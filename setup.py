@@ -17,6 +17,7 @@ requires = [
     'deform',
     'repoze.whoplugins.zodb',
     'Babel',
+    'slugify',
     ]
 
 setup(name='voteit.core',

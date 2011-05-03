@@ -1,7 +1,10 @@
 from repoze.folder import Folder
 
-from voteit.core.models.site import SiteRoot, SiteRootSchema
+from voteit.core.models.agenda_item import AgendaItem, AgendaItemSchema
 from voteit.core.models.meeting import Meeting, MeetingSchema
+from voteit.core.models.poll import Poll, PollSchema
+from voteit.core.models.proposal import Proposal, ProposalSchema
+from voteit.core.models.site import SiteRoot, SiteRootSchema
 
 
 class FactoryTypeInformation(Folder):
@@ -38,5 +41,8 @@ class TypeInformation(object):
 
 #FIXME: This is temporary and should be a generic utility or similar later        
 ftis = FactoryTypeInformation()
-ftis[SiteRoot.content_type] = TypeInformation(SiteRootSchema, SiteRoot)
+ftis[AgendaItem.content_type] = TypeInformation(AgendaItemSchema, AgendaItem)
 ftis[Meeting.content_type] = TypeInformation(MeetingSchema, Meeting)
+ftis[Poll.content_type] = TypeInformation(PollSchema, Poll)
+ftis[Proposal.content_type] = TypeInformation(ProposalSchema, Proposal)
+ftis[SiteRoot.content_type] = TypeInformation(SiteRootSchema, SiteRoot)

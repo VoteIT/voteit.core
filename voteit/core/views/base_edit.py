@@ -7,6 +7,7 @@ import colander
 from deform import Form
 from deform.exception import ValidationFailure
 from webob.exc import HTTPFound
+from slugify import slugify
 
 from voteit.core.models.factory_type_information import ftis
 from voteit.core.views.api import APIView
@@ -47,7 +48,8 @@ class BaseEdit(object):
             obj = ftis[content_type].type_class()
             for (k, v) in appstruct.items():
                 obj.set_field_value(k, v)
-            self.context[appstruct['name']] = obj
+            name = self.generate_slug(appstruct['title'])
+            self.context[name] = obj
             
             url = resource_url(obj, self.request)
             
@@ -130,3 +132,24 @@ class BaseEdit(object):
         #No action - Render edit form
         self.response['form'] = self.form.render()
         return self.response
+
+    def generate_slug(self, text, limit=40):
+        """ Suggest a name for content that will be added.
+            text is a title or similar to be used.
+        """
+        suggestion = slugify(text[:limit])
+        
+        #Is the suggested ID already unique?
+        if suggestion not in self.context:
+            return suggestion
+        
+        #ID isn't unique, let's try to generate a unique one.
+        RETRY = 100
+        i = 1
+        while i <= RETRY:
+            new_s = "%s-%s" % (suggestion, str(i))
+            if new_s not in self.context:
+                return new_s
+            i += 1
+        #If no id was found, don't just continue
+        raise KeyError("No unique id could be found")

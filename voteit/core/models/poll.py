@@ -3,14 +3,14 @@ import colander
 from voteit.core.models.base_content import BaseContent
 
 
-class Meeting(BaseContent):
-    """ Meeting content. """
-    content_type = 'Meeting'
-
+class Poll(BaseContent):
+    """ Poll content. """
+    
+    content_type = 'Poll'
     omit_fields_on_edit = ['name']
-    allowed_contexts = ['SiteRoot']
+    allowed_contexts = ['AgendaItem']
     
 
-class MeetingSchema(colander.MappingSchema):
+class PollSchema(colander.MappingSchema):
     title = colander.SchemaNode(colander.String())
     description = colander.SchemaNode(colander.String())
