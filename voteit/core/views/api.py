@@ -54,6 +54,18 @@ class APIView(object):
         """ Is the current context inside a meeting, or a meeting itself? """
         return find_interface(context, Meeting)
 
-    def get_proposals(self, context):
-        """ Return all proposals for a specific context. """
-        return [x for x in context.values() if x.content_type == 'Proposal']
+    def get_content(self, context, content_type=None):
+        """ Get contained items.
+            If a content_type is passed, it will restrict the search to that type.
+        """
+        if content_type is None:
+            return context.values()
+        return [x for x in context.values() if x.content_type == content_type]
+
+    def get_action_bar(self, context, request):
+        """ Get the action-bar for a specific context """
+        response = {}
+        response['addable_types'] = self._get_addable_types(context)
+        response['context'] = context
+        return render('templates/action_bar.pt', response, request=request)
+    

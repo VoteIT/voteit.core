@@ -1,19 +1,30 @@
 <metal:main define-macro="navigation" tal:define="meeting api.find_meeting(context)">
-
-<tal:root condition="not meeting">
-<tal:iterate repeat="meeting api.root.values()">
-	<h3 tal:content="meeting.get_field_value('title')">Meeting title</h3>
+<div class="content_wrapper">
+	<tal:root condition="not meeting">
+	<tal:iterate repeat="meeting api.root.values()">
+		<h3>
+			<a tal:attributes="href api.resource_url(meeting, request)"
+			   tal:content="meeting.get_field_value('title')">Meeting title</a>
+		</h3>
+		
+	</tal:iterate>
+	</tal:root>
 	
-</tal:iterate>
-</tal:root>
-
-<tal:meeting condition="meeting" define="proposals api.get_proposals(context)">
-	<h3 tal:content="meeting.get_field_value('title')">Meeting title</h3>
-	<ul tal:condition="proposals">
-		<tal:iterate repeat="proposal proposals">
-		<li tal:content="proposal.get_field_value('title')">Proposal title</li>
+	<tal:meeting condition="meeting">
+		<tal:agenda_items define="agenda_items api.get_content(meeting, content_type='AgendaItem')">
+        <h3>
+            <a tal:attributes="href api.resource_url(meeting, request)"
+               tal:content="meeting.get_field_value('title')">Meeting title</a>
+        </h3>
+		<ul tal:condition="agenda_items">
+		<tal:iterate repeat="agenda_item agenda_items">
+			<li>
+                <a tal:attributes="href api.resource_url(agenda_item, request)"
+                   tal:content="agenda_item.get_field_value('title')">Agenda item title</a>
+			</li>
 		</tal:iterate>
-	</ul>
-</tal:meeting>
-
+		</ul>
+		</tal:agenda_items>
+	</tal:meeting>
+</div>
 </metal:main>

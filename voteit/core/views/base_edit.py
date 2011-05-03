@@ -29,7 +29,7 @@ class BaseEdit(object):
     def add_form(self):
         content_type = self.request.params.get('content_type')
         ftis = self.response['api'].ftis
-        schema = ftis[content_type].schema()
+        schema = ftis[content_type].schema().clone()
 
         self.form = Form(schema, buttons=('add', 'cancel'))
         self.response['form_resources'] = self.form.get_widget_resources()
@@ -67,7 +67,7 @@ class BaseEdit(object):
     def edit_form(self):
         content_type = self.context.content_type
         ftis = self.response['api'].ftis
-        schema = ftis[content_type].schema()
+        schema = ftis[content_type].schema().clone()
         
         #Remove unwanted fields like 'name'
         for omit_name in ftis[content_type].omit_fields_on_edit:

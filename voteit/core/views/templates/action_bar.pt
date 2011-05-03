@@ -1,0 +1,8 @@
+<div id="add_content" tal:condition="addable_types|False">
+    <tal:iterate tal:repeat="type_name addable_types">
+        <a tal:content="string: add $type_name"
+           tal:attributes="href string:add?content_type=$type_name">Name</a>
+    </tal:iterate>
+</div>
+<div><a href="./edit">Edit</a></div>
+<div><a href="./delete">Delete</a></div>

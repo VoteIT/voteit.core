@@ -1,0 +1,37 @@
+body {
+	font-size: 14px;
+	font-family: Times;
+}
+#navigation {
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	bottom: 0px;
+	width: 200px;
+	background: #ccc;
+}
+
+#main_window {
+    position: absolute;
+	left: 201px;
+	right: 0px;
+	top: 0px;
+	bottom: 0px;
+}
+.content_wrapper {
+	padding: 1em;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: Tahoma, Geneva, Arial, Helvetica, sans-serif;
+}
+
+h1 {
+	font-size: 160%;
+}
+h2 {
+    font-size: 140%;
+}
+h3 {
+    font-size: 120%;
+}
