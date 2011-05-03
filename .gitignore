@@ -1,0 +1,14 @@
+.project
+.pydevproject*
+.Python
+.DS_Store
+.installed.cfg
+bin
+include
+lib
+src
+eggs
+develop-eggs
+parts
+var
+
