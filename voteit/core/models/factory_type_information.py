@@ -1,0 +1,42 @@
+from repoze.folder import Folder
+
+from voteit.core.models.site import SiteRoot, SiteRootSchema
+from voteit.core.models.meeting import Meeting, MeetingSchema
+
+
+class FactoryTypeInformation(Folder):
+    """ Contains information about content types. The purpose of this
+        is to handle generic creation of objects, and also provide information
+        so we can store data in a dynamic way.
+    """
+
+class TypeInformation(object):
+    """ schema: add schema for the content type.
+        type_class: which class the content type is constructed from.
+        omit_fields_on_edit: list of fieldnames to omit on edit. (like 'name')
+        allowed_contexts: which contexts this type can be added to.
+        add_permission: which permission is required to add.
+        
+        Any assignment that is None means None, which would mean that
+        most types wouldn't be addable.
+    """
+    def __init__(self, schema, type_class):
+        self.schema = schema
+        self.type_class = type_class
+        for attr in ['omit_fields_on_edit', 'allowed_contexts',]:
+            if not hasattr(self.type_class, attr):
+                raise AttributeError("Class %s doesn't have the required attribute '%s'" % (self.type_class, attr))
+    
+    @property
+    def omit_fields_on_edit(self):
+        return self.type_class.omit_fields_on_edit
+    
+    @property
+    def allowed_contexts(self):
+        return self.type_class.allowed_contexts
+
+
+#FIXME: This is temporary and should be a generic utility or similar later        
+ftis = FactoryTypeInformation()
+ftis[SiteRoot.content_type] = TypeInformation(SiteRootSchema, SiteRoot)
+ftis[Meeting.content_type] = TypeInformation(MeetingSchema, Meeting)

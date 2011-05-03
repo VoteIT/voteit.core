@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      metal:define-macro="master">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	    <metal:page_title define-slot="page_title">
+		   <title>Application</title>
+	    </metal:page_title>
+	<meta name="keywords" content="python web application" />
+	<meta name="description" content="pyramid web application" />
+	
+	<link href="${request.application_url}/static/reset.css" rel="stylesheet" type="text/css" />
+	
+	<metal:head define-slot="head"></metal:head>
+
+</head>
+<body>
+	
+	<div id="add_content" tal:condition="api.addable_types|False">
+		<tal:iterate tal:repeat="type_name api.addable_types">
+			<a tal:content="string: add $type_name"
+			   tal:attributes="href string:add?content_type=$type_name">Name</a>
+		</tal:iterate>
+	</div>
+    <div><a href="./edit">Edit</a></div>
+    <div><a href="./delete">Delete</a></div>
+
+    <div id="container">
+    	
+		<div id="context_obj" tal:condition="not form|True">
+            <h3 tal:content="context.get_field_value('title')">Title</h3>
+            <div tal:content="context.get_field_value('description')">Description</div>
+		</div>
+    	
+		<div id="content" metal:define-slot="content"></div>
+        
+        <div tal:condition="form|False" tal:replace="structure form">Form</div>
+
+	    <div metal:define-slot="listing">
+	        <div tal:condition="show_content_listing|False" tal:repeat="obj context.values()">
+	            <a tal:attributes="href api.resource_url(obj, request)">
+                    <h3 tal:content="obj.get_field_value('title')">Title</h3>
+				    <div tal:content="obj.get_field_value('description')">Description</div>
+	            </a>
+	        </div>
+	    </div>
+
+	</div>
+
+</body>
+</html>
