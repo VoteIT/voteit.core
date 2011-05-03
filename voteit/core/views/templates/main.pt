@@ -16,7 +16,17 @@
 
 </head>
 <body>
-	
+
+    <div id="navigation" metal:use-macro="api.navigation.macros['navigation']">Navigation</div>
+
+    <div id="path_bar">
+        <tal:iterate repeat="obj api.reversed_lineage">
+            &raquo;
+            <a tal:attributes="href api.resource_url(obj, request);"
+               tal:content="obj.get_field_value('title')">Title</a>
+        </tal:iterate>
+    </div>
+
 	<div id="add_content" tal:condition="api.addable_types|False">
 		<tal:iterate tal:repeat="type_name api.addable_types">
 			<a tal:content="string: add $type_name"

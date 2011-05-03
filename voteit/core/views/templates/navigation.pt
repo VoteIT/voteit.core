@@ -1,0 +1,19 @@
+<metal:main define-macro="navigation" tal:define="meeting api.find_meeting(context)">
+
+<tal:root condition="not meeting">
+<tal:iterate repeat="meeting api.root.values()">
+	<h3 tal:content="meeting.get_field_value('title')">Meeting title</h3>
+	
+</tal:iterate>
+</tal:root>
+
+<tal:meeting condition="meeting" define="proposals api.get_proposals(context)">
+	<h3 tal:content="meeting.get_field_value('title')">Meeting title</h3>
+	<ul tal:condition="proposals">
+		<tal:iterate repeat="proposal proposals">
+		<li tal:content="proposal.get_field_value('title')">Proposal title</li>
+		</tal:iterate>
+	</ul>
+</tal:meeting>
+
+</metal:main>

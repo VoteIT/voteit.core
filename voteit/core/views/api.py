@@ -1,13 +1,14 @@
 from time import strftime
 
-from pyramid.renderers import get_renderer
+from pyramid.renderers import get_renderer, render
 from pyramid.security import authenticated_userid
 from pyramid.security import principals_allowed_by_permission
 from pyramid.url import resource_url
-from pyramid.location import lineage
-from pyramid.traversal import find_root
+from pyramid.location import lineage, inside
+from pyramid.traversal import find_root, find_interface
 
 from voteit.core.models.factory_type_information import ftis
+from voteit.core.models.meeting import Meeting
 
 
 class APIView(object):
@@ -21,7 +22,13 @@ class APIView(object):
         self.ftis = ftis
         self.addable_types = self._get_addable_types(context)
         self.root = find_root(context)
-        
+        self.navigation = get_renderer('templates/navigation.pt').implementation()
+        self.lineage = lineage(context)
+        rev = []
+        [rev.insert(0, x) for x in self.lineage]
+        self.reversed_lineage = tuple(rev)
+
+
     def format_feed_time(self, value):
         """ Lordag 3 apr 2010, 01:10
         """
@@ -38,3 +45,15 @@ class APIView(object):
             if context_type in type.allowed_contexts:
                 addable_names.add(type.type_class.content_type)
         return addable_names
+
+    #navigation stuff
+    def in_path(self, obj):
+        return inside(self.context, obj)
+    
+    def find_meeting(self, context):
+        """ Is the current context inside a meeting, or a meeting itself? """
+        return find_interface(context, Meeting)
+
+    def get_proposals(self, context):
+        """ Return all proposals for a specific context. """
+        return [x for x in context.values() if x.content_type == 'Proposal']
