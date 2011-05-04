@@ -16,7 +16,7 @@
 		
 		<tal:anon condition="not api.userid">
 			<!-- Unauthenticated user actions -->
-			<a>Register</a>
+            <a tal:attributes="href request.application_url + '/@@register'">Register</a>
             <a tal:attributes="href request.application_url + '/@@login'">Login</a>
 		</tal:anon>
 	</div>

@@ -9,6 +9,7 @@ from voteit.core.models.user import AddUserSchema, User, EditUserSchema,\
     ChangePasswordSchema
 from voteit.core.models.users import Users
 from voteit.core.views.api import APIView
+from voteit.core.models.site import SiteRoot
 
 DEFAULT_TEMPLATE = "templates/base_edit.pt"
 
@@ -60,6 +61,56 @@ class UsersView(object):
             
             #self.context is the site root. Users are stored in the users-property
             self.context[name] = obj
+            
+            url = resource_url(self.context, self.request)
+            
+            return HTTPFound(location=url)
+
+        if 'cancel' in post:
+            url = resource_url(self.context, self.request)
+            return HTTPFound(location=url)
+
+        #No action - Render edit form
+        self.response['form'] = self.form.render()
+        return self.response
+
+    @view_config(context=SiteRoot, name="register", renderer=DEFAULT_TEMPLATE)
+    def registration_form(self):
+        schema = AddUserSchema()
+
+        self.form = Form(schema, buttons=('register', 'cancel'))
+        self.response['form_resources'] = self.form.get_widget_resources()
+
+        post = self.request.POST
+        if 'register' in post:
+            controls = post.items()
+            try:
+                #appstruct is deforms convention. It will be the submitted data in a dict.
+                appstruct = self.form.validate(controls)
+                #FIXME: validate name - it must be unique and url-id-like
+            except ValidationFailure, e:
+                self.response['form'] = e.render()
+                return self.response
+            
+            obj = User()
+            
+            if appstruct['password']:
+                #At this point the validation should have been done
+                obj.set_password(appstruct['password'])
+                
+            #Remove the field since it's handled - to avoid blanking the already set password
+            if 'password' in appstruct:
+                del appstruct['password']
+            
+            #Userid and name should be consistent
+            name = appstruct['userid']
+            del appstruct['userid']
+            
+            for (k, v) in appstruct.items():
+                obj.set_field_value(k, v)
+            
+            #self.context is the site root. Users are stored in the users-property
+            self.context.users[name] = obj
             
             url = resource_url(self.context, self.request)
             
