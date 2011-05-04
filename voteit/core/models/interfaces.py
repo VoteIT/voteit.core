@@ -16,11 +16,10 @@ class IBaseContent(Interface):
     def get_field_value(key, default=None):
         """ Get value. Return default if it doesn't exist. """
 
-class IAssignmentPlugin(Interface):
-    """ """
-    
-    name = Attribute("This is the internal name, it will be used to later"
-                     "retrieve the plugin so it needs to be unique")
-    
-    title = Attribute("A human friendly name.")
+
+class IUsers(Interface):
+    """ Contains all users. """
+
+class IUser(Interface):
+    """ A user object. """
     

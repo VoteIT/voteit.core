@@ -41,7 +41,9 @@
 	    	
 			<div class="content_wrapper">
 	    	
-				<div id="context_obj" tal:condition="not form|True">
+				<div metal:define-slot="page_heading"
+                     id="context_obj"
+					 tal:condition="not form|True">
 		            <h3 tal:content="context.get_field_value('title')">Title</h3>
 		            <div tal:content="context.get_field_value('description')">Description</div>
 				</div>

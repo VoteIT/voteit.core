@@ -1,0 +1,17 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      metal:use-macro="api.main_template.macros['master']">
+<body>
+<h1 metal:fill-slot="page_heading">Users</h1>
+<div metal:fill-slot="content">
+    <tal:iterate repeat="user context.users.values()">
+    	<h3 tal:content="user.__name__">userid</h3>
+        <span tal:content="user.get_field_value('first_name')">First name</span>
+        <span tal:content="user.get_field_value('last_name')">Last name</span>
+        <span tal:content="user.get_field_value('email')">Email</span>
+    </tal:iterate>
+</div>
+</body>
+</html>

@@ -1,8 +1,7 @@
 import colander
-from repoze.who.plugins.zodb.users import Users
 
 from voteit.core.models.base_content import BaseContent
-
+from voteit.core.models.users import Users
 
 class SiteRoot(BaseContent):
     """ The root of the site. Contains all other objects. """
