@@ -1,12 +1,21 @@
 <div id="profile_toolbar" metal:define-macro="profile_toolbar">
 	<div class="content_wrapper">
+		<tal:administrator condition="api.userid">
+			<!-- Administrator actions -->
+            <a tal:attributes="href request.application_url + '/users/list'">Manage users</a>
+			
+		</tal:administrator>
+		
 		<tal:authenticated condition="api.userid">
+			<!-- Regular authenticated user actions -->
 		    <a tal:content="api.userid"
 			   tal:attributes="href api.user_profile_url">Userid</a>
 			<a tal:attributes="href api.user_profile_url + 'change_password'">Change password</a>
 			<a tal:attributes="href request.application_url + '/logout'">Logout</a>
 		</tal:authenticated>
+		
 		<tal:anon condition="not api.userid">
+			<!-- Unauthenticated user actions -->
 			<a>Register</a>
             <a tal:attributes="href request.application_url + '/login'">Login</a>
 		</tal:anon>
