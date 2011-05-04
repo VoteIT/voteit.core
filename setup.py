@@ -15,7 +15,6 @@ requires = [
     'WebError',
     'repoze.folder',
     'deform',
-    'repoze.whoplugins.zodb',
     'Babel',
     'slugify',
     ]
