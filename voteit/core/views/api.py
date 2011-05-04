@@ -27,6 +27,7 @@ class APIView(object):
         rev = []
         [rev.insert(0, x) for x in self.lineage]
         self.reversed_lineage = tuple(rev)
+        self.inside = inside
 
 
     def format_feed_time(self, value):
@@ -47,9 +48,6 @@ class APIView(object):
         return addable_names
 
     #navigation stuff
-    def in_path(self, obj):
-        return inside(self.context, obj)
-    
     def find_meeting(self, context):
         """ Is the current context inside a meeting, or a meeting itself? """
         return find_interface(context, Meeting)

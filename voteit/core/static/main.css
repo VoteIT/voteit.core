@@ -8,9 +8,24 @@ body {
 	top: 0px;
 	bottom: 0px;
 	width: 200px;
-	background: #ccc;
+	background: #dbe0e5;
 }
-
+#navigation a {
+    color: #054265;
+}
+#navigation .selected {
+    background: #fff;
+}
+#navigation .header {
+    background: #054265;
+	color: #fff;
+	padding: 10px;
+	margin-left: -10px;
+	margin-right: -10px;
+}
+#navigation .header a {
+	color: #fff;
+}
 #main_window {
     position: absolute;
 	left: 201px;
@@ -21,20 +36,34 @@ body {
 
 h1, h2, h3, h4, h5, h6 {
     font-family: Tahoma, Geneva, Arial, Helvetica, sans-serif;
+	font-weight: bold;
+	margin: 0.5em 0;
 }
 
 h1 {
-	font-size: 160%;
+	font-size: 200%;
 }
 h2 {
-    font-size: 140%;
+    font-size: 1750%;
 }
 h3 {
-    font-size: 120%;
+    font-size: 150%;
 }
-
+h4 {
+    font-size: 125%;
+}
+h5 {
+    font-size: 100%;
+}
+h6 {
+    font-size: 85%;
+}
+a {
+    color: #f60;
+	text-decoration: none;
+}
 .content_wrapper {
-	padding: 1em;
+	padding: 10px;
 }
 .browse_up {
 }
