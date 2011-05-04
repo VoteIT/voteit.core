@@ -4,8 +4,9 @@ from pyramid.security import remember
 from pyramid.security import forget
 from pyramid.view import view_config
 from pyramid.url import resource_url
+from deform import Form
 
-from voteit.core.models.user import get_sha_password
+from voteit.core.models.user import get_sha_password, LoginSchema
 from voteit.core.models.interfaces import IUser
 from voteit.core import VoteITMF as _
 from voteit.core.models.site import SiteRoot
@@ -13,36 +14,48 @@ from voteit.core.views.api import APIView
 
 
 @view_config(context=SiteRoot, name='login',
-             renderer='templates/login.pt')
+             renderer='templates/base_edit.pt')
 def login(context, request):
-    referer = request.url
-    if referer.endswith('login'):
-        referrer = '/' # never use the login form itself as came_from
-    came_from = request.params.get('came_from', referrer)
-    message = ''
-    userid = ''
-    password = ''
+    response = {}
+    response['api'] = APIView(context, request)
+    schema = LoginSchema()
+    form = Form(schema, buttons=('login', 'cancel'))
+    response['form_resources'] = form.get_widget_resources()
 
-    if 'form.submitted' in request.params:
-        userid = request.params['userid']
-        password = request.params['password']
+    #Came from
+    referrer = request.url
+    if referrer.endswith('login'):
+        referrer = '/' # never use the login form itself as came_from
+    schema['came_from'].default = referrer
+
+    #Handle submitted information
+    if 'login' in request.POST:
+        controls = request.POST.items()
+
+        try:
+            #appstruct is deforms convention. It will be the submitted data in a dict.
+            appstruct = form.validate(controls)
+            #FIXME: validate name - it must be unique and url-id-like
+        except ValidationFailure, e:
+            response['form'] = e.render()
+            response['message'] = _('Login failed.')
+            return response
         
+        userid = appstruct['userid']
+        password = appstruct['password']
+
         user = context['users'].get(userid)
         if IUser.providedBy(user):
             if get_sha_password(password) == user.get_password():
                 headers = remember(request, userid)
-                return HTTPFound(location = came_from,
+                return HTTPFound(location = appstruct['came_from'],
                                  headers = headers)
         message = _('Login failed.')
+    
+    #Render form
+    response['form'] = form.render()
+    return response
 
-    return dict(
-        message = message,
-        url = request.application_url + '/@@login',
-        came_from = came_from,
-        userid = userid,
-        password = password,
-        api = APIView(context, request),
-        )
     
 @view_config(context=SiteRoot, name='logout')
 def logout(request):

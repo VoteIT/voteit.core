@@ -53,6 +53,20 @@ class EditUserSchema(colander.Schema):
     first_name = colander.SchemaNode(colander.String())
     last_name = colander.SchemaNode(colander.String())
 
+class LoginSchema(colander.Schema):
+    userid = colander.SchemaNode(colander.String())
+    password = colander.SchemaNode(
+                colander.String(),
+                validator=colander.Length(min=5, max=100),
+                widget=deform.widget.PasswordWidget(size=20),
+                description=_('Enter a password'))
+    came_from = colander.SchemaNode(
+                colander.String(),
+                widget = deform.widget.HiddenWidget(),
+                default='/',
+                )
+
+
 class ChangePasswordSchema(colander.Schema):
     password = colander.SchemaNode(
                 colander.String(),
