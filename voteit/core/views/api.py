@@ -16,12 +16,18 @@ class APIView(object):
         
     def __init__(self, context, request):
         self.resource_url = resource_url
+        self.root = find_root(context)
+
+        #user-related
         self.userid = authenticated_userid(request)
+        if self.userid:
+            self.user_profile = self.root.users.get(self.userid)
+            self.user_profile_url = resource_url(self.user_profile, request)
+        
         #request.application_url
         self.main_template = get_renderer('templates/main.pt').implementation()
         self.ftis = ftis
         self.addable_types = self._get_addable_types(context)
-        self.root = find_root(context)
         self.navigation = get_renderer('templates/navigation.pt').implementation()
         self.profile_toolbar = get_renderer('templates/profile_toolbar.pt').implementation()
         self.lineage = lineage(context)

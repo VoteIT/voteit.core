@@ -11,6 +11,7 @@ PROJECTNAME = 'voteit.core'
 VoteITMF = TranslationStringFactory(PROJECTNAME)
 
 from voteit.core.models.site import SiteRoot
+from voteit.core.models.users import Users
 
 
 def main(global_config, **settings):
@@ -48,6 +49,7 @@ def main(global_config, **settings):
 def appmaker(zodb_root):
     if not 'app_root' in zodb_root:
         app_root = SiteRoot()
+        app_root['users'] = Users()
         zodb_root['app_root'] = app_root
         import transaction
         transaction.commit()

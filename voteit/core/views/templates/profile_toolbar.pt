@@ -1,7 +1,9 @@
 <div id="profile_toolbar" metal:define-macro="profile_toolbar">
 	<div class="content_wrapper">
 		<tal:authenticated condition="api.userid">
-		    <a tal:content="api.userid">Userid</a>
+		    <a tal:content="api.userid"
+			   tal:attributes="href api.user_profile_url">Userid</a>
+			<a tal:attributes="href api.user_profile_url + 'change_password'">Change password</a>
 			<a tal:attributes="href request.application_url + '/logout'">Logout</a>
 		</tal:authenticated>
 		<tal:anon condition="not api.userid">

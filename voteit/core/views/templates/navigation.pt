@@ -2,7 +2,7 @@
 <div class="content_wrapper">
 	<tal:root condition="not meeting">
 	<h5>Available meetings</h5>
-	<tal:iterate repeat="meeting api.root.values()">
+	<tal:iterate repeat="meeting api.get_content(api.root, content_type='Meeting')">
 		<h5>
 			<a tal:attributes="href api.resource_url(meeting, request)"
 			   tal:content="meeting.get_field_value('title')">Meeting title</a>

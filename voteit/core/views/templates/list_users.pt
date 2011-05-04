@@ -6,7 +6,7 @@
 <body>
 <h1 metal:fill-slot="page_heading">Users</h1>
 <div metal:fill-slot="content">
-    <tal:iterate repeat="user context.users.values()">
+    <tal:iterate repeat="user context.values()">
     	<h3 tal:content="user.__name__">userid</h3>
         <span tal:content="user.get_field_value('first_name')">First name</span>
         <span tal:content="user.get_field_value('last_name')">Last name</span>

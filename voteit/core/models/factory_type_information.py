@@ -5,7 +5,8 @@ from voteit.core.models.meeting import Meeting, MeetingSchema
 from voteit.core.models.poll import Poll, PollSchema
 from voteit.core.models.proposal import Proposal, ProposalSchema
 from voteit.core.models.site import SiteRoot, SiteRootSchema
-
+from voteit.core.models.user import User
+from voteit.core.models.users import Users, UsersSchema
 
 class FactoryTypeInformation(Folder):
     """ Contains information about content types. The purpose of this
@@ -46,3 +47,5 @@ ftis[Meeting.content_type] = TypeInformation(MeetingSchema, Meeting)
 ftis[Poll.content_type] = TypeInformation(PollSchema, Poll)
 ftis[Proposal.content_type] = TypeInformation(ProposalSchema, Proposal)
 ftis[SiteRoot.content_type] = TypeInformation(SiteRootSchema, SiteRoot)
+ftis[Users.content_type] = TypeInformation(UsersSchema, Users)
+ftis[User.content_type] = TypeInformation(None, User) #Special case

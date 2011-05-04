@@ -13,19 +13,7 @@ class SiteRoot(BaseContent):
     
     @property
     def users(self):
-        """ Contains all users. user_id should be the same as set name."""
-        users = getattr(self, '__users__', None)
-        if users is None:
-            users = self.__users__ = Users()
-        return users
-
-#    @property
-#    def groups(self):
-#        """ Contains all groups. """
-#        groups = getattr(self, '__groups__', None)
-#        if groups is None:
-#            groups = self.__groups__ = Folder()
-#        return groups
+        return self['users']
 
 
 class SiteRootSchema(colander.MappingSchema):

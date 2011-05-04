@@ -28,7 +28,7 @@ def login(context, request):
         userid = request.params['userid']
         password = request.params['password']
         
-        user = context.users.get(userid)
+        user = context['users'].get(userid)
         if IUser.providedBy(user):
             if get_sha_password(password) == user.get_password():
                 headers = remember(request, userid)

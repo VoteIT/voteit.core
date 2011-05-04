@@ -1,6 +1,13 @@
-from repoze.folder import Folder
+from voteit.core.models.base_content import BaseContent
+import colander
 
 
-class Users(Folder):
+class Users(BaseContent):
     """ Container for all user objects """
     content_type = 'Users'
+    omit_fields_on_edit = []
+    allowed_contexts = []
+
+class UsersSchema(colander.Schema):
+    title = colander.SchemaNode(colander.String())
+    description = colander.SchemaNode(colander.String())
