@@ -15,9 +15,8 @@ from voteit.core.views.api import APIView
 @view_config(context=SiteRoot, name='login',
              renderer='templates/login.pt')
 def login(context, request):
-    login_url = resource_url(request.context, request, 'login')
-    referrer = request.url
-    if referrer == login_url:
+    referer = request.url
+    if referer.endswith('login'):
         referrer = '/' # never use the login form itself as came_from
     came_from = request.params.get('came_from', referrer)
     message = ''
@@ -38,7 +37,7 @@ def login(context, request):
 
     return dict(
         message = message,
-        url = request.application_url + '/login',
+        url = request.application_url + '/@@login',
         came_from = came_from,
         userid = userid,
         password = password,
