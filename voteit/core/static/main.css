@@ -28,12 +28,15 @@ body {
 }
 #main_window {
     position: absolute;
-	left: 201px;
+	left: 200px;
 	right: 0px;
 	top: 0px;
 	bottom: 0px;
 }
-
+#profile_toolbar {
+	text-align: right;
+	background: #dbe0e5;
+}
 h1, h2, h3, h4, h5, h6 {
     font-family: Tahoma, Geneva, Arial, Helvetica, sans-serif;
 	font-weight: bold;

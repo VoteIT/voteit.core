@@ -31,7 +31,7 @@ def login(context, request):
         user = context.users.get(userid)
         if IUser.providedBy(user):
             if get_sha_password(password) == user.get_password():
-                headers = remember(request, login)
+                headers = remember(request, userid)
                 return HTTPFound(location = came_from,
                                  headers = headers)
         message = _('Login failed.')

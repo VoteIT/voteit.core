@@ -23,6 +23,7 @@ class APIView(object):
         self.addable_types = self._get_addable_types(context)
         self.root = find_root(context)
         self.navigation = get_renderer('templates/navigation.pt').implementation()
+        self.profile_toolbar = get_renderer('templates/profile_toolbar.pt').implementation()
         self.lineage = lineage(context)
         rev = []
         [rev.insert(0, x) for x in self.lineage]

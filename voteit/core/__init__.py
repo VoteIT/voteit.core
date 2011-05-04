@@ -1,7 +1,7 @@
 from pyramid.config import Configurator
 from pyramid.i18n import TranslationStringFactory
-#from pyramid.authorization import ACLAuthorizationPolicy
-#from pyramid.authentication import AuthTktAuthenticationPolicy
+from pyramid.authorization import ACLAuthorizationPolicy
+from pyramid.authentication import AuthTktAuthenticationPolicy
 from repoze.zodbconn.finder import PersistentApplicationFinder
 from zope.component import getGlobalSiteManager
 
@@ -17,9 +17,9 @@ def main(global_config, **settings):
     """ This function returns a Pyramid WSGI application.
     """
     groupfinder = None #FIXME
-    #authn_policy = AuthTktAuthenticationPolicy(secret='sosecret',
-    #                                           callback=groupfinder)
-    #authz_policy = ACLAuthorizationPolicy()
+    authn_policy = AuthTktAuthenticationPolicy(secret='sosecret',
+                                               callback=groupfinder)
+    authz_policy = ACLAuthorizationPolicy()
 
     zodb_uri = settings.get('zodb_uri')
     if zodb_uri is None:
@@ -32,8 +32,8 @@ def main(global_config, **settings):
     config = Configurator(registry=globalreg)
     config.setup_registry(settings=settings,
                           root_factory=get_root,
-                          #authentication_policy=authn_policy,
-                          #authorization_policy=authz_policy
+                          authentication_policy=authn_policy,
+                          authorization_policy=authz_policy
                           )
     config.add_static_view('static', '%s:static' % PROJECTNAME)
     config.add_static_view('deform', 'deform:static')

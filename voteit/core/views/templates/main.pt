@@ -21,6 +21,9 @@
     <div id="navigation"><metal:nav metal:use-macro="api.navigation.macros['navigation']">Navigation</metal:nav></div>
 
     <div id="main_window">
+    	
+        <metal:toolbar metal:use-macro="api.profile_toolbar.macros['profile_toolbar']">Profile toolbar</metal:toolbar>
+		
 	    <div id="path_bar" tal:condition="not form|True">
 	    	<div class="content_wrapper">
 	        <tal:iterate repeat="obj api.reversed_lineage">
