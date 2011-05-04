@@ -1,8 +1,10 @@
 from hashlib import sha1
 from BTrees.OOBTree import OOBTree
 import colander
+from zope.interface import implements
 
 from voteit.core.models.base_content import BaseContent
+from voteit.core.models.interfaces import IUser
 
 
 def get_sha_password(password):
@@ -14,10 +16,11 @@ def get_sha_password(password):
 
 class User(BaseContent):
     """ Content type for a user. Usable as a profile page. """
+    implements(IUser)
     content_type = 'User'
     
     def get_password(self):
-        self.get_field_value('password')
+        return self.get_field_value('password')
     
     def set_password(self, value):
         """ Encrypt a plaintext password. """
