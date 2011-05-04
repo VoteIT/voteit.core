@@ -17,6 +17,8 @@ requires = [
     'deform',
     'Babel',
     'slugify',
+    'webtest',
+    'zope.testbrowser',
     ]
 
 setup(name='voteit.core',
