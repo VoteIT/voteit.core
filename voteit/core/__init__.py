@@ -4,14 +4,18 @@ from pyramid.authorization import ACLAuthorizationPolicy
 from pyramid.authentication import AuthTktAuthenticationPolicy
 from repoze.zodbconn.finder import PersistentApplicationFinder
 from zope.component import getGlobalSiteManager
-
+from zope.component.globalregistry import provideAdapter
+from zope.component.globalregistry import provideUtility
+from zope.interface.verify import verifyClass
 
 PROJECTNAME = 'voteit.core'
 #Must be before all of this packages imports
 VoteITMF = TranslationStringFactory(PROJECTNAME)
 
+#voteit.core package imports
 from voteit.core.models.site import SiteRoot
 from voteit.core.models.users import Users
+from voteit.core.models.interfaces import IPollPlugin
 
 
 def main(global_config, **settings):
@@ -41,10 +45,19 @@ def main(global_config, **settings):
     
     #config.add_translation_dirs('%s:locale/' % PROJECTNAME)
 
-    
     config.scan(PROJECTNAME)
-    return config.make_wsgi_app()
+    
+    #include specified poll plugins
+    poll_plugins = settings.get('poll_plugins')
 
+    if poll_plugins is not None:
+        for poll_plugin in poll_plugins.strip().splitlines():
+            try:
+                config.include(poll_plugin)
+            except ImportError:
+                raise ImportError("Couldn't import a poll plugin with name: '%s'" % poll_plugin)
+
+    return config.make_wsgi_app()
 
 def appmaker(zodb_root):
     if not 'app_root' in zodb_root:
@@ -54,3 +67,10 @@ def appmaker(zodb_root):
         import transaction
         transaction.commit()
     return zodb_root['app_root']
+
+
+def register_poll_plugin(plugin_class):
+    verifyClass(IPollPlugin, plugin_class)
+    provideUtility(plugin_class, IPollPlugin, name = plugin_class.name)
+    #provideAdapter(plugin_class, name = plugin_class.name)
+

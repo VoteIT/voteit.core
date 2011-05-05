@@ -22,4 +22,10 @@ class IUsers(Interface):
 
 class IUser(Interface):
     """ A user object. """
+
+class IPoll(Interface):
+    """ Poll content type. """
+
+class IPollPlugin(Interface):
+    """ A plugin for a poll. """
     

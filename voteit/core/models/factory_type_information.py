@@ -2,7 +2,7 @@ from repoze.folder import Folder
 
 from voteit.core.models.agenda_item import AgendaItem, AgendaItemSchema
 from voteit.core.models.meeting import Meeting, MeetingSchema
-from voteit.core.models.poll import Poll, PollSchema
+from voteit.core.models.poll import Poll, get_poll_schema
 from voteit.core.models.proposal import Proposal, ProposalSchema
 from voteit.core.models.site import SiteRoot, SiteRootSchema
 from voteit.core.models.user import User
@@ -44,7 +44,7 @@ class TypeInformation(object):
 ftis = FactoryTypeInformation()
 ftis[AgendaItem.content_type] = TypeInformation(AgendaItemSchema, AgendaItem)
 ftis[Meeting.content_type] = TypeInformation(MeetingSchema, Meeting)
-ftis[Poll.content_type] = TypeInformation(PollSchema, Poll)
+ftis[Poll.content_type] = TypeInformation(get_poll_schema, Poll)
 ftis[Proposal.content_type] = TypeInformation(ProposalSchema, Proposal)
 ftis[SiteRoot.content_type] = TypeInformation(SiteRootSchema, SiteRoot)
 ftis[Users.content_type] = TypeInformation(UsersSchema, Users)
