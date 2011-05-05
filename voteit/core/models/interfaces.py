@@ -25,6 +25,10 @@ class IUser(Interface):
 
 class IPoll(Interface):
     """ Poll content type. """
+    
+    proposals = Attribute("Contains a set of UIDs for all proposals this poll is about.")
+    poll_plugin = Attribute("Returns the selected plugin utility.")
+
 
 class IPollPlugin(Interface):
     """ A plugin for a poll. """

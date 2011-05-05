@@ -1,6 +1,7 @@
 import colander
 import deform
 from zope.interface import implements
+from zope.component import getUtility
 from zope.component import getUtilitiesFor
 from pyramid.traversal import find_interface
 
@@ -17,6 +18,22 @@ class Poll(BaseContent):
     content_type = 'Poll'
     omit_fields_on_edit = ['name']
     allowed_contexts = ['AgendaItem']
+    
+    #proposals
+    def _get_proposals(self):
+        return self.get_field_value('proposals')
+
+    def _set_proposals(self, value):
+        self.set_field_value('proposals', value)
+
+    proposals = property(_get_proposals, _set_proposals)
+    
+    @property
+    def poll_plugin(self):
+        """ Returns registered poll plugin. (An utility)
+        """
+        name = self.get_field_value('poll_plugin')
+        return getUtility(IPollPlugin, name = name)
 
 
 class PollSchema(colander.MappingSchema):
