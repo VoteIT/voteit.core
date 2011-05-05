@@ -29,7 +29,7 @@
 	        <tal:iterate repeat="obj api.reversed_lineage">
 	            &raquo;
 	            <a tal:attributes="href api.resource_url(obj, request);"
-	               tal:content="obj.get_field_value('title')">Title</a>
+	               tal:content="obj.title">Title</a>
 	        </tal:iterate>
 			</div>
 	    </div>

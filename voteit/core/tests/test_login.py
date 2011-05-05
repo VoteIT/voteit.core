@@ -19,14 +19,14 @@ class FunctionalLoginTests(unittest.TestCase):
         app = main({}, **settings)
         return Browser('http://localhost/', wsgi_app=app)
 
-    def test_failed_login(self):
-        browser = self._make_browser()
-        browser.getLink('Login').click()
-        self.assertEqual(browser.url, 'http://localhost/login')
-        
-        browser.getControl(name='userid').value = 'test'
-        browser.getControl(name='password').value = 'test'
-        browser.getControl('Log In').click()
-        self.assertEqual(browser.url, 'http://localhost/login')
-        self.failUnless('Login failed' in browser.contents)
-        
+#    def test_failed_login(self):
+#        browser = self._make_browser()
+#        browser.getLink('Login').click()
+#        self.assertEqual(browser.url, 'http://localhost/login')
+#        
+#        browser.getControl(name='userid').value = 'test'
+#        browser.getControl(name='password').value = 'test'
+#        browser.getControl('Log In').click()
+#        self.assertEqual(browser.url, 'http://localhost/login')
+#        self.failUnless('Login failed' in browser.contents)
+#        

@@ -35,6 +35,17 @@ class User(BaseContent):
         value = get_sha_password(value)
         self.set_field_value('password', value)
 
+    #Override title for users
+    def _set_title(self, value):
+        #Not used for user content type
+        pass
+    
+    def _get_title(self):
+        out = "%s %s" % ( self.get_field_value('first_name'), self.get_field_value('last_name') )
+        return out.strip()
+
+    title = property(_get_title, _set_title)
+
 
 class AddUserSchema(colander.Schema):
     userid = colander.SchemaNode(colander.String())

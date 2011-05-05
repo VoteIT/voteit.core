@@ -7,15 +7,15 @@ class IBaseContent(Interface):
         It expects validation to be done on the form level.
     """
     
-    storage_key = Attribute("The key for a specific content type."
-                            "Usually the content types own name or similar.")
-    
     def set_field_value(key, value):
         """ Store value in 'key' in storage. """
         
     def get_field_value(key, default=None):
         """ Get value. Return default if it doesn't exist. """
 
+    uid = Attribute('UID')
+    title = Attribute('Gets the title from the title field.'
+                      'Exists so it can be overridden.')
 
 class IUsers(Interface):
     """ Contains all users. """
@@ -28,4 +28,3 @@ class IPoll(Interface):
 
 class IPollPlugin(Interface):
     """ A plugin for a poll. """
-    
