@@ -4,5 +4,5 @@
            tal:attributes="href string:@@add?content_type=$type_name">Name</a>
     </tal:iterate>
 </div>
-<div><a href="./@@edit">Edit</a></div>
-<div><a href="./@@delete">Delete</a></div>
+<div><a tal:attributes="href resource_url(context, request) + '@@edit'">Edit</a></div>
+<div><a tal:attributes="href resource_url(context, request) + '@@delete'">Delete</a></div>

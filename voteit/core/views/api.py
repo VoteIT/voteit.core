@@ -72,5 +72,6 @@ class APIView(object):
         response = {}
         response['addable_types'] = self._get_addable_types(context)
         response['context'] = context
+        response['resource_url'] = resource_url
         return render('templates/action_bar.pt', response, request=request)
     
