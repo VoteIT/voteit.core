@@ -30,7 +30,10 @@ class BaseEdit(object):
         content_type = self.request.params.get('content_type')
         ftis = self.response['api'].ftis
         schema = ftis[content_type].schema().clone()
-
+        update_method = ftis[content_type].update_method
+        if update_method is not None:
+            update_method(schema, self.context)
+            
         self.form = Form(schema, buttons=('add', 'cancel'))
         self.response['form_resources'] = self.form.get_widget_resources()
 
@@ -68,7 +71,10 @@ class BaseEdit(object):
         content_type = self.context.content_type
         ftis = self.response['api'].ftis
         schema = ftis[content_type].schema().clone()
-        
+        update_method = ftis[content_type].update_method
+        if update_method is not None:
+            update_method(schema, self.context)
+
         #Remove unwanted fields like 'name'
         for omit_name in ftis[content_type].omit_fields_on_edit:
             if omit_name in schema:
@@ -116,7 +122,7 @@ class BaseEdit(object):
 
         post = self.request.POST
         if 'delete' in post:
-            if self.context is self.root:
+            if self.context is self.response['api'].root:
                 raise Exception("Can't delete site root")
 
             parent = self.context.__parent__

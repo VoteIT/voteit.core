@@ -2,7 +2,7 @@ from repoze.folder import Folder
 
 from voteit.core.models.agenda_item import AgendaItem, AgendaItemSchema
 from voteit.core.models.meeting import Meeting, MeetingSchema
-from voteit.core.models.poll import Poll, get_poll_schema
+from voteit.core.models.poll import Poll, PollSchema, update_poll_schema
 from voteit.core.models.proposal import Proposal, ProposalSchema
 from voteit.core.models.site import SiteRoot, SiteRootSchema
 from voteit.core.models.user import User
@@ -24,9 +24,10 @@ class TypeInformation(object):
         Any assignment that is None means None, which would mean that
         most types wouldn't be addable.
     """
-    def __init__(self, schema, type_class):
+    def __init__(self, schema, type_class, update_method=None):
         self.schema = schema
         self.type_class = type_class
+        self.update_method = update_method
         for attr in ['omit_fields_on_edit', 'allowed_contexts',]:
             if not hasattr(self.type_class, attr):
                 raise AttributeError("Class %s doesn't have the required attribute '%s'" % (self.type_class, attr))
@@ -44,7 +45,7 @@ class TypeInformation(object):
 ftis = FactoryTypeInformation()
 ftis[AgendaItem.content_type] = TypeInformation(AgendaItemSchema, AgendaItem)
 ftis[Meeting.content_type] = TypeInformation(MeetingSchema, Meeting)
-ftis[Poll.content_type] = TypeInformation(get_poll_schema, Poll)
+ftis[Poll.content_type] = TypeInformation(PollSchema, Poll, update_poll_schema)
 ftis[Proposal.content_type] = TypeInformation(ProposalSchema, Proposal)
 ftis[SiteRoot.content_type] = TypeInformation(SiteRootSchema, SiteRoot)
 ftis[Users.content_type] = TypeInformation(UsersSchema, Users)
