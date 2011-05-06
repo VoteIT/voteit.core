@@ -50,7 +50,7 @@
 
 		            <h3 tal:content="context.title">Title</h3>
 					
-                    <div tal:content="context.get_field_value('description')">Description</div>
+		            <div tal:condition="context.get_field_value('description')" tal:content="context.get_field_value('description')">Description</div>
 					
                     <tal:creators tal:replace="structure api.get_creators_info(context.creators, request)">Creators</tal:creators>
 					
