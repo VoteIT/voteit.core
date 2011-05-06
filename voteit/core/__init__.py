@@ -13,15 +13,13 @@ PROJECTNAME = 'voteit.core'
 VoteITMF = TranslationStringFactory(PROJECTNAME)
 
 #voteit.core package imports
-from voteit.core.models.site import SiteRoot
-from voteit.core.models.users import Users
+from voteit.core.security import groupfinder
 from voteit.core.models.interfaces import IPollPlugin
-
+from voteit.core.bootstrap import bootstrap
 
 def main(global_config, **settings):
     """ This function returns a Pyramid WSGI application.
     """
-    groupfinder = None #FIXME
     authn_policy = AuthTktAuthenticationPolicy(secret='sosecret',
                                                callback=groupfinder)
     authz_policy = ACLAuthorizationPolicy()
@@ -61,9 +59,7 @@ def main(global_config, **settings):
 
 def appmaker(zodb_root):
     if not 'app_root' in zodb_root:
-        app_root = SiteRoot()
-        app_root['users'] = Users()
-        zodb_root['app_root'] = app_root
+        zodb_root['app_root'] = bootstrap() #Returns a site root
         import transaction
         transaction.commit()
     return zodb_root['app_root']
@@ -72,5 +68,3 @@ def appmaker(zodb_root):
 def register_poll_plugin(plugin_class):
     verifyClass(IPollPlugin, plugin_class)
     provideUtility(plugin_class, IPollPlugin, name = plugin_class.name)
-    #provideAdapter(plugin_class, name = plugin_class.name)
-

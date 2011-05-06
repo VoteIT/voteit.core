@@ -3,6 +3,7 @@ from BTrees.OOBTree import OOBTree
 import colander
 import deform
 from zope.interface import implements
+from repoze.folder import unicodify
 
 from voteit.core.models.base_content import BaseContent
 from voteit.core.models.interfaces import IUser
@@ -29,7 +30,7 @@ class User(BaseContent):
     def set_password(self, value):
         """ Encrypt a plaintext password. """
         if not isinstance(value, unicode):
-            raise TypeError("Supplied password was not in Unicode")
+            value = unicodify(value)
         if len(value) < 5:
             raise ValueError("Password must be longer than 4 chars")
         value = get_sha_password(value)
@@ -63,6 +64,7 @@ class EditUserSchema(colander.Schema):
     email = colander.SchemaNode(colander.String())
     first_name = colander.SchemaNode(colander.String())
     last_name = colander.SchemaNode(colander.String())
+
 
 class LoginSchema(colander.Schema):
     userid = colander.SchemaNode(colander.String())

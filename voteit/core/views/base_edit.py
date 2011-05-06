@@ -11,6 +11,7 @@ from slugify import slugify
 
 from voteit.core.models.factory_type_information import ftis
 from voteit.core.views.api import APIView
+from voteit.core.security import ROLE_OWNER, EDIT
 
 DEFAULT_TEMPLATE = "templates/base_edit.pt"
 
@@ -54,6 +55,8 @@ class BaseEdit(object):
             
             if self.api.userid:
                 obj.creators = [self.api.userid]
+                import pdb;pdb.set_trace()
+                obj.add_groups(self.api.userid, (ROLE_OWNER,))
             name = self.generate_slug(appstruct['title'])
             self.context[name] = obj
             
@@ -69,7 +72,7 @@ class BaseEdit(object):
         self.response['form'] = self.form.render()
         return self.response
 
-    @view_config(name="edit", renderer=DEFAULT_TEMPLATE)
+    @view_config(name="edit", renderer=DEFAULT_TEMPLATE, permission=EDIT)
     def edit_form(self):
         content_type = self.context.content_type
         ftis = self.api.ftis

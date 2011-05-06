@@ -2,10 +2,11 @@ from time import strftime
 
 from pyramid.renderers import get_renderer, render
 from pyramid.security import authenticated_userid
-from pyramid.security import principals_allowed_by_permission
 from pyramid.url import resource_url
 from pyramid.location import lineage, inside
 from pyramid.traversal import find_root, find_interface
+from webob.exc import HTTPFound
+from pyramid.exceptions import Forbidden
 
 from voteit.core.models.factory_type_information import ftis
 from voteit.core.models.meeting import Meeting
@@ -20,7 +21,7 @@ class APIView(object):
         self.root = find_root(context)
         setattr(self, self.USER_CACHE_ATTR, {})
 
-        #user-related
+        #Authentication- / User-related
         self.userid = authenticated_userid(request)
         if self.userid:
             self.user_profile = self.get_user(self.userid)

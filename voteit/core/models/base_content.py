@@ -4,20 +4,17 @@ from repoze.folder import Folder
 from zope.interface import implements
 from BTrees.OOBTree import OOBTree
 
-from pyramid.security import Allow, Everyone, Authenticated, Deny,\
-    ALL_PERMISSIONS
+from pyramid.security import DENY_ALL
 
 from voteit.core.models.interfaces import IBaseContent
+from voteit.core.models.security_aware import SecurityAware
 
 
-class BaseContent(Folder):
+class BaseContent(Folder, SecurityAware):
     __doc__ = IBaseContent.__doc__
     implements(IBaseContent)
     
-    #__acl__ = [(Allow, Authenticated, View),
-    #           (Allow, Authenticated, Edit),
-    #           (Allow, Authenticated, Add),
-    #           (Deny, Everyone, ALL_PERMISSIONS),]
+    #__acl__ = DENY_ALL
 
     def __init__(self):
         self.uid = str(uuid4())
