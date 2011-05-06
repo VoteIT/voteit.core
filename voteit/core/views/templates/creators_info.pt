@@ -1,0 +1,11 @@
+<div class="creators" tal:condition="users">
+<tal:iterate repeat="user users">
+
+	<a tal:condition="user"
+	   tal:content="user.title"
+	   tal:attributes="href resource_url(user, request)">
+	    My Full Name
+	</a><span tal:condition="not repeat['user'].end">,</span>
+
+</tal:iterate>
+</div>

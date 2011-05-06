@@ -13,15 +13,17 @@ from voteit.core.models.meeting import Meeting
 
 class APIView(object):
     """ Convenience methods for templates """
+    USER_CACHE_ATTR = '_user_lookup_cache'
         
     def __init__(self, context, request):
         self.resource_url = resource_url
         self.root = find_root(context)
+        setattr(self, self.USER_CACHE_ATTR, {})
 
         #user-related
         self.userid = authenticated_userid(request)
         if self.userid:
-            self.user_profile = self.root.users.get(self.userid)
+            self.user_profile = self.get_user(self.userid)
             self.user_profile_url = resource_url(self.user_profile, request)
         
         #request.application_url
@@ -36,12 +38,20 @@ class APIView(object):
         self.reversed_lineage = tuple(rev)
         self.inside = inside
 
+    def get_user(self, userid):
+        """ Returns the user object. Will also cache each lookup. """
+        cache = getattr(self, self.USER_CACHE_ATTR)
+        if userid in cache:
+            return cache[userid]
+        
+        user = self.root.users.get(userid)
+        cache[userid] = user
+        return user
 
     def format_feed_time(self, value):
         """ Lordag 3 apr 2010, 01:10
         """
         return strftime("%A %d %B %Y, %H:%M", value)
-
     
     def _get_addable_types(self, context):
         context_type = getattr(context, 'content_type', '')
@@ -74,4 +84,19 @@ class APIView(object):
         response['context'] = context
         response['resource_url'] = resource_url
         return render('templates/action_bar.pt', response, request=request)
-    
+
+    def get_creators_info(self, creators, request):
+        """ Return template for a set of creators.
+            The content of creators should be userids
+        """
+        
+        users = set()
+        for userid in creators:
+            user = self.get_user(userid)
+            if user:
+                users.add(user)
+        
+        response = {}
+        response['resource_url'] = resource_url
+        response['users'] = users
+        return render('templates/creators_info.pt', response, request=request)

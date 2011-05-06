@@ -23,12 +23,12 @@ class BaseEdit(object):
         self.request = request
 
         self.response = {}
-        self.response['api'] = APIView(context, request)
+        self.response['api'] = self.api = APIView(context, request)
 
     @view_config(name="add", renderer=DEFAULT_TEMPLATE)
     def add_form(self):
         content_type = self.request.params.get('content_type')
-        ftis = self.response['api'].ftis
+        ftis = self.api.ftis
         schema = ftis[content_type].schema().clone()
         update_method = ftis[content_type].update_method
         if update_method is not None:
@@ -51,6 +51,9 @@ class BaseEdit(object):
             obj = ftis[content_type].type_class()
             for (k, v) in appstruct.items():
                 obj.set_field_value(k, v)
+            
+            if self.api.userid:
+                obj.creators = [self.api.userid]
             name = self.generate_slug(appstruct['title'])
             self.context[name] = obj
             
@@ -69,7 +72,7 @@ class BaseEdit(object):
     @view_config(name="edit", renderer=DEFAULT_TEMPLATE)
     def edit_form(self):
         content_type = self.context.content_type
-        ftis = self.response['api'].ftis
+        ftis = self.api.ftis
         schema = ftis[content_type].schema().clone()
         update_method = ftis[content_type].update_method
         if update_method is not None:
@@ -122,7 +125,7 @@ class BaseEdit(object):
 
         post = self.request.POST
         if 'delete' in post:
-            if self.context is self.response['api'].root:
+            if self.context is self.api.root:
                 raise Exception("Can't delete site root")
 
             parent = self.context.__parent__

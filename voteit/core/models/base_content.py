@@ -39,19 +39,29 @@ class BaseContent(Folder):
         return self._storage.get(key, default)
 
     #uid
-    def _set_uid(self, value):
-        self.__UID__ = value
-        
     def _get_uid(self):
         return getattr(self, '__UID__', None)
     
+    def _set_uid(self, value):
+        self.__UID__ = value
+        
     uid = property(_get_uid, _set_uid)
 
     #title
-    def _set_title(self, value):
-        self.set_field_value('title', value)
-    
     def _get_title(self):
         return self.get_field_value('title')
+    
+    def _set_title(self, value):
+        self.set_field_value('title', value)
 
     title = property(_get_title, _set_title)
+
+    #creators
+    def _get_creators(self):
+        return getattr(self, '__creators__', ())
+
+    def _set_creators(self, value):
+        self.__creators__ = tuple(value)
+    
+    creators = property(_get_creators, _set_creators)
+    

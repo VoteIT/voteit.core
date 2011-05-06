@@ -47,13 +47,20 @@
 				<div metal:define-slot="page_heading"
                      id="context_obj"
 					 tal:condition="not form|True">
-		            <h3 tal:content="context.get_field_value('title')">Title</h3>
-		            <div tal:content="context.get_field_value('description')">Description</div>
+
+		            <h3 tal:content="context.title">Title</h3>
+					
+                    <div tal:content="context.get_field_value('description')">Description</div>
+					
+                    <tal:creators tal:replace="structure api.get_creators_info(context.creators, request)">Creators</tal:creators>
+					
 				</div>
 		    </div>
+			
 			<div class="content_wrapper">
 				<div id="content" metal:define-slot="content"></div>
 		    </div>
+			
 			<div class="content_wrapper">
 		        <div tal:condition="form|False" tal:replace="structure form">Form</div>
 		

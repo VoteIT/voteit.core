@@ -14,8 +14,11 @@ class IBaseContent(Interface):
         """ Get value. Return default if it doesn't exist. """
 
     uid = Attribute('UID')
-    title = Attribute('Gets the title from the title field.'
+    title = Attribute('Gets the title from the title field. '
                       'Exists so it can be overridden.')
+    creators = Attribute('The userids of the creators of this content. '
+                         'Normally just one. ')
+
 
 class IUsers(Interface):
     """ Contains all users. """

@@ -28,3 +28,9 @@ class BaseContentTests(unittest.TestCase):
         obj1 = self._make_obj()
         obj2 = self._make_obj()
         self.assertNotEqual(obj1, obj2)
+
+    def test_creators(self):
+        obj = self._make_obj()
+        self.assertEqual(obj.creators, ())
+        obj.creators = ['franz']
+        self.assertEqual(obj.creators, ('franz',))
