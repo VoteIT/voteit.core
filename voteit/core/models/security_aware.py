@@ -1,6 +1,8 @@
 from BTrees.OOBTree import OOBTree
 from pyramid.location import lineage
+from zope.interface import implements
 
+from voteit.core.models.interfaces import ISecurityAware
 
 NON_INHERITED_GROUPS = ('role:Owner',)
 
@@ -13,6 +15,7 @@ class SecurityAware(object):
     """ Mixin for all content that should handle groups.
         Principal in this terminology is a userid or a group id.
     """
+    implements(ISecurityAware)
 
     @property
     def _groups(self):
