@@ -6,7 +6,7 @@ from voteit.core import VoteITMF as _
 from voteit.core.security import ROLE_ADMIN
 
 
-def bootstrap():
+def bootstrap_voteit():
     """ Bootstrap site root.
         Will add:
         - Site root

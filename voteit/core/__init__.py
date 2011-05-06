@@ -15,7 +15,7 @@ VoteITMF = TranslationStringFactory(PROJECTNAME)
 #voteit.core package imports
 from voteit.core.security import groupfinder
 from voteit.core.models.interfaces import IPollPlugin
-from voteit.core.bootstrap import bootstrap
+from voteit.core.bootstrap import bootstrap_voteit
 
 def main(global_config, **settings):
     """ This function returns a Pyramid WSGI application.
@@ -59,7 +59,7 @@ def main(global_config, **settings):
 
 def appmaker(zodb_root):
     if not 'app_root' in zodb_root:
-        zodb_root['app_root'] = bootstrap() #Returns a site root
+        zodb_root['app_root'] = bootstrap_voteit() #Returns a site root
         import transaction
         transaction.commit()
     return zodb_root['app_root']
