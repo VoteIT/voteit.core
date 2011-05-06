@@ -2,6 +2,7 @@ from pyramid.view import view_config
 from pyramid.renderers import get_renderer
 from pyramid.traversal import find_root, find_interface
 from pyramid.url import resource_url
+from pyramid.security import has_permission
 
 import colander
 from deform import Form
@@ -12,6 +13,7 @@ from slugify import slugify
 from voteit.core.models.factory_type_information import ftis
 from voteit.core.views.api import APIView
 from voteit.core.security import ROLE_OWNER, EDIT
+from pyramid.exceptions import Forbidden
 
 DEFAULT_TEMPLATE = "templates/base_edit.pt"
 
@@ -30,6 +32,12 @@ class BaseEdit(object):
     def add_form(self):
         content_type = self.request.params.get('content_type')
         ftis = self.api.ftis
+        
+        #Permission check
+        add_permission = getattr(ftis[content_type], 'add_permission', None)
+        if not has_permission(add_permission, self.context, self.request):
+            raise Forbidden("You're not allowed to add '%s' in this context." % content_type)
+        
         schema = ftis[content_type].schema().clone()
         update_method = ftis[content_type].update_method
         if update_method is not None:
@@ -55,7 +63,6 @@ class BaseEdit(object):
             
             if self.api.userid:
                 obj.creators = [self.api.userid]
-                import pdb;pdb.set_trace()
                 obj.add_groups(self.api.userid, (ROLE_OWNER,))
             name = self.generate_slug(appstruct['title'])
             self.context[name] = obj

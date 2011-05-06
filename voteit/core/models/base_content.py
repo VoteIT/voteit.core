@@ -4,17 +4,18 @@ from repoze.folder import Folder
 from zope.interface import implements
 from BTrees.OOBTree import OOBTree
 
-from pyramid.security import DENY_ALL
-
 from voteit.core.models.interfaces import IBaseContent
 from voteit.core.models.security_aware import SecurityAware
+
 
 
 class BaseContent(Folder, SecurityAware):
     __doc__ = IBaseContent.__doc__
     implements(IBaseContent)
-    
-    #__acl__ = DENY_ALL
+    add_permission = None
+    content_type = None
+    omit_fields_on_edit = ()
+    allowed_contexts = ()
 
     def __init__(self):
         self.uid = str(uuid4())
@@ -52,6 +53,14 @@ class BaseContent(Folder, SecurityAware):
         self.set_field_value('title', value)
 
     title = property(_get_title, _set_title)
+
+    def _get_description(self):
+        return self.get_field_value('description')
+    
+    def _set_description(self, value):
+        self.set_field_value('description', value)
+
+    description = property(_get_description, _set_description)
 
     #creators
     def _get_creators(self):

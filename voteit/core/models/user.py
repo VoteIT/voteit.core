@@ -4,11 +4,13 @@ import colander
 import deform
 from zope.interface import implements
 from repoze.folder import unicodify
+from pyramid.security import Allow
 
 from voteit.core.models.base_content import BaseContent
 from voteit.core.models.interfaces import IUser
 from voteit.core import VoteITMF as _
-
+from voteit.core import security
+from voteit.core.security import ADD_USER
 
 def get_sha_password(password):
     """ Encode a plaintext password to sha1. """
@@ -21,8 +23,12 @@ class User(BaseContent):
     """ Content type for a user. Usable as a profile page. """
     implements(IUser)
     content_type = 'User'
-    allowed_contexts = ['Users']
-    omit_fields_on_edit = [] #N/A for this content type
+    allowed_contexts = ('Users',)
+    omit_fields_on_edit = () #N/A for this content type
+    add_permission = ADD_USER
+    
+    __acl__ = [(Allow, security.ROLE_ADMIN, security.EDIT),
+               (Allow, security.ROLE_OWNER, [security.EDIT, security.CHANGE_PASSWORD])]
 
     def get_password(self):
         return self.get_field_value('password')

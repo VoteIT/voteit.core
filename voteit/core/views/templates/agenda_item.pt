@@ -10,7 +10,7 @@
 	    <tal:iterate condition="proposals" repeat="proposal proposals">
 	    	<div tal:replace="structure api.get_action_bar(proposal, request)">Action bar</div>
             <h3 tal:content="proposal.title">Title</h3>
-            <div tal:content="proposal.get_field_value('description')">Title</div>
+            <div tal:content="proposal.description">Description</div>
             <tal:creators tal:replace="structure api.get_creators_info(proposal.creators, request)">Creators</tal:creators>
 
 	    </tal:iterate>

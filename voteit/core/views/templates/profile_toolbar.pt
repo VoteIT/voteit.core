@@ -8,7 +8,7 @@
 		
 		<tal:authenticated condition="api.userid">
 			<!-- Regular authenticated user actions -->
-		    <a tal:content="api.userid"
+		    <a tal:content="api.user_profile.title"
 			   tal:attributes="href api.user_profile_url">Userid</a>
 			<a tal:attributes="href api.user_profile_url + '@@change_password'">Change password</a>
 			<a tal:attributes="href request.application_url + '/@@logout'">Logout</a>

@@ -9,6 +9,7 @@ from voteit.core.models.agenda_item import AgendaItem
 from voteit.core.models.base_content import BaseContent
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IPollPlugin
+from voteit.core.security import ADD_POLL
 
 
 class Poll(BaseContent):
@@ -16,8 +17,9 @@ class Poll(BaseContent):
     implements(IPoll)
     
     content_type = 'Poll'
-    omit_fields_on_edit = ['name']
-    allowed_contexts = ['AgendaItem']
+    omit_fields_on_edit = ('name',)
+    allowed_contexts = ('AgendaItem',)
+    add_permission = ADD_POLL
     
     #proposals
     def _get_proposals(self):

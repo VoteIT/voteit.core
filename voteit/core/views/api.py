@@ -1,7 +1,7 @@
 from time import strftime
 
 from pyramid.renderers import get_renderer, render
-from pyramid.security import authenticated_userid
+from pyramid.security import authenticated_userid, has_permission
 from pyramid.url import resource_url
 from pyramid.location import lineage, inside
 from pyramid.traversal import find_root, find_interface
@@ -30,7 +30,7 @@ class APIView(object):
         #request.application_url
         self.main_template = get_renderer('templates/main.pt').implementation()
         self.ftis = ftis
-        self.addable_types = self._get_addable_types(context)
+        self.addable_types = self._get_addable_types(context, request)
         self.navigation = get_renderer('templates/navigation.pt').implementation()
         self.profile_toolbar = get_renderer('templates/profile_toolbar.pt').implementation()
         self.lineage = lineage(context)
@@ -38,6 +38,7 @@ class APIView(object):
         [rev.insert(0, x) for x in self.lineage]
         self.reversed_lineage = tuple(rev)
         self.inside = inside
+        
 
     def get_user(self, userid):
         """ Returns the user object. Will also cache each lookup. """
@@ -54,16 +55,17 @@ class APIView(object):
         """
         return strftime("%A %d %B %Y, %H:%M", value)
     
-    def _get_addable_types(self, context):
+    def _get_addable_types(self, context, request):
         context_type = getattr(context, 'content_type', '')
         if not context_type:
-            return []
+            return ()
         
         addable_names = set()
         for type in self.ftis.values():
-            if context_type in type.allowed_contexts:
+            if context_type in type.allowed_contexts and \
+                has_permission(type.add_permission, context, request):
                 addable_names.add(type.type_class.content_type)
-        return addable_names
+        return tuple(addable_names)
 
     #navigation stuff
     def find_meeting(self, context):
@@ -81,7 +83,7 @@ class APIView(object):
     def get_action_bar(self, context, request):
         """ Get the action-bar for a specific context """
         response = {}
-        response['addable_types'] = self._get_addable_types(context)
+        response['addable_types'] = self._get_addable_types(context, request)
         response['context'] = context
         response['resource_url'] = resource_url
         return render('templates/action_bar.pt', response, request=request)

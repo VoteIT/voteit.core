@@ -10,6 +10,7 @@ from voteit.core.models.user import AddUserSchema, User, EditUserSchema,\
 from voteit.core.models.users import Users
 from voteit.core.views.api import APIView
 from voteit.core.models.site import SiteRoot
+from voteit.core.security import CHANGE_PASSWORD, ROLE_OWNER
 
 DEFAULT_TEMPLATE = "templates/base_edit.pt"
 
@@ -58,7 +59,10 @@ class UsersView(object):
             
             for (k, v) in appstruct.items():
                 obj.set_field_value(k, v)
-            
+
+            #The user should be owner of the user object
+            obj.add_groups(name, (ROLE_OWNER,))
+
             #self.context is the site root. Users are stored in the users-property
             self.context[name] = obj
             
@@ -165,7 +169,7 @@ class UsersView(object):
         self.response['form'] = self.form.render()
         return self.response
 
-    @view_config(context=User, name="change_password", renderer=DEFAULT_TEMPLATE)
+    @view_config(context=User, name="change_password", renderer=DEFAULT_TEMPLATE, permission=CHANGE_PASSWORD)
     def password_form(self):
         schema = ChangePasswordSchema()
 

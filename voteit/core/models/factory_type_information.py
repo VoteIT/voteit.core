@@ -28,9 +28,6 @@ class TypeInformation(object):
         self.schema = schema
         self.type_class = type_class
         self.update_method = update_method
-        for attr in ['omit_fields_on_edit', 'allowed_contexts',]:
-            if not hasattr(self.type_class, attr):
-                raise AttributeError("Class %s doesn't have the required attribute '%s'" % (self.type_class, attr))
     
     @property
     def omit_fields_on_edit(self):
@@ -40,6 +37,9 @@ class TypeInformation(object):
     def allowed_contexts(self):
         return self.type_class.allowed_contexts
 
+    @property
+    def add_permission(self):
+        return self.type_class.add_permission
 
 #FIXME: This is temporary and should be a generic utility or similar later        
 ftis = FactoryTypeInformation()
