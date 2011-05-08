@@ -8,6 +8,7 @@ ROLE_VIEWER = 'role:Viewer'
 ROLE_OWNER = 'role:Owner'
 
 #Global Permissions
+VIEW = 'View'
 EDIT = 'Edit'
 REGISTER = 'Register'
 CHANGE_PASSWORD = 'Change Password'

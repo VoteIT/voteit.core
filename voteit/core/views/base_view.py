@@ -4,6 +4,7 @@ from pyramid.renderers import get_renderer
 from pyramid.traversal import find_root, find_interface
 
 from voteit.core.views.api import APIView
+from voteit.core.security import VIEW
 
 DEFAULT_TEMPLATE = "templates/base_view.pt"
 
@@ -19,7 +20,7 @@ class BaseView(object):
         self.response['api'] = APIView(context, request)
         self.response['show_content_listing'] = True
 
-    @view_config(renderer=DEFAULT_TEMPLATE)
+    @view_config(renderer=DEFAULT_TEMPLATE, permission=VIEW)
     def dynamic_view(self):
         """ """
         return self.response
