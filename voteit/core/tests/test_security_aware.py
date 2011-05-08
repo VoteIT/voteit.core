@@ -22,6 +22,11 @@ class SecurityAwareTests(unittest.TestCase):
         
         return DummyContent()
 
+    def _bootstrap_root(self):
+        """ Create a default app root"""
+        from voteit.core.bootstrap import bootstrap_voteit
+        return bootstrap_voteit()
+
     def test_verify_object(self):
         from zope.interface.verify import verifyObject
         from voteit.core.models.interfaces import ISecurityAware
@@ -51,3 +56,22 @@ class SecurityAwareTests(unittest.TestCase):
     def test_add_bad_group(self):
         obj = self._make_obj()
         self.assertRaises(ValueError, obj.add_groups, 'tester', ['Hipsters'])
+
+    def test_get_security_appstruct(self):
+        obj = self._make_obj()
+        self.assertEqual(obj.get_security_appstruct(), {'userids_and_groups': []})
+        obj.set_groups('robin', ['role:Admin', 'group:Hipsters'])
+        self.assertEqual(obj.get_security_appstruct(),
+                         {'userids_and_groups': [{'userid': 'robin', 'groups': ('group:Hipsters', 'role:Admin')}]})
+
+    def test_update_from_form(self):
+        obj = self._make_obj()
+        obj.update_from_form([{'userid': 'robin', 'groups': ('group:DeathCab', 'role:Moderator')}])
+        self.assertEqual(obj._groups['robin'], ('group:DeathCab', 'role:Moderator'))
+
+    def test_list_all_groups(self):
+        obj = self._make_obj()
+        obj.add_groups('tester1', ['group:Hipsters'])
+        obj.add_groups('tester2', ['role:Confused', 'group:Hipsters'])
+        obj.add_groups('tester3', ['role:Confused', 'group:PeterLicht'])
+        self.assertEqual(obj.list_all_groups(), set(('group:Hipsters', 'role:Confused', 'group:PeterLicht')) )

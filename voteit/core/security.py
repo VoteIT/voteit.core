@@ -7,11 +7,13 @@ ROLE_VOTER = 'role:Voter'
 ROLE_VIEWER = 'role:Viewer'
 ROLE_OWNER = 'role:Owner'
 
+
 #Global Permissions
 VIEW = 'View'
 EDIT = 'Edit'
 REGISTER = 'Register'
 CHANGE_PASSWORD = 'Change Password'
+MANAGE_GROUPS = 'Manage Groups'
 
 #Add permissions
 #Note: For add permissions, check each content types class

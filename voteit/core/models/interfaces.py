@@ -41,6 +41,19 @@ class ISecurityAware(Interface):
         """ Set groups for a principal in this context. (This clears any previous setting)
         """
 
+    def update_from_form(value):
+        """ Set permissions from a list of dicts with the following layout:
+            {'userid':<userid>,'groups':<set of groups that the user should have>}.
+        """
+
+    def get_security_appstruct():
+        """ Return the current settings in a structure that is usable in a deform form.
+        """
+
+    def list_all_groups():
+        """ Returns a set of all groups in this context. """
+
+
 
 class IUsers(Interface):
     """ Contains all users. """

@@ -12,8 +12,8 @@ class Meeting(BaseContent):
     allowed_contexts = ('SiteRoot',)
     add_permission = security.ADD_MEETING
 
-    __acl__ = [(Allow, security.ROLE_MODERATOR, (security.ALL_ADD_PERMISSIONS, security.VIEW, security.EDIT,)),
-               (Allow, security.ROLE_ADMIN, (security.ALL_ADD_PERMISSIONS, security.VIEW, security.EDIT,)),
+    __acl__ = [(Allow, security.ROLE_MODERATOR, security.ALL_ADD_PERMISSIONS),
+               (Allow, security.ROLE_MODERATOR, (security.VIEW, security.EDIT, security.MANAGE_GROUPS)),
                (Allow, security.ROLE_PARTICIPANT, (security.VIEW, security.ADD_PROPOSAL,)),
                (Allow, security.ROLE_VIEWER, (security.VIEW,)),
                DENY_ALL,
