@@ -1,6 +1,6 @@
 import colander
 
-from pyramid.security import Allow, Deny, DENY_ALL
+from pyramid.security import Allow, Deny, DENY_ALL, ALL_PERMISSIONS
 from voteit.core.models.base_content import BaseContent
 from voteit.core import security
 
@@ -15,6 +15,7 @@ class Meeting(BaseContent):
     __acl__ = [(Allow, security.ROLE_MODERATOR, security.ALL_ADD_PERMISSIONS),
                (Allow, security.ROLE_MODERATOR, (security.VIEW, security.EDIT, security.MANAGE_GROUPS)),
                (Allow, security.ROLE_PARTICIPANT, (security.VIEW, security.ADD_PROPOSAL,)),
+               (Allow, security.ROLE_ADMIN, ALL_PERMISSIONS),
                (Allow, security.ROLE_VIEWER, (security.VIEW,)),
                DENY_ALL,
                ]

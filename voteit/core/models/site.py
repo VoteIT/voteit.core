@@ -1,5 +1,5 @@
 import colander
-from pyramid.security import Allow, Everyone, AllPermissionsList
+from pyramid.security import Allow, Everyone, ALL_PERMISSIONS
 from pyramid.security import DENY_ALL
 
 from voteit.core import security
@@ -15,7 +15,7 @@ class SiteRoot(BaseContent):
     omit_fields_on_edit = ()
     allowed_contexts = ()
 
-    __acl__ = [(Allow, security.ROLE_ADMIN, AllPermissionsList()),
+    __acl__ = [(Allow, security.ROLE_ADMIN, ALL_PERMISSIONS),
                (Allow, security.ROLE_OWNER, (security.EDIT, security.CHANGE_PASSWORD)),
                (Allow, Everyone, security.VIEW),
                DENY_ALL]
