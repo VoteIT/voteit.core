@@ -97,7 +97,7 @@ class SecurityAware(object):
         [groups.update(x) for x in self._groups.values()]
         return groups
 
-ROOT_ROLES = ((security.ROLE_ADMIN, _(u'Administrator'),))
+ROOT_ROLES = ((security.ROLE_ADMIN, _(u'Administrator')),)
 MEETING_ROLES = ((security.ROLE_MODERATOR, _(u'Moderator')),
                  (security.ROLE_PARTICIPANT, _(u'Participant')),
                  (security.ROLE_VOTER, _(u'Voter')),
