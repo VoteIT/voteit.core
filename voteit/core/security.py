@@ -22,12 +22,14 @@ ADD_MEETING = 'Add Meeting'
 ADD_POLL = 'Add Poll'
 ADD_PROPOSAL = 'Add Proposal'
 ADD_USER = 'Add User'
+ADD_VOTE = 'Add Vote'
 
 ALL_ADD_PERMISSIONS = (ADD_AGENDA_ITEM,
                        ADD_MEETING,
                        ADD_POLL,
                        ADD_PROPOSAL,
-                       ADD_USER,)
+                       ADD_USER,
+                       ADD_VOTE,)
 
 def groupfinder(name, request):
     """ Get groups for the current user. See models/security_aware.py

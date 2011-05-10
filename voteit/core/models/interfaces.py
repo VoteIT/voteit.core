@@ -23,6 +23,7 @@ class IBaseContent(Interface):
     omit_fields_on_edit = Attribute('Remove the following keys from appstruct on edit. See base_edit.py for instance.')
     allowed_contexts = Attribute('Which contexts is this type allowed in?')
 
+
 class ISecurityAware(Interface):
     """ Mixin for all content that should handle groups.
         Principal in this terminology is a userid or a group id.
@@ -58,15 +59,68 @@ class ISecurityAware(Interface):
 class IUsers(Interface):
     """ Contains all users. """
 
+
 class IUser(Interface):
     """ A user object. """
 
+
 class IPoll(Interface):
     """ Poll content type. """
-    
-    proposals = Attribute("Contains a set of UIDs for all proposals this poll is about.")
-    poll_plugin = Attribute("Returns the selected plugin utility.")
+    proposal_uids = Attribute("Contains a set of UIDs for all proposals this poll is about.")
+    poll_plugin_name = Attribute("Returns the name of the selected voting utility.")
+
+    def get_proposal_objects():
+        """ Return all proposal objects resigered in this poll.
+        """
+
+    def get_voted_userids():
+        """ Returns userids of all who've voted in this poll.
+        """
+
+    def get_ballots():
+        """ Returns unique ballots and their counts. In the format:
+            [{'ballot':x,'count':y}, <etc...>]
+            The x in ballot can be any type of object. It's just what
+            this polls plugin considers to be a vote.
+        """
+
+    def get_poll_result():
+        """ Get a result of this poll from the polls plugin.
+        """
+
+class IVote(Interface):
+    """ Vote content type.
+    """
+
+    def set_vote_data(value):
+        """ Set vote data. The data itself could be anything passed
+            along by the poll plugin.
+        """
+        
+    def get_vote_data():
+        """ Get the data. The poll plugin should know what to make of it.
+        """
 
 
 class IPollPlugin(Interface):
-    """ A plugin for a poll. """
+    """ A plugin for a poll.
+    """
+
+    def get_vote_schema(poll):
+        """ Return the schema of how a vote should be structured.
+            This is used to render a voting form.
+        """
+    
+    def get_vote_class():
+        """ Get the vote class to use for this poll. Normally it's the
+            voteit.core.models.vote.Vote class.
+        """
+        
+    def get_settings_schema(poll):
+        """ Get an instance of the schema used to render a form for editing settings.
+        """
+
+    def render_result(poll, ballots):
+        """ Return rendered html with result display. Called by the poll view
+            when the poll has finished.
+        """

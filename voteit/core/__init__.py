@@ -50,10 +50,7 @@ def main(global_config, **settings):
 
     if poll_plugins is not None:
         for poll_plugin in poll_plugins.strip().splitlines():
-            try:
-                config.include(poll_plugin)
-            except ImportError:
-                raise ImportError("Couldn't import a poll plugin with name: '%s'" % poll_plugin)
+            config.include(poll_plugin)
 
     return config.make_wsgi_app()
 
@@ -66,5 +63,6 @@ def appmaker(zodb_root):
 
 
 def register_poll_plugin(plugin_class):
+    """ Verify and register a Poll Plugin class. """
     verifyClass(IPollPlugin, plugin_class)
-    provideUtility(plugin_class, IPollPlugin, name = plugin_class.name)
+    provideUtility(plugin_class(), IPollPlugin, name = plugin_class.name)

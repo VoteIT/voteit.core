@@ -18,8 +18,8 @@
     </script>
 </tal:deform>
 
-
-
-
+<div metal:fill-slot="content">
+    <div tal:content="structure poll_result">Poll result</div>
+</div>
 
 </html>

@@ -3,12 +3,14 @@ import deform
 from zope.interface import implements
 from zope.component import getUtility
 from zope.component import getUtilitiesFor
-from pyramid.traversal import find_interface
+from pyramid.traversal import find_interface, find_root
+from BTrees.OOBTree import OOBTree
 
 from voteit.core.models.agenda_item import AgendaItem
 from voteit.core.models.base_content import BaseContent
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IPollPlugin
+from voteit.core.models.interfaces import IVote
 from voteit.core.security import ADD_POLL
 
 
@@ -22,20 +24,67 @@ class Poll(BaseContent):
     add_permission = ADD_POLL
     
     #proposals
-    def _get_proposals(self):
+    def _get_proposal_uids(self):
         return self.get_field_value('proposals')
 
-    def _set_proposals(self, value):
+    def _set_proposal_uids(self, value):
         self.set_field_value('proposals', value)
 
-    proposals = property(_get_proposals, _set_proposals)
-    
+    proposal_uids = property(_get_proposal_uids, _set_proposal_uids)
+
     @property
-    def poll_plugin(self):
-        """ Returns registered poll plugin. (An utility)
+    def poll_plugin_name(self):
+        """ Returns registered poll plugin name. Can be used to get reigstered utility
         """
-        name = self.get_field_value('poll_plugin')
-        return getUtility(IPollPlugin, name = name)
+        return self.get_field_value('poll_plugin')
+
+    def get_proposal_objects(self):
+        agenda_item = find_interface(self, AgendaItem)
+        proposals = set()
+        for item in agenda_item.values():
+            if item.uid in self.proposal_uids:
+                proposals.add(item)
+        return proposals
+
+    def get_all_votes(self):
+        """ Returns all votes in this context. """
+        return frozenset([x for x in self.values() if IVote.providedBy(x)])
+
+    def get_voted_userids(self):
+        """ Returns userids of all users who've voted. """
+        userids = [x.creators[0] for x in self.get_all_votes()]
+        return frozenset(userids)
+    
+    def get_ballots(self):
+        ballot_counter = Ballots()
+        for vote in self.get_all_votes():
+            ballot_counter.add(vote.get_vote_data())
+        return ballot_counter.get_result()
+
+    def render_poll_result(self):
+        """ Render poll result. Calls plugin to calculate result.
+        """
+        ballots = self.get_ballots()
+        poll_plugin = getUtility(IPollPlugin, name = self.poll_plugin_name)
+        return poll_plugin.render_result(self, ballots)
+        
+
+class Ballots(object):
+    """ Simple object to help counting votes. It's not addable anywhere."""
+
+    def __init__(self):
+        self.ballots = OOBTree()
+
+    def get_result(self):
+        """ Return data formated as a dictionary. """
+        return [{'ballot':x,'count':y} for x, y in self.ballots.items()]
+    
+    def add(self, value):
+        """ Add a dict of results - a ballot - to the pool. Append and increase counter. """
+        if value in self.ballots:
+            self.ballots[value] += 1
+        else:
+            self.ballots[value] = 1
 
 
 class PollSchema(colander.MappingSchema):

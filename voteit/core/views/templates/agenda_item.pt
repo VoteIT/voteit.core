@@ -5,6 +5,7 @@
       metal:use-macro="api.main_template.macros['master']">
 <body>
 	<div metal:fill-slot="content">
+		<h1>Proposals</h1>
 	    <tal:def define="proposals api.get_content(context, content_type='Proposal')">
 	    	
 	    <tal:iterate condition="proposals" repeat="proposal proposals">
@@ -20,6 +21,30 @@
 		</tal:no_proposals>
 		
 	    </tal:def>
+
+        <h1>Polls</h1>
+        <tal:def define="polls api.get_content(context, content_type='Poll')">
+            
+        <tal:iterate condition="polls" repeat="poll polls">
+            <div tal:replace="structure api.get_action_bar(poll, request)">Action bar</div>
+            <h3 tal:content="poll.title">Title</h3>
+            <div tal:content="poll.description">Description</div>
+
+        </tal:iterate>
+        
+        <tal:no_polls condition="not polls">
+            <h3>No polls yet</h3>
+        </tal:no_polls>
+        
+        </tal:def>
+
+
+
+
+
+
+
+
 	</div>
 </body>
 </html>
