@@ -4,9 +4,8 @@ from pyramid.authorization import ACLAuthorizationPolicy
 from pyramid.authentication import AuthTktAuthenticationPolicy
 from repoze.zodbconn.finder import PersistentApplicationFinder
 from zope.component import getGlobalSiteManager
-from zope.component.globalregistry import provideAdapter
-from zope.component.globalregistry import provideUtility
 from zope.interface.verify import verifyClass
+from pyramid.threadlocal import get_current_registry
 
 PROJECTNAME = 'voteit.core'
 #Must be before all of this packages imports
@@ -16,6 +15,7 @@ VoteITMF = TranslationStringFactory(PROJECTNAME)
 from voteit.core.security import groupfinder
 from voteit.core.models.interfaces import IPollPlugin
 from voteit.core.bootstrap import bootstrap_voteit
+
 
 def main(global_config, **settings):
     """ This function returns a Pyramid WSGI application.
@@ -31,6 +31,7 @@ def main(global_config, **settings):
     finder = PersistentApplicationFinder(zodb_uri, appmaker)
     def get_root(request):
         return finder(request.environ)
+    
     globalreg = getGlobalSiteManager()
     config = Configurator(registry=globalreg)
     config.setup_registry(settings=settings,
@@ -38,6 +39,8 @@ def main(global_config, **settings):
                           authentication_policy=authn_policy,
                           authorization_policy=authz_policy
                           )
+    config.hook_zca()
+    
     config.add_static_view('static', '%s:static' % PROJECTNAME)
     config.add_static_view('deform', 'deform:static')
     
@@ -52,7 +55,7 @@ def main(global_config, **settings):
         for poll_plugin in poll_plugins.strip().splitlines():
             config.include(poll_plugin)
 
-    return config.make_wsgi_app()
+    return config.make_wsgi_app()    
 
 def appmaker(zodb_root):
     if not 'app_root' in zodb_root:
@@ -62,7 +65,13 @@ def appmaker(zodb_root):
     return zodb_root['app_root']
 
 
-def register_poll_plugin(plugin_class):
-    """ Verify and register a Poll Plugin class. """
-    verifyClass(IPollPlugin, plugin_class)
-    provideUtility(plugin_class(), IPollPlugin, name = plugin_class.name)
+def register_poll_plugin(plugin_class, verify=True, registry=None):
+    """ Verify and register a Poll Plugin class.
+        This is a very expensive method to run - it should only be used during
+        startup or testing!
+    """
+    if verify:
+        verifyClass(IPollPlugin, plugin_class)
+    if registry is None:
+        registry = get_current_registry()
+    registry.registerUtility(plugin_class(), IPollPlugin, name = plugin_class.name)
