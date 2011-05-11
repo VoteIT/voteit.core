@@ -70,7 +70,9 @@ class Poll(BaseContent):
         
 
 class Ballots(object):
-    """ Simple object to help counting votes. It's not addable anywhere."""
+    """ Simple object to help counting votes. It's not addable anywhere.
+        Should be treatable as an internal object for polls.
+    """
 
     def __init__(self):
         self.ballots = OOBTree()

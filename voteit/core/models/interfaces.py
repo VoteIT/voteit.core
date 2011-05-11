@@ -84,8 +84,8 @@ class IPoll(Interface):
             this polls plugin considers to be a vote.
         """
 
-    def get_poll_result():
-        """ Get a result of this poll from the polls plugin.
+    def render_poll_result():
+        """ Render poll result. Calls plugin to calculate result.
         """
 
 class IVote(Interface):

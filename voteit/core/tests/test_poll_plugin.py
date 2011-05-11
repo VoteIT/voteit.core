@@ -1,7 +1,6 @@
 import unittest
 
 from pyramid import testing
-import colander
 from zope.interface.verify import verifyObject
 from zope.interface.exceptions import BrokenImplementation
 from zope.component import queryUtility
