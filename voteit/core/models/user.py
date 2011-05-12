@@ -70,6 +70,9 @@ class EditUserSchema(colander.Schema):
     email = colander.SchemaNode(colander.String())
     first_name = colander.SchemaNode(colander.String())
     last_name = colander.SchemaNode(colander.String())
+    biography = colander.SchemaNode(colander.String(),
+                widget = deform.widget.TextAreaWidget(rows=10, cols=60),
+                default = u'')
 
 
 class LoginSchema(colander.Schema):

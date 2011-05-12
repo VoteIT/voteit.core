@@ -70,3 +70,28 @@ a {
 }
 .browse_up {
 }
+#path_bar {
+	float: left;
+}
+#action_bar {
+	float: right;
+}
+#action_bar div {
+	display: inline;
+}
+
+#profile_toolbar ul {
+	float: right;
+	margin-top: -0.6em;
+}
+#profile_toolbar ul li { 
+	float: left;
+	margin-left: 0.5em;
+}
+#profile_toolbar ul li ul {
+	position: absolute;
+	display: none;
+	margin: 0 0 0 -1px;
+	padding: 0;
+	list-style: none
+}

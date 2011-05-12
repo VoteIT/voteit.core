@@ -132,6 +132,9 @@ class UsersView(object):
     def list_users(self):
         return self.response
 
+    @view_config(context=User, renderer='templates/view_user.pt')
+    def view_users(self):
+        return self.response
     @view_config(context=User, name="edit", renderer=DEFAULT_TEMPLATE)
     def edit_form(self):
         schema = EditUserSchema()

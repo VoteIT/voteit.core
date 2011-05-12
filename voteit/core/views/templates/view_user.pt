@@ -1,0 +1,16 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      metal:use-macro="api.main_template.macros['master']">
+<body>
+<h1 metal:fill-slot="page_heading" tal:content="context.title">User</h1>
+<div metal:fill-slot="content">
+	<div>
+		<a tal:attributes="href api.user_profile_url + '@@change_password'">Change password</a>
+	</div>
+	<div>Email: <span tal:content="context.get_field_value('email')"></span></div>
+	<div>Biography: <span tal:content="context.get_field_value('biography')"></span></div>
+</div>
+</body>
+</html>

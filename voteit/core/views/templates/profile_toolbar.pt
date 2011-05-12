@@ -1,23 +1,27 @@
 <div id="profile_toolbar" metal:define-macro="profile_toolbar">
 	<div class="content_wrapper">
+		<ul>
 		<tal:administrator condition="api.userid">
 			<!-- Administrator actions -->
-            <a tal:attributes="href request.application_url + '/users/@@list'">Manage users</a>
-			
+			<li>
+				<a href="#">Manage</a>
+				<ul>
+					<li><a tal:attributes="href request.application_url + '/users/@@list'">Users</a></li>
+				</ul>
+			</li>
 		</tal:administrator>
 		
 		<tal:authenticated condition="api.userid">
 			<!-- Regular authenticated user actions -->
-		    <a tal:content="api.user_profile.title"
-			   tal:attributes="href api.user_profile_url">Userid</a>
-			<a tal:attributes="href api.user_profile_url + '@@change_password'">Change password</a>
-			<a tal:attributes="href request.application_url + '/@@logout'">Logout</a>
+		    <li><a tal:attributes="href api.user_profile_url">Profile</a></li>
+			<li><a tal:attributes="href request.application_url + '/@@logout'">Logout (<span tal:replace="api.userid">userid</span>)</a></li>
 		</tal:authenticated>
 		
 		<tal:anon condition="not api.userid">
 			<!-- Unauthenticated user actions -->
-            <a tal:attributes="href request.application_url + '/@@register'">Register</a>
-            <a tal:attributes="href request.application_url + '/@@login'">Login</a>
+            <li><a tal:attributes="href request.application_url + '/@@register'">Register</a></li>
+            <li><a tal:attributes="href request.application_url + '/@@login'">Login</a></li>
 		</tal:anon>
+		</ul>
 	</div>
 </div>
