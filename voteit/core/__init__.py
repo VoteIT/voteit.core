@@ -7,6 +7,7 @@ from zope.component import getGlobalSiteManager
 from zope.component.globalregistry import provideAdapter
 from zope.component.globalregistry import provideUtility
 from zope.interface.verify import verifyClass
+from zope.configuration import xmlconfig
 
 PROJECTNAME = 'voteit.core'
 #Must be before all of this packages imports
@@ -51,6 +52,12 @@ def main(global_config, **settings):
     if poll_plugins is not None:
         for poll_plugin in poll_plugins.strip().splitlines():
             config.include(poll_plugin)
+
+    # load workflow
+    xmlconfig.file('src/voteit.core/voteit/core/workflows/meeting.xml', execute=True)
+    xmlconfig.file('src/voteit.core/voteit/core/workflows/agenda_item.xml', execute=True)
+    xmlconfig.file('src/voteit.core/voteit/core/workflows/proposal.xml', execute=True)
+    xmlconfig.file('src/voteit.core/voteit/core/workflows/poll.xml', execute=True)
 
     return config.make_wsgi_app()
 

@@ -1,14 +1,25 @@
 <div id="action_bar">
-	<div id="add_content" tal:condition="addable_types|False">
-	    <tal:iterate tal:repeat="type_name addable_types">
-	        <a tal:content="string: add $type_name"
-	           tal:attributes="href string:@@add?content_type=$type_name">Name</a>
-	    </tal:iterate>
-	</div>
-	<div id="add_vote" tal:condition="context.content_type == 'Poll'">
-		<a tal:attributes="href resource_url(context, request) + '@@vote'">Vote</a>
-	</div>
-	<div><a tal:attributes="href resource_url(context, request) + '@@edit'">Edit</a></div>
-	<div><a tal:attributes="href resource_url(context, request) + '@@delete'">Delete</a></div>
+    <ul>
+        <li id="add_content" tal:condition="addable_types|False"><a href="#">Content</a>
+            <ul>
+            <tal:iterate tal:repeat="type_name addable_types">
+                <li><a tal:content="string: add $type_name"
+                   tal:attributes="href string:@@add?content_type=$type_name">Name</a></li>
+            </tal:iterate>
+            </ul>
+        </li>
+        <li id="add_vote" tal:condition="context.content_type == 'Poll'">
+            <a tal:attributes="href resource_url(context, request) + '@@vote'">Vote</a>
+        </li>
+        <li><a tal:attributes="href resource_url(context, request) + '@@edit'">Edit</a></li>
+        <li><a tal:attributes="href resource_url(context, request) + '@@delete'">Delete</a></li>
+        <li id="states" tal:condition="states|False"><a href="#">States</a>
+            <ul>
+            <tal:iterate repeat="state states">
+                <li tal:attributes="class state.current and 'current'"><a tal:attributes="href resource_url(context, request) + '@@state' + '?state=' + state.name" tal:content="state.title">State</a></li>
+            </tal:iterate>
+            </ul>
+        </li>
+    </ul>
 </div>
 <div style="clear: both"></div>

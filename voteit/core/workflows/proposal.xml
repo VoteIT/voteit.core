@@ -1,0 +1,95 @@
+<configure xmlns="http://namespaces.repoze.org/bfg">
+
+<include package="repoze.workflow" file="meta.zcml"/>
+
+	<workflow
+		type="security"
+		name="Proposal Workflow"
+		state_attr="state"
+		initial_state="published"
+		content_types="voteit.core.models.proposal.Proposal"
+		permission_checker="voteit.core.security.workflowpermission"
+	>
+
+		<state name="published">
+			<key name="title" value="Published"/>
+			<key name="description" value=""/>
+		</state>
+
+		<state name="retracted">
+			<key name="title" value="Retracted"/>
+			<key name="description" value=""/>
+		</state>
+
+		<state name="voting">
+			<key name="title" value="Locked for voting"/>
+			<key name="description" value=""/>
+		</state>
+
+		<state name="approved">
+			<key name="title" value="Approved"/>
+			<key name="description" value=""/>
+		</state>
+
+		<state name="denied">
+			<key name="title" value="Denied"/>
+			<key name="description" value=""/>
+		</state>
+
+		<state name="finished">
+			<key name="title" value="Finished"/>
+			<key name="description" value=""/>
+		</state>
+
+		<transition
+			name="published_to_retracted"
+			from_state="published"
+			to_state="retracted"
+			permission="owner"
+		/>
+
+		<transition
+			name="retracted_to_published"
+			from_state="retracted"
+			to_state="published"
+			permission="owner"
+		/>
+		
+		<transition
+			name="published_to_voting"
+			from_state="published"
+			to_state="voting"
+			permission="moderator"
+		/>
+		
+		<transition
+			name="voting_to_approved"
+			from_state="voting"
+			to_state="approved"
+			permission="moderator"
+		/>
+
+		<transition
+			name="voting_to_denied"
+			from_state="voting"
+			to_state="denied"
+			permission="moderator"
+		/>
+		
+		<transition
+			name="approved_to_finished"
+			from_state="approved"
+			to_state="finished"
+			permission="moderator"
+		/>
+		
+		<transition
+			name="denied_to_finished"
+			from_state="denied"
+			to_state="finished"
+			permission="moderator"
+		/>
+
+	</workflow>
+
+</configure>

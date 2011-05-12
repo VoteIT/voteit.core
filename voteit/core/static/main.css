@@ -76,22 +76,26 @@ a {
 #action_bar {
 	float: right;
 }
-#action_bar div {
-	display: inline;
-}
 
-#profile_toolbar ul {
+#profile_toolbar ul,
+#action_bar ul {
 	float: right;
 	margin-top: -0.6em;
 }
-#profile_toolbar ul li { 
+#profile_toolbar ul li,
+#action_bar ul li { 
 	float: left;
 	margin-left: 0.5em;
 }
-#profile_toolbar ul li ul {
+#profile_toolbar ul li ul,
+#action_bar ul li ul {
 	position: absolute;
 	display: none;
 	margin: 0 0 0 -1px;
 	padding: 0;
 	list-style: none
+}
+
+#states li.current{
+    font-weight: bold;
 }

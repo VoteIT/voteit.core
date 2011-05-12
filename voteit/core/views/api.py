@@ -8,6 +8,8 @@ from pyramid.traversal import find_root, find_interface
 from webob.exc import HTTPFound
 from pyramid.exceptions import Forbidden
 
+from repoze.workflow import get_workflow
+
 from voteit.core.models.factory_type_information import ftis
 from voteit.core.models.meeting import Meeting
 
@@ -86,6 +88,13 @@ class APIView(object):
         response['addable_types'] = self._get_addable_types(context, request)
         response['context'] = context
         response['resource_url'] = resource_url
+        
+        workflow = get_workflow(context.__class__, 'security', context)
+        if workflow:
+            response['states'] = workflow.state_info(context, request)
+        else:
+            response['states'] = None
+
         return render('templates/action_bar.pt', response, request=request)
 
     def get_creators_info(self, creators, request):

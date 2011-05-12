@@ -1,0 +1,76 @@
+<configure xmlns="http://namespaces.repoze.org/bfg">
+
+<include package="repoze.workflow" file="meta.zcml"/>
+
+	<workflow
+		type="security"
+		name="Poll Workflow"
+		state_attr="state"
+		initial_state="private"
+		content_types="voteit.core.models.poll.Poll"
+		permission_checker="voteit.core.security.workflowpermission"
+	>
+
+		<state name="private">
+			<key name="title" value="Private"/>
+			<key name="description" value=""/>
+		</state>
+
+		<state name="planned">
+			<key name="title" value="Planned"/>
+			<key name="description" value=""/>
+		</state>
+
+		<state name="ongoing">
+			<key name="title" value="Ongoing"/>
+			<key name="description" value=""/>
+		</state>
+
+		<state name="cancelled">
+			<key name="title" value="Cancelled"/>
+			<key name="description" value=""/>
+		</state>
+
+		<state name="closed">
+			<key name="title" value="Closed"/>
+			<key name="description" value=""/>
+		</state>
+
+		<transition
+			name="private_to_planned"
+			from_state="private"
+			to_state="planned"
+			permission="owner"
+		/>
+
+		<transition
+			name="planned_to_ongoing"
+			from_state="planned"
+			to_state="ongoing"
+			permission="owner"
+		/>
+		
+		<transition
+			name="planned_to_cancelled"
+			from_state="planned"
+			to_state="cancelled"
+			permission="moderator"
+		/>
+		
+		<transition
+			name="ongoing_to_close"
+			from_state="ongoing"
+			to_state="closed"
+			permission="moderator"
+		/>
+		
+		<transition
+			name="ongoing_to_planned"
+			from_state="ongoing"
+			to_state="planned"
+			permission="moderator"
+		/>
+
+	</workflow>
+
+</configure>

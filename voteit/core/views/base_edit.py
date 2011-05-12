@@ -10,6 +10,8 @@ from deform.exception import ValidationFailure
 from webob.exc import HTTPFound
 from slugify import slugify
 
+from repoze.workflow import get_workflow
+
 from voteit.core.models.factory_type_information import ftis
 from voteit.core.views.api import APIView
 from voteit.core.security import ROLE_OWNER, EDIT
@@ -66,6 +68,10 @@ class BaseEdit(object):
                 obj.add_groups(self.api.userid, (ROLE_OWNER,))
             name = self.generate_slug(appstruct['title'])
             self.context[name] = obj
+            
+            workflow = get_workflow(obj.__class__, 'security', obj)
+            if workflow:
+                workflow.initialize(obj)
             
             url = resource_url(obj, self.request)
             
@@ -172,3 +178,12 @@ class BaseEdit(object):
             i += 1
         #If no id was found, don't just continue
         raise KeyError("No unique id could be found")
+        
+    @view_config(name="state", renderer=DEFAULT_TEMPLATE, permission=EDIT)
+    def state_change(self):
+        workflow = get_workflow(self.context.__class__, 'security', self.context)
+        if workflow:
+            workflow.transition_to_state(self.context, self.request, self.request.params.get('state'))
+
+        url = resource_url(self.context, self.request)
+        return HTTPFound(location=url)

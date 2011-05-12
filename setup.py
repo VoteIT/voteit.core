@@ -19,6 +19,7 @@ requires = [
     'slugify',
     'webtest',
     'zope.testbrowser',
+    'repoze.workflow',
     ]
 
 setup(name='voteit.core',

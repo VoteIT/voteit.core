@@ -18,7 +18,7 @@
 	<script type="text/javascript" src="${request.application_url}/static/jquery-1.6.min.js"></script>
 	<script type="text/javascript">
 	$(document).ready(function () {
-		$('#profile_toolbar ul li').hover(
+		$('#profile_toolbar ul li, #action_bar ul li').hover(
 			function () {
 				//show its submenu
 				$('ul', this).slideDown(100);

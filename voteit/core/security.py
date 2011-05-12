@@ -35,3 +35,13 @@ def groupfinder(name, request):
     """ Get groups for the current user. See models/security_aware.py
     """
     return request.context.get_groups(name)
+    
+def workflowpermission(permission, context, request):
+    from pyramid.security import authenticated_userid
+    userid = authenticated_userid(request)
+    groups = context.get_groups(userid)
+    print groups
+    if permission in groups or ROLE_MODERATOR in groups or ROLE_ADMIN in groups:
+        return True
+    else:
+        return False
