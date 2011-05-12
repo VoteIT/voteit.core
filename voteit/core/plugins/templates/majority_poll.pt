@@ -1,0 +1,15 @@
+<h1>Poll result</h1>
+<div tal:condition="result">
+    <tal:iterate repeat="item result">
+    	<div>
+    		<strong>
+    			<span tal:replace="item['percentage']">30%</span>
+				(<span tal:replace="item['count']">3</span> vote)
+			</strong>
+			&mdash;
+			<tal:proposal tal:define="proposal get_proposal_by_uid(proposals, item['ballot']['proposal'])">
+				<span tal:content="proposal.title">Title</span>
+			</tal:proposal>
+		</div>
+    </tal:iterate>
+</div>

@@ -84,8 +84,8 @@ class IPoll(Interface):
             this polls plugin considers to be a vote.
         """
 
-    def get_poll_result():
-        """ Get a result of this poll from the polls plugin.
+    def render_poll_result():
+        """ Render poll result. Calls plugin to calculate result.
         """
 
 class IVote(Interface):
@@ -105,6 +105,9 @@ class IVote(Interface):
 class IPollPlugin(Interface):
     """ A plugin for a poll.
     """
+    name = Attribute("Internal name of this plugin. Must be unique.")
+    title = Attribute("Readable title that will appear when you select which"
+                      "poll plugin to use for a poll.")
 
     def get_vote_schema(poll):
         """ Return the schema of how a vote should be structured.
