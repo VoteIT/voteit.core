@@ -13,9 +13,11 @@ PROJECTNAME = 'voteit.core'
 VoteITMF = TranslationStringFactory(PROJECTNAME)
 
 #voteit.core package imports
-from voteit.core.security import groupfinder
-from voteit.core.models.interfaces import IPollPlugin
 from voteit.core.bootstrap import bootstrap_voteit
+from voteit.core.models.content_utility import ContentUtility
+from voteit.core.models.interfaces import IContentUtility
+from voteit.core.models.interfaces import IPollPlugin
+from voteit.core.security import groupfinder
 
 
 def main(global_config, **settings):
@@ -49,6 +51,16 @@ def main(global_config, **settings):
 
     config.scan(PROJECTNAME)
     
+    #Include content types and their utility IContentUtility
+    config.registry.registerUtility(ContentUtility(), IContentUtility)
+    
+    content_types = settings.get('content_types')
+    if content_types is None:
+        raise ValueError("content_types must exist in application configuration."
+                         "It should point to includable modules, like voteit.core.models.meeting")
+    for content_type in content_types.strip().splitlines():
+        config.include(content_type)
+    
     #include specified poll plugins
     poll_plugins = settings.get('poll_plugins')
 
@@ -63,6 +75,7 @@ def main(global_config, **settings):
     xmlconfig.file('src/voteit.core/voteit/core/workflows/poll.xml', execute=True)
 
     return config.make_wsgi_app()
+
 
 def appmaker(zodb_root):
     if not 'app_root' in zodb_root:
@@ -82,3 +95,14 @@ def register_poll_plugin(plugin_class, verify=True, registry=None):
     if registry is None:
         registry = get_current_registry()
     registry.registerUtility(plugin_class(), IPollPlugin, name = plugin_class.name)
+
+
+def register_content_info(schema, type_class, update_method=None, verify=True, registry=None):
+    if registry is None:
+        registry = get_current_registry()
+    
+    util = registry.getUtility(IContentUtility)
+    
+    obj = util.create(schema, type_class, update_method=update_method)
+    util.add(obj, verify=verify)
+    

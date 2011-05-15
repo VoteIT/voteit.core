@@ -1,6 +1,7 @@
 import colander
 from voteit.core.models.base_content import BaseContent
 from voteit.core.security import ADD_PROPOSAL
+from voteit.core import register_content_info
 
 
 class Proposal(BaseContent):
@@ -15,3 +16,7 @@ class Proposal(BaseContent):
 class ProposalSchema(colander.MappingSchema):
     title = colander.SchemaNode(colander.String())
     description = colander.SchemaNode(colander.String())
+
+
+def includeme(config):
+    register_content_info(ProposalSchema, Proposal, registry=config.registry)

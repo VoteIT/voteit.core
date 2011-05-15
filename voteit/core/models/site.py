@@ -28,3 +28,8 @@ class SiteRoot(BaseContent):
 class SiteRootSchema(colander.MappingSchema):
     title = colander.SchemaNode(colander.String())
     description = colander.SchemaNode(colander.String())
+
+
+def includeme(config):
+    from voteit.core import register_content_info
+    register_content_info(SiteRootSchema, SiteRoot, registry=config.registry)

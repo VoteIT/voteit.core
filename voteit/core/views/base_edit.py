@@ -12,7 +12,6 @@ from slugify import slugify
 
 from repoze.workflow import get_workflow
 
-from voteit.core.models.factory_type_information import ftis
 from voteit.core.views.api import APIView
 from voteit.core.security import ROLE_OWNER, EDIT
 from pyramid.exceptions import Forbidden
@@ -33,7 +32,7 @@ class BaseEdit(object):
     @view_config(name="add", renderer=DEFAULT_TEMPLATE)
     def add_form(self):
         content_type = self.request.params.get('content_type')
-        ftis = self.api.ftis
+        ftis = self.api.content_info
         
         #Permission check
         add_permission = getattr(ftis[content_type], 'add_permission', None)
@@ -88,7 +87,7 @@ class BaseEdit(object):
     @view_config(name="edit", renderer=DEFAULT_TEMPLATE, permission=EDIT)
     def edit_form(self):
         content_type = self.context.content_type
-        ftis = self.api.ftis
+        ftis = self.api.content_info
         schema = ftis[content_type].schema().clone()
         update_method = ftis[content_type].update_method
         if update_method is not None:

@@ -12,6 +12,7 @@ from voteit.core import VoteITMF as _
 from voteit.core import security
 from voteit.core.security import ADD_USER
 
+
 def get_sha_password(password):
     """ Encode a plaintext password to sha1. """
     if isinstance(password, unicode):
@@ -95,3 +96,8 @@ class ChangePasswordSchema(colander.Schema):
                 validator=colander.Length(min=5),
                 widget=deform.widget.CheckedPasswordWidget(size=20),
                 description=_(u'Type your password and confirm it'))
+
+
+def includeme(config):
+    from voteit.core import register_content_info
+    register_content_info(None, User, registry=config.registry)

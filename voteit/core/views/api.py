@@ -10,8 +10,8 @@ from pyramid.exceptions import Forbidden
 
 from repoze.workflow import get_workflow
 
-from voteit.core.models.factory_type_information import ftis
 from voteit.core.models.meeting import Meeting
+from voteit.core.models.interfaces import IContentUtility
 
 
 class APIView(object):
@@ -31,7 +31,7 @@ class APIView(object):
         
         #request.application_url
         self.main_template = get_renderer('templates/main.pt').implementation()
-        self.ftis = ftis
+        self.content_info = request.registry.getUtility(IContentUtility)
         self.addable_types = self._get_addable_types(context, request)
         self.navigation = get_renderer('templates/navigation.pt').implementation()
         self.profile_toolbar = get_renderer('templates/profile_toolbar.pt').implementation()
@@ -63,7 +63,7 @@ class APIView(object):
             return ()
         
         addable_names = set()
-        for type in self.ftis.values():
+        for type in self.content_info.values():
             if context_type in type.allowed_contexts and \
                 has_permission(type.add_permission, context, request):
                 addable_names.add(type.type_class.content_type)

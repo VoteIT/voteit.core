@@ -2,7 +2,7 @@ import colander
 
 from pyramid.security import Allow, Deny, DENY_ALL, ALL_PERMISSIONS
 from voteit.core.models.base_content import BaseContent
-from voteit.core import security
+from voteit.core import security, register_content_info
 
 
 class Meeting(BaseContent):
@@ -24,3 +24,7 @@ class Meeting(BaseContent):
 class MeetingSchema(colander.MappingSchema):
     title = colander.SchemaNode(colander.String())
     description = colander.SchemaNode(colander.String())
+
+
+def includeme(config):
+    register_content_info(MeetingSchema, Meeting, registry=config.registry)

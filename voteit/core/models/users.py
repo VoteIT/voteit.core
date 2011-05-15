@@ -13,3 +13,8 @@ class Users(BaseContent):
 class UsersSchema(colander.Schema):
     title = colander.SchemaNode(colander.String())
     description = colander.SchemaNode(colander.String())
+
+
+def includeme(config):
+    from voteit.core import register_content_info
+    register_content_info(UsersSchema, Users, registry=config.registry)

@@ -127,3 +127,48 @@ class IPollPlugin(Interface):
         """ Return rendered html with result display. Called by the poll view
             when the poll has finished.
         """
+
+
+class IContentTypeInfo(Interface):
+    """ A content type info for VoteIT. Any content addable through
+        the regular add menus needs one of these.
+    """
+    schema = Attribute("Schema class to use for this content")
+    type_class = Attribute("Class to construct content from")
+    update_method = Attribute("A method to be called if the schema needs to be"
+                              "updated during runtime. See base_edit.py")
+    omit_fields_on_edit = Attribute("Returns the type_class attribute omit_fields_on_edit."
+                                    "It's usually a tuple of field names to remove on edit")
+    
+    allowed_contexts = Attribute("Return a list of content_type names where"
+                                 "this content type is allowed. Taken from"
+                                 "type_class.allowed_contexts.")
+    add_permission = Attribute("Return add_permission from type_class - required to add content.")
+    content_type = Attribute("Returns content_type attribute from type_class."
+                    "Also used to identify the content type in the plugin like: util[<content_type>]")
+
+
+class IContentUtility(Interface):
+    """ The utility responsible for handling content types.
+        All content type factories are registered with this utility.
+        
+        The utility itself inherits from repoze.folder.Folder which means it
+        will behave like a regular folder.
+        
+        IContentTypeFactory types should be registered in the utility with the
+        'add' method. See below.
+    """
+    def add(factory_obj, verify=True):
+        """ Add ContentTypeInfo to the utility.
+            factory_obj is an object that implements IContentTypeInfo
+            verify if it's true the utility will check that IContentTypeInfo is
+                implemented by the factory_obj.
+        """
+
+    def create(schema, type_class, update_method=None):
+        """ Create a ContentTypeInfo object and return it. """
+
+    def addable_in_type(content_type):
+        """ Get all content type factories that are addable in the context of
+            a content_type.
+        """

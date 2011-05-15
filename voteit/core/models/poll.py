@@ -12,6 +12,7 @@ from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IPollPlugin
 from voteit.core.models.interfaces import IVote
 from voteit.core.security import ADD_POLL
+from voteit.core import register_content_info
 
 
 class Poll(BaseContent):
@@ -114,3 +115,7 @@ def update_poll_schema(schema, context):
     schema.add(colander.SchemaNode(deform.Set(),
                                  name="proposals",
                                  widget=deform.widget.CheckboxChoiceWidget(values=proposal_choices),),)
+
+
+def includeme(config):
+    register_content_info(PollSchema, Poll, registry=config.registry, update_method=update_poll_schema)
