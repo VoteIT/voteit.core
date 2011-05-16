@@ -89,11 +89,15 @@ class APIView(object):
         response['context'] = context
         response['resource_url'] = resource_url
         
-        workflow = get_workflow(context.__class__, 'security', context)
-        if workflow:
-            response['states'] = workflow.state_info(context, request)
-        else:
-            response['states'] = None
+        #FIXME: This should be done in some other way
+        # The siteroot gets the proposal workflow somehow and it shouldn't
+        from voteit.core.models.site import SiteRoot
+        if not isinstance(context, SiteRoot):
+            workflow = get_workflow(self.content_info[context.content_type].type_class, 'security', context)
+            if workflow:
+                response['states'] = workflow.state_info(context, request)
+            else:
+                response['states'] = None
 
         return render('templates/action_bar.pt', response, request=request)
 

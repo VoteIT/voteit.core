@@ -42,7 +42,6 @@ def main(global_config, **settings):
                           authentication_policy=authn_policy,
                           authorization_policy=authz_policy
                           )
-    config.hook_zca()
     
     config.add_static_view('static', '%s:static' % PROJECTNAME)
     config.add_static_view('deform', 'deform:static')
@@ -69,6 +68,7 @@ def main(global_config, **settings):
             config.include(poll_plugin)
 
     # load workflow
+    # FIXME: use package-relative dotted name insted of absolute path
     xmlconfig.file('src/voteit.core/voteit/core/workflows/meeting.xml', execute=True)
     xmlconfig.file('src/voteit.core/voteit/core/workflows/agenda_item.xml', execute=True)
     xmlconfig.file('src/voteit.core/voteit/core/workflows/proposal.xml', execute=True)
