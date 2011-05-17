@@ -3,7 +3,7 @@
 <include package="repoze.workflow" file="meta.zcml"/>
 
 	<workflow
-		type="security"
+		type="Meeting"
 		name="Meeting Workflow"
 		state_attr="state"
 		initial_state="private"

@@ -68,7 +68,8 @@ class BaseEdit(object):
             name = self.generate_slug(appstruct['title'])
             self.context[name] = obj
             
-            workflow = get_workflow(obj.__class__, 'security', obj)
+            #FIXME: the type should be som generic instead of the class name, but since the wrong workflow is returned this is is a workaround
+            workflow = get_workflow(self.content_info[obj.content_type].type_class, self.content_info[obj.content_type].type_class.__name__, obj)
             if workflow:
                 workflow.initialize(obj)
             

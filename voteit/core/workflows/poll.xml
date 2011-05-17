@@ -3,7 +3,7 @@
 <include package="repoze.workflow" file="meta.zcml"/>
 
 	<workflow
-		type="security"
+		type="Poll"
 		name="Poll Workflow"
 		state_attr="state"
 		initial_state="private"
@@ -13,11 +13,6 @@
 
 		<state name="private">
 			<key name="title" value="Private"/>
-			<key name="description" value=""/>
-		</state>
-
-		<state name="planned">
-			<key name="title" value="Planned"/>
 			<key name="description" value=""/>
 		</state>
 
@@ -37,38 +32,32 @@
 		</state>
 
 		<transition
-			name="private_to_planned"
+			name="private_to_ongoing"
 			from_state="private"
-			to_state="planned"
-			permission="owner"
-		/>
-
-		<transition
-			name="planned_to_ongoing"
-			from_state="planned"
 			to_state="ongoing"
 			permission="owner"
 		/>
 		
 		<transition
-			name="planned_to_cancelled"
-			from_state="planned"
+			name="ongoing_to_private"
+			from_state="ongoing"
+			to_state="private"
+			permission="moderator"
+		/>
+		
+		<transition
+			name="ongoing_to_cancelled"
+			from_state="ongoing"
 			to_state="cancelled"
 			permission="moderator"
 		/>
 		
 		<transition
-			name="ongoing_to_close"
+			name="ongoing_to_closed"
 			from_state="ongoing"
 			to_state="closed"
 			permission="moderator"
-		/>
-		
-		<transition
-			name="ongoing_to_planned"
-			from_state="ongoing"
-			to_state="planned"
-			permission="moderator"
+			callback="voteit.core.models.poll.closing_poll_callback"
 		/>
 
 	</workflow>
