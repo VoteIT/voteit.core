@@ -1,29 +1,35 @@
+from pyramid.threadlocal import get_current_registry
 
-from voteit.core.models.site import SiteRoot
-from voteit.core.models.users import Users
-from voteit.core.models.user import User
 from voteit.core import VoteITMF as _
 from voteit.core.security import ROLE_ADMIN
+from voteit.core.models.interfaces import IContentUtility
 
 
-def bootstrap_voteit():
+def bootstrap_voteit(registry=None):
     """ Bootstrap site root.
         Will add:
         - Site root
         - Users folder
         - An administrative user with login: admin and pass: admin
     """
+    if registry is None:
+        registry = get_current_registry()
+    
+    content_util = registry.getUtility(IContentUtility)
+
     print "Bootstrapping site - creating 'admin' user with password 'admin'"
-    root = SiteRoot()
+    
+    #Add root
+    root = content_util['SiteRoot'].type_class()
     root.title = _(u"VoteIT")
 
     #Add users folder
-    root['users'] = Users()
+    root['users'] = content_util['Users'].type_class()
     users = root.users
     users.title = _(u"Registered users")
     
     #Add user admin
-    admin = User()
+    admin = content_util['User'].type_class()
     admin.set_password('admin')
     admin.set_field_value('first_name', 'Administrator')
     users['admin'] = admin

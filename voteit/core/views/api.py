@@ -10,7 +10,7 @@ from pyramid.exceptions import Forbidden
 
 from repoze.workflow import get_workflow
 
-from voteit.core.models.meeting import Meeting
+from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import IContentUtility
 
 
@@ -72,7 +72,7 @@ class APIView(object):
     #navigation stuff
     def find_meeting(self, context):
         """ Is the current context inside a meeting, or a meeting itself? """
-        return find_interface(context, Meeting)
+        return find_interface(context, IMeeting)
 
     def get_content(self, context, content_type=None):
         """ Get contained items.

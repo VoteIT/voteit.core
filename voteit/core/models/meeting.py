@@ -1,12 +1,15 @@
 import colander
-
+from zope.interface import implements
 from pyramid.security import Allow, Deny, DENY_ALL, ALL_PERMISSIONS
+
 from voteit.core.models.base_content import BaseContent
 from voteit.core import security, register_content_info
+from voteit.core.models.interfaces import IMeeting
 
 
 class Meeting(BaseContent):
     """ Meeting content. """
+    implements(IMeeting)
     content_type = 'Meeting'
     omit_fields_on_edit = ('name',)
     allowed_contexts = ('SiteRoot',)

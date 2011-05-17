@@ -1,14 +1,17 @@
 import colander
 from pyramid.security import Allow, Everyone, ALL_PERMISSIONS
 from pyramid.security import DENY_ALL
+from zope.interface import implements
 
 from voteit.core import security
+from voteit.core.models.interfaces import ISiteRoot
 from voteit.core.models.base_content import BaseContent
 from voteit.core.models.users import Users
 
 
 class SiteRoot(BaseContent):
     """ The root of the site. Contains all other objects. """
+    implements(ISiteRoot)
     
     content_type = 'SiteRoot'
 

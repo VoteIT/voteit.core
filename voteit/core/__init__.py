@@ -13,7 +13,6 @@ PROJECTNAME = 'voteit.core'
 VoteITMF = TranslationStringFactory(PROJECTNAME)
 
 #voteit.core package imports
-from voteit.core.bootstrap import bootstrap_voteit
 from voteit.core.models.content_utility import ContentUtility
 from voteit.core.models.interfaces import IContentUtility
 from voteit.core.models.interfaces import IPollPlugin
@@ -42,7 +41,6 @@ def main(global_config, **settings):
                           authentication_policy=authn_policy,
                           authorization_policy=authz_policy
                           )
-    config.hook_zca()
     
     config.add_static_view('static', '%s:static' % PROJECTNAME)
     config.add_static_view('deform', 'deform:static')
@@ -79,6 +77,7 @@ def main(global_config, **settings):
 
 def appmaker(zodb_root):
     if not 'app_root' in zodb_root:
+        from voteit.core.bootstrap import bootstrap_voteit
         zodb_root['app_root'] = bootstrap_voteit() #Returns a site root
         import transaction
         transaction.commit()
