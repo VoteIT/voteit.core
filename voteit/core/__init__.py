@@ -66,15 +66,20 @@ def main(global_config, **settings):
         for poll_plugin in poll_plugins.strip().splitlines():
             config.include(poll_plugin)
 
-    # load workflow
-    # FIXME: use package-relative dotted name insted of absolute path
-    xmlconfig.file('src/voteit.core/voteit/core/workflows/meeting.xml', execute=True)
-    xmlconfig.file('src/voteit.core/voteit/core/workflows/agenda_item.xml', execute=True)
-    xmlconfig.file('src/voteit.core/voteit/core/workflows/proposal.xml', execute=True)
-    xmlconfig.file('src/voteit.core/voteit/core/workflows/poll.xml', execute=True)
+    register_workflows()
 
     return config.make_wsgi_app()
 
+
+def register_workflows():
+    """ Load workflows. """
+    #FIXME: Make this pluggable later on.
+    
+    import voteit.core.workflows as vcw
+    xmlconfig.file('meeting.zcml', vcw, execute=True)
+    xmlconfig.file('agenda_item.zcml', vcw, execute=True)
+    xmlconfig.file('proposal.zcml', vcw, execute=True)
+    xmlconfig.file('poll.zcml', vcw, execute=True)    
 
 def appmaker(zodb_root):
     if not 'app_root' in zodb_root:

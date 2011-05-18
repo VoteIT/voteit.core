@@ -21,11 +21,8 @@ class WorkflowTests(unittest.TestCase):
         
     def _load_workflows(self):
         # load workflow
-        # FIXME: use package-relative dotted name insted of absolute path
-        xmlconfig.file('voteit/core/workflows/meeting.xml', execute=True)
-        xmlconfig.file('voteit/core/workflows/agenda_item.xml', execute=True)
-        xmlconfig.file('voteit/core/workflows/proposal.xml', execute=True)
-        xmlconfig.file('voteit/core/workflows/poll.xml', execute=True)
+        from voteit.core import register_workflows
+        register_workflows()
         
     def test_verify_workflow(self):
         self._load_workflows()
@@ -46,8 +43,7 @@ class WorkflowTests(unittest.TestCase):
         self.assertEqual(workflow.name, u'Poll Workflow')
         
     def test_meeting_states(self):
-        xmlconfig.file('voteit/core/workflows/meeting.xml', execute=True)
-        request = get_current_request()
+        self._load_workflows()
         
         obj = Meeting()
 
@@ -89,8 +85,7 @@ class WorkflowTests(unittest.TestCase):
         self.assertEqual(obj.get_workflow_state, u'inactive')
         
     def test_agenda_item_states(self):
-        xmlconfig.file('voteit/core/workflows/agenda_item.xml', execute=True)
-        request = get_current_request()
+        self._load_workflows()
         
         obj = AgendaItem()
         
@@ -134,8 +129,7 @@ class WorkflowTests(unittest.TestCase):
         self.assertEqual(obj.get_workflow_state, u'inactive')
         
     def test_proposal_states(self):
-        xmlconfig.file('voteit/core/workflows/proposal.xml', execute=True)
-        request = get_current_request()
+        self._load_workflows()
         
         obj = Proposal()
         
@@ -165,8 +159,7 @@ class WorkflowTests(unittest.TestCase):
         self.assertEqual(obj.get_workflow_state, u'finished')
         
     def test_poll_states(self):
-        xmlconfig.file('voteit/core/workflows/poll.xml', execute=True)
-        request = get_current_request()
+        self._load_workflows()
         
         obj = Poll()
         
