@@ -79,5 +79,5 @@ class MajorityPollPlugin(PollPlugin):
         return render('templates/majority_poll.pt', response)
     
 def includeme(config):
-    register_poll_plugin(MajorityPollPlugin)
+    register_poll_plugin(MajorityPollPlugin, registry=config.registry)
     

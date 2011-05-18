@@ -1,6 +1,7 @@
 import unittest
 
 from pyramid import testing
+from pyramid.threadlocal import get_current_registry
 from zope.interface.verify import verifyObject
 from zope.interface.exceptions import BrokenImplementation
 from zope.component import queryUtility
@@ -37,9 +38,9 @@ class PollPluginTests(unittest.TestCase):
         """ Register example plugin that ships with voteit. """ 
         from voteit.core import register_poll_plugin
         from voteit.core.models.interfaces import IPollPlugin
-        
+        registry = get_current_registry()
         good_cls = self._example_plugin_class()
-        register_poll_plugin(good_cls, verify=0)
+        register_poll_plugin(good_cls, verify=0, registry=registry)
         name = good_cls.name
         
         util = queryUtility(IPollPlugin, name = name)
