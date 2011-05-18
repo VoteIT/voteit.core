@@ -72,7 +72,7 @@ class PollTests(unittest.TestCase):
         agenda_item['poll'] = poll = self._make_obj()
         poll.proposal_uids = (prop1.uid, prop2.uid,)
         
-        self.assertEqual(tuple(poll.get_proposal_objects()), (prop1, prop2,))
+        self.assertEqual(set(poll.get_proposal_objects()), set([prop1, prop2,]))
     
     def test_get_all_votes(self):
         """ Get all votes for the current poll. """
