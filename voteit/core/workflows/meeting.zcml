@@ -35,49 +35,49 @@
 			name="private_to_inactive"
 			from_state="private"
 			to_state="inactive"
-			permission="moderator"
+			permission="role:Moderator"
 		/>
 
 		<transition
 			name="inactive_to_active"
 			from_state="inactive"
 			to_state="active"
-			permission="moderator"
+			permission="role:Moderator"
 		/>
 		
 		<transition
 			name="inactive_to_closed"
 			from_state="inactive"
 			to_state="closed"
-			permission="moderator"
+			permission="role:Moderator"
 		/>
 		
 		<transition
 			name="active_to_inactive"
 			from_state="active"
 			to_state="inactive"
-			permission="moderator"
+			permission="role:Moderator"
 		/>
 
 		<transition
 			name="active_to_closed"
 			from_state="active"
 			to_state="closed"
-			permission="moderator"
+			permission="role:Moderator"
 		/>
 		
 		<transition
 			name="closed_to_active"
 			from_state="closed"
 			to_state="active"
-			permission="moderator"
+			permission="role:Moderator"
 		/>
 		
 		<transition
 			name="closed_to_inactive"
 			from_state="closed"
 			to_state="inactive"
-			permission="moderator"
+			permission="role:Moderator"
 		/>
 
 	</workflow>

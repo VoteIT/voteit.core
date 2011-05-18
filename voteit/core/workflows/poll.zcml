@@ -35,28 +35,28 @@
 			name="private_to_ongoing"
 			from_state="private"
 			to_state="ongoing"
-			permission="owner"
+			permission="role:Owner"
 		/>
 		
 		<transition
 			name="ongoing_to_private"
 			from_state="ongoing"
 			to_state="private"
-			permission="moderator"
+			permission="role:Moderator"
 		/>
 		
 		<transition
 			name="ongoing_to_cancelled"
 			from_state="ongoing"
 			to_state="cancelled"
-			permission="moderator"
+			permission="role:Moderator"
 		/>
 		
 		<transition
 			name="ongoing_to_closed"
 			from_state="ongoing"
 			to_state="closed"
-			permission="moderator"
+			permission="role:Moderator"
 			callback="voteit.core.models.poll.closing_poll_callback"
 		/>
 

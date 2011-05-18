@@ -119,5 +119,15 @@ class BaseContent(Folder, SecurityAware):
             return []
             
     def get_available_workflow_states(self):
-        return []
+        if self.get_workflow:
+            #FIXME: request should maybe sent as a parameter
+            request = get_current_request()
+            states = self.get_workflow.state_info(self, request)
+            astates = []
+            for state in states:
+                if state['transitions']:
+                    astates.append(state)
+            return astates
+        else:
+            return []
         

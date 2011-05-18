@@ -182,3 +182,10 @@ class WorkflowTests(unittest.TestCase):
         obj.make_workflow_transition('private_to_ongoing')
         obj.make_workflow_transition('ongoing_to_private')
         self.assertEqual(obj.get_workflow_state, u'private')
+        
+    def test_meeting_transitions(self):
+        self._load_workflows()
+        
+        obj = Meeting()
+
+        states = obj.get_workflow_states()
