@@ -3,6 +3,9 @@ from uuid import uuid4
 from repoze.folder import Folder
 from zope.interface import implements
 from BTrees.OOBTree import OOBTree
+from repoze.workflow import get_workflow
+
+from pyramid.threadlocal import get_current_request
 
 from voteit.core.models.interfaces import IBaseContent
 from voteit.core.models.security_aware import SecurityAware
@@ -20,6 +23,7 @@ class BaseContent(Folder, SecurityAware):
     def __init__(self):
         self.uid = str(uuid4())
         super(BaseContent, self).__init__()
+        self._initialize_workflow()
 
     @property
     def _storage(self):
@@ -71,3 +75,49 @@ class BaseContent(Folder, SecurityAware):
     
     creators = property(_get_creators, _set_creators)
     
+    def _initialize_workflow(self):
+        #FIXME: the type should be som generic instead of the class name, but since the wrong workflow is returned this is is a workaround
+        workflow = get_workflow(self.__class__, self.__class__.__name__, self)
+        if workflow:
+            workflow.initialize(self)
+            self._workflow = workflow
+            return workflow
+    
+    def reset_workflow(self):
+        return self._initialize_workflow()
+    
+    @property
+    def get_workflow(self):
+        return getattr(self, '_workflow', None)
+        
+    @property
+    def get_workflow_state(self):
+        if self.get_workflow:
+            return self.get_workflow.state_of(self)
+        else:
+            return None
+        
+    def set_workflow_state(self, state):
+        if self.get_workflow:
+            #FIXME: request should maybe sent as a parameter
+            request = get_current_request()
+            self.get_workflow.transition_to_state(self, request, state)
+            
+    def make_workflow_transition(self, transition):
+        if self.get_workflow:
+            #FIXME: request should maybe sent as a parameter
+            request = get_current_request()
+            self.get_workflow.transition(self, request, transition)
+        
+    def get_workflow_states(self):
+        if self.get_workflow:
+            #FIXME: request should maybe sent as a parameter
+            request = get_current_request()
+            states = self.get_workflow.state_info(self, request)
+            return states
+        else:
+            return []
+            
+    def get_available_workflow_states(self):
+        return []
+        

@@ -87,14 +87,8 @@ class APIView(object):
         response = {}
         response['addable_types'] = self._get_addable_types(context, request)
         response['context'] = context
-        response['resource_url'] = resource_url
-        
-        #FIXME: the type should be som generic instead of the class name, but since the wrong workflow is returned this is is a workaround
-        workflow = get_workflow(self.content_info[context.content_type].type_class, self.content_info[context.content_type].type_class.__name__, context)
-        if workflow:
-            response['states'] = workflow.state_info(context, request)
-        else:
-            response['states'] = None
+        response['resource_url'] = resource_url        
+        response['states'] = context.get_workflow_states()
 
         return render('templates/action_bar.pt', response, request=request)
 

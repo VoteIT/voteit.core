@@ -119,3 +119,6 @@ def update_poll_schema(schema, context):
 
 def includeme(config):
     register_content_info(PollSchema, Poll, registry=config.registry, update_method=update_poll_schema)
+    
+def closing_poll_callback(content, info):
+    pass

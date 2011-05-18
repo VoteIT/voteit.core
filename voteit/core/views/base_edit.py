@@ -68,11 +68,6 @@ class BaseEdit(object):
             name = self.generate_slug(appstruct['title'])
             self.context[name] = obj
             
-            #FIXME: the type should be som generic instead of the class name, but since the wrong workflow is returned this is is a workaround
-            workflow = get_workflow(self.content_info[obj.content_type].type_class, self.content_info[obj.content_type].type_class.__name__, obj)
-            if workflow:
-                workflow.initialize(obj)
-            
             url = resource_url(obj, self.request)
             
             return HTTPFound(location=url)
@@ -181,9 +176,7 @@ class BaseEdit(object):
         
     @view_config(name="state", renderer=DEFAULT_TEMPLATE, permission=EDIT)
     def state_change(self):
-        workflow = get_workflow(self.context.__class__, 'security', self.context)
-        if workflow:
-            workflow.transition_to_state(self.context, self.request, self.request.params.get('state'))
+        self.context.set_workflow_state(self.request.params.get('state'))
 
         url = resource_url(self.context, self.request)
         return HTTPFound(location=url)
