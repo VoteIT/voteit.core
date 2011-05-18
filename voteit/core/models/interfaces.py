@@ -55,6 +55,9 @@ class ISecurityAware(Interface):
         """ Returns a set of all groups in this context. """
 
 
+class ISiteRoot(Interface):
+    """ Singleton that is used as the site root. """
+
 
 class IUsers(Interface):
     """ Contains all users. """
@@ -62,6 +65,18 @@ class IUsers(Interface):
 
 class IUser(Interface):
     """ A user object. """
+
+
+class IAgendaItem(Interface):
+    """ Agenda item content """
+
+
+class IMeeting(Interface):
+    """ Meeting content type """
+
+
+class IProposal(Interface):
+    """ Proposal content type. """
 
 
 class IPoll(Interface):

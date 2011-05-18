@@ -5,11 +5,14 @@ from deform.exception import ValidationFailure
 from webob.exc import HTTPFound
 from pyramid.url import resource_url
 
-from voteit.core.models.user import AddUserSchema, User, EditUserSchema,\
-    ChangePasswordSchema
-from voteit.core.models.users import Users
+from voteit.core.models.interfaces import IContentUtility
+from voteit.core.models.interfaces import ISiteRoot
+from voteit.core.models.interfaces import IUser
+from voteit.core.models.interfaces import IUsers
+from voteit.core.models.user import AddUserSchema
+from voteit.core.models.user import EditUserSchema
+from voteit.core.models.user import ChangePasswordSchema
 from voteit.core.views.api import APIView
-from voteit.core.models.site import SiteRoot
 from voteit.core.security import CHANGE_PASSWORD, ROLE_OWNER
 
 DEFAULT_TEMPLATE = "templates/base_edit.pt"
@@ -25,8 +28,10 @@ class UsersView(object):
         self.response = {}
         self.response['api'] = APIView(context, request)
 
-    @view_config(context=Users, name="add", renderer=DEFAULT_TEMPLATE)
+    @view_config(context=IUsers, name="add", renderer=DEFAULT_TEMPLATE)
     def add_form(self):
+        #FIXME: Utility might need to handle different schemas here?
+        content_util = self.request.registry.getUtility(IContentUtility)
         schema = AddUserSchema()
 
         self.form = Form(schema, buttons=('add', 'cancel'))
@@ -43,7 +48,7 @@ class UsersView(object):
                 self.response['form'] = e.render()
                 return self.response
             
-            obj = User()
+            obj = content_util['User'].type_class()
             
             if appstruct['password']:
                 #At this point the validation should have been done
@@ -78,8 +83,9 @@ class UsersView(object):
         self.response['form'] = self.form.render()
         return self.response
 
-    @view_config(context=SiteRoot, name="register", renderer=DEFAULT_TEMPLATE)
+    @view_config(context=ISiteRoot, name="register", renderer=DEFAULT_TEMPLATE)
     def registration_form(self):
+        content_util = self.request.registry.getUtility(IContentUtility)
         schema = AddUserSchema()
 
         self.form = Form(schema, buttons=('register', 'cancel'))
@@ -96,7 +102,7 @@ class UsersView(object):
                 self.response['form'] = e.render()
                 return self.response
             
-            obj = User()
+            obj = content_util['User'].type_class()
             
             if appstruct['password']:
                 #At this point the validation should have been done
@@ -128,14 +134,14 @@ class UsersView(object):
         self.response['form'] = self.form.render()
         return self.response
 
-    @view_config(context=Users, name="list", renderer='templates/list_users.pt')
+    @view_config(context=IUsers, name="list", renderer='templates/list_users.pt')
     def list_users(self):
         return self.response
 
-    @view_config(context=User, renderer='templates/view_user.pt')
+    @view_config(context=IUser, renderer='templates/view_user.pt')
     def view_users(self):
         return self.response
-    @view_config(context=User, name="edit", renderer=DEFAULT_TEMPLATE)
+    @view_config(context=IUser, name="edit", renderer=DEFAULT_TEMPLATE)
     def edit_form(self):
         schema = EditUserSchema()
         
@@ -172,7 +178,7 @@ class UsersView(object):
         self.response['form'] = self.form.render()
         return self.response
 
-    @view_config(context=User, name="change_password", renderer=DEFAULT_TEMPLATE, permission=CHANGE_PASSWORD)
+    @view_config(context=IUser, name="change_password", renderer=DEFAULT_TEMPLATE, permission=CHANGE_PASSWORD)
     def password_form(self):
         schema = ChangePasswordSchema()
 

@@ -13,8 +13,8 @@ from webob.exc import HTTPFound
 from voteit.core.views.api import APIView
 from voteit.core.security import MANAGE_GROUPS
 from voteit.core.models.security_aware import get_groups_schema
-from voteit.core.models.site import SiteRoot
-from voteit.core.models.meeting import Meeting
+from voteit.core.models.interfaces import IMeeting
+from voteit.core.models.interfaces import ISiteRoot
 
 DEFAULT_TEMPLATE = "templates/base_edit.pt"
 
@@ -30,8 +30,8 @@ class EditGroups(object):
         self.response['api'] = self.api = APIView(context, request)
 
 
-    @view_config(context=SiteRoot, name="edit_groups", renderer=DEFAULT_TEMPLATE, permission=MANAGE_GROUPS)
-    @view_config(context=Meeting, name="edit_groups", renderer=DEFAULT_TEMPLATE, permission=MANAGE_GROUPS)
+    @view_config(context=ISiteRoot, name="edit_groups", renderer=DEFAULT_TEMPLATE, permission=MANAGE_GROUPS)
+    @view_config(context=IMeeting, name="edit_groups", renderer=DEFAULT_TEMPLATE, permission=MANAGE_GROUPS)
     def root_group_form(self):
         schema = get_groups_schema(self.context)
 

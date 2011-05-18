@@ -7,13 +7,13 @@ from pyramid.url import resource_url
 from deform import Form
 
 from voteit.core.models.user import get_sha_password, LoginSchema
+from voteit.core.models.interfaces import ISiteRoot
 from voteit.core.models.interfaces import IUser
 from voteit.core import VoteITMF as _
-from voteit.core.models.site import SiteRoot
 from voteit.core.views.api import APIView
 
 
-@view_config(context=SiteRoot, name='login',
+@view_config(context=ISiteRoot, name='login',
              renderer='templates/base_edit.pt')
 def login(context, request):
     response = {}
@@ -57,7 +57,7 @@ def login(context, request):
     return response
 
     
-@view_config(context=SiteRoot, name='logout')
+@view_config(context=ISiteRoot, name='logout')
 def logout(request):
     headers = forget(request)
     return HTTPFound(location = resource_url(request.context, request),
