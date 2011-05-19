@@ -121,7 +121,7 @@ class VoteView(object):
         self.response['form'] = self.form.render()
         return self.response
 
-    @view_config(name="delete", renderer=DEFAULT_TEMPLATE)
+    @view_config(name="delete", context=IVote, renderer=DEFAULT_TEMPLATE)
     def delete_vote(self):
         #FIXME: Add permission checks
         #FIXME: Check workflow
