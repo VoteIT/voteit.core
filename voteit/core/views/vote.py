@@ -10,7 +10,7 @@ from webob.exc import HTTPFound
 from zope.component import getUtility
 
 from voteit.core.views.api import APIView
-from voteit.core.security import ROLE_OWNER, EDIT
+from voteit.core.security import ROLE_OWNER, EDIT, DELETE, ADD_VOTE
 from pyramid.exceptions import Forbidden
 from voteit.core.models.interfaces import IVote
 from voteit.core.models.interfaces import IPoll
@@ -38,7 +38,7 @@ class VoteView(object):
         self.schema = self.poll_plugin.get_vote_schema(self.poll)
 
 
-    @view_config(context=IPoll, name="vote", renderer=DEFAULT_TEMPLATE)
+    @view_config(context=IPoll, name="vote", permission=ADD_VOTE, renderer=DEFAULT_TEMPLATE)
     def add_vote(self):
         """ Add a Vote to a Poll. """
         #Permission check
@@ -121,7 +121,7 @@ class VoteView(object):
         self.response['form'] = self.form.render()
         return self.response
 
-    @view_config(name="delete", context=IVote, renderer=DEFAULT_TEMPLATE)
+    @view_config(name="delete", context=IVote, permission=DELETE, renderer=DEFAULT_TEMPLATE)
     def delete_vote(self):
         #FIXME: Add permission checks
         #FIXME: Check workflow

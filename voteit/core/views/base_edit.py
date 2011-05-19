@@ -11,10 +11,10 @@ from webob.exc import HTTPFound
 from slugify import slugify
 
 from repoze.workflow import get_workflow
+from pyramid.exceptions import Forbidden
 
 from voteit.core.views.api import APIView
-from voteit.core.security import ROLE_OWNER, EDIT
-from pyramid.exceptions import Forbidden
+from voteit.core.security import ROLE_OWNER, EDIT, DELETE
 
 DEFAULT_TEMPLATE = "templates/base_edit.pt"
 
@@ -127,7 +127,7 @@ class BaseEdit(object):
         self.response['form'] = self.form.render()
         return self.response
 
-    @view_config(name="delete", renderer=DEFAULT_TEMPLATE)
+    @view_config(name="delete", permission=DELETE, renderer=DEFAULT_TEMPLATE)
     def delete_form(self):
         schema = colander.Schema()
 
@@ -174,7 +174,7 @@ class BaseEdit(object):
         #If no id was found, don't just continue
         raise KeyError("No unique id could be found")
         
-    @view_config(name="state", renderer=DEFAULT_TEMPLATE, permission=EDIT)
+    @view_config(name="state", permission=EDIT, renderer=DEFAULT_TEMPLATE)
     def state_change(self):
         self.context.set_workflow_state(self.request.params.get('state'))
 

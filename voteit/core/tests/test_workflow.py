@@ -136,8 +136,8 @@ class WorkflowTests(unittest.TestCase):
         self.assertEqual(obj.get_workflow_state, u'approved')
 
         obj.reset_workflow()
-        obj.make_workflow_transition('published_to_finished')
-        self.assertEqual(obj.get_workflow_state, u'finished')
+        obj.make_workflow_transition('published_to_unhandled')
+        self.assertEqual(obj.get_workflow_state, u'unhandled')
 
         obj.reset_workflow()
         obj.make_workflow_transition('published_to_voting')

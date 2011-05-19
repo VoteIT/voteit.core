@@ -36,8 +36,8 @@
 			<key name="description" value=""/>
 		</state>
 
-		<state name="finished">
-			<key name="title" value="Finished"/>
+		<state name="unhandled">
+			<key name="title" value="Unhandled"/>
 			<key name="description" value=""/>
 		</state>
 
@@ -47,15 +47,6 @@
 			to_state="retracted"
 			permission="Edit"
 		/>
-
-        <!--
-		<transition
-			name="retracted_to_published"
-			from_state="retracted"
-			to_state="published"
-			permission="role:Owner"
-		/>
-		-->
 		
 		<transition
 			name="published_to_voting"
@@ -79,9 +70,9 @@
 		/>
 		
 		<transition
-			name="published_to_finished"
+			name="published_to_unhandled"
 			from_state="published"
-			to_state="finished"
+			to_state="unhandled"
 			permission="Moderate Meeting"
 		/>
 

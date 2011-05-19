@@ -4,26 +4,52 @@ from zope.interface import implements
 from zope.component import getUtility
 from zope.component import getUtilitiesFor
 from pyramid.traversal import find_interface, find_root
+from pyramid.security import Allow, DENY_ALL, ALL_PERMISSIONS
 from BTrees.OOBTree import OOBTree
 
+from voteit.core import security
+from voteit.core import register_content_info
 from voteit.core.models.agenda_item import AgendaItem
 from voteit.core.models.base_content import BaseContent
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IPollPlugin
 from voteit.core.models.interfaces import IVote
-from voteit.core.security import ADD_POLL
-from voteit.core import register_content_info
+
+
+ACL = {}
+ACL['ongoing'] = [(Allow, security.ROLE_ADMIN, ALL_PERMISSIONS),
+                  (Allow, security.ROLE_MODERATOR, (security.VIEW, security.EDIT,)),
+                  (Allow, security.ROLE_PARTICIPANT, (security.VIEW,)),
+                  (Allow, security.ROLE_VOTER, (security.VIEW, security.ADD_VOTE,)),
+                  (Allow, security.ROLE_VIEWER, (security.VIEW,)),
+                  DENY_ALL,
+                   ]
+ACL['closed'] = [(Allow, security.ROLE_ADMIN, ALL_PERMISSIONS),
+                 (Allow, security.ROLE_MODERATOR, (security.VIEW,)),
+                 (Allow, security.ROLE_PARTICIPANT, (security.VIEW,)),
+                 (Allow, security.ROLE_VIEWER, (security.VIEW,)),
+                 DENY_ALL,
+                ]
+CLOSED_STATES = ('canceled', 'closed', )
 
 
 class Poll(BaseContent):
     """ Poll content. """
     implements(IPoll)
-    
     content_type = 'Poll'
     omit_fields_on_edit = ('name',)
     allowed_contexts = ('AgendaItem',)
-    add_permission = ADD_POLL
-    
+    add_permission = security.ADD_POLL
+
+    @property
+    def __acl__(self):
+        state = self.get_workflow_state
+        if state in CLOSED_STATES:
+            return ACL['closed']
+        if state == u'ongoing':
+            return ACL['ongoing']
+        raise AttributeError('Check parents ACL')
+
     #proposals
     def _get_proposal_uids(self):
         return self.get_field_value('proposals')

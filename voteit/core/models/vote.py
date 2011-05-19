@@ -1,10 +1,20 @@
 from zope.interface import implements
 from pyramid.security import Allow
 from pyramid.security import DENY_ALL
+from pyramid.traversal import find_interface
 
-from voteit.core.models.base_content import BaseContent
-from voteit.core.models.interfaces import IVote
 from voteit.core import security
+from voteit.core.models.base_content import BaseContent
+from voteit.core.models.interfaces import IPoll
+from voteit.core.models.interfaces import IVote
+
+ACL = {}
+ACL['ongoing'] = [(Allow, security.ROLE_OWNER, (security.EDIT, security.VIEW, security.DELETE,)),
+                  DENY_ALL,
+                  ]
+ACL['closed'] = [(Allow, security.ROLE_OWNER,  security.VIEW,),
+                  DENY_ALL,
+                  ]
 
 
 class Vote(BaseContent):
@@ -16,11 +26,15 @@ class Vote(BaseContent):
     content_type = 'Vote'
     omit_fields_on_edit = ()
     allowed_contexts = () #N/A for this content type, it shouldn't be addable the normal way.
+    add_permission = security.ADD_VOTE
 
-    #FIXME: ACL need to reflect workflow
-    __acl__ = [(Allow, security.ROLE_OWNER, (security.EDIT, security.VIEW,)),
-               DENY_ALL,
-               ]
+    @property
+    def __acl__(self):
+        poll = find_interface(self, IPoll)
+        state = poll.get_workflow_state
+        if state == 'ongoing':
+            return ACL['ongoing']
+        return ACL['closed']
 
     def set_vote_data(self, value):
         """ Set vote data """
