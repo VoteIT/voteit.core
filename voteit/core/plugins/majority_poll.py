@@ -44,7 +44,7 @@ class MajorityPollPlugin(PollPlugin):
     def get_vote_class(self):
         return Vote
 
-    def get_result(self, ballots):
+    def get_result(self, ballots, **settings):
         """ Get the calculated result of this ballot.
             We'll update the ballots with percentage and simply return them.
             The result should look something like this:
@@ -59,23 +59,13 @@ class MajorityPollPlugin(PollPlugin):
             
             return ballots
 
-
     def _get_percentage(self, num):
         return u"%s%%" % (round(num*100, 1))
-
-    @staticmethod
-    def _get_proposal_by_uid(proposals, uid):
-        """ Return a proposal by it's uid"""
-        for prop in proposals:
-            if prop.uid == uid:
-                return prop
-        raise KeyError("No proposal found with UID '%s'" % uid)
         
-    def render_result(self, poll, ballots):
+    def render_result(self, poll):
         response = {}
-        response['result'] = self.get_result(ballots)
-        response['proposals'] = poll.get_proposal_objects()
-        response['get_proposal_by_uid'] = self._get_proposal_by_uid
+        response['result'] = poll.get_poll_result()
+        response['get_proposal_by_uid'] = poll.get_proposal_by_uid
         return render('templates/majority_poll.pt', response)
     
 def includeme(config):

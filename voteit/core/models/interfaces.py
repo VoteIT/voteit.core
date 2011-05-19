@@ -84,6 +84,11 @@ class IPoll(Interface):
     proposal_uids = Attribute("Contains a set of UIDs for all proposals this poll is about.")
     poll_plugin_name = Attribute("Returns the name of the selected voting utility.")
 
+    def get_poll_plugin():
+        """ Preform a poll plugin lookup. Returns the poll plugin that is
+            registered for this specific poll. Lookup uses the name set when the poll was added.
+        """
+
     def get_proposal_objects():
         """ Return all proposal objects resigered in this poll.
         """
@@ -92,15 +97,32 @@ class IPoll(Interface):
         """ Returns userids of all who've voted in this poll.
         """
 
-    def get_ballots():
-        """ Returns unique ballots and their counts. In the format:
-            [{'ballot':x,'count':y}, <etc...>]
-            The x in ballot can be any type of object. It's just what
-            this polls plugin considers to be a vote.
-        """
-
     def render_poll_result():
         """ Render poll result. Calls plugin to calculate result.
+        """
+
+    def close_poll():
+        """ Close the poll, calculate and store the result.
+        """
+
+    def set_raw_poll_data(value):
+        """ Store raw poll data. """
+    
+    def get_raw_poll_data():
+        """ Get raw poll data. """
+
+    def set_poll_result(value):
+        """ Set poll result - as defined by the poll plugin.
+        """
+    
+    def get_poll_result():
+        """ Get poll result - usually only called by the poll plugin since
+            it knows how to make sense of it.
+        """
+
+    def get_proposal_by_uid(uid):
+        """ Return a proposal by its uid. Raises KeyError if it isn't found, since
+            it shouldn't be used with uids that don't exist.
         """
 
 class IVote(Interface):
@@ -138,7 +160,13 @@ class IPollPlugin(Interface):
         """ Get an instance of the schema used to render a form for editing settings.
         """
 
-    def render_result(poll, ballots):
+    def get_result(ballots, **settings):
+        """ Get the result.
+            Settings should be keywords that are based on the configuration form for the current plugin.
+            See get_settings_schema.
+        """
+
+    def render_result(poll):
         """ Return rendered html with result display. Called by the poll view
             when the poll has finished.
         """

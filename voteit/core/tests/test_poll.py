@@ -119,8 +119,11 @@ class PollTests(unittest.TestCase):
         obj['vote4'] = self._make_vote(choice2)
         obj['vote5'] = self._make_vote(choice2)
 
-        expected = [{'count': 3, 'ballot': choice1}, {'count': 2, 'ballot': choice2}]
-        self.assertEqual(obj.get_ballots(), expected)
+        expected = [{'count': 2, 'ballot': choice2}, {'count': 3, 'ballot': choice1}]
+        result = obj.get_ballots()
+        result.sort(key=lambda x: x['count'])
+        
+        self.assertEqual(result, expected)
 
     def test_ballots_dict(self):
         obj = self._make_obj()
@@ -137,4 +140,9 @@ class PollTests(unittest.TestCase):
 
         #Keep an eye on this. Dicts aren't hashable so this may fail due to ordering in the list.
         expected = [{'count': 2, 'ballot': choice2}, {'count': 3, 'ballot': choice1}]
-        self.assertEqual(obj.get_ballots(), expected)
+        result = obj.get_ballots()
+        result.sort(key=lambda x: x['count'])
+        
+        self.assertEqual(result, expected)
+
+
