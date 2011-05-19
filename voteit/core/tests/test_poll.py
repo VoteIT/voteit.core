@@ -3,6 +3,7 @@ import unittest
 from pyramid import testing
 from zope.interface.verify import verifyObject
 from zope.component import queryUtility
+from pyramid.threadlocal import get_current_registry
 
 
 
@@ -21,7 +22,8 @@ class PollTests(unittest.TestCase):
     def _register_majority_poll(self, poll):
         from voteit.core import register_poll_plugin
         from voteit.core.plugins.majority_poll import MajorityPollPlugin
-        register_poll_plugin(MajorityPollPlugin)
+        registry = get_current_registry()
+        register_poll_plugin(MajorityPollPlugin, registry=registry)
 
     def _agenda_item_with_proposals_fixture(self):
         """ Create an agenda item with a poll and two proposals. """
@@ -144,5 +146,89 @@ class PollTests(unittest.TestCase):
         result.sort(key=lambda x: x['count'])
         
         self.assertEqual(result, expected)
+    
+    def _load_workflows(self):
+        from voteit.core import register_workflows
+        register_workflows()
+    
+    def _make_obj(self):
+        from voteit.core.models.poll import Poll
+        return Poll()
 
+    def _extract_transition_names(self, info):
+        return set([x['name'] for x in info])
 
+    def test_poll_transitions(self):
+        self._load_workflows()
+        
+        #Setup for proper test
+        obj = self._make_obj()
+        self._register_majority_poll(obj)
+        obj.set_field_value('poll_plugin', u'majority_poll')
+        
+        #Initial state
+        self.assertEqual(obj.get_workflow_state, u'private')
+        
+        #private -> planned
+        obj.make_workflow_transition('private_to_planned')
+        self.assertEqual(obj.get_workflow_state, u'planned')
+
+        #planned -> private
+        obj.make_workflow_transition('planned_to_private')
+        self.assertEqual(obj.get_workflow_state, u'private')
+
+        #planned -> ongoing
+        obj.reset_workflow()
+        obj.set_workflow_state('planned')
+        obj.make_workflow_transition('planned_to_ongoing')
+        self.assertEqual(obj.get_workflow_state, u'ongoing')
+
+        #planned -> canceled
+        obj.reset_workflow()
+        obj.set_workflow_state('planned')
+        obj.make_workflow_transition('planned_to_canceled')
+        self.assertEqual(obj.get_workflow_state, u'canceled')
+
+        #ongoing -> closed
+        obj.reset_workflow()
+        obj.set_workflow_state('planned')
+        obj.set_workflow_state('ongoing')
+        obj.make_workflow_transition('ongoing_to_closed')
+        self.assertEqual(obj.get_workflow_state, u'closed')
+
+    def test_available_transitions(self):
+        self._load_workflows()
+        
+        #Setup for proper test
+        obj = self._make_obj()
+        self._register_majority_poll(obj)
+        obj.set_field_value('poll_plugin', u'majority_poll')
+        
+        #Private - Initial state
+        result = self._extract_transition_names(obj.get_available_workflow_states())
+        self.assertEqual(result, set([u'planned']))
+        
+        #Planned
+        obj.set_workflow_state('planned')
+        result = self._extract_transition_names(obj.get_available_workflow_states())
+        self.assertEqual(result, set([u'private', u'ongoing', u'canceled']))
+
+        #Ongoing
+        obj.set_workflow_state('ongoing')
+        result = self._extract_transition_names(obj.get_available_workflow_states())
+        self.assertEqual(result, set([u'closed']))
+
+        #Canceled
+        obj.reset_workflow()
+        obj.set_workflow_state('planned')
+        obj.set_workflow_state('canceled')
+        result = self._extract_transition_names(obj.get_available_workflow_states())
+        self.assertEqual(result, set())
+
+        #Closed
+        obj.reset_workflow()
+        obj.set_workflow_state('planned')
+        obj.set_workflow_state('ongoing')
+        obj.set_workflow_state('closed')
+        result = self._extract_transition_names(obj.get_available_workflow_states())
+        self.assertEqual(result, set())

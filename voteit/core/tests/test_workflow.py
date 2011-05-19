@@ -78,11 +78,6 @@ class WorkflowTests(unittest.TestCase):
         obj.make_workflow_transition('closed_to_active')
         self.assertEqual(obj.get_workflow_state, u'active')
         
-        obj.reset_workflow()
-        obj.make_workflow_transition('private_to_inactive')
-        obj.make_workflow_transition('inactive_to_closed')
-        obj.make_workflow_transition('closed_to_inactive')
-        self.assertEqual(obj.get_workflow_state, u'inactive')
         
     def test_agenda_item_states(self):
         self._load_workflows()
@@ -122,19 +117,12 @@ class WorkflowTests(unittest.TestCase):
         obj.make_workflow_transition('closed_to_active')
         self.assertEqual(obj.get_workflow_state, u'active')
         
-        obj.reset_workflow()
-        obj.make_workflow_transition('private_to_inactive')
-        obj.make_workflow_transition('inactive_to_closed')
-        obj.make_workflow_transition('closed_to_inactive')
-        self.assertEqual(obj.get_workflow_state, u'inactive')
         
     def test_proposal_states(self):
         self._load_workflows()
         
         obj = Proposal()
         
-        workflow = get_workflow(Proposal, Proposal.__name__, obj)
-        obj.reset_workflow()
         self.assertEqual(obj.get_workflow_state, u'published')
 
         obj.make_workflow_transition('published_to_retracted')
@@ -146,46 +134,12 @@ class WorkflowTests(unittest.TestCase):
 
         obj.make_workflow_transition('voting_to_approved')
         self.assertEqual(obj.get_workflow_state, u'approved')
-        
-        obj.make_workflow_transition('approved_to_finished')
+
+        obj.reset_workflow()
+        obj.make_workflow_transition('published_to_finished')
         self.assertEqual(obj.get_workflow_state, u'finished')
 
         obj.reset_workflow()
         obj.make_workflow_transition('published_to_voting')
         obj.make_workflow_transition('voting_to_denied')
         self.assertEqual(obj.get_workflow_state, u'denied')
-        
-        obj.make_workflow_transition('denied_to_finished')
-        self.assertEqual(obj.get_workflow_state, u'finished')
-        
-    def test_poll_states(self):
-        self._load_workflows()
-        
-        obj = Poll()
-        
-        workflow = get_workflow(Poll, Poll.__name__, obj)
-        obj.reset_workflow()
-        self.assertEqual(obj.get_workflow_state, u'private')
-
-        obj.make_workflow_transition('private_to_ongoing')
-        self.assertEqual(obj.get_workflow_state, u'ongoing')
-
-        obj.make_workflow_transition('ongoing_to_closed')
-        self.assertEqual(obj.get_workflow_state, u'closed')
-        
-        obj.reset_workflow()
-        obj.make_workflow_transition('private_to_ongoing')
-        obj.make_workflow_transition('ongoing_to_cancelled')
-        self.assertEqual(obj.get_workflow_state, u'cancelled')
-
-        obj.reset_workflow()
-        obj.make_workflow_transition('private_to_ongoing')
-        obj.make_workflow_transition('ongoing_to_private')
-        self.assertEqual(obj.get_workflow_state, u'private')
-        
-    def test_meeting_transitions(self):
-        self._load_workflows()
-        
-        obj = Meeting()
-
-        states = obj.get_workflow_states()

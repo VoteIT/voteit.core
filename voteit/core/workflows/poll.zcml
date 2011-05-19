@@ -8,7 +8,7 @@
 		state_attr="state"
 		initial_state="private"
 		content_types="voteit.core.models.poll.Poll"
-		permission_checker="voteit.core.security.workflowpermission"
+        permission_checker="pyramid.security.has_permission"
 	>
 
 		<state name="private">
@@ -16,13 +16,18 @@
 			<key name="description" value=""/>
 		</state>
 
+        <state name="planned">
+            <key name="title" value="Planned"/>
+            <key name="description" value=""/>
+        </state>
+
 		<state name="ongoing">
 			<key name="title" value="Ongoing"/>
 			<key name="description" value=""/>
 		</state>
 
-		<state name="cancelled">
-			<key name="title" value="Cancelled"/>
+		<state name="canceled">
+			<key name="title" value="Canceled"/>
 			<key name="description" value=""/>
 		</state>
 
@@ -32,31 +37,38 @@
 		</state>
 
 		<transition
-			name="private_to_ongoing"
+			name="private_to_planned"
 			from_state="private"
-			to_state="ongoing"
-			permission="role:Owner"
+			to_state="planned"
+			permission="Edit"
 		/>
 		
 		<transition
-			name="ongoing_to_private"
-			from_state="ongoing"
+			name="planned_to_private"
+			from_state="planned"
 			to_state="private"
-			permission="role:Moderator"
+			permission="Edit"
 		/>
 		
+        <transition
+            name="planned_to_ongoing"
+            from_state="planned"
+            to_state="ongoing"
+            permission="Edit"
+        />
+
 		<transition
-			name="ongoing_to_cancelled"
-			from_state="ongoing"
-			to_state="cancelled"
-			permission="role:Moderator"
+			name="planned_to_canceled"
+			from_state="planned"
+			to_state="canceled"
+			permission="Edit"
 		/>
 		
 		<transition
 			name="ongoing_to_closed"
 			from_state="ongoing"
 			to_state="closed"
-			permission="role:Moderator"
+			permission="Edit"
 			callback="voteit.core.models.poll.closing_poll_callback"
 		/>
 
