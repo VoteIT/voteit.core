@@ -6,7 +6,6 @@ from repoze.zodbconn.finder import PersistentApplicationFinder
 from zope.component import getGlobalSiteManager
 from zope.interface.verify import verifyClass
 from zope.configuration import xmlconfig
-from pyramid.threadlocal import get_current_registry
 
 PROJECTNAME = 'voteit.core'
 #Must be before all of this packages imports
@@ -98,13 +97,13 @@ def register_poll_plugin(plugin_class, verify=True, registry=None):
     if verify:
         verifyClass(IPollPlugin, plugin_class)
     if registry is None:
-        registry = get_current_registry()
+        raise ValueError("Missing required keyword argument registry")
     registry.registerUtility(plugin_class(), IPollPlugin, name = plugin_class.name)
 
 
 def register_content_info(schema, type_class, update_method=None, verify=True, registry=None):
     if registry is None:
-        registry = get_current_registry()
+        raise ValueError("Missing required keyword argument registry")
     
     util = registry.getUtility(IContentUtility)
     

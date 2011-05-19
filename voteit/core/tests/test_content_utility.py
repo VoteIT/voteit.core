@@ -19,10 +19,8 @@ class ContentUtilityTests(unittest.TestCase):
         from voteit.core.models.content_utility import ContentUtility
         return ContentUtility()
 
-    def _register_util(self, registry=None):
+    def _register_util(self, registry):
         from voteit.core.models.interfaces import IContentUtility
-        if registry is None:
-            registry = get_current_registry()
         obj = self._make_obj()
         registry.registerUtility(obj, IContentUtility)
 
@@ -77,7 +75,7 @@ class ContentUtilityTests(unittest.TestCase):
             pass
 
         registry = get_current_registry() #To speed up the test, since we need it later
-        self._register_util(registry=registry) #Add utility
+        self._register_util(registry) #Add utility
         
         self.assertRaises(BrokenImplementation, register_content_info, None, BadCls, registry=registry)
 
@@ -89,7 +87,7 @@ class ContentUtilityTests(unittest.TestCase):
         from voteit.core.models.meeting import Meeting, MeetingSchema
         
         registry = get_current_registry() #To speed up the test, since we need it later
-        self._register_util(registry=registry) #Add utility
+        self._register_util(registry) #Add utility
         register_content_info(MeetingSchema, Meeting, verify=False, registry=registry)
         
         util = registry.getUtility(IContentUtility)
