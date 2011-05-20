@@ -12,6 +12,7 @@ from repoze.workflow import get_workflow
 
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import IContentUtility
+from voteit.core.models.expression_adapter import Expressions
 
 
 class APIView(object):
@@ -19,6 +20,9 @@ class APIView(object):
     USER_CACHE_ATTR = '_user_lookup_cache'
         
     def __init__(self, context, request):
+        self.context = context
+        self.request = request
+        
         self.resource_url = resource_url
         self.root = find_root(context)
         setattr(self, self.USER_CACHE_ATTR, {})
@@ -107,3 +111,22 @@ class APIView(object):
         response['resource_url'] = resource_url
         response['users'] = users
         return render('templates/creators_info.pt', response, request=request)
+
+    def get_user_expressions(self, context, tag, userid, display_name=None):
+        expressions = Expressions(self.request)
+        userids = expressions.retrieve_userids(tag, context.uid)
+
+        response = {}
+        response['toggle_url'] = "%sset_expression" % resource_url(context, self.request)
+        response['tag'] = tag
+        response['button_txt'] = "%s %s" % (len(userids), display_name and display_name or tag)
+        
+        if userid and userid in userids:
+            response['selected'] = True
+            response['do'] = "0"
+        else:
+            response['selected'] = False
+            response['do'] = "1"
+        response['count'] = len(userids)
+                
+        return render('templates/user_expressions.pt', response, request=self.request)

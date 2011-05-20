@@ -76,7 +76,6 @@ class MeetingView(BaseView):
                  permission=security.MODERATE_MEETING,
                  renderer="templates/pending_access_requests.pt")
     def pending_access_requests_view(self):
-        
         result = self.request.sqldb.execute("select id, userid, message from pending_meeting_access_requests where meeting_uid = '%s'" % self.context.uid)
         access_requests = []
         for row in result.fetchall():

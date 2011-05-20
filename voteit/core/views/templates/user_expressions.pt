@@ -1,0 +1,9 @@
+You like: <span tal:content="selected"></span>
+Num people: <span tal:content="count"></span>
+<form method="post" tal:attributes="action toggle_url">
+    <input name="tag" type="hidden" tal:attributes="value tag" />
+    <input name="do" type="hidden" tal:attributes="value do" />
+	<input name="submit" type="submit" 
+	       tal:attributes="value button_txt;
+	                       class selected and 'expression_button expression_enabled' or 'expression_button';" />
+</form>

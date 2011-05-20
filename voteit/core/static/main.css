@@ -119,3 +119,18 @@ div#page_info fieldset {
 #main {
     clear: both;
 }
+
+/* FIXME: Temp colors etc */
+.expression_button {
+	border: 1px solid #ccc;
+	background-color: #fff;
+}
+.expression_button:hover {
+    border-color: green;
+}
+.expression_enabled {
+    border-color: green;
+}
+.expression_enabled:hover {
+    border-color: yellow;
+}

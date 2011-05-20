@@ -30,6 +30,9 @@
                 <h3 tal:content="proposal.title">Title</h3>
                 <tal:creators tal:replace="structure api.get_creators_info(proposal.creators, request)">Creators</tal:creators>
                 <div tal:content="proposal.description">Description</div>
+				
+				<div tal:content="structure api.get_user_expressions(proposal, 'support', api.userid, 'Support')">User expressions</div>
+				
 	        </tal:iterate>
 		
 		    <tal:no_proposals condition="not proposals">
