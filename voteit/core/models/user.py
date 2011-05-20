@@ -1,4 +1,6 @@
+import re
 from hashlib import sha1
+
 from BTrees.OOBTree import OOBTree
 import colander
 import deform
@@ -8,9 +10,10 @@ from pyramid.security import Allow
 
 from voteit.core.models.base_content import BaseContent
 from voteit.core.models.interfaces import IUser
+from voteit.core.models.interfaces import IUsers
 from voteit.core import VoteITMF as _
 from voteit.core import security
-from voteit.core.security import ADD_USER
+from voteit.core.validators import password_validation
 
 
 def get_sha_password(password):
@@ -26,7 +29,7 @@ class User(BaseContent):
     content_type = 'User'
     allowed_contexts = ('Users',)
     omit_fields_on_edit = () #N/A for this content type
-    add_permission = ADD_USER
+    add_permission = security.ADD_USER
     
     __acl__ = [(Allow, security.ROLE_ADMIN, security.EDIT),
                (Allow, security.ROLE_OWNER, [security.EDIT, security.CHANGE_PASSWORD])]
@@ -63,55 +66,82 @@ def construct_schema(**kwargs):
     if type is None:
         KeyError("'type' is a required keyword for User schemas. See construct_schema in the user module.")    
 
+    #Common schema nodes
+    password_node = colander.SchemaNode(
+                        colander.String(),
+                        validator=password_validation,
+                        widget=deform.widget.CheckedPasswordWidget(size=20),
+                        title=_('Password'))
+    email_node = colander.SchemaNode(colander.String(),
+                                     title=_(u"Email"),
+                                     validator=colander.Email(msg=_(u"Invalid email")))
+    first_name_node = colander.SchemaNode(colander.String(),
+                                          title=_(u"First name"),)
+    last_name_node = colander.SchemaNode(colander.String(),
+                                         title=_(u"Last name"),
+                                         missing=u"",)
+
+
     if type == 'login':
         class LoginSchema(colander.Schema):
-            userid = colander.SchemaNode(colander.String())
-            password = colander.SchemaNode(
-                        colander.String(),
-                        validator=colander.Length(min=5, max=100),
-                        widget=deform.widget.PasswordWidget(size=20),
-                        description=_('Enter your password'))
+            userid = colander.SchemaNode(colander.String(),
+                                         title=_(u"UserID or email address."))
+            password = colander.SchemaNode(colander.String(),
+                                           title=_('Password'),
+                                           widget=deform.widget.PasswordWidget(size=20),)
             came_from = colander.SchemaNode(
                         colander.String(),
                         widget = deform.widget.HiddenWidget(),
-                        default='/',
-                        )
+                        default='/',)
         return LoginSchema()
 
     if type in ('add', 'registration'):
+        if not IUsers.providedBy(context):
+            raise TypeError("context for a user registration must be an object that implements IUsers.")
+        
+        def _userid_validation(node, value):
+            """ Context-dependent userid validation.
+                Check that userid is:
+                - unique
+                - doesn't contain bogus chars
+            """
+            pattern = re.compile(r'^[a-zA-Z]{1}[\w-]{1,14}$')
+            if not pattern.match(value):
+                raise colander.Invalid(node, _(u"UserID must be 3-15 chars, start with a-zA-Z and only contain regular latin chars, numbers, minus and underscore."))
+            if value in context:
+                raise colander.Invalid(node, _(u"UserID already registered. If it was registered by you, try to retrieve your password."))
+
         class AddUserSchema(colander.Schema):
-            userid = colander.SchemaNode(colander.String())
-            password = colander.SchemaNode(
-                        colander.String(),
-                        validator=colander.Length(min=5),
-                        widget=deform.widget.CheckedPasswordWidget(size=20),
-                        description=_(u'Type your password and confirm it'))
-            email = colander.SchemaNode(colander.String())
-            first_name = colander.SchemaNode(colander.String())
-            last_name = colander.SchemaNode(colander.String())
+            userid = colander.SchemaNode(colander.String(),
+                                         title = _(u"UserID"),
+                                         description = _(u"Used like a nick-name and as a unique id. You can't change this later."),
+                                         validator=_userid_validation)
+            password = password_node
+            email = email_node
+            first_name = first_name_node
+            last_name = last_name_node
         return AddUserSchema()
 
     if type == 'edit':
         class EditUserSchema(colander.Schema):
-            email = colander.SchemaNode(colander.String())
-            first_name = colander.SchemaNode(colander.String())
-            last_name = colander.SchemaNode(colander.String())
+            email = email_node
+            first_name = first_name_node
+            last_name = last_name_node
             biography = colander.SchemaNode(colander.String(),
-                        widget = deform.widget.TextAreaWidget(rows=10, cols=60),
-                        default = u'')
+                title = _(u"About you"),
+                description = _(u"Please note that anything you type here will be visible to all registered users."),
+                widget = deform.widget.TextAreaWidget(rows=10, cols=60),
+                missing=u"")
         return EditUserSchema()
 
     if type == 'change_password':
         class ChangePasswordSchema(colander.Schema):
-            password = colander.SchemaNode(
-                        colander.String(),
-                        validator=colander.Length(min=5),
-                        widget=deform.widget.CheckedPasswordWidget(size=20),
-                        description=_(u'Type your password and confirm it'))
+            password = password_node
         return ChangePasswordSchema()
 
     #No schema found
     raise KeyError("No schema found of type: '%s'" % type)
+
 
 def includeme(config):
     from voteit.core import register_content_info
