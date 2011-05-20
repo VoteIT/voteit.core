@@ -51,7 +51,7 @@ class BaseContent(Folder, SecurityAware):
 
     #title
     def _get_title(self):
-        return self.get_field_value('title')
+        return self.get_field_value('title', u"")
     
     def _set_title(self, value):
         self.set_field_value('title', value)
@@ -59,7 +59,7 @@ class BaseContent(Folder, SecurityAware):
     title = property(_get_title, _set_title)
 
     def _get_description(self):
-        return self.get_field_value('description')
+        return self.get_field_value('description', u"")
     
     def _set_description(self, value):
         self.set_field_value('description', value)
