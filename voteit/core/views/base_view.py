@@ -1,7 +1,4 @@
 from pyramid.view import view_config
-from pyramid.url import resource_url
-from pyramid.renderers import get_renderer
-from pyramid.traversal import find_root, find_interface
 
 from voteit.core.views.api import APIView
 from voteit.core.security import VIEW
@@ -17,7 +14,7 @@ class BaseView(object):
         self.request = request
 
         self.response = {}
-        self.response['api'] = APIView(context, request)
+        self.response['api'] = self.api = APIView(context, request)
         self.response['show_content_listing'] = True
 
     @view_config(renderer=DEFAULT_TEMPLATE, permission=VIEW)

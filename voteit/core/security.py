@@ -17,6 +17,7 @@ REGISTER = 'Register'
 CHANGE_PASSWORD = 'Change Password'
 MANAGE_GROUPS = 'Manage Groups'
 MODERATE_MEETING = 'Moderate Meeting'
+REQUEST_MEETING_ACCESS = 'Request Meeting Access'
 
 #Add permissions
 #Note: For add permissions, check each content types class
