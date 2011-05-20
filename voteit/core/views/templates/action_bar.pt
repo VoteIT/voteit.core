@@ -1,13 +1,5 @@
 <div id="action_bar">
     <ul>
-        <li id="add_content" tal:condition="addable_types|False"><a href="#">Content</a>
-            <ul>
-            <tal:iterate tal:repeat="type_name addable_types">
-                <li><a tal:content="string: add $type_name"
-                   tal:attributes="href string:@@add?content_type=$type_name">Name</a></li>
-            </tal:iterate>
-            </ul>
-        </li>
         <li id="add_vote" tal:condition="context.content_type == 'Poll'">
             <a tal:attributes="href resource_url(context, request) + '@@vote'">Vote</a>
         </li>
@@ -22,4 +14,3 @@
         </li>
     </ul>
 </div>
-<div style="clear: both"></div>

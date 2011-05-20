@@ -1,4 +1,5 @@
 import colander
+import deform
 from zope.interface import implements
 from pyramid.security import Allow, DENY_ALL, ALL_PERMISSIONS
 
@@ -52,7 +53,9 @@ class Meeting(BaseContent):
 def construct_schema(**kwargs):
     class MeetingSchema(colander.MappingSchema):
         title = colander.SchemaNode(colander.String())
-        description = colander.SchemaNode(colander.String())
+        description = colander.SchemaNode(
+            colander.String(),
+            widget=deform.widget.TextAreaWidget(rows=10, cols=60))
     return MeetingSchema()
 
 def includeme(config):

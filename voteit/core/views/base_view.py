@@ -17,7 +17,7 @@ class BaseView(object):
         self.request = request
 
         self.response = {}
-        self.response['api'] = APIView(context, request)
+        self.response['api'] = self.api = APIView(context, request)
         self.response['show_content_listing'] = True
 
     @view_config(renderer=DEFAULT_TEMPLATE, permission=VIEW)

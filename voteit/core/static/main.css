@@ -34,7 +34,7 @@ body {
 	bottom: 0px;
 }
 #profile_toolbar {
-	text-align: right;
+    width: 100%;
 	background: #dbe0e5;
 }
 h1, h2, h3, h4, h5, h6 {
@@ -47,7 +47,7 @@ h1 {
 	font-size: 200%;
 }
 h2 {
-    font-size: 1750%;
+    font-size: 175%;
 }
 h3 {
     font-size: 150%;
@@ -80,7 +80,6 @@ a {
 #profile_toolbar ul,
 #action_bar ul {
 	float: right;
-	margin-top: -0.6em;
 }
 #profile_toolbar ul li,
 #action_bar ul li { 
@@ -98,4 +97,25 @@ a {
 
 #states li.current{
     font-weight: bold;
+}
+
+.column {
+    float: left;
+    width: 49%
+}
+
+div#page_info fieldset {
+    border: 1px solid black;
+}
+
+#profile_toolbar .content_wrapper {
+    padding: 0;
+}
+
+#profile_toolbar h2 {
+    margin: 0;
+}
+
+#main {
+    clear: both;
 }

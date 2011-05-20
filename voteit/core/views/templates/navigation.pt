@@ -16,7 +16,7 @@
 		<div class="browse_up">
 			<a tal:attributes="href api.resource_url(api.root, request)">&laquo; all meetings</a>
 		</div>
-        <h5 class="header breakout">
+        <h5 class="header">
             <a tal:attributes="href api.resource_url(meeting, request)"
                tal:content="meeting.get_field_value('title')">Meeting title</a>
         </h5>

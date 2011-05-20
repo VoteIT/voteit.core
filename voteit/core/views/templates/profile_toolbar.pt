@@ -1,6 +1,21 @@
-<div id="profile_toolbar" metal:define-macro="profile_toolbar">
+<div id="profile_toolbar" metal:define-macro="profile_toolbar" tal:define="meeting api.find_meeting(context)">
 	<div class="content_wrapper">
+        <h2 tal:condition="meeting">
+            <a tal:attributes="href api.resource_url(meeting, request)"
+               tal:content="meeting.get_field_value('title')">Meeting title</a>
+        </h2>
+        <h2 tal:condition="not meeting">
+            VoteIT
+        </h2>
 		<ul>
+            <li id="add_content" tal:condition="api.addable_types|False"><a href="#">Content</a>
+                <ul>
+                <tal:iterate tal:repeat="type_name api.addable_types">
+                    <li><a tal:content="string: add $type_name"
+                       tal:attributes="href string:@@add?content_type=$type_name">Name</a></li>
+                </tal:iterate>
+                </ul>
+            </li>
 		<tal:administrator condition="api.userid">
 			<!-- Administrator actions -->
 			<li>
@@ -9,7 +24,7 @@
 					<li><a tal:attributes="href request.application_url + '/users/@@list'">Users</a></li>
 				</ul>
 			</li>
-		</tal:administrator>
+    	</tal:administrator>
 		
 		<tal:authenticated condition="api.userid">
 			<!-- Regular authenticated user actions -->
