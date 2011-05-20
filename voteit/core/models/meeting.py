@@ -1,8 +1,9 @@
 import colander
 import deform
 from zope.interface import implements
-from pyramid.security import Allow, DENY_ALL, ALL_PERMISSIONS
+from pyramid.security import Allow, DENY_ALL, ALL_PERMISSIONS, Authenticated
 
+from voteit.core import VoteITMF as _
 from voteit.core import security
 from voteit.core import register_content_info
 from voteit.core.models.base_content import BaseContent
@@ -15,6 +16,7 @@ ACL['default'] = [(Allow, security.ROLE_ADMIN, ALL_PERMISSIONS),
                   (Allow, security.ROLE_OWNER, (security.VIEW, security.EDIT,)),
                   (Allow, security.ROLE_PARTICIPANT, (security.VIEW, security.ADD_PROPOSAL,)),
                   (Allow, security.ROLE_VIEWER, (security.VIEW,)),
+                  (Allow, Authenticated, security.REQUEST_MEETING_ACCESS),
                   DENY_ALL,
                    ]
 ACL['private'] = [(Allow, security.ROLE_ADMIN, ALL_PERMISSIONS),
@@ -42,15 +44,18 @@ class Meeting(BaseContent):
     def __acl__(self):
         return ACL.get(self.get_workflow_state, ACL['default'])
 
-    @property
-    def is_closed(self):
-        """ Check if the meeting is closed. After a meeting has closed,
-            no one should be albe to make any changes.
-        """
-        return self.get_workflow_state == u'closed'
-
 
 def construct_schema(**kwargs):
+    if kwargs.get('type') == 'request_access':
+        class RequestAccessSchema(colander.Schema):
+            message = colander.SchemaNode(colander.String(),
+                                          title = _(u"Message"),
+                                          validator = colander.Length(5, 999),
+                                          default = _(u"Knock knock - Please let me access the meeting."),
+                                          widget = deform.widget.TextAreaWidget(rows=5, cols=40),)
+        return RequestAccessSchema()
+    
+    #Default schema
     class MeetingSchema(colander.MappingSchema):
         title = colander.SchemaNode(colander.String())
         description = colander.SchemaNode(

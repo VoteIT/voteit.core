@@ -82,8 +82,9 @@ class UsersView(object):
 
     @view_config(context=ISiteRoot, name="register", renderer=DEFAULT_TEMPLATE)
     def registration_form(self):
+        users = self.context.users
         content_util = self.request.registry.getUtility(IContentUtility)
-        schema = content_util['User'].schema(context=self.context, request=self.request, type='registration')
+        schema = content_util['User'].schema(context=users, request=self.request, type='registration')
 
         self.form = Form(schema, buttons=('register', 'cancel'))
         self.response['form_resources'] = self.form.get_widget_resources()
@@ -117,7 +118,7 @@ class UsersView(object):
                 obj.set_field_value(k, v)
             
             #self.context is the site root. Users are stored in the users-property
-            self.context.users[name] = obj
+            users[name] = obj
             
             url = resource_url(self.context, self.request)
             

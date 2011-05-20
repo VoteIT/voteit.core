@@ -39,7 +39,7 @@ class AgendaItem(BaseContent):
             return ACL['closed']
         
         meeting = find_interface(self, IMeeting)
-        if meeting.is_closed:
+        if meeting.get_workflow_state == u'closed':
             return ACL['closed']
         
         if state == 'private':

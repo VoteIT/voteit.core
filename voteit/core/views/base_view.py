@@ -1,7 +1,4 @@
 from pyramid.view import view_config
-from pyramid.url import resource_url
-from pyramid.renderers import get_renderer
-from pyramid.traversal import find_root, find_interface
 
 from voteit.core.views.api import APIView
 from voteit.core.security import VIEW

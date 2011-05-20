@@ -54,6 +54,9 @@ def login(context, request):
                                  headers = headers)
         message = _('Login failed.')
     
+    if 'cancel' in request.POST:
+        return HTTPFound(location = referrer)
+    
     #Render form
     response['form'] = form.render()
     return response
