@@ -25,9 +25,9 @@ class ContentUtilityTests(unittest.TestCase):
         registry.registerUtility(obj, IContentUtility)
 
     def _make_content_type_info(self):
-        from voteit.core.models.meeting import Meeting, MeetingSchema
+        from voteit.core.models.meeting import Meeting, construct_schema
         from voteit.core.models.content_type_info import ContentTypeInfo
-        return ContentTypeInfo(MeetingSchema, Meeting)
+        return ContentTypeInfo(construct_schema, Meeting)
 
     def test_verify_obj(self):
         from voteit.core.models.interfaces import IContentUtility
@@ -48,10 +48,10 @@ class ContentUtilityTests(unittest.TestCase):
         self.assertRaises(DoesNotImplement, obj.add, cti)
 
     def test_create(self):
-        from voteit.core.models.meeting import Meeting, MeetingSchema
+        from voteit.core.models.meeting import Meeting, construct_schema
         from voteit.core.models.interfaces import IContentTypeInfo
         util = self._make_obj()
-        cti = util.create(MeetingSchema, Meeting)
+        cti = util.create(construct_schema, Meeting)
 
         self.assertTrue(verifyObject(IContentTypeInfo, cti))
 
@@ -84,11 +84,11 @@ class ContentUtilityTests(unittest.TestCase):
         """
         from voteit.core.models.interfaces import IContentUtility
         from voteit.core import register_content_info
-        from voteit.core.models.meeting import Meeting, MeetingSchema
+        from voteit.core.models.meeting import Meeting, construct_schema
         
         registry = get_current_registry() #To speed up the test, since we need it later
         self._register_util(registry) #Add utility
-        register_content_info(MeetingSchema, Meeting, verify=False, registry=registry)
+        register_content_info(construct_schema, Meeting, verify=False, registry=registry)
         
         util = registry.getUtility(IContentUtility)
         

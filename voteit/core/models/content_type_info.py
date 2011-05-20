@@ -14,10 +14,9 @@ class ContentTypeInfo(object):
     """
     implements(IContentTypeInfo)
     
-    def __init__(self, schema, type_class, update_method=None):
+    def __init__(self, schema, type_class):
         self.schema = schema
         self.type_class = type_class
-        self.update_method = update_method
 
     @property
     def content_type(self):

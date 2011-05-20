@@ -9,9 +9,6 @@ from voteit.core.models.interfaces import IContentUtility
 from voteit.core.models.interfaces import ISiteRoot
 from voteit.core.models.interfaces import IUser
 from voteit.core.models.interfaces import IUsers
-from voteit.core.models.user import AddUserSchema
-from voteit.core.models.user import EditUserSchema
-from voteit.core.models.user import ChangePasswordSchema
 from voteit.core.views.api import APIView
 from voteit.core.security import CHANGE_PASSWORD, ROLE_OWNER
 
@@ -32,7 +29,7 @@ class UsersView(object):
     def add_form(self):
         #FIXME: Utility might need to handle different schemas here?
         content_util = self.request.registry.getUtility(IContentUtility)
-        schema = AddUserSchema()
+        schema = content_util['User'].schema(context=self.context, request=self.request, type='add')
 
         self.form = Form(schema, buttons=('add', 'cancel'))
         self.response['form_resources'] = self.form.get_widget_resources()
@@ -86,7 +83,7 @@ class UsersView(object):
     @view_config(context=ISiteRoot, name="register", renderer=DEFAULT_TEMPLATE)
     def registration_form(self):
         content_util = self.request.registry.getUtility(IContentUtility)
-        schema = AddUserSchema()
+        schema = content_util['User'].schema(context=self.context, request=self.request, type='registration')
 
         self.form = Form(schema, buttons=('register', 'cancel'))
         self.response['form_resources'] = self.form.get_widget_resources()
@@ -143,8 +140,9 @@ class UsersView(object):
         return self.response
     @view_config(context=IUser, name="edit", renderer=DEFAULT_TEMPLATE)
     def edit_form(self):
-        schema = EditUserSchema()
-        
+        content_util = self.request.registry.getUtility(IContentUtility)
+        schema = content_util['User'].schema(context=self.context, request=self.request, type='edit')
+
         #Make the current value the default value
         for field in schema:
             field.default = self.context.get_field_value(field.name)
@@ -180,7 +178,8 @@ class UsersView(object):
 
     @view_config(context=IUser, name="change_password", renderer=DEFAULT_TEMPLATE, permission=CHANGE_PASSWORD)
     def password_form(self):
-        schema = ChangePasswordSchema()
+        content_util = self.request.registry.getUtility(IContentUtility)
+        schema = content_util['User'].schema(context=self.context, request=self.request, type='change_password')
 
         self.form = Form(schema, buttons=('update', 'cancel'))
         self.response['form_resources'] = self.form.get_widget_resources()

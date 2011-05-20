@@ -19,9 +19,9 @@ class ContentUtility(Folder):
         name = str(factory_obj.content_type)
         super(ContentUtility, self).add(name, factory_obj)
 
-    def create(self, schema, type_class, update_method=None):
+    def create(self, schema, type_class):
         """ See IContentUtility. """
-        return ContentTypeInfo(schema, type_class, update_method=update_method)
+        return ContentTypeInfo(schema, type_class)
 
     def addable_in_type(self, content_type):
         """ See IContentUtility. """

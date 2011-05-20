@@ -39,10 +39,7 @@ class BaseEdit(object):
         if not has_permission(add_permission, self.context, self.request):
             raise Forbidden("You're not allowed to add '%s' in this context." % content_type)
         
-        schema = ftis[content_type].schema().clone()
-        update_method = ftis[content_type].update_method
-        if update_method is not None:
-            update_method(schema, self.context)
+        schema = ftis[content_type].schema(context=self.context, request=self.request, type='add')
             
         self.form = Form(schema, buttons=('add', 'cancel'))
         self.response['form_resources'] = self.form.get_widget_resources()
@@ -84,10 +81,7 @@ class BaseEdit(object):
     def edit_form(self):
         content_type = self.context.content_type
         ftis = self.api.content_info
-        schema = ftis[content_type].schema().clone()
-        update_method = ftis[content_type].update_method
-        if update_method is not None:
-            update_method(schema, self.context)
+        schema = ftis[content_type].schema(context=self.context, request=self.request, type='edit')
 
         #Remove unwanted fields like 'name'
         for omit_name in ftis[content_type].omit_fields_on_edit:

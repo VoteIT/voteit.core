@@ -27,12 +27,13 @@ class SiteRoot(BaseContent):
     def users(self):
         return self['users']
 
-
-class SiteRootSchema(colander.MappingSchema):
-    title = colander.SchemaNode(colander.String())
-    description = colander.SchemaNode(colander.String())
+def construct_schema(**kwargs):
+    class SiteRootSchema(colander.MappingSchema):
+        title = colander.SchemaNode(colander.String())
+        description = colander.SchemaNode(colander.String())
+    return SiteRootSchema()
 
 
 def includeme(config):
     from voteit.core import register_content_info
-    register_content_info(SiteRootSchema, SiteRoot, registry=config.registry)
+    register_content_info(construct_schema, SiteRoot, registry=config.registry)

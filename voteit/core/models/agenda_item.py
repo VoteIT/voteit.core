@@ -47,11 +47,15 @@ class AgendaItem(BaseContent):
         raise AttributeError("Go fetch parents acl")
 
 
-class AgendaItemSchema(colander.MappingSchema):
-    title = colander.SchemaNode(colander.String())
-    description = colander.SchemaNode(colander.String())
+
+
+def construct_schema(**kwargs):
+    class AgendaItemSchema(colander.MappingSchema):
+        title = colander.SchemaNode(colander.String())
+        description = colander.SchemaNode(colander.String())
+    return AgendaItemSchema()
 
 
 def includeme(config):
     from voteit.core import register_content_info
-    register_content_info(AgendaItemSchema, AgendaItem, registry=config.registry)
+    register_content_info(construct_schema, AgendaItem, registry=config.registry)

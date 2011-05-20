@@ -35,10 +35,12 @@ class Proposal(BaseContent):
         raise AttributeError('Check parents ACL')
 
 
-class ProposalSchema(colander.MappingSchema):
-    title = colander.SchemaNode(colander.String())
-    description = colander.SchemaNode(colander.String())
+def construct_schema(**kwargs):
+    class ProposalSchema(colander.MappingSchema):
+        title = colander.SchemaNode(colander.String())
+        description = colander.SchemaNode(colander.String())
+    return ProposalSchema()
 
 
 def includeme(config):
-    register_content_info(ProposalSchema, Proposal, registry=config.registry)
+    register_content_info(construct_schema, Proposal, registry=config.registry)

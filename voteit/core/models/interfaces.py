@@ -178,8 +178,6 @@ class IContentTypeInfo(Interface):
     """
     schema = Attribute("Schema class to use for this content")
     type_class = Attribute("Class to construct content from")
-    update_method = Attribute("A method to be called if the schema needs to be"
-                              "updated during runtime. See base_edit.py")
     omit_fields_on_edit = Attribute("Returns the type_class attribute omit_fields_on_edit."
                                     "It's usually a tuple of field names to remove on edit")
     
@@ -208,7 +206,7 @@ class IContentUtility(Interface):
                 implemented by the factory_obj.
         """
 
-    def create(schema, type_class, update_method=None):
+    def create(schema, type_class):
         """ Create a ContentTypeInfo object and return it. """
 
     def addable_in_type(content_type):

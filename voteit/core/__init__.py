@@ -101,12 +101,12 @@ def register_poll_plugin(plugin_class, verify=True, registry=None):
     registry.registerUtility(plugin_class(), IPollPlugin, name = plugin_class.name)
 
 
-def register_content_info(schema, type_class, update_method=None, verify=True, registry=None):
+def register_content_info(schema, type_class, verify=True, registry=None):
     if registry is None:
         raise ValueError("Missing required keyword argument registry")
     
     util = registry.getUtility(IContentUtility)
     
-    obj = util.create(schema, type_class, update_method=update_method)
+    obj = util.create(schema, type_class)
     util.add(obj, verify=verify)
     

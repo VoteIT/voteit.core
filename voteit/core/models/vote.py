@@ -4,6 +4,7 @@ from pyramid.security import DENY_ALL
 from pyramid.traversal import find_interface
 
 from voteit.core import security
+from voteit.core import VoteITMF as _
 from voteit.core.models.base_content import BaseContent
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IVote
@@ -27,6 +28,9 @@ class Vote(BaseContent):
     omit_fields_on_edit = ()
     allowed_contexts = () #N/A for this content type, it shouldn't be addable the normal way.
     add_permission = security.ADD_VOTE
+    
+    title = _(u"Your vote")
+    description = _(u"This is your vote. While the poll is open, you can delete or change it if you wish.")
 
     @property
     def __acl__(self):

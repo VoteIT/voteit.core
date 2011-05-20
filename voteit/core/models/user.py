@@ -55,49 +55,64 @@ class User(BaseContent):
     title = property(_get_title, _set_title)
 
 
-class AddUserSchema(colander.Schema):
-    userid = colander.SchemaNode(colander.String())
-    password = colander.SchemaNode(
-                colander.String(),
-                validator=colander.Length(min=5),
-                widget=deform.widget.CheckedPasswordWidget(size=20),
-                description=_(u'Type your password and confirm it'))
-    email = colander.SchemaNode(colander.String())
-    first_name = colander.SchemaNode(colander.String())
-    last_name = colander.SchemaNode(colander.String())
+def construct_schema(**kwargs):
+    context = kwargs.get('context', None)
+    type = kwargs.get('type', None)
+    if context is None:
+        KeyError("'context' is a required keyword for User schemas. See construct_schema in the user module.")    
+    if type is None:
+        KeyError("'type' is a required keyword for User schemas. See construct_schema in the user module.")    
 
+    if type == 'login':
+        class LoginSchema(colander.Schema):
+            userid = colander.SchemaNode(colander.String())
+            password = colander.SchemaNode(
+                        colander.String(),
+                        validator=colander.Length(min=5, max=100),
+                        widget=deform.widget.PasswordWidget(size=20),
+                        description=_('Enter your password'))
+            came_from = colander.SchemaNode(
+                        colander.String(),
+                        widget = deform.widget.HiddenWidget(),
+                        default='/',
+                        )
+        return LoginSchema()
 
-class EditUserSchema(colander.Schema):
-    email = colander.SchemaNode(colander.String())
-    first_name = colander.SchemaNode(colander.String())
-    last_name = colander.SchemaNode(colander.String())
-    biography = colander.SchemaNode(colander.String(),
-                widget = deform.widget.TextAreaWidget(rows=10, cols=60),
-                default = u'')
+    if type in ('add', 'registration'):
+        class AddUserSchema(colander.Schema):
+            userid = colander.SchemaNode(colander.String())
+            password = colander.SchemaNode(
+                        colander.String(),
+                        validator=colander.Length(min=5),
+                        widget=deform.widget.CheckedPasswordWidget(size=20),
+                        description=_(u'Type your password and confirm it'))
+            email = colander.SchemaNode(colander.String())
+            first_name = colander.SchemaNode(colander.String())
+            last_name = colander.SchemaNode(colander.String())
+        return AddUserSchema()
 
+    if type == 'edit':
+        class EditUserSchema(colander.Schema):
+            email = colander.SchemaNode(colander.String())
+            first_name = colander.SchemaNode(colander.String())
+            last_name = colander.SchemaNode(colander.String())
+            biography = colander.SchemaNode(colander.String(),
+                        widget = deform.widget.TextAreaWidget(rows=10, cols=60),
+                        default = u'')
+        return EditUserSchema()
 
-class LoginSchema(colander.Schema):
-    userid = colander.SchemaNode(colander.String())
-    password = colander.SchemaNode(
-                colander.String(),
-                validator=colander.Length(min=5, max=100),
-                widget=deform.widget.PasswordWidget(size=20),
-                description=_('Enter a password'))
-    came_from = colander.SchemaNode(
-                colander.String(),
-                widget = deform.widget.HiddenWidget(),
-                default='/',
-                )
+    if type == 'change_password':
+        class ChangePasswordSchema(colander.Schema):
+            password = colander.SchemaNode(
+                        colander.String(),
+                        validator=colander.Length(min=5),
+                        widget=deform.widget.CheckedPasswordWidget(size=20),
+                        description=_(u'Type your password and confirm it'))
+        return ChangePasswordSchema()
 
-
-class ChangePasswordSchema(colander.Schema):
-    password = colander.SchemaNode(
-                colander.String(),
-                validator=colander.Length(min=5),
-                widget=deform.widget.CheckedPasswordWidget(size=20),
-                description=_(u'Type your password and confirm it'))
-
+    #No schema found
+    raise KeyError("No schema found of type: '%s'" % type)
 
 def includeme(config):
     from voteit.core import register_content_info
-    register_content_info(None, User, registry=config.registry)
+    register_content_info(construct_schema, User, registry=config.registry)

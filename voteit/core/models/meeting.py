@@ -2,9 +2,9 @@ import colander
 from zope.interface import implements
 from pyramid.security import Allow, DENY_ALL, ALL_PERMISSIONS
 
-from voteit.core.models.base_content import BaseContent
 from voteit.core import security
 from voteit.core import register_content_info
+from voteit.core.models.base_content import BaseContent
 from voteit.core.models.interfaces import IMeeting
 
 ACL = {}
@@ -49,10 +49,11 @@ class Meeting(BaseContent):
         return self.get_workflow_state == u'closed'
 
 
-class MeetingSchema(colander.MappingSchema):
-    title = colander.SchemaNode(colander.String())
-    description = colander.SchemaNode(colander.String())
-
+def construct_schema(**kwargs):
+    class MeetingSchema(colander.MappingSchema):
+        title = colander.SchemaNode(colander.String())
+        description = colander.SchemaNode(colander.String())
+    return MeetingSchema()
 
 def includeme(config):
-    register_content_info(MeetingSchema, Meeting, registry=config.registry)
+    register_content_info(construct_schema, Meeting, registry=config.registry)

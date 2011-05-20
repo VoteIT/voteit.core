@@ -12,13 +12,15 @@ class Users(BaseContent):
     omit_fields_on_edit = ()
     allowed_contexts = ()
     add_permission = None
-    
 
-class UsersSchema(colander.Schema):
-    title = colander.SchemaNode(colander.String())
-    description = colander.SchemaNode(colander.String())
+
+def construct_schema(**kwargs):
+    class UsersSchema(colander.Schema):
+        title = colander.SchemaNode(colander.String())
+        description = colander.SchemaNode(colander.String())
+    return UsersSchema()
 
 
 def includeme(config):
     from voteit.core import register_content_info
-    register_content_info(UsersSchema, Users, registry=config.registry)
+    register_content_info(construct_schema, Users, registry=config.registry)

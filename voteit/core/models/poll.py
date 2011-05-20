@@ -9,8 +9,8 @@ from BTrees.OOBTree import OOBTree
 
 from voteit.core import security
 from voteit.core import register_content_info
-from voteit.core.models.agenda_item import AgendaItem
 from voteit.core.models.base_content import BaseContent
+from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IPollPlugin
 from voteit.core.models.interfaces import IVote
@@ -81,7 +81,7 @@ class Poll(BaseContent):
         return getUtility(IPollPlugin, name = self.poll_plugin_name)
 
     def get_proposal_objects(self):
-        agenda_item = find_interface(self, AgendaItem)
+        agenda_item = find_interface(self, IAgendaItem)
         proposals = set()
         for item in agenda_item.values():
             if item.uid in self.proposal_uids:
@@ -151,35 +151,39 @@ class Ballots(object):
             self.ballots[value] = 1
 
 
-class PollSchema(colander.MappingSchema):
-    title = colander.SchemaNode(colander.String())
-    description = colander.SchemaNode(colander.String())
-    
-    
-def update_poll_schema(schema, context):
-    """ Wrapper to allow fields to be added when we have a context.
-    """
-    #Poll method, Ie which poll plugin to use
+def construct_schema(**kwargs):
+    context = kwargs.get('context', None)
+    if context is None:
+        KeyError("'context' is a required keyword for Poll schemas. See construct_schema in the poll module.")
+
+    #Add all selectable plugins to schema. This chooses the poll method to use
     plugin_choices = set()
     for (name, plugin) in getUtilitiesFor(IPollPlugin):
         plugin_choices.add((name, plugin.title))
 
-    schema.add(colander.SchemaNode(colander.String(),
-                                 name='poll_plugin',
-                                 widget=deform.widget.SelectWidget(values=plugin_choices),),)
-    
     #Proposals to vote on
     proposal_choices = set()
-    agenda_item = find_interface(context, AgendaItem)
+    agenda_item = find_interface(context, IAgendaItem)
+    if agenda_item is None:
+        Exception("Couldn't find the agenda item from this polls context")
     [proposal_choices.add((x.uid, x.title)) for x in agenda_item.values() if x.content_type == 'Proposal']
 
-    schema.add(colander.SchemaNode(deform.Set(),
-                                 name="proposals",
-                                 widget=deform.widget.CheckboxChoiceWidget(values=proposal_choices),),)
+    #base schema
+    class PollSchema(colander.MappingSchema):
+        title = colander.SchemaNode(colander.String())
+        description = colander.SchemaNode(colander.String())
+        poll_plugin = colander.SchemaNode(colander.String(),
+                                          widget=deform.widget.SelectWidget(values=plugin_choices),)
+        proposals = colander.SchemaNode(deform.Set(),
+                                        name="proposals",
+                                        widget=deform.widget.CheckboxChoiceWidget(values=proposal_choices),)
+
+    return PollSchema()
 
 
 def includeme(config):
-    register_content_info(PollSchema, Poll, registry=config.registry, update_method=update_poll_schema)
+    register_content_info(construct_schema, Poll, registry=config.registry)
+
     
 def closing_poll_callback(content, info):
     """ Content is a poll here. """

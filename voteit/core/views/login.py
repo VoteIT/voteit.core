@@ -6,7 +6,8 @@ from pyramid.view import view_config
 from pyramid.url import resource_url
 from deform import Form
 
-from voteit.core.models.user import get_sha_password, LoginSchema
+from voteit.core.models.user import get_sha_password
+from voteit.core.models.interfaces import IContentUtility
 from voteit.core.models.interfaces import ISiteRoot
 from voteit.core.models.interfaces import IUser
 from voteit.core import VoteITMF as _
@@ -18,7 +19,8 @@ from voteit.core.views.api import APIView
 def login(context, request):
     response = {}
     response['api'] = APIView(context, request)
-    schema = LoginSchema()
+    content_util = request.registry.getUtility(IContentUtility)
+    schema = content_util['User'].schema(context=context, request=request, type='login')
     form = Form(schema, buttons=('login', 'cancel'))
     response['form_resources'] = form.get_widget_resources()
 
