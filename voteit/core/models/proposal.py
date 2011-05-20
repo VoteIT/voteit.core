@@ -3,9 +3,10 @@ import deform
 from zope.interface import implements
 from pyramid.security import Allow, DENY_ALL, ALL_PERMISSIONS
 
-from voteit.core.models.base_content import BaseContent
+from voteit.core import VoteITMF as _
 from voteit.core import security
 from voteit.core import register_content_info
+from voteit.core.models.base_content import BaseContent
 from voteit.core.models.interfaces import IProposal
 
 
@@ -38,10 +39,8 @@ class Proposal(BaseContent):
 
 def construct_schema(**kwargs):
     class ProposalSchema(colander.MappingSchema):
-        title = colander.SchemaNode(colander.String())
-        description = colander.SchemaNode(
-            colander.String(),
-            widget=deform.widget.TextAreaWidget(rows=10, cols=60))
+        title = colander.SchemaNode(colander.String(),
+                                    title = _(u"Proposal"),)
     return ProposalSchema()
 
 

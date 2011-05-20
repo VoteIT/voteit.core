@@ -22,26 +22,24 @@
 	    </div>
 
 	    <div class="column">
-		    <h1>Proposals</h1>
-	        <tal:def define="proposals api.get_content(context, content_type='Proposal')">
-	        	
-	        <tal:iterate condition="proposals" repeat="proposal proposals">
-	        	<div tal:replace="structure api.get_action_bar(proposal, request)">Action bar</div>
-                <h3 tal:content="proposal.title">Title</h3>
-                <tal:creators tal:replace="structure api.get_creators_info(proposal.creators, request)">Creators</tal:creators>
-                <div tal:content="proposal.description">Description</div>
-				
-				<div tal:content="structure api.get_user_expressions(proposal, 'support', api.userid, 'Support')">User expressions</div>
-				
-	        </tal:iterate>
-		
-		    <tal:no_proposals condition="not proposals">
-			    <h3>No proposals yet</h3>
-		    </tal:no_proposals>
-		    
-		    <div tal:condition="proposal_form|False" tal:replace="structure proposal_form">Proposal form</div>
-		
-	        </tal:def>
+	    	<div id="proposals">
+		        <tal:def define="proposals api.get_content(context, content_type='Proposal')">
+			    <h1><span tal:replace="len(proposals)">1</span> Proposals</h1>
+		        	
+		        <tal:iterate condition="proposals" repeat="proposal proposals">
+		        	<div tal:replace="structure api.get_action_bar(proposal, request)">Action bar</div>
+	                <tal:creators tal:replace="structure api.get_creators_info(proposal.creators, request)">Creators</tal:creators>
+					<span>propose:</span>
+	                <span class="body" tal:content="proposal.title">Title</span>
+					
+					<div tal:content="structure api.get_user_expressions(proposal, 'support', api.userid, 'Support')">User expressions</div>
+					
+		        </tal:iterate>
+			    
+			    <div tal:condition="proposal_form|False" tal:replace="structure proposal_form">Proposal form</div>
+			
+		        </tal:def>
+			</div>
 
             <h1>Polls</h1>
             <tal:def define="polls api.get_content(context, content_type='Poll')">
