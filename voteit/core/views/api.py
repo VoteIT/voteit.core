@@ -88,9 +88,9 @@ class APIView(object):
     def get_action_bar(self, context, request):
         """ Get the action-bar for a specific context """
         response = {}
+        response['api'] = self
         response['addable_types'] = self._get_addable_types(context, request)
         response['context'] = context
-        response['resource_url'] = resource_url        
         response['states'] = context.get_available_workflow_states()
 
         return render('templates/action_bar.pt', response, request=request)

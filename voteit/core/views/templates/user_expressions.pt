@@ -2,7 +2,7 @@
     <input name="tag" type="hidden" tal:attributes="value tag" />
     <input name="do" type="hidden" tal:attributes="value do" />
     <input name="display_name" type="hidden" tal:attributes="value display_name" />
-	<input name="submit" type="submit" 
+	<input name="submit" type="submit" title="hello"
 	       tal:attributes="value button_txt;
-	                       class selected and 'expression_button expression_enabled' or 'expression_button';" />
+	                       class selected and 'expression_button selected buttonize' or 'expression_button buttonize';" />
 </form>

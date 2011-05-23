@@ -16,36 +16,39 @@ table, caption, tbody, tfoot, thead, tr, th, td {
 	font-family: inherit;
 	vertical-align: baseline;
 }
-
+input {
+    font-weight: inherit;
+    font-style: inherit;
+    font-size: 100%;
+    font-family: inherit;
+    vertical-align: baseline;	
+}
 :focus {
 	outline: 0;
 }
-	
-	ol, ul {
-		list-style: none;
-	}
-	
+ol, ul {
+	list-style: none;
+}
+table {
+	border-collapse: separate;
+	border-spacing: 0;
+}
+caption, th, td {
+	text-align: left;
+	font-weight: normal;
+}
 
-	table {
-		border-collapse: separate;
-		border-spacing: 0;
-	}
-		caption, th, td {
-			text-align: left;
-			font-weight: normal;
-		}
-	
-	dt {
-		display: none;
-	}	
-	
-	.clear {
-		clear: both;
-	}	
-	
+dt {
+	display: none;
+}	
+
+.clear {
+	clear: both;
+}	
+
 em, i {
-	font-style: italic;
-	}
+    font-style: italic;
+}
 strong, b {
-	font-weight: bold;
-	}
+    font-weight: bold;
+}

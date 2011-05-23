@@ -29,16 +29,16 @@
     </script>
     </tal:deform>
 
-	<script type="text/javascript" src="${request.application_url}/static/jquery-1.6.min.js"></script>
-	<script type="text/javascript" src="${request.application_url}/static/ajax.js"></script>
+    <script type="text/javascript" src="${request.application_url}/static/jquery-1.6.min.js"></script>
+    <script type="text/javascript" src="${request.application_url}/static/ajax.js"></script>
 </head>
 <body>
+    <metal:toolbar metal:use-macro="api.profile_toolbar.macros['profile_toolbar']">Profile toolbar</metal:toolbar>
 
     <div id="navigation"><metal:nav metal:use-macro="api.navigation.macros['navigation']">Navigation</metal:nav></div>
 
     <div id="main_window">
     	
-        <metal:toolbar metal:use-macro="api.profile_toolbar.macros['profile_toolbar']">Profile toolbar</metal:toolbar>
 		
 	    <div id="path_bar" tal:condition="not form|True">
 	    	<div class="content_wrapper">
@@ -53,7 +53,7 @@
 	    <div id="main">
 	    	
 			<div class="content_wrapper">
-                <div tal:replace="structure api.get_action_bar(context, request)">Action bar</div>
+                <div tal:condition="not form|True" tal:content="structure api.get_action_bar(context, request)">Action bar</div>
 		        <div metal:define-slot="page_heading"
                      id="page_heading"
 			         tal:condition="not form|True">

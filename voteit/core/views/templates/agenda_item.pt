@@ -27,12 +27,12 @@
 			    <h1><span tal:replace="len(proposals)">1</span> Proposals</h1>
 		        	
 		        <tal:iterate condition="proposals" repeat="proposal proposals">
-		        	<div tal:replace="structure api.get_action_bar(proposal, request)">Action bar</div>
 	                <tal:creators tal:replace="structure api.get_creators_info(proposal.creators, request)">Creators</tal:creators>
 					<span>propose:</span>
 	                <span class="body" tal:content="proposal.title">Title</span>
 					
-					<div tal:content="structure api.get_user_expressions(proposal, 'support', api.userid, 'Support')">User expressions</div>
+		        	<div tal:replace="structure api.get_action_bar(proposal, request)">Action bar</div>
+					<div class="clear"><!-- --></div>
 					
 		        </tal:iterate>
 			    

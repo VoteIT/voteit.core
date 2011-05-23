@@ -2,10 +2,15 @@ body {
 	font-size: 14px;
 	font-family: Times;
 }
+#wrapper {
+	position: relative;
+	height: 100%;
+	width: 100%;
+}
 #navigation {
 	position: absolute;
 	left: 0px;
-	top: 0px;
+	top: 50px;
 	bottom: 0px;
 	width: 200px;
 	background: #dbe0e5;
@@ -30,13 +35,10 @@ body {
     position: absolute;
 	left: 200px;
 	right: 0px;
-	top: 0px;
+	top: 50px;
 	bottom: 0px;
 }
-#profile_toolbar {
-    width: 100%;
-	background: #dbe0e5;
-}
+
 h1, h2, h3, h4, h5, h6 {
     font-family: Tahoma, Geneva, Arial, Helvetica, sans-serif;
 	font-weight: bold;
@@ -73,32 +75,55 @@ a {
 #path_bar {
 	float: left;
 }
-#action_bar {
-	float: right;
+
+/* Profile toolbar with tabs */
+#profile_toolbar {
+    width: 100%;
+	height: 50px;
+    background: #054265;
+	position: relative;
 }
 
-#profile_toolbar ul,
-#action_bar ul {
-	float: right;
-}
-#profile_toolbar ul li,
-#action_bar ul li { 
-	float: left;
-	margin-left: 0.5em;
-}
-#profile_toolbar ul li ul,
-#action_bar ul li ul {
+#profile_toolbar ul.tabs {
 	position: absolute;
-	display: none;
-	margin: 0 0 0 -1px;
-	padding: 0;
-	list-style: none
+    right: 0px;
+	bottom: 0px;
+}
+#profile_toolbar ul li.tab { 
+    float: left;
+    margin-right: 0.5em;
+	bottom: 0px;
+	padding: 0.25em 1em;
+	background: #fff;
+	border-style: solid;
+	border-color: #dbe0e5;
+	border-width: 1px 1px 0px 1px;
+
+	border-top-left-radius: 0.5em 0.5em;
+	border-top-right-radius: 0.5em 0.5em;
+	-webkit-border-top-left-radius: 0.5em 0.5em;
+	-webkit-border-top-right-radius: 0.5em 0.5em;
+	-moz-border-top-left-radius: 0.5em 0.5em;
+	-moz-border-top-right-radius: 0.5em 0.5em;
+
 }
 
-#states li.current{
-    font-weight: bold;
-}
+/* End profile toolbar */
 
+/* Action bar class */
+.action_bar {
+    clear: both;
+	white-space: nowrap;
+	list-style: none;
+}
+.action_bar .expression_form {
+	display: inline;
+}
+.action_bar li.menuitem { 
+	margin-left: 0.5em;
+	display: inline;
+}
+/* end action bar */
 .column {
     float: left;
     width: 49%
@@ -108,29 +133,58 @@ div#page_info fieldset {
     border: 1px solid black;
 }
 
-#profile_toolbar .content_wrapper {
-    padding: 0;
-}
-
-#profile_toolbar h2 {
-    margin: 0;
-}
-
 #main {
     clear: both;
 }
 
-/* FIXME: Temp colors etc */
-.expression_button {
-	border: 1px solid #ccc;
-	background-color: #fff;
+.buttonize {
+	border: 1px solid #054265;
+	background: #dbe0e5;
+	padding: 0.25em 0.5em;
+	color: #054265;
+    border-radius: 0.5em;
+    -webkit-border-radius: 0.5em;
+    -moz-border-radius: 0.5em;
+    box-shadow: 0 0 1em 0 #888;
+    -moz-box-shadow: 0 0 0.5em 0 #888;
+    -webkit-box-shadow: 0 0 0.5em #888;
+	font-size: 12px;
 }
-.expression_button:hover {
-    border-color: green;
+.buttonize.selected {
 }
-.expression_enabled {
-    border-color: green;
+.buttonize:hover {
+    background-color: #054265;
+    color: #fff;
 }
-.expression_enabled:hover {
-    border-color: yellow;
+
+.dropdown_menu {
+	position: relative;
 }
+.menu_header {}
+.menu_body {
+    position: absolute;
+    display: none;
+    margin: 0 0 0 -5px;
+    padding: 1em;
+    background: #fff;
+    border: 1px solid #dbe0e5;
+    border-radius: 0.5em;
+    -webkit-border-radius: 0.5em;
+    -moz-border-radius: 0.5em;
+	z-index: 99;
+}
+.menu_body li {
+	white-space: nowrap;
+}
+.menu_body a {
+	display: block;
+    margin-left: -1em;
+    margin-right: -1em;
+	padding: 0.25em 1em;
+
+}
+.menu_body a:hover {
+	color: #fff;
+	background: #054265;
+}
+

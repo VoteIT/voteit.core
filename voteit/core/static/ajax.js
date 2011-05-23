@@ -1,13 +1,19 @@
-/* Menus */
+/* Menus
+ * example layout:
+ * <div class="dropdown_menu">
+ *   <a class="menu_header">x</a>
+ *   <div class="menu_body">Dropdown menu here</a>
+ * </div>
+ */
 $(document).ready(function () {
-	$('#profile_toolbar ul li, #action_bar ul li').hover(
+	$('.dropdown_menu').hover(
 		function () {
 			//show its submenu
-			$('ul', this).slideDown(100);
+			$('.menu_body', this).slideDown(100);
 		},
 		function () {
 			//hide its submenu
-			$('ul', this).slideUp(100);
+			$('.menu_body', this).slideUp(100);
 		}
 	);
 });

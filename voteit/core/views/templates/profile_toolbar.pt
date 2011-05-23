@@ -1,42 +1,45 @@
 <div id="profile_toolbar" metal:define-macro="profile_toolbar" tal:define="meeting api.find_meeting(context)">
 	<div class="content_wrapper">
-        <h2 tal:condition="meeting">
+		<!--
+        <h2 tal:condition="meeting" class="profile_heading">
             <a tal:attributes="href api.resource_url(meeting, request)"
                tal:content="meeting.get_field_value('title')">Meeting title</a>
         </h2>
-        <h2 tal:condition="not meeting">
+        <h2 tal:condition="not meeting" class="profile_heading">
             VoteIT
         </h2>
-		<ul>
-            <li id="add_content" tal:condition="api.addable_types|False"><a href="#">Content</a>
-                <ul>
+		-->
+		<ul id="main_profile_tabs" class="tabs">
+            <li class="tab dropdown_menu" tal:condition="api.addable_types|False">
+            	<a href="#" class="menu_header">Content &raquo;</a>
+                <ul class="menu_body">
                 <tal:iterate tal:repeat="type_name api.addable_types">
                     <li><a tal:content="string: add $type_name"
                        tal:attributes="href string:@@add?content_type=$type_name">Name</a></li>
                 </tal:iterate>
                 </ul>
             </li>
-		<tal:administrator condition="api.userid">
-			<!-- Administrator actions -->
-			<li>
-				<a href="#">Manage</a>
-				<ul>
-					<li><a tal:attributes="href request.application_url + '/users/@@list'">Users</a></li>
-				</ul>
-			</li>
-    	</tal:administrator>
-		
-		<tal:authenticated condition="api.userid">
-			<!-- Regular authenticated user actions -->
-		    <li><a tal:attributes="href api.user_profile_url">Profile</a></li>
-			<li><a tal:attributes="href request.application_url + '/@@logout'">Logout (<span tal:replace="api.userid">userid</span>)</a></li>
-		</tal:authenticated>
-		
-		<tal:anon condition="not api.userid">
-			<!-- Unauthenticated user actions -->
-            <li><a tal:attributes="href request.application_url + '/@@register'">Register</a></li>
-            <li><a tal:attributes="href request.application_url + '/@@login'">Login</a></li>
-		</tal:anon>
+			<tal:administrator condition="api.userid">
+				<!-- Administrator actions -->
+				<li class="tab dropdown_menu" >
+					<a href="#" class="menu_header">Settings  &raquo;</a>
+                    <ul class="menu_body">
+						<li><a tal:attributes="href request.application_url + '/users/@@list'">Users</a></li>
+					</ul>
+				</li>
+	    	</tal:administrator>
+			
+			<tal:authenticated condition="api.userid">
+				<!-- Regular authenticated user actions -->
+			    <li class="tab"><a tal:attributes="href api.user_profile_url">Profile</a></li>
+				<li class="tab"><a tal:attributes="href request.application_url + '/@@logout'">Logout (<span tal:replace="api.userid">userid</span>)</a></li>
+			</tal:authenticated>
+			
+			<tal:anon condition="not api.userid">
+				<!-- Unauthenticated user actions -->
+	            <li class="tab"><a tal:attributes="href request.application_url + '/@@register'">Register</a></li>
+	            <li class="tab"><a tal:attributes="href request.application_url + '/@@login'">Login</a></li>
+			</tal:anon>
 		</ul>
 	</div>
 </div>
