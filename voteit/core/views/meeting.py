@@ -11,7 +11,7 @@ from pyramid.exceptions import Forbidden
 
 class MeetingView(BaseView):
     
-    @view_config(context=IMeeting, renderer="templates/base_view.pt")
+    @view_config(context=IMeeting, renderer="templates/meeting.pt")
     def meeting_view(self):
         """ Meeting view behaves a bit differently than regular views since
             it should allow users to request access if unauthorized is raised.
