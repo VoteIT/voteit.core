@@ -3,10 +3,7 @@
 class Expressions(object):
     """ Handle user expressions like 'Like' or 'Support'.
     """
-    #FIXME: Some statements here is vulnerable to SQL injections.
-    #While this class shouldn't be accessed directly by anything, it might be good
-    #to clean it up when we have the time.
-    #All SQL-parts should be handled through another lib
+    #FIXME: Implement in SQLAlchemy
     
     def __init__(self, request):
         self.request = request
