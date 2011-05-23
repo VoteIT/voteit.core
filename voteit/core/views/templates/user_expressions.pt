@@ -1,6 +1,7 @@
-<form method="post" tal:attributes="action toggle_url">
+<form method="post" tal:attributes="action toggle_url; id 'expression_form_'+context_id" class="expression_form">
     <input name="tag" type="hidden" tal:attributes="value tag" />
     <input name="do" type="hidden" tal:attributes="value do" />
+    <input name="display_name" type="hidden" tal:attributes="value display_name" />
 	<input name="submit" type="submit" 
 	       tal:attributes="value button_txt;
 	                       class selected and 'expression_button expression_enabled' or 'expression_button';" />

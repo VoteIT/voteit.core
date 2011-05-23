@@ -30,20 +30,7 @@
     </tal:deform>
 
 	<script type="text/javascript" src="${request.application_url}/static/jquery-1.6.min.js"></script>
-	<script type="text/javascript">
-	$(document).ready(function () {
-		$('#profile_toolbar ul li, #action_bar ul li').hover(
-			function () {
-				//show its submenu
-				$('ul', this).slideDown(100);
-			},
-			function () {
-				//hide its submenu
-				$('ul', this).slideUp(100);
-			}
-		);
-	});
-	</script>
+	<script type="text/javascript" src="${request.application_url}/static/ajax.js"></script>
 </head>
 <body>
 

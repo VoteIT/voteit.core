@@ -117,8 +117,10 @@ class APIView(object):
         userids = expressions.retrieve_userids(tag, context.uid)
 
         response = {}
+        response['context_id'] = context.uid
         response['toggle_url'] = "%sset_expression" % resource_url(context, self.request)
         response['tag'] = tag
+        response['display_name'] = display_name
         response['button_txt'] = "%s %s" % (len(userids), display_name and display_name or tag)
         
         if userid and userid in userids:
