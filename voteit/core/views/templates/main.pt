@@ -68,21 +68,18 @@
 			<div class="content_wrapper">
                 <div tal:replace="structure api.get_action_bar(context, request)">Action bar</div>
 		        <div metal:define-slot="page_heading"
-                     id="page_title">
-		            <h3 tal:content="context.title">Title</h3>
-	            </div>
-		        <div metal:define-slot="page_heading"
                      id="page_heading"
-			         tal:condition="not form|True"
-			         class="column">
-                    <tal:creators tal:replace="structure api.get_creators_info(context.creators, request)">Creators</tal:creators>
-                    <div tal:condition="context.description" tal:content="context.description">Description</div>
-		        </div>
-	            <div metal:define-slot="page_info"
-	                 id="page_info"
-			         tal:condition="not form|True"
-	                 class="column">
+			         tal:condition="not form|True">
+		            <h3 tal:content="context.title">Title</h3>
+		            <div class="column">
+                        <tal:creators tal:replace="structure api.get_creators_info(context.creators, request)">Creators</tal:creators>
+                        <div tal:condition="context.description" tal:content="context.description">Description</div>
+                    </div>
                 </div>
+                <div metal:define-slot="page_info"
+                     id="page_info"
+	                 tal:condition="not form|True"
+                     class="column"></div>
 	        </div>
 	        
 	        <div style="clear: both"></div>
