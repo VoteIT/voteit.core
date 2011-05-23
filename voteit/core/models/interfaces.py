@@ -23,6 +23,13 @@ class IBaseContent(Interface):
     omit_fields_on_edit = Attribute('Remove the following keys from appstruct on edit. See base_edit.py for instance.')
     allowed_contexts = Attribute('Which contexts is this type allowed in?')
 
+    def get_content(content_type=None, iface=None):
+        """ Returns contained items within this folder. Keywords are usually conditions.
+            They're treated as 'AND'.
+            keywords:
+            content_type: Only return types of this content type.
+            iface: content must implement this interface
+        """
 
 class ISecurityAware(Interface):
     """ Mixin for all content that should handle groups.

@@ -11,7 +11,6 @@ from voteit.core.models.interfaces import IBaseContent
 from voteit.core.models.security_aware import SecurityAware
 
 
-
 class BaseContent(Folder, SecurityAware):
     __doc__ = IBaseContent.__doc__
     implements(IBaseContent)
@@ -74,7 +73,23 @@ class BaseContent(Folder, SecurityAware):
         self.__creators__ = tuple(value)
     
     creators = property(_get_creators, _set_creators)
-    
+
+    def get_content(self, content_type=None, iface=None):
+        """ See IBaseContent """
+        for candidate in self.values():
+            
+            #Specific content_type?
+            if content_type is not None:
+                if getattr(candidate, 'content_type', '') != content_type:
+                    continue
+            
+            #Specific interface?
+            if iface is not None:
+                if not iface.providedBy(candidate):
+                    continue
+            
+            yield candidate
+
     def _initialize_workflow(self):
         #FIXME: the type should be som generic instead of the class name, but since the wrong workflow is returned this is is a workaround
         workflow = get_workflow(self.__class__, self.__class__.__name__, self)
