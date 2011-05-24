@@ -9,9 +9,6 @@
          class="column">
 	    <fieldset>
 	        <legend>Info</legend>
-	        <div>Number of proposals: <span tal:content="number_of_proposals">0</span></div>
-	        <div>Number of posts: <span tal:content="number_of_posts">0</span></div>
-	        <div>Participants: <span tal:content="number_of_participants">0</span></div>
 	        <div>Next poll: in <span tal:content="next_poll">0</span> (<span tal:content="poll_start"></span> - <span tal:content="poll_end"></span>)</div>
         </fieldset>
 	</div>
@@ -23,8 +20,7 @@
 
 	    <div class="column">
 	    	<div id="proposals">
-		        <tal:def define="proposals api.get_content(context, content_type='Proposal')">
-			    <h1><span tal:replace="len(proposals)">1</span> Proposals</h1>
+			    <h1>Proposals</h1>
 		        	
 		        <tal:iterate condition="proposals" repeat="proposal proposals">
 	                <tal:creators tal:replace="structure api.get_creators_info(proposal.creators, request)">Creators</tal:creators>
@@ -38,11 +34,9 @@
 			    
 			    <div tal:condition="proposal_form|False" tal:replace="structure proposal_form">Proposal form</div>
 			
-		        </tal:def>
 			</div>
 
-            <h1>Polls</h1>
-            <tal:def define="polls api.get_content(context, content_type='Poll')">
+            <h1>Poll</h1>
                 
             <tal:iterate condition="polls" repeat="poll polls">
                 <h3 tal:content="poll.title">Title</h3>
@@ -54,7 +48,6 @@
                 <h3>No polls yet</h3>
             </tal:no_polls>
             
-            </tal:def>
         </div>
 
         <div style="clear: both"></div>

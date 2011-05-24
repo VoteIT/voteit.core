@@ -5,8 +5,10 @@ from deform import Form
 
 from voteit.core.views.base_view import BaseView
 from voteit.core.models.interfaces import IAgendaItem
-from voteit.core.views.api import APIView
+from voteit.core.models.interfaces import IPoll
+from voteit.core.models.interfaces import IProposal
 from voteit.core.security import VIEW
+
 
 class AgendaItemView(BaseView):
     """ View for agenda items. """
@@ -15,12 +17,12 @@ class AgendaItemView(BaseView):
     def agenda_item_view(self):
         """ """
         #FIXME: this is just placeholders, should be filled with real data
-        self.response['number_of_proposals'] = 2
-        self.response['number_of_posts'] = '10'
-        self.response['number_of_participants'] = 4
         self.response['next_poll'] = '1 hour'
         self.response['poll_start'] = '15.00'
         self.response['poll_end'] = '16.00'
+    
+        self.response['proposals'] = self.context.get_content(iface=IProposal)
+        self.response['polls'] = self.context.get_content(iface=IPoll)
         
         #Add proposal form
         ftis = self.api.content_info
