@@ -184,8 +184,26 @@ div#page_info fieldset {
 
 }
 .menu_body a:hover,
-.menu_header.hover {
+.action_bar .menu_header.hover {
 	color: #fff;
 	background: #054265;
 }
 
+.listing_block {
+    margin-top: 1em;
+}
+
+/* Workflow states */
+.wf-state-active {}
+.wf-state-approved {}
+.wf-state-canceled {}
+.wf-state-closed {}
+.wf-state-denied {}
+.wf-state-inactive {}
+.wf-state-planned {}
+.wf-state-private {}
+.wf-state-published {}
+.wf-state-retracted {}
+.wf-state-unhandled {}
+.wf-state-voting {}
+.wf-state-ongoing {}

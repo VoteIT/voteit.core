@@ -23,12 +23,20 @@
 			    <h1>Proposals</h1>
 		        	
 		        <tal:iterate condition="proposals" repeat="proposal proposals">
-	                <tal:creators tal:replace="structure api.get_creators_info(proposal.creators, request)">Creators</tal:creators>
-					<span>propose:</span>
-	                <span class="body" tal:content="proposal.title">Title</span>
-					
-		        	<div tal:replace="structure api.get_action_bar(proposal, request)">Action bar</div>
-					<div class="clear"><!-- --></div>
+		        	<div class="listing_block">
+		                <tal:creators tal:replace="structure api.get_creators_info(proposal.creators, request)">Creators</tal:creators>
+						<span>propose:</span>
+		                <span class="body" tal:content="proposal.title">Title</span>
+						
+						<div tal:define="state_id proposal.get_workflow_state">
+							<span>State:</span>
+							<strong tal:attributes="class 'wf-state-%s' % state_id"
+							      tal:content="state_id">private</strong>
+						</div>
+						
+			        	<div tal:replace="structure api.get_action_bar(proposal, request)">Action bar</div>
+						<div class="clear"><!-- --></div>
+					</div>
 					
 		        </tal:iterate>
 			    
@@ -39,9 +47,18 @@
             <h1>Poll</h1>
                 
             <tal:iterate condition="polls" repeat="poll polls">
-                <h3 tal:content="poll.title">Title</h3>
-                <div tal:content="poll.description">Description</div>
-                <div tal:replace="structure api.get_action_bar(poll, request)">Action bar</div>
+                <div class="listing_block">
+	                <h3 tal:content="poll.title">Title</h3>
+	                <div tal:content="poll.description">Description</div>
+
+                    <div tal:define="state_id poll.get_workflow_state" class="wf-info">
+                        <span>State:</span>
+                        <strong tal:attributes="class 'wf-state-%s' % state_id"
+                              tal:content="state_id">open</strong>
+                    </div>
+
+	                <div tal:replace="structure api.get_action_bar(poll, request)">Action bar</div>
+				</div>
             </tal:iterate>
             
             <tal:no_polls condition="not polls">
