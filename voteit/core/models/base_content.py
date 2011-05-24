@@ -1,4 +1,5 @@
 from uuid import uuid4
+from datetime import datetime
 
 from repoze.folder import Folder
 from zope.interface import implements
@@ -21,6 +22,7 @@ class BaseContent(Folder, SecurityAware):
 
     def __init__(self):
         self.uid = str(uuid4())
+        self.created = datetime.now()
         super(BaseContent, self).__init__()
         self._initialize_workflow()
 

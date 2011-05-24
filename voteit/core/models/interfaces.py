@@ -18,6 +18,7 @@ class IBaseContent(Interface):
                       'Exists so it can be overridden.')
     creators = Attribute('The userids of the creators of this content. '
                          'Normally just one. ')
+    created = Attribute('When the object was created. (datetime.datetime)')
     add_permission = Attribute('Permission required to add this content')
     content_type = Attribute('Content type, internal name')
     omit_fields_on_edit = Attribute('Remove the following keys from appstruct on edit. See base_edit.py for instance.')
