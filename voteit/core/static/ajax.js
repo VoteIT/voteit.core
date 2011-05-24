@@ -6,14 +6,21 @@
  * </div>
  */
 $(document).ready(function () {
+	$('.dropdown_menu .menu_header').live('click', function(event) {
+    	return false;
+	}
+	);
 	$('.dropdown_menu').hover(
 		function () {
 			//show its submenu
-			$('.menu_body', this).slideDown(100);
+			$(this).find('.menu_body').slideDown(100);
+			$(this).find('.menu_header').addClass('hover');
 		},
 		function () {
 			//hide its submenu
-			$('.menu_body', this).slideUp(100);
+            $(this).find('.menu_body').slideUp(100);
+            $(this).find('.menu_header').removeClass('hover');
+
 		}
 	);
 });

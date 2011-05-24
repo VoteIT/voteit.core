@@ -164,7 +164,7 @@ div#page_info fieldset {
 .menu_body {
     position: absolute;
     display: none;
-    margin: 0 0 0 -5px;
+    top: 1.25em;
     padding: 1em;
     background: #fff;
     border: 1px solid #dbe0e5;
@@ -183,7 +183,8 @@ div#page_info fieldset {
 	padding: 0.25em 1em;
 
 }
-.menu_body a:hover {
+.menu_body a:hover,
+.menu_header.hover {
 	color: #fff;
 	background: #054265;
 }

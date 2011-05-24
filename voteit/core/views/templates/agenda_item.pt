@@ -45,9 +45,9 @@
             <tal:def define="polls api.get_content(context, content_type='Poll')">
                 
             <tal:iterate condition="polls" repeat="poll polls">
-                <div tal:replace="structure api.get_action_bar(poll, request)">Action bar</div>
                 <h3 tal:content="poll.title">Title</h3>
                 <div tal:content="poll.description">Description</div>
+                <div tal:replace="structure api.get_action_bar(poll, request)">Action bar</div>
             </tal:iterate>
             
             <tal:no_polls condition="not polls">
