@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import colander
 import deform
 from zope.interface import implements
@@ -9,6 +11,7 @@ from BTrees.OOBTree import OOBTree
 
 from voteit.core import security
 from voteit.core import register_content_info
+from voteit.core import VoteITMF as _
 from voteit.core.models.base_content import BaseContent
 from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IPoll
@@ -167,11 +170,28 @@ def construct_schema(**kwargs):
     if agenda_item is None:
         Exception("Couldn't find the agenda item from this polls context")
     [proposal_choices.add((x.uid, x.title)) for x in agenda_item.values() if x.content_type == 'Proposal']
+    
+    _earliest_start = colander.Range(min=datetime.now(),
+                                     min_err=_('${val} is earlier than earliest date ${min}'),)
+    _earliest_end = colander.Range(min=datetime.now(),
+                                   min_err=_('${val} is earlier than earliest date ${min}'),)
 
     #base schema
     class PollSchema(colander.MappingSchema):
         title = colander.SchemaNode(colander.String())
         description = colander.SchemaNode(colander.String())
+        #FIXME: Add later
+#        start = colander.SchemaNode(colander.DateTime(),
+#                                    title = _(u"Start time"),
+#                                    default = datetime.now(),
+#                                    validator=_earliest_start,
+#                                    )
+#        end = colander.SchemaNode(colander.DateTime(),
+#                                    title = _(u"End time"),
+#                                    default = datetime.now(),
+#                                    validator=_earliest_end,
+#                                    )
+        
         poll_plugin = colander.SchemaNode(colander.String(),
                                           widget=deform.widget.SelectWidget(values=plugin_choices),)
         proposals = colander.SchemaNode(deform.Set(),
