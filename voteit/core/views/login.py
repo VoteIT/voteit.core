@@ -46,10 +46,16 @@ def login(context, request):
         userid = appstruct['userid']
         password = appstruct['password']
 
-        user = context['users'].get(userid)
+        #userid here can be either an email address or a login name
+        if '@' in userid:
+            #assume email
+            user = context['users'].get_user_by_email(userid)
+        else:
+            user = context['users'].get(userid)
+        
         if IUser.providedBy(user):
             if get_sha_password(password) == user.get_password():
-                headers = remember(request, userid)
+                headers = remember(request, user.__name__)
                 return HTTPFound(location = appstruct['came_from'],
                                  headers = headers)
         message = _('Login failed.')
