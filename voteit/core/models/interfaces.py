@@ -69,6 +69,11 @@ class ISiteRoot(Interface):
 
 class IUsers(Interface):
     """ Contains all users. """
+    
+    def get_user_by_email(email):
+        """ Return a user object if one exist with that email address.
+            (email addresses should be unique)
+        """
 
 
 class IUser(Interface):

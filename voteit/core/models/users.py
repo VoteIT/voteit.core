@@ -2,6 +2,7 @@ import colander
 from zope.interface import implements
 
 from voteit.core.models.base_content import BaseContent
+from voteit.core.models.interfaces import IUser
 from voteit.core.models.interfaces import IUsers
 
 
@@ -12,6 +13,11 @@ class Users(BaseContent):
     omit_fields_on_edit = ()
     allowed_contexts = ()
     add_permission = None
+    
+    def get_user_by_email(self, email):
+        for user in self.get_content(iface=IUser):
+            if user.get_field_value('email') == email:
+                return user
 
 
 def construct_schema(**kwargs):

@@ -14,6 +14,7 @@ from voteit.core.models.interfaces import IUsers
 from voteit.core import VoteITMF as _
 from voteit.core import security
 from voteit.core.validators import password_validation
+from pyramid.traversal import find_interface
 
 
 def get_sha_password(password):
@@ -65,6 +66,21 @@ def construct_schema(**kwargs):
         KeyError("'context' is a required keyword for User schemas. See construct_schema in the user module.")    
     if type is None:
         KeyError("'type' is a required keyword for User schemas. See construct_schema in the user module.")    
+        
+    def _validate_email(node, value):
+        default_email_validator = colander.Email(msg=_(u"Invalid email"))
+        default_email_validator(node, value)
+        
+        #context can be IUser or IUsers
+        users = find_interface(context, IUsers)
+        
+        #User with email exists?
+        match = users.get_user_by_email(value)
+        if match and context != match:
+            #Something was found, and it isn't this context - I.e. some other user
+            raise colander.Invalid(node, 
+                                   u"Another user has already registered with that email address. "
+                                   "If you've lost your password, request a new one instead.")
 
     #Common schema nodes
     password_node = colander.SchemaNode(
@@ -74,7 +90,7 @@ def construct_schema(**kwargs):
                         title=_('Password'))
     email_node = colander.SchemaNode(colander.String(),
                                      title=_(u"Email"),
-                                     validator=colander.Email(msg=_(u"Invalid email")))
+                                     validator=_validate_email,)
     first_name_node = colander.SchemaNode(colander.String(),
                                           title=_(u"First name"),)
     last_name_node = colander.SchemaNode(colander.String(),
