@@ -17,7 +17,6 @@ class BaseContent(Folder, SecurityAware):
     implements(IBaseContent)
     add_permission = None
     content_type = None
-    omit_fields_on_edit = ()
     allowed_contexts = ()
 
     def __init__(self):

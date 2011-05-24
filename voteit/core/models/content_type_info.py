@@ -5,7 +5,6 @@ from voteit.core.models.interfaces import IContentTypeInfo
 class ContentTypeInfo(object):
     """ schema: add schema for the content type.
         type_class: which class the content type is constructed from.
-        omit_fields_on_edit: list of fieldnames to omit on edit. (like 'name')
         allowed_contexts: which contexts this type can be added to.
         add_permission: which permission is required to add.
         
@@ -21,10 +20,6 @@ class ContentTypeInfo(object):
     @property
     def content_type(self):
         return self.type_class.content_type
-
-    @property
-    def omit_fields_on_edit(self):
-        return self.type_class.omit_fields_on_edit
     
     @property
     def allowed_contexts(self):

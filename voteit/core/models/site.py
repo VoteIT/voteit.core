@@ -12,10 +12,7 @@ from voteit.core.models.users import Users
 class SiteRoot(BaseContent):
     """ The root of the site. Contains all other objects. """
     implements(ISiteRoot)
-    
     content_type = 'SiteRoot'
-
-    omit_fields_on_edit = ()
     allowed_contexts = ()
 
     __acl__ = [(Allow, security.ROLE_ADMIN, ALL_PERMISSIONS),

@@ -38,7 +38,6 @@ class Meeting(BaseContent):
     """ Meeting content. """
     implements(IMeeting)
     content_type = 'Meeting'
-    omit_fields_on_edit = ('name',)
     allowed_contexts = ('SiteRoot',)
     add_permission = security.ADD_MEETING
 

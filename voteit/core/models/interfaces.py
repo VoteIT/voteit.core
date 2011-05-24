@@ -21,7 +21,6 @@ class IBaseContent(Interface):
     created = Attribute('When the object was created. (datetime.datetime)')
     add_permission = Attribute('Permission required to add this content')
     content_type = Attribute('Content type, internal name')
-    omit_fields_on_edit = Attribute('Remove the following keys from appstruct on edit. See base_edit.py for instance.')
     allowed_contexts = Attribute('Which contexts is this type allowed in?')
 
     def get_content(content_type=None, iface=None):
@@ -191,8 +190,6 @@ class IContentTypeInfo(Interface):
     """
     schema = Attribute("Schema class to use for this content")
     type_class = Attribute("Class to construct content from")
-    omit_fields_on_edit = Attribute("Returns the type_class attribute omit_fields_on_edit."
-                                    "It's usually a tuple of field names to remove on edit")
     
     allowed_contexts = Attribute("Return a list of content_type names where"
                                  "this content type is allowed. Taken from"

@@ -29,7 +29,6 @@ class User(BaseContent):
     implements(IUser)
     content_type = 'User'
     allowed_contexts = ('Users',)
-    omit_fields_on_edit = () #N/A for this content type
     add_permission = security.ADD_USER
     
     __acl__ = [(Allow, security.ROLE_ADMIN, security.EDIT),

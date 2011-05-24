@@ -29,7 +29,6 @@ class AgendaItem(BaseContent):
     """ Agenda Item content. """
     implements(IAgendaItem)
     content_type = 'AgendaItem'
-    omit_fields_on_edit = ('name',)
     allowed_contexts = ('Meeting',)
     add_permission = security.ADD_AGENDA_ITEM
 

@@ -25,7 +25,6 @@ class Vote(BaseContent):
     implements(IVote)
     
     content_type = 'Vote'
-    omit_fields_on_edit = ()
     allowed_contexts = () #N/A for this content type, it shouldn't be addable the normal way.
     add_permission = security.ADD_VOTE
     

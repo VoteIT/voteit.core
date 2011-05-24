@@ -83,11 +83,6 @@ class BaseEdit(object):
         ftis = self.api.content_info
         schema = ftis[content_type].schema(context=self.context, request=self.request, type='edit')
 
-        #Remove unwanted fields like 'name'
-        for omit_name in ftis[content_type].omit_fields_on_edit:
-            if omit_name in schema:
-                del schema[omit_name]
-
         #Make the current value the default value
         for field in schema:
             field.default = self.context.get_field_value(field.name)

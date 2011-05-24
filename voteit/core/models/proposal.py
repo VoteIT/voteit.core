@@ -25,7 +25,6 @@ class Proposal(BaseContent):
     """ Proposal content. """
     implements(IProposal)
     content_type = 'Proposal'
-    omit_fields_on_edit = ('name',)
     allowed_contexts = ('AgendaItem',)
     add_permission = security.ADD_PROPOSAL
 
