@@ -87,11 +87,15 @@ class APIView(object):
 
     def get_action_bar(self, context, request):
         """ Get the action-bar for a specific context """
+        def _here_perm(perm):
+            return has_permission(perm, context, request)
+        
         response = {}
         response['api'] = self
         response['addable_types'] = self._get_addable_types(context, request)
         response['context'] = context
         response['states'] = context.get_available_workflow_states()
+        response['here_perm'] = _here_perm
 
         return render('templates/action_bar.pt', response, request=request)
 

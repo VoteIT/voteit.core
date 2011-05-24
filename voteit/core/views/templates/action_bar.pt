@@ -4,11 +4,15 @@
 	    tal:content="structure api.get_user_expressions(context, 'support', api.userid, 'Support')">User expressions</li>
 
     <li class="menuitem"
-	    tal:condition="context.content_type == 'Poll'">
+	    tal:condition="context.content_type == 'Poll' and here_perm('Add Vote')">
         <a class="buttonize" tal:attributes="href api.resource_url(context, request) + '@@vote'">Vote</a>
     </li>
-    <li class="menuitem"><a class="buttonize" tal:attributes="href api.resource_url(context, request) + '@@edit'">Edit</a></li>
-    <li class="menuitem"><a class="buttonize"  tal:attributes="href api.resource_url(context, request) + '@@delete'">Delete</a></li>
+    <li class="menuitem" tal:condition="here_perm('Edit')">
+    	<a class="buttonize" tal:attributes="href api.resource_url(context, request) + '@@edit'">Edit</a>
+	</li>
+    <li class="menuitem" tal:condition="here_perm('Delete')">
+    	<a class="buttonize"  tal:attributes="href api.resource_url(context, request) + '@@delete'">Delete</a>
+	</li>
     <li tal:condition="states|False" class="dropdown_menu menuitem">
 		<a href="#" class="buttonize menu_header">Set state &raquo;</a>
 		<ul class="menu_body">
