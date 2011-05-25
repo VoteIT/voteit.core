@@ -129,8 +129,9 @@ def get_groups_schema(context):
             widget = userid_widget,
             )
         groups = colander.SchemaNode(
-            deform.Set(),
-            widget=deform.widget.CheckboxChoiceWidget(values=group_choices),
+            deform.Set(allow_empty=True),
+            widget=deform.widget.CheckboxChoiceWidget(values=group_choices,
+                                                      missing=colander.null,)
             )
     
     class UserIDsAndGroupsSequenceSchema(colander.SequenceSchema):
