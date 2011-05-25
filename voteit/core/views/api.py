@@ -13,6 +13,7 @@ from repoze.workflow import get_workflow
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import IContentUtility
 from voteit.core.models.expression_adapter import Expressions
+from voteit.core.views.macros import FlashMessages
 
 
 class APIView(object):
@@ -44,6 +45,9 @@ class APIView(object):
         [rev.insert(0, x) for x in self.lineage]
         self.reversed_lineage = tuple(rev)
         self.inside = inside
+        
+        #macros
+        self.flash_messages = FlashMessages(request)
         
 
     def get_user(self, userid):

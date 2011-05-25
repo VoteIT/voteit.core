@@ -207,3 +207,36 @@ div#page_info fieldset {
 .wf-state-unhandled {}
 .wf-state-voting {}
 .wf-state-ongoing {}
+
+/* Flash messages */
+#flash_messages .message {
+    padding: 0.25em 0.5em;
+    border-radius: 0.5em;
+    -webkit-border-radius: 0.5em;
+    -moz-border-radius: 0.5em;
+    box-shadow: 0 0 1em 0 #888;
+    -moz-box-shadow: 0 0 0.5em 0 #888;
+    -webkit-box-shadow: 0 0 0.5em #888;
+	/* Info is default */
+    border: 1px solid #996;
+    background: #ffffe3;
+	width: 400px;
+	position: relative;
+}
+#flash_messages .info {
+}
+#flash_messages .error {
+    border-color: red;
+    background-color: #fdc;
+}
+#flash_messages .you {
+    border-color: #75ad0a;
+    background-color: rgb(207,249,159);
+}
+/* Hover class added when you hover the message. It needs to express that you can click to remove it */
+#flash_messages .close_message {
+	position: absolute;
+	left: 420px;
+	bottom: 0px;
+    border-color: black;
+}

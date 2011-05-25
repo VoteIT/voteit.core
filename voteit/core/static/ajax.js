@@ -1,3 +1,11 @@
+/* Flash messages */
+$(document).ready(function () {
+    $('#flash_messages .close_message').live('click', function(event) {
+		//Parent of the .close_message class should be .message
+        $(this).parent().remove();
+    });
+});
+
 /* Menus
  * example layout:
  * <div class="dropdown_menu">

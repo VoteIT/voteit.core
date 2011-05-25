@@ -14,6 +14,7 @@ from repoze.workflow import get_workflow
 from pyramid.exceptions import Forbidden
 
 from voteit.core.views.api import APIView
+from voteit.core import VoteITMF as _
 from voteit.core.security import ROLE_OWNER, EDIT, DELETE
 
 DEFAULT_TEMPLATE = "templates/base_edit.pt"
@@ -65,11 +66,14 @@ class BaseEdit(object):
             name = self.generate_slug(appstruct['title'])
             self.context[name] = obj
             
+            self.api.flash_messages.add(_(u"Successfully added"))
+
             url = resource_url(obj, self.request)
-            
             return HTTPFound(location=url)
 
         if 'cancel' in post:
+            self.api.flash_messages.add(_(u"Canceled"))
+
             url = resource_url(self.context, self.request)
             return HTTPFound(location=url)
 
@@ -101,14 +105,22 @@ class BaseEdit(object):
                 self.response['form'] = e.render()
                 return self.response
             
+            updated = False
             for (k, v) in appstruct.items():
-                self.context.set_field_value(k, v)
-            
+                if self.context.get_field_value(k) != v:
+                    self.context.set_field_value(k, v)
+                    updated = True
+
+            if updated:
+                self.api.flash_messages.add(_(u"Successfully updated"))
+            else:
+                self.api.flash_messages.add(_(u"Nothing updated"))
+
             url = resource_url(self.context, self.request)
-            
             return HTTPFound(location=url)
 
         if 'cancel' in post:
+            self.api.flash_messages.add(_(u"Canceled"))
             url = resource_url(self.context, self.request)
             return HTTPFound(location=url)
 
@@ -130,11 +142,14 @@ class BaseEdit(object):
 
             parent = self.context.__parent__
             del parent[self.context.__name__]
-            
+
+            self.api.flash_messages.add(_(u"Successfully deleted"))
+
             url = resource_url(parent, self.request)
             return HTTPFound(location=url)
 
         if 'cancel' in post:
+            self.api.flash_messages.add(_(u"Canceled"))
             url = resource_url(self.context, self.request)
             return HTTPFound(location=url)
 

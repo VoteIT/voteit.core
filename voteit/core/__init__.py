@@ -2,13 +2,14 @@ from pyramid.config import Configurator
 from pyramid.i18n import TranslationStringFactory
 from pyramid.authorization import ACLAuthorizationPolicy
 from pyramid.authentication import AuthTktAuthenticationPolicy
+from pyramid.session import UnencryptedCookieSessionFactoryConfig
 from repoze.zodbconn.finder import PersistentApplicationFinder
 from zope.component import getGlobalSiteManager
 from zope.interface.verify import verifyClass
 from zope.configuration import xmlconfig
 
 PROJECTNAME = 'voteit.core'
-#Must be before all of this packages imports
+#Must be before all of this packages imports since some other methods might import it
 VoteITMF = TranslationStringFactory(PROJECTNAME)
 
 #voteit.core package imports
@@ -32,13 +33,17 @@ def main(global_config, **settings):
     finder = PersistentApplicationFinder(zodb_uri, appmaker)
     def get_root(request):
         return finder(request.environ)
+
+    sessionfact = UnencryptedCookieSessionFactoryConfig('messages')
+
     
     globalreg = getGlobalSiteManager()
     config = Configurator(registry=globalreg)
     config.setup_registry(settings=settings,
                           root_factory=get_root,
                           authentication_policy=authn_policy,
-                          authorization_policy=authz_policy
+                          authorization_policy=authz_policy,
+                          session_factory = sessionfact,
                           )
     
     config.add_static_view('static', '%s:static' % PROJECTNAME)

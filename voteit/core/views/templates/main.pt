@@ -52,6 +52,8 @@
 
 	    <div id="main">
 	    	
+			<tal:messages replace="structure api.flash_messages()">Messages</tal:messages>
+	    	
 			<div class="content_wrapper">
                 <div tal:condition="not form|True" tal:content="structure api.get_action_bar(context, request)">Action bar</div>
 		        <div metal:define-slot="page_heading"
