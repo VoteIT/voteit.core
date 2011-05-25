@@ -33,13 +33,14 @@
     <script type="text/javascript" src="${request.application_url}/static/ajax.js"></script>
 </head>
 <body>
+	
+	<div id="page_wrapper">
     <metal:toolbar metal:use-macro="api.profile_toolbar.macros['profile_toolbar']">Profile toolbar</metal:toolbar>
 
     <div id="navigation"><metal:nav metal:use-macro="api.navigation.macros['navigation']">Navigation</metal:nav></div>
 
     <div id="main_window">
     	
-		
 	    <div id="path_bar" tal:condition="not form|True">
 	    	<div class="content_wrapper">
 	        <tal:iterate repeat="obj api.reversed_lineage">
@@ -77,22 +78,11 @@
 				<div id="content" metal:define-slot="content"></div>
 		    </div>
 			
-			<div class="content_wrapper">
-		        <div tal:condition="form|False" tal:replace="structure form">Form</div>
-		
-		        <!--
-			    <div id="listing" metal:define-slot="listing">
-			        <div tal:condition="show_content_listing|False" tal:repeat="obj context.values()">
-			            <a tal:attributes="href api.resource_url(obj, request)">
-		                    <h3 tal:content="obj.get_field_value('title')">Title</h3>
-						    <div tal:content="obj.get_field_value('description')">Description</div>
-			            </a>
-			        </div>
-			    </div>
-				-->
-			</div>
+			<div tal:condition="form|False" class="content_wrapper" tal:content="structure form">Form</div>
 	
 		</div>
+	</div>
+	<div class="clear"></div>
 	</div>
 
 </body>

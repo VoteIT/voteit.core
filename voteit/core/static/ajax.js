@@ -2,7 +2,7 @@
 $(document).ready(function () {
     $('#flash_messages .close_message').live('click', function(event) {
 		//Parent of the .close_message class should be .message
-        $(this).parent().remove();
+        $(this).parent().slideUp(200);
     });
 });
 
@@ -16,8 +16,7 @@ $(document).ready(function () {
 $(document).ready(function () {
 	$('.dropdown_menu .menu_header').live('click', function(event) {
     	return false;
-	}
-	);
+	});
 	$('.dropdown_menu').hover(
 		function () {
 			//show its submenu
@@ -28,7 +27,6 @@ $(document).ready(function () {
 			//hide its submenu
             $(this).find('.menu_body').slideUp(100);
             $(this).find('.menu_header').removeClass('hover');
-
 		}
 	);
 });
