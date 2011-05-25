@@ -40,6 +40,7 @@ class Poll(BaseContent):
     """ Poll content. """
     implements(IPoll)
     content_type = 'Poll'
+    display_name = _(u"Poll")
     allowed_contexts = ('AgendaItem',)
     add_permission = security.ADD_POLL
 

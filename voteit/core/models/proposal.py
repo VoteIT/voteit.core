@@ -25,6 +25,7 @@ class Proposal(BaseContent):
     """ Proposal content. """
     implements(IProposal)
     content_type = 'Proposal'
+    display_name = _(u"Proposal")
     allowed_contexts = ('AgendaItem',)
     add_permission = security.ADD_PROPOSAL
 

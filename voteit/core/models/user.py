@@ -28,6 +28,7 @@ class User(BaseContent):
     """ Content type for a user. Usable as a profile page. """
     implements(IUser)
     content_type = 'User'
+    display_name = _(u"User")
     allowed_contexts = ('Users',)
     add_permission = security.ADD_USER
     

@@ -25,6 +25,7 @@ class Vote(BaseContent):
     implements(IVote)
     
     content_type = 'Vote'
+    display_name = _(u"Vote")
     allowed_contexts = () #N/A for this content type, it shouldn't be addable the normal way.
     add_permission = security.ADD_VOTE
     

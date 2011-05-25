@@ -15,6 +15,13 @@ class BaseContentTests(unittest.TestCase):
         from voteit.core.models.base_content import BaseContent
         return BaseContent()
 
+    def _make_schema(self):
+        import colander
+        class Schema(colander.Schema):
+            title = colander.SchemaNode(colander.String())
+            number = colander.SchemaNode(colander.Integer())
+        return Schema()
+
     def test_verify_interface(self):
         from voteit.core.models.interfaces import IBaseContent
         obj = self._make_obj()
@@ -34,3 +41,39 @@ class BaseContentTests(unittest.TestCase):
         self.assertEqual(obj.creators, ())
         obj.creators = ['franz']
         self.assertEqual(obj.creators, ('franz',))
+
+    def test_get_set_field_value(self):
+        obj = self._make_obj()
+        obj.set_field_value('title', "Hello world")
+        self.assertEqual(obj.get_field_value('title'), "Hello world")
+        
+    def test_get_field_appstruct(self):
+        obj = self._make_obj()
+        obj.set_field_value('title', 'Hello')
+        obj.set_field_value('number', 1)
+        schema = self._make_schema()
+        appstruct = obj.get_field_appstruct(schema)
+        self.assertEqual(appstruct, {'title':'Hello', 'number':1})
+
+    def test_get_field_appstruct_nonexistent(self):
+        """ Check that appstruct doesn't return a value if nothing exists. """
+        obj = self._make_obj()
+        obj.set_field_value('title', 'Hello') 
+        schema = self._make_schema()
+        appstruct = obj.get_field_appstruct(schema)
+        self.assertEqual(appstruct, {'title':'Hello'})
+
+    def test_get_field_appstruct_with_none(self):
+        """ Check that None is treated as a value. """
+        obj = self._make_obj()
+        obj.set_field_value('title', None) 
+        schema = self._make_schema()
+        appstruct = obj.get_field_appstruct(schema)
+        self.assertEqual(appstruct, {'title':None})
+        
+    def test_set_field_appstruct(self):
+        obj = self._make_obj()
+        appstruct = {'title':'Hello', 'number':2}
+        obj.set_field_appstruct(appstruct)
+        self.assertEqual(obj.get_field_value('title'), 'Hello')
+        self.assertEqual(obj.get_field_value('number'), 2)

@@ -5,6 +5,7 @@ from deform.exception import ValidationFailure
 from webob.exc import HTTPFound
 from pyramid.url import resource_url
 
+from voteit.core import VoteITMF as _
 from voteit.core.models.interfaces import IContentUtility
 from voteit.core.models.interfaces import ISiteRoot
 from voteit.core.models.interfaces import IUser
@@ -23,7 +24,7 @@ class UsersView(object):
         self.request = request
 
         self.response = {}
-        self.response['api'] = APIView(context, request)
+        self.response['api'] = self.api = APIView(context, request)
 
     @view_config(context=IUsers, name="add", renderer=DEFAULT_TEMPLATE)
     def add_form(self):
@@ -59,24 +60,27 @@ class UsersView(object):
             name = appstruct['userid']
             del appstruct['userid']
             
-            for (k, v) in appstruct.items():
-                obj.set_field_value(k, v)
+            obj.set_field_appstruct(appstruct)
 
             #The user should be owner of the user object
             obj.add_groups(name, (ROLE_OWNER,))
 
             #self.context is the site root. Users are stored in the users-property
             self.context[name] = obj
-            
-            url = resource_url(self.context, self.request)
-            
+
+            self.api.flash_messages.add(_(u"Successfully added"))
+
+            url = resource_url(self.context, self.request)            
             return HTTPFound(location=url)
 
         if 'cancel' in post:
+            self.api.flash_messages.add(_(u"Canceled"))
             url = resource_url(self.context, self.request)
             return HTTPFound(location=url)
 
-        #No action - Render edit form
+        #No action - Render add form
+        msg = _(u"Add new user")
+        self.api.flash_messages.add(msg, close_button=False)
         self.response['form'] = self.form.render()
         return self.response
 
@@ -119,16 +123,19 @@ class UsersView(object):
             
             #self.context is the site root. Users are stored in the users-property
             users[name] = obj
-            
-            url = resource_url(self.context, self.request)
-            
+
+            self.api.flash_messages.add(_(u"Successfully registered - you may now log in!"))
+            url = "%slogin" % resource_url(self.context, self.request)
             return HTTPFound(location=url)
 
         if 'cancel' in post:
+            self.api.flash_messages.add(_(u"Canceled"))
             url = resource_url(self.context, self.request)
             return HTTPFound(location=url)
 
-        #No action - Render edit form
+        #No action - Render registration form
+        msg = _(u"New user registration")
+        self.api.flash_messages.add(msg, close_button=False)
         self.response['form'] = self.form.render()
         return self.response
 
@@ -138,43 +145,6 @@ class UsersView(object):
 
     @view_config(context=IUser, renderer='templates/view_user.pt')
     def view_users(self):
-        return self.response
-    @view_config(context=IUser, name="edit", renderer=DEFAULT_TEMPLATE)
-    def edit_form(self):
-        content_util = self.request.registry.getUtility(IContentUtility)
-        schema = content_util['User'].schema(context=self.context, request=self.request, type='edit')
-
-        #Make the current value the default value
-        for field in schema:
-            field.default = self.context.get_field_value(field.name)
-
-        self.form = Form(schema, buttons=('update', 'cancel'))
-        self.response['form_resources'] = self.form.get_widget_resources()
-
-        post = self.request.POST
-        if 'update' in post:
-            controls = post.items()
-            try:
-                #appstruct is deforms convention. It will be the submitted data in a dict.
-                appstruct = self.form.validate(controls)
-                #FIXME: validate name - it must be unique and url-id-like
-            except ValidationFailure, e:
-                self.response['form'] = e.render()
-                return self.response
-            
-            for (k, v) in appstruct.items():
-                self.context.set_field_value(k, v)
-            
-            url = resource_url(self.context, self.request)
-            
-            return HTTPFound(location=url)
-
-        if 'cancel' in post:
-            url = resource_url(self.context, self.request)
-            return HTTPFound(location=url)
-
-        #No action - Render edit form
-        self.response['form'] = self.form.render()
         return self.response
 
     @view_config(context=IUser, name="change_password", renderer=DEFAULT_TEMPLATE, permission=CHANGE_PASSWORD)

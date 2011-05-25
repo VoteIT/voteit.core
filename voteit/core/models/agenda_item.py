@@ -29,6 +29,7 @@ class AgendaItem(BaseContent):
     """ Agenda Item content. """
     implements(IAgendaItem)
     content_type = 'AgendaItem'
+    display_name = _(u"Agenda item")
     allowed_contexts = ('Meeting',)
     add_permission = security.ADD_AGENDA_ITEM
 

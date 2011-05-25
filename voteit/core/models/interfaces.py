@@ -7,11 +7,25 @@ class IBaseContent(Interface):
         It expects validation to be done on the form level.
     """
     
+    def get_field_value(key, default=None):
+        """ Get value. Return default if it doesn't exist. """
+
     def set_field_value(key, value):
         """ Store value in 'key' in storage. """
         
-    def get_field_value(key, default=None):
-        """ Get value. Return default if it doesn't exist. """
+    def get_field_appstruct(schema):
+        """ Return an appstruct based on schema. Suitable for use with deform.
+            Example: If there's a schema with the field 'title', this method will
+            return a dict with the following layout:
+            {'title':<Value of title>}
+            Fields that don't have a value won't be returned.
+        """
+
+    def set_field_appstruct(appstruct):
+        """ Set a field value from an appstruct. (A dict)
+            Usually passed along by Deform.
+            This equals running set_field_value for each key/value pair in a dict.
+        """
 
     uid = Attribute('UID')
     title = Attribute('Gets the title from the title field. '

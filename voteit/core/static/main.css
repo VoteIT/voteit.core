@@ -133,7 +133,8 @@ div#page_info fieldset {
     clear: both;
 }
 
-.buttonize {
+.buttonize,
+.buttons button {
 	border: 1px solid #054265;
 	background: #dbe0e5;
 	padding: 0.25em 0.5em;
@@ -148,7 +149,8 @@ div#page_info fieldset {
 }
 .buttonize.selected {
 }
-.buttonize:hover {
+.buttonize:hover,
+.buttons button:hover {
     background-color: #054265;
     color: #fff;
 }

@@ -32,13 +32,34 @@ class BaseContent(Folder, SecurityAware):
             storage = self.__storage__ =  OOBTree()
         return storage
 
+    def get_field_value(self, key, default=None):
+        """ Get value. Return default if it doesn't exist. """
+        return self._storage.get(key, default)
+
     def set_field_value(self, key, value):
         """ Store value in 'key' in annotations. """
         self._storage[key] = value
 
-    def get_field_value(self, key, default=None):
-        """ Get value. Return default if it doesn't exist. """
-        return self._storage.get(key, default)
+    def get_field_appstruct(self, schema):
+        """ Get an appstruct from the current field values.
+            Appstruct is just a dictionary. Deform can use it to populate existing fields.
+            The trick with marker is to make sure that None is handled properly.
+        """
+        marker = object()
+        appstruct = {}
+        for field in schema:
+            value = self.get_field_value(field.name, marker)
+            if value != marker:
+                appstruct[field.name] = value
+        return appstruct
+
+    def set_field_appstruct(self, appstruct):
+        updated = set()
+        for (k, v) in appstruct.items():
+            if self.get_field_value(k) != v:
+                self.set_field_value(k, v)
+                updated.add(k)
+        return updated
 
     #uid
     def _get_uid(self):

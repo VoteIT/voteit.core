@@ -2,7 +2,7 @@
 	<tal:iterate repeat="flash messages">
 		<div tal:attributes="class 'message %s'.strip() % flash['type']">
 			<span tal:content="flash['msg']">Message</span>
-			<a href="#" title="Close message" class="close_message buttonize">OK</a>
+			<a href="#" title="Close message" class="close_message buttonize" tal:condition="flash['close_button']">OK</a>
         </div>
 	</tal:iterate>
 </div>

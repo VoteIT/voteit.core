@@ -34,10 +34,6 @@ class PollView(object):
             ComponentLookupError("Couldn't find any registered poll plugin with the name '%s'." % self.context.poll_plugin_name)
         schema = poll_plugin.get_settings_schema(self.context)
         
-        #Make the current value the default value
-        for field in schema:
-            field.default = self.context.get_field_value(field.name)
-
         self.form = Form(schema, buttons=('save', 'cancel'))
         self.response['form_resources'] = self.form.get_widget_resources()
 
@@ -52,8 +48,7 @@ class PollView(object):
                 self.response['form'] = e.render()
                 return self.response
             
-            for (k, v) in appstruct.items():
-                self.context.set_field_value(k, v)
+            self.context.set_field_appstruct(appstruct)
             
             url = resource_url(self.context, self.request)
             
@@ -63,6 +58,8 @@ class PollView(object):
             url = resource_url(self.context, self.request)
             return HTTPFound(location=url)
 
+        appstruct = self.context.get_field_appstruct(schema)
+        self.response['form'] = self.form.render(appstruct=appstruct)
         return self.response
         
     @view_config(context=IPoll, renderer='templates/poll.pt')

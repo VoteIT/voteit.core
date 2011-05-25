@@ -57,8 +57,7 @@ class BaseEdit(object):
                 return self.response
             
             obj = ftis[content_type].type_class()
-            for (k, v) in appstruct.items():
-                obj.set_field_value(k, v)
+            obj.set_field_appstruct(appstruct)
             
             if self.api.userid:
                 obj.creators = [self.api.userid]
@@ -77,7 +76,9 @@ class BaseEdit(object):
             url = resource_url(self.context, self.request)
             return HTTPFound(location=url)
 
-        #No action - Render edit form
+        #No action - Render add form
+        msg = _(u"Add") + ' ' + ftis[content_type].type_class.display_name
+        self.api.flash_messages.add(msg, close_button=False)
         self.response['form'] = self.form.render()
         return self.response
 
@@ -86,10 +87,6 @@ class BaseEdit(object):
         content_type = self.context.content_type
         ftis = self.api.content_info
         schema = ftis[content_type].schema(context=self.context, request=self.request, type='edit')
-
-        #Make the current value the default value
-        for field in schema:
-            field.default = self.context.get_field_value(field.name)
 
         self.form = Form(schema, buttons=('update', 'cancel'))
         self.response['form_resources'] = self.form.get_widget_resources()
@@ -105,11 +102,7 @@ class BaseEdit(object):
                 self.response['form'] = e.render()
                 return self.response
             
-            updated = False
-            for (k, v) in appstruct.items():
-                if self.context.get_field_value(k) != v:
-                    self.context.set_field_value(k, v)
-                    updated = True
+            updated = self.context.set_field_appstruct(appstruct)
 
             if updated:
                 self.api.flash_messages.add(_(u"Successfully updated"))
@@ -125,13 +118,17 @@ class BaseEdit(object):
             return HTTPFound(location=url)
 
         #No action - Render edit form
-        self.response['form'] = self.form.render()
+        msg = _(u"Edit") + ' ' + ftis[content_type].type_class.display_name
+        self.api.flash_messages.add(msg, close_button=False)
+        appstruct = self.context.get_field_appstruct(schema)
+        self.response['form'] = self.form.render(appstruct=appstruct)
         return self.response
 
     @view_config(name="delete", permission=DELETE, renderer=DEFAULT_TEMPLATE)
     def delete_form(self):
-        schema = colander.Schema()
 
+        schema = colander.Schema()
+        
         self.form = Form(schema, buttons=('delete', 'cancel'))
         self.response['form_resources'] = self.form.get_widget_resources()
 
@@ -154,6 +151,8 @@ class BaseEdit(object):
             return HTTPFound(location=url)
 
         #No action - Render edit form
+        msg = _(u"Are you sure you want to delete this item?")
+        self.api.flash_messages.add(msg, close_button=False)
         self.response['form'] = self.form.render()
         return self.response
 

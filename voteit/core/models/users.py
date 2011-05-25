@@ -1,6 +1,7 @@
 import colander
 from zope.interface import implements
 
+from voteit.core import VoteITMF as _
 from voteit.core.models.base_content import BaseContent
 from voteit.core.models.interfaces import IUser
 from voteit.core.models.interfaces import IUsers
@@ -10,6 +11,7 @@ class Users(BaseContent):
     """ Container for all user objects """
     implements(IUsers)
     content_type = 'Users'
+    display_name = _(u"Users")
     allowed_contexts = ()
     add_permission = None
     

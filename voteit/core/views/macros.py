@@ -23,8 +23,8 @@ class FlashMessages(object):
         response = dict(messages = self._get_messages(),)
         return render(FLASH_TEMPLATE, response, request=self.request)
     
-    def add(self, msg, type='info'):
-        flash = {'msg':msg, 'type':type}
+    def add(self, msg, type='info', close_button=True):
+        flash = {'msg':msg, 'type':type, 'close_button':close_button}
         self.request.session.flash(flash)
 
     @view_config(name="_flash_messages", renderer=FLASH_TEMPLATE)
