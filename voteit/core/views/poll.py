@@ -10,6 +10,7 @@ from deform.exception import ValidationFailure
 from webob.exc import HTTPFound
 
 from voteit.core.views.api import APIView
+from voteit.core.security import EDIT, VIEW
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IPollPlugin
 
@@ -24,7 +25,7 @@ class PollView(object):
         self.response = {}
         self.response['api'] = APIView(context, request)
 
-    @view_config(context=IPoll, name="poll_config", renderer='templates/base_edit.pt')
+    @view_config(context=IPoll, name="poll_config", renderer='templates/base_edit.pt', permission=EDIT)
     def poll_config(self):
         """ Configure poll settings. Only for moderators.
             The settins themselves come from the poll plugin.
@@ -62,12 +63,11 @@ class PollView(object):
         self.response['form'] = self.form.render(appstruct=appstruct)
         return self.response
         
-    @view_config(context=IPoll, renderer='templates/poll.pt')
+    @view_config(context=IPoll, renderer='templates/poll.pt', permission=VIEW)
     def poll_view(self):
         """ Render poll view.
         """
-        #FIXME: Permissions for poll
-        #FIXME: Workflow states
+        #FIXME: Workflow states and explanatory text
         
         self.response['poll_result'] = self.context.render_poll_result()
         return self.response
