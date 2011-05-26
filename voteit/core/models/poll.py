@@ -20,17 +20,29 @@ from voteit.core.models.interfaces import IVote
 
 
 ACL = {}
-ACL['ongoing'] = [(Allow, security.ROLE_ADMIN, ALL_PERMISSIONS),
-                  (Allow, security.ROLE_MODERATOR, (security.VIEW, security.EDIT,)),
-                  (Allow, security.ROLE_PARTICIPANT, (security.VIEW,)),
-                  (Allow, security.ROLE_VOTER, (security.VIEW, security.ADD_VOTE,)),
-                  (Allow, security.ROLE_VIEWER, (security.VIEW,)),
+ACL['private'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, security.EDIT, security.DELETE, )),
+                  (Allow, security.ROLE_MODERATOR, (security.VIEW, security.EDIT, security.DELETE, )),
                   DENY_ALL,
                    ]
-ACL['closed'] = [(Allow, security.ROLE_ADMIN, ALL_PERMISSIONS),
-                 (Allow, security.ROLE_MODERATOR, (security.VIEW,)),
-                 (Allow, security.ROLE_PARTICIPANT, (security.VIEW,)),
-                 (Allow, security.ROLE_VIEWER, (security.VIEW,)),
+ACL['planned'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, security.EDIT, security.DELETE, )),
+                  (Allow, security.ROLE_MODERATOR, (security.VIEW, security.EDIT, security.DELETE, )),
+                  (Allow, security.ROLE_PARTICIPANT, security.VIEW),
+                  (Allow, security.ROLE_VOTER, security.VIEW),
+                  (Allow, security.ROLE_VIEWER, security.VIEW),
+                  DENY_ALL,
+                   ]
+ACL['ongoing'] = [(Allow, security.ROLE_ADMIN, security.VIEW),
+                  (Allow, security.ROLE_MODERATOR, security.VIEW),
+                  (Allow, security.ROLE_PARTICIPANT, security.VIEW),
+                  (Allow, security.ROLE_VOTER, (security.VIEW, security.ADD_VOTE, )),
+                  (Allow, security.ROLE_VIEWER, security.VIEW),
+                  DENY_ALL,
+                   ]
+ACL['closed'] = [(Allow, security.ROLE_ADMIN, security.VIEW),
+                 (Allow, security.ROLE_MODERATOR, security.VIEW),
+                 (Allow, security.ROLE_PARTICIPANT, security.VIEW),
+                 (Allow, security.ROLE_VOTER, security.VIEW),
+                 (Allow, security.ROLE_VIEWER, security.VIEW),
                  DENY_ALL,
                 ]
 CLOSED_STATES = ('canceled', 'closed', )
@@ -47,12 +59,14 @@ class Poll(BaseContent):
     @property
     def __acl__(self):
         state = self.get_workflow_state
-        if state in CLOSED_STATES:
-            return ACL['closed']
+        if state == u'private':
+            return ACL['private']
+        if state == u'planned':
+            return ACL['planned']
         if state == u'ongoing':
             return ACL['ongoing']
-        raise AttributeError('Check parents ACL')
-
+        return ACL['closed'] #As default - don't traverse to parent
+    
     #proposals
     def _get_proposal_uids(self):
         return self.get_field_value('proposals')

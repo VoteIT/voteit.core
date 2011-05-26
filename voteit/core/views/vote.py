@@ -1,17 +1,17 @@
+from pyramid.exceptions import Forbidden
 from pyramid.view import view_config
 from pyramid.traversal import find_root, find_interface
 from pyramid.url import resource_url
 from pyramid.security import has_permission
-
 import colander
 from deform import Form
 from deform.exception import ValidationFailure
 from webob.exc import HTTPFound
 from zope.component import getUtility
 
+from voteit.core import VoteITMF as _
 from voteit.core.views.api import APIView
 from voteit.core.security import ROLE_OWNER, EDIT, DELETE, ADD_VOTE
-from pyramid.exceptions import Forbidden
 from voteit.core.models.interfaces import IVote
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IPollPlugin
@@ -38,17 +38,25 @@ class VoteView(object):
         self.schema = self.poll_plugin.get_vote_schema(self.poll)
 
 
-    @view_config(context=IPoll, name="vote", permission=ADD_VOTE, renderer=DEFAULT_TEMPLATE)
+    @view_config(context=IPoll, name="vote", renderer=DEFAULT_TEMPLATE, permission=ADD_VOTE)
     def add_vote(self):
         """ Add a Vote to a Poll. """
-        #Permission check
-        #FIXME: Check if someone can vote
         #FIXME: Allow plugin to override renderer
         
         #Check if the users vote exists already
         userid = self.api.userid
         if userid in self.context:
-            raise Forbidden("Already voted")
+            #If editing a vote is allowed, redirect. Editing is only allowed in open polls
+            vote = self.context.get(userid)
+            assert IVote.providedBy(vote)
+            
+            if has_permission(EDIT, vote, self.request):
+                msg = _(u"You've already voted, but the poll is still open so you can change or even delete your vote if you want to.")
+                self.api.flash_messages.add(msg)
+                url = "%sedit" % resource_url(vote, self.request)
+                return HTTPFound(location=url)
+            
+            raise Forbidden("You've already voted and the poll is closed.")
 
         self.form = Form(self.schema, buttons=('vote', 'cancel'))
         self.response['form_resources'] = self.form.get_widget_resources()
@@ -74,23 +82,26 @@ class VoteView(object):
             
             self.context[userid] = vote
             
+            msg = _(u"Thank you for voting!")
+            self.api.flash_messages.add(msg)
             url = resource_url(vote, self.request)
-            
             return HTTPFound(location=url)
 
         if 'cancel' in post:
+            msg = _(u"Canceled - your vote has NOT been added!")
+            self.api.flash_messages.add(msg)
             url = resource_url(self.context, self.request)
             return HTTPFound(location=url)
 
         #No action - Render edit form
+        msg = _(u"Add a vote")
+        self.api.flash_messages.add(msg, close_button=False)
         self.response['form'] = self.form.render()
         return self.response
 
     @view_config(context=IVote, name="edit", renderer=DEFAULT_TEMPLATE, permission=EDIT)
     def edit_vote(self):
         """ Edit vote, only for the owner of the vote. """
-        #Permission check
-        #FIXME: Check if someone can vote
         #FIXME: Allow plugin to override renderer
        
         self.form = Form(self.schema, buttons=('update', 'cancel'))
@@ -102,46 +113,27 @@ class VoteView(object):
             try:
                 #appstruct is deforms convention. It will be the submitted data in a dict.
                 appstruct = self.form.validate(controls)
-                #FIXME: validate name - it must be unique and url-id-like
             except ValidationFailure, e:
                 self.response['form'] = e.render()
                 return self.response
             
             self.context.set_vote_data(appstruct)
-            
+
+            msg = _(u"Your vote has been updated.")
+            self.api.flash_messages.add(msg)
+
             url = resource_url(self.context, self.request)
-            
             return HTTPFound(location=url)
 
         if 'cancel' in post:
+            msg = _(u"Canceled - vote NOT updated!")
+            self.api.flash_messages.add(msg)
             url = resource_url(self.context, self.request)
             return HTTPFound(location=url)
 
         #No action - Render edit form
-        self.response['form'] = self.form.render()
-        return self.response
-
-    @view_config(name="delete", context=IVote, permission=DELETE, renderer=DEFAULT_TEMPLATE)
-    def delete_vote(self):
-        #FIXME: Add permission checks
-        #FIXME: Check workflow
-        schema = colander.Schema()
-
-        self.form = Form(schema, buttons=('delete', 'cancel'))
-        self.response['form_resources'] = self.form.get_widget_resources()
-
-        post = self.request.POST
-        if 'delete' in post:
-            parent = self.context.__parent__
-            del parent[self.context.__name__]
-            
-            url = resource_url(parent, self.request)
-            return HTTPFound(location=url)
-
-        if 'cancel' in post:
-            url = resource_url(self.context, self.request)
-            return HTTPFound(location=url)
-
-        #No action - Render edit form
-        self.response['form'] = self.form.render()
+        msg = _(u"Edit your vote", close_button=False)
+        self.api.flash_messages.add(msg)
+        appstruct = self.context.get_vote_data()
+        self.response['form'] = self.form.render(appstruct=appstruct)
         return self.response

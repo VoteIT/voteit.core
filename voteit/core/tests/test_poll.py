@@ -4,8 +4,9 @@ from pyramid import testing
 from zope.interface.verify import verifyObject
 from zope.component import queryUtility
 from pyramid.threadlocal import get_current_registry
+from pyramid.authorization import ACLAuthorizationPolicy
 
-
+from voteit.core import security
 
     
 class PollTests(unittest.TestCase):
@@ -232,3 +233,97 @@ class PollTests(unittest.TestCase):
         obj.set_workflow_state('closed')
         result = self._extract_transition_names(obj.get_available_workflow_states())
         self.assertEqual(result, set())
+
+
+class PollPermissionTests(unittest.TestCase):
+
+    def setUp(self):
+        self.config = testing.setUp()
+        policy = ACLAuthorizationPolicy()
+        self.pap = policy.principals_allowed_by_permission
+        # load workflow
+        from voteit.core import register_workflows
+        register_workflows()
+
+    def tearDown(self):
+        testing.tearDown()
+
+    def _make_obj(self):
+        from voteit.core.models.poll import Poll
+        return Poll()
+
+    def _register_majority_poll(self, poll):
+        from voteit.core import register_poll_plugin
+        from voteit.core.plugins.majority_poll import MajorityPollPlugin
+        registry = get_current_registry()
+        register_poll_plugin(MajorityPollPlugin, registry=registry)
+        poll.set_field_value('poll_plugin', u'majority_poll')
+
+
+    def test_private(self):
+        poll = self._make_obj()
+        
+        self.assertEqual(self.pap(poll, security.VIEW),
+                         set([security.ROLE_ADMIN, security.ROLE_MODERATOR]))
+        
+        self.assertEqual(self.pap(poll, security.EDIT),
+                         set([security.ROLE_ADMIN, security.ROLE_MODERATOR]))
+        
+        self.assertEqual(self.pap(poll, security.DELETE),
+                         set([security.ROLE_ADMIN, security.ROLE_MODERATOR]))
+        
+        self.assertEqual(self.pap(poll, security.ADD_VOTE),
+                         set([]))
+
+
+    def test_planned(self):
+        poll = self._make_obj()
+        poll.set_workflow_state('planned')
+        
+        self.assertEqual(self.pap(poll, security.VIEW),
+                         set([security.ROLE_ADMIN, security.ROLE_MODERATOR, security.ROLE_PARTICIPANT, security.ROLE_VIEWER, security.ROLE_VOTER]))
+        
+        self.assertEqual(self.pap(poll, security.EDIT),
+                         set([security.ROLE_ADMIN, security.ROLE_MODERATOR]))
+        
+        self.assertEqual(self.pap(poll, security.DELETE),
+                         set([security.ROLE_ADMIN, security.ROLE_MODERATOR]))
+        
+        self.assertEqual(self.pap(poll, security.ADD_VOTE),
+                         set([]))
+
+    def test_ongoing(self):
+        poll = self._make_obj()
+        poll.set_workflow_state('planned')
+        poll.set_workflow_state('ongoing')
+        
+        self.assertEqual(self.pap(poll, security.VIEW),
+                         set([security.ROLE_ADMIN, security.ROLE_MODERATOR, security.ROLE_PARTICIPANT, security.ROLE_VIEWER, security.ROLE_VOTER]))
+        
+        self.assertEqual(self.pap(poll, security.EDIT),
+                         set([]))
+        
+        self.assertEqual(self.pap(poll, security.DELETE),
+                         set([]))
+        
+        self.assertEqual(self.pap(poll, security.ADD_VOTE),
+                         set([security.ROLE_VOTER]))
+
+    def test_closed_or_canceled(self):
+        poll = self._make_obj()
+        self._register_majority_poll(poll)
+        poll.set_workflow_state('planned')
+        poll.set_workflow_state('ongoing')
+        poll.set_workflow_state('closed')
+        
+        self.assertEqual(self.pap(poll, security.VIEW),
+                         set([security.ROLE_ADMIN, security.ROLE_MODERATOR, security.ROLE_PARTICIPANT, security.ROLE_VIEWER, security.ROLE_VOTER]))
+        
+        self.assertEqual(self.pap(poll, security.EDIT),
+                         set([]))
+        
+        self.assertEqual(self.pap(poll, security.DELETE),
+                         set([]))
+        
+        self.assertEqual(self.pap(poll, security.ADD_VOTE),
+                         set([]))

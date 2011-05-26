@@ -40,10 +40,10 @@ class Vote(BaseContent):
             return ACL['ongoing']
         return ACL['closed']
 
-    def set_vote_data(self, value):
-        """ Set vote data """
-        self.__vote_data__ = value
-    
     def get_vote_data(self):
         """ Get vote data. """
         return getattr(self, '__vote_data__', None)
+
+    def set_vote_data(self, value):
+        """ Set vote data """
+        self.__vote_data__ = value
