@@ -16,6 +16,7 @@ from pyramid.exceptions import Forbidden
 from voteit.core.views.api import APIView
 from voteit.core import VoteITMF as _
 from voteit.core.security import ROLE_OWNER, EDIT, DELETE
+from voteit.core.models.schemas import add_csrf_token
 
 DEFAULT_TEMPLATE = "templates/base_edit.pt"
 
@@ -41,6 +42,7 @@ class BaseEdit(object):
             raise Forbidden("You're not allowed to add '%s' in this context." % content_type)
         
         schema = ftis[content_type].schema(context=self.context, request=self.request, type='add')
+        add_csrf_token(self.context, self.request, schema)
             
         self.form = Form(schema, buttons=('add', 'cancel'))
         self.response['form_resources'] = self.form.get_widget_resources()
@@ -87,6 +89,7 @@ class BaseEdit(object):
         content_type = self.context.content_type
         ftis = self.api.content_info
         schema = ftis[content_type].schema(context=self.context, request=self.request, type='edit')
+        add_csrf_token(self.context, self.request, schema)
 
         self.form = Form(schema, buttons=('update', 'cancel'))
         self.response['form_resources'] = self.form.get_widget_resources()
@@ -128,6 +131,7 @@ class BaseEdit(object):
     def delete_form(self):
 
         schema = colander.Schema()
+        add_csrf_token(self.context, self.request, schema)
         
         self.form = Form(schema, buttons=('delete', 'cancel'))
         self.response['form_resources'] = self.form.get_widget_resources()

@@ -12,6 +12,7 @@ from voteit.core.models.interfaces import IUser
 from voteit.core.models.interfaces import IUsers
 from voteit.core.views.api import APIView
 from voteit.core.security import CHANGE_PASSWORD, ROLE_OWNER
+from voteit.core.models.schemas import add_csrf_token
 
 DEFAULT_TEMPLATE = "templates/base_edit.pt"
 
@@ -31,6 +32,7 @@ class UsersView(object):
         #FIXME: Utility might need to handle different schemas here?
         content_util = self.request.registry.getUtility(IContentUtility)
         schema = content_util['User'].schema(context=self.context, request=self.request, type='add')
+        add_csrf_token(self.context, self.request, schema)
 
         self.form = Form(schema, buttons=('add', 'cancel'))
         self.response['form_resources'] = self.form.get_widget_resources()
@@ -89,6 +91,7 @@ class UsersView(object):
         users = self.context.users
         content_util = self.request.registry.getUtility(IContentUtility)
         schema = content_util['User'].schema(context=users, request=self.request, type='registration')
+        add_csrf_token(self.context, self.request, schema)
 
         self.form = Form(schema, buttons=('register', 'cancel'))
         self.response['form_resources'] = self.form.get_widget_resources()
@@ -151,6 +154,7 @@ class UsersView(object):
     def password_form(self):
         content_util = self.request.registry.getUtility(IContentUtility)
         schema = content_util['User'].schema(context=self.context, request=self.request, type='change_password')
+        add_csrf_token(self.context, self.request, schema)
 
         self.form = Form(schema, buttons=('update', 'cancel'))
         self.response['form_resources'] = self.form.get_widget_resources()

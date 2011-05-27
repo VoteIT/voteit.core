@@ -33,7 +33,7 @@ class APIView(object):
         if self.userid:
             self.user_profile = self.get_user(self.userid)
             self.user_profile_url = resource_url(self.user_profile, request)
-        
+                
         #request.application_url
         self.main_template = get_renderer('templates/main.pt').implementation()
         self.content_info = request.registry.getUtility(IContentUtility)

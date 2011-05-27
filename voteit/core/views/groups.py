@@ -15,6 +15,7 @@ from voteit.core.security import MANAGE_GROUPS
 from voteit.core.models.security_aware import get_groups_schema
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import ISiteRoot
+from voteit.core.models.schemas import add_csrf_token
 
 DEFAULT_TEMPLATE = "templates/base_edit.pt"
 
@@ -34,6 +35,7 @@ class EditGroups(object):
     @view_config(context=IMeeting, name="edit_groups", renderer=DEFAULT_TEMPLATE, permission=MANAGE_GROUPS)
     def root_group_form(self):
         schema = get_groups_schema(self.context)
+        add_csrf_token(self.context, self.request, schema)
 
         self.form = Form(schema, buttons=('save', 'cancel'))
         self.response['form_resources'] = self.form.get_widget_resources()

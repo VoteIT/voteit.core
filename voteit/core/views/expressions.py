@@ -20,6 +20,7 @@ def expression_action(context, request):
     """ View for setting or removing expression tags like 'Like' or 'Support'.
         the request.POST object must contain tag and do.
     """
+    #FIXME: Use normal colander Schema + CSRF?
     userid = authenticated_userid(request)
     if not userid:
         raise Forbidden("You're not allowed to access this view.")

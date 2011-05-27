@@ -13,6 +13,7 @@ from voteit.core.views.api import APIView
 from voteit.core.security import EDIT, VIEW
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IPollPlugin
+from voteit.core.models.schemas import add_csrf_token
 
 
 class PollView(object):
@@ -34,7 +35,8 @@ class PollView(object):
         if not poll_plugin:
             ComponentLookupError("Couldn't find any registered poll plugin with the name '%s'." % self.context.poll_plugin_name)
         schema = poll_plugin.get_settings_schema(self.context)
-        
+        add_csrf_token(self.context, self.request, schema)
+
         self.form = Form(schema, buttons=('save', 'cancel'))
         self.response['form_resources'] = self.form.get_widget_resources()
 
