@@ -7,20 +7,25 @@ from repoze.zodbconn.finder import PersistentApplicationFinder
 from zope.component import getGlobalSiteManager
 from zope.interface.verify import verifyClass
 from zope.configuration import xmlconfig
-import sqlalchemy
+
+from sqlalchemy import create_engine
+from sqlalchemy import MetaData
 from sqlalchemy.orm import scoped_session
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.ext.declarative import declarative_base
 from zope.sqlalchemy import ZopeTransactionExtension
 
-PROJECTNAME = 'voteit.core'
 #Must be before all of this packages imports since some other methods might import it
+PROJECTNAME = 'voteit.core'
 VoteITMF = TranslationStringFactory(PROJECTNAME)
+
+RDB_Base = declarative_base()
+RDB_Session = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
 
 #voteit.core package imports
 from voteit.core.models.content_utility import ContentUtility
 from voteit.core.models.interfaces import IContentUtility
 from voteit.core.models.interfaces import IPollPlugin
-from voteit.core.models import DBBase
 from voteit.core.security import groupfinder
 
 
@@ -43,6 +48,7 @@ def main(global_config, **settings):
 
     init_sql_database(settings)
     
+    
     globalreg = getGlobalSiteManager()
     config = Configurator(registry=globalreg)
     config.setup_registry(settings=settings,
@@ -58,7 +64,7 @@ def main(global_config, **settings):
     #config.add_translation_dirs('%s:locale/' % PROJECTNAME)
 
     config.scan(PROJECTNAME)
-    
+        
     #Include content types and their utility IContentUtility
     config.registry.registerUtility(ContentUtility(), IContentUtility)
     
@@ -77,7 +83,6 @@ def main(global_config, **settings):
             config.include(poll_plugin)
 
     register_workflows()
-
 
     return config.make_wsgi_app()
 
@@ -122,21 +127,24 @@ def register_content_info(schema, type_class, verify=True, registry=None):
     obj = util.create(schema, type_class)
     util.add(obj, verify=verify)
     
-    
-def init_sql_database(settings):
-    engine = sqlalchemy.create_engine(settings['sqlite_file'])
 
-    SQLSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
-    SQLSession.configure(bind=engine)
-    settings['sql_session'] = SQLSession
+def init_sql_database(settings):
+    sqlite_file = settings.get('sqlite_file')
+    if sqlite_file is None:
+        raise ValueError("""
+        A path to an SQLite db file needs to be specified.
+        Something like: 'sqlite_file = sqlite:///%(here)s/../var/sqlite.db'
+        added in paster setup. (Either development.ini or production.ini)
+        """)
     
-    from sqlalchemy import MetaData, Table
-    from sqlalchemy.orm import mapper
-    from voteit.core.models.expression_adapter import Expression
+    engine = create_engine(sqlite_file)
+    RDB_Session.configure(bind=engine)
+
+    #Touch all modules that are SQL-based
+    from voteit.core.models.expression import Expression
     
-    metadata = MetaData(engine)
-    expressions = Table('expressions', metadata)
-    expressionmapper = mapper(Expression, expressions)
+    #Create tables
+    RDB_Base.metadata.create_all(engine)
     
-#    DBBase.metadata.bind = engine
-#    DBBase.metadata.create_all(engine)
+    #This is used by a subscriber for each new request. See sql_db.py
+    settings['sql_session'] = RDB_Session

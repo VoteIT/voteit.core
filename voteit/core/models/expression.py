@@ -1,11 +1,17 @@
 from sqlalchemy import Integer
 from sqlalchemy import Unicode
 from sqlalchemy import Column
+from zope.interface import implements
+from repoze.folder import unicodify
 
-from voteit.core.models import DBBase
+from voteit.core import RDB_Base
+from voteit.core.models.interfaces import IExpressions
 
-class Expression(object):
-    """ """
+
+class Expression(RDB_Base):
+    """ Persistance for an expression.
+        Expressions are singular user tags like 'Like' or 'Dislike'.
+    """
     
     __tablename__ = 'expressions'
     id = Column(Integer, primary_key=True)
@@ -16,16 +22,19 @@ class Expression(object):
     #TODO: make tag+userid+uid unique
     
     def __init__(self, tag, userid, uid):
-        self.tag = tag
-        self.userid = userid
-        self.uid = uid
+        self.tag = unicodify(tag)
+        self.userid = unicodify(userid)
+        self.uid = unicodify(uid)
         
     def __repr__(self):
         return "<Expression('%s','%s','%s')>" % (self.tag, self.userid, self.uid)
 
+
 class Expressions(object):
     """ Handle user expressions like 'Like' or 'Support'.
+        This behaves like an adapter on a request.
     """
+    implements(IExpressions)
     
     def __init__(self, request):
         self.request = request

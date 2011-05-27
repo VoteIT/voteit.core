@@ -238,3 +238,20 @@ class IContentUtility(Interface):
         """ Get all content type factories that are addable in the context of
             a content_type.
         """
+
+class IExpressions(Interface):
+    """ Handle user expressions like 'Like' or 'Support'.
+        This behaves like an adapter on a request.
+    """
+    
+    def __init__(request):
+        """ Object needs a request to adapt. """
+
+    def add(tag, userid, uid):
+        """ Add an expression. """
+
+    def retrieve_userids(tag, uid):
+        """ Retrieve a set of all userids who've set tag on uid. """
+
+    def remove(tag, userid, uid):
+        """ Remove where tag and userid and uid match. """

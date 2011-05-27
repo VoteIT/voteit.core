@@ -12,7 +12,7 @@ from repoze.workflow import get_workflow
 
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import IContentUtility
-from voteit.core.models.expression_adapter import Expressions
+from voteit.core.models.expression import Expressions
 from voteit.core.views.macros import FlashMessages
 
 

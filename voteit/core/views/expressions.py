@@ -8,7 +8,7 @@ from webob.exc import HTTPFound
 from pyramid.response import Response
 
 from voteit.core.models.interfaces import IBaseContent
-from voteit.core.models.expression_adapter import Expressions
+from voteit.core.models.expression import Expressions
 
 from voteit.core.views.api import APIView
 
