@@ -70,3 +70,11 @@ def construct_schema(**kwargs):
 
 def includeme(config):
     register_content_info(construct_schema, Meeting, registry=config.registry)
+
+def closing_meeting_callback(context, info):
+    """ Callback for workflow action. When a meeting is closed,
+        raise an exception if any agenda item is active.
+    """
+    #get_content returns a generator. It's "True" even if it's empty!
+    if tuple(context.get_content(iface=IAgendaItem, state='active')):
+        raise Exception("This meeting still has open Agenda items in it. You can't close it until they're closed.")

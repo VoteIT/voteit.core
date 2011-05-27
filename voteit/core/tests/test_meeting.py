@@ -19,6 +19,9 @@ owner = set([security.ROLE_OWNER])
 class MeetingTests(unittest.TestCase):
     def setUp(self):
         self.config = testing.setUp()
+        # load workflow
+        from voteit.core import register_workflows
+        register_workflows()
 
     def tearDown(self):
         testing.tearDown()
@@ -27,11 +30,26 @@ class MeetingTests(unittest.TestCase):
         from voteit.core.models.meeting import Meeting
         return Meeting()
     
+    def _make_ai(self):
+        from voteit.core.models.agenda_item import AgendaItem
+        return AgendaItem()
+
     def test_verify_implementation(self):
         from voteit.core.models.interfaces import IMeeting
         obj = self._make_obj()
         self.assertTrue(verifyObject(IMeeting, obj))
 
+    def test_closing_meeting_with_active_ais(self):
+        """ Closing a meeting with active agenda items should raise an exception. """
+        ai = self._make_ai()
+        ai.set_workflow_state('inactive')
+        ai.set_workflow_state('active')
+        obj = self._make_obj()
+        obj['ai'] = ai
+        
+        obj.set_workflow_state('inactive')
+        obj.set_workflow_state('active')
+        self.assertRaises(Exception, obj.set_workflow_state, 'closed')
 
 class MeetingPermissionTests(unittest.TestCase):
     """ Check permissions in different meeting states. """

@@ -64,6 +64,7 @@
 			from_state="active"
 			to_state="closed"
 			permission="Edit"
+            callback="voteit.core.models.meeting.closing_meeting_callback"
 		/>
 		
 		<transition
