@@ -45,7 +45,7 @@
 			name="published_to_retracted"
 			from_state="published"
 			to_state="retracted"
-			permission="Edit"
+			permission="Retract"
 		/>
 		
 		<transition

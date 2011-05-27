@@ -9,6 +9,8 @@ from voteit.core import VoteITMF as _
 from voteit.core.models.base_content import BaseContent
 from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IMeeting
+from voteit.core.models.interfaces import IProposal
+from voteit.core.models.interfaces import IPoll
 
 
 ACL = {}
@@ -108,3 +110,16 @@ def construct_schema(**kwargs):
 def includeme(config):
     from voteit.core import register_content_info
     register_content_info(construct_schema, AgendaItem, registry=config.registry)
+
+
+def closing_agenda_item_callback(context, info):
+    """ Callback for workflow action. When an agenda item is closed,
+        all contained proposals that haven't been handled should be set to
+        "unhandled".
+        If there are any open polls, this should raise an exception or an error message of some sort.
+    """
+    #get_content returns a generator. It's "True" even if it's empty!
+    if tuple(context.get_content(iface=IPoll, state='ongoing')):
+        raise Exception("You can't close an agenda item that has active polls in it. Close the polls first!")
+    for proposal in context.get_content(iface=IProposal, state='published'):
+        proposal.set_workflow_state('unhandled')

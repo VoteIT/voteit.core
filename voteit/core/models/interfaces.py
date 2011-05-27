@@ -37,12 +37,13 @@ class IBaseContent(Interface):
     content_type = Attribute('Content type, internal name')
     allowed_contexts = Attribute('Which contexts is this type allowed in?')
 
-    def get_content(content_type=None, iface=None):
+    def get_content(content_type=None, iface=None, state=None):
         """ Returns contained items within this folder. Keywords are usually conditions.
             They're treated as 'AND'.
             keywords:
             content_type: Only return types of this content type.
             iface: content must implement this interface
+            state: Only get content with this workflow state
         """
 
 class ISecurityAware(Interface):

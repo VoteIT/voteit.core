@@ -64,6 +64,7 @@
 			from_state="active"
 			to_state="closed"
 			permission="Edit"
+            callback="voteit.core.models.agenda_item.closing_agenda_item_callback"
 		/>
 		
 		<transition

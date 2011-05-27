@@ -96,7 +96,7 @@ class BaseContent(Folder, SecurityAware):
     
     creators = property(_get_creators, _set_creators)
 
-    def get_content(self, content_type=None, iface=None):
+    def get_content(self, content_type=None, iface=None, state=None):
         """ See IBaseContent """
         for candidate in self.values():
             
@@ -108,6 +108,11 @@ class BaseContent(Folder, SecurityAware):
             #Specific interface?
             if iface is not None:
                 if not iface.providedBy(candidate):
+                    continue
+            
+            #Specific workflow state?
+            if state is not None:
+                if not state == candidate.get_workflow_state:
                     continue
             
             yield candidate

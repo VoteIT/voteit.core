@@ -19,6 +19,8 @@ owner = set([security.ROLE_OWNER])
 class AgendaItemTests(unittest.TestCase):
     def setUp(self):
         self.config = testing.setUp()
+        from voteit.core import register_workflows
+        register_workflows()
 
     def tearDown(self):
         testing.tearDown()
@@ -26,12 +28,46 @@ class AgendaItemTests(unittest.TestCase):
     def _make_obj(self):
         from voteit.core.models.agenda_item import AgendaItem
         return AgendaItem()
+
+    def _make_proposal(self):
+        from voteit.core.models.proposal import Proposal
+        return Proposal()
     
+    def _make_poll(self):
+        from voteit.core.models.poll import Poll
+        return Poll()
+
     def test_verify_implementation(self):
         from voteit.core.models.interfaces import IAgendaItem
         obj = self._make_obj()
         self.assertTrue(verifyObject(IAgendaItem, obj))
 
+    def test_workflow_closed_state_marks_proposals_unhandled(self):
+        """ Published proposals should be marked as 'unhandled' when
+            an AI closes.
+        """
+        obj = self._make_obj()
+        obj['proposal'] = self._make_proposal() #Should be published as initial state
+        obj.set_workflow_state('inactive')
+        obj.set_workflow_state('active')
+        obj.set_workflow_state('closed')
+        self.assertEqual(obj['proposal'].get_workflow_state, u'unhandled')
+
+
+    def test_workflow_closed_state_active_poll_exception(self):
+        """ When you try to close an agenda items that has an ongoing
+            poll in it, it should raise an exception.
+        """
+        obj = self._make_obj()
+
+        obj['poll'] = self._make_poll()
+        obj['poll'].set_workflow_state('planned')
+        obj['poll'].set_workflow_state('ongoing')
+
+        obj.set_workflow_state('inactive')
+        obj.set_workflow_state('active')
+        self.assertRaises(Exception, obj.set_workflow_state, 'closed')
+        
 
 class AgendaItemPermissionTests(unittest.TestCase):
     """ Check permissions in different agenda item states. """
