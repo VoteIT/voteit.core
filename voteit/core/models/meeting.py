@@ -16,7 +16,7 @@ ACL['default'] = [(Allow, security.ROLE_ADMIN, security.REGULAR_ADD_PERMISSIONS)
                   (Allow, security.ROLE_ADMIN, (security.VIEW, security.EDIT, security.MANAGE_GROUPS, security.DELETE, )),
                   (Allow, security.ROLE_MODERATOR, security.REGULAR_ADD_PERMISSIONS),
                   (Allow, security.ROLE_MODERATOR, (security.VIEW, security.EDIT, security.MANAGE_GROUPS, security.DELETE, )),
-                  (Allow, security.ROLE_OWNER, (security.VIEW, security.EDIT, security.DELETE, )),
+                  (Allow, security.ROLE_OWNER, (security.VIEW, security.EDIT, )),
                   (Allow, security.ROLE_PARTICIPANT, (security.VIEW, security.ADD_PROPOSAL, )),
                   (Allow, security.ROLE_VIEWER, (security.VIEW,)),
                   (Allow, Authenticated, security.REQUEST_MEETING_ACCESS),

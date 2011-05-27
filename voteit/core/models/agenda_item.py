@@ -12,15 +12,16 @@ from voteit.core.models.interfaces import IMeeting
 
 
 ACL = {}
-ACL['private'] = [(Allow, security.ROLE_ADMIN, ALL_PERMISSIONS),
+ACL['private'] = [(Allow, security.ROLE_ADMIN, security.REGULAR_ADD_PERMISSIONS),
+                  (Allow, security.ROLE_ADMIN, (security.VIEW, security.EDIT, security.DELETE, )),
                   (Allow, security.ROLE_MODERATOR, security.REGULAR_ADD_PERMISSIONS),
-                  (Allow, security.ROLE_MODERATOR, (security.VIEW, security.EDIT, security.DELETE)),
+                  (Allow, security.ROLE_MODERATOR, (security.VIEW, security.EDIT, security.DELETE, )),
                   DENY_ALL,
                 ]
-ACL['closed'] = [(Allow, security.ROLE_ADMIN, ALL_PERMISSIONS),
-                 (Allow, security.ROLE_MODERATOR, (security.VIEW,)),
-                 (Allow, security.ROLE_PARTICIPANT, (security.VIEW,)),
-                 (Allow, security.ROLE_VIEWER, (security.VIEW,)),
+ACL['closed'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, )),
+                 (Allow, security.ROLE_MODERATOR, (security.VIEW, )),
+                 (Allow, security.ROLE_PARTICIPANT, (security.VIEW, )),
+                 (Allow, security.ROLE_VIEWER, (security.VIEW, )),
                  DENY_ALL,
                 ]
 
@@ -38,13 +39,13 @@ class AgendaItem(BaseContent):
         state = self.get_workflow_state
         if state == 'closed':
             return ACL['closed']
+        if state == 'private':
+            return ACL['private']
         
         meeting = find_interface(self, IMeeting)
         if meeting.get_workflow_state == u'closed':
             return ACL['closed']
         
-        if state == 'private':
-            return ACL['private']
 
         raise AttributeError("Go fetch parents acl")
 

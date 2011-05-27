@@ -8,7 +8,14 @@ from pyramid.authorization import ACLAuthorizationPolicy
 
 from voteit.core import security
 
-    
+admin = set([security.ROLE_ADMIN])
+moderator = set([security.ROLE_MODERATOR])
+participant = set([security.ROLE_PARTICIPANT])
+viewer = set([security.ROLE_VIEWER])
+voter = set([security.ROLE_VOTER])
+owner = set([security.ROLE_OWNER])
+
+
 class PollTests(unittest.TestCase):
     def setUp(self):
         self.config = testing.setUp()
@@ -263,51 +270,38 @@ class PollPermissionTests(unittest.TestCase):
     def test_private(self):
         poll = self._make_obj()
         
-        self.assertEqual(self.pap(poll, security.VIEW),
-                         set([security.ROLE_ADMIN, security.ROLE_MODERATOR]))
+        self.assertEqual(self.pap(poll, security.VIEW), admin | moderator)
         
-        self.assertEqual(self.pap(poll, security.EDIT),
-                         set([security.ROLE_ADMIN, security.ROLE_MODERATOR]))
+        self.assertEqual(self.pap(poll, security.EDIT), admin | moderator)
         
-        self.assertEqual(self.pap(poll, security.DELETE),
-                         set([security.ROLE_ADMIN, security.ROLE_MODERATOR]))
+        self.assertEqual(self.pap(poll, security.DELETE), admin | moderator)
         
-        self.assertEqual(self.pap(poll, security.ADD_VOTE),
-                         set([]))
-
+        self.assertEqual(self.pap(poll, security.ADD_VOTE), set())
 
     def test_planned(self):
         poll = self._make_obj()
         poll.set_workflow_state('planned')
         
-        self.assertEqual(self.pap(poll, security.VIEW),
-                         set([security.ROLE_ADMIN, security.ROLE_MODERATOR, security.ROLE_PARTICIPANT, security.ROLE_VIEWER, security.ROLE_VOTER]))
+        self.assertEqual(self.pap(poll, security.VIEW), admin | moderator | participant | viewer | voter)
         
-        self.assertEqual(self.pap(poll, security.EDIT),
-                         set([security.ROLE_ADMIN, security.ROLE_MODERATOR]))
+        self.assertEqual(self.pap(poll, security.EDIT), admin | moderator)
         
-        self.assertEqual(self.pap(poll, security.DELETE),
-                         set([security.ROLE_ADMIN, security.ROLE_MODERATOR]))
+        self.assertEqual(self.pap(poll, security.DELETE), admin | moderator)
         
-        self.assertEqual(self.pap(poll, security.ADD_VOTE),
-                         set([]))
+        self.assertEqual(self.pap(poll, security.ADD_VOTE), set())
 
     def test_ongoing(self):
         poll = self._make_obj()
         poll.set_workflow_state('planned')
         poll.set_workflow_state('ongoing')
         
-        self.assertEqual(self.pap(poll, security.VIEW),
-                         set([security.ROLE_ADMIN, security.ROLE_MODERATOR, security.ROLE_PARTICIPANT, security.ROLE_VIEWER, security.ROLE_VOTER]))
+        self.assertEqual(self.pap(poll, security.VIEW), admin | moderator | participant | viewer | voter)
         
-        self.assertEqual(self.pap(poll, security.EDIT),
-                         set([]))
+        self.assertEqual(self.pap(poll, security.EDIT), set())
         
-        self.assertEqual(self.pap(poll, security.DELETE),
-                         set([]))
+        self.assertEqual(self.pap(poll, security.DELETE), set())
         
-        self.assertEqual(self.pap(poll, security.ADD_VOTE),
-                         set([security.ROLE_VOTER]))
+        self.assertEqual(self.pap(poll, security.ADD_VOTE), voter)
 
     def test_closed_or_canceled(self):
         poll = self._make_obj()
@@ -316,14 +310,10 @@ class PollPermissionTests(unittest.TestCase):
         poll.set_workflow_state('ongoing')
         poll.set_workflow_state('closed')
         
-        self.assertEqual(self.pap(poll, security.VIEW),
-                         set([security.ROLE_ADMIN, security.ROLE_MODERATOR, security.ROLE_PARTICIPANT, security.ROLE_VIEWER, security.ROLE_VOTER]))
+        self.assertEqual(self.pap(poll, security.VIEW), admin | moderator | participant | viewer | voter)
         
-        self.assertEqual(self.pap(poll, security.EDIT),
-                         set([]))
+        self.assertEqual(self.pap(poll, security.EDIT), set())
         
-        self.assertEqual(self.pap(poll, security.DELETE),
-                         set([]))
+        self.assertEqual(self.pap(poll, security.DELETE), set())
         
-        self.assertEqual(self.pap(poll, security.ADD_VOTE),
-                         set([]))
+        self.assertEqual(self.pap(poll, security.ADD_VOTE), set())
