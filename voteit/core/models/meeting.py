@@ -12,24 +12,27 @@ from voteit.core.models.interfaces import IMeeting
 
 
 ACL = {}
-ACL['default'] = [(Allow, security.ROLE_ADMIN, ALL_PERMISSIONS),
+ACL['default'] = [(Allow, security.ROLE_ADMIN, security.REGULAR_ADD_PERMISSIONS),
+                  (Allow, security.ROLE_ADMIN, (security.VIEW, security.EDIT, security.MANAGE_GROUPS, security.DELETE, )),
                   (Allow, security.ROLE_MODERATOR, security.REGULAR_ADD_PERMISSIONS),
-                  (Allow, security.ROLE_MODERATOR, (security.VIEW, security.EDIT, security.MANAGE_GROUPS, security.DELETE)),
-                  (Allow, security.ROLE_OWNER, (security.VIEW, security.EDIT,)),
-                  (Allow, security.ROLE_PARTICIPANT, (security.VIEW, security.ADD_PROPOSAL,)),
+                  (Allow, security.ROLE_MODERATOR, (security.VIEW, security.EDIT, security.MANAGE_GROUPS, security.DELETE, )),
+                  (Allow, security.ROLE_OWNER, (security.VIEW, security.EDIT, security.DELETE, )),
+                  (Allow, security.ROLE_PARTICIPANT, (security.VIEW, security.ADD_PROPOSAL, )),
                   (Allow, security.ROLE_VIEWER, (security.VIEW,)),
                   (Allow, Authenticated, security.REQUEST_MEETING_ACCESS),
                   DENY_ALL,
                    ]
-ACL['private'] = [(Allow, security.ROLE_ADMIN, ALL_PERMISSIONS),
+ACL['private'] = [(Allow, security.ROLE_ADMIN, security.REGULAR_ADD_PERMISSIONS),
+                  (Allow, security.ROLE_ADMIN, (security.VIEW, security.EDIT, security.MANAGE_GROUPS, security.DELETE, )),
                   (Allow, security.ROLE_MODERATOR, security.REGULAR_ADD_PERMISSIONS),
-                  (Allow, security.ROLE_MODERATOR, (security.VIEW, security.EDIT, security.MANAGE_GROUPS, security.DELETE)),
+                  (Allow, security.ROLE_MODERATOR, (security.VIEW, security.EDIT, security.MANAGE_GROUPS, security.DELETE, )),
                   DENY_ALL,
                 ]
-ACL['closed'] = [(Allow, security.ROLE_ADMIN, ALL_PERMISSIONS),
-                 (Allow, security.ROLE_MODERATOR, (security.VIEW,)),
-                 (Allow, security.ROLE_PARTICIPANT, (security.VIEW,)),
-                 (Allow, security.ROLE_VIEWER, (security.VIEW,)),
+ACL['closed'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, security.MANAGE_GROUPS, )),
+                 (Allow, security.ROLE_MODERATOR, (security.VIEW, security.MANAGE_GROUPS, )),
+                 (Allow, security.ROLE_OWNER, (security.VIEW, )),
+                 (Allow, security.ROLE_PARTICIPANT, (security.VIEW, )),
+                 (Allow, security.ROLE_VIEWER, (security.VIEW, )),
                  DENY_ALL,
                 ]
 
