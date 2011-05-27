@@ -30,6 +30,7 @@ class BaseContentTests(unittest.TestCase):
     def test_uid_generated(self):
         obj = self._make_obj()
         self.failIf(obj.uid is None)
+        self.assertTrue(isinstance(obj.uid, unicode))
     
     def test_uid_compare(self):
         obj1 = self._make_obj()

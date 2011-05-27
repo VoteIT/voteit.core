@@ -2,6 +2,7 @@ from uuid import uuid4
 from datetime import datetime
 
 from repoze.folder import Folder
+from repoze.folder import unicodify
 from zope.interface import implements
 from BTrees.OOBTree import OOBTree
 from repoze.workflow import get_workflow
@@ -20,7 +21,7 @@ class BaseContent(Folder, SecurityAware):
     allowed_contexts = ()
 
     def __init__(self):
-        self.uid = str(uuid4())
+        self.uid = uuid4()
         self.created = datetime.now()
         super(BaseContent, self).__init__()
         self._initialize_workflow()
@@ -66,7 +67,7 @@ class BaseContent(Folder, SecurityAware):
         return getattr(self, '__UID__', None)
     
     def _set_uid(self, value):
-        self.__UID__ = value
+        self.__UID__ = unicodify(value)
         
     uid = property(_get_uid, _set_uid)
 
