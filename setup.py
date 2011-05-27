@@ -20,6 +20,8 @@ requires = [
     'webtest',
     'zope.testbrowser',
     'repoze.workflow',
+    'sqlalchemy',
+    'zope.sqlalchemy',
     ]
 
 setup(name='voteit.core',

@@ -7,6 +7,10 @@ from repoze.zodbconn.finder import PersistentApplicationFinder
 from zope.component import getGlobalSiteManager
 from zope.interface.verify import verifyClass
 from zope.configuration import xmlconfig
+import sqlalchemy
+from sqlalchemy.orm import scoped_session
+from sqlalchemy.orm import sessionmaker
+from zope.sqlalchemy import ZopeTransactionExtension
 
 PROJECTNAME = 'voteit.core'
 #Must be before all of this packages imports since some other methods might import it
@@ -16,6 +20,7 @@ VoteITMF = TranslationStringFactory(PROJECTNAME)
 from voteit.core.models.content_utility import ContentUtility
 from voteit.core.models.interfaces import IContentUtility
 from voteit.core.models.interfaces import IPollPlugin
+from voteit.core.models import DBBase
 from voteit.core.security import groupfinder
 
 
@@ -36,6 +41,7 @@ def main(global_config, **settings):
 
     sessionfact = UnencryptedCookieSessionFactoryConfig('messages')
 
+    init_sql_database(settings)
     
     globalreg = getGlobalSiteManager()
     config = Configurator(registry=globalreg)
@@ -71,6 +77,7 @@ def main(global_config, **settings):
             config.include(poll_plugin)
 
     register_workflows()
+
 
     return config.make_wsgi_app()
 
@@ -115,3 +122,21 @@ def register_content_info(schema, type_class, verify=True, registry=None):
     obj = util.create(schema, type_class)
     util.add(obj, verify=verify)
     
+    
+def init_sql_database(settings):
+    engine = sqlalchemy.create_engine(settings['sqlite_file'])
+
+    SQLSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
+    SQLSession.configure(bind=engine)
+    settings['sql_session'] = SQLSession
+    
+    from sqlalchemy import MetaData, Table
+    from sqlalchemy.orm import mapper
+    from voteit.core.models.expression_adapter import Expression
+    
+    metadata = MetaData(engine)
+    expressions = Table('expressions', metadata)
+    expressionmapper = mapper(Expression, expressions)
+    
+#    DBBase.metadata.bind = engine
+#    DBBase.metadata.create_all(engine)
