@@ -46,6 +46,34 @@ class IBaseContent(Interface):
             state: Only get content with this workflow state
         """
 
+class IWorkflowAware(Interface):
+    """ Mixin class for content that needs workflow. """
+    
+    workflow = Attribute('Get the workflow for this content.')
+
+    def initialize_workflow():
+        """ Initialize workflow. The initial state will be set.
+            If called twice, it will reset to the initial state.
+        """
+    
+    def get_workflow_state():
+        """ Get current workflow state. """
+        
+    def set_workflow_state(request, state):
+        """ Set workflow state. Transition must be available to this state. (No warping ;) """
+
+    def make_workflow_transition(request, transition):
+        """ Set a state by specifying a specific transition to execute.
+            This differs from set_workflow_state in the way that you can control
+            which transition to execute, where set_workflow_state will just
+            execute first available that it finds.
+        """
+    
+    def get_available_workflow_states(request):
+        """ Get all states that the current user can transition to from the current state.
+        """
+
+
 class ISecurityAware(Interface):
     """ Mixin for all content that should handle groups.
         Principal in this terminology is a userid or a group id.

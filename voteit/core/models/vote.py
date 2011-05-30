@@ -35,7 +35,7 @@ class Vote(BaseContent):
     @property
     def __acl__(self):
         poll = find_interface(self, IPoll)
-        state = poll.get_workflow_state
+        state = poll.get_workflow_state()
         if state == 'ongoing':
             return ACL['ongoing']
         return ACL['closed']

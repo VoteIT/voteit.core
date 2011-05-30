@@ -2,13 +2,14 @@ import colander
 import deform
 from zope.interface import implements
 from pyramid.security import Allow, DENY_ALL, ALL_PERMISSIONS
+from pyramid.traversal import find_interface
 
 from voteit.core import VoteITMF as _
 from voteit.core import security
 from voteit.core import register_content_info
 from voteit.core.models.base_content import BaseContent
 from voteit.core.models.interfaces import IProposal, IAgendaItem
-from pyramid.traversal import find_interface
+from voteit.core.models.workflow_aware import WorkflowAware
 
 
 ACL = {}
@@ -34,7 +35,7 @@ ACL['closed'] = [(Allow, security.ROLE_ADMIN, security.VIEW),
                  DENY_ALL,
                 ]
 
-class Proposal(BaseContent):
+class Proposal(BaseContent, WorkflowAware):
     """ Proposal content.
         about states:
         'published' is used in ongoing meetings. This proposal is a candidate for a future poll.
@@ -57,13 +58,13 @@ class Proposal(BaseContent):
 
     @property
     def __acl__(self):
-        state = self.get_workflow_state
+        state = self.get_workflow_state()
         if state == 'published':
             return ACL['published']
         
         #Check if AI is open.
         ai = find_interface(self, IAgendaItem)
-        if ai.get_workflow_state == 'closed':
+        if ai.get_workflow_state() == 'closed':
             return ACL['closed']
         
         return ACL['locked']

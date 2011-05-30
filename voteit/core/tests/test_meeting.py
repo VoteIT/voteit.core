@@ -41,14 +41,15 @@ class MeetingTests(unittest.TestCase):
 
     def test_closing_meeting_with_active_ais(self):
         """ Closing a meeting with active agenda items should raise an exception. """
+        request = testing.DummyRequest()
         ai = self._make_ai()
-        ai.set_workflow_state('inactive')
-        ai.set_workflow_state('active')
+        ai.set_workflow_state(request, 'inactive')
+        ai.set_workflow_state(request, 'active')
         obj = self._make_obj()
         obj['ai'] = ai
         
-        obj.set_workflow_state('inactive')
-        obj.set_workflow_state('active')
+        obj.set_workflow_state(request, 'inactive')
+        obj.set_workflow_state(request, 'active')
         self.assertRaises(Exception, obj.set_workflow_state, 'closed')
 
 class MeetingPermissionTests(unittest.TestCase):
@@ -95,8 +96,9 @@ class MeetingPermissionTests(unittest.TestCase):
         
 
     def test_inactive(self):
+        request = testing.DummyRequest()
         obj = self._make_obj()
-        obj.set_workflow_state('inactive')
+        obj.set_workflow_state(request, 'inactive')
         
         #View
         self.assertEqual(self.pap(obj, security.VIEW), admin | moderator | viewer | participant | owner)
@@ -123,9 +125,10 @@ class MeetingPermissionTests(unittest.TestCase):
         self.assertEqual(self.pap(obj, security.ADD_VOTE), set())
 
     def test_active(self):
+        request = testing.DummyRequest()
         obj = self._make_obj()
-        obj.set_workflow_state('inactive')
-        obj.set_workflow_state('active')
+        obj.set_workflow_state(request, 'inactive')
+        obj.set_workflow_state(request, 'active')
         
         #View
         self.assertEqual(self.pap(obj, security.VIEW), admin | moderator | viewer | participant | owner)
@@ -154,10 +157,11 @@ class MeetingPermissionTests(unittest.TestCase):
 
 #
     def test_closed(self):
+        request = testing.DummyRequest()
         obj = self._make_obj()
-        obj.set_workflow_state('inactive')
-        obj.set_workflow_state('active')
-        obj.set_workflow_state('closed')
+        obj.set_workflow_state(request, 'inactive')
+        obj.set_workflow_state(request, 'active')
+        obj.set_workflow_state(request, 'closed')
         
         #View
         self.assertEqual(self.pap(obj, security.VIEW), admin | moderator | viewer | participant | owner)

@@ -28,7 +28,7 @@
 						<span>propose:</span>
 		                <span class="body" tal:content="proposal.title">Title</span>
 						
-						<div tal:define="state_id proposal.get_workflow_state">
+						<div tal:define="state_id proposal.get_workflow_state()">
 							<span>State:</span>
 							<strong tal:attributes="class 'wf-state-%s' % state_id"
 							      tal:content="state_id">private</strong>
@@ -51,7 +51,7 @@
 	                <h3 tal:content="poll.title">Title</h3>
 	                <div tal:content="poll.description">Description</div>
 
-                    <div tal:define="state_id poll.get_workflow_state" class="wf-info">
+                    <div tal:define="state_id poll.get_workflow_state()" class="wf-info">
                         <span>State:</span>
                         <strong tal:attributes="class 'wf-state-%s' % state_id"
                               tal:content="state_id">open</strong>

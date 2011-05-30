@@ -46,26 +46,28 @@ class AgendaItemTests(unittest.TestCase):
         """ Published proposals should be marked as 'unhandled' when
             an AI closes.
         """
+        request = testing.DummyRequest()
         obj = self._make_obj()
         obj['proposal'] = self._make_proposal() #Should be published as initial state
-        obj.set_workflow_state('inactive')
-        obj.set_workflow_state('active')
-        obj.set_workflow_state('closed')
-        self.assertEqual(obj['proposal'].get_workflow_state, u'unhandled')
+        obj.set_workflow_state(request, 'inactive')
+        obj.set_workflow_state(request, 'active')
+        obj.set_workflow_state(request ,'closed')
+        self.assertEqual(obj['proposal'].get_workflow_state(), u'unhandled')
 
 
     def test_workflow_closed_state_active_poll_exception(self):
         """ When you try to close an agenda items that has an ongoing
             poll in it, it should raise an exception.
         """
+        request = testing.DummyRequest()
         obj = self._make_obj()
 
         obj['poll'] = self._make_poll()
-        obj['poll'].set_workflow_state('planned')
-        obj['poll'].set_workflow_state('ongoing')
+        obj['poll'].set_workflow_state(request, 'planned')
+        obj['poll'].set_workflow_state(request, 'ongoing')
 
-        obj.set_workflow_state('inactive')
-        obj.set_workflow_state('active')
+        obj.set_workflow_state(request, 'inactive')
+        obj.set_workflow_state(request, 'active')
         self.assertRaises(Exception, obj.set_workflow_state, 'closed')
         
 
@@ -111,15 +113,16 @@ class AgendaItemPermissionTests(unittest.TestCase):
         
 
     def test_active_with_closed_meeting(self):
+        request = testing.DummyRequest()
         obj = self._make_obj()
         
-        obj.set_workflow_state('inactive')
-        obj.set_workflow_state('active')
+        obj.set_workflow_state(request, 'inactive')
+        obj.set_workflow_state(request, 'active')
         
         meeting = self._make_meeting()
-        meeting.set_workflow_state('inactive')
-        meeting.set_workflow_state('active')
-        meeting.set_workflow_state('closed')
+        meeting.set_workflow_state(request, 'inactive')
+        meeting.set_workflow_state(request, 'active')
+        meeting.set_workflow_state(request, 'closed')
         
         meeting['ai'] = obj
 
@@ -139,14 +142,15 @@ class AgendaItemPermissionTests(unittest.TestCase):
         self.assertEqual(self.pap(obj, security.ADD_POLL), set())
 
     def test_active_with_active_meeting(self):
+        request = testing.DummyRequest()
         obj = self._make_obj()
         
-        obj.set_workflow_state('inactive')
-        obj.set_workflow_state('active')
+        obj.set_workflow_state(request, 'inactive')
+        obj.set_workflow_state(request, 'active')
         
         meeting = self._make_meeting()
-        meeting.set_workflow_state('inactive')
-        meeting.set_workflow_state('active')
+        meeting.set_workflow_state(request, 'inactive')
+        meeting.set_workflow_state(request, 'active')
         
         meeting['ai'] = obj
         
@@ -167,10 +171,11 @@ class AgendaItemPermissionTests(unittest.TestCase):
 
 #
     def test_closed(self):
+        request = testing.DummyRequest()
         obj = self._make_obj()
-        obj.set_workflow_state('inactive')
-        obj.set_workflow_state('active')
-        obj.set_workflow_state('closed')
+        obj.set_workflow_state(request, 'inactive')
+        obj.set_workflow_state(request, 'active')
+        obj.set_workflow_state(request, 'closed')
         
         #View
         self.assertEqual(self.pap(obj, security.VIEW), admin | moderator | viewer | participant)

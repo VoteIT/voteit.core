@@ -72,11 +72,12 @@ class ProposalPermissionTests(unittest.TestCase):
         self.assertEqual(self.pap(obj, security.RETRACT), admin | moderator | owner)
 
     def test_retracted_in_active_ai(self):
+        request = testing.DummyRequest()
         obj = self._make_obj()
-        obj.set_workflow_state('retracted')
+        obj.set_workflow_state(request, 'retracted')
         ai = self._make_ai()
-        ai.set_workflow_state('inactive')
-        ai.set_workflow_state('active')
+        ai.set_workflow_state(request, 'inactive')
+        ai.set_workflow_state(request, 'active')
         ai['prop'] = obj
 
         #View
@@ -92,12 +93,13 @@ class ProposalPermissionTests(unittest.TestCase):
         self.assertEqual(self.pap(obj, security.RETRACT), set())
 
     def test_retracted_in_closed_ai(self):
+        request = testing.DummyRequest()
         obj = self._make_obj()
-        obj.set_workflow_state('retracted')
+        obj.set_workflow_state(request, 'retracted')
         ai = self._make_ai()
-        ai.set_workflow_state('inactive')
-        ai.set_workflow_state('active')
-        ai.set_workflow_state('closed')
+        ai.set_workflow_state(request, 'inactive')
+        ai.set_workflow_state(request, 'active')
+        ai.set_workflow_state(request, 'closed')
         ai['prop'] = obj
 
         #View
@@ -113,12 +115,13 @@ class ProposalPermissionTests(unittest.TestCase):
         self.assertEqual(self.pap(obj, security.RETRACT), set())
 
     def test_unhandled_in_closed_ai(self):
+        request = testing.DummyRequest()
         obj = self._make_obj()
-        obj.set_workflow_state('unhandled')
+        obj.set_workflow_state(request, 'unhandled')
         ai = self._make_ai()
-        ai.set_workflow_state('inactive')
-        ai.set_workflow_state('active')
-        ai.set_workflow_state('closed')
+        ai.set_workflow_state(request, 'inactive')
+        ai.set_workflow_state(request, 'active')
+        ai.set_workflow_state(request, 'closed')
         ai['prop'] = obj
 
         #View
@@ -134,12 +137,13 @@ class ProposalPermissionTests(unittest.TestCase):
         self.assertEqual(self.pap(obj, security.RETRACT), set())
 
     def test_approved_in_active_ai(self):
+        request = testing.DummyRequest()
         obj = self._make_obj()
-        obj.set_workflow_state('voting')
-        obj.set_workflow_state('approved')
+        obj.set_workflow_state(request, 'voting')
+        obj.set_workflow_state(request, 'approved')
         ai = self._make_ai()
-        ai.set_workflow_state('inactive')
-        ai.set_workflow_state('active')
+        ai.set_workflow_state(request, 'inactive')
+        ai.set_workflow_state(request, 'active')
         ai['prop'] = obj
 
         #View
@@ -155,13 +159,14 @@ class ProposalPermissionTests(unittest.TestCase):
         self.assertEqual(self.pap(obj, security.RETRACT), set())
 
     def test_approved_in_closed_ai(self):
+        request = testing.DummyRequest()
         obj = self._make_obj()
-        obj.set_workflow_state('voting')
-        obj.set_workflow_state('approved')
+        obj.set_workflow_state(request, 'voting')
+        obj.set_workflow_state(request, 'approved')
         ai = self._make_ai()
-        ai.set_workflow_state('inactive')
-        ai.set_workflow_state('active')
-        ai.set_workflow_state('closed')
+        ai.set_workflow_state(request, 'inactive')
+        ai.set_workflow_state(request, 'active')
+        ai.set_workflow_state(request, 'closed')
         ai['prop'] = obj
 
         #View
@@ -174,12 +179,13 @@ class ProposalPermissionTests(unittest.TestCase):
         self.assertEqual(self.pap(obj, security.DELETE), set())
 
     def test_denied_in_active_ai(self):
+        request = testing.DummyRequest()
         obj = self._make_obj()
-        obj.set_workflow_state('voting')
-        obj.set_workflow_state('denied')
+        obj.set_workflow_state(request, 'voting')
+        obj.set_workflow_state(request, 'denied')
         ai = self._make_ai()
-        ai.set_workflow_state('inactive')
-        ai.set_workflow_state('active')
+        ai.set_workflow_state(request, 'inactive')
+        ai.set_workflow_state(request, 'active')
         ai['prop'] = obj
 
         #View

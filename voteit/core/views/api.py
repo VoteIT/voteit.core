@@ -98,7 +98,7 @@ class APIView(object):
         response['api'] = self
         response['addable_types'] = self._get_addable_types(context, request)
         response['context'] = context
-        response['states'] = context.get_available_workflow_states()
+        response['states'] = context.get_available_workflow_states(request)
         response['here_perm'] = _here_perm
 
         return render('templates/action_bar.pt', response, request=request)

@@ -183,7 +183,8 @@ class BaseEdit(object):
         
     @view_config(name="state", permission=EDIT, renderer=DEFAULT_TEMPLATE)
     def state_change(self):
-        self.context.set_workflow_state(self.request.params.get('state'))
+        state = self.request.params.get('state')
+        self.context.set_workflow_state(self.request, state)
 
         url = resource_url(self.context, self.request)
         return HTTPFound(location=url)

@@ -13,6 +13,7 @@ from voteit.core import security
 from voteit.core import register_content_info
 from voteit.core import VoteITMF as _
 from voteit.core.models.base_content import BaseContent
+from voteit.core.models.workflow_aware import WorkflowAware
 from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IPollPlugin
@@ -48,7 +49,7 @@ ACL['closed'] = [(Allow, security.ROLE_ADMIN, security.VIEW),
 CLOSED_STATES = ('canceled', 'closed', )
 
 
-class Poll(BaseContent):
+class Poll(BaseContent, WorkflowAware):
     """ Poll content. """
     implements(IPoll)
     content_type = 'Poll'
@@ -58,7 +59,7 @@ class Poll(BaseContent):
 
     @property
     def __acl__(self):
-        state = self.get_workflow_state
+        state = self.get_workflow_state()
         if state == u'private':
             return ACL['private']
         if state == u'planned':

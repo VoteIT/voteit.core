@@ -9,6 +9,7 @@ from voteit.core import register_content_info
 from voteit.core.models.base_content import BaseContent
 from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IMeeting
+from voteit.core.models.workflow_aware import WorkflowAware
 
 
 ACL = {}
@@ -37,7 +38,7 @@ ACL['closed'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, security.MANAGE_GR
                 ]
 
 
-class Meeting(BaseContent):
+class Meeting(BaseContent, WorkflowAware):
     """ Meeting content. """
     implements(IMeeting)
     content_type = 'Meeting'
@@ -47,7 +48,7 @@ class Meeting(BaseContent):
 
     @property
     def __acl__(self):
-        return ACL.get(self.get_workflow_state, ACL['default'])
+        return ACL.get(self.get_workflow_state(), ACL['default'])
 
 
 def construct_schema(**kwargs):

@@ -7,10 +7,12 @@ from pyramid.security import Allow, DENY_ALL, ALL_PERMISSIONS
 from voteit.core import security
 from voteit.core import VoteITMF as _
 from voteit.core.models.base_content import BaseContent
+from voteit.core.models.workflow_aware import WorkflowAware
 from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import IProposal
 from voteit.core.models.interfaces import IPoll
+from pyramid.threadlocal import get_current_request
 
 
 ACL = {}
@@ -28,7 +30,7 @@ ACL['closed'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, )),
                 ]
 
 
-class AgendaItem(BaseContent):
+class AgendaItem(BaseContent, WorkflowAware):
     """ Agenda Item content. """
     implements(IAgendaItem)
     content_type = 'AgendaItem'
@@ -38,14 +40,14 @@ class AgendaItem(BaseContent):
 
     @property
     def __acl__(self):
-        state = self.get_workflow_state
+        state = self.get_workflow_state()
         if state == 'closed':
             return ACL['closed']
         if state == 'private':
             return ACL['private']
         
         meeting = find_interface(self, IMeeting)
-        if meeting.get_workflow_state == u'closed':
+        if meeting.get_workflow_state() == u'closed':
             return ACL['closed']
         
 
@@ -118,8 +120,9 @@ def closing_agenda_item_callback(context, info):
         "unhandled".
         If there are any open polls, this should raise an exception or an error message of some sort.
     """
+    request = get_current_request() #Should be okay to use here since this method is called very seldom.
     #get_content returns a generator. It's "True" even if it's empty!
     if tuple(context.get_content(iface=IPoll, state='ongoing')):
         raise Exception("You can't close an agenda item that has active polls in it. Close the polls first!")
     for proposal in context.get_content(iface=IProposal, state='published'):
-        proposal.set_workflow_state('unhandled')
+        proposal.set_workflow_state(request, 'unhandled')

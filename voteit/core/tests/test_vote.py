@@ -67,9 +67,10 @@ class VotePermissionTests(unittest.TestCase):
         return poll
 
     def test_ongoing_poll_context(self):
+        request = testing.DummyRequest()
         poll = self._make_poll()
-        poll.set_workflow_state('planned')
-        poll.set_workflow_state('ongoing')
+        poll.set_workflow_state(request, 'planned')
+        poll.set_workflow_state(request, 'ongoing')
         
         obj = self._make_obj()
         poll['vote'] = obj
@@ -84,10 +85,11 @@ class VotePermissionTests(unittest.TestCase):
         self.assertEqual(self.pap(obj, security.DELETE), owner)
 
     def test_closed_poll_context(self):
+        request = testing.DummyRequest()
         poll = self._make_poll()
-        poll.set_workflow_state('planned')
-        poll.set_workflow_state('ongoing')
-        poll.set_workflow_state('closed')
+        poll.set_workflow_state(request, 'planned')
+        poll.set_workflow_state(request, 'ongoing')
+        poll.set_workflow_state(request, 'closed')
         
         obj = self._make_obj()
         poll['vote'] = obj
