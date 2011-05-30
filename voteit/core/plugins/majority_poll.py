@@ -12,7 +12,7 @@ class MajorityPollPlugin(PollPlugin):
     """ Majority poll plugin. An example of how plugins work. """
 
     name = u'majority_poll'
-    title = u'Majority Poll'
+    title = _(u'Majority Poll')
     
     def get_settings_schema(self, poll):
         """ Get an instance of the schema used to render a form for editing settings.

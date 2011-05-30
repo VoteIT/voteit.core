@@ -20,6 +20,8 @@ MANAGE_GROUPS = 'Manage Groups'
 MODERATE_MEETING = 'Moderate Meeting'
 REQUEST_MEETING_ACCESS = 'Request Meeting Access'
 
+#FIXME: We need to separate Edit and workflow permissions for most content types
+
 #Add permissions
 #Note: For add permissions, check each content types class
 ADD_AGENDA_ITEM = 'Add Agenda Item'
