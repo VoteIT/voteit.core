@@ -12,6 +12,8 @@ from voteit.core.models.agenda_item import AgendaItem
 from voteit.core.models.proposal import Proposal
 from voteit.core.models.poll import Poll
 
+#FIXME: Refactor and add under each content type
+
 class WorkflowTests(unittest.TestCase):
     def setUp(self):
         self.config = testing.setUp()

@@ -75,6 +75,27 @@
 			to_state="unhandled"
 			permission="Moderate Meeting"
 		/>
+		
+        <transition
+            name="unhandled_to_published"
+            from_state="unhandled"
+            to_state="published"
+            permission="Moderate Meeting"
+        />
+
+        <transition
+            name="denied_to_published"
+            from_state="denied"
+            to_state="published"
+            permission="Moderate Meeting"
+        />
+
+        <transition
+            name="approved_to_published"
+            from_state="approved"
+            to_state="published"
+            permission="Moderate Meeting"
+        />
 
 	</workflow>
 
