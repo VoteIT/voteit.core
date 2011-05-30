@@ -78,7 +78,7 @@
 				<div id="content" metal:define-slot="content"></div>
 		    </div>
 			
-			<div tal:condition="form|False" class="content_wrapper" tal:content="structure form">Form</div>
+			<div metal:define-slot="form" tal:condition="form|False" class="content_wrapper" tal:content="structure form">Form</div>
 	
 		</div>
 	</div>

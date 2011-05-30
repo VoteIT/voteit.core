@@ -40,4 +40,12 @@ class MeetingView(BaseView):
 
         return self.response
 
-
+    @view_config(name="meeting_access", context=IMeeting, renderer="templates/meeting_access.pt", permission=security.VIEW)
+    def meeting_access(self):
+        self.response['security_appstruct'] = self.context.get_security_appstruct()['userids_and_groups']
+        self.response['form'] = True
+        self.response['moderator'] = security.ROLE_MODERATOR
+        self.response['participant'] = security.ROLE_PARTICIPANT
+        self.response['voter'] = security.ROLE_VOTER
+        self.response['viewer'] = security.ROLE_VIEWER
+        return self.response

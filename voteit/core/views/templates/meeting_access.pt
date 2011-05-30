@@ -1,0 +1,44 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      metal:use-macro="api.main_template.macros['master']">
+
+    <metal:form fill-slot="form">
+
+    <table>
+    	<thead>
+    		<tr>
+    			<th>Count</th>
+                <th>UserID</th>
+                <th>Email</th>
+                <th>First name</th>
+                <th>Last name</th>
+                <th>Moderator</th>
+                <th>Voter</th>
+                <th>Participant</th>
+                <th>Viewer</th>
+    		</tr>
+    	</thead>
+		<tbody>
+			<tr tal:repeat="entry security_appstruct">
+			<tal:user define="user api.get_user(entry['userid']);
+			                  groups entry['groups'];">
+			    <td tal:content="repeat['entry'].number">Count #</td>
+                <td tal:content="entry['userid']">UserID</td>
+                <td tal:content="user.get_field_value('email')">Email</td>
+                <td tal:content="user.get_field_value('first_name')">First name</td>
+                <td tal:content="user.get_field_value('last_name')">Last name</td>
+                <td tal:content="moderator in groups">Moderator</td>
+                <td tal:content="voter in groups">Voter</td>
+                <td tal:content="participant in groups">Participant</td>
+                <td tal:content="viewer in groups">Viewer</td>
+			</tal:user>
+			</tr>
+			
+		</tbody>
+    </table>
+
+    </metal:form>
+
+</html>
