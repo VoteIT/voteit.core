@@ -5,5 +5,9 @@ from pyramid.events import subscriber
 @subscriber(NewRequest)
 def connect_sql(event):
     """ Adds property sqldb to a Pyramid request object. """
-    request = event.request
-    request.sql_session = request.registry.settings['sql_session']
+    make_session(event.request)
+    
+
+def make_session(request):
+    if not hasattr(request, 'sql_session'):
+        request.sql_session = request.registry.settings['rdb_session_factory']()

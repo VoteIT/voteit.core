@@ -40,13 +40,13 @@ class Expressions(object):
         self.request = request
     
     def add(self, tag, userid, uid):
-        session = self.request.sql_session()
+        session = self.request.sql_session
         
         exp = Expression(tag, userid, uid)
         session.add(exp)
 
     def retrieve_userids(self, tag, uid):
-        session = self.request.sql_session()
+        session = self.request.sql_session
         query = session.query(Expression).filter_by(tag=tag, uid=uid)
 
         userids = set()
@@ -55,7 +55,7 @@ class Expressions(object):
         return userids
 
     def remove(self, tag, userid, uid):
-        session = self.request.sql_session()
+        session = self.request.sql_session
         query = session.query(Expression).filter_by(tag=tag, userid=userid, uid=uid)
         exp = query.first()
         session.delete(exp)

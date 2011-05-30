@@ -20,7 +20,6 @@ PROJECTNAME = 'voteit.core'
 VoteITMF = TranslationStringFactory(PROJECTNAME)
 
 RDB_Base = declarative_base()
-RDB_Session = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
 
 #voteit.core package imports
 from voteit.core.models.content_utility import ContentUtility
@@ -136,15 +135,14 @@ def init_sql_database(settings):
         Something like: 'sqlite_file = sqlite:///%(here)s/../var/sqlite.db'
         added in paster setup. (Either development.ini or production.ini)
         """)
-    
-    engine = create_engine(sqlite_file)
-    RDB_Session.configure(bind=engine)
+
+    settings['rdb_engine'] = create_engine(sqlite_file)
+    settings['rdb_session_factory'] = sessionmaker(bind=settings['rdb_engine'],
+                                                   extension=ZopeTransactionExtension())
 
     #Touch all modules that are SQL-based
     from voteit.core.models.expression import Expression
     
     #Create tables
-    RDB_Base.metadata.create_all(engine)
-    
-    #This is used by a subscriber for each new request. See sql_db.py
-    settings['sql_session'] = RDB_Session
+    RDB_Base.metadata.create_all(settings['rdb_engine'])
+

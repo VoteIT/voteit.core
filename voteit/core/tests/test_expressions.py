@@ -1,26 +1,31 @@
 import unittest
-import tempfile
+import os
 
 from pyramid import testing
-
 from zope.interface.verify import verifyObject
+
+from voteit.core import init_sql_database
+from voteit.core.sql_db import make_session
 
 
 class ExpressionsTests(unittest.TestCase):
     def setUp(self):
         self.config = testing.setUp()
-        self.dbfile = tempfile.NamedTemporaryFile() 
-        from voteit.core import init_sql_database
-        settings = {'sqlite_file':'sqlite:///%s' % self.dbfile}
+
+        self.request = testing.DummyRequest()
+        settings = self.request.registry.settings
+
+        self.dbfile = '_temp_testing_sqlite.db'
+        settings['sqlite_file'] = 'sqlite:///%s' % self.dbfile
+        
         init_sql_database(settings)
         
-        self.request = testing.DummyRequest()
-        self.request.sql_session = settings['sql_session']
+        make_session(self.request)
 
     def tearDown(self):
         testing.tearDown()
-        self.request.sql_session.close()
-        self.dbfile.close()
+        #Is this really smart. Pythons tempfile module created lot's of crap that wasn't cleaned up
+        os.unlink(self.dbfile)
 
     def _import_class(self):
         from voteit.core.models.expression import Expressions        
@@ -54,7 +59,7 @@ class ExpressionsTests(unittest.TestCase):
         obj.add(tag, userid, uid)
 
         from voteit.core.models.expression import Expression
-        session = self.request.sql_session()
+        session = self.request.sql_session
         query = session.query(Expression).filter_by(tag=tag, userid=userid, uid=uid)
 
         self.assertEqual(len(query.all()), 1)
