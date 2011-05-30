@@ -18,7 +18,6 @@ from voteit.core.views.macros import FlashMessages
 
 class APIView(object):
     """ Convenience methods for templates """
-    USER_CACHE_ATTR = '_user_lookup_cache'
         
     def __init__(self, context, request):
         self.context = context
@@ -26,7 +25,6 @@ class APIView(object):
         
         self.resource_url = resource_url
         self.root = find_root(context)
-        setattr(self, self.USER_CACHE_ATTR, {})
 
         #Authentication- / User-related
         self.userid = authenticated_userid(request)
@@ -48,11 +46,16 @@ class APIView(object):
         
         #macros
         self.flash_messages = FlashMessages(request)
-        
+
+    def _get_user_cache(self):
+        cache = getattr(self.request, '_user_lookup_cache', None)
+        if cache is None:
+            cache = self.request._user_lookup_cache = {}
+        return cache
 
     def get_user(self, userid):
         """ Returns the user object. Will also cache each lookup. """
-        cache = getattr(self, self.USER_CACHE_ATTR)
+        cache = self._get_user_cache()
         if userid in cache:
             return cache[userid]
         
