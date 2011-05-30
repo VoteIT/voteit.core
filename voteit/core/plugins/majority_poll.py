@@ -67,7 +67,14 @@ class MajorityPollPlugin(PollPlugin):
         response['result'] = poll.get_poll_result()
         response['get_proposal_by_uid'] = poll.get_proposal_by_uid
         return render('templates/majority_poll.pt', response)
-    
+
+    def close(self, poll):
+        """ This gets called when a poll has finished. It should return the winning proposals uids as a list.
+            (If it's only one winner, just wrap it in a list)
+        """
+        #FIXME: implement
+        return []
+
 def includeme(config):
     register_poll_plugin(MajorityPollPlugin, registry=config.registry)
     

@@ -226,7 +226,11 @@ class IPollPlugin(Interface):
             when the poll has finished.
         """
 
-
+    def close(poll):
+        """ This gets called when a poll has finished. It should return the winning proposals uids as a list.
+            (If it's only one winner, just wrap it in a list)
+        """
+        
 class IContentTypeInfo(Interface):
     """ A content type info for VoteIT. Any content addable through
         the regular add menus needs one of these.

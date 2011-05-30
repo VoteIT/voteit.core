@@ -25,6 +25,9 @@ class FlashMessages(object):
     
     def add(self, msg, type='info', close_button=True):
         flash = {'msg':msg, 'type':type, 'close_button':close_button}
+        if not hasattr(self.request, 'session'):
+            #FIXME: Import proper logger
+            return
         self.request.session.flash(flash)
 
     @view_config(name="_flash_messages", renderer=FLASH_TEMPLATE)

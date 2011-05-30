@@ -8,6 +8,8 @@ from zope.component import getUtilitiesFor
 from pyramid.traversal import find_interface, find_root
 from pyramid.security import Allow, DENY_ALL, ALL_PERMISSIONS
 from BTrees.OOBTree import OOBTree
+from pyramid.threadlocal import get_current_request
+from repoze.workflow.workflow import WorkflowError
 
 from voteit.core import security
 from voteit.core import register_content_info
@@ -18,6 +20,7 @@ from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IPollPlugin
 from voteit.core.models.interfaces import IVote
+from voteit.core.views.macros import FlashMessages
 
 
 ACL = {}
@@ -32,8 +35,8 @@ ACL['planned'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, security.EDIT, se
                   (Allow, security.ROLE_VIEWER, security.VIEW),
                   DENY_ALL,
                    ]
-ACL['ongoing'] = [(Allow, security.ROLE_ADMIN, security.VIEW),
-                  (Allow, security.ROLE_MODERATOR, security.VIEW),
+ACL['ongoing'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, security.EDIT, )),
+                  (Allow, security.ROLE_MODERATOR, (security.VIEW, security.EDIT, )),
                   (Allow, security.ROLE_PARTICIPANT, security.VIEW),
                   (Allow, security.ROLE_VOTER, (security.VIEW, security.ADD_VOTE, )),
                   (Allow, security.ROLE_VIEWER, security.VIEW),
@@ -70,7 +73,7 @@ class Poll(BaseContent, WorkflowAware):
     
     #proposals
     def _get_proposal_uids(self):
-        return self.get_field_value('proposals')
+        return self.get_field_value('proposals', ())
 
     def _set_proposal_uids(self, value):
         self.set_field_value('proposals', value)
@@ -101,6 +104,8 @@ class Poll(BaseContent, WorkflowAware):
     def get_proposal_objects(self):
         agenda_item = find_interface(self, IAgendaItem)
         proposals = set()
+        if agenda_item is None:
+            return proposals
         for item in agenda_item.values():
             if item.uid in self.proposal_uids:
                 proposals.add(item)
@@ -128,12 +133,36 @@ class Poll(BaseContent, WorkflowAware):
 
     def close_poll(self):
         """ Close the poll. """
+        request = get_current_request() #This is an exception - won't be called many times.
+        fm = FlashMessages(request)
+        
         ballots = self.get_ballots()
         self.set_raw_poll_data(ballots)
         
         poll_plugin = self.get_poll_plugin()
         
         self.set_poll_result(poll_plugin.get_result(ballots))
+        winner_uids = poll_plugin.close(self)
+        
+        for uid in self.proposal_uids:
+            proposal = self.get_proposal_by_uid(uid)
+            #Set approved
+            if uid in winner_uids:
+                try:
+                    proposal.set_workflow_state(request, 'approved')
+                except WorkflowError:
+                    msg = _(u"Proposal with uid '%s' couldn't be set as approved. You should do this manually." % proposal.uid)
+                    fm.add(msg, type='error')
+            #Set denied
+            else:
+                try:
+                    proposal.set_workflow_state(request, 'denied')
+                except WorkflowError:
+                    msg = _(u"Proposal with uid '%s' couldn't be set as denied. You should do this manually." % proposal.uid)
+                    fm.add(msg, type='error')
+        
+        msg = _(u"Poll closed. Proposals have been adjusted as approved or denied depending on outcome of the poll.")
+        fm.add(msg)
 
     def render_poll_result(self):
         """ Render poll result. Calls plugin to calculate result.
@@ -221,6 +250,24 @@ def includeme(config):
 
     
 def closing_poll_callback(content, info):
-    """ Content is a poll here. """
+    """ Workflow callback when a poll is closed. Content is a poll here. """
     content.close_poll()
 
+def planned_poll_callback(content, info):
+    """ Workflow callback when a poll is set in the planned state.
+        This method sets all proposals in the locked for vote-state.
+    """
+    request = get_current_request() #This is an exception - won't be called many times.
+    count = 0
+    for proposal in content.get_proposal_objects():
+        if 'voting' in [x['name'] for x in proposal.get_available_workflow_states(request)]:
+            proposal.set_workflow_state(request, 'voting')
+            count += 1
+    
+    fm = FlashMessages(request)
+    msg = _(u"Setting poll in planned state. It's now visible for meeting participants.")
+    fm.add(msg)
+    if count:
+        #FIXME: Translation mappings
+        msg = _(u"%s proposals were set in the 'locked for vote' state. They can no longer be edited or retracted." % count)
+        fm.add(msg)

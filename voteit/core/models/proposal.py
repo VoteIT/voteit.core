@@ -13,15 +13,15 @@ from voteit.core.models.workflow_aware import WorkflowAware
 
 
 ACL = {}
-ACL['published'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, security.EDIT, security.DELETE, security.RETRACT, )),
-                    (Allow, security.ROLE_MODERATOR, (security.VIEW, security.EDIT, security.DELETE, security.RETRACT, )),
+ACL['published'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, security.EDIT, security.DELETE, security.RETRACT, security.MODERATE_MEETING, )),
+                    (Allow, security.ROLE_MODERATOR, (security.VIEW, security.EDIT, security.DELETE, security.RETRACT, security.MODERATE_MEETING, )),
                     (Allow, security.ROLE_OWNER, (security.VIEW, security.RETRACT, )),
                     (Allow, security.ROLE_PARTICIPANT, (security.VIEW,)),
                     (Allow, security.ROLE_VIEWER, (security.VIEW,)),
                     DENY_ALL,
                 ]
-ACL['locked'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, security.EDIT, security.DELETE, )),
-                 (Allow, security.ROLE_MODERATOR, (security.VIEW, security.EDIT, security.DELETE, )),
+ACL['locked'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, security.EDIT, security.DELETE, security.MODERATE_MEETING, )),
+                 (Allow, security.ROLE_MODERATOR, (security.VIEW, security.EDIT, security.DELETE, security.MODERATE_MEETING, )),
                  (Allow, security.ROLE_OWNER, security.VIEW),
                  (Allow, security.ROLE_PARTICIPANT, (security.VIEW,)),
                  (Allow, security.ROLE_VIEWER, (security.VIEW,)),

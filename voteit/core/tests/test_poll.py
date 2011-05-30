@@ -301,7 +301,7 @@ class PollPermissionTests(unittest.TestCase):
         
         self.assertEqual(self.pap(poll, security.VIEW), admin | moderator | participant | viewer | voter)
         
-        self.assertEqual(self.pap(poll, security.EDIT), set())
+        self.assertEqual(self.pap(poll, security.EDIT), admin | moderator)
         
         self.assertEqual(self.pap(poll, security.DELETE), set())
         

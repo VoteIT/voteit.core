@@ -41,6 +41,7 @@
 			from_state="private"
 			to_state="planned"
 			permission="Edit"
+            callback="voteit.core.models.poll.planned_poll_callback"
 		/>
 		
 		<transition

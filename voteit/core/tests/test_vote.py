@@ -66,9 +66,15 @@ class VotePermissionTests(unittest.TestCase):
 
         return poll
 
+    def _make_ai(self):
+        from voteit.core.models.agenda_item import AgendaItem
+        return AgendaItem()
+
     def test_ongoing_poll_context(self):
         request = testing.DummyRequest()
+        ai = self._make_ai()
         poll = self._make_poll()
+        ai['poll'] = poll
         poll.set_workflow_state(request, 'planned')
         poll.set_workflow_state(request, 'ongoing')
         
@@ -86,7 +92,9 @@ class VotePermissionTests(unittest.TestCase):
 
     def test_closed_poll_context(self):
         request = testing.DummyRequest()
+        ai = self._make_ai()
         poll = self._make_poll()
+        ai['poll'] = poll
         poll.set_workflow_state(request, 'planned')
         poll.set_workflow_state(request, 'ongoing')
         poll.set_workflow_state(request, 'closed')

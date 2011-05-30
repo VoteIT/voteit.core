@@ -8,7 +8,6 @@ from voteit.core import VoteITMF as _
 
 def add_csrf_token(context, request, schema):
     token = request.session.get_csrf_token()
-    
     def _validate_csrf(node, value):
         if value != token:
             #Normally this raises colander.Invalid, but that error will be
