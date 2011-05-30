@@ -1,7 +1,4 @@
 <ul class="action_bar">
-    <li class="menuitem"
-	    tal:condition="context.content_type == 'Proposal'"
-	    tal:content="structure api.get_user_expressions(context, 'support', api.userid, 'Support')">User expressions</li>
 
     <li class="menuitem"
 	    tal:condition="context.content_type == 'Poll' and here_perm('Add Vote')">

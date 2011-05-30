@@ -31,7 +31,7 @@ $(document).ready(function () {
 	);
 });
 
-/*  */
+/*  Expression methods */
 $(document).ready(function() {
     $(".expression_form").live('submit', function(event) {
         /* stop form from submitting normally */
@@ -43,7 +43,7 @@ $(document).ready(function() {
             _do = $form.find('input[name="do"]').val(),
             display_name = $form.find('input[name="display_name"]').val(),
             url = $form.attr('action'),
-            id = $form.attr('id');
+            id = $form.parent().attr('id');
 
         /* Send the data using post and put the results in a div */
         $.post(url, {'tag': tag, 'do': _do, 'display_name': display_name},

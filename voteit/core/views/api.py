@@ -12,8 +12,8 @@ from repoze.workflow import get_workflow
 
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import IContentUtility
-from voteit.core.models.expression import Expressions
 from voteit.core.views.macros import FlashMessages
+from voteit.core.views.expressions import ExpressionsView
 
 
 class APIView(object):
@@ -46,6 +46,7 @@ class APIView(object):
         
         #macros
         self.flash_messages = FlashMessages(request)
+        self.expressions = ExpressionsView(request)
 
     def _get_user_cache(self):
         cache = getattr(self.request, '_user_lookup_cache', None)
@@ -101,7 +102,8 @@ class APIView(object):
         response['api'] = self
         response['addable_types'] = self._get_addable_types(context, request)
         response['context'] = context
-        response['states'] = context.get_available_workflow_states(request)
+        if getattr(context, 'workflow', None):
+            response['states'] = context.get_available_workflow_states(request)
         response['here_perm'] = _here_perm
 
         return render('templates/action_bar.pt', response, request=request)
@@ -122,23 +124,3 @@ class APIView(object):
         response['users'] = users
         return render('templates/creators_info.pt', response, request=request)
 
-    def get_user_expressions(self, context, tag, userid, display_name=None):
-        expressions = Expressions(self.request)
-        userids = expressions.retrieve_userids(tag, context.uid)
-
-        response = {}
-        response['context_id'] = context.uid
-        response['toggle_url'] = "%sset_expression" % resource_url(context, self.request)
-        response['tag'] = tag
-        response['display_name'] = display_name
-        response['button_txt'] = "%s %s" % (len(userids), display_name and display_name or tag)
-        
-        if userid and userid in userids:
-            response['selected'] = True
-            response['do'] = "0"
-        else:
-            response['selected'] = False
-            response['do'] = "1"
-        response['count'] = len(userids)
-                
-        return render('templates/user_expressions.pt', response, request=self.request)

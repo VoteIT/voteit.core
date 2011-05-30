@@ -33,7 +33,7 @@
 							<strong tal:attributes="class 'wf-state-%s' % state_id"
 							      tal:content="state_id">private</strong>
 						</div>
-						
+						<div class="expressions" tal:content="structure api.expressions.get_expressions(proposal, 'support', api.userid, 'Support')"></div>
 			        	<div tal:replace="structure api.get_action_bar(proposal, request)">Action bar</div>
 						<div class="clear"><!-- --></div>
 					</div>

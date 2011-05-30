@@ -1,0 +1,19 @@
+<div tal:attributes="id 'expression_form_'+context_id;">
+	<form method="post" tal:attributes="action toggle_url;" class="expression_form">
+	    <input name="tag" type="hidden" tal:attributes="value tag" />
+	    <input name="do" type="hidden" tal:attributes="value do" />
+	    <input name="display_name" type="hidden" tal:attributes="value display_name" />
+		<input name="submit" type="submit"
+		       tal:attributes="value button_txt;
+		                       class selected and 'expression_button selected buttonize' or 'expression_button buttonize';" />
+	</form>
+
+	<tal:you condition="selected">You</tal:you>
+	<tal:and condition="selected and userids">and</tal:and>
+	<tal:iterate repeat="userid userids">
+		<tal:userid tal:content="userid">
+		    userid
+		</tal:userid><tal:comma tal:condition="not repeat['userid'].end">,</tal:comma>
+	</tal:iterate>
+	<tal:over_limit condition="over_limit">and <span tal:replace="over_limit"></span> more</tal:over_limit>
+</div>
