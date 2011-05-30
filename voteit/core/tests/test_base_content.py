@@ -78,3 +78,14 @@ class BaseContentTests(unittest.TestCase):
         obj.set_field_appstruct(appstruct)
         self.assertEqual(obj.get_field_value('title'), 'Hello')
         self.assertEqual(obj.get_field_value('number'), 2)
+
+    def test_set_restricted_key_with_set_field_appstruct(self):
+        obj = self._make_obj()
+        appstruct = {'title':'Hello', 'number':2, 'csrf_token':"don't save me"}
+        obj.set_field_appstruct(appstruct)
+        self.assertEqual(obj.get_field_value('csrf_token'), None)
+
+    def test_set_restricted_key_with_set_field(self):
+        obj = self._make_obj()
+        obj.set_field_value('csrf_token', "don't save me")
+        self.assertEqual(obj.get_field_value('csrf_token'), None)

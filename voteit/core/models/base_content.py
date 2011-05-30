@@ -9,6 +9,10 @@ from BTrees.OOBTree import OOBTree
 from voteit.core.models.interfaces import IBaseContent
 from voteit.core.models.security_aware import SecurityAware
 
+#FIXME: This should be changable some way.
+#Things that should never be saved
+RESTRICTED_KEYS = ('csrf_token', )
+
 
 class BaseContent(Folder, SecurityAware):
     __doc__ = IBaseContent.__doc__
@@ -35,6 +39,8 @@ class BaseContent(Folder, SecurityAware):
 
     def set_field_value(self, key, value):
         """ Store value in 'key' in annotations. """
+        if key in RESTRICTED_KEYS:
+            return
         self._storage[key] = value
 
     def get_field_appstruct(self, schema):
@@ -53,6 +59,8 @@ class BaseContent(Folder, SecurityAware):
     def set_field_appstruct(self, appstruct):
         updated = set()
         for (k, v) in appstruct.items():
+            if k in RESTRICTED_KEYS:
+                continue
             if self.get_field_value(k) != v:
                 self.set_field_value(k, v)
                 updated.add(k)
