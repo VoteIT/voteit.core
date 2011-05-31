@@ -182,3 +182,43 @@ class UsersView(object):
         #No action - Render edit form
         self.response['form'] = self.form.render()
         return self.response
+
+    @view_config(context=IUser, name="token_pw", renderer=DEFAULT_TEMPLATE)
+    def token_password_change(self):
+        content_util = self.request.registry.getUtility(IContentUtility)
+        schema = content_util['User'].schema(context=self.context, request=self.request, type='token_password_change')
+
+        self.form = Form(schema, buttons=('change', 'cancel'))
+        self.response['form_resources'] = self.form.get_widget_resources()
+
+        post = self.request.POST
+        if 'change' in post:
+            controls = post.items()
+            try:
+                #appstruct is deforms convention. It will be the submitted data in a dict.
+                appstruct = self.form.validate(controls)
+            except ValidationFailure, e:
+                self.response['form'] = e.render()
+                return self.response
+            
+            self.context.set_password(appstruct['password'])
+            self.api.flash_messages.add(_(u"Password set. You may login now."))
+            url = "%s@@login" % resource_url(self.api.root, self.request)
+            return HTTPFound(location=url)
+
+        if 'cancel' in post:
+            url = resource_url(self.api.root, self.request)
+            return HTTPFound(location=url)
+
+        #Fetch token from get request
+        token = self.request.GET.get('token', None)
+        if token is None:
+            msg = _(u"Invalid security token. Did you click the link in your email?")
+            self.api.flash_messages.add(msg, type="error")
+            url = resource_url(self.api.root, self.request)
+            return HTTPFound(location=url)
+
+        #Everything seems okay. Render form
+        appstruct = dict(token = token)
+        self.response['form'] = self.form.render(appstruct=appstruct)
+        return self.response

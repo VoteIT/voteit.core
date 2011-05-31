@@ -31,7 +31,8 @@ def bootstrap_voteit(registry=None):
     #Add user admin
     admin = content_util['User'].type_class()
     admin.set_password('admin')
-    admin.set_field_value('first_name', 'Administrator')
+    admin.set_field_value('first_name', _(u'VoteIT'))
+    admin.set_field_value('last_name', _(u'Administrator'))
     users['admin'] = admin
     
     #Add admin to group managers

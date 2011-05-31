@@ -11,15 +11,16 @@ requires = [
     'repoze.zodbconn',
     'repoze.tm2>=1.0b1', # default_commit_veto
     'repoze.retry',
+    'repoze.folder',
+    'repoze.workflow',
+    'pyramid_mailer',
     'ZODB3',
     'WebError',
-    'repoze.folder',
     'deform',
     'Babel',
     'slugify',
     'webtest',
     'zope.testbrowser',
-    'repoze.workflow',
     'sqlalchemy',
     'zope.sqlalchemy',
     ]

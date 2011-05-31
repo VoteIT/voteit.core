@@ -59,7 +59,12 @@ def main(global_config, **settings):
     
     config.add_static_view('static', '%s:static' % PROJECTNAME)
     config.add_static_view('deform', 'deform:static')
-    
+
+    #Set which mailer to use
+    if settings['mailer'] == 'pyramid_mailer.testing':
+        print "\nWARNING! Using testmailer - no mail will be sent!\n"
+    config.include(settings['mailer'])
+
     #config.add_translation_dirs('%s:locale/' % PROJECTNAME)
 
     config.scan(PROJECTNAME)

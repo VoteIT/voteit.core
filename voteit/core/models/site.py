@@ -29,7 +29,9 @@ class SiteRoot(BaseContent):
 def construct_schema(**kwargs):
     class SiteRootSchema(colander.MappingSchema):
         title = colander.SchemaNode(colander.String())
-        description = colander.SchemaNode(colander.String())
+        description = colander.SchemaNode(colander.String(),
+                                          missing = u"",)
+        
     return SiteRootSchema()
 
 
