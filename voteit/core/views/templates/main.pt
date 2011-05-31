@@ -29,8 +29,10 @@
     </script>
     </tal:deform>
 
-    <script type="text/javascript" src="${request.application_url}/static/jquery-1.6.min.js"></script>
-    <script type="text/javascript" src="${request.application_url}/static/ajax.js"></script>
+    <tal:notdeform tal:condition="not form_resources|True">
+	<script type="text/javascript" src="${request.application_url}/static/jquery-1.6.min.js"></script>
+    </tal:notdeform>
+	<script type="text/javascript" src="${request.application_url}/static/ajax.js"></script>
 </head>
 <body>
 	
