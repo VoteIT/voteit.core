@@ -7,7 +7,7 @@
 		name="Proposal Workflow"
 		state_attr="state"
 		initial_state="published"
-		content_types="voteit.core.models.proposal.Proposal"
+		content_types="voteit.core.models.interfaces.IProposal"
         permission_checker="pyramid.security.has_permission"
 	>
 

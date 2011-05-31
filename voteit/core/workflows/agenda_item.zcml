@@ -7,7 +7,7 @@
 		name="Agenda Item Workflow"
 		state_attr="state"
 		initial_state="private"
-		content_types="voteit.core.models.agenda_item.AgendaItem"
+		content_types="voteit.core.models.interfaces.IAgendaItem"
 		permission_checker="pyramid.security.has_permission"
 	>
 

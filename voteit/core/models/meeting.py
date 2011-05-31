@@ -1,5 +1,6 @@
 import colander
 import deform
+from BTrees.OOBTree import OOBTree
 from zope.interface import implements
 from pyramid.security import Allow, DENY_ALL, ALL_PERMISSIONS, Authenticated
 
@@ -50,6 +51,19 @@ class Meeting(BaseContent, WorkflowAware):
     def __acl__(self):
         return ACL.get(self.get_workflow_state(), ACL['default'])
 
+    @property
+    def invite_tickets(self):
+        """ Storage for invite_tickets. Works pretty much like a folder. """
+        storage = getattr(self, '__invite_tickets__', None)
+        if storage is None:
+            storage = self.__invite_tickets__ =  OOBTree()
+        return storage
+
+    def add_invite_ticket(self, ticket, request):
+        ticket.__parent__ = self
+        self.invite_tickets[ticket.email] = ticket
+        ticket.send(request)
+
 
 def construct_schema(**kwargs):
     if kwargs.get('type') == 'request_access':
@@ -67,6 +81,13 @@ def construct_schema(**kwargs):
         description = colander.SchemaNode(
             colander.String(),
             widget=deform.widget.TextAreaWidget(rows=10, cols=60))
+        meeting_mail_name = colander.SchemaNode(colander.String(),
+                                                title = _(u"Name visible on system mail sent from this meeting"),
+                                                default = _(u"VoteIT"),)
+        meeting_mail_address = colander.SchemaNode(colander.String(),
+                                                title = _(u"Email address to send from"),
+                                                default = _(u"noreply@somehost.voteit"),
+                                                validator = colander.Email(msg = _(u"Invalid email address")),)
     return MeetingSchema()
 
 def includeme(config):

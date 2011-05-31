@@ -11,6 +11,10 @@ from voteit.core.models.meeting import Meeting
 from voteit.core.models.agenda_item import AgendaItem
 from voteit.core.models.proposal import Proposal
 from voteit.core.models.poll import Poll
+from voteit.core.models.interfaces import IMeeting, IInviteTicket
+from voteit.core.models.interfaces import IAgendaItem
+from voteit.core.models.interfaces import IProposal
+from voteit.core.models.interfaces import IPoll
 
 #FIXME: Refactor and add under each content type
 
@@ -32,17 +36,20 @@ class WorkflowTests(unittest.TestCase):
         workflow = get_workflow(SiteRoot, SiteRoot.__name__)
         self.assertEqual(workflow, None)
         
-        workflow = get_workflow(Meeting, Meeting.__name__)
+        workflow = get_workflow(IMeeting, 'Meeting')
         self.assertEqual(workflow.name, u'Meeting Workflow')
         
-        workflow = get_workflow(AgendaItem, AgendaItem.__name__)
+        workflow = get_workflow(IAgendaItem, 'AgendaItem')
         self.assertEqual(workflow.name, u'Agenda Item Workflow')
         
-        workflow = get_workflow(Proposal, Proposal.__name__)
+        workflow = get_workflow(IProposal, 'Proposal')
         self.assertEqual(workflow.name, u'Proposal Workflow')
         
-        workflow = get_workflow(Poll, Poll.__name__)
+        workflow = get_workflow(IPoll, 'Poll')
         self.assertEqual(workflow.name, u'Poll Workflow')
+
+        workflow = get_workflow(IInviteTicket, 'InviteTicket')
+        self.failUnless(workflow)
         
     def test_meeting_states(self):
         self._load_workflows()

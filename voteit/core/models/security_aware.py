@@ -97,13 +97,6 @@ class SecurityAware(object):
         [groups.update(x) for x in self._groups.values()]
         return groups
 
-ROOT_ROLES = ((security.ROLE_ADMIN, _(u'Administrator')),)
-MEETING_ROLES = ((security.ROLE_MODERATOR, _(u'Moderator')),
-                 (security.ROLE_PARTICIPANT, _(u'Participant')),
-                 (security.ROLE_VOTER, _(u'Voter')),
-                 (security.ROLE_VIEWER, _(u'View only')),
-                )
-
 
 def get_groups_schema(context):
     """ Return selectable groups schema. This can be done in a smarter way with
@@ -117,10 +110,10 @@ def get_groups_schema(context):
         )
     if context is root:
         #Only show administrator as selectable group in root
-        group_choices = ROOT_ROLES
+        group_choices = security.ROOT_ROLES
     else:
         #In other contexts (like Meeting) meeting roles apply
-        group_choices = MEETING_ROLES
+        group_choices = security.MEETING_ROLES
 
     class UserIDAndGroupsSchema(colander.Schema):
         userid = colander.SchemaNode(

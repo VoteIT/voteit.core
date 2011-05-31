@@ -7,7 +7,7 @@
 		name="Meeting Workflow"
 		state_attr="state"
 		initial_state="private"
-		content_types="voteit.core.models.meeting.Meeting"
+		content_types="voteit.core.models.interfaces.IMeeting"
         permission_checker="pyramid.security.has_permission"
 	>
 

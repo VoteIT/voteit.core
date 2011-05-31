@@ -130,6 +130,10 @@ class IMeeting(Interface):
     """ Meeting content type """
 
 
+class IInviteTicket(Interface):
+    """ Invite ticket - these track invitations to meetings. """
+    
+
 class IProposal(Interface):
     """ Proposal content type. """
 
