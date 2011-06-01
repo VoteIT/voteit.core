@@ -2,7 +2,6 @@ from sqlalchemy import Integer
 from sqlalchemy import Unicode
 from sqlalchemy import Column
 from zope.interface import implements
-from repoze.folder import unicodify
 
 from voteit.core import RDB_Base
 from voteit.core.models.interfaces import IExpressions
@@ -22,9 +21,9 @@ class Expression(RDB_Base):
     #TODO: make tag+userid+uid unique
     
     def __init__(self, tag, userid, uid):
-        self.tag = unicodify(tag)
-        self.userid = unicodify(userid)
-        self.uid = unicodify(uid)
+        self.tag = tag
+        self.userid = userid
+        self.uid = uid
         
     def __repr__(self):
         return "<Expression('%s','%s','%s')>" % (self.tag, self.userid, self.uid)
