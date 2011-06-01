@@ -56,6 +56,14 @@ class MeetingView(BaseView):
 
     @view_config(name="ticket", context=IMeeting, renderer="templates/base_edit.pt")
     def claim_ticket(self):
+        """ Handle claim of a ticket. It acts in two ways:
+            - The normal way is that a user is authenticated and clicks the link in
+              the email sent by the ticket invite system. That will be a GET-request,
+              and the user in question will never see this form.
+            - The other usecase is simly going to the link directly, or if for instance
+              the link was cut off and the form didn't pass validation for the email + token.
+              In that case, the form will be rendered so the user can cut and paste the token.
+        """
         if not self.api.userid:
             msg = _(u"You need to login or register first, then your can use your ticket to gain access to this meeting.")
             self.api.flash_messages.add(msg, type='error')
@@ -102,6 +110,11 @@ class MeetingView(BaseView):
     
     @view_config(name="add_tickets", context=IMeeting, renderer="templates/base_edit.pt", permission=security.MANAGE_GROUPS)
     def add_tickets(self):
+        """ Add ticket invites to this meeting.
+            Renders a form where you can paste email addresses and select which roles they
+            should have once they register. When the form is submitted, it will also email
+            users.
+        """
         ci = self.api.content_info['InviteTicket']
         schema = ci.schema(context=self.context, request=self.request, type='add')
         add_csrf_token(self.context, self.request, schema)
@@ -143,6 +156,8 @@ class MeetingView(BaseView):
 
     @view_config(name="manage_tickets", context=IMeeting, renderer="templates/base_view.pt", permission=security.MANAGE_GROUPS)
     def manage_tickets(self):
+        """ A form for handling and reviewing already sent tickets.
+        """
         ci = self.api.content_info['InviteTicket']
         schema = ci.schema(context=self.context, request=self.request, type='manage')
         add_csrf_token(self.context, self.request, schema)

@@ -129,10 +129,34 @@ class IAgendaItem(Interface):
 class IMeeting(Interface):
     """ Meeting content type """
 
+    def add_invite_ticket(ticket, request):
+        """ Add an invite ticket to the storage invite_tickets.
+            It will also set the __parent__ attribute to allow
+            lookup of objects. The parent of the ticket will
+            in that case be the meeting.
+        """
 
 class IInviteTicket(Interface):
     """ Invite ticket - these track invitations to meetings. """
+    email = Attribute("Email address this invite is for.")
+    roles = Attribute("Roles to assign to this user once the ticket is used.")
+    created = Attribute("Creation date")
+    closed = Attribute("Close date (When the ticket was used)")
+    token = Attribute("Security token that was part of the email. "
+                      "Used in combinaton with an email address to gain entry to a meeting.")
+    sent_dates = Attribute("A list of dates when an email was sent. (Each resend gets saved here)")
+    claimed_by = Attribute("The userid of the user who claimed (used) this ticket.")
     
+    def send(request):
+        """ Send an invite or reminder to the email address that's set in
+            the email attribute. Each time will be logged in sent_dates.
+        """
+
+    def claim(request):
+        """ Use the ticket to gain access. Called by ticket form - see:
+            views/meeting.py
+        """
+
 
 class IProposal(Interface):
     """ Proposal content type. """

@@ -53,13 +53,18 @@ class Meeting(BaseContent, WorkflowAware):
 
     @property
     def invite_tickets(self):
-        """ Storage for invite_tickets. Works pretty much like a folder. """
+        """ Storage for InviteTickets. Works pretty much like a folder. """
         storage = getattr(self, '__invite_tickets__', None)
         if storage is None:
             storage = self.__invite_tickets__ =  OOBTree()
         return storage
 
     def add_invite_ticket(self, ticket, request):
+        """ Add an invite ticket to the storage invite_tickets.
+            It will also set the __parent__ attribute to allow
+            lookup of objects. The parent of the ticket will
+            in that case be the meeting.
+        """
         ticket.__parent__ = self
         self.invite_tickets[ticket.email] = ticket
         ticket.send(request)

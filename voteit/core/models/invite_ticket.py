@@ -10,6 +10,7 @@ from pyramid_mailer.message import Message
 from pyramid.traversal import find_interface
 from pyramid.url import resource_url
 from pyramid.exceptions import Forbidden
+from pyramid.security import authenticated_userid
 from persistent import Persistent
 
 from voteit.core import VoteITMF as _
@@ -44,6 +45,7 @@ class InviteTicket(Persistent, WorkflowAware):
         self.roles = roles
         self.created = datetime.now()
         self.closed = None
+        self.claimed_by = None
         self.token = ''.join([choice(string.letters + string.digits) for x in range(30)])
         self.sent_dates = []
 
@@ -90,14 +92,15 @@ Access link for direct acces once you've logged in:
         if self.get_workflow_state() != 'open':
             raise Forbidden("Access already granted with this ticket")
         #Find required resources and do some basic validation
-        root = find_interface(self, ISiteRoot)
-        assert root
         meeting = find_interface(self, IMeeting)
         assert meeting
-        user = root.users.get_user_by_email(self.email)
-        assert IUser.providedBy(user)
         
-        meeting.set_groups(user.__name__, self.roles)
+        userid = authenticated_userid(request)
+        if userid is None:
+            raise Forbidden("You can't claim a ticket unless you're authenticated.")
+        
+        meeting.set_groups(userid, self.roles)
+        self.claimed_by = userid
 
         self.set_workflow_state(request, 'closed')
         
