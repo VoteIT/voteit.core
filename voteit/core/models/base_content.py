@@ -101,8 +101,9 @@ class BaseContent(Folder, SecurityAware):
     
     creators = property(_get_creators, _set_creators)
 
-    def get_content(self, content_type=None, iface=None, state=None):
+    def get_content(self, content_type=None, iface=None, state=None, sort_on=None, sort_reverse=False):
         """ See IBaseContent """
+        results = set()
         for candidate in self.values():
             
             #Specific content_type?
@@ -124,5 +125,11 @@ class BaseContent(Folder, SecurityAware):
                 except AttributeError:
                     continue
             
-            yield candidate
+            results.add(candidate)
+        if sort_on is None:
+            return tuple(results)
+        
+        def _sorter(obj):
+            return getattr(obj, sort_on)
 
+        return tuple(sorted(results, key = _sorter, reverse = sort_reverse))

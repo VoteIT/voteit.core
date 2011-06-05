@@ -89,3 +89,18 @@ class BaseContentTests(unittest.TestCase):
         obj = self._make_obj()
         obj.set_field_value('csrf_token', "don't save me")
         self.assertEqual(obj.get_field_value('csrf_token'), None)
+    
+    def test_get_content_sorting(self):
+        parent = self._make_obj()
+        obj1 = self._make_obj()
+        obj1.title = 'hello'
+        parent['1'] = obj1
+        obj2 = self._make_obj()
+        obj2.title = 'world'
+        parent['2'] = obj2
+        
+        self.assertEqual(parent.get_content(sort_on = 'title'), (obj1, obj2))
+        self.assertEqual(parent.get_content(sort_on = 'title', sort_reverse = True), (obj2, obj1))
+        self.assertRaises(AttributeError, parent.get_content, sort_on = 'non_existent')
+        
+        

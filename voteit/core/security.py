@@ -26,6 +26,7 @@ REQUEST_MEETING_ACCESS = 'Request Meeting Access'
 #Add permissions
 #Note: For add permissions, check each content types class
 ADD_AGENDA_ITEM = 'Add Agenda Item'
+ADD_DISCUSSION_POST = 'Add Discussion Post'
 ADD_MEETING = 'Add Meeting'
 ADD_POLL = 'Add Poll'
 ADD_PROPOSAL = 'Add Proposal'
@@ -34,6 +35,7 @@ ADD_VOTE = 'Add Vote'
 
 #All add permissions except vote!
 REGULAR_ADD_PERMISSIONS = (ADD_AGENDA_ITEM,
+                           ADD_DISCUSSION_POST,
                            ADD_MEETING,
                            ADD_POLL,
                            ADD_PROPOSAL,

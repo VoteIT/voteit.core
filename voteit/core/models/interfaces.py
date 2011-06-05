@@ -37,13 +37,15 @@ class IBaseContent(Interface):
     content_type = Attribute('Content type, internal name')
     allowed_contexts = Attribute('Which contexts is this type allowed in?')
 
-    def get_content(content_type=None, iface=None, state=None):
+    def get_content(content_type=None, iface=None, state=None, sort_on=None, sort_reverse=False):
         """ Returns contained items within this folder. Keywords are usually conditions.
             They're treated as 'AND'.
             keywords:
             content_type: Only return types of this content type.
             iface: content must implement this interface
             state: Only get content with this workflow state
+            sort_on: Key to sort on
+            sort_reverse: Reverse sort order
         """
 
 class IWorkflowAware(Interface):
@@ -315,3 +317,7 @@ class IExpressions(Interface):
 
     def remove(tag, userid, uid):
         """ Remove where tag and userid and uid match. """
+
+class IDiscussionPost(Interface):
+    """ A discussion post.
+    """
