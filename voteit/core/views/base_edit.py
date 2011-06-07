@@ -3,6 +3,7 @@ from pyramid.renderers import get_renderer
 from pyramid.traversal import find_root, find_interface
 from pyramid.url import resource_url
 from pyramid.security import has_permission
+from pyramid.exceptions import Forbidden
 
 import colander
 from deform import Form
@@ -10,13 +11,11 @@ from deform.exception import ValidationFailure
 from webob.exc import HTTPFound
 from slugify import slugify
 
-from repoze.workflow import get_workflow
-from pyramid.exceptions import Forbidden
-
 from voteit.core.views.api import APIView
 from voteit.core import VoteITMF as _
 from voteit.core.security import ROLE_OWNER, EDIT, DELETE
 from voteit.core.models.schemas import add_csrf_token
+
 
 DEFAULT_TEMPLATE = "templates/base_edit.pt"
 
@@ -64,7 +63,7 @@ class BaseEdit(object):
             if self.api.userid:
                 obj.creators = [self.api.userid]
                 obj.add_groups(self.api.userid, (ROLE_OWNER,))
-            name = self.generate_slug(appstruct['title'])
+            name = self.generate_slug(obj.title)
             self.context[name] = obj
             
             self.api.flash_messages.add(_(u"Successfully added"))

@@ -1,0 +1,32 @@
+<configure xmlns="http://namespaces.repoze.org/bfg">
+
+<include package="repoze.workflow" file="meta.zcml"/>
+
+	<workflow
+		type="InviteTicket"
+		name="Invite Ticket Workflow"
+		state_attr="state"
+		initial_state="open"
+		content_types="voteit.core.models.interfaces.IInviteTicket"
+		permission_checker="pyramid.security.has_permission"
+	>
+
+		<state name="open">
+			<key name="title" value="Open"/>
+			<key name="description" value=""/>
+		</state>
+
+		<state name="closed">
+			<key name="title" value="Closed"/>
+			<key name="description" value=""/>
+		</state>
+
+		<transition
+			name="open_to_closed"
+			from_state="open"
+			to_state="closed"
+		/>
+
+	</workflow>
+
+</configure>

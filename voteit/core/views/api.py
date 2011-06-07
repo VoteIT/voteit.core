@@ -93,7 +93,7 @@ class APIView(object):
             If a content_type is passed, it will restrict the search to that type.
             See models/IBaseContent
         """
-        return tuple(context.get_content(**kwargs))
+        return context.get_content(**kwargs)
 
     def get_action_bar(self, context, request):
         """ Get the action-bar for a specific context """

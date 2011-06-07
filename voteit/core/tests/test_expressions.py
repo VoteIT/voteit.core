@@ -33,15 +33,15 @@ class ExpressionsTests(unittest.TestCase):
 
     def _add_mock_data(self, obj):
         data = (
-            ('Like', 'robin', 'aaa'),
-            ('Like', 'evis', 'aaa'),
-            ('Like', 'elin', 'aaa'),
-            ('Like', 'fredrik', 'aaa'),
-            ('Like', 'frej', 'aaa'),
-            ('Like', 'frej', 'bbb'),
-            ('Like', 'frej', 'ccc'),
-            ('Dislike', 'sandra', 'aaa'),
-            ('Dislike', 'sandra', 'bbb'),
+            (u'Like', u'robin', u'aaa'),
+            (u'Like', u'evis', u'aaa'),
+            (u'Like', u'elin', u'aaa'),
+            (u'Like', u'fredrik', u'aaa'),
+            (u'Like', u'frej', u'aaa'),
+            (u'Like', u'frej', u'bbb'),
+            (u'Like', u'frej', u'ccc'),
+            (u'Dislike', u'sandra', u'aaa'),
+            (u'Dislike', u'sandra', u'bbb'),
          )
         for (tag, userid, uid) in data:
             obj.add(tag, userid, uid)
@@ -53,9 +53,9 @@ class ExpressionsTests(unittest.TestCase):
 
     def test_add(self):
         obj = self._import_class()(self.request)
-        tag = 'Like'
-        userid = 'robin'
-        uid = 'aa-bb'
+        tag = u'Like'
+        userid = u'robin'
+        uid = u'aa-bb'
         obj.add(tag, userid, uid)
 
         from voteit.core.models.expression import Expression
@@ -73,15 +73,15 @@ class ExpressionsTests(unittest.TestCase):
         obj = self._import_class()(self.request)
         self._add_mock_data(obj)
 
-        self.assertEqual(len(obj.retrieve_userids('Like', 'aaa')), 5)
-        self.assertEqual(len(obj.retrieve_userids('Like', 'bbb')), 1)
-        self.assertEqual(obj.retrieve_userids('Like', 'ccc'), set(['frej']))
-        self.assertEqual(len(obj.retrieve_userids('Dislike', 'aaa')), 1)
-        self.assertEqual(len(obj.retrieve_userids('Dislike', 'bbb')), 1)
+        self.assertEqual(len(obj.retrieve_userids(u'Like', u'aaa')), 5)
+        self.assertEqual(len(obj.retrieve_userids(u'Like', u'bbb')), 1)
+        self.assertEqual(obj.retrieve_userids(u'Like', u'ccc'), set([u'frej']))
+        self.assertEqual(len(obj.retrieve_userids(u'Dislike', u'aaa')), 1)
+        self.assertEqual(len(obj.retrieve_userids(u'Dislike', u'bbb')), 1)
 
     def test_remove(self):
         obj = self._import_class()(self.request)
         self._add_mock_data(obj)
         
-        obj.remove('Like', 'elin', 'aaa')
-        self.assertEqual(len(obj.retrieve_userids('Like', 'aaa')), 4)
+        obj.remove(u'Like', u'elin', u'aaa')
+        self.assertEqual(len(obj.retrieve_userids(u'Like', u'aaa')), 4)

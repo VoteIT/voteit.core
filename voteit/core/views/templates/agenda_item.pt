@@ -4,52 +4,71 @@
       xmlns:tal="http://xml.zope.org/namespaces/tal"
       metal:use-macro="api.main_template.macros['master']">
 <body>
-	<div metal:fill-slot="page_info"
+    <div metal:fill-slot="page_info"
          id="page_info" 
          class="column">
-	    <fieldset>
-	        <legend>Info</legend>
-	        <div>Next poll: in <span tal:content="next_poll">0</span> (<span tal:content="poll_start"></span> - <span tal:content="poll_end"></span>)</div>
+        <fieldset>
+            <legend>Info</legend>
+            <div>Next poll: in <span tal:content="next_poll">0</span> (<span tal:content="poll_start"></span> - <span tal:content="poll_end"></span>)</div>
         </fieldset>
-	</div>
+    </div>
 
-	<div id="content" metal:fill-slot="content">
-	    <div class="column">
-		    <h1>Discussion</h1>
-	    </div>
-
-	    <div class="column">
-	    	<div id="proposals">
-			    <h1>Proposals</h1>
-		        	
-		        <tal:iterate condition="proposals" repeat="proposal proposals">
-		        	<div class="listing_block">
-		                <tal:creators tal:replace="structure api.get_creators_info(proposal.creators, request)">Creators</tal:creators>
-						<span>propose:</span>
-		                <span class="body" tal:content="proposal.title">Title</span>
+    <div id="content" metal:fill-slot="content">
+        <div class="column">
+            <div id="discussions">
+                <h1>Discussion</h1>
+				
+				<tal:iterate condition="discussions" repeat="post discussions">
+                    <div class="listing_block">
+                        <tal:creators tal:replace="structure api.get_creators_info(post.creators, request)">Creators</tal:creators>
 						
-						<div tal:define="state_id proposal.get_workflow_state()">
-							<span>State:</span>
-							<strong tal:attributes="class 'wf-state-%s' % state_id"
-							      tal:content="state_id">private</strong>
-						</div>
-						<div class="expressions" tal:content="structure api.expressions.get_expressions(proposal, 'support', api.userid, 'Support')"></div>
-			        	<div tal:replace="structure api.get_action_bar(proposal, request)">Action bar</div>
-						<div class="clear"><!-- --></div>
-					</div>
-					
-		        </tal:iterate>
-			    
-			    <div tal:condition="proposal_form|False" tal:replace="structure proposal_form">Proposal form</div>
-			
-			</div>
+                        <span class="body" tal:content="structure post.get_field_value('text')">text</span>
+
+                        <div class="expressions" tal:content="structure api.expressions.get_expressions(post, 'support', api.userid, 'Support')"></div>
+                        <div tal:replace="structure api.get_action_bar(post, request)">Action bar</div>
+                        <div class="clear"><!-- --></div>
+                    </div>
+                    
+                </tal:iterate>
+                
+                <div tal:condition="discussion_form|False" tal:replace="structure discussion_form">Discussion form</div>
+            
+				
+            </div>
+        </div>
+
+        <div class="column">
+            <div id="proposals">
+                <h1>Proposals</h1>
+                    
+                <tal:iterate condition="proposals" repeat="proposal proposals">
+                    <div class="listing_block">
+                        <tal:creators tal:replace="structure api.get_creators_info(proposal.creators, request)">Creators</tal:creators>
+                        <span>propose:</span>
+                        <span class="body" tal:content="proposal.title">Title</span>
+                        
+                        <div tal:define="state_id proposal.get_workflow_state()">
+                            <span>State:</span>
+                            <strong tal:attributes="class 'wf-state-%s' % state_id"
+                                  tal:content="state_id">private</strong>
+                        </div>
+                        <div class="expressions" tal:content="structure api.expressions.get_expressions(proposal, 'support', api.userid, 'Support')"></div>
+                        <div tal:replace="structure api.get_action_bar(proposal, request)">Action bar</div>
+                        <div class="clear"><!-- --></div>
+                    </div>
+                    
+                </tal:iterate>
+                
+                <div tal:condition="proposal_form|False" tal:replace="structure proposal_form">Proposal form</div>
+            
+            </div>
 
             <h1>Poll</h1>
                 
             <tal:iterate condition="polls" repeat="poll polls">
                 <div class="listing_block">
-	                <h3 tal:content="poll.title">Title</h3>
-	                <div tal:content="poll.description">Description</div>
+                    <h3 tal:content="poll.title">Title</h3>
+                    <div tal:content="poll.description">Description</div>
 
                     <div tal:define="state_id poll.get_workflow_state()" class="wf-info">
                         <span>State:</span>
@@ -57,8 +76,8 @@
                               tal:content="state_id">open</strong>
                     </div>
 
-	                <div tal:replace="structure api.get_action_bar(poll, request)">Action bar</div>
-				</div>
+                    <div tal:replace="structure api.get_action_bar(poll, request)">Action bar</div>
+                </div>
             </tal:iterate>
             
             <tal:no_polls condition="not polls">
@@ -76,6 +95,6 @@
 
 
 
-	</div>
+    </div>
 </body>
 </html>

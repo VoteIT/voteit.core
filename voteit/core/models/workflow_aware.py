@@ -9,19 +9,19 @@ class WorkflowAware(object):
 
     @property
     def workflow(self):
-        #wf = getattr(self, '_workflow', None)
-        #if wf is None:
-        #    wf = self.initialize_workflow()
-        
-        return get_workflow(self.__class__, self.__class__.__name__, self)
+        try:
+            self.content_type
+        except AttributeError:
+            raise "context doesn't have content_type attribute set"
+
+        for iface in self.__class__.__implemented__.interfaces():
+            wf = get_workflow(iface, self.content_type, self)
+            if wf is not None:
+                return wf
 
     def initialize_workflow(self):
         #FIXME: the type should be som generic instead of the class name, but since the wrong workflow is returned this is is a workaround
-        workflow = get_workflow(self.__class__, self.__class__.__name__, self)
-        if workflow:
-            workflow.initialize(self)
-            #self._workflow = workflow
-            return workflow
+        self.workflow.initialize(self)
         
     def get_workflow_state(self):
         return self.workflow.state_of(self)

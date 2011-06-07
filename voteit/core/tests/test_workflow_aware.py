@@ -16,8 +16,11 @@ class WorkflowAwareTests(unittest.TestCase):
         testing.tearDown()
 
     def _make_obj(self):
+        """ WorkflowAware is a mixin class. """
         from voteit.core.models.workflow_aware import WorkflowAware
-        return WorkflowAware()
+        class Dummy(WorkflowAware):
+            content_type = 'dummy'
+        return Dummy()
     
     def test_verify_interface(self):
         from voteit.core.models.interfaces import IWorkflowAware

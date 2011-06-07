@@ -60,9 +60,7 @@ def main(global_config, **settings):
     config.add_static_view('static', '%s:static' % PROJECTNAME)
     config.add_static_view('deform', 'deform:static')
 
-    #Set which mailer to use
-    if settings['mailer'] == 'pyramid_mailer.testing':
-        print "\nWARNING! Using testmailer - no mail will be sent!\n"
+    #Set which mailer to use        
     config.include(settings['mailer'])
 
     #config.add_translation_dirs('%s:locale/' % PROJECTNAME)
@@ -96,8 +94,9 @@ def register_workflows():
     #FIXME: Make this pluggable later on.
     
     import voteit.core.workflows as vcw
-    xmlconfig.file('meeting.zcml', vcw, execute=True)
     xmlconfig.file('agenda_item.zcml', vcw, execute=True)
+    xmlconfig.file('invite_ticket.zcml', vcw, execute=True)
+    xmlconfig.file('meeting.zcml', vcw, execute=True)
     xmlconfig.file('proposal.zcml', vcw, execute=True)
     xmlconfig.file('poll.zcml', vcw, execute=True)    
 

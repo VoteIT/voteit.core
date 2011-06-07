@@ -7,7 +7,7 @@
 		name="Poll Workflow"
 		state_attr="state"
 		initial_state="private"
-		content_types="voteit.core.models.poll.Poll"
+		content_types="voteit.core.models.interfaces.IPoll"
         permission_checker="pyramid.security.has_permission"
 	>
 
