@@ -287,3 +287,20 @@ class IExpressions(Interface):
 
     def remove(tag, userid, uid):
         """ Remove where tag and userid and uid match. """
+        
+class IMessages(Interface):
+    """ Handle messages.
+        This behaves like an adapter on a request.
+    """
+    
+    def __init__(request):
+        """ Object needs a request to adapt. """
+
+    def add(userid, message):
+        """ Add a message. """
+
+    def retrieve_user_messages(userid):
+        """ Retrieve a set of messages for the userid. """
+
+    def remove(userid, id):
+        """ Remove where userid and id match. """

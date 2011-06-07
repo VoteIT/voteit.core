@@ -14,6 +14,7 @@ from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import IContentUtility
 from voteit.core.views.macros import FlashMessages
 from voteit.core.views.expressions import ExpressionsView
+from voteit.core.views.messages import MessagesView
 
 
 class APIView(object):
@@ -47,6 +48,7 @@ class APIView(object):
         #macros
         self.flash_messages = FlashMessages(request)
         self.expressions = ExpressionsView(request)
+        self.messages = MessagesView(request)
 
     def _get_user_cache(self):
         cache = getattr(self.request, '_user_lookup_cache', None)

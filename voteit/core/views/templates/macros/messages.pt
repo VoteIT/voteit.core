@@ -1,0 +1,5 @@
+<ul tal:condition="messages|False">
+<tal:iterate repeat="message messages">
+    <li tal:content="message">message</li>
+</tal:iterate>
+</ul>
