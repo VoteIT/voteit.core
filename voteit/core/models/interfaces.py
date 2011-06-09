@@ -327,14 +327,11 @@ class IMessages(Interface):
     def __init__(request):
         """ Object needs a request to adapt. """
 
-    def add(userid, message):
+    def add(meetinguid, message, tag=None, contextuid=None, userid=None):
         """ Add a message. """
-
-    def retrieve_user_messages(userid):
-        """ Retrieve a set of messages for the userid. """
-
-    def remove(userid, id):
-        """ Remove where userid and id match. """
+        
+    def retrieve_messages(meetinguid, tag=None, contextuid=None, userid=None):
+        """ Retrieve a set of messages in meetinguid. """
 
 
 class IDiscussionPost(Interface):

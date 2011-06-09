@@ -17,16 +17,25 @@ class Message(RDB_Base):
     
     __tablename__ = 'messages'
     id = Column(Integer, primary_key=True)
-    userid = Column(Unicode(100))
+    meetinguid = Column(Unicode(40))
     message = Column(Unicode(250))
-    meeting = Column(Unicode(40))
+    tag = Column(Unicode(10))
+    contextuid = Column(Unicode(40))
+    userid = Column(Unicode(100))
     created = Column(DateTime())
     
-    def __init__(self, userid, message, meeting_uid, created=datetime.now()):
-        self.userid = unicodify(userid)
+    def __init__(self, meetinguid, message, tag=None, contextuid=None, userid=None, created=datetime.now()):
+        self.meetinguid = unicodify(meetinguid)
         self.message = unicodify(message)
-        self.meeting = unicodify(meeting_uid)
+        self.tag = unicodify(tag)
+        self.contextuid = unicodify(contextuid)
+        self.userid = unicodify(userid)
         self.created = created
+        
+    def format_created(self):
+        """ Lordag 3 apr 2010, 01:10
+        """
+        return self.created.strftime("%A %d %B %Y, %H:%M")
 
 class Messages(object):
     """ Handle messages.
@@ -37,20 +46,22 @@ class Messages(object):
     def __init__(self, request):
         self.request = request
     
-    def add(self, userid, message, meeting_uid):
+    def add(self, meetinguid, message, tag=None, contextuid=None, userid=None):
         session = self.request.sql_session
         
-        msg = Message(userid, message, meeting_uid)
+        msg = Message(meetinguid, message, tag, contextuid, userid)
         session.add(msg)
 
-    def retrieve_user_messages(self, userid, meeting_uid):
+    def retrieve_messages(self, meetinguid, tag=None, contextuid=None, userid=None):
         session = self.request.sql_session
-        query = session.query(Message).filter_by(userid=userid, meeting=meeting_uid).order_by('created')
+        query = session.query(Message).filter_by(meetinguid=meetinguid)
+        if tag:
+            query = query.filter_by(tag=tag)
+        if contextuid:
+            query = query.filter_by(contextuid=contextuid)
+        if userid:
+            query = query.filter_by(userid=userid)
+
+        query.order_by('created')
 
         return tuple(query.all())
-
-    def remove(self, userid, meeting_uid, id):
-        session = self.request.sql_session
-        query = session.query(Message).filter_by(userid=userid, meeting=meeting_uid, id=id)
-        message = query.first()
-        session.delete(message)

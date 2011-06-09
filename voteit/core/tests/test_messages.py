@@ -33,18 +33,15 @@ class MessagesTests(unittest.TestCase):
 
     def _add_mock_data(self, obj):
         data = (
-            ('robin', 'aaa'),
-            ('evis', 'aaa'),
-            ('elin', 'aaa'),
-            ('fredrik', 'aaa'),
-            ('frej', 'aaa'),
-            ('frej', 'bbb'),
-            ('frej', 'ccc'),
-            ('sandra', 'aaa'),
-            ('sandra', 'bbb'),
+            ('m1', 'test', 'alert', None, None,),
+            ('m1', 'test', 'log', 'm1', None,),
+            ('m1', 'test', 'like', 'p1', 'robin',),
+            ('m1', 'test', 'alert', 'v1', 'robin',),
+            ('m1', 'test', 'log', 'p1', None,),
+            ('m1', 'test', 'log', 'v1', None,),
          )
-        for (userid, message) in data:
-            obj.add(userid, message)
+        for (meetinguid, message, tag, contextuid, userid) in data:
+            obj.add(meetinguid, message, tag, contextuid, userid)
 
     def test_verify_obj_implementation(self):
         from voteit.core.models.interfaces import IMessages
@@ -53,9 +50,12 @@ class MessagesTests(unittest.TestCase):
 
     def test_add(self):
         obj = self._import_class()(self.request)
-        userid = 'robin'
+        meetinguid = 'a1'
         message = 'aa-bb'
-        obj.add(userid, message)
+        tag = 'log'
+        contextuid = 'a1'
+        userid = 'robin'
+        obj.add(meetinguid, message, tag, contextuid, userid)
 
         from voteit.core.models.message import Message
         session = self.request.sql_session
@@ -64,18 +64,12 @@ class MessagesTests(unittest.TestCase):
         self.assertEqual(len(query.all()), 1)
         result_obj = query.all()[0]
         self.assertEqual(result_obj.userid, userid)
+        self.assertEqual(result_obj.meetinguid, meetinguid)
         self.assertEqual(result_obj.message, message)
+        self.assertEqual(result_obj.tag, tag)
 
     def test_retrieve_user_messages(self):
         obj = self._import_class()(self.request)
         self._add_mock_data(obj)
 
-        self.assertEqual(len(obj.retrieve_user_messages('frej')), 3)
-
-    def test_remove(self):
-        obj = self._import_class()(self.request)
-        self._add_mock_data(obj)
-        
-        messages = obj.retrieve_user_messages('frej')
-        obj.remove('frej', messages[0].id)
-        self.assertEqual(len(obj.retrieve_user_messages('frej')), 2)
+        self.assertEqual(len(obj.retrieve_messages('m1', contextuid='v1')), 2)

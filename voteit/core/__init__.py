@@ -27,7 +27,6 @@ from voteit.core.models.interfaces import IContentUtility
 from voteit.core.models.interfaces import IPollPlugin
 from voteit.core.security import groupfinder
 
-
 def main(global_config, **settings):
     """ This function returns a Pyramid WSGI application.
     """

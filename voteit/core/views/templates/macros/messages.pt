@@ -1,5 +1,5 @@
-<ul tal:condition="messages|False">
+<ul tal:condition="messages|False" class="menu_body">
 <tal:iterate repeat="message messages">
-    <li tal:content="message">message</li>
+    <li><span tal:replace="message.format_created()">created</span> <span tal:replace="message.message">message</span></li>
 </tal:iterate>
 </ul>

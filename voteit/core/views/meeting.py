@@ -11,7 +11,7 @@ from voteit.core import VoteITMF as _
 from voteit.core.views.base_view import BaseView
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.schemas import add_csrf_token
-
+from voteit.core.models.message import Messages
 
 
 class MeetingView(BaseView):
@@ -41,6 +41,14 @@ class MeetingView(BaseView):
         self.response['number_of_proposals'] = 32
         self.response['next_poll'] = '3 hours'
         self.response['remaining_meeting_time'] = '2 days, 3 hours'
+        
+        _messages = Messages(self.request)
+        meeting = self.api.find_meeting(self.request.context)
+        if meeting and meeting.uid:
+            messages = _messages.retrieve_messages(meeting.uid, tag='log', userid=None)
+        else:
+            messages = None
+        self.response['this_has_happened'] = messages
 
         return self.response
 

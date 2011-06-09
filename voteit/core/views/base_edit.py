@@ -16,6 +16,8 @@ from voteit.core import VoteITMF as _
 from voteit.core.security import ROLE_OWNER, EDIT, DELETE
 from voteit.core.models.schemas import add_csrf_token
 
+from voteit.core.models.message import Messages
+
 
 DEFAULT_TEMPLATE = "templates/base_edit.pt"
 
@@ -184,6 +186,9 @@ class BaseEdit(object):
     def state_change(self):
         state = self.request.params.get('state')
         self.context.set_workflow_state(self.request, state)
+        
+        messages = Messages(self.request)
+        messages.add(self.api.userid, self.api.find_meeting(self.context).uid, "State change on %s to %s" % (self.context.title, state), 'state_change')
 
         url = resource_url(self.context, self.request)
         return HTTPFound(location=url)
