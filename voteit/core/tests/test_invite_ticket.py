@@ -11,6 +11,8 @@ class InviteTicketTests(unittest.TestCase):
     def setUp(self):
         self.config = testing.setUp()
         self.config.include('pyramid_mailer.testing')
+        self.config.include('pyramid_zcml')
+        self.config.load_zcml('voteit.core:configure.zcml')
 
     def tearDown(self):
         testing.tearDown()
@@ -27,9 +29,6 @@ class InviteTicketTests(unittest.TestCase):
         from voteit.core.models.meeting import Meeting
         return Meeting()
     
-    def _register_wfs(self):
-        from voteit.core import register_workflows
-        register_workflows()
 
     def test_verify_interface(self):
         from voteit.core.models.interfaces import IInviteTicket
@@ -53,7 +52,6 @@ class InviteTicketTests(unittest.TestCase):
         self.assertEqual(len(obj.sent_dates), 2)
         
     def test_claim_ticket(self):
-        self._register_wfs()
         meeting = self._make_meeting()
         obj = self._make_obj()
         self.config.testing_securitypolicy(userid='some_user',
@@ -71,7 +69,6 @@ class InviteTicketTests(unittest.TestCase):
         self.assertEqual(meeting.get_groups('some_user'), ('role:Moderator',))
 
     def test_claim_closed(self):
-        self._register_wfs()
         meeting = self._make_meeting()
         obj = self._make_obj()
         self.config.testing_securitypolicy(userid='some_user',
@@ -86,7 +83,6 @@ class InviteTicketTests(unittest.TestCase):
         self.assertRaises(Forbidden, ticket.claim, request)
 
     def test_claim_unathenticated(self):
-        self._register_wfs()
         meeting = self._make_meeting()
         obj = self._make_obj()
         

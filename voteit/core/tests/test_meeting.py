@@ -20,8 +20,8 @@ class MeetingTests(unittest.TestCase):
     def setUp(self):
         self.config = testing.setUp()
         # load workflow
-        from voteit.core import register_workflows
-        register_workflows()
+        self.config.include('pyramid_zcml')
+        self.config.load_zcml('voteit.core:configure.zcml')
 
     def tearDown(self):
         testing.tearDown()
@@ -60,8 +60,8 @@ class MeetingPermissionTests(unittest.TestCase):
         policy = ACLAuthorizationPolicy()
         self.pap = policy.principals_allowed_by_permission
         # load workflow
-        from voteit.core import register_workflows
-        register_workflows()
+        self.config.include('pyramid_zcml')
+        self.config.load_zcml('voteit.core:configure.zcml')
 
     def tearDown(self):
         testing.tearDown()

@@ -4,9 +4,7 @@ from pyramid.authorization import ACLAuthorizationPolicy
 from pyramid.authentication import AuthTktAuthenticationPolicy
 from pyramid.session import UnencryptedCookieSessionFactoryConfig
 from repoze.zodbconn.finder import PersistentApplicationFinder
-from zope.component import getGlobalSiteManager
 from zope.interface.verify import verifyClass
-from zope.configuration import xmlconfig
 
 from sqlalchemy import create_engine
 from sqlalchemy import MetaData
@@ -18,7 +16,6 @@ from zope.sqlalchemy import ZopeTransactionExtension
 #Must be before all of this packages imports since some other methods might import it
 PROJECTNAME = 'voteit.core'
 VoteITMF = TranslationStringFactory(PROJECTNAME)
-
 RDB_Base = declarative_base()
 
 #voteit.core package imports
@@ -26,6 +23,7 @@ from voteit.core.models.content_utility import ContentUtility
 from voteit.core.models.interfaces import IContentUtility
 from voteit.core.models.interfaces import IPollPlugin
 from voteit.core.security import groupfinder
+
 
 def main(global_config, **settings):
     """ This function returns a Pyramid WSGI application.
@@ -46,15 +44,14 @@ def main(global_config, **settings):
 
     init_sql_database(settings)
     
-    
-    globalreg = getGlobalSiteManager()
-    config = Configurator(registry=globalreg)
-    config.setup_registry(settings=settings,
+    config = Configurator(settings=settings,
                           root_factory=get_root,
                           authentication_policy=authn_policy,
                           authorization_policy=authz_policy,
-                          session_factory = sessionfact,
-                          )
+                          session_factory = sessionfact,)
+
+    #Enable zcml usage
+    config.include('pyramid_zcml')
     
     config.add_static_view('static', '%s:static' % PROJECTNAME)
     config.add_static_view('deform', 'deform:static')
@@ -83,21 +80,10 @@ def main(global_config, **settings):
         for poll_plugin in poll_plugins.strip().splitlines():
             config.include(poll_plugin)
 
-    register_workflows()
+    config.load_zcml('voteit.core:configure.zcml')
 
     return config.make_wsgi_app()
 
-
-def register_workflows():
-    """ Load workflows. """
-    #FIXME: Make this pluggable later on.
-    
-    import voteit.core.workflows as vcw
-    xmlconfig.file('agenda_item.zcml', vcw, execute=True)
-    xmlconfig.file('invite_ticket.zcml', vcw, execute=True)
-    xmlconfig.file('meeting.zcml', vcw, execute=True)
-    xmlconfig.file('proposal.zcml', vcw, execute=True)
-    xmlconfig.file('poll.zcml', vcw, execute=True)    
 
 def appmaker(zodb_root):
     if not 'app_root' in zodb_root:

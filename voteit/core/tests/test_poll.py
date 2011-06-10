@@ -19,6 +19,8 @@ owner = set([security.ROLE_OWNER])
 class PollTests(unittest.TestCase):
     def setUp(self):
         self.config = testing.setUp()
+        self.config.include('pyramid_zcml')
+        self.config.load_zcml('voteit.core:configure.zcml')
 
     def tearDown(self):
         testing.tearDown()
@@ -154,11 +156,7 @@ class PollTests(unittest.TestCase):
         result.sort(key=lambda x: x['count'])
         
         self.assertEqual(result, expected)
-    
-    def _load_workflows(self):
-        from voteit.core import register_workflows
-        register_workflows()
-    
+
     def _make_obj(self):
         from voteit.core.models.poll import Poll
         return Poll()
@@ -167,7 +165,6 @@ class PollTests(unittest.TestCase):
         return set([x['name'] for x in info])
 
     def test_poll_transitions(self):
-        self._load_workflows()
         request = testing.DummyRequest()
         
         #Setup for proper test
@@ -206,7 +203,6 @@ class PollTests(unittest.TestCase):
         self.assertEqual(obj.get_workflow_state(), u'closed')
 
     def test_available_transitions(self):
-        self._load_workflows()
         
         #Setup for proper test
         obj = self._make_obj()
@@ -251,8 +247,8 @@ class PollPermissionTests(unittest.TestCase):
         policy = ACLAuthorizationPolicy()
         self.pap = policy.principals_allowed_by_permission
         # load workflow
-        from voteit.core import register_workflows
-        register_workflows()
+        self.config.include('pyramid_zcml')
+        self.config.load_zcml('voteit.core:configure.zcml')
 
     def tearDown(self):
         testing.tearDown()
