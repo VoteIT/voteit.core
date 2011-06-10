@@ -1,5 +1,7 @@
 from repoze.workflow import get_workflow
 from zope.interface import implements
+from repoze.workflow.workflow import WorkflowError
+
 from voteit.core.models.interfaces import IWorkflowAware
 
 
@@ -18,6 +20,7 @@ class WorkflowAware(object):
             wf = get_workflow(iface, self.content_type, self)
             if wf is not None:
                 return wf
+        raise WorkflowError("Workflow not found for %s" % self)
 
     def initialize_workflow(self):
         #FIXME: the type should be som generic instead of the class name, but since the wrong workflow is returned this is is a workaround
