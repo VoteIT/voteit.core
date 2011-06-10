@@ -41,7 +41,7 @@ class MeetingView(BaseView):
         self.response['next_poll'] = '3 hours'
         self.response['remaining_meeting_time'] = '2 days, 3 hours'
         
-        self.response['this_has_happened'] = self.api.logs.retrieve_entries(self.context.uid, tag='log')
+        self.response['this_has_happened'] = self.api.logs.retrieve_entries(self.context.uid)
 
         return self.response
 
