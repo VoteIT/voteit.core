@@ -1,0 +1,5 @@
+<configure xmlns="http://pylonshq.com/pyramid">
+
+  <include package=".workflows" />
+
+</configure>

@@ -8,12 +8,13 @@ CHANGES = open(os.path.join(here, 'CHANGES.txt')).read()
 
 requires = [
     'pyramid',
+    'pyramid_mailer',
+    'pyramid_zcml',
     'repoze.zodbconn',
     'repoze.tm2>=1.0b1', # default_commit_veto
     'repoze.retry',
     'repoze.folder',
     'repoze.workflow',
-    'pyramid_mailer',
     'ZODB3',
     'WebError',
     'deform',

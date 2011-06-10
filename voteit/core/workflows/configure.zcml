@@ -1,0 +1,11 @@
+<configure xmlns="http://pylonshq.com/pyramid">
+
+  <include package="repoze.workflow" file="meta.zcml"/>
+  
+  <include file="agenda_item.zcml" />
+  <include file="invite_ticket.zcml" />
+  <include file="meeting.zcml" />
+  <include file="proposal.zcml" />
+  <include file="poll.zcml" />
+
+</configure>

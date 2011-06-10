@@ -4,10 +4,9 @@ from pyramid import testing
 from pyramid.authorization import ACLAuthorizationPolicy
 from pyramid.security import Authenticated
 from zope.interface.verify import verifyObject
-
-from voteit.core import security
 from pyramid.threadlocal import get_current_registry
 
+from voteit.core import security
 
 admin = set([security.ROLE_ADMIN])
 moderator = set([security.ROLE_MODERATOR])
@@ -43,8 +42,8 @@ class VotePermissionTests(unittest.TestCase):
         policy = ACLAuthorizationPolicy()
         self.pap = policy.principals_allowed_by_permission
         # load workflow
-        from voteit.core import register_workflows
-        register_workflows()
+        self.config.include('pyramid_zcml')
+        self.config.load_zcml('voteit.core:configure.zcml')
 
     def tearDown(self):
         testing.tearDown()

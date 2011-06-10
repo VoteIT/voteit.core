@@ -21,18 +21,13 @@ from voteit.core.models.interfaces import IPoll
 class WorkflowTests(unittest.TestCase):
     def setUp(self):
         self.config = testing.setUp()
+        self.config.include('pyramid_zcml')
+        self.config.load_zcml('voteit.core:configure.zcml')
 
     def tearDown(self):
         testing.tearDown()
         
-    def _load_workflows(self):
-        # load workflow
-        from voteit.core import register_workflows
-        register_workflows()
-        
     def test_verify_workflow(self):
-        self._load_workflows()
-        
         workflow = get_workflow(SiteRoot, SiteRoot.__name__)
         self.assertEqual(workflow, None)
         
@@ -52,8 +47,6 @@ class WorkflowTests(unittest.TestCase):
         self.failUnless(workflow)
         
     def test_meeting_states(self):
-        self._load_workflows()
-        
         obj = Meeting()
         request = testing.DummyRequest()
 
@@ -90,8 +83,6 @@ class WorkflowTests(unittest.TestCase):
         
         
     def test_agenda_item_states(self):
-        self._load_workflows()
-        
         obj = AgendaItem()
         request = testing.DummyRequest()
 
@@ -130,8 +121,6 @@ class WorkflowTests(unittest.TestCase):
         
         
     def test_proposal_states(self):
-        self._load_workflows()
-        
         obj = Proposal()
         request = testing.DummyRequest()
         

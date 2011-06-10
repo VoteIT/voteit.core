@@ -19,8 +19,8 @@ owner = set([security.ROLE_OWNER])
 class AgendaItemTests(unittest.TestCase):
     def setUp(self):
         self.config = testing.setUp()
-        from voteit.core import register_workflows
-        register_workflows()
+        self.config.include('pyramid_zcml')
+        self.config.load_zcml('voteit.core:configure.zcml')
 
     def tearDown(self):
         testing.tearDown()
@@ -79,8 +79,8 @@ class AgendaItemPermissionTests(unittest.TestCase):
         policy = ACLAuthorizationPolicy()
         self.pap = policy.principals_allowed_by_permission
         # load workflow
-        from voteit.core import register_workflows
-        register_workflows()
+        self.config.include('pyramid_zcml')
+        self.config.load_zcml('voteit.core:configure.zcml')
 
     def tearDown(self):
         testing.tearDown()
