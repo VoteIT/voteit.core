@@ -14,7 +14,7 @@ class WorkflowAware(object):
         try:
             self.content_type
         except AttributeError:
-            raise "context doesn't have content_type attribute set"
+            raise WorkflowError("context doesn't have content_type attribute set")
 
         for iface in self.__class__.__implemented__.interfaces():
             wf = get_workflow(iface, self.content_type, self)
