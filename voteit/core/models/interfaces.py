@@ -332,6 +332,20 @@ class IMessages(Interface):
         
     def retrieve_messages(meetinguid, tag=None, contextuid=None, userid=None):
         """ Retrieve a set of messages in meetinguid. """
+        
+class ILogs(Interface):
+    """ Handle logs.
+        This behaves like an adapter on a request.
+    """
+    
+    def __init__(request):
+        """ Object needs a request to adapt. """
+
+    def add(meetinguid, message, tag=None, userid=None):
+        """ Add a log entry. """
+        
+    def retrieve_entries(meetinguid, tag=None, userid=None):
+        """ Retrieve a set of log entries in meetinguid. """
 
 
 class IDiscussionPost(Interface):
