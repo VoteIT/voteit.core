@@ -1,9 +1,9 @@
 from datetime import datetime
 
-from sqlalchemy import Integer
-from sqlalchemy import Unicode
-from sqlalchemy import DateTime
+from sqlalchemy import Integer, Unicode, DateTime, Boolean
 from sqlalchemy import Column
+from sqlalchemy import ForeignKey
+from sqlalchemy.orm import relationship
 from zope.interface import implements
 from repoze.folder import unicodify
 
@@ -12,7 +12,7 @@ from voteit.core.models.interfaces import IMessages
 
 
 class Message(RDB_Base):
-    """ Persistance for an message.
+    """ Persistance for a message.
     """
     
     __tablename__ = 'messages'
@@ -23,6 +23,7 @@ class Message(RDB_Base):
     contextuid = Column(Unicode(40))
     userid = Column(Unicode(100))
     created = Column(DateTime())
+    read = relationship("MessageRead", backref="parent")
     
     def __init__(self, meetinguid, message, tag=None, contextuid=None, userid=None, created=datetime.now()):
         self.meetinguid = unicodify(meetinguid)
@@ -36,6 +37,25 @@ class Message(RDB_Base):
         """ Lordag 3 apr 2010, 01:10
         """
         return self.created.strftime("%A %d %B %Y, %H:%M")
+        
+
+class MessageRead(RDB_Base):
+    """ Persistance for a message.
+    """
+    
+    __tablename__ = 'messagesread'
+    id = Column(Integer, primary_key=True)
+    messageid = Column(Integer, ForeignKey('messages.id'))
+    userid = Column(Unicode(100))
+    read = Column(Boolean)
+    
+    #TODO: make messageid + userid unique
+
+    def __init__(self, userid, messageid, read=False):
+        self.messageid = unicodify(messageid)
+        self.userid = unicodify(userid)
+        self.read = read
+
 
 class Messages(object):
     """ Handle messages.
@@ -54,14 +74,24 @@ class Messages(object):
 
     def retrieve_messages(self, meetinguid, tag=None, contextuid=None, userid=None):
         session = self.request.sql_session
-        query = session.query(Message).filter_by(meetinguid=meetinguid)
+        query = session.query(Message).outerjoin((MessageRead, Message.id==MessageRead.messageid)).filter(Message.meetinguid==meetinguid)
         if tag:
-            query = query.filter_by(tag=tag)
+            query = query.filter(Message.tag==tag)
         if contextuid:
-            query = query.filter_by(contextuid=contextuid)
+            query = query.filter(Message.contextuid==contextuid)
         if userid:
-            query = query.filter_by(userid=userid)
+            query = query.filter(Message.userid==userid)
 
         query.order_by('created')
 
         return tuple(query.all())
+        
+    def mark_read(self, messageid, userid):
+        session = self.request.sql_session
+        read = session.query(MessageRead).filter(MessageRead.userid==userid).filter(MessageRead.messageid==messageid).first()
+        if read:
+            read.read = True
+            session.add(read)
+        else:
+            read = MessageRead(userid, messageid, True)
+            session.add(read)

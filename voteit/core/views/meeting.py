@@ -42,13 +42,7 @@ class MeetingView(BaseView):
         self.response['next_poll'] = '3 hours'
         self.response['remaining_meeting_time'] = '2 days, 3 hours'
         
-        _messages = Messages(self.request)
-        meeting = self.api.find_meeting(self.request.context)
-        if meeting and meeting.uid:
-            messages = _messages.retrieve_messages(meeting.uid, tag='log', userid=None)
-        else:
-            messages = None
-        self.response['this_has_happened'] = messages
+        self.response['this_has_happened'] = self.messages.retrieve_messages(self.context.uid, tag='log')
 
         return self.response
 
@@ -216,4 +210,8 @@ class MeetingView(BaseView):
         self.response['form'] = self.form.render()
         return self.response
 
-
+    @view_config(name="protocol", context=IMeeting, renderer="templates/protocol.pt", permission=security.VIEW)
+    def protocol(self):
+        self.response['messages'] = self.messages.retrieve_messages(self.context.uid, tag='log')
+        
+        return self.response

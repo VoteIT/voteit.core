@@ -73,3 +73,18 @@ class MessagesTests(unittest.TestCase):
         self._add_mock_data(obj)
 
         self.assertEqual(len(obj.retrieve_messages('m1', contextuid='v1')), 2)
+        
+    def test_mark_read(self):
+        obj = self._import_class()(self.request)
+        messageid = 1
+        userid = 'robin'
+        obj.mark_read(messageid, userid)
+
+        from voteit.core.models.message import MessageRead
+        session = self.request.sql_session
+        query = session.query(MessageRead).filter(MessageRead.messageid==messageid).filter(MessageRead.userid==userid)
+
+        self.assertEqual(len(query.all()), 1)
+        result_obj = query.all()[0]
+        self.assertEqual(result_obj.messageid, messageid)
+        self.assertEqual(result_obj.userid, userid)

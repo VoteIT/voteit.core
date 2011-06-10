@@ -146,6 +146,7 @@ def init_sql_database(settings):
     #Touch all modules that are SQL-based
     from voteit.core.models.expression import Expression
     from voteit.core.models.message import Message
+    from voteit.core.models.message import MessageRead
     
     #Create tables
     RDB_Base.metadata.create_all(settings['rdb_engine'])
