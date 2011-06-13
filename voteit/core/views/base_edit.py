@@ -70,6 +70,11 @@ class BaseEdit(object):
             
             self.api.flash_messages.add(_(u"Successfully added"))
 
+            #Log entry
+            meeting = self.api.find_meeting(self.context)
+            if meeting:
+                self.api.logs.add(meeting.uid, '%s %s added' % (content_type, obj.title, ), tag='added', userid=self.api.userid)
+
             url = resource_url(obj, self.request)
             return HTTPFound(location=url)
 
@@ -110,6 +115,11 @@ class BaseEdit(object):
 
             if updated:
                 self.api.flash_messages.add(_(u"Successfully updated"))
+                
+                #Log entry
+                meeting = self.api.find_meeting(self.context)
+                if meeting:
+                    self.api.logs.add(meeting.uid, '%s %s updated' % (content_type, obj.title, ), tag='updated', userid=self.api.userid)
             else:
                 self.api.flash_messages.add(_(u"Nothing updated"))
 
@@ -146,6 +156,11 @@ class BaseEdit(object):
             del parent[self.context.__name__]
 
             self.api.flash_messages.add(_(u"Successfully deleted"))
+            
+            #Log entry
+            meeting = self.api.find_meeting(self.context)
+            if meeting:
+                self.api.logs.add(meeting.uid, '%s %s deleted' % (content_type, obj.title, ), tag='deleted', userid=self.api.userid)
 
             url = resource_url(parent, self.request)
             return HTTPFound(location=url)
@@ -189,6 +204,11 @@ class BaseEdit(object):
         
         messages = Messages(self.request)
         messages.add(self.api.userid, self.api.find_meeting(self.context).uid, "State change on %s to %s" % (self.context.title, state), 'state_change')
+        
+        #Log entry
+        meeting = self.api.find_meeting(self.context)
+        if meeting:
+            self.api.logs.add(meeting.uid, '%s changed state to %s' % (self.context.title, state, ), tag='state change', userid=self.api.userid)
 
         url = resource_url(self.context, self.request)
         return HTTPFound(location=url)

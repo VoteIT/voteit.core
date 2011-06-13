@@ -10,10 +10,10 @@
         </h2>
 		-->
 		<ul id="main_profile_tabs" class="tabs">
-		    <li id="user_messages" class="tab dropdown_menu">
+		    <!--li id="user_messages" class="tab dropdown_menu">
 				<a href="#" class="menu_header">Messages  &raquo;</a>
 		        <div tal:replace="structure api.messages.get_messages(userid=api.userid)">User messages</div>
-		    </li>
+		    </li-->
             <li class="tab dropdown_menu" tal:condition="api.addable_types|False">
             	<a href="#" class="menu_header">Content &raquo;</a>
                 <ul class="menu_body">

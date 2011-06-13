@@ -2,7 +2,6 @@ from pyramid.view import view_config
 
 from voteit.core.views.api import APIView
 from voteit.core.security import VIEW
-from voteit.core.models.message import Messages
 
 DEFAULT_TEMPLATE = "templates/base_view.pt"
 
@@ -17,7 +16,6 @@ class BaseView(object):
         self.response = {}
         self.response['api'] = self.api = APIView(context, request)
         self.response['show_content_listing'] = True
-        self.messages = Messages(request)
 
     @view_config(renderer=DEFAULT_TEMPLATE, permission=VIEW)
     def dynamic_view(self):
