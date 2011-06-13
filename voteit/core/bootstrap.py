@@ -38,4 +38,12 @@ def bootstrap_voteit(registry=None):
     #Add admin to group managers
     root.add_groups('admin', [ROLE_ADMIN])
     
+    #Add log tags
+    from voteit.core.models.Log import Tag
+    sql_session = registry.settings['rdb_session_factory']()
+    #FIXME: tags should be defined elswhere
+    for tag in ('added', 'updated', 'deleted', 'state change',):
+        _tag = Tag(tag)
+        sql_session.add(_tag)
+    
     return root

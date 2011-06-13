@@ -133,7 +133,9 @@ def init_sql_database(settings):
     from voteit.core.models.expression import Expression
     from voteit.core.models.message import Message
     from voteit.core.models.message import MessageRead
+    from voteit.core.models.log import log_tags
     from voteit.core.models.log import Log
+    from voteit.core.models.log import Tag
     
     #Create tables
     RDB_Base.metadata.create_all(settings['rdb_engine'])

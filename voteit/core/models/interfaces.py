@@ -341,10 +341,10 @@ class ILogs(Interface):
     def __init__(request):
         """ Object needs a request to adapt. """
 
-    def add(meetinguid, message, tag=None, userid=None):
+    def add(meetinguid, message, tags=None, userid=None):
         """ Add a log entry. """
         
-    def retrieve_entries(meetinguid, tag=None, userid=None):
+    def retrieve_entries(meetinguid, tags=None, userid=None):
         """ Retrieve a set of log entries in meetinguid. """
 
 

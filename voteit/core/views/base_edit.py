@@ -202,9 +202,6 @@ class BaseEdit(object):
         state = self.request.params.get('state')
         self.context.set_workflow_state(self.request, state)
         
-        messages = Messages(self.request)
-        messages.add(self.api.userid, self.api.find_meeting(self.context).uid, "State change on %s to %s" % (self.context.title, state), 'state_change')
-        
         #Log entry
         meeting = self.api.find_meeting(self.context)
         if meeting:
