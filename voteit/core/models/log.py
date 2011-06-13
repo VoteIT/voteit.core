@@ -61,9 +61,12 @@ class Logs(object):
     def add(self, meetinguid, message, tags=None, userid=None):
         session = self.request.sql_session
         
+        if not type(tags) == tuple:
+            tags = (tags, )
+        
         _tags = []
         for tag in tags:
-            _tag = session.query(Tag).filter_by(tag=tag).one()
+            _tag = session.query(Tag).filter(Tag.tag==tag).one()
             _tags.append(_tag)
         
         log = Log(meetinguid, message, _tags, userid)

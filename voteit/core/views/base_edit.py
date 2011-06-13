@@ -73,7 +73,7 @@ class BaseEdit(object):
             #Log entry
             meeting = self.api.find_meeting(self.context)
             if meeting:
-                self.api.logs.add(meeting.uid, '%s %s added' % (content_type, obj.title, ), tag='added', userid=self.api.userid)
+                self.api.logs.add(meeting.uid, '%s %s added' % (content_type, obj.title, ), tags='added', userid=self.api.userid)
 
             url = resource_url(obj, self.request)
             return HTTPFound(location=url)
@@ -119,7 +119,7 @@ class BaseEdit(object):
                 #Log entry
                 meeting = self.api.find_meeting(self.context)
                 if meeting:
-                    self.api.logs.add(meeting.uid, '%s %s updated' % (content_type, obj.title, ), tag='updated', userid=self.api.userid)
+                    self.api.logs.add(meeting.uid, '%s %s updated' % (content_type, self.context.title, ), tags='updated', userid=self.api.userid)
             else:
                 self.api.flash_messages.add(_(u"Nothing updated"))
 
@@ -152,15 +152,16 @@ class BaseEdit(object):
             if self.context is self.api.root:
                 raise Exception("Can't delete site root")
 
+            #Log entry
+            meeting = self.api.find_meeting(self.context)
+            if meeting:
+                self.api.logs.add(meeting.uid, '%s %s deleted' % (self.context.content_type, self.context.title, ), tags='deleted', userid=self.api.userid)
+
             parent = self.context.__parent__
             del parent[self.context.__name__]
 
             self.api.flash_messages.add(_(u"Successfully deleted"))
             
-            #Log entry
-            meeting = self.api.find_meeting(self.context)
-            if meeting:
-                self.api.logs.add(meeting.uid, '%s %s deleted' % (content_type, obj.title, ), tag='deleted', userid=self.api.userid)
 
             url = resource_url(parent, self.request)
             return HTTPFound(location=url)
@@ -205,7 +206,7 @@ class BaseEdit(object):
         #Log entry
         meeting = self.api.find_meeting(self.context)
         if meeting:
-            self.api.logs.add(meeting.uid, '%s changed state to %s' % (self.context.title, state, ), tag='state change', userid=self.api.userid)
+            self.api.logs.add(meeting.uid, 'changed state to %s on %s %s' % (state, self.context.content_type, self.context.title, ), tags='state change', userid=self.api.userid)
 
         url = resource_url(self.context, self.request)
         return HTTPFound(location=url)

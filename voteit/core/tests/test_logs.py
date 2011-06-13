@@ -122,7 +122,6 @@ class LogsTests(unittest.TestCase):
         obj = self._import_class()(self.request)
         self._add_mock_data(obj)
 
-        #FIXME: this will fail because of missing fetures
         self.assertEqual(len(obj.retrieve_entries('m1', tag='log')), 3)
 
 
