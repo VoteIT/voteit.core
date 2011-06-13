@@ -55,13 +55,12 @@ class DiscussionPost(BaseContent):
     title = property(_get_title, _set_title)
 
 
-@subscriber(IObjectAddedEvent)
+@subscriber(IDiscussionPost, IObjectAddedEvent)
 def discussion_post_added(event):
     """ Callback for when an object is added. This is used to do extra things,
         like adding hashtags, mentions, notifying users etc.
     """
-    #FIXME: Important! The global ZCA registry doesn't seem to work,
-    #so the repoze.folder events don't fire.
+    #FIXME: We'll add this later on
     pass
 
 
