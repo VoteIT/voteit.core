@@ -4,7 +4,6 @@ import colander
 import deform
 from zope.interface import implements
 from zope.component import getUtility
-from zope.component import getUtilitiesFor
 from pyramid.traversal import find_interface, find_root
 from pyramid.security import Allow, DENY_ALL, ALL_PERMISSIONS
 from BTrees.OOBTree import OOBTree
@@ -198,14 +197,17 @@ class Ballots(object):
             self.ballots[value] = 1
 
 
-def construct_schema(**kwargs):
-    context = kwargs.get('context', None)
+def construct_schema(context=None, request=None, **kwargs):
     if context is None:
         KeyError("'context' is a required keyword for Poll schemas. See construct_schema in the poll module.")
+    if request is None:
+        KeyError("'request' is a required keyword for Poll schemas. See construct_schema in the poll module.")
+
 
     #Add all selectable plugins to schema. This chooses the poll method to use
     plugin_choices = set()
-    for (name, plugin) in getUtilitiesFor(IPollPlugin):
+
+    for (name, plugin) in request.registry.getUtilitiesFor(IPollPlugin):
         plugin_choices.add((name, plugin.title))
 
     #Proposals to vote on

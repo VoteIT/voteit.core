@@ -1,10 +1,13 @@
 from pyramid.config import Configurator
+from pyramid.events import ApplicationCreated
+from pyramid.events import subscriber
 from pyramid.i18n import TranslationStringFactory
 from pyramid.authorization import ACLAuthorizationPolicy
 from pyramid.authentication import AuthTktAuthenticationPolicy
 from pyramid.session import UnencryptedCookieSessionFactoryConfig
 from repoze.zodbconn.finder import PersistentApplicationFinder
 from zope.interface.verify import verifyClass
+
 
 from sqlalchemy import create_engine
 from sqlalchemy import MetaData
@@ -44,15 +47,19 @@ def main(global_config, **settings):
 
     init_sql_database(settings)
     
+#    config = Configurator(registry=registry)
+#    config.setup_registry(settings=settings,
+#                          root_factory=get_root,
+#                          authentication_policy=authn_policy,
+#                          authorization_policy=authz_policy,
+#                          session_factory = sessionfact,)
     config = Configurator(settings=settings,
                           root_factory=get_root,
                           authentication_policy=authn_policy,
                           authorization_policy=authz_policy,
                           session_factory = sessionfact,)
-
-    #Enable zcml usage
-    config.include('pyramid_zcml')
     
+
     config.add_static_view('static', '%s:static' % PROJECTNAME)
     config.add_static_view('deform', 'deform:static')
 
@@ -62,6 +69,10 @@ def main(global_config, **settings):
     #config.add_translation_dirs('%s:locale/' % PROJECTNAME)
 
     config.scan(PROJECTNAME)
+
+    #Enable ZCML usage
+    #config.include('pyramid_zcml')
+    #config.load_zcml('voteit.core:configure.zcml')
         
     #Include content types and their utility IContentUtility
     config.registry.registerUtility(ContentUtility(), IContentUtility)
@@ -80,7 +91,8 @@ def main(global_config, **settings):
         for poll_plugin in poll_plugins.strip().splitlines():
             config.include(poll_plugin)
 
-    config.load_zcml('voteit.core:configure.zcml')
+
+    config.hook_zca()
 
     return config.make_wsgi_app()
 
@@ -139,4 +151,20 @@ def init_sql_database(settings):
     
     #Create tables
     RDB_Base.metadata.create_all(settings['rdb_engine'])
+
+
+def include_zcml(config):
+    config.include('pyramid_zcml')
+    config.load_zcml('voteit.core:configure.zcml')
+    config.commit()
+
+
+@subscriber(ApplicationCreated)
+def post_application_config(event):
+    """ The zope.component registry must be global if we want to hook components from
+        non-Pyramid packages. This stage ensures that zopes getSiteManager method
+        will actually return the VoteIT registry rather than something else.
+    """
+    config = Configurator(registry=event.app.registry)
+    include_zcml(config)
 
