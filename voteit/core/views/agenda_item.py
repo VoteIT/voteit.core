@@ -1,7 +1,9 @@
 from pyramid.view import view_config
 from pyramid.url import resource_url
+from pyramid.security import has_permission
 
 from deform import Form
+import colander
 
 from voteit.core.views.base_view import BaseView
 from voteit.core.models.interfaces import IAgendaItem
@@ -28,26 +30,31 @@ class AgendaItemView(BaseView):
         
         ci = self.api.content_info
         url = resource_url(self.context, self.request)
-
+        
         #Proposal form
-        prop_schema = ci['Proposal'].schema(context=self.context, request=self.request, type='add')
-        self.prop_form = Form(prop_schema, action=url+"@@add?content_type=Proposal", buttons=('add',))
+        if has_permission(ci['Proposal'].add_permission, self.context, self.request):
+            prop_schema = ci['Proposal'].schema(context=self.context, request=self.request, type='add')
+            prop_form = Form(prop_schema, action=url+"@@add?content_type=Proposal", buttons=('add',))
+        else:
+            prop_form = Form(colander.Schema(), buttons=())
 
         #Discussion form
-        discussion_schema = ci['DiscussionPost'].schema(context=self.context, request=self.request, type='add')
-        self.discussion_form = Form(discussion_schema, action=url+"@@add?content_type=DiscussionPost", buttons=('add',))
-        
+        if has_permission(ci['DiscussionPost'].add_permission, self.context, self.request):
+            discussion_schema = ci['DiscussionPost'].schema(context=self.context, request=self.request, type='add')
+            discussion_form = Form(discussion_schema, action=url+"@@add?content_type=DiscussionPost", buttons=('add',))
+        else:
+            discussion_form = Form(colander.Schema(), buttons=())
+
         #Join resources
-        form_resources = self.prop_form.get_widget_resources()
-        for (k, v) in self.discussion_form.get_widget_resources().items():
+        form_resources = prop_form.get_widget_resources()
+        for (k, v) in discussion_form.get_widget_resources().items():
             if k in form_resources:
                 form_resources[k].extend(v)
             else:
                 form_resources[k] = v
         
-        
         self.response['form_resources'] = form_resources
-        self.response['proposal_form'] = self.prop_form.render()
-        self.response['discussion_form'] = self.discussion_form.render()
+        self.response['proposal_form'] = prop_form.render()
+        self.response['discussion_form'] = discussion_form.render()
 
         return self.response
