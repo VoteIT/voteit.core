@@ -97,6 +97,13 @@
             permission="Moderate Meeting"
         />
 
+        <transition
+            name="retracted_to_published"
+            from_state="retracted"
+            to_state="published"
+            permission="Moderate Meeting"
+        />
+
 	</workflow>
 
 </configure>
