@@ -1,3 +1,4 @@
+import re
 from uuid import uuid4
 from datetime import datetime
 
@@ -133,3 +134,24 @@ class BaseContent(Folder, SecurityAware):
             return getattr(obj, sort_on)
 
         return tuple(sorted(results, key = _sorter, reverse = sort_reverse))
+
+#FIXME: This should probably be done on the field level instead
+#    def transform_mentions(self, key, base_url):
+#        text = self.get_field_value(key)
+#        if text is None:
+#            return ()
+#        
+#        matched_userids = set()
+#        pattern = re.compile(r'(\A|\s)@(\w+)')
+#        
+#        matches = pattern.findall(text)
+#        for match in matches:
+#            #Second position is the userid
+#            matched_userids.add(match[1])
+#        
+#        if matches:
+#            transformed = pattern.sub(r'\1<a href="%s\2">@\2</a>' % base_url, text)
+#            self.set_field_value(key, transformed)
+#            return matched_userids
+#        
+#        return ()
