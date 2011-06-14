@@ -18,7 +18,11 @@ class WorkflowAwareTests(unittest.TestCase):
         """ WorkflowAware is a mixin class. We'll use an Agenda item to test. """
         from voteit.core.models.agenda_item import AgendaItem
         return AgendaItem()
-    
+
+    def _registerEventListener(self, listener, iface):
+        from zope.interface import Interface
+        self.config.registry.registerHandler(listener, (iface,))
+
     def test_verify_interface(self):
         from voteit.core.models.interfaces import IWorkflowAware
         self.assertTrue(verifyObject(IWorkflowAware, self._make_obj()))
@@ -32,3 +36,17 @@ class WorkflowAwareTests(unittest.TestCase):
         except WorkflowError:
             pass
 
+    def test_workflow_event_on_state_change(self):
+        from voteit.core.interfaces import IWorkflowStateChange
+
+        events = []
+        def listener(event):
+            events.append(event)
+        self._registerEventListener(listener, IWorkflowStateChange)
+        
+        obj = self._make_obj()
+        request = testing.DummyRequest()
+        obj.set_workflow_state(request, 'inactive')
+        
+        self.assertTrue(IWorkflowStateChange.providedBy(events[0]))
+        

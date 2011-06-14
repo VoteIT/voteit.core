@@ -46,14 +46,13 @@ class AgendaItemTests(unittest.TestCase):
         """ Published proposals should be marked as 'unhandled' when
             an AI closes.
         """
-        request = testing.DummyRequest()
         obj = self._make_obj()
+        request = testing.DummyRequest()
         obj['proposal'] = self._make_proposal() #Should be published as initial state
         obj.set_workflow_state(request, 'inactive')
         obj.set_workflow_state(request, 'active')
         obj.set_workflow_state(request ,'closed')
         self.assertEqual(obj['proposal'].get_workflow_state(), u'unhandled')
-
 
     def test_workflow_closed_state_active_poll_exception(self):
         """ When you try to close an agenda items that has an ongoing
