@@ -104,6 +104,13 @@
             permission="Moderate Meeting"
         />
 
+        <transition
+            name="voting_to_published"
+            from_state="voting"
+            to_state="published"
+            permission="Moderate Meeting"
+        />
+
 	</workflow>
 
 </configure>
