@@ -10,6 +10,7 @@ from voteit.core import register_content_info
 from voteit.core.models.base_content import BaseContent
 from voteit.core.models.interfaces import IProposal, IAgendaItem
 from voteit.core.models.workflow_aware import WorkflowAware
+from voteit.core.validators import html_string_validator
 
 
 ACL = {}
@@ -73,7 +74,8 @@ class Proposal(BaseContent, WorkflowAware):
 def construct_schema(**kwargs):
     class ProposalSchema(colander.MappingSchema):
         title = colander.SchemaNode(colander.String(),
-                                    title = _(u"Proposal"),)
+                                    title = _(u"Proposal"),
+                                    validator=html_string_validator,)
     return ProposalSchema()
 
 

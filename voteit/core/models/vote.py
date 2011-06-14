@@ -8,6 +8,7 @@ from voteit.core import VoteITMF as _
 from voteit.core.models.base_content import BaseContent
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IVote
+from voteit.core.validators import html_string_validator
 
 ACL = {}
 ACL['ongoing'] = [(Allow, security.ROLE_OWNER, (security.EDIT, security.VIEW, security.DELETE,)),

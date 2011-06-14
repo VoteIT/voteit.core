@@ -11,7 +11,7 @@ from voteit.core import security
 from voteit.core import register_content_info
 from voteit.core.models.interfaces import IDiscussionPost
 from voteit.core.models.base_content import BaseContent
-
+from voteit.core.validators import html_string_validator
 
 ACL =  {}
 ACL['open'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, security.DELETE, )),
@@ -67,7 +67,8 @@ def discussion_post_added(event):
 def construct_schema(**kwargs):
     class Schema(colander.Schema):
         text = colander.SchemaNode(colander.String(),
-                                    title = _(u"Text"),)
+                                    title = _(u"Text"),
+                                    validator=html_string_validator,)
     return Schema()
 
 

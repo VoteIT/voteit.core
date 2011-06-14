@@ -65,7 +65,7 @@
 		            <h3 tal:content="context.title">Title</h3>
 		            <div class="column">
                         <tal:creators tal:replace="structure api.get_creators_info(context.creators, request)">Creators</tal:creators>
-                        <div tal:condition="context.description" tal:content="context.description">Description</div>
+                        <div tal:condition="context.description" tal:content="structure api.nl2br(context.description)">Description</div>
                     </div>
                 </div>
                 <div metal:define-slot="page_info"

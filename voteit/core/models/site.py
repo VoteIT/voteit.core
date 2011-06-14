@@ -8,6 +8,7 @@ from voteit.core import security
 from voteit.core.models.interfaces import ISiteRoot
 from voteit.core.models.base_content import BaseContent
 from voteit.core.models.users import Users
+from voteit.core.validators import html_string_validator
 
 
 class SiteRoot(BaseContent):
@@ -30,7 +31,8 @@ def construct_schema(**kwargs):
     class SiteRootSchema(colander.MappingSchema):
         title = colander.SchemaNode(colander.String())
         description = colander.SchemaNode(colander.String(),
-                                          missing = u"",)
+                                          missing = u"",
+                                          validator=html_string_validator,)
         
     return SiteRootSchema()
 

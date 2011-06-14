@@ -22,6 +22,7 @@ from voteit.core.models.interfaces import IUsers
 from voteit.core import VoteITMF as _
 from voteit.core import security
 from voteit.core.validators import password_validation
+from voteit.core.validators import html_string_validator
 
 
 def get_sha_password(password):
@@ -130,17 +131,19 @@ def construct_schema(**kwargs):
     #Common schema nodes
     password_node = colander.SchemaNode(
                         colander.String(),
-                        validator=password_validation,
+                        validator=colander.All(password_validation, html_string_validator,),
                         widget=deform.widget.CheckedPasswordWidget(size=20),
                         title=_('Password'))
     email_node = colander.SchemaNode(colander.String(),
                                      title=_(u"Email"),
-                                     validator=_validate_email,)
+                                     validator=colander.All(_validate_email, html_string_validator,),)
     first_name_node = colander.SchemaNode(colander.String(),
-                                          title=_(u"First name"),)
+                                          title=_(u"First name"),
+                                          validator=html_string_validator,)
     last_name_node = colander.SchemaNode(colander.String(),
                                          title=_(u"Last name"),
-                                         missing=u"",)
+                                         missing=u"",
+                                         validator=html_string_validator,)
 
 
     if type == 'login':
@@ -192,7 +195,8 @@ def construct_schema(**kwargs):
                 title = _(u"About you"),
                 description = _(u"Please note that anything you type here will be visible to all registered users."),
                 widget = deform.widget.TextAreaWidget(rows=10, cols=60),
-                missing=u"")
+                missing=u"",
+                validator=html_string_validator,)
         return EditUserSchema()
 
     if type == 'change_password':

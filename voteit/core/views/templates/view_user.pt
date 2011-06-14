@@ -9,7 +9,7 @@
 		<a tal:attributes="href api.user_profile_url + '@@change_password'">Change password</a>
 	</div>
 	<div>Email: <span tal:content="context.get_field_value('email')"></span></div>
-	<div>Biography: <span tal:content="context.get_field_value('biography')"></span></div>
+	<div>Biography: <span tal:content="structure api.nl2br(context.get_field_value('biography'))"></span></div>
 </div>
 </body>
 </html>
