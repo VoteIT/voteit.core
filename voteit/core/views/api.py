@@ -16,6 +16,7 @@ from voteit.core.models.log import Logs
 from voteit.core.views.macros import FlashMessages
 from voteit.core.views.expressions import ExpressionsView
 from voteit.core.views.messages import MessagesView
+from webhelpers.html.converters import nl2br
 
 
 class APIView(object):
@@ -51,6 +52,8 @@ class APIView(object):
         self.expressions = ExpressionsView(request)
         
         self.logs = Logs(request)
+        
+        self.nl2br = nl2br
 
     def _get_user_cache(self):
         cache = getattr(self.request, '_user_lookup_cache', None)

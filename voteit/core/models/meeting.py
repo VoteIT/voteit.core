@@ -11,6 +11,7 @@ from voteit.core.models.base_content import BaseContent
 from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.workflow_aware import WorkflowAware
+from voteit.core.validators import html_string_validator
 
 
 ACL = {}
@@ -75,7 +76,7 @@ def construct_schema(**kwargs):
         class RequestAccessSchema(colander.Schema):
             message = colander.SchemaNode(colander.String(),
                                           title = _(u"Message"),
-                                          validator = colander.Length(5, 999),
+                                          validator = colander.All(colander.Length(5, 999), html_string_validator,),
                                           default = _(u"Knock knock - Please let me access the meeting."),
                                           widget = deform.widget.TextAreaWidget(rows=5, cols=40),)
         return RequestAccessSchema()
@@ -92,7 +93,7 @@ def construct_schema(**kwargs):
         meeting_mail_address = colander.SchemaNode(colander.String(),
                                                 title = _(u"Email address to send from"),
                                                 default = _(u"noreply@somehost.voteit"),
-                                                validator = colander.Email(msg = _(u"Invalid email address")),)
+                                                validator = colander.All(colander.Email(msg = _(u"Invalid email address")), html_string_validator,),)
     return MeetingSchema()
 
 def includeme(config):

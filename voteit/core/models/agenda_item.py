@@ -3,6 +3,7 @@ import deform
 from zope.interface import implements
 from pyramid.traversal import find_interface
 from pyramid.security import Allow, DENY_ALL, ALL_PERMISSIONS
+from pyramid.threadlocal import get_current_request
 
 from voteit.core import security
 from voteit.core import VoteITMF as _
@@ -12,8 +13,7 @@ from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import IProposal
 from voteit.core.models.interfaces import IPoll
-from pyramid.threadlocal import get_current_request
-
+from voteit.core.validators import html_string_validator
 
 ACL = {}
 ACL['private'] = [(Allow, security.ROLE_ADMIN, security.REGULAR_ADD_PERMISSIONS),
@@ -53,9 +53,6 @@ class AgendaItem(BaseContent, WorkflowAware):
 
         raise AttributeError("Go fetch parents acl")
 
-
-
-
 def construct_schema(**kwargs):
     context = kwargs.get('context', None)
     if context is None:
@@ -91,11 +88,14 @@ def construct_schema(**kwargs):
     
     class AgendaItemSchema(colander.MappingSchema):
         title = colander.SchemaNode(colander.String(),
-                                    title = _(u"Title"),)
+            title = _(u"Title"),
+            validator=html_string_validator,
+        )
         description = colander.SchemaNode(
             colander.String(),
             title = _(u"Description"),
             widget=deform.widget.TextAreaWidget(rows=10, cols=60),
+            validator=html_string_validator,
         )
         agenda_item_id = colander.SchemaNode(
             colander.String(),

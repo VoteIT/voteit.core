@@ -24,6 +24,7 @@ requires = [
     'zope.testbrowser',
     'sqlalchemy',
     'zope.sqlalchemy',
+    'webhelpers',
     ]
 
 setup(name='voteit.core',

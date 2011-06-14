@@ -20,6 +20,7 @@ from voteit.core.models.interfaces import IUser
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import ISiteRoot
 from voteit.core.models.workflow_aware import WorkflowAware
+from voteit.core.validators import html_string_validator
 
 SELECTABLE_ROLES = (security.ROLE_MODERATOR,
                     security.ROLE_PARTICIPANT,
@@ -147,7 +148,9 @@ def construct_schema(context=None, request=None, type=None):
             #FIXME: Validate that an invite doesn't already exist.
             emails = colander.SchemaNode(colander.String(),
                                          title = _(u"Email addresses to give the role above."),
-                                         widget = deform.widget.TextAreaWidget(rows=5, cols=40),)
+                                         widget = deform.widget.TextAreaWidget(rows=5, cols=40),
+                                         validator = html_string_validator,
+            )
         return AddSchema()
     
     if type == 'manage':
@@ -157,6 +160,7 @@ def construct_schema(context=None, request=None, type=None):
                 deform.Set(),
                 widget = deform.widget.CheckboxChoiceWidget(values=email_choices),
                 title = _(u"Current invitations"),
+                validator = html_string_validator,
             )
         return ManageSchema()
 

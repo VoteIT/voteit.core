@@ -5,6 +5,7 @@ from voteit.core import VoteITMF as _
 from voteit.core.models.base_content import BaseContent
 from voteit.core.models.interfaces import IUser
 from voteit.core.models.interfaces import IUsers
+from voteit.core.validators import html_string_validator
 
 
 class Users(BaseContent):
@@ -23,8 +24,10 @@ class Users(BaseContent):
 
 def construct_schema(**kwargs):
     class UsersSchema(colander.Schema):
-        title = colander.SchemaNode(colander.String())
-        description = colander.SchemaNode(colander.String())
+        title = colander.SchemaNode(colander.String(),
+            validator=html_string_validator,)
+        description = colander.SchemaNode(colander.String(),
+            validator=html_string_validator,)
     return UsersSchema()
 
 

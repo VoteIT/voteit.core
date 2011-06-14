@@ -20,6 +20,7 @@ from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IPollPlugin
 from voteit.core.models.interfaces import IVote
 from voteit.core.views.macros import FlashMessages
+from voteit.core.validators import html_string_validator
 
 
 ACL = {}
@@ -234,8 +235,10 @@ def construct_schema(context=None, request=None, **kwargs):
 
     #base schema
     class PollSchema(colander.MappingSchema):
-        title = colander.SchemaNode(colander.String())
-        description = colander.SchemaNode(colander.String())
+        title = colander.SchemaNode(colander.String(),
+            validator=html_string_validator,)
+        description = colander.SchemaNode(colander.String(),
+            validator=html_string_validator,)
         #FIXME: Add later
 #        start = colander.SchemaNode(colander.DateTime(),
 #                                    title = _(u"Start time"),
