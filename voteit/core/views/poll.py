@@ -51,7 +51,7 @@ class PollView(object):
                 self.response['form'] = e.render()
                 return self.response
             
-            self.context.set_field_appstruct(appstruct)
+            self.context.set_poll_settings(appstruct)
             
             url = resource_url(self.context, self.request)
             

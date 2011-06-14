@@ -45,7 +45,7 @@
                     <div class="listing_block">
                         <tal:creators tal:replace="structure api.get_creators_info(proposal.creators, request)">Creators</tal:creators>
                         <span>propose:</span>
-                        <span class="body" tal:content="proposal.title">Title</span>
+                        <span class="body" tal:content="structure proposal.title">Title</span>
                         
                         <div tal:define="state_id proposal.get_workflow_state()">
                             <span>State:</span>

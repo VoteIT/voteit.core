@@ -55,13 +55,12 @@ class DiscussionPost(BaseContent):
     title = property(_get_title, _set_title)
 
 
-@subscriber(IDiscussionPost, IObjectAddedEvent)
-def discussion_post_added(event):
-    """ Callback for when an object is added. This is used to do extra things,
-        like adding hashtags, mentions, notifying users etc.
-    """
-    #FIXME: We'll add this later on
-    pass
+#@subscriber(IDiscussionPost, IObjectAddedEvent)
+#def discussion_post_added(obj, event):
+#    """ Callback for when an object is added. This is used to do extra things,
+#        like adding hashtags, mentions, notifying users etc.
+#    """
+    #FIXME: implement
 
 
 def construct_schema(**kwargs):

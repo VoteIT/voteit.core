@@ -168,6 +168,9 @@ class IPoll(Interface):
     """ Poll content type. """
     proposal_uids = Attribute("Contains a set of UIDs for all proposals this poll is about.")
     poll_plugin_name = Attribute("Returns the name of the selected voting utility.")
+    ballots = Attribute("All ballots, set here after the poll has closed.")
+    poll_result = Attribute("Result data that the poll plugin will set. Used for rendering the actual result.")
+    poll_settings = Attribute("A dict of settings that the poll plugin might set from it's config_schema.")
 
     def get_poll_plugin():
         """ Preform a poll plugin lookup. Returns the poll plugin that is
@@ -183,32 +186,18 @@ class IPoll(Interface):
         """
 
     def render_poll_result():
-        """ Render poll result. Calls plugin to calculate result.
+        """ Render poll result. Delegates this to plugin.
         """
 
     def close_poll():
         """ Close the poll, calculate and store the result.
         """
 
-    def set_raw_poll_data(value):
-        """ Store raw poll data. """
-    
-    def get_raw_poll_data():
-        """ Get raw poll data. """
-
-    def set_poll_result(value):
-        """ Set poll result - as defined by the poll plugin.
-        """
-    
-    def get_poll_result():
-        """ Get poll result - usually only called by the poll plugin since
-            it knows how to make sense of it.
-        """
-
     def get_proposal_by_uid(uid):
         """ Return a proposal by its uid. Raises KeyError if it isn't found, since
             it shouldn't be used with uids that don't exist.
         """
+
 
 class IVote(Interface):
     """ Vote content type.
@@ -231,7 +220,8 @@ class IPollPlugin(Interface):
     title = Attribute("Readable title that will appear when you select which"
                       "poll plugin to use for a poll.")
 
-    def get_vote_schema(poll):
+
+    def get_vote_schema():
         """ Return the schema of how a vote should be structured.
             This is used to render a voting form.
         """
@@ -241,24 +231,25 @@ class IPollPlugin(Interface):
             voteit.core.models.vote.Vote class.
         """
         
-    def get_settings_schema(poll):
+    def get_settings_schema():
         """ Get an instance of the schema used to render a form for editing settings.
         """
 
-    def get_result(ballots, **settings):
-        """ Get the result.
-            Settings should be keywords that are based on the configuration form for the current plugin.
-            See get_settings_schema.
+    def handle_close():
+        """ Handle closing of the poll.
         """
 
-    def render_result(poll):
+    def render_result():
         """ Return rendered html with result display. Called by the poll view
             when the poll has finished.
         """
 
-    def close(poll):
-        """ This gets called when a poll has finished. It should return the winning proposals uids as a list.
-            (If it's only one winner, just wrap it in a list)
+    def change_states_of():
+        """ This gets called when a poll has finished.
+            It returns a dictionary with proposal uid as key and new state as value.
+            Like: {'<uid>':'approved', '<uid>', 'denied'}
+            It's not required to do, but if it isn't done, the proposals won't change state
+            and you have to do it manually
         """
         
 class IContentTypeInfo(Interface):

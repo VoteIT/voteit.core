@@ -3,12 +3,12 @@ from datetime import datetime
 import colander
 import deform
 from zope.interface import implements
-from zope.component import getUtility
 from pyramid.traversal import find_interface, find_root
 from pyramid.security import Allow, DENY_ALL, ALL_PERMISSIONS
-from BTrees.OOBTree import OOBTree
+from BTrees.OIBTree import OIBTree
 from pyramid.threadlocal import get_current_request
 from repoze.workflow.workflow import WorkflowError
+from zope.component import getAdapter
 
 from voteit.core import security
 from voteit.core import register_content_info
@@ -71,7 +71,6 @@ class Poll(BaseContent, WorkflowAware):
             return ACL['ongoing']
         return ACL['closed'] #As default - don't traverse to parent
     
-    #proposals
     def _get_proposal_uids(self):
         return self.get_field_value('proposals', ())
 
@@ -80,17 +79,31 @@ class Poll(BaseContent, WorkflowAware):
 
     proposal_uids = property(_get_proposal_uids, _set_proposal_uids)
 
-    def set_raw_poll_data(self, value):
-        self._raw_poll_data = value
+    def _get_poll_settings(self):
+        return getattr(self, '_poll_settings', {})
     
-    def get_raw_poll_data(self):
-        return getattr(self, '_raw_poll_data', None)
+    def _set_poll_settings(self, value):
+        if not isinstance(value, dict):
+            raise TypeError("poll_settings attribute should be a dict")
+        self._poll_settings = value
+    
+    poll_settings = property(_get_poll_settings, _set_poll_settings)
 
-    def set_poll_result(self, value):
-        self._poll_result = value
+    def _get_ballots(self):
+        return getattr(self, '_ballots', None)
     
-    def get_poll_result(self):
+    def _set_ballots(self, value):
+        self._ballots = value
+        
+    ballots = property(_get_ballots, _set_ballots)
+
+    def _get_poll_result(self):
         return getattr(self, '_poll_result', None)
+    
+    def _set_poll_result(self, value):
+        self._poll_result = value
+        
+    poll_result = property(_get_poll_result, _set_poll_result)
 
     @property
     def poll_plugin_name(self):
@@ -99,7 +112,7 @@ class Poll(BaseContent, WorkflowAware):
         return self.get_field_value('poll_plugin')
 
     def get_poll_plugin(self):
-        return getUtility(IPollPlugin, name = self.poll_plugin_name)
+        return getAdapter(self, name = self.poll_plugin_name, interface = IPollPlugin)
 
     def get_proposal_objects(self):
         agenda_item = find_interface(self, IAgendaItem)
@@ -119,64 +132,58 @@ class Poll(BaseContent, WorkflowAware):
         """ Returns userids of all users who've voted. """
         userids = [x.creators[0] for x in self.get_all_votes()]
         return frozenset(userids)
-    
-    def get_ballots(self):
-        """ Returns unique ballots and their counts. In the format:
-            [{'ballot':x,'count':y}, <etc...>]
-            The x in ballot can be any type of object. It's just what
-            this polls plugin considers to be a vote.
-        """
+
+    def _calculate_ballots(self):
         ballot_counter = Ballots()
         for vote in self.get_all_votes():
             ballot_counter.add(vote.get_vote_data())
-        return ballot_counter.get_result()
+        self.ballots = ballot_counter.result()
 
     def close_poll(self):
         """ Close the poll. """
-        request = get_current_request() #This is an exception - won't be called many times.
+        request = get_current_request() #Since this is only used once per poll it should be okay
         fm = FlashMessages(request)
         
-        ballots = self.get_ballots()
-        self.set_raw_poll_data(ballots)
+        self._calculate_ballots()
         
         poll_plugin = self.get_poll_plugin()
+        poll_plugin.handle_close()
         
-        self.set_poll_result(poll_plugin.get_result(ballots))
-        winner_uids = poll_plugin.close(self)
-        
-        for uid in self.proposal_uids:
+        handle_uids = poll_plugin.change_states_of()
+
+        for (uid, state) in handle_uids.items():
+            if uid not in self.proposal_uids:
+                raise ValueError("The poll plugins close() method returned a uid that doesn't exist in this poll.")
             proposal = self.get_proposal_by_uid(uid)
-            #Set approved
-            if uid in winner_uids:
-                try:
-                    proposal.set_workflow_state(request, 'approved')
-                except WorkflowError:
-                    msg = _(u"Proposal with uid '%s' couldn't be set as approved. You should do this manually." % proposal.uid)
-                    fm.add(msg, type='error')
-            #Set denied
+            
+            #Adjust state?
+            if proposal.get_workflow_state() == state:
+                msg = _(u"Proposal '%s' already in state %s" % (proposal.__name__, state))
+                fm.add(msg)
             else:
                 try:
-                    proposal.set_workflow_state(request, 'denied')
+                    proposal.set_workflow_state(request, state)
+                    msg = _(u"Proposal '%s' set as %s" % (proposal.__name__, state))
+                    fm.add(msg)
                 except WorkflowError:
-                    msg = _(u"Proposal with uid '%s' couldn't be set as denied. You should do this manually." % proposal.uid)
+                    msg = _(u"Proposal with id '%s' couldn't be set as %s. You should do this manually." % (proposal.__name__, state))
                     fm.add(msg, type='error')
         
-        msg = _(u"Poll closed. Proposals have been adjusted as approved or denied depending on outcome of the poll.")
+        msg = _(u"Poll closed. Proposals might have been adjusted as approved or denied depending on outcome of the poll.")
         fm.add(msg)
 
     def render_poll_result(self):
         """ Render poll result. Calls plugin to calculate result.
         """
-        ballots = self.get_ballots()
-        poll_plugin = getUtility(IPollPlugin, name = self.poll_plugin_name)
-        return poll_plugin.render_result(self)
+        poll_plugin = self.get_poll_plugin()
+        return poll_plugin.render_result()
 
     def get_proposal_by_uid(self, uid):
         for prop in self.get_proposal_objects():
             if prop.uid == uid:
                 return prop
         raise KeyError("No proposal found with UID '%s'" % uid)
-        
+
 
 class Ballots(object):
     """ Simple object to help counting votes. It's not addable anywhere.
@@ -184,12 +191,11 @@ class Ballots(object):
     """
 
     def __init__(self):
-        self.ballots = OOBTree()
+        self.ballots = OIBTree()
 
-    def get_result(self):
-        """ Return data formated as a dictionary. """
-        return [{'ballot':x,'count':y} for x, y in self.ballots.items()]
-    
+    def result(self):
+        return tuple( sorted( self.ballots.iteritems() ) )
+            
     def add(self, value):
         """ Add a dict of results - a ballot - to the pool. Append and increase counter. """
         if value in self.ballots:
@@ -208,7 +214,11 @@ def construct_schema(context=None, request=None, **kwargs):
     #Add all selectable plugins to schema. This chooses the poll method to use
     plugin_choices = set()
 
-    for (name, plugin) in request.registry.getUtilitiesFor(IPollPlugin):
+    #FIXME: The new object should probably be sent to construct schema
+    #for now, we can fake this
+    poll = Poll()
+
+    for (name, plugin) in request.registry.getAdapters([poll], IPollPlugin):
         plugin_choices.add((name, plugin.title))
 
     #Proposals to vote on
@@ -274,5 +284,5 @@ def planned_poll_callback(content, info):
     fm.add(msg)
     if count:
         #FIXME: Translation mappings
-        msg = _(u"%s proposals were set in the 'locked for vote' state. They can no longer be edited or retracted." % count)
+        msg = _(u"%s selected proposals were set in the 'locked for vote' state. They can no longer be edited or retracted by normal users." % count)
         fm.add(msg)
