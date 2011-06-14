@@ -1,4 +1,7 @@
 from zope.interface import implements
+from zope.component import adapts
+
+from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IPollPlugin
 
 
@@ -8,4 +11,4 @@ class PollPlugin(object):
         See IPollPlugin for documentation.
     """
     implements(IPollPlugin)
-    
+    adapts(IPoll)

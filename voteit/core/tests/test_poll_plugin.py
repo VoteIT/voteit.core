@@ -38,11 +38,15 @@ class PollPluginTests(unittest.TestCase):
         """ Register example plugin that ships with voteit. """ 
         from voteit.core import register_poll_plugin
         from voteit.core.models.interfaces import IPollPlugin
+        from voteit.core.models.poll import Poll
+        
         registry = get_current_registry()
         good_cls = self._example_plugin_class()
         register_poll_plugin(good_cls, verify=0, registry=registry)
         name = good_cls.name
         
-        util = queryUtility(IPollPlugin, name = name)
-        self.failUnless(util)
-        self.assertTrue(verifyObject(IPollPlugin, util))
+        poll = Poll()
+
+        poll_plugin = registry.getAdapter(poll, name = name, interface = IPollPlugin)
+
+        self.failUnless( verifyObject(IPollPlugin, poll_plugin) )

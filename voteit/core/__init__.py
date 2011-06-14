@@ -24,6 +24,7 @@ RDB_Base = declarative_base()
 #voteit.core package imports
 from voteit.core.models.content_utility import ContentUtility
 from voteit.core.models.interfaces import IContentUtility
+from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IPollPlugin
 from voteit.core.security import groupfinder
 
@@ -115,7 +116,7 @@ def register_poll_plugin(plugin_class, verify=True, registry=None):
         verifyClass(IPollPlugin, plugin_class)
     if registry is None:
         raise ValueError("Missing required keyword argument registry")
-    registry.registerUtility(plugin_class(), IPollPlugin, name = plugin_class.name)
+    registry.registerAdapter(plugin_class, (IPoll,), IPollPlugin, plugin_class.name)
 
 
 def register_content_info(schema, type_class, verify=True, registry=None):

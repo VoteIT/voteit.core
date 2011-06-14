@@ -231,7 +231,7 @@ class IPollPlugin(Interface):
     title = Attribute("Readable title that will appear when you select which"
                       "poll plugin to use for a poll.")
 
-    def get_vote_schema(poll):
+    def get_vote_schema():
         """ Return the schema of how a vote should be structured.
             This is used to render a voting form.
         """
@@ -241,7 +241,7 @@ class IPollPlugin(Interface):
             voteit.core.models.vote.Vote class.
         """
         
-    def get_settings_schema(poll):
+    def get_settings_schema():
         """ Get an instance of the schema used to render a form for editing settings.
         """
 
@@ -251,14 +251,17 @@ class IPollPlugin(Interface):
             See get_settings_schema.
         """
 
-    def render_result(poll):
+    def render_result():
         """ Return rendered html with result display. Called by the poll view
             when the poll has finished.
         """
 
-    def close(poll):
-        """ This gets called when a poll has finished. It should return the winning proposals uids as a list.
-            (If it's only one winner, just wrap it in a list)
+    def change_states_of():
+        """ This gets called when a poll has finished.
+            It returns a dictionary with proposal uid as key and new state as value.
+            Like: {'<uid>':'approved', '<uid>', 'denied'}
+            It's not required to do, but if it isn't done, the proposals won't change state
+            and you have to do it manually
         """
         
 class IContentTypeInfo(Interface):

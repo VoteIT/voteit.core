@@ -3,12 +3,12 @@ from datetime import datetime
 import colander
 import deform
 from zope.interface import implements
-from zope.component import getUtility
 from pyramid.traversal import find_interface, find_root
 from pyramid.security import Allow, DENY_ALL, ALL_PERMISSIONS
 from BTrees.OOBTree import OOBTree
 from pyramid.threadlocal import get_current_request
 from repoze.workflow.workflow import WorkflowError
+from zope.component import getAdapter
 
 from voteit.core import security
 from voteit.core import register_content_info
@@ -98,7 +98,7 @@ class Poll(BaseContent, WorkflowAware):
         return self.get_field_value('poll_plugin')
 
     def get_poll_plugin(self):
-        return getUtility(IPollPlugin, name = self.poll_plugin_name)
+        return getAdapter(self, name = self.poll_plugin_name, interface = IPollPlugin)
 
     def get_proposal_objects(self):
         agenda_item = find_interface(self, IAgendaItem)
@@ -132,7 +132,7 @@ class Poll(BaseContent, WorkflowAware):
 
     def close_poll(self):
         """ Close the poll. """
-        request = get_current_request() #This is an exception - won't be called many times.
+        request = get_current_request() #Since this is only used once per poll it should be okay
         fm = FlashMessages(request)
         
         ballots = self.get_ballots()
@@ -141,34 +141,34 @@ class Poll(BaseContent, WorkflowAware):
         poll_plugin = self.get_poll_plugin()
         
         self.set_poll_result(poll_plugin.get_result(ballots))
-        winner_uids = poll_plugin.close(self)
-        
-        for uid in self.proposal_uids:
+        handle_uids = poll_plugin.change_states_of()
+
+        for (uid, state) in handle_uids.items():
+            if uid not in self.proposal_uids:
+                raise ValueError("The poll plugins close() method returned a uid that doesn't exist in this poll.")
             proposal = self.get_proposal_by_uid(uid)
-            #Set approved
-            if uid in winner_uids:
-                try:
-                    proposal.set_workflow_state(request, 'approved')
-                except WorkflowError:
-                    msg = _(u"Proposal with uid '%s' couldn't be set as approved. You should do this manually." % proposal.uid)
-                    fm.add(msg, type='error')
-            #Set denied
+            
+            #Adjust state?
+            if proposal.get_workflow_state() == state:
+                msg = _(u"Proposal '%s' already in state %s" % (proposal.__name__, state))
+                fm.add(msg)
             else:
                 try:
-                    proposal.set_workflow_state(request, 'denied')
+                    proposal.set_workflow_state(request, state)
+                    msg = _(u"Proposal '%s' set as %s" % (proposal.__name__, state))
+                    fm.add(msg)
                 except WorkflowError:
-                    msg = _(u"Proposal with uid '%s' couldn't be set as denied. You should do this manually." % proposal.uid)
+                    msg = _(u"Proposal with id '%s' couldn't be set as %s. You should do this manually." % (proposal.__name__, state))
                     fm.add(msg, type='error')
         
-        msg = _(u"Poll closed. Proposals have been adjusted as approved or denied depending on outcome of the poll.")
+        msg = _(u"Poll closed. Proposals might have been adjusted as approved or denied depending on outcome of the poll.")
         fm.add(msg)
 
     def render_poll_result(self):
         """ Render poll result. Calls plugin to calculate result.
         """
-        ballots = self.get_ballots()
-        poll_plugin = getUtility(IPollPlugin, name = self.poll_plugin_name)
-        return poll_plugin.render_result(self)
+        poll_plugin = self.get_poll_plugin()
+        return poll_plugin.render_result()
 
     def get_proposal_by_uid(self, uid):
         for prop in self.get_proposal_objects():
@@ -207,7 +207,11 @@ def construct_schema(context=None, request=None, **kwargs):
     #Add all selectable plugins to schema. This chooses the poll method to use
     plugin_choices = set()
 
-    for (name, plugin) in request.registry.getUtilitiesFor(IPollPlugin):
+    #FIXME: The new object should probably be sent to construct schema
+    #for now, we can fake this
+    poll = Poll()
+
+    for (name, plugin) in request.registry.getAdapters([poll], IPollPlugin):
         plugin_choices.add((name, plugin.title))
 
     #Proposals to vote on
@@ -271,5 +275,5 @@ def planned_poll_callback(content, info):
     fm.add(msg)
     if count:
         #FIXME: Translation mappings
-        msg = _(u"%s proposals were set in the 'locked for vote' state. They can no longer be edited or retracted." % count)
+        msg = _(u"%s selected proposals were set in the 'locked for vote' state. They can no longer be edited or retracted by normal users." % count)
         fm.add(msg)

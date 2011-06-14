@@ -7,7 +7,6 @@ import colander
 from deform import Form
 from deform.exception import ValidationFailure
 from webob.exc import HTTPFound
-from zope.component import getUtility
 
 from voteit.core import VoteITMF as _
 from voteit.core.views.api import APIView
@@ -33,9 +32,9 @@ class VoteView(object):
             raise Forbidden("No UserID found.")
         
         self.poll = find_interface(context, IPoll)
-        self.poll_plugin = getUtility(IPollPlugin, name = self.poll.poll_plugin_name)
+        self.poll_plugin = self.poll.get_poll_plugin()
         
-        self.schema = self.poll_plugin.get_vote_schema(self.poll)
+        self.schema = self.poll_plugin.get_vote_schema()
 
 
     @view_config(context=IPoll, name="vote", renderer=DEFAULT_TEMPLATE, permission=ADD_VOTE)

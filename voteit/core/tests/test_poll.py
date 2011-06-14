@@ -157,10 +157,6 @@ class PollTests(unittest.TestCase):
         
         self.assertEqual(result, expected)
 
-    def _make_obj(self):
-        from voteit.core.models.poll import Poll
-        return Poll()
-
     def _extract_transition_names(self, info):
         return set([x['name'] for x in info])
 
