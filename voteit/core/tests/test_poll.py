@@ -116,7 +116,8 @@ class PollTests(unittest.TestCase):
         vote3.set_vote_data('other')
         obj['vote3'] = vote3
 
-        self.assertEqual(obj.get_ballots(), [{'count': 2, 'ballot': 'hello_world'}, {'count': 1, 'ballot': 'other'}])
+        obj._calculate_ballots()
+        self.assertEqual(obj.ballots, (('hello_world', 2), ('other', 1)))
 
     def test_ballots_object(self):
         obj = self._make_obj()
@@ -131,11 +132,10 @@ class PollTests(unittest.TestCase):
         obj['vote4'] = self._make_vote(choice2)
         obj['vote5'] = self._make_vote(choice2)
 
-        expected = [{'count': 2, 'ballot': choice2}, {'count': 3, 'ballot': choice1}]
-        result = obj.get_ballots()
-        result.sort(key=lambda x: x['count'])
-        
-        self.assertEqual(result, expected)
+        obj._calculate_ballots()
+        #FIXME: Is it possible to sort objects in this way?
+        self.assertEqual((obj.ballots[0]), (choice2, 2))
+        self.assertEqual((obj.ballots[1]), (choice1, 3))
 
     def test_ballots_dict(self):
         obj = self._make_obj()
@@ -150,12 +150,9 @@ class PollTests(unittest.TestCase):
         obj['vote4'] = self._make_vote(choice2)
         obj['vote5'] = self._make_vote(choice2)
 
-        #Keep an eye on this. Dicts aren't hashable so this may fail due to ordering in the list.
-        expected = [{'count': 2, 'ballot': choice2}, {'count': 3, 'ballot': choice1}]
-        result = obj.get_ballots()
-        result.sort(key=lambda x: x['count'])
+        obj._calculate_ballots()
         
-        self.assertEqual(result, expected)
+        self.assertEqual(obj.ballots, (({'apple': 1}, 2), ({'apple': 1, 'potato': 2}, 3)))
 
     def _extract_transition_names(self, info):
         return set([x['name'] for x in info])

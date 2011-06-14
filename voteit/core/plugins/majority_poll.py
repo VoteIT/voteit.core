@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 import colander
 import deform
 from pyramid.renderers import render
@@ -13,9 +15,6 @@ class MajorityPollPlugin(PollPlugin):
     
     name = u'majority_poll'
     title = _(u'Majority Poll')
-    
-    def __init__(self, context):
-        self.context = context
     
     def get_settings_schema(self):
         """ Get an instance of the schema used to render a form for editing settings.
@@ -47,27 +46,33 @@ class MajorityPollPlugin(PollPlugin):
     def get_vote_class(self):
         return Vote
 
-    def get_result(self, ballots, **settings):
+    def handle_close(self):
         """ Get the calculated result of this ballot.
             We'll update the ballots with percentage and simply return them.
             The result should look something like this:
             [{'count': 1, 'percentage': 33.33333, ballot': {'proposal': u'af4aa2bc-1ebb-43e1-811b-88ec6ed0e2d1'}}, <etc...>, ]
             Note that percentage is a decimal, not a string.
         """
+        ballots = self.context.ballots
+        results = []
         if ballots:
-            total_votes = sum([x['count'] for x in ballots])
-            for result in ballots:
-                num = float(result['count']/total_votes)
+            total_votes = sum([x[1] for x in ballots])
+            for (uid, count) in ballots:
+                result = {}
+                num = Decimal(count) / total_votes
                 result['percentage'] = self._get_percentage(num)
+                result['uid'] = uid
+                result['count'] = count
+                results.append(result)
             
-            return ballots
+        self.context.poll_result = results
 
     def _get_percentage(self, num):
         return u"%s%%" % (round(num*100, 1))
         
     def render_result(self):
         response = {}
-        response['result'] = self.context.get_poll_result()
+        response['result'] = self.context.poll_result
         response['get_proposal_by_uid'] = self.context.get_proposal_by_uid
         return render('templates/majority_poll.pt', response)
 
@@ -76,7 +81,7 @@ class MajorityPollPlugin(PollPlugin):
             It returns a dictionary with proposal uid as key and new state as value.
             Like: {'<uid>':'approved', '<uid>', 'denied'}
         """
-        #FIXME: implement
+        #Not implemented
         return {}
 
 def includeme(config):

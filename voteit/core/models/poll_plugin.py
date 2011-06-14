@@ -12,3 +12,6 @@ class PollPlugin(object):
     """
     implements(IPollPlugin)
     adapts(IPoll)
+    
+    def __init__(self, context):
+        self.context = context
