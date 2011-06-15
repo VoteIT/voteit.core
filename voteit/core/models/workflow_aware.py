@@ -1,6 +1,6 @@
 from repoze.workflow import get_workflow
 from repoze.workflow.workflow import WorkflowError
-from zope.event import notify
+from zope.component.event import objectEventNotify
 from zope.interface import implements
 
 from voteit.core.models.interfaces import IWorkflowAware
@@ -34,7 +34,7 @@ class WorkflowAware(object):
     def set_workflow_state(self, request, state):
         """ Set a workflow state. """
         old_state = self.get_workflow_state()
-        notify(WorkflowStateChange(self, old_state, state))
+        objectEventNotify(WorkflowStateChange(self, old_state, state))
         
         self.workflow.transition_to_state(self, request, state)
 
@@ -43,7 +43,7 @@ class WorkflowAware(object):
         old_state = self.get_workflow_state()
         self.workflow.transition(self, request, transition)
         new_state = self.get_workflow_state()
-        notify(WorkflowStateChange(self, old_state, new_state))
+        objectEventNotify(WorkflowStateChange(self, old_state, new_state))
             
     def get_available_workflow_states(self, request):
         states = self.workflow.state_info(self, request)

@@ -21,7 +21,7 @@ class WorkflowAwareTests(unittest.TestCase):
 
     def _registerEventListener(self, listener, iface):
         from zope.interface import Interface
-        self.config.registry.registerHandler(listener, (iface,))
+        self.config.registry.registerHandler(listener, (Interface, iface))
 
     def test_verify_interface(self):
         from voteit.core.models.interfaces import IWorkflowAware
@@ -40,13 +40,18 @@ class WorkflowAwareTests(unittest.TestCase):
         from voteit.core.interfaces import IWorkflowStateChange
 
         events = []
-        def listener(event):
-            events.append(event)
+        def listener(obj, event):
+            events.append((obj, event))
         self._registerEventListener(listener, IWorkflowStateChange)
         
         obj = self._make_obj()
         request = testing.DummyRequest()
         obj.set_workflow_state(request, 'inactive')
         
-        self.assertTrue(IWorkflowStateChange.providedBy(events[0]))
+        event_obj = events[0][0]
+        event = events[0][1]
+        
+        self.assertEqual(event_obj, obj)
+        self.assertTrue(IWorkflowStateChange.providedBy(event))
+        
         
