@@ -2,7 +2,7 @@
 <div class="content_wrapper">
 	<tal:root condition="not meeting">
 	<h5>Available meetings</h5>
-	<tal:iterate repeat="meeting api.get_content(api.root, content_type='Meeting')">
+	<tal:iterate repeat="meeting api.root.get_content(content_type='Meeting')">
 		<h5>
 			<a tal:attributes="href api.resource_url(meeting, request)"
 			   tal:content="meeting.get_field_value('title')">Meeting title</a>
@@ -12,7 +12,7 @@
 	</tal:root>
 	
 	<tal:meeting condition="meeting">
-	<tal:agenda_items define="agenda_items api.get_content(meeting, content_type='AgendaItem')">
+	<tal:agenda_items define="agenda_items meeting.get_content(content_type='AgendaItem')">
 		<div class="browse_up">
 			<a tal:attributes="href api.resource_url(api.root, request)">&laquo; all meetings</a>
 		</div>
@@ -25,7 +25,7 @@
 			<li tal:attributes="class api.inside(context, agenda_item) and 'selected' or 'plain'">
                 <a tal:attributes="href api.resource_url(agenda_item, request)">
                    	<span tal:content="agenda_item.get_field_value('title')">Agenda item title</span>
-					(<span tal:replace="len(api.get_content(agenda_item, content_type='Proposal'))">0</span>)
+					(<span tal:replace="len(agenda_item.get_content(content_type='Proposal'))">0</span>)
 				</a>
 			</li>
 		</tal:iterate>

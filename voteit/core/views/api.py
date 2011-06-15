@@ -104,13 +104,6 @@ class APIView(object):
         """ Is the current context inside a meeting, or a meeting itself? """
         return find_interface(context, IMeeting)
 
-    def get_content(self, context, **kwargs):
-        """ Get contained items.
-            If a content_type is passed, it will restrict the search to that type.
-            See models/IBaseContent
-        """
-        return context.get_content(**kwargs)
-
     def get_action_bar(self, context, request):
         """ Get the action-bar for a specific context """
 
