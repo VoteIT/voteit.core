@@ -126,7 +126,7 @@ class AgendaItemPermissionTests(unittest.TestCase):
         meeting['ai'] = obj
 
         #View
-        self.assertEqual(self.pap(obj, security.VIEW), admin | moderator | participant | viewer)
+        self.assertEqual(self.pap(obj, security.VIEW), admin | moderator | participant | viewer | owner)
 
         #Edit
         self.assertEqual(self.pap(obj, security.EDIT), set())

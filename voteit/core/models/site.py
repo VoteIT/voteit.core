@@ -11,6 +11,7 @@ from voteit.core.models.users import Users
 from voteit.core.validators import html_string_validator
 
 
+
 class SiteRoot(BaseContent):
     """ The root of the site. Contains all other objects. """
     implements(ISiteRoot)

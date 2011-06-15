@@ -1,22 +1,29 @@
 from time import strftime
 
 from pyramid.renderers import get_renderer, render
-from pyramid.security import authenticated_userid, has_permission
+from pyramid.security import authenticated_userid
+from pyramid.security import Allowed
+from pyramid.security import Authenticated
+from pyramid.security import Everyone
 from pyramid.url import resource_url
-from pyramid.location import lineage, inside
-from pyramid.traversal import find_root, find_interface
-from webob.exc import HTTPFound
+from pyramid.location import lineage
+from pyramid.location import inside
+from pyramid.traversal import find_interface
+from pyramid.traversal import find_root
 from pyramid.exceptions import Forbidden
-
+from pyramid.interfaces import IAuthenticationPolicy
+from pyramid.interfaces import IAuthorizationPolicy
+from webob.exc import HTTPFound
 from repoze.workflow import get_workflow
+from webhelpers.html.converters import nl2br
 
+from voteit.core import security
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import IContentUtility
 from voteit.core.models.log import Logs
 from voteit.core.views.macros import FlashMessages
 from voteit.core.views.expressions import ExpressionsView
 from voteit.core.views.messages import MessagesView
-from webhelpers.html.converters import nl2br
 
 
 class APIView(object):
@@ -35,6 +42,10 @@ class APIView(object):
             self.user_profile = self.get_user(self.userid)
             self.user_profile_url = resource_url(self.user_profile, request)
                 
+        #Authentication / Authorization utils. 
+        self.authn_policy = request.registry.getUtility(IAuthenticationPolicy)
+        self.authz_policy = request.registry.getUtility(IAuthorizationPolicy)
+
         #request.application_url
         self.main_template = get_renderer('templates/main.pt').implementation()
         self.content_info = request.registry.getUtility(IContentUtility)
@@ -46,7 +57,7 @@ class APIView(object):
         [rev.insert(0, x) for x in self.lineage]
         self.reversed_lineage = tuple(rev)
         self.inside = inside
-        
+
         #macros
         self.flash_messages = FlashMessages(request)
         self.expressions = ExpressionsView(request)
@@ -84,7 +95,7 @@ class APIView(object):
         addable_names = set()
         for type in self.content_info.values():
             if context_type in type.allowed_contexts and \
-                has_permission(type.add_permission, context, request):
+                self.context_has_permission(type.add_permission, self.context):
                 addable_names.add(type.type_class.content_type)
         return tuple(addable_names)
 
@@ -102,8 +113,11 @@ class APIView(object):
 
     def get_action_bar(self, context, request):
         """ Get the action-bar for a specific context """
-        def _here_perm(perm):
-            return has_permission(perm, context, request)
+
+        def _show_retract():
+            return context.content_type == 'Proposal' and \
+                self.context_has_permission('Retract', context) and \
+                context.get_workflow_state() == 'published'
         
         response = {}
         response['api'] = self
@@ -111,15 +125,16 @@ class APIView(object):
         response['context'] = context
         if getattr(context, 'workflow', None):
             response['states'] = context.get_available_workflow_states(request)
-        response['here_perm'] = _here_perm
-
+        response['context_has_permission'] = self.context_has_permission
+        response['show_retract'] = _show_retract
+        response['is_moderator'] = self.context_has_permission(security.MODERATE_MEETING, context)
+        
         return render('templates/action_bar.pt', response, request=request)
 
     def get_creators_info(self, creators, request):
         """ Return template for a set of creators.
             The content of creators should be userids
         """
-        
         users = set()
         for userid in creators:
             user = self.get_user(userid)
@@ -130,4 +145,30 @@ class APIView(object):
         response['resource_url'] = resource_url
         response['users'] = users
         return render('templates/creators_info.pt', response, request=request)
+
+    def context_has_permission(self, permission, context):
+        """ Special permission check that is agnostic of the request.context attribute.
+            (As opposed to pyramid.security.has_permission)
+            Don't use anything else than this one to determine permissions for something
+            where the request.context isn't the same as context, for instance another 
+            object that appears in a listing.
+        """
+        principals = self.context_effective_principals(context)
+        return self.authz_policy.permits(context, principals, permission)
+
+    def context_effective_principals(self, context):
+        """ Special version of pyramid.security.effective_principals that
+            adds groups based on context instead of request.context
+        """
+        effective_principals = [Everyone]
+        if self.userid is None:
+            return effective_principals
+        
+        groups = context.get_groups(self.userid)
+        
+        effective_principals.append(Authenticated)
+        effective_principals.append(self.userid)
+        effective_principals.extend(groups)
+        
+        return effective_principals
 

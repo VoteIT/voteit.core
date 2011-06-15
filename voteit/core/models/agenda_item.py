@@ -15,11 +15,13 @@ from voteit.core.models.interfaces import IProposal
 from voteit.core.models.interfaces import IPoll
 from voteit.core.validators import html_string_validator
 
+_PRIV_MOD_PERMS = (security.VIEW, security.EDIT, security.DELETE, security.MODERATE_MEETING, security.CHANGE_WORKFLOW_STATE, )
+
 ACL = {}
 ACL['private'] = [(Allow, security.ROLE_ADMIN, security.REGULAR_ADD_PERMISSIONS),
-                  (Allow, security.ROLE_ADMIN, (security.VIEW, security.EDIT, security.DELETE, )),
+                  (Allow, security.ROLE_ADMIN, _PRIV_MOD_PERMS),
                   (Allow, security.ROLE_MODERATOR, security.REGULAR_ADD_PERMISSIONS),
-                  (Allow, security.ROLE_MODERATOR, (security.VIEW, security.EDIT, security.DELETE, )),
+                  (Allow, security.ROLE_MODERATOR, _PRIV_MOD_PERMS),
                   DENY_ALL,
                 ]
 ACL['closed'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, )),
@@ -45,11 +47,6 @@ class AgendaItem(BaseContent, WorkflowAware):
             return ACL['closed']
         if state == 'private':
             return ACL['private']
-        
-        meeting = find_interface(self, IMeeting)
-        if meeting.get_workflow_state() == u'closed':
-            return ACL['closed']
-        
 
         raise AttributeError("Go fetch parents acl")
 
