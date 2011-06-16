@@ -2,6 +2,7 @@ from pyramid.view import view_config
 from pyramid.url import resource_url
 from pyramid.renderers import get_renderer
 from pyramid.traversal import find_root, find_interface
+from pyramid.exceptions import Forbidden
 from zope.component import queryUtility
 from zope.component.interfaces import ComponentLookupError
 
@@ -12,7 +13,6 @@ from webob.exc import HTTPFound
 from voteit.core.views.api import APIView
 from voteit.core.security import EDIT, VIEW
 from voteit.core.models.interfaces import IPoll
-from voteit.core.models.interfaces import IPollPlugin
 from voteit.core.models.schemas import add_csrf_token
 
 
@@ -29,12 +29,15 @@ class PollView(object):
     @view_config(context=IPoll, name="poll_config", renderer='templates/base_edit.pt', permission=EDIT)
     def poll_config(self):
         """ Configure poll settings. Only for moderators.
-            The settins themselves come from the poll plugin.
+            The settings themselves come from the poll plugin.
+            Note that the Edit permission should only be granted to moderators
+            before the actual poll has been set in the ongoing state. After that,
+            no settings may be changed.
         """
-        poll_plugin = queryUtility(IPollPlugin, name = self.context.poll_plugin_name)
-        if not poll_plugin:
-            ComponentLookupError("Couldn't find any registered poll plugin with the name '%s'." % self.context.poll_plugin_name)
-        schema = poll_plugin.get_settings_schema(self.context)
+        poll_plugin = self.context.get_poll_plugin()
+        schema = poll_plugin.get_settings_schema()
+        if schema is None:
+            raise Forbidden("No settings for this poll")
         add_csrf_token(self.context, self.request, schema)
 
         self.form = Form(schema, buttons=('save', 'cancel'))

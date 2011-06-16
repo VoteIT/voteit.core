@@ -1,6 +1,5 @@
 from voteit.core import VoteITMF as _
 
-
 #Roles, which are the same as groups really
 ROLE_ADMIN = 'role:Admin'
 ROLE_MODERATOR = 'role:Moderator'
@@ -16,6 +15,7 @@ EDIT = 'Edit'
 DELETE = 'Delete'
 REGISTER = 'Register'
 RETRACT = 'Retract'
+CHANGE_WORKFLOW_STATE = 'Change Workflow State'
 CHANGE_PASSWORD = 'Change Password'
 MANAGE_GROUPS = 'Manage Groups'
 MODERATE_MEETING = 'Moderate Meeting'

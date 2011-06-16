@@ -256,7 +256,6 @@ class PollPermissionTests(unittest.TestCase):
         register_poll_plugin(MajorityPollPlugin, registry=registry)
         poll.set_field_value('poll_plugin', u'majority_poll')
 
-
     def test_private(self):
         poll = self._make_obj()
         
@@ -267,6 +266,8 @@ class PollPermissionTests(unittest.TestCase):
         self.assertEqual(self.pap(poll, security.DELETE), admin | moderator)
         
         self.assertEqual(self.pap(poll, security.ADD_VOTE), set())
+
+        self.assertEqual(self.pap(poll, security.CHANGE_WORKFLOW_STATE), admin | moderator)
 
     def test_planned(self):
         poll = self._make_obj()
@@ -281,6 +282,8 @@ class PollPermissionTests(unittest.TestCase):
         
         self.assertEqual(self.pap(poll, security.ADD_VOTE), set())
 
+        self.assertEqual(self.pap(poll, security.CHANGE_WORKFLOW_STATE), admin | moderator)
+
     def test_ongoing(self):
         request = testing.DummyRequest()
         poll = self._make_obj()
@@ -289,11 +292,13 @@ class PollPermissionTests(unittest.TestCase):
         
         self.assertEqual(self.pap(poll, security.VIEW), admin | moderator | participant | viewer | voter)
         
-        self.assertEqual(self.pap(poll, security.EDIT), admin | moderator)
+        self.assertEqual(self.pap(poll, security.EDIT), set())
         
         self.assertEqual(self.pap(poll, security.DELETE), set())
         
         self.assertEqual(self.pap(poll, security.ADD_VOTE), voter)
+
+        self.assertEqual(self.pap(poll, security.CHANGE_WORKFLOW_STATE), admin | moderator)
 
     def test_closed_or_canceled(self):
         request = testing.DummyRequest()

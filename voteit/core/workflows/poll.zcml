@@ -40,7 +40,7 @@
 			name="private_to_planned"
 			from_state="private"
 			to_state="planned"
-			permission="Edit"
+			permission="Change Workflow State"
             callback="voteit.core.models.poll.planned_poll_callback"
 		/>
 		
@@ -48,28 +48,28 @@
 			name="planned_to_private"
 			from_state="planned"
 			to_state="private"
-			permission="Edit"
+			permission="Change Workflow State"
 		/>
 		
         <transition
             name="planned_to_ongoing"
             from_state="planned"
             to_state="ongoing"
-            permission="Edit"
+            permission="Change Workflow State"
         />
 
 		<transition
 			name="planned_to_canceled"
 			from_state="planned"
 			to_state="canceled"
-			permission="Edit"
+			permission="Change Workflow State"
 		/>
 		
 		<transition
 			name="ongoing_to_closed"
 			from_state="ongoing"
 			to_state="closed"
-			permission="Edit"
+			permission="Change Workflow State"
 			callback="voteit.core.models.poll.closing_poll_callback"
 		/>
 

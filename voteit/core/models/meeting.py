@@ -18,12 +18,13 @@ from voteit.core.models.workflow_aware import WorkflowAware
 from voteit.core.validators import html_string_validator
 from voteit.core.models.log import Logs
 
+_MODERATOR_DEFAULTS = (security.VIEW, security.EDIT, security.MANAGE_GROUPS, security.MODERATE_MEETING, security.DELETE, )
 
 ACL = {}
 ACL['default'] = [(Allow, security.ROLE_ADMIN, security.REGULAR_ADD_PERMISSIONS),
-                  (Allow, security.ROLE_ADMIN, (security.VIEW, security.EDIT, security.MANAGE_GROUPS, security.DELETE, )),
+                  (Allow, security.ROLE_ADMIN, _MODERATOR_DEFAULTS),
                   (Allow, security.ROLE_MODERATOR, security.REGULAR_ADD_PERMISSIONS),
-                  (Allow, security.ROLE_MODERATOR, (security.VIEW, security.EDIT, security.MANAGE_GROUPS, security.DELETE, )),
+                  (Allow, security.ROLE_MODERATOR, _MODERATOR_DEFAULTS),
                   (Allow, security.ROLE_OWNER, (security.VIEW, security.EDIT, )),
                   (Allow, security.ROLE_PARTICIPANT, (security.VIEW, security.ADD_PROPOSAL, )),
                   (Allow, security.ROLE_VIEWER, (security.VIEW,)),
@@ -31,9 +32,9 @@ ACL['default'] = [(Allow, security.ROLE_ADMIN, security.REGULAR_ADD_PERMISSIONS)
                   DENY_ALL,
                    ]
 ACL['private'] = [(Allow, security.ROLE_ADMIN, security.REGULAR_ADD_PERMISSIONS),
-                  (Allow, security.ROLE_ADMIN, (security.VIEW, security.EDIT, security.MANAGE_GROUPS, security.DELETE, )),
+                  (Allow, security.ROLE_ADMIN, _MODERATOR_DEFAULTS),
                   (Allow, security.ROLE_MODERATOR, security.REGULAR_ADD_PERMISSIONS),
-                  (Allow, security.ROLE_MODERATOR, (security.VIEW, security.EDIT, security.MANAGE_GROUPS, security.DELETE, )),
+                  (Allow, security.ROLE_MODERATOR, _MODERATOR_DEFAULTS),
                   DENY_ALL,
                 ]
 ACL['closed'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, security.MANAGE_GROUPS, )),

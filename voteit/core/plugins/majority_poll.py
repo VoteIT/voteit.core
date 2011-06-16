@@ -20,7 +20,7 @@ class MajorityPollPlugin(PollPlugin):
         """ Get an instance of the schema used to render a form for editing settings.
             This form doesn't have any settings, so the schema is empty.
         """
-        return colander.Schema()
+        return None
     
     def get_vote_schema(self):
         """ Get an instance of the schema that this poll uses.

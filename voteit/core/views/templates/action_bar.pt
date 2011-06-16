@@ -1,23 +1,61 @@
 <ul class="action_bar">
 
     <li class="menuitem"
-	    tal:condition="context.content_type == 'Poll' and here_perm('Add Vote')">
+	    tal:condition="context.content_type == 'Poll' and context_has_permission('Add Vote', context)">
         <a class="buttonize" tal:attributes="href api.resource_url(context, request) + '@@vote'">Vote</a>
     </li>
-    <li class="menuitem" tal:condition="here_perm('Edit')">
+    <li class="menuitem" tal:condition="context_has_permission('Edit', context)">
     	<a class="buttonize" tal:attributes="href api.resource_url(context, request) + '@@edit'">Edit</a>
 	</li>
-    <li class="menuitem" tal:condition="here_perm('Delete')">
+    <li class="menuitem" tal:condition="context_has_permission('Delete', context)">
     	<a class="buttonize"  tal:attributes="href api.resource_url(context, request) + '@@delete'">Delete</a>
 	</li>
-    <li tal:condition="states|False" class="dropdown_menu menuitem">
-		<a href="#" class="buttonize menu_header">Set state &raquo;</a>
-		<ul class="menu_body">
-			<tal:iterate repeat="state states">
-			<li tal:attributes="class state.current and 'current'">
-				<a tal:attributes="href api.resource_url(context, request) + '@@state' + '?state=' + state.name" tal:content="state.title">State</a>
-			</li>
-			</tal:iterate>
-		</ul>
-    </li>
+	
+	<tal:users_only condition="not is_moderator">
+		<tal:comment condition="False">
+			Users only actions. This is to avoid cluttering the administrative interface
+			with actions that might exist somewhere else. (Like workflows)
+			
+			Note that repoze.workflow checks permissions through request.context, so checking
+			available workflow transitions the normal way won't work.
+		</tal:comment>
+		<tal:retract condition="show_retract()">
+		    <li class="menuitem">
+	            <a class="buttonize"
+				   tal:attributes="href api.resource_url(context, request) + '@@state?state=retracted'">Retract</a>
+		    </li>
+		</tal:retract>
+	</tal:users_only>
+
+    <tal:admin>
+		<li tal:condition="context.content_type in ['Meeting', 'SiteRoot'] and
+		                   context_has_permission('Manage Groups', context)"
+			class="dropdown_menu menuitem">
+	        <a class="buttonize" tal:attributes="href api.resource_url(context, request) + '@@edit_groups'">Permissions</a>
+		</li>
+	</tal:admin>
+	
+	<tal:moderator condition="is_moderator">
+		<tal:comment condition="False">
+			Moderator only actions. Avoid rendering these for all other users.
+			It's okay to place more computationally expensive things here.
+		</tal:comment>
+        <li tal:condition="context.content_type == 'Poll' and
+		                   context_has_permission('Edit', context) and
+						   context.get_poll_plugin().get_settings_schema()|False"
+		    class="menuitem">
+            <a class="buttonize" tal:attributes="href api.resource_url(context, request) + '@@poll_config'">Poll settings</a>
+        </li>
+	    <li tal:condition="states|False" class="dropdown_menu menuitem">
+			<a href="#" class="buttonize menu_header">Set state &raquo;</a>
+			<ul class="menu_body">
+				<tal:iterate repeat="state states">
+				<li tal:attributes="class state.current and 'current'">
+					<a tal:attributes="href api.resource_url(context, request) + '@@state' + '?state=' + state.name"
+					   tal:content="state.title">State</a>
+				</li>
+				</tal:iterate>
+			</ul>
+	    </li>
+	</tal:moderator>
 </ul>

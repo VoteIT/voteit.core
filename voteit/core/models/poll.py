@@ -22,28 +22,29 @@ from voteit.core.models.interfaces import IVote
 from voteit.core.views.macros import FlashMessages
 from voteit.core.validators import html_string_validator
 
+_PLANNED_PERMS = (security.VIEW, security.EDIT, security.DELETE, security.CHANGE_WORKFLOW_STATE, security.MODERATE_MEETING, )
 
 ACL = {}
-ACL['private'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, security.EDIT, security.DELETE, )),
-                  (Allow, security.ROLE_MODERATOR, (security.VIEW, security.EDIT, security.DELETE, )),
+ACL['private'] = [(Allow, security.ROLE_ADMIN, _PLANNED_PERMS),
+                  (Allow, security.ROLE_MODERATOR, _PLANNED_PERMS),
                   DENY_ALL,
                    ]
-ACL['planned'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, security.EDIT, security.DELETE, )),
-                  (Allow, security.ROLE_MODERATOR, (security.VIEW, security.EDIT, security.DELETE, )),
+ACL['planned'] = [(Allow, security.ROLE_ADMIN, _PLANNED_PERMS),
+                  (Allow, security.ROLE_MODERATOR, _PLANNED_PERMS),
                   (Allow, security.ROLE_PARTICIPANT, security.VIEW),
                   (Allow, security.ROLE_VOTER, security.VIEW),
                   (Allow, security.ROLE_VIEWER, security.VIEW),
                   DENY_ALL,
                    ]
-ACL['ongoing'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, security.EDIT, )),
-                  (Allow, security.ROLE_MODERATOR, (security.VIEW, security.EDIT, )),
+ACL['ongoing'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, security.CHANGE_WORKFLOW_STATE, security.MODERATE_MEETING, )),
+                  (Allow, security.ROLE_MODERATOR, (security.VIEW, security.CHANGE_WORKFLOW_STATE, security.MODERATE_MEETING, )),
                   (Allow, security.ROLE_PARTICIPANT, security.VIEW),
                   (Allow, security.ROLE_VOTER, (security.VIEW, security.ADD_VOTE, )),
                   (Allow, security.ROLE_VIEWER, security.VIEW),
                   DENY_ALL,
                    ]
-ACL['closed'] = [(Allow, security.ROLE_ADMIN, security.VIEW),
-                 (Allow, security.ROLE_MODERATOR, security.VIEW),
+ACL['closed'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, security.CHANGE_WORKFLOW_STATE, )),
+                 (Allow, security.ROLE_MODERATOR, (security.VIEW, security.CHANGE_WORKFLOW_STATE, )),
                  (Allow, security.ROLE_PARTICIPANT, security.VIEW),
                  (Allow, security.ROLE_VOTER, security.VIEW),
                  (Allow, security.ROLE_VIEWER, security.VIEW),
