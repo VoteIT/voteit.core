@@ -20,6 +20,8 @@ class EventTests(unittest.TestCase):
         init_sql_database(settings)
         
         make_session(self.request)
+        
+        self.config.scan('voteit.core.event_handlers')
 
     def tearDown(self):
         testing.tearDown()
@@ -39,9 +41,9 @@ class EventTests(unittest.TestCase):
     
         from voteit.core.models.meeting import Meeting
         meeting = Meeting()
-        
-        #FIXME: the event for adding to folers doesn't fire
         root['meeting'] = meeting
         
+        #FIXME: Until we can use a utility or similar to fetch a currently active SQL session,
+        #this code will be broken. :(
         logs = self._make_logs()
         self.assertEqual(len(logs.retrieve_entries(meeting.uid, tag='added', primaryuid=meeting.uid)), 1)

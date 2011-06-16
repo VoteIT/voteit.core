@@ -97,7 +97,6 @@ class LogsTests(unittest.TestCase):
         self.assertEqual(result_obj.primaryuid, primaryuid)
         self.assertEqual(result_obj.secondaryuid, secondaryuid)
         self.assertEqual(len(result_obj.tags), 2)
-        
     
     def test_add(self):
         self._init_tags()
