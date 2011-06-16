@@ -10,7 +10,6 @@ from voteit.core.interfaces import IWorkflowStateChange
 
 @subscriber(IMeeting, IObjectAddedEvent)
 def meeting_added(obj, event):
-    import pdb; pdb.set_trace()
     #Log entry
     request = get_current_request()
     userid = authenticated_userid(request)
