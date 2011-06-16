@@ -11,21 +11,20 @@ from voteit.core.sql_db import make_session
 class LogsTests(unittest.TestCase):
 
     def setUp(self):
-        self.config = testing.setUp()
 
         self.request = testing.DummyRequest()
-        settings = self.request.registry.settings
+        self.config = testing.setUp(request=self.request)
 
+        settings = {}
         self.dbfile = '_temp_testing_sqlite.db'
         settings['sqlite_file'] = 'sqlite:///%s' % self.dbfile
-        
         init_sql_database(settings)
-        
+        self.request.registry.settings = settings
         make_session(self.request)
 
     def tearDown(self):
         testing.tearDown()
-        #Is this really smart. Pythons tempfile module created lot's of crap that wasn't cleaned up
+        #Is this really smart? Pythons tempfile module created lot's of crap that wasn't cleaned up
         os.unlink(self.dbfile)
 
     def _import_class(self):
@@ -47,7 +46,7 @@ class LogsTests(unittest.TestCase):
     def _init_tags(self):
         from voteit.core.models.log import Tag
         session = self.request.sql_session
-        tags = ('alert', 'log', 'like',)
+        tags = ('alert', 'log', 'like', 'added', )
         for tag in tags:
             _tag = Tag(tag)
             session.add(_tag)
@@ -63,7 +62,7 @@ class LogsTests(unittest.TestCase):
         from voteit.core.models.log import Tag
         session = self.request.sql_session
         query = session.query(Tag)
-        self.assertEqual(len(query.all()), 3)
+        self.assertEqual(len(query.all()), 4)
         self.assertEqual(len(query.filter(Tag.tag=='log').all()), 1)
         
     def test_log(self):
@@ -130,3 +129,19 @@ class LogsTests(unittest.TestCase):
         self._add_mock_data(obj)
 
         self.assertEqual(len(obj.retrieve_entries('m1', tag='log')), 3)
+
+    def test_meeting_added_subscriber_adds_to_log(self):
+        self._init_tags()
+
+        #Add subscribers
+        self.config.scan('voteit.core.event_handlers')
+
+        from voteit.core.models.site import SiteRoot
+        root = SiteRoot()
+        
+        from voteit.core.models.meeting import Meeting
+        meeting = Meeting()
+        root['meeting'] = meeting
+        
+        logs = self._import_class()(self.request)
+        self.assertEqual(len(logs.retrieve_entries(meeting.uid, tag='added', primaryuid=meeting.uid)), 1)

@@ -1,10 +1,14 @@
-from repoze.folder.interfaces import IObjectAddedEvent, IObjectWillBeRemovedEvent
 from pyramid.events import subscriber
 from pyramid.threadlocal import get_current_request
 from pyramid.security import authenticated_userid
 from pyramid.traversal import find_interface
+from repoze.folder.interfaces import IObjectAddedEvent
+from repoze.folder.interfaces import IObjectWillBeRemovedEvent
 
-from voteit.core.models.interfaces import IMeeting, IAgendaItem, IProposal, IPoll
+from voteit.core.models.interfaces import IAgendaItem
+from voteit.core.models.interfaces import IMeeting
+from voteit.core.models.interfaces import IPoll
+from voteit.core.models.interfaces import IProposal
 from voteit.core.models.log import Logs
 from voteit.core.interfaces import IWorkflowStateChange
 
