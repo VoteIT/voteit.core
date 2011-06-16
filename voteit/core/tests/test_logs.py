@@ -34,15 +34,15 @@ class LogsTests(unittest.TestCase):
 
     def _add_mock_data(self, obj):
         data = (
-            ('m1', 'test', ('alert',), 'fredrik',),
-            ('m1', 'test', ('log',), 'anders',),
-            ('m1', 'test', ('like',), 'robin',),
-            ('m1', 'test', ('alert',), 'robin',),
-            ('m1', 'test', ('log',), 'hanna',),
-            ('m1', 'test', ('log','alert',), 'hanna',),
+            ('m1', 'test', ('alert',), 'fredrik', None, None,),
+            ('m1', 'test', ('log',), 'anders', None, None,),
+            ('m1', 'test', ('like',), 'robin', None, None,),
+            ('m1', 'test', ('alert',), 'robin', 'v1', None,),
+            ('m1', 'test', ('log',), 'hanna', 'p1', None,),
+            ('m1', 'test', ('log','alert',), 'hanna', 'v1', 'p1',),
          )
-        for (meetinguid, message, tag, userid) in data:
-            obj.add(meetinguid, message, tag, userid)
+        for (meetinguid, message, tag, userid, primaryuid, secondaryuid) in data:
+            obj.add(meetinguid, message, tag, userid, primaryuid, secondaryuid)
 
     def _init_tags(self):
         from voteit.core.models.log import Tag
@@ -71,6 +71,8 @@ class LogsTests(unittest.TestCase):
         message = 'lorem ipsum'
         tags = ('log', 'alert')
         userid = 'robin'
+        primaryuid = 'v1'
+        secondaryuid = 'p1'
 
         self._init_tags()
         session = self.request.sql_session
@@ -83,7 +85,7 @@ class LogsTests(unittest.TestCase):
             
             
         from voteit.core.models.log import Log
-        log = Log(meetinguid, message, _tags, userid)
+        log = Log(meetinguid, message, _tags, userid, primaryuid, secondaryuid)
         session.add(log)
         
         query = session.query(Log)
@@ -92,6 +94,8 @@ class LogsTests(unittest.TestCase):
         self.assertEqual(result_obj.meetinguid, meetinguid)
         self.assertEqual(result_obj.message, message)
         self.assertEqual(result_obj.userid, userid)
+        self.assertEqual(result_obj.primaryuid, primaryuid)
+        self.assertEqual(result_obj.secondaryuid, secondaryuid)
         self.assertEqual(len(result_obj.tags), 2)
         
     
@@ -103,7 +107,9 @@ class LogsTests(unittest.TestCase):
         message = 'aa-bb'
         tag = ('log', 'alert')
         userid = 'robin'
-        obj.add(meetinguid, message, tag, userid)
+        primaryuid = 'v1'
+        secondaryuid = 'p1'
+        obj.add(meetinguid, message, tag, userid, primaryuid, secondaryuid)
 
         from voteit.core.models.log import Log
         session = self.request.sql_session
@@ -111,9 +117,11 @@ class LogsTests(unittest.TestCase):
 
         self.assertEqual(len(query.all()), 1)
         result_obj = query.all()[0]
-        self.assertEqual(result_obj.userid, userid)
         self.assertEqual(result_obj.meetinguid, meetinguid)
         self.assertEqual(result_obj.message, message)
+        self.assertEqual(result_obj.userid, userid)
+        self.assertEqual(result_obj.primaryuid, primaryuid)
+        self.assertEqual(result_obj.secondaryuid, secondaryuid)
         self.assertEqual(len(result_obj.tags), 2)
 
     def test_retrieve_entries(self):
@@ -123,5 +131,3 @@ class LogsTests(unittest.TestCase):
         self._add_mock_data(obj)
 
         self.assertEqual(len(obj.retrieve_entries('m1', tag='log')), 3)
-
-

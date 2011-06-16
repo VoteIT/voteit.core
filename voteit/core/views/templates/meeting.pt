@@ -20,7 +20,7 @@
 	        <h1>This has happened</h1>
 	        <ul tal:condition="this_has_happened|False">
 	        <tal:iterate repeat="message this_has_happened">
-                <li><span tal:replace="message.format_created()">message</span> <span tal:replace="message.message">message</span></li>
+                <li><span tal:replace="message.format_created()">message</span> <span tal:replace="message.message">message</span> <span tal:replace="message.userid">userid</span></li>
             </tal:iterate>
 	        </ul>
 	        

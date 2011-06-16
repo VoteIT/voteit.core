@@ -3,6 +3,10 @@ import deform
 from BTrees.OOBTree import OOBTree
 from zope.interface import implements
 from pyramid.security import Allow, DENY_ALL, ALL_PERMISSIONS, Authenticated
+from repoze.folder.interfaces import IObjectAddedEvent
+from pyramid.events import subscriber
+from pyramid.threadlocal import get_current_request
+from pyramid.security import authenticated_userid
 
 from voteit.core import VoteITMF as _
 from voteit.core import security
@@ -12,6 +16,7 @@ from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.workflow_aware import WorkflowAware
 from voteit.core.validators import html_string_validator
+from voteit.core.models.log import Logs
 
 
 ACL = {}
@@ -106,3 +111,4 @@ def closing_meeting_callback(context, info):
     #get_content returns a generator. It's "True" even if it's empty!
     if tuple(context.get_content(iface=IAgendaItem, state='active')):
         raise Exception("This meeting still has open Agenda items in it. You can't close it until they're closed.")
+

@@ -26,13 +26,20 @@ class Log(RDB_Base):
     userid = Column(Unicode(100))
     created = Column(DateTime())
     tags = relationship("Tag", secondary=log_tags, backref="logs")
+    primaryuid = Column(Unicode(100))
+    secondaryuid = Column(Unicode(100))
     
-    def __init__(self, meetinguid, message, tags=None, userid=None, created=datetime.now()):
+    def __init__(self, meetinguid, message, tags=None, userid=None, primaryuid=None, secondaryuid=None, created=None):
+        if not created:
+            created = datetime.now()
+    
         self.meetinguid = unicodify(meetinguid)
         self.message = unicodify(message)
         self.userid = unicodify(userid)
         self.created = created
         self.tags = tags
+        self.primaryuid = primaryuid
+        self.secondaryuid = secondaryuid
         
     def format_created(self):
         """ Lordag 3 apr 2010, 01:10
@@ -58,7 +65,7 @@ class Logs(object):
     def __init__(self, request):
         self.request = request
     
-    def add(self, meetinguid, message, tags=None, userid=None):
+    def add(self, meetinguid, message, tags=None, userid=None, primaryuid=None, secondaryuid=None):
         session = self.request.sql_session
         
         if not type(tags) == tuple:
@@ -69,16 +76,20 @@ class Logs(object):
             _tag = session.query(Tag).filter(Tag.tag==tag).one()
             _tags.append(_tag)
         
-        log = Log(meetinguid, message, _tags, userid)
+        log = Log(meetinguid, message, _tags, userid, primaryuid, secondaryuid)
         session.add(log)
 
-    def retrieve_entries(self, meetinguid, tag=None, userid=None):
+    def retrieve_entries(self, meetinguid, tag=None, userid=None, primaryuid=None, secondaryuid=None):
         session = self.request.sql_session
         query = session.query(Log).filter(Log.meetinguid==meetinguid)
         if tag:
             query = query.filter(Log.tags.any(tag=tag))
         if userid:
             query = query.filter(Log.userid==userid)
+        if primaryuid:
+            query = query.filter(Log.primaryuid==primaryuid)
+        if secondaryuid:
+            query = query.filter(Log.secondaryuid==secondaryuid)
 
         query.order_by('created')
 

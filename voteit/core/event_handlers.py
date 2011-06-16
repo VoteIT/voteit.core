@@ -1,0 +1,100 @@
+from repoze.folder.interfaces import IObjectAddedEvent, IObjectWillBeRemovedEvent
+from pyramid.events import subscriber
+from pyramid.threadlocal import get_current_request
+from pyramid.security import authenticated_userid
+from pyramid.traversal import find_interface
+
+from voteit.core.models.interfaces import IMeeting, IAgendaItem, IProposal, IPoll
+from voteit.core.models.log import Logs
+from voteit.core.interfaces import IWorkflowStateChange
+
+@subscriber(IMeeting, IObjectAddedEvent)
+def meeting_added(obj, event):
+    import pdb; pdb.set_trace()
+    #Log entry
+    request = get_current_request()
+    userid = authenticated_userid(request)
+    logs = Logs(request)
+    logs.add(
+        obj.uid, 
+        '%s %s added' % (obj.content_type, obj.title), 
+        tags='added', 
+        userid=userid, 
+        primaryuid=obj.uid,
+    )
+    
+@subscriber(IAgendaItem, IObjectAddedEvent)
+@subscriber(IProposal, IObjectAddedEvent)
+def content_added(obj, event):
+    #Log entry
+    request = get_current_request()
+    meeting = find_interface(obj, IMeeting)
+    userid = authenticated_userid(request)
+    logs = Logs(request)
+    logs.add(
+        meeting.uid, 
+        '%s %s added' % (obj.content_type, obj.title), 
+        tags='added', 
+        userid=userid, 
+        primaryuid=obj.uid,
+    )
+    
+@subscriber(IPoll, IObjectAddedEvent)
+def poll_added(obj, event):
+    #Log entry
+    request = get_current_request()
+    meeting = find_interface(obj, IMeeting)
+    userid = authenticated_userid(request)
+    logs = Logs(request)
+    logs.add(
+        meeting.uid, 
+        '%s %s added' % (obj.content_type, obj.title), 
+        tags='added', 
+        userid=userid, 
+        primaryuid=obj.uid,
+    )
+    for proposal in obj.get_proposal_objects():
+        logs.add(
+            meeting.uid, 
+            '%s %s added to %s %s ' % (proposal.content_type, proposal.title, obj.content_type, obj.title), 
+            tags='proposal to poll', 
+            userid=userid, 
+            primaryuid=obj.uid,
+            secondaryuid=proposal.uid,
+        )
+    
+@subscriber(IMeeting, IObjectWillBeRemovedEvent)
+@subscriber(IAgendaItem, IObjectWillBeRemovedEvent)
+@subscriber(IProposal, IObjectWillBeRemovedEvent)
+@subscriber(IPoll, IObjectWillBeRemovedEvent)
+def content_deleted(obj, event):
+    #Log entry
+    request = get_current_request()
+    meeting = find_interface(obj, IMeeting)
+    userid = authenticated_userid(request)
+    logs = Logs(request)
+    logs.add(
+        meeting.uid, 
+        '%s %s deleted' % (obj.content_type, obj.title), 
+        tags='deleted', 
+        userid=userid, 
+        primaryuid=obj.uid,
+    )
+    
+    
+@subscriber(IMeeting, IWorkflowStateChange)
+@subscriber(IAgendaItem, IWorkflowStateChange)
+@subscriber(IProposal, IWorkflowStateChange)
+@subscriber(IPoll, IWorkflowStateChange)
+def state_changed(obj, event):
+    request = get_current_request()
+    meeting = find_interface(obj, IMeeting)
+    userid = authenticated_userid(request)
+    logs = Logs(request)
+    logs.add(
+        meeting.uid, 
+        'changed state from %s to %s on %s %s' % (event.old_state, event.new_state, obj.content_type, obj.title), 
+        tags='state change', 
+        userid=userid, 
+        primaryuid=obj.uid,
+    )
