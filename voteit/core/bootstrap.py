@@ -42,7 +42,7 @@ def bootstrap_voteit(registry=None):
     from voteit.core.models.log import Tag
     sql_session = registry.settings['rdb_session_factory']()
     #FIXME: tags should be defined elswhere
-    for tag in ('added', 'updated', 'deleted', 'state change', 'proposal to poll'):
+    for tag in ('added', 'updated', 'deleted', 'state changed', 'proposal to poll'):
         _tag = Tag(tag)
         sql_session.add(_tag)
     

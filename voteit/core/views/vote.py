@@ -131,8 +131,8 @@ class VoteView(object):
             return HTTPFound(location=url)
 
         #No action - Render edit form
-        msg = _(u"Edit your vote", close_button=False)
-        self.api.flash_messages.add(msg)
+        msg = _(u"Edit your vote")
+        self.api.flash_messages.add(msg, close_button=False)
         appstruct = self.context.get_vote_data()
         self.response['form'] = self.form.render(appstruct=appstruct)
         return self.response
