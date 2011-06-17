@@ -12,6 +12,11 @@
          id="page_info">
 	</div>
 	<div id="content" metal:fill-slot="content">
+        <ul tal:condition="log|False">
+        <tal:iterate repeat="entry log">
+            <li><span tal:replace="entry.format_created()">date</span> <span tal:replace="entry.message">message</span> by <span tal:replace="entry.userid">userid</span></li>
+        </tal:iterate>
+        </ul>
 	</div>
 </body>
 </html>

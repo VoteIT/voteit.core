@@ -18,11 +18,8 @@
 	<div id="content" metal:fill-slot="content">
 	    <div class="column">
 	        <h1>This has happened</h1>
-	        <ul tal:condition="this_has_happened|False">
-	        <tal:iterate repeat="message this_has_happened">
-                <li><span tal:replace="message.format_created()">message</span> <span tal:replace="message.message">message</span> <span tal:replace="message.userid">userid</span></li>
-            </tal:iterate>
-	        </ul>
+            <ul>
+            </ul>
 	        
 	        <h1>This is happening now</h1>
 	        <ul>

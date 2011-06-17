@@ -41,8 +41,6 @@ class MeetingView(BaseView):
         self.response['next_poll'] = '3 hours'
         self.response['remaining_meeting_time'] = '2 days, 3 hours'
         
-        self.response['this_has_happened'] = self.api.logs.retrieve_entries(self.context.uid)
-
         return self.response
 
     @view_config(name="meeting_access", context=IMeeting, renderer="templates/meeting_access.pt", permission=security.VIEW)
@@ -211,6 +209,6 @@ class MeetingView(BaseView):
 
     @view_config(name="protocol", context=IMeeting, renderer="templates/protocol.pt", permission=security.VIEW)
     def protocol(self):
-        self.response['messages'] = self.messages.retrieve_messages(self.context.uid, tag='log')
+        self.response['log'] = self.api.logs.retrieve_entries(self.context.uid)
         
         return self.response
