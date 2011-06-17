@@ -7,3 +7,7 @@ class IWorkflowStateChange(Interface):
     object = Attribute("Object this event is for")
     old_state = Attribute("Old state id")
     new_state = Attribute("New state id")
+    
+class IObjectUpdatedEvent(Interface):
+    """ An object event for object updated. """
+    object = Attribute("Object this event is for")

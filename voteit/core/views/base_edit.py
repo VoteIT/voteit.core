@@ -4,6 +4,7 @@ from pyramid.traversal import find_root, find_interface
 from pyramid.url import resource_url
 from pyramid.security import has_permission
 from pyramid.exceptions import Forbidden
+from zope.component.event import objectEventNotify
 
 import colander
 from deform import Form
@@ -15,6 +16,7 @@ from voteit.core.views.api import APIView
 from voteit.core import VoteITMF as _
 from voteit.core.security import ROLE_OWNER, EDIT, DELETE
 from voteit.core.models.schemas import add_csrf_token
+from voteit.core.events import ObjectUpdatedEvent
 
 from voteit.core.models.message import Messages
 
@@ -110,6 +112,8 @@ class BaseEdit(object):
 
             if updated:
                 self.api.flash_messages.add(_(u"Successfully updated"))
+                #TODO: This should probably not be fired here, instead it should be fired by the object
+                objectEventNotify(ObjectUpdatedEvent(self.context))
             else:
                 self.api.flash_messages.add(_(u"Nothing updated"))
 
@@ -146,7 +150,6 @@ class BaseEdit(object):
             del parent[self.context.__name__]
 
             self.api.flash_messages.add(_(u"Successfully deleted"))
-            
 
             url = resource_url(parent, self.request)
             return HTTPFound(location=url)

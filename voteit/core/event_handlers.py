@@ -11,6 +11,7 @@ from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IProposal
 from voteit.core.models.log import Logs
 from voteit.core.interfaces import IWorkflowStateChange
+from voteit.core.interfaces import IObjectUpdatedEvent
 
 @subscriber(IMeeting, IObjectAddedEvent)
 def meeting_added(obj, event):
@@ -97,7 +98,25 @@ def state_changed(obj, event):
     logs.add(
         meeting.uid, 
         'changed state from %s to %s on %s %s' % (event.old_state, event.new_state, obj.content_type, obj.title), 
-        tags='state change', 
+        tags='state changed', 
+        userid=userid, 
+        primaryuid=obj.uid,
+    )
+    
+@subscriber(IMeeting, IObjectUpdatedEvent)
+@subscriber(IAgendaItem, IObjectUpdatedEvent)
+@subscriber(IProposal, IObjectUpdatedEvent)
+@subscriber(IPoll, IObjectUpdatedEvent)
+def content_updated(obj, event):
+    #Log entry
+    request = get_current_request()
+    meeting = find_interface(obj, IMeeting)
+    userid = authenticated_userid(request)
+    logs = Logs(request)
+    logs.add(
+        meeting.uid, 
+        '%s %s updated' % (obj.content_type, obj.title), 
+        tags='updated', 
         userid=userid, 
         primaryuid=obj.uid,
     )
