@@ -117,9 +117,9 @@ class Poll(BaseContent, WorkflowAware):
 
     def get_proposal_objects(self):
         agenda_item = find_interface(self, IAgendaItem)
-        proposals = set()
         if agenda_item is None:
-            return proposals
+            raise ValueError("Can't find any agenda item in the polls lineage")
+        proposals = set()
         for item in agenda_item.values():
             if item.uid in self.proposal_uids:
                 proposals.add(item)
@@ -178,7 +178,7 @@ class Poll(BaseContent, WorkflowAware):
         """
         poll_plugin = self.get_poll_plugin()
         return poll_plugin.render_result()
-
+        
     def get_proposal_by_uid(self, uid):
         for prop in self.get_proposal_objects():
             if prop.uid == uid:

@@ -251,6 +251,17 @@ class IPollPlugin(Interface):
             It's not required to do, but if it isn't done, the proposals won't change state
             and you have to do it manually
         """
+
+    def render_raw_data():
+        """ Return rendered html with raw data from this poll.
+            It should consist of ballot information, but be anonymised.
+            The point with this view is to enable others to run
+            a poll to verify the result.
+            
+            The method needs to return an instance of either:
+            - pyramid.renderers.render
+            - pyramid.response.Response
+        """
         
 class IContentTypeInfo(Interface):
     """ A content type info for VoteIT. Any content addable through

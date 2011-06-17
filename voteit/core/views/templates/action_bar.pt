@@ -1,15 +1,23 @@
 <ul class="action_bar">
 
-    <li class="menuitem"
-	    tal:condition="context.content_type == 'Poll' and context_has_permission('Add Vote', context)">
-        <a class="buttonize" tal:attributes="href api.resource_url(context, request) + '@@vote'">Vote</a>
-    </li>
     <li class="menuitem" tal:condition="context_has_permission('Edit', context)">
     	<a class="buttonize" tal:attributes="href api.resource_url(context, request) + '@@edit'">Edit</a>
 	</li>
     <li class="menuitem" tal:condition="context_has_permission('Delete', context)">
     	<a class="buttonize"  tal:attributes="href api.resource_url(context, request) + '@@delete'">Delete</a>
 	</li>
+
+    <tal:poll condition="context.content_type == 'Poll'">
+	    <li class="menuitem"
+		    tal:condition="context_has_permission('Add Vote', context)">
+	        <a class="buttonize" tal:attributes="href api.resource_url(context, request) + '@@vote'">Vote</a>
+	    </li>
+        <li class="menuitem"
+            tal:condition="context.get_workflow_state() == 'closed'">
+            <a class="buttonize" tal:attributes="href api.resource_url(context, request) + '@@poll_raw_data'">Poll raw data</a>
+        </li>
+	</tal:poll>
+	
 	
 	<tal:users_only condition="not is_moderator">
 		<tal:comment condition="False">

@@ -3,6 +3,7 @@ from decimal import Decimal
 import colander
 import deform
 from pyramid.renderers import render
+from pyramid.response import Response
 
 from voteit.core.models.poll_plugin import PollPlugin
 from voteit.core.models.vote import Vote
@@ -83,6 +84,9 @@ class MajorityPollPlugin(PollPlugin):
         """
         #Not implemented
         return {}
+
+    def render_raw_data(self):
+        return Response(unicode(self.context.ballots))
 
 def includeme(config):
     register_poll_plugin(MajorityPollPlugin, registry=config.registry)
