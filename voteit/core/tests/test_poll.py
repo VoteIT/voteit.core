@@ -109,6 +109,12 @@ class PollTests(unittest.TestCase):
 
         self.assertEqual(obj.get_voted_userids(), frozenset(['admin', 'some_guy']))
 
+    def test_get_voted_userids_bad_vote(self):
+        obj = self._make_obj()
+        vote1 = self._make_vote()
+        obj['v'] = vote1
+        self.assertRaises(ValueError, obj.get_voted_userids)
+
     def test_get_ballots_string(self):
         obj = self._make_obj()
         #Make some default votes

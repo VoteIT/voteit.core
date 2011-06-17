@@ -131,7 +131,12 @@ class Poll(BaseContent, WorkflowAware):
 
     def get_voted_userids(self):
         """ Returns userids of all users who've voted. """
-        userids = [x.creators[0] for x in self.get_all_votes()]
+        userids = set()
+        for vote in self.get_all_votes():
+            if not len(vote.creators) == 1:
+                raise ValueError("The creators attribute on a vote didn't have a single value. "
+                                 "Votes can only have one creator. Vote was: %s" % vote)
+            userids.add(vote.creators[0])
         return frozenset(userids)
 
     def _calculate_ballots(self):
