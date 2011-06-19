@@ -7,13 +7,21 @@
     	<a class="buttonize"  tal:attributes="href api.resource_url(context, request) + '@@delete'">Delete</a>
 	</li>
 
-    <tal:poll condition="context.content_type == 'Poll'">
+    <tal:poll condition="context.content_type == 'Poll'" tal:define="has_voted api.userid and api.userid in context">
+    	<tal:comment condition="False">
+    		Poll controls - note that these are ment for a poll as a context, so while the edit button above
+			will be visible if a this view is invoked directly on a vote, the "Change vote" button won't be visible.
+    	</tal:comment>
 	    <li class="menuitem"
-		    tal:condition="context_has_permission('Add Vote', context)">
+		    tal:condition="not has_voted and context_has_permission('Add Vote', context)">
 	        <a class="buttonize" tal:attributes="href api.resource_url(context, request) + '@@vote'">Vote</a>
 	    </li>
         <li class="menuitem"
-            tal:condition="api.userid in context">
+            tal:condition="has_voted and context_has_permission('Add Vote', context)">
+            <a class="buttonize" tal:attributes="href api.resource_url(context, request) + api.userid + '/@@edit'">Change vote</a>
+        </li>
+        <li class="menuitem"
+            tal:condition="has_voted">
             <a class="buttonize" tal:attributes="href api.resource_url(context, request) + api.userid">Your vote</a>
         </li>
         <li class="menuitem"
@@ -21,7 +29,6 @@
             <a class="buttonize" tal:attributes="href api.resource_url(context, request) + '@@poll_raw_data'">Poll raw data</a>
         </li>
 	</tal:poll>
-	
 	
 	<tal:users_only condition="not is_moderator">
 		<tal:comment condition="False">
