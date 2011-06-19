@@ -13,6 +13,10 @@
 	        <a class="buttonize" tal:attributes="href api.resource_url(context, request) + '@@vote'">Vote</a>
 	    </li>
         <li class="menuitem"
+            tal:condition="api.userid in context">
+            <a class="buttonize" tal:attributes="href api.resource_url(context, request) + api.userid">Your vote</a>
+        </li>
+        <li class="menuitem"
             tal:condition="context.get_workflow_state() == 'closed'">
             <a class="buttonize" tal:attributes="href api.resource_url(context, request) + '@@poll_raw_data'">Poll raw data</a>
         </li>

@@ -143,8 +143,8 @@ class VoteView(object):
         self.form = Form(self.schema, buttons=())
         self.response['form_resources'] = self.form.get_widget_resources()
 
-        msg = _(u"Your vote has been updated.")
-        self.api.flash_messages.add(msg)
+        msg = _(u"This is your vote")
+        self.api.flash_messages.add(msg, close_button=False)
 
         appstruct = self.context.get_vote_data()
         self.response['readonly_form'] = self.form.render(appstruct=appstruct, readonly=True)
