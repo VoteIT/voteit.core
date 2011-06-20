@@ -25,6 +25,7 @@ requires = [
     'sqlalchemy',
     'zope.sqlalchemy',
     'webhelpers',
+    'repoze.catalog',
     ]
 
 setup(name='voteit.core',
