@@ -44,7 +44,8 @@ def bootstrap_voteit(registry=None, echo=True):
     sql_session = registry.settings['rdb_session_factory']()
     #FIXME: tags should be defined elswhere
     for tag in ('added', 'updated', 'deleted', 'state changed', 'proposal to poll'):
-        _tag = Tag(tag)
-        sql_session.add(_tag)
+        if not sql_session.query(Tag).filter(Tag.tag==tag).one():
+            _tag = Tag(tag)
+            sql_session.add(_tag)
     
     return root
