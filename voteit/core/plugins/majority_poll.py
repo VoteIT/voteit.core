@@ -7,7 +7,6 @@ from pyramid.response import Response
 
 from voteit.core.models.poll_plugin import PollPlugin
 from voteit.core.models.vote import Vote
-from voteit.core import register_poll_plugin
 from voteit.core import VoteITMF as _
 
 
@@ -89,5 +88,6 @@ class MajorityPollPlugin(PollPlugin):
         return Response(unicode(self.context.ballots))
 
 def includeme(config):
+    from voteit.core.app import register_poll_plugin
     register_poll_plugin(MajorityPollPlugin, registry=config.registry)
     

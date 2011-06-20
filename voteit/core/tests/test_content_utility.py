@@ -69,7 +69,7 @@ class ContentUtilityTests(unittest.TestCase):
         """ Check that registration of a bad plugin raises errors.
             Using register_content_info
         """
-        from voteit.core import register_content_info
+        from voteit.core.app import register_content_info
 
         class BadCls(object):
             pass
@@ -83,7 +83,7 @@ class ContentUtilityTests(unittest.TestCase):
         """ Register meeting as a content type. Should work as expected unless the meeting tests fail :)
         """
         from voteit.core.models.interfaces import IContentUtility
-        from voteit.core import register_content_info
+        from voteit.core.app import register_content_info
         from voteit.core.models.meeting import Meeting, construct_schema
         
         registry = get_current_registry() #To speed up the test, since we need it later

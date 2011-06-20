@@ -6,7 +6,6 @@ from pyramid.traversal import find_interface
 
 from voteit.core import VoteITMF as _
 from voteit.core import security
-from voteit.core import register_content_info
 from voteit.core.models.base_content import BaseContent
 from voteit.core.models.interfaces import IProposal, IAgendaItem
 from voteit.core.models.workflow_aware import WorkflowAware
@@ -80,4 +79,5 @@ def construct_schema(**kwargs):
 
 
 def includeme(config):
+    from voteit.core.app import register_content_info
     register_content_info(construct_schema, Proposal, registry=config.registry)

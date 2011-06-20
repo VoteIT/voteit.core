@@ -32,5 +32,5 @@ def construct_schema(**kwargs):
 
 
 def includeme(config):
-    from voteit.core import register_content_info
+    from voteit.core.app import register_content_info
     register_content_info(construct_schema, Users, registry=config.registry)

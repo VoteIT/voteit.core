@@ -36,7 +36,7 @@ class PollTests(unittest.TestCase):
         return ai['poll']
     
     def _register_majority_poll(self, poll):
-        from voteit.core import register_poll_plugin
+        from voteit.core.app import register_poll_plugin
         from voteit.core.plugins.majority_poll import MajorityPollPlugin
         registry = get_current_registry()
         register_poll_plugin(MajorityPollPlugin, registry=registry)
@@ -268,7 +268,7 @@ class PollPermissionTests(unittest.TestCase):
         return ai['poll']
 
     def _register_majority_poll(self, poll):
-        from voteit.core import register_poll_plugin
+        from voteit.core.app import register_poll_plugin
         from voteit.core.plugins.majority_poll import MajorityPollPlugin
         registry = get_current_registry()
         register_poll_plugin(MajorityPollPlugin, registry=registry)

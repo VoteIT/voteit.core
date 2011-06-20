@@ -9,7 +9,7 @@ from voteit.core.testing import DummyRequestWithVoteIT
 
 class ExpressionsTests(unittest.TestCase):
     def setUp(self):
-        from voteit.core import init_sql_database
+        from voteit.core.app import init_sql_database
 
         self.config = testing.setUp()
 

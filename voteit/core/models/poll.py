@@ -11,7 +11,6 @@ from repoze.workflow.workflow import WorkflowError
 from zope.component import getAdapter
 
 from voteit.core import security
-from voteit.core import register_content_info
 from voteit.core import VoteITMF as _
 from voteit.core.models.base_content import BaseContent
 from voteit.core.models.workflow_aware import WorkflowAware
@@ -267,12 +266,14 @@ def construct_schema(context=None, request=None, **kwargs):
 
 
 def includeme(config):
+    from voteit.core.app import register_content_info
     register_content_info(construct_schema, Poll, registry=config.registry)
 
-    
+
 def closing_poll_callback(content, info):
     """ Workflow callback when a poll is closed. Content is a poll here. """
     content.close_poll()
+
 
 def planned_poll_callback(content, info):
     """ Workflow callback when a poll is set in the planned state.

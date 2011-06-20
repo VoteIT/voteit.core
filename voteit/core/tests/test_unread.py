@@ -6,7 +6,7 @@ from pyramid.authorization import ACLAuthorizationPolicy
 from pyramid.security import Authenticated
 from zope.interface.verify import verifyObject
 
-from voteit.core import init_sql_database
+from voteit.core.app import init_sql_database
 from voteit.core import security
 from voteit.core.testing import DummyRequestWithVoteIT
 

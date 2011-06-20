@@ -4,7 +4,7 @@ import os
 from pyramid import testing
 from zope.interface.verify import verifyObject
 
-from voteit.core import init_sql_database
+from voteit.core.app import init_sql_database
 from voteit.core.testing import DummyRequestWithVoteIT
 
 class MessagesTests(unittest.TestCase):
