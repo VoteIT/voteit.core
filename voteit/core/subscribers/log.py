@@ -14,7 +14,7 @@ from voteit.core.interfaces import IWorkflowStateChange
 from voteit.core.interfaces import IObjectUpdatedEvent
 
 @subscriber(IMeeting, IObjectAddedEvent)
-def meeting_added(obj, event):
+def log_meeting_added(obj, event):
     #Log entry
     request = get_current_request()
     userid = authenticated_userid(request)
@@ -29,7 +29,7 @@ def meeting_added(obj, event):
     
 @subscriber(IAgendaItem, IObjectAddedEvent)
 @subscriber(IProposal, IObjectAddedEvent)
-def content_added(obj, event):
+def log_content_added(obj, event):
     #Log entry
     request = get_current_request()
     meeting = find_interface(obj, IMeeting)
@@ -44,7 +44,7 @@ def content_added(obj, event):
     )
     
 @subscriber(IPoll, IObjectAddedEvent)
-def poll_added(obj, event):
+def log_poll_added(obj, event):
     #Log entry
     request = get_current_request()
     meeting = find_interface(obj, IMeeting)
@@ -71,7 +71,7 @@ def poll_added(obj, event):
 @subscriber(IAgendaItem, IObjectWillBeRemovedEvent)
 @subscriber(IProposal, IObjectWillBeRemovedEvent)
 @subscriber(IPoll, IObjectWillBeRemovedEvent)
-def content_deleted(obj, event):
+def log_content_deleted(obj, event):
     #Log entry
     request = get_current_request()
     meeting = find_interface(obj, IMeeting)
@@ -90,7 +90,7 @@ def content_deleted(obj, event):
 @subscriber(IAgendaItem, IWorkflowStateChange)
 @subscriber(IProposal, IWorkflowStateChange)
 @subscriber(IPoll, IWorkflowStateChange)
-def state_changed(obj, event):
+def log_state_changed(obj, event):
     request = get_current_request()
     meeting = find_interface(obj, IMeeting)
     userid = authenticated_userid(request)
@@ -107,7 +107,7 @@ def state_changed(obj, event):
 @subscriber(IAgendaItem, IObjectUpdatedEvent)
 @subscriber(IProposal, IObjectUpdatedEvent)
 @subscriber(IPoll, IObjectUpdatedEvent)
-def content_updated(obj, event):
+def log_content_updated(obj, event):
     #Log entry
     request = get_current_request()
     meeting = find_interface(obj, IMeeting)

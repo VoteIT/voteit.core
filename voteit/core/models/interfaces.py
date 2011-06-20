@@ -342,3 +342,27 @@ class ILogs(Interface):
 class IDiscussionPost(Interface):
     """ A discussion post.
     """
+
+
+class IUnreads(Interface):
+    """ Handle messages.
+        This behaves like an adapter on a request.
+    """
+    
+    def __init__(request):
+        """ Object needs a request to adapt. """
+
+    def add(userid, contextuid):
+        """ Add an unread. """
+        
+    def remove(userid, contextuid):
+        """ Remove an unread. """
+    
+    def remove_user(userid):
+        """ Remove an unread. """
+        
+    def remove_context(contextuid):
+        """ Remove an unread. """
+        
+    def retrieve(userid, contextuid=None):
+        """ Retrieve unreads. """

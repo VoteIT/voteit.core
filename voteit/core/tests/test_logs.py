@@ -137,7 +137,7 @@ class LogsTests(unittest.TestCase):
         self._init_tags()
 
         #Add subscribers
-        self.config.scan('voteit.core.event_handlers')
+        self.config.scan('voteit.core.subscribers.log')
 
         from voteit.core.models.site import SiteRoot
         root = SiteRoot()
@@ -153,7 +153,7 @@ class LogsTests(unittest.TestCase):
         self._init_tags()
 
         #Add subscribers
-        self.config.scan('voteit.core.event_handlers')
+        self.config.scan('voteit.core.subscribers.log')
         
         from voteit.core.models.site import SiteRoot
         root = SiteRoot()
@@ -181,7 +181,7 @@ class LogsTests(unittest.TestCase):
         self._init_tags()
         
         #Add subscribers
-        self.config.scan('voteit.core.event_handlers')
+        self.config.scan('voteit.core.subscribers.log')
 
         from voteit.core.models.site import SiteRoot
         root = SiteRoot()
@@ -215,7 +215,7 @@ class LogsTests(unittest.TestCase):
         self._init_tags()
         
         #Add subscribers
-        self.config.scan('voteit.core.event_handlers')
+        self.config.scan('voteit.core.subscribers.log')
         
         from voteit.core.models.meeting import Meeting
         meeting = Meeting()
@@ -233,7 +233,7 @@ class LogsTests(unittest.TestCase):
         self._init_tags()
         
         #Add subscribers
-        self.config.scan('voteit.core.event_handlers')
+        self.config.scan('voteit.core.subscribers.log')
         
         from voteit.core.models.meeting import Meeting
         meeting = Meeting()
@@ -264,7 +264,7 @@ class LogsTests(unittest.TestCase):
         self._init_tags()
         
         #Add subscribers
-        self.config.scan('voteit.core.event_handlers')
+        self.config.scan('voteit.core.subscribers.log')
         
         from voteit.core.models.meeting import Meeting
         meeting = Meeting()
