@@ -2,6 +2,8 @@ import colander
 from pyramid.security import Allow, Everyone, ALL_PERMISSIONS
 from pyramid.security import DENY_ALL
 from zope.interface import implements
+from repoze.catalog.catalog import Catalog
+from repoze.catalog.document import DocumentMap
 
 from voteit.core import VoteITMF as _
 from voteit.core import security
@@ -9,7 +11,7 @@ from voteit.core.models.interfaces import ISiteRoot
 from voteit.core.models.base_content import BaseContent
 from voteit.core.models.users import Users
 from voteit.core.validators import html_string_validator
-
+from voteit.core.catalog import update_indexes
 
 
 class SiteRoot(BaseContent):
@@ -23,6 +25,12 @@ class SiteRoot(BaseContent):
                (Allow, security.ROLE_OWNER, (security.EDIT, security.CHANGE_PASSWORD)),
                (Allow, Everyone, security.VIEW),
                DENY_ALL]
+
+    def __init__(self):
+        self.catalog = Catalog()
+        self.catalog.document_map = DocumentMap()
+        update_indexes(self.catalog)
+        super(SiteRoot, self).__init__()
 
     @property
     def users(self):

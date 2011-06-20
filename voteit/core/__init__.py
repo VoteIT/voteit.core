@@ -58,7 +58,7 @@ def main(global_config, **settings):
     config.scan(PROJECTNAME)
 
     config.hook_zca()
-
+    
     return config.make_wsgi_app()
 
 

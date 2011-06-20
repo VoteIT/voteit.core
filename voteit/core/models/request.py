@@ -2,6 +2,7 @@ from pyramid.request import Request
 from pyramid.decorator import reify
 from pyramid.security import authenticated_userid
 from pyramid.traversal import find_interface
+from pyramid.traversal import find_resource
 
 from voteit.core.models.interfaces import ISiteRoot
 from voteit.core.models.interfaces import IUser
@@ -38,6 +39,10 @@ class VoteITRequestMixin(object):
         user = self.users.get(self.userid)
         if IUser.providedBy(user):
             return user
+
+    def catalog_id_to_object(self, id):
+        path = self.site_root.catalog.document_map.address_for_docid(id)
+        return find_resource(self.site_root, path)
 
 
 class VoteITRequestFactory(Request, VoteITRequestMixin):
