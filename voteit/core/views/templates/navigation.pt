@@ -25,7 +25,9 @@
 			<li tal:attributes="class api.inside(context, agenda_item) and 'selected' or 'plain'">
                 <a tal:attributes="href api.resource_url(agenda_item, request)">
                    	<span tal:content="agenda_item.get_field_value('title')">Agenda item title</span>
-					(<span tal:replace="len(agenda_item.get_content(content_type='Proposal'))">0</span>)
+					<span tal:replace="api.get_unread(agenda_item, content_type='Proposal')">0</span>
+					<span tal:replace="api.get_unread(agenda_item, content_type='Poll')">0</span>
+					<span tal:replace="api.get_unread(agenda_item, content_type='DiscussionPost')">0</span>
 				</a>
 			</li>
 		</tal:iterate>

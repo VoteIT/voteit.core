@@ -74,6 +74,7 @@ def init_sql_database(settings):
     from voteit.core.models.log import log_tags
     from voteit.core.models.log import Log
     from voteit.core.models.log import Tag
+    from voteit.core.models.unread import Unread
     
     #Create tables
     RDB_Base.metadata.create_all(settings['rdb_engine'])

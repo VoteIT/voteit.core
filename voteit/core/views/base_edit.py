@@ -14,11 +14,12 @@ from slugify import slugify
 
 from voteit.core.views.api import APIView
 from voteit.core import VoteITMF as _
-from voteit.core.security import ROLE_OWNER, EDIT, DELETE
+from voteit.core.security import ROLE_OWNER, EDIT, DELETE, VIEW
 from voteit.core.models.schemas import add_csrf_token
 from voteit.core.events import ObjectUpdatedEvent
 
 from voteit.core.models.message import Messages
+from voteit.core.models.unread import Unreads
 
 
 DEFAULT_TEMPLATE = "templates/base_edit.pt"
@@ -197,6 +198,16 @@ class BaseEdit(object):
         """
         state = self.request.params.get('state')
         self.context.set_workflow_state(self.request, state)
+        
+        url = resource_url(self.context, self.request)
+        return HTTPFound(location=url)
+        
+    @view_config(name="read", renderer=DEFAULT_TEMPLATE, permission=VIEW)
+    def read(self):
+        """ Mark the context as read for the user.
+        """
+        unreads = Unreads(self.request)
+        unreads.remove(self.api.userid, self.context.uid)
         
         url = resource_url(self.context, self.request)
         return HTTPFound(location=url)

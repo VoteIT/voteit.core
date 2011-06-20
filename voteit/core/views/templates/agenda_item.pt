@@ -23,6 +23,7 @@
                         <tal:creators tal:replace="structure api.get_creators_info(post.creators, request)">Creators</tal:creators>
 						
                         <span class="body" tal:content="structure post.get_field_value('text')">text</span>
+                        <div tal:define="unread api.is_unread(post)" tal:condition="unread"><a tal:attributes="href api.resource_url(post, request)+'read'">Mark as read</a></div>
 
                         <div class="expressions" tal:content="structure api.expressions.get_expressions(post, 'support', api.userid, 'Support')"></div>
                         <div tal:replace="structure api.get_action_bar(post, request)">Action bar</div>
@@ -46,6 +47,7 @@
                         <tal:creators tal:replace="structure api.get_creators_info(proposal.creators, request)">Creators</tal:creators>
                         <span>propose:</span>
                         <span class="body" tal:content="structure proposal.title">Title</span>
+                        <div tal:define="unread api.is_unread(proposal)" tal:condition="unread"><a tal:attributes="href api.resource_url(proposal, request)+'read'">Mark as read</a></div>
                         
                         <div tal:define="state_id proposal.get_workflow_state()">
                             <span>State:</span>
@@ -71,6 +73,7 @@
 				     class="listing_block">
                     <h3 tal:content="poll.title">Title</h3>
                     <div tal:content="poll.description">Description</div>
+					<div tal:define="unread api.is_unread(poll)" tal:condition="unread"><a tal:attributes="href api.resource_url(poll, request)+'read'">Mark as read</a></div>
 					
 					<div>
                         <span>Poll method:</span>

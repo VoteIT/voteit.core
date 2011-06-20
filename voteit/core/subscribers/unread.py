@@ -11,12 +11,14 @@ from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IProposal
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IUser
+from voteit.core.models.interfaces import IDiscussionPost
 from voteit.core.models.unread import Unreads
 
 @subscriber(IMeeting, IObjectAddedEvent)
 @subscriber(IAgendaItem, IObjectAddedEvent)
 @subscriber(IProposal, IObjectAddedEvent)
 @subscriber(IPoll, IObjectAddedEvent)
+@subscriber(IDiscussionPost, IObjectAddedEvent)
 def unread_content_added(obj, event):
     request = get_current_request()
     unreads = Unreads(request)
@@ -35,6 +37,7 @@ def unread_user_removed(obj, event):
 @subscriber(IAgendaItem, IObjectWillBeRemovedEvent)
 @subscriber(IProposal, IObjectWillBeRemovedEvent)
 @subscriber(IPoll, IObjectWillBeRemovedEvent)
+@subscriber(IDiscussionPost, IObjectWillBeRemovedEvent)
 def unread_content_removed(obj, event):
     request = get_current_request()
     unreads = Unreads(request)
