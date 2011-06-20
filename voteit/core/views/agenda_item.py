@@ -25,8 +25,8 @@ class AgendaItemView(BaseView):
         self.response['poll_end'] = '16.00'
     
         self.response['discussions'] = self.context.get_content(iface=IDiscussionPost, sort_on='created')
-        self.response['proposals'] = self.context.get_content(iface=IProposal)
-        self.response['polls'] = self.context.get_content(iface=IPoll)
+        self.response['proposals'] = self.context.get_content(iface=IProposal, sort_on='created')
+        self.response['polls'] = self.context.get_content(iface=IPoll, sort_on='created')
         
         ci = self.api.content_info
         url = resource_url(self.context, self.request)

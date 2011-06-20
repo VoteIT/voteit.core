@@ -24,7 +24,7 @@ from voteit.core.models.log import Logs
 from voteit.core.views.macros import FlashMessages
 from voteit.core.views.expressions import ExpressionsView
 from voteit.core.views.messages import MessagesView
-
+from voteit.core.models.unread import Unreads
 
 class APIView(object):
     """ Convenience methods for templates """
@@ -164,4 +164,20 @@ class APIView(object):
         effective_principals.extend(groups)
         
         return effective_principals
-
+        
+    def get_unread(self, context, content_type=None):
+        unreads = Unreads(self.request)
+        contents = context.get_content(content_type=content_type)
+        unread_count = 0
+        for content in contents:
+            if len(unreads.retrieve(self.userid, content.uid)) > 0:
+                unread_count = unread_count+1
+            
+        return unread_count
+        
+    def is_unread(self, context):
+        unreads = Unreads(self.request)
+        if len(unreads.retrieve(self.userid, context.uid)) > 0:
+            return True
+            
+        return False
