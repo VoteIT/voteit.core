@@ -122,6 +122,29 @@ class IUsers(Interface):
 
 class IUser(Interface):
     """ A user object. """
+    
+    userid = Attribute("The userid is always the same as __name__, meaning "
+                       "that the name of the stored object must be the userid. "
+                       "This enables you to do get(<userid>) on a Users folder, "
+                       "and it makes it easy to check that each username is only used once.")
+    
+    def get_password():
+        """ Get password hash.
+        """
+    
+    def set_password(value):
+        """ Set password for user.
+            value is the unencrypted password, it will be stored as a SHA1-hash.
+        """
+
+    def new_request_password_token(request):
+        """ Create a new password request token. Used for resetting a users password.
+            It will email the link to reset password to that user.
+        """
+        
+    def validate_password_token(node, value):
+        """ Deform validator for password token. Ment to be used by Deform forms.
+        """
 
 
 class IAgendaItem(Interface):

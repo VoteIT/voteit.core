@@ -4,15 +4,14 @@ import os
 from pyramid import testing
 from zope.interface.verify import verifyObject
 
-from voteit.core import init_sql_database
-from voteit.core.sql_db import make_session
-
+from voteit.core.app import init_sql_database
+from voteit.core.testing import DummyRequestWithVoteIT
 
 class MessagesTests(unittest.TestCase):
     def setUp(self):
         self.config = testing.setUp()
 
-        self.request = testing.DummyRequest()
+        self.request = DummyRequestWithVoteIT()
         settings = self.request.registry.settings
 
         self.dbfile = '_temp_testing_sqlite.db'
@@ -20,7 +19,6 @@ class MessagesTests(unittest.TestCase):
         
         init_sql_database(settings)
         
-        make_session(self.request)
 
     def tearDown(self):
         testing.tearDown()

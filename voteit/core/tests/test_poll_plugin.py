@@ -29,14 +29,14 @@ class PollPluginTests(unittest.TestCase):
     def test_register_bad_plugin(self):
         """ Check that registration of a bad plugin raises errors.
         """
-        from voteit.core import register_poll_plugin
+        from voteit.core.app import register_poll_plugin
         bad_cls = _bad_mock_plugin_class()
         
         self.assertRaises(BrokenImplementation, register_poll_plugin, bad_cls)
 
     def test_good_plugin(self):
         """ Register example plugin that ships with voteit. """ 
-        from voteit.core import register_poll_plugin
+        from voteit.core.app import register_poll_plugin
         from voteit.core.models.interfaces import IPollPlugin
         from voteit.core.models.poll import Poll
         

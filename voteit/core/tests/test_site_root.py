@@ -14,11 +14,6 @@ class SiteRootTests(unittest.TestCase):
     def _make_obj(self):
         from voteit.core.models.site import SiteRoot
         return SiteRoot()
-    
-    def _bootstrap_root(self):
-        """ Create a default app root"""
-        from voteit.core.bootstrap import bootstrap_voteit
-        return bootstrap_voteit()
 
     def test_verify_interface(self):
         from voteit.core.models.interfaces import IBaseContent

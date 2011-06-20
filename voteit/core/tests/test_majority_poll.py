@@ -3,7 +3,7 @@ import unittest
 from pyramid import testing
 from zope.interface.verify import verifyObject
 
-from voteit.core import register_poll_plugin
+from voteit.core.app import register_poll_plugin
 
     
 class MPUnitTests(unittest.TestCase):

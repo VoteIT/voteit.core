@@ -167,5 +167,5 @@ def construct_schema(context=None, request=None, type=None):
 
 
 def includeme(config):
-    from voteit.core import register_content_info
+    from voteit.core.app import register_content_info
     register_content_info(construct_schema, InviteTicket, registry=config.registry)

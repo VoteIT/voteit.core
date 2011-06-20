@@ -8,7 +8,6 @@ from pyramid.events import subscriber
 
 from voteit.core import VoteITMF as _
 from voteit.core import security
-from voteit.core import register_content_info
 from voteit.core.models.interfaces import IDiscussionPost
 from voteit.core.models.base_content import BaseContent
 from voteit.core.validators import html_string_validator
@@ -72,4 +71,5 @@ def construct_schema(**kwargs):
 
 
 def includeme(config):
+    from voteit.core.app import register_content_info
     register_content_info(construct_schema, DiscussionPost, registry=config.registry)

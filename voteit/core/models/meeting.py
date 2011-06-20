@@ -10,7 +10,6 @@ from pyramid.security import authenticated_userid
 
 from voteit.core import VoteITMF as _
 from voteit.core import security
-from voteit.core import register_content_info
 from voteit.core.models.base_content import BaseContent
 from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IMeeting
@@ -103,6 +102,7 @@ def construct_schema(**kwargs):
     return MeetingSchema()
 
 def includeme(config):
+    from voteit.core.app import register_content_info
     register_content_info(construct_schema, Meeting, registry=config.registry)
 
 def closing_meeting_callback(context, info):

@@ -22,6 +22,29 @@ class UserTests(unittest.TestCase):
         from voteit.core.models.interfaces import IUser
         obj = self._make_obj()
         self.assertTrue(verifyObject(IUser, obj))
+    
+    def test_userid(self):
+        from voteit.core.models.users import Users
+        users = Users()
+        obj = self._make_obj()
+        users['my_userid'] = obj
+        
+        self.assertEqual(obj.userid, u'my_userid')
+        self.assertEqual(obj.userid, obj.__name__) #Convention
+        
+    def test_get_and_set_password(self):
+        from voteit.core.models.user import get_sha_password
+        pw = 'very_secret'
+        hashed = get_sha_password(pw)
+        
+        obj = self._make_obj()
+        obj.set_password(pw)
+        
+        self.assertEqual(obj.get_password(), hashed)
+    
+    def test_empty_password(self):
+        obj = self._make_obj()
+        self.assertEqual(obj.get_password(), None)    
 
     def test_new_request_password_token(self):
         obj = self._make_obj()
