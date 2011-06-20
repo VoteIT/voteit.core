@@ -42,6 +42,11 @@ class User(BaseContent):
     
     __acl__ = [(Allow, security.ROLE_ADMIN, security.EDIT),
                (Allow, security.ROLE_OWNER, [security.EDIT, security.CHANGE_PASSWORD])]
+    
+    @property
+    def userid(self):
+        """ Convention - name should always be same as userid """
+        return self.__name__
 
     def get_password(self):
         return self.get_field_value('password')
