@@ -48,12 +48,6 @@ def main(global_config, **settings):
 
     init_sql_database(settings)
     
-#    config = Configurator(registry=registry)
-#    config.setup_registry(settings=settings,
-#                          root_factory=get_root,
-#                          authentication_policy=authn_policy,
-#                          authorization_policy=authz_policy,
-#                          session_factory = sessionfact,)
     config = Configurator(settings=settings,
                           root_factory=get_root,
                           authentication_policy=authn_policy,
@@ -70,10 +64,6 @@ def main(global_config, **settings):
     #config.add_translation_dirs('%s:locale/' % PROJECTNAME)
 
     config.scan(PROJECTNAME)
-
-    #Enable ZCML usage
-    #config.include('pyramid_zcml')
-    #config.load_zcml('voteit.core:configure.zcml')
         
     #Include content types and their utility IContentUtility
     config.registry.registerUtility(ContentUtility(), IContentUtility)
@@ -92,6 +82,8 @@ def main(global_config, **settings):
         for poll_plugin in poll_plugins.strip().splitlines():
             config.include(poll_plugin)
 
+    from voteit.core.models.request import VoteITRequestFactory
+    config.set_request_factory(VoteITRequestFactory)
 
     config.hook_zca()
 

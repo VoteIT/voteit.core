@@ -5,14 +5,13 @@ from pyramid import testing
 from zope.interface.verify import verifyObject
 
 from voteit.core import init_sql_database
-from voteit.core.sql_db import make_session
+from voteit.core.testing import DummyRequestWithVoteIT
 
 
 class LogsTests(unittest.TestCase):
 
     def setUp(self):
-
-        self.request = testing.DummyRequest()
+        self.request = DummyRequestWithVoteIT()
         self.config = testing.setUp(request=self.request)
 
         settings = {}
@@ -20,7 +19,6 @@ class LogsTests(unittest.TestCase):
         settings['sqlite_file'] = 'sqlite:///%s' % self.dbfile
         init_sql_database(settings)
         self.request.registry.settings = settings
-        make_session(self.request)
         
         self.config.include('pyramid_zcml')
         self.config.load_zcml('voteit.core:configure.zcml')

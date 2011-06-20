@@ -7,8 +7,8 @@ from pyramid.security import Authenticated
 from zope.interface.verify import verifyObject
 
 from voteit.core import init_sql_database
-from voteit.core.sql_db import make_session
 from voteit.core import security
+from voteit.core.testing import DummyRequestWithVoteIT
 
 
 viewer = set([security.ROLE_VIEWER])
@@ -16,7 +16,7 @@ viewer = set([security.ROLE_VIEWER])
 
 class UnreadTests(unittest.TestCase):
     def setUp(self):
-        self.request = testing.DummyRequest()
+        self.request = DummyRequestWithVoteIT()
         self.config = testing.setUp(request=self.request)
 
         settings = {}
@@ -24,14 +24,13 @@ class UnreadTests(unittest.TestCase):
         settings['sqlite_file'] = 'sqlite:///%s' % self.dbfile
         init_sql_database(settings)
         self.request.registry.settings = settings
-        make_session(self.request)
         
         self.config.include('pyramid_zcml')
         self.config.load_zcml('voteit.core:configure.zcml')
 
     def tearDown(self):
         testing.tearDown()
-        #Is this really smart. Pythons tempfile module created lot's of crap that wasn't cleaned up
+        #Is this really smart? Pythons tempfile module created lot's of crap that wasn't cleaned up
         os.unlink(self.dbfile)
 
     def _import_class(self):
