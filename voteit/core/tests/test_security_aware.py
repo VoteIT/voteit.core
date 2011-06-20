@@ -22,11 +22,6 @@ class SecurityAwareTests(unittest.TestCase):
         
         return DummyContent()
 
-    def _bootstrap_root(self):
-        """ Create a default app root"""
-        from voteit.core.bootstrap import bootstrap_voteit
-        return bootstrap_voteit()
-
     def test_verify_object(self):
         from zope.interface.verify import verifyObject
         from voteit.core.models.interfaces import ISecurityAware
