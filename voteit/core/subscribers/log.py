@@ -98,7 +98,7 @@ def log_state_changed(obj, event):
     logs.add(
         meeting.uid, 
         'changed state from %s to %s on %s %s' % (event.old_state, event.new_state, obj.content_type, obj.title), 
-        tags='state changed', 
+        tags='state changed',
         userid=userid, 
         primaryuid=obj.uid,
     )

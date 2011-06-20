@@ -26,8 +26,14 @@ class PollTests(unittest.TestCase):
         testing.tearDown()
     
     def _make_obj(self):
+        """ Poll object need to be in the context of an Agenda Item to work properly
+        """
         from voteit.core.models.poll import Poll
-        return Poll()
+        from voteit.core.models.agenda_item import AgendaItem
+        ai = AgendaItem()
+        ai['poll'] = Poll()
+
+        return ai['poll']
     
     def _register_majority_poll(self, poll):
         from voteit.core import register_poll_plugin
@@ -102,6 +108,12 @@ class PollTests(unittest.TestCase):
         obj['vote2'] = vote2
 
         self.assertEqual(obj.get_voted_userids(), frozenset(['admin', 'some_guy']))
+
+    def test_get_voted_userids_bad_vote(self):
+        obj = self._make_obj()
+        vote1 = self._make_vote()
+        obj['v'] = vote1
+        self.assertRaises(ValueError, obj.get_voted_userids)
 
     def test_get_ballots_string(self):
         obj = self._make_obj()
@@ -246,8 +258,14 @@ class PollPermissionTests(unittest.TestCase):
         testing.tearDown()
 
     def _make_obj(self):
+        """ Poll object need to be in the context of an Agenda Item to work properly
+        """
         from voteit.core.models.poll import Poll
-        return Poll()
+        from voteit.core.models.agenda_item import AgendaItem
+        ai = AgendaItem()
+        ai['poll'] = Poll()
+
+        return ai['poll']
 
     def _register_majority_poll(self, poll):
         from voteit.core import register_poll_plugin

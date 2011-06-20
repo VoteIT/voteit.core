@@ -10,7 +10,7 @@ from webob.exc import HTTPFound
 
 from voteit.core import VoteITMF as _
 from voteit.core.views.api import APIView
-from voteit.core.security import ROLE_OWNER, EDIT, DELETE, ADD_VOTE
+from voteit.core.security import ROLE_OWNER, EDIT, DELETE, ADD_VOTE, VIEW
 from voteit.core.models.interfaces import IVote
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IPollPlugin
@@ -101,7 +101,7 @@ class VoteView(object):
     @view_config(context=IVote, name="edit", renderer=DEFAULT_TEMPLATE, permission=EDIT)
     def edit_vote(self):
         """ Edit vote, only for the owner of the vote. """
-        #FIXME: Allow plugin to override renderer
+        #FIXME: Allow plugin to override renderer?
        
         self.form = Form(self.schema, buttons=('update', 'cancel'))
         self.response['form_resources'] = self.form.get_widget_resources()
@@ -131,8 +131,21 @@ class VoteView(object):
             return HTTPFound(location=url)
 
         #No action - Render edit form
-        msg = _(u"Edit your vote", close_button=False)
-        self.api.flash_messages.add(msg)
+        msg = _(u"Edit your vote")
+        self.api.flash_messages.add(msg, close_button=False)
         appstruct = self.context.get_vote_data()
         self.response['form'] = self.form.render(appstruct=appstruct)
+        return self.response
+
+    @view_config(context=IVote, renderer='templates/base_readonly_form.pt', permission=VIEW)
+    def view_vote(self):
+
+        self.form = Form(self.schema, buttons=())
+        self.response['form_resources'] = self.form.get_widget_resources()
+
+        msg = _(u"This is your vote")
+        self.api.flash_messages.add(msg, close_button=False)
+
+        appstruct = self.context.get_vote_data()
+        self.response['readonly_form'] = self.form.render(appstruct=appstruct, readonly=True)
         return self.response

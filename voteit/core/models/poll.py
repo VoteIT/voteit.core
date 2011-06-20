@@ -117,9 +117,9 @@ class Poll(BaseContent, WorkflowAware):
 
     def get_proposal_objects(self):
         agenda_item = find_interface(self, IAgendaItem)
-        proposals = set()
         if agenda_item is None:
-            return proposals
+            raise ValueError("Can't find any agenda item in the polls lineage")
+        proposals = set()
         for item in agenda_item.values():
             if item.uid in self.proposal_uids:
                 proposals.add(item)
@@ -131,7 +131,12 @@ class Poll(BaseContent, WorkflowAware):
 
     def get_voted_userids(self):
         """ Returns userids of all users who've voted. """
-        userids = [x.creators[0] for x in self.get_all_votes()]
+        userids = set()
+        for vote in self.get_all_votes():
+            if not len(vote.creators) == 1:
+                raise ValueError("The creators attribute on a vote didn't have a single value. "
+                                 "Votes can only have one creator. Vote was: %s" % vote)
+            userids.add(vote.creators[0])
         return frozenset(userids)
 
     def _calculate_ballots(self):
@@ -178,7 +183,7 @@ class Poll(BaseContent, WorkflowAware):
         """
         poll_plugin = self.get_poll_plugin()
         return poll_plugin.render_result()
-
+        
     def get_proposal_by_uid(self, uid):
         for prop in self.get_proposal_objects():
             if prop.uid == uid:

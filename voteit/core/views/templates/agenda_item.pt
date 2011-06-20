@@ -39,7 +39,7 @@
 
         <div class="column">
             <div id="proposals">
-                <h1>Proposals</h1>
+                <h1>Proposal(s)</h1>
                     
                 <tal:iterate condition="proposals" repeat="proposal proposals">
                     <div class="listing_block">
@@ -63,18 +63,29 @@
             
             </div>
 
-            <h1>Poll</h1>
+            <h1>Poll(s)</h1>
                 
             <tal:iterate condition="polls" repeat="poll polls">
-                <div class="listing_block">
+                <div tal:define="poll_plugin poll.get_poll_plugin();
+				                 state_id poll.get_workflow_state();"
+				     class="listing_block">
                     <h3 tal:content="poll.title">Title</h3>
                     <div tal:content="poll.description">Description</div>
+					
+					<div>
+                        <span>Poll method:</span>
+                        <strong tal:content="poll_plugin.title">Title</strong>
+					</div>
 
-                    <div tal:define="state_id poll.get_workflow_state()" class="wf-info">
+                    <div class="wf-info">
                         <span>State:</span>
                         <strong tal:attributes="class 'wf-state-%s' % state_id"
                               tal:content="state_id">open</strong>
                     </div>
+					
+					<div tal:condition="state_id == 'closed'" tal:content="structure poll.render_poll_result()">
+						Poll result
+					</div>
 
                     <div tal:replace="structure api.get_action_bar(poll, request)">Action bar</div>
                 </div>
@@ -85,15 +96,7 @@
             </tal:no_polls>
             
         </div>
-
-        <div style="clear: both"></div>
-
-
-
-
-
-
-
+        <div class="clear"><!-- --></div>
 
     </div>
 </body>
