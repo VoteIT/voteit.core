@@ -26,12 +26,12 @@ class VoteITRequestMixin(object):
         return authenticated_userid(self)
 
     @reify
-    def root(self):
+    def site_root(self):
         return find_interface(self.context, ISiteRoot)
 
     @reify
     def users(self):
-        return self.root.users
+        return self.site_root.users
         
     @reify
     def user(self):

@@ -5,7 +5,7 @@ from voteit.core.security import ROLE_ADMIN
 from voteit.core.models.interfaces import IContentUtility
 
 
-def bootstrap_voteit(registry=None):
+def bootstrap_voteit(registry=None, echo=True):
     """ Bootstrap site root.
         Will add:
         - Site root
@@ -17,7 +17,8 @@ def bootstrap_voteit(registry=None):
     
     content_util = registry.getUtility(IContentUtility)
 
-    print "Bootstrapping site - creating 'admin' user with password 'admin'"
+    if echo:
+        print "Bootstrapping site - creating 'admin' user with password 'admin'"
     
     #Add root
     root = content_util['SiteRoot'].type_class()

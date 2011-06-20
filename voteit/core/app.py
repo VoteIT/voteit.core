@@ -46,7 +46,9 @@ def register_content_types(config):
     if content_types is None:
         raise ValueError("content_types must exist in application configuration."
                          "It should point to includable modules, like voteit.core.models.meeting")
-    for content_type in content_types.strip().splitlines():
+    
+    cts = [x.strip() for x in content_types.strip().splitlines()]
+    for content_type in cts:
         config.include(content_type)
 
 
