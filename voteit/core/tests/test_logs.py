@@ -41,10 +41,10 @@ class LogsTests(unittest.TestCase):
         self.assertTrue(verifyObject(ILogs, obj))
 
     def test_tag(self):
-        from voteit.core.models.log import Tag
-        query = self.session.query(Tag)
+        from voteit.core.models.log import LogTag
+        query = self.session.query(LogTag)
         self.assertEqual(len(query.all()), 5)
-        self.assertEqual(len(query.filter(Tag.tag=='added').all()), 1)
+        self.assertEqual(len(query.filter(LogTag.tag=='added').all()), 1)
         
     def test_log(self):
         meetinguid = 'm1'
@@ -54,10 +54,10 @@ class LogsTests(unittest.TestCase):
         primaryuid = 'v1'
         secondaryuid = 'p1'
 
-        from voteit.core.models.log import Tag
+        from voteit.core.models.log import LogTag
         _tags = []
         for tag in tags:
-            _tag = self.session.query(Tag).filter_by(tag=tag).one()
+            _tag = self.session.query(LogTag).filter_by(tag=tag).one()
             _tags.append(_tag)
             
             
