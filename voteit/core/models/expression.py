@@ -31,22 +31,19 @@ class Expression(RDB_Base):
 
 class Expressions(object):
     """ Handle user expressions like 'Like' or 'Support'.
-        This behaves like an adapter on a request.
+        This behaves like an adapter on a sql db session.
     """
     implements(IExpressions)
     
-    def __init__(self, request):
-        self.request = request
+    def __init__(self, session):
+        self.session = session
     
     def add(self, tag, userid, uid):
-        session = self.request.sql_session
-        
         exp = Expression(tag, userid, uid)
-        session.add(exp)
+        self.session.add(exp)
 
     def retrieve_userids(self, tag, uid):
-        session = self.request.sql_session
-        query = session.query(Expression).filter_by(tag=tag, uid=uid)
+        query = self.session.query(Expression).filter_by(tag=tag, uid=uid)
 
         userids = set()
         for row in query.all():
@@ -54,7 +51,6 @@ class Expressions(object):
         return userids
 
     def remove(self, tag, userid, uid):
-        session = self.request.sql_session
-        query = session.query(Expression).filter_by(tag=tag, userid=userid, uid=uid)
+        query = self.session.query(Expression).filter_by(tag=tag, userid=userid, uid=uid)
         exp = query.first()
-        session.delete(exp)
+        self.session.delete(exp)

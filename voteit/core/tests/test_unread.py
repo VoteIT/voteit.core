@@ -1,14 +1,13 @@
 import unittest
-import os
 
 from pyramid import testing
 from pyramid.authorization import ACLAuthorizationPolicy
 from pyramid.security import Authenticated
 from zope.interface.verify import verifyObject
+import transaction
 
-from voteit.core.app import init_sql_database
 from voteit.core import security
-from voteit.core.testing import DummyRequestWithVoteIT
+from voteit.core.testing import testing_sql_session
 
 
 viewer = set([security.ROLE_VIEWER])
@@ -16,22 +15,14 @@ viewer = set([security.ROLE_VIEWER])
 
 class UnreadTests(unittest.TestCase):
     def setUp(self):
-        self.request = DummyRequestWithVoteIT()
-        self.config = testing.setUp(request=self.request)
-
-        settings = {}
-        self.dbfile = '_temp_testing_sqlite.db'
-        settings['sqlite_file'] = 'sqlite:///%s' % self.dbfile
-        init_sql_database(settings)
-        self.request.registry.settings = settings
-        
+        self.config = testing.setUp()
+        self.session = testing_sql_session(self.config)
         self.config.include('pyramid_zcml')
         self.config.load_zcml('voteit.core:configure.zcml')
 
     def tearDown(self):
         testing.tearDown()
-        #Is this really smart? Pythons tempfile module created lot's of crap that wasn't cleaned up
-        os.unlink(self.dbfile)
+        transaction.abort() #To cancel any commit to the sql db
 
     def _import_class(self):
         from voteit.core.models.unread import Unreads
@@ -51,18 +42,17 @@ class UnreadTests(unittest.TestCase):
 
     def test_verify_obj_implementation(self):
         from voteit.core.models.interfaces import IUnreads
-        obj = self._import_class()(self.request)
+        obj = self._import_class()(self.session)
         self.assertTrue(verifyObject(IUnreads, obj))
 
     def test_add(self):
-        obj = self._import_class()(self.request)
+        obj = self._import_class()(self.session)
         userid = 'robin'
         contextuid = 'a1'
         obj.add(userid, contextuid)
 
         from voteit.core.models.unread import Unread
-        session = self.request.sql_session
-        query = session.query(Unread)
+        query = self.session.query(Unread)
 
         self.assertEqual(len(query.all()), 1)
         result_obj = query.all()[0]
@@ -70,7 +60,7 @@ class UnreadTests(unittest.TestCase):
         self.assertEqual(result_obj.contextuid, contextuid)
 
     def test_remove(self):
-        obj = self._import_class()(self.request)
+        obj = self._import_class()(self.session)
         self._add_mock_data(obj)
         
         userid = 'robin'
@@ -79,13 +69,12 @@ class UnreadTests(unittest.TestCase):
         obj.remove(userid, contextuid)
 
         from voteit.core.models.unread import Unread
-        session = self.request.sql_session
-        query = session.query(Unread).filter(Unread.userid==userid)
+        query = self.session.query(Unread).filter(Unread.userid==userid)
 
         self.assertEqual(len(query.all()), 2)
         
     def test_remove_userid(self):
-        obj = self._import_class()(self.request)
+        obj = self._import_class()(self.session)
         self._add_mock_data(obj)
         
         userid = 'robin'
@@ -93,13 +82,12 @@ class UnreadTests(unittest.TestCase):
         obj.remove_user(userid)
 
         from voteit.core.models.unread import Unread
-        session = self.request.sql_session
-        query = session.query(Unread).filter(Unread.userid==userid)
+        query = self.session.query(Unread).filter(Unread.userid==userid)
         
         self.assertEqual(len(query.all()), 0)
 
     def test_remove_context(self):
-        obj = self._import_class()(self.request)
+        obj = self._import_class()(self.session)
         self._add_mock_data(obj)
         
         contextuid = 'p1'
@@ -107,13 +95,12 @@ class UnreadTests(unittest.TestCase):
         obj.remove_context(contextuid)
 
         from voteit.core.models.unread import Unread
-        session = self.request.sql_session
-        query = session.query(Unread).filter(Unread.contextuid==contextuid)
+        query = self.session.query(Unread).filter(Unread.contextuid==contextuid)
         
         self.assertEqual(len(query.all()), 0)
 
     def test_retrieve(self):
-        obj = self._import_class()(self.request)
+        obj = self._import_class()(self.session)
         self._add_mock_data(obj)
         
         userid = 'robin'
@@ -158,7 +145,7 @@ class UnreadTests(unittest.TestCase):
         m1['a1'] = a1
 
         # check that users have entries in unread
-        unreads = self._import_class()(self.request)
+        unreads = self._import_class()(self.session)
         self.assertEqual(len(unreads.retrieve('robin', 'a1')), 1)
         
     def test_content_removed_subscriber_removes_from_unread(self):
@@ -200,7 +187,7 @@ class UnreadTests(unittest.TestCase):
         del m1['a1']
         
         # check that user have no entries in unread for agenda item
-        unreads = self._import_class()(self.request)
+        unreads = self._import_class()(self.session)
         self.assertEqual(len(unreads.retrieve('robin', 'a1')), 0)
         
     def test_user_removed_subscriber_removes_from_unread(self):
@@ -242,5 +229,5 @@ class UnreadTests(unittest.TestCase):
         del root.users['fredrik']
         
         # check that user have no entries in unread
-        unreads = self._import_class()(self.request)
+        unreads = self._import_class()(self.session)
         self.assertEqual(len(unreads.retrieve('fredrik')), 0)

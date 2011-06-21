@@ -1,32 +1,23 @@
 import unittest
-import os
 
 from pyramid import testing
+import transaction
 from zope.interface.verify import verifyObject
-
-from voteit.core.app import init_sql_database
-from voteit.core.testing import DummyRequestWithVoteIT
+from voteit.core.testing import testing_sql_session
 
 
 class LogsTests(unittest.TestCase):
 
     def setUp(self):
-        self.request = DummyRequestWithVoteIT()
-        self.config = testing.setUp(request=self.request)
+        self.config = testing.setUp()
 
-        settings = {}
-        self.dbfile = '_temp_testing_sqlite.db'
-        settings['sqlite_file'] = 'sqlite:///%s' % self.dbfile
-        init_sql_database(settings)
-        self.request.registry.settings = settings
-        
         self.config.include('pyramid_zcml')
         self.config.load_zcml('voteit.core:configure.zcml')
+        self.session = testing_sql_session(self.config)
 
     def tearDown(self):
         testing.tearDown()
-        #Is this really smart? Pythons tempfile module created lot's of crap that wasn't cleaned up
-        os.unlink(self.dbfile)
+        transaction.abort() #To cancel any commit to the sql db
 
     def _import_class(self):
         from voteit.core.models.log import Logs
@@ -44,25 +35,14 @@ class LogsTests(unittest.TestCase):
         for (meetinguid, message, tag, userid, primaryuid, secondaryuid) in data:
             obj.add(meetinguid, message, tag, userid, primaryuid, secondaryuid)
 
-    def _init_tags(self):
-        from voteit.core.models.log import Tag
-        session = self.request.sql_session
-        tags = ('added', 'updated', 'deleted', 'state changed', 'proposal to poll')
-        for tag in tags:
-            _tag = Tag(tag)
-            session.add(_tag)
-
     def test_verify_obj_implementation(self):
         from voteit.core.models.interfaces import ILogs
-        obj = self._import_class()(self.request)
+        obj = self._import_class()(self.session)
         self.assertTrue(verifyObject(ILogs, obj))
 
     def test_tag(self):
-        self._init_tags()
-        
         from voteit.core.models.log import Tag
-        session = self.request.sql_session
-        query = session.query(Tag)
+        query = self.session.query(Tag)
         self.assertEqual(len(query.all()), 5)
         self.assertEqual(len(query.filter(Tag.tag=='added').all()), 1)
         
@@ -74,21 +54,18 @@ class LogsTests(unittest.TestCase):
         primaryuid = 'v1'
         secondaryuid = 'p1'
 
-        self._init_tags()
-        session = self.request.sql_session
-
         from voteit.core.models.log import Tag
         _tags = []
         for tag in tags:
-            _tag = session.query(Tag).filter_by(tag=tag).one()
+            _tag = self.session.query(Tag).filter_by(tag=tag).one()
             _tags.append(_tag)
             
             
         from voteit.core.models.log import Log
         log = Log(meetinguid, message, _tags, userid, primaryuid, secondaryuid)
-        session.add(log)
+        self.session.add(log)
         
-        query = session.query(Log)
+        query = self.session.query(Log)
         self.assertEqual(len(query.all()), 1)
         result_obj = query.all()[0]
         self.assertEqual(result_obj.meetinguid, meetinguid)
@@ -98,10 +75,8 @@ class LogsTests(unittest.TestCase):
         self.assertEqual(result_obj.secondaryuid, secondaryuid)
         self.assertEqual(len(result_obj.tags), 2)
     
-    def test_add(self):
-        self._init_tags()
-        
-        obj = self._import_class()(self.request)
+    def test_add(self):        
+        obj = self._import_class()(self.session)
         meetinguid = 'a1'
         message = 'aa-bb'
         tags = ('added', 'proposal to poll')
@@ -111,8 +86,7 @@ class LogsTests(unittest.TestCase):
         obj.add(meetinguid, message, tags, userid, primaryuid, secondaryuid)
 
         from voteit.core.models.log import Log
-        session = self.request.sql_session
-        query = session.query(Log)
+        query = self.session.query(Log)
 
         self.assertEqual(len(query.all()), 1)
         result_obj = query.all()[0]
@@ -123,17 +97,13 @@ class LogsTests(unittest.TestCase):
         self.assertEqual(result_obj.secondaryuid, secondaryuid)
         self.assertEqual(len(result_obj.tags), 2)
 
-    def test_retrieve_entries(self):
-        self._init_tags()
-        
-        obj = self._import_class()(self.request)
+    def test_retrieve_entries(self):        
+        obj = self._import_class()(self.session)
         self._add_mock_data(obj)
 
         self.assertEqual(len(obj.retrieve_entries('m1', tag='added')), 2)
 
     def test_meeting_added_subscriber_adds_to_log(self):
-        self._init_tags()
-
         #Add subscribers
         self.config.scan('voteit.core.subscribers.log')
 
@@ -144,12 +114,10 @@ class LogsTests(unittest.TestCase):
         meeting = Meeting()
         root['meeting'] = meeting
         
-        logs = self._import_class()(self.request)
+        logs = self._import_class()(self.session)
         self.assertEqual(len(logs.retrieve_entries(meeting.uid, tag='added', primaryuid=meeting.uid)), 1)
         
     def test_added_subscriber_adds_to_log(self):
-        self._init_tags()
-
         #Add subscribers
         self.config.scan('voteit.core.subscribers.log')
         
@@ -172,12 +140,10 @@ class LogsTests(unittest.TestCase):
         vo = Proposal()
         ai['v1'] = vo
         
-        logs = self._import_class()(self.request)
+        logs = self._import_class()(self.session)
         self.assertEqual(len(logs.retrieve_entries(meeting.uid, tag='added')), 4)
         
-    def test_deleted_subscriber_adds_to_log(self):
-        self._init_tags()
-        
+    def test_deleted_subscriber_adds_to_log(self):        
         #Add subscribers
         self.config.scan('voteit.core.subscribers.log')
 
@@ -206,12 +172,10 @@ class LogsTests(unittest.TestCase):
         del meeting['a1']
         del root['meeting']
         
-        logs = self._import_class()(self.request)
+        logs = self._import_class()(self.session)
         self.assertEqual(len(logs.retrieve_entries(meeting_uid, tag='deleted')), 4)
         
     def test_state_changed_subscriber_adds_to_log(self):
-        self._init_tags()
-        
         #Add subscribers
         self.config.scan('voteit.core.subscribers.log')
         
@@ -222,14 +186,13 @@ class LogsTests(unittest.TestCase):
         ai = AgendaItem()
         meeting['a1'] = ai
 
-        ai.set_workflow_state(self.request, 'inactive')
+        request = testing.DummyRequest()
+        ai.set_workflow_state(request, 'inactive')
         
-        logs = self._import_class()(self.request)
+        logs = self._import_class()(self.session)
         self.assertEqual(len(logs.retrieve_entries(meeting.uid, tag='state changed')), 1)
         
     def test_proposal_to_poll_subscriber_adds_to_log(self):
-        self._init_tags()
-        
         #Add subscribers
         self.config.scan('voteit.core.subscribers.log')
         
@@ -252,15 +215,13 @@ class LogsTests(unittest.TestCase):
         vo.proposal_uids = (p1.uid, p2.uid)
         ai['v1'] = vo
         
-        logs = self._import_class()(self.request)
+        logs = self._import_class()(self.session)
         self.assertEqual(len(logs.retrieve_entries(meeting.uid, tag='added')), 4)
 
-        logs = self._import_class()(self.request)
+        logs = self._import_class()(self.session)
         self.assertEqual(len(logs.retrieve_entries(meeting.uid, tag='proposal to poll')), 2)
         
     def test_updated_subscriber_adds_to_log(self):
-        self._init_tags()
-        
         #Add subscribers
         self.config.scan('voteit.core.subscribers.log')
         
@@ -271,5 +232,5 @@ class LogsTests(unittest.TestCase):
         from voteit.core.events import ObjectUpdatedEvent
         objectEventNotify(ObjectUpdatedEvent(meeting))
 
-        logs = self._import_class()(self.request)
+        logs = self._import_class()(self.session)
         self.assertEqual(len(logs.retrieve_entries(meeting.uid, tag='updated')), 1)

@@ -18,8 +18,6 @@ from voteit.core.security import ROLE_OWNER, EDIT, DELETE, VIEW
 from voteit.core.models.schemas import add_csrf_token
 from voteit.core.events import ObjectUpdatedEvent
 
-from voteit.core.models.message import Messages
-
 
 DEFAULT_TEMPLATE = "templates/base_edit.pt"
 
@@ -185,3 +183,18 @@ class BaseEdit(object):
             i += 1
         #If no id was found, don't just continue
         raise KeyError("No unique id could be found")
+        
+    @view_config(name="state", renderer=DEFAULT_TEMPLATE)
+    def state_change(self):
+        """ Change workflow state for context.
+            Note that if this view is called without the required permission,
+            it will raise a WorkflowError exception. This view should
+            never be linked to without doing the proper permission checks first.
+            (Since the WorkflowError is not the same as Pyramids Forbidden exception,
+            which will be handled by the application.)
+        """
+        state = self.request.params.get('state')
+        self.context.set_workflow_state(self.request, state)
+        
+        url = resource_url(self.context, self.request)
+        return HTTPFound(location=url)

@@ -2,7 +2,7 @@ from pyramid.threadlocal import get_current_registry
 
 from voteit.core import VoteITMF as _
 from voteit.core.security import ROLE_ADMIN
-from voteit.core.models.interfaces import IContentUtility
+from voteit.core.models.interfaces import IContentUtility, ISQLSession
 
 
 def bootstrap_voteit(registry=None, echo=True):
@@ -38,14 +38,5 @@ def bootstrap_voteit(registry=None, echo=True):
     
     #Add admin to group managers
     root.add_groups('admin', [ROLE_ADMIN])
-    
-    #Add log tags
-    from voteit.core.models.log import Tag
-    sql_session = registry.settings['rdb_session_factory']()
-    #FIXME: tags should be defined elswhere
-    for tag in ('added', 'updated', 'deleted', 'state changed', 'proposal to poll'):
-        if sql_session.query(Tag).filter(Tag.tag==tag).count() == 0:
-            _tag = Tag(tag)
-            sql_session.add(_tag)
     
     return root

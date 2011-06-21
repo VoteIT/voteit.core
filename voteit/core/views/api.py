@@ -19,12 +19,13 @@ from webhelpers.html.converters import nl2br
 
 from voteit.core import security
 from voteit.core.models.interfaces import IMeeting
+from voteit.core.models.interfaces import ISQLSession
 from voteit.core.models.interfaces import IContentUtility
 from voteit.core.models.log import Logs
 from voteit.core.views.macros import FlashMessages
 from voteit.core.views.expressions import ExpressionsView
-from voteit.core.views.messages import MessagesView
 from voteit.core.models.unread import Unreads
+
 
 class APIView(object):
     """ Convenience methods for templates """
@@ -35,6 +36,7 @@ class APIView(object):
         
         self.resource_url = resource_url
         self.root = find_root(context)
+        self.sql_session = request.registry.getUtility(ISQLSession)()
 
         #Authentication- / User-related
         self.userid = authenticated_userid(request)
@@ -62,7 +64,7 @@ class APIView(object):
         self.flash_messages = FlashMessages(request)
         self.expressions = ExpressionsView(request)
         
-        self.logs = Logs(request)
+        self.logs = Logs(self.sql_session)
         
         self.nl2br = nl2br
 
@@ -166,7 +168,7 @@ class APIView(object):
         return effective_principals
         
     def get_unread(self, context, content_type=None):
-        unreads = Unreads(self.request)
+        unreads = Unreads(self.sql_session)
         contents = context.get_content(content_type=content_type)
         unread_count = 0
         for content in contents:
@@ -176,7 +178,7 @@ class APIView(object):
         return unread_count
         
     def is_unread(self, context):
-        unreads = Unreads(self.request)
+        unreads = Unreads(self.sql_session)
         if len(unreads.retrieve(self.userid, context.uid)) > 0:
             return True
             

@@ -10,18 +10,13 @@ from pyramid.config import Configurator
 from zope.interface.verify import verifyClass
 
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
 from zope.sqlalchemy import ZopeTransactionExtension
 
 from voteit.core.models.interfaces import IContentUtility
 from voteit.core.models.interfaces import IPollPlugin
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IPollPlugin
-
-
-def register_request_factory(config):
-    from voteit.core.models.request import VoteITRequestFactory
-    config.set_request_factory(VoteITRequestFactory)
+from voteit.core.models.interfaces import ISQLSession
 
 
 def register_poll_plugins(config):
@@ -51,33 +46,50 @@ def register_content_types(config):
     for content_type in cts:
         config.include(content_type)
 
+def add_sql_session_util(config, sqlite_file=None):
+    settings = config.registry.settings
+    
+    if sqlite_file is None:
+        sqlite_file = settings.get('sqlite_file')
+        if sqlite_file is None:
+            raise ValueError("""
+            A path to an SQLite db file needs to be specified.
+            Something like: 'sqlite_file = sqlite:///%(here)s/../var/sqlite.db'
+            added in paster setup. (Either development.ini or production.ini)
+            
+            Alternatively, you can pass sqlite_file as an argument to this method.
+            """)
+    
+    engine = create_engine(sqlite_file)
 
-def init_sql_database(settings):
+    from voteit.core.models.sql_session import SQLSession
+    util = SQLSession(engine)
+    config.registry.registerUtility(util, ISQLSession)
+
+
+def populate_sql_database(config):
     from voteit.core import RDB_Base
     
-    sqlite_file = settings.get('sqlite_file')
-    if sqlite_file is None:
-        raise ValueError("""
-        A path to an SQLite db file needs to be specified.
-        Something like: 'sqlite_file = sqlite:///%(here)s/../var/sqlite.db'
-        added in paster setup. (Either development.ini or production.ini)
-        """)
-
-    settings['rdb_engine'] = create_engine(sqlite_file)
-    settings['rdb_session_factory'] = sessionmaker(bind=settings['rdb_engine'],
-                                                   extension=ZopeTransactionExtension())
-
+    sql_util = config.registry.getUtility(ISQLSession)
+    
     #Touch all modules that are SQL-based
     from voteit.core.models.expression import Expression
-    from voteit.core.models.message import Message
-    from voteit.core.models.message import MessageRead
     from voteit.core.models.log import log_tags
     from voteit.core.models.log import Log
     from voteit.core.models.log import Tag
     from voteit.core.models.unread import Unread
     
     #Create tables
-    RDB_Base.metadata.create_all(settings['rdb_engine'])
+    RDB_Base.metadata.create_all(sql_util.engine)
+    
+    session = sql_util()
+
+    #Add log tags
+    #FIXME: tags should be defined elswhere
+    for tag in ('added', 'updated', 'deleted', 'state changed', 'proposal to poll'):
+        if session.query(Tag).filter(Tag.tag==tag).count() == 0:
+            _tag = Tag(tag)
+            session.add(_tag)
 
 
 def include_zcml(config):

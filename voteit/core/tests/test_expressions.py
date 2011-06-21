@@ -1,28 +1,17 @@
 import unittest
-import os
 
 from pyramid import testing
 from zope.interface.verify import verifyObject
-
-from voteit.core.testing import DummyRequestWithVoteIT
+from voteit.core.testing import testing_sql_session
 
 
 class ExpressionsTests(unittest.TestCase):
     def setUp(self):
-        from voteit.core.app import init_sql_database
-
         self.config = testing.setUp()
-
-        self.request = DummyRequestWithVoteIT()
-        settings = self.request.registry.settings
-        self.dbfile = '_temp_testing_sqlite.db'
-        settings['sqlite_file'] = 'sqlite:///%s' % self.dbfile
-        init_sql_database(settings)
+        self.session = testing_sql_session(self.config)
 
     def tearDown(self):
         testing.tearDown()
-        #Is this really smart. Pythons tempfile module created lot's of crap that wasn't cleaned up
-        os.unlink(self.dbfile)
 
     def _import_class(self):
         from voteit.core.models.expression import Expressions        
@@ -45,19 +34,18 @@ class ExpressionsTests(unittest.TestCase):
 
     def test_verify_obj_implementation(self):
         from voteit.core.models.interfaces import IExpressions
-        obj = self._import_class()(self.request)
+        obj = self._import_class()(self.session)
         self.assertTrue(verifyObject(IExpressions, obj))
 
     def test_add(self):
-        obj = self._import_class()(self.request)
+        obj = self._import_class()(self.session)
         tag = u'Like'
         userid = u'robin'
         uid = u'aa-bb'
         obj.add(tag, userid, uid)
 
         from voteit.core.models.expression import Expression
-        session = self.request.sql_session
-        query = session.query(Expression).filter_by(tag=tag, userid=userid, uid=uid)
+        query = self.session.query(Expression).filter_by(tag=tag, userid=userid, uid=uid)
 
         self.assertEqual(len(query.all()), 1)
         result_obj = query.all()[0]
@@ -67,7 +55,7 @@ class ExpressionsTests(unittest.TestCase):
 
     def test_retrieve_userids(self):
         """ Must be unique in uid and tag. """
-        obj = self._import_class()(self.request)
+        obj = self._import_class()(self.session)
         self._add_mock_data(obj)
 
         self.assertEqual(len(obj.retrieve_userids(u'Like', u'aaa')), 5)
@@ -77,7 +65,7 @@ class ExpressionsTests(unittest.TestCase):
         self.assertEqual(len(obj.retrieve_userids(u'Dislike', u'bbb')), 1)
 
     def test_remove(self):
-        obj = self._import_class()(self.request)
+        obj = self._import_class()(self.session)
         self._add_mock_data(obj)
         
         obj.remove(u'Like', u'elin', u'aaa')

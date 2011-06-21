@@ -5,8 +5,6 @@ from pyramid.session import UnencryptedCookieSessionFactoryConfig
 from repoze.zodbconn.finder import PersistentApplicationFinder
 from pyramid.config import Configurator
 
-from sqlalchemy import MetaData
-from sqlalchemy.orm import scoped_session
 from sqlalchemy.ext.declarative import declarative_base
 
 #Must be before all of this packages imports since some other methods might import it
@@ -34,8 +32,6 @@ def main(global_config, **settings):
 
     sessionfact = UnencryptedCookieSessionFactoryConfig('messages')
 
-    from voteit.core import app
-    app.init_sql_database(settings)
     
     config = Configurator(settings=settings,
                           root_factory=get_root,
@@ -43,16 +39,19 @@ def main(global_config, **settings):
                           authorization_policy=authz_policy,
                           session_factory = sessionfact,)
     
+    from voteit.core import app
+    #FIXME: Pluggable startup procedure?
+    app.add_sql_session_util(config)
+    app.populate_sql_database(config)
+    app.register_content_types(config)
+    app.register_poll_plugins(config)
+    
     config.add_static_view('static', '%s:static' % PROJECTNAME)
     config.add_static_view('deform', 'deform:static')
 
     #Set which mailer to use        
     config.include(settings['mailer'])
 
-    app.register_content_types(config)
-    app.register_poll_plugins(config)
-    app.register_request_factory(config)
-    
     #config.add_translation_dirs('%s:locale/' % PROJECTNAME)
 
     config.scan(PROJECTNAME)

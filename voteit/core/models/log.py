@@ -58,15 +58,15 @@ class Tag(RDB_Base):
     
 class Logs(object):
     """ Handle logs.
-        This behaves like an adapter on a request.
+        This behaves like an adapter on a sql db session.
     """
     implements(ILogs)
     
-    def __init__(self, request):
-        self.request = request
+    def __init__(self, session):
+        self.session = session
     
     def add(self, meetinguid, message, tags=None, userid=None, primaryuid=None, secondaryuid=None):
-        session = self.request.sql_session
+        session = self.session
         
         if not type(tags) == tuple:
             tags = (tags, )
@@ -80,7 +80,7 @@ class Logs(object):
         session.add(log)
 
     def retrieve_entries(self, meetinguid, tag=None, userid=None, primaryuid=None, secondaryuid=None):
-        session = self.request.sql_session
+        session = self.session
         query = session.query(Log).filter(Log.meetinguid==meetinguid)
         if tag:
             query = query.filter(Log.tags.any(tag=tag))

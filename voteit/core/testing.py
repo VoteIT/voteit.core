@@ -1,14 +1,9 @@
-from pyramid import testing as pyra_testing
+from voteit.core.app import add_sql_session_util
+from voteit.core.app import populate_sql_database
+from voteit.core.models.interfaces import ISQLSession
 
-from voteit.core.models.request import VoteITRequestMixin
 
-
-class DummyRequestWithVoteIT(pyra_testing.DummyRequest, VoteITRequestMixin):
-    """ Same as DummyRequest, but it can have a real context set.
-    """
-    
-    def __init__(self, params=None, environ=None, headers=None, path='/',
-                 cookies=None, post=None, context=None, **kw):
-        super(DummyRequestWithVoteIT, self).__init__(params=None, environ=None, headers=None, path='/',
-                                                     cookies=None, post=None, **kw)
-        self.context = context
+def testing_sql_session(config):
+    add_sql_session_util(config, sqlite_file='sqlite://') #// means in memory
+    populate_sql_database(config)
+    return config.registry.getUtility(ISQLSession)() #Returns a session
