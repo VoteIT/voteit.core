@@ -1,17 +1,15 @@
 import unittest
-import os
 
 from pyramid import testing
-from pyramid.interfaces import IRequest
 from zope.interface.verify import verifyObject
 from zope.component.event import objectEventNotify
 
-from voteit.core.app import init_sql_database
 from voteit.core.app import register_content_types
 from voteit.core.bootstrap import bootstrap_voteit
 from voteit.core.models.interfaces import IContentUtility
 from voteit.core.interfaces import IObjectUpdatedEvent
 from voteit.core.events import ObjectUpdatedEvent
+from voteit.core.testing import testing_sql_session
 
 
 class CatalogTests(unittest.TestCase):
@@ -26,10 +24,7 @@ class CatalogTests(unittest.TestCase):
         self.config.registry.settings['content_types'] = ct
         register_content_types(self.config)
 
-        self.dbfile = '_temp_testing_sqlite.db'
-        self.config.registry.settings['sqlite_file'] = 'sqlite:///%s' % self.dbfile
-        init_sql_database(self.config.registry.settings)
-        
+        testing_sql_session(self.config) #To register session utility   
         self.config.scan('voteit.core.subscribers.catalog')
 
         self.root = bootstrap_voteit(registry=self.config.registry, echo=False)
@@ -38,7 +33,6 @@ class CatalogTests(unittest.TestCase):
         self.config.load_zcml('voteit.core:configure.zcml')
 
     def tearDown(self):
-        os.unlink(self.dbfile)
         testing.tearDown()
 
     def test_indexed_on_add(self):

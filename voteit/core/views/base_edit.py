@@ -17,8 +17,6 @@ from voteit.core import VoteITMF as _
 from voteit.core.security import ROLE_OWNER, EDIT, DELETE, VIEW
 from voteit.core.models.schemas import add_csrf_token
 from voteit.core.events import ObjectUpdatedEvent
-
-from voteit.core.models.message import Messages
 from voteit.core.models.unread import Unreads
 
 
@@ -206,7 +204,7 @@ class BaseEdit(object):
     def read(self):
         """ Mark the context as read for the user.
         """
-        unreads = Unreads(self.request)
+        unreads = Unreads(self.api.sql_session)
         unreads.remove(self.api.userid, self.context.uid)
         
         url = resource_url(self.context, self.request)

@@ -4,6 +4,7 @@ from pyramid.security import authenticated_userid
 from pyramid.traversal import find_root
 from repoze.folder.interfaces import IObjectAddedEvent
 from repoze.folder.interfaces import IObjectWillBeRemovedEvent
+from zope.component import getUtility
 
 from voteit.core import security
 from voteit.core.models.interfaces import IMeeting
@@ -12,7 +13,9 @@ from voteit.core.models.interfaces import IProposal
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IUser
 from voteit.core.models.interfaces import IDiscussionPost
+from voteit.core.models.interfaces import ISQLSession
 from voteit.core.models.unread import Unreads
+
 
 @subscriber(IMeeting, IObjectAddedEvent)
 @subscriber(IAgendaItem, IObjectAddedEvent)
@@ -20,8 +23,8 @@ from voteit.core.models.unread import Unreads
 @subscriber(IPoll, IObjectAddedEvent)
 @subscriber(IDiscussionPost, IObjectAddedEvent)
 def unread_content_added(obj, event):
-    request = get_current_request()
-    unreads = Unreads(request)
+    session = getUtility(ISQLSession)()
+    unreads = Unreads(session)
     root = find_root(obj)
     for userid in root.users.keys():
          if security.ROLE_VIEWER in obj.get_groups(userid):
@@ -29,8 +32,8 @@ def unread_content_added(obj, event):
 
 @subscriber(IUser, IObjectWillBeRemovedEvent)
 def unread_user_removed(obj, event):
-    request = get_current_request()
-    unreads = Unreads(request)
+    session = getUtility(ISQLSession)()
+    unreads = Unreads(session)
     unreads.remove_user(obj.__name__)
 
 @subscriber(IMeeting, IObjectWillBeRemovedEvent)
@@ -39,6 +42,6 @@ def unread_user_removed(obj, event):
 @subscriber(IPoll, IObjectWillBeRemovedEvent)
 @subscriber(IDiscussionPost, IObjectWillBeRemovedEvent)
 def unread_content_removed(obj, event):
-    request = get_current_request()
-    unreads = Unreads(request)
+    session = getUtility(ISQLSession)()
+    unreads = Unreads(session)
     unreads.remove_context(obj.uid)

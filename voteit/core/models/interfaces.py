@@ -328,11 +328,11 @@ class IContentUtility(Interface):
 
 class IExpressions(Interface):
     """ Handle user expressions like 'Like' or 'Support'.
-        This behaves like an adapter on a request.
+        This behaves like an adapter on a sql db session.
     """
     
-    def __init__(request):
-        """ Object needs a request to adapt. """
+    def __init__(session):
+        """ Object needs a session to adapt. """
 
     def add(tag, userid, uid):
         """ Add an expression. """
@@ -343,27 +343,13 @@ class IExpressions(Interface):
     def remove(tag, userid, uid):
         """ Remove where tag and userid and uid match. """
 
-
-class IMessages(Interface):
-    """ Handle messages.
-        This behaves like an adapter on a request.
-    """
-    
-    def __init__(request):
-        """ Object needs a request to adapt. """
-
-    def add(meetinguid, message, tag=None, contextuid=None, userid=None):
-        """ Add a message. """
-        
-    def retrieve_messages(meetinguid, tag=None, contextuid=None, userid=None):
-        """ Retrieve a set of messages in meetinguid. """
         
 class ILogs(Interface):
     """ Handle logs.
-        This behaves like an adapter on a request.
+        This behaves like an adapter on a sql db session.
     """
     
-    def __init__(request):
+    def __init__(session):
         """ Object needs a request to adapt. """
 
     def add(meetinguid, message, tags=None, userid=None):
@@ -380,11 +366,11 @@ class IDiscussionPost(Interface):
 
 class IUnreads(Interface):
     """ Handle messages.
-        This behaves like an adapter on a request.
+        This behaves like an adapter on a sql db session.
     """
     
-    def __init__(request):
-        """ Object needs a request to adapt. """
+    def __init__(session):
+        """ Object needs a session to adapt. """
 
     def add(userid, contextuid):
         """ Add an unread. """
@@ -400,3 +386,15 @@ class IUnreads(Interface):
         
     def retrieve(userid, contextuid=None):
         """ Retrieve unreads. """
+
+
+class ISQLSession(Interface):
+    
+    engine = Attribute("SQL engine")
+    session_factory = Attribute("SQL session factory, must be a scoped session.")
+    
+    def __init__(engine):
+        """ Engine to create a session from """
+    
+    def __call__():
+        """ Returns session. """

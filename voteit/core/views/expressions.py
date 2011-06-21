@@ -9,8 +9,8 @@ from pyramid.response import Response
 
 from voteit.core import VoteITMF as _
 from voteit.core.models.interfaces import IBaseContent
+from voteit.core.models.interfaces import ISQLSession
 from voteit.core.models.expression import Expressions
-from voteit.core.models.message import Messages
 
 
 TAG_PATTERN = re.compile(r'^[a-zA-Z]{1,10}$')
@@ -21,8 +21,8 @@ class ExpressionsView(object):
 
     def __init__(self, request):
         self.request = request
-        self.expressions = Expressions(request)
-        self.messages = Messages(request)
+        self.sql_session = request.registry.getUtility(ISQLSession)()
+        self.expressions = Expressions(self.sql_session)
 
     @view_config(name="_set_expression", context=IBaseContent)
     def set_expression(self):

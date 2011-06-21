@@ -4,21 +4,25 @@ from pyramid.security import authenticated_userid
 from pyramid.traversal import find_interface
 from repoze.folder.interfaces import IObjectAddedEvent
 from repoze.folder.interfaces import IObjectWillBeRemovedEvent
+from zope.component import getUtility
 
 from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IProposal
+from voteit.core.models.interfaces import ISQLSession
 from voteit.core.models.log import Logs
 from voteit.core.interfaces import IWorkflowStateChange
 from voteit.core.interfaces import IObjectUpdatedEvent
+
 
 @subscriber(IMeeting, IObjectAddedEvent)
 def log_meeting_added(obj, event):
     #Log entry
     request = get_current_request()
     userid = authenticated_userid(request)
-    logs = Logs(request)
+    session = getUtility(ISQLSession)()
+    logs = Logs(session)
     logs.add(
         obj.uid, 
         '%s %s added' % (obj.content_type, obj.title), 
@@ -34,7 +38,8 @@ def log_content_added(obj, event):
     request = get_current_request()
     meeting = find_interface(obj, IMeeting)
     userid = authenticated_userid(request)
-    logs = Logs(request)
+    session = getUtility(ISQLSession)()
+    logs = Logs(session)
     logs.add(
         meeting.uid, 
         '%s %s added' % (obj.content_type, obj.title), 
@@ -49,7 +54,8 @@ def log_poll_added(obj, event):
     request = get_current_request()
     meeting = find_interface(obj, IMeeting)
     userid = authenticated_userid(request)
-    logs = Logs(request)
+    session = getUtility(ISQLSession)()
+    logs = Logs(session)
     logs.add(
         meeting.uid, 
         '%s %s added' % (obj.content_type, obj.title), 
@@ -76,7 +82,8 @@ def log_content_deleted(obj, event):
     request = get_current_request()
     meeting = find_interface(obj, IMeeting)
     userid = authenticated_userid(request)
-    logs = Logs(request)
+    session = getUtility(ISQLSession)()
+    logs = Logs(session)
     logs.add(
         meeting.uid, 
         '%s %s deleted' % (obj.content_type, obj.title), 
@@ -94,7 +101,8 @@ def log_state_changed(obj, event):
     request = get_current_request()
     meeting = find_interface(obj, IMeeting)
     userid = authenticated_userid(request)
-    logs = Logs(request)
+    session = getUtility(ISQLSession)()
+    logs = Logs(session)
     logs.add(
         meeting.uid, 
         'changed state from %s to %s on %s %s' % (event.old_state, event.new_state, obj.content_type, obj.title), 
@@ -112,7 +120,8 @@ def log_content_updated(obj, event):
     request = get_current_request()
     meeting = find_interface(obj, IMeeting)
     userid = authenticated_userid(request)
-    logs = Logs(request)
+    session = getUtility(ISQLSession)()
+    logs = Logs(session)
     logs.add(
         meeting.uid, 
         '%s %s updated' % (obj.content_type, obj.title), 
