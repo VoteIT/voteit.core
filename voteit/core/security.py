@@ -1,3 +1,9 @@
+from zope.component import getUtility
+from pyramid.interfaces import IAuthorizationPolicy
+from pyramid.traversal import find_root
+from pyramid.security import Authenticated
+from pyramid.security import Everyone
+
 from voteit.core import VoteITMF as _
 
 #Roles, which are the same as groups really
@@ -50,5 +56,47 @@ MEETING_ROLES = ((ROLE_MODERATOR, _(u'Moderator')),
 
 def groupfinder(name, request):
     """ Get groups for the current user. See models/security_aware.py
+        This is also a callback for the Authorization policy.
     """
     return request.context.get_groups(name)
+
+def find_authorized_userids(context, permissions):
+    """ Return a set of all userids that fullfill all of the permissions in permissions.
+
+        Special permission check that is agnostic of the request.context attribute.
+        (As opposed to pyramid.security.has_permission)
+        Don't use anything else than this one to determine permissions for something
+        where the request.context isn't the same as context, for instance another 
+        object that appears in a listing.
+        
+        Warning: This method will of course consume CPU. Use it where appropriate.
+    """
+    authz_policy = getUtility(IAuthorizationPolicy)
+    root = find_root(context)
+    allowed_userids = set()
+    
+    for userid in root.users.keys():
+        principals = context_effective_principals(context, userid)
+        res = [authz_policy.permits(context, principals, perm) for perm in permissions]
+        if len(res) == sum(res): #Bool true counts as 1, and false as 0
+            allowed_userids.add(userid)
+    return allowed_userids
+
+def context_effective_principals(context, userid):
+    """ Special version of pyramid.security.effective_principals that
+        adds groups based on context instead of request.context
+        
+        A note about Authenticated: It doesn't mean that the current user is authenticated,
+        rather than someone with a userid are part of the Authenticated group, since by using
+        a userid they will have logged in :)
+    """
+    effective_principals = [Everyone]
+    if userid is None:
+        return effective_principals
+    
+    groups = context.get_groups(userid)
+    
+    effective_principals.append(Authenticated)
+    effective_principals.append(userid)
+    effective_principals.extend(groups)
+    return effective_principals    
