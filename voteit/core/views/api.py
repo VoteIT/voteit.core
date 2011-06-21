@@ -25,6 +25,8 @@ from voteit.core.models.log import Logs
 from voteit.core.views.macros import FlashMessages
 from voteit.core.views.expressions import ExpressionsView
 from voteit.core.models.unread import Unreads
+from voteit.core.models.message import Messages
+from pyramid.decorator import reify
 
 
 class APIView(object):
@@ -43,6 +45,11 @@ class APIView(object):
         if self.userid:
             self.user_profile = self.get_user(self.userid)
             self.user_profile_url = resource_url(self.user_profile, request)
+            self.messages_adapter = Messages(self.sql_session)
+        
+        #Only in meeting context
+        if self.userid and self.meeting:
+            self.msg_count = self.messages_adapter.unreadcount_in_meeting(self.meeting.uid, self.userid)
                 
         #Authentication / Authorization utils. 
         self.authn_policy = request.registry.getUtility(IAuthenticationPolicy)
@@ -101,10 +108,10 @@ class APIView(object):
                 addable_names.add(type.type_class.content_type)
         return tuple(addable_names)
 
-    #navigation stuff
-    def find_meeting(self, context):
+    @reify
+    def meeting(self):
         """ Is the current context inside a meeting, or a meeting itself? """
-        return find_interface(context, IMeeting)
+        return find_interface(self.context, IMeeting)
 
     def get_action_bar(self, context, request):
         """ Get the action-bar for a specific context """

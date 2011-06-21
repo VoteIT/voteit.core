@@ -1,4 +1,4 @@
-<div id="profile_toolbar" metal:define-macro="profile_toolbar" tal:define="meeting api.find_meeting(context)">
+<div id="profile_toolbar" metal:define-macro="profile_toolbar">
 	<div class="content_wrapper">
 		<!--
         <h2 tal:condition="meeting" class="profile_heading">
@@ -31,6 +31,9 @@
 			
 			<tal:authenticated condition="api.userid">
 				<!-- Regular authenticated user actions -->
+                <li class="tab" tal:condition="api.meeting"><a tal:attributes="href api.resource_url(api.meeting, request) + '@@messages'">
+                	Messages (<span tal:replace="api.msg_count" />) &raquo;
+				</a></li>
 			    <li class="tab"><a tal:attributes="href api.user_profile_url">Profile</a></li>
 				<li class="tab"><a tal:attributes="href request.application_url + '/@@logout'">Logout (<span tal:replace="api.userid">userid</span>)</a></li>
 			</tal:authenticated>

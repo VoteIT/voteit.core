@@ -1,0 +1,26 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      metal:use-macro="api.main_template.macros['master']">
+<body>
+<div metal:fill-slot="content">
+
+<tal:messages condition="messages">
+	<h1>Messages</h1>
+	<tal:iterate repeat="msg messages">
+		Added: <span tal:content="msg.created">1970-01-01</span>
+        Tags: <span tal:content="msg.string_tags">tags</span>
+        Unread: <span tal:content="msg.unread">True</span>
+		<div tal:content="msg.message">Earthlings, we come in peace!</div>
+	</tal:iterate>
+</tal:messages>
+
+<tal:messages condition="not messages">
+    <h1>No messages</h1>
+</tal:messages>
+
+
+</div>
+</body>
+</html>

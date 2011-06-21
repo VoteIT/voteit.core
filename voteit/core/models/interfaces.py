@@ -416,6 +416,10 @@ class IMessages(Interface):
     def mark_read(messageid, userid):
         """ Mark message as read. """
 
+    def unreadcount_in_meeting(meetinguid, userid):
+        """ Count unread messages for a meeting. (Identified by its uid)
+        """
+
 #Marker interfaces
 class ICatalogMetadataEnabled(Interface):
     """ Marker interface for IBaseContent that should have metadata.

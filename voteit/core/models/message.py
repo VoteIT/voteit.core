@@ -39,7 +39,7 @@ class Message(RDB_Base):
         self.tags.extend(tags)
         self.contextuid = unicodify(contextuid)
         self.userid = unicodify(userid)
-        self.unread = False
+        self.unread = True
         self.popup = popup
         self.created = created
     
@@ -108,3 +108,11 @@ class Messages(object):
         if message:
             message.unread = False
             self.session.add(message)
+
+    def unreadcount_in_meeting(self, meeting_uid, userid):
+        query = self.session.query(Message)
+        query = query.filter(Message.meetinguid==meeting_uid)
+        query = query.filter(Message.unread==True)
+        query = query.filter(Message.userid==userid)
+        return len(query.all())
+        

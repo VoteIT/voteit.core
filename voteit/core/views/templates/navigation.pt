@@ -1,6 +1,6 @@
-<metal:main define-macro="navigation" tal:define="meeting api.find_meeting(context)">
+<metal:main define-macro="navigation">
 <div class="content_wrapper">
-	<tal:root condition="not meeting">
+	<tal:root condition="not api.meeting">
 	<h5>Available meetings</h5>
 	<tal:iterate repeat="meeting api.root.get_content(content_type='Meeting')">
 		<h5>
@@ -11,14 +11,14 @@
 	</tal:iterate>
 	</tal:root>
 	
-	<tal:meeting condition="meeting">
-	<tal:agenda_items define="agenda_items meeting.get_content(content_type='AgendaItem')">
+	<tal:inside_meeting condition="api.meeting">
+	<tal:agenda_items define="agenda_items api.meeting.get_content(content_type='AgendaItem')">
 		<div class="browse_up">
 			<a tal:attributes="href api.resource_url(api.root, request)">&laquo; all meetings</a>
 		</div>
         <h5 class="header">
-            <a tal:attributes="href api.resource_url(meeting, request)"
-               tal:content="meeting.get_field_value('title')">Meeting title</a>
+            <a tal:attributes="href api.resource_url(api.meeting, request)"
+               tal:content="api.meeting.get_field_value('title')">Meeting title</a>
         </h5>
 		<ul tal:condition="agenda_items">
 		<tal:iterate repeat="agenda_item agenda_items">
@@ -33,6 +33,6 @@
 		</tal:iterate>
 		</ul>
 	</tal:agenda_items>
-	</tal:meeting>
+	</tal:inside_meeting>
 </div>
 </metal:main>
