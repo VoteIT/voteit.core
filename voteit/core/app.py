@@ -94,13 +94,6 @@ def populate_sql_database(config):
     
     session = sql_util()
 
-    #Add log tags
-    #FIXME: tags should be defined elswhere
-    for tag in ('added', 'updated', 'deleted', 'state changed', 'proposal to poll'):
-        if session.query(LogTag).filter(LogTag.tag==tag).count() == 0:
-            _tag = LogTag(tag)
-            session.add(_tag)
-
 
 def include_zcml(config):
     config.include('pyramid_zcml')

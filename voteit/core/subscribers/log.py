@@ -22,11 +22,12 @@ def log_meeting_added(obj, event):
     request = get_current_request()
     userid = authenticated_userid(request)
     session = getUtility(ISQLSession)()
+
     logs = Logs(session)
     logs.add(
         obj.uid, 
         '%s %s added' % (obj.content_type, obj.title), 
-        tags='added', 
+        tags=('added',),
         userid=userid, 
         primaryuid=obj.uid,
     )
@@ -43,7 +44,7 @@ def log_content_added(obj, event):
     logs.add(
         meeting.uid, 
         '%s %s added' % (obj.content_type, obj.title), 
-        tags='added', 
+        tags=('added',),
         userid=userid, 
         primaryuid=obj.uid,
     )
@@ -59,7 +60,7 @@ def log_poll_added(obj, event):
     logs.add(
         meeting.uid, 
         '%s %s added' % (obj.content_type, obj.title), 
-        tags='added', 
+        tags=('added',), 
         userid=userid, 
         primaryuid=obj.uid,
     )
@@ -67,7 +68,7 @@ def log_poll_added(obj, event):
         logs.add(
             meeting.uid, 
             '%s %s added to %s %s ' % (proposal.content_type, proposal.title, obj.content_type, obj.title), 
-            tags='proposal to poll', 
+            tags=('proposal to poll',),
             userid=userid, 
             primaryuid=obj.uid,
             secondaryuid=proposal.uid,
@@ -87,7 +88,7 @@ def log_content_deleted(obj, event):
     logs.add(
         meeting.uid, 
         '%s %s deleted' % (obj.content_type, obj.title), 
-        tags='deleted', 
+        tags=('deleted',),
         userid=userid, 
         primaryuid=obj.uid,
     )
@@ -106,7 +107,7 @@ def log_state_changed(obj, event):
     logs.add(
         meeting.uid, 
         'changed state from %s to %s on %s %s' % (event.old_state, event.new_state, obj.content_type, obj.title), 
-        tags='state changed',
+        tags=('state changed',),
         userid=userid, 
         primaryuid=obj.uid,
     )
@@ -125,7 +126,7 @@ def log_content_updated(obj, event):
     logs.add(
         meeting.uid, 
         '%s %s updated' % (obj.content_type, obj.title), 
-        tags='updated', 
+        tags=('updated',),
         userid=userid, 
         primaryuid=obj.uid,
     )

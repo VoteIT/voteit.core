@@ -2,7 +2,8 @@ from pyramid.threadlocal import get_current_registry
 
 from voteit.core import VoteITMF as _
 from voteit.core.security import ROLE_ADMIN
-from voteit.core.models.interfaces import IContentUtility, ISQLSession
+from voteit.core.models.interfaces import IContentUtility
+from voteit.core.models.interfaces import ISQLSession
 
 
 def bootstrap_voteit(registry=None, echo=True):

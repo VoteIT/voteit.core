@@ -29,7 +29,7 @@ class Log(RDB_Base):
     primaryuid = Column(Unicode(100))
     secondaryuid = Column(Unicode(100))
     
-    def __init__(self, meetinguid, message, tags=None, userid=None, primaryuid=None, secondaryuid=None, created=None):
+    def __init__(self, meetinguid, message, tags=(), userid=None, primaryuid=None, secondaryuid=None, created=None):
         if not created:
             created = datetime.now()
     
@@ -37,7 +37,7 @@ class Log(RDB_Base):
         self.message = unicodify(message)
         self.userid = unicodify(userid)
         self.created = created
-        self.tags = tags
+        self.tags.extend(tags)
         self.primaryuid = primaryuid
         self.secondaryuid = secondaryuid
         
@@ -65,19 +65,22 @@ class Logs(object):
     def __init__(self, session):
         self.session = session
     
-    def add(self, meetinguid, message, tags=None, userid=None, primaryuid=None, secondaryuid=None):
+    def add(self, meetinguid, message, tags=(), userid=None, primaryuid=None, secondaryuid=None):
         session = self.session
-        
-        if not type(tags) == tuple:
-            tags = (tags, )
         
         _tags = []
         for tag in tags:
-            _tag = session.query(LogTag).filter(LogTag.tag==tag).one()
+            query = session.query(LogTag).filter(LogTag.tag==tag)
+            if query.count() == 0:
+                _tag = LogTag(tag)
+                session.add(_tag)
+            else:
+                _tag = query.one()
             _tags.append(_tag)
-        
+
         log = Log(meetinguid, message, _tags, userid, primaryuid, secondaryuid)
         session.add(log)
+
 
     def retrieve_entries(self, meetinguid, tag=None, userid=None, primaryuid=None, secondaryuid=None):
         session = self.session
