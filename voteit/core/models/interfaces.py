@@ -415,3 +415,10 @@ class IMessages(Interface):
 
     def mark_read(messageid, userid):
         """ Mark message as read. """
+
+#Marker interfaces
+class ICatalogMetadataEnabled(Interface):
+    """ Marker interface for IBaseContent that should have metadata.
+        The interface itself doesn't do anything, but the ICatalogMetadata
+        adapter is registered for it.
+    """

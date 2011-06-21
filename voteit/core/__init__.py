@@ -41,6 +41,7 @@ def main(global_config, **settings):
     
     from voteit.core import app
     #FIXME: Pluggable startup procedure?
+    app.register_catalog_metadata_adapter(config)
     app.add_sql_session_util(config)
     app.populate_sql_database(config)
     app.register_content_types(config)

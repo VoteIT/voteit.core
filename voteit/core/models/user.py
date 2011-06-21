@@ -19,6 +19,7 @@ from pyramid_mailer.message import Message
 from voteit.core.models.base_content import BaseContent
 from voteit.core.models.interfaces import IUser
 from voteit.core.models.interfaces import IUsers
+from voteit.core.models.interfaces import ICatalogMetadataEnabled
 from voteit.core import VoteITMF as _
 from voteit.core import security
 from voteit.core.validators import password_validation
@@ -34,7 +35,7 @@ def get_sha_password(password):
 
 class User(BaseContent):
     """ Content type for a user. Usable as a profile page. """
-    implements(IUser)
+    implements(IUser, ICatalogMetadataEnabled)
     content_type = 'User'
     display_name = _(u"User")
     allowed_contexts = ('Users',)

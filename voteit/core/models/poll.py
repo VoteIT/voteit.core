@@ -15,6 +15,7 @@ from voteit.core import VoteITMF as _
 from voteit.core.models.base_content import BaseContent
 from voteit.core.models.workflow_aware import WorkflowAware
 from voteit.core.models.interfaces import IAgendaItem
+from voteit.core.models.interfaces import ICatalogMetadataEnabled
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IPollPlugin
 from voteit.core.models.interfaces import IVote
@@ -54,7 +55,7 @@ CLOSED_STATES = ('canceled', 'closed', )
 
 class Poll(BaseContent, WorkflowAware):
     """ Poll content. """
-    implements(IPoll)
+    implements(IPoll, ICatalogMetadataEnabled)
     content_type = 'Poll'
     display_name = _(u"Poll")
     allowed_contexts = ('AgendaItem',)

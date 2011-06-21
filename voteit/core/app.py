@@ -12,12 +12,13 @@ from zope.interface.verify import verifyClass
 from sqlalchemy import create_engine
 from zope.sqlalchemy import ZopeTransactionExtension
 
+from voteit.core.interfaces import ICatalogMetadata
 from voteit.core.models.interfaces import IContentUtility
+from voteit.core.models.interfaces import ICatalogMetadataEnabled
 from voteit.core.models.interfaces import IPollPlugin
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IPollPlugin
 from voteit.core.models.interfaces import ISQLSession
-
 
 def register_poll_plugins(config):
     """ Register poll plugins configured in the paster .ini file.
@@ -45,6 +46,12 @@ def register_content_types(config):
     cts = [x.strip() for x in content_types.strip().splitlines()]
     for content_type in cts:
         config.include(content_type)
+
+
+def register_catalog_metadata_adapter(config):
+    from voteit.core.catalog import CatalogMetadata
+    config.registry.registerAdapter(CatalogMetadata, (ICatalogMetadataEnabled,), ICatalogMetadata)
+
 
 def add_sql_session_util(config, sqlite_file=None):
     settings = config.registry.settings

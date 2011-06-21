@@ -1,10 +1,12 @@
 import unittest
+from datetime import datetime
 
 from pyramid import testing
 from zope.interface.verify import verifyObject
 from zope.component.event import objectEventNotify
 
 from voteit.core.app import register_content_types
+from voteit.core.app import register_catalog_metadata_adapter
 from voteit.core.bootstrap import bootstrap_voteit
 from voteit.core.models.interfaces import IContentUtility
 from voteit.core.interfaces import IObjectUpdatedEvent
@@ -13,7 +15,8 @@ from voteit.core.testing import testing_sql_session
 from voteit.core.security import ROLE_OWNER
 
 
-class CatalogTests(unittest.TestCase):
+class CatalogTestCase(unittest.TestCase):
+    """ Class for registering test setup and some helper methods. """
     def setUp(self):
         self.config = testing.setUp()
         ct = """
@@ -24,11 +27,14 @@ class CatalogTests(unittest.TestCase):
         """
         self.config.registry.settings['content_types'] = ct
         register_content_types(self.config)
+        register_catalog_metadata_adapter(self.config)
 
         testing_sql_session(self.config) #To register session utility   
         self.config.scan('voteit.core.subscribers.catalog')
 
         self.root = bootstrap_voteit(registry=self.config.registry, echo=False)
+        self.query = self.root.catalog.query
+        self.get_metadata = self.root.catalog.document_map.get_metadata
         self.content_types = self.config.registry.getUtility(IContentUtility)
         self.config.include('pyramid_zcml')
         self.config.load_zcml('voteit.core:configure.zcml')
@@ -36,6 +42,17 @@ class CatalogTests(unittest.TestCase):
     def tearDown(self):
         testing.tearDown()
 
+    def _add_mock_meeting(self):
+        obj = self.content_types['Meeting'].type_class()
+        obj.title = 'Testing catalog'
+        obj.uid = 'simple_uid'
+        obj.creators = ['demo_userid']
+        obj.add_groups('demo_userid', (ROLE_OWNER,))
+        self.root['meeting'] = obj
+        return obj
+
+
+class CatalogTests(CatalogTestCase):
     def test_indexed_on_add(self):
         title_index = self.root.catalog['title']
         title_count = title_index.documentCount()
@@ -65,7 +82,7 @@ class CatalogTests(unittest.TestCase):
         meeting.title = 'hello world'
         self.root['meeting'] = meeting
         
-        query = self.root.catalog.query
+        query = self.query
         self.assertEqual(query("title == 'hello world'")[0], 1)
         
         self.root['meeting'].title = 'me and my little friends'
@@ -75,40 +92,9 @@ class CatalogTests(unittest.TestCase):
         self.assertEqual(query("title == 'hello world'")[0], 0)
         self.assertEqual(query("title == 'me and my little friends'")[0], 1)
 
-class CatalogIndexTests(unittest.TestCase):
+
+class CatalogIndexTests(CatalogTestCase):
     """ Make sure indexes work as expected. """
-    
-    def setUp(self):
-        self.config = testing.setUp()
-        ct = """
-    voteit.core.models.meeting
-    voteit.core.models.site
-    voteit.core.models.user
-    voteit.core.models.users
-        """
-        self.config.registry.settings['content_types'] = ct
-        register_content_types(self.config)
-
-        testing_sql_session(self.config) #To register session utility
-        self.config.scan('voteit.core.subscribers.catalog')
-
-        self.root = bootstrap_voteit(registry=self.config.registry, echo=False)
-        self.content_types = self.config.registry.getUtility(IContentUtility)
-        self.config.include('pyramid_zcml')
-        self.config.load_zcml('voteit.core:configure.zcml')
-        self.query = self.root.catalog.query
-
-    def tearDown(self):
-        testing.tearDown()
-    
-    def _add_mock_meeting(self):
-        obj = self.content_types['Meeting'].type_class()
-        obj.title = 'Testing catalog'
-        obj.uid = 'simple_uid'
-        obj.creators = ['demo_userid']
-        obj.add_groups('demo_userid', (ROLE_OWNER,))
-        self.root['meeting'] = obj
-        return obj
 
     def test_title(self):
         self._add_mock_meeting()
@@ -150,5 +136,30 @@ class CatalogIndexTests(unittest.TestCase):
         self.assertEqual(self.query("created == %s and path == '/meeting'" % meeting_unix)[0], 1)
         qy = ("%s < created < %s and path == '/meeting'" % (meeting_unix-1, meeting_unix+1))
         self.assertEqual(self.query(qy)[0], 1)
-        
 
+
+class CatalogMetadataTests(CatalogTestCase):
+    """ Test metadata creation. This test also covers catalog subscribers.
+    """
+    
+    def test_title(self):
+        self._add_mock_meeting()
+        result = self.query("title == 'Testing catalog'")
+        doc_id = result[1][0] #Layout is something like: (1, set([123]))
+        metadata = self.get_metadata(doc_id)
+        
+        self.assertTrue('title' in metadata)
+        self.assertEqual(metadata['title'], 'Testing catalog')        
+        
+    def test_created(self):
+        """ created actually stores unix-time. Note that it's very
+            likely that all objects are added within the same second.
+            The metadata is regular datetime though.
+        """
+        obj = self._add_mock_meeting()
+        result = self.query("title == 'Testing catalog'")
+        doc_id = result[1][0]
+        metadata = self.get_metadata(doc_id)
+        
+        self.assertEqual(obj.created, metadata['created'])
+        self.assertTrue(isinstance(metadata['created'], datetime))

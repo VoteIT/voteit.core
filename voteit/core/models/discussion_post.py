@@ -9,6 +9,7 @@ from pyramid.events import subscriber
 from voteit.core import VoteITMF as _
 from voteit.core import security
 from voteit.core.models.interfaces import IDiscussionPost
+from voteit.core.models.interfaces import ICatalogMetadataEnabled
 from voteit.core.models.base_content import BaseContent
 from voteit.core.validators import html_string_validator
 
@@ -32,7 +33,7 @@ ACL['closed'] = [(Allow, security.ROLE_ADMIN, security.VIEW),
 class DiscussionPost(BaseContent):
     """ Discussion post content
     """
-    implements(IDiscussionPost)
+    implements(IDiscussionPost, ICatalogMetadataEnabled)
     content_type = 'DiscussionPost'
     display_name = _(u"Discussion Post")
     allowed_contexts = ('AgendaItem',)

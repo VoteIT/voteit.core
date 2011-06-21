@@ -7,7 +7,9 @@ from pyramid.traversal import find_interface
 from voteit.core import VoteITMF as _
 from voteit.core import security
 from voteit.core.models.base_content import BaseContent
-from voteit.core.models.interfaces import IProposal, IAgendaItem
+from voteit.core.models.interfaces import IAgendaItem
+from voteit.core.models.interfaces import IProposal
+from voteit.core.models.interfaces import ICatalogMetadataEnabled
 from voteit.core.models.workflow_aware import WorkflowAware
 from voteit.core.validators import html_string_validator
 
@@ -50,7 +52,7 @@ class Proposal(BaseContent, WorkflowAware):
         (This is simply to help editing things to avoid mistakes.) After that, the proposals will be locked
         without any option to alter them. In that case, the ACL table 'closed' is used.
         """
-    implements(IProposal)
+    implements(IProposal, ICatalogMetadataEnabled)
     content_type = 'Proposal'
     display_name = _(u"Proposal")
     allowed_contexts = ('AgendaItem',)

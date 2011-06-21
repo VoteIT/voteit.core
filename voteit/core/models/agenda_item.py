@@ -13,6 +13,7 @@ from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import IProposal
 from voteit.core.models.interfaces import IPoll
+from voteit.core.models.interfaces import ICatalogMetadataEnabled
 from voteit.core.validators import html_string_validator
 
 _PRIV_MOD_PERMS = (security.VIEW, security.EDIT, security.DELETE, security.MODERATE_MEETING, security.CHANGE_WORKFLOW_STATE, )
@@ -34,7 +35,7 @@ ACL['closed'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, )),
 
 class AgendaItem(BaseContent, WorkflowAware):
     """ Agenda Item content. """
-    implements(IAgendaItem)
+    implements(IAgendaItem, ICatalogMetadataEnabled)
     content_type = 'AgendaItem'
     display_name = _(u"Agenda item")
     allowed_contexts = ('Meeting',)

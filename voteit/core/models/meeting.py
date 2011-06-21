@@ -13,6 +13,7 @@ from voteit.core import security
 from voteit.core.models.base_content import BaseContent
 from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IMeeting
+from voteit.core.models.interfaces import ICatalogMetadataEnabled
 from voteit.core.models.workflow_aware import WorkflowAware
 from voteit.core.validators import html_string_validator
 from voteit.core.models.log import Logs
@@ -47,7 +48,7 @@ ACL['closed'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, security.MANAGE_GR
 
 class Meeting(BaseContent, WorkflowAware):
     """ Meeting content. """
-    implements(IMeeting)
+    implements(IMeeting, ICatalogMetadataEnabled)
     content_type = 'Meeting'
     display_name = _(u"Meeting")
     allowed_contexts = ('SiteRoot',)

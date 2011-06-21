@@ -11,3 +11,11 @@ class IWorkflowStateChange(Interface):
 class IObjectUpdatedEvent(Interface):
     """ An object event for object updated. """
     object = Attribute("Object this event is for")
+
+#Adapters
+class ICatalogMetadata(Interface):
+    """ An adapter to fetch metadata for the catalog.
+        it adapts voteit.core.models.interfaces.ICatalogMetadataEnabled
+        which is just a marker interface.
+    """
+    

@@ -3,9 +3,33 @@ from calendar import timegm
 from repoze.catalog.indexes.field import CatalogFieldIndex
 from repoze.catalog.indexes.keyword import CatalogKeywordIndex
 from repoze.catalog.indexes.path import CatalogPathIndex
+from zope.interface import implements
+from zope.component import adapts
 from pyramid.traversal import resource_path
 
+from voteit.core.models.interfaces import ICatalogMetadataEnabled
 from voteit.core.models.interfaces import IWorkflowAware
+from voteit.core.interfaces import ICatalogMetadata
+
+
+class CatalogMetadata(object):
+    """ An adapter to fetch metadata for the catalog.
+        See ICatalogMetadata
+    """
+    implements(ICatalogMetadata)
+    adapts(ICatalogMetadataEnabled)
+    
+    def __init__(self, context):
+        self.context = context
+
+    def __call__(self):
+        """ Return a dict of metadata values for an object. """
+        #FIXME: Should fields be configurable, or should we just fetch all?
+        result = {
+            'title':self.context.title,
+            'created':self.context.created,
+        }
+        return result
 
 def update_indexes(catalog):
     indexes = {
