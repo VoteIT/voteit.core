@@ -10,9 +10,9 @@ from repoze.folder import unicodify
 from voteit.core import RDB_Base
 from voteit.core.models.interfaces import ILogs
 
-log_tags = Table('log_tags', RDB_Base.metadata,
+logs_tags = Table('logs_tags', RDB_Base.metadata,
     Column('log_id', Integer, ForeignKey('logs.id')),
-    Column('tag_id', Integer, ForeignKey('tags.id'))
+    Column('tag_id', Integer, ForeignKey('log_tags.id'))
 )
 
 class Log(RDB_Base):
@@ -25,7 +25,7 @@ class Log(RDB_Base):
     message = Column(Unicode(250))
     userid = Column(Unicode(100))
     created = Column(DateTime())
-    tags = relationship("Tag", secondary=log_tags, backref="logs")
+    tags = relationship("LogTag", secondary=logs_tags, backref="logs")
     primaryuid = Column(Unicode(100))
     secondaryuid = Column(Unicode(100))
     
@@ -47,9 +47,9 @@ class Log(RDB_Base):
         return self.created.strftime("%A %d %B %Y, %H:%M")
         
         
-class Tag(RDB_Base):
+class LogTag(RDB_Base):
         
-    __tablename__ = 'tags'
+    __tablename__ = 'log_tags'
     id = Column(Integer, primary_key=True)
     tag = Column(Unicode(10))
     
@@ -73,7 +73,7 @@ class Logs(object):
         
         _tags = []
         for tag in tags:
-            _tag = session.query(Tag).filter(Tag.tag==tag).one()
+            _tag = session.query(LogTag).filter(LogTag.tag==tag).one()
             _tags.append(_tag)
         
         log = Log(meetinguid, message, _tags, userid, primaryuid, secondaryuid)
