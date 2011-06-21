@@ -24,15 +24,15 @@ class MessagesTests(unittest.TestCase):
 
     def _add_mock_data(self, obj):
         data = (
-            ('m1', 'test', 'alert', None, None,),
-            ('m1', 'test', 'log', 'm1', None,),
-            ('m1', 'test', 'like', 'p1', 'robin',),
-            ('m1', 'test', 'alert', 'v1', 'robin',),
-            ('m1', 'test', 'log', 'p1', None,),
-            ('m1', 'test', 'log', 'v1', None,),
+            ('m1', 'test', ('alert', 'social', ), None, None,),
+            ('m1', 'test', ('log',), 'm1', None,),
+            ('m1', 'test', ('like',), 'p1', 'robin',),
+            ('m1', 'test', ('alert',), 'v1', 'robin',),
+            ('m1', 'test', ('log',), 'p1', None,),
+            ('m1', 'test', ('log',), 'v1', None,),
          )
-        for (meetinguid, message, tag, contextuid, userid) in data:
-            obj.add(meetinguid, message, tag, contextuid, userid)
+        for (meetinguid, message, tags, contextuid, userid) in data:
+            obj.add(meetinguid, message, tags, contextuid, userid)
 
     def test_verify_obj_implementation(self):
         from voteit.core.models.interfaces import IMessages
@@ -43,7 +43,7 @@ class MessagesTests(unittest.TestCase):
         obj = self._import_class()(self.session)
         meetinguid = 'a1'
         message = 'aa-bb'
-        tags = 'log'
+        tags = ('log',)
         contextuid = 'a1'
         userid = 'robin'
         obj.add(meetinguid, message, tags, contextuid, userid)
@@ -56,8 +56,7 @@ class MessagesTests(unittest.TestCase):
         self.assertEqual(result_obj.userid, userid)
         self.assertEqual(result_obj.meetinguid, meetinguid)
         self.assertEqual(result_obj.message, message)
-        #FIXME: thid doesn't work
-        #self.assertEqual(result_obj.tags, tags)
+        self.assertEqual(result_obj.string_tags, tags)
 
     def test_retrieve_user_messages(self):
         obj = self._import_class()(self.session)
@@ -69,7 +68,7 @@ class MessagesTests(unittest.TestCase):
         obj = self._import_class()(self.session)
         meetinguid = 'a1'
         message = 'aa-bb'
-        tags = 'log'
+        tags = ('log',)
         contextuid = 'a1'
         userid = 'robin'
         obj.add(meetinguid, message, tags, contextuid, userid)
@@ -86,4 +85,24 @@ class MessagesTests(unittest.TestCase):
         self.assertEqual(result_obj.id, msg.id)
         self.assertEqual(result_obj.userid, userid)
         self.assertEqual(result_obj.unread, False)
+
+    def test_tags_created_on_add(self):
+        obj = self._import_class()(self.session)
+        self._add_mock_data(obj)
+        
+        from voteit.core.models.message import Message
+        query = self.session.query(Message)
+
+        mock_tags = set()
+        for result in query.all():
+            mock_tags.update(result.string_tags)
+        
+        obj.add('m1', 'message', tags=('first_new', 'second_new',))
+        
+        new_tags = set()
+        for result in query.all():
+            new_tags.update(result.string_tags)
+        
+        self.assertNotEqual(mock_tags, new_tags)
+        self.assertEqual(new_tags, mock_tags | set(('first_new', 'second_new',)))
 

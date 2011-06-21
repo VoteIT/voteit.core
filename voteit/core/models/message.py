@@ -30,7 +30,7 @@ class Message(RDB_Base):
     popup = Column(Boolean())
     created = Column(DateTime())
     
-    def __init__(self, meetinguid, message, tags=None, contextuid=None, userid=None, popup=False, created=None):
+    def __init__(self, meetinguid, message, tags=(), contextuid=None, userid=None, popup=False, created=None):
         if not created:
             created = datetime.now()
             
@@ -42,6 +42,13 @@ class Message(RDB_Base):
         self.unread = False
         self.popup = popup
         self.created = created
+    
+    @property
+    def string_tags(self):
+        """ The tags attribute consists of Tag objects rather than the actual text tags.
+            This property returns the text.
+        """
+        return tuple([x.tag for x in self.tags])
         
     def format_created(self):
         """ Lordag 3 apr 2010, 01:10
@@ -61,17 +68,14 @@ class MessageTag(RDB_Base):
 
 class Messages(object):
     """ Handle messages.
-        This behaves like an adapter on a request.
+        This behaves like an adapter on a sql db session.
     """
     implements(IMessages)
     
     def __init__(self, session):
         self.session = session
     
-    def add(self, meetinguid, message, tags=None, contextuid=None, userid=None):
-        if not type(tags) == list:
-            tags = [tags]
-    
+    def add(self, meetinguid, message, tags=(), contextuid=None, userid=None):    
         _tags = []
         for tag in tags:
             query = self.session.query(MessageTag).filter(MessageTag.tag==tag)
@@ -82,19 +86,14 @@ class Messages(object):
             else:
                 _tag = query.one()
                 _tags.append(_tag)
-                
 
         msg = Message(meetinguid, message, _tags, contextuid, userid)
         self.session.add(msg)
 
-    def retrieve_messages(self, meetinguid, tags=None, contextuid=None, userid=None):
-        if not type(tags) == list:
-            tags = [tags]
-
+    def retrieve_messages(self, meetinguid, tags=(), contextuid=None, userid=None):
         query = self.session.query(Message).filter(Message.meetinguid==meetinguid)
-        #FIXME: this doesn't work
-#        if tags:
-#            query = query.filter(Message.tags.any(tags=tags))
+        if tags:
+            query = query.filter(Message.tags.any(tags=tags))
         if contextuid:
             query = query.filter(Message.contextuid==contextuid)
         if userid:
