@@ -30,6 +30,15 @@
         </li>
 	</tal:poll>
 	
+	<tal:meeting condition="context.content_type == 'Meeting'">
+        <tal:comment condition="False">
+            Common functions for meeting.
+        </tal:comment>
+        <li class="menuitem">
+            <a class="buttonize" tal:attributes="href api.resource_url(context, request) + '@@meeting_access'">Participants</a>
+        </li>
+	</tal:meeting>
+	
 	<tal:users_only condition="not is_moderator">
 		<tal:comment condition="False">
 			Users only actions. This is to avoid cluttering the administrative interface
@@ -65,6 +74,17 @@
 		    class="menuitem">
             <a class="buttonize" tal:attributes="href api.resource_url(context, request) + '@@poll_config'">Poll settings</a>
         </li>
+        <li tal:condition="context.content_type == 'Meeting' and
+                           context.get_workflow_state() != 'private'"
+            class="menuitem">
+            <a class="buttonize" tal:attributes="href api.resource_url(context, request) + '@@add_tickets'">Invite participants</a>
+        </li>
+        <li tal:condition="context.content_type == 'Meeting' and
+                           context.get_workflow_state() != 'private'"
+            class="menuitem">
+            <a class="buttonize" tal:attributes="href api.resource_url(context, request) + '@@manage_tickets'">Manage invites</a>
+        </li>
+
 	    <li tal:condition="states|False" class="dropdown_menu menuitem">
 			<a href="#" class="buttonize menu_header">Set state &raquo;</a>
 			<ul class="menu_body">

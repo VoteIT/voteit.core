@@ -123,7 +123,10 @@ class UsersView(object):
             
             for (k, v) in appstruct.items():
                 obj.set_field_value(k, v)
-            
+
+            #The user should be owner of the user object
+            obj.add_groups(name, (ROLE_OWNER,))
+
             #self.context is the site root. Users are stored in the users-property
             users[name] = obj
 

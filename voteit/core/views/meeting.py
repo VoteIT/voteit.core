@@ -41,6 +41,12 @@ class MeetingView(BaseView):
         self.response['next_poll'] = '3 hours'
         self.response['remaining_meeting_time'] = '2 days, 3 hours'
         
+        if self.context.get_workflow_state() == 'private':
+            msg = _(u"This meeting is in the state <b>Private</b>. "
+                    u"No regular meeting participants can see this meeting yet, and you won't be able to send invitations. "
+                    u"If you want others to see it, you can set the meeting in the <b>Inactive</b> state by using the <b>set state</b> menu.")
+            self.api.flash_messages.add(msg)
+
         return self.response
 
     @view_config(name="meeting_access", context=IMeeting, renderer="templates/meeting_access.pt", permission=security.VIEW)
