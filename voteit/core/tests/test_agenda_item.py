@@ -109,6 +109,9 @@ class AgendaItemPermissionTests(unittest.TestCase):
 
         #Add poll
         self.assertEqual(self.pap(obj, security.ADD_POLL), admin | moderator)
+
+        #Add discussion post
+        self.assertEqual(self.pap(obj, security.ADD_DISCUSSION_POST), admin | moderator)
         
 
     def test_active_with_closed_meeting(self):
@@ -140,6 +143,9 @@ class AgendaItemPermissionTests(unittest.TestCase):
         #Add poll
         self.assertEqual(self.pap(obj, security.ADD_POLL), set())
 
+        #Add discussion post
+        self.assertEqual(self.pap(obj, security.ADD_DISCUSSION_POST), set())
+
     def test_active_with_active_meeting(self):
         request = testing.DummyRequest()
         obj = self._make_obj()
@@ -168,6 +174,8 @@ class AgendaItemPermissionTests(unittest.TestCase):
         #Add poll
         self.assertEqual(self.pap(obj, security.ADD_POLL), admin | moderator)
 
+        #Add discussion post
+        self.assertEqual(self.pap(obj, security.ADD_DISCUSSION_POST), admin | moderator | participant)
 #
     def test_closed(self):
         request = testing.DummyRequest()
@@ -190,3 +198,6 @@ class AgendaItemPermissionTests(unittest.TestCase):
 
         #Add poll
         self.assertEqual(self.pap(obj, security.ADD_POLL), set())
+
+        #Add discussion post
+        self.assertEqual(self.pap(obj, security.ADD_DISCUSSION_POST), set())
