@@ -1,7 +1,6 @@
 from pyramid.events import subscriber
 from pyramid.threadlocal import get_current_request
 from pyramid.security import authenticated_userid
-from pyramid.traversal import find_root
 from repoze.folder.interfaces import IObjectAddedEvent
 from repoze.folder.interfaces import IObjectWillBeRemovedEvent
 from zope.component import getUtility
@@ -25,10 +24,9 @@ from voteit.core.models.unread import Unreads
 def unread_content_added(obj, event):
     session = getUtility(ISQLSession)()
     unreads = Unreads(session)
-    root = find_root(obj)
-    for userid in root.users.keys():
-         if security.ROLE_VIEWER in obj.get_groups(userid):
-            unreads.add(userid, obj.uid)
+    userids = security.find_authorized_userids(obj, (security.VIEW, ))
+    for userid in userids:
+        unreads.add(userid, obj.uid)
 
 @subscriber(IUser, IObjectWillBeRemovedEvent)
 def unread_user_removed(obj, event):

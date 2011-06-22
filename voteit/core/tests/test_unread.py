@@ -1,28 +1,52 @@
 import unittest
+import transaction
 
 from pyramid import testing
 from pyramid.authorization import ACLAuthorizationPolicy
-from pyramid.security import Authenticated
+from pyramid.authentication import AuthTktAuthenticationPolicy
+
+from voteit.core.bootstrap import bootstrap_voteit
+from voteit.core.app import register_content_types
+from voteit.core import security
+
 from zope.interface.verify import verifyObject
-import transaction
 
 from voteit.core import security
 from voteit.core.testing import testing_sql_session
 
 
-viewer = set([security.ROLE_VIEWER])
+viewer = (security.ROLE_VIEWER, )
 
 
 class UnreadTests(unittest.TestCase):
     def setUp(self):
         self.config = testing.setUp()
-        self.session = testing_sql_session(self.config)
+        self.config.testing_securitypolicy(userid='some_user',
+                                           permissive=True)
+        ct = """
+    voteit.core.models.site
+    voteit.core.models.user
+    voteit.core.models.users
+        """
+        self.config.registry.settings['content_types'] = ct #Needed for bootstrap_voteit
         self.config.include('pyramid_zcml')
         self.config.load_zcml('voteit.core:configure.zcml')
+        self.session = testing_sql_session(self.config)
+        register_content_types(self.config)
+        self.root = self._fixture()
 
     def tearDown(self):
         testing.tearDown()
         transaction.abort() #To cancel any commit to the sql db
+
+    def _fixture(self):
+        root = bootstrap_voteit(registry=self.config.registry, echo=False)
+        from voteit.core.models.user import User
+        
+        for userid in ('fredrik', 'anders', 'hanna', 'robin'):
+            root.users[userid] = User()
+
+        return root
 
     def _import_class(self):
         from voteit.core.models.unread import Unreads
@@ -110,26 +134,13 @@ class UnreadTests(unittest.TestCase):
         self.assertEqual(len(obj.retrieve(userid, contextuid)), 1)
         
     def test_added_subscriber_adds_to_unread(self):
-        policy = ACLAuthorizationPolicy()
-        pap = policy.principals_allowed_by_permission
-    
-        from voteit.core.models.site import SiteRoot
-        root = SiteRoot()
-        
-        from voteit.core.models.users import Users
-        root['users'] = Users()
-        
-        # Add users to site
-        from voteit.core.models.user import User
-        u1 = User()
-        root.users['robin'] = u1
-        u2 = User()
-        root.users['fredrik'] = u2
+        request = testing.DummyRequest()
 
         # Add meeting
         from voteit.core.models.meeting import Meeting
         m1 = Meeting()
-        root['m1'] = m1
+        self.root['m1'] = m1
+        m1.set_workflow_state(request, 'inactive')
 
         # Give users access to meeting
         m1.set_groups('robin', viewer)
@@ -149,26 +160,13 @@ class UnreadTests(unittest.TestCase):
         self.assertEqual(len(unreads.retrieve('robin', 'a1')), 1)
         
     def test_content_removed_subscriber_removes_from_unread(self):
-        policy = ACLAuthorizationPolicy()
-        pap = policy.principals_allowed_by_permission
-    
-        from voteit.core.models.site import SiteRoot
-        root = SiteRoot()
-        
-        from voteit.core.models.users import Users
-        root['users'] = Users()
-        
-        # Add users to site
-        from voteit.core.models.user import User
-        u1 = User()
-        root.users['robin'] = u1
-        u2 = User()
-        root.users['fredrik'] = u2
+        request = testing.DummyRequest()
 
         # Add meeting
         from voteit.core.models.meeting import Meeting
         m1 = Meeting()
-        root['m1'] = m1
+        self.root['m1'] = m1
+        m1.set_workflow_state(request, 'inactive')
 
         # Give users access to meeting
         m1.set_groups('robin', viewer)
@@ -191,30 +189,17 @@ class UnreadTests(unittest.TestCase):
         self.assertEqual(len(unreads.retrieve('robin', 'a1')), 0)
         
     def test_user_removed_subscriber_removes_from_unread(self):
-        policy = ACLAuthorizationPolicy()
-        pap = policy.principals_allowed_by_permission
-    
-        from voteit.core.models.site import SiteRoot
-        root = SiteRoot()
-        
-        from voteit.core.models.users import Users
-        root['users'] = Users()
-        
-        # Add users to site
-        from voteit.core.models.user import User
-        u1 = User()
-        root.users['robin'] = u1
-        u2 = User()
-        root.users['fredrik'] = u2
+        request = testing.DummyRequest()
 
         # Add meeting
         from voteit.core.models.meeting import Meeting
         m1 = Meeting()
-        root['m1'] = m1
+        self.root['m1'] = m1
+        m1.set_workflow_state(request, 'inactive')
 
         # Give users access to meeting
-        m1.set_groups('robin', viewer)
-        m1.set_groups('fredrik', viewer)
+        m1.add_groups('robin', viewer)
+        m1.add_groups('fredrik', viewer)
 
         #Add subscribers
         self.config.scan('voteit.core.subscribers.unread')
@@ -226,7 +211,7 @@ class UnreadTests(unittest.TestCase):
         m1['a1'] = a1
         
         # remove user
-        del root.users['fredrik']
+        del self.root.users['fredrik']
         
         # check that user have no entries in unread
         unreads = self._import_class()(self.session)
