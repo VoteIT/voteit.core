@@ -2,6 +2,8 @@ import unittest
 from datetime import datetime
 
 from pyramid import testing
+from pyramid.authentication import AuthTktAuthenticationPolicy
+from pyramid.authorization import ACLAuthorizationPolicy
 from zope.interface.verify import verifyObject
 from zope.component.event import objectEventNotify
 
@@ -13,10 +15,18 @@ from voteit.core.interfaces import IObjectUpdatedEvent
 from voteit.core.events import ObjectUpdatedEvent
 from voteit.core.testing import testing_sql_session
 from voteit.core.security import ROLE_OWNER
+from voteit.core.security import groupfinder
+
+
+authn_policy = AuthTktAuthenticationPolicy(secret='sosecret',
+                                           callback=groupfinder)
+authz_policy = ACLAuthorizationPolicy()
 
 
 class CatalogTestCase(unittest.TestCase):
-    """ Class for registering test setup and some helper methods. """
+    """ Class for registering test setup and some helper methods.
+        This doesn't actually run any tests.
+    """
     def setUp(self):
         self.config = testing.setUp()
         ct = """
@@ -92,6 +102,40 @@ class CatalogTests(CatalogTestCase):
         self.assertEqual(query("title == 'hello world'")[0], 0)
         self.assertEqual(query("title == 'me and my little friends'")[0], 1)
 
+    def test_update_indexes_when_index_removed(self):
+        meeting = self.content_types['Meeting'].type_class()
+        meeting.title = 'hello world'
+        self.root['meeting'] = meeting
+        
+        catalog = self.root.catalog
+        catalog['nonexistent_index'] = catalog['title'] #Nonexistent should be removed
+        del catalog['title'] #Removing title index should recreate it
+        
+        self.failUnless(catalog.get('nonexistent_index'))
+        
+        from voteit.core.models.catalog import update_indexes
+        update_indexes(catalog, reindex=False)
+        
+        self.failIf(catalog.get('nonexistent_index'))
+        self.failUnless(catalog.get('title'))
+    
+    def test_reindex_indexes(self):
+        meeting = self.content_types['Meeting'].type_class()
+        meeting.title = 'hello world'
+        self.root['meeting'] = meeting
+        catalog = self.root.catalog
+        
+        #Catalog should return the meeting on a search
+        self.assertEqual(self.query("title == 'hello world'")[0], 1)
+        
+        #If the meeting title changes, no subscriber will be fired here...
+        meeting.title = "Goodbye cruel world"
+        #...but when reindexed it should work
+        from voteit.core.models.catalog import reindex_indexes
+        reindex_indexes(catalog)
+        
+        self.assertEqual(self.query("title == 'Goodbye cruel world'")[0], 1)
+
 
 class CatalogIndexTests(CatalogTestCase):
     """ Make sure indexes work as expected. """
@@ -136,6 +180,16 @@ class CatalogIndexTests(CatalogTestCase):
         self.assertEqual(self.query("created == %s and path == '/meeting'" % meeting_unix)[0], 1)
         qy = ("%s < created < %s and path == '/meeting'" % (meeting_unix-1, meeting_unix+1))
         self.assertEqual(self.query(qy)[0], 1)
+
+    def test_allowed_to_view(self):
+        self.config.setup_registry(authentication_policy=authn_policy,
+                                   authorization_policy=authz_policy)
+        obj = self._add_mock_meeting()
+        
+        #Owners are not allowed to view meetings. It's exclusive for Admins / Moderators right now
+        self.assertEqual(self.query("allowed_to_view in any('role:Owner',) and path == '/meeting'")[0], 0)
+        self.assertEqual(self.query("allowed_to_view in any('role:Admin',) and path == '/meeting'")[0], 1)
+        self.assertEqual(self.query("allowed_to_view in any('role:Moderator',) and path == '/meeting'")[0], 1)
 
 
 class CatalogMetadataTests(CatalogTestCase):

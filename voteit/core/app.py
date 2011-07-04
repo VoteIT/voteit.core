@@ -12,7 +12,7 @@ from zope.interface.verify import verifyClass
 from sqlalchemy import create_engine
 from zope.sqlalchemy import ZopeTransactionExtension
 
-from voteit.core.interfaces import ICatalogMetadata
+from voteit.core.models.interfaces import ICatalogMetadata
 from voteit.core.models.interfaces import IContentUtility
 from voteit.core.models.interfaces import ICatalogMetadataEnabled
 from voteit.core.models.interfaces import IPollPlugin
@@ -49,7 +49,7 @@ def register_content_types(config):
 
 
 def register_catalog_metadata_adapter(config):
-    from voteit.core.catalog import CatalogMetadata
+    from voteit.core.models.catalog import CatalogMetadata
     config.registry.registerAdapter(CatalogMetadata, (ICatalogMetadataEnabled,), ICatalogMetadata)
 
 

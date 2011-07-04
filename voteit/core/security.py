@@ -54,6 +54,13 @@ MEETING_ROLES = ((ROLE_MODERATOR, _(u'Moderator')),
                  (ROLE_VIEWER, _(u'View only')),
                 )
 
+
+# An empty value tells the catalog to match anything, whereas when
+# there are no principals with permission to view we want for there
+# to be no matches. This string is in other words forbidden to use
+# as a userid, group or role name.
+NEVER_EVER_PRINCIPAL = 'NO ONE no way NO HOW'
+
 def groupfinder(name, request):
     """ Get groups for the current user. See models/security_aware.py
         This is also a callback for the Authorization policy.

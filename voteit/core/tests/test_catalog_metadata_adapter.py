@@ -29,7 +29,7 @@ class CatalogMetadataTests(unittest.TestCase):
         testing.tearDown()
 
     def _make_obj(self, context):
-        from voteit.core.catalog import CatalogMetadata
+        from voteit.core.models.catalog import CatalogMetadata
         return CatalogMetadata(context)
     
     def test_add_and_get_metadata(self):
