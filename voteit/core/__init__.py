@@ -1,6 +1,4 @@
 from pyramid.i18n import TranslationStringFactory
-from pyramid.authorization import ACLAuthorizationPolicy
-from pyramid.authentication import AuthTktAuthenticationPolicy
 from pyramid.session import UnencryptedCookieSessionFactoryConfig
 from repoze.zodbconn.finder import PersistentApplicationFinder
 from pyramid.config import Configurator
@@ -16,12 +14,6 @@ RDB_Base = declarative_base()
 def main(global_config, **settings):
     """ This function returns a Pyramid WSGI application.
     """
-    from voteit.core.security import groupfinder
-    #FIXME: Is secret a salt or an id?
-    authn_policy = AuthTktAuthenticationPolicy(secret='sosecret',
-                                               callback=groupfinder)
-    authz_policy = ACLAuthorizationPolicy()
-
     zodb_uri = settings.get('zodb_uri')
     if zodb_uri is None:
         raise ValueError("No 'zodb_uri' in application configuration.")
@@ -35,12 +27,11 @@ def main(global_config, **settings):
     
     config = Configurator(settings=settings,
                           root_factory=get_root,
-                          authentication_policy=authn_policy,
-                          authorization_policy=authz_policy,
                           session_factory = sessionfact,)
     
     from voteit.core import app
     #FIXME: Pluggable startup procedure?
+    app.register_security_policy(config)
     app.register_catalog_metadata_adapter(config)
     app.add_sql_session_util(config)
     app.populate_sql_database(config)

@@ -7,6 +7,8 @@
 from pyramid.events import ApplicationCreated
 from pyramid.events import subscriber
 from pyramid.config import Configurator
+from pyramid.authorization import ACLAuthorizationPolicy
+from pyramid.authentication import AuthTktAuthenticationPolicy
 from zope.interface.verify import verifyClass
 
 from sqlalchemy import create_engine
@@ -31,6 +33,15 @@ def register_poll_plugins(config):
     else:
         raise ValueError("At least one poll plugin must be used")
 
+def register_security_policy(config):
+    from voteit.core.security import groupfinder
+
+    authn_policy = AuthTktAuthenticationPolicy(secret='sosecret',
+                                               callback=groupfinder)
+    authz_policy = ACLAuthorizationPolicy()
+
+    config.setup_registry(authentication_policy=authn_policy,
+                          authorization_policy=authz_policy)
 
 def register_content_types(config):
     """ Include content types and their utility IContentUtility """
