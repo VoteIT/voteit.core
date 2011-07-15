@@ -4,6 +4,7 @@ from datetime import datetime
 from pyramid import testing
 from pyramid.authentication import AuthTktAuthenticationPolicy
 from pyramid.authorization import ACLAuthorizationPolicy
+from pyramid.security import remember, principals_allowed_by_permission
 from zope.interface.verify import verifyObject
 from zope.component.event import objectEventNotify
 
@@ -14,7 +15,7 @@ from voteit.core.models.interfaces import IContentUtility
 from voteit.core.interfaces import IObjectUpdatedEvent
 from voteit.core.events import ObjectUpdatedEvent
 from voteit.core.testing import testing_sql_session
-from voteit.core.security import ROLE_OWNER
+from voteit.core import security
 from voteit.core.security import groupfinder
 
 
@@ -57,7 +58,8 @@ class CatalogTestCase(unittest.TestCase):
         obj.title = 'Testing catalog'
         obj.uid = 'simple_uid'
         obj.creators = ['demo_userid']
-        obj.add_groups('demo_userid', (ROLE_OWNER,))
+        obj.add_groups('demo_userid', (security.ROLE_OWNER,))
+        obj.add_groups('admin', (security.ROLE_ADMIN, security.ROLE_MODERATOR,))
         self.root['meeting'] = obj
         return obj
 
@@ -135,6 +137,32 @@ class CatalogTests(CatalogTestCase):
         reindex_indexes(catalog)
         
         self.assertEqual(self.query("title == 'Goodbye cruel world'")[0], 1)
+
+    def test_reindex_object_security(self):
+        from voteit.core.models.catalog import reindex_object_security
+        
+        self.config.setup_registry(authentication_policy=authn_policy,
+                                   authorization_policy=authz_policy)
+        
+        catalog = self.root.catalog
+        obj = self._add_mock_meeting()
+        
+        #Owners are not allowed to view meetings. It's exclusive for Admins / Moderators right now
+        self.assertEqual(self.query("allowed_to_view in any('role:Admin',) and path == '/meeting'")[0], 1)
+        self.assertEqual(self.query("allowed_to_view in any('role:Participant',) and path == '/meeting'")[0], 0)        
+        self.assertEqual(self.query("allowed_to_view in any('role:Viewer',) and path == '/meeting'")[0], 0)        
+        
+        self.config.testing_securitypolicy(userid='some_user',
+                                           permissive=True)
+        request = testing.DummyRequest()
+        obj.set_workflow_state(request, 'inactive')
+        
+        self.config.setup_registry(authentication_policy=authn_policy,
+                                   authorization_policy=authz_policy)
+        reindex_object_security(catalog, obj)
+
+        self.assertEqual(self.query("allowed_to_view in any('role:Participant',) and path == '/meeting'")[0], 1)        
+        self.assertEqual(self.query("allowed_to_view in any('role:Viewer',) and path == '/meeting'")[0], 1)        
 
 
 class CatalogIndexTests(CatalogTestCase):

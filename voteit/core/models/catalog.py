@@ -11,7 +11,8 @@ from pyramid.traversal import find_root
 from pyramid.traversal import resource_path
 from pyramid.security import principals_allowed_by_permission
 
-from voteit.core.models.interfaces import ICatalogMetadataEnabled
+from voteit.core.models.interfaces import ICatalogMetadataEnabled,\
+    ISecurityAware
 from voteit.core.models.interfaces import IWorkflowAware
 from voteit.core.models.interfaces import ICatalogMetadata
 from voteit.core.security import NEVER_EVER_PRINCIPAL
@@ -100,6 +101,7 @@ def index_object(catalog, obj):
         metadata = getAdapter(obj, ICatalogMetadata)
         catalog.document_map.add_metadata(obj_id, metadata())
 
+
 def reindex_object(catalog, obj):
     """ Reindex an object and update metadata. """
     obj_id = catalog.document_map.docid_for_address(resource_path(obj))
@@ -110,6 +112,7 @@ def reindex_object(catalog, obj):
         metadata = getAdapter(obj, ICatalogMetadata)
         catalog.document_map.add_metadata(obj_id, metadata())
 
+
 def unindex_object(catalog, obj):
     """ Remove an index and its metadata. """
     obj_id = catalog.document_map.docid_for_address(resource_path(obj))
@@ -119,6 +122,16 @@ def unindex_object(catalog, obj):
     if ICatalogMetadataEnabled.providedBy(obj):
         catalog.document_map.remove_metadata(obj_id)
 
+
+def reindex_object_security(catalog, obj):
+    """ Update security information in the catalog.
+        Will update all contained objects as well.
+    """
+    reindex_object(catalog, obj)
+    #Recurse
+    for contained in obj.values():
+        if ISecurityAware.providedBy(contained):
+            reindex_object_security(catalog, contained)
 
 #Indexes
 def get_title(object, default):
