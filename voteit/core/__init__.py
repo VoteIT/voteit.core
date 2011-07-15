@@ -14,6 +14,9 @@ RDB_Base = declarative_base()
 def main(global_config, **settings):
     """ This function returns a Pyramid WSGI application.
     """
+    from voteit.core.security import authn_policy
+    from voteit.core.security import authz_policy
+    
     zodb_uri = settings.get('zodb_uri')
     if zodb_uri is None:
         raise ValueError("No 'zodb_uri' in application configuration.")
@@ -26,12 +29,13 @@ def main(global_config, **settings):
 
     
     config = Configurator(settings=settings,
+                          authentication_policy=authn_policy,
+                          authorization_policy=authz_policy,
                           root_factory=get_root,
                           session_factory = sessionfact,)
     
     from voteit.core import app
     #FIXME: Pluggable startup procedure?
-    app.register_security_policy(config)
     app.register_catalog_metadata_adapter(config)
     app.add_sql_session_util(config)
     app.populate_sql_database(config)

@@ -7,8 +7,6 @@
 from pyramid.events import ApplicationCreated
 from pyramid.events import subscriber
 from pyramid.config import Configurator
-from pyramid.authorization import ACLAuthorizationPolicy
-from pyramid.authentication import AuthTktAuthenticationPolicy
 from zope.interface.verify import verifyClass
 
 from sqlalchemy import create_engine
@@ -33,15 +31,6 @@ def register_poll_plugins(config):
     else:
         raise ValueError("At least one poll plugin must be used")
 
-def register_security_policy(config):
-    from voteit.core.security import groupfinder
-
-    authn_policy = AuthTktAuthenticationPolicy(secret='sosecret',
-                                               callback=groupfinder)
-    authz_policy = ACLAuthorizationPolicy()
-
-    config.setup_registry(authentication_policy=authn_policy,
-                          authorization_policy=authz_policy)
 
 def register_content_types(config):
     """ Include content types and their utility IContentUtility """
@@ -66,16 +55,16 @@ def register_catalog_metadata_adapter(config):
 
 def add_sql_session_util(config, sqlite_file=None):
     settings = config.registry.settings
-    
+
     if sqlite_file is None:
         sqlite_file = settings.get('sqlite_file')
         if sqlite_file is None:
             raise ValueError("""
-            A path to an SQLite db file needs to be specified.
-            Something like: 'sqlite_file = sqlite:///%(here)s/../var/sqlite.db'
-            added in paster setup. (Either development.ini or production.ini)
-            
-            Alternatively, you can pass sqlite_file as an argument to this method.
+A path to an SQLite db file needs to be specified.
+Something like: 'sqlite_file = sqlite:///%(here)s/../var/sqlite.db'
+added in paster setup. (Either development.ini or production.ini)
+
+Alternatively, you can pass sqlite_file as an argument to this method.
             """)
     
     engine = create_engine(sqlite_file)
