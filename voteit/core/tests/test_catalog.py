@@ -56,6 +56,7 @@ class CatalogTestCase(unittest.TestCase):
     def _add_mock_meeting(self):
         obj = self.content_types['Meeting'].type_class()
         obj.title = 'Testing catalog'
+        obj.description = 'To check that everything works as expected.'
         obj.uid = 'simple_uid'
         obj.creators = ['demo_userid']
         obj.add_groups('demo_userid', (security.ROLE_OWNER,))
@@ -219,6 +220,15 @@ class CatalogIndexTests(CatalogTestCase):
         self.assertEqual(self.query("allowed_to_view in any('role:Admin',) and path == '/meeting'")[0], 1)
         self.assertEqual(self.query("allowed_to_view in any('role:Moderator',) and path == '/meeting'")[0], 1)
 
+    def test_searchable_text(self):
+        obj = self._add_mock_meeting()
+        
+        self.assertEqual(self.query("'Testing' in searchable_text")[0], 1)
+        self.assertEqual(self.query("'everything works as expected' in searchable_text")[0], 1)
+        #FIXME: Not possible to search on "Not", wtf?
+        self.assertEqual(self.query("'We are 404' in searchable_text")[0], 0)
+        
+        
 
 class CatalogMetadataTests(CatalogTestCase):
     """ Test metadata creation. This test also covers catalog subscribers.

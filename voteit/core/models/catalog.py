@@ -3,6 +3,7 @@ from calendar import timegm
 from repoze.catalog.indexes.field import CatalogFieldIndex
 from repoze.catalog.indexes.keyword import CatalogKeywordIndex
 from repoze.catalog.indexes.path import CatalogPathIndex
+from repoze.catalog.indexes.text import CatalogTextIndex
 from zope.interface import implements
 from zope.component import adapts
 from zope.component import getAdapter
@@ -18,6 +19,9 @@ from voteit.core.models.interfaces import ICatalogMetadata
 from voteit.core.security import NEVER_EVER_PRINCIPAL
 from voteit.core.security import VIEW
 
+
+SEARCHABLE_TEXT_INDEXES = ('title',
+                           'description',)
 
 class CatalogMetadata(object):
     """ An adapter to fetch metadata for the catalog.
@@ -55,6 +59,7 @@ def update_indexes(catalog, reindex=True):
         'creators': CatalogKeywordIndex(get_creators),
         'created': CatalogFieldIndex(get_created),
         'allowed_to_view': CatalogKeywordIndex(get_allowed_to_view),
+        'searchable_text' : CatalogTextIndex(get_searchable_text),
     }
     
     changed_indexes = set()
@@ -118,7 +123,7 @@ def unindex_object(catalog, obj):
     obj_id = catalog.document_map.docid_for_address(resource_path(obj))
     catalog.unindex_doc(obj_id)
 
-    #Add metadata
+    #Remove metadata
     if ICatalogMetadataEnabled.providedBy(obj):
         catalog.document_map.remove_metadata(obj_id)
 
@@ -129,6 +134,7 @@ def reindex_object_security(catalog, obj):
     """
     reindex_object(catalog, obj)
     #Recurse
+    #FIXME: We may want to only touch the security related index here, and no metadata.
     for contained in obj.values():
         if ISecurityAware.providedBy(contained):
             reindex_object_security(catalog, contained)
@@ -176,3 +182,15 @@ def get_allowed_to_view(object, default):
         # to be no matches.
         principals = [NEVER_EVER_PRINCIPAL,]
     return principals
+
+def get_searchable_text(object, default):
+    """ Searchable text is basically all textfields that should be
+        searchable appended to each other.
+    """
+    text = u''
+    for index in SEARCHABLE_TEXT_INDEXES:
+        res = getattr(object, index, None)
+        if res:
+            text += u' %s' % res
+    text = text.strip()
+    return text and text or default
