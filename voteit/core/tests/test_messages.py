@@ -50,7 +50,7 @@ class MessagesTests(unittest.TestCase):
         obj = self._import_class()(self.session)
         for tag in ('t1', 't2', 't3'):
             t = obj.tag_to_obj(tag)
-            self.assertIn(t, tags)
+            self.assertTrue(t in tags)
 
     def test_add(self):
         obj = self._import_class()(self.session)
