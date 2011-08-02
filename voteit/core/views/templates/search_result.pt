@@ -18,6 +18,10 @@
     </script>
 </tal:deform>
 
+<metal:heading fill-slot="page_heading">
+	<h3>Search</h3>
+</metal:heading>
+
 <div metal:fill-slot="content">
 	
 	<form method="POST" tal:attributes="action '%ssearch' % api.resource_url(context, request)">
