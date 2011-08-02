@@ -1,10 +1,13 @@
 from zope.component import getUtility
+from pyramid.authorization import ACLAuthorizationPolicy
+from pyramid.authentication import AuthTktAuthenticationPolicy
 from pyramid.interfaces import IAuthorizationPolicy
 from pyramid.traversal import find_root
 from pyramid.security import Authenticated
 from pyramid.security import Everyone
 
 from voteit.core import VoteITMF as _
+
 
 #Roles, which are the same as groups really
 ROLE_ADMIN = 'role:Admin'
@@ -54,11 +57,24 @@ MEETING_ROLES = ((ROLE_MODERATOR, _(u'Moderator')),
                  (ROLE_VIEWER, _(u'View only')),
                 )
 
+
+# An empty value tells the catalog to match anything, whereas when
+# there are no principals with permission to view we want for there
+# to be no matches. This string is in other words forbidden to use
+# as a userid, group or role name.
+NEVER_EVER_PRINCIPAL = 'NO ONE no way NO HOW'
+
 def groupfinder(name, request):
     """ Get groups for the current user. See models/security_aware.py
         This is also a callback for the Authorization policy.
     """
     return request.context.get_groups(name)
+
+#Authentication policies
+authn_policy = AuthTktAuthenticationPolicy(secret='sosecret',
+                                           callback=groupfinder)
+authz_policy = ACLAuthorizationPolicy()
+
 
 def find_authorized_userids(context, permissions):
     """ Return a set of all userids that fullfill all of the permissions in permissions.

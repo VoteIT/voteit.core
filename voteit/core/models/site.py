@@ -11,7 +11,7 @@ from voteit.core.models.interfaces import ISiteRoot
 from voteit.core.models.base_content import BaseContent
 from voteit.core.models.users import Users
 from voteit.core.validators import html_string_validator
-from voteit.core.catalog import update_indexes
+from voteit.core.models.catalog import update_indexes
 
 
 class SiteRoot(BaseContent):
@@ -22,12 +22,13 @@ class SiteRoot(BaseContent):
     allowed_contexts = ()
 
     __acl__ = [(Allow, security.ROLE_ADMIN, ALL_PERMISSIONS),
-               (Allow, security.ROLE_OWNER, (security.EDIT, security.CHANGE_PASSWORD)),
+               (Allow, security.ROLE_OWNER, (security.EDIT, security.CHANGE_PASSWORD, )),
                (Allow, Everyone, security.VIEW),
                DENY_ALL]
 
     def __init__(self):
         self.catalog = Catalog()
+        self.catalog.__parent__ = self #To make traversal work
         self.catalog.document_map = DocumentMap()
         update_indexes(self.catalog)
         super(SiteRoot, self).__init__()

@@ -420,6 +420,12 @@ class IMessages(Interface):
         """ Count unread messages for a meeting. (Identified by its uid)
         """
 
+class ICatalogMetadata(Interface):
+    """ An adapter to fetch metadata for the catalog.
+        it adapts voteit.core.models.interfaces.ICatalogMetadataEnabled
+        which is just a marker interface.
+    """
+
 #Marker interfaces
 class ICatalogMetadataEnabled(Interface):
     """ Marker interface for IBaseContent that should have metadata.

@@ -12,7 +12,7 @@ from zope.interface.verify import verifyClass
 from sqlalchemy import create_engine
 from zope.sqlalchemy import ZopeTransactionExtension
 
-from voteit.core.interfaces import ICatalogMetadata
+from voteit.core.models.interfaces import ICatalogMetadata
 from voteit.core.models.interfaces import IContentUtility
 from voteit.core.models.interfaces import ICatalogMetadataEnabled
 from voteit.core.models.interfaces import IPollPlugin
@@ -49,22 +49,22 @@ def register_content_types(config):
 
 
 def register_catalog_metadata_adapter(config):
-    from voteit.core.catalog import CatalogMetadata
+    from voteit.core.models.catalog import CatalogMetadata
     config.registry.registerAdapter(CatalogMetadata, (ICatalogMetadataEnabled,), ICatalogMetadata)
 
 
 def add_sql_session_util(config, sqlite_file=None):
     settings = config.registry.settings
-    
+
     if sqlite_file is None:
         sqlite_file = settings.get('sqlite_file')
         if sqlite_file is None:
             raise ValueError("""
-            A path to an SQLite db file needs to be specified.
-            Something like: 'sqlite_file = sqlite:///%(here)s/../var/sqlite.db'
-            added in paster setup. (Either development.ini or production.ini)
-            
-            Alternatively, you can pass sqlite_file as an argument to this method.
+A path to an SQLite db file needs to be specified.
+Something like: 'sqlite_file = sqlite:///%(here)s/../var/sqlite.db'
+added in paster setup. (Either development.ini or production.ini)
+
+Alternatively, you can pass sqlite_file as an argument to this method.
             """)
     
     engine = create_engine(sqlite_file)
