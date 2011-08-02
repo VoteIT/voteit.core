@@ -38,6 +38,19 @@ class MessagesTests(unittest.TestCase):
         from voteit.core.models.interfaces import IMessages
         obj = self._import_class()(self.session)
         self.assertTrue(verifyObject(IMessages, obj))
+        
+    def test_tag_to_obj(self):
+        from voteit.core.models.message import MessageTag
+        tags = []
+        for tag in ('t1', 't2', 't3'):
+            t = MessageTag(tag)
+            self.session.add(t)
+            tags.append(t)
+        
+        obj = self._import_class()(self.session)
+        for tag in ('t1', 't2', 't3'):
+            t = obj.tag_to_obj(tag)
+            self.assertIn(t, tags)
 
     def test_add(self):
         obj = self._import_class()(self.session)
@@ -62,7 +75,7 @@ class MessagesTests(unittest.TestCase):
         obj = self._import_class()(self.session)
         self._add_mock_data(obj)
 
-        self.assertEqual(len(obj.retrieve_messages('m1', contextuid='v1')), 2)
+        self.assertEqual(len(obj.retrieve_messages('m1', tags=('like','log',), contextuid='v1')), 1)
         
     def test_mark_read(self):
         obj = self._import_class()(self.session)

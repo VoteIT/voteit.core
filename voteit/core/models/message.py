@@ -91,11 +91,15 @@ class Messages(object):
         self.session.add(msg)
 
     def retrieve_messages(self, meetinguid, tags=(), contextuid=None, userid=None):
+    
         query = self.session.query(Message).filter(Message.meetinguid==meetinguid)
+    
         if tags:
-            query = query.filter(Message.tags.any(tags=tags))
+            query = query.filter(Message.tags.any(MessageTag.tag.in_(tags)))
+    
         if contextuid:
             query = query.filter(Message.contextuid==contextuid)
+    
         if userid:
             query = query.filter(Message.userid==userid)
 
@@ -116,3 +120,9 @@ class Messages(object):
         query = query.filter(Message.userid==userid)
         return len(query.all())
         
+    def tag_to_obj(self, tag):
+        query = self.session.query(MessageTag).filter(MessageTag.tag==tag)
+        if query.count() > 0:
+            return query.one()
+
+        return None
