@@ -1,0 +1,44 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      metal:use-macro="api.main_template.macros['master']">
+
+<tal:deform tal:condition="form|False" metal:fill-slot="head">
+    <tal:css repeat="css_file form_resources['css']|[]">
+        <link rel="stylesheet"
+              tal:attributes="href string:/deform/${css_file}" type="text/css" />
+    </tal:css>
+    <tal:js repeat="js_file form_resources['js']|[]">
+        <script type="text/javascript"
+                tal:attributes="src string:/deform/${js_file}"></script>
+    </tal:js>
+    <script type="text/javascript">
+        deform.load()
+    </script>
+</tal:deform>
+
+<div metal:fill-slot="content">
+	
+	<form method="POST" tal:attributes="action '%ssearch' % api.resource_url(context, request)">
+		<input type="text" name="query"
+		       tal:attributes="value search_string and search_string or ''" />
+		<input type="submit" />
+	</form>
+	
+    <tal:results condition="search_results">
+    	<tal:iterate repeat="obj search_results">
+    		<h5>
+		    	<a tal:content="obj.title"
+				   tal:attributes="href api.resource_url(obj, request)">Title</a>
+			</h5>
+			<div tal:content="obj.description">Description</div>
+    	</tal:iterate>
+    </tal:results>
+	
+	<tal:no_results condition="search_string and not search_results">No results</tal:no_results>
+	
+    <tal:no_search condition="not search_string">Search above</tal:no_search>
+</div>
+
+</html>
