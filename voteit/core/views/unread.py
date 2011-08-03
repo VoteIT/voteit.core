@@ -26,7 +26,7 @@ class Unread(object):
     def read(self):
         """ Mark the context as read for the user.
         """
-        unreads = Unreads(self.request)
+        unreads = Unreads(self.api.sql_session)
         unreads.remove(self.api.userid, self.context.uid)
         
         url = resource_url(self.context, self.request)
