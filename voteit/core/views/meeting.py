@@ -9,6 +9,7 @@ from pyramid.url import resource_url
 from voteit.core import security
 from voteit.core import VoteITMF as _
 from voteit.core.views.base_view import BaseView
+from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.schemas import add_csrf_token
 
@@ -46,8 +47,13 @@ class MeetingView(BaseView):
                     u"No regular meeting participants can see this meeting yet, and you won't be able to send invitations. "
                     u"If you want others to see it, you can set the meeting in the <b>Inactive</b> state by using the <b>set state</b> menu.")
             self.api.flash_messages.add(msg)
+        
+        self.response['get_state_ais'] = self._get_state_ais
 
         return self.response
+
+    def _get_state_ais(self, state):
+        return self.context.get_content(iface=IAgendaItem, state=state, sort_on='agenda_item_id')
 
     @view_config(name="meeting_access", context=IMeeting, renderer="templates/meeting_access.pt", permission=security.VIEW)
     def meeting_access(self):

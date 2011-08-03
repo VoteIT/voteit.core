@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import colander
 import deform
 from zope.interface import implements
@@ -51,6 +53,18 @@ class AgendaItem(BaseContent, WorkflowAware):
 
         raise AttributeError("Go fetch parents acl")
 
+    @property
+    def agenda_item_id(self):
+        return self.get_field_value('agenda_item_id')
+
+    @property
+    def start_time(self):
+        return self.get_field_value('start_time')
+
+    @property
+    def end_time(self):
+        return self.get_field_value('end_time')
+
 def construct_schema(**kwargs):
     context = kwargs.get('context', None)
     if context is None:
@@ -92,6 +106,7 @@ def construct_schema(**kwargs):
         description = colander.SchemaNode(
             colander.String(),
             title = _(u"Description"),
+            missing = u"",
             widget=deform.widget.TextAreaWidget(rows=10, cols=60),
             validator=html_string_validator,
         )
@@ -103,6 +118,20 @@ def construct_schema(**kwargs):
             default = suggested_id,
             missing = u"",
             validator = _validate_uniqueness_ai_id,
+        )
+        summary = colander.SchemaNode(
+            colander.String(),
+            title = _(u"Summary of this item."),
+            description = _(u"This could be what was decided. Used for logging events."),
+            widget=deform.widget.TextAreaWidget(rows=10, cols=60),
+            missing = u"",
+            validator=html_string_validator,
+        )
+        estimated_start_time = colander.SchemaNode(
+             colander.DateTime(),
+             title = _(u"Estimated start time of this Agenda Item."),
+             description = _(u"Note that no action will be taken automatically to start it, "
+                             "you have to do it yourself when ready."),
         )
     return AgendaItemSchema()
 

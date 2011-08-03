@@ -17,7 +17,7 @@ requires = [
     'repoze.workflow',
     'ZODB3',
     'WebError',
-    'deform',
+    'deform>=0.9.1',
     'Babel',
     'slugify',
     'webtest',
