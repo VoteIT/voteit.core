@@ -1,4 +1,5 @@
 import unittest
+from datetime import datetime
 
 from pyramid import testing
 from pyramid.authorization import ACLAuthorizationPolicy
@@ -68,7 +69,26 @@ class AgendaItemTests(unittest.TestCase):
         obj.set_workflow_state(request, 'inactive')
         obj.set_workflow_state(request, 'active')
         self.assertRaises(Exception, obj.set_workflow_state, 'closed')
-        
+
+    def test_timestamp_added_on_active(self):
+        self.config.scan('voteit.core.subscribers.timestamps') #To add subscriber
+        request = testing.DummyRequest()
+        obj = self._make_obj()
+        obj.set_workflow_state(request, 'inactive')
+        self.assertFalse(isinstance(obj.start_time, datetime))
+        obj.set_workflow_state(request, 'active')
+        self.assertTrue(isinstance(obj.start_time, datetime))
+
+    def test_timestamp_added_on_close(self):
+        self.config.scan('voteit.core.subscribers.timestamps') #To add subscriber
+        request = testing.DummyRequest()
+        obj = self._make_obj()
+        obj.set_workflow_state(request, 'inactive')
+        obj.set_workflow_state(request, 'active')
+        self.assertFalse(isinstance(obj.end_time, datetime))
+        obj.set_workflow_state(request, 'closed')
+        self.assertTrue(isinstance(obj.end_time, datetime))
+
 
 class AgendaItemPermissionTests(unittest.TestCase):
     """ Check permissions in different agenda item states. """
