@@ -326,6 +326,23 @@ class IContentUtility(Interface):
             a content_type.
         """
 
+
+class IDateTimeUtil(Interface):
+    """ Utility that handles display of datetime formats.
+        Also takes care of locale negotiation.
+    """
+    locale = Attribute("Currently set locale.")
+    
+    def set_locale(value):
+        """ Set a new locale. """
+    
+    def date(value, format='short'):
+        """ Return date formatted according to current locale."""
+
+    def datetime(value, format='short'):
+        """ Return date and time formatted according to current locale."""
+
+
 class IExpressions(Interface):
     """ Handle user expressions like 'Like' or 'Support'.
         This behaves like an adapter on a sql db session.

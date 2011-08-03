@@ -22,8 +22,8 @@
 				<tal:closed condition="ais" repeat="ai ais">
                     <h5 tal:content="ai.title">Title</h5>
 					<div>
-                        Started: <span tal:content="ai.start_time">1970</span>
-                        Closed: <span tal:content="ai.end_time">1970</span>
+                        Started: <span tal:content="api.dt_util.datetime(ai.start_time)">1970</span>
+                        Closed: <span tal:content="api.dt_util.datetime(ai.end_time)">1970</span>
 					</div>
 					<div tal:content="ai.get_field_value('summary')">Summary</div>
 				</tal:closed>
@@ -37,7 +37,7 @@
                 <tal:closed condition="ais" repeat="ai ais">
                     <h5 tal:content="ai.title">Title</h5>
                     <div>
-                        Started: <span tal:content="ai.start_time">1970</span>
+                        Started: <span tal:content="api.dt_util.datetime(ai.start_time)">1970</span>
                     </div>
                     <div tal:content="ai.get_field_value('summary')">Summary</div>
                 </tal:closed>
@@ -51,7 +51,7 @@
                 <tal:closed condition="ais" repeat="ai ais">
                     <h5 tal:content="ai.title">Title</h5>
                     <div>
-                        Planned for: <span tal:content="ai.get_field_value('estimated_start_time')">1970</span>
+                        Planned for: <span tal:content="api.dt_util.datetime(ai.get_field_value('estimated_start_time'))">1970</span>
                     </div>
                     <div tal:content="ai.get_field_value('summary')">Summary</div>
                 </tal:closed>

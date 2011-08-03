@@ -13,20 +13,21 @@ from pyramid.traversal import find_root
 from pyramid.exceptions import Forbidden
 from pyramid.interfaces import IAuthenticationPolicy
 from pyramid.interfaces import IAuthorizationPolicy
+from pyramid.decorator import reify
 from webob.exc import HTTPFound
 from repoze.workflow import get_workflow
 from webhelpers.html.converters import nl2br
 
 from voteit.core import security
+from voteit.core.models.interfaces import IContentUtility
+from voteit.core.models.interfaces import IDateTimeUtil
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import ISQLSession
-from voteit.core.models.interfaces import IContentUtility
 from voteit.core.models.log import Logs
 from voteit.core.views.macros import FlashMessages
 from voteit.core.views.expressions import ExpressionsView
 from voteit.core.models.unread import Unreads
 from voteit.core.models.message import Messages
-from pyramid.decorator import reify
 
 
 class APIView(object):
@@ -66,6 +67,7 @@ class APIView(object):
         [rev.insert(0, x) for x in self.lineage]
         self.reversed_lineage = tuple(rev)
         self.inside = inside
+        self.dt_util = request.registry.getUtility(IDateTimeUtil)
 
         #macros
         self.flash_messages = FlashMessages(request)

@@ -19,6 +19,8 @@ from voteit.core.models.interfaces import IPollPlugin
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IPollPlugin
 from voteit.core.models.interfaces import ISQLSession
+from voteit.core.models.interfaces import IDateTimeUtil
+
 
 def register_poll_plugins(config):
     """ Register poll plugins configured in the paster .ini file.
@@ -73,6 +75,15 @@ Alternatively, you can pass sqlite_file as an argument to this method.
     util = SQLSession(engine)
     config.registry.registerUtility(util, ISQLSession)
 
+def add_date_time_util(config, locale=None):
+    """ """
+    from voteit.core.models.date_time_util import DateTimeUtil
+    
+    if locale is None:
+        locale = config.registry.settings.get('default_locale_name')
+        
+    util = DateTimeUtil(locale)
+    config.registry.registerUtility(util, IDateTimeUtil)
 
 def populate_sql_database(config):
     from voteit.core import RDB_Base
@@ -121,6 +132,7 @@ def register_content_info(schema, type_class, verify=True, registry=None):
     
     obj = util.create(schema, type_class)
     util.add(obj, verify=verify)
+
 
 
 @subscriber(ApplicationCreated)

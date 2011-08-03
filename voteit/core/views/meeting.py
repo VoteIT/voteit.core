@@ -49,7 +49,7 @@ class MeetingView(BaseView):
             self.api.flash_messages.add(msg)
         
         self.response['get_state_ais'] = self._get_state_ais
-
+        
         return self.response
 
     def _get_state_ais(self, state):
