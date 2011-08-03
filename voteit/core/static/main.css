@@ -27,6 +27,20 @@ body {
 #navigation .header a {
 	color: #fff;
 }
+#navigation ul.closed, 
+#navigation ul.active {
+    border-bottom: black 1px solid;
+}
+#navigation ul.closed {
+    list-style: disc url('images/bullet_closed.gif');
+}
+#navigation ul.active {
+    list-style: disc url('images/bullet_active.gif');
+}
+#navigation ul.inactive {
+    list-style: disc url('images/bullet_inactive.gif');
+}
+
 #main_window {
     position: absolute;
 	left: 200px;

@@ -12,7 +12,11 @@
 	</tal:root>
 	
 	<tal:inside_meeting condition="api.meeting">
-	<tal:agenda_items define="agenda_items api.meeting.get_content(content_type='AgendaItem')">
+	<tal:agenda_items define="
+	                        agenda_items_active api.meeting.get_content(content_type='AgendaItem', state='active');
+                            agenda_items_inactive api.meeting.get_content(content_type='AgendaItem', state='inactive');
+                            agenda_items_closed api.meeting.get_content(content_type='AgendaItem', state='closed');
+                            agenda_items_private api.meeting.get_content(content_type='AgendaItem', state='private');">
 		<div class="browse_up">
 			<a tal:attributes="href api.resource_url(api.root, request)">&laquo; all meetings</a>
 		</div>
@@ -20,14 +24,46 @@
             <a tal:attributes="href api.resource_url(api.meeting, request)"
                tal:content="api.meeting.get_field_value('title')">Meeting title</a>
         </h5>
-		<ul tal:condition="agenda_items">
-		<tal:iterate repeat="agenda_item agenda_items">
+		<ul class="closed" tal:condition="agenda_items_closed">
+		<tal:iterate repeat="agenda_item agenda_items_closed">
 			<li tal:attributes="class api.inside(context, agenda_item) and 'selected' or 'plain'">
                 <a tal:attributes="href api.resource_url(agenda_item, request)">
                    	<span tal:content="agenda_item.get_field_value('title')">Agenda item title</span>
-					<span tal:replace="api.get_unread(agenda_item, content_type='Proposal')">0</span>
-					<span tal:replace="api.get_unread(agenda_item, content_type='Poll')">0</span>
-					<span tal:replace="api.get_unread(agenda_item, content_type='DiscussionPost')">0</span>
+					<span class="discussions"><img src="/static/images/discussion.png" alt="Discussions"/><span class="total" tal:replace="len(agenda_item.get_content(content_type='DiscussionPost'))">0</span> (<span class="unread" tal:replace="api.get_unread(agenda_item, content_type='DiscussionPost')">0</span>)</span>
+					<span class="polls"><img src="/static/images/poll.png" alt="Polls"/><span class="total" tal:replace="len(agenda_item.get_content(content_type='Poll'))">0</span> (<span class="unread" tal:replace="api.get_unread(agenda_item, content_type='Poll')">0</span>)</span>
+				</a>
+			</li>
+		</tal:iterate>
+		</ul>
+		<ul class="active" tal:condition="agenda_items_active">
+		<tal:iterate repeat="agenda_item agenda_items_active">
+			<li tal:attributes="class api.inside(context, agenda_item) and 'selected' or 'plain'">
+                <a tal:attributes="href api.resource_url(agenda_item, request)">
+                   	<span tal:content="agenda_item.get_field_value('title')">Agenda item title</span>
+    				<span class="discussions"><img src="/static/images/discussion.png" alt="Discussions"/><span class="total" tal:replace="len(agenda_item.get_content(content_type='DiscussionPost'))">0</span> (<span class="unread" tal:replace="api.get_unread(agenda_item, content_type='DiscussionPost')">0</span>)</span>
+					<span class="polls"><img src="/static/images/poll.png" alt="Polls"/><span class="total" tal:replace="len(agenda_item.get_content(content_type='Poll'))">0</span> (<span class="unread" tal:replace="api.get_unread(agenda_item, content_type='Poll')">0</span>)</span>
+				</a>
+			</li>
+		</tal:iterate>
+		</ul>
+		<ul class="inactive" tal:condition="agenda_items_inactive">
+		<tal:iterate repeat="agenda_item agenda_items_inactive">
+			<li tal:attributes="class api.inside(context, agenda_item) and 'selected' or 'plain'">
+                <a tal:attributes="href api.resource_url(agenda_item, request)">
+                   	<span tal:content="agenda_item.get_field_value('title')">Agenda item title</span>
+					<span class="discussions"><img src="/static/images/discussion.png" alt="Discussions"/><span class="total" tal:replace="len(agenda_item.get_content(content_type='DiscussionPost'))">0</span> (<span class="unread" tal:replace="api.get_unread(agenda_item, content_type='DiscussionPost')">0</span>)</span>
+					<span class="polls"><img src="/static/images/poll.png" alt="Polls"/><span class="total" tal:replace="len(agenda_item.get_content(content_type='Poll'))">0</span> (<span class="unread" tal:replace="api.get_unread(agenda_item, content_type='Poll')">0</span>)</span>
+				</a>
+			</li>
+		</tal:iterate>
+		</ul>
+		<ul class="private" tal:condition="agenda_items_private">
+		<tal:iterate repeat="agenda_item agenda_items_private">
+			<li tal:attributes="class api.inside(context, agenda_item) and 'selected' or 'plain'">
+                <a tal:attributes="href api.resource_url(agenda_item, request)">
+                   	<span tal:content="agenda_item.get_field_value('title')">Agenda item title</span>
+					<span class="discussions"><img src="/static/images/discussion.png" alt="Discussions"/><span class="total" tal:replace="len(agenda_item.get_content(content_type='DiscussionPost'))">0</span> (<span class="unread" tal:replace="api.get_unread(agenda_item, content_type='DiscussionPost')">0</span>)</span>
+					<span class="polls"><img src="/static/images/poll.png" alt="Polls"/><span class="total" tal:replace="len(agenda_item.get_content(content_type='Poll'))">0</span> (<span class="unread" tal:replace="api.get_unread(agenda_item, content_type='Poll')">0</span>)</span>
 				</a>
 			</li>
 		</tal:iterate>
