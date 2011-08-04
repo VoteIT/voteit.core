@@ -154,7 +154,7 @@ def construct_schema(context=None, request=None, type=None):
         return AddSchema()
     
     if type == 'manage':
-        email_choices = [(x.email, x.email) for x in context.invite_tickets.values()]
+        email_choices = [(x.email, x.email) for x in context.invite_tickets.values() if x.get_workflow_state() != u'closed']
         class ManageSchema(colander.Schema):
             emails = colander.SchemaNode(
                 deform.Set(),
