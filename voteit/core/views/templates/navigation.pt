@@ -30,7 +30,7 @@
                 <a tal:attributes="href api.resource_url(agenda_item, request)">
                    	<span tal:content="agenda_item.get_field_value('title')">Agenda item title</span>
 					<span class="discussions"><img src="/static/images/discussion.png" alt="Discussions"/><span class="total" tal:replace="len(agenda_item.get_content(content_type='DiscussionPost'))">0</span> (<span class="unread" tal:replace="api.get_unread(agenda_item, content_type='DiscussionPost')">0</span>)</span>
-					<span class="polls"><img src="/static/images/poll.png" alt="Polls"/><span class="total" tal:replace="len(agenda_item.get_content(content_type='Poll'))">0</span> (<span class="unread" tal:replace="api.get_unread(agenda_item, content_type='Poll')">0</span>)</span>
+					<span class="proposals"><img src="/static/images/proposal.png" alt="Proposals"/><span class="total" tal:replace="len(agenda_item.get_content(content_type='Proposal'))">0</span> (<span class="unread" tal:replace="api.get_unread(agenda_item, content_type='Proposal')">0</span>)</span>
 				</a>
 			</li>
 		</tal:iterate>
@@ -41,7 +41,7 @@
                 <a tal:attributes="href api.resource_url(agenda_item, request)">
                    	<span tal:content="agenda_item.get_field_value('title')">Agenda item title</span>
     				<span class="discussions"><img src="/static/images/discussion.png" alt="Discussions"/><span class="total" tal:replace="len(agenda_item.get_content(content_type='DiscussionPost'))">0</span> (<span class="unread" tal:replace="api.get_unread(agenda_item, content_type='DiscussionPost')">0</span>)</span>
-					<span class="polls"><img src="/static/images/poll.png" alt="Polls"/><span class="total" tal:replace="len(agenda_item.get_content(content_type='Poll'))">0</span> (<span class="unread" tal:replace="api.get_unread(agenda_item, content_type='Poll')">0</span>)</span>
+					<span class="proposals"><img src="/static/images/proposal.png" alt="Proposals"/><span class="total" tal:replace="len(agenda_item.get_content(content_type='Proposal'))">0</span> (<span class="unread" tal:replace="api.get_unread(agenda_item, content_type='Proposal')">0</span>)</span>
 				</a>
 			</li>
 		</tal:iterate>
@@ -52,7 +52,7 @@
                 <a tal:attributes="href api.resource_url(agenda_item, request)">
                    	<span tal:content="agenda_item.get_field_value('title')">Agenda item title</span>
 					<span class="discussions"><img src="/static/images/discussion.png" alt="Discussions"/><span class="total" tal:replace="len(agenda_item.get_content(content_type='DiscussionPost'))">0</span> (<span class="unread" tal:replace="api.get_unread(agenda_item, content_type='DiscussionPost')">0</span>)</span>
-					<span class="polls"><img src="/static/images/poll.png" alt="Polls"/><span class="total" tal:replace="len(agenda_item.get_content(content_type='Poll'))">0</span> (<span class="unread" tal:replace="api.get_unread(agenda_item, content_type='Poll')">0</span>)</span>
+					<span class="proposals"><img src="/static/images/proposal.png" alt="Proposals"/><span class="total" tal:replace="len(agenda_item.get_content(content_type='Proposal'))">0</span> (<span class="unread" tal:replace="api.get_unread(agenda_item, content_type='Proposal')">0</span>)</span>
 				</a>
 			</li>
 		</tal:iterate>
@@ -63,7 +63,7 @@
                 <a tal:attributes="href api.resource_url(agenda_item, request)">
                    	<span tal:content="agenda_item.get_field_value('title')">Agenda item title</span>
 					<span class="discussions"><img src="/static/images/discussion.png" alt="Discussions"/><span class="total" tal:replace="len(agenda_item.get_content(content_type='DiscussionPost'))">0</span> (<span class="unread" tal:replace="api.get_unread(agenda_item, content_type='DiscussionPost')">0</span>)</span>
-					<span class="polls"><img src="/static/images/poll.png" alt="Polls"/><span class="total" tal:replace="len(agenda_item.get_content(content_type='Poll'))">0</span> (<span class="unread" tal:replace="api.get_unread(agenda_item, content_type='Poll')">0</span>)</span>
+					<span class="proposals"><img src="/static/images/proposal.png" alt="Proposals"/><span class="total" tal:replace="len(agenda_item.get_content(content_type='Proposal'))">0</span> (<span class="unread" tal:replace="api.get_unread(agenda_item, content_type='Proposal')">0</span>)</span>
 				</a>
 			</li>
 		</tal:iterate>
