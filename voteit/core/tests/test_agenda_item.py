@@ -137,6 +137,8 @@ class AgendaItemPermissionTests(unittest.TestCase):
         self.assertEqual(self.pap(obj, security.CHANGE_WORKFLOW_STATE), admin | moderator)
 
     def test_active_with_closed_meeting(self):
+        #FIXME: This workflow state combination should never happen with the current configuration of the site
+        #We might want to remove this test, or change the raised exception so it happends on the workflow change instead.
         request = testing.DummyRequest()
         obj = self._make_obj()
         
@@ -157,7 +159,7 @@ class AgendaItemPermissionTests(unittest.TestCase):
         self.assertEqual(self.pap(obj, security.EDIT), set())
         
         #Delete
-        self.assertEqual(self.pap(obj, security.DELETE), set())
+        self.assertEqual(self.pap(obj, security.DELETE), admin)
 
         #Add proposal
         self.assertEqual(self.pap(obj, security.ADD_PROPOSAL), set())
