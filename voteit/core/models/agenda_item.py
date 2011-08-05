@@ -27,8 +27,10 @@ ACL['private'] = [(Allow, security.ROLE_ADMIN, security.REGULAR_ADD_PERMISSIONS)
                   (Allow, security.ROLE_MODERATOR, _PRIV_MOD_PERMS),
                   DENY_ALL,
                 ]
-ACL['closed_ai'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, security.CHANGE_WORKFLOW_STATE, security.ADD_DISCUSSION_POST, )),
-                    (Allow, security.ROLE_MODERATOR, (security.VIEW, security.CHANGE_WORKFLOW_STATE, security.ADD_DISCUSSION_POST, )),
+ACL['closed_ai'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, security.CHANGE_WORKFLOW_STATE,
+                                                  security.ADD_DISCUSSION_POST, security.MODERATE_MEETING, )),
+                    (Allow, security.ROLE_MODERATOR, (security.VIEW, security.CHANGE_WORKFLOW_STATE,
+                                                      security.ADD_DISCUSSION_POST, security.MODERATE_MEETING, )),
                     (Allow, security.ROLE_PARTICIPANT, (security.VIEW, security.ADD_DISCUSSION_POST, )),
                     (Allow, security.ROLE_VIEWER, (security.VIEW, )),
                     DENY_ALL,

@@ -18,7 +18,8 @@ from voteit.core.models.workflow_aware import WorkflowAware
 from voteit.core.validators import html_string_validator
 from voteit.core.models.log import Logs
 
-_MODERATOR_DEFAULTS = (security.VIEW, security.EDIT, security.MANAGE_GROUPS, security.MODERATE_MEETING, security.DELETE, )
+_MODERATOR_DEFAULTS = (security.VIEW, security.EDIT, security.MANAGE_GROUPS,
+                       security.MODERATE_MEETING, security.DELETE, security.CHANGE_WORKFLOW_STATE, )
 
 ACL = {}
 ACL['default'] = [(Allow, security.ROLE_ADMIN, security.REGULAR_ADD_PERMISSIONS),

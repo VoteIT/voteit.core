@@ -203,7 +203,7 @@ class AgendaItemPermissionTests(unittest.TestCase):
         self.assertEqual(self.pap(obj, security.ADD_DISCUSSION_POST), admin | moderator | participant)
 
         #Change workflow state
-        self.assertEqual(self.pap(obj, security.CHANGE_WORKFLOW_STATE), set())
+        self.assertEqual(self.pap(obj, security.CHANGE_WORKFLOW_STATE), admin | moderator)
 
     def test_closed_ai_in_closed_meeting(self):
         request = testing.DummyRequest()
