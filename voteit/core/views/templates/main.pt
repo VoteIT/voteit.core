@@ -65,11 +65,11 @@
 		            <h3 tal:content="context.title">Title</h3>
 
                     <tal:state define="state_id context.get_workflow_state()|False">
-                    	<tal:cond condition="state_id">
+                    	<div tal:condition="state_id">
 	                        <span>State:</span>
 	                        <strong tal:attributes="class 'wf-state-%s' % state_id"
 	                              tal:content="state_id">private</strong>
-						</tal:cond>
+						</div>
                     </tal:state>
 
 		            <div class="column">
