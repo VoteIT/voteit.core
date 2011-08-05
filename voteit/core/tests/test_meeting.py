@@ -1,4 +1,5 @@
 import unittest
+from datetime import datetime
 
 from pyramid import testing
 from pyramid.authorization import ACLAuthorizationPolicy
@@ -52,6 +53,46 @@ class MeetingTests(unittest.TestCase):
         obj.set_workflow_state(request, 'active')
         self.assertRaises(Exception, obj.set_workflow_state, 'closed')
 
+    def test_timestamp_added_on_close(self):
+        self.config.scan('voteit.core.subscribers.timestamps') #To add subscriber
+        request = testing.DummyRequest()
+        obj = self._make_obj()
+        obj.set_workflow_state(request, 'inactive')
+        obj.set_workflow_state(request, 'active')
+        self.assertFalse(isinstance(obj.end_time, datetime))
+        obj.set_workflow_state(request, 'closed')
+        self.assertTrue(isinstance(obj.end_time, datetime))
+
+    def test_meeting_start_time_from_ais(self):
+        request = testing.DummyRequest()
+        obj = self._make_obj()
+        self.assertEqual(obj.start_time, None)
+        
+        ai1 = self._make_ai()
+        ai1time = datetime.strptime('1999-12-13', "%Y-%m-%d")
+        ai1.set_field_value('start_time', ai1time)
+        obj['ai1'] = ai1
+
+        #It's still private
+        self.assertEqual(obj.start_time, None)
+        
+        #Publish ai1 to use its time
+        ai1.set_workflow_state(request, 'inactive')
+        self.assertEqual(obj.start_time, ai1time)
+
+        #Add anotherone
+        ai2 = self._make_ai()
+        ai2time = datetime.strptime('1970-01-01', "%Y-%m-%d")
+        ai2.set_field_value('start_time', ai2time)
+        obj['ai2'] = ai2
+        
+        #Since the new one is private, it shouldn't affect anything
+        self.assertEqual(obj.start_time, ai1time)
+        
+        #Publishing ai2 makes it take precedence
+        ai2.set_workflow_state(request, 'inactive')
+        self.assertEqual(obj.start_time, ai2time)
+        
 class MeetingPermissionTests(unittest.TestCase):
     """ Check permissions in different meeting states. """
 
@@ -154,8 +195,6 @@ class MeetingPermissionTests(unittest.TestCase):
         #Add vote
         self.assertEqual(self.pap(obj, security.ADD_VOTE), set())
 
-
-#
     def test_closed(self):
         request = testing.DummyRequest()
         obj = self._make_obj()
