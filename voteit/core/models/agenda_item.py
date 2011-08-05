@@ -27,12 +27,18 @@ ACL['private'] = [(Allow, security.ROLE_ADMIN, security.REGULAR_ADD_PERMISSIONS)
                   (Allow, security.ROLE_MODERATOR, _PRIV_MOD_PERMS),
                   DENY_ALL,
                 ]
-ACL['closed'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, )),
-                 (Allow, security.ROLE_MODERATOR, (security.VIEW, )),
-                 (Allow, security.ROLE_PARTICIPANT, (security.VIEW, )),
-                 (Allow, security.ROLE_VIEWER, (security.VIEW, )),
-                 DENY_ALL,
-                ]
+ACL['closed_ai'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, security.CHANGE_WORKFLOW_STATE, security.ADD_DISCUSSION_POST, )),
+                    (Allow, security.ROLE_MODERATOR, (security.VIEW, security.CHANGE_WORKFLOW_STATE, security.ADD_DISCUSSION_POST, )),
+                    (Allow, security.ROLE_PARTICIPANT, (security.VIEW, security.ADD_DISCUSSION_POST, )),
+                    (Allow, security.ROLE_VIEWER, (security.VIEW, )),
+                    DENY_ALL,
+                   ]
+ACL['closed_meeting'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, )),
+                         (Allow, security.ROLE_MODERATOR, (security.VIEW, )),
+                         (Allow, security.ROLE_PARTICIPANT, (security.VIEW, )),
+                         (Allow, security.ROLE_VIEWER, (security.VIEW, )),
+                         DENY_ALL,
+                        ]
 
 
 class AgendaItem(BaseContent, WorkflowAware):
@@ -47,7 +53,11 @@ class AgendaItem(BaseContent, WorkflowAware):
     def __acl__(self):
         state = self.get_workflow_state()
         if state == 'closed':
-            return ACL['closed']
+            #Check if the meeting is closed, if not discussion should be allowed +
+            #it should be allowed to change the workflow back
+            if self.__parent__.get_workflow_state() == 'closed':
+                return ACL['closed_meeting']
+            return ACL['closed_ai']
         if state == 'private':
             return ACL['private']
 

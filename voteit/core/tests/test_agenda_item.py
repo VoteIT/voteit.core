@@ -132,7 +132,9 @@ class AgendaItemPermissionTests(unittest.TestCase):
 
         #Add discussion post
         self.assertEqual(self.pap(obj, security.ADD_DISCUSSION_POST), admin | moderator)
-        
+
+        #Change workflow state
+        self.assertEqual(self.pap(obj, security.CHANGE_WORKFLOW_STATE), admin | moderator)
 
     def test_active_with_closed_meeting(self):
         request = testing.DummyRequest()
@@ -166,6 +168,9 @@ class AgendaItemPermissionTests(unittest.TestCase):
         #Add discussion post
         self.assertEqual(self.pap(obj, security.ADD_DISCUSSION_POST), set())
 
+        #Change workflow state
+        self.assertEqual(self.pap(obj, security.CHANGE_WORKFLOW_STATE), set())
+
     def test_active_with_active_meeting(self):
         request = testing.DummyRequest()
         obj = self._make_obj()
@@ -196,13 +201,24 @@ class AgendaItemPermissionTests(unittest.TestCase):
 
         #Add discussion post
         self.assertEqual(self.pap(obj, security.ADD_DISCUSSION_POST), admin | moderator | participant)
-#
-    def test_closed(self):
+
+        #Change workflow state
+        self.assertEqual(self.pap(obj, security.CHANGE_WORKFLOW_STATE), set())
+
+    def test_closed_ai_in_closed_meeting(self):
         request = testing.DummyRequest()
         obj = self._make_obj()
+        
         obj.set_workflow_state(request, 'inactive')
         obj.set_workflow_state(request, 'active')
         obj.set_workflow_state(request, 'closed')
+        
+        meeting = self._make_meeting()
+        meeting.set_workflow_state(request, 'inactive')
+        meeting.set_workflow_state(request, 'active')
+        meeting.set_workflow_state(request, 'closed')
+        
+        meeting['ai'] = obj
         
         #View
         self.assertEqual(self.pap(obj, security.VIEW), admin | moderator | viewer | participant)
@@ -221,3 +237,41 @@ class AgendaItemPermissionTests(unittest.TestCase):
 
         #Add discussion post
         self.assertEqual(self.pap(obj, security.ADD_DISCUSSION_POST), set())
+
+        #Change workflow state
+        self.assertEqual(self.pap(obj, security.CHANGE_WORKFLOW_STATE), set())
+
+    def test_closed_ai_in_open_meeting(self):
+        request = testing.DummyRequest()
+        obj = self._make_obj()
+        
+        obj.set_workflow_state(request, 'inactive')
+        obj.set_workflow_state(request, 'active')
+        obj.set_workflow_state(request, 'closed')
+        
+        meeting = self._make_meeting()
+        meeting.set_workflow_state(request, 'inactive')
+        meeting.set_workflow_state(request, 'active')
+        
+        meeting['ai'] = obj
+        
+        #View
+        self.assertEqual(self.pap(obj, security.VIEW), admin | moderator | viewer | participant)
+
+        #Edit
+        self.assertEqual(self.pap(obj, security.EDIT), set())
+        
+        #Delete
+        self.assertEqual(self.pap(obj, security.DELETE), set())
+
+        #Add proposal
+        self.assertEqual(self.pap(obj, security.ADD_PROPOSAL), set())
+
+        #Add poll
+        self.assertEqual(self.pap(obj, security.ADD_POLL), set())
+
+        #Add discussion post
+        self.assertEqual(self.pap(obj, security.ADD_DISCUSSION_POST), admin | moderator | participant)
+
+        #Change workflow state
+        self.assertEqual(self.pap(obj, security.CHANGE_WORKFLOW_STATE), admin | moderator)
