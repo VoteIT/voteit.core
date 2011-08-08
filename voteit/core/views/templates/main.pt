@@ -35,13 +35,29 @@
     </tal:notdeform>
 	<script type="text/javascript" src="${request.application_url}/static/ajax.js"></script>
 	<script type="text/javascript" src="${request.application_url}/static/jquery.rating.js"></script>
+	<script type="text/javascript" src="${request.application_url}/static/jquery.qtip.js"></script>
+	
+	<script type="text/javascript">
+	    $(document).ready(function() {
+	        $('.help').each(function() {
+                $(this).qtip({
+                   url: this.href,
+                   show: 'mouseover',
+                   hide: 'mouseout'
+                })
+	        })
+        })
+	</script>
 </head>
 <body>
 	
 	<div id="page_wrapper">
     <metal:toolbar metal:use-macro="api.profile_toolbar.macros['profile_toolbar']">Profile toolbar</metal:toolbar>
 
-    <div id="navigation"><metal:nav metal:use-macro="api.navigation.macros['navigation']">Navigation</metal:nav></div>
+    <div id="navigation"><a href="1" class="help">?</a>
+<a href="2" class="help">?</a>
+<a href="3" class="help">?</a>
+<a href="4" class="help">?</a><metal:nav metal:use-macro="api.navigation.macros['navigation']">Navigation</metal:nav></div>
 
     <div id="main_window">
     	
