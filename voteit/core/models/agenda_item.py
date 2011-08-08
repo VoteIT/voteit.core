@@ -139,12 +139,12 @@ def construct_schema(**kwargs):
             missing = u"",
             validator=html_string_validator,
         )
-        estimated_start_time = colander.SchemaNode(
+        start_time = colander.SchemaNode(
              colander.DateTime(),
-             title = _(u"Estimated start time of this Agenda Item."),
-             description = _(u"Note that no action will be taken automatically to start it, "
-                             "you have to do it yourself when ready."),
+             title = _(u"Start time of this Agenda Item."),
+             description = _(u"It will be opened automatically when this time has passed."),
         )
+        #End-time is handled by a subscriber when it is closed
     return AgendaItemSchema()
 
 

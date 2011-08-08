@@ -60,6 +60,21 @@ class Meeting(BaseContent, WorkflowAware):
         return ACL.get(self.get_workflow_state(), ACL['default'])
 
     @property
+    def start_time(self):
+        """ Returns start time of the earliest visible agenda item
+            that has a start time set. Could return None if no time exists.
+        """
+        for ai in self.get_content(iface=IAgendaItem, sort_on='start_time'):
+            if ai.get_workflow_state() == 'private':
+                continue
+            if ai.start_time is not None:
+                return ai.start_time
+
+    @property
+    def end_time(self):
+        return self.get_field_value('end_time')
+
+    @property
     def invite_tickets(self):
         """ Storage for InviteTickets. Works pretty much like a folder. """
         storage = getattr(self, '__invite_tickets__', None)
