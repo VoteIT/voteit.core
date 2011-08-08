@@ -12,6 +12,7 @@
 	
     <link href="${request.application_url}/static/reset.css" rel="stylesheet" type="text/css" />
     <link href="${request.application_url}/static/main.css" rel="stylesheet" type="text/css" />
+    <link href="${request.application_url}/static/jquery.rating.css" rel="stylesheet" type="text/css" />
 	
 	<metal:head define-slot="head"></metal:head>
 	
@@ -33,6 +34,7 @@
 	<script type="text/javascript" src="${request.application_url}/static/jquery-1.6.min.js"></script>
     </tal:notdeform>
 	<script type="text/javascript" src="${request.application_url}/static/ajax.js"></script>
+	<script type="text/javascript" src="${request.application_url}/static/jquery.rating.js"></script>
 </head>
 <body>
 	
