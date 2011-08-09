@@ -20,7 +20,6 @@
 					Nothing closed yet
 				</tal:no_closed>
 			</tal:block>
-	        
 	        <h1>This is happening now</h1>
             <tal:block define="ais get_state_ais('active')">
                 <tal:closed condition="ais" repeat="ai ais">

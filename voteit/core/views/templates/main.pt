@@ -38,12 +38,32 @@
 	<script type="text/javascript" src="${request.application_url}/static/jquery.qtip.js"></script>
 	
 	<script type="text/javascript">
+	    // converts the help links to tooltips
 	    $(document).ready(function() {
-	        $('.help').each(function() {
+	        $('a.help').each(function() {
                 $(this).qtip({
-                   url: this.href,
-                   show: 'mouseover',
-                   hide: 'mouseout'
+                    content: { url: this.href },
+                    show: 'click',
+                    hide: 'unfocus',
+                    position: {
+                        corner: {
+                            target: 'rightMiddle',
+                            tooltip: 'leftTop',
+                        }
+                    },
+                    style: { 
+                        tip: true,
+                        name: 'blue',
+                        border: {
+                            width: 2,
+                            radius: 5,
+                        },
+                        width: { min: 200 },
+                        textAlign: 'justify',
+                    },
+                })
+                $(this).click(function() {
+                    return false;
                 })
 	        })
         })
@@ -54,10 +74,7 @@
 	<div id="page_wrapper">
     <metal:toolbar metal:use-macro="api.profile_toolbar.macros['profile_toolbar']">Profile toolbar</metal:toolbar>
 
-    <div id="navigation"><a href="1" class="help">?</a>
-<a href="2" class="help">?</a>
-<a href="3" class="help">?</a>
-<a href="4" class="help">?</a><metal:nav metal:use-macro="api.navigation.macros['navigation']">Navigation</metal:nav></div>
+    <div id="navigation"><metal:nav metal:use-macro="api.navigation.macros['navigation']">Navigation</metal:nav></div>
 
     <div id="main_window">
     	
