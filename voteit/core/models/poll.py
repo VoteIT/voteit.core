@@ -71,7 +71,15 @@ class Poll(BaseContent, WorkflowAware):
         if state == u'ongoing':
             return ACL['ongoing']
         return ACL['closed'] #As default - don't traverse to parent
-    
+
+    @property
+    def start_time(self):
+        return self.get_field_value('start_time')
+
+    @property
+    def end_time(self):
+        return self.get_field_value('end_time')
+
     def _get_proposal_uids(self):
         return self.get_field_value('proposals', ())
 
@@ -234,10 +242,11 @@ def construct_schema(context=None, request=None, **kwargs):
         Exception("Couldn't find the agenda item from this polls context")
     [proposal_choices.add((x.uid, x.title)) for x in agenda_item.values() if x.content_type == 'Proposal']
     
-    _earliest_start = colander.Range(min=datetime.now(),
-                                     min_err=_('${val} is earlier than earliest date ${min}'),)
-    _earliest_end = colander.Range(min=datetime.now(),
-                                   min_err=_('${val} is earlier than earliest date ${min}'),)
+    #FIXME: With timezones... sigh...
+#    _earliest_start = colander.Range(min=datetime.now(),
+#                                     min_err=_('${val} is earlier than earliest date ${min}'),)
+#    _earliest_end = colander.Range(min=datetime.now(),
+#                                   min_err=_('${val} is earlier than earliest date ${min}'),)
 
     #base schema
     class PollSchema(colander.MappingSchema):
@@ -245,23 +254,26 @@ def construct_schema(context=None, request=None, **kwargs):
             validator=html_string_validator,)
         description = colander.SchemaNode(colander.String(),
             validator=html_string_validator,)
-        #FIXME: Add later
-#        start = colander.SchemaNode(colander.DateTime(),
-#                                    title = _(u"Start time"),
-#                                    default = datetime.now(),
-#                                    validator=_earliest_start,
-#                                    )
-#        end = colander.SchemaNode(colander.DateTime(),
-#                                    title = _(u"End time"),
-#                                    default = datetime.now(),
-#                                    validator=_earliest_end,
-#                                    )
         
         poll_plugin = colander.SchemaNode(colander.String(),
                                           widget=deform.widget.SelectWidget(values=plugin_choices),)
         proposals = colander.SchemaNode(deform.Set(),
                                         name="proposals",
+                                        #Should we allow this to be empty?
                                         widget=deform.widget.CheckboxChoiceWidget(values=proposal_choices),)
+
+        start_time = colander.SchemaNode(
+             colander.DateTime(),
+             missing = colander.null,
+             title = _(u"Start time of this poll."),
+             description = _(u"It will be opened automatically when this time has passed."),
+        )
+        end_time = colander.SchemaNode(
+             colander.DateTime(),
+             missing = colander.null,
+             title = _(u"End time of this poll."),
+             description = _(u"It will be closed automatically when this time has passed."),
+        )
 
     return PollSchema()
 

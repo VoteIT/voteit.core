@@ -14,6 +14,7 @@ from pyramid.exceptions import Forbidden
 from pyramid.interfaces import IAuthenticationPolicy
 from pyramid.interfaces import IAuthorizationPolicy
 from pyramid.decorator import reify
+from pyramid.i18n import get_locale_name
 from webob.exc import HTTPFound
 from repoze.workflow import get_workflow
 from webhelpers.html.converters import nl2br
@@ -76,6 +77,8 @@ class APIView(object):
         self.logs = Logs(self.sql_session)
         
         self.nl2br = nl2br
+        
+        self.locale = get_locale_name(request)
 
     def _get_user_cache(self):
         cache = getattr(self.request, '_user_lookup_cache', None)

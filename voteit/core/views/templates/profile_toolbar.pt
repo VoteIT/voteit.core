@@ -15,15 +15,6 @@
 				   class="menu_header">Meeting search</a>
             </li>
 
-            <li class="tab dropdown_menu" tal:condition="api.addable_types|False">
-            	<a href="#" class="menu_header">Content &raquo;</a>
-                <ul class="menu_body">
-                <tal:iterate tal:repeat="type_name api.addable_types">
-                    <li><a tal:content="string: add $type_name"
-                       tal:attributes="href string:@@add?content_type=$type_name">Name</a></li>
-                </tal:iterate>
-                </ul>
-            </li>
 			<tal:administrator condition="api.userid">
 				<!-- Administrator actions -->
 				<li class="tab dropdown_menu" >

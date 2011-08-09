@@ -54,7 +54,8 @@ class PollView(object):
                 self.response['form'] = e.render()
                 return self.response
             
-            self.context.set_poll_settings(appstruct)
+            del appstruct['csrf_token'] #Otherwise it will be stored too
+            self.context.poll_settings = appstruct
             
             url = resource_url(self.context, self.request)
             
@@ -64,8 +65,7 @@ class PollView(object):
             url = resource_url(self.context, self.request)
             return HTTPFound(location=url)
 
-        appstruct = self.context.get_field_appstruct(schema)
-        self.response['form'] = self.form.render(appstruct=appstruct)
+        self.response['form'] = self.form.render(appstruct=self.context.poll_settings)
         return self.response
         
     @view_config(context=IPoll, renderer='templates/poll.pt', permission=VIEW)

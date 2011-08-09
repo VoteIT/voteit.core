@@ -84,6 +84,16 @@
             class="menuitem">
             <a class="buttonize" tal:attributes="href api.resource_url(context, request) + '@@manage_tickets'">Manage invites</a>
         </li>
+             
+        <li tal:condition="api.addable_types|False" class="dropdown_menu menuitem">
+        	<a href="#" class="buttonize menu_header">Content &raquo;</a>
+            <ul class="menu_body">
+            <tal:iterate tal:repeat="type_name api.addable_types">
+                <li><a tal:content="string: add $type_name"
+                   tal:attributes="href string:@@add?content_type=$type_name">Name</a></li>
+            </tal:iterate>
+            </ul>
+        </li>
 
 	    <li tal:condition="states|False" class="dropdown_menu menuitem">
 			<a href="#" class="buttonize menu_header">Set state &raquo;</a>
@@ -97,4 +107,7 @@
 			</ul>
 	    </li>
 	</tal:moderator>
+	<!-- FIXME: this is just a dummy for showing the feature -->
+    <a tal:attributes="href string:/help/${api.locale}/dummy.html" target="_blank" class="help">?</a>
 </ul>
+

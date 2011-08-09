@@ -20,10 +20,12 @@
         <link rel="stylesheet"
               tal:attributes="href string:/deform/${css_file}" type="text/css" />
     </tal:css>
+    <link href="${request.application_url}/static/jquery.rating.css" rel="stylesheet" type="text/css" />
     <tal:js repeat="js_file form_resources['js']|[]">
         <script type="text/javascript"
                 tal:attributes="src string:/deform/${js_file}"></script>
     </tal:js>
+    <script type="text/javascript" src="${request.application_url}/static/jquery.rating.js"></script>
     <script type="text/javascript">
         deform.load()
     </script>
@@ -33,6 +35,39 @@
 	<script type="text/javascript" src="${request.application_url}/static/jquery-1.6.min.js"></script>
     </tal:notdeform>
 	<script type="text/javascript" src="${request.application_url}/static/ajax.js"></script>
+	<script type="text/javascript" src="${request.application_url}/static/jquery.qtip.js"></script>
+	
+	<script type="text/javascript">
+	    // converts the help links to tooltips
+	    $(document).ready(function() {
+	        $('a.help').each(function() {
+                $(this).qtip({
+                    content: { url: this.href },
+                    show: 'click',
+                    hide: 'unfocus',
+                    position: {
+                        corner: {
+                            target: 'rightMiddle',
+                            tooltip: 'leftTop',
+                        }
+                    },
+                    style: { 
+                        tip: true,
+                        name: 'blue',
+                        border: {
+                            width: 2,
+                            radius: 5,
+                        },
+                        width: { min: 200 },
+                        textAlign: 'justify',
+                    },
+                })
+                $(this).click(function() {
+                    return false;
+                })
+	        })
+        })
+	</script>
 </head>
 <body>
 	
@@ -64,11 +99,13 @@
 			         tal:condition="not form|True">
 		            <h3 tal:content="context.title">Title</h3>
 
-                    <div tal:define="state_id context.get_workflow_state()">
-                        <span>State:</span>
-                        <strong tal:attributes="class 'wf-state-%s' % state_id"
-                              tal:content="state_id">private</strong>
-                    </div>
+                    <tal:state define="state_id context.get_workflow_state()|False">
+                    	<div tal:condition="state_id">
+	                        <span>State:</span>
+	                        <strong tal:attributes="class 'wf-state-%s' % state_id"
+	                              tal:content="state_id">private</strong>
+						</div>
+                    </tal:state>
 
 		            <div class="column">
                         <tal:creators tal:replace="structure api.get_creators_info(context.creators, request)">Creators</tal:creators>
