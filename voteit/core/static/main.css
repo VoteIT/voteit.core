@@ -138,11 +138,6 @@ a {
     float: left;
     width: 49%
 }
-
-div#page_info fieldset {
-    border: 1px solid black;
-}
-
 #main {
     clear: both;
 }
