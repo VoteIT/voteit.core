@@ -49,7 +49,6 @@ class MeetingTests(unittest.TestCase):
         obj = self._make_obj()
         obj['ai'] = ai
         
-        obj.set_workflow_state(request, 'inactive')
         obj.set_workflow_state(request, 'active')
         self.assertRaises(Exception, obj.set_workflow_state, 'closed')
 
@@ -57,7 +56,6 @@ class MeetingTests(unittest.TestCase):
         self.config.scan('voteit.core.subscribers.timestamps') #To add subscriber
         request = testing.DummyRequest()
         obj = self._make_obj()
-        obj.set_workflow_state(request, 'inactive')
         obj.set_workflow_state(request, 'active')
         self.assertFalse(isinstance(obj.end_time, datetime))
         obj.set_workflow_state(request, 'closed')
@@ -111,35 +109,9 @@ class MeetingPermissionTests(unittest.TestCase):
         from voteit.core.models.meeting import Meeting
         return Meeting()
 
-    def test_private(self):
-        obj = self._make_obj()
-        
-        #View
-        self.assertEqual(self.pap(obj, security.VIEW), admin | moderator)
-
-        #Edit
-        self.assertEqual(self.pap(obj, security.EDIT), admin | moderator)
-        
-        #Meeting access
-        self.assertEqual(self.pap(obj, security.REQUEST_MEETING_ACCESS), set())
-        
-        #Delete
-        self.assertEqual(self.pap(obj, security.DELETE), admin | moderator)
-
-        #Manage groups
-        self.assertEqual(self.pap(obj, security.MANAGE_GROUPS), admin | moderator)
-
-        #Add proposal
-        self.assertEqual(self.pap(obj, security.ADD_PROPOSAL), admin | moderator)
-
-        #Add poll
-        self.assertEqual(self.pap(obj, security.ADD_POLL), admin | moderator)
-        
-
     def test_inactive(self):
         request = testing.DummyRequest()
         obj = self._make_obj()
-        obj.set_workflow_state(request, 'inactive')
         
         #View
         self.assertEqual(self.pap(obj, security.VIEW), admin | moderator | viewer | participant | owner)
@@ -168,7 +140,6 @@ class MeetingPermissionTests(unittest.TestCase):
     def test_active(self):
         request = testing.DummyRequest()
         obj = self._make_obj()
-        obj.set_workflow_state(request, 'inactive')
         obj.set_workflow_state(request, 'active')
         
         #View
@@ -198,7 +169,6 @@ class MeetingPermissionTests(unittest.TestCase):
     def test_closed(self):
         request = testing.DummyRequest()
         obj = self._make_obj()
-        obj.set_workflow_state(request, 'inactive')
         obj.set_workflow_state(request, 'active')
         obj.set_workflow_state(request, 'closed')
         
