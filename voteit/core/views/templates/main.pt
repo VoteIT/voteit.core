@@ -42,10 +42,25 @@
 	    $(document).ready(function() {
 	        $('a.help').each(function() {
                 $(this).qtip({
-                   content: { url: this.href },
-                   show: 'mouseover',
-                   hide: 'mouseout',
-                   style: { width: { min: 200 } },
+                    content: { url: this.href },
+                    show: 'click',
+                    hide: 'unfocus',
+                    position: {
+                        corner: {
+                            target: 'rightMiddle',
+                            tooltip: 'leftTop',
+                        }
+                    },
+                    style: { 
+                        tip: true,
+                        name: 'blue',
+                        border: {
+                            width: 2,
+                            radius: 5,
+                        },
+                        width: { min: 200 },
+                        textAlign: 'justify',
+                    },
                 })
                 $(this).click(function() {
                     return false;
