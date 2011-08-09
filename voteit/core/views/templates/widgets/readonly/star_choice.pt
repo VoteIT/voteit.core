@@ -1,4 +1,4 @@
-<div class="deformSet"> 
+<div class="deformSet" id="${field.oid}"> 
     <input type="hidden" name="__start__" value="${field.name}:rename"/>
     <tal:loop tal:repeat="choice field.widget.values">
       <tal:def tal:define="(value, title) choice">
@@ -13,7 +13,7 @@
     <input type="hidden" name="__end__"/>
 </div>
 <script type="text/javascript">
-    $(document).ready(function() {
-        $('input.star').rating('readOnly',true);
+    deform.addCallback(${field.oid}, function(oid) {
+        $('#'+oid.id).find('input.star').rating('readOnly',true);
     })
 </script>

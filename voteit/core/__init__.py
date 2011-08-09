@@ -46,7 +46,7 @@ def main(global_config, **settings):
     config.add_static_view('static', '%s:static' % PROJECTNAME)
     config.add_static_view('deform', 'deform:static')
 
-    #Set which mailer to use        
+    #Set which mailer to use
     config.include(settings['mailer'])
 
     #config.add_translation_dirs('%s:locale/' % PROJECTNAME)
