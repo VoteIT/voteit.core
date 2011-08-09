@@ -148,20 +148,11 @@ class CatalogTests(CatalogTestCase):
         catalog = self.root.catalog
         obj = self._add_mock_meeting()
         
-        #Owners are not allowed to view meetings. It's exclusive for Admins / Moderators right now
-        self.assertEqual(self.query("allowed_to_view in any('role:Admin',) and path == '/meeting'")[0], 1)
-        self.assertEqual(self.query("allowed_to_view in any('role:Participant',) and path == '/meeting'")[0], 0)        
-        self.assertEqual(self.query("allowed_to_view in any('role:Viewer',) and path == '/meeting'")[0], 0)        
-        
-        self.config.testing_securitypolicy(userid='some_user',
-                                           permissive=True)
-        request = testing.DummyRequest()
-        obj.set_workflow_state(request, 'inactive')
-        
         self.config.setup_registry(authentication_policy=authn_policy,
                                    authorization_policy=authz_policy)
         reindex_object_security(catalog, obj)
 
+        self.assertEqual(self.query("allowed_to_view in any('role:Admin',) and path == '/meeting'")[0], 1)
         self.assertEqual(self.query("allowed_to_view in any('role:Participant',) and path == '/meeting'")[0], 1)        
         self.assertEqual(self.query("allowed_to_view in any('role:Viewer',) and path == '/meeting'")[0], 1)        
 
@@ -187,7 +178,7 @@ class CatalogIndexTests(CatalogTestCase):
 
     def test_workflow_state(self):
         self._add_mock_meeting()
-        self.assertEqual(self.query("workflow_state == 'private'")[0], 1)
+        self.assertEqual(self.query("workflow_state == 'inactive'")[0], 1)
 
     def test_path(self):
         self._add_mock_meeting()
@@ -216,7 +207,8 @@ class CatalogIndexTests(CatalogTestCase):
         obj = self._add_mock_meeting()
         
         #Owners are not allowed to view meetings. It's exclusive for Admins / Moderators right now
-        self.assertEqual(self.query("allowed_to_view in any('role:Owner',) and path == '/meeting'")[0], 0)
+        self.assertEqual(self.query("allowed_to_view in any('404',) and path == '/meeting'")[0], 0)
+        self.assertEqual(self.query("allowed_to_view in any('role:Viewer',) and path == '/meeting'")[0], 1)
         self.assertEqual(self.query("allowed_to_view in any('role:Admin',) and path == '/meeting'")[0], 1)
         self.assertEqual(self.query("allowed_to_view in any('role:Moderator',) and path == '/meeting'")[0], 1)
 

@@ -6,15 +6,10 @@
 		type="Meeting"
 		name="Meeting Workflow"
 		state_attr="state"
-		initial_state="private"
+		initial_state="inactive"
 		content_types="voteit.core.models.interfaces.IMeeting"
         permission_checker="pyramid.security.has_permission"
 	>
-
-		<state name="private">
-			<key name="title" value="Private"/>
-			<key name="description" value=""/>
-		</state>
 
 		<state name="inactive">
 			<key name="title" value="Inactive"/>
@@ -30,13 +25,6 @@
 			<key name="title" value="Closed"/>
 			<key name="description" value=""/>
 		</state>
-
-		<transition
-			name="private_to_inactive"
-			from_state="private"
-			to_state="inactive"
-			permission="Edit"
-		/>
 
 		<transition
 			name="inactive_to_active"
