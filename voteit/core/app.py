@@ -75,14 +75,17 @@ Alternatively, you can pass sqlite_file as an argument to this method.
     util = SQLSession(engine)
     config.registry.registerUtility(util, ISQLSession)
 
-def add_date_time_util(config, locale=None):
+def add_date_time_util(config, locale=None, timezone_name=None):
     """ """
     from voteit.core.models.date_time_util import DateTimeUtil
     
     if locale is None:
         locale = config.registry.settings.get('default_locale_name')
-        
-    util = DateTimeUtil(locale)
+
+    if timezone_name is None:
+        timezone_name = config.registry.settings.get('default_timezone_name')
+
+    util = DateTimeUtil(locale, timezone_name)
     config.registry.registerUtility(util, IDateTimeUtil)
 
 def populate_sql_database(config):
