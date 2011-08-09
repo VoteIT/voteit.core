@@ -107,4 +107,7 @@
 			</ul>
 	    </li>
 	</tal:moderator>
+	<!-- FIXME: this is just a dummy for showing the feature -->
+    <a tal:attributes="href string:/help/${api.locale}/dummy.html" target="_blank" class="help">?</a>
 </ul>
+
