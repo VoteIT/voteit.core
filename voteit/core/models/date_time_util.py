@@ -29,17 +29,19 @@ class DateTimeUtil(object):
     def set_locale(self, value):
         self.locale = value
 
-    def date(self, value, format='short'):
-        """Format the given date in the given format.
+    def d_format(self, value, format='short'):
+        """ Format the given date in the given format.
+            Will also convert to current timezone from utc.
         """
+        localtime = self.utc_to_tz(value)
+        return format_date(localtime, format=format, locale=self.locale)
 
-        return format_date(value, format=format, locale=self.locale)
-
-    def datetime(self, value, format='short'):
-        """Format the given datetime in the given format.
+    def dt_format(self, value, format='short'):
+        """ Format the given datetime in the given format.
+            Will also convert to current timezone from utc.
         """
-
-        return format_datetime(value, format=format, locale=self.locale)
+        localtime = self.utc_to_tz(value)
+        return format_datetime(localtime, format=format, locale=self.locale)
 
     def tz_to_utc(self, datetime):
         """Convert the provided datetime object from local to UTC.
@@ -47,7 +49,6 @@ class DateTimeUtil(object):
         The datetime object is expected to have the timezone specified in
         the timezone attribute.
         """
-
         utc = pytz.utc
         return datetime.astimezone(utc)
 
@@ -64,6 +65,13 @@ class DateTimeUtil(object):
         """Localize a naive datetime to the provided timezone.
 
         If no timezone is provided, the current selected one is used.
+        
+        Example usage:
+        from datetime.datetime import now
+        #Regular python datetime:
+        now_dt = now()
+        #Converted to datetime that cares about a specific locale:
+        self.localize(now_dt)
         """
 
         if tz is None:
@@ -76,8 +84,7 @@ class DateTimeUtil(object):
 
         The difference between this method and datetime.utcnow() is
         that datetime.utcnow() returns the current UTC time but as a naive
-        datetime object, whereas this one includes the UTC tz info."""
-
+        datetime object, whereas this one includes the UTC tz info.
+        """
         naive_utcnow = datetime.utcnow()
-        localized_utcnow = pytz.utc.localize(naive_utcnow)
-        return localized_utcnow
+        return self.localize(naive_utcnow, pytz.utc)

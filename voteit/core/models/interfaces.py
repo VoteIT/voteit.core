@@ -336,11 +336,46 @@ class IDateTimeUtil(Interface):
     def set_locale(value):
         """ Set a new locale. """
     
-    def date(value, format='short'):
+    def d_format(value, format='short'):
         """ Return date formatted according to current locale."""
 
-    def datetime(value, format='short'):
+    def dt_format(value, format='short'):
         """ Return date and time formatted according to current locale."""
+
+    def tz_to_utc(datetime):
+        """Convert the provided datetime object from local to UTC.
+
+        The datetime object is expected to have the timezone specified in
+        the timezone attribute.
+        """
+
+    def utc_to_tz(datetime):
+        """Convert the provided datetime object from UTC to local.
+
+        The resulting localized datetime object will have the timezone
+        specified in the timezone attribute.
+        """
+
+    def localize(datetime, tz=None):
+        """Localize a naive datetime to the provided timezone.
+
+        If no timezone is provided, the current selected one is used.
+        
+        Example usage:
+        from datetime.datetime import now
+        #Regular python datetime:
+        now_dt = now()
+        #Converted to datetime that cares about a specific locale:
+        self.localize(now_dt)
+        """
+
+    def utcnow():
+        """Get the current datetime localized to UTC.
+
+        The difference between this method and datetime.utcnow() is
+        that datetime.utcnow() returns the current UTC time but as a naive
+        datetime object, whereas this one includes the UTC tz info.
+        """
 
 
 class IExpressions(Interface):
