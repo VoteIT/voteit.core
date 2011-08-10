@@ -9,6 +9,7 @@ from BTrees.OIBTree import OIBTree
 from pyramid.threadlocal import get_current_request
 from repoze.workflow.workflow import WorkflowError
 from zope.component import getAdapter
+from zope.component import getUtility
 
 from voteit.core import security
 from voteit.core import VoteITMF as _
@@ -16,14 +17,13 @@ from voteit.core.models.base_content import BaseContent
 from voteit.core.models.workflow_aware import WorkflowAware
 from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import ICatalogMetadataEnabled
+from voteit.core.models.interfaces import IDateTimeUtil
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IPollPlugin
 from voteit.core.models.interfaces import IVote
 from voteit.core.views.macros import FlashMessages
 from voteit.core.validators import html_string_validator
 from voteit.core.fields import TZDateTime
-
-from voteit.core.utils import getDateTimeUtil
 
 
 _PLANNED_PERMS = (security.VIEW, security.EDIT, security.DELETE, security.CHANGE_WORKFLOW_STATE, security.MODERATE_MEETING, )
@@ -254,7 +254,7 @@ def construct_schema(context=None, request=None, **kwargs):
 
     #base schema
 
-    dt_util = getDateTimeUtil()
+    dt_util = getUtility(IDateTimeUtil)
     local_tz = dt_util.timezone
 
     class PollSchema(colander.MappingSchema):
