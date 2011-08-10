@@ -10,10 +10,7 @@
 			<tal:block define="ais get_state_ais('closed')">
 				<tal:closed condition="ais" repeat="ai ais">
                     <h5 tal:content="ai.title">Title</h5>
-					<div>
-                        Started: <span tal:content="api.dt_util.datetime(ai.start_time)">1970</span>
-                        Closed: <span tal:content="api.dt_util.datetime(ai.end_time)">1970</span>
-					</div>
+					<div tal:replace="structure api.get_time_info(context, request)">start time and end time macro</div>
 					<div tal:content="ai.get_field_value('summary')">Summary</div>
 				</tal:closed>
 				<tal:no_closed condition="not ais">
@@ -24,9 +21,7 @@
             <tal:block define="ais get_state_ais('active')">
                 <tal:closed condition="ais" repeat="ai ais">
                     <h5 tal:content="ai.title">Title</h5>
-                    <div>
-                        Started: <span tal:content="api.dt_util.datetime(ai.start_time)">1970</span>
-                    </div>
+                    <div tal:replace="structure api.get_time_info(ai, request)">start time and end time macro</div>
                     <div tal:content="ai.get_field_value('summary')">Summary</div>
                 </tal:closed>
                 <tal:no_active condition="not ais">
@@ -38,9 +33,7 @@
             <tal:block define="ais get_state_ais('inactive')">
                 <tal:closed condition="ais" repeat="ai ais">
                     <h5 tal:content="ai.title">Title</h5>
-                    <div>
-                        Planned for: <span tal:content="api.dt_util.datetime(ai.get_field_value('estimated_start_time'))">1970</span>
-                    </div>
+                    <div tal:replace="structure api.get_time_info(ai, request)">start time and end time macro</div>
                     <div tal:content="ai.get_field_value('summary')">Summary</div>
                 </tal:closed>
                 <tal:no_planned condition="not ais">

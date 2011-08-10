@@ -1,5 +1,3 @@
-from datetime import datetime
-
 import colander
 import deform
 from zope.interface import implements

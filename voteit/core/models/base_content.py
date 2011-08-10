@@ -1,6 +1,5 @@
 import re
 from uuid import uuid4
-from datetime import datetime
 
 from repoze.folder import Folder
 from repoze.folder import unicodify
