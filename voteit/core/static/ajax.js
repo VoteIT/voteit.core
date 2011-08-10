@@ -53,3 +53,34 @@ $(document).ready(function() {
         );
     });
 });
+
+
+/* helpbuttons */
+$(document).ready(function() {
+    $('a.help').each(function() {
+        $(this).click(function() {
+            return false;
+        });
+        $(this).qtip({
+            content: { url: this.href },
+            show: 'click',
+            hide: 'unfocus',
+            position: {
+                corner: {
+                    target: 'rightMiddle',
+                    tooltip: 'leftTop',
+                }
+            },
+            style: { 
+                tip: true,
+                name: 'blue',
+                border: {
+                    width: 2,
+                    radius: 5,
+                },
+                width: { min: 200 },
+                textAlign: 'justify',
+            },
+        });
+    })
+})

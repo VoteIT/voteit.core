@@ -9,13 +9,13 @@
         <div class="column">
             <div id="discussions">
                 <h1>Discussion</h1>
-				
-				<tal:iterate condition="discussions" repeat="post discussions">
-                    <div class="listing_block">
+                    
+                <tal:iterate condition="discussions" repeat="post discussions">
+                    <div tal:define="unread api.is_unread(post, True)"
+                         tal:attributes="class unread and 'unread listing_block' or 'listing_block'">
                         <tal:creators tal:replace="structure api.get_creators_info(post.creators, request)">Creators</tal:creators>
-						
+                        
                         <span class="body" tal:content="structure post.get_field_value('text')">text</span>
-                        <div tal:define="unread api.is_unread(post)" tal:condition="unread"><a tal:attributes="href api.resource_url(post, request)+'read'">Mark as read</a></div>
 
                         <div class="expressions" tal:content="structure api.expressions.get_expressions(post, 'support', api.userid, 'Support')"></div>
                         <div tal:replace="structure api.get_action_bar(post, request)">Action bar</div>
@@ -25,7 +25,6 @@
                 </tal:iterate>
 
                 <div tal:condition="discussion_form|False" tal:replace="structure discussion_form">Discussion form</div>
-
             </div>
         </div>
 
@@ -33,12 +32,12 @@
             <div id="proposals">
                 <h1>Proposal(s)</h1>
                     
-                <tal:iterate condition="proposals" repeat="proposal proposals">
-                    <div class="listing_block">
+                <tal:iterate condition="proposals" repeat="proposal proposals" >
+                    <div tal:define="unread api.is_unread(proposal, True)"
+                         tal:attributes="class unread and 'unread listing_block' or 'listing_block'">
                         <tal:creators tal:replace="structure api.get_creators_info(proposal.creators, request)">Creators</tal:creators>
                         <span>propose:</span>
                         <span class="body" tal:content="structure proposal.title">Title</span>
-                        <div tal:define="unread api.is_unread(proposal)" tal:condition="unread"><a tal:attributes="href api.resource_url(proposal, request)+'read'">Mark as read</a></div>
                         
                         <div tal:define="state_id proposal.get_workflow_state()">
                             <span>State:</span>
@@ -60,26 +59,26 @@
                 
             <tal:iterate condition="polls" repeat="poll polls">
                 <div tal:define="poll_plugin poll.get_poll_plugin();
-				                 state_id poll.get_workflow_state();"
-				     class="listing_block">
+                                 state_id poll.get_workflow_state();
+                                 unread api.is_unread(poll, True);"
+                     tal:attributes="class unread and 'unread listing_block' or 'listing_block'">
                     <h3 tal:content="poll.title">Title</h3>
                     <div tal:content="poll.description">Description</div>
-					<div tal:define="unread api.is_unread(poll)" tal:condition="unread"><a tal:attributes="href api.resource_url(poll, request)+'read'">Mark as read</a></div>
-					
-					<div>
+                    
+                    <div>
                         <span>Poll method:</span>
                         <strong tal:content="poll_plugin.title">Title</strong>
-					</div>
+                    </div>
 
                     <div class="wf-info">
                         <span>State:</span>
                         <strong tal:attributes="class 'wf-state-%s' % state_id"
                               tal:content="state_id">open</strong>
                     </div>
-					
-					<div tal:condition="state_id == 'closed'" tal:content="structure poll.render_poll_result()">
-						Poll result
-					</div>
+                    
+                    <div tal:condition="state_id == 'closed'" tal:content="structure poll.render_poll_result()">
+                        Poll result
+                    </div>
 
                     <div tal:replace="structure api.get_action_bar(poll, request)">Action bar</div>
                 </div>

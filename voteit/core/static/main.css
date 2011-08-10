@@ -247,3 +247,7 @@ a {
 	bottom: 0px;
     border-color: black;
 }
+
+div.unread.listing_block {
+    border-left: solid 1px black;
+}
