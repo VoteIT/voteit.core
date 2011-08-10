@@ -50,33 +50,26 @@ class WorkflowTests(unittest.TestCase):
         obj = Meeting()
         request = testing.DummyRequest()
 
-        self.assertEqual(obj.get_workflow_state(), u'private')
-
-        obj.make_workflow_transition(request, 'private_to_inactive')
         self.assertEqual(obj.get_workflow_state(), u'inactive')
 
         obj.make_workflow_transition(request, 'inactive_to_active')
         self.assertEqual(obj.get_workflow_state(), u'active')
 
         obj.initialize_workflow()
-        obj.make_workflow_transition(request, 'private_to_inactive')
         obj.make_workflow_transition(request, 'inactive_to_closed')
         self.assertEqual(obj.get_workflow_state(), u'closed')
 
         obj.initialize_workflow()
-        obj.make_workflow_transition(request, 'private_to_inactive')
         obj.make_workflow_transition(request, 'inactive_to_active')
         obj.make_workflow_transition(request, 'active_to_inactive')
         self.assertEqual(obj.get_workflow_state(), u'inactive')
 
         obj.initialize_workflow()
-        obj.make_workflow_transition(request, 'private_to_inactive')
         obj.make_workflow_transition(request, 'inactive_to_active')
         obj.make_workflow_transition(request, 'active_to_closed')
         self.assertEqual(obj.get_workflow_state(), u'closed')
         
         obj.initialize_workflow()
-        obj.make_workflow_transition(request, 'private_to_inactive')
         obj.make_workflow_transition(request, 'inactive_to_closed')
         obj.make_workflow_transition(request, 'closed_to_active')
         self.assertEqual(obj.get_workflow_state(), u'active')

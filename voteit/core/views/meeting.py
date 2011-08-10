@@ -36,12 +36,6 @@ class MeetingView(BaseView):
             #Otherwise raise unauthorized
             #raise Forbidden("You can't request access to this meeting. Maybe you need to login, or it isn't allowed.")
         
-        #FIXME: this is just placeholders, should be filled with real data
-        self.response['logged_in_participants'] = 5
-        self.response['number_of_proposals'] = 32
-        self.response['next_poll'] = '3 hours'
-        self.response['remaining_meeting_time'] = '2 days, 3 hours'
-        
         if self.context.get_workflow_state() == 'private':
             msg = _(u"This meeting is in the state <b>Private</b>. "
                     u"No regular meeting participants can see this meeting yet, and you won't be able to send invitations. "

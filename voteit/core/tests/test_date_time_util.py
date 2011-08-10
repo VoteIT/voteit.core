@@ -1,6 +1,8 @@
 import unittest
 from datetime import datetime
 
+import pytz
+
 from pyramid import testing
 from zope.interface.verify import verifyObject
 from voteit.core.models.interfaces import IDateTimeUtil
@@ -24,7 +26,7 @@ class DateTimeUtilityTests(unittest.TestCase):
     def test_add_method(self):
         from voteit.core.app import add_date_time_util
         
-        add_date_time_util(self.config, locale='sv')
+        add_date_time_util(self.config, locale='sv', timezone_name='Europe/Stockholm')
         util = self.config.registry.queryUtility(IDateTimeUtil)
         
         self.failUnless(util)
@@ -50,4 +52,30 @@ class DateTimeUtilityTests(unittest.TestCase):
         obj.set_locale('sv')
         date_and_time = datetime.strptime('1999-12-14 19:12', "%Y-%m-%d %H:%M")
         self.assertEqual(obj.datetime(date_and_time, format='full'), u'tisdag den 14 december 1999 kl. 19.12.00 v\xe4rlden (GMT)')
-        
+
+    def test_datetime_localize(self):
+        obj = self._make_obj()
+        fmt = '%Y-%m-%d %H:%M %Z%z'
+        date_time = datetime.strptime('1999-12-14 19:12', "%Y-%m-%d %H:%M")
+        localized_dt = obj.localize(date_time)
+        result = localized_dt.strftime(fmt)
+        self.assertEquals(result, '1999-12-14 19:12 CET+0100')
+
+    def test_tz_to_utc(self):
+        obj = self._make_obj()
+        fmt = '%Y-%m-%d %H:%M %Z%z'
+        date_time = datetime.strptime('1999-12-14 19:12', "%Y-%m-%d %H:%M")
+        localized_dt = obj.localize(date_time)
+        utc_dt = obj.tz_to_utc(localized_dt)
+        result = utc_dt.strftime(fmt)
+        self.assertEquals(result, '1999-12-14 18:12 UTC+0000')
+
+
+    def test_utc_to_tz(self):
+        obj = self._make_obj()
+        fmt = '%Y-%m-%d %H:%M %Z%z'
+        date_time = datetime.strptime('1999-12-14 18:12', "%Y-%m-%d %H:%M")
+        utc_dt = obj.localize(date_time, pytz.utc)
+        local_dt = obj.utc_to_tz(utc_dt)
+        result = local_dt.strftime(fmt)
+        self.assertEquals(result, '1999-12-14 19:12 CET+0100')

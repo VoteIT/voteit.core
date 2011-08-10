@@ -4,14 +4,6 @@
       xmlns:tal="http://xml.zope.org/namespaces/tal"
       metal:use-macro="api.main_template.macros['master']">
 <body>
-    <div metal:fill-slot="page_info"
-         id="page_info" 
-         class="column">
-        <fieldset>
-            <legend>Info</legend>
-            <div>Next poll: in <span tal:content="next_poll">0</span> (<span tal:content="poll_start"></span> - <span tal:content="poll_end"></span>)</div>
-        </fieldset>
-    </div>
 
     <div id="content" metal:fill-slot="content">
         <div class="column">
@@ -29,12 +21,10 @@
                         <div tal:replace="structure api.get_action_bar(post, request)">Action bar</div>
                         <div class="clear"><!-- --></div>
                     </div>
-                    
+
                 </tal:iterate>
-                
+
                 <div tal:condition="discussion_form|False" tal:replace="structure discussion_form">Discussion form</div>
-            
-                
             </div>
         </div>
 

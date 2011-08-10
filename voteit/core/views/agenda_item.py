@@ -19,11 +19,7 @@ class AgendaItemView(BaseView):
     @view_config(context=IAgendaItem, renderer="templates/agenda_item.pt", permission=VIEW)
     def agenda_item_view(self):
         """ """
-        #FIXME: this is just placeholders, should be filled with real data
-        self.response['next_poll'] = '1 hour'
-        self.response['poll_start'] = '15.00'
-        self.response['poll_end'] = '16.00'
-    
+
         self.response['discussions'] = self.context.get_content(iface=IDiscussionPost, sort_on='created')
         self.response['proposals'] = self.context.get_content(iface=IProposal, sort_on='created')
         self.response['polls'] = self.context.get_content(iface=IPoll, sort_on='created')
