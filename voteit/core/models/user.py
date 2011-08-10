@@ -2,12 +2,12 @@ import re
 import string
 from random import choice
 from hashlib import sha1
-from datetime import datetime
 from datetime import timedelta
 
 from BTrees.OOBTree import OOBTree
 import colander
 import deform
+from zope.component import getUtility
 from zope.interface import implements
 from repoze.folder import unicodify
 from pyramid.url import resource_url
@@ -24,7 +24,7 @@ from voteit.core import VoteITMF as _
 from voteit.core import security
 from voteit.core.validators import password_validation
 from voteit.core.validators import html_string_validator
-
+from voteit.core.models.date_time_util import utcnow
 
 def get_sha_password(password):
     """ Encode a plaintext password to sha1. """
@@ -98,7 +98,7 @@ class RequestPasswordToken(object):
     
     def __init__(self):
         self.token = ''.join([choice(string.letters + string.digits) for x in range(30)])
-        self.created = datetime.now()
+        self.created = utcnow()
         self.expires = self.created + timedelta(days=3)
         
     def __call__(self):
@@ -107,7 +107,7 @@ class RequestPasswordToken(object):
     def validate(self, value):
         if value != self.token:
             raise ValueError("Token doesn't match.")
-        if datetime.now() > self.expires:
+        if utcnow() > self.expires:
             raise ValueError("Token expired.")
         
 

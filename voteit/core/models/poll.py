@@ -1,5 +1,3 @@
-from datetime import datetime
-
 import colander
 import deform
 from zope.interface import implements
@@ -9,6 +7,7 @@ from BTrees.OIBTree import OIBTree
 from pyramid.threadlocal import get_current_request
 from repoze.workflow.workflow import WorkflowError
 from zope.component import getAdapter
+from zope.component import getUtility
 
 from voteit.core import security
 from voteit.core import VoteITMF as _
@@ -16,14 +15,14 @@ from voteit.core.models.base_content import BaseContent
 from voteit.core.models.workflow_aware import WorkflowAware
 from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import ICatalogMetadataEnabled
+from voteit.core.models.interfaces import IDateTimeUtil
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IPollPlugin
 from voteit.core.models.interfaces import IVote
+from voteit.core.models.interfaces import IDateTimeUtil
 from voteit.core.views.macros import FlashMessages
 from voteit.core.validators import html_string_validator
 from voteit.core.fields import TZDateTime
-
-from voteit.core.utils import getDateTimeUtil
 
 
 _PLANNED_PERMS = (security.VIEW, security.EDIT, security.DELETE, security.CHANGE_WORKFLOW_STATE, security.MODERATE_MEETING, )
@@ -228,6 +227,7 @@ def construct_schema(context=None, request=None, **kwargs):
     if request is None:
         KeyError("'request' is a required keyword for Poll schemas. See construct_schema in the poll module.")
 
+    dt_util = getUtility(IDateTimeUtil)
 
     #Add all selectable plugins to schema. This chooses the poll method to use
     plugin_choices = set()
@@ -247,14 +247,12 @@ def construct_schema(context=None, request=None, **kwargs):
     [proposal_choices.add((x.uid, x.title)) for x in agenda_item.values() if x.content_type == 'Proposal']
 
     #FIXME: With timezones... sigh...
-#    _earliest_start = colander.Range(min=datetime.now(),
-#                                     min_err=_('${val} is earlier than earliest date ${min}'),)
-#    _earliest_end = colander.Range(min=datetime.now(),
-#                                   min_err=_('${val} is earlier than earliest date ${min}'),)
+    _earliest_start = colander.Range(min=dt_util.localnow(),
+                                     min_err=_('${val} is earlier than earliest date ${min}'),)
+    _earliest_end = colander.Range(min=dt_util.localnow(),
+                                   min_err=_('${val} is earlier than earliest date ${min}'),)
 
     #base schema
-
-    dt_util = getDateTimeUtil()
     local_tz = dt_util.timezone
 
     class PollSchema(colander.MappingSchema):
