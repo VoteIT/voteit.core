@@ -7,6 +7,7 @@ from babel.dates import format_datetime
 
 import pytz
 from pytz import timezone
+from datetime import datetime
 
 from zope.interface import implements
 
@@ -69,3 +70,14 @@ class DateTimeUtil(object):
             tz = self.timezone
 
         return tz.localize(datetime)
+
+    def utcnow(self):
+        """Get the current datetime localized to UTC.
+
+        The difference between this method and datetime.utcnow() is
+        that datetime.utcnow() returns the current UTC time but as a naive
+        datetime object, whereas this one includes the UTC tz info."""
+
+        naive_utcnow = datetime.utcnow()
+        localized_utcnow = pytz.utc.localize(naive_utcnow)
+        return localized_utcnow
