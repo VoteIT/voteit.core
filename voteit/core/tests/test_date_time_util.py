@@ -78,3 +78,17 @@ class DateTimeUtilityTests(unittest.TestCase):
         local_dt = obj.utc_to_tz(utc_dt)
         result = local_dt.strftime(fmt)
         self.assertEquals(result, '1999-12-14 19:12 CET+0100')
+
+    def test_utcnow(self):
+        from voteit.core.models.date_time_util import utcnow
+        obj = self._make_obj()
+        now = utcnow()
+        self.assertEquals(now.tzinfo, pytz.utc)
+        now = obj.utcnow()
+        self.assertEquals(now.tzinfo, pytz.utc)
+
+    def test_localnow(self):
+        obj = self._make_obj()
+        now = obj.localnow()
+        # we don't check for exactly equal timezones due to DST changes
+        self.assertEquals(str(now.tzinfo), str(obj.timezone))
