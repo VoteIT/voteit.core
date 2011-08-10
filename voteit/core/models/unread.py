@@ -1,14 +1,14 @@
-from datetime import datetime
-
 from sqlalchemy import Integer, Unicode, DateTime, Boolean
 from sqlalchemy import Column
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import relationship
+from zope.component import getUtility
 from zope.interface import implements
 from repoze.folder import unicodify
 
 from voteit.core import RDB_Base
 from voteit.core.models.interfaces import IUnreads
+from voteit.core.models.date_time_util import utcnow
 
 
 class Unread(RDB_Base):
@@ -27,7 +27,7 @@ class Unread(RDB_Base):
         if created:
             self.created = created
         else:
-            self.created = datetime.now()
+            self.created = utcnow()
         
     def format_created(self):
         """ Lordag 3 apr 2010, 01:10

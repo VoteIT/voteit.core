@@ -78,6 +78,15 @@ class DateTimeUtil(object):
         that datetime.utcnow() returns the current UTC time but as a naive
         datetime object, whereas this one includes the UTC tz info."""
 
-        naive_utcnow = datetime.utcnow()
-        localized_utcnow = pytz.utc.localize(naive_utcnow)
-        return localized_utcnow
+        return utcnow()
+        
+def utcnow():
+    """Get the current datetime localized to UTC.
+
+    The difference between this method and datetime.utcnow() is
+    that datetime.utcnow() returns the current UTC time but as a naive
+    datetime object, whereas this one includes the UTC tz info."""
+
+    naive_utcnow = datetime.utcnow()
+    localized_utcnow = pytz.utc.localize(naive_utcnow)
+    return localized_utcnow

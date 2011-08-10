@@ -4,11 +4,13 @@ from datetime import datetime
 
 from repoze.folder import Folder
 from repoze.folder import unicodify
+from zope.component import getUtility
 from zope.interface import implements
 from BTrees.OOBTree import OOBTree
 
 from voteit.core.models.interfaces import IBaseContent
 from voteit.core.models.security_aware import SecurityAware
+from voteit.core.models.date_time_util import utcnow
 
 #FIXME: This should be changable some way.
 #Things that should never be saved
@@ -24,7 +26,7 @@ class BaseContent(Folder, SecurityAware):
 
     def __init__(self):
         self.uid = uuid4()
-        self.created = datetime.now()
+        self.created = utcnow()
         super(BaseContent, self).__init__()
 
     @property
