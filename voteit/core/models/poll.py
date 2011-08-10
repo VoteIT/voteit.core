@@ -21,6 +21,10 @@ from voteit.core.models.interfaces import IPollPlugin
 from voteit.core.models.interfaces import IVote
 from voteit.core.views.macros import FlashMessages
 from voteit.core.validators import html_string_validator
+from voteit.core.fields import TZDateTime
+
+from voteit.core.utils import getDateTimeUtil
+
 
 _PLANNED_PERMS = (security.VIEW, security.EDIT, security.DELETE, security.CHANGE_WORKFLOW_STATE, security.MODERATE_MEETING, )
 
@@ -90,28 +94,28 @@ class Poll(BaseContent, WorkflowAware):
 
     def _get_poll_settings(self):
         return getattr(self, '_poll_settings', {})
-    
+
     def _set_poll_settings(self, value):
         if not isinstance(value, dict):
             raise TypeError("poll_settings attribute should be a dict")
         self._poll_settings = value
-    
+
     poll_settings = property(_get_poll_settings, _set_poll_settings)
 
     def _get_ballots(self):
         return getattr(self, '_ballots', None)
-    
+
     def _set_ballots(self, value):
         self._ballots = value
-        
+
     ballots = property(_get_ballots, _set_ballots)
 
     def _get_poll_result(self):
         return getattr(self, '_poll_result', None)
-    
+
     def _set_poll_result(self, value):
         self._poll_result = value
-        
+
     poll_result = property(_get_poll_result, _set_poll_result)
 
     @property
@@ -157,19 +161,19 @@ class Poll(BaseContent, WorkflowAware):
         """ Close the poll. """
         request = get_current_request() #Since this is only used once per poll it should be okay
         fm = FlashMessages(request)
-        
+
         self._calculate_ballots()
-        
+
         poll_plugin = self.get_poll_plugin()
         poll_plugin.handle_close()
-        
+
         handle_uids = poll_plugin.change_states_of()
 
         for (uid, state) in handle_uids.items():
             if uid not in self.proposal_uids:
                 raise ValueError("The poll plugins close() method returned a uid that doesn't exist in this poll.")
             proposal = self.get_proposal_by_uid(uid)
-            
+
             #Adjust state?
             if proposal.get_workflow_state() == state:
                 msg = _(u"Proposal '%s' already in state %s" % (proposal.__name__, state))
@@ -182,7 +186,7 @@ class Poll(BaseContent, WorkflowAware):
                 except WorkflowError:
                     msg = _(u"Proposal with id '%s' couldn't be set as %s. You should do this manually." % (proposal.__name__, state))
                     fm.add(msg, type='error')
-        
+
         msg = _(u"Poll closed. Proposals might have been adjusted as approved or denied depending on outcome of the poll.")
         fm.add(msg)
 
@@ -191,7 +195,7 @@ class Poll(BaseContent, WorkflowAware):
         """
         poll_plugin = self.get_poll_plugin()
         return poll_plugin.render_result()
-        
+
     def get_proposal_by_uid(self, uid):
         for prop in self.get_proposal_objects():
             if prop.uid == uid:
@@ -209,7 +213,7 @@ class Ballots(object):
 
     def result(self):
         return tuple( sorted( self.ballots.iteritems() ) )
-            
+
     def add(self, value):
         """ Add a dict of results - a ballot - to the pool. Append and increase counter. """
         if value in self.ballots:
@@ -241,7 +245,7 @@ def construct_schema(context=None, request=None, **kwargs):
     if agenda_item is None:
         Exception("Couldn't find the agenda item from this polls context")
     [proposal_choices.add((x.uid, x.title)) for x in agenda_item.values() if x.content_type == 'Proposal']
-    
+
     #FIXME: With timezones... sigh...
 #    _earliest_start = colander.Range(min=datetime.now(),
 #                                     min_err=_('${val} is earlier than earliest date ${min}'),)
@@ -249,12 +253,16 @@ def construct_schema(context=None, request=None, **kwargs):
 #                                   min_err=_('${val} is earlier than earliest date ${min}'),)
 
     #base schema
+
+    dt_util = getDateTimeUtil()
+    local_tz = dt_util.timezone
+
     class PollSchema(colander.MappingSchema):
         title = colander.SchemaNode(colander.String(),
             validator=html_string_validator,)
         description = colander.SchemaNode(colander.String(),
             validator=html_string_validator,)
-        
+
         poll_plugin = colander.SchemaNode(colander.String(),
                                           widget=deform.widget.SelectWidget(values=plugin_choices),)
         proposals = colander.SchemaNode(deform.Set(),
@@ -263,13 +271,13 @@ def construct_schema(context=None, request=None, **kwargs):
                                         widget=deform.widget.CheckboxChoiceWidget(values=proposal_choices),)
 
         start_time = colander.SchemaNode(
-             colander.DateTime(),
+             TZDateTime(local_tz),
              missing = colander.null,
              title = _(u"Start time of this poll."),
              description = _(u"It will be opened automatically when this time has passed."),
         )
         end_time = colander.SchemaNode(
-             colander.DateTime(),
+             TZDateTime(local_tz),
              missing = colander.null,
              title = _(u"End time of this poll."),
              description = _(u"It will be closed automatically when this time has passed."),
@@ -298,7 +306,7 @@ def planned_poll_callback(content, info):
         if 'voting' in [x['name'] for x in proposal.get_available_workflow_states(request)]:
             proposal.set_workflow_state(request, 'voting')
             count += 1
-    
+
     fm = FlashMessages(request)
     msg = _(u"Setting poll in planned state. It's now visible for meeting participants.")
     fm.add(msg)
