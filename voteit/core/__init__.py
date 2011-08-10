@@ -39,6 +39,7 @@ def main(global_config, **settings):
     app.register_catalog_metadata_adapter(config)
     app.add_sql_session_util(config)
     app.add_date_time_util(config)
+    app.add_help_util(config)
     app.populate_sql_database(config)
     app.register_content_types(config)
     app.register_poll_plugins(config)
