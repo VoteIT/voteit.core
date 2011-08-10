@@ -13,7 +13,7 @@
     <input type="hidden" name="__end__"/>
 </div>
 <script type="text/javascript">
-    deform.addCallback(${field.oid}, function(oid) {
-        $('#'+oid.id).find('input.star').rating('readOnly',true);
+    $(document).ready(function() {
+        $('#${field.oid}').find('input.star').rating('readOnly',true);
     })
 </script>
