@@ -1,14 +1,14 @@
-from datetime import datetime
-
 from sqlalchemy import Table, Column
 from sqlalchemy import Integer, Unicode, DateTime, Boolean
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import relationship
+from zope.component import getUtility
 from zope.interface import implements
 from repoze.folder import unicodify
 
 from voteit.core import RDB_Base
 from voteit.core.models.interfaces import IMessages
+from voteit.core.models.date_time_util import utcnow
 
 messages_tags = Table('messages_tags', RDB_Base.metadata,
     Column('message_id', Integer, ForeignKey('messages.id')),
@@ -32,7 +32,7 @@ class Message(RDB_Base):
     
     def __init__(self, meetinguid, message, tags=(), contextuid=None, userid=None, popup=False, created=None):
         if not created:
-            created = datetime.now()
+            created = utcnow()
             
         self.meetinguid = unicodify(meetinguid)
         self.message = unicodify(message)

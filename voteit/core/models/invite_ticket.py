@@ -1,9 +1,9 @@
 import string
 from random import choice
-from datetime import datetime
 
 import colander
 import deform
+from zope.component import getUtility
 from zope.interface import implements
 from pyramid_mailer import get_mailer
 from pyramid_mailer.message import Message
@@ -21,6 +21,7 @@ from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import ISiteRoot
 from voteit.core.models.workflow_aware import WorkflowAware
 from voteit.core.validators import html_string_validator
+from voteit.core.models.date_time_util import utcnow
 
 SELECTABLE_ROLES = (security.ROLE_MODERATOR,
                     security.ROLE_PARTICIPANT,
@@ -44,7 +45,7 @@ class InviteTicket(Persistent, WorkflowAware):
             if role not in SELECTABLE_ROLES:
                 raise ValueError("InviteTicket got '%s' as a role, and that isn't selectable." % role)
         self.roles = roles
-        self.created = datetime.now()
+        self.created = utcnow()
         self.closed = None
         self.claimed_by = None
         self.token = ''.join([choice(string.letters + string.digits) for x in range(30)])
@@ -85,7 +86,7 @@ Access link for direct acces once you've logged in:
         mailer = get_mailer(request)
         mailer.send(msg)
 
-        self.sent_dates.append(datetime.now())
+        self.sent_dates.append(utcnow())
 
     def claim(self, request):
         """ Handle claim of this ticket. Set permissions for meeting and set the ticket as closed. """
@@ -105,7 +106,7 @@ Access link for direct acces once you've logged in:
 
         self.set_workflow_state(request, 'closed')
         
-        self.closed = datetime.now()
+        self.closed = utcnow()
 
 
 def construct_schema(context=None, request=None, type=None):

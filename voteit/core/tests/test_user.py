@@ -6,6 +6,8 @@ from pyramid import testing
 from zope.interface.verify import verifyObject
 from pyramid_mailer import get_mailer
 
+from voteit.core.models.date_time_util import utcnow
+
 
 class UserTests(unittest.TestCase):
     def setUp(self):
@@ -101,7 +103,7 @@ class RequestPasswordTokenTests(unittest.TestCase):
     def test_validate_expired(self):
         obj = self._make_obj()
         obj.token = 'dummy'
-        obj.expires = datetime.now() - timedelta(days=1)
+        obj.expires = utcnow() - timedelta(days=1)
         self.assertRaises(ValueError, obj.validate, 'dummy')
 
     def test_validate_wrong_token(self):
