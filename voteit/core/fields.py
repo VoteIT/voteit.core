@@ -9,8 +9,17 @@ from voteit.core.models.interfaces import IDateTimeUtil
 class TZDateTime(DateTime):
     """ A type representing a timezone-aware datetime object.
 
-    It respects the timezone specified on creation.
+    It respects the timezone specified on creation. The datetime coming from
+    the form is expected to be specified according to the local time zone, and
+    is converted to UTC during deserialization. Serialization converts it back
+    to the local timezone, so the conversion process is transparent to the user.
     """
+
+    def __init__(self, default_tzinfo=None):
+        super(TZDateTime, self).__init__()
+
+        registry = get_current_registry()
+        self.dt_util = registry.getUtility(IDateTimeUtil)
 
     def serialize(self, node, appstruct):
         if appstruct is null:
@@ -25,26 +34,21 @@ class TZDateTime(DateTime):
                             mapping={'val':appstruct})
                           )
 
-        registry = get_current_registry()
-        dt_util = registry.getUtility(IDateTimeUtil)
-        return dt_util.utc_to_tz(appstruct).isoformat()
-
-        # if appstruct.tzinfo is None:
-        #     appstruct = appstruct.replace(tzinfo=self.default_tzinfo)
-        # return appstruct.isoformat()
+        return self.dt_util.utc_to_tz(appstruct).isoformat()
 
 
     def deserialize(self, node, cstruct):
-        registry = get_current_registry()
-        dt_util = registry.getUtility(IDateTimeUtil)
-
         if not cstruct:
             return null
-        
+
         try:
             result = iso8601.parse_date(cstruct, self.default_tzinfo)
+
+            # python's datetime doesn't deal correctly with DST, so we have
+            # to use the pytz localize function instead
             result = result.replace(tzinfo=None)
-            result = dt_util.localize(result)
+            result = self.dt_util.localize(result)
+
         except (iso8601.ParseError, TypeError), e:
             try:
                 year, month, day = map(int, cstruct.split('-', 2))
@@ -54,6 +58,4 @@ class TZDateTime(DateTime):
                 raise Invalid(node, _(self.err_template,
                                       mapping={'val':cstruct, 'err':e}))
 
-        result = dt_util.tz_to_utc(result)
-
-        return result
+        return self.dt_util.tz_to_utc(result)
