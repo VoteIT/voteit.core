@@ -65,6 +65,8 @@
                      id="page_heading"
 			         tal:condition="not form|True">
 		            <h3 tal:content="context.title">Title</h3>
+					
+					<div tal:replace="structure api.get_time_info(context, request)">start time and end time macro</div>
 
                     <tal:state define="state_id context.get_workflow_state()|False">
                     	<div tal:condition="state_id">

@@ -15,6 +15,7 @@ from voteit.core.models.base_content import BaseContent
 from voteit.core.models.workflow_aware import WorkflowAware
 from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import ICatalogMetadataEnabled
+from voteit.core.models.interfaces import IDateTimeUtil
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IPollPlugin
 from voteit.core.models.interfaces import IVote
@@ -252,7 +253,6 @@ def construct_schema(context=None, request=None, **kwargs):
                                    min_err=_('${val} is earlier than earliest date ${min}'),)
 
     #base schema
-    
     local_tz = dt_util.timezone
 
     class PollSchema(colander.MappingSchema):

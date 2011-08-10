@@ -31,27 +31,27 @@ class DateTimeUtilityTests(unittest.TestCase):
         
         self.failUnless(util)
     
-    def test_date(self):
+    def test_d_format(self):
         obj = self._make_obj()
-        date = datetime.strptime('1999-12-13', "%Y-%m-%d")
-        self.assertEqual(obj.date(date), u'12/13/99')
+        date = obj.localize(datetime.strptime('1999-12-13', "%Y-%m-%d"))
+        self.assertEqual(obj.d_format(date), u'12/13/99')
     
-    def test_datetime(self):
+    def test_dt_format(self):
         obj = self._make_obj()
-        date_and_time = datetime.strptime('1999-12-14 19:12', "%Y-%m-%d %H:%M")
-        self.assertEqual(obj.datetime(date_and_time), '12/14/99 7:12 PM')
+        date_and_time = obj.localize(datetime.strptime('1999-12-14 19:12', "%Y-%m-%d %H:%M"))
+        self.assertEqual(obj.dt_format(date_and_time), '12/14/99 7:12 PM')
     
     def test_datetime_sv_locale(self):
         obj = self._make_obj()
         obj.set_locale('sv')
-        date_and_time = datetime.strptime('1999-12-14 19:12', "%Y-%m-%d %H:%M")
-        self.assertEqual(obj.datetime(date_and_time), '1999-12-14 19.12')
+        date_and_time = obj.localize(datetime.strptime('1999-12-14 19:12', "%Y-%m-%d %H:%M"))
+        self.assertEqual(obj.dt_format(date_and_time), '1999-12-14 19.12')
 
     def test_datetime_full_sv(self):
         obj = self._make_obj()
         obj.set_locale('sv')
-        date_and_time = datetime.strptime('1999-12-14 19:12', "%Y-%m-%d %H:%M")
-        self.assertEqual(obj.datetime(date_and_time, format='full'), u'tisdag den 14 december 1999 kl. 19.12.00 v\xe4rlden (GMT)')
+        date_and_time = obj.localize(datetime.strptime('1999-12-14 19:12', "%Y-%m-%d %H:%M"))
+        self.assertEqual(obj.dt_format(date_and_time, format='full'), u'tisdag den 14 december 1999 kl. 19.12.00 Sverige')
 
     def test_datetime_localize(self):
         obj = self._make_obj()
@@ -69,7 +69,6 @@ class DateTimeUtilityTests(unittest.TestCase):
         utc_dt = obj.tz_to_utc(localized_dt)
         result = utc_dt.strftime(fmt)
         self.assertEquals(result, '1999-12-14 18:12 UTC+0000')
-
 
     def test_utc_to_tz(self):
         obj = self._make_obj()

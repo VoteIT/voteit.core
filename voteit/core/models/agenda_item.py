@@ -6,6 +6,7 @@ from zope.interface import implements
 from pyramid.traversal import find_interface
 from pyramid.security import Allow, DENY_ALL, ALL_PERMISSIONS
 from pyramid.threadlocal import get_current_request
+from zope.component import getUtility
 
 from voteit.core import security
 from voteit.core import VoteITMF as _
@@ -16,10 +17,9 @@ from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import IProposal
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import ICatalogMetadataEnabled
+from voteit.core.models.interfaces import IDateTimeUtil
 from voteit.core.validators import html_string_validator
 from voteit.core.fields import TZDateTime
-
-from voteit.core.utils import getDateTimeUtil
 
 
 _PRIV_MOD_PERMS = (security.VIEW, security.EDIT, security.DELETE, security.MODERATE_MEETING, security.CHANGE_WORKFLOW_STATE, )
@@ -113,7 +113,7 @@ def construct_schema(**kwargs):
         if value in current_ids:
             raise colander.Invalid(node, _(u"This value isn't unique within this meeting."))
 
-    dt_util = getDateTimeUtil()
+    dt_util = getUtility(IDateTimeUtil)
     local_tz = dt_util.timezone
         
 

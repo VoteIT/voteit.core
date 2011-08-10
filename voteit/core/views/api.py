@@ -138,6 +138,14 @@ class APIView(object):
         
         return render('templates/action_bar.pt', response, request=request)
 
+    def get_time_info(self, context, request):
+        """ Render start and end time of something, if those exist. """
+        response = {}
+        response['dt_format'] = self.dt_util.datetime
+        response['start_time'] = context.get_field_value('start_time')
+        response['end_time'] = context.get_field_value('end_time')
+        return render('templates/time_info.pt', response, request=request)
+
     def get_creators_info(self, creators, request):
         """ Return template for a set of creators.
             The content of creators should be userids
