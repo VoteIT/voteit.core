@@ -79,8 +79,22 @@ class DateTimeUtil(object):
 
         return tz.localize(datetime)
 
+    def localnow(self, tz=None):
+        """Get the current datetime localized to the specified timezone.
+
+        If no timezone is specified, the current selected one is used.
+        """
+
+        naive_now = datetime.now()
+
+        if tz is None:
+            tz = self.timezone
+
+        return self.localize(naive_now, tz)
+
     def utcnow(self):
         return utcnow()
+
 
 
 def utcnow():
