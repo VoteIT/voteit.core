@@ -15,6 +15,7 @@ from zope.sqlalchemy import ZopeTransactionExtension
 from voteit.core.models.interfaces import ICatalogMetadata
 from voteit.core.models.interfaces import IContentUtility
 from voteit.core.models.interfaces import ICatalogMetadataEnabled
+from voteit.core.models.interfaces import IHelpUtil
 from voteit.core.models.interfaces import IPollPlugin
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IPollPlugin
@@ -87,6 +88,16 @@ def add_date_time_util(config, locale=None, timezone_name=None):
 
     util = DateTimeUtil(locale, timezone_name)
     config.registry.registerUtility(util, IDateTimeUtil)
+
+def add_help_util(config, locale=None):
+    from voteit.core.models.help_util import HelpUtil
+    
+    if locale is None:
+        locale = config.registry.settings.get('default_locale_name')
+    
+    util = HelpUtil(locale)
+    config.registry.registerUtility(util, IHelpUtil)
+
 
 def populate_sql_database(config):
     from voteit.core import RDB_Base

@@ -450,7 +450,33 @@ class ISQLSession(Interface):
     
     def __call__():
         """ Returns session. """
-        
+
+
+class IHelpUtil(Interface):
+    """ Registers and fetches help texts for a specific topic.
+        Needs a set locale to work.
+        Default language will always be english.
+    """
+    locale = Attribute("Currently set locale.")
+    
+    def set_default_locale(lang):
+        """ Set locale. """
+    
+    def add_help_text(id, path, locale=None):
+        """ Add help text, usually html.
+            If locale is None, the default one is used
+        """
+
+    def add_help_file(id, path, locale=None):
+        """ Add a path to a HTML file with some help text.
+            If locale is None, the default one is used
+        """
+
+    def get(id, locale=None):
+        """ Get HTML for an id. If lang is not specified, get the already set lang.
+        """
+    
+    
 class IMessages(Interface):
     """ Handle messages.
         This behaves like an adapter on a request.
