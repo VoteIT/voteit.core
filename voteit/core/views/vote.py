@@ -14,6 +14,8 @@ from voteit.core.security import ROLE_OWNER, EDIT, DELETE, ADD_VOTE, VIEW
 from voteit.core.models.interfaces import IVote
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IPollPlugin
+from voteit.core.models.interfaces import IAgendaItem
+from voteit.core.models.schemas import add_csrf_token
 
 DEFAULT_TEMPLATE = "templates/base_edit.pt"
 
@@ -83,13 +85,15 @@ class VoteView(object):
             
             msg = _(u"Thank you for voting!")
             self.api.flash_messages.add(msg)
-            url = resource_url(vote, self.request)
+            ai = find_interface(vote, IAgendaItem)
+            url = resource_url(ai, self.request)
             return HTTPFound(location=url)
 
         if 'cancel' in post:
             msg = _(u"Canceled - your vote has NOT been added!")
             self.api.flash_messages.add(msg)
-            url = resource_url(self.context, self.request)
+            ai = find_interface(self.context, IAgendaItem)
+            url = resource_url(ai, self.request)
             return HTTPFound(location=url)
 
         #No action - Render edit form
@@ -121,13 +125,15 @@ class VoteView(object):
             msg = _(u"Your vote has been updated.")
             self.api.flash_messages.add(msg)
 
-            url = resource_url(self.context, self.request)
+            ai = find_interface(self.context, IAgendaItem)
+            url = resource_url(ai, self.request)
             return HTTPFound(location=url)
 
         if 'cancel' in post:
             msg = _(u"Canceled - vote NOT updated!")
             self.api.flash_messages.add(msg)
-            url = resource_url(self.context, self.request)
+            ai = find_interface(self.context, IAgendaItem)
+            url = resource_url(ai, self.request)
             return HTTPFound(location=url)
 
         #No action - Render edit form
@@ -135,6 +141,39 @@ class VoteView(object):
         self.api.flash_messages.add(msg, close_button=False)
         appstruct = self.context.get_vote_data()
         self.response['form'] = self.form.render(appstruct=appstruct)
+        return self.response
+        
+    @view_config(context=IVote, name="delete", permission=DELETE, renderer=DEFAULT_TEMPLATE)
+    def delete_form(self):
+
+        schema = colander.Schema()
+        add_csrf_token(self.context, self.request, schema)
+        
+        self.form = Form(schema, buttons=('delete', 'cancel'))
+        self.response['form_resources'] = self.form.get_widget_resources()
+
+        post = self.request.POST
+        if 'delete' in post:
+
+            parent = self.context.__parent__
+            del parent[self.context.__name__]
+
+            self.api.flash_messages.add(_(u"Successfully deleted"))
+
+            ai = find_interface(parent, IAgendaItem)
+            url = resource_url(ai, self.request)
+            return HTTPFound(location=url)
+
+        if 'cancel' in post:
+            self.api.flash_messages.add(_(u"Canceled"))
+            ai = find_interface(self.context, IAgendaItem)
+            url = resource_url(ai, self.request)
+            return HTTPFound(location=url)
+
+        #No action - Render edit form
+        msg = _(u"Are you sure you want to delete this item?")
+        self.api.flash_messages.add(msg, close_button=False)
+        self.response['form'] = self.form.render()
         return self.response
 
     @view_config(context=IVote, renderer='templates/base_readonly_form.pt', permission=VIEW)

@@ -6,6 +6,41 @@
 <body>
 
     <div id="content" metal:fill-slot="content">
+    
+        <h1>Poll(s)</h1>
+                    
+        <tal:iterate condition="polls" repeat="poll polls">
+            <div tal:define="poll_plugin poll.get_poll_plugin();
+                             state_id poll.get_workflow_state();
+                             unread api.is_unread(poll, True);"
+                 tal:attributes="class unread and 'unread listing_block' or 'listing_block'">
+                <h3 tal:content="poll.title">Title</h3>
+                <div tal:content="poll.description">Description</div>
+                
+                <div>
+                    <span>Poll method:</span>
+                    <strong tal:content="poll_plugin.title">Title</strong>
+                </div>
+
+                <div class="wf-info">
+                    <span>State:</span>
+                    <strong tal:attributes="class 'wf-state-%s' % state_id"
+                          tal:content="state_id">open</strong>
+                </div>
+                
+                <div tal:condition="state_id == 'closed'" tal:content="structure poll.render_poll_result()">
+                    Poll result
+                </div>
+
+                <div tal:replace="structure api.get_action_bar(poll, request)">Action bar</div>
+                <div tal:condition="poll_forms[poll.uid]|False" tal:content="structure poll_forms[poll.uid]"></div>
+            </div>
+        </tal:iterate>
+        
+        <tal:no_polls condition="not polls">
+            <h3>No polls yet</h3>
+        </tal:no_polls>
+        <div style="clear: both"></div>
         <div class="column">
             <div id="discussions">
                 <h1>Discussion</h1>
@@ -54,39 +89,6 @@
                 <div tal:condition="proposal_form|False" tal:replace="structure proposal_form">Proposal form</div>
             
             </div>
-
-            <h1>Poll(s)</h1>
-                
-            <tal:iterate condition="polls" repeat="poll polls">
-                <div tal:define="poll_plugin poll.get_poll_plugin();
-                                 state_id poll.get_workflow_state();
-                                 unread api.is_unread(poll, True);"
-                     tal:attributes="class unread and 'unread listing_block' or 'listing_block'">
-                    <h3 tal:content="poll.title">Title</h3>
-                    <div tal:content="poll.description">Description</div>
-                    
-                    <div>
-                        <span>Poll method:</span>
-                        <strong tal:content="poll_plugin.title">Title</strong>
-                    </div>
-
-                    <div class="wf-info">
-                        <span>State:</span>
-                        <strong tal:attributes="class 'wf-state-%s' % state_id"
-                              tal:content="state_id">open</strong>
-                    </div>
-                    
-                    <div tal:condition="state_id == 'closed'" tal:content="structure poll.render_poll_result()">
-                        Poll result
-                    </div>
-
-                    <div tal:replace="structure api.get_action_bar(poll, request)">Action bar</div>
-                </div>
-            </tal:iterate>
-            
-            <tal:no_polls condition="not polls">
-                <h3>No polls yet</h3>
-            </tal:no_polls>
             
         </div>
         <div class="clear"><!-- --></div>

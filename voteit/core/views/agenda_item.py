@@ -5,12 +5,16 @@ from pyramid.security import has_permission
 from deform import Form
 import colander
 
+from webob.exc import HTTPFound
+
+from voteit.core import VoteITMF as _
 from voteit.core.views.base_view import BaseView
 from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IDiscussionPost
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IProposal
-from voteit.core.security import VIEW
+from voteit.core.models.interfaces import IVote
+from voteit.core.security import VIEW, EDIT, ADD_VOTE
 
 
 class AgendaItemView(BaseView):
@@ -26,6 +30,33 @@ class AgendaItemView(BaseView):
         
         ci = self.api.content_info
         url = resource_url(self.context, self.request)
+        
+        poll_forms = {}
+        poll_form_resources = {}
+        for poll in self.response['polls']:
+            #Check if the users vote exists already
+            userid = self.api.userid
+            poll_schema = poll.get_poll_plugin().get_vote_schema()
+            appstruct = {}
+            if userid in poll:
+                #If editing a vote is allowed, redirect. Editing is only allowed in open polls
+                vote = poll.get(userid)
+                assert IVote.providedBy(vote)
+                
+                #show the users vote and edit button
+                appstruct = vote.get_vote_data()
+                
+                form = Form(poll_schema)
+                poll_forms[poll.uid] = form.render(appstruct=appstruct, readonly=True)
+                poll_form_resources = form.get_widget_resources()
+
+            else: 
+                if has_permission(ADD_VOTE, poll, self.request):
+                    poll_url = resource_url(poll, self.request)
+                    form = Form(poll_schema, action=poll_url+"@@vote", buttons=('vote', 'cancel'))
+                    poll_forms[poll.uid] = form.render()
+                    poll_form_resources = form.get_widget_resources()
+
         
         #Proposal form
         if has_permission(ci['Proposal'].add_permission, self.context, self.request):
@@ -48,8 +79,14 @@ class AgendaItemView(BaseView):
                 form_resources[k].extend(v)
             else:
                 form_resources[k] = v
+        for (k, v) in poll_form_resources.items():
+            if k in form_resources:
+                form_resources[k].extend(v)
+            else:
+                form_resources[k] = v
         
         self.response['form_resources'] = form_resources
+        self.response['poll_forms'] = poll_forms
         self.response['proposal_form'] = prop_form.render()
         self.response['discussion_form'] = discussion_form.render()
 
