@@ -3,11 +3,13 @@
       so import things from the voteit.core package in each method rather than globally.
     - Don't put anything here that will run after application configuration.
 """
+import os, fnmatch
 
 from pyramid.events import ApplicationCreated
 from pyramid.events import subscriber
 from pyramid.config import Configurator
 from zope.interface.verify import verifyClass
+from zope.component import getUtility
 
 from sqlalchemy import create_engine
 from zope.sqlalchemy import ZopeTransactionExtension
@@ -157,3 +159,22 @@ def post_application_config(event):
     """
     config = Configurator(registry=event.app.registry)
     include_zcml(config)
+    
+    # read help files
+    # get path of this file
+    PROJECTROOT = os.path.dirname( __file__ )
+    help_util = getUtility(IHelpUtil)
+    # get help files path
+    helpdir = os.path.join(PROJECTROOT, 'help')
+    # loop through locale directories
+    for path, dirs, files in os.walk(helpdir):
+        for name in dirs:
+            dir = os.path.join(path, name)
+            # loop through html files in locale directories
+            for file in fnmatch.filter(os.listdir(dir), '*.html'):
+                # get the name of the file without extension
+                id = os.path.splitext(file)[0]
+                # add file to HelpUtil
+                help_util.add_help_file(id, os.path.join(dir, file))
+    
+

@@ -105,7 +105,6 @@
 	    </li>
 	</tal:moderator>
 	<!-- FIXME: this is just a dummy for showing the feature -->
-    <a tal:attributes="id string:help_${context.uid};
-                        href string:/help/${api.locale}/dummy.html" target="_blank" class="help">?</a>
+    <a tal:attributes="id string:help_${context.uid};" href="@@help?article=dummy" target="_blank" class="help">?</a>
 </ul>
 

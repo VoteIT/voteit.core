@@ -1,0 +1,1 @@
+<tal:p tal:replace="structure help"></tal:p>

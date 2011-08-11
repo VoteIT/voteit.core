@@ -5,6 +5,7 @@ from pyramid.config import Configurator
 
 from sqlalchemy.ext.declarative import declarative_base
 
+
 #Must be before all of this packages imports since some other methods might import it
 PROJECTNAME = 'voteit.core'
 VoteITMF = TranslationStringFactory(PROJECTNAME)
@@ -45,7 +46,6 @@ def main(global_config, **settings):
     app.register_poll_plugins(config)
     
     config.add_static_view('static', '%s:static' % PROJECTNAME)
-    config.add_static_view('help', '%s:help' % PROJECTNAME)
     config.add_static_view('deform', 'deform:static')
 
     #Set which mailer to use
