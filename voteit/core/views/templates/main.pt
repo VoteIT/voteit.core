@@ -35,11 +35,7 @@
 	<script type="text/javascript" src="${request.application_url}/static/jquery.qtip.js"></script>
 	<script type="text/javascript" src="${request.application_url}/static/jquery-ui-1.8.15.custom.min.js"></script>
 	<script type="text/javascript" src="${request.application_url}/static/jquery.easy-confirm-dialog.js"></script>
-<script type="text/javascript">
-  $(document).ready(function() {
-    $('.buttonize').easyconfirm({locale:{title:'VoteIT rocks!', text:'Are you sure you want to click on this link?', button: ['No', 'Yes']}});
-  });
-</script>
+
 	<metal:head define-slot="head"></metal:head>
 	
 </head>
