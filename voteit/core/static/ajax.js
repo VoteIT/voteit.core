@@ -84,3 +84,14 @@ $(document).ready(function() {
         });
     })
 })
+
+/*  Confirmation windows  */
+$(document).ready(function() {
+    $('.confirm').easyconfirm({
+        locale: {
+            title: 'Please confirm', 
+            text: 'Are you sure you want to do this?', 
+            button: ['No', 'Yes']
+        }
+    });
+});
