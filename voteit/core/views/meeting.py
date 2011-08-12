@@ -2,6 +2,7 @@ from pyramid.security import has_permission
 from pyramid.view import view_config
 from webob.exc import HTTPFound
 import deform
+import urllib
 from deform.exception import ValidationFailure
 from pyramid.exceptions import Forbidden
 from pyramid.url import resource_url
@@ -73,7 +74,8 @@ class MeetingView(BaseView):
             msg = _(u"You need to login or register first, then your can use your ticket to gain access to this meeting.")
             self.api.flash_messages.add(msg, type='error')
 
-            url = "%s@@login" % resource_url(self.api.root, self.request)
+            came_from = urllib.quote(self.request.url)
+            url = "%s@@login?came_from=%s" % (resource_url(self.api.root, self.request), came_from)
             return HTTPFound(location=url)
         
         ci = self.api.content_info['InviteTicket']

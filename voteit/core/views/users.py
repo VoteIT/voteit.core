@@ -1,5 +1,6 @@
 from pyramid.view import view_config
 import colander
+import urllib
 from deform import Form
 from deform.exception import ValidationFailure
 from pyramid.httpexceptions import HTTPFound
@@ -211,6 +212,7 @@ class UsersView(object):
             
             userid = appstruct['userid']
             password = appstruct['password']
+            came_from = urllib.unquote(appstruct['came_from'])
     
             #userid here can be either an email address or a login name
             if '@' in userid:
@@ -223,6 +225,8 @@ class UsersView(object):
                 if get_sha_password(password) == user.get_password():
                     headers = remember(self.request, user.__name__)
                     url = resource_url(self.context, self.request)
+                    if came_from:
+                        url = came_from
                     return HTTPFound(location = url,
                                      headers = headers)
             self.response['api'].flash_messages.add(_('Login failed.'), type='error')
@@ -259,10 +263,15 @@ class UsersView(object):
             #self.context is the site root. Users are stored in the users-property
             users[name] = obj
 
-            self.api.flash_messages.add(_(u"Successfully registered - you may now log in!"))
             #FIXME: Validate email address instead!
             url = "%slogin" % resource_url(self.context, self.request)
-            return HTTPFound(location=url)
+
+            headers = remember(self.request, name)  # login user
+
+            came_from = urllib.unquote(appstruct['came_from'])
+            if came_from:
+                url = came_from
+            return HTTPFound(location=url, headers=headers)
 
         #Render forms
         self.response['login_form'] = login_form.render()
