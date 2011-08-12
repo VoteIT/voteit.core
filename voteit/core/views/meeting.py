@@ -138,9 +138,10 @@ class MeetingView(BaseView):
                 self.response['form'] = e.render()
                 return self.response
             
-            emails = appstruct['emails'].splitlines()       
+            emails = appstruct['emails'].splitlines()
+            message = appstruct['message']
             for email in emails:
-                obj = ci.type_class(email, appstruct['roles'])
+                obj = ci.type_class(email, appstruct['roles'], message)
                 self.context.add_invite_ticket(obj, self.request) #Will also email user
             
             self.api.flash_messages.add(_(u"Successfully added and sent %s invites" % len(emails)))
