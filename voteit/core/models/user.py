@@ -3,6 +3,7 @@ import string
 from random import choice
 from hashlib import sha1
 from datetime import timedelta
+import urllib
 
 from BTrees.OOBTree import OOBTree
 import colander
@@ -113,6 +114,8 @@ class RequestPasswordToken(object):
 
 def construct_schema(**kwargs):
     context = kwargs.get('context', None)
+    request = kwargs.get('request', None)
+    referer = urllib.quote(request.GET.get('came_from', '/'))
     type = kwargs.get('type', None)
     if context is None:
         KeyError("'context' is a required keyword for User schemas. See construct_schema in the user module.")    
@@ -152,6 +155,10 @@ def construct_schema(**kwargs):
                                          validator=html_string_validator,)
 
 
+    came_from_node = colander.SchemaNode(colander.String(),
+                                         widget = deform.widget.HiddenWidget(),
+                                         default=referer,)
+
     if type == 'login':
         class LoginSchema(colander.Schema):
             userid = colander.SchemaNode(colander.String(),
@@ -159,10 +166,8 @@ def construct_schema(**kwargs):
             password = colander.SchemaNode(colander.String(),
                                            title=_('Password'),
                                            widget=deform.widget.PasswordWidget(size=20),)
-            came_from = colander.SchemaNode(
-                        colander.String(),
-                        widget = deform.widget.HiddenWidget(),
-                        default='/',)
+            came_from = came_from_node
+
         return LoginSchema()
 
     if type in ('add', 'registration'):
@@ -190,6 +195,7 @@ def construct_schema(**kwargs):
             email = email_node
             first_name = first_name_node
             last_name = last_name_node
+            came_from = came_from_node
         return AddUserSchema()
 
     if type == 'edit':

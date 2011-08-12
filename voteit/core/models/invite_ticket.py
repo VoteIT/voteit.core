@@ -39,12 +39,13 @@ class InviteTicket(Persistent, WorkflowAware):
     allowed_contexts = () #Not addable through regular forms
     add_permission = None
     
-    def __init__(self, email, roles):
+    def __init__(self, email, roles, message):
         self.email = email
         for role in roles:
             if role not in SELECTABLE_ROLES:
                 raise ValueError("InviteTicket got '%s' as a role, and that isn't selectable." % role)
         self.roles = roles
+        self.message = message
         self.created = utcnow()
         self.closed = None
         self.claimed_by = None
@@ -61,8 +62,10 @@ class InviteTicket(Persistent, WorkflowAware):
         access_link = form_url + '?email=%s&token=%s' % (self.email, self.token)
         
         #FIXME: Proper template or edit form
-        body = """
-You've received a meeting invitation for a VoteIT meeting.
+        instructions = """
+
+
+-------------------------------------------------------------
 
 To access the meeting, you need to do the following:
 1. You need to register an account at the site inviting you.
@@ -77,6 +80,7 @@ Access link for direct acces once you've logged in:
         """ % (form_url, access_link)
         
         sender = meeting.get_field_value('meeting_mail_address')
+        body = self.message + instructions
 
         msg = Message(subject=_(u"VoteIT meeting invitation"),
                       sender = sender and sender or None,
@@ -101,7 +105,7 @@ Access link for direct acces once you've logged in:
         if userid is None:
             raise Forbidden("You can't claim a ticket unless you're authenticated.")
         
-        meeting.set_groups(userid, self.roles)
+        meeting.add_groups(userid, self.roles)
         self.claimed_by = userid
 
         self.set_workflow_state(request, 'closed')
@@ -152,6 +156,15 @@ def construct_schema(context=None, request=None, type=None):
                                          widget = deform.widget.TextAreaWidget(rows=5, cols=40),
                                          validator = html_string_validator,
             )
+            message = colander.SchemaNode(colander.String(),
+                                          title = _(u'Welcome text of the email that will be sent'),
+                                          description = _(u'No HTML tags allowed.'),
+                                          widget = deform.widget.TextAreaWidget(rows=5, cols=40),
+                                          default = _(u"You've received a meeting invitation for a VoteIT meeting."),
+                                          missing = u'',
+                                          validator = html_string_validator,
+            )
+                                       
         return AddSchema()
     
     if type == 'manage':

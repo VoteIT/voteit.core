@@ -23,7 +23,7 @@ class InviteTicketTests(unittest.TestCase):
         return InviteTicket
     
     def _make_obj(self):
-        return self._get_class('this@email.com', ['role:Moderator'])
+        return self._get_class('this@email.com', ['role:Moderator'], 'Welcome to the meeting!')
     
     def _make_meeting(self):
         from voteit.core.models.meeting import Meeting
