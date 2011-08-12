@@ -101,7 +101,7 @@ Access link for direct acces once you've logged in:
         if userid is None:
             raise Forbidden("You can't claim a ticket unless you're authenticated.")
         
-        meeting.set_groups(userid, self.roles)
+        meeting.add_groups(userid, self.roles)
         self.claimed_by = userid
 
         self.set_workflow_state(request, 'closed')
