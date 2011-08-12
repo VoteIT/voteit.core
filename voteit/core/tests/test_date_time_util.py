@@ -1,5 +1,6 @@
 import unittest
 from datetime import datetime
+from datetime import timedelta
 
 import pytz
 
@@ -92,3 +93,15 @@ class DateTimeUtilityTests(unittest.TestCase):
         now = obj.localnow()
         # we don't check for exactly equal timezones due to DST changes
         self.assertEquals(str(now.tzinfo), str(obj.timezone))
+
+    def test_dst_timedelta(self):
+        """Check that timedeltas take DST into account.
+        """
+        obj = self._make_obj()
+        date_time1 = datetime.strptime('1999-12-14 18:12', "%Y-%m-%d %H:%M")
+        date_time2 = datetime.strptime('1999-08-14 18:12', "%Y-%m-%d %H:%M")
+        l_dt1 = obj.localize(date_time1)
+        l_dt2 = obj.localize(date_time2)
+
+        self.assertNotEqual(l_dt1 - l_dt2, timedelta(days=122))
+        self.assertEquals(l_dt1 - l_dt2, timedelta(days=122, hours=1))
