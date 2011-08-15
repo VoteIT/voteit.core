@@ -199,12 +199,12 @@ def get_searchable_text(object, default):
 
 def get_start_time(object, default):
     value = object.get_field_value('start_time', default)
-    if value != default:
+    if value and value != default:
         return timegm(value.timetuple())
     return default
 
 def get_end_time(object, default):
     value = object.get_field_value('end_time', default)
-    if value != default:
+    if value and value != default:
         return timegm(value.timetuple())
     return default
