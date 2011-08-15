@@ -21,7 +21,7 @@ input {
     font-style: inherit;
     font-size: 100%;
     font-family: inherit;
-    vertical-align: baseline;	
+    vertical-align: baseline;
 }
 :focus {
 	outline: 0;
@@ -38,13 +38,9 @@ caption, th, td {
 	font-weight: normal;
 }
 
-dt {
-	display: none;
-}	
-
 .clear {
 	clear: both;
-}	
+}
 
 em, i {
     font-style: italic;
