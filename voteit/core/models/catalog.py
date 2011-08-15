@@ -60,6 +60,8 @@ def update_indexes(catalog, reindex=True):
         'created': CatalogFieldIndex(get_created),
         'allowed_to_view': CatalogKeywordIndex(get_allowed_to_view),
         'searchable_text' : CatalogTextIndex(get_searchable_text),
+        'start_time' : CatalogFieldIndex(get_start_time),
+        'end_time' : CatalogFieldIndex(get_end_time),
     }
     
     changed_indexes = set()
@@ -194,3 +196,15 @@ def get_searchable_text(object, default):
             text += u' %s' % res
     text = text.strip()
     return text and text or default
+
+def get_start_time(object, default):
+    value = object.get_field_value('start_time', default)
+    if value != default:
+        return timegm(value.timetuple())
+    return default
+
+def get_end_time(object, default):
+    value = object.get_field_value('end_time', default)
+    if value != default:
+        return timegm(value.timetuple())
+    return default
