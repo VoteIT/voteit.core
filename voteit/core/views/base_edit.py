@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from pyramid.view import view_config
 from pyramid.renderers import get_renderer
 from pyramid.traversal import find_root, find_interface
@@ -17,6 +19,7 @@ from voteit.core import VoteITMF as _
 from voteit.core.security import ROLE_OWNER, EDIT, DELETE, VIEW
 from voteit.core.models.schemas import add_csrf_token
 from voteit.core.events import ObjectUpdatedEvent
+from voteit.core.models.schemas import add_csrf_token
 
 
 DEFAULT_TEMPLATE = "templates/base_edit.pt"
@@ -47,6 +50,7 @@ class BaseEdit(object):
             
         self.form = Form(schema, buttons=('add', 'cancel'))
         self.response['form_resources'] = self.form.get_widget_resources()
+        appstruct = {}
 
         post = self.request.POST
         if 'add' in post:
@@ -82,7 +86,12 @@ class BaseEdit(object):
         #No action - Render add form
         msg = _(u"Add") + ' ' + ftis[content_type].type_class.display_name
         self.api.flash_messages.add(msg, close_button=False)
-        self.response['form'] = self.form.render()
+        #FIXME: this should probably be handled in a more graceful way, but since almost every content type is added here this must go here
+        if not 'start_time' in appstruct:
+            appstruct['start_time'] = self.api.dt_util.localnow()
+        if not 'end_time' in appstruct:
+            appstruct['end_time'] = self.api.dt_util.localnow() + timedelta(hours=6)
+        self.response['form'] = self.form.render(appstruct=appstruct)
         return self.response
 
     @view_config(name="edit", renderer=DEFAULT_TEMPLATE, permission=EDIT)

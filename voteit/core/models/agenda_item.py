@@ -145,10 +145,10 @@ def construct_schema(**kwargs):
             validator=html_string_validator,
         )
         start_time = colander.SchemaNode(
-             TZDateTime(local_tz),
-             title = _(u"Start time of this Agenda Item."),
-             description = _(u"It will be opened automatically when this time has passed."),
-             missing = None,
+            TZDateTime(local_tz),
+            title = _(u"Start time of this Agenda Item."),
+            description = _(u"It will be opened automatically when this time has passed."),
+            missing = None,
         )
         #End-time is handled by a subscriber when it is closed
     return AgendaItemSchema()

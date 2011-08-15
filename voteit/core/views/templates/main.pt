@@ -33,7 +33,6 @@
     <script type="text/javascript" src="${request.application_url}/static/jquery.rating.js"></script>
 	<script type="text/javascript" src="${request.application_url}/static/ajax.js"></script>
 	<script type="text/javascript" src="${request.application_url}/static/jquery.qtip.js"></script>
-	<script type="text/javascript" src="${request.application_url}/static/jquery-ui-1.8.15.custom.min.js"></script>
 	<script type="text/javascript" src="${request.application_url}/static/jquery.easy-confirm-dialog.js"></script>
 
 	<metal:head define-slot="head"></metal:head>

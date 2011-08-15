@@ -34,7 +34,7 @@ class TZDateTime(DateTime):
                             mapping={'val':appstruct})
                           )
 
-        return self.dt_util.utc_to_tz(appstruct).isoformat()
+        return self.dt_util.utc_to_tz(appstruct).strftime('%Y-%m-%d %H:%M')
 
 
     def deserialize(self, node, cstruct):
