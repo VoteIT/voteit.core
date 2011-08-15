@@ -51,6 +51,8 @@ setup(name='voteit.core',
       entry_points = """\
       [paste.app_factory]
       main = voteit.core:main
+      [console_scripts]
+      crontick = voteit.core.scripts.crontick:crontick
       """,
       paster_plugins=['pyramid'],
       message_extractors = { '.': [
