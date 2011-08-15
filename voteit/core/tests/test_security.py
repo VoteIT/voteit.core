@@ -3,10 +3,12 @@ import unittest
 from pyramid import testing
 from pyramid.authorization import ACLAuthorizationPolicy
 from pyramid.authentication import AuthTktAuthenticationPolicy
+from repoze.workflow.workflow import WorkflowError
 
 from voteit.core.bootstrap import bootstrap_voteit
 from voteit.core.app import register_content_types
 from voteit.core import security
+
 
 authn_policy = AuthTktAuthenticationPolicy(secret='sosecret',
                                            callback=security.groupfinder)
@@ -43,16 +45,6 @@ class SecurityTests(unittest.TestCase):
 
         return root
 
-#    def _make_dummy(self):
-#        """ Security aware is a mixin class, so we need to add BaseContent too"""
-#        from voteit.core.models.security_aware import SecurityAware
-#        from voteit.core.models.base_content import BaseContent
-#        
-#        class DummyContent(BaseContent, SecurityAware):
-#            pass
-#        
-#        return DummyContent()
-
     def test_find_authorized_userids_admin(self):
         res = security.find_authorized_userids(self.root, (security.ROLE_ADMIN,))
         self.assertEqual(res, set(('admin',)))
@@ -82,3 +74,17 @@ class SecurityTests(unittest.TestCase):
         self.assertEqual(res, ['system.Everyone', 'system.Authenticated',
                                'robin', 'role:Admin'])
     
+    def test_unrestricted_wf_transition_to(self):
+        self.config.include('pyramid_zcml')
+        self.config.load_zcml('voteit.core:configure.zcml') #Load workflows
+        
+        from voteit.core.models.meeting import Meeting
+        request = testing.DummyRequest()
+        obj = Meeting()
+        
+        #Regular wf method doesn't work
+        self.assertRaises(WorkflowError, obj.set_workflow_state, request, 'active')
+        
+        #But unrestricted does
+        security.unrestricted_wf_transition_to(obj, 'active')
+        self.assertEqual(obj.get_workflow_state(), 'active')

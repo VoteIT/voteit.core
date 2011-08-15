@@ -5,7 +5,9 @@ from pyramid.interfaces import IAuthorizationPolicy
 from pyramid.traversal import find_root
 from pyramid.security import Authenticated
 from pyramid.security import Everyone
+from zope.component.event import objectEventNotify
 
+from voteit.core.events import WorkflowStateChange
 from voteit.core import VoteITMF as _
 
 
@@ -116,3 +118,10 @@ def context_effective_principals(context, userid):
     effective_principals.append(userid)
     effective_principals.extend(groups)
     return effective_principals    
+
+def unrestricted_wf_transition_to(obj, state):
+    """ Transition to a stade WITHOUT checking permission.
+    """
+    old_state = obj.get_workflow_state()
+    obj.workflow._transition_to_state(obj, state, guards=())
+    objectEventNotify(WorkflowStateChange(obj, old_state, state))
