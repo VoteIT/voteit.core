@@ -87,10 +87,13 @@ class SecurityAware(object):
     def get_security_appstruct(self):
         """ Return the current settings in a structure that is usable in a deform form.
         """
+        root = find_root(self)
+        users = root['users']
         appstruct = {}
         userids_and_groups = []
         for userid in self._groups:
-            userids_and_groups.append({'userid':userid, 'groups':self.get_groups(userid)})
+            user = users[userid]
+            userids_and_groups.append({'userid':userid, 'groups':self.get_groups(userid), 'email':user.get_field_value('email')})
         appstruct['userids_and_groups'] = userids_and_groups
         return appstruct
 
@@ -99,11 +102,14 @@ class SecurityAware(object):
         """ Return the current settings in a structure that is usable in a deform form,
             including invitations.
         """
+        root = find_root(self)
+        users = root['users']
         appstruct = {}
         userids_and_groups = []
         invitations_and_groups = []
         for userid in self._groups:
-            userids_and_groups.append({'userid':userid, 'groups':self.get_groups(userid)})
+            user = users[userid]
+            userids_and_groups.append({'userid':userid, 'groups':self.get_groups(userid), 'email':user.get_field_value('email')})
         for ticket in self.invite_tickets.values():
             if ticket.get_workflow_state() != u'closed':
                 invitations_and_groups.append({'email':ticket.email, 'groups':tuple(ticket.roles)})
@@ -132,9 +138,8 @@ def get_groups_schema(context):
     user_choice = tuple(root.users.keys())
 
     email_choices = [x.email for x in context.invite_tickets.values() if x.get_workflow_state() != u'closed']
-    userid_widget = deform.widget.AutocompleteInputWidget(
+    userid_widget = deform.widget.TextInputWidget(
         size=10,
-        values = user_choice,
         )
     if context is root:
         #Only show administrator as selectable group in root
@@ -149,6 +154,8 @@ def get_groups_schema(context):
             validator=colander.OneOf(user_choice),
             widget = userid_widget,
             )
+        email = colander.SchemaNode(
+            colander.String())
         groups = colander.SchemaNode(
             deform.Set(allow_empty=True),
             widget=deform.widget.CheckboxChoiceWidget(values=group_choices,

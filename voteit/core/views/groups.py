@@ -41,6 +41,7 @@ class EditGroups(object):
         self.response['api'] = self.api = APIView(context, request)
 
 
+    @view_config(context=IMeeting, name="edit_permissions", renderer=DEFAULT_TEMPLATE, permission=MANAGE_GROUPS)
     @view_config(context=ISiteRoot, name="edit_groups", renderer=DEFAULT_TEMPLATE, permission=MANAGE_GROUPS)
     def root_group_form(self):
         schema = get_groups_schema(self.context)
@@ -61,7 +62,7 @@ class EditGroups(object):
                 return self.response
             
             #Set permissions
-            self.context.update_from_form(appstruct['userids_and_groups'])
+            self.context.update_userids_permissions_from_form(appstruct['userids_and_groups'])
             
             url = resource_url(self.context, self.request)
             

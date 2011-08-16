@@ -14,13 +14,12 @@
          class="deformProto" 
          tal:attributes="prototype prototype"/>
 
-  <table>
+
 
     <div tal:repeat="tup subfields"
          tal:replace="structure rndr(item_tmpl, field=tup[1], cstruct=tup[0],
                       parent=field)"/>
 
-  </table>
   
   <input type="hidden" name="__end__" value="${field.name}:sequence"/>
 
