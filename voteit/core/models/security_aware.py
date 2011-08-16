@@ -62,7 +62,7 @@ class SecurityAware(object):
         self._check_groups(groups)
         self._groups[principal] = tuple(groups)
 
-    def update_from_form(self, value):
+    def update_userids_permissions_from_form(self, value):
         """ Set permissions from a list of dicts with the following layout:
             {'userid':<userid>,'groups':<set of groups that the user should have>}.
         """
@@ -76,6 +76,14 @@ class SecurityAware(object):
         for item in value:
             self.set_groups(item['userid'], item['groups'])
 
+    def update_tickets_permissions_from_form(self, value):
+        """ Set tickets permissions from a list of dicts with the following layout:
+            {'email':<email>,'groups':<set of groups that the user should have>}.
+        """
+        for ticket in value:
+            self._check_groups(ticket['groups'])
+            self.invite_tickets[ticket['email']].roles = tuple(ticket['groups'])
+
     def get_security_appstruct(self):
         """ Return the current settings in a structure that is usable in a deform form.
         """
@@ -84,6 +92,24 @@ class SecurityAware(object):
         for userid in self._groups:
             userids_and_groups.append({'userid':userid, 'groups':self.get_groups(userid)})
         appstruct['userids_and_groups'] = userids_and_groups
+        return appstruct
+
+
+    def get_security_and_invitations_appstruct(self):
+        """ Return the current settings in a structure that is usable in a deform form,
+            including invitations.
+        """
+        appstruct = {}
+        userids_and_groups = []
+        invitations_and_groups = []
+        for userid in self._groups:
+            userids_and_groups.append({'userid':userid, 'groups':self.get_groups(userid)})
+        for ticket in self.invite_tickets.values():
+            if ticket.get_workflow_state() != u'closed':
+                invitations_and_groups.append({'email':ticket.email, 'groups':tuple(ticket.roles)})
+        appstruct['userids_and_groups'] = userids_and_groups
+
+        appstruct['invitations_and_groups'] = invitations_and_groups
         return appstruct
 
     def _check_groups(self, groups):
@@ -104,6 +130,8 @@ def get_groups_schema(context):
     """
     root = find_root(context)
     user_choice = tuple(root.users.keys())
+
+    email_choices = [x.email for x in context.invite_tickets.values() if x.get_workflow_state() != u'closed']
     userid_widget = deform.widget.AutocompleteInputWidget(
         size=10,
         values = user_choice,
@@ -129,8 +157,27 @@ def get_groups_schema(context):
     
     class UserIDsAndGroupsSequenceSchema(colander.SequenceSchema):
         userid_and_groups = UserIDAndGroupsSchema(title=_(u'Groups for user'),)
-    
+
+
+    class InvitationAndGroupsSchema(colander.Schema):
+        email = colander.SchemaNode(
+            colander.String(),
+            validator=colander.OneOf(email_choices),
+            widget = userid_widget,
+            )
+        groups = colander.SchemaNode(
+            deform.Set(allow_empty=True),
+            widget=deform.widget.CheckboxChoiceWidget(values=group_choices,
+                                                      missing=colander.null,
+                                                      css_class="invitation")
+            )
+
+    class InvitationsAndGroupsSequenceSchema(colander.SequenceSchema):
+        invitation_and_groups = InvitationAndGroupsSchema(title=_(u'Groups for invitation'),)
+
+
     class Schema(colander.Schema):
         userids_and_groups = UserIDsAndGroupsSequenceSchema(title=_(u'Group settings for users'))
+        invitations_and_groups = InvitationsAndGroupsSequenceSchema(title=_(u'Invitations'))
     
     return Schema()
