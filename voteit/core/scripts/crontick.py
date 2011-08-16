@@ -1,35 +1,47 @@
-import transaction
 from calendar import timegm
 
-from pyramid.traversal import find_resource
+import transaction
+from pyramid.util import DottedNameResolver
 
 from voteit.core.scripts.worker import ScriptWorker
 from voteit.core.models.date_time_util import utcnow
-from voteit.core.security import unrestricted_wf_transition_to
 
+def _find_methods(worker):
+    cronjobsentry = worker.app.registry.settings.get('cronjobs')
+    if cronjobsentry is None:
+        raise ValueError("cronjobs must exist in application configuration if you want to run this. "
+                         "It should point to methods that can be run by the crontick worker. "
+                         "See voteit.core.scripts.crontick")
+
+    resolver = DottedNameResolver(None)
+
+    dotteds = [x.strip() for x in cronjobsentry.strip().splitlines()]
+    methods = []
+    for dotted in dotteds:
+        try:
+            methods.append(resolver.resolve(dotted))
+        except ImportError, e:
+            worker.logger.exception(e)
+    return methods
 
 def crontick():
-    #FIXME: Needs to be very defensive and handle exceptions
-    #FIXME: Needs to log somewhere, perhaps so administrators can read the log online
     
     worker = ScriptWorker('crontick')
-    catalog = worker.root.catalog
-    address_for_docid = catalog.document_map.address_for_docid
-    query = catalog.query
     
-    def _resolve_obj(id):
-        path = address_for_docid(id)
-        return find_resource(worker.root, path)
+    unixnow = timegm(utcnow().timetuple())
+
+    #Find methods to execute and run them
+    methods = _find_methods(worker)
     
-    unix_now = timegm(utcnow().timetuple())
+    for method in methods:
+        try:
+            method(worker, unixnow)
+            transaction.commit()
+            print "=== Transaction for %s committed" % method
+        except Exception, e:
+            worker.logger.exception(e)
+            transaction.abort()
+            print "=== Transaction for %s aborted" % method
     
-    #Open polls
-    q_str = "start_time <= %s and workflow_state == 'planned' and content_type == 'Poll'" % unix_now
-    for id in query(q_str)[1]:
-        obj = _resolve_obj(id)
-        unrestricted_wf_transition_to(obj, 'ongoing')
-        print "setting ongoing for %s" % obj
-    
-    transaction.commit()
     worker.shutdown()
     
