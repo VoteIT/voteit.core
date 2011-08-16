@@ -12,4 +12,10 @@
     </tal:loop>
     <input type="hidden" name="__end__"/>
 </div>
-
+<script type="text/javascript">
+    if(deform) {
+        deform.addCallback('${field.oid}', function(oid) {
+            $('#'+oid).find('input.star').rating();
+        });
+    }
+</script>
