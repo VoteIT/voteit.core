@@ -28,7 +28,6 @@ class ScriptWorker(object):
 
         #setup logging
         self._setup_log()
-        self.logger.info('HELLO!')
 
         #PID file name
         rel = os.path.join(self.buildoutpath, 'var', 'worker_%s.pid' % self.id)
@@ -36,14 +35,18 @@ class ScriptWorker(object):
         
         #Check if PID exists
         if os.path.exists(self.pidfile):
-            sys.exit("PID-file already exists. Maybe the script is already running?")
+            #Is this correct?
+            msg = "PID-file already exists. Maybe the script is already running?"
+            self.logger.exception(msg)
+            sys.exit(msg)
+            
         
         #Start wsgi stuff
         config = os.path.join(self.buildoutpath, 'etc', 'development.ini') #FIXME: buildout info for script?
         config = os.path.abspath(os.path.normpath(config))
-        app = loadapp('config:%s' % config, name='voteit.core')
-        self.root, self.closer = get_root(app)
-
+        self.app = loadapp('config:%s' % config, name='voteit.core')
+        self.root, self.closer = get_root(self.app)
+        
         print 'Worker initialized'
 
         #write pid
@@ -76,7 +79,6 @@ class ScriptWorker(object):
         
         self.logger = logger
         
-
     def _write_pid_file(self):
         with open(self.pidfile, 'w') as f:
             f.write( "%s" % os.getpid() )
@@ -86,6 +88,5 @@ class ScriptWorker(object):
 
     def shutdown(self):
         """ Close the application. """
-        print 'Comitting changes'
         self._remove_pid_file()
         sys.exit(0)
