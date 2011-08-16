@@ -78,7 +78,7 @@ class EditGroups(object):
         return self.response
         
     @view_config(context=IMeeting, name="edit_groups", renderer=DEFAULT_TEMPLATE, permission=MANAGE_GROUPS)
-    def root_group_form(self):
+    def meeting_group_form(self):
         schema = get_groups_schema(self.context)
         add_csrf_token(self.context, self.request, schema)
 
@@ -97,7 +97,8 @@ class EditGroups(object):
                 return self.response
             
             #Set permissions
-            self.context.update_from_form(appstruct['userids_and_groups'])
+            self.context.update_userids_permissions_from_form(appstruct['userids_and_groups'])
+            self.context.update_tickets_permissions_from_form(appstruct['invitations_and_groups'])
             
             url = resource_url(self.context, self.request)
             
@@ -108,7 +109,7 @@ class EditGroups(object):
             return HTTPFound(location=url)
 
         #No action - Render edit form
-        appstruct = self.context.get_security_appstruct()
+        appstruct = self.context.get_security_and_invitations_appstruct()
         
         self.response['form'] = self.form.render(appstruct=appstruct)
         return self.response
