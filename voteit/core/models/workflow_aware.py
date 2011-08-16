@@ -33,10 +33,9 @@ class WorkflowAware(object):
         
     def set_workflow_state(self, request, state):
         """ Set a workflow state. """
-        old_state = self.get_workflow_state()
-        objectEventNotify(WorkflowStateChange(self, old_state, state))
-        
+        old_state = self.get_workflow_state()        
         self.workflow.transition_to_state(self, request, state)
+        objectEventNotify(WorkflowStateChange(self, old_state, state))
 
     def make_workflow_transition(self, request, transition):
         """ Do a specific workflow transition. """

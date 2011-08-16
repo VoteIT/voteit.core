@@ -10,6 +10,7 @@ from BTrees.OOBTree import OOBTree
 from voteit.core.models.interfaces import IBaseContent
 from voteit.core.models.security_aware import SecurityAware
 from voteit.core.models.date_time_util import utcnow
+import colander
 
 #FIXME: This should be changable some way.
 #Things that should never be saved

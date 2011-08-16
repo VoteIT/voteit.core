@@ -1,5 +1,6 @@
 import unittest
 from datetime import datetime
+from calendar import timegm
 
 from pyramid import testing
 from pyramid.authentication import AuthTktAuthenticationPolicy
@@ -17,6 +18,7 @@ from voteit.core.events import ObjectUpdatedEvent
 from voteit.core.testing import testing_sql_session
 from voteit.core import security
 from voteit.core.security import groupfinder
+from voteit.core.models.date_time_util import utcnow
 
 
 authn_policy = AuthTktAuthenticationPolicy(secret='sosecret',
@@ -194,7 +196,6 @@ class CatalogIndexTests(CatalogTestCase):
         """
         obj = self._add_mock_meeting()
         from datetime import datetime
-        from calendar import timegm
         meeting_unix = timegm(obj.created.timetuple())
         
         self.assertEqual(self.query("created == %s and path == '/meeting'" % meeting_unix)[0], 1)
@@ -219,8 +220,41 @@ class CatalogIndexTests(CatalogTestCase):
         self.assertEqual(self.query("'everything works as expected' in searchable_text")[0], 1)
         #FIXME: Not possible to search on "Not", wtf?
         self.assertEqual(self.query("'We are 404' in searchable_text")[0], 0)
+
+    def test_start_time(self):
+        obj = self._add_mock_meeting()
+
+        now = utcnow()
+        now_unix = timegm(now.timetuple())
         
+        #Shouldn't return anything
+        self.assertEqual(self.query("start_time == %s and path == '/meeting'" % now_unix)[0], 0)
+        qy = ("%s < start_time < %s and path == '/meeting'" % (now_unix-1, now_unix+1))
+        self.assertEqual(self.query(qy)[0], 0)
         
+        #So let's set it and return stuff
+        obj.set_field_value('start_time', now)
+        from voteit.core.models.catalog import reindex_indexes
+        reindex_indexes(self.root.catalog)
+        
+        self.assertEqual(self.query("start_time == %s and path == '/meeting'" % now_unix)[0], 1)
+        qy = ("%s < start_time < %s and path == '/meeting'" % (now_unix-1, now_unix+1))
+        self.assertEqual(self.query(qy)[0], 1)
+
+    def test_end_time(self):
+        obj = self._add_mock_meeting()
+
+        now = utcnow()
+        now_unix = timegm(now.timetuple())
+        
+        obj.set_field_value('end_time', now)
+        from voteit.core.models.catalog import reindex_indexes
+        reindex_indexes(self.root.catalog)
+        
+        self.assertEqual(self.query("end_time == %s and path == '/meeting'" % now_unix)[0], 1)
+        qy = ("%s < end_time < %s and path == '/meeting'" % (now_unix-1, now_unix+1))
+        self.assertEqual(self.query(qy)[0], 1)
+
 
 class CatalogMetadataTests(CatalogTestCase):
     """ Test metadata creation. This test also covers catalog subscribers.

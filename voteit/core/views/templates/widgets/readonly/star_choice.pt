@@ -13,7 +13,11 @@
     <input type="hidden" name="__end__"/>
 </div>
 <script type="text/javascript">
-    $(document).ready(function() {
-        $('#${field.oid}').find('input.star').rating('readOnly',true);
-    })
+    if(deform) {
+        deform.addCallback('${field.oid}', function(oid) {
+            // unless we set rating on the input explicitly it its not possbile to set readOnly on it
+            $('#'+oid).find('input.star').rating();
+            $('#'+oid).find('input.star').rating('readOnly',true);
+        });
+    }
 </script>

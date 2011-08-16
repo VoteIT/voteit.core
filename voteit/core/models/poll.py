@@ -270,13 +270,11 @@ def construct_schema(context=None, request=None, **kwargs):
 
         start_time = colander.SchemaNode(
              TZDateTime(local_tz),
-             missing = colander.null,
              title = _(u"Start time of this poll."),
              description = _(u"It will be opened automatically when this time has passed."),
         )
         end_time = colander.SchemaNode(
              TZDateTime(local_tz),
-             missing = colander.null,
              title = _(u"End time of this poll."),
              description = _(u"It will be closed automatically when this time has passed."),
         )
