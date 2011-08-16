@@ -29,6 +29,7 @@ RETRACT = 'Retract'
 CHANGE_WORKFLOW_STATE = 'Change Workflow State'
 CHANGE_PASSWORD = 'Change Password'
 MANAGE_GROUPS = 'Manage Groups'
+MANAGE_SERVER = 'Manage Server'
 MODERATE_MEETING = 'Moderate Meeting'
 REQUEST_MEETING_ACCESS = 'Request Meeting Access'
 

@@ -1,0 +1,26 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      metal:use-macro="api.main_template.macros['master']">
+<body>
+<div metal:fill-slot="page_heading">
+	<h1>VoteIT logs</h1>
+</div>
+<div metal:fill-slot="content">
+
+    <ul>
+    <tal:iterate repeat="filename logfiles">
+    	<li><a tal:attributes="href string:?file=$filename" tal:content="filename">
+    		Filename
+    	</a></li>
+    </tal:iterate>
+	</ul>
+	
+	<h3 tal:condition="not current_log">Select a log above</h3>
+	<h3 tal:condition="current_log">Current log: <span tal:replace="current_log">logfile</span></h3>
+	<pre cols="80" rows="40" tal:content="logdata" tal:condition="logdata">Log content</pre>
+
+</div>
+</body>
+</html>

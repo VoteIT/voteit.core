@@ -5,6 +5,8 @@ import logging
 from paste.deploy import loadapp
 from pyramid.scripting import get_root
 
+#FIXME: Need tests for scriptworker
+#FIXME: Log file should be read the same way as if paster executed the server
 
 class ScriptWorker(object):
     
