@@ -57,6 +57,11 @@
 			class="dropdown_menu menuitem">
 	        <a class="buttonize" tal:attributes="href api.resource_url(context, request) + '@@edit_groups'">Permissions</a>
 		</li>
+        <li tal:condition="context.content_type == 'SiteRoot' and
+                           context_has_permission('Manage Server', context)"
+            class="dropdown_menu menuitem">
+            <a class="buttonize" tal:attributes="href api.resource_url(context, request) + '@@logs'">Server logs</a>
+        </li>
 	</tal:admin>
 	
 	<tal:moderator condition="is_moderator">
