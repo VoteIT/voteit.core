@@ -6,6 +6,7 @@ from pyramid.util import DottedNameResolver
 from voteit.core.scripts.worker import ScriptWorker
 from voteit.core.models.date_time_util import utcnow
 
+
 def _find_methods(worker):
     cronjobsentry = worker.app.registry.settings.get('cronjobs')
     if cronjobsentry is None:
