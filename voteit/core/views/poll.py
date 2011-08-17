@@ -15,6 +15,8 @@ from voteit.core.security import EDIT, VIEW
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.schemas import add_csrf_token
 
+from base_edit import DEFAULT_TEMPLATE
+
 
 class PollView(object):
     """ View class for poll objects """
@@ -94,3 +96,17 @@ class PollView(object):
         plugin = self.context.get_poll_plugin()
         return plugin.render_raw_data()
     
+    @view_config(context=IPoll, name="state", renderer=DEFAULT_TEMPLATE)
+    def state_change(self):
+        """ Change workflow state for context.
+            Note that if this view is called without the required permission,
+            it will raise a WorkflowError exception. This view should
+            never be linked to without doing the proper permission checks first.
+            (Since the WorkflowError is not the same as Pyramids Forbidden exception,
+            which will be handled by the application.)
+        """
+        state = self.request.params.get('state')
+        self.context.set_workflow_state(self.request, state)
+        
+        url = resource_url(self.context.__parent__, self.request)
+        return HTTPFound(location=url)
