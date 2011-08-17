@@ -14,26 +14,27 @@
     <link href="${request.application_url}/static/main.css" rel="stylesheet" type="text/css" />
     <link href="${request.application_url}/static/jquery.rating.css" rel="stylesheet" type="text/css" />
     <link href="${request.application_url}/static/ui-lightness/jquery-ui-1.8.15.custom.css" rel="stylesheet" type="text/css" />
+
+    <script type="text/javascript" src="${request.application_url}/deform/scripts/jquery-1.4.2.min.js"></script>
+    <script type="text/javascript" src="${request.application_url}/static/jquery-ui-1.8.15.custom.min.js"></script>
+    <script type="text/javascript" src="${request.application_url}/static/jquery.rating.js"></script>
+	<script type="text/javascript" src="${request.application_url}/static/ajax.js"></script>
+	<script type="text/javascript" src="${request.application_url}/static/jquery.qtip.js"></script>
+	<script type="text/javascript" src="${request.application_url}/static/jquery.easy-confirm-dialog.js"></script>
+
 	<tal:deform tal:condition="form_resources|False">
     <tal:css repeat="css_file form_resources['css']|[]">
     <link rel="stylesheet"
           tal:attributes="href string:/deform/${css_file}" type="text/css" />
     </tal:css>
-    <tal:js repeat="js_file form_resources['js']|[]">
-    <script type="text/javascript"
-            tal:attributes="src string:/deform/${js_file}"></script>
-    </tal:js>
+    <script type="text/javascript" src="${request.application_url}/deform/scripts/deform.js"></script>
+    <script type="text/javascript" src="${request.application_url}/deform/scripts/jquery-ui-timepicker-addon.js"></script>
+    <script type="text/javascript" src="${request.application_url}/deform/scripts/jquery.form.js"></script>
+    <script type="text/javascript" src="${request.application_url}/deform/scripts/jquery.maskedinput-1.2.2.min.js"></script>
     <script type="text/javascript">
         deform.load()
     </script>
     </tal:deform>
-    <tal:notdeform tal:condition="not form_resources|True">
-    <script type="text/javascript" src="${request.application_url}/deform/scripts/jquery-1.4.2.min.js"></script>
-    </tal:notdeform>
-    <script type="text/javascript" src="${request.application_url}/static/jquery.rating.js"></script>
-	<script type="text/javascript" src="${request.application_url}/static/ajax.js"></script>
-	<script type="text/javascript" src="${request.application_url}/static/jquery.qtip.js"></script>
-	<script type="text/javascript" src="${request.application_url}/static/jquery.easy-confirm-dialog.js"></script>
 
 	<metal:head define-slot="head"></metal:head>
 	
