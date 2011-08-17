@@ -84,39 +84,13 @@ class SecurityAware(object):
             self._check_groups(ticket['groups'])
             self.invite_tickets[ticket['email']].roles = tuple(ticket['groups'])
 
-    def get_security_appstruct(self):
-        """ Return the current settings in a structure that is usable in a deform form.
+    def get_security(self):
+        """ Return the current security settings.
         """
-        root = find_root(self)
-        users = root['users']
-        appstruct = {}
         userids_and_groups = []
         for userid in self._groups:
-            user = users[userid]
-            userids_and_groups.append({'userid':userid, 'groups':self.get_groups(userid), 'email':user.get_field_value('email')})
-        appstruct['userids_and_groups'] = userids_and_groups
-        return appstruct
-
-
-    def get_security_and_invitations_appstruct(self):
-        """ Return the current settings in a structure that is usable in a deform form,
-            including invitations.
-        """
-        root = find_root(self)
-        users = root['users']
-        appstruct = {}
-        userids_and_groups = []
-        invitations_and_groups = []
-        for userid in self._groups:
-            user = users[userid]
-            userids_and_groups.append({'userid':userid, 'groups':self.get_groups(userid), 'email':user.get_field_value('email')})
-        for ticket in self.invite_tickets.values():
-            if ticket.get_workflow_state() != u'closed':
-                invitations_and_groups.append({'email':ticket.email, 'groups':tuple(ticket.roles)})
-        appstruct['userids_and_groups'] = userids_and_groups
-
-        appstruct['invitations_and_groups'] = invitations_and_groups
-        return appstruct
+            userids_and_groups.append({'userid':userid, 'groups':self.get_groups(userid)})
+        return userids_and_groups
 
     def _check_groups(self, groups):
         for group in groups:

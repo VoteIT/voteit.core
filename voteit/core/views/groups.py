@@ -41,6 +41,39 @@ class EditGroups(object):
         self.response['api'] = self.api = APIView(context, request)
 
 
+    def get_security_appstruct(self, context):
+        """ Return the current settings in a structure that is usable in a deform form.
+        """
+        root = find_root(context)
+        users = root['users']
+        appstruct = {}
+        userids_and_groups = []
+        for userid in context._groups:
+            user = users[userid]
+            userids_and_groups.append({'userid':userid, 'groups':context.get_groups(userid), 'email':user.get_field_value('email')})
+        appstruct['userids_and_groups'] = userids_and_groups
+        return appstruct
+
+    def get_security_and_invitations_appstruct(self, context):
+        """ Return the current settings in a structure that is usable in a deform form,
+            including invitations.
+        """
+        root = find_root(context)
+        users = root['users']
+        appstruct = {}
+        userids_and_groups = []
+        invitations_and_groups = []
+        for userid in context._groups:
+            user = users[userid]
+            userids_and_groups.append({'userid':userid, 'groups':context.get_groups(userid), 'email':user.get_field_value('email')})
+        for ticket in context.invite_tickets.values():
+            if ticket.get_workflow_state() != u'closed':
+                invitations_and_groups.append({'email':ticket.email, 'groups':tuple(ticket.roles)})
+        appstruct['userids_and_groups'] = userids_and_groups
+
+        appstruct['invitations_and_groups'] = invitations_and_groups
+        return appstruct
+
     @view_config(context=IMeeting, name="edit_permissions", renderer=DEFAULT_TEMPLATE, permission=MANAGE_GROUPS)
     @view_config(context=ISiteRoot, name="edit_groups", renderer=DEFAULT_TEMPLATE, permission=MANAGE_GROUPS)
     def root_group_form(self):
@@ -110,7 +143,7 @@ class EditGroups(object):
             return HTTPFound(location=url)
 
         #No action - Render edit form
-        appstruct = self.context.get_security_and_invitations_appstruct()
+        appstruct = self.get_security_and_invitations_appstruct(self.context)
         
         self.response['form'] = self.form.render(appstruct=appstruct)
         return self.response

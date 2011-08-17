@@ -3,8 +3,6 @@ import unittest
 from pyramid import testing
 
 
-
-
 class SecurityAwareTests(unittest.TestCase):
     def setUp(self):
         self.config = testing.setUp()
@@ -52,16 +50,16 @@ class SecurityAwareTests(unittest.TestCase):
         obj = self._make_obj()
         self.assertRaises(ValueError, obj.add_groups, 'tester', ['Hipsters'])
 
-    def test_get_security_appstruct(self):
+    def test_get_security(self):
         obj = self._make_obj()
-        self.assertEqual(obj.get_security_appstruct(), {'userids_and_groups': []})
-        obj.set_groups('robin', ['role:Admin', 'group:Hipsters'])
-        self.assertEqual(obj.get_security_appstruct(),
-                         {'userids_and_groups': [{'userid': 'robin', 'groups': ('group:Hipsters', 'role:Admin')}]})
 
-    def test_update_from_form(self):
+        self.assertEqual(obj.get_security(), [])
+        obj.set_groups('robin', ['role:Admin', 'group:Hipsters'])
+        self.assertEqual(obj.get_security(),[{'userid': 'robin', 'groups': ('group:Hipsters', 'role:Admin')}])
+
+    def test_update_userids_permissions_from_form(self):
         obj = self._make_obj()
-        obj.update_from_form([{'userid': 'robin', 'groups': ('group:DeathCab', 'role:Moderator')}])
+        obj.update_userids_permissions_from_form([{'userid': 'robin', 'groups': ('group:DeathCab', 'role:Moderator')}])
         self.assertEqual(obj._groups['robin'], ('group:DeathCab', 'role:Moderator'))
 
     def test_list_all_groups(self):
