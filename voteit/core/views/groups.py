@@ -119,7 +119,7 @@ class EditGroups(object):
         self.response['form'] = self.form.render(appstruct=appstruct)
         return self.response
         
-    @view_config(context=IMeeting, name="edit_groups", renderer=DEFAULT_TEMPLATE, permission=MANAGE_GROUPS)
+    @view_config(context=IMeeting, name="participants", renderer=DEFAULT_TEMPLATE, permission=MANAGE_GROUPS)
     def meeting_group_form(self):
         schema = get_groups_schema(self.context)
         add_csrf_token(self.context, self.request, schema)
@@ -142,10 +142,6 @@ class EditGroups(object):
             self.context.update_userids_permissions(appstruct['userids_and_groups'])
             self.update_tickets_permissions(self.context, appstruct['invitations_and_groups'])
             
-            url = resource_url(self.context, self.request)
-            
-            return HTTPFound(location=url)
-
         if 'cancel' in post:
             url = resource_url(self.context, self.request)
             return HTTPFound(location=url)
