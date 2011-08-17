@@ -167,6 +167,12 @@ def get_groups_schema(context):
 
 
     class InvitationAndGroupsSchema(colander.Schema):
+        #Userid will always be empty for invitations
+        userid = colander.SchemaNode(
+            colander.String(),
+            widget = userid_widget,
+            missing = None,
+            )
         email = colander.SchemaNode(
             colander.String(),
             validator=colander.OneOf(email_choices),
