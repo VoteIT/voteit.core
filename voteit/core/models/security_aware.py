@@ -62,11 +62,11 @@ class SecurityAware(object):
         self._check_groups(groups)
         self._groups[principal] = tuple(groups)
 
-    def update_userids_permissions_from_form(self, value):
+    def update_userids_permissions(self, value):
         """ Set permissions from a list of dicts with the following layout:
             {'userid':<userid>,'groups':<set of groups that the user should have>}.
         """
-        #Unset all permissions from users that have them but didn't exist in the submitted form
+        #Unset all permissions from users that exist but aren't provided
         submitted_userids = [x['userid'] for x in value]
         for userid in self._groups:
             if userid not in submitted_userids:
@@ -75,14 +75,6 @@ class SecurityAware(object):
         #Set the new permissions
         for item in value:
             self.set_groups(item['userid'], item['groups'])
-
-    def update_tickets_permissions_from_form(self, value):
-        """ Set tickets permissions from a list of dicts with the following layout:
-            {'email':<email>,'groups':<set of groups that the user should have>}.
-        """
-        for ticket in value:
-            self._check_groups(ticket['groups'])
-            self.invite_tickets[ticket['email']].roles = tuple(ticket['groups'])
 
     def get_security(self):
         """ Return the current security settings.

@@ -94,14 +94,9 @@ class ISecurityAware(Interface):
         """ Set groups for a principal in this context. (This clears any previous setting)
         """
 
-    def update_userids_permissions_from_form(value):
+    def update_userids_permissions(value):
         """ Set permissions from a list of dicts with the following layout:
             {'userid':<userid>,'groups':<set of groups that the user should have>}.
-        """
-
-    def update_tickets_permissions_from_form(value):
-        """ Set tickets permissions from a list of dicts with the following layout:
-            {'email':<email>,'groups':<set of groups that the user should have>}.
         """
 
     def get_security():

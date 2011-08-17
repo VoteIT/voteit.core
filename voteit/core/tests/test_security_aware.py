@@ -57,9 +57,9 @@ class SecurityAwareTests(unittest.TestCase):
         obj.set_groups('robin', ['role:Admin', 'group:Hipsters'])
         self.assertEqual(obj.get_security(),[{'userid': 'robin', 'groups': ('group:Hipsters', 'role:Admin')}])
 
-    def test_update_userids_permissions_from_form(self):
+    def test_update_userids_permissions(self):
         obj = self._make_obj()
-        obj.update_userids_permissions_from_form([{'userid': 'robin', 'groups': ('group:DeathCab', 'role:Moderator')}])
+        obj.update_userids_permissions([{'userid': 'robin', 'groups': ('group:DeathCab', 'role:Moderator')}])
         self.assertEqual(obj._groups['robin'], ('group:DeathCab', 'role:Moderator'))
 
     def test_list_all_groups(self):
