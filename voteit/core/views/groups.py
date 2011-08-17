@@ -74,6 +74,14 @@ class EditGroups(object):
         appstruct['invitations_and_groups'] = invitations_and_groups
         return appstruct
 
+    def update_tickets_permissions(self, context, value):
+        """ Set tickets permissions from a list of dicts with the following layout:
+            {'email':<email>,'groups':<set of groups that the user should have>}.
+        """
+        for ticket in value:
+            context._check_groups(ticket['groups'])
+            context.invite_tickets[ticket['email']].roles = tuple(ticket['groups'])
+
     @view_config(context=IMeeting, name="edit_permissions", renderer=DEFAULT_TEMPLATE, permission=MANAGE_GROUPS)
     @view_config(context=ISiteRoot, name="edit_groups", renderer=DEFAULT_TEMPLATE, permission=MANAGE_GROUPS)
     def root_group_form(self):
@@ -131,8 +139,8 @@ class EditGroups(object):
                 return self.response
             
             #Set permissions
-            self.context.update_userids_permissions_from_form(appstruct['userids_and_groups'])
-            self.context.update_tickets_permissions_from_form(appstruct['invitations_and_groups'])
+            self.context.update_userids_permissions(appstruct['userids_and_groups'])
+            self.update_tickets_permissions(context, appstruct['invitations_and_groups'])
             
             url = resource_url(self.context, self.request)
             
