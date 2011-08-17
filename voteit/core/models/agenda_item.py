@@ -105,12 +105,6 @@ def construct_schema(**kwargs):
     if current_numbers:
         suggested_id = str(max(current_numbers)+1)
 
-    #Internal methods
-    def _validate_uniqueness_ai_id(node, value):
-        """ Requires current_ids to be set. """
-        if value in current_ids:
-            raise colander.Invalid(node, _(u"This value isn't unique within this meeting."))
-
     dt_util = getUtility(IDateTimeUtil)
     local_tz = dt_util.timezone
         
@@ -126,15 +120,6 @@ def construct_schema(**kwargs):
             missing = u"",
             widget=deform.widget.TextAreaWidget(rows=10, cols=60),
             validator=html_string_validator,
-        )
-        agenda_item_id = colander.SchemaNode(
-            colander.String(),
-            title = _(u"Agenda Item ID."),
-            description = _(u"Normally this will be a number. If it's an integer, "
-                            "it will be used for sorting. Must be unique regardless of value."),
-            default = suggested_id,
-            missing = u"",
-            validator = _validate_uniqueness_ai_id,
         )
         summary = colander.SchemaNode(
             colander.String(),
