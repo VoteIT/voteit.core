@@ -140,7 +140,7 @@ class EditGroups(object):
             
             #Set permissions
             self.context.update_userids_permissions(appstruct['userids_and_groups'])
-            self.update_tickets_permissions(context, appstruct['invitations_and_groups'])
+            self.update_tickets_permissions(self.context, appstruct['invitations_and_groups'])
             
             url = resource_url(self.context, self.request)
             
