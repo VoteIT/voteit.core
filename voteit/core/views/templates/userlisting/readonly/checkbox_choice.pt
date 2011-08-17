@@ -1,0 +1,15 @@
+<tal:loop tal:repeat="choice field.widget.values">
+     <tal:def tal:define="(value, title) choice">
+        <td class="deformSet-item">
+          <input tal:attributes="checked value in cstruct;
+                                 class field.widget.css_class"
+                 type="checkbox"
+                 name="checkbox"
+                 value="${value}"
+                 id="${field.oid}-${repeat.choice.index}"
+                 disabled="True" />
+          <label for="${field.oid}-${repeat.choice.index}">${title}</label>
+        </td>
+ </tal:def>
+</tal:loop>
+
