@@ -42,7 +42,7 @@ class TZDateTime(DateTime):
             return null
 
         try:
-            result = iso8601.parse_date(cstruct, self.default_tzinfo)
+            result = datetime.datetime.strptime(cstruct, "%Y-%m-%dT%H:%M")
 
             # python's datetime doesn't deal correctly with DST, so we have
             # to use the pytz localize function instead

@@ -133,6 +133,7 @@ def construct_schema(**kwargs):
             TZDateTime(local_tz),
             title = _(u"Start time of this Agenda Item."),
             description = _(u"It will be opened automatically when this time has passed."),
+            widget=deform.widget.DateTimeInputWidget(options={'timeFormat': 'hh:mm'}),
             missing = None,
         )
         #End-time is handled by a subscriber when it is closed

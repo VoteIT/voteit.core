@@ -2,7 +2,7 @@
 <div class="content_wrapper">
 	<tal:root condition="not api.meeting">
 	<h5>Available meetings</h5>
-	<tal:iterate repeat="meeting api.root.get_content(content_type='Meeting')">
+	<tal:iterate repeat="meeting api.get_restricted_content(api.root, content_type='Meeting')">
 		<h5>
 			<a tal:attributes="href api.resource_url(meeting, request)"
 			   tal:content="meeting.get_field_value('title')">Meeting title</a>
@@ -13,10 +13,10 @@
 	
 	<tal:inside_meeting condition="api.meeting">
 	<tal:agenda_items define="
-	                        agenda_items_active api.meeting.get_content(content_type='AgendaItem', state='active');
-                            agenda_items_inactive api.meeting.get_content(content_type='AgendaItem', state='inactive');
-                            agenda_items_closed api.meeting.get_content(content_type='AgendaItem', state='closed');
-                            agenda_items_private api.meeting.get_content(content_type='AgendaItem', state='private');">
+	                        agenda_items_active api.get_restricted_content(api.meeting, content_type='AgendaItem', state='active');
+                            agenda_items_inactive api.get_restricted_content(api.meeting, content_type='AgendaItem', state='inactive');
+                            agenda_items_closed api.get_restricted_content(api.meeting, content_type='AgendaItem', state='closed');
+                            agenda_items_private api.get_restricted_content(api.meeting, content_type='AgendaItem', state='private');">
 		<div class="browse_up">
 			<a tal:attributes="href api.resource_url(api.root, request)">&laquo; all meetings</a>
 		</div>
