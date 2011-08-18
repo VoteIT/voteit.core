@@ -20,14 +20,16 @@ class Unread(RDB_Base):
     userid = Column(Unicode(100))
     contextuid = Column(Unicode(40))
     created = Column(DateTime())
+    persistent = Column(Boolean())
     
-    def __init__(self, userid, contextuid, created=None):
+    def __init__(self, userid, contextuid, created=None, persistent=False):
         self.userid = unicodify(userid)
         self.contextuid = unicodify(contextuid)
         if created:
             self.created = created
         else:
             self.created = utcnow()
+        self.persistent = persistent
         
     def format_created(self):
         """ Lordag 3 apr 2010, 01:10
@@ -44,8 +46,8 @@ class Unreads(object):
     def __init__(self, session):
         self.session = session
     
-    def add(self, userid, contextuid):
-        unread = Unread(userid, contextuid)
+    def add(self, userid, contextuid, persistent=False):
+        unread = Unread(userid, contextuid, persistent=persistent)
         self.session.add(unread)
         
     def remove(self, userid, contextuid):
@@ -59,10 +61,12 @@ class Unreads(object):
     def remove_context(self, contextuid):
         self.session.query(Unread).filter(Unread.contextuid==contextuid).delete()
 
-    def retrieve(self, userid, contextuid=None):
+    def retrieve(self, userid, contextuid=None, persistent_only=False):
         query = self.session.query(Unread).filter(Unread.userid==userid)
         if contextuid:
             query = query.filter(Unread.contextuid==contextuid)
+        if persistent_only:
+            query = query.filter(Unread.persistent==persistent_only)
 
         query.order_by('created')
 

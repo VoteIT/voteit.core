@@ -199,9 +199,12 @@ class APIView(object):
         
     def is_unread(self, context, mark=False):
         unreads = Unreads(self.sql_session)
-        if len(unreads.retrieve(self.userid, context.uid)) > 0:
-            if mark:
-                unreads.remove(self.userid, context.uid)
+        unread_items = unreads.retrieve(self.userid, context.uid)
+        if unread_items:
+            # there should only be one anyways
+            for unread_item in unread_items:
+                if mark and not unread_item.persistent:
+                    unreads.remove(self.userid, context.uid)
             
             return True
             

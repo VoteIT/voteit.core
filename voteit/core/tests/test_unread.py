@@ -54,15 +54,15 @@ class UnreadTests(unittest.TestCase):
 
     def _add_mock_data(self, obj):
         data = (
-            ('robin','m1', ),
-            ('fredrik', 'm1'),
-            ('robin','p1'),
-            ('fredrik', 'p1'),
-            ('robin','v1'),
-            ('fredrik', 'v1'),
+            ('robin','m1', False),
+            ('fredrik', 'm1', False),
+            ('robin','p1', True),
+            ('fredrik', 'p1', True),
+            ('robin','v1', True),
+            ('fredrik', 'v1', False),
          )
-        for (userid, contextuid) in data:
-            obj.add(userid, contextuid)
+        for (userid, contextuid, persistent) in data:
+            obj.add(userid, contextuid, persistent)
 
     def test_verify_obj_implementation(self):
         from voteit.core.models.interfaces import IUnreads
@@ -132,6 +132,12 @@ class UnreadTests(unittest.TestCase):
 
         self.assertEqual(len(obj.retrieve(userid)), 3)
         self.assertEqual(len(obj.retrieve(userid, contextuid)), 1)
+
+    def test_retrieve_persistentonly(self):
+        obj = self._import_class()(self.session)
+        self._add_mock_data(obj)
+
+        self.assertEqual(len(obj.retrieve('robin', persistent_only=True)), 2)
         
     def test_added_subscriber_adds_to_unread(self):
         request = testing.DummyRequest()
