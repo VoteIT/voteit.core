@@ -34,7 +34,12 @@ def unread_message_added(message, event):
     session = getUtility(ISQLSession)()
     unreads = Unreads(session)
     userid = message.userid
-    unreads.add(userid, message.uid)
+    # This is just an example of persistent messages
+    if "Poll" in message.message:
+        persistent = True
+    else:
+        persistent = False
+    unreads.add(userid, message.uid, persistent=persistent)
 
 @subscriber(IUser, IObjectWillBeRemovedEvent)
 def unread_user_removed(obj, event):
