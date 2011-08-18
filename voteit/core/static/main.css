@@ -251,3 +251,8 @@ a {
 div.unread.listing_block {
     border-left: solid 1px black;
 }
+
+/* Notification messages */
+li.notification_message {
+	margin-bottom: 10px;
+}

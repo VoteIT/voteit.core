@@ -8,9 +8,9 @@
 
 <tal:messages condition="messages">
 	<h1>Messages</h1>
-  <ul>
+  <ul class="notification_messages">
   	<tal:messages tal:repeat="msg messages">
-      <li>
+      <li class="notification_message">
     		<p>Added: <span tal:content="msg.format_created()">1970-01-01</span></p>
         <p>Unread: <span tal:content="api.is_unread(msg, True)">True</span></p>
     		<div tal:content="msg.message">Earthlings, we come in peace!</div>
