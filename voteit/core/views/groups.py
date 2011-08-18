@@ -12,7 +12,7 @@ from deform.exception import ValidationFailure
 from webob.exc import HTTPFound
 
 from voteit.core.views.api import APIView
-from voteit.core.security import MANAGE_GROUPS
+from voteit.core.security import MANAGE_GROUPS, VIEW
 from voteit.core.models.security_aware import get_groups_schema
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import ISiteRoot
@@ -119,7 +119,7 @@ class EditGroups(object):
         self.response['form'] = self.form.render(appstruct=appstruct)
         return self.response
         
-    @view_config(context=IMeeting, name="participants", renderer=DEFAULT_TEMPLATE, permission=MANAGE_GROUPS)
+    @view_config(context=IMeeting, name="participants", renderer=DEFAULT_TEMPLATE, permission=VIEW)
     def meeting_group_form(self):
         schema = get_groups_schema(self.context)
         add_csrf_token(self.context, self.request, schema)
@@ -149,5 +149,6 @@ class EditGroups(object):
         #No action - Render edit form
         appstruct = self.get_security_and_invitations_appstruct(self.context)
         
-        self.response['form'] = self.form.render(appstruct=appstruct)
+        readonly = not self.api.context_has_permission(MANAGE_GROUPS, self.context)
+        self.response['form'] = self.form.render(appstruct=appstruct, readonly=readonly)
         return self.response

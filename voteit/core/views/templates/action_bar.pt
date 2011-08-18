@@ -30,9 +30,7 @@
         <tal:comment condition="False">
             Common functions for meeting.
         </tal:comment>
-        <li tal:condition="context.content_type in ['Meeting', 'SiteRoot'] and
-                           context_has_permission('Manage Groups', context)"
-            class="dropdown_menu menuitem">
+        <li class="dropdown_menu menuitem">
             <a class="buttonize" tal:attributes="href api.resource_url(context, request) + '@@participants'">Participants</a>
         </li>
 	</tal:meeting>
