@@ -13,6 +13,7 @@ from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IUser
 from voteit.core.models.interfaces import IDiscussionPost
 from voteit.core.models.interfaces import ISQLSession
+from voteit.core.models.interfaces import IMessage
 from voteit.core.models.unread import Unreads
 
 
@@ -27,6 +28,13 @@ def unread_content_added(obj, event):
     userids = security.find_authorized_userids(obj, (security.VIEW, ))
     for userid in userids:
         unreads.add(userid, obj.uid)
+
+@subscriber(IMessage, IObjectAddedEvent)
+def unread_message_added(message, event):
+    session = getUtility(ISQLSession)()
+    unreads = Unreads(session)
+    userid = message.userid
+    unreads.add(userid, message.uid)
 
 @subscriber(IUser, IObjectWillBeRemovedEvent)
 def unread_user_removed(obj, event):

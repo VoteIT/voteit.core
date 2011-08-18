@@ -10,4 +10,5 @@ class MessageView(BaseView):
     @view_config(context=IMeeting, name="messages", permission=VIEW, renderer='templates/messages.pt')
     def meeting_messages(self):
         self.response['messages'] = self.api.messages_adapter.retrieve_messages(self.context.uid, userid=self.api.userid)
+        self.response['msg_adapter'] = self.api.messages_adapter
         return self.response

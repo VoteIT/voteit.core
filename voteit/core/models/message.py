@@ -1,14 +1,24 @@
+import pytz
+from uuid import uuid4
+
 from sqlalchemy import Table, Column
 from sqlalchemy import Integer, Unicode, DateTime, Boolean
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import relationship
 from zope.component import getUtility
 from zope.interface import implements
+from zope.component.event import objectEventNotify
 from repoze.folder import unicodify
+from repoze.folder.events import ObjectAddedEvent
+from pyramid.threadlocal import get_current_registry
 
 from voteit.core import RDB_Base
 from voteit.core.models.interfaces import IMessages
+from voteit.core.models.interfaces import IDateTimeUtil
+from voteit.core.models.interfaces import IMessage
+from voteit.core.models.unread import Unreads
 from voteit.core.models.date_time_util import utcnow
+
 
 messages_tags = Table('messages_tags', RDB_Base.metadata,
     Column('message_id', Integer, ForeignKey('messages.id')),
@@ -18,30 +28,34 @@ messages_tags = Table('messages_tags', RDB_Base.metadata,
 class Message(RDB_Base):
     """ Persistance for a message.
     """
-    
+    implements(IMessage)
+
     __tablename__ = 'messages'
     id = Column(Integer, primary_key=True)
+    uid = Column(Unicode(40))
     meetinguid = Column(Unicode(40))
     message = Column(Unicode(250))
     tags = relationship("MessageTag", secondary=messages_tags, backref="messages")
     contextuid = Column(Unicode(40))
     userid = Column(Unicode(100))
-    unread = Column(Boolean())
     popup = Column(Boolean())
     created = Column(DateTime())
+
     
     def __init__(self, meetinguid, message, tags=(), contextuid=None, userid=None, popup=False, created=None):
         if not created:
             created = utcnow()
             
+        self.uid = unicode(uuid4())
         self.meetinguid = unicodify(meetinguid)
         self.message = unicodify(message)
         self.tags.extend(tags)
         self.contextuid = unicodify(contextuid)
         self.userid = unicodify(userid)
-        self.unread = True
         self.popup = popup
         self.created = created
+
+        objectEventNotify(ObjectAddedEvent(self, self.contextuid, self.uid))
     
     @property
     def string_tags(self):
@@ -53,7 +67,9 @@ class Message(RDB_Base):
     def format_created(self):
         """ Lordag 3 apr 2010, 01:10
         """
-        return self.created.strftime("%A %d %B %Y, %H:%M")
+        registry = get_current_registry()
+        dt_util = registry.getUtility(IDateTimeUtil)
+        return dt_util.dt_format(dt_util.localize(self.created, pytz.utc))
 
 
 class MessageTag(RDB_Base):
@@ -116,10 +132,17 @@ class Messages(object):
     def unreadcount_in_meeting(self, meeting_uid, userid):
         query = self.session.query(Message)
         query = query.filter(Message.meetinguid==meeting_uid)
-        query = query.filter(Message.unread==True)
         query = query.filter(Message.userid==userid)
-        return len(query.all())
+        messages = tuple(query.all())
+
+        unread_count = 0
+        unreads = Unreads(self.session)
+        for message in messages:
+            if len(unreads.retrieve(message.userid, message.uid)) > 0:
+                unread_count = unread_count + 1
         
+        return unread_count
+
     def tag_to_obj(self, tag):
         query = self.session.query(MessageTag).filter(MessageTag.tag==tag)
         if query.count() > 0:
