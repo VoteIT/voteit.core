@@ -272,11 +272,13 @@ def construct_schema(context=None, request=None, **kwargs):
              TZDateTime(local_tz),
              title = _(u"Start time of this poll."),
              description = _(u"It will be opened automatically when this time has passed."),
+             widget=deform.widget.DateTimeInputWidget(options={'timeFormat': 'hh:mm'}),
         )
         end_time = colander.SchemaNode(
              TZDateTime(local_tz),
              title = _(u"End time of this poll."),
              description = _(u"It will be closed automatically when this time has passed."),
+             widget=deform.widget.DateTimeInputWidget(options={'timeFormat': 'hh:mm'}),
         )
 
     return PollSchema()
