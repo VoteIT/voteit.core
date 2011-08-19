@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2011-08-19 15:00+0200\n"
+"POT-Creation-Date: 2011-08-19 15:26+0200\n"
 "PO-Revision-Date: 2011-08-19 10:51+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: sv <LL@li.org>\n"
@@ -18,7 +18,8 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 0.9.6\n"
 
-#: voteit/core/bootstrap.py:26 voteit/core/bootstrap.py:36
+#: voteit/core/bootstrap.py:26
+#: voteit/core/bootstrap.py:36
 #: voteit/core/models/meeting.py:107
 msgid "VoteIT"
 msgstr "VoteIT"
@@ -27,7 +28,8 @@ msgstr "VoteIT"
 msgid "Registered users"
 msgstr "Registrerade användare"
 
-#: voteit/core/bootstrap.py:37 voteit/core/security.py:56
+#: voteit/core/bootstrap.py:37
+#: voteit/core/security.py:56
 msgid "Administrator"
 msgstr "Administratör"
 
@@ -79,25 +81,23 @@ msgstr "Beskrivning"
 msgid "Summary of this item."
 msgstr "Sammanfattning av denna punkt."
 
+#: voteit/core/models/agenda_item.py:127
 #. Default: This could be what was decided. It will show up in the log on the
 #. meeting page.
-#: voteit/core/models/agenda_item.py:127
 msgid "ai_summary_description"
-msgstr ""
-"Det här kan vara beslut eller andra viktiga noter. Kommer visas i "
+msgstr "Det här kan vara beslut eller andra viktiga noter. Kommer visas i "
 "mötesloggen på mötessidan."
 
-#. Default: Estimated start time of this Agenda Item.
 #: voteit/core/models/agenda_item.py:135
+#. Default: Estimated start time of this Agenda Item.
 msgid "ai_start_time_title"
 msgstr "Planerad starttid för dagordningpunkten."
 
+#: voteit/core/models/agenda_item.py:137
 #. Default: No action will be taken automatically when the time has passed, so
 #. you need to open this item yourself.
-#: voteit/core/models/agenda_item.py:137
 msgid "ai_start_time_description"
-msgstr ""
-"Det här kan vara beslut eller andra viktiga noter. Kommer visas i "
+msgstr "Det här kan vara beslut eller andra viktiga noter. Kommer visas i "
 "mötesloggen på mötessidan."
 
 #: voteit/core/models/discussion_post.py:38
@@ -108,37 +108,24 @@ msgstr "Diskussionsinlägg"
 msgid "Text"
 msgstr "Text"
 
+#: voteit/core/models/invite_ticket.py:64
 #. Default:   -------------------------------------------------------------
 #. Click the link to access this VoteIT meeting: %(access_link)s  Have an
 #. account already? Simply login after clicking this link.  Need to register?
 #. Use the above link and simply register. You'll be granted access instantly.
 #. Don't want to register now? Remember that you need to click this link to
 #. gain access to the meeting you're invited to.  Warm regards, The VoteIT team
-#: voteit/core/models/invite_ticket.py:64
 msgid "ticket_claim_instructions"
-msgstr ""
-"-------------------------------------------------------------\n"
-"\"\n"
-"\"Klicka på länken för att komma in i VoteIT-mötet:\n"
-"\"\n"
-"\"%(access_link)s\n"
-"\"\n"
-"\"Har du ett konto redan?\n"
-"\"\n"
-"\"Logga in efter att du klickat på länken.\n"
-"\"\n"
-"\"Behöver du registrera dig?\n"
-"\"\n"
-"\"Använd länken ovan för att registrera dig. Du får tillgång till mötet "
-"direkt efter.\n"
-"\"\n"
-"\"Vill du inte registrera dig nu?\n"
-"\"\n"
-"\"Kom ihåg att du måste klicka på länken för att få tillgång till mötet\n"
-"\"\n"
-"\"du är inbjuden till.\n"
-"\"\n"
-"\"Varma hälsningar, VoteIT-gänget"
+msgstr "-------------------------------------------------------------"
+"Klicka på länken för att komma in i VoteIT-mötet:"
+"%(access_link)s"
+"Har du ett konto redan?"
+"Logga in efter att du klickat på länken."
+"Behöver du registrera dig?"
+"Använd länken ovan för att registrera dig. Du får tillgång till mötet direkt efter."
+"Vill du inte registrera dig nu?"
+"Kom ihåg att du måste klicka på länken för att få tillgång till mötet du är inbjuden till."
+"Varma hälsningar, VoteIT-gänget"
 
 #: voteit/core/models/invite_ticket.py:87
 msgid "VoteIT meeting invitation"
@@ -148,7 +135,8 @@ msgstr "VoteIT mötesinbjudan"
 msgid "Email address your invitation was sent to."
 msgstr "Epostadressen din inbjudan skickades till."
 
-#: voteit/core/models/invite_ticket.py:124 voteit/core/models/meeting.py:111
+#: voteit/core/models/invite_ticket.py:124
+#: voteit/core/models/meeting.py:111
 #: voteit/core/models/user.py:128
 msgid "Invalid email address."
 msgstr "Ogiltig epostadress"
@@ -185,12 +173,13 @@ msgstr "Välkomsttext i brevet som kommer skickas"
 msgid "No HTML tags allowed."
 msgstr "Inga HTML-taggar tillåtna."
 
-#. Default: You've received a meeting invitation for a VoteIT meeting.
 #: voteit/core/models/invite_ticket.py:166
+#. Default: You've received a meeting invitation for a VoteIT meeting.
 msgid "invitation_default_text"
 msgstr "Du har fått en inbjudan till ett VoteIT-möte."
 
-#: voteit/core/models/invite_ticket.py:180 voteit/core/views/meeting.py:204
+#: voteit/core/models/invite_ticket.py:180
+#: voteit/core/views/meeting.py:214
 msgid "Current invitations"
 msgstr "Nuvarande inbjudningar"
 
@@ -210,31 +199,32 @@ msgstr "Epostadress att skicka från"
 msgid "Poll"
 msgstr "Omröstning"
 
-#. Default: Proposal '%(name)s' already in state %(state)s
 #: voteit/core/models/poll.py:178
+#. Default: Proposal '%(name)s' already in state %(state)s
 msgid "change_prop_state_already_that_state_error"
 msgstr ""
 
-#. Default: Proposal '%(name)s' set as %(state)s
 #: voteit/core/models/poll.py:185
+#. Default: Proposal '%(name)s' set as %(state)s
 msgid "prop_state_changed_notice"
 msgstr ""
 
+#: voteit/core/models/poll.py:190
 #. Default: Proposal with id '%(name)s' couldn't be set as %(state)s. You
 #. should do this manually.
-#: voteit/core/models/poll.py:190
 msgid "prop_state_change_error"
 msgstr ""
 
+#: voteit/core/models/poll.py:195
 #. Default: Poll closed. Proposals might have been adjusted as approved or
 #. denied depending on outcome of the poll.
-#: voteit/core/models/poll.py:195
 msgid "poll_closed_info"
 msgstr ""
 
-#: voteit/core/models/poll.py:258 voteit/core/models/poll.py:260
+#: voteit/core/models/poll.py:258
+#: voteit/core/models/poll.py:260
 msgid "${val} is earlier than earliest date ${min}"
-msgstr ""
+msgstr "${val} är tidigare än tidigast möjliga tid ${min}"
 
 #: voteit/core/models/poll.py:280
 msgid "Start time of this poll."
@@ -242,7 +232,7 @@ msgstr "Starttid för omröstningen."
 
 #: voteit/core/models/poll.py:281
 msgid "You need to open it yourself."
-msgstr ""
+msgstr "Du behöver öppna den själv."
 
 #: voteit/core/models/poll.py:286
 msgid "End time of this poll."
@@ -252,13 +242,14 @@ msgstr "Sluttid för omröstningen."
 msgid "You need to close it yourself."
 msgstr "Du behöver stänga den själv."
 
+#: voteit/core/models/poll.py:316
 #. Default: Setting poll in planned state. It's now visible for meeting
 #. participants.
-#: voteit/core/models/poll.py:316
 msgid "poll_planned_state_notice"
 msgstr ""
 
-#: voteit/core/models/proposal.py:57 voteit/core/models/proposal.py:78
+#: voteit/core/models/proposal.py:57
+#: voteit/core/models/proposal.py:78
 msgid "Proposal"
 msgstr "Yrkande"
 
@@ -286,8 +277,8 @@ msgstr "Site rot"
 msgid "User"
 msgstr "Användare"
 
-#. Default: password link: %(pw_link)s
 #: voteit/core/models/user.py:83
+#. Default: password link: %(pw_link)s
 msgid "request_new_password_text"
 msgstr ""
 
@@ -295,11 +286,13 @@ msgstr ""
 msgid "Password reset request from VoteIT"
 msgstr "Begäran om nytt lösenord från VoteIT"
 
-#: voteit/core/models/user.py:147 voteit/core/models/user.py:169
+#: voteit/core/models/user.py:147
+#: voteit/core/models/user.py:169
 msgid "Password"
 msgstr "Lösenord"
 
 #: voteit/core/models/user.py:149
+#: voteit/core/views/templates/view_user.pt:12
 msgid "Email"
 msgstr "Epost"
 
@@ -311,19 +304,20 @@ msgstr "Förnamn"
 msgid "Last name"
 msgstr "Efternamn"
 
-#: voteit/core/models/user.py:167 voteit/core/models/user.py:226
+#: voteit/core/models/user.py:167
+#: voteit/core/models/user.py:226
 msgid "UserID or email address."
 msgstr "AnvändarID eller epostadress"
 
+#: voteit/core/models/user.py:187
 #. Default: UserID must be 3-15 chars, start with a-zA-Z and only contain
 #. regular latin chars, numbers, minus and underscore.
-#: voteit/core/models/user.py:187
 msgid "userid_char_error"
 msgstr ""
 
+#: voteit/core/models/user.py:189
 #. Default: UserID already registered. If it was registered by you, try to
 #. retrieve your password.
-#: voteit/core/models/user.py:189
 msgid "already_registered_error"
 msgstr ""
 
@@ -331,9 +325,9 @@ msgstr ""
 msgid "UserID"
 msgstr "AnvändarID"
 
+#: voteit/core/models/user.py:195
 #. Default: Used like a nick-name and as a unique id. You can't change this
 #. later.
-#: voteit/core/models/user.py:195
 msgid "userid_description"
 msgstr ""
 
@@ -341,13 +335,15 @@ msgstr ""
 msgid "About you"
 msgstr "Om dig"
 
+#: voteit/core/models/user.py:211
 #. Default: Please note that anything you type here will be visible to all
 #. registered users, even if they're not in the same meeting as you.
-#: voteit/core/models/user.py:211
 msgid "bio_visible_notice"
 msgstr ""
 
 #: voteit/core/models/users.py:15
+#: voteit/core/views/templates/list_users.pt:7
+#: voteit/core/views/templates/profile_toolbar.pt:15
 msgid "Users"
 msgstr "Användare"
 
@@ -359,9 +355,9 @@ msgstr "Röst"
 msgid "Your vote"
 msgstr "Din röst"
 
+#: voteit/core/models/vote.py:34
 #. Default: This is your vote. While the poll is open, you can delete or change
 #. it if you wish.
-#: voteit/core/models/vote.py:34
 msgid "your_vote_description"
 msgstr ""
 
@@ -393,14 +389,19 @@ msgstr "Nej"
 msgid "Yes"
 msgstr "Ja"
 
-#: voteit/core/views/base_edit.py:75 voteit/core/views/users.py:80
+#: voteit/core/views/base_edit.py:75
+#: voteit/core/views/users.py:80
 msgid "Successfully added"
 msgstr "Tillagd"
 
-#: voteit/core/views/base_edit.py:81 voteit/core/views/base_edit.py:131
-#: voteit/core/views/base_edit.py:165 voteit/core/views/catalog.py:48
-#: voteit/core/views/meeting.py:93 voteit/core/views/meeting.py:140
-#: voteit/core/views/meeting.py:198 voteit/core/views/users.py:86
+#: voteit/core/views/base_edit.py:81
+#: voteit/core/views/base_edit.py:131
+#: voteit/core/views/base_edit.py:165
+#: voteit/core/views/catalog.py:48
+#: voteit/core/views/meeting.py:103
+#: voteit/core/views/meeting.py:150
+#: voteit/core/views/meeting.py:208
+#: voteit/core/views/users.py:86
 #: voteit/core/views/vote.py:168
 msgid "Canceled"
 msgstr "Avbruten"
@@ -418,14 +419,17 @@ msgid "Nothing updated"
 msgstr "Inget uppdaterat"
 
 #: voteit/core/views/base_edit.py:136
+#: voteit/core/views/templates/action_bar.pt:4
 msgid "Edit"
 msgstr "Redigera"
 
-#: voteit/core/views/base_edit.py:159 voteit/core/views/vote.py:161
+#: voteit/core/views/base_edit.py:159
+#: voteit/core/views/vote.py:161
 msgid "Deleted"
 msgstr "Raderad"
 
-#: voteit/core/views/base_edit.py:170 voteit/core/views/vote.py:174
+#: voteit/core/views/base_edit.py:170
+#: voteit/core/views/vote.py:174
 msgid "Are you sure you want to delete this item?"
 msgstr "Är du säker på att du vill radera detta objekt?"
 
@@ -433,40 +437,40 @@ msgstr "Är du säker på att du vill radera detta objekt?"
 msgid "Remove"
 msgstr "Ta bort"
 
-#: voteit/core/views/meeting.py:26
+#: voteit/core/views/meeting.py:27
 msgid "You're not allowed access to this meeting."
 msgstr "Du har inte rätt att delta i mötet."
 
+#: voteit/core/views/meeting.py:69
 #. Default: To gain access to a meeting you need to use an access ticket that
 #. should have been mailed to you. If you've aldready registered, please login.
-#: voteit/core/views/meeting.py:59
 msgid "login_to_access_meeting_notice"
 msgstr ""
 
-#: voteit/core/views/meeting.py:87
+#: voteit/core/views/meeting.py:97
 msgid "You've been granted access to the meeting. Welcome!"
 msgstr "Du har fått rätt att delta i mötet. Välkommen!"
 
-#: voteit/core/views/meeting.py:98
+#: voteit/core/views/meeting.py:108
 msgid "Meeting Access"
 msgstr "Mötestillgång"
 
+#: voteit/core/views/meeting.py:143
 #. Default: Successfully added and sent %(mail_count)s invites
-#: voteit/core/views/meeting.py:133
 msgid "sent_tickets_text"
 msgstr ""
 
-#: voteit/core/views/meeting.py:146
+#: voteit/core/views/meeting.py:156
 msgid "Send meeting invitations"
 msgstr "Skicka mötesinbjudningar"
 
+#: voteit/core/views/meeting.py:189
 #. Default: Resending %(count_emails)s invites
-#: voteit/core/views/meeting.py:179
 msgid "resent_invites_notice"
 msgstr ""
 
+#: voteit/core/views/meeting.py:200
 #. Default: Deleting %(count_emails)s invites
-#: voteit/core/views/meeting.py:190
 msgid "deleting_invites_notice"
 msgstr ""
 
@@ -494,9 +498,9 @@ msgstr "Epost skickad."
 msgid "Username or email not found."
 msgstr "AnvändarID eller epost hittades inte"
 
+#: voteit/core/views/vote.py:55
 #. Default: You've already voted, but the poll is still open so you can change
 #. your vote if you want to.
-#: voteit/core/views/vote.py:55
 msgid "already_voted_poll_open"
 msgstr ""
 
@@ -528,6 +532,208 @@ msgstr "Redigera din röst"
 msgid "This is your vote"
 msgstr "Detta är din röst"
 
+#: voteit/core/views/templates/action_bar.pt:120
+msgid "Set state"
+msgstr "Sätt tillstånd"
+
+#: voteit/core/views/templates/action_bar.pt:110
+msgid "Name"
+msgstr "Namn"
+
+#: voteit/core/views/templates/action_bar.pt:107
+msgid "Content"
+msgstr "Innehåll"
+
+#: voteit/core/views/templates/action_bar.pt:100
+msgid "Manage invites"
+msgstr "Hantera inbjudningar"
+
+#: voteit/core/views/templates/action_bar.pt:93
+msgid "Invite participants"
+msgstr "Bjud in deltagare"
+
+#: voteit/core/views/templates/action_bar.pt:86
+msgid "Poll settings"
+msgstr "Inställningar för omröstning"
+
+#: voteit/core/views/templates/action_bar.pt:71
+msgid "Server logs"
+msgstr "Serverloggar"
+
+#: voteit/core/views/templates/action_bar.pt:60
+msgid "Retract"
+msgstr "Dra tillbaka"
+
+#: voteit/core/views/templates/action_bar.pt:44
+msgid "Participants"
+msgstr "Deltagare"
+
+#: voteit/core/views/templates/action_bar.pt:33
+msgid "Poll raw data"
+msgstr "Omröstningens rådata"
+
+#: voteit/core/views/templates/action_bar.pt:27
+msgid "Delete vote"
+msgstr "Radera röst"
+
+#: voteit/core/views/templates/action_bar.pt:21
+msgid "Change vote"
+msgstr "Ändra röst"
+
+#: voteit/core/views/templates/action_bar.pt:9
+msgid "Delete"
+msgstr "Radera"
+
+#: voteit/core/views/templates/agenda_item.pt:68
+#: voteit/core/views/templates/agenda_item.pt:26
+#: voteit/core/views/templates/main.pt:79
+msgid "State"
+msgstr "Tillstånd"
+
+#: voteit/core/views/templates/agenda_item.pt:64
+msgid "propose"
+msgstr "yrkar"
+
+#: voteit/core/views/templates/agenda_item.pt:58
+msgid "Proposal(s)"
+msgstr "Yrkande(n)"
+
+#: voteit/core/views/templates/agenda_item.pt:47
+msgid "Discussion"
+msgstr "Diskussion"
+
+#: voteit/core/views/templates/agenda_item.pt:42
+msgid "No polls yet"
+msgstr "Inga omröstningar än"
+
+#: voteit/core/views/templates/agenda_item.pt:21
+msgid "Poll method"
+msgstr "Omröstningsmetod"
+
+#: voteit/core/views/templates/agenda_item.pt:10
+msgid "Poll(s)"
+msgstr "Omröstning(ar)"
+
+#: voteit/core/views/templates/login_register.pt:19
+msgid "Registration"
+msgstr "Registrering"
+
+#: voteit/core/views/templates/login_register.pt:11
+#: voteit/core/views/templates/profile_toolbar.pt:38
+msgid "Login"
+msgstr "Logga in"
+
+#: voteit/core/views/templates/logs.pt:23
+msgid "Current log"
+msgstr "Nuvarande logg"
+
+#: voteit/core/views/templates/logs.pt:21
+msgid "Select a log above"
+msgstr "Välj en logg ovan"
+
+#: voteit/core/views/templates/logs.pt:7
+msgid "VoteIT logs"
+msgstr "VoteIT loggar"
+
+#: voteit/core/views/templates/meeting.pt:22
+#: voteit/core/views/templates/meeting.pt:16
+#: voteit/core/views/templates/meeting.pt:10
+msgid "Show all"
+msgstr "Visa alla"
+
+#: voteit/core/views/templates/meeting.pt:21
+msgid "This will happen"
+msgstr "Kommer att hända"
+
+#: voteit/core/views/templates/meeting.pt:15
+msgid "This is happening now"
+msgstr "Händer nu"
+
+#: voteit/core/views/templates/meeting.pt:9
+msgid "This has happened"
+msgstr "Har hänt"
+
+#: voteit/core/views/templates/messages.pt:23
+msgid "No messages"
+msgstr "Inga meddelanden"
+
+#: voteit/core/views/templates/messages.pt:15
+msgid "Unread"
+msgstr "Olästa"
+
+#: voteit/core/views/templates/messages.pt:14
+msgid "Added"
+msgstr "Tillagd"
+
+#: voteit/core/views/templates/messages.pt:10
+#: voteit/core/views/templates/profile_toolbar.pt:24
+msgid "Messages"
+msgstr "Meddelanden"
+
+#: voteit/core/views/templates/navigation.pt:22
+msgid "all meetings"
+msgstr "alla möten"
+
+#: voteit/core/views/templates/navigation.pt:4
+msgid "Available meetings"
+msgstr "Tillgängliga möten"
+
+#: voteit/core/views/templates/pending_access_requests.pt:7
+msgid "${access_count} pending access request(s)"
+msgstr "${access_count} förfrågningar om tillgång till möte"
+
+#: voteit/core/views/templates/profile_toolbar.pt:36
+msgid "Register"
+msgstr "Registrera"
+
+#: voteit/core/views/templates/profile_toolbar.pt:30
+msgid "Logout"
+msgstr "Logga ut"
+
+#: voteit/core/views/templates/profile_toolbar.pt:27
+msgid "Profile"
+msgstr "Profil"
+
+#: voteit/core/views/templates/profile_toolbar.pt:13
+msgid "Settings"
+msgstr "Inställningar"
+
+#: voteit/core/views/templates/profile_toolbar.pt:5
+msgid "Meeting search"
+msgstr "Sök i mötet"
+
+#: voteit/core/views/templates/protocol.pt:20
+msgid "by"
+msgstr "av"
+
+#: voteit/core/views/templates/search_result.pt:46
+msgid "Search above"
+msgstr "Sök ovan"
+
+#: voteit/core/views/templates/search_result.pt:43
+msgid "No results"
+msgstr "Inget resultat"
+
+#: voteit/core/views/templates/search_result.pt:22
+msgid "Search"
+msgstr "Sök"
+
+#: voteit/core/views/templates/time_info.pt:9
+msgid "ends"
+msgstr "slutar"
+
+#: voteit/core/views/templates/time_info.pt:4
+msgid "starts"
+msgstr "startar"
+
+#: voteit/core/views/templates/view_user.pt:13
+msgid "Biography"
+msgstr ""
+
+#: voteit/core/views/templates/view_user.pt:9
+msgid "Change password"
+msgstr "Ändra lösenord"
+
 #: voteit/core/views/templates/macros/expressions.pt:18
 msgid "and ${item_count} more "
 msgstr "och ${item_count} fler "
@@ -539,6 +745,10 @@ msgstr "och"
 #: voteit/core/views/templates/macros/expressions.pt:11
 msgid "You"
 msgstr "Du"
+
+#: voteit/core/views/templates/macros/flash_messages.pt:5
+msgid "OK"
+msgstr "OK"
 
 #: voteit/core/views/templates/userlisting/form.pt:21
 msgid "Errors have been highlighted below"

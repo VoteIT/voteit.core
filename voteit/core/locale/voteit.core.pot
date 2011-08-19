@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2011-08-19 15:00+0200\n"
+"POT-Creation-Date: 2011-08-19 15:26+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -164,7 +164,7 @@ msgstr ""
 msgid "invitation_default_text"
 msgstr ""
 
-#: voteit/core/models/invite_ticket.py:180 voteit/core/views/meeting.py:204
+#: voteit/core/models/invite_ticket.py:180 voteit/core/views/meeting.py:214
 msgid "Current invitations"
 msgstr ""
 
@@ -273,7 +273,7 @@ msgstr ""
 msgid "Password"
 msgstr ""
 
-#: voteit/core/models/user.py:149
+#: voteit/core/models/user.py:149 voteit/core/views/templates/view_user.pt:12
 msgid "Email"
 msgstr ""
 
@@ -321,7 +321,8 @@ msgstr ""
 msgid "bio_visible_notice"
 msgstr ""
 
-#: voteit/core/models/users.py:15
+#: voteit/core/models/users.py:15 voteit/core/views/templates/list_users.pt:7
+#: voteit/core/views/templates/profile_toolbar.pt:15
 msgid "Users"
 msgstr ""
 
@@ -373,8 +374,8 @@ msgstr ""
 
 #: voteit/core/views/base_edit.py:81 voteit/core/views/base_edit.py:131
 #: voteit/core/views/base_edit.py:165 voteit/core/views/catalog.py:48
-#: voteit/core/views/meeting.py:93 voteit/core/views/meeting.py:140
-#: voteit/core/views/meeting.py:198 voteit/core/views/users.py:86
+#: voteit/core/views/meeting.py:103 voteit/core/views/meeting.py:150
+#: voteit/core/views/meeting.py:208 voteit/core/views/users.py:86
 #: voteit/core/views/vote.py:168
 msgid "Canceled"
 msgstr ""
@@ -392,6 +393,7 @@ msgid "Nothing updated"
 msgstr ""
 
 #: voteit/core/views/base_edit.py:136
+#: voteit/core/views/templates/action_bar.pt:4
 msgid "Edit"
 msgstr ""
 
@@ -407,40 +409,40 @@ msgstr ""
 msgid "Remove"
 msgstr ""
 
-#: voteit/core/views/meeting.py:26
+#: voteit/core/views/meeting.py:27
 msgid "You're not allowed access to this meeting."
 msgstr ""
 
 #. Default: To gain access to a meeting you need to use an access ticket that
 #. should have been mailed to you. If you've aldready registered, please login.
-#: voteit/core/views/meeting.py:59
+#: voteit/core/views/meeting.py:69
 msgid "login_to_access_meeting_notice"
 msgstr ""
 
-#: voteit/core/views/meeting.py:87
+#: voteit/core/views/meeting.py:97
 msgid "You've been granted access to the meeting. Welcome!"
 msgstr ""
 
-#: voteit/core/views/meeting.py:98
+#: voteit/core/views/meeting.py:108
 msgid "Meeting Access"
 msgstr ""
 
 #. Default: Successfully added and sent %(mail_count)s invites
-#: voteit/core/views/meeting.py:133
+#: voteit/core/views/meeting.py:143
 msgid "sent_tickets_text"
 msgstr ""
 
-#: voteit/core/views/meeting.py:146
+#: voteit/core/views/meeting.py:156
 msgid "Send meeting invitations"
 msgstr ""
 
 #. Default: Resending %(count_emails)s invites
-#: voteit/core/views/meeting.py:179
+#: voteit/core/views/meeting.py:189
 msgid "resent_invites_notice"
 msgstr ""
 
 #. Default: Deleting %(count_emails)s invites
-#: voteit/core/views/meeting.py:190
+#: voteit/core/views/meeting.py:200
 msgid "deleting_invites_notice"
 msgstr ""
 
@@ -502,6 +504,208 @@ msgstr ""
 msgid "This is your vote"
 msgstr ""
 
+#: voteit/core/views/templates/action_bar.pt:120
+msgid "Set state"
+msgstr ""
+
+#: voteit/core/views/templates/action_bar.pt:110
+msgid "Name"
+msgstr ""
+
+#: voteit/core/views/templates/action_bar.pt:107
+msgid "Content"
+msgstr ""
+
+#: voteit/core/views/templates/action_bar.pt:100
+msgid "Manage invites"
+msgstr ""
+
+#: voteit/core/views/templates/action_bar.pt:93
+msgid "Invite participants"
+msgstr ""
+
+#: voteit/core/views/templates/action_bar.pt:86
+msgid "Poll settings"
+msgstr ""
+
+#: voteit/core/views/templates/action_bar.pt:71
+msgid "Server logs"
+msgstr ""
+
+#: voteit/core/views/templates/action_bar.pt:60
+msgid "Retract"
+msgstr ""
+
+#: voteit/core/views/templates/action_bar.pt:44
+msgid "Participants"
+msgstr ""
+
+#: voteit/core/views/templates/action_bar.pt:33
+msgid "Poll raw data"
+msgstr ""
+
+#: voteit/core/views/templates/action_bar.pt:27
+msgid "Delete vote"
+msgstr ""
+
+#: voteit/core/views/templates/action_bar.pt:21
+msgid "Change vote"
+msgstr ""
+
+#: voteit/core/views/templates/action_bar.pt:9
+msgid "Delete"
+msgstr ""
+
+#: voteit/core/views/templates/agenda_item.pt:68
+#: voteit/core/views/templates/agenda_item.pt:26
+#: voteit/core/views/templates/main.pt:79
+msgid "State"
+msgstr ""
+
+#: voteit/core/views/templates/agenda_item.pt:64
+msgid "propose"
+msgstr ""
+
+#: voteit/core/views/templates/agenda_item.pt:58
+msgid "Proposal(s)"
+msgstr ""
+
+#: voteit/core/views/templates/agenda_item.pt:47
+msgid "Discussion"
+msgstr ""
+
+#: voteit/core/views/templates/agenda_item.pt:42
+msgid "No polls yet"
+msgstr ""
+
+#: voteit/core/views/templates/agenda_item.pt:21
+msgid "Poll method"
+msgstr ""
+
+#: voteit/core/views/templates/agenda_item.pt:10
+msgid "Poll(s)"
+msgstr ""
+
+#: voteit/core/views/templates/login_register.pt:19
+msgid "Registration"
+msgstr ""
+
+#: voteit/core/views/templates/login_register.pt:11
+#: voteit/core/views/templates/profile_toolbar.pt:38
+msgid "Login"
+msgstr ""
+
+#: voteit/core/views/templates/logs.pt:23
+msgid "Current log"
+msgstr ""
+
+#: voteit/core/views/templates/logs.pt:21
+msgid "Select a log above"
+msgstr ""
+
+#: voteit/core/views/templates/logs.pt:7
+msgid "VoteIT logs"
+msgstr ""
+
+#: voteit/core/views/templates/meeting.pt:22
+#: voteit/core/views/templates/meeting.pt:16
+#: voteit/core/views/templates/meeting.pt:10
+msgid "Show all"
+msgstr ""
+
+#: voteit/core/views/templates/meeting.pt:21
+msgid "This will happen"
+msgstr ""
+
+#: voteit/core/views/templates/meeting.pt:15
+msgid "This is happening now"
+msgstr ""
+
+#: voteit/core/views/templates/meeting.pt:9
+msgid "This has happened"
+msgstr ""
+
+#: voteit/core/views/templates/messages.pt:23
+msgid "No messages"
+msgstr ""
+
+#: voteit/core/views/templates/messages.pt:15
+msgid "Unread"
+msgstr ""
+
+#: voteit/core/views/templates/messages.pt:14
+msgid "Added"
+msgstr ""
+
+#: voteit/core/views/templates/messages.pt:10
+#: voteit/core/views/templates/profile_toolbar.pt:24
+msgid "Messages"
+msgstr ""
+
+#: voteit/core/views/templates/navigation.pt:22
+msgid "all meetings"
+msgstr ""
+
+#: voteit/core/views/templates/navigation.pt:4
+msgid "Available meetings"
+msgstr ""
+
+#: voteit/core/views/templates/pending_access_requests.pt:7
+msgid "${access_count} pending access request(s)"
+msgstr ""
+
+#: voteit/core/views/templates/profile_toolbar.pt:36
+msgid "Register"
+msgstr ""
+
+#: voteit/core/views/templates/profile_toolbar.pt:30
+msgid "Logout"
+msgstr ""
+
+#: voteit/core/views/templates/profile_toolbar.pt:27
+msgid "Profile"
+msgstr ""
+
+#: voteit/core/views/templates/profile_toolbar.pt:13
+msgid "Settings"
+msgstr ""
+
+#: voteit/core/views/templates/profile_toolbar.pt:5
+msgid "Meeting search"
+msgstr ""
+
+#: voteit/core/views/templates/protocol.pt:20
+msgid "by"
+msgstr ""
+
+#: voteit/core/views/templates/search_result.pt:46
+msgid "Search above"
+msgstr ""
+
+#: voteit/core/views/templates/search_result.pt:43
+msgid "No results"
+msgstr ""
+
+#: voteit/core/views/templates/search_result.pt:22
+msgid "Search"
+msgstr ""
+
+#: voteit/core/views/templates/time_info.pt:9
+msgid "ends"
+msgstr ""
+
+#: voteit/core/views/templates/time_info.pt:4
+msgid "starts"
+msgstr ""
+
+#: voteit/core/views/templates/view_user.pt:13
+msgid "Biography"
+msgstr ""
+
+#: voteit/core/views/templates/view_user.pt:9
+msgid "Change password"
+msgstr ""
+
 #: voteit/core/views/templates/macros/expressions.pt:18
 msgid "and ${item_count} more "
 msgstr ""
@@ -512,6 +716,10 @@ msgstr ""
 
 #: voteit/core/views/templates/macros/expressions.pt:11
 msgid "You"
+msgstr ""
+
+#: voteit/core/views/templates/macros/flash_messages.pt:5
+msgid "OK"
 msgstr ""
 
 #: voteit/core/views/templates/userlisting/form.pt:21
