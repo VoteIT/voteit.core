@@ -1,3 +1,4 @@
+from pyramid.renderers import get_renderer, render
 from pyramid.security import has_permission
 from pyramid.view import view_config
 from webob.exc import HTTPFound
@@ -33,7 +34,16 @@ class MeetingView(BaseView):
         return self.response
 
     def _get_state_ais(self, state):
-        return self.context.get_content(iface=IAgendaItem, state=state, sort_on='agenda_item_id')
+        limit = 5
+        if 'log_'+state in self.request.GET and self.request.GET['log_'+state] == 'all':
+            limit=None
+        
+        response = {}
+        response['log'] = self.context.get_content(iface=IAgendaItem, state=state, sort_on='agenda_item_id', limit=limit)
+        response['api'] = self.api
+        response['context'] = self
+        
+        return render('templates/log.pt', response, request=self.request)
 
     @view_config(name="meeting_access", context=IMeeting, renderer="templates/meeting_access.pt", permission=security.VIEW)
     def meeting_access(self):
@@ -211,4 +221,14 @@ class MeetingView(BaseView):
     def protocol(self):
         self.response['log'] = self.api.logs.retrieve_entries(self.context.uid)
         
+        return self.response
+        
+    @view_config(context=IMeeting, name="log", permission=security.VIEW, renderer='templates/log.pt')
+    def meeting_messages(self):
+        state = self.request.GET.get('state', 'active')
+
+        self.response = {}
+        self.response['log'] = self.context.get_content(iface=IAgendaItem, state=state, sort_on='agenda_item_id')
+        self.response['api'] = self.api
+
         return self.response

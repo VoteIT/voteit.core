@@ -104,9 +104,10 @@ class BaseContent(Folder, SecurityAware):
     
     creators = property(_get_creators, _set_creators)
 
-    def get_content(self, content_type=None, iface=None, state=None, sort_on=None, sort_reverse=False):
+    def get_content(self, content_type=None, iface=None, state=None, sort_on=None, sort_reverse=False, limit=None):
         """ See IBaseContent """
         results = set()
+
         for candidate in self.values():
             
             #Specific content_type?
@@ -129,13 +130,19 @@ class BaseContent(Folder, SecurityAware):
                     continue
             
             results.add(candidate)
+
         if sort_on is None:
             return tuple(results)
         
         def _sorter(obj):
             return getattr(obj, sort_on)
 
-        return tuple(sorted(results, key = _sorter, reverse = sort_reverse))
+        results = tuple(sorted(results, key = _sorter, reverse = sort_reverse))
+        
+        if limit:
+            results = results[-limit:]
+
+        return results
 
 #FIXME: This should probably be done on the field level instead
 #    def transform_mentions(self, key, base_url):
