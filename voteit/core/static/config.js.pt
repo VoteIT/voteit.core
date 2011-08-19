@@ -1,0 +1,10 @@
+<tal:domain i18n:domain="VoteIT">
+var voteit = {};
+voteit.translation = {
+    'yes':'<tal:trans i18n:translate="">Yes</tal:trans>',
+    'no':'<tal:trans i18n:translate="">No</tal:trans>',
+    'confirm-title':'<tal:trans i18n:translate="">Please confirm</tal:trans>',
+    'confirm-state':'<tal:trans i18n:translate="">Are you sure you want to change the state?</tal:trans>',
+    'confirm-retract':'<tal:trans i18n:translate="">Are you sure you want to retract this proposal?</tal:trans>',
+};
+</tal:domain>

@@ -4,7 +4,7 @@
     	<a class="buttonize" tal:attributes="href api.resource_url(context, request) + '@@edit'">Edit</a>
 	</li>
     <li class="menuitem" tal:condition="context_has_permission('Delete', context)">
-    	<a class="buttonize confirm"  tal:attributes="href api.resource_url(context, request) + '@@delete'">Delete</a>
+    	<a class="buttonize"  tal:attributes="href api.resource_url(context, request) + '@@delete'">Delete</a>
 	</li>
 
     <tal:poll condition="context.content_type == 'Poll'" tal:define="has_voted api.userid and api.userid in context">
@@ -22,7 +22,7 @@
         </li>
         <li class="menuitem"
             tal:condition="context.get_workflow_state() == 'closed'">
-            <a class="buttonize confirm" tal:attributes="href api.resource_url(context, request) + '@@poll_raw_data'">Poll raw data</a>
+            <a class="buttonize" tal:attributes="href api.resource_url(context, request) + '@@poll_raw_data'">Poll raw data</a>
         </li>
 	</tal:poll>
 	
@@ -45,7 +45,7 @@
 		</tal:comment>
 		<tal:retract condition="show_retract()">
 		    <li class="menuitem">
-	            <a class="buttonize confirm"
+	            <a class="buttonize confirm-retract"
 				   tal:attributes="href api.resource_url(context, request) + '@@state?state=retracted'">Retract</a>
 		    </li>
 		</tal:retract>
@@ -97,7 +97,7 @@
 			<ul class="menu_body">
 				<tal:iterate repeat="state states">
 				<li tal:attributes="class state.current and 'current'">
-					<a class="confirm" tal:attributes="href api.resource_url(context, request) + '@@state' + '?state=' + state.name"
+					<a class="confirm-state" tal:attributes="href api.resource_url(context, request) + '@@state' + '?state=' + state.name"
 					   tal:content="state.title">State</a>
 				</li>
 				</tal:iterate>

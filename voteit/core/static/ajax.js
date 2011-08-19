@@ -87,11 +87,18 @@ $(document).ready(function() {
 
 /*  Confirmation windows  */
 $(document).ready(function() {
-    $('.confirm').easyconfirm({
+    $('.confirm-state').easyconfirm({
         locale: {
-            title: 'Please confirm', 
-            text: 'Are you sure you want to do this?', 
-            button: ['No', 'Yes']
+            title: voteit.translation['confirm-title'], 
+            text: voteit.translation['confirm-state'], 
+            button: [voteit.translation['no'], voteit.translation['yes']],
+        }
+    });
+    $('.confirm-retract').easyconfirm({
+        locale: {
+            title: voteit.translation['confirm-title'], 
+            text: voteit.translation['confirm-retract'], 
+            button: [voteit.translation['no'], voteit.translation['yes']],
         }
     });
 });
