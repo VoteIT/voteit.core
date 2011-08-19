@@ -19,7 +19,7 @@
 </tal:deform>
 
 <metal:heading fill-slot="page_heading">
-	<h3>Search</h3>
+	<h3 i18n:translate="">Search</h3>
 </metal:heading>
 
 <div metal:fill-slot="content">
@@ -40,9 +40,11 @@
     	</tal:iterate>
     </tal:results>
 	
-	<tal:no_results condition="search_string and not search_results">No results</tal:no_results>
+	<tal:no_results condition="search_string and not search_results"
+	                i18n:translate="">No results</tal:no_results>
 	
-    <tal:no_search condition="not search_string">Search above</tal:no_search>
+    <tal:no_search condition="not search_string"
+	               i18n:translate="">Search above</tal:no_search>
 </div>
 
 </html>

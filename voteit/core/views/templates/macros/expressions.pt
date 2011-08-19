@@ -8,12 +8,14 @@
 		                       class selected and 'expression_button selected buttonize' or 'expression_button buttonize';" />
 	</form>
 
-	<tal:you condition="selected">You</tal:you>
-	<tal:and condition="selected and userids">and</tal:and>
+	<tal:you condition="selected" i18n:translate="">You</tal:you>
+	<tal:and condition="selected and userids" i18n:translate="">and</tal:and>
 	<tal:iterate repeat="userid userids">
 		<tal:userid tal:content="userid">
 		    userid
 		</tal:userid><tal:comma tal:condition="not repeat['userid'].end">,</tal:comma>
 	</tal:iterate>
-	<tal:over_limit condition="over_limit">and <span tal:replace="over_limit"></span> more</tal:over_limit>
+	<tal:over_limit condition="over_limit" i18n:translate="">
+	    and <span tal:replace="over_limit" i18n:name="item_count">3</span> more
+	</tal:over_limit>
 </div>

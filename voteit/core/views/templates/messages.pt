@@ -7,12 +7,12 @@
 <div metal:fill-slot="content">
 
 <tal:messages condition="messages">
-	<h1>Messages</h1>
+	<h1 i18n:translate="">Messages</h1>
   <ul class="notification_messages">
   	<tal:messages tal:repeat="msg messages">
       <li class="notification_message">
-    		<p>Added: <span tal:content="msg.format_created()">1970-01-01</span></p>
-        <p>Unread: <span tal:content="api.is_unread(msg, True)">True</span></p>
+    		<p><span i18n:translate="">Added</span>: <span tal:content="msg.format_created()">1970-01-01</span></p>
+        <p><span i18n:translate="">Unread</span>: <span tal:content="api.is_unread(msg, True)">True</span></p>
     		<div tal:content="msg.message">Earthlings, we come in peace!</div>
       </li>
   	</tal:messages>
@@ -20,7 +20,7 @@
 </tal:messages>
 
 <tal:messages condition="not messages">
-    <h1>No messages</h1>
+    <h1 i18n:translate="">No messages</h1>
 </tal:messages>
 
 

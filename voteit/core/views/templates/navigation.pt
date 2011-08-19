@@ -1,7 +1,7 @@
 <metal:main define-macro="navigation">
 <div class="content_wrapper">
 	<tal:root condition="not api.meeting">
-	<h5>Available meetings</h5>
+	<h5 i18n:translate="">Available meetings</h5>
 	<tal:iterate repeat="meeting api.get_restricted_content(api.root, content_type='Meeting')">
 		<h5>
 			<a tal:attributes="href api.resource_url(meeting, request)"
@@ -18,7 +18,9 @@
                             agenda_items_closed api.get_restricted_content(api.meeting, content_type='AgendaItem', state='closed');
                             agenda_items_private api.get_restricted_content(api.meeting, content_type='AgendaItem', state='private');">
 		<div class="browse_up">
-			<a tal:attributes="href api.resource_url(api.root, request)">&laquo; all meetings</a>
+			<a tal:attributes="href api.resource_url(api.root, request)">
+				&laquo; <span i18n:translate="">all meetings</span>
+			</a>
 		</div>
         <h5 class="header">
             <a tal:attributes="href api.resource_url(api.meeting, request)"

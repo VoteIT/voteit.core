@@ -4,7 +4,7 @@
       xmlns:tal="http://xml.zope.org/namespaces/tal"
       metal:use-macro="api.main_template.macros['master']">
 <div metal:fill-slot="page_heading">
-    <h1>VoteIT logs</h1>
+    <h1 i18n:translate="">VoteIT logs</h1>
 </div>
 
 <div metal:fill-slot="action_bar"></div>
@@ -18,8 +18,11 @@
     </tal:iterate>
     </ul>
     
-    <h3 tal:condition="not current_log">Select a log above</h3>
-    <h3 tal:condition="current_log">Current log: <span tal:replace="current_log">logfile</span></h3>
+    <h3 tal:condition="not current_log" i18n:translate="">Select a log above</h3>
+    <h3 tal:condition="current_log">
+    	<span i18n:translate="">Current log</span>:
+		<span tal:replace="current_log">logfile</span>
+	</h3>
     <pre cols="80" rows="40" tal:content="logdata" tal:condition="logdata">Log content</pre>
 </div>
 

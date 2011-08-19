@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2011-08-19 10:51+0200\n"
+"POT-Creation-Date: 2011-08-19 15:00+0200\n"
 "PO-Revision-Date: 2011-08-19 10:51+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: sv <LL@li.org>\n"
@@ -19,437 +19,532 @@ msgstr ""
 "Generated-By: Babel 0.9.6\n"
 
 #: voteit/core/bootstrap.py:26 voteit/core/bootstrap.py:36
-#: voteit/core/models/meeting.py:115
+#: voteit/core/models/meeting.py:107
 msgid "VoteIT"
-msgstr ""
+msgstr "VoteIT"
 
 #: voteit/core/bootstrap.py:31
 msgid "Registered users"
-msgstr ""
+msgstr "Registrerade användare"
 
 #: voteit/core/bootstrap.py:37 voteit/core/security.py:56
 msgid "Administrator"
-msgstr ""
+msgstr "Administratör"
 
 #: voteit/core/fields.py:33
-msgid "\"${val}\" is not a datetime object"
-msgstr ""
+msgid "'${val}' is not valid as date and time"
+msgstr "'{val}' är inte giltigt som datum och tid"
 
 #: voteit/core/security.py:57
 msgid "Moderator"
-msgstr ""
+msgstr "Moderator"
 
 #: voteit/core/security.py:58
 msgid "Participant"
-msgstr ""
+msgstr "Deltagare"
 
 #: voteit/core/security.py:59
 msgid "Voter"
-msgstr ""
+msgstr "Rösträtt"
 
 #: voteit/core/security.py:60
 msgid "View only"
-msgstr ""
+msgstr "Endast se"
 
 #: voteit/core/validators.py:14
 msgid "Too short. At least 6 chars required."
-msgstr ""
+msgstr "För kort. Minst 6 tecken krävs."
 
 #: voteit/core/validators.py:16
-msgid "It's good to use secure passwords, but keep it under 100 chars will you?"
-msgstr ""
+msgid "Less than 100 chars please."
+msgstr "Mindre än 100 tecken tack."
 
 #: voteit/core/validators.py:32
 msgid "HTML is not allowed."
-msgstr ""
+msgstr "HTML är inte tillåtet."
 
 #: voteit/core/models/agenda_item.py:52
 msgid "Agenda item"
-msgstr ""
+msgstr "Dagordningspunkt"
 
 #: voteit/core/models/agenda_item.py:114
 msgid "Title"
-msgstr ""
+msgstr "Titel"
 
 #: voteit/core/models/agenda_item.py:119
 msgid "Description"
-msgstr ""
+msgstr "Beskrivning"
 
 #: voteit/core/models/agenda_item.py:126
 msgid "Summary of this item."
-msgstr ""
+msgstr "Sammanfattning av denna punkt."
 
+#. Default: This could be what was decided. It will show up in the log on the
+#. meeting page.
 #: voteit/core/models/agenda_item.py:127
-msgid "This could be what was decided. Used for logging events."
+msgid "ai_summary_description"
 msgstr ""
+"Det här kan vara beslut eller andra viktiga noter. Kommer visas i "
+"mötesloggen på mötessidan."
 
-#: voteit/core/models/agenda_item.py:134
-msgid "Start time of this Agenda Item."
-msgstr ""
+#. Default: Estimated start time of this Agenda Item.
+#: voteit/core/models/agenda_item.py:135
+msgid "ai_start_time_title"
+msgstr "Planerad starttid för dagordningpunkten."
 
-#: voteit/core/models/agenda_item.py:135 voteit/core/models/poll.py:274
-msgid "It will be opened automatically when this time has passed."
+#. Default: No action will be taken automatically when the time has passed, so
+#. you need to open this item yourself.
+#: voteit/core/models/agenda_item.py:137
+msgid "ai_start_time_description"
 msgstr ""
+"Det här kan vara beslut eller andra viktiga noter. Kommer visas i "
+"mötesloggen på mötessidan."
 
 #: voteit/core/models/discussion_post.py:38
 msgid "Discussion Post"
-msgstr ""
+msgstr "Diskussionsinlägg"
 
 #: voteit/core/models/discussion_post.py:69
 msgid "Text"
-msgstr ""
+msgstr "Text"
 
-#: voteit/core/models/invite_ticket.py:85
+#. Default:   -------------------------------------------------------------
+#. Click the link to access this VoteIT meeting: %(access_link)s  Have an
+#. account already? Simply login after clicking this link.  Need to register?
+#. Use the above link and simply register. You'll be granted access instantly.
+#. Don't want to register now? Remember that you need to click this link to
+#. gain access to the meeting you're invited to.  Warm regards, The VoteIT team
+#: voteit/core/models/invite_ticket.py:64
+msgid "ticket_claim_instructions"
+msgstr ""
+"-------------------------------------------------------------\n"
+"\"\n"
+"\"Klicka på länken för att komma in i VoteIT-mötet:\n"
+"\"\n"
+"\"%(access_link)s\n"
+"\"\n"
+"\"Har du ett konto redan?\n"
+"\"\n"
+"\"Logga in efter att du klickat på länken.\n"
+"\"\n"
+"\"Behöver du registrera dig?\n"
+"\"\n"
+"\"Använd länken ovan för att registrera dig. Du får tillgång till mötet "
+"direkt efter.\n"
+"\"\n"
+"\"Vill du inte registrera dig nu?\n"
+"\"\n"
+"\"Kom ihåg att du måste klicka på länken för att få tillgång till mötet\n"
+"\"\n"
+"\"du är inbjuden till.\n"
+"\"\n"
+"\"Varma hälsningar, VoteIT-gänget"
+
+#: voteit/core/models/invite_ticket.py:87
 msgid "VoteIT meeting invitation"
-msgstr ""
+msgstr "VoteIT mötesinbjudan"
 
-#: voteit/core/models/invite_ticket.py:121
+#: voteit/core/models/invite_ticket.py:123
 msgid "Email address your invitation was sent to."
-msgstr ""
+msgstr "Epostadressen din inbjudan skickades till."
 
-#: voteit/core/models/invite_ticket.py:122
+#: voteit/core/models/invite_ticket.py:124 voteit/core/models/meeting.py:111
+#: voteit/core/models/user.py:128
 msgid "Invalid email address."
-msgstr ""
+msgstr "Ogiltig epostadress"
 
-#: voteit/core/models/invite_ticket.py:125
+#: voteit/core/models/invite_ticket.py:127
 msgid "The access token your received in your email."
-msgstr ""
+msgstr "Engångslösenordet du fick till din epostadress."
 
-#: voteit/core/models/invite_ticket.py:134
+#: voteit/core/models/invite_ticket.py:136
 msgid "Couldn't find any invitation for this email address."
-msgstr ""
+msgstr "Kan inte hitta någon inbjudan för denna epostadress."
 
-#: voteit/core/models/invite_ticket.py:138
+#: voteit/core/models/invite_ticket.py:140
 msgid "Email matches, but token doesn't"
-msgstr ""
+msgstr "Epostadressen matchar, men engångslösenordet stämmer inte"
 
-#: voteit/core/models/invite_ticket.py:139
+#: voteit/core/models/invite_ticket.py:141
 msgid "Check this field - token doesn't match"
-msgstr ""
+msgstr "Kontrollera fältet - engångslösenordet stämmer inte"
 
-#: voteit/core/models/invite_ticket.py:149
+#: voteit/core/models/invite_ticket.py:151
 msgid "Roles"
-msgstr ""
+msgstr "Roller"
 
-#: voteit/core/models/invite_ticket.py:155
+#: voteit/core/models/invite_ticket.py:158
 msgid "Email addresses to give the role above."
-msgstr ""
-
-#: voteit/core/models/invite_ticket.py:160
-msgid "Welcome text of the email that will be sent"
-msgstr ""
-
-#: voteit/core/models/invite_ticket.py:161
-msgid "No HTML tags allowed."
-msgstr ""
+msgstr "Epostadresser som ska ha rollerna ovan."
 
 #: voteit/core/models/invite_ticket.py:163
-msgid "You've received a meeting invitation for a VoteIT meeting."
-msgstr ""
+msgid "Welcome text of the email that will be sent"
+msgstr "Välkomsttext i brevet som kommer skickas"
 
-#: voteit/core/models/invite_ticket.py:176 voteit/core/views/meeting.py:213
+#: voteit/core/models/invite_ticket.py:164
+msgid "No HTML tags allowed."
+msgstr "Inga HTML-taggar tillåtna."
+
+#. Default: You've received a meeting invitation for a VoteIT meeting.
+#: voteit/core/models/invite_ticket.py:166
+msgid "invitation_default_text"
+msgstr "Du har fått en inbjudan till ett VoteIT-möte."
+
+#: voteit/core/models/invite_ticket.py:180 voteit/core/views/meeting.py:204
 msgid "Current invitations"
-msgstr ""
+msgstr "Nuvarande inbjudningar"
 
 #: voteit/core/models/meeting.py:54
 msgid "Meeting"
-msgstr ""
+msgstr "Möte"
 
-#: voteit/core/models/meeting.py:100
-msgid "Message"
-msgstr ""
-
-#: voteit/core/models/meeting.py:102
-msgid "Knock knock - Please let me access the meeting."
-msgstr ""
-
-#: voteit/core/models/meeting.py:114
+#: voteit/core/models/meeting.py:106
 msgid "Name visible on system mail sent from this meeting"
-msgstr ""
+msgstr "Avsändarnamn på epost skickat från mötet"
 
-#: voteit/core/models/meeting.py:117
+#: voteit/core/models/meeting.py:109
 msgid "Email address to send from"
-msgstr ""
-
-#: voteit/core/models/meeting.py:118
-msgid "noreply@somehost.voteit"
-msgstr ""
-
-#: voteit/core/models/meeting.py:119
-msgid "Invalid email address"
-msgstr ""
+msgstr "Epostadress att skicka från"
 
 #: voteit/core/models/poll.py:63
 msgid "Poll"
+msgstr "Omröstning"
+
+#. Default: Proposal '%(name)s' already in state %(state)s
+#: voteit/core/models/poll.py:178
+msgid "change_prop_state_already_that_state_error"
 msgstr ""
 
-#: voteit/core/models/poll.py:189
-msgid ""
-"Poll closed. Proposals might have been adjusted as approved or denied "
-"depending on outcome of the poll."
+#. Default: Proposal '%(name)s' set as %(state)s
+#: voteit/core/models/poll.py:185
+msgid "prop_state_changed_notice"
 msgstr ""
 
-#: voteit/core/models/poll.py:251 voteit/core/models/poll.py:253
+#. Default: Proposal with id '%(name)s' couldn't be set as %(state)s. You
+#. should do this manually.
+#: voteit/core/models/poll.py:190
+msgid "prop_state_change_error"
+msgstr ""
+
+#. Default: Poll closed. Proposals might have been adjusted as approved or
+#. denied depending on outcome of the poll.
+#: voteit/core/models/poll.py:195
+msgid "poll_closed_info"
+msgstr ""
+
+#: voteit/core/models/poll.py:258 voteit/core/models/poll.py:260
 msgid "${val} is earlier than earliest date ${min}"
 msgstr ""
 
-#: voteit/core/models/poll.py:273
-msgid "Start time of this poll."
-msgstr ""
-
-#: voteit/core/models/poll.py:279
-msgid "End time of this poll."
-msgstr ""
-
 #: voteit/core/models/poll.py:280
-msgid "It will be closed automatically when this time has passed."
+msgid "Start time of this poll."
+msgstr "Starttid för omröstningen."
+
+#: voteit/core/models/poll.py:281
+msgid "You need to open it yourself."
 msgstr ""
 
-#: voteit/core/models/poll.py:309
-msgid "Setting poll in planned state. It's now visible for meeting participants."
+#: voteit/core/models/poll.py:286
+msgid "End time of this poll."
+msgstr "Sluttid för omröstningen."
+
+#: voteit/core/models/poll.py:287
+msgid "You need to close it yourself."
+msgstr "Du behöver stänga den själv."
+
+#. Default: Setting poll in planned state. It's now visible for meeting
+#. participants.
+#: voteit/core/models/poll.py:316
+msgid "poll_planned_state_notice"
 msgstr ""
 
 #: voteit/core/models/proposal.py:57 voteit/core/models/proposal.py:78
 msgid "Proposal"
-msgstr ""
-
-#: voteit/core/models/schemas.py:17
-msgid "CSRF token didn't match. Did you submit this yourself?"
-msgstr ""
+msgstr "Yrkande"
 
 #: voteit/core/models/security_aware.py:132
 msgid "Groups for user"
-msgstr ""
+msgstr "Grupper för användaren"
 
 #: voteit/core/models/security_aware.py:155
 msgid "Groups for invitation"
-msgstr ""
+msgstr "Grupper för inbjudan"
 
 #: voteit/core/models/security_aware.py:159
 msgid "Group settings for users"
-msgstr ""
+msgstr "Gruppinställningar för användaren"
 
 #: voteit/core/models/security_aware.py:160
 msgid "Invitations"
-msgstr ""
+msgstr "Inbjudningar"
 
 #: voteit/core/models/site.py:21
 msgid "Site root"
-msgstr ""
+msgstr "Site rot"
 
 #: voteit/core/models/user.py:41
 msgid "User"
+msgstr "Användare"
+
+#. Default: password link: %(pw_link)s
+#: voteit/core/models/user.py:83
+msgid "request_new_password_text"
 msgstr ""
 
-#: voteit/core/models/user.py:85
+#: voteit/core/models/user.py:87
 msgid "Password reset request from VoteIT"
-msgstr ""
+msgstr "Begäran om nytt lösenord från VoteIT"
 
-#: voteit/core/models/user.py:126
-msgid "Invalid email"
-msgstr ""
-
-#: voteit/core/models/user.py:145 voteit/core/models/user.py:167
+#: voteit/core/models/user.py:147 voteit/core/models/user.py:169
 msgid "Password"
-msgstr ""
+msgstr "Lösenord"
 
-#: voteit/core/models/user.py:147
+#: voteit/core/models/user.py:149
 msgid "Email"
-msgstr ""
+msgstr "Epost"
 
-#: voteit/core/models/user.py:150
+#: voteit/core/models/user.py:152
 msgid "First name"
-msgstr ""
+msgstr "Förnamn"
 
-#: voteit/core/models/user.py:153
+#: voteit/core/models/user.py:155
 msgid "Last name"
-msgstr ""
+msgstr "Efternamn"
 
-#: voteit/core/models/user.py:165 voteit/core/models/user.py:222
+#: voteit/core/models/user.py:167 voteit/core/models/user.py:226
 msgid "UserID or email address."
-msgstr ""
+msgstr "AnvändarID eller epostadress"
 
-
+#. Default: UserID must be 3-15 chars, start with a-zA-Z and only contain
+#. regular latin chars, numbers, minus and underscore.
 #: voteit/core/models/user.py:187
-msgid ""
-"UserID already registered. If it was registered by you, try to retrieve "
-"your password."
+msgid "userid_char_error"
 msgstr ""
 
-#: voteit/core/models/user.py:191
+#. Default: UserID already registered. If it was registered by you, try to
+#. retrieve your password.
+#: voteit/core/models/user.py:189
+msgid "already_registered_error"
+msgstr ""
+
+#: voteit/core/models/user.py:194
 msgid "UserID"
+msgstr "AnvändarID"
+
+#. Default: Used like a nick-name and as a unique id. You can't change this
+#. later.
+#: voteit/core/models/user.py:195
+msgid "userid_description"
 msgstr ""
 
-#: voteit/core/models/user.py:192
-msgid "Used like a nick-name and as a unique id. You can't change this later."
-msgstr ""
-
-#: voteit/core/models/user.py:207
+#: voteit/core/models/user.py:210
 msgid "About you"
-msgstr ""
+msgstr "Om dig"
 
-#: voteit/core/models/user.py:208
-msgid ""
-"Please note that anything you type here will be visible to all registered"
-" users."
+#. Default: Please note that anything you type here will be visible to all
+#. registered users, even if they're not in the same meeting as you.
+#: voteit/core/models/user.py:211
+msgid "bio_visible_notice"
 msgstr ""
 
 #: voteit/core/models/users.py:15
 msgid "Users"
-msgstr ""
+msgstr "Användare"
 
 #: voteit/core/models/vote.py:29
 msgid "Vote"
-msgstr ""
+msgstr "Röst"
 
 #: voteit/core/models/vote.py:33
 msgid "Your vote"
-msgstr ""
+msgstr "Din röst"
 
+#. Default: This is your vote. While the poll is open, you can delete or change
+#. it if you wish.
 #: voteit/core/models/vote.py:34
-msgid ""
-"This is your vote. While the poll is open, you can delete or change it if"
-" you wish."
+msgid "your_vote_description"
 msgstr ""
 
 #: voteit/core/plugins/majority_poll.py:17
 msgid "Majority Poll"
-msgstr ""
+msgstr "Majoritetsomröstning"
 
 #: voteit/core/plugins/majority_poll.py:41
 msgid "Vote for one"
-msgstr ""
+msgstr "Rösta på en"
+
+#: voteit/core/static/config.js.pt:8
+msgid "Are you sure you want to retract this proposal?"
+msgstr "Är du säker på att du vill dra tillbaka ditt yrkande?"
+
+#: voteit/core/static/config.js.pt:7
+msgid "Are you sure you want to change the state?"
+msgstr "Är du säker på att du vill ändra tillstånd?"
+
+#: voteit/core/static/config.js.pt:6
+msgid "Please confirm"
+msgstr "Vänligen bekräfta"
+
+#: voteit/core/static/config.js.pt:5
+msgid "No"
+msgstr "Nej"
+
+#: voteit/core/static/config.js.pt:4
+msgid "Yes"
+msgstr "Ja"
 
 #: voteit/core/views/base_edit.py:75 voteit/core/views/users.py:80
 msgid "Successfully added"
-msgstr ""
+msgstr "Tillagd"
 
 #: voteit/core/views/base_edit.py:81 voteit/core/views/base_edit.py:131
 #: voteit/core/views/base_edit.py:165 voteit/core/views/catalog.py:48
-#: voteit/core/views/meeting.py:107 voteit/core/views/meeting.py:153
-#: voteit/core/views/meeting.py:207 voteit/core/views/users.py:86
+#: voteit/core/views/meeting.py:93 voteit/core/views/meeting.py:140
+#: voteit/core/views/meeting.py:198 voteit/core/views/users.py:86
 #: voteit/core/views/vote.py:168
 msgid "Canceled"
-msgstr ""
+msgstr "Avbruten"
 
 #: voteit/core/views/base_edit.py:87
 msgid "Add"
-msgstr ""
+msgstr "Lägg till"
 
 #: voteit/core/views/base_edit.py:121
 msgid "Successfully updated"
-msgstr ""
+msgstr "Uppdaterat"
 
 #: voteit/core/views/base_edit.py:125
 msgid "Nothing updated"
-msgstr ""
+msgstr "Inget uppdaterat"
 
 #: voteit/core/views/base_edit.py:136
 msgid "Edit"
-msgstr ""
+msgstr "Redigera"
 
 #: voteit/core/views/base_edit.py:159 voteit/core/views/vote.py:161
-msgid "Successfully deleted"
-msgstr ""
+msgid "Deleted"
+msgstr "Raderad"
 
 #: voteit/core/views/base_edit.py:170 voteit/core/views/vote.py:174
 msgid "Are you sure you want to delete this item?"
-msgstr ""
+msgstr "Är du säker på att du vill radera detta objekt?"
 
 #: voteit/core/views/expressions.py:74
 msgid "Remove"
-msgstr ""
+msgstr "Ta bort"
 
 #: voteit/core/views/meeting.py:26
 msgid "You're not allowed access to this meeting."
+msgstr "Du har inte rätt att delta i mötet."
+
+#. Default: To gain access to a meeting you need to use an access ticket that
+#. should have been mailed to you. If you've aldready registered, please login.
+#: voteit/core/views/meeting.py:59
+msgid "login_to_access_meeting_notice"
 msgstr ""
 
-#: voteit/core/views/meeting.py:74
-msgid ""
-"You need to login or register first, then your can use your ticket to "
-"gain access to this meeting."
-msgstr ""
-
-#: voteit/core/views/meeting.py:101
+#: voteit/core/views/meeting.py:87
 msgid "You've been granted access to the meeting. Welcome!"
-msgstr ""
+msgstr "Du har fått rätt att delta i mötet. Välkommen!"
 
-#: voteit/core/views/meeting.py:112
+#: voteit/core/views/meeting.py:98
 msgid "Meeting Access"
+msgstr "Mötestillgång"
+
+#. Default: Successfully added and sent %(mail_count)s invites
+#: voteit/core/views/meeting.py:133
+msgid "sent_tickets_text"
 msgstr ""
 
-#: voteit/core/views/meeting.py:159
+#: voteit/core/views/meeting.py:146
 msgid "Send meeting invitations"
+msgstr "Skicka mötesinbjudningar"
+
+#. Default: Resending %(count_emails)s invites
+#: voteit/core/views/meeting.py:179
+msgid "resent_invites_notice"
+msgstr ""
+
+#. Default: Deleting %(count_emails)s invites
+#: voteit/core/views/meeting.py:190
+msgid "deleting_invites_notice"
 msgstr ""
 
 #: voteit/core/views/users.py:91
 msgid "Add new user"
-msgstr ""
+msgstr "Lägg till ny användare"
 
 #: voteit/core/views/users.py:156
 msgid "Password set. You may login now."
-msgstr ""
+msgstr "Lösenord satt. Du kan logga in nu."
 
 #: voteit/core/views/users.py:167
 msgid "Invalid security token. Did you click the link in your email?"
-msgstr ""
+msgstr "Ogiltigt engångslösenord. Klickade du på länken du fick med epost?"
 
 #: voteit/core/views/users.py:232
 msgid "Login failed."
-msgstr ""
+msgstr "Inloggning misslyckades."
 
 #: voteit/core/views/users.py:313
 msgid "Email sent."
-msgstr ""
+msgstr "Epost skickad."
 
 #: voteit/core/views/users.py:317
 msgid "Username or email not found."
-msgstr ""
+msgstr "AnvändarID eller epost hittades inte"
 
+#. Default: You've already voted, but the poll is still open so you can change
+#. your vote if you want to.
 #: voteit/core/views/vote.py:55
-msgid ""
-"You've already voted, but the poll is still open so you can change or "
-"even delete your vote if you want to."
+msgid "already_voted_poll_open"
 msgstr ""
 
 #: voteit/core/views/vote.py:86
 msgid "Thank you for voting!"
-msgstr ""
+msgstr "Tack för din röst!"
 
 #: voteit/core/views/vote.py:93
 msgid "Canceled - your vote has NOT been added!"
-msgstr ""
+msgstr "Avbruten - din röst har INTE lagts till!"
 
 #: voteit/core/views/vote.py:100
 msgid "Add a vote"
-msgstr ""
+msgstr "Lägg till röst"
 
 #: voteit/core/views/vote.py:125
 msgid "Your vote has been updated."
-msgstr ""
+msgstr "Din röst har uppdaterats."
 
 #: voteit/core/views/vote.py:133
 msgid "Canceled - vote NOT updated!"
-msgstr ""
+msgstr "Avbruten - din röst har INTE uppdaterats!"
 
 #: voteit/core/views/vote.py:140
 msgid "Edit your vote"
-msgstr ""
+msgstr "Redigera din röst"
 
 #: voteit/core/views/vote.py:185
 msgid "This is your vote"
-msgstr ""
+msgstr "Detta är din röst"
+
+#: voteit/core/views/templates/macros/expressions.pt:18
+msgid "and ${item_count} more "
+msgstr "och ${item_count} fler "
+
+#: voteit/core/views/templates/macros/expressions.pt:12
+msgid "and"
+msgstr "och"
+
+#: voteit/core/views/templates/macros/expressions.pt:11
+msgid "You"
+msgstr "Du"
 
 #: voteit/core/views/templates/userlisting/form.pt:21
 msgid "Errors have been highlighted below"
-msgstr ""
+msgstr "Felen har markerats nedan"
 
 #: voteit/core/views/templates/userlisting/form.pt:19
 msgid "There was a problem with your submission"
-msgstr ""
-
-#: voteit/core/views/templates/userlisting/mapping_item.pt:9
-#: voteit/core/views/templates/userlisting/sequence_item.pt:8
-msgid "${msg}"
-msgstr ""
+msgstr "Det var ett problem med ditt formulär"
 

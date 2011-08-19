@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2011-08-19 14:11+0200\n"
+"POT-Creation-Date: 2011-08-19 15:00+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -32,7 +32,7 @@ msgid "Administrator"
 msgstr ""
 
 #: voteit/core/fields.py:33
-msgid "\"${val}\" is not valid as date and time"
+msgid "'${val}' is not valid as date and time"
 msgstr ""
 
 #: voteit/core/security.py:57
@@ -56,7 +56,7 @@ msgid "Too short. At least 6 chars required."
 msgstr ""
 
 #: voteit/core/validators.py:16
-msgid "It's good to use secure passwords, but keep it under 100 chars will you?"
+msgid "Less than 100 chars please."
 msgstr ""
 
 #: voteit/core/validators.py:32
@@ -93,7 +93,7 @@ msgstr ""
 #. Default: No action will be taken automatically when the time has passed, so
 #. you need to open this item yourself.
 #: voteit/core/models/agenda_item.py:137
-msgid "ai_start_time"
+msgid "ai_start_time_description"
 msgstr ""
 
 #: voteit/core/models/discussion_post.py:38
@@ -122,7 +122,8 @@ msgstr ""
 msgid "Email address your invitation was sent to."
 msgstr ""
 
-#: voteit/core/models/invite_ticket.py:124
+#: voteit/core/models/invite_ticket.py:124 voteit/core/models/meeting.py:111
+#: voteit/core/models/user.py:128
 msgid "Invalid email address."
 msgstr ""
 
@@ -177,10 +178,6 @@ msgstr ""
 
 #: voteit/core/models/meeting.py:109
 msgid "Email address to send from"
-msgstr ""
-
-#: voteit/core/models/meeting.py:111
-msgid "Invalid email address"
 msgstr ""
 
 #: voteit/core/models/poll.py:63
@@ -270,10 +267,6 @@ msgstr ""
 
 #: voteit/core/models/user.py:87
 msgid "Password reset request from VoteIT"
-msgstr ""
-
-#: voteit/core/models/user.py:128
-msgid "Invalid email"
 msgstr ""
 
 #: voteit/core/models/user.py:147 voteit/core/models/user.py:169
@@ -403,7 +396,7 @@ msgid "Edit"
 msgstr ""
 
 #: voteit/core/views/base_edit.py:159 voteit/core/views/vote.py:161
-msgid "Successfully deleted"
+msgid "Deleted"
 msgstr ""
 
 #: voteit/core/views/base_edit.py:170 voteit/core/views/vote.py:174
@@ -507,6 +500,18 @@ msgstr ""
 
 #: voteit/core/views/vote.py:185
 msgid "This is your vote"
+msgstr ""
+
+#: voteit/core/views/templates/macros/expressions.pt:18
+msgid "and ${item_count} more "
+msgstr ""
+
+#: voteit/core/views/templates/macros/expressions.pt:12
+msgid "and"
+msgstr ""
+
+#: voteit/core/views/templates/macros/expressions.pt:11
+msgid "You"
 msgstr ""
 
 #: voteit/core/views/templates/userlisting/form.pt:21

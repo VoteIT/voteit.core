@@ -76,7 +76,7 @@
 
                     <tal:state define="state_id context.get_workflow_state()|False">
                     	<div tal:condition="state_id">
-	                        <span>State:</span>
+	                        <span i18n:translate="">State</span>:
 	                        <strong tal:attributes="class 'wf-state-%s' % state_id"
 	                              tal:content="state_id">private</strong>
 						</div>

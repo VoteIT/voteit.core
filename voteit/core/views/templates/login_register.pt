@@ -8,7 +8,7 @@
     <div id="content" metal:fill-slot="content">
         <div class="column">
             <div id="login">
-                <h1>Login</h1>
+                <h1 i18n:translate="">Login</h1>
                 <div tal:condition="login_form|False" tal:replace="structure login_form">Login form</div>
 
             </div>
@@ -16,7 +16,7 @@
 
         <div class="column">
             <div id="registration">
-                <h1>Registration</h1>
+                <h1 i18n:translate="">Registration</h1>
                 <div tal:condition="reg_form|False" tal:replace="structure reg_form">Reg form</div>
             
             </div>
