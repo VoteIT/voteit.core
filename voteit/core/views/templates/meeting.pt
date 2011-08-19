@@ -7,39 +7,15 @@
 	<div id="content" metal:fill-slot="content">
 	    <div class="column">
 	        <h1>This has happened</h1>
-			<tal:block define="ais get_state_ais('closed')">
-				<tal:closed condition="ais" repeat="ai ais">
-                    <h5 tal:content="ai.title">Title</h5>
-					<div tal:replace="structure api.get_time_info(context, request)">start time and end time macro</div>
-					<div tal:content="ai.get_field_value('summary')">Summary</div>
-				</tal:closed>
-				<tal:no_closed condition="not ais">
-					Nothing closed yet
-				</tal:no_closed>
-			</tal:block>
+	        <a class="buttonize" tal:attributes="href api.resource_url(context, request) + '?log_closed=all'">Show all</a>
+            <tal:block replace="structure get_state_ais('closed')"></tal:block>
 	        <h1>This is happening now</h1>
-            <tal:block define="ais get_state_ais('active')">
-                <tal:closed condition="ais" repeat="ai ais">
-                    <h5 tal:content="ai.title">Title</h5>
-                    <div tal:replace="structure api.get_time_info(ai, request)">start time and end time macro</div>
-                    <div tal:content="ai.get_field_value('summary')">Summary</div>
-                </tal:closed>
-                <tal:no_active condition="not ais">
-                    Nothing right now
-                </tal:no_active>
-            </tal:block>
+	        <a class="buttonize" tal:attributes="href api.resource_url(context, request) + '?log_active=all'">Show all</a>
+            <tal:block replace="structure get_state_ais('active')"></tal:block>
 	        
 	        <h1>This will happen</h1>
-            <tal:block define="ais get_state_ais('inactive')">
-                <tal:closed condition="ais" repeat="ai ais">
-                    <h5 tal:content="ai.title">Title</h5>
-                    <div tal:replace="structure api.get_time_info(ai, request)">start time and end time macro</div>
-                    <div tal:content="ai.get_field_value('summary')">Summary</div>
-                </tal:closed>
-                <tal:no_planned condition="not ais">
-                    Nothing planned
-                </tal:no_planned>
-            </tal:block>
+	        <a class="buttonize" tal:attributes="href api.resource_url(context, request) + '?log_inactive=all'">Show all</a>
+            <tal:block replace="structure get_state_ais('inactive')"></tal:block>
 
         </div>
 	</div>

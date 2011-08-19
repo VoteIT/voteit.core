@@ -1,3 +1,4 @@
+from pyramid.renderers import get_renderer, render
 from pyramid.view import view_config
 from pyramid.url import resource_url
 from pyramid.security import has_permission
@@ -24,7 +25,7 @@ class AgendaItemView(BaseView):
     def agenda_item_view(self):
         """ """
 
-        self.response['discussions'] = self.context.get_content(iface=IDiscussionPost, sort_on='created')
+        self.response['get_discussions'] = self.get_discussions
         self.response['proposals'] = self.context.get_content(iface=IProposal, sort_on='created')
         self.response['polls'] = self.api.get_restricted_content(self.context, iface=IPoll, sort_on='created')
         
@@ -90,4 +91,23 @@ class AgendaItemView(BaseView):
         self.response['proposal_form'] = prop_form.render()
         self.response['discussion_form'] = discussion_form.render()
 
+        return self.response
+        
+    def get_discussions(self):
+        """ Get discussions for a specific context """
+        
+        limit = 5
+        if 'discussions' in self.request.GET and self.request.GET['discussions'] == 'all':
+            limit=None
+        
+        response = {}
+        response['discussions'] = self.context.get_content(iface=IDiscussionPost, sort_on='created', limit=limit)
+        response['api'] = self.api
+        response['context'] = self
+        
+        return render('templates/discussions.pt', response, request=self.request)
+        
+    @view_config(context=IAgendaItem, name="discussions", permission=VIEW, renderer='templates/discussions.pt')
+    def meeting_messages(self):
+        self.response['discussions'] = self.context.get_content(iface=IDiscussionPost, sort_on='created')
         return self.response
