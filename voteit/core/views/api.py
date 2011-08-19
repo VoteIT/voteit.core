@@ -209,9 +209,9 @@ class APIView(object):
         
     def get_restricted_content(self, context, content_type=None, iface=None, state=None, sort_on=None, sort_reverse=False):
         candidates = context.get_content(content_type=content_type, iface=iface, state=state, sort_on=sort_on, sort_reverse=sort_reverse)
-        results = set()
+        results = []
         for candidate in candidates:
             if self.context_has_permission(security.VIEW, candidate):
-                results.add(candidate)
+                results.append(candidate)
             
         return results
