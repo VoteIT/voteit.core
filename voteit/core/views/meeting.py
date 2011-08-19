@@ -27,21 +27,6 @@ class MeetingView(BaseView):
             
             url = self.api.resource_url(self.api.root, self.request)
             return HTTPFound(location = url)
-            
-            #FIXME:
-            #If user is authenticated:
-#            if has_permission(security.REQUEST_MEETING_ACCESS, self.context, self.request):
-#                url = self.api.resource_url(self.context, self.request) + 'request_meeting_access'
-#                return HTTPFound(location = url)
-            
-            #Otherwise raise unauthorized
-            #raise Forbidden("You can't request access to this meeting. Maybe you need to login, or it isn't allowed.")
-        
-        if self.context.get_workflow_state() == 'private':
-            msg = _(u"This meeting is in the state <b>Private</b>. "
-                    u"No regular meeting participants can see this meeting yet, and you won't be able to send invitations. "
-                    u"If you want others to see it, you can set the meeting in the <b>Inactive</b> state by using the <b>set state</b> menu.")
-            self.api.flash_messages.add(msg)
         
         self.response['get_state_ais'] = self._get_state_ais
         
@@ -191,7 +176,9 @@ class MeetingView(BaseView):
             for email in emails:
                 self.context.invite_tickets[email].send(self.request)
             
-            self.api.flash_messages.add(_(u"Resending %s invites" % len(emails)))
+            self.api.flash_messages.add(_('resent_invites_notice',
+                                          default=u"Resending %(count_emails)s invites",
+                                          mapping={'count_emails':len(emails)}))
             url = resource_url(self.context, self.request)
             return HTTPFound(location=url)            
 
@@ -200,7 +187,9 @@ class MeetingView(BaseView):
             for email in emails:
                 del self.context.invite_tickets[email]
             
-            self.api.flash_messages.add(_(u"Deleting %s invites" % len(emails)))
+            self.api.flash_messages.add(_('deleting_invites_notice',
+                                          default=u"Deleting %(count_emails)s invites",
+                                          mapping={'count_emails':len(emails)}))
 
             url = resource_url(self.context, self.request)
             return HTTPFound(location=url)

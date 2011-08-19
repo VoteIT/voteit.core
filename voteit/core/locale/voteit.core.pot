@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2011-08-19 13:14+0200\n"
+"POT-Creation-Date: 2011-08-19 14:11+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Generated-By: Babel 0.9.6\n"
 
 #: voteit/core/bootstrap.py:26 voteit/core/bootstrap.py:36
-#: voteit/core/models/meeting.py:115
+#: voteit/core/models/meeting.py:107
 msgid "VoteIT"
 msgstr ""
 
@@ -79,16 +79,21 @@ msgstr ""
 msgid "Summary of this item."
 msgstr ""
 
+#. Default: This could be what was decided. It will show up in the log on the
+#. meeting page.
 #: voteit/core/models/agenda_item.py:127
-msgid "This could be what was decided. Used for logging events."
+msgid "ai_summary_description"
 msgstr ""
 
-#: voteit/core/models/agenda_item.py:134
-msgid "Start time of this Agenda Item."
+#. Default: Estimated start time of this Agenda Item.
+#: voteit/core/models/agenda_item.py:135
+msgid "ai_start_time_title"
 msgstr ""
 
-#: voteit/core/models/agenda_item.py:135 voteit/core/models/poll.py:274
-msgid "It will be opened automatically when this time has passed."
+#. Default: No action will be taken automatically when the time has passed, so
+#. you need to open this item yourself.
+#: voteit/core/models/agenda_item.py:137
+msgid "ai_start_time"
 msgstr ""
 
 #: voteit/core/models/discussion_post.py:38
@@ -99,55 +104,66 @@ msgstr ""
 msgid "Text"
 msgstr ""
 
-#: voteit/core/models/invite_ticket.py:85
+#. Default:   -------------------------------------------------------------
+#. Click the link to access this VoteIT meeting: %(access_link)s  Have an
+#. account already? Simply login after clicking this link.  Need to register?
+#. Use the above link and simply register. You'll be granted access instantly.
+#. Don't want to register now? Remember that you need to click this link to
+#. gain access to the meeting you're invited to.  Warm regards, The VoteIT team
+#: voteit/core/models/invite_ticket.py:64
+msgid "ticket_claim_instructions"
+msgstr ""
+
+#: voteit/core/models/invite_ticket.py:87
 msgid "VoteIT meeting invitation"
 msgstr ""
 
-#: voteit/core/models/invite_ticket.py:121
+#: voteit/core/models/invite_ticket.py:123
 msgid "Email address your invitation was sent to."
 msgstr ""
 
-#: voteit/core/models/invite_ticket.py:122
+#: voteit/core/models/invite_ticket.py:124
 msgid "Invalid email address."
 msgstr ""
 
-#: voteit/core/models/invite_ticket.py:125
+#: voteit/core/models/invite_ticket.py:127
 msgid "The access token your received in your email."
 msgstr ""
 
-#: voteit/core/models/invite_ticket.py:134
+#: voteit/core/models/invite_ticket.py:136
 msgid "Couldn't find any invitation for this email address."
 msgstr ""
 
-#: voteit/core/models/invite_ticket.py:138
+#: voteit/core/models/invite_ticket.py:140
 msgid "Email matches, but token doesn't"
 msgstr ""
 
-#: voteit/core/models/invite_ticket.py:139
+#: voteit/core/models/invite_ticket.py:141
 msgid "Check this field - token doesn't match"
 msgstr ""
 
-#: voteit/core/models/invite_ticket.py:149
+#: voteit/core/models/invite_ticket.py:151
 msgid "Roles"
 msgstr ""
 
-#: voteit/core/models/invite_ticket.py:155
+#: voteit/core/models/invite_ticket.py:158
 msgid "Email addresses to give the role above."
 msgstr ""
 
-#: voteit/core/models/invite_ticket.py:160
+#: voteit/core/models/invite_ticket.py:163
 msgid "Welcome text of the email that will be sent"
 msgstr ""
 
-#: voteit/core/models/invite_ticket.py:161
+#: voteit/core/models/invite_ticket.py:164
 msgid "No HTML tags allowed."
 msgstr ""
 
-#: voteit/core/models/invite_ticket.py:163
-msgid "You've received a meeting invitation for a VoteIT meeting."
+#. Default: You've received a meeting invitation for a VoteIT meeting.
+#: voteit/core/models/invite_ticket.py:166
+msgid "invitation_default_text"
 msgstr ""
 
-#: voteit/core/models/invite_ticket.py:176 voteit/core/views/meeting.py:215
+#: voteit/core/models/invite_ticket.py:180 voteit/core/views/meeting.py:204
 msgid "Current invitations"
 msgstr ""
 
@@ -155,27 +171,15 @@ msgstr ""
 msgid "Meeting"
 msgstr ""
 
-#: voteit/core/models/meeting.py:100
-msgid "Message"
-msgstr ""
-
-#: voteit/core/models/meeting.py:102
-msgid "Knock knock - Please let me access the meeting."
-msgstr ""
-
-#: voteit/core/models/meeting.py:114
+#: voteit/core/models/meeting.py:106
 msgid "Name visible on system mail sent from this meeting"
 msgstr ""
 
-#: voteit/core/models/meeting.py:117
+#: voteit/core/models/meeting.py:109
 msgid "Email address to send from"
 msgstr ""
 
-#: voteit/core/models/meeting.py:118
-msgid "noreply@somehost.voteit"
-msgstr ""
-
-#: voteit/core/models/meeting.py:119
+#: voteit/core/models/meeting.py:111
 msgid "Invalid email address"
 msgstr ""
 
@@ -183,38 +187,56 @@ msgstr ""
 msgid "Poll"
 msgstr ""
 
+#. Default: Proposal '%(name)s' already in state %(state)s
+#: voteit/core/models/poll.py:178
+msgid "change_prop_state_already_that_state_error"
+msgstr ""
+
+#. Default: Proposal '%(name)s' set as %(state)s
+#: voteit/core/models/poll.py:185
+msgid "prop_state_changed_notice"
+msgstr ""
+
+#. Default: Proposal with id '%(name)s' couldn't be set as %(state)s. You
+#. should do this manually.
+#: voteit/core/models/poll.py:190
+msgid "prop_state_change_error"
+msgstr ""
+
 #. Default: Poll closed. Proposals might have been adjusted as approved or
 #. denied depending on outcome of the poll.
-#: voteit/core/models/poll.py:189
+#: voteit/core/models/poll.py:195
 msgid "poll_closed_info"
 msgstr ""
 
-#: voteit/core/models/poll.py:251 voteit/core/models/poll.py:253
+#: voteit/core/models/poll.py:258 voteit/core/models/poll.py:260
 msgid "${val} is earlier than earliest date ${min}"
 msgstr ""
 
-#: voteit/core/models/poll.py:273
+#: voteit/core/models/poll.py:280
 msgid "Start time of this poll."
 msgstr ""
 
-#: voteit/core/models/poll.py:279
+#: voteit/core/models/poll.py:281
+msgid "You need to open it yourself."
+msgstr ""
+
+#: voteit/core/models/poll.py:286
 msgid "End time of this poll."
 msgstr ""
 
-#: voteit/core/models/poll.py:280
-msgid "It will be closed automatically when this time has passed."
+#: voteit/core/models/poll.py:287
+msgid "You need to close it yourself."
 msgstr ""
 
-#: voteit/core/models/poll.py:309
-msgid "Setting poll in planned state. It's now visible for meeting participants."
+#. Default: Setting poll in planned state. It's now visible for meeting
+#. participants.
+#: voteit/core/models/poll.py:316
+msgid "poll_planned_state_notice"
 msgstr ""
 
 #: voteit/core/models/proposal.py:57 voteit/core/models/proposal.py:78
 msgid "Proposal"
-msgstr ""
-
-#: voteit/core/models/schemas.py:17
-msgid "CSRF token didn't match. Did you submit this yourself?"
 msgstr ""
 
 #: voteit/core/models/security_aware.py:132
@@ -241,63 +263,68 @@ msgstr ""
 msgid "User"
 msgstr ""
 
-#: voteit/core/models/user.py:85
+#. Default: password link: %(pw_link)s
+#: voteit/core/models/user.py:83
+msgid "request_new_password_text"
+msgstr ""
+
+#: voteit/core/models/user.py:87
 msgid "Password reset request from VoteIT"
 msgstr ""
 
-#: voteit/core/models/user.py:126
+#: voteit/core/models/user.py:128
 msgid "Invalid email"
 msgstr ""
 
-#: voteit/core/models/user.py:145 voteit/core/models/user.py:167
+#: voteit/core/models/user.py:147 voteit/core/models/user.py:169
 msgid "Password"
 msgstr ""
 
-#: voteit/core/models/user.py:147
+#: voteit/core/models/user.py:149
 msgid "Email"
 msgstr ""
 
-#: voteit/core/models/user.py:150
+#: voteit/core/models/user.py:152
 msgid "First name"
 msgstr ""
 
-#: voteit/core/models/user.py:153
+#: voteit/core/models/user.py:155
 msgid "Last name"
 msgstr ""
 
-#: voteit/core/models/user.py:165 voteit/core/models/user.py:224
+#: voteit/core/models/user.py:167 voteit/core/models/user.py:226
 msgid "UserID or email address."
 msgstr ""
 
 #. Default: UserID must be 3-15 chars, start with a-zA-Z and only contain
 #. regular latin chars, numbers, minus and underscore.
-#: voteit/core/models/user.py:185
+#: voteit/core/models/user.py:187
 msgid "userid_char_error"
 msgstr ""
 
 #. Default: UserID already registered. If it was registered by you, try to
 #. retrieve your password.
-#: voteit/core/models/user.py:187
+#: voteit/core/models/user.py:189
 msgid "already_registered_error"
 msgstr ""
 
-#: voteit/core/models/user.py:192
+#: voteit/core/models/user.py:194
 msgid "UserID"
 msgstr ""
 
 #. Default: Used like a nick-name and as a unique id. You can't change this
 #. later.
-#: voteit/core/models/user.py:193
+#: voteit/core/models/user.py:195
 msgid "userid_description"
 msgstr ""
 
-#: voteit/core/models/user.py:208
+#: voteit/core/models/user.py:210
 msgid "About you"
 msgstr ""
 
 #. Default: Please note that anything you type here will be visible to all
 #. registered users, even if they're not in the same meeting as you.
-#: voteit/core/models/user.py:209
+#: voteit/core/models/user.py:211
 msgid "bio_visible_notice"
 msgstr ""
 
@@ -327,14 +354,34 @@ msgstr ""
 msgid "Vote for one"
 msgstr ""
 
+#: voteit/core/static/config.js.pt:8
+msgid "Are you sure you want to retract this proposal?"
+msgstr ""
+
+#: voteit/core/static/config.js.pt:7
+msgid "Are you sure you want to change the state?"
+msgstr ""
+
+#: voteit/core/static/config.js.pt:6
+msgid "Please confirm"
+msgstr ""
+
+#: voteit/core/static/config.js.pt:5
+msgid "No"
+msgstr ""
+
+#: voteit/core/static/config.js.pt:4
+msgid "Yes"
+msgstr ""
+
 #: voteit/core/views/base_edit.py:75 voteit/core/views/users.py:80
 msgid "Successfully added"
 msgstr ""
 
 #: voteit/core/views/base_edit.py:81 voteit/core/views/base_edit.py:131
 #: voteit/core/views/base_edit.py:165 voteit/core/views/catalog.py:48
-#: voteit/core/views/meeting.py:108 voteit/core/views/meeting.py:155
-#: voteit/core/views/meeting.py:209 voteit/core/views/users.py:86
+#: voteit/core/views/meeting.py:93 voteit/core/views/meeting.py:140
+#: voteit/core/views/meeting.py:198 voteit/core/views/users.py:86
 #: voteit/core/views/vote.py:168
 msgid "Canceled"
 msgstr ""
@@ -373,25 +420,35 @@ msgstr ""
 
 #. Default: To gain access to a meeting you need to use an access ticket that
 #. should have been mailed to you. If you've aldready registered, please login.
-#: voteit/core/views/meeting.py:74
+#: voteit/core/views/meeting.py:59
 msgid "login_to_access_meeting_notice"
 msgstr ""
 
-#: voteit/core/views/meeting.py:102
+#: voteit/core/views/meeting.py:87
 msgid "You've been granted access to the meeting. Welcome!"
 msgstr ""
 
-#: voteit/core/views/meeting.py:113
+#: voteit/core/views/meeting.py:98
 msgid "Meeting Access"
 msgstr ""
 
 #. Default: Successfully added and sent %(mail_count)s invites
-#: voteit/core/views/meeting.py:148
+#: voteit/core/views/meeting.py:133
 msgid "sent_tickets_text"
 msgstr ""
 
-#: voteit/core/views/meeting.py:161
+#: voteit/core/views/meeting.py:146
 msgid "Send meeting invitations"
+msgstr ""
+
+#. Default: Resending %(count_emails)s invites
+#: voteit/core/views/meeting.py:179
+msgid "resent_invites_notice"
+msgstr ""
+
+#. Default: Deleting %(count_emails)s invites
+#: voteit/core/views/meeting.py:190
+msgid "deleting_invites_notice"
 msgstr ""
 
 #: voteit/core/views/users.py:91
