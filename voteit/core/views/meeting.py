@@ -71,7 +71,8 @@ class MeetingView(BaseView):
               In that case, the form will be rendered so the user can cut and paste the token.
         """
         if not self.api.userid:
-            msg = _(u"You need to login or register first, then your can use your ticket to gain access to this meeting.")
+            msg = _('login_to_access_meeting_notice',
+                    default=u"To gain access to a meeting you need to use an access ticket that should have been mailed to you. If you've aldready registered, please login.")
             self.api.flash_messages.add(msg, type='error')
 
             came_from = urllib.quote(self.request.url)
@@ -144,7 +145,8 @@ class MeetingView(BaseView):
                 obj = ci.type_class(email, appstruct['roles'], message)
                 self.context.add_invite_ticket(obj, self.request) #Will also email user
             
-            self.api.flash_messages.add(_(u"Successfully added and sent %s invites" % len(emails)))
+            msg = _('sent_tickets_text', default=u"Successfully added and sent %(mail_count)s invites", mapping={'mail_count':len(emails)} )
+            self.api.flash_messages.add(msg)
 
             url = resource_url(self.context, self.request)
             return HTTPFound(location=url)

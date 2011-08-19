@@ -52,7 +52,7 @@ class VoteView(object):
             assert IVote.providedBy(vote)
             
             if has_permission(EDIT, vote, self.request):
-                msg = _(u"You've already voted, but the poll is still open so you can change or even delete your vote if you want to.")
+                msg = _('already_voted_poll_open', default=u"You've already voted, but the poll is still open so you can change your vote if you want to.")
                 self.api.flash_messages.add(msg)
                 url = "%sedit" % resource_url(vote, self.request)
                 return HTTPFound(location=url)

@@ -51,7 +51,7 @@ def main(global_config, **settings):
     #Set which mailer to use
     config.include(settings['mailer'])
 
-    #config.add_translation_dirs('%s:locale/' % PROJECTNAME)
+    config.add_translation_dirs('%s:locale/' % PROJECTNAME)
 
     config.scan(PROJECTNAME)
 
