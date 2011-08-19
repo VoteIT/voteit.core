@@ -15,6 +15,7 @@
     <link href="${request.application_url}/static/jquery.rating.css" rel="stylesheet" type="text/css" />
     <link href="${request.application_url}/static/ui-lightness/jquery-ui-1.8.15.custom.css" rel="stylesheet" type="text/css" />
 
+    <script type="text/javascript" src="${request.application_url}/config.js"></script>
     <script type="text/javascript" src="${request.application_url}/deform/scripts/jquery-1.4.2.min.js"></script>
     <script type="text/javascript" src="${request.application_url}/static/jquery-ui-1.8.15.custom.min.js"></script>
     <script type="text/javascript" src="${request.application_url}/static/jquery.rating.js"></script>
