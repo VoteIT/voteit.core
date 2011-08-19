@@ -476,7 +476,11 @@ class IHelpUtil(Interface):
         """ Get HTML for an id. If lang is not specified, get the already set lang.
         """
     
-    
+
+class IMessage(Interface):
+    """ Messages are stored in a relational database and behave like notifications.
+    """
+
 class IMessages(Interface):
     """ Handle messages.
         This behaves like an adapter on a request.

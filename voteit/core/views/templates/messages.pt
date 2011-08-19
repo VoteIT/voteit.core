@@ -8,12 +8,15 @@
 
 <tal:messages condition="messages">
 	<h1>Messages</h1>
-	<tal:iterate repeat="msg messages">
-		Added: <span tal:content="msg.created">1970-01-01</span>
-        Tags: <span tal:content="msg.string_tags">tags</span>
-        Unread: <span tal:content="msg.unread">True</span>
-		<div tal:content="msg.message">Earthlings, we come in peace!</div>
-	</tal:iterate>
+  <ul class="notification_messages">
+  	<tal:messages tal:repeat="msg messages">
+      <li class="notification_message">
+    		<p>Added: <span tal:content="msg.format_created()">1970-01-01</span></p>
+        <p>Unread: <span tal:content="api.is_unread(msg, True)">True</span></p>
+    		<div tal:content="msg.message">Earthlings, we come in peace!</div>
+      </li>
+  	</tal:messages>
+  </ul>
 </tal:messages>
 
 <tal:messages condition="not messages">

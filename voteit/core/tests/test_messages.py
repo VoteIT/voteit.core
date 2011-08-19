@@ -120,6 +120,8 @@ class MessagesTests(unittest.TestCase):
         self.assertEqual(new_tags, mock_tags | set(('first_new', 'second_new',)))
 
     def test_unread_count_in_meeting(self):
+        # FIXME: It looks like the events system doesn't get loaded in the testcase,
+        # so no unread marker items are created in the DB.
         obj = self._import_class()(self.session)
         self._add_mock_data(obj)
         
