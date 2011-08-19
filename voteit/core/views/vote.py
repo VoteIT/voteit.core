@@ -158,7 +158,7 @@ class VoteView(object):
             parent = self.context.__parent__
             del parent[self.context.__name__]
 
-            self.api.flash_messages.add(_(u"Successfully deleted"))
+            self.api.flash_messages.add(_(u"Deleted"))
 
             ai = find_interface(parent, IAgendaItem)
             url = resource_url(ai, self.request)

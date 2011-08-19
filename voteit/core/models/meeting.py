@@ -108,7 +108,7 @@ def construct_schema(**kwargs):
         meeting_mail_address = colander.SchemaNode(colander.String(),
                                                 title = _(u"Email address to send from"),
                                                 default = u"noreply@somehost.voteit",
-                                                validator = colander.All(colander.Email(msg = _(u"Invalid email address")), html_string_validator,),)
+                                                validator = colander.All(colander.Email(msg = _(u"Invalid email address.")), html_string_validator,),)
     return MeetingSchema()
 
 def includeme(config):

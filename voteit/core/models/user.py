@@ -125,7 +125,7 @@ def construct_schema(**kwargs):
         KeyError("'type' is a required keyword for User schemas. See construct_schema in the user module.")    
         
     def _validate_email(node, value):
-        default_email_validator = colander.Email(msg=_(u"Invalid email"))
+        default_email_validator = colander.Email(msg=_(u"Invalid email address."))
         default_email_validator(node, value)
         
         #context can be IUser or IUsers

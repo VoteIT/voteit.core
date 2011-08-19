@@ -134,7 +134,7 @@ def construct_schema(**kwargs):
             TZDateTime(local_tz),
             title = _('ai_start_time_title',
                       default=u"Estimated start time of this Agenda Item."),
-            description = _('ai_start_time',
+            description = _('ai_start_time_description',
                             default=u"No action will be taken automatically when the time has passed, so you need to open this item yourself."),
             widget=deform.widget.DateTimeInputWidget(options={'timeFormat': 'hh:mm'}),
             missing = None,
