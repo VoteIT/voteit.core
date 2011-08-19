@@ -150,7 +150,7 @@ class BaseEdit(object):
 
         post = self.request.POST
         if 'delete' in post:
-            if self.context.content_type == 'SiteRoot' or self.context.content_type == 'Users':
+            if self.context.content_type == 'SiteRoot' or self.context.content_type == 'Users' or self.context.content_type == 'User':
                 raise Exception("Can't delete this content type")
 
             parent = self.context.__parent__
