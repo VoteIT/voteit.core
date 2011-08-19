@@ -1,3 +1,4 @@
+<tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core">
 <div id="flash_messages" class="content_wrapper">
 	<tal:iterate repeat="flash messages">
 		<div tal:attributes="class 'message %s'.strip() % flash['type']">
@@ -9,3 +10,4 @@
         </div>
 	</tal:iterate>
 </div>
+</tal:main>

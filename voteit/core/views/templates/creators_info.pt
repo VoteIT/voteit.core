@@ -1,3 +1,4 @@
+<tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core">
 <span class="creators" tal:condition="users">
 <tal:iterate repeat="user users">
 	<a tal:condition="user"
@@ -7,3 +8,4 @@
 	</a><tal:comma tal:condition="not repeat['user'].end">,</tal:comma>
 </tal:iterate>
 </span>
+</tal:main>

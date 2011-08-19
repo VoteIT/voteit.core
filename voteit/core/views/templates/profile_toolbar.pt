@@ -1,3 +1,4 @@
+<tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core">
 <div id="profile_toolbar" metal:define-macro="profile_toolbar">
 	<div class="content_wrapper">
 		<ul id="main_profile_tabs" class="tabs">
@@ -41,3 +42,4 @@
 		</ul>
 	</div>
 </div>
+</tal:main>

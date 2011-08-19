@@ -1,1 +1,3 @@
+<tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core">
 <tal:p tal:replace="structure help"></tal:p>
+</tal:main>

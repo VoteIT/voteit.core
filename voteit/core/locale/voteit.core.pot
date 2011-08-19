@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2011-08-19 15:26+0200\n"
+"POT-Creation-Date: 2011-08-19 16:19+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -273,7 +273,7 @@ msgstr ""
 msgid "Password"
 msgstr ""
 
-#: voteit/core/models/user.py:149 voteit/core/views/templates/view_user.pt:12
+#: voteit/core/models/user.py:149 voteit/core/views/templates/view_user.pt:14
 msgid "Email"
 msgstr ""
 
@@ -321,8 +321,8 @@ msgstr ""
 msgid "bio_visible_notice"
 msgstr ""
 
-#: voteit/core/models/users.py:15 voteit/core/views/templates/list_users.pt:7
-#: voteit/core/views/templates/profile_toolbar.pt:15
+#: voteit/core/models/users.py:15 voteit/core/views/templates/list_users.pt:9
+#: voteit/core/views/templates/profile_toolbar.pt:16
 msgid "Users"
 msgstr ""
 
@@ -381,6 +381,7 @@ msgid "Canceled"
 msgstr ""
 
 #: voteit/core/views/base_edit.py:87
+#: voteit/core/views/templates/action_bar.pt:111
 msgid "Add"
 msgstr ""
 
@@ -504,12 +505,8 @@ msgstr ""
 msgid "This is your vote"
 msgstr ""
 
-#: voteit/core/views/templates/action_bar.pt:120
+#: voteit/core/views/templates/action_bar.pt:121
 msgid "Set state"
-msgstr ""
-
-#: voteit/core/views/templates/action_bar.pt:110
-msgid "Name"
 msgstr ""
 
 #: voteit/core/views/templates/action_bar.pt:107
@@ -556,169 +553,173 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
-#: voteit/core/views/templates/agenda_item.pt:68
-#: voteit/core/views/templates/agenda_item.pt:26
-#: voteit/core/views/templates/main.pt:79
+#: voteit/core/views/templates/agenda_item.pt:70
+#: voteit/core/views/templates/agenda_item.pt:28
+#: voteit/core/views/templates/main.pt:82
 msgid "State"
 msgstr ""
 
-#: voteit/core/views/templates/agenda_item.pt:64
+#: voteit/core/views/templates/agenda_item.pt:66
 msgid "propose"
 msgstr ""
 
-#: voteit/core/views/templates/agenda_item.pt:58
+#: voteit/core/views/templates/agenda_item.pt:60
 msgid "Proposal(s)"
 msgstr ""
 
-#: voteit/core/views/templates/agenda_item.pt:47
+#: voteit/core/views/templates/agenda_item.pt:49
 msgid "Discussion"
 msgstr ""
 
-#: voteit/core/views/templates/agenda_item.pt:42
+#: voteit/core/views/templates/agenda_item.pt:44
 msgid "No polls yet"
 msgstr ""
 
-#: voteit/core/views/templates/agenda_item.pt:21
+#: voteit/core/views/templates/agenda_item.pt:23
 msgid "Poll method"
 msgstr ""
 
-#: voteit/core/views/templates/agenda_item.pt:10
+#: voteit/core/views/templates/agenda_item.pt:12
 msgid "Poll(s)"
 msgstr ""
 
-#: voteit/core/views/templates/login_register.pt:19
+#: voteit/core/views/templates/log.pt:7
+msgid "Nothing planned yet "
+msgstr ""
+
+#: voteit/core/views/templates/login_register.pt:21
 msgid "Registration"
 msgstr ""
 
-#: voteit/core/views/templates/login_register.pt:11
-#: voteit/core/views/templates/profile_toolbar.pt:38
+#: voteit/core/views/templates/login_register.pt:13
+#: voteit/core/views/templates/profile_toolbar.pt:39
 msgid "Login"
 msgstr ""
 
-#: voteit/core/views/templates/logs.pt:23
+#: voteit/core/views/templates/logs.pt:25
 msgid "Current log"
 msgstr ""
 
-#: voteit/core/views/templates/logs.pt:21
+#: voteit/core/views/templates/logs.pt:23
 msgid "Select a log above"
 msgstr ""
 
-#: voteit/core/views/templates/logs.pt:7
+#: voteit/core/views/templates/logs.pt:9
 msgid "VoteIT logs"
 msgstr ""
 
-#: voteit/core/views/templates/meeting.pt:22
-#: voteit/core/views/templates/meeting.pt:16
-#: voteit/core/views/templates/meeting.pt:10
+#: voteit/core/views/templates/meeting.pt:24
+#: voteit/core/views/templates/meeting.pt:18
+#: voteit/core/views/templates/meeting.pt:12
 msgid "Show all"
 msgstr ""
 
-#: voteit/core/views/templates/meeting.pt:21
+#: voteit/core/views/templates/meeting.pt:23
 msgid "This will happen"
 msgstr ""
 
-#: voteit/core/views/templates/meeting.pt:15
+#: voteit/core/views/templates/meeting.pt:17
 msgid "This is happening now"
 msgstr ""
 
-#: voteit/core/views/templates/meeting.pt:9
+#: voteit/core/views/templates/meeting.pt:11
 msgid "This has happened"
 msgstr ""
 
-#: voteit/core/views/templates/messages.pt:23
+#: voteit/core/views/templates/messages.pt:25
 msgid "No messages"
 msgstr ""
 
-#: voteit/core/views/templates/messages.pt:15
+#: voteit/core/views/templates/messages.pt:17
 msgid "Unread"
 msgstr ""
 
-#: voteit/core/views/templates/messages.pt:14
+#: voteit/core/views/templates/messages.pt:16
 msgid "Added"
 msgstr ""
 
-#: voteit/core/views/templates/messages.pt:10
-#: voteit/core/views/templates/profile_toolbar.pt:24
+#: voteit/core/views/templates/messages.pt:12
+#: voteit/core/views/templates/profile_toolbar.pt:25
 msgid "Messages"
 msgstr ""
 
-#: voteit/core/views/templates/navigation.pt:22
+#: voteit/core/views/templates/navigation.pt:24
 msgid "all meetings"
 msgstr ""
 
-#: voteit/core/views/templates/navigation.pt:4
+#: voteit/core/views/templates/navigation.pt:6
 msgid "Available meetings"
 msgstr ""
 
-#: voteit/core/views/templates/pending_access_requests.pt:7
+#: voteit/core/views/templates/pending_access_requests.pt:9
 msgid "${access_count} pending access request(s)"
 msgstr ""
 
-#: voteit/core/views/templates/profile_toolbar.pt:36
+#: voteit/core/views/templates/profile_toolbar.pt:37
 msgid "Register"
 msgstr ""
 
-#: voteit/core/views/templates/profile_toolbar.pt:30
+#: voteit/core/views/templates/profile_toolbar.pt:31
 msgid "Logout"
 msgstr ""
 
-#: voteit/core/views/templates/profile_toolbar.pt:27
+#: voteit/core/views/templates/profile_toolbar.pt:28
 msgid "Profile"
 msgstr ""
 
-#: voteit/core/views/templates/profile_toolbar.pt:13
+#: voteit/core/views/templates/profile_toolbar.pt:14
 msgid "Settings"
 msgstr ""
 
-#: voteit/core/views/templates/profile_toolbar.pt:5
+#: voteit/core/views/templates/profile_toolbar.pt:6
 msgid "Meeting search"
 msgstr ""
 
-#: voteit/core/views/templates/protocol.pt:20
+#: voteit/core/views/templates/protocol.pt:22
 msgid "by"
 msgstr ""
 
-#: voteit/core/views/templates/search_result.pt:46
+#: voteit/core/views/templates/search_result.pt:48
 msgid "Search above"
 msgstr ""
 
-#: voteit/core/views/templates/search_result.pt:43
+#: voteit/core/views/templates/search_result.pt:45
 msgid "No results"
 msgstr ""
 
-#: voteit/core/views/templates/search_result.pt:22
+#: voteit/core/views/templates/search_result.pt:24
 msgid "Search"
 msgstr ""
 
-#: voteit/core/views/templates/time_info.pt:9
+#: voteit/core/views/templates/time_info.pt:10
 msgid "ends"
 msgstr ""
 
-#: voteit/core/views/templates/time_info.pt:4
+#: voteit/core/views/templates/time_info.pt:5
 msgid "starts"
 msgstr ""
 
-#: voteit/core/views/templates/view_user.pt:13
+#: voteit/core/views/templates/view_user.pt:15
 msgid "Biography"
 msgstr ""
 
-#: voteit/core/views/templates/view_user.pt:9
+#: voteit/core/views/templates/view_user.pt:11
 msgid "Change password"
 msgstr ""
 
-#: voteit/core/views/templates/macros/expressions.pt:18
+#: voteit/core/views/templates/macros/expressions.pt:20
 msgid "and ${item_count} more "
 msgstr ""
 
-#: voteit/core/views/templates/macros/expressions.pt:12
+#: voteit/core/views/templates/macros/expressions.pt:14
 msgid "and"
 msgstr ""
 
-#: voteit/core/views/templates/macros/expressions.pt:11
+#: voteit/core/views/templates/macros/expressions.pt:13
 msgid "You"
 msgstr ""
 
-#: voteit/core/views/templates/macros/flash_messages.pt:5
+#: voteit/core/views/templates/macros/flash_messages.pt:6
 msgid "OK"
 msgstr ""
 

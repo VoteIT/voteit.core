@@ -1,3 +1,4 @@
+<tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core">
 <div class="time_info"
      tal:condition="start_time or end_time">
     <span tal:condition="start_time">
@@ -10,3 +11,4 @@
 		@ <span tal:content="dt_format(end_time)">1970-01-01 01:01</span>
     </span>
 </div>
+</tal:main>

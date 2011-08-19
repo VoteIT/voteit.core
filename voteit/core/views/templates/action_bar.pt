@@ -1,4 +1,4 @@
-<ul class="action_bar">
+<ul class="action_bar" i18n:domain="voteit.core">
 
     <li class="menuitem" tal:condition="context_has_permission('Edit', context)">
     	<a class="buttonize"
@@ -107,9 +107,10 @@
         	<a href="#" class="buttonize menu_header"><span i18n:translate="">Content</span> &raquo;</a>
             <ul class="menu_body">
             <tal:iterate tal:repeat="type_name api.addable_types">
-                <li><a tal:content="string: add $type_name"
-                   tal:attributes="href string:@@add?content_type=$type_name"
-				   i18n:translate="">Name</a></li>
+                <li><a tal:attributes="href string:@@add?content_type=$type_name">
+                    <span i18n:translate="">Add</span>
+					<span tal:replace="type_name">somestuff</span>
+                </a></li>
             </tal:iterate>
             </ul>
         </li>
@@ -131,4 +132,3 @@
 	<!-- FIXME: this is just a dummy for showing the feature -->
     <a tal:attributes="id string:help_${context.uid};" href="@@help?article=dummy" target="_blank" class="help">?</a>
 </ul>
-

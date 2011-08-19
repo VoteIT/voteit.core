@@ -1,8 +1,10 @@
-<tal:closed condition="log" repeat="entry log">
-    <h5 tal:content="entry.title">Title</h5>
-    <div tal:replace="structure api.get_time_info(entry, request)">start time and end time macro</div>
-    <div tal:content="entry.get_field_value('summary')">Summary</div>
-</tal:closed>
-<tal:no_active condition="not log">
-    Nothing right now
-</tal:no_active>
+<metal:main i18n:domain="voteit.core">
+	<tal:closed condition="log" repeat="entry log">
+	    <h5 tal:content="entry.title">Title</h5>
+	    <div tal:replace="structure api.get_time_info(entry, request)">start time and end time macro</div>
+	    <div tal:content="entry.get_field_value('summary')">Summary</div>
+	</tal:closed>
+	<tal:no_active condition="not log" i18n:translate="">
+	    Nothing planned yet
+	</tal:no_active>
+</metal:main>

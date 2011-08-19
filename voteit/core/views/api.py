@@ -62,7 +62,6 @@ class APIView(object):
         self.content_info = request.registry.getUtility(IContentUtility)
         self.addable_types = self._get_addable_types(context, request)
         self.navigation = get_renderer('templates/navigation.pt').implementation()
-        self.profile_toolbar = get_renderer('templates/profile_toolbar.pt').implementation()
         self.lineage = lineage(context)
         rev = []
         [rev.insert(0, x) for x in self.lineage]
@@ -137,6 +136,9 @@ class APIView(object):
         response['is_moderator'] = self.context_has_permission(security.MODERATE_MEETING, context)
         
         return render('templates/action_bar.pt', response, request=request)
+
+    def get_profile_toolbar(self, context, request):
+        return render('templates/profile_toolbar.pt', {'api':self}, request=request)
 
     def get_time_info(self, context, request):
         """ Render start and end time of something, if those exist. """

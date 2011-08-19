@@ -1,4 +1,6 @@
-<div tal:attributes="id 'expression_form_'+context_id;">
+<div tal:attributes="id 'expression_form_'+context_id;"
+     xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+     i18n:domain="voteit.core">
 	<form method="post" tal:attributes="action toggle_url;" class="expression_form">
 	    <input name="tag" type="hidden" tal:attributes="value tag" />
 	    <input name="do" type="hidden" tal:attributes="value do" />

@@ -1,4 +1,6 @@
-<metal:main define-macro="navigation">
+<metal:main define-macro="navigation"
+            xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+			i18n:domain="voteit.core">
 <div class="content_wrapper">
 	<tal:root condition="not api.meeting">
 	<h5 i18n:translate="">Available meetings</h5>
