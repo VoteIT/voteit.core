@@ -1,7 +1,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:tal="http://xml.zope.org/namespaces/tal"
-      metal:define-macro="master">
+      metal:define-macro="master"
+	  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+	  i18n:domain="voteit.core">
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 	    <metal:page_title define-slot="page_title">
@@ -43,7 +45,8 @@
 <body>
 	
 	<div id="page_wrapper">
-    <metal:toolbar metal:use-macro="api.profile_toolbar.macros['profile_toolbar']">Profile toolbar</metal:toolbar>
+
+    <div tal:replace="structure api.get_profile_toolbar(context, request)">Profile toolbar</div>
 
     <div id="navigation"><metal:nav metal:use-macro="api.navigation.macros['navigation']">Navigation</metal:nav></div>
 
@@ -76,7 +79,7 @@
 
                     <tal:state define="state_id context.get_workflow_state()|False">
                     	<div tal:condition="state_id">
-	                        <span>State:</span>
+	                        <span i18n:translate="">State</span>:
 	                        <strong tal:attributes="class 'wf-state-%s' % state_id"
 	                              tal:content="state_id">private</strong>
 						</div>

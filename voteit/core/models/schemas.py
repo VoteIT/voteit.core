@@ -14,7 +14,7 @@ def add_csrf_token(context, request, schema):
             #hidden since the form element for csrf is hidden.
             #The error as such should only appear if someone is actually
             #beeing attacked, so treating it like an input error seems wrong.
-            raise Forbidden(_(u"CSRF token didn't match. Did you submit this yourself?"))
+            raise Forbidden("CSRF token didn't match. Did you submit this yourself?")
     
     schema.add(colander.SchemaNode(
                    colander.String(),

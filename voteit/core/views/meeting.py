@@ -28,21 +28,6 @@ class MeetingView(BaseView):
             
             url = self.api.resource_url(self.api.root, self.request)
             return HTTPFound(location = url)
-            
-            #FIXME:
-            #If user is authenticated:
-#            if has_permission(security.REQUEST_MEETING_ACCESS, self.context, self.request):
-#                url = self.api.resource_url(self.context, self.request) + 'request_meeting_access'
-#                return HTTPFound(location = url)
-            
-            #Otherwise raise unauthorized
-            #raise Forbidden("You can't request access to this meeting. Maybe you need to login, or it isn't allowed.")
-        
-        if self.context.get_workflow_state() == 'private':
-            msg = _(u"This meeting is in the state <b>Private</b>. "
-                    u"No regular meeting participants can see this meeting yet, and you won't be able to send invitations. "
-                    u"If you want others to see it, you can set the meeting in the <b>Inactive</b> state by using the <b>set state</b> menu.")
-            self.api.flash_messages.add(msg)
         
         self.response['get_state_ais'] = self._get_state_ais
         
@@ -81,7 +66,8 @@ class MeetingView(BaseView):
               In that case, the form will be rendered so the user can cut and paste the token.
         """
         if not self.api.userid:
-            msg = _(u"You need to login or register first, then your can use your ticket to gain access to this meeting.")
+            msg = _('login_to_access_meeting_notice',
+                    default=u"To gain access to a meeting you need to use an access ticket that should have been mailed to you. If you've aldready registered, please login.")
             self.api.flash_messages.add(msg, type='error')
 
             came_from = urllib.quote(self.request.url)
@@ -154,7 +140,8 @@ class MeetingView(BaseView):
                 obj = ci.type_class(email, appstruct['roles'], message)
                 self.context.add_invite_ticket(obj, self.request) #Will also email user
             
-            self.api.flash_messages.add(_(u"Successfully added and sent %s invites" % len(emails)))
+            msg = _('sent_tickets_text', default=u"Successfully added and sent %(mail_count)s invites", mapping={'mail_count':len(emails)} )
+            self.api.flash_messages.add(msg)
 
             url = resource_url(self.context, self.request)
             return HTTPFound(location=url)
@@ -199,7 +186,9 @@ class MeetingView(BaseView):
             for email in emails:
                 self.context.invite_tickets[email].send(self.request)
             
-            self.api.flash_messages.add(_(u"Resending %s invites" % len(emails)))
+            self.api.flash_messages.add(_('resent_invites_notice',
+                                          default=u"Resending %(count_emails)s invites",
+                                          mapping={'count_emails':len(emails)}))
             url = resource_url(self.context, self.request)
             return HTTPFound(location=url)            
 
@@ -208,7 +197,9 @@ class MeetingView(BaseView):
             for email in emails:
                 del self.context.invite_tickets[email]
             
-            self.api.flash_messages.add(_(u"Deleting %s invites" % len(emails)))
+            self.api.flash_messages.add(_('deleting_invites_notice',
+                                          default=u"Deleting %(count_emails)s invites",
+                                          mapping={'count_emails':len(emails)}))
 
             url = resource_url(self.context, self.request)
             return HTTPFound(location=url)

@@ -61,23 +61,25 @@ class InviteTicket(Persistent, WorkflowAware):
         form_url = "%sticket" % resource_url(meeting, request)
         access_link = form_url + '?email=%s&token=%s' % (self.email, self.token)
         
-        #FIXME: Proper template or edit form
-        instructions = """
-
+        instructions = _('ticket_claim_instructions', default=u"""
 
 -------------------------------------------------------------
+Click the link to access this VoteIT meeting:
+%(access_link)s
 
-To access the meeting, you need to do the following:
-1. You need to register an account at the site inviting you.
-2. Log in
-3. Click the link below to gain access directly, or go to:
-   %s
-   and enter your details
+Have an account already?
+Simply login after clicking this link.
 
-Access link for direct acces once you've logged in:
-%s
+Need to register?
+Use the above link and simply register. You'll be granted access instantly.
+
+Don't want to register now?
+Remember that you need to click this link to gain access to the meeting you're invited to.
+
+Warm regards,
+The VoteIT team
         
-        """ % (form_url, access_link)
+        """, mapping={'access_link':access_link})
         
         sender = meeting.get_field_value('meeting_mail_address')
         body = self.message + instructions
@@ -151,6 +153,7 @@ def construct_schema(context=None, request=None, type=None):
             )
             #FIXME: Proper validation or even a list of emails widget.
             #FIXME: Validate that an invite doesn't already exist.
+            #FIXME: Add custom subject line. No sense in having it static!
             emails = colander.SchemaNode(colander.String(),
                                          title = _(u"Email addresses to give the role above."),
                                          widget = deform.widget.TextAreaWidget(rows=5, cols=40),
@@ -160,7 +163,8 @@ def construct_schema(context=None, request=None, type=None):
                                           title = _(u'Welcome text of the email that will be sent'),
                                           description = _(u'No HTML tags allowed.'),
                                           widget = deform.widget.TextAreaWidget(rows=5, cols=40),
-                                          default = _(u"You've received a meeting invitation for a VoteIT meeting."),
+                                          default = _('invitation_default_text',
+                                                      default=u"You've received a meeting invitation for a VoteIT meeting."),
                                           missing = u'',
                                           validator = html_string_validator,
             )

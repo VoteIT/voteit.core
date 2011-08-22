@@ -94,14 +94,6 @@ class Meeting(BaseContent, WorkflowAware):
 
 
 def construct_schema(**kwargs):
-    if kwargs.get('type') == 'request_access':
-        class RequestAccessSchema(colander.Schema):
-            message = colander.SchemaNode(colander.String(),
-                                          title = _(u"Message"),
-                                          validator = colander.All(colander.Length(5, 999), html_string_validator,),
-                                          default = _(u"Knock knock - Please let me access the meeting."),
-                                          widget = deform.widget.TextAreaWidget(rows=5, cols=40),)
-        return RequestAccessSchema()
     
     #Default schema
     class MeetingSchema(colander.MappingSchema):
@@ -115,8 +107,8 @@ def construct_schema(**kwargs):
                                                 default = _(u"VoteIT"),)
         meeting_mail_address = colander.SchemaNode(colander.String(),
                                                 title = _(u"Email address to send from"),
-                                                default = _(u"noreply@somehost.voteit"),
-                                                validator = colander.All(colander.Email(msg = _(u"Invalid email address")), html_string_validator,),)
+                                                default = u"noreply@somehost.voteit",
+                                                validator = colander.All(colander.Email(msg = _(u"Invalid email address.")), html_string_validator,),)
     return MeetingSchema()
 
 def includeme(config):

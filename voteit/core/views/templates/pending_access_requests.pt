@@ -2,10 +2,12 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
       xmlns:tal="http://xml.zope.org/namespaces/tal"
-      metal:use-macro="api.main_template.macros['master']">
+      metal:use-macro="api.main_template.macros['master']"
+	  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+	  i18n:domain="voteit.core">
 <body>
-<h1 metal:fill-slot="page_heading">
-	<span tal:replace="len(access_requests)">1</span>
+<h1 metal:fill-slot="page_heading" i18n:translate="">
+	<span tal:replace="len(access_requests)" i18n:name="access_count">1</span>
 	pending access request(s)</h1>
 <div metal:fill-slot="content">
     <tal:iterate repeat="ar access_requests">

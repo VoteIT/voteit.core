@@ -30,7 +30,7 @@ class TZDateTime(DateTime):
 
         if not isinstance(appstruct, datetime.datetime):
             raise Invalid(node,
-                          _('"${val}" is not a datetime object',
+                          _("'${val}' is not valid as date and time",
                             mapping={'val':appstruct})
                           )
 

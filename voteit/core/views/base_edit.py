@@ -156,7 +156,7 @@ class BaseEdit(object):
             parent = self.context.__parent__
             del parent[self.context.__name__]
 
-            self.api.flash_messages.add(_(u"Successfully deleted"))
+            self.api.flash_messages.add(_(u"Deleted"))
 
             url = resource_url(parent, self.request)
             return HTTPFound(location=url)

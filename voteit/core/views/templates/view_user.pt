@@ -2,14 +2,17 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
       xmlns:tal="http://xml.zope.org/namespaces/tal"
-      metal:use-macro="api.main_template.macros['master']">
+      metal:use-macro="api.main_template.macros['master']"
+	  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+	  i18n:domain="voteit.core">
 <body>
 <div metal:fill-slot="content">
 	<div>
-		<a tal:attributes="href api.user_profile_url + '@@change_password'">Change password</a>
+		<a tal:attributes="href api.user_profile_url + '@@change_password'"
+		   i18n:translate="">Change password</a>
 	</div>
-	<div>Email: <span tal:content="context.get_field_value('email')"></span></div>
-	<div>Biography: <span tal:content="structure api.nl2br(context.get_field_value('biography'))"></span></div>
+	<div><span i18n:translate="">Email</span>: <span tal:content="context.get_field_value('email')"></span></div>
+	<div><span i18n:translate="">Biography</span>: <span tal:content="structure api.nl2br(context.get_field_value('biography'))"></span></div>
 </div>
 </body>
 </html>

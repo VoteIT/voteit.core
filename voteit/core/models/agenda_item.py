@@ -124,15 +124,18 @@ def construct_schema(**kwargs):
         summary = colander.SchemaNode(
             colander.String(),
             title = _(u"Summary of this item."),
-            description = _(u"This could be what was decided. Used for logging events."),
+            description = _('ai_summary_description',
+                            default=u"This could be what was decided. It will show up in the log on the meeting page."),
             widget=deform.widget.TextAreaWidget(rows=10, cols=60),
             missing = u"",
             validator=html_string_validator,
         )
         start_time = colander.SchemaNode(
             TZDateTime(local_tz),
-            title = _(u"Start time of this Agenda Item."),
-            description = _(u"It will be opened automatically when this time has passed."),
+            title = _('ai_start_time_title',
+                      default=u"Estimated start time of this Agenda Item."),
+            description = _('ai_start_time_description',
+                            default=u"No action will be taken automatically when the time has passed, so you need to open this item yourself."),
             widget=deform.widget.DateTimeInputWidget(options={'timeFormat': 'hh:mm'}),
             missing = None,
         )

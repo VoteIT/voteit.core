@@ -2,12 +2,14 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
       xmlns:tal="http://xml.zope.org/namespaces/tal"
-      metal:use-macro="api.main_template.macros['master']">
+      metal:use-macro="api.main_template.macros['master']"
+	  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+	  i18n:domain="voteit.core">
 <body>
 
     <div id="content" metal:fill-slot="content">
     
-        <h1>Poll(s)</h1>
+        <h1 i18n:translate="">Poll(s)</h1>
                     
         <tal:iterate condition="polls" repeat="poll polls">
             <div tal:define="poll_plugin poll.get_poll_plugin();
@@ -18,17 +20,18 @@
                 <div tal:content="poll.description">Description</div>
                 
                 <div>
-                    <span>Poll method:</span>
+                    <span i18n:translate="">Poll method</span>:
                     <strong tal:content="poll_plugin.title">Title</strong>
                 </div>
 
                 <div class="wf-info">
-                    <span>State:</span>
+                    <span i18n:translate="">State</span>:
                     <strong tal:attributes="class 'wf-state-%s' % state_id"
-                          tal:content="state_id">open</strong>
+                            tal:content="state_id">open</strong>
                 </div>
                 
-                <div tal:condition="state_id == 'closed'" tal:content="structure poll.render_poll_result()">
+                <div tal:condition="state_id == 'closed'"
+				     tal:content="structure poll.render_poll_result()">
                     Poll result
                 </div>
 
@@ -38,12 +41,12 @@
         </tal:iterate>
         
         <tal:no_polls condition="not polls">
-            <h3>No polls yet</h3>
+            <h3 i18n:translate="">No polls yet</h3>
         </tal:no_polls>
         <div style="clear: both"></div>
         <div class="column">
             <div id="discussions">
-                <h1>Discussion</h1>
+                <h1 i18n:translate="">Discussion</h1>
                 <a class="buttonize" tal:attributes="href api.resource_url(context, request) + '?discussions=all'">Show all</a>
                     
                 <div tal:replace="structure get_discussions()"></div>
@@ -54,17 +57,17 @@
 
         <div class="column">
             <div id="proposals">
-                <h1>Proposal(s)</h1>
+                <h1 i18n:translate="">Proposal(s)</h1>
                     
                 <tal:iterate condition="proposals" repeat="proposal proposals" >
                     <div tal:define="unread api.is_unread(proposal, True)"
                          tal:attributes="class unread and 'unread listing_block' or 'listing_block'">
                         <tal:creators tal:replace="structure api.get_creators_info(proposal.creators, request)">Creators</tal:creators>
-                        <span>propose:</span>
+                        <span i18n:translate="">propose</span>:
                         <span class="body" tal:content="structure proposal.title">Title</span>
                         
                         <div tal:define="state_id proposal.get_workflow_state()">
-                            <span>State:</span>
+                            <span i18n:translate="">State</span>:
                             <strong tal:attributes="class 'wf-state-%s' % state_id"
                                   tal:content="state_id">private</strong>
                         </div>

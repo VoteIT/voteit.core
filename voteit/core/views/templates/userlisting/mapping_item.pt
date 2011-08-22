@@ -11,7 +11,7 @@
      tal:repeat="msg field.error.messages()"
      tal:attributes="id repeat.msg.index==0 and errstr or
                        ('%s-%s' % (errstr, repeat.msg.index))"
-     class="${field.widget.error_class}" i18n:translate="">${msg}</p>
+     class="${field.widget.error_class}">${msg}</p>
 
   <!-- /mapping_item -->
 </td>

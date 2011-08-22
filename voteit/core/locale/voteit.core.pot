@@ -1,0 +1,733 @@
+# Translations template for voteit.core.
+# Copyright (C) 2011 ORGANIZATION
+# This file is distributed under the same license as the voteit.core
+# project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: voteit.core 0.0\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2011-08-19 16:19+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 0.9.6\n"
+
+#: voteit/core/bootstrap.py:26 voteit/core/bootstrap.py:36
+#: voteit/core/models/meeting.py:107
+msgid "VoteIT"
+msgstr ""
+
+#: voteit/core/bootstrap.py:31
+msgid "Registered users"
+msgstr ""
+
+#: voteit/core/bootstrap.py:37 voteit/core/security.py:56
+msgid "Administrator"
+msgstr ""
+
+#: voteit/core/fields.py:33
+msgid "'${val}' is not valid as date and time"
+msgstr ""
+
+#: voteit/core/security.py:57
+msgid "Moderator"
+msgstr ""
+
+#: voteit/core/security.py:58
+msgid "Participant"
+msgstr ""
+
+#: voteit/core/security.py:59
+msgid "Voter"
+msgstr ""
+
+#: voteit/core/security.py:60
+msgid "View only"
+msgstr ""
+
+#: voteit/core/validators.py:14
+msgid "Too short. At least 6 chars required."
+msgstr ""
+
+#: voteit/core/validators.py:16
+msgid "Less than 100 chars please."
+msgstr ""
+
+#: voteit/core/validators.py:32
+msgid "HTML is not allowed."
+msgstr ""
+
+#: voteit/core/models/agenda_item.py:52
+msgid "Agenda item"
+msgstr ""
+
+#: voteit/core/models/agenda_item.py:114
+msgid "Title"
+msgstr ""
+
+#: voteit/core/models/agenda_item.py:119
+msgid "Description"
+msgstr ""
+
+#: voteit/core/models/agenda_item.py:126
+msgid "Summary of this item."
+msgstr ""
+
+#. Default: This could be what was decided. It will show up in the log on the
+#. meeting page.
+#: voteit/core/models/agenda_item.py:127
+msgid "ai_summary_description"
+msgstr ""
+
+#. Default: Estimated start time of this Agenda Item.
+#: voteit/core/models/agenda_item.py:135
+msgid "ai_start_time_title"
+msgstr ""
+
+#. Default: No action will be taken automatically when the time has passed, so
+#. you need to open this item yourself.
+#: voteit/core/models/agenda_item.py:137
+msgid "ai_start_time_description"
+msgstr ""
+
+#: voteit/core/models/discussion_post.py:38
+msgid "Discussion Post"
+msgstr ""
+
+#: voteit/core/models/discussion_post.py:69
+msgid "Text"
+msgstr ""
+
+#. Default:   -------------------------------------------------------------
+#. Click the link to access this VoteIT meeting: %(access_link)s  Have an
+#. account already? Simply login after clicking this link.  Need to register?
+#. Use the above link and simply register. You'll be granted access instantly.
+#. Don't want to register now? Remember that you need to click this link to
+#. gain access to the meeting you're invited to.  Warm regards, The VoteIT team
+#: voteit/core/models/invite_ticket.py:64
+msgid "ticket_claim_instructions"
+msgstr ""
+
+#: voteit/core/models/invite_ticket.py:87
+msgid "VoteIT meeting invitation"
+msgstr ""
+
+#: voteit/core/models/invite_ticket.py:123
+msgid "Email address your invitation was sent to."
+msgstr ""
+
+#: voteit/core/models/invite_ticket.py:124 voteit/core/models/meeting.py:111
+#: voteit/core/models/user.py:128
+msgid "Invalid email address."
+msgstr ""
+
+#: voteit/core/models/invite_ticket.py:127
+msgid "The access token your received in your email."
+msgstr ""
+
+#: voteit/core/models/invite_ticket.py:136
+msgid "Couldn't find any invitation for this email address."
+msgstr ""
+
+#: voteit/core/models/invite_ticket.py:140
+msgid "Email matches, but token doesn't"
+msgstr ""
+
+#: voteit/core/models/invite_ticket.py:141
+msgid "Check this field - token doesn't match"
+msgstr ""
+
+#: voteit/core/models/invite_ticket.py:151
+msgid "Roles"
+msgstr ""
+
+#: voteit/core/models/invite_ticket.py:158
+msgid "Email addresses to give the role above."
+msgstr ""
+
+#: voteit/core/models/invite_ticket.py:163
+msgid "Welcome text of the email that will be sent"
+msgstr ""
+
+#: voteit/core/models/invite_ticket.py:164
+msgid "No HTML tags allowed."
+msgstr ""
+
+#. Default: You've received a meeting invitation for a VoteIT meeting.
+#: voteit/core/models/invite_ticket.py:166
+msgid "invitation_default_text"
+msgstr ""
+
+#: voteit/core/models/invite_ticket.py:180 voteit/core/views/meeting.py:214
+msgid "Current invitations"
+msgstr ""
+
+#: voteit/core/models/meeting.py:54
+msgid "Meeting"
+msgstr ""
+
+#: voteit/core/models/meeting.py:106
+msgid "Name visible on system mail sent from this meeting"
+msgstr ""
+
+#: voteit/core/models/meeting.py:109
+msgid "Email address to send from"
+msgstr ""
+
+#: voteit/core/models/poll.py:63
+msgid "Poll"
+msgstr ""
+
+#. Default: Proposal '%(name)s' already in state %(state)s
+#: voteit/core/models/poll.py:178
+msgid "change_prop_state_already_that_state_error"
+msgstr ""
+
+#. Default: Proposal '%(name)s' set as %(state)s
+#: voteit/core/models/poll.py:185
+msgid "prop_state_changed_notice"
+msgstr ""
+
+#. Default: Proposal with id '%(name)s' couldn't be set as %(state)s. You
+#. should do this manually.
+#: voteit/core/models/poll.py:190
+msgid "prop_state_change_error"
+msgstr ""
+
+#. Default: Poll closed. Proposals might have been adjusted as approved or
+#. denied depending on outcome of the poll.
+#: voteit/core/models/poll.py:195
+msgid "poll_closed_info"
+msgstr ""
+
+#: voteit/core/models/poll.py:258 voteit/core/models/poll.py:260
+msgid "${val} is earlier than earliest date ${min}"
+msgstr ""
+
+#: voteit/core/models/poll.py:280
+msgid "Start time of this poll."
+msgstr ""
+
+#: voteit/core/models/poll.py:281
+msgid "You need to open it yourself."
+msgstr ""
+
+#: voteit/core/models/poll.py:286
+msgid "End time of this poll."
+msgstr ""
+
+#: voteit/core/models/poll.py:287
+msgid "You need to close it yourself."
+msgstr ""
+
+#. Default: Setting poll in planned state. It's now visible for meeting
+#. participants.
+#: voteit/core/models/poll.py:316
+msgid "poll_planned_state_notice"
+msgstr ""
+
+#: voteit/core/models/proposal.py:57 voteit/core/models/proposal.py:78
+msgid "Proposal"
+msgstr ""
+
+#: voteit/core/models/security_aware.py:132
+msgid "Groups for user"
+msgstr ""
+
+#: voteit/core/models/security_aware.py:155
+msgid "Groups for invitation"
+msgstr ""
+
+#: voteit/core/models/security_aware.py:159
+msgid "Group settings for users"
+msgstr ""
+
+#: voteit/core/models/security_aware.py:160
+msgid "Invitations"
+msgstr ""
+
+#: voteit/core/models/site.py:21
+msgid "Site root"
+msgstr ""
+
+#: voteit/core/models/user.py:41
+msgid "User"
+msgstr ""
+
+#. Default: password link: %(pw_link)s
+#: voteit/core/models/user.py:83
+msgid "request_new_password_text"
+msgstr ""
+
+#: voteit/core/models/user.py:87
+msgid "Password reset request from VoteIT"
+msgstr ""
+
+#: voteit/core/models/user.py:147 voteit/core/models/user.py:169
+msgid "Password"
+msgstr ""
+
+#: voteit/core/models/user.py:149 voteit/core/views/templates/view_user.pt:14
+msgid "Email"
+msgstr ""
+
+#: voteit/core/models/user.py:152
+msgid "First name"
+msgstr ""
+
+#: voteit/core/models/user.py:155
+msgid "Last name"
+msgstr ""
+
+#: voteit/core/models/user.py:167 voteit/core/models/user.py:226
+msgid "UserID or email address."
+msgstr ""
+
+#. Default: UserID must be 3-15 chars, start with a-zA-Z and only contain
+#. regular latin chars, numbers, minus and underscore.
+#: voteit/core/models/user.py:187
+msgid "userid_char_error"
+msgstr ""
+
+#. Default: UserID already registered. If it was registered by you, try to
+#. retrieve your password.
+#: voteit/core/models/user.py:189
+msgid "already_registered_error"
+msgstr ""
+
+#: voteit/core/models/user.py:194
+msgid "UserID"
+msgstr ""
+
+#. Default: Used like a nick-name and as a unique id. You can't change this
+#. later.
+#: voteit/core/models/user.py:195
+msgid "userid_description"
+msgstr ""
+
+#: voteit/core/models/user.py:210
+msgid "About you"
+msgstr ""
+
+#. Default: Please note that anything you type here will be visible to all
+#. registered users, even if they're not in the same meeting as you.
+#: voteit/core/models/user.py:211
+msgid "bio_visible_notice"
+msgstr ""
+
+#: voteit/core/models/users.py:15 voteit/core/views/templates/list_users.pt:9
+#: voteit/core/views/templates/profile_toolbar.pt:16
+msgid "Users"
+msgstr ""
+
+#: voteit/core/models/vote.py:29
+msgid "Vote"
+msgstr ""
+
+#: voteit/core/models/vote.py:33
+msgid "Your vote"
+msgstr ""
+
+#. Default: This is your vote. While the poll is open, you can delete or change
+#. it if you wish.
+#: voteit/core/models/vote.py:34
+msgid "your_vote_description"
+msgstr ""
+
+#: voteit/core/plugins/majority_poll.py:17
+msgid "Majority Poll"
+msgstr ""
+
+#: voteit/core/plugins/majority_poll.py:41
+msgid "Vote for one"
+msgstr ""
+
+#: voteit/core/static/config.js.pt:8
+msgid "Are you sure you want to retract this proposal?"
+msgstr ""
+
+#: voteit/core/static/config.js.pt:7
+msgid "Are you sure you want to change the state?"
+msgstr ""
+
+#: voteit/core/static/config.js.pt:6
+msgid "Please confirm"
+msgstr ""
+
+#: voteit/core/static/config.js.pt:5
+msgid "No"
+msgstr ""
+
+#: voteit/core/static/config.js.pt:4
+msgid "Yes"
+msgstr ""
+
+#: voteit/core/views/base_edit.py:75 voteit/core/views/users.py:80
+msgid "Successfully added"
+msgstr ""
+
+#: voteit/core/views/base_edit.py:81 voteit/core/views/base_edit.py:131
+#: voteit/core/views/base_edit.py:165 voteit/core/views/catalog.py:48
+#: voteit/core/views/meeting.py:103 voteit/core/views/meeting.py:150
+#: voteit/core/views/meeting.py:208 voteit/core/views/users.py:86
+#: voteit/core/views/vote.py:168
+msgid "Canceled"
+msgstr ""
+
+#: voteit/core/views/base_edit.py:87
+#: voteit/core/views/templates/action_bar.pt:111
+msgid "Add"
+msgstr ""
+
+#: voteit/core/views/base_edit.py:121
+msgid "Successfully updated"
+msgstr ""
+
+#: voteit/core/views/base_edit.py:125
+msgid "Nothing updated"
+msgstr ""
+
+#: voteit/core/views/base_edit.py:136
+#: voteit/core/views/templates/action_bar.pt:4
+msgid "Edit"
+msgstr ""
+
+#: voteit/core/views/base_edit.py:159 voteit/core/views/vote.py:161
+msgid "Deleted"
+msgstr ""
+
+#: voteit/core/views/base_edit.py:170 voteit/core/views/vote.py:174
+msgid "Are you sure you want to delete this item?"
+msgstr ""
+
+#: voteit/core/views/expressions.py:74
+msgid "Remove"
+msgstr ""
+
+#: voteit/core/views/meeting.py:27
+msgid "You're not allowed access to this meeting."
+msgstr ""
+
+#. Default: To gain access to a meeting you need to use an access ticket that
+#. should have been mailed to you. If you've aldready registered, please login.
+#: voteit/core/views/meeting.py:69
+msgid "login_to_access_meeting_notice"
+msgstr ""
+
+#: voteit/core/views/meeting.py:97
+msgid "You've been granted access to the meeting. Welcome!"
+msgstr ""
+
+#: voteit/core/views/meeting.py:108
+msgid "Meeting Access"
+msgstr ""
+
+#. Default: Successfully added and sent %(mail_count)s invites
+#: voteit/core/views/meeting.py:143
+msgid "sent_tickets_text"
+msgstr ""
+
+#: voteit/core/views/meeting.py:156
+msgid "Send meeting invitations"
+msgstr ""
+
+#. Default: Resending %(count_emails)s invites
+#: voteit/core/views/meeting.py:189
+msgid "resent_invites_notice"
+msgstr ""
+
+#. Default: Deleting %(count_emails)s invites
+#: voteit/core/views/meeting.py:200
+msgid "deleting_invites_notice"
+msgstr ""
+
+#: voteit/core/views/users.py:91
+msgid "Add new user"
+msgstr ""
+
+#: voteit/core/views/users.py:156
+msgid "Password set. You may login now."
+msgstr ""
+
+#: voteit/core/views/users.py:167
+msgid "Invalid security token. Did you click the link in your email?"
+msgstr ""
+
+#: voteit/core/views/users.py:232
+msgid "Login failed."
+msgstr ""
+
+#: voteit/core/views/users.py:313
+msgid "Email sent."
+msgstr ""
+
+#: voteit/core/views/users.py:317
+msgid "Username or email not found."
+msgstr ""
+
+#. Default: You've already voted, but the poll is still open so you can change
+#. your vote if you want to.
+#: voteit/core/views/vote.py:55
+msgid "already_voted_poll_open"
+msgstr ""
+
+#: voteit/core/views/vote.py:86
+msgid "Thank you for voting!"
+msgstr ""
+
+#: voteit/core/views/vote.py:93
+msgid "Canceled - your vote has NOT been added!"
+msgstr ""
+
+#: voteit/core/views/vote.py:100
+msgid "Add a vote"
+msgstr ""
+
+#: voteit/core/views/vote.py:125
+msgid "Your vote has been updated."
+msgstr ""
+
+#: voteit/core/views/vote.py:133
+msgid "Canceled - vote NOT updated!"
+msgstr ""
+
+#: voteit/core/views/vote.py:140
+msgid "Edit your vote"
+msgstr ""
+
+#: voteit/core/views/vote.py:185
+msgid "This is your vote"
+msgstr ""
+
+#: voteit/core/views/templates/action_bar.pt:121
+msgid "Set state"
+msgstr ""
+
+#: voteit/core/views/templates/action_bar.pt:107
+msgid "Content"
+msgstr ""
+
+#: voteit/core/views/templates/action_bar.pt:100
+msgid "Manage invites"
+msgstr ""
+
+#: voteit/core/views/templates/action_bar.pt:93
+msgid "Invite participants"
+msgstr ""
+
+#: voteit/core/views/templates/action_bar.pt:86
+msgid "Poll settings"
+msgstr ""
+
+#: voteit/core/views/templates/action_bar.pt:71
+msgid "Server logs"
+msgstr ""
+
+#: voteit/core/views/templates/action_bar.pt:60
+msgid "Retract"
+msgstr ""
+
+#: voteit/core/views/templates/action_bar.pt:44
+msgid "Participants"
+msgstr ""
+
+#: voteit/core/views/templates/action_bar.pt:33
+msgid "Poll raw data"
+msgstr ""
+
+#: voteit/core/views/templates/action_bar.pt:27
+msgid "Delete vote"
+msgstr ""
+
+#: voteit/core/views/templates/action_bar.pt:21
+msgid "Change vote"
+msgstr ""
+
+#: voteit/core/views/templates/action_bar.pt:9
+msgid "Delete"
+msgstr ""
+
+#: voteit/core/views/templates/agenda_item.pt:70
+#: voteit/core/views/templates/agenda_item.pt:28
+#: voteit/core/views/templates/main.pt:82
+msgid "State"
+msgstr ""
+
+#: voteit/core/views/templates/agenda_item.pt:66
+msgid "propose"
+msgstr ""
+
+#: voteit/core/views/templates/agenda_item.pt:60
+msgid "Proposal(s)"
+msgstr ""
+
+#: voteit/core/views/templates/agenda_item.pt:49
+msgid "Discussion"
+msgstr ""
+
+#: voteit/core/views/templates/agenda_item.pt:44
+msgid "No polls yet"
+msgstr ""
+
+#: voteit/core/views/templates/agenda_item.pt:23
+msgid "Poll method"
+msgstr ""
+
+#: voteit/core/views/templates/agenda_item.pt:12
+msgid "Poll(s)"
+msgstr ""
+
+#: voteit/core/views/templates/log.pt:7
+msgid "Nothing planned yet "
+msgstr ""
+
+#: voteit/core/views/templates/login_register.pt:21
+msgid "Registration"
+msgstr ""
+
+#: voteit/core/views/templates/login_register.pt:13
+#: voteit/core/views/templates/profile_toolbar.pt:39
+msgid "Login"
+msgstr ""
+
+#: voteit/core/views/templates/logs.pt:25
+msgid "Current log"
+msgstr ""
+
+#: voteit/core/views/templates/logs.pt:23
+msgid "Select a log above"
+msgstr ""
+
+#: voteit/core/views/templates/logs.pt:9
+msgid "VoteIT logs"
+msgstr ""
+
+#: voteit/core/views/templates/meeting.pt:24
+#: voteit/core/views/templates/meeting.pt:18
+#: voteit/core/views/templates/meeting.pt:12
+msgid "Show all"
+msgstr ""
+
+#: voteit/core/views/templates/meeting.pt:23
+msgid "This will happen"
+msgstr ""
+
+#: voteit/core/views/templates/meeting.pt:17
+msgid "This is happening now"
+msgstr ""
+
+#: voteit/core/views/templates/meeting.pt:11
+msgid "This has happened"
+msgstr ""
+
+#: voteit/core/views/templates/messages.pt:25
+msgid "No messages"
+msgstr ""
+
+#: voteit/core/views/templates/messages.pt:17
+msgid "Unread"
+msgstr ""
+
+#: voteit/core/views/templates/messages.pt:16
+msgid "Added"
+msgstr ""
+
+#: voteit/core/views/templates/messages.pt:12
+#: voteit/core/views/templates/profile_toolbar.pt:25
+msgid "Messages"
+msgstr ""
+
+#: voteit/core/views/templates/navigation.pt:24
+msgid "all meetings"
+msgstr ""
+
+#: voteit/core/views/templates/navigation.pt:6
+msgid "Available meetings"
+msgstr ""
+
+#: voteit/core/views/templates/pending_access_requests.pt:9
+msgid "${access_count} pending access request(s)"
+msgstr ""
+
+#: voteit/core/views/templates/profile_toolbar.pt:37
+msgid "Register"
+msgstr ""
+
+#: voteit/core/views/templates/profile_toolbar.pt:31
+msgid "Logout"
+msgstr ""
+
+#: voteit/core/views/templates/profile_toolbar.pt:28
+msgid "Profile"
+msgstr ""
+
+#: voteit/core/views/templates/profile_toolbar.pt:14
+msgid "Settings"
+msgstr ""
+
+#: voteit/core/views/templates/profile_toolbar.pt:6
+msgid "Meeting search"
+msgstr ""
+
+#: voteit/core/views/templates/protocol.pt:22
+msgid "by"
+msgstr ""
+
+#: voteit/core/views/templates/search_result.pt:48
+msgid "Search above"
+msgstr ""
+
+#: voteit/core/views/templates/search_result.pt:45
+msgid "No results"
+msgstr ""
+
+#: voteit/core/views/templates/search_result.pt:24
+msgid "Search"
+msgstr ""
+
+#: voteit/core/views/templates/time_info.pt:10
+msgid "ends"
+msgstr ""
+
+#: voteit/core/views/templates/time_info.pt:5
+msgid "starts"
+msgstr ""
+
+#: voteit/core/views/templates/view_user.pt:15
+msgid "Biography"
+msgstr ""
+
+#: voteit/core/views/templates/view_user.pt:11
+msgid "Change password"
+msgstr ""
+
+#: voteit/core/views/templates/macros/expressions.pt:20
+msgid "and ${item_count} more "
+msgstr ""
+
+#: voteit/core/views/templates/macros/expressions.pt:14
+msgid "and"
+msgstr ""
+
+#: voteit/core/views/templates/macros/expressions.pt:13
+msgid "You"
+msgstr ""
+
+#: voteit/core/views/templates/macros/flash_messages.pt:6
+msgid "OK"
+msgstr ""
+
+#: voteit/core/views/templates/userlisting/form.pt:21
+msgid "Errors have been highlighted below"
+msgstr ""
+
+#: voteit/core/views/templates/userlisting/form.pt:19
+msgid "There was a problem with your submission"
+msgstr ""
+

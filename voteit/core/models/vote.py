@@ -31,7 +31,7 @@ class Vote(BaseContent):
     add_permission = security.ADD_VOTE
     
     title = _(u"Your vote")
-    description = _(u"This is your vote. While the poll is open, you can delete or change it if you wish.")
+    description = _('your_vote_description', default=u"This is your vote. While the poll is open, you can delete or change it if you wish.")
 
     @property
     def __acl__(self):

@@ -2,7 +2,9 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
       xmlns:tal="http://xml.zope.org/namespaces/tal"
-      metal:use-macro="api.main_template.macros['master']">
+      metal:use-macro="api.main_template.macros['master']"
+	  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+	  i18n:domain="voteit.core">
 
 <tal:deform tal:condition="form|False" metal:fill-slot="head">
     <tal:css repeat="css_file form_resources['css']|[]">
@@ -19,7 +21,7 @@
 </tal:deform>
 
 <metal:heading fill-slot="page_heading">
-	<h3>Search</h3>
+	<h3 i18n:translate="">Search</h3>
 </metal:heading>
 
 <div metal:fill-slot="content">
@@ -40,9 +42,11 @@
     	</tal:iterate>
     </tal:results>
 	
-	<tal:no_results condition="search_string and not search_results">No results</tal:no_results>
+	<tal:no_results condition="search_string and not search_results"
+	                i18n:translate="">No results</tal:no_results>
 	
-    <tal:no_search condition="not search_string">Search above</tal:no_search>
+    <tal:no_search condition="not search_string"
+	               i18n:translate="">Search above</tal:no_search>
 </div>
 
 </html>

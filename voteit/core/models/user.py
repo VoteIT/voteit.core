@@ -79,8 +79,10 @@ class User(BaseContent):
         self.__token__ = RequestPasswordToken()
         
         #FIXME: Email should use a proper template
-        body = "password link:\n"
-        body += "%stoken_pw?token=%s" % (resource_url(self, request), self.__token__())
+        pw_link = "s%stoken_pw?token=%s" % (resource_url(self, request), self.__token__())
+        body = _('request_new_password_text',
+                 default=u"password link: %(pw_link)s",
+                 mapping={'pw_link':pw_link},)
         
         msg = Message(subject=_(u"Password reset request from VoteIT"),
                        recipients=[self.get_field_value('email')],
@@ -123,7 +125,7 @@ def construct_schema(**kwargs):
         KeyError("'type' is a required keyword for User schemas. See construct_schema in the user module.")    
         
     def _validate_email(node, value):
-        default_email_validator = colander.Email(msg=_(u"Invalid email"))
+        default_email_validator = colander.Email(msg=_(u"Invalid email address."))
         default_email_validator(node, value)
         
         #context can be IUser or IUsers
@@ -182,14 +184,15 @@ def construct_schema(**kwargs):
             """
             pattern = re.compile(r'^[a-zA-Z]{1}[\w-]{1,14}$')
             if not pattern.match(value):
-                raise colander.Invalid(node, _(u"UserID must be 3-15 chars, start with a-zA-Z and only contain regular latin chars, numbers, minus and underscore."))
+                raise colander.Invalid(node, _('userid_char_error', default=u"UserID must be 3-15 chars, start with a-zA-Z and only contain regular latin chars, numbers, minus and underscore."))
             if value in context:
-                raise colander.Invalid(node, _(u"UserID already registered. If it was registered by you, try to retrieve your password."))
+                raise colander.Invalid(node, _('already_registered_error',
+                                               default=u"UserID already registered. If it was registered by you, try to retrieve your password."))
 
         class AddUserSchema(colander.Schema):
             userid = colander.SchemaNode(colander.String(),
                                          title = _(u"UserID"),
-                                         description = _(u"Used like a nick-name and as a unique id. You can't change this later."),
+                                         description = _('userid_description', default=u"Used like a nick-name and as a unique id. You can't change this later."),
                                          validator=_userid_validation)
             password = password_node
             email = email_node
@@ -205,7 +208,8 @@ def construct_schema(**kwargs):
             last_name = last_name_node
             biography = colander.SchemaNode(colander.String(),
                 title = _(u"About you"),
-                description = _(u"Please note that anything you type here will be visible to all registered users."),
+                description = _('bio_visible_notice',
+                                default=u"Please note that anything you type here will be visible to all registered users, even if they're not in the same meeting as you."),
                 widget = deform.widget.TextAreaWidget(rows=10, cols=60),
                 missing=u"",
                 validator=html_string_validator,)

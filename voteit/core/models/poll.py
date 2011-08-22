@@ -175,18 +175,25 @@ class Poll(BaseContent, WorkflowAware):
 
             #Adjust state?
             if proposal.get_workflow_state() == state:
-                msg = _(u"Proposal '%s' already in state %s" % (proposal.__name__, state))
+                msg = _('change_prop_state_already_that_state_error',
+                        default=u"Proposal '%(name)s' already in state %(state)s",
+                        mapping={'name':proposal.__name__, 'state':state})
                 fm.add(msg)
             else:
                 try:
                     proposal.set_workflow_state(request, state)
-                    msg = _(u"Proposal '%s' set as %s" % (proposal.__name__, state))
+                    msg = _('prop_state_changed_notice',
+                            default=u"Proposal '%(name)s' set as %(state)s",
+                            mapping={'name':proposal.__name__, 'state':state})
                     fm.add(msg)
                 except WorkflowError:
-                    msg = _(u"Proposal with id '%s' couldn't be set as %s. You should do this manually." % (proposal.__name__, state))
+                    msg = _('prop_state_change_error',
+                            default=u"Proposal with id '%(name)s' couldn't be set as %(state)s. You should do this manually.",
+                            mapping={'name':proposal.__name__, 'state':state})
                     fm.add(msg, type='error')
 
-        msg = _(u"Poll closed. Proposals might have been adjusted as approved or denied depending on outcome of the poll.")
+        msg = _('poll_closed_info',
+                default=u"Poll closed. Proposals might have been adjusted as approved or denied depending on outcome of the poll.")
         fm.add(msg)
 
     def render_poll_result(self):
@@ -246,7 +253,7 @@ def construct_schema(context=None, request=None, **kwargs):
         Exception("Couldn't find the agenda item from this polls context")
     [proposal_choices.add((x.uid, x.title)) for x in agenda_item.values() if x.content_type == 'Proposal']
 
-    #FIXME: With timezones... sigh...
+    #Note: The message factory shouldn't process mappings here, it's handled by deform!
     _earliest_start = colander.Range(min=dt_util.localnow(),
                                      min_err=_('${val} is earlier than earliest date ${min}'),)
     _earliest_end = colander.Range(min=dt_util.localnow(),
@@ -271,13 +278,13 @@ def construct_schema(context=None, request=None, **kwargs):
         start_time = colander.SchemaNode(
              TZDateTime(local_tz),
              title = _(u"Start time of this poll."),
-             description = _(u"It will be opened automatically when this time has passed."),
+             description = _(u"You need to open it yourself."),
              widget=deform.widget.DateTimeInputWidget(options={'timeFormat': 'hh:mm'}),
         )
         end_time = colander.SchemaNode(
              TZDateTime(local_tz),
              title = _(u"End time of this poll."),
-             description = _(u"It will be closed automatically when this time has passed."),
+             description = _(u"You need to close it yourself."),
              widget=deform.widget.DateTimeInputWidget(options={'timeFormat': 'hh:mm'}),
         )
 
@@ -306,7 +313,8 @@ def planned_poll_callback(content, info):
             count += 1
 
     fm = FlashMessages(request)
-    msg = _(u"Setting poll in planned state. It's now visible for meeting participants.")
+    msg = _('poll_planned_state_notice',
+            default=u"Setting poll in planned state. It's now visible for meeting participants.")
     fm.add(msg)
     if count:
         #FIXME: Translation mappings
