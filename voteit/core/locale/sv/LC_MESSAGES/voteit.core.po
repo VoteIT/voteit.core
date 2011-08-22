@@ -344,7 +344,7 @@ msgstr "Användare"
 #: voteit/core/models/user.py:83
 #. Default: password link: %(pw_link)s
 msgid "request_new_password_text"
-msgstr ""
+msgstr "Lösenordslänk: ${pw_link}"
 
 #: voteit/core/models/user.py:87
 msgid "Password reset request from VoteIT"

@@ -12,7 +12,8 @@
             <div id="login">
                 <h1 i18n:translate="">Login</h1>
                 <div tal:condition="login_form|False" tal:replace="structure login_form">Login form</div>
-
+                <div><a href="@@request_password" i18n:translate="">Forgot password?</a></div>
+                
             </div>
         </div>
 

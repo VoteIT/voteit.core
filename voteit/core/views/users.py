@@ -287,7 +287,7 @@ class UsersView(object):
         
         schema = content_util['User'].schema(context=self.context, request=self.request, type='request_password')
         form = Form(schema, buttons=(button_request, button_cancel))
-        response['form_resources'] = form.get_widget_resources()
+        self.response['form_resources'] = form.get_widget_resources()
     
         #Handle submitted information
         if 'request' in self.request.POST:

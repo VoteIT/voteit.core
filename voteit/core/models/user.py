@@ -16,6 +16,7 @@ from pyramid.security import Allow
 from pyramid.traversal import find_interface
 from pyramid_mailer import get_mailer
 from pyramid_mailer.message import Message
+from pyramid.i18n import get_localizer
 
 from voteit.core.models.base_content import BaseContent
 from voteit.core.models.interfaces import IUser
@@ -75,14 +76,16 @@ class User(BaseContent):
 
     def new_request_password_token(self, request):
         """ Set a new request password token and email user. """
+        locale = get_localizer(request)
+        
         #FIXME email user
         self.__token__ = RequestPasswordToken()
         
         #FIXME: Email should use a proper template
-        pw_link = "s%stoken_pw?token=%s" % (resource_url(self, request), self.__token__())
-        body = _('request_new_password_text',
-                 default=u"password link: %(pw_link)s",
-                 mapping={'pw_link':pw_link},)
+        pw_link = "%stoken_pw?token=%s" % (resource_url(self, request), self.__token__())
+        body = locale.translate(_('request_new_password_text',
+                 default=u"password link: ${pw_link}",
+                 mapping={'pw_link':pw_link},))
         
         msg = Message(subject=_(u"Password reset request from VoteIT"),
                        recipients=[self.get_field_value('email')],
