@@ -13,7 +13,8 @@ from voteit.core import VoteITMF as _
 from voteit.core.views.base_view import BaseView
 from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IMeeting
-from voteit.core.models.schemas import add_csrf_token
+from voteit.core.models.schemas import add_csrf_token, button_add, button_cancel,\
+    button_resend, button_delete
 
 
 class MeetingView(BaseView):
@@ -78,7 +79,7 @@ class MeetingView(BaseView):
         schema = ci.schema(context=self.context, request=self.request, type='claim')
         add_csrf_token(self.context, self.request, schema)
 
-        self.form = deform.Form(schema, buttons=('add', 'cancel'))
+        self.form = deform.Form(schema, buttons=(button_add, button_cancel))
         self.response['form_resources'] = self.form.get_widget_resources()
 
         if 'add' in self.request.POST or \
@@ -122,7 +123,7 @@ class MeetingView(BaseView):
         schema = ci.schema(context=self.context, request=self.request, type='add')
         add_csrf_token(self.context, self.request, schema)
 
-        self.form = deform.Form(schema, buttons=('add', 'cancel'))
+        self.form = deform.Form(schema, buttons=(button_add, button_cancel))
         self.response['form_resources'] = self.form.get_widget_resources()
 
         post = self.request.POST
@@ -167,7 +168,7 @@ class MeetingView(BaseView):
         schema = ci.schema(context=self.context, request=self.request, type='manage')
         add_csrf_token(self.context, self.request, schema)
             
-        self.form = deform.Form(schema, buttons=('resend', 'delete', 'cancel',))
+        self.form = deform.Form(schema, buttons=(button_resend, button_delete, button_cancel,))
         self.response['form_resources'] = self.form.get_widget_resources()
 
         post = self.request.POST
