@@ -15,6 +15,7 @@ RDB_Base = declarative_base()
 def main(global_config, **settings):
     """ This function returns a Pyramid WSGI application.
     """
+    import voteit.core.patches
     from voteit.core.security import authn_policy
     from voteit.core.security import authz_policy
     

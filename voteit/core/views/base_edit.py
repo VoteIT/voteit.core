@@ -84,7 +84,7 @@ class BaseEdit(object):
             return HTTPFound(location=url)
 
         #No action - Render add form
-        msg = _(u"Add") + ' ' + ftis[content_type].type_class.display_name
+        msg = _(u"Add")
         self.api.flash_messages.add(msg, close_button=False)
         #FIXME: this should probably be handled in a more graceful way, but since almost every content type is added here this must go here
         if not 'start_time' in appstruct:
@@ -133,7 +133,7 @@ class BaseEdit(object):
             return HTTPFound(location=url)
 
         #No action - Render edit form
-        msg = _(u"Edit") + ' ' + ftis[content_type].type_class.display_name
+        msg = _(u"Edit")
         self.api.flash_messages.add(msg, close_button=False)
         appstruct = self.context.get_field_appstruct(schema)
         self.response['form'] = self.form.render(appstruct=appstruct)

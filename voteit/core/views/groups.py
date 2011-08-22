@@ -20,15 +20,6 @@ from voteit.core.models.schemas import add_csrf_token
 
 DEFAULT_TEMPLATE = "templates/base_edit.pt"
 
-from deform import ZPTRendererFactory
-from pkg_resources import resource_filename
-
-CURRENT_PATH = os.path.abspath(os.path.dirname(__file__).decode('utf-8'))
-mytemplates_path = os.path.join(CURRENT_PATH, 'templates/userlisting')
-
-deform_templates = resource_filename('deform', 'templates')
-search_path = (mytemplates_path, deform_templates)
-renderer = ZPTRendererFactory(search_path)
 
 class EditGroups(object):
     """ View class for adding, editing or deleting dynamic content. """
