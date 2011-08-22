@@ -65,7 +65,7 @@ class InviteTicket(Persistent, WorkflowAware):
 
 -------------------------------------------------------------
 Click the link to access this VoteIT meeting:
-%(access_link)s
+${access_link}
 
 Have an account already?
 Simply login after clicking this link.

@@ -141,7 +141,7 @@ class MeetingView(BaseView):
                 obj = ci.type_class(email, appstruct['roles'], message)
                 self.context.add_invite_ticket(obj, self.request) #Will also email user
             
-            msg = _('sent_tickets_text', default=u"Successfully added and sent %(mail_count)s invites", mapping={'mail_count':len(emails)} )
+            msg = _('sent_tickets_text', default=u"Successfully added and sent ${mail_count} invites", mapping={'mail_count':len(emails)} )
             self.api.flash_messages.add(msg)
 
             url = resource_url(self.context, self.request)
@@ -188,7 +188,7 @@ class MeetingView(BaseView):
                 self.context.invite_tickets[email].send(self.request)
             
             self.api.flash_messages.add(_('resent_invites_notice',
-                                          default=u"Resending %(count_emails)s invites",
+                                          default=u"Resending ${count_emails} invites",
                                           mapping={'count_emails':len(emails)}))
             url = resource_url(self.context, self.request)
             return HTTPFound(location=url)            
@@ -199,7 +199,7 @@ class MeetingView(BaseView):
                 del self.context.invite_tickets[email]
             
             self.api.flash_messages.add(_('deleting_invites_notice',
-                                          default=u"Deleting %(count_emails)s invites",
+                                          default=u"Deleting ${count_emails} invites",
                                           mapping={'count_emails':len(emails)}))
 
             url = resource_url(self.context, self.request)
