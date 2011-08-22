@@ -17,7 +17,8 @@ from slugify import slugify
 from voteit.core.views.api import APIView
 from voteit.core import VoteITMF as _
 from voteit.core.security import ROLE_OWNER, EDIT, DELETE, VIEW
-from voteit.core.models.schemas import add_csrf_token
+from voteit.core.models.schemas import add_csrf_token, button_add, button_cancel,\
+    button_update, button_delete
 from voteit.core.events import ObjectUpdatedEvent
 from voteit.core.models.schemas import add_csrf_token
 
@@ -48,7 +49,7 @@ class BaseEdit(object):
         schema = ftis[content_type].schema(context=self.context, request=self.request, type='add')
         add_csrf_token(self.context, self.request, schema)
             
-        self.form = Form(schema, buttons=('add', 'cancel'))
+        self.form = Form(schema, buttons=(button_add, button_cancel))
         self.response['form_resources'] = self.form.get_widget_resources()
         appstruct = {}
 
@@ -101,7 +102,7 @@ class BaseEdit(object):
         schema = ftis[content_type].schema(context=self.context, request=self.request, type='edit')
         add_csrf_token(self.context, self.request, schema)
 
-        self.form = Form(schema, buttons=('update', 'cancel'))
+        self.form = Form(schema, buttons=(button_update, button_cancel))
         self.response['form_resources'] = self.form.get_widget_resources()
 
         post = self.request.POST
@@ -145,7 +146,7 @@ class BaseEdit(object):
         schema = colander.Schema()
         add_csrf_token(self.context, self.request, schema)
         
-        self.form = Form(schema, buttons=('delete', 'cancel'))
+        self.form = Form(schema, buttons=(button_delete, button_cancel))
         self.response['form_resources'] = self.form.get_widget_resources()
 
         post = self.request.POST

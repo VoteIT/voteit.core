@@ -15,7 +15,8 @@ from voteit.core.models.interfaces import IUser
 from voteit.core.models.interfaces import IUsers
 from voteit.core.views.api import APIView
 from voteit.core.security import CHANGE_PASSWORD, ROLE_OWNER
-from voteit.core.models.schemas import add_csrf_token
+from voteit.core.models.schemas import add_csrf_token, button_add, button_cancel,\
+    button_update, button_change, button_login, button_register, button_request
 from voteit.core.models.user import get_sha_password
 
 
@@ -41,7 +42,7 @@ class UsersView(object):
         schema = content_util['User'].schema(context=self.context, request=self.request, type='add')
         add_csrf_token(self.context, self.request, schema)
 
-        self.form = Form(schema, buttons=('add', 'cancel'))
+        self.form = Form(schema, buttons=(button_add, button_cancel))
         self.response['form_resources'] = self.form.get_widget_resources()
 
         post = self.request.POST
@@ -107,7 +108,7 @@ class UsersView(object):
         schema = content_util['User'].schema(context=self.context, request=self.request, type='change_password')
         add_csrf_token(self.context, self.request, schema)
 
-        self.form = Form(schema, buttons=('update', 'cancel'))
+        self.form = Form(schema, buttons=(button_update, button_cancel))
         self.response['form_resources'] = self.form.get_widget_resources()
 
         post = self.request.POST
@@ -139,7 +140,7 @@ class UsersView(object):
         content_util = self.request.registry.getUtility(IContentUtility)
         schema = content_util['User'].schema(context=self.context, request=self.request, type='token_password_change')
 
-        self.form = Form(schema, buttons=('change', 'cancel'))
+        self.form = Form(schema, buttons=(button_change, button_cancel))
         self.response['form_resources'] = self.form.get_widget_resources()
 
         post = self.request.POST
@@ -183,8 +184,8 @@ class UsersView(object):
         login_schema = content_util['User'].schema(context=self.context, request=self.request, type='login')
         register_schema = content_util['User'].schema(context=users, request=self.request, type='registration')
 
-        login_form = Form(login_schema, buttons=('login',))
-        reg_form = Form(register_schema, buttons=('register',))
+        login_form = Form(login_schema, buttons=(button_login,))
+        reg_form = Form(register_schema, buttons=(button_register,))
 
         #Join form resources
         form_resources = login_form.get_widget_resources()
@@ -285,7 +286,7 @@ class UsersView(object):
         content_util = self.request.registry.getUtility(IContentUtility)
         
         schema = content_util['User'].schema(context=self.context, request=self.request, type='request_password')
-        form = Form(schema, buttons=('request', 'cancel'))
+        form = Form(schema, buttons=(button_request, button_cancel))
         response['form_resources'] = form.get_widget_resources()
     
         #Handle submitted information

@@ -13,7 +13,8 @@ from webob.exc import HTTPFound
 from voteit.core.views.api import APIView
 from voteit.core.security import EDIT, VIEW
 from voteit.core.models.interfaces import IPoll
-from voteit.core.models.schemas import add_csrf_token
+from voteit.core.models.schemas import add_csrf_token, button_save,\
+    button_cancel
 
 from base_edit import DEFAULT_TEMPLATE
 
@@ -42,7 +43,7 @@ class PollView(object):
             raise Forbidden("No settings for this poll")
         add_csrf_token(self.context, self.request, schema)
 
-        self.form = Form(schema, buttons=('save', 'cancel'))
+        self.form = Form(schema, buttons=(button_save, button_cancel))
         self.response['form_resources'] = self.form.get_widget_resources()
 
         post = self.request.POST

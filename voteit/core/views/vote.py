@@ -15,7 +15,8 @@ from voteit.core.models.interfaces import IVote
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IPollPlugin
 from voteit.core.models.interfaces import IAgendaItem
-from voteit.core.models.schemas import add_csrf_token
+from voteit.core.models.schemas import add_csrf_token, button_vote,\
+    button_cancel, button_update, button_delete
 
 DEFAULT_TEMPLATE = "templates/base_edit.pt"
 
@@ -59,7 +60,7 @@ class VoteView(object):
             
             raise Forbidden("You've already voted and the poll is closed.")
 
-        self.form = Form(self.schema, buttons=('vote', 'cancel'))
+        self.form = Form(self.schema, buttons=(button_vote, button_cancel))
         self.response['form_resources'] = self.form.get_widget_resources()
 
         post = self.request.POST
@@ -107,7 +108,7 @@ class VoteView(object):
         """ Edit vote, only for the owner of the vote. """
         #FIXME: Allow plugin to override renderer?
        
-        self.form = Form(self.schema, buttons=('update', 'cancel'))
+        self.form = Form(self.schema, buttons=(button_update, button_cancel))
         self.response['form_resources'] = self.form.get_widget_resources()
 
         post = self.request.POST
@@ -149,7 +150,7 @@ class VoteView(object):
         schema = colander.Schema()
         add_csrf_token(self.context, self.request, schema)
         
-        self.form = Form(schema, buttons=('delete', 'cancel'))
+        self.form = Form(schema, buttons=(button_delete, button_cancel))
         self.response['form_resources'] = self.form.get_widget_resources()
 
         post = self.request.POST

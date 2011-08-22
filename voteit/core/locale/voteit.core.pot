@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2011-08-19 16:19+0200\n"
+"POT-Creation-Date: 2011-08-22 13:16+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -164,7 +164,7 @@ msgstr ""
 msgid "invitation_default_text"
 msgstr ""
 
-#: voteit/core/models/invite_ticket.py:180 voteit/core/views/meeting.py:214
+#: voteit/core/models/invite_ticket.py:180 voteit/core/views/meeting.py:215
 msgid "Current invitations"
 msgstr ""
 
@@ -234,6 +234,54 @@ msgstr ""
 
 #: voteit/core/models/proposal.py:57 voteit/core/models/proposal.py:78
 msgid "Proposal"
+msgstr ""
+
+#: voteit/core/models/schemas.py:9 voteit/core/views/base_edit.py:88
+#: voteit/core/views/templates/action_bar.pt:111
+msgid "Add"
+msgstr ""
+
+#: voteit/core/models/schemas.py:10
+msgid "Cancel"
+msgstr ""
+
+#: voteit/core/models/schemas.py:11
+msgid "Change"
+msgstr ""
+
+#: voteit/core/models/schemas.py:12 voteit/core/views/templates/action_bar.pt:9
+msgid "Delete"
+msgstr ""
+
+#: voteit/core/models/schemas.py:13
+#: voteit/core/views/templates/login_register.pt:13
+#: voteit/core/views/templates/profile_toolbar.pt:39
+msgid "Login"
+msgstr ""
+
+#: voteit/core/models/schemas.py:14
+#: voteit/core/views/templates/profile_toolbar.pt:37
+msgid "Register"
+msgstr ""
+
+#: voteit/core/models/schemas.py:15
+msgid "Request"
+msgstr ""
+
+#: voteit/core/models/schemas.py:16
+msgid "Save"
+msgstr ""
+
+#: voteit/core/models/schemas.py:17
+msgid "Update"
+msgstr ""
+
+#: voteit/core/models/schemas.py:18 voteit/core/models/vote.py:29
+msgid "Vote"
+msgstr ""
+
+#: voteit/core/models/schemas.py:19
+msgid "Resend"
 msgstr ""
 
 #: voteit/core/models/security_aware.py:132
@@ -326,10 +374,6 @@ msgstr ""
 msgid "Users"
 msgstr ""
 
-#: voteit/core/models/vote.py:29
-msgid "Vote"
-msgstr ""
-
 #: voteit/core/models/vote.py:33
 msgid "Your vote"
 msgstr ""
@@ -368,41 +412,35 @@ msgstr ""
 msgid "Yes"
 msgstr ""
 
-#: voteit/core/views/base_edit.py:75 voteit/core/views/users.py:80
+#: voteit/core/views/base_edit.py:76 voteit/core/views/users.py:81
 msgid "Successfully added"
 msgstr ""
 
-#: voteit/core/views/base_edit.py:81 voteit/core/views/base_edit.py:131
-#: voteit/core/views/base_edit.py:165 voteit/core/views/catalog.py:48
-#: voteit/core/views/meeting.py:103 voteit/core/views/meeting.py:150
-#: voteit/core/views/meeting.py:208 voteit/core/views/users.py:86
-#: voteit/core/views/vote.py:168
+#: voteit/core/views/base_edit.py:82 voteit/core/views/base_edit.py:132
+#: voteit/core/views/base_edit.py:166 voteit/core/views/meeting.py:104
+#: voteit/core/views/meeting.py:151 voteit/core/views/meeting.py:209
+#: voteit/core/views/users.py:87 voteit/core/views/vote.py:169
 msgid "Canceled"
 msgstr ""
 
-#: voteit/core/views/base_edit.py:87
-#: voteit/core/views/templates/action_bar.pt:111
-msgid "Add"
-msgstr ""
-
-#: voteit/core/views/base_edit.py:121
+#: voteit/core/views/base_edit.py:122
 msgid "Successfully updated"
 msgstr ""
 
-#: voteit/core/views/base_edit.py:125
+#: voteit/core/views/base_edit.py:126
 msgid "Nothing updated"
 msgstr ""
 
-#: voteit/core/views/base_edit.py:136
+#: voteit/core/views/base_edit.py:137
 #: voteit/core/views/templates/action_bar.pt:4
 msgid "Edit"
 msgstr ""
 
-#: voteit/core/views/base_edit.py:159 voteit/core/views/vote.py:161
+#: voteit/core/views/base_edit.py:160 voteit/core/views/vote.py:162
 msgid "Deleted"
 msgstr ""
 
-#: voteit/core/views/base_edit.py:170 voteit/core/views/vote.py:174
+#: voteit/core/views/base_edit.py:171 voteit/core/views/vote.py:175
 msgid "Are you sure you want to delete this item?"
 msgstr ""
 
@@ -410,98 +448,98 @@ msgstr ""
 msgid "Remove"
 msgstr ""
 
-#: voteit/core/views/meeting.py:27
+#: voteit/core/views/meeting.py:28
 msgid "You're not allowed access to this meeting."
 msgstr ""
 
 #. Default: To gain access to a meeting you need to use an access ticket that
 #. should have been mailed to you. If you've aldready registered, please login.
-#: voteit/core/views/meeting.py:69
+#: voteit/core/views/meeting.py:70
 msgid "login_to_access_meeting_notice"
 msgstr ""
 
-#: voteit/core/views/meeting.py:97
+#: voteit/core/views/meeting.py:98
 msgid "You've been granted access to the meeting. Welcome!"
 msgstr ""
 
-#: voteit/core/views/meeting.py:108
+#: voteit/core/views/meeting.py:109
 msgid "Meeting Access"
 msgstr ""
 
 #. Default: Successfully added and sent %(mail_count)s invites
-#: voteit/core/views/meeting.py:143
+#: voteit/core/views/meeting.py:144
 msgid "sent_tickets_text"
 msgstr ""
 
-#: voteit/core/views/meeting.py:156
+#: voteit/core/views/meeting.py:157
 msgid "Send meeting invitations"
 msgstr ""
 
 #. Default: Resending %(count_emails)s invites
-#: voteit/core/views/meeting.py:189
+#: voteit/core/views/meeting.py:190
 msgid "resent_invites_notice"
 msgstr ""
 
 #. Default: Deleting %(count_emails)s invites
-#: voteit/core/views/meeting.py:200
+#: voteit/core/views/meeting.py:201
 msgid "deleting_invites_notice"
 msgstr ""
 
-#: voteit/core/views/users.py:91
+#: voteit/core/views/users.py:92
 msgid "Add new user"
 msgstr ""
 
-#: voteit/core/views/users.py:156
+#: voteit/core/views/users.py:157
 msgid "Password set. You may login now."
 msgstr ""
 
-#: voteit/core/views/users.py:167
+#: voteit/core/views/users.py:168
 msgid "Invalid security token. Did you click the link in your email?"
 msgstr ""
 
-#: voteit/core/views/users.py:232
+#: voteit/core/views/users.py:233
 msgid "Login failed."
 msgstr ""
 
-#: voteit/core/views/users.py:313
+#: voteit/core/views/users.py:314
 msgid "Email sent."
 msgstr ""
 
-#: voteit/core/views/users.py:317
+#: voteit/core/views/users.py:318
 msgid "Username or email not found."
 msgstr ""
 
 #. Default: You've already voted, but the poll is still open so you can change
 #. your vote if you want to.
-#: voteit/core/views/vote.py:55
+#: voteit/core/views/vote.py:56
 msgid "already_voted_poll_open"
 msgstr ""
 
-#: voteit/core/views/vote.py:86
+#: voteit/core/views/vote.py:87
 msgid "Thank you for voting!"
 msgstr ""
 
-#: voteit/core/views/vote.py:93
+#: voteit/core/views/vote.py:94
 msgid "Canceled - your vote has NOT been added!"
 msgstr ""
 
-#: voteit/core/views/vote.py:100
+#: voteit/core/views/vote.py:101
 msgid "Add a vote"
 msgstr ""
 
-#: voteit/core/views/vote.py:125
+#: voteit/core/views/vote.py:126
 msgid "Your vote has been updated."
 msgstr ""
 
-#: voteit/core/views/vote.py:133
+#: voteit/core/views/vote.py:134
 msgid "Canceled - vote NOT updated!"
 msgstr ""
 
-#: voteit/core/views/vote.py:140
+#: voteit/core/views/vote.py:141
 msgid "Edit your vote"
 msgstr ""
 
-#: voteit/core/views/vote.py:185
+#: voteit/core/views/vote.py:186
 msgid "This is your vote"
 msgstr ""
 
@@ -549,10 +587,6 @@ msgstr ""
 msgid "Change vote"
 msgstr ""
 
-#: voteit/core/views/templates/action_bar.pt:9
-msgid "Delete"
-msgstr ""
-
 #: voteit/core/views/templates/agenda_item.pt:70
 #: voteit/core/views/templates/agenda_item.pt:28
 #: voteit/core/views/templates/main.pt:82
@@ -589,11 +623,6 @@ msgstr ""
 
 #: voteit/core/views/templates/login_register.pt:21
 msgid "Registration"
-msgstr ""
-
-#: voteit/core/views/templates/login_register.pt:13
-#: voteit/core/views/templates/profile_toolbar.pt:39
-msgid "Login"
 msgstr ""
 
 #: voteit/core/views/templates/logs.pt:25
@@ -653,10 +682,6 @@ msgstr ""
 
 #: voteit/core/views/templates/pending_access_requests.pt:9
 msgid "${access_count} pending access request(s)"
-msgstr ""
-
-#: voteit/core/views/templates/profile_toolbar.pt:37
-msgid "Register"
 msgstr ""
 
 #: voteit/core/views/templates/profile_toolbar.pt:31

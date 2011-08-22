@@ -2,11 +2,9 @@ from pyramid.renderers import get_renderer, render
 from pyramid.view import view_config
 from pyramid.url import resource_url
 from pyramid.security import has_permission
-
+from webob.exc import HTTPFound
 from deform import Form
 import colander
-
-from webob.exc import HTTPFound
 
 from voteit.core import VoteITMF as _
 from voteit.core.views.base_view import BaseView
@@ -16,6 +14,8 @@ from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IProposal
 from voteit.core.models.interfaces import IVote
 from voteit.core.security import VIEW, EDIT, ADD_VOTE
+from voteit.core.models.schemas import button_add, button_cancel, button_vote
+
 
 
 class AgendaItemView(BaseView):
@@ -54,7 +54,7 @@ class AgendaItemView(BaseView):
             else: 
                 if has_permission(ADD_VOTE, poll, self.request):
                     poll_url = resource_url(poll, self.request)
-                    form = Form(poll_schema, action=poll_url+"@@vote", buttons=('vote', 'cancel'))
+                    form = Form(poll_schema, action=poll_url+"@@vote", buttons=(button_vote, button_cancel))
                     poll_forms[poll.uid] = form.render()
                     poll_form_resources = form.get_widget_resources()
 
@@ -62,14 +62,14 @@ class AgendaItemView(BaseView):
         #Proposal form
         if has_permission(ci['Proposal'].add_permission, self.context, self.request):
             prop_schema = ci['Proposal'].schema(context=self.context, request=self.request, type='add')
-            prop_form = Form(prop_schema, action=url+"@@add?content_type=Proposal", buttons=('add',))
+            prop_form = Form(prop_schema, action=url+"@@add?content_type=Proposal", buttons=(button_add,))
         else:
             prop_form = Form(colander.Schema(), buttons=())
 
         #Discussion form
         if has_permission(ci['DiscussionPost'].add_permission, self.context, self.request):
             discussion_schema = ci['DiscussionPost'].schema(context=self.context, request=self.request, type='add')
-            discussion_form = Form(discussion_schema, action=url+"@@add?content_type=DiscussionPost", buttons=('add',))
+            discussion_form = Form(discussion_schema, action=url+"@@add?content_type=DiscussionPost", buttons=(button_add,))
         else:
             discussion_form = Form(colander.Schema(), buttons=())
 
