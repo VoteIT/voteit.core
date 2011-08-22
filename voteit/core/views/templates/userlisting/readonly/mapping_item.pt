@@ -1,7 +1,0 @@
-<td title="${field.description}"
-    tal:omit-tag="field.widget.hidden or field.widget.category == 'structural'">
-  <!-- mapping_item -->
-  <span tal:replace="structure
-            field.serialize(cstruct, readonly=True)"/>
-  <!-- /mapping_item -->
-</td>
