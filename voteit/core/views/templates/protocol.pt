@@ -10,9 +10,6 @@
          id="page_heading"
          tal:condition="not form|True">
     </div>
-	<div metal:fill-slot="page_info"
-         id="page_info">
-	</div>
 	<div id="content" metal:fill-slot="content">
         <ul tal:condition="log|False">
         <tal:iterate repeat="entry log">

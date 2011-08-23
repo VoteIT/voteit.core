@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2011-08-22 13:16+0200\n"
+"POT-Creation-Date: 2011-08-22 14:21+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -105,7 +105,7 @@ msgid "Text"
 msgstr ""
 
 #. Default:   -------------------------------------------------------------
-#. Click the link to access this VoteIT meeting: %(access_link)s  Have an
+#. Click the link to access this VoteIT meeting: ${access_link}  Have an
 #. account already? Simply login after clicking this link.  Need to register?
 #. Use the above link and simply register. You'll be granted access instantly.
 #. Don't want to register now? Remember that you need to click this link to
@@ -123,7 +123,7 @@ msgid "Email address your invitation was sent to."
 msgstr ""
 
 #: voteit/core/models/invite_ticket.py:124 voteit/core/models/meeting.py:111
-#: voteit/core/models/user.py:128
+#: voteit/core/models/user.py:131
 msgid "Invalid email address."
 msgstr ""
 
@@ -184,18 +184,18 @@ msgstr ""
 msgid "Poll"
 msgstr ""
 
-#. Default: Proposal '%(name)s' already in state %(state)s
+#. Default: Proposal '${name}' already in state ${state}
 #: voteit/core/models/poll.py:178
 msgid "change_prop_state_already_that_state_error"
 msgstr ""
 
-#. Default: Proposal '%(name)s' set as %(state)s
+#. Default: Proposal '${name}' set as ${state}
 #: voteit/core/models/poll.py:185
 msgid "prop_state_changed_notice"
 msgstr ""
 
-#. Default: Proposal with id '%(name)s' couldn't be set as %(state)s. You
-#. should do this manually.
+#. Default: Proposal with id '${name}' couldn't be set as ${state}. You should
+#. do this manually.
 #: voteit/core/models/poll.py:190
 msgid "prop_state_change_error"
 msgstr ""
@@ -304,68 +304,68 @@ msgstr ""
 msgid "Site root"
 msgstr ""
 
-#: voteit/core/models/user.py:41
+#: voteit/core/models/user.py:42
 msgid "User"
 msgstr ""
 
-#. Default: password link: %(pw_link)s
-#: voteit/core/models/user.py:83
+#. Default: password link: ${pw_link}
+#: voteit/core/models/user.py:86
 msgid "request_new_password_text"
 msgstr ""
 
-#: voteit/core/models/user.py:87
+#: voteit/core/models/user.py:90
 msgid "Password reset request from VoteIT"
 msgstr ""
 
-#: voteit/core/models/user.py:147 voteit/core/models/user.py:169
+#: voteit/core/models/user.py:150 voteit/core/models/user.py:172
 msgid "Password"
 msgstr ""
 
-#: voteit/core/models/user.py:149 voteit/core/views/templates/view_user.pt:14
+#: voteit/core/models/user.py:152 voteit/core/views/templates/view_user.pt:14
 msgid "Email"
 msgstr ""
 
-#: voteit/core/models/user.py:152
+#: voteit/core/models/user.py:155
 msgid "First name"
 msgstr ""
 
-#: voteit/core/models/user.py:155
+#: voteit/core/models/user.py:158
 msgid "Last name"
 msgstr ""
 
-#: voteit/core/models/user.py:167 voteit/core/models/user.py:226
+#: voteit/core/models/user.py:170 voteit/core/models/user.py:229
 msgid "UserID or email address."
 msgstr ""
 
 #. Default: UserID must be 3-15 chars, start with a-zA-Z and only contain
 #. regular latin chars, numbers, minus and underscore.
-#: voteit/core/models/user.py:187
+#: voteit/core/models/user.py:190
 msgid "userid_char_error"
 msgstr ""
 
 #. Default: UserID already registered. If it was registered by you, try to
 #. retrieve your password.
-#: voteit/core/models/user.py:189
+#: voteit/core/models/user.py:192
 msgid "already_registered_error"
 msgstr ""
 
-#: voteit/core/models/user.py:194
+#: voteit/core/models/user.py:197
 msgid "UserID"
 msgstr ""
 
 #. Default: Used like a nick-name and as a unique id. You can't change this
 #. later.
-#: voteit/core/models/user.py:195
+#: voteit/core/models/user.py:198
 msgid "userid_description"
 msgstr ""
 
-#: voteit/core/models/user.py:210
+#: voteit/core/models/user.py:213
 msgid "About you"
 msgstr ""
 
 #. Default: Please note that anything you type here will be visible to all
 #. registered users, even if they're not in the same meeting as you.
-#: voteit/core/models/user.py:211
+#: voteit/core/models/user.py:214
 msgid "bio_visible_notice"
 msgstr ""
 
@@ -466,7 +466,7 @@ msgstr ""
 msgid "Meeting Access"
 msgstr ""
 
-#. Default: Successfully added and sent %(mail_count)s invites
+#. Default: Successfully added and sent ${mail_count} invites
 #: voteit/core/views/meeting.py:144
 msgid "sent_tickets_text"
 msgstr ""
@@ -475,12 +475,12 @@ msgstr ""
 msgid "Send meeting invitations"
 msgstr ""
 
-#. Default: Resending %(count_emails)s invites
+#. Default: Resending ${count_emails} invites
 #: voteit/core/views/meeting.py:190
 msgid "resent_invites_notice"
 msgstr ""
 
-#. Default: Deleting %(count_emails)s invites
+#. Default: Deleting ${count_emails} invites
 #: voteit/core/views/meeting.py:201
 msgid "deleting_invites_notice"
 msgstr ""
@@ -621,8 +621,12 @@ msgstr ""
 msgid "Nothing planned yet "
 msgstr ""
 
-#: voteit/core/views/templates/login_register.pt:21
+#: voteit/core/views/templates/login_register.pt:22
 msgid "Registration"
+msgstr ""
+
+#: voteit/core/views/templates/login_register.pt:15
+msgid "Forgot password?"
 msgstr ""
 
 #: voteit/core/views/templates/logs.pt:25
@@ -746,13 +750,5 @@ msgstr ""
 
 #: voteit/core/views/templates/macros/flash_messages.pt:6
 msgid "OK"
-msgstr ""
-
-#: voteit/core/views/templates/userlisting/form.pt:21
-msgid "Errors have been highlighted below"
-msgstr ""
-
-#: voteit/core/views/templates/userlisting/form.pt:19
-msgid "There was a problem with your submission"
 msgstr ""
 

@@ -176,19 +176,19 @@ class Poll(BaseContent, WorkflowAware):
             #Adjust state?
             if proposal.get_workflow_state() == state:
                 msg = _('change_prop_state_already_that_state_error',
-                        default=u"Proposal '%(name)s' already in state %(state)s",
+                        default=u"Proposal '${name}' already in state ${state}",
                         mapping={'name':proposal.__name__, 'state':state})
                 fm.add(msg)
             else:
                 try:
                     proposal.set_workflow_state(request, state)
                     msg = _('prop_state_changed_notice',
-                            default=u"Proposal '%(name)s' set as %(state)s",
+                            default=u"Proposal '${name}' set as ${state}",
                             mapping={'name':proposal.__name__, 'state':state})
                     fm.add(msg)
                 except WorkflowError:
                     msg = _('prop_state_change_error',
-                            default=u"Proposal with id '%(name)s' couldn't be set as %(state)s. You should do this manually.",
+                            default=u"Proposal with id '${name}' couldn't be set as ${state}. You should do this manually.",
                             mapping={'name':proposal.__name__, 'state':state})
                     fm.add(msg, type='error')
 

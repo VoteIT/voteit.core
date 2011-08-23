@@ -116,7 +116,7 @@ class EditGroups(object):
         schema = get_groups_schema(self.context)
         add_csrf_token(self.context, self.request, schema)
 
-        self.form = Form(schema, buttons=(button_save, button_cancel), renderer=renderer)
+        self.form = Form(schema, buttons=('save', 'cancel'))
         self.response['form_resources'] = self.form.get_widget_resources()
 
         post = self.request.POST
