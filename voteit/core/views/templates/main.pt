@@ -2,16 +2,16 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:tal="http://xml.zope.org/namespaces/tal"
       metal:define-macro="master"
-	  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
-	  i18n:domain="voteit.core">
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="voteit.core">
 <head>
-	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	    <metal:page_title define-slot="page_title">
-		   <title>VoteIT</title>
-	    </metal:page_title>
-	<meta name="keywords" content="python web application" />
-	<meta name="description" content="pyramid web application" />
-	
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+        <metal:page_title define-slot="page_title">
+           <title>VoteIT</title>
+        </metal:page_title>
+    <meta name="keywords" content="python web application" />
+    <meta name="description" content="pyramid web application" />
+    
     <link href="${request.application_url}/static/reset.css" rel="stylesheet" type="text/css" />
     <link href="${request.application_url}/static/main.css" rel="stylesheet" type="text/css" />
     <link href="${request.application_url}/static/jquery.rating.css" rel="stylesheet" type="text/css" />
@@ -21,11 +21,11 @@
     <script type="text/javascript" src="${request.application_url}/deform/scripts/jquery-1.4.2.min.js"></script>
     <script type="text/javascript" src="${request.application_url}/static/jquery-ui-1.8.15.custom.min.js"></script>
     <script type="text/javascript" src="${request.application_url}/static/jquery.rating.js"></script>
-	<script type="text/javascript" src="${request.application_url}/static/ajax.js"></script>
-	<script type="text/javascript" src="${request.application_url}/static/jquery.qtip.js"></script>
-	<script type="text/javascript" src="${request.application_url}/static/jquery.easy-confirm-dialog.js"></script>
+    <script type="text/javascript" src="${request.application_url}/static/ajax.js"></script>
+    <script type="text/javascript" src="${request.application_url}/static/jquery.qtip.js"></script>
+    <script type="text/javascript" src="${request.application_url}/static/jquery.easy-confirm-dialog.js"></script>
 
-	<tal:deform tal:condition="form_resources|False">
+    <tal:deform tal:condition="form_resources|False">
     <tal:css repeat="css_file form_resources['css']|[]">
     <link rel="stylesheet"
           tal:attributes="href string:/deform/${css_file}" type="text/css" />
@@ -39,75 +39,74 @@
     </script>
     </tal:deform>
 
-	<metal:head define-slot="head"></metal:head>
-	
+    <metal:head define-slot="head"></metal:head>
+    
 </head>
 <body>
-	
-	<div id="page_wrapper">
+    <div id="page_wrapper">
 
-    <div tal:replace="structure api.get_profile_toolbar(context, request)">Profile toolbar</div>
+        <div tal:replace="structure api.get_profile_toolbar(context, request)">
+            Profile toolbar
+        </div>
 
-    <div id="navigation"><metal:nav metal:use-macro="api.navigation.macros['navigation']">Navigation</metal:nav></div>
+        <div id="navigation">
+            <metal:nav metal:use-macro="api.navigation.macros['navigation']">Navigation</metal:nav>
+        </div>
 
-    <div id="main_window">
-    	
-	    <div id="path_bar" tal:condition="not form|True">
-	    	<div class="content_wrapper">
-	        <tal:iterate repeat="obj api.reversed_lineage">
-	            &raquo;
-	            <a tal:attributes="href api.resource_url(obj, request);"
-	               tal:content="obj.title">Title</a>
-	        </tal:iterate>
-			</div>
-	    </div>
-
-	    <div id="main">
-	    	
-			<tal:messages replace="structure api.flash_messages()">Messages</tal:messages>
-	    	
-			<div class="content_wrapper">
-                <div metal:define-slot="action_bar"
-				     tal:condition="not form|True"
-					 tal:content="structure api.get_action_bar(context, request)">Action bar</div>
-		        <div metal:define-slot="page_heading"
-                     id="page_heading"
-			         tal:condition="not form|True">
-		            <h3 tal:content="context.title">Title</h3>
-					
-					<div tal:replace="structure api.get_time_info(context, request)">start time and end time macro</div>
-
-                    <tal:state define="state_id context.get_workflow_state()|False">
-                    	<div tal:condition="state_id">
-	                        <span i18n:translate="">State</span>:
-	                        <strong tal:attributes="class 'wf-state-%s' % state_id"
-	                              tal:content="state_id">private</strong>
-						</div>
-                    </tal:state>
-
-		            <div class="column">
-                        <tal:creators tal:replace="structure api.get_creators_info(context.creators, request)">Creators</tal:creators>
-                        <div tal:condition="context.description" tal:content="structure api.nl2br(context.description)">Description</div>
+        <div id="main_window">
+            <div id="top">
+                <div class="content_wrapper">
+                    <div id="path_bar" tal:condition="not form|True">
+                        <div class="content_wrapper">
+                        <tal:iterate repeat="obj api.reversed_lineage">
+                            &raquo;
+                            <a tal:attributes="href api.resource_url(obj, request);"
+                               tal:content="obj.title">Title</a>
+                        </tal:iterate>
+                        </div>
                     </div>
+                    <tal:messages replace="structure api.flash_messages()">Messages</tal:messages>
+                    <div metal:define-slot="action_bar"
+                         tal:condition="not form|True"
+                         tal:content="structure api.get_action_bar(context, request)">Action bar</div>
+                    <div metal:define-slot="page_heading"
+                         id="page_heading"
+                         tal:condition="not form|True">
+                        <h3 tal:content="context.title">Title</h3>
+                    
+                        <div tal:replace="structure api.get_time_info(context, request)">start time and end time macro</div>
+
+                        <tal:state define="state_id context.get_workflow_state()|False">
+                            <div tal:condition="state_id">
+                                <span i18n:translate="">State</span>:
+                                <strong tal:attributes="class 'wf-state-%s' % state_id"
+                                      tal:content="state_id">private</strong>
+                            </div>
+                        </tal:state>
+                        <tal:creators tal:replace="structure api.get_creators_info(context.creators, request)">Creators</tal:creators>
+                    </div> <!-- page_heading -->
+                    <div id="content" metal:define-slot="top_content" tal:condition="not form|True"></div>
+                </div> <!-- content_wrapper -->
+            </div> <!-- top -->
+
+            <div id="left" class="column" tal:condition="not form|True">
+                <div class="content_wrapper">
+                    <div class="description" tal:condition="context.description" tal:content="structure api.nl2br(context.description)">Description</div>
+                    <div id="content" metal:define-slot="left_content"></div>
                 </div>
-                <div metal:define-slot="page_info"
-                     id="page_info"
-	                 tal:condition="not form|True"
-                     class="column"></div>
-	        </div>
-	        
-	        <div style="clear: both"></div>
-			
-			<div class="content_wrapper">
-				<div id="content" metal:define-slot="content"></div>
-		    </div>
-			
-			<div metal:define-slot="form" tal:condition="form|False" class="content_wrapper" tal:content="structure form">Form</div>
-	
-		</div>
-	</div>
-	<div class="clear"></div>
-	</div>
+            </div> <!-- left column-->
+            
+            <div id="right" class="column" tal:condition="not form|True">
+                <div class="content_wrapper">
+                    <div id="content" metal:define-slot="right_content"></div>
+                </div>
+            </div> <!-- right column-->
+
+            <div metal:define-slot="form" tal:condition="form|False" class="content_wrapper" tal:content="structure form">Form</div>
+            
+        </div> <!-- main_window -->
+        <div class="clear"></div>
+    </div> <!-- page_wrapper -->
 
 </body>
 </html>
