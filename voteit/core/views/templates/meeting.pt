@@ -7,23 +7,29 @@
 	  i18n:domain="voteit.core">
 <body>
 	<div id="content" metal:fill-slot="right_content">
-        <h1 i18n:translate="">This has happened</h1>
-        <a class="buttonize"
-		   tal:attributes="href api.resource_url(context, request) + '?log_closed=all'"
-		   i18n:translate="">Show all</a>
-        <tal:block replace="structure get_state_ais('closed')"></tal:block>
-		
-        <h1 i18n:translate="">This is happening now</h1>
-        <a class="buttonize"
-		   tal:attributes="href api.resource_url(context, request) + '?log_active=all'"
-		   i18n:translate="">Show all</a>
-        <tal:block replace="structure get_state_ais('active')"></tal:block>
-        
-        <h1 i18n:translate="">This will happen</h1>
-        <a class="buttonize"
-		   tal:attributes="href api.resource_url(context, request) + '?log_inactive=all'"
-		   i18n:translate="">Show all</a>
-        <tal:block replace="structure get_state_ais('inactive')"></tal:block>
+	    <div id="meeting_overview">
+	        <div id="has">
+                <h4 i18n:translate="">This has happened</h4>
+                <a class="buttonize"
+		           tal:attributes="href api.resource_url(context, request) + '?log_closed=all'"
+		           i18n:translate="">Show all</a>
+                <tal:block replace="structure get_state_ais('closed')"></tal:block>
+    		</div>
+	        <div id="now">
+                <h4 i18n:translate="">This is happening now</h4>
+                <a class="buttonize"
+		           tal:attributes="href api.resource_url(context, request) + '?log_active=all'"
+		           i18n:translate="">Show all</a>
+                <tal:block replace="structure get_state_ais('active')"></tal:block>
+            </div>
+	        <div id="will">
+                <h4 i18n:translate="">This will happen</h4>
+                <a class="buttonize"
+		           tal:attributes="href api.resource_url(context, request) + '?log_inactive=all'"
+		           i18n:translate="">Show all</a>
+                <tal:block replace="structure get_state_ais('inactive')"></tal:block>
+            </div>
+        </div>
 	</div>
 </body>
 </html>

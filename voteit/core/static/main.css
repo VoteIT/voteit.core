@@ -298,3 +298,33 @@ li.notification_message {
     color: #fff;
 }
 
+/* meeting overview */
+#meeting_overview {
+	color: #054265;
+}
+#meeting_overview a {
+    color: #054265;
+}
+#meeting_overview h4 {
+    font-size: 14px;
+    font-weight: bold;
+    border-bottom: 1px solid #86A3B4;
+    padding-left: 20px;
+}
+#meeting_overview #has h4 {
+    background: url(images/iconset.png) no-repeat 0px -49px;
+}
+#meeting_overview #now h4 {
+    background: url(images/iconset.png) no-repeat 0px -67px;
+}
+#meeting_overview #will h4 {
+    background: url(images/iconset.png) no-repeat 0px -85px;
+}
+#meeting_overview div#has, 
+#meeting_overview div#now {
+    margin-bottom: 40px;
+}
+#meeting_overview ul li {
+    margin-top: 5px;
+    border-bottom: #ccc 1px solid;
+}
