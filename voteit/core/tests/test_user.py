@@ -4,7 +4,9 @@ from datetime import datetime
 
 from pyramid import testing
 from zope.interface.verify import verifyObject
+from zope.component.event import objectEventNotify
 from pyramid_mailer import get_mailer
+from repoze.folder.events import ObjectAddedEvent
 
 from voteit.core.models.date_time_util import utcnow
 
@@ -70,10 +72,37 @@ class UserTests(unittest.TestCase):
         msg = mailer.outbox[0]
         
         self.failUnless(obj.__token__() in msg.body)
+    
+    def test_blank_email_hash_generation(self):
+        obj = self._make_obj()
+        self.assertEqual(obj.get_image_tag(), '<img src="http://www.gravatar.com/avatar/?d=mm&s=40" height="40" width="40" />')
 
-#FIXME: Should be done in the form context
-#    def test_validate_password_token(self):
+    def test_email_hash_generation_subscriber(self):
+        self.config.scan('voteit.core.subscribers.user')
         
+        obj = self._make_obj()
+        obj.set_field_value('email', 'hello@world.com')
+        objectEventNotify(ObjectAddedEvent(obj, None, 'dummy'))
+        
+        self.assertEqual(obj.get_field_value('email_hash'),
+                         '4b3cdf9adfc6258a102ab90eb64565ea')
+
+    def test_email_hash_method(self):
+        obj = self._make_obj()
+        obj.set_field_value('email', 'hello@world.com')
+        obj.generate_email_hash()
+        
+        self.assertEqual(obj.get_field_value('email_hash'),
+                         '4b3cdf9adfc6258a102ab90eb64565ea')
+
+    def test_get_image_tag(self):
+        obj = self._make_obj()
+        obj.set_field_value('email', 'hello@world.com')
+        obj.generate_email_hash()
+        
+        self.assertEqual(obj.get_image_tag(size=45),
+                         '<img src="http://www.gravatar.com/avatar/4b3cdf9adfc6258a102ab90eb64565ea?d=mm&s=45" height="45" width="45" />')
+
 
 class RequestPasswordTokenTests(unittest.TestCase):
     def setUp(self):

@@ -2,6 +2,7 @@ import re
 import string
 from random import choice
 from hashlib import sha1
+from hashlib import md5
 from datetime import timedelta
 import urllib
 
@@ -27,6 +28,7 @@ from voteit.core.validators import password_validation
 from voteit.core.validators import html_string_validator
 from voteit.core.models.date_time_util import utcnow
 
+
 def get_sha_password(password):
     """ Encode a plaintext password to sha1. """
     if isinstance(password, unicode):
@@ -49,6 +51,14 @@ class User(BaseContent):
     def userid(self):
         """ Convention - name should always be same as userid """
         return self.__name__
+    
+    def get_image_tag(self, size=40):
+        email_hash = self.get_field_value('email_hash', None)
+        tag = '<img src="http://www.gravatar.com/avatar/'
+        if email_hash:
+            tag += email_hash
+        tag += '?d=mm&s=%(size)s" height="%(size)s" width="%(size)s" />' % {'size':size}
+        return tag
 
     def get_password(self):
         return self.get_field_value('password')
@@ -95,6 +105,14 @@ class User(BaseContent):
         """ Validate input from a colander form. See token_password_change schema """
         #FIXME: We need to handle an error here in a nicer way
         self.__token__.validate(value)
+
+    def generate_email_hash(self):
+        """ Save an md5 hash of an email address.
+            Used to generate urls for gravatar profile images.
+        """
+        email = self.get_field_value('email', '').strip().lower()
+        if email:
+            self.set_field_value('email_hash', md5(email).hexdigest())
 
 
 class RequestPasswordToken(object):

@@ -13,6 +13,9 @@
 	</div>
 	<div><span i18n:translate="">Email</span>: <span tal:content="context.get_field_value('email')"></span></div>
 	<div><span i18n:translate="">Biography</span>: <span tal:content="structure api.nl2br(context.get_field_value('biography'))"></span></div>
+	<div>
+		<img tal:replace="structure context.get_image_tag(size=100)" />
+	</div>
 </div>
 </body>
 </html>
