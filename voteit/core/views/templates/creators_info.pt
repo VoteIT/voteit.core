@@ -2,10 +2,10 @@
 <span class="creators" tal:condition="users">
 <tal:iterate repeat="user users">
 	<a tal:condition="user"
-	   tal:content="user.title"
 	   tal:attributes="href resource_url(user, request)">
-	    My Full Name
-	</a><tal:comma tal:condition="not repeat['user'].end">,</tal:comma>
+        <img tal:replace="structure user.get_image_tag()" />
+	    <span tal:content="user.title">My fullname</span>
+	</a><tal:sep tal:condition="not repeat['user'].end">|</tal:sep>
 </tal:iterate>
 </span>
 </tal:main>
