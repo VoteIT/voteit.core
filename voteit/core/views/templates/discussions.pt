@@ -1,14 +1,15 @@
-    <tal:iterate condition="discussions" repeat="post discussions">
-        <div tal:define="unread api.is_unread(post, True)"
-             tal:attributes="class unread and 'unread listing_block' or 'listing_block'">
-            <tal:creators tal:replace="structure api.get_creators_info(post.creators, request)">Creators</tal:creators>
-            
-            <span class="body" tal:content="structure post.get_field_value('text')">text</span>
+<tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core">
+<tal:iterate condition="discussions" repeat="post discussions">
+    <div tal:define="unread api.is_unread(post, True)"
+         tal:attributes="class unread and 'unread listing_block' or 'listing_block'">
+        <tal:creators tal:replace="structure api.get_creators_info(post.creators, request)">Creators</tal:creators>
+        
+        <span class="body" tal:content="structure post.get_field_value('text')">text</span>
 
-            <div class="expressions" tal:content="structure api.expressions.get_expressions(post, 'support', api.userid, 'Support')"></div>
-            <div tal:replace="structure api.get_action_bar(post, request)">Action bar</div>
-            <div class="clear"><!-- --></div>
-        </div>
+        <div class="expressions" tal:content="structure api.expressions.get_expressions(post, 'support', api.userid, 'Support')"></div>
+        <div tal:replace="structure api.get_action_bar(post, request)">Action bar</div>
+        <div class="clear"><!-- --></div>
+    </div>
 
-    </tal:iterate>
-
+</tal:iterate>
+</tal:main>
