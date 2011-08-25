@@ -1,7 +1,28 @@
 <tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core">
 <div id="profile_toolbar" metal:define-macro="profile_toolbar">
+    <img src="/static/images/logo.png" alt="VoteIT" />
+    <h1 tal:condition="api.meeting" tal:content="api.meeting.title"></h1>
 	<div class="content_wrapper">
-		<ul id="main_profile_tabs" class="tabs">
+		<ul id="main_profile" class="first">
+			<tal:authenticated condition="api.userid">
+		        <li><a tal:attributes="href api.user_profile_url"
+			           tal:content="api.user_profile.title">Profile</a></li>
+			    <li><a tal:attributes="href request.application_url + '/@@logout'">
+				    <span i18n:translate="">Logout</span>
+			    </a></li>
+		    </tal:authenticated>
+		
+		    <tal:anon condition="not api.userid">
+			    <!-- Unauthenticated user actions -->
+                <li><a tal:attributes="href request.application_url + '/@@register'"
+			                       i18n:translate="">Register</a></li>
+                <li><a tal:attributes="href request.application_url + '/@@login'"
+			                       i18n:translate="">Login</a></li>
+		    </tal:anon>
+	    </ul>
+    </div>
+	<div class="content_wrapper second">
+		<ul class="second">
             <li class="tab" tal:condition="api.meeting">
                 <a tal:attributes="href '%ssearch' % api.resource_url(api.meeting, request)"
 				   class="menu_header"
@@ -20,25 +41,11 @@
 	    	</tal:administrator>
 			
 			<tal:authenticated condition="api.userid">
-				<!-- Regular authenticated user actions -->
                 <li class="tab" tal:condition="api.meeting"><a tal:attributes="href api.resource_url(api.meeting, request) + '@@messages'">
                 	<span i18n:translate="">Messages</span>
-					(<span tal:replace="api.msg_count" />) &raquo;
-				</a></li>
-			    <li class="tab"><a tal:attributes="href api.user_profile_url"
-				                   i18n:translate="">Profile</a></li>
-				<li class="tab"><a tal:attributes="href request.application_url + '/@@logout'">
-					<span i18n:translate="">Logout</span> (<span tal:replace="api.userid">userid</span>)
+					<span class="unread">(<span tal:content="api.msg_count" />)</span> &raquo;
 				</a></li>
 			</tal:authenticated>
-			
-			<tal:anon condition="not api.userid">
-				<!-- Unauthenticated user actions -->
-	            <li class="tab"><a tal:attributes="href request.application_url + '/@@register'"
-				                   i18n:translate="">Register</a></li>
-	            <li class="tab"><a tal:attributes="href request.application_url + '/@@login'"
-				                   i18n:translate="">Login</a></li>
-			</tal:anon>
 		</ul>
 	</div>
 </div>

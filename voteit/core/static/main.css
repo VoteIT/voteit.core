@@ -42,46 +42,75 @@ a {
     position: absolute;
 	left: 300px;
 	right: 0px;
-	top: 50px;
+	top: 100px;
 	bottom: 0px;
 }
 
 /* Profile toolbar with tabs */
 #profile_toolbar {
     width: 100%;
-	height: 50px;
+	height: 100px;
     background: #054265;
 	position: relative;
 }
 
-#profile_toolbar ul.tabs {
+#profile_toolbar img {
+    float: left;
+}
+
+#profile_toolbar h1 {
+    float: left;
+    font-size: 24px;
+    font-weight: normal;
+    color: #fff;
+}
+
+#profile_toolbar ul.first {
+    float: right;
+    font-size: 12px;
+    font-weight: bold;
+}
+#profile_toolbar ul.first li { 
+    float: left;
+    margin-right: 0.5em;
+}
+#profile_toolbar ul.first a {
+    color: #fff
+}
+
+#profile_toolbar ul.second {
 	position: absolute;
     right: 0px;
 	bottom: 0px;
+    font-size: 14px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+#profile_toolbar ul.second .unread {
+    font-weight: normal;
 }
 #profile_toolbar ul li.tab { 
     float: left;
     margin-right: 0.5em;
-	bottom: 0px;
-	padding: 0.25em 1em;
-	background: #fff;
-	border-style: solid;
-	border-color: #dbe0e5;
-	border-width: 1px 1px 0px 1px;
+}
+#profile_toolbar ul.second a {
+    color: #054265;
+}
 
-	border-top-left-radius: 0.5em 0.5em;
-	border-top-right-radius: 0.5em 0.5em;
-	-webkit-border-top-left-radius: 0.5em 0.5em;
-	-webkit-border-top-right-radius: 0.5em 0.5em;
-	-moz-border-top-left-radius: 0.5em 0.5em;
-	-moz-border-top-right-radius: 0.5em 0.5em;
+#profile_toolbar div.second {
+    background-color: #86A3B4;
+    position: absolute;
+    right: 0px;
+	bottom: 0px;
+	width: 100%;
+    height: 35px;
 }
 
 /* Left side navigation (Agenda) */
 #navigation {
 	position: absolute;
 	left: 0px;
-	top: 50px;
+	top: 100px;
 	bottom: 0px;
 	width: 300px;
 	background: #dbe0e5;

@@ -85,22 +85,24 @@
                         </tal:state>
                         <tal:creators tal:replace="structure api.get_creators_info(context.creators, request)">Creators</tal:creators>
                     </div> <!-- page_heading -->
-                    <div id="content" metal:define-slot="top_content" tal:condition="not form|True"></div>
+                    <div id="top_content" metal:define-slot="top_content" tal:condition="not form|True"></div>
                 </div> <!-- content_wrapper -->
             </div> <!-- top -->
 
-            <div id="left" class="column" tal:condition="not form|True">
-                <div class="content_wrapper">
-                    <div class="description" tal:condition="context.description" tal:content="structure api.nl2br(context.description)">Description</div>
-                    <div id="content" metal:define-slot="left_content"></div>
-                </div>
-            </div> <!-- left column-->
-            
-            <div id="right" class="column" tal:condition="not form|True">
-                <div class="content_wrapper">
-                    <div id="content" metal:define-slot="right_content"></div>
-                </div>
-            </div> <!-- right column-->
+            <div id="content" metal:define-slot="content">
+                <div id="left" class="column" tal:condition="not form|True">
+                    <div class="content_wrapper">
+                        <div class="description" tal:condition="context.description" tal:content="structure api.nl2br(context.description)">Description</div>
+                        <div id="content" metal:define-slot="left_content"></div>
+                    </div>
+                </div> <!-- left column-->
+                
+                <div id="right" class="column" tal:condition="not form|True">
+                    <div class="content_wrapper">
+                        <div id="content" metal:define-slot="right_content"></div>
+                    </div>
+                </div> <!-- right column-->
+            </div> <!-- content -->
 
             <div metal:define-slot="form" tal:condition="form|False" class="content_wrapper" tal:content="structure form">Form</div>
             
