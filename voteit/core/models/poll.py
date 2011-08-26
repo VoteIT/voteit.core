@@ -18,6 +18,7 @@ from voteit.core.models.interfaces import ICatalogMetadataEnabled
 from voteit.core.models.interfaces import IDateTimeUtil
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IPollPlugin
+from voteit.core.models.interfaces import IProposal
 from voteit.core.models.interfaces import IVote
 from voteit.core.models.interfaces import IDateTimeUtil
 from voteit.core.views.macros import FlashMessages
@@ -251,7 +252,10 @@ def construct_schema(context=None, request=None, **kwargs):
     agenda_item = find_interface(context, IAgendaItem)
     if agenda_item is None:
         Exception("Couldn't find the agenda item from this polls context")
-    [proposal_choices.add((x.uid, x.title)) for x in agenda_item.values() if x.content_type == 'Proposal']
+        
+    #Get valid proposals - should be in states 'published' to be selectable
+    for prop in agenda_item.get_content(iface=IProposal, states='published', sort_on='title'):
+        proposal_choices.add((prop.uid, prop.title, ))
 
     #Note: The message factory shouldn't process mappings here, it's handled by deform!
     _earliest_start = colander.Range(min=dt_util.localnow(),
@@ -269,9 +273,15 @@ def construct_schema(context=None, request=None, **kwargs):
             validator=html_string_validator,)
 
         poll_plugin = colander.SchemaNode(colander.String(),
+                                          title = _(u"Poll method to use"),
+                                          description = _(u"poll_method_description",
+                                                          default=u"Each poll method should contain information about what it does."),
                                           widget=deform.widget.SelectWidget(values=plugin_choices),)
         proposals = colander.SchemaNode(deform.Set(),
                                         name="proposals",
+                                        title = _(u"Proposals"),
+                                        description = _(u"poll_select_proposals_description",
+                                                        default=u"Only proposals in the state 'published' can be selected here."),
                                         #Should we allow this to be empty?
                                         widget=deform.widget.CheckboxChoiceWidget(values=proposal_choices),)
 
