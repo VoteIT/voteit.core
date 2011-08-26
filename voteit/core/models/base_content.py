@@ -104,7 +104,7 @@ class BaseContent(Folder, SecurityAware):
     
     creators = property(_get_creators, _set_creators)
 
-    def get_content(self, content_type=None, iface=None, state=None, sort_on=None, sort_reverse=False, limit=None):
+    def get_content(self, content_type=None, iface=None, states=None, sort_on=None, sort_reverse=False, limit=None):
         """ See IBaseContent """
         results = set()
 
@@ -121,11 +121,18 @@ class BaseContent(Folder, SecurityAware):
                     continue
             
             #Specific workflow state?
-            if state is not None:
+            if states is not None:
                 #All objects might not have a workflow. In that case they won't have the method get_workflow_state
                 try:
-                    if not state == candidate.get_workflow_state():
-                        continue
+                    curr_state = candidate.get_workflow_state()
+                    if isinstance(states, basestring):
+                        #states is a string - a single state
+                        if not curr_state == states:
+                            continue
+                    else:
+                        #states is an iterable
+                        if not curr_state in states:
+                            continue
                 except AttributeError:
                     continue
             

@@ -103,4 +103,25 @@ class BaseContentTests(unittest.TestCase):
         self.assertEqual(parent.get_content(sort_on = 'title', sort_reverse = True), (obj2, obj1))
         self.assertRaises(AttributeError, parent.get_content, sort_on = 'non_existent')
         
+    def test_get_content_states(self):
+        """ To test content states we need to setup workflow and use real content types."""
+        from voteit.core.models.meeting import Meeting
+        from voteit.core.models.agenda_item import AgendaItem
+        self.config.include('pyramid_zcml')
+        self.config.load_zcml('voteit.core:configure.zcml')
+
+        meeting = Meeting()
+        meeting.title = 'Hello Meeting'
+        ai1 = AgendaItem()
+        ai1.title = 'Stuff to do'
+        ai2 = AgendaItem()
+        ai2.title = 'More important things'
+        meeting['ai1'] = ai1
+        meeting['ai2'] = ai2
         
+        self.assertEqual(meeting.get_content(sort_on = 'title', states='private'), (ai2, ai1))
+        self.assertEqual(meeting.get_content(sort_on = 'title', states=('private', 'inactive')), (ai2, ai1))
+        request = testing.DummyRequest()
+        ai1.set_workflow_state(request, 'inactive')
+        self.assertEqual(meeting.get_content(sort_on = 'title', states='private'), (ai2,))
+        self.assertEqual(meeting.get_content(sort_on = 'title', states=('private', 'inactive',)), (ai2, ai1))

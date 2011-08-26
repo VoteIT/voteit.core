@@ -15,10 +15,10 @@
 	
 	<tal:inside_meeting condition="api.meeting">
 	<tal:agenda_items define="
-	                        agenda_items_active api.get_restricted_content(api.meeting, content_type='AgendaItem', state='active');
-                            agenda_items_inactive api.get_restricted_content(api.meeting, content_type='AgendaItem', state='inactive');
-                            agenda_items_closed api.get_restricted_content(api.meeting, content_type='AgendaItem', state='closed');
-                            agenda_items_private api.get_restricted_content(api.meeting, content_type='AgendaItem', state='private');">
+	                        agenda_items_active api.get_restricted_content(api.meeting, content_type='AgendaItem', states='active');
+                            agenda_items_inactive api.get_restricted_content(api.meeting, content_type='AgendaItem', states='inactive');
+                            agenda_items_closed api.get_restricted_content(api.meeting, content_type='AgendaItem', states='closed');
+                            agenda_items_private api.get_restricted_content(api.meeting, content_type='AgendaItem', states='private');">
 		<div class="browse_up">
 			<a tal:attributes="href api.resource_url(api.root, request)">
 				&laquo; <span i18n:translate="">all meetings</span>

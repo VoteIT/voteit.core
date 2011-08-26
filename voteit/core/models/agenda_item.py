@@ -156,7 +156,7 @@ def closing_agenda_item_callback(context, info):
     """
     request = get_current_request() #Should be okay to use here since this method is called very seldom.
     #get_content returns a generator. It's "True" even if it's empty!
-    if tuple(context.get_content(iface=IPoll, state='ongoing')):
+    if tuple(context.get_content(iface=IPoll, states='ongoing')):
         raise Exception("You can't close an agenda item that has active polls in it. Close the polls first!")
-    for proposal in context.get_content(iface=IProposal, state='published'):
+    for proposal in context.get_content(iface=IProposal, states='published'):
         proposal.set_workflow_state(request, 'unhandled')

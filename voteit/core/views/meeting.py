@@ -40,7 +40,7 @@ class MeetingView(BaseView):
             limit=None
         
         response = {}
-        response['log'] = self.context.get_content(iface=IAgendaItem, state=state, sort_on='agenda_item_id', limit=limit)
+        response['log'] = self.context.get_content(iface=IAgendaItem, states=state, sort_on='agenda_item_id', limit=limit)
         response['api'] = self.api
         response['context'] = self
         
@@ -229,7 +229,7 @@ class MeetingView(BaseView):
         state = self.request.GET.get('state', 'active')
 
         self.response = {}
-        self.response['log'] = self.context.get_content(iface=IAgendaItem, state=state, sort_on='agenda_item_id')
+        self.response['log'] = self.context.get_content(iface=IAgendaItem, states=state, sort_on='agenda_item_id')
         self.response['api'] = self.api
 
         return self.response

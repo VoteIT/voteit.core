@@ -120,6 +120,6 @@ def closing_meeting_callback(context, info):
         raise an exception if any agenda item is active.
     """
     #get_content returns a generator. It's "True" even if it's empty!
-    if tuple(context.get_content(iface=IAgendaItem, state='active')):
+    if tuple(context.get_content(iface=IAgendaItem, states='active')):
         raise Exception("This meeting still has open Agenda items in it. You can't close it until they're closed.")
 
