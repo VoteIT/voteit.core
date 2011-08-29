@@ -20,7 +20,7 @@ from voteit.core.models.interfaces import IUser
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import ISiteRoot
 from voteit.core.models.workflow_aware import WorkflowAware
-from voteit.core.validators import html_string_validator
+from voteit.core.validators import html_string_validator, multiple_email_validator
 from voteit.core.models.date_time_util import utcnow
 
 SELECTABLE_ROLES = (security.ROLE_MODERATOR,
@@ -157,7 +157,7 @@ def construct_schema(context=None, request=None, type=None):
             emails = colander.SchemaNode(colander.String(),
                                          title = _(u"Email addresses to give the role above."),
                                          widget = deform.widget.TextAreaWidget(rows=5, cols=40),
-                                         validator = html_string_validator,
+                                         validator = colander.All(html_string_validator, multiple_email_validator),
             )
             message = colander.SchemaNode(colander.String(),
                                           title = _(u'Welcome text of the email that will be sent'),
