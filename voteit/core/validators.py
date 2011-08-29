@@ -31,3 +31,20 @@ def html_string_validator(node, value):
     if not svalue == value:
         raise colander.Invalid(node, _(u"HTML is not allowed."))
 
+
+def multiple_email_validator(node, value):
+    """
+        checks that each line of value is a correct email
+    """
+
+    validator = colander.Email()
+    invalid = []
+    for email in value.splitlines():
+        try:
+            validator(node, email)
+        except colander.Invalid:
+            invalid.append(email)
+            
+    if invalid:
+        emails = ", ".join(invalid)
+        raise colander.Invalid(node, _(u"The following adresses is invalid: ${emails}", mapping={'emails': emails}))
