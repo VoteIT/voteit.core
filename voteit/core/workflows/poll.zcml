@@ -1,4 +1,7 @@
-<configure xmlns="http://namespaces.repoze.org/bfg">
+<configure 
+    xmlns="http://namespaces.repoze.org/bfg"
+    xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+    i18n:domain="voteit.core">
 
 <include package="repoze.workflow" file="meta.zcml"/>
 
@@ -12,27 +15,27 @@
 	>
 
 		<state name="private">
-			<key name="title" value="Private"/>
+			<key name="title" value="Private" i18n:attributes="value" />
 			<key name="description" value=""/>
 		</state>
 
         <state name="planned">
-            <key name="title" value="Planned"/>
+            <key name="title" value="Planned" i18n:attributes="value" />
             <key name="description" value=""/>
         </state>
 
 		<state name="ongoing">
-			<key name="title" value="Ongoing"/>
+			<key name="title" value="Ongoing" i18n:attributes="value" />
 			<key name="description" value=""/>
 		</state>
 
 		<state name="canceled">
-			<key name="title" value="Canceled"/>
+			<key name="title" value="Canceled" i18n:attributes="value" />
 			<key name="description" value=""/>
 		</state>
 
 		<state name="closed">
-			<key name="title" value="Closed"/>
+			<key name="title" value="Closed" i18n:attributes="value" />
 			<key name="description" value=""/>
 		</state>
 

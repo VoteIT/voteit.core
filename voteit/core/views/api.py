@@ -14,11 +14,12 @@ from pyramid.exceptions import Forbidden
 from pyramid.interfaces import IAuthenticationPolicy
 from pyramid.interfaces import IAuthorizationPolicy
 from pyramid.decorator import reify
-from pyramid.i18n import get_locale_name
+from pyramid.i18n import get_locale_name, get_localizer
 from webob.exc import HTTPFound
 from repoze.workflow import get_workflow
 from webhelpers.html.converters import nl2br
 
+from voteit.core import VoteITMF as _
 from voteit.core import security
 from voteit.core.models.interfaces import IContentUtility
 from voteit.core.models.interfaces import IDateTimeUtil
@@ -78,6 +79,12 @@ class APIView(object):
         self.nl2br = nl2br
         
         self.locale = get_locale_name(request)
+
+    def translate(self, *args, **kwargs):
+        """ Hook into the translation string machinery.
+            See the i18n section of the Pyramid Docs.
+        """ 
+        return _(*args, **kwargs)
 
     def _get_user_cache(self):
         cache = getattr(self.request, '_user_lookup_cache', None)
