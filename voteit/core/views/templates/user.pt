@@ -15,6 +15,11 @@
 	<div><span i18n:translate="">Biography</span>: <span tal:content="structure api.nl2br(context.get_field_value('biography'))"></span></div>
 	<div>
 		<img tal:replace="structure context.get_image_tag(size=100)" />
+		<div i18n:translate="profile_gravatar_explanation">
+			The image above comes from the <a href="http://www.gravatar.com" target="_blank">Gravatar network</a>.
+			It's taken from your current email address. If you want to change the picture, simply go to
+			the Gravatar site and change your picture for the email you use in VoteIT.
+		</div>
 	</div>
 </div>
 </body>
