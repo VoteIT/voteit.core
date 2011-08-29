@@ -98,8 +98,8 @@ class UsersView(object):
     def list_users(self):
         return self.response
 
-    @view_config(context=IUser, renderer='templates/view_user.pt')
-    def view_users(self):
+    @view_config(context=IUser, renderer='templates/user.pt')
+    def view_user(self):
         return self.response
 
     @view_config(context=IUser, name="change_password", renderer=DEFAULT_TEMPLATE, permission=CHANGE_PASSWORD)
