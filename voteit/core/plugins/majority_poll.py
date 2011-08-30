@@ -39,7 +39,7 @@ class MajorityPollPlugin(PollPlugin):
                             validator=colander.OneOf([x[0] for x in choices]),
                             widget=deform.widget.RadioChoiceWidget(values=choices),
                             title=_(u'Vote for one'),
-                            description=_(u''),)
+                            description=u'',)
 
         return Schema()
 

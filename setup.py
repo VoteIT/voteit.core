@@ -26,6 +26,7 @@ requires = [
     'zope.sqlalchemy',
     'webhelpers',
     'repoze.catalog',
+    'lingua',
     ]
 
 setup(name='voteit.core',
@@ -56,8 +57,8 @@ setup(name='voteit.core',
       """,
       paster_plugins=['pyramid'],
       message_extractors = { '.': [
-              ('**.py',   'chameleon_python', None ),
-              ('**.pt',   'chameleon_xml', None ),
-              ('**.zcml',   'chameleon_xml', None ), #Should we use something else?
+              ('**.py',   'lingua_python', None ),
+              ('**.pt',   'lingua_xml', None ),
+              ('**.zcml',   'lingua_zcml', None ),
               ]},
       )
