@@ -16,7 +16,7 @@ from voteit.core.interfaces import IWorkflowStateChange
 from voteit.core.interfaces import IObjectUpdatedEvent
 
 
-@subscriber(IMeeting, IObjectAddedEvent)
+@subscriber([IMeeting, IObjectAddedEvent])
 def log_meeting_added(obj, event):
     #Log entry
     request = get_current_request()
@@ -32,8 +32,8 @@ def log_meeting_added(obj, event):
         primaryuid=obj.uid,
     )
     
-@subscriber(IAgendaItem, IObjectAddedEvent)
-@subscriber(IProposal, IObjectAddedEvent)
+@subscriber([IAgendaItem, IObjectAddedEvent])
+@subscriber([IProposal, IObjectAddedEvent])
 def log_content_added(obj, event):
     #Log entry
     request = get_current_request()
@@ -49,7 +49,7 @@ def log_content_added(obj, event):
         primaryuid=obj.uid,
     )
     
-@subscriber(IPoll, IObjectAddedEvent)
+@subscriber([IPoll, IObjectAddedEvent])
 def log_poll_added(obj, event):
     #Log entry
     request = get_current_request()
@@ -74,10 +74,10 @@ def log_poll_added(obj, event):
             secondaryuid=proposal.uid,
         )
     
-@subscriber(IMeeting, IObjectWillBeRemovedEvent)
-@subscriber(IAgendaItem, IObjectWillBeRemovedEvent)
-@subscriber(IProposal, IObjectWillBeRemovedEvent)
-@subscriber(IPoll, IObjectWillBeRemovedEvent)
+@subscriber([IMeeting, IObjectWillBeRemovedEvent])
+@subscriber([IAgendaItem, IObjectWillBeRemovedEvent])
+@subscriber([IProposal, IObjectWillBeRemovedEvent])
+@subscriber([IPoll, IObjectWillBeRemovedEvent])
 def log_content_deleted(obj, event):
     #Log entry
     request = get_current_request()
@@ -94,10 +94,10 @@ def log_content_deleted(obj, event):
     )
     
     
-@subscriber(IMeeting, IWorkflowStateChange)
-@subscriber(IAgendaItem, IWorkflowStateChange)
-@subscriber(IProposal, IWorkflowStateChange)
-@subscriber(IPoll, IWorkflowStateChange)
+@subscriber([IMeeting, IWorkflowStateChange])
+@subscriber([IAgendaItem, IWorkflowStateChange])
+@subscriber([IProposal, IWorkflowStateChange])
+@subscriber([IPoll, IWorkflowStateChange])
 def log_state_changed(obj, event):
     request = get_current_request()
     meeting = find_interface(obj, IMeeting)
@@ -112,10 +112,10 @@ def log_state_changed(obj, event):
         primaryuid=obj.uid,
     )
     
-@subscriber(IMeeting, IObjectUpdatedEvent)
-@subscriber(IAgendaItem, IObjectUpdatedEvent)
-@subscriber(IProposal, IObjectUpdatedEvent)
-@subscriber(IPoll, IObjectUpdatedEvent)
+@subscriber([IMeeting, IObjectUpdatedEvent])
+@subscriber([IAgendaItem, IObjectUpdatedEvent])
+@subscriber([IProposal, IObjectUpdatedEvent])
+@subscriber([IPoll, IObjectUpdatedEvent])
 def log_content_updated(obj, event):
     #Log entry
     request = get_current_request()

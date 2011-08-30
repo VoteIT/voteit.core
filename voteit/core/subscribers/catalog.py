@@ -12,20 +12,20 @@ from voteit.core.models.catalog import reindex_object
 from voteit.core.models.catalog import unindex_object
 
 
-@subscriber(IBaseContent, IObjectAddedEvent)
+@subscriber([IBaseContent, IObjectAddedEvent])
 def object_added(obj, event):
     """ Index a base content object. """
     root = find_interface(obj, ISiteRoot)
     index_object(root.catalog, obj)
 
-@subscriber(IBaseContent, IObjectUpdatedEvent)
-@subscriber(IBaseContent, IWorkflowStateChange)
+@subscriber([IBaseContent, IObjectUpdatedEvent])
+@subscriber([IBaseContent, IWorkflowStateChange])
 def object_updated(obj, event):
     """ Reindex a base content object"""
     root = find_interface(obj, ISiteRoot)
     reindex_object(root.catalog, obj)
 
-@subscriber(IBaseContent, IObjectWillBeRemovedEvent)
+@subscriber([IBaseContent, IObjectWillBeRemovedEvent])
 def object_removed(obj, event):
     """ Remove an index for a base content object"""
     root = find_interface(obj, ISiteRoot)

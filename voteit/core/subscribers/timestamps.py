@@ -8,8 +8,8 @@ from voteit.core.interfaces import IWorkflowStateChange
 from voteit.core.models.date_time_util import DateTimeUtil
 
 
-@subscriber(IAgendaItem, IWorkflowStateChange)
-@subscriber(IMeeting, IWorkflowStateChange)
+@subscriber([IAgendaItem, IWorkflowStateChange])
+@subscriber([IMeeting, IWorkflowStateChange])
 def add_close_timestamp(obj, event):
     """ Add timestamps when a meeting or an agenda item is closed. """
     

@@ -328,5 +328,7 @@ def planned_poll_callback(content, info):
     fm.add(msg)
     if count:
         #FIXME: Translation mappings
-        msg = _(u"%s selected proposals were set in the 'locked for vote' state. They can no longer be edited or retracted by normal users." % count)
+        msg = _(u'poll_closed_proposals_locked_notice',
+                default=u"${count} selected proposals were set in the 'locked for vote' state. They can no longer be edited or retracted by normal users.",
+                mapping={'count':count})
         fm.add(msg)

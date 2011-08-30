@@ -14,9 +14,9 @@ from voteit.core.security import VIEW
 from voteit.core.security import find_authorized_userids
 
 
-@subscriber(IAgendaItem, IObjectAddedEvent)
-@subscriber(IProposal, IObjectAddedEvent)
-@subscriber(IPoll, IObjectAddedEvent)
+@subscriber([IAgendaItem, IObjectAddedEvent])
+@subscriber([IProposal, IObjectAddedEvent])
+@subscriber([IPoll, IObjectAddedEvent])
 def message_content_added(obj, event):
     meeting = find_interface(obj, IMeeting)
 

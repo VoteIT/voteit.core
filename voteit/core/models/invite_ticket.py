@@ -12,6 +12,7 @@ from pyramid.url import resource_url
 from pyramid.exceptions import Forbidden
 from pyramid.security import authenticated_userid
 from persistent import Persistent
+from pyramid.renderers import render
 
 from voteit.core import VoteITMF as _
 from voteit.core import security
@@ -54,35 +55,17 @@ class InviteTicket(Persistent, WorkflowAware):
 
     def send(self, request):
         """ Send message about invite ticket. """
+        response = {}
 
         meeting = find_interface(self, IMeeting)
         assert meeting
         
         form_url = "%sticket" % resource_url(meeting, request)
-        access_link = form_url + '?email=%s&token=%s' % (self.email, self.token)
-        
-        instructions = _('ticket_claim_instructions', default=u"""
-
--------------------------------------------------------------
-Click the link to access this VoteIT meeting:
-${access_link}
-
-Have an account already?
-Simply login after clicking this link.
-
-Need to register?
-Use the above link and simply register. You'll be granted access instantly.
-
-Don't want to register now?
-Remember that you need to click this link to gain access to the meeting you're invited to.
-
-Warm regards,
-The VoteIT team
-        
-        """, mapping={'access_link':access_link})
+        response['access_link'] = form_url + '?email=%s&token=%s' % (self.email, self.token)
+        response['message'] = self.message
         
         sender = meeting.get_field_value('meeting_mail_address')
-        body = self.message + instructions
+        body = render('../views/templates/invite_ticket_email.pt', response, request=request)
 
         msg = Message(subject=_(u"VoteIT meeting invitation"),
                       sender = sender and sender or None,

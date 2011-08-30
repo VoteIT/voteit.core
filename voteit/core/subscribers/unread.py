@@ -17,11 +17,11 @@ from voteit.core.models.interfaces import IMessage
 from voteit.core.models.unread import Unreads
 
 
-@subscriber(IMeeting, IObjectAddedEvent)
-@subscriber(IAgendaItem, IObjectAddedEvent)
-@subscriber(IProposal, IObjectAddedEvent)
-@subscriber(IPoll, IObjectAddedEvent)
-@subscriber(IDiscussionPost, IObjectAddedEvent)
+@subscriber([IMeeting, IObjectAddedEvent])
+@subscriber([IAgendaItem, IObjectAddedEvent])
+@subscriber([IProposal, IObjectAddedEvent])
+@subscriber([IPoll, IObjectAddedEvent])
+@subscriber([IDiscussionPost, IObjectAddedEvent])
 def unread_content_added(obj, event):
     session = getUtility(ISQLSession)()
     unreads = Unreads(session)
@@ -29,7 +29,7 @@ def unread_content_added(obj, event):
     for userid in userids:
         unreads.add(userid, obj.uid)
 
-@subscriber(IMessage, IObjectAddedEvent)
+@subscriber([IMessage, IObjectAddedEvent])
 def unread_message_added(message, event):
     session = getUtility(ISQLSession)()
     unreads = Unreads(session)
@@ -41,17 +41,17 @@ def unread_message_added(message, event):
         persistent = False
     unreads.add(userid, message.uid, persistent=persistent)
 
-@subscriber(IUser, IObjectWillBeRemovedEvent)
+@subscriber([IUser, IObjectWillBeRemovedEvent])
 def unread_user_removed(obj, event):
     session = getUtility(ISQLSession)()
     unreads = Unreads(session)
     unreads.remove_user(obj.__name__)
 
-@subscriber(IMeeting, IObjectWillBeRemovedEvent)
-@subscriber(IAgendaItem, IObjectWillBeRemovedEvent)
-@subscriber(IProposal, IObjectWillBeRemovedEvent)
-@subscriber(IPoll, IObjectWillBeRemovedEvent)
-@subscriber(IDiscussionPost, IObjectWillBeRemovedEvent)
+@subscriber([IMeeting, IObjectWillBeRemovedEvent])
+@subscriber([IAgendaItem, IObjectWillBeRemovedEvent])
+@subscriber([IProposal, IObjectWillBeRemovedEvent])
+@subscriber([IPoll, IObjectWillBeRemovedEvent])
+@subscriber([IDiscussionPost, IObjectWillBeRemovedEvent])
 def unread_content_removed(obj, event):
     session = getUtility(ISQLSession)()
     unreads = Unreads(session)
