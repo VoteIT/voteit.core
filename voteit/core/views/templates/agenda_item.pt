@@ -8,45 +8,59 @@
 <body>
 
     <div id="content" metal:fill-slot="top_content">
-        <h1 i18n:translate="">Poll(s)</h1>
-        <tal:iterate condition="polls" repeat="poll polls">
-            <div tal:define="poll_plugin poll.get_poll_plugin();
-                             state_id poll.get_workflow_state();
-                             unread api.is_unread(poll, True);"
-                 tal:attributes="class unread and 'unread listing_block' or 'listing_block'">
-                <h3 tal:content="poll.title">Title</h3>
-                <div tal:content="poll.description">Description</div>
-                
-                <div>
-                    <span i18n:translate="">Poll method</span>:
-                    <strong tal:content="poll_plugin.title">Title</strong>
-                </div>
+        <div id="polls">
+            <h2><span i18n:translate="">Poll(s)</span>
+                <!-- FIXME: this is just a dummy for showing the feature -->
+                <a tal:attributes="id string:help_${context.uid};" href="@@help?article=dummy" target="_blank" class="help">?</a>
+            </h2>
+            <tal:iterate condition="polls" repeat="poll polls">
+                <div tal:define="poll_plugin poll.get_poll_plugin();
+                                 state_id poll.get_workflow_state();
+                                 unread api.is_unread(poll, True);"
+                     tal:attributes="class unread and 'unread listing_block' or 'listing_block'">
+                    <div class="poll_type">
+                        <strong i18n:translate="">Poll method</strong>: <span tal:content="poll_plugin.title">Title</span>
+                        <div tal:content="structure poll_plugin.description">Description</div>
+                    </div>
+                    <h3 tal:content="poll.title">Title</h3>
+                    <div class="wf-info">
+                        <span i18n:translate="">State</span>:
+                        <strong tal:attributes="class 'wf-state-%s' % state_id"
+                                tal:content="state_id">open</strong>
+                    </div>
+                    <div tal:content="poll.description">Description</div>
+                    
+                    <div tal:condition="state_id == 'closed'"
+                        tal:content="structure poll.render_poll_result()">
+                        Poll result
+                    </div>
+                    <div tal:condition="state_id == 'private'" tal:define="proposals poll.get_proposal_objects()">
+                    <tal:iterate condition="proposals" repeat="proposal proposals" >
+                        <div class="proposal">
+                            <strong tal:content="structure proposal.title"></strong>
+                            <tal:creators tal:replace="structure api.get_creators_info(proposal.creators, request)">Creators</tal:creators>
+                        </div>
+                    </tal:iterate>
+                    </div>
 
-                <div class="wf-info">
-                    <span i18n:translate="">State</span>:
-                    <strong tal:attributes="class 'wf-state-%s' % state_id"
-                            tal:content="state_id">open</strong>
+                    <div tal:replace="structure api.get_action_bar(poll, request)">Action bar</div>
+                    <div tal:condition="poll_forms[poll.uid]|False" tal:content="structure poll_forms[poll.uid]"></div>
                 </div>
-                
-                <div tal:condition="state_id == 'closed'"
-				     tal:content="structure poll.render_poll_result()">
-                    Poll result
-                </div>
-
-                <div tal:replace="structure api.get_action_bar(poll, request)">Action bar</div>
-                <div tal:condition="poll_forms[poll.uid]|False" tal:content="structure poll_forms[poll.uid]"></div>
-            </div>
-        </tal:iterate>
-        <tal:no_polls condition="not polls">
-            <h3 i18n:translate="">No polls yet</h3>
-        </tal:no_polls>
+            </tal:iterate>
+            <tal:no_polls condition="not polls">
+                <h3 i18n:translate="">No polls yet</h3>
+            </tal:no_polls>
+        </div> <!-- polls -->
     </div> <!-- top_content -->
         
 
     <div id="content" metal:fill-slot="right_content">
         <div id="discussions">
-            <h1 i18n:translate="">Discussion</h1>
-            <a class="buttonize" tal:attributes="href api.resource_url(context, request) + '?discussions=all'">Show all</a>
+            <h2><span i18n:translate="">Discussion</span>
+                <!-- FIXME: this is just a dummy for showing the feature -->
+                <a tal:attributes="id string:help_${context.uid};" href="@@help?article=dummy" target="_blank" class="help">?</a>
+            </h2>
+            <a class="load_more" tal:attributes="href api.resource_url(context, request) + '?discussions=all'" i18n:translate="">Show all</a>
                 
             <div tal:replace="structure get_discussions()"></div>
 
@@ -56,8 +70,10 @@
 
     <div id="content" metal:fill-slot="left_content">
         <div id="proposals">
-            <h1 i18n:translate="">Proposal(s)</h1>
-                
+            <h2><span i18n:translate="">Proposal(s)</span>
+                <!-- FIXME: this is just a dummy for showing the feature -->
+                <a tal:attributes="id string:help_${context.uid};" href="@@help?article=dummy" target="_blank" class="help">?</a>
+            </h2>
             <tal:iterate condition="proposals" repeat="proposal proposals" >
                 <div tal:define="unread api.is_unread(proposal, True)"
                      tal:attributes="class unread and 'unread listing_block' or 'listing_block'">
@@ -70,8 +86,9 @@
                         <strong tal:attributes="class 'wf-state-%s' % state_id"
                               tal:content="state_id">private</strong>
                     </div>
-                    <div class="expressions" tal:content="structure api.expressions.get_expressions(proposal, 'support', api.userid, 'Support')"></div>
+                    <span class="time" tal:content="api.get_time_created(context)"></span>
                     <div tal:replace="structure api.get_action_bar(proposal, request)">Action bar</div>
+                    <span class="expressions" tal:content="structure api.expressions.get_expressions(proposal, 'support', api.userid, 'Support')"></span>
                     <div class="clear"><!-- --></div>
                 </div>
                 

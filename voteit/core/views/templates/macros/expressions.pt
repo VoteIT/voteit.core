@@ -7,7 +7,7 @@
 	    <input name="display_name" type="hidden" tal:attributes="value display_name" />
 		<input name="submit" type="submit"
 		       tal:attributes="value button_txt;
-		                       class selected and 'expression_button selected buttonize' or 'expression_button buttonize';" />
+		                       class selected and 'expression_button selected' or 'expression_button';" />
 	</form>
 
 	<tal:you condition="selected" i18n:translate="">You</tal:you>
