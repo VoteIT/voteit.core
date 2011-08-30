@@ -242,6 +242,7 @@ class IPollPlugin(Interface):
     name = Attribute("Internal name of this plugin. Must be unique.")
     title = Attribute("Readable title that will appear when you select which"
                       "poll plugin to use for a poll.")
+    description = Attribute("Readable description that will appear when poll is displayed.")
 
 
     def get_vote_schema():

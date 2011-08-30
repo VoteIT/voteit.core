@@ -15,6 +15,8 @@ class MajorityPollPlugin(PollPlugin):
     
     name = u'majority_poll'
     title = _(u'Majority Poll')
+    #FIXME: Description of majority poll
+    description = _(u'Description of majority poll')
     
     def get_settings_schema(self):
         """ Get an instance of the schema used to render a form for editing settings.
