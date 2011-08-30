@@ -123,7 +123,7 @@
 				<tal:iterate repeat="state states">
 				<li tal:attributes="class state.current and 'current'">
 					<a class="confirm-state" tal:attributes="href api.resource_url(context, request) + '@@state' + '?state=' + state.name"
-					   tal:content="state.title">State</a>
+					   tal:content="api.translate(state.title)">State</a>
 				</li>
 				</tal:iterate>
 			</ul>

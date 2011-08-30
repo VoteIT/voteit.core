@@ -1,4 +1,6 @@
-<configure xmlns="http://pylonshq.com/pyramid">
+<configure xmlns="http://pylonshq.com/pyramid"
+    xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+    i18n:domain="voteit.core">
 
   <include package="repoze.workflow" file="meta.zcml"/>
   

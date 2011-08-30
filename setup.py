@@ -58,5 +58,6 @@ setup(name='voteit.core',
       message_extractors = { '.': [
               ('**.py',   'chameleon_python', None ),
               ('**.pt',   'chameleon_xml', None ),
+              ('**.zcml',   'chameleon_xml', None ), #Should we use something else?
               ]},
       )
