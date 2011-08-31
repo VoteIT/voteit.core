@@ -4,7 +4,7 @@
 <div class="deformSet"> 
     <input type="hidden" name="__start__" value="${field.name}:rename"/>
     <tal:loop tal:repeat="choice field.widget.values">
-      <input tal:attributes="checked value == cstruct;
+      <input tal:attributes="checked choice[0] == cstruct;
                              class string:${field.widget.css_class} star"
              type="radio"
              name="${field.oid}"
