@@ -24,6 +24,7 @@
     <script type="text/javascript" src="${request.application_url}/static/ajax.js"></script>
     <script type="text/javascript" src="${request.application_url}/static/jquery.qtip.js"></script>
     <script type="text/javascript" src="${request.application_url}/static/jquery.easy-confirm-dialog.js"></script>
+    <script type="text/javascript" src="${request.application_url}/static/jquery.cookie.js"></script>
 
     <tal:deform tal:condition="form_resources|False">
     <tal:css repeat="css_file form_resources['css']|[]">
@@ -50,7 +51,7 @@
         </div>
 
         <div id="navigation">
-            <metal:nav metal:use-macro="api.navigation.macros['navigation']">Navigation</metal:nav>
+            <div tal:replace="structure api.get_navigation()">Navigation</div>
         </div>
 
         <div id="main_window">

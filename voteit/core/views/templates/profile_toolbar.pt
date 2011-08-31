@@ -1,7 +1,7 @@
 <tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core">
 <div id="profile_toolbar" metal:define-macro="profile_toolbar">
     <img src="/static/images/logo.png" alt="VoteIT" />
-    <h1 tal:condition="api.meeting" tal:content="api.meeting.title"></h1>
+    <h1 tal:condition="api.meeting"><a tal:attributes="href api.resource_url(api.meeting, request)" tal:content="api.meeting.title">Meeting</a></h1>
 	<div class="content_wrapper">
 		<ul id="main_profile" class="first">
 			<tal:authenticated condition="api.userid">

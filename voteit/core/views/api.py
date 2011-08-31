@@ -62,7 +62,6 @@ class APIView(object):
         self.main_template = get_renderer('templates/main.pt').implementation()
         self.content_info = request.registry.getUtility(IContentUtility)
         self.addable_types = self._get_addable_types(context, request)
-        self.navigation = get_renderer('templates/navigation.pt').implementation()
         self.lineage = lineage(context)
         rev = []
         [rev.insert(0, x) for x in self.lineage]
@@ -118,11 +117,32 @@ class APIView(object):
                 self.context_has_permission(type.add_permission, self.context):
                 addable_names.add(type.type_class.content_type)
         return tuple(addable_names)
-
+        
     @reify
     def meeting(self):
         """ Is the current context inside a meeting, or a meeting itself? """
         return find_interface(self.context, IMeeting)
+
+    def _is_section_closed(self, section):
+        return self.request.cookies.get(section, None)
+
+    def get_navigation(self):
+        """ Get navigatoin """
+
+        response = {}
+        response['api'] = self
+        response['context_has_permission'] = self.context_has_permission
+        if self.meeting:
+            response['is_moderator'] = self.context_has_permission(security.MODERATE_MEETING, self.meeting)
+        else:
+            response['is_moderator'] = False
+        if response['is_moderator']:
+            response['sections'] = ('closed', 'active', 'inactive', 'private')
+        else:
+            response['sections'] = ('closed', 'active', 'inactive')
+        response['is_closed'] = self._is_section_closed
+        
+        return render('templates/navigation.pt', response, request=self.request)
 
     def get_action_bar(self, context, request):
         """ Get the action-bar for a specific context """

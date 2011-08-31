@@ -8,23 +8,29 @@
 <body>
 	<div id="content" metal:fill-slot="right_content">
 	    <div id="meeting_overview">
-	        <div id="has">
-                <h4 i18n:translate="">This has happened</h4>
-                <a class="buttonize"
+	        <div tal:attributes="
+	                             id '%s-has' % api.meeting.uid;
+                                 class is_closed('%s-has' % api.meeting.uid) and 'closed-element minimizable_area has' or 'opened-element minimizable_area has';">
+                <h4 class="toggle_minimize has" i18n:translate="">This has happened</h4>
+                <a class="load_more"
 		           tal:attributes="href api.resource_url(context, request) + '?log_closed=all'"
 		           i18n:translate="">Show all</a>
                 <tal:block replace="structure get_state_ais('closed')"></tal:block>
     		</div>
-	        <div id="now">
-                <h4 i18n:translate="">This is happening now</h4>
-                <a class="buttonize"
+	        <div tal:attributes="
+	                             id '%s-now' % api.meeting.uid;
+	                             class is_closed('%s-now' % api.meeting.uid) and 'closed-element minimizable_area now' or 'opened-element minimizable_area now'">
+                <h4 class="toggle_minimize now" i18n:translate="">This is happening now</h4>
+                <a class="load_more"
 		           tal:attributes="href api.resource_url(context, request) + '?log_active=all'"
 		           i18n:translate="">Show all</a>
                 <tal:block replace="structure get_state_ais('active')"></tal:block>
             </div>
-	        <div id="will">
-                <h4 i18n:translate="">This will happen</h4>
-                <a class="buttonize"
+	        <div tal:attributes="
+	                             id '%s-will' % api.meeting.uid;
+	                             class is_closed('%s-will' % api.meeting.uid) and 'closed-element minimizable_area will' or 'opened-element minimizable_area will'">
+                <h4 class="toggle_minimize will" i18n:translate="">This will happen</h4>
+                <a class="load_more"
 		           tal:attributes="href api.resource_url(context, request) + '?log_inactive=all'"
 		           i18n:translate="">Show all</a>
                 <tal:block replace="structure get_state_ais('inactive')"></tal:block>

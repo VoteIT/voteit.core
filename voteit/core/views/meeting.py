@@ -31,6 +31,7 @@ class MeetingView(BaseView):
             return HTTPFound(location = url)
         
         self.response['get_state_ais'] = self._get_state_ais
+        self.response['is_closed'] = self._is_section_closed
         
         return self.response
 
@@ -45,6 +46,9 @@ class MeetingView(BaseView):
         response['context'] = self
         
         return render('templates/log.pt', response, request=self.request)
+        
+    def _is_section_closed(self, section):
+        return self.request.cookies.get(section, None)
 
     @view_config(name="meeting_access", context=IMeeting, renderer="templates/meeting_access.pt", permission=security.VIEW)
     def meeting_access(self):
