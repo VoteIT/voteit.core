@@ -9,12 +9,15 @@ from zope.component.interfaces import ComponentLookupError
 from deform import Form
 from deform.exception import ValidationFailure
 from webob.exc import HTTPFound
+from zope.component.event import objectEventNotify
 
 from voteit.core.views.api import APIView
+from voteit.core import VoteITMF as _
 from voteit.core.security import EDIT, VIEW
 from voteit.core.models.interfaces import IPoll
-from voteit.core.models.schemas import add_csrf_token, button_save,\
-    button_cancel
+from voteit.core.models.schemas import add_csrf_token, button_add, button_cancel,\
+    button_update, button_delete
+from voteit.core.events import ObjectUpdatedEvent
 
 from base_edit import DEFAULT_TEMPLATE
 
@@ -28,6 +31,53 @@ class PollView(object):
 
         self.response = {}
         self.response['api'] = self.api = APIView(context, request)
+        
+    @view_config(context=IPoll, name="edit", renderer='templates/base_edit.pt', permission=EDIT)
+    def edit_form(self):
+        content_type = self.context.content_type
+        ftis = self.api.content_info
+        schema = ftis[content_type].schema(context=self.context, request=self.request, type='edit')
+        add_csrf_token(self.context, self.request, schema)
+
+        self.form = Form(schema, buttons=(button_update, button_cancel))
+        self.response['form_resources'] = self.form.get_widget_resources()
+
+        post = self.request.POST
+        if 'update' in post:
+            controls = post.items()
+            try:
+                #appstruct is deforms convention. It will be the submitted data in a dict.
+                appstruct = self.form.validate(controls)
+                #FIXME: validate name - it must be unique and url-id-like
+            except ValidationFailure, e:
+                self.response['form'] = e.render()
+                return self.response
+
+            old_proposals = self.context.proposal_uids
+            updated = self.context.set_field_appstruct(appstruct)
+
+            if updated:
+                self.context.proposal_uids.update(old_proposals)
+                self.api.flash_messages.add(_(u"Successfully updated"))
+                #TODO: This should probably not be fired here, instead it should be fired by the object
+                objectEventNotify(ObjectUpdatedEvent(self.context))
+            else:
+                self.api.flash_messages.add(_(u"Nothing updated"))
+
+            url = resource_url(self.context, self.request)
+            return HTTPFound(location=url)
+
+        if 'cancel' in post:
+            self.api.flash_messages.add(_(u"Canceled"))
+            url = resource_url(self.context, self.request)
+            return HTTPFound(location=url)
+
+        #No action - Render edit form
+        msg = _(u"Edit")
+        self.api.flash_messages.add(msg, close_button=False)
+        appstruct = self.context.get_field_appstruct(schema)
+        self.response['form'] = self.form.render(appstruct=appstruct)
+        return self.response
 
     @view_config(context=IPoll, name="poll_config", renderer='templates/base_edit.pt', permission=EDIT)
     def poll_config(self):

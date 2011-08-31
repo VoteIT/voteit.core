@@ -234,6 +234,7 @@ def construct_schema(context=None, request=None, **kwargs):
         KeyError("'context' is a required keyword for Poll schemas. See construct_schema in the poll module.")
     if request is None:
         KeyError("'request' is a required keyword for Poll schemas. See construct_schema in the poll module.")
+    type = kwargs.get('type', None)
 
     dt_util = getUtility(IDateTimeUtil)
 
@@ -256,7 +257,7 @@ def construct_schema(context=None, request=None, **kwargs):
     #Get valid proposals - should be in states 'published' to be selectable
     for prop in agenda_item.get_content(iface=IProposal, states='published', sort_on='title'):
         proposal_choices.add((prop.uid, prop.title, ))
-
+        
     #Note: The message factory shouldn't process mappings here, it's handled by deform!
     _earliest_start = colander.Range(min=dt_util.localnow(),
                                      min_err=_('${val} is earlier than earliest date ${min}'),)
@@ -277,12 +278,12 @@ def construct_schema(context=None, request=None, **kwargs):
                                           description = _(u"poll_method_description",
                                                           default=u"Each poll method should contain information about what it does."),
                                           widget=deform.widget.SelectWidget(values=plugin_choices),)
-        proposals = colander.SchemaNode(deform.Set(),
+                                          
+        proposals = colander.SchemaNode(deform.Set(allow_empty=False if context.get_workflow_state() != u'planned' else True), #When editing and the poll is in state "planned" this could be empty
                                         name="proposals",
                                         title = _(u"Proposals"),
                                         description = _(u"poll_select_proposals_description",
                                                         default=u"Only proposals in the state 'published' can be selected here."),
-                                        #Should we allow this to be empty?
                                         widget=deform.widget.CheckboxChoiceWidget(values=proposal_choices),)
 
         start_time = colander.SchemaNode(
