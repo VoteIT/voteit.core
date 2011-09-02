@@ -1,7 +1,7 @@
 body {
 	font-size: 14px;
 	font-family: Tahoma, Geneva, Arial, Helvetica, sans-serif;
-	background: url('images/bubble_big.png') no-repeat top left;
+	background: url('images/bubble_big.png') no-repeat -120px -50px;
 }
 
 div#page_wrapper {
@@ -57,10 +57,6 @@ a {
     top: 1.25em;
     padding: 1em;
     background: #fff;
-    border: 1px solid #dbe0e5;
-    border-radius: 0.5em;
-    -webkit-border-radius: 0.5em;
-    -moz-border-radius: 0.5em;
 	z-index: 99;
 }
 .dropdown_menu .menu_body li {
@@ -81,12 +77,13 @@ a {
 
 /* Profile toolbar with tabs */
 #profile_toolbar {
+	position: relative;
     width: 100%;
 	height: 100px;
     background: #054265;
-	position: relative;
+    opacity:0.8;
+    filter:alpha(opacity=80);
 }
-
 #profile_toolbar img {
     float: left;
 }
@@ -95,6 +92,9 @@ a {
     float: left;
     font-size: 24px;
     font-weight: normal;
+    color: #fff;
+}
+#profile_toolbar h1 a {
     color: #fff;
 }
 
@@ -139,6 +139,15 @@ a {
     height: 35px;
 }
 
+#profile_toolbar .user {
+    padding-left: 20px;
+    background: url(images/iconset.png) no-repeat 0px -15px;
+}
+#profile_toolbar .logout {
+    padding-left: 20px;
+    background: url(images/iconset.png) no-repeat 0px -32px;
+}
+
 /* Left side navigation (Agenda) */
 #navigation {
 	position: absolute;
@@ -158,22 +167,39 @@ a {
     font-size: 14px;
     font-weight: bold;
     border-bottom: 1px solid #86A3B4;
+}
+#navigation .closed-element.minimizable_area .toggle_minimize {
+    background: url(images/arrow_down_light.png) no-repeat top right;
+}
+#navigation .closed-element.minimizable_area .toggle_minimize:hover {
+    background: url(images/arrow_down_dark.png) no-repeat top right;
+}
+#navigation .opened-element.minimizable_area .toggle_minimize {
+    background: url(images/arrow_up_light.png) no-repeat top right;
+}
+#navigation .opened-element.minimizable_area .toggle_minimize:hover {
+    background: url(images/arrow_up_dark.png) no-repeat top right;
+}
+#navigation h6 span {
     padding-left: 20px;
 }
-#navigation h6.closed {
+#navigation h6.closed span {
     background: url(images/iconset.png) no-repeat 0px -49px;
 }
-#navigation h6.active {
+#navigation h6.active span {
     background: url(images/iconset.png) no-repeat 0px -67px;
 }
-#navigation h6.inactive {
+#navigation h6.inactive span {
     background: url(images/iconset.png) no-repeat 0px -85px;
 }
 #navigation a {
     color: #054265;
 }
 #navigation .selected {
-    background: ;
+    background: url(images/task_active.png) no-repeat center right;
+}
+#navigation ul {
+    margin: 0px;
 }
 #navigation ul.closed, 
 #navigation ul.active, 
@@ -218,15 +244,20 @@ a {
 	float: left;
 }
 
-#page_heading h3 {
+#page_heading h2 {
     font-size: 24px;
     font-weight: normal;
     color: #000;
+    border-bottom: 1px solid #86A3B4;
 }
 
 #page_heading .description {
     font-size: 14px;
     line-height: 1.5em;
+}
+
+#page_heading .action_menu {
+    float: right;
 }
 
 
@@ -345,15 +376,29 @@ li.notification_message {
     font-size: 14px;
     font-weight: bold;
     border-bottom: 1px solid #86A3B4;
+}
+#meeting_overview .closed-element.minimizable_area .toggle_minimize {
+    background: url(images/arrow_down_light.png) no-repeat top right;
+}
+#meeting_overview .closed-element.minimizable_area .toggle_minimize:hover {
+    background: url(images/arrow_down_dark.png) no-repeat top right;
+}
+#meeting_overview .opened-element.minimizable_area .toggle_minimize {
+    background: url(images/arrow_up_light.png) no-repeat top right;
+}
+#meeting_overview .opened-element.minimizable_area .toggle_minimize:hover {
+    background: url(images/arrow_up_dark.png) no-repeat top right;
+}
+#meeting_overview h4 span {
     padding-left: 20px;
 }
-#meeting_overview .has h4 {
+#meeting_overview .has h4 span {
     background: url(images/iconset.png) no-repeat 0px -49px;
 }
-#meeting_overview .now h4 {
+#meeting_overview .now h4 span {
     background: url(images/iconset.png) no-repeat 0px -67px;
 }
-#meeting_overview .will h4 {
+#meeting_overview .will h4 span {
     background: url(images/iconset.png) no-repeat 0px -85px;
 }
 #meeting_overview div.has, 
@@ -452,8 +497,9 @@ ui-dialog {
 }
 .action_menu.dropdown_menu .menu_body {
     top: -1em;
-    right: -7em;
-    width: 5em;
+    right: -12em;
+    width: 10em;
+    padding: 0 1em;
 }
 .action_menu li {
     margin-top: 0;
@@ -465,10 +511,6 @@ ui-dialog {
 .action_menu .menu_header {}
 .action_menu .menu_body {
     background: #86A3B4;
-    border: none !important;
-    border-radius: none !important;
-    -webkit-border-radius: none !important;
-    -moz-border-radius: none !important;
 }
 .action_menu .menu_body a:hover {
     color: #fff;

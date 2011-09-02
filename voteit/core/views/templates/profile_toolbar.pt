@@ -5,9 +5,9 @@
 	<div class="content_wrapper">
 		<ul id="main_profile" class="first">
 			<tal:authenticated condition="api.userid">
-		        <li><a tal:attributes="href api.user_profile_url"
+		        <li class="user"><a tal:attributes="href api.user_profile_url"
 			           tal:content="api.user_profile.title">Profile</a></li>
-			    <li><a tal:attributes="href request.application_url + '/@@logout'">
+			    <li class="logout"><a tal:attributes="href request.application_url + '/@@logout'">
 				    <span i18n:translate="">Logout</span>
 			    </a></li>
 		    </tal:authenticated>

@@ -15,7 +15,7 @@
     <link href="${request.application_url}/static/reset.css" rel="stylesheet" type="text/css" />
     <link href="${request.application_url}/static/main.css" rel="stylesheet" type="text/css" />
     <link href="${request.application_url}/static/jquery.rating.css" rel="stylesheet" type="text/css" />
-    <link href="${request.application_url}/static/ui-lightness/jquery-ui-1.8.15.custom.css" rel="stylesheet" type="text/css" />
+    <link href="${request.application_url}/static/smoothness/jquery-ui-1.8.16.custom.css" rel="stylesheet" type="text/css" />
 
     <script type="text/javascript" src="${request.application_url}/config.js"></script>
     <script type="text/javascript" src="${request.application_url}/deform/scripts/jquery-1.4.2.min.js"></script>
@@ -73,7 +73,7 @@
                     <div metal:define-slot="page_heading"
                          id="page_heading"
                          tal:condition="not form|True">
-                        <h3 tal:content="context.title">Title</h3>
+                        <h2 tal:content="context.title">Title</h2>
                     
                         <div tal:replace="structure api.get_time_info(context, request)">start time and end time macro</div>
 

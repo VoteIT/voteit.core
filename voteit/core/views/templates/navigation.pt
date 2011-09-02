@@ -20,7 +20,7 @@
             </a>
         </div>
         <div id="add_agenda_item" tal:condition="is_moderator|False">
-            <a tal:attributes="href api.resource_url(api.meeting, request) + '@@add?content_type=AgendaItem'"><span i18n:translate="">Add agenda item</span></a>
+            <a tal:attributes="href api.resource_url(api.meeting, request) + '@@add?content_type=AgendaItem'"><img src="${request.application_url}/static/images/plus.png" alt="Add agenda item" title="Add agenda item" i18n:attributes="alt title" /></a>
         </div>
         <h5 class="header" i18n:translate="">
             Agenda
@@ -31,12 +31,12 @@
                                      id '%s-%s' % (api.meeting.uid, section);
                                      class is_closed('%s-%s' % (api.meeting.uid, section)) and 'closed-element minimizable_area' or 'opened-element minimizable_area';"
                      >
-                    <h6 tal:attributes="class 'toggle_minimize %s' % section" tal:content="api.translate(section.title())"></h6>
+                    <h6 tal:attributes="class 'toggle_minimize %s' % section"><span tal:content="api.translate(section.title())"></span></h6>
                     <ul tal:attributes="class section" tal:condition="agenda_items">
                     <tal:iterate repeat="agenda_item agenda_items">
                         <li tal:attributes="class api.inside(context, agenda_item) and 'selected' or 'plain'">
                             <div class="action_menu dropdown_menu">
-                                <a class="menu_header">X</a>
+                                <a class="menu_header"><img src="${request.application_url}/static/images/cog_light.png" alt="Config menu" i18n:attributes="alt" /></a>
                                 <ul class="menu_body">
                                     <tal:state define="state_id agenda_item.get_workflow_state()|False">
                                     <li tal:condition="state_id">
@@ -70,7 +70,7 @@
                                 </ul>
                             </div>
                             <a tal:attributes="href api.resource_url(agenda_item, request)">
-                                   <span tal:content="agenda_item.get_field_value('title')">Agenda item title</span>
+                                <div tal:content="agenda_item.get_field_value('title')">Agenda item title</div>
                                 <span class="discussions"><img src="/static/images/discussion.png" alt="Discussions"/><span class="total" tal:content="len(agenda_item.get_content(content_type='DiscussionPost'))">0</span> (<span class="unread" tal:content="api.get_unread(agenda_item, content_type='DiscussionPost')">0</span>)</span>
                                 <span class="proposals"><img src="/static/images/proposal.png" alt="Proposals"/><span class="total" tal:content="len(agenda_item.get_content(content_type='Proposal'))">0</span> (<span class="unread" tal:content="api.get_unread(agenda_item, content_type='Proposal')">0</span>)</span>
                             </a>
