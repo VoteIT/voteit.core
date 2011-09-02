@@ -352,6 +352,10 @@ a {
 .wf-state-ongoing {}
 
 /* Flash messages */
+#flash_messages {
+	clear: both;
+}
+
 #flash_messages .message {
     padding: 0.25em 0.5em;
     border-radius: 0.5em;
@@ -363,8 +367,8 @@ a {
 	/* Info is default */
     border: 1px solid #996;
     background: #ffffe3;
-	width: 400px;
-	position: relative;
+	float: left;
+	clear: both;
 }
 #flash_messages .info {
 }
