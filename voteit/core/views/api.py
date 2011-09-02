@@ -181,6 +181,10 @@ class APIView(object):
     def get_meeting_actions(self, context, request):
         return render('templates/meeting_actions.pt', {'api':self}, request=request)
 
+    def get_moderator_actions(self, context, request):
+        """ A.k.a. the cogwheel-menu. """
+        return render('templates/moderator_actions.pt', {'api':self, 'context':context}, request=request)
+
     def get_time_info(self, context, request):
         """ Render start and end time of something, if those exist. """
         response = {}

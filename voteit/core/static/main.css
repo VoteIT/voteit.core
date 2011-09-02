@@ -7,7 +7,6 @@ h1, h2, h3, h4, h5, h6 {
 	font-weight: bold;
 	margin: 0.5em 0;
 }
-
 h1 {
 	font-size: 200%;
 }
@@ -181,6 +180,7 @@ a {
 	bottom: 0px;
 	width: 300px;
 	color: #054265;
+	background: #dbe0e5;
 }
 #navigation h5 {
     margin: 0;
@@ -217,37 +217,52 @@ a {
     background: url(images/iconset.png) no-repeat 0px -85px;
 }
 #navigation .selected {
-    background: url(images/task_active.png) no-repeat center right;
+	margin-right: -20px;
+	padding-right: 20px;
+    background: url(images/task_active.png) no-repeat right bottom;
 }
 #navigation ul {
     margin: 0px;
 }
-#navigation ul.closed, 
-#navigation ul.active, 
-#navigation ul.inactive {
-    margin-bottom: 40px;
-}
-#navigation ul.closed li, 
-#navigation ul.active li,
-#navigation ul.inactive li,
-#navigation ul.private li {
+
+#navigation > ul > li {
     margin-top: 5px;
     border-bottom: #ccc 1px solid;
 }
-#navigation span.title {
-    display: block;
-}
-#navigation span.total {
+#navigation span.unread {
     font-weight: bold;
 }
-.browse_up {
+
+#navigation .discussions {
+	width: 70px;
+	float: left;
+	padding: 3px 0 3px 35px;
+    background: url(images/gfx_disk_lb.png) no-repeat 0 3px;
+	height: 15px;
 }
-#navigation #add_agenda_item {
+#navigation .proposals {
+    width: 70px;
+	float: left;
+    padding: 3px 0 3px 35px;
+    background: url(images/gfx_prop_lb.png) no-repeat 0 3px;
+    height: 15px;
+}
+
+#navigation #add_menu {
     float: right;
 }
 
 #navigation .action_menu {
     float: right;
+	margin-top: 5px;
+}
+#navigation .agenda_item {
+	padding: 5px 0px;
+	border-bottom: 1px solid #ccc;
+}
+
+#navigation .block {
+	padding: 10px 20px 10px 10px;
 }
 
 /* Main window */

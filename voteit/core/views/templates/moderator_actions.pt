@@ -1,0 +1,36 @@
+<metal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core">
+<div class="action_menu dropdown_menu">
+    <a class="menu_header"><img src="${request.application_url}/static/images/cog_light.png" alt="Moderator menu" i18n:attributes="alt" /></a>
+    <ul class="menu_body">
+        <tal:state define="state_id context.get_workflow_state()|False">
+        <li tal:condition="state_id">
+            <strong tal:attributes="class 'wf-state-%s' % state_id"
+                  tal:content="api.translate(state_id.title())">private</strong>
+        </li>
+        </tal:state>
+        <li class="menuitem" tal:condition="api.context_has_permission('Edit', context)">
+            <a 
+               tal:attributes="href api.resource_url(context, request) + '@@edit'"
+               i18n:translate="">Edit</a>
+        </li>
+        <li class="menuitem" tal:condition="api.context_has_permission('Delete', context)">
+            <a 
+               tal:attributes="href api.resource_url(context, request) + '@@delete'"
+               i18n:translate="">Delete</a>
+        </li>
+        <tal:states define="states context.get_available_workflow_states(request)" tal:condition="states|False">
+        <li>
+               <span i18n:translate="">Set state</span>
+            <ul>
+                <tal:iterate repeat="state states">
+                <li tal:attributes="class state.current and 'current'">
+                    <a class="confirm-state" tal:attributes="href api.resource_url(context, request) + '@@state' + '?state=' + state.name"
+                       tal:content="api.translate(state.title)">State</a>
+                </li>
+                </tal:iterate>
+            </ul>
+        </li>
+        </tal:states>
+    </ul>
+</div>
+</metal:main>

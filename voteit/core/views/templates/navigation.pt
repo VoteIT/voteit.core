@@ -1,86 +1,83 @@
 <metal:main define-macro="navigation"
             xmlns:i18n="http://xml.zope.org/namespaces/i18n"
             i18n:domain="voteit.core">
-<div class="content_wrapper">
+
     <tal:root condition="not api.meeting">
-    <h5 i18n:translate="">Available meetings</h5>
+    <div class="block">
+    <div id="add_menu" tal:condition="api.context_has_permission('Add Meeting', api.root)">
+        <a tal:attributes="href api.resource_url(api.root, request) + '@@add?content_type=Meeting'">
+        	<img src="${request.application_url}/static/images/plus.png" alt="Add meeting" title="Add meeting" i18n:attributes="alt title" />
+		</a>
+    </div>
+    <h5 class="header" i18n:translate="">Available meetings</h5>
     <tal:iterate repeat="meeting api.get_restricted_content(api.root, content_type='Meeting')">
-        <h5>
+        <h6>
             <a tal:attributes="href api.resource_url(meeting, request)"
                tal:content="meeting.get_field_value('title')">Meeting title</a>
-        </h5>
+        </h6>
         
     </tal:iterate>
+	</div>
     </tal:root>
 
     <tal:inside_meeting condition="api.meeting">
-        <div class="browse_up">
+        <div class="block">
             <a tal:attributes="href api.resource_url(api.root, request)">
                 &laquo; <span i18n:translate="">all meetings</span>
             </a>
         </div>
-        <div id="add_agenda_item" tal:condition="is_moderator|False">
-            <a tal:attributes="href api.resource_url(api.meeting, request) + '@@add?content_type=AgendaItem'"><img src="${request.application_url}/static/images/plus.png" alt="Add agenda item" title="Add agenda item" i18n:attributes="alt title" /></a>
+        <div class="block">
+        <div id="add_menu" tal:condition="is_moderator">
+            <a tal:attributes="href api.resource_url(api.meeting, request) + '@@add?content_type=AgendaItem'">
+            	<img src="${request.application_url}/static/images/plus.png" alt="Add agenda item" title="Add agenda item" i18n:attributes="alt title" />
+			</a>
         </div>
         <h5 class="header" i18n:translate="">
             Agenda
         </h5>
+		</div>
         <tal:iterate repeat="section sections">
             <tal:agenda_items define="agenda_items api.get_restricted_content(api.meeting, content_type='AgendaItem', states=section);">
-                <div tal:attributes="
-                                     id '%s-%s' % (api.meeting.uid, section);
-                                     class is_closed('%s-%s' % (api.meeting.uid, section)) and 'closed-element minimizable_area' or 'opened-element minimizable_area';"
-                     >
-                    <h6 tal:attributes="class 'toggle_minimize %s' % section"><span tal:content="api.translate(section.title())"></span></h6>
+                <div tal:attributes="id '%s-%s' % (api.meeting.uid, section);
+                                     class is_closed('%s-%s' % (api.meeting.uid, section)) and 'closed-element minimizable_area block' or 'opened-element minimizable_area block';">
+                    <h6 tal:attributes="class 'toggle_minimize %s' % section">
+                    	<span tal:content="api.translate(section.title())">Section title</span>
+					</h6>
+					
                     <ul tal:attributes="class section" tal:condition="agenda_items">
                     <tal:iterate repeat="agenda_item agenda_items">
                         <li tal:attributes="class api.inside(context, agenda_item) and 'selected' or 'plain'">
-                            <div class="action_menu dropdown_menu">
-                                <a class="menu_header"><img src="${request.application_url}/static/images/cog_light.png" alt="Config menu" i18n:attributes="alt" /></a>
-                                <ul class="menu_body">
-                                    <tal:state define="state_id agenda_item.get_workflow_state()|False">
-                                    <li tal:condition="state_id">
-                                        <strong tal:attributes="class 'wf-state-%s' % state_id"
-                                              tal:content="api.translate(state_id.title())">private</strong>
-                                    </li>
-                                    </tal:state>
-                                    <li class="menuitem" tal:condition="api.context_has_permission('Edit', agenda_item)">
-                                        <a 
-                                           tal:attributes="href api.resource_url(agenda_item, request) + '@@edit'"
-                                           i18n:translate="">Edit</a>
-                                    </li>
-                                    <li class="menuitem" tal:condition="api.context_has_permission('Delete', agenda_item)">
-                                        <a 
-                                           tal:attributes="href api.resource_url(agenda_item, request) + '@@delete'"
-                                           i18n:translate="">Delete</a>
-                                    </li>
-                                    <tal:states define="states agenda_item.get_available_workflow_states(request)" tal:condition="states|False">
-                                    <li>
-                                           <span i18n:translate="">Set state</span>
-                                        <ul>
-                                            <tal:iterate repeat="state states">
-                                            <li tal:attributes="class state.current and 'current'">
-                                                <a class="confirm-state" tal:attributes="href api.resource_url(agenda_item, request) + '@@state' + '?state=' + state.name"
-                                                   tal:content="api.translate(state.title)">State</a>
-                                            </li>
-                                            </tal:iterate>
-                                        </ul>
-                                    </li>
-                                    </tal:states>
-                                </ul>
-                            </div>
-                            <a tal:attributes="href api.resource_url(agenda_item, request)">
-                                <div tal:content="agenda_item.get_field_value('title')">Agenda item title</div>
-                                <span class="discussions"><img src="/static/images/discussion.png" alt="Discussions"/><span class="total" tal:content="len(agenda_item.get_content(content_type='DiscussionPost'))">0</span> (<span class="unread" tal:content="api.get_unread(agenda_item, content_type='DiscussionPost')">0</span>)</span>
-                                <span class="proposals"><img src="/static/images/proposal.png" alt="Proposals"/><span class="total" tal:content="len(agenda_item.get_content(content_type='Proposal'))">0</span> (<span class="unread" tal:content="api.get_unread(agenda_item, content_type='Proposal')">0</span>)</span>
-                            </a>
+                        	<tal:moderator_menu condition="is_moderator">
+	                        	<span tal:replace="structure api.get_moderator_actions(agenda_item, request)">
+								     Cogwheel menu
+								</span>
+							</tal:moderator_menu>
+							<div class="agenda_item">
+	                            <a tal:attributes="href api.resource_url(agenda_item, request)">
+	                                <div tal:content="agenda_item.get_field_value('title')">Agenda item title</div>
+	                                <span class="discussions"
+									      tal:define="unread_count api.get_unread(agenda_item, content_type='DiscussionPost')">
+										<span class="total"
+										      tal:content="len(agenda_item.get_content(content_type='DiscussionPost'))">0</span>
+									    <span class="unread" tal:condition="unread_count" tal:content="string:($unread_count)">(2)</span>
+									</span>
+	                                <span class="proposals"
+	                                      tal:define="unread_count api.get_unread(agenda_item, content_type='Proposal')">
+										<span class="total"
+										      tal:content="len(agenda_item.get_content(content_type='Proposal'))">0</span>
+	                                    <span class="unread" tal:condition="unread_count" tal:content="string:($unread_count)">(2)</span>
+									</span>
+									<div class="clear"><!-- --></div>
+	                            </a>
+							</div>
                         </li>
                     </tal:iterate>
                     </ul>
+					
                 </div>
             </tal:agenda_items>
 
         </tal:iterate>
     </tal:inside_meeting>
-</div>
+
 </metal:main>
