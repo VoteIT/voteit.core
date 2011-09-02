@@ -97,7 +97,9 @@ a {
 	height: 100px;
 	background: #054265;
 }
-
+#logo {
+	padding: 10px;
+}
 #logo-meeting-wrapper {
 	position: absolute;
     display: block;

@@ -87,7 +87,7 @@ class APIView(object):
     def logo_image_tag(self):
         """ Should handle customisations later. """
         url = "%s/static/images/logo.png" % self.request.application_url
-        return '<img src="%(url)s" height="%(h)s" width="%(w)s" />' % {'url':url, 'h':51, 'w':128}
+        return '<img src="%(url)s" height="%(h)s" width="%(w)s" id="logo" />' % {'url':url, 'h':31, 'w':85}
 
 
     def translate(self, *args, **kwargs):
