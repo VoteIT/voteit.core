@@ -46,9 +46,27 @@
 <body>
     <div id="page_wrapper">
 
-        <div tal:replace="structure api.get_profile_toolbar(context, request)">
-            Profile toolbar
-        </div>
+        <div id="header">
+             <div id="global-actions" tal:content="structure api.get_global_actions(context, request)">
+                Global actions toolbar - like login, profile etc
+            </div>
+
+            <div id="meeting-actions" tal:content="structure api.get_meeting_actions(context, request)">
+	            Meeting actions - like who's in a meeting, search etc
+			</div>
+
+            <div id="logo-meeting-wrapper">
+                <a id="logo-space"
+                   tal:attributes="href api.logo_link()">
+                    <img tal:replace="structure api.logo_image_tag()" />
+                </a>
+                
+                <h1 id="meeting-name-space" tal:condition="api.meeting">
+                    <a tal:attributes="href api.resource_url(api.meeting, request)" tal:content="api.meeting.title">Meeting</a>
+                </h1>
+            </div>
+
+		</div>
 
         <div id="navigation">
             <div tal:replace="structure api.get_navigation()">Navigation</div>

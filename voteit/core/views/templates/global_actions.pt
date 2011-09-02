@@ -1,0 +1,23 @@
+<tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core">
+
+<ul id="global-actions-menu">
+    <tal:authenticated condition="api.userid">
+        <li><a tal:attributes="href api.user_profile_url"
+               tal:content="api.user_profile.title"
+			   class="user icon">Profile</a></li>
+        <li><a tal:attributes="href request.application_url + '/@@logout'"
+		       class="logout icon">
+            <span i18n:translate="">Logout</span>
+        </a></li>
+    </tal:authenticated>
+
+    <tal:anon condition="not api.userid">
+        <!-- Unauthenticated user actions -->
+        <li><a tal:attributes="href request.application_url + '/@@register'"
+                           i18n:translate="">Register</a></li>
+        <li><a tal:attributes="href request.application_url + '/@@login'"
+                           i18n:translate="">Login</a></li>
+    </tal:anon>
+</ul>
+
+</tal:main>

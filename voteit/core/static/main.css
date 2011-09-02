@@ -1,11 +1,6 @@
 body {
 	font-size: 14px;
-	font-family: Tahoma, Geneva, Arial, Helvetica, sans-serif;
-	background: url('images/bubble_big.png') no-repeat -120px -50px;
-}
-
-div#page_wrapper {
-    background: url('images/bubble_small.png') no-repeat top right;
+	font-family: Arial, Helvetica, sans-serif;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -32,7 +27,7 @@ h6 {
     font-size: 85%;
 }
 a {
-    color: #f60;
+    color: #054265;
 	text-decoration: none;
 }
 .content_wrapper {
@@ -74,78 +69,108 @@ a {
 	background: #054265;
 }
 
-
-/* Profile toolbar with tabs */
-#profile_toolbar {
-	position: relative;
-    width: 100%;
+/* Header sections */
+#header {
+    position: absolute;
+	display: block;
+	left: 0px;
+	right: 0px;
+	top: 0px;
 	height: 100px;
-    background: #054265;
-    opacity:0.8;
-    filter:alpha(opacity=80);
-}
-#profile_toolbar img {
-    float: left;
+	background: #054265;
 }
 
-#profile_toolbar h1 {
-    float: left;
-    font-size: 24px;
-    font-weight: normal;
-    color: #fff;
-}
-#profile_toolbar h1 a {
-    color: #fff;
-}
-
-#profile_toolbar ul.first {
-    float: right;
-    font-size: 12px;
-    font-weight: bold;
-}
-#profile_toolbar ul.first li { 
-    float: left;
-    margin-right: 0.5em;
-}
-#profile_toolbar ul.first a {
-    color: #fff
-}
-
-#profile_toolbar ul.second {
+#logo-meeting-wrapper {
 	position: absolute;
+    display: block;
+    top: 0px;
+    left: 0px;
+    height: 50px;
+	width: 600px;
+	white-space: nowrap;
+	overflow: hidden;
+}
+#logo-meeting-wrapper a,
+#global-actions a{
+    color: #fff;
+}
+#logo-space {
+    padding: 0px;
+	display: inline;
+	float: left;
+}
+#meeting-name-space {
+	padding: 10px;
+	display: inline;
+	font-size: 24px;
+	margin-top: 10px;
+    margin-left: 20px;
+	padding: 0px;
+	float: left;
+}
+#global-actions {
+    position: absolute;
+	display: block;
+	top: 0px;
+	left: 300px;
+	right: 0px;
+	height: 50px;
+}
+#meeting-actions {
+    position: absolute;
+    display: block;
+	top: 50px;
+    left: 0px;
     right: 0px;
-	bottom: 0px;
+    height: 50px;
+    background-color: #86A3B4;
+}
+
+/* Action areas in #header */
+#global-actions-menu {
+	float: right;
+	font-weight: bold;
+    font-size: 14px;
+	padding: 15px 10px;
+
+}
+#global-actions-menu .icon {
+	padding-left: 15px;
+}
+#global-actions-menu li {
+    float: left;
+    margin-right: 10px;
+}
+#global-actions-menu .user {
+	background: url(images/gfx_user.png) no-repeat 0 0;
+}
+#global-actions-menu .logout {
+    background: url(images/gfx_logout.png) no-repeat 0 0;
+}
+
+#meeting-actions-menu {
+	float: right;
     font-size: 14px;
     font-weight: bold;
     text-transform: uppercase;
+    padding: 10px;
 }
-#profile_toolbar ul.second .unread {
+#meeting-actions-menu .unread {
     font-weight: normal;
 }
-#profile_toolbar ul li.tab { 
+#meeting-actions-menu li.tab { 
     float: left;
-    margin-right: 0.5em;
+    margin-left: 0.5em;
 }
-#profile_toolbar ul.second a {
-    color: #054265;
+#meeting-actions-menu li.tab > a {
+	display: block;
+	height: 20px;
+	padding: 10px;
 }
-
-#profile_toolbar div.second {
+#meeting-actions-menu .dropdown_menu .menu_body {
+	top: 40px;
     background-color: #86A3B4;
-    position: absolute;
-    right: 0px;
-	bottom: 0px;
-	width: 100%;
-    height: 35px;
-}
 
-#profile_toolbar .user {
-    padding-left: 20px;
-    background: url(images/iconset.png) no-repeat 0px -15px;
-}
-#profile_toolbar .logout {
-    padding-left: 20px;
-    background: url(images/iconset.png) no-repeat 0px -32px;
 }
 
 /* Left side navigation (Agenda) */
@@ -155,7 +180,6 @@ a {
 	top: 100px;
 	bottom: 0px;
 	width: 300px;
-	background: #dbe0e5;
 	color: #054265;
 }
 #navigation h5 {
@@ -191,9 +215,6 @@ a {
 }
 #navigation h6.inactive span {
     background: url(images/iconset.png) no-repeat 0px -85px;
-}
-#navigation a {
-    color: #054265;
 }
 #navigation .selected {
     background: url(images/task_active.png) no-repeat center right;
@@ -369,9 +390,7 @@ li.notification_message {
 #meeting_overview {
 	color: #054265;
 }
-#meeting_overview a {
-    color: #054265;
-}
+
 #meeting_overview h4 {
     font-size: 14px;
     font-weight: bold;

@@ -79,6 +79,17 @@ class APIView(object):
         
         self.locale = get_locale_name(request)
 
+    def logo_link(self):
+        if self.meeting:
+            return resource_url(self.meeting, self.request)
+        return resource_url(self.root, self.request)
+
+    def logo_image_tag(self):
+        """ Should handle customisations later. """
+        url = "%s/static/images/logo.png" % self.request.application_url
+        return '<img src="%(url)s" height="%(h)s" width="%(w)s" />' % {'url':url, 'h':51, 'w':128}
+
+
     def translate(self, *args, **kwargs):
         """ Hook into the translation string machinery.
             See the i18n section of the Pyramid Docs.
@@ -164,8 +175,11 @@ class APIView(object):
         
         return render('templates/action_bar.pt', response, request=request)
 
-    def get_profile_toolbar(self, context, request):
-        return render('templates/profile_toolbar.pt', {'api':self}, request=request)
+    def get_global_actions(self, context, request):
+        return render('templates/global_actions.pt', {'api':self}, request=request)
+
+    def get_meeting_actions(self, context, request):
+        return render('templates/meeting_actions.pt', {'api':self}, request=request)
 
     def get_time_info(self, context, request):
         """ Render start and end time of something, if those exist. """
