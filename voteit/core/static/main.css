@@ -32,12 +32,35 @@ a {
 .content_wrapper {
 	padding: 10px;
 }
+#page_wrapper {
+    background: #dbe0e5;
+}
 #main_window {
-    position: absolute;
-	left: 300px;
-	right: 0px;
-	top: 100px;
-	bottom: 0px;
+    background: #fff;
+}
+
+/* positioning */
+#page_wrapper {
+	float: left;
+	width: 100%;
+	display: block;
+	position: relative;
+}
+
+#navigation {
+	position: relative;
+	float: left;
+	left: 100%;
+	margin-left: -100%;
+	width: 25%;
+}
+
+#main_window {
+    position: relative;
+    float: left;
+    left: 100%;
+    margin-left: -75%;
+    width: 75%;
 }
 
 /* dropdown menu */
@@ -70,11 +93,7 @@ a {
 
 /* Header sections */
 #header {
-    position: absolute;
 	display: block;
-	left: 0px;
-	right: 0px;
-	top: 0px;
 	height: 100px;
 	background: #054265;
 }
@@ -174,13 +193,7 @@ a {
 
 /* Left side navigation (Agenda) */
 #navigation {
-	position: absolute;
-	left: 0px;
-	top: 100px;
-	bottom: 0px;
-	width: 300px;
 	color: #054265;
-	background: #dbe0e5;
 }
 #navigation h5 {
     margin: 0;
