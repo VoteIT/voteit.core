@@ -68,6 +68,7 @@
 
 		</div>
 
+        <div id="rightcol-wrapper"><div id="leftcol-wrapper">
         <div id="navigation">
             <div tal:replace="structure api.get_navigation()">Navigation</div>
         </div>
@@ -126,6 +127,10 @@
             <div metal:define-slot="form" tal:condition="form|False" class="content_wrapper" tal:content="structure form">Form</div>
             
         </div> <!-- main_window -->
+		
+		</div></div><!-- wrappers -->
+		
+		
         <div class="clear"></div>
     </div> <!-- page_wrapper -->
 
