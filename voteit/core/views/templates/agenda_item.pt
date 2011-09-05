@@ -63,7 +63,6 @@
                 <!-- FIXME: this is just a dummy for showing the feature -->
                 <a tal:attributes="id string:help_${context.uid};" href="@@help?article=dummy" target="_blank" class="help">?</a>
             </h2>
-            <a class="load_more" tal:attributes="href api.resource_url(context, request) + '?discussions=all'" i18n:translate="">Show all</a>
                 
             <div tal:replace="structure get_discussions()"></div>
 

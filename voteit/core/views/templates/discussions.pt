@@ -1,4 +1,15 @@
 <tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core">
+
+<div tal:condition="over_limit">
+	<span i18n:translate="">
+		<span tal:content="over_limit" i18n:name="count">5</span>
+		more posts.
+	</span>
+	<a class="load_more"
+	   tal:attributes="href api.resource_url(context, request) + '?discussions=all'"
+	   i18n:translate="">Show all</a>
+</div>
+
 <tal:iterate condition="discussions" repeat="post discussions">
     <div tal:define="unread api.is_unread(post, True)"
          tal:attributes="class unread and 'unread listing_block' or 'listing_block'">

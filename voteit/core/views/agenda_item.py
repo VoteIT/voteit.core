@@ -98,12 +98,18 @@ class AgendaItemView(BaseView):
         
         limit = 5
         if 'discussions' in self.request.GET and self.request.GET['discussions'] == 'all':
-            limit=None
+            limit = 0
+        
+        discussions = self.context.get_content(iface=IDiscussionPost, sort_on='created')
         
         response = {}
-        response['discussions'] = self.context.get_content(iface=IDiscussionPost, sort_on='created', limit=limit)
+        response['discussions'] = discussions[-limit:]
+        if limit and limit < len(discussions):
+            response['over_limit'] = len(discussions) - limit
+        else:
+            response['over_limit'] = 0
+            
         response['api'] = self.api
-        response['context'] = self
         
         return render('templates/discussions.pt', response, request=self.request)
         
