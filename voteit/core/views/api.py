@@ -151,7 +151,7 @@ class APIView(object):
             response['sections'] = ('closed', 'active', 'inactive', 'private')
         else:
             response['sections'] = ('closed', 'active', 'inactive')
-        response['is_closed'] = self._is_section_closed
+        response['is_section_closed'] = self._is_section_closed
         
         return render('templates/navigation.pt', response, request=self.request)
 

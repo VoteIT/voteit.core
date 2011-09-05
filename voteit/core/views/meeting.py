@@ -30,22 +30,22 @@ class MeetingView(BaseView):
             url = self.api.resource_url(self.api.root, self.request)
             return HTTPFound(location = url)
         
+        
         self.response['get_state_ais'] = self._get_state_ais
-        self.response['is_closed'] = self._is_section_closed
+        self.response['check_section_closed'] = self._is_section_closed
+        self.response['section_overview_macro'] = self.section_overview_macro
         
         return self.response
+    
+    @property
+    def section_overview_macro(self):
+        return get_renderer('templates/macros/meeting_overview_section.pt').implementation().macros['main']
 
     def _get_state_ais(self, state):
         limit = 5
         if 'log_'+state in self.request.GET and self.request.GET['log_'+state] == 'all':
             limit=None
-        
-        response = {}
-        response['log'] = self.context.get_content(iface=IAgendaItem, states=state, sort_on='agenda_item_id', limit=limit)
-        response['api'] = self.api
-        response['context'] = self
-        
-        return render('templates/log.pt', response, request=self.request)
+        return self.context.get_content(iface=IAgendaItem, states=state, sort_on='agenda_item_id', limit=limit)
         
     def _is_section_closed(self, section):
         return self.request.cookies.get(section, None)

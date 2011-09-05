@@ -6,35 +6,36 @@
 	  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
 	  i18n:domain="voteit.core">
 <body>
+	
+	<tal:comment condition="nothing">
+		A lot of the structure here is dependent on that css classes are named the way
+		the js-script expects it to be. Check static resources before changing anything.
+	</tal:comment>
+	
 	<div id="content" metal:fill-slot="right_content">
 	    <div id="meeting_overview">
-	        <div tal:attributes="
-	                             id '%s-has' % api.meeting.uid;
-                                 class is_closed('%s-has' % api.meeting.uid) and 'closed-element minimizable_area has' or 'opened-element minimizable_area has';">
-                <h4 class="toggle_minimize has"><span i18n:translate="">This has happened</span></h4>
-                <a class="load_more"
-		           tal:attributes="href api.resource_url(context, request) + '?log_closed=all'"
-		           i18n:translate="">Show all</a>
-                <tal:block replace="structure get_state_ais('closed')"></tal:block>
-    		</div>
-	        <div tal:attributes="
-	                             id '%s-now' % api.meeting.uid;
-	                             class is_closed('%s-now' % api.meeting.uid) and 'closed-element minimizable_area now' or 'opened-element minimizable_area now'">
-                <h4 class="toggle_minimize now"><span i18n:translate="">This is happening now</span></h4>
-                <a class="load_more"
-		           tal:attributes="href api.resource_url(context, request) + '?log_active=all'"
-		           i18n:translate="">Show all</a>
-                <tal:block replace="structure get_state_ais('active')"></tal:block>
+	    	
+            <div tal:define="state string:closed;
+			                 is_closed check_section_closed('%s-%s' % (api.meeting.uid, state));">
+				<div metal:use-macro="section_overview_macro">
+					<span metal:fill-slot="heading" i18n:translate="">This has happened</span>
+				</div>
+			</div>
+
+            <div tal:define="state string:active;
+                             is_closed check_section_closed('%s-%s' % (api.meeting.uid, state));">
+                <div metal:use-macro="section_overview_macro">
+                    <span metal:fill-slot="heading" i18n:translate="">This is happening now</span>
+                </div>
             </div>
-	        <div tal:attributes="
-	                             id '%s-will' % api.meeting.uid;
-	                             class is_closed('%s-will' % api.meeting.uid) and 'closed-element minimizable_area will' or 'opened-element minimizable_area will'">
-                <h4 class="toggle_minimize will"><span i18n:translate="">This will happen</span></h4>
-                <a class="load_more"
-		           tal:attributes="href api.resource_url(context, request) + '?log_inactive=all'"
-		           i18n:translate="">Show all</a>
-                <tal:block replace="structure get_state_ais('inactive')"></tal:block>
+
+            <div tal:define="state string:inactive;
+                             is_closed check_section_closed('%s-%s' % (api.meeting.uid, state));">
+                <div metal:use-macro="section_overview_macro">
+                    <span metal:fill-slot="heading" i18n:translate="">This will happen</span>
+                </div>
             </div>
+
         </div>
 	</div>
 </body>
