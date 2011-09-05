@@ -157,6 +157,7 @@ def get_groups_schema(context):
 
     class Schema(colander.Schema):
         userids_and_groups = UserIDsAndGroupsSequenceSchema(title=_(u'Group settings for users'))
-        invitations_and_groups = InvitationsAndGroupsSequenceSchema(title=_(u'Invitations'))
+        #FIXME: this should be readded later
+        #invitations_and_groups = InvitationsAndGroupsSequenceSchema(title=_(u'Invitations'))
     
     return Schema()
