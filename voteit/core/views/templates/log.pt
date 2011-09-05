@@ -2,8 +2,11 @@
 	<tal:closed condition="log" repeat="entry log">
 	    <ul>
 	        <li>
-	            <div tal:replace="structure api.get_time_info(entry, request)">start time and end time macro</div>
-	            <div tal:content="entry.get_field_value('summary')">Summary</div>
+	        	<a tal:attributes="href api.resource_url(entry, request)">
+		        	<div tal:content="entry.title">Title</div>
+		            <div tal:content="structure api.get_time_info(entry, request)">start time and end time macro</div>
+		            <div tal:content="entry.get_field_value('summary')">Summary</div>
+				</a>
 	        </li>
 	    </ul>
 	</tal:closed>
