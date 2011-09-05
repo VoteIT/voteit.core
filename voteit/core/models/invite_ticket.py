@@ -151,9 +151,9 @@ def construct_schema(context=None, request=None, type=None):
                                           missing = u'',
                                           validator = html_string_validator,
             )
-                                       
+            
         return AddSchema()
-    
+
     if type == 'manage':
         email_choices = [(x.email, x.email) for x in context.invite_tickets.values() if x.get_workflow_state() != u'closed']
         class ManageSchema(colander.Schema):
@@ -161,7 +161,6 @@ def construct_schema(context=None, request=None, type=None):
                 deform.Set(),
                 widget = deform.widget.CheckboxChoiceWidget(values=email_choices),
                 title = _(u"Current invitations"),
-                validator = html_string_validator,
             )
         return ManageSchema()
 
