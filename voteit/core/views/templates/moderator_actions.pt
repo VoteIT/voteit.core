@@ -2,25 +2,75 @@
 <div class="action_menu dropdown_menu">
     <a class="menu_header"><img src="${request.application_url}/static/images/cog_light.png" alt="Moderator menu" i18n:attributes="alt" /></a>
     <ul class="menu_body">
+
         <tal:state define="state_id context.get_workflow_state()|False">
         <li tal:condition="state_id">
             <strong tal:attributes="class 'wf-state-%s' % state_id"
                   tal:content="api.translate(state_id.title())">private</strong>
         </li>
         </tal:state>
-        <li class="menuitem" tal:condition="api.context_has_permission('Edit', context)">
+
+        <li class="menuitem" tal:condition="context_has_permission('Edit', context)">
             <a 
                tal:attributes="href api.resource_url(context, request) + '@@edit'"
                i18n:translate="">Edit</a>
         </li>
-        <li class="menuitem" tal:condition="api.context_has_permission('Delete', context)">
+        <li class="menuitem" tal:condition="context_has_permission('Delete', context)">
             <a 
                tal:attributes="href api.resource_url(context, request) + '@@delete'"
                i18n:translate="">Delete</a>
         </li>
-        <tal:states define="states context.get_available_workflow_states(request)" tal:condition="states|False">
+
+        <tal:siteroot tal:condition="context.content_type == 'SiteRoot' and
+                                    context_has_permission('Manage Server', context)">
+        <tal:comment condition="False">
+            Common functions for siteroot
+        </tal:comment>
+        <li class="menuitem">
+            <a tal:attributes="href api.resource_url(context, request) + '@@logs'"
+               i18n:translate="">Server logs</a>
+        </li>
+        </tal:siteroot>
+
+        <tal:meeting condition="context.content_type == 'Meeting'">
+        <tal:comment condition="False">
+            Common functions for meeting.
+        </tal:comment>
+        <li class="menuitem">
+            <a tal:attributes="href api.resource_url(context, request) + '@@participants'"
+                i18n:translate="">Participants</a>
+        </li>
+        <li class="menuitem" tal:condition="context.get_workflow_state() != 'private'">
+            <a tal:attributes="href api.resource_url(context, request) + '@@add_tickets'"
+               i18n:translate="">Invite participants</a>
+        </li>
+        <li class="menuitem" tal:condition="context.get_workflow_state() != 'private'">
+            <a tal:attributes="href api.resource_url(context, request) + '@@manage_tickets'"
+               i18n:translate="">Manage invites</a>
+        </li>
+        </tal:meeting>
+
+        <tal:add_content tal:condition="
+                                        (context.content_type == 'SiteRoot' or context.content_type == 'Meeting') and
+                                        addable_types|False">
+            <tal:iterate tal:repeat="type_name addable_types">
+                <li><a tal:attributes="href string:@@add?content_type=$type_name">
+                    <span i18n:translate="">Add</span>
+                    <span tal:replace="api.translate(type_name)">somestuff</span>
+                </a></li>
+            </tal:iterate>
+        </tal:add_content>
+        
+        <li class="menuitem" tal:condition="context.content_type == 'Poll' and
+                                            context_has_permission('Edit', context) and
+                                            context.get_poll_plugin().get_settings_schema()|False">
+            <a tal:attributes="href api.resource_url(context, request) + '@@poll_config'"
+               i18n:translate="">Poll settings</a>
+        </li>
+
+        <tal:states tal:condition="states|False">
         <li>
-               <span i18n:translate="">Set state</span>
+            <span i18n:translate="">Set state</span>
             <ul>
                 <tal:iterate repeat="state states">
                 <li tal:attributes="class state.current and 'current'">
@@ -31,6 +81,7 @@
             </ul>
         </li>
         </tal:states>
+
     </ul>
 </div>
 </metal:main>
