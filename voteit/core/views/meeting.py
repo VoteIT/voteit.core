@@ -177,14 +177,14 @@ class MeetingView(BaseView):
 
         post = self.request.POST
 
-        controls = post.items()
         emails = ()
-        try:
-            appstruct = self.form.validate(controls)
-            emails = appstruct['emails']
-        except ValidationFailure, e:
-            self.response['form'] = e.render()
-
+        if 'resend' in post or 'delete' in post:
+            controls = post.items()
+            try:
+                appstruct = self.form.validate(controls)
+                emails = appstruct['emails']
+            except ValidationFailure, e:
+                self.response['form'] = e.render()
 
         if emails and 'resend' in post:
             for email in emails:
