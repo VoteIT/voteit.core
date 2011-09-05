@@ -183,7 +183,17 @@ class APIView(object):
 
     def get_moderator_actions(self, context, request):
         """ A.k.a. the cogwheel-menu. """
-        return render('templates/moderator_actions.pt', {'api':self, 'context':context}, request=request)
+
+        response = {}
+        response['api'] = self
+        response['addable_types'] = self._get_addable_types(context, request)
+        response['context'] = context
+        if getattr(context, 'workflow', None):
+            response['states'] = context.get_available_workflow_states(request)
+        response['context_has_permission'] = self.context_has_permission
+        response['is_moderator'] = self.context_has_permission(security.MODERATE_MEETING, context)
+
+        return render('templates/moderator_actions.pt', response, request=request)
 
     def get_time_info(self, context, request):
         """ Render start and end time of something, if those exist. """

@@ -176,18 +176,17 @@ class MeetingView(BaseView):
         self.response['form_resources'] = self.form.get_widget_resources()
 
         post = self.request.POST
-        def process_form():
+
+        emails = ()
+        if 'resend' in post or 'delete' in post:
             controls = post.items()
             try:
                 appstruct = self.form.validate(controls)
+                emails = appstruct['emails']
             except ValidationFailure, e:
                 self.response['form'] = e.render()
-                return self.response
 
-            return appstruct['emails']    
-
-        if 'resend' in post:
-            emails = process_form()
+        if emails and 'resend' in post:
             for email in emails:
                 self.context.invite_tickets[email].send(self.request)
             
@@ -195,10 +194,9 @@ class MeetingView(BaseView):
                                           default=u"Resending ${count_emails} invites",
                                           mapping={'count_emails':len(emails)}))
             url = resource_url(self.context, self.request)
-            return HTTPFound(location=url)            
+            return HTTPFound(location=url)
 
-        if 'delete' in post:
-            emails = process_form()
+        if emails and 'delete' in post:
             for email in emails:
                 del self.context.invite_tickets[email]
             

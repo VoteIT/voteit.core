@@ -15,7 +15,7 @@ class PrintingMailer(object):
         print "Subject: %s" % message.subject
         print "To: %s" % ", ".join(message.recipients)
         print "======================================"
-        print message.body
+        print message.html
 
     send_to_queue = send_immediately = send
 

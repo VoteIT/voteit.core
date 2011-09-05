@@ -85,9 +85,9 @@
                         </div>
                     </div>
                     <tal:messages replace="structure api.flash_messages()">Messages</tal:messages>
-                    <div metal:define-slot="action_bar"
-                         tal:condition="not form|True"
-                         tal:content="structure api.get_action_bar(context, request)">Action bar</div>
+                    <div metal:define-slot="action_menu"
+                         tal:condition="not form|api.context_has_permission('Moderate Meeting', context)"
+                         tal:content="structure api.get_moderator_actions(context, request)">Cogwheel menu</div>
                     <div metal:define-slot="page_heading"
                          id="page_heading"
                          tal:condition="not form|True">

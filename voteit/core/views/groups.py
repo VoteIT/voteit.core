@@ -53,17 +53,19 @@ class EditGroups(object):
         root = find_root(context)
         users = root['users']
         appstruct = {}
+
         userids_and_groups = []
-        invitations_and_groups = []
         for userid in context._groups:
             user = users[userid]
             userids_and_groups.append({'userid':userid, 'groups':context.get_groups(userid), 'email':user.get_field_value('email')})
-        for ticket in context.invite_tickets.values():
-            if ticket.get_workflow_state() != u'closed':
-                invitations_and_groups.append({'email':ticket.email, 'groups':tuple(ticket.roles)})
         appstruct['userids_and_groups'] = userids_and_groups
 
-        appstruct['invitations_and_groups'] = invitations_and_groups
+        #FIXME: this should be readded later
+#        invitations_and_groups = []
+#        for ticket in context.invite_tickets.values():
+#            if ticket.get_workflow_state() != u'closed':
+#                invitations_and_groups.append({'email':ticket.email, 'groups':tuple(ticket.roles)})
+#        appstruct['invitations_and_groups'] = invitations_and_groups
         return appstruct
 
     def update_tickets_permissions(self, context, value):
@@ -132,7 +134,8 @@ class EditGroups(object):
             
             #Set permissions
             self.context.update_userids_permissions(appstruct['userids_and_groups'])
-            self.update_tickets_permissions(self.context, appstruct['invitations_and_groups'])
+            #FIXME: this should be readded later
+#            self.update_tickets_permissions(self.context, appstruct['invitations_and_groups'])
             
         if 'cancel' in post:
             url = resource_url(self.context, self.request)

@@ -65,12 +65,12 @@ class InviteTicket(Persistent, WorkflowAware):
         response['message'] = self.message
         
         sender = meeting.get_field_value('meeting_mail_address')
-        body = render('../views/templates/invite_ticket_email.pt', response, request=request)
+        body_html = render('../views/templates/invite_ticket_email.pt', response, request=request)
 
         msg = Message(subject=_(u"VoteIT meeting invitation"),
                       sender = sender and sender or None,
                       recipients=[self.email],
-                      body=body)
+                      html=body_html)
 
         mailer = get_mailer(request)
         mailer.send(msg)
@@ -151,9 +151,9 @@ def construct_schema(context=None, request=None, type=None):
                                           missing = u'',
                                           validator = html_string_validator,
             )
-                                       
+            
         return AddSchema()
-    
+
     if type == 'manage':
         email_choices = [(x.email, x.email) for x in context.invite_tickets.values() if x.get_workflow_state() != u'closed']
         class ManageSchema(colander.Schema):
@@ -161,7 +161,6 @@ def construct_schema(context=None, request=None, type=None):
                 deform.Set(),
                 widget = deform.widget.CheckboxChoiceWidget(values=email_choices),
                 title = _(u"Current invitations"),
-                validator = html_string_validator,
             )
         return ManageSchema()
 
