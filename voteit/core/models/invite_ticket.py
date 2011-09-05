@@ -65,12 +65,12 @@ class InviteTicket(Persistent, WorkflowAware):
         response['message'] = self.message
         
         sender = meeting.get_field_value('meeting_mail_address')
-        body = render('../views/templates/invite_ticket_email.pt', response, request=request)
+        body_html = render('../views/templates/invite_ticket_email.pt', response, request=request)
 
         msg = Message(subject=_(u"VoteIT meeting invitation"),
                       sender = sender and sender or None,
                       recipients=[self.email],
-                      body=body)
+                      html=body_html)
 
         mailer = get_mailer(request)
         mailer.send(msg)
