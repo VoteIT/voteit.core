@@ -103,19 +103,26 @@ $(document).ready(function() {
     });
 });
 
-/* minimize */
+/* Minimize
+ * Structure to make minimize work. elem can be most html tags
+ * <elem id="something_unique" class="toggle_area toggle_closed"> <!--or toggle_opened -->
+ *   <elem class="toggle_minimize">Something clickable</elem>
+ *   <elem class="minimizable_area">Stuff that will be hidden</elem>
+ *   <elem class="minimizable_inverted">Stuff that will only be visible when it's minimized</elem>
+ * </elem>
+ */
 voteit.minimize = {
     init: function(){
         $('.toggle_minimize').live('click', function() {
-            var area = $(this).parents('.minimizable_area');
-            area.toggleClass('closed-element').toggleClass('opened-element');
-
-            var cookie_id = area.attr('id')
-            if (area.hasClass('closed-element')) {
-                $.cookie(cookie_id, 1)
-
+			min_parent = $(this).parents('.toggle_area');
+			// Set parent class as opened or closed
+			min_parent.toggleClass('toggle_opened').toggleClass('toggle_closed');
+			
+            var cookie_id = min_parent.attr('id');
+            if (min_parent.hasClass('toggle_closed')) {
+                $.cookie(cookie_id, 1);
             } else {
-                $.cookie(cookie_id, null)
+                $.cookie(cookie_id, null);
             }
         })
     }

@@ -8,6 +8,8 @@
 <body>
 <div metal:fill-slot="content">
 	<div>
+        <a tal:attributes="href api.user_profile_url + '@@edit'"
+           i18n:translate="">Edit your profile and settings.</a><br/>
 		<a tal:attributes="href api.user_profile_url + '@@change_password'"
 		   i18n:translate="">Change password</a>
 	</div>
