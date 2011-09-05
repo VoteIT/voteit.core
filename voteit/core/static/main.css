@@ -33,7 +33,7 @@ a {
 	padding: 10px;
 }
 #page_wrapper {
-    background: #dbe0e5;
+    background: url(images/bubble_big.png) no-repeat -140px 60px;
 }
 #main_window {
     background: #fff;
@@ -95,7 +95,6 @@ a {
 #header {
 	display: block;
 	height: 100px;
-	background: #054265;
 }
 #logo {
 	padding: 10px;
@@ -132,9 +131,10 @@ a {
     position: absolute;
 	display: block;
 	top: 0px;
-	left: 300px;
+	left: 0px;
 	right: 0px;
 	height: 50px;
+    background: #054265;
 }
 #meeting-actions {
     position: absolute;
@@ -143,7 +143,7 @@ a {
     left: 0px;
     right: 0px;
     height: 50px;
-    background-color: #86A3B4;
+    background: url(images/meetingmenu_bg_opacity30.png) repeat;
 }
 
 /* Action areas in #header */
@@ -189,13 +189,13 @@ a {
 }
 #meeting-actions-menu .dropdown_menu .menu_body {
 	top: 40px;
-    background-color: #86A3B4;
-
+    background: url(images/meetingmenu_bg_opacity30.png) repeat;
 }
 
 /* Left side navigation (Agenda) */
 #navigation {
 	color: #054265;
+	background: url(images/navigation_bg_opacity10.png) repeat;
 }
 #navigation h5 {
     margin: 0;
