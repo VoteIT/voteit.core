@@ -103,6 +103,9 @@ class User(BaseContent):
 
         mailer = get_mailer(request)
         mailer.send(msg)
+        
+    def remove_password_token(self):
+        self.__token__ = None
 
     def validate_password_token(self, node, value):
         """ Validate input from a colander form. See token_password_change schema """

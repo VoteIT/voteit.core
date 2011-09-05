@@ -153,6 +153,7 @@ class UsersView(object):
                 self.response['form'] = e.render()
                 return self.response
             
+            self.context.remove_password_token()
             self.context.set_password(appstruct['password'])
             self.api.flash_messages.add(_(u"Password set. You may login now."))
             url = "%s@@login" % resource_url(self.api.root, self.request)
