@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
-"POT-Creation-Date: 2011-09-06 11:42+0000\n"
+"POT-Creation-Date: 2011-09-06 13:42+0000\n"
 "PO-Revision-Date: 2011-08-19 10:51+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: sv <LL@li.org>\n"
@@ -54,6 +54,10 @@ msgstr "(inga inlägg)"
 msgid "About you"
 msgstr "Om dig"
 
+#. Default: "Active"
+msgid "Active"
+msgstr "Aktiv"
+
 #: ./views/templates/action_bar.pt:111
 #. Default: "Add"
 msgid "Add"
@@ -89,6 +93,10 @@ msgstr "Agenda"
 #: ./models/agenda_item.py:52
 msgid "Agenda item"
 msgstr "Dagordningspunkt"
+
+#. Default: "Approved"
+msgid "Approved"
+msgstr "Bifallen"
 
 #: ./views/base_edit.py:171
 msgid "Are you sure you want to delete this item?"
@@ -143,6 +151,10 @@ msgstr "Kontrollera fältet - engångslösenordet stämmer inte"
 msgid "Click the link to access this VoteIT meeting:"
 msgstr "Klicka på länken för att få tillträde till VoteIT-mötet:"
 
+#. Default: "Closed"
+msgid "Closed"
+msgstr "Stängd"
+
 #: ./views/templates/action_bar.pt:107
 #. Default: "Content"
 msgid "Content"
@@ -174,6 +186,10 @@ msgstr "Radera röst"
 #: ./views/base_edit.py:160
 msgid "Deleted"
 msgstr "Raderad"
+
+#. Default: "Denied"
+msgid "Denied"
+msgstr "Avslagen"
 
 #: ./models/agenda_item.py:119
 msgid "Description"
@@ -270,6 +286,10 @@ msgstr "HTML är inte tillåtet."
 msgid "Have an account already?"
 msgstr "Har du ett konto redan?"
 
+#. Default: "Inactive"
+msgid "Inactive"
+msgstr "Inaktiv"
+
 #: ./models/invite_ticket.py:107
 msgid "Invalid email address."
 msgstr "Ogiltig epostadress"
@@ -294,6 +314,10 @@ msgstr "Mindre än 100 tecken tack."
 #: ./views/agenda_item.py:99
 msgid "Like"
 msgstr "Gilla"
+
+#. Default: "Locked for voting"
+msgid "Locked for voting"
+msgstr "Låst för omröstning"
 
 #: ./views/templates/global_actions.pt:18
 #. Default: "Login"
@@ -387,6 +411,14 @@ msgstr "Inget uppdaterat"
 msgid "OK"
 msgstr "OK"
 
+#. Default: "Ongoing"
+msgid "Ongoing"
+msgstr "Pågående"
+
+#. Default: "Open"
+msgid "Open"
+msgstr "Öppen"
+
 #: ./security.py:58
 msgid "Participant"
 msgstr "Deltagare"
@@ -407,6 +439,10 @@ msgstr "Begäran om nytt lösenord från VoteIT"
 #: ./views/users.py:158
 msgid "Password set. You may login now."
 msgstr "Lösenord satt. Du kan logga in nu."
+
+#. Default: "Planned"
+msgid "Planned"
+msgstr "Planerad"
 
 #: ./models/poll.py:64
 msgid "Poll"
@@ -436,6 +472,10 @@ msgstr "Inställningar för omröstning"
 msgid "Poll(s)"
 msgstr "Omröstning(ar)"
 
+#. Default: "Private"
+msgid "Private"
+msgstr "Privat"
+
 #: ./models/proposal.py:57
 msgid "Proposal"
 msgstr "Yrkande"
@@ -448,6 +488,10 @@ msgstr "Yrkande(n)"
 #: ./models/poll.py:284
 msgid "Proposals"
 msgstr "Yrkanden"
+
+#. Default: "Published"
+msgid "Published"
+msgstr "Publicerad"
 
 #: ./views/templates/global_actions.pt:16
 #. Default: "Register"
@@ -468,7 +512,7 @@ msgstr "Registrering"
 msgid "Remember that you need to click this link to gain access to the meeting you're invited to."
 msgstr "Kom ihåg att du behöver klicka på länken för att få tillträde till mötet du är inbjuden till."
 
-#: ./views/expressions.py:74
+#: ./views/expressions.py:76
 msgid "Remove ${display_name}"
 msgstr "Ta bort ${display_name}"
 
@@ -484,6 +528,10 @@ msgstr "Skicka igen"
 #. Default: "Retract"
 msgid "Retract"
 msgstr "Dra tillbaka"
+
+#. Default: "Retracted"
+msgid "Retracted"
+msgstr "Tillbakadragen"
 
 #: ./models/invite_ticket.py:134
 msgid "Roles"
@@ -604,6 +652,10 @@ msgstr "Titel"
 #: ./validators.py:14
 msgid "Too short. At least 6 chars required."
 msgstr "För kort. Minst 6 tecken krävs."
+
+#. Default: "Unhandled"
+msgid "Unhandled"
+msgstr "Ohanterad"
 
 #: ./views/templates/messages.pt:17
 #. Default: "Unread"
