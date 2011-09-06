@@ -1,17 +1,15 @@
-#from babel.core import Locale
+from datetime import timedelta
+from datetime import datetime
+import pytz
+
 from pyramid.i18n import get_locale_name
 from pyramid.threadlocal import get_current_request
 from babel.dates import format_date
 from babel.dates import format_datetime
-#from babel.dates import format_time
-
-import pytz
-from pytz import timezone
-from datetime import datetime
-
 from zope.interface import implements
 
 from voteit.core.models.interfaces import IDateTimeUtil
+from voteit.core import VoteITMF as _
 
 
 class DateTimeUtil(object):
@@ -24,7 +22,7 @@ class DateTimeUtil(object):
 
     def __init__(self, locale='en', timezone_name='Europe/Stockholm'):
         self.set_locale(locale)
-        self.timezone = timezone(timezone_name)
+        self.timezone = pytz.timezone(timezone_name)
 
     def set_locale(self, value):
         self.locale = value
@@ -81,10 +79,8 @@ class DateTimeUtil(object):
 
     def localnow(self, tz=None):
         """Get the current datetime localized to the specified timezone.
-
         If no timezone is specified, the current selected one is used.
         """
-
         naive_now = datetime.now()
 
         if tz is None:
@@ -95,6 +91,14 @@ class DateTimeUtil(object):
     def utcnow(self):
         return utcnow()
 
+#    def relative_time_format(self, datetime):
+#        """ Takes a localized datetime and returns a string based on relative
+#            time from that point. Like "1 minute ago" or similar.
+#        """
+        #FIXME: Implement relative time
+        #The method format_timedelta in Babel currently exists in trunk:
+        #http://svn.edgewall.org/repos/babel/trunk/babel/dates.py
+        #Use it when it's available
 
 
 def utcnow():
@@ -105,6 +109,5 @@ def utcnow():
     datetime object, whereas this one includes the UTC tz info."""
 
     naive_utcnow = datetime.utcnow()
-    localized_utcnow = pytz.utc.localize(naive_utcnow)
-    return localized_utcnow
+    return pytz.utc.localize(naive_utcnow)
 
