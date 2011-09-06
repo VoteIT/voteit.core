@@ -9,7 +9,7 @@
 
     <div id="content" metal:fill-slot="top_content">
         <div id="polls">
-            <div id="add_poll">
+            <div id="add_poll" tal:condition="api.show_moderator_actions and api.context_has_permission('Add Poll', context)">
                 <a class="buttonize" tal:attributes="href api.resource_url(context, request) + '@@add?content_type=Poll'"><span i18n:translate="">Add poll</span></a>
             </div>
             <h2><span i18n:translate="">Poll(s)</span>
