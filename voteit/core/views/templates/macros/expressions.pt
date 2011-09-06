@@ -15,12 +15,12 @@
     <tal:has_entries condition="has_entries">
     	(
 		<tal:you condition="selected" i18n:translate="">You</tal:you>
-		<a tal:condition="selected and userids" tal:attributes="title ', '.join(userids)">
-	        <tal:and i18n:translate="">and</tal:and>
+		<a tal:condition="userids" tal:attributes="title ', '.join(userids)">
+            <tal:and i18n:translate="" condition="selected">and</tal:and>
 	        <span tal:replace="len(userids)">3</span>
 	        <tal:more i18n:translate="">more</tal:more>
 		</a>
-		<span tal:replace="expl_display_name">Likes this</span>
+		<span tal:replace="expl_display_name">Like this</span>
 		)
 	</tal:has_entries>
 	
