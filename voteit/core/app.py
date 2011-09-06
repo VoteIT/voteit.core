@@ -98,8 +98,25 @@ def add_help_util(config, locale=None):
         locale = config.registry.settings.get('default_locale_name')
     
     util = HelpUtil(locale)
-    config.registry.registerUtility(util, IHelpUtil)
 
+    # read help files
+    # get path of this file
+    PROJECTROOT = os.path.dirname( __file__ )
+    # get help files path
+    helpdir = os.path.join(PROJECTROOT, 'help')
+    # loop through locale directories
+    for path, dirs, files in os.walk(helpdir):
+        for name in dirs:
+            dir = os.path.join(path, name)
+            # loop through html files in locale directories
+            for file in fnmatch.filter(os.listdir(dir), '*.html'):
+                # get the name of the file without extension
+                id = os.path.splitext(file)[0]
+                # add file to HelpUtil
+                util.add_help_file(id, os.path.join(dir, file))
+
+    #Register the utility
+    config.registry.registerUtility(util, IHelpUtil)
 
 def populate_sql_database(config):
     from voteit.core import RDB_Base
@@ -159,22 +176,3 @@ def post_application_config(event):
     """
     config = Configurator(registry=event.app.registry)
     include_zcml(config)
-    
-    # read help files
-    # get path of this file
-    PROJECTROOT = os.path.dirname( __file__ )
-    help_util = getUtility(IHelpUtil)
-    # get help files path
-    helpdir = os.path.join(PROJECTROOT, 'help')
-    # loop through locale directories
-    for path, dirs, files in os.walk(helpdir):
-        for name in dirs:
-            dir = os.path.join(path, name)
-            # loop through html files in locale directories
-            for file in fnmatch.filter(os.listdir(dir), '*.html'):
-                # get the name of the file without extension
-                id = os.path.splitext(file)[0]
-                # add file to HelpUtil
-                help_util.add_help_file(id, os.path.join(dir, file))
-    
-
