@@ -51,3 +51,10 @@ class WorkflowAware(object):
             if state['transitions']:
                 astates.append(state)
         return astates
+
+    def current_state_title(self, request):
+        """ Return (untranslated) state title for the current state. """
+        for info in self.workflow.state_info(self, request):
+            if info['current']:
+                return info['title']
+        raise WorkflowError("No workflow title found on object: %s" % self)

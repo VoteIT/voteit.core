@@ -75,6 +75,9 @@ class IWorkflowAware(Interface):
         """ Get all states that the current user can transition to from the current state.
         """
 
+    def current_state_title(request):
+        """ Return (untranslated) state title for the current state. """
+
 
 class ISecurityAware(Interface):
     """ Mixin for all content that should handle groups.
