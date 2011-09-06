@@ -30,7 +30,7 @@
 		           i18n:translate="">Delete</a>
 	        </span>
 			
-	        <span class="expressions" tal:content="structure api.expressions.get_expressions(post, 'support', api.userid, like, like_this)"></span>
+	        <span class="expressions" tal:content="structure api.expressions.get_expressions(post, 'like', api.userid, like, like_this)"></span>
 		</div>
         <div class="clear"><!-- --></div>
     </div>
