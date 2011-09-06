@@ -297,10 +297,6 @@ a {
 #main_window #right {
 }
 
-#path_bar {
-	float: left;
-}
-
 #page_heading h2 {
     font-size: 24px;
     font-weight: normal;

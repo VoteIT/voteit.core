@@ -63,9 +63,6 @@ class APIView(object):
         self.content_info = request.registry.getUtility(IContentUtility)
         self.addable_types = self._get_addable_types(context, request)
         self.lineage = lineage(context)
-        rev = []
-        [rev.insert(0, x) for x in self.lineage]
-        self.reversed_lineage = tuple(rev)
         self.inside = inside
         self.dt_util = request.registry.getUtility(IDateTimeUtil)
 

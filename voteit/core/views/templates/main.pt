@@ -76,15 +76,7 @@
         <div id="main_window">
             <div id="top">
                 <div class="content_wrapper">
-                    <div id="path_bar" tal:condition="not form|True">
-                        <div class="content_wrapper">
-                        <tal:iterate repeat="obj api.reversed_lineage">
-                            &raquo;
-                            <a tal:attributes="href api.resource_url(obj, request);"
-                               tal:content="obj.title">Title</a>
-                        </tal:iterate>
-                        </div>
-                    </div>
+
                     <tal:messages replace="structure api.flash_messages()">Messages</tal:messages>
 
                     <div metal:define-slot="page_heading"
