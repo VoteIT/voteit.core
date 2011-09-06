@@ -12,10 +12,7 @@
             <div id="add_poll" tal:condition="api.show_moderator_actions and api.context_has_permission('Add Poll', context)">
                 <a class="buttonize" tal:attributes="href api.resource_url(context, request) + '@@add?content_type=Poll'"><span i18n:translate="">Add poll</span></a>
             </div>
-            <h2 tal:condition="polls"><span i18n:translate="">Poll(s)</span>
-                <!-- FIXME: this is just a dummy for showing the feature -->
-                <a tal:attributes="id string:help_${context.uid};" href="@@help?article=dummy" target="_blank" class="help">?</a>
-            </h2>
+            <h2 tal:condition="polls"><span i18n:translate="">Poll(s)</span></h2>
             <tal:iterate condition="polls" repeat="poll polls">
                 <div tal:define="poll_plugin poll.get_poll_plugin();
                                  state_id poll.get_workflow_state();
@@ -56,10 +53,7 @@
 
     <div id="content" metal:fill-slot="right_content">
         <div id="discussions">
-            <h2><span i18n:translate="">Discussion</span>
-                <!-- FIXME: this is just a dummy for showing the feature -->
-                <a tal:attributes="id string:help_${context.uid};" href="@@help?article=dummy" target="_blank" class="help">?</a>
-            </h2>
+            <h2><span i18n:translate="">Discussion</span></h2>
                 
             <div tal:replace="structure get_discussions()">Discussion listing</div>
 
@@ -69,10 +63,7 @@
 
     <div id="content" metal:fill-slot="left_content">
         <div id="proposals">
-            <h2><span i18n:translate="">Proposal(s)</span>
-                <!-- FIXME: this is just a dummy for showing the feature -->
-                <a tal:attributes="id string:help_${context.uid};" href="@@help?article=dummy" target="_blank" class="help">?</a>
-            </h2>
+            <h2><span i18n:translate="">Proposal(s)</span></h2>
 
             <div tal:replace="structure get_proposals()">Proposals listing</div>
             
