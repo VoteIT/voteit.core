@@ -76,7 +76,8 @@ def construct_schema(**kwargs):
     class ProposalSchema(colander.MappingSchema):
         title = colander.SchemaNode(colander.String(),
                                     title = _(u"Proposal"),
-                                    validator=html_string_validator,)
+                                    validator=html_string_validator,
+                                    widget=deform.widget.TextAreaWidget(rows=3, cols=40),)
     return ProposalSchema()
 
 

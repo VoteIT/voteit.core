@@ -1,5 +1,6 @@
 
 import colander
+import deform
 from zope.interface import implements
 
 from repoze.folder.interfaces import IObjectAddedEvent
@@ -59,7 +60,8 @@ def construct_schema(**kwargs):
     class Schema(colander.Schema):
         text = colander.SchemaNode(colander.String(),
                                     title = _(u"Text"),
-                                    validator=html_string_validator,)
+                                    validator=html_string_validator,
+                                    widget=deform.widget.TextAreaWidget(rows=3, cols=40),)
     return Schema()
 
 
