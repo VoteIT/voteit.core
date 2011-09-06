@@ -91,7 +91,7 @@
                     </ul>
 					
 					<tal:no_entries condition="not agenda_items">
-						<div i18n:translate="">(no entries)</div>
+						<div i18n:translate="">(Nothing)</div>
 					</tal:no_entries>
 	            </tal:agenda_items>
 				

@@ -30,7 +30,7 @@
 	        </ul>
 	    </tal:closed>
 	    <tal:no_active condition="not agenda_items" i18n:translate="">
-	        Nothing planned yet
+	        (Nothing)
 	    </tal:no_active>
 	
 	</div>
