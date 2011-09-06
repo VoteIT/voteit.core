@@ -15,11 +15,13 @@ from voteit.core.views.api import APIView
 from voteit.core import VoteITMF as _
 from voteit.core.security import EDIT, VIEW
 from voteit.core.models.interfaces import IPoll
-from voteit.core.models.schemas import add_csrf_token, button_add, button_cancel,\
-    button_update, button_delete
 from voteit.core.events import ObjectUpdatedEvent
-
-from base_edit import DEFAULT_TEMPLATE
+from voteit.core.models.schemas import add_csrf_token
+from voteit.core.models.schemas import button_add
+from voteit.core.models.schemas import button_cancel
+from voteit.core.models.schemas import button_update
+from voteit.core.models.schemas import button_delete
+from voteit.core.models.schemas import button_save
 
 
 class PollView(object):
@@ -147,7 +149,7 @@ class PollView(object):
         plugin = self.context.get_poll_plugin()
         return plugin.render_raw_data()
     
-    @view_config(context=IPoll, name="state", renderer=DEFAULT_TEMPLATE)
+    @view_config(context=IPoll, name="state", renderer='templates/base_edit.pt')
     def state_change(self):
         """ Change workflow state for context.
             Note that if this view is called without the required permission,
