@@ -64,7 +64,6 @@ a {
 	float: left;
 	left: 80%;
 	width: 20%;
-    overflow:hidden;
 }
 #main_window {
     position: relative;
@@ -72,6 +71,7 @@ a {
     left: 80%;
 	width: 80%;
     overflow:hidden;
+	
 }
 
 /* dropdown menu */
