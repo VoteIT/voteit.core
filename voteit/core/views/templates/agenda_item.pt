@@ -64,7 +64,7 @@
                 <a tal:attributes="id string:help_${context.uid};" href="@@help?article=dummy" target="_blank" class="help">?</a>
             </h2>
                 
-            <div tal:replace="structure get_discussions()"></div>
+            <div tal:replace="structure get_discussions()">Discussion listing</div>
 
             <div tal:condition="discussion_form|False" tal:replace="structure discussion_form">Discussion form</div>
         </div>
@@ -76,25 +76,8 @@
                 <!-- FIXME: this is just a dummy for showing the feature -->
                 <a tal:attributes="id string:help_${context.uid};" href="@@help?article=dummy" target="_blank" class="help">?</a>
             </h2>
-            <tal:iterate condition="proposals" repeat="proposal proposals" >
-                <div tal:define="unread api.is_unread(proposal, True)"
-                     tal:attributes="class unread and 'unread listing_block' or 'listing_block'">
-                    <tal:creators tal:replace="structure api.get_creators_info(proposal.creators, request)">Creators</tal:creators>
-                    <span i18n:translate="">propose</span>:
-                    <span class="body" tal:content="structure proposal.title">Title</span>
-                    
-                    <div tal:define="state_id proposal.get_workflow_state()">
-                        <span i18n:translate="">State</span>:
-                        <strong tal:attributes="class 'wf-state-%s' % state_id"
-                              tal:content="state_id">private</strong>
-                    </div>
-                    <span class="time" tal:content="api.get_time_created(context)"></span>
-                    <div tal:replace="structure api.get_action_bar(proposal, request)">Action bar</div>
-                    <span class="expressions" tal:content="structure api.expressions.get_expressions(proposal, 'support', api.userid, 'Support')"></span>
-                    <div class="clear"><!-- --></div>
-                </div>
-                
-            </tal:iterate>
+
+            <div tal:replace="structure get_proposals()">Proposals listing</div>
             
             <div tal:condition="proposal_form|False" tal:replace="structure proposal_form">Proposal form</div>
         </div>

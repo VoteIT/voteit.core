@@ -16,9 +16,14 @@
         <tal:creators tal:replace="structure api.get_creators_info(post.creators, request)">Creators</tal:creators>
         
         <span class="body" tal:content="structure post.get_field_value('text')">text</span>
+		
+		<div class="entry_info">
+			<span tal:content="api.dt_util.dt_format(post.created)">1 hour ago</span>
+		</div>
 
         <div tal:replace="structure api.get_action_bar(post, request)">Action bar</div>
-        <div class="expressions" tal:content="structure api.expressions.get_expressions(post, 'support', api.userid, 'Support')"></div>
+		
+        <div class="expressions" tal:content="structure api.expressions.get_expressions(post, 'support', api.userid, like, like_this)"></div>
         <div class="clear"><!-- --></div>
     </div>
 

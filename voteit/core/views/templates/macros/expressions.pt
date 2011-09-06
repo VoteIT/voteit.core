@@ -1,23 +1,27 @@
 <div tal:attributes="id 'expression_form_'+context_id;"
      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
      i18n:domain="voteit.core">
-	<form method="post" tal:attributes="action toggle_url;" class="expression_form">
-	    <input name="tag" type="hidden" tal:attributes="value tag" />
-	    <input name="do" type="hidden" tal:attributes="value do" />
-	    <input name="display_name" type="hidden" tal:attributes="value display_name" />
-		<input name="submit" type="submit"
-		       tal:attributes="value button_txt;
-		                       class selected and 'expression_button selected' or 'expression_button';" />
-	</form>
 
-	<tal:you condition="selected" i18n:translate="">You</tal:you>
-	<tal:and condition="selected and userids" i18n:translate="">and</tal:and>
-	<tal:iterate repeat="userid userids">
-		<tal:userid tal:content="userid">
-		    userid
-		</tal:userid><tal:comma tal:condition="not repeat['userid'].end">,</tal:comma>
-	</tal:iterate>
-	<tal:over_limit condition="over_limit" i18n:translate="">
-	    and <span tal:replace="over_limit" i18n:name="item_count">3</span> more
-	</tal:over_limit>
+    <form method="post" tal:attributes="action toggle_url;" class="expression_form">
+        <input name="tag" type="hidden" tal:attributes="value tag" />
+        <input name="do" type="hidden" tal:attributes="value do" />
+        <input name="display_name" type="hidden" tal:attributes="value display_name" />
+        <input name="expl_display_name" type="hidden" tal:attributes="value expl_display_name" />
+        <input name="submit" type="submit"
+               tal:attributes="value button_label;
+                               class selected and 'expression_button selected' or 'expression_button';" />
+    </form>
+
+    <tal:has_entries condition="has_entries">
+    	(
+		<tal:you condition="selected" i18n:translate="">You</tal:you>
+		<a tal:condition="selected and userids" tal:attributes="title ', '.join(userids)">
+	        <tal:and i18n:translate="">and</tal:and>
+	        <span tal:replace="len(userids)">3</span>
+	        <tal:more i18n:translate="">more</tal:more>
+		</a>
+		<span tal:replace="expl_display_name">Likes this</span>
+		)
+	</tal:has_entries>
+	
 </div>

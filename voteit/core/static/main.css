@@ -37,6 +37,7 @@ a {
 }
 #main_window {
     background: #fff;
+	line-height: 1.5em;
 }
 
 /* positioning */
@@ -316,9 +317,6 @@ a {
 	white-space: nowrap;
 	list-style: none;
 }
-.action_bar .expression_form {
-	display: inline;
-}
 .action_bar li.menuitem { 
 	margin-left: 0.5em;
 	display: inline;
@@ -477,6 +475,8 @@ li.notification_message {
     border: 0; 
     padding: 0;
     cursor: pointer;
+    color: #054265;
+	text-decoration: underline;
 }
 
 

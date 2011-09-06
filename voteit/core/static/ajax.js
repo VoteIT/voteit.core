@@ -42,11 +42,12 @@ $(document).ready(function() {
             tag = $form.find('input[name="tag"]').val(),
             _do = $form.find('input[name="do"]').val(),
             display_name = $form.find('input[name="display_name"]').val(),
+            expl_display_name = $form.find('input[name="expl_display_name"]').val(),
             url = $form.attr('action'),
             id = $form.parent().attr('id');
 
         /* Send the data using post and put the results in a div */
-        $.post(url, {'tag': tag, 'do': _do, 'display_name': display_name},
+        $.post(url, {'tag': tag, 'do': _do, 'display_name': display_name, 'expl_display_name':expl_display_name},
           function(data) {
               $("#"+id).html(data);
           }

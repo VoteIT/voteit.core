@@ -1,4 +1,5 @@
 import re
+
 from pyramid.security import authenticated_userid
 from pyramid.exceptions import Forbidden
 from pyramid.view import view_config
@@ -6,6 +7,7 @@ from pyramid.url import resource_url
 from webob.exc import HTTPFound
 from pyramid.renderers import render
 from pyramid.response import Response
+from pyramid.i18n import get_localizer
 
 from voteit.core import VoteITMF as _
 from voteit.core.models.interfaces import IBaseContent
@@ -16,13 +18,13 @@ from voteit.core.models.expression import Expressions
 TAG_PATTERN = re.compile(r'^[a-zA-Z]{1,10}$')
 
 
-
 class ExpressionsView(object):
 
     def __init__(self, request):
         self.request = request
         self.sql_session = request.registry.getUtility(ISQLSession)()
         self.expressions = Expressions(self.sql_session)
+        self.localizer = get_localizer(request)
 
     @view_config(name="_set_expression", context=IBaseContent)
     def set_expression(self):
@@ -53,15 +55,14 @@ class ExpressionsView(object):
             self.expressions.remove(tag, userid, context.uid)
             
         display_name = request.POST.get('display_name')
-        if display_name == '':
-            display_name = None
+        expl_display_name = request.POST.get('expl_display_name')
     
         if not request.is_xhr:
             return HTTPFound(location=resource_url(context, request))
         else:
-            return Response(self.get_expressions(context, tag, userid, display_name))
+            return Response(self.get_expressions(context, tag, userid, display_name, expl_display_name))
 
-    def get_expressions(self, context, tag, userid, display_name):
+    def get_expressions(self, context, tag, userid, display_name, expl_display_name):
         userids = list(self.expressions.retrieve_userids(tag, context.uid))
 
         response = {}
@@ -71,20 +72,21 @@ class ExpressionsView(object):
         response['display_name'] = display_name
         
         if userid and userid in userids:
-            response['button_txt'] = "%s %s" % (_(u"Remove"), display_name)
+            #Note: It's not possible to have nested translation strings. Hence this
+            response['button_label'] = _(u"Remove ${display_name}",
+                                         mapping={'display_name':self.localizer.translate(display_name)})
             response['selected'] = True
             response['do'] = "0"
             userids.remove(userid)
         else:
-            response['button_txt'] = "%s" % display_name
+            response['button_label'] = display_name
             response['selected'] = False
             response['do'] = "1"
         
-        response['over_limit'] = 0
-        limit = 5
-        if len(userids) > limit:
-            response['over_limit'] = len(userids) - limit            
-        response['userids'] = userids[:limit]
+        response['has_entries'] = bool(response['selected'] or userids)
+        response['userids'] = userids
+        #This label is for after the listing, could be "4 people like this"
+        response['expl_display_name'] = expl_display_name
         
         return render('templates/macros/expressions.pt', response, request=self.request)
         

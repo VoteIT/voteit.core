@@ -26,7 +26,7 @@ class AgendaItemView(BaseView):
         """ """
 
         self.response['get_discussions'] = self.get_discussions
-        self.response['proposals'] = self.context.get_content(iface=IProposal, sort_on='created')
+        self.response['get_proposals'] = self.get_proposals
         self.response['polls'] = self.api.get_restricted_content(self.context, iface=IPoll, sort_on='created')
         
         ci = self.api.content_info
@@ -92,6 +92,15 @@ class AgendaItemView(BaseView):
         self.response['discussion_form'] = discussion_form.render()
 
         return self.response
+
+    def get_proposals(self):
+        response = {}
+        response['proposals'] = self.context.get_content(iface=IProposal, sort_on='created')
+        response['like'] = _(u"Like")
+        response['like_this'] = _(u"like this")
+        response['api'] = self.api
+        
+        return render('templates/proposals.pt', response, request=self.request)
         
     def get_discussions(self):
         """ Get discussions for a specific context """
@@ -108,7 +117,9 @@ class AgendaItemView(BaseView):
             response['over_limit'] = len(discussions) - limit
         else:
             response['over_limit'] = 0
-            
+        
+        response['like'] = _(u"Like")
+        response['like_this'] = _(u"like this")
         response['api'] = self.api
         
         return render('templates/discussions.pt', response, request=self.request)
