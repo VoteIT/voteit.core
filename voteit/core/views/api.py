@@ -184,7 +184,10 @@ class APIView(object):
         return render('templates/action_bar.pt', response, request=request)
 
     def get_global_actions(self, context, request):
-        return render('templates/global_actions.pt', {'api':self}, request=request)
+        response = {}
+        response['api'] = self
+        response['meeting_time'] = self.dt_util.dt_format(self.dt_util.utcnow())
+        return render('templates/global_actions.pt', response, request=request)
 
     def get_meeting_actions(self, context, request):
         return render('templates/meeting_actions.pt', {'api':self}, request=request)

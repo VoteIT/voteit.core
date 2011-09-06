@@ -122,7 +122,7 @@ a {
 	overflow: hidden;
 }
 #logo-meeting-wrapper a,
-#global-actions a{
+#global-actions a {
     color: #fff;
 }
 #logo-space {
@@ -172,6 +172,9 @@ a {
 #global-actions-menu li {
     float: left;
     margin-right: 10px;
+}
+#global-actions-menu .meeting_time {
+    background: url(images/gfx_time_head.png) no-repeat 0 0;
 }
 #global-actions-menu .user {
 	background: url(images/gfx_user.png) no-repeat 0 0;

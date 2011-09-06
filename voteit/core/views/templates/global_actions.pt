@@ -1,6 +1,12 @@
 <tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core">
 
 <ul id="global-actions-menu">
+	
+	<li><a class="meeting_time icon"
+	       tal:content="meeting_time"
+		   title="The time that the server think it is. If this is wrong, you need to change the server time."
+		   i18n:attributes="title">1999</a></li>
+	
     <tal:authenticated condition="api.userid">
         <li><a tal:attributes="href api.user_profile_url"
                tal:content="api.user_profile.title"
