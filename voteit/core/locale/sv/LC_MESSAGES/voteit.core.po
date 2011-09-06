@@ -874,7 +874,7 @@ msgstr "Bara yrkanden i tillståndet 'Publicerad' kan väljas här."
 #: ./views/templates/user.pt:20
 #. Default: "The image above comes from the <a href=\"http://www.gravatar.com\" target=\"_blank\">Gravatar network</a>. It's taken from your current email address. If you want to change the picture, simply go to the Gravatar site and change your picture for the email you use in VoteIT."
 msgid "profile_gravatar_explanation"
-msgstr "Bilden ovan kommer från <a href=\"http://www.gravatar.com\" target=\"_blank\">Gravatar</a>. Den är taken från din epostadress. Om du vill ändra bild, gå till Gravatar och ändra bild för den epostadress du använder i VoteIT."
+msgstr "Bilden ovan kommer från <a href=\"http://www.gravatar.com\" target=\"_blank\">Gravatar</a>. Den är tagen från din epostadress. Om du vill ändra bild, gå till Gravatar och ändra bild för den epostadress du använder i VoteIT."
 
 #: ./models/poll.py:191
 #. do this manually.
