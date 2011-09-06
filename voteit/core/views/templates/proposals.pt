@@ -1,3 +1,5 @@
+<tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core">
+
 <tal:iterate condition="proposals" repeat="proposal proposals" >
     <div tal:define="unread api.is_unread(proposal, True)"
          tal:attributes="class unread and 'unread listing_block' or 'listing_block'">
@@ -25,3 +27,4 @@
     </div>
     
 </tal:iterate>
+</tal:main>
