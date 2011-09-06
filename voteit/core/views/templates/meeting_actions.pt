@@ -1,11 +1,13 @@
 <tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core">
 
 <ul id="meeting-actions-menu">
+	<!-- FIXME: Not properly implemented yet
     <li class="tab" tal:condition="api.meeting">
         <a tal:attributes="href '%ssearch' % api.resource_url(api.meeting, request)"
            class="menu_header"
            i18n:translate="">Meeting search</a>
     </li>
+	-->
 
     <tal:administrator condition="api.userid">
         <!-- Administrator actions -->
