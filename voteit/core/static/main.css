@@ -306,11 +306,6 @@ a {
     line-height: 1.5em;
 }
 
-#page_heading .action_menu {
-    float: right;
-}
-
-
 /* Action bar class */
 .action_bar {
     clear: both;
