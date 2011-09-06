@@ -21,7 +21,9 @@
 	            <li>
 	                <a tal:attributes="href api.resource_url(agenda_item, request)">
 	                    <div tal:content="agenda_item.title">Title</div>
+						<!-- FIXME: Show start and close times for polls instead
 	                    <div tal:content="structure api.get_time_info(agenda_item, request)">start time and end time macro</div>
+						-->
 	                    <div tal:content="agenda_item.get_field_value('summary')">Summary</div>
 	                </a>
 	            </li>
