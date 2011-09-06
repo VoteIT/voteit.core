@@ -94,7 +94,6 @@
                     
                         <div tal:replace="structure api.get_time_info(context, request)">start time and end time macro</div>
 
-
 	                    <span metal:define-slot="action_menu"
 	                         tal:condition="not form|api.context_has_permission('Moderate Meeting', context)"
 	                         tal:content="structure api.get_moderator_actions(context, request)">Cogwheel menu</span>

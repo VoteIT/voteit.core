@@ -83,6 +83,10 @@ class APIView(object):
     def show_moderator_actions(self):
         return self.context_has_permission(security.MODERATE_MEETING, self.meeting)
 
+    @reify
+    def unreads(self):
+        return Unreads(self.sql_session)
+
     def logo_link(self):
         if self.meeting:
             return resource_url(self.meeting, self.request)
@@ -253,26 +257,21 @@ class APIView(object):
         return effective_principals
         
     def get_unread(self, context, content_type=None):
-        unreads = Unreads(self.sql_session)
         contents = context.get_content(content_type=content_type)
         unread_count = 0
         for content in contents:
-            if len(unreads.retrieve(self.userid, content.uid)) > 0:
+            if len(self.unreads.retrieve(self.userid, content.uid)) > 0:
                 unread_count = unread_count+1
-            
         return unread_count
         
     def is_unread(self, context, mark=False):
-        unreads = Unreads(self.sql_session)
-        unread_items = unreads.retrieve(self.userid, context.uid)
+        unread_items = self.unreads.retrieve(self.userid, context.uid)
         if unread_items:
             # there should only be one anyways
             for unread_item in unread_items:
                 if mark and not unread_item.persistent:
-                    unreads.remove(self.userid, context.uid)
-            
+                    self.unreads.remove(self.userid, context.uid)
             return True
-            
         return False
         
     def get_restricted_content(self, context, content_type=None, iface=None, states=None, sort_on=None, sort_reverse=False):

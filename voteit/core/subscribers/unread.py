@@ -15,6 +15,7 @@ from voteit.core.models.interfaces import IDiscussionPost
 from voteit.core.models.interfaces import ISQLSession
 from voteit.core.models.interfaces import IMessage
 from voteit.core.models.unread import Unreads
+from voteit.core.interfaces import IWorkflowStateChange
 
 
 @subscriber([IMeeting, IObjectAddedEvent])
@@ -22,6 +23,7 @@ from voteit.core.models.unread import Unreads
 @subscriber([IProposal, IObjectAddedEvent])
 @subscriber([IPoll, IObjectAddedEvent])
 @subscriber([IDiscussionPost, IObjectAddedEvent])
+@subscriber([IPoll, IWorkflowStateChange])
 def unread_content_added(obj, event):
     session = getUtility(ISQLSession)()
     unreads = Unreads(session)

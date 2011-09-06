@@ -247,19 +247,23 @@ a {
     font-weight: bold;
 }
 
-#navigation .discussions {
-	width: 70px;
-	float: left;
-	padding: 3px 0 3px 35px;
-    background: url(images/gfx_disk_lb.png) no-repeat 0 3px;
+#navigation .cinfo {
+    width: 40px;
+    float: left;
+    padding: 3px 0 3px 35px;
 	height: 15px;
 }
+#navigation .discussions {
+    background: url(images/gfx_disk_lb.png) no-repeat 0 3px;
+}
 #navigation .proposals {
-    width: 70px;
-	float: left;
-    padding: 3px 0 3px 35px;
     background: url(images/gfx_prop_lb.png) no-repeat 0 3px;
-    height: 15px;
+}
+#navigation .polls {
+    background: url(images/gfx_star_db.png) no-repeat 0 3px;
+}
+#navigation .ai_info {
+	clear: both;
 }
 
 #navigation #add_menu {
