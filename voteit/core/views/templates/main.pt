@@ -99,8 +99,9 @@
                         <tal:state define="state_id context.get_workflow_state()|False">
                             <div tal:condition="state_id">
                                 <span i18n:translate="">State</span>:
-                                <strong tal:attributes="class 'wf-state-%s' % state_id"
-                                      tal:content="state_id">private</strong>
+					            <strong tal:attributes="class 'wf-state-%s' % state_id"
+					                    tal:content="api.translate(context.current_state_title(request))">private</strong>
+
                             </div>
                         </tal:state>
                         <tal:creators tal:replace="structure api.get_creators_info(context.creators, request)">Creators</tal:creators>

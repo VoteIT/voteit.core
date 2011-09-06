@@ -16,14 +16,22 @@
         <tal:creators tal:replace="structure api.get_creators_info(post.creators, request)">Creators</tal:creators>
         
         <span class="body" tal:content="structure post.get_field_value('text')">text</span>
-		
-		<div class="entry_info">
-			<span tal:content="api.dt_util.dt_format(post.created)">1 hour ago</span>
-		</div>
 
-        <div tal:replace="structure api.get_action_bar(post, request)">Action bar</div>
-		
-        <div class="expressions" tal:content="structure api.expressions.get_expressions(post, 'support', api.userid, like, like_this)"></div>
+        <div class="meta">
+	        <span tal:condition="api.show_moderator_actions" tal:replace="structure api.get_moderator_actions(post, request)">
+	             Cogwheel menu
+	        </span>
+	
+	        <span class="time" tal:content="api.get_time_created(post)"></span>
+	
+	        <span tal:condition="not api.show_moderator_actions and api.context_has_permission('Delete', post)">
+	        	<a class="delete"
+		           tal:attributes="href api.resource_url(context, request) + '@@delete'"
+		           i18n:translate="">Delete</a>
+	        </span>
+			
+	        <span class="expressions" tal:content="structure api.expressions.get_expressions(post, 'support', api.userid, like, like_this)"></span>
+		</div>
         <div class="clear"><!-- --></div>
     </div>
 

@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2011-09-06 11:42+0000\n"
+"POT-Creation-Date: 2011-09-06 13:42+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -49,6 +49,12 @@ msgstr ""
 msgid "About you"
 msgstr ""
 
+#. Default: "Active"
+#: ./workflows/agenda_item.xml
+#: ./workflows/meeting.xml
+msgid "Active"
+msgstr ""
+
 #. Default: "Add"
 #: ./views/templates/action_bar.pt:111
 msgid "Add"
@@ -83,6 +89,11 @@ msgstr ""
 
 #: ./models/agenda_item.py:52
 msgid "Agenda item"
+msgstr ""
+
+#. Default: "Approved"
+#: ./workflows/proposal.xml
+msgid "Approved"
 msgstr ""
 
 #: ./views/base_edit.py:171
@@ -138,6 +149,13 @@ msgstr ""
 msgid "Click the link to access this VoteIT meeting:"
 msgstr ""
 
+#. Default: "Closed"
+#: ./workflows/agenda_item.xml
+#: ./workflows/invite_ticket.xml
+#: ./workflows/meeting.xml
+msgid "Closed"
+msgstr ""
+
 #. Default: "Content"
 #: ./views/templates/action_bar.pt:107
 msgid "Content"
@@ -168,6 +186,11 @@ msgstr ""
 
 #: ./views/base_edit.py:160
 msgid "Deleted"
+msgstr ""
+
+#. Default: "Denied"
+#: ./workflows/proposal.xml
+msgid "Denied"
 msgstr ""
 
 #: ./models/agenda_item.py:119
@@ -265,6 +288,12 @@ msgstr ""
 msgid "Have an account already?"
 msgstr ""
 
+#. Default: "Inactive"
+#: ./workflows/agenda_item.xml
+#: ./workflows/meeting.xml
+msgid "Inactive"
+msgstr ""
+
 #: ./models/invite_ticket.py:107
 msgid "Invalid email address."
 msgstr ""
@@ -288,6 +317,11 @@ msgstr ""
 
 #: ./views/agenda_item.py:99
 msgid "Like"
+msgstr ""
+
+#. Default: "Locked for voting"
+#: ./workflows/proposal.xml
+msgid "Locked for voting"
 msgstr ""
 
 #. Default: "Login"
@@ -382,6 +416,16 @@ msgstr ""
 msgid "OK"
 msgstr ""
 
+#. Default: "Ongoing"
+#: ./workflows/poll.xml
+msgid "Ongoing"
+msgstr ""
+
+#. Default: "Open"
+#: ./workflows/invite_ticket.xml
+msgid "Open"
+msgstr ""
+
 #: ./security.py:58
 msgid "Participant"
 msgstr ""
@@ -401,6 +445,11 @@ msgstr ""
 
 #: ./views/users.py:158
 msgid "Password set. You may login now."
+msgstr ""
+
+#. Default: "Planned"
+#: ./workflows/poll.xml
+msgid "Planned"
 msgstr ""
 
 #: ./models/poll.py:64
@@ -431,6 +480,12 @@ msgstr ""
 msgid "Poll(s)"
 msgstr ""
 
+#. Default: "Private"
+#: ./workflows/agenda_item.xml
+#: ./workflows/poll.xml
+msgid "Private"
+msgstr ""
+
 #: ./models/proposal.py:57
 msgid "Proposal"
 msgstr ""
@@ -442,6 +497,11 @@ msgstr ""
 
 #: ./models/poll.py:284
 msgid "Proposals"
+msgstr ""
+
+#. Default: "Published"
+#: ./workflows/proposal.xml
+msgid "Published"
 msgstr ""
 
 #. Default: "Register"
@@ -463,7 +523,7 @@ msgstr ""
 msgid "Remember that you need to click this link to gain access to the meeting you're invited to."
 msgstr ""
 
-#: ./views/expressions.py:74
+#: ./views/expressions.py:76
 msgid "Remove ${display_name}"
 msgstr ""
 
@@ -478,6 +538,11 @@ msgstr ""
 #. Default: "Retract"
 #: ./views/templates/action_bar.pt:60
 msgid "Retract"
+msgstr ""
+
+#. Default: "Retracted"
+#: ./workflows/proposal.xml
+msgid "Retracted"
 msgstr ""
 
 #: ./models/invite_ticket.py:134
@@ -598,6 +663,11 @@ msgstr ""
 
 #: ./validators.py:14
 msgid "Too short. At least 6 chars required."
+msgstr ""
+
+#. Default: "Unhandled"
+#: ./workflows/proposal.xml
+msgid "Unhandled"
 msgstr ""
 
 #. Default: "Unread"

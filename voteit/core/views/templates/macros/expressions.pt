@@ -1,4 +1,4 @@
-<div tal:attributes="id 'expression_form_'+context_id;"
+<span tal:attributes="id 'expression_form_'+context_id;"
      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
      i18n:domain="voteit.core">
 
@@ -24,4 +24,4 @@
 		)
 	</tal:has_entries>
 	
-</div>
+</span>

@@ -8,11 +8,19 @@
         <div tal:define="state_id proposal.get_workflow_state()">
             <span i18n:translate="">State</span>:
             <strong tal:attributes="class 'wf-state-%s' % state_id"
-                  tal:content="state_id">private</strong>
+                    tal:content="api.translate(proposal.current_state_title(request))">private</strong>
         </div>
-        <span class="time" tal:content="api.get_time_created(context)"></span>
-        <div tal:replace="structure api.get_action_bar(proposal, request)">Action bar</div>
-        <span class="expressions" tal:content="structure api.expressions.get_expressions(proposal, 'like', api.userid, like, like_this)"></span>
+
+        <div class="meta">
+	        <span tal:condition="api.show_moderator_actions" tal:replace="structure api.get_moderator_actions(proposal, request)">
+	             Cogwheel menu
+	        </span>
+	
+	        <span class="time" tal:content="api.get_time_created(proposal)"></span>
+			
+	        <span class="expressions" tal:content="structure api.expressions.get_expressions(proposal, 'like', api.userid, like, like_this)"></span>
+		</div>
+		
         <div class="clear"><!-- --></div>
     </div>
     

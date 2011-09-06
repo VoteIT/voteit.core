@@ -79,6 +79,10 @@ class APIView(object):
         
         self.locale = get_locale_name(request)
 
+    @reify
+    def show_moderator_actions(self):
+        return self.context_has_permission(security.MODERATE_MEETING, self.meeting)
+
     def logo_link(self):
         if self.meeting:
             return resource_url(self.meeting, self.request)

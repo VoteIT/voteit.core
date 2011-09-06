@@ -54,4 +54,9 @@ class WorkflowAwareTests(unittest.TestCase):
         self.assertEqual(event_obj, obj)
         self.assertTrue(IWorkflowStateChange.providedBy(event))
         
-        
+    def test_current_state_title(self):
+        obj = self._make_obj()
+        request = testing.DummyRequest()
+        self.assertEqual(obj.current_state_title(request), u'Private')
+        obj.set_workflow_state(request, 'inactive')
+        self.assertEqual(obj.current_state_title(request), u'Inactive')

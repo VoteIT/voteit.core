@@ -564,7 +564,17 @@ ui-dialog {
     background: #054265;
 }
 
+/* listing */
+.creators img {
+	margin: 0px 5px 5px 0px;
+}
+.meta {
+    clear: both;
+	color: #666;
+}
+
 /* minimize */
 .toggle_minimize {
     cursor: pointer;
 }
+
