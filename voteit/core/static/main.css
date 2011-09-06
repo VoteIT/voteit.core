@@ -507,9 +507,6 @@ li.notification_message {
     color: #ccc;
     display: block;
 }
-#polls #add_poll {
-    float: right;
-}
 
 /* proposals */
 #proposals .creators img {

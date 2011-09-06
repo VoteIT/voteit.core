@@ -12,7 +12,7 @@
             <div id="add_poll" tal:condition="api.show_moderator_actions and api.context_has_permission('Add Poll', context)">
                 <a class="buttonize" tal:attributes="href api.resource_url(context, request) + '@@add?content_type=Poll'"><span i18n:translate="">Add poll</span></a>
             </div>
-            <h2><span i18n:translate="">Poll(s)</span>
+            <h2 tal:condition="polls"><span i18n:translate="">Poll(s)</span>
                 <!-- FIXME: this is just a dummy for showing the feature -->
                 <a tal:attributes="id string:help_${context.uid};" href="@@help?article=dummy" target="_blank" class="help">?</a>
             </h2>
@@ -50,9 +50,6 @@
                     <div tal:condition="poll_forms[poll.uid]|False" tal:content="structure poll_forms[poll.uid]"></div>
                 </div>
             </tal:iterate>
-            <tal:no_polls condition="not polls">
-                <h3 i18n:translate="">No polls yet</h3>
-            </tal:no_polls>
         </div> <!-- polls -->
     </div> <!-- top_content -->
         
