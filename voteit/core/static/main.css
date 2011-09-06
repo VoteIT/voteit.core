@@ -375,13 +375,6 @@ a {
     border-color: #75ad0a;
     background-color: rgb(207,249,159);
 }
-/* Hover class added when you hover the message. It needs to express that you can click to remove it */
-#flash_messages .close_message {
-	position: absolute;
-	left: 420px;
-	bottom: 0px;
-    border-color: black;
-}
 
 div.unread.listing_block {
     border-left: solid 1px black;
