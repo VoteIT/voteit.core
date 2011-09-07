@@ -356,6 +356,19 @@ a {
 .wf-state-voting {}
 .wf-state-ongoing {}
 
+#proposals .wf-state {
+	padding-left: 20px;
+}
+.wf-state-published .wf-state { background: url(icons/icon_doc.png) no-repeat; }
+.wf-state-retracted .wf-state { background: url(icons/icon_doc_retracted.png) no-repeat; }
+.wf-state-unhandled .wf-state { background: url(icons/icon_doc.png) no-repeat; } /*FIXME: Icon */
+.wf-state-voting .wf-state { background: url(icons/icon_lock.png) no-repeat; }
+.wf-state-approved .wf-state { background: url(icons/icon_approved.png) no-repeat; }
+.wf-state-denied .wf-state { background: url(icons/icon_denied.png) no-repeat; }
+
+
+
+
 /* Flash messages */
 #flash_messages {
 	clear: both;
