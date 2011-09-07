@@ -11,8 +11,8 @@
     <tal:root condition="not api.meeting">
     <div class="block">
     <div id="add_menu" tal:condition="api.context_has_permission('Add Meeting', api.root)">
-        <a tal:attributes="href api.resource_url(api.root, request) + '@@add?content_type=Meeting'">
-        	<img src="${request.application_url}/static/images/plus.png" alt="Add meeting" title="Add meeting" i18n:attributes="alt title" />
+        <a class="add_button" tal:attributes="href api.resource_url(api.root, request) + '@@add?content_type=Meeting'">
+        	<img src="${request.application_url}/static/icons/icon_add.png" alt="Add meeting" title="Add meeting" i18n:attributes="alt title" />
 		</a>
     </div>
     <h5 class="header" i18n:translate="">Available meetings</h5>
@@ -35,7 +35,10 @@
         <div class="block">
         <div id="add_menu" tal:condition="is_moderator">
             <a tal:attributes="href api.resource_url(api.meeting, request) + '@@add?content_type=AgendaItem'">
-            	<img src="${request.application_url}/static/images/plus.png" alt="Add agenda item" title="Add agenda item" i18n:attributes="alt title" />
+            	<img src="${request.application_url}/static/icons/icon_add.png"
+				     alt="Add agenda item"
+					 title="Add agenda item"
+					 i18n:attributes="alt title" />
 			</a>
         </div>
         <h5 class="header" i18n:translate="">

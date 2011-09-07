@@ -158,6 +158,28 @@ a {
     background: url(images/meetingmenu_bg_opacity30.png) repeat;
 }
 
+/* State icons */
+#navigation h6 span,
+#meeting_overview h4 span {
+    padding-left: 20px;
+}
+#navigation h6.closed span,
+#meeting_overview h4.closed span {
+    background: url(icons/icon_past.png) no-repeat;
+}
+#navigation h6.active span,
+#meeting_overview h4.active span {
+    background: url(icons/icon_ongoing.png) no-repeat;
+}
+#navigation h6.inactive span,
+#meeting_overview h4.inactive span {
+    background: url(icons/icon_upcoming.png) no-repeat;
+}
+#navigation h6.private span {
+    background: url(icons/icon_upcoming_red.png) no-repeat;
+}
+/* End state icons */
+
 /* Action areas in #header */
 #global-actions-menu {
 	float: right;
@@ -167,20 +189,21 @@ a {
 
 }
 #global-actions-menu .icon {
-	padding-left: 15px;
+	padding-left: 20px;
 }
 #global-actions-menu li {
     float: left;
     margin-right: 10px;
+	margin-left: 20px;
 }
 #global-actions-menu .meeting_time {
-    background: url(images/gfx_time_head.png) no-repeat 0 0;
+    background: url(icons/icon_clock_white.png) no-repeat 0 0;
 }
 #global-actions-menu .user {
-	background: url(images/gfx_user.png) no-repeat 0 0;
+	background: url(icons/icon_user.png) no-repeat 0 0;
 }
 #global-actions-menu .logout {
-    background: url(images/gfx_logout.png) no-repeat 0 0;
+    background: url(icons/icon_close_white.png) no-repeat 0 0;
 }
 
 #meeting-actions-menu {
@@ -217,21 +240,9 @@ a {
     font-weight: normal;
 }
 #navigation h6 {
-    font-size: 14px;
+    font-size: 16px;
     font-weight: bold;
     border-bottom: 1px solid #86A3B4;
-}
-#navigation h6 span {
-    padding-left: 20px;
-}
-#navigation h6.closed span {
-    background: url(images/iconset.png) no-repeat 0px -49px;
-}
-#navigation h6.active span {
-    background: url(images/iconset.png) no-repeat 0px -67px;
-}
-#navigation h6.inactive span {
-    background: url(images/iconset.png) no-repeat 0px -85px;
 }
 #navigation .selected {
 	margin-right: -20px;
@@ -420,35 +431,22 @@ li.notification_message {
     border-bottom: 1px solid #86A3B4;
 }
 .toggle_opened .toggle_minimize {
-    background: url(images/arrow_up_light.png) no-repeat top right;
+    background: url(icons/icon_arrow_up_lb.png) no-repeat top right;
 }
 .toggle_opened .toggle_minimize:hover {
-    background-image: url(images/arrow_up_dark.png);
+    background-image: url(icons/icon_arrow_up.png);
 }
 .toggle_closed .toggle_minimize {
-    background: url(images/arrow_down_light.png) no-repeat top right;
+    background: url(icons/icon_arrow_down_lb.png) no-repeat top right;
 }
 .toggle_closed .toggle_minimize:hover {
-    background-image: url(images/arrow_down_dark.png);
+    background-image: url(icons/icon_arrow_down.png);
 }
 .toggle_area.toggle_closed .minimizable_area {
 	display: none !important;
 }
 .toggle_area.toggle_opened .minimizable_inverted {
 	display: none !important;
-}
-
-#meeting_overview h4 span {
-    padding-left: 20px;
-}
-#meeting_overview h4.closed span {
-    background: url(images/iconset.png) no-repeat 0px -49px;
-}
-#meeting_overview h4.active span {
-    background: url(images/iconset.png) no-repeat 0px -67px;
-}
-#meeting_overview h4.inactive span {
-    background: url(images/iconset.png) no-repeat 0px -85px;
 }
 #meeting_overview ul li {
     margin-top: 5px;
@@ -558,6 +556,16 @@ ui-dialog {
     background: #054265;
 }
 
+.cogwheel {
+	width: 1px;
+	padding-right: 15px;
+	height: 1px;
+	padding-bottom: 15px;
+	background: url(icons/icon_settings_lb.png) no-repeat;
+}
+.cogwheel:hover {
+	background-image: url(icons/icon_settings.png);
+}
 /* listing */
 .creators img {
 	margin: 0px 5px 5px 0px;
