@@ -10,7 +10,6 @@
         <span class="body" tal:content="structure proposal.title">Title</span>
         
         <div>
-            <span i18n:translate="">State</span>:
             <strong class="wf-state"
 			        tal:content="api.translate(proposal.current_state_title(request))">private</strong>
         </div>

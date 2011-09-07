@@ -366,9 +366,6 @@ a {
 .wf-state-approved .wf-state { background: url(icons/icon_approved.png) no-repeat; }
 .wf-state-denied .wf-state { background: url(icons/icon_denied.png) no-repeat; }
 
-
-
-
 /* Flash messages */
 #flash_messages {
 	clear: both;
