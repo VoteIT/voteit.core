@@ -376,7 +376,9 @@ a {
 }
 
 div.unread.listing_block {
-    border-left: solid 1px black;
+	margin-left: -5px;
+	padding-left: 5px;
+    border-left: solid 2px #054265;
 }
 
 /* Notification messages */
@@ -507,6 +509,10 @@ li.notification_message {
 /* proposals */
 #proposals .creators img {
     float: left;
+}
+
+#proposals .wf-state-retracted .body {
+	text-decoration: line-through;
 }
 
 /* discussions */

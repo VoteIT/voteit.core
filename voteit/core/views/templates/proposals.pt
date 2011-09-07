@@ -1,16 +1,18 @@
 <tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core">
 
 <tal:iterate condition="proposals" repeat="proposal proposals" >
-    <div tal:define="unread api.is_unread(proposal, True)"
-         tal:attributes="class unread and 'unread listing_block' or 'listing_block'">
+    <div tal:define="unread api.is_unread(proposal, True);
+	                 state_id proposal.get_workflow_state();
+					 css_class 'listing_block wf-state-%s' % state_id;"
+         tal:attributes="class unread and 'unread %s' % css_class or css_class">
         <tal:creators tal:replace="structure api.get_creators_info(proposal.creators, request)">Creators</tal:creators>
         <span i18n:translate="">propose</span>:
         <span class="body" tal:content="structure proposal.title">Title</span>
         
-        <div tal:define="state_id proposal.get_workflow_state()">
+        <div>
             <span i18n:translate="">State</span>:
-            <strong tal:attributes="class 'wf-state-%s' % state_id"
-                    tal:content="api.translate(proposal.current_state_title(request))">private</strong>
+            <strong class="wf-state"
+			        tal:content="api.translate(proposal.current_state_title(request))">private</strong>
         </div>
 
         <div class="meta">
