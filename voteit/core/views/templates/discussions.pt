@@ -23,10 +23,10 @@
 	        </span>
 	
 	        <span class="time" tal:content="api.get_time_created(post)"></span>
-	
+		
 	        <span tal:condition="not api.show_moderator_actions and api.context_has_permission('Delete', post)">
 	        	<a class="delete"
-		           tal:attributes="href api.resource_url(context, request) + '@@delete'"
+		           tal:attributes="href api.resource_url(post, request) + '@@delete'"
 		           i18n:translate="">Delete</a>
 	        </span>
 			
