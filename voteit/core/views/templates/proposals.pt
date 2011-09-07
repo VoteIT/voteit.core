@@ -8,17 +8,15 @@
         <tal:creators tal:replace="structure api.get_creators_info(proposal.creators, request)">Creators</tal:creators>
         <span i18n:translate="">propose</span>:
         <span class="body" tal:content="structure proposal.title">Title</span>
-        
-        <div>
-            <strong class="wf-state"
-			        tal:content="api.translate(proposal.current_state_title(request))">private</strong>
-        </div>
 
         <div class="meta">
 	        <span tal:condition="api.show_moderator_actions" tal:replace="structure api.get_moderator_actions(proposal, request)">
 	             Cogwheel menu
 	        </span>
-	
+
+            <strong class="wf-state"
+                    tal:content="api.translate(proposal.current_state_title(request))">private</strong>
+
 	        <span class="time" tal:content="api.get_time_created(proposal)"></span>
 			
 	        <span class="expressions" tal:content="structure api.expressions.get_expressions(proposal, 'like', api.userid, like, like_this)"></span>
