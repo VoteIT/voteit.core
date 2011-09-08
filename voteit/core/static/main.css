@@ -674,7 +674,7 @@ table.listing > tbody > tr.odd > td {
 	background: #dbe0e5;
 }
 table.listing > tbody > tr.even > td {
-	background: #86A3B4;
+	background: #fff;
 }
 
 .yes_icon {
