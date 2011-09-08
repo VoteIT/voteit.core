@@ -30,10 +30,29 @@ class MeetingView(BaseView):
             url = self.api.resource_url(self.api.root, self.request)
             return HTTPFound(location = url)
         
-        
-        self.response['get_state_ais'] = self._get_state_ais
         self.response['check_section_closed'] = self._is_section_closed
         self.response['section_overview_macro'] = self.section_overview_macro
+        
+        states = ('active', 'inactive', 'closed')
+        over_limit = {}
+        agenda_items = {}
+        for state in states:
+            if 'log_'+state in self.request.GET and self.request.GET['log_'+state] == 'all':
+                limit = 0
+            else:
+                limit = 5
+            ais = self.context.get_content(iface=IAgendaItem, states=state, sort_on='agenda_item_id')
+            if limit and len(ais) > limit:
+                #Over limit
+                over_limit[state] = len(ais) - limit
+                agenda_items[state] = ais[-limit:] #Only the 5 last entries
+            else:
+                #Not over limit
+                over_limit[state] = 0
+                agenda_items[state] = ais
+        
+        self.response['agenda_items'] = agenda_items
+        self.response['over_limit'] = over_limit
         
         return self.response
     
@@ -41,12 +60,6 @@ class MeetingView(BaseView):
     def section_overview_macro(self):
         return get_renderer('templates/macros/meeting_overview_section.pt').implementation().macros['main']
 
-    def _get_state_ais(self, state):
-        limit = 5
-        if 'log_'+state in self.request.GET and self.request.GET['log_'+state] == 'all':
-            limit=None
-        return self.context.get_content(iface=IAgendaItem, states=state, sort_on='agenda_item_id', limit=limit)
-        
     def _is_section_closed(self, section):
         return self.request.cookies.get(section, None)
 
