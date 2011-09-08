@@ -7,7 +7,11 @@
 	  i18n:domain="voteit.core">
 <body>
 <div metal:fill-slot="content">
-
+	<div class="content_wrapper">
+        <div class="description"
+		     tal:condition="context.description"
+			 tal:content="structure api.nl2br(context.description)">Description</div>
+    </div>
 </div>
 </body>
 </html>

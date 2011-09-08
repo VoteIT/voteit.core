@@ -112,6 +112,11 @@ def index_object(catalog, obj):
 def reindex_object(catalog, obj):
     """ Reindex an object and update metadata. """
     obj_id = catalog.document_map.docid_for_address(resource_path(obj))
+    if obj_id is None:
+        #This is a special case when an object that isn't indexed tries to be reindexed
+        index_object(catalog, obj) #Do reindex instead
+        return
+
     catalog.reindex_doc(obj_id, obj)
 
     #Add metadata
