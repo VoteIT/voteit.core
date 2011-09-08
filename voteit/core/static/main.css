@@ -458,7 +458,7 @@ li.notification_message {
 .toggle_area.toggle_opened .minimizable_inverted {
 	display: none !important;
 }
-#meeting_overview ul li {
+#meeting_overview ul.ai_list > li {
     margin-top: 5px;
     border-bottom: #ccc 1px solid;
 }
@@ -592,4 +592,3 @@ ui-dialog {
 .toggle_minimize {
     cursor: pointer;
 }
-

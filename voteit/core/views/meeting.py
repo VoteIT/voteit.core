@@ -12,6 +12,7 @@ from voteit.core import security
 from voteit.core import VoteITMF as _
 from voteit.core.views.base_view import BaseView
 from voteit.core.models.interfaces import IAgendaItem
+from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.schemas import add_csrf_token, button_add, button_cancel,\
     button_resend, button_delete
@@ -41,7 +42,7 @@ class MeetingView(BaseView):
                 limit = 0
             else:
                 limit = 5
-            ais = self.context.get_content(iface=IAgendaItem, states=state, sort_on='agenda_item_id')
+            ais = self.context.get_content(iface=IAgendaItem, states=state, sort_on='start_time')
             if limit and len(ais) > limit:
                 #Over limit
                 over_limit[state] = len(ais) - limit
@@ -53,9 +54,13 @@ class MeetingView(BaseView):
         
         self.response['agenda_items'] = agenda_items
         self.response['over_limit'] = over_limit
+        self.response['get_polls'] = self._get_polls
         
         return self.response
-    
+
+    def _get_polls(self, agenda_item):
+        return agenda_item.get_content(iface=IPoll, states=('planned', 'ongoing', 'closed'), sort_on='start_time')
+
     @property
     def section_overview_macro(self):
         return get_renderer('templates/macros/meeting_overview_section.pt').implementation().macros['main']
