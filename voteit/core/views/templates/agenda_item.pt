@@ -57,7 +57,10 @@
                 
             <div tal:replace="structure get_discussions()">Discussion listing</div>
 
-            <div tal:condition="discussion_form|False" tal:replace="structure discussion_form">Discussion form</div>
+            <div class="discussion_form" tal:condition="discussion_form|False">
+                <tal:creators tal:replace="structure api.get_creators_info((api.userid, ), request)">Creators</tal:creators>
+                <span tal:replace="structure discussion_form">Discussion form</span>
+            </div>
         </div>
     </div> <!-- right_content -->
 
@@ -67,7 +70,11 @@
 
             <div tal:replace="structure get_proposals()">Proposals listing</div>
             
-            <div tal:condition="proposal_form|False" tal:replace="structure proposal_form">Proposal form</div>
+            <div class="proposal_form" tal:condition="proposal_form|False">
+                <tal:creators tal:replace="structure api.get_creators_info((api.userid, ), request)">Creators</tal:creators>
+                <span tal:replace="structure proposal_form">Proposal form</span>
+            </div>
+
         </div>
     </div> <!-- left_content -->
 </body>

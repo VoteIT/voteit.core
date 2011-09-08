@@ -410,24 +410,23 @@ li.notification_message {
 /* Buttonize */
 .buttonize,
 .buttons button {
-	border: 1px solid #054265;
-	background: #dbe0e5;
+	border: 1px solid #ccc;
+	background: #eff0f2;
+	margin: 0px;
 	padding: 0.25em 0.5em;
 	color: #054265;
-    border-radius: 0.5em;
-    -webkit-border-radius: 0.5em;
-    -moz-border-radius: 0.5em;
-    box-shadow: 0 0 1em 0 #888;
-    -moz-box-shadow: 0 0 0.5em 0 #888;
-    -webkit-box-shadow: 0 0 0.5em #888;
-	font-size: 12px;
+    border-radius: 0.3em;
+    -webkit-border-radius: 0.3em;
+    -moz-border-radius: 0.3em;
+	font-size: 0.8em;
+	font-weight: bold;
+	text-transform:uppercase;
 }
 .buttonize.selected {
 }
 .buttonize:hover,
 .buttons button:hover {
-    background-color: #054265;
-    color: #fff;
+    color: #000;
 }
 
 /* meeting overview */
@@ -477,7 +476,7 @@ li.notification_message {
     padding: 0;
     cursor: pointer;
     color: #054265;
-	text-decoration: underline;
+	text-decoration: none;
 }
 
 
@@ -514,8 +513,19 @@ li.notification_message {
     display: block;
 }
 
-/* proposals */
-#proposals .creators img {
+#polls #add_poll {
+    float: right;
+}
+
+#polls #add_poll .buttonize {
+    font-size: 1.2em;
+	padding-left: 1.5em;
+	padding-right: 1.5em;
+}
+
+/* proposals and discussions */
+#proposals .creators img,
+#discussions .creators img {
     float: left;
 }
 
@@ -523,16 +533,53 @@ li.notification_message {
 	text-decoration: line-through;
 }
 
-/* discussions */
-#discussions .creators img {
-    float: left;
-}
 #discussions a.load_more {
     display: block;
     text-align: center;
     color: #054265;
     border-bottom: 2px solid #86A3B4;
     padding: 0 0 10px 0;
+}
+
+#proposals .proposal_form,
+#discussions .discussion_form {
+    background-color: #DBE0E5;
+    margin-top: 1em;
+    padding: 10px;
+}
+
+#proposals .proposal_form .creators span,
+#discussions .discussion_form .creators span {
+    display: none;
+}
+
+#proposals .proposal_form label,
+#discussions .discussion_form label {
+    display: none;
+}
+
+#proposals .proposal_form img,
+#discussions .discussion_form img {
+}
+
+#proposals .proposal_form li,
+#discussions .discussion_form li {
+    margin: 0;
+    padding: 0;
+}
+
+#proposals .proposal_form textarea,
+#discussions .discussion_form textarea {
+    margin-left: 5px;
+    padding: 2px !important;
+    height: 36px;
+    width: 97%;
+    border: none;
+}
+
+#proposals .proposal_form button,
+#discussions .discussion_form button {
+    float: right;
 }
 
 /* confirm dialog */

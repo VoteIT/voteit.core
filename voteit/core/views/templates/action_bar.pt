@@ -1,12 +1,12 @@
 <ul class="action_bar" i18n:domain="voteit.core">
 
     <li class="menuitem" tal:condition="context_has_permission('Edit', context)">
-    	<a class="buttonize"
+    	<a 
 		   tal:attributes="href api.resource_url(context, request) + '@@edit'"
 		   i18n:translate="">Edit</a>
 	</li>
     <li class="menuitem" tal:condition="context_has_permission('Delete', context)">
-    	<a class="buttonize"
+    	<a 
 		   tal:attributes="href api.resource_url(context, request) + '@@delete'"
 		   i18n:translate="">Delete</a>
 	</li>
@@ -18,19 +18,19 @@
     	</tal:comment>
         <li class="menuitem"
             tal:condition="has_voted and context_has_permission('Add Vote', context)">
-            <a class="buttonize"
+            <a 
 			   tal:attributes="href api.resource_url(context, request) + api.userid + '/@@edit'"
 			   i18n:translate="">Change vote</a>
         </li>
         <li class="menuitem"
             tal:condition="has_voted and context_has_permission('Add Vote', context)">
-            <a class="buttonize"
+            <a 
 			   tal:attributes="href api.resource_url(context, request) + api.userid + '/@@delete'"
 			   i18n:translate="">Delete vote</a>
         </li>
         <li class="menuitem"
             tal:condition="context.get_workflow_state() == 'closed'">
-            <a class="buttonize"
+            <a 
 			   tal:attributes="href api.resource_url(context, request) + '@@poll_raw_data'"
 			   i18n:translate="">Poll raw data</a>
         </li>
@@ -41,7 +41,7 @@
             Common functions for meeting.
         </tal:comment>
         <li class="dropdown_menu menuitem">
-            <a class="buttonize"
+            <a 
 			   tal:attributes="href api.resource_url(context, request) + '@@participants'"
 			   i18n:translate="">Participants</a>
         </li>
@@ -57,7 +57,7 @@
 		</tal:comment>
 		<tal:retract condition="show_retract()">
 		    <li class="menuitem">
-	            <a class="buttonize confirm-retract"
+	            <a class="confirm-retract"
 				   tal:attributes="href api.resource_url(context, request) + '@@state?state=retracted'"
 				   i18n:translate="">Retract</a>
 		    </li>
@@ -68,7 +68,7 @@
         <li tal:condition="context.content_type == 'SiteRoot' and
                            context_has_permission('Manage Server', context)"
             class="dropdown_menu menuitem">
-            <a class="buttonize"
+            <a 
 			   tal:attributes="href api.resource_url(context, request) + '@@logs'"
 			   i18n:translate="">Server logs</a>
         </li>
@@ -83,28 +83,28 @@
 		                   context_has_permission('Edit', context) and
 						   context.get_poll_plugin().get_settings_schema()|False"
 		    class="menuitem">
-            <a class="buttonize"
+            <a 
 			   tal:attributes="href api.resource_url(context, request) + '@@poll_config'"
 			   i18n:translate="">Poll settings</a>
         </li>
         <li tal:condition="context.content_type == 'Meeting' and
                            context.get_workflow_state() != 'private'"
             class="menuitem">
-            <a class="buttonize"
+            <a 
 			   tal:attributes="href api.resource_url(context, request) + '@@add_tickets'"
 			   i18n:translate="">Invite participants</a>
         </li>
         <li tal:condition="context.content_type == 'Meeting' and
                            context.get_workflow_state() != 'private'"
             class="menuitem">
-            <a class="buttonize"
+            <a 
 			   tal:attributes="href api.resource_url(context, request) + '@@manage_tickets'"
 			   i18n:translate="">Manage invites</a>
         </li>
              
         <li tal:condition="(context.content_type == 'SiteRoot' or context.content_type == 'Meeting' or context.content_type == 'AgendaItem') and
                            api.addable_types|False" class="dropdown_menu menuitem">
-        	<a href="#" class="buttonize menu_header"><span i18n:translate="">Content</span> &raquo;</a>
+        	<a href="#" class="menu_header"><span i18n:translate="">Content</span> &raquo;</a>
             <ul class="menu_body">
             <tal:iterate tal:repeat="type_name api.addable_types">
                 <li><a tal:attributes="href string:@@add?content_type=$type_name">
@@ -117,7 +117,7 @@
 
 	    <li tal:condition="states|False" class="dropdown_menu menuitem">
 			<a href="#"
-			   class="buttonize menu_header">
+			   class="menu_header">
 			   	<span i18n:translate="">Set state</span> &raquo;</a>
 			<ul class="menu_body">
 				<tal:iterate repeat="state states">
