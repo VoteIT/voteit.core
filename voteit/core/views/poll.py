@@ -123,14 +123,12 @@ class PollView(object):
         self.response['form'] = self.form.render(appstruct=self.context.poll_settings)
         return self.response
         
-    @view_config(context=IPoll, renderer='templates/poll.pt', permission=VIEW)
+    @view_config(context=IPoll)
     def poll_view(self):
-        """ Render poll view.
+        """ Poll view should only redirect to parent agenda item!
         """
-        #FIXME: Workflow states and explanatory text
-        
-        self.response['poll_result'] = self.context.render_poll_result()
-        return self.response
+        url = resource_url(self.context.__parent__, self.request)
+        return HTTPFound(location=url)
     
     @view_config(context=IPoll, name="poll_raw_data", permission=VIEW)
     def poll_raw_data(self):

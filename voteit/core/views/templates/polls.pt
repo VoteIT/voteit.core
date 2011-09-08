@@ -1,0 +1,47 @@
+<tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core">
+
+    <tal:iterate condition="polls" repeat="poll polls">
+    <div tal:define="poll_plugin poll.get_poll_plugin();
+                     wf_state poll.get_workflow_state();
+                     unread api.is_unread(poll, True);"
+         tal:attributes="class unread and 'unread listing_block' or 'listing_block'">
+
+	    <span tal:condition="api.show_moderator_actions" tal:replace="structure api.get_moderator_actions(poll, request)">
+	         Cogwheel menu
+	    </span>
+
+        <div class="poll_type">
+            <strong i18n:translate="">Poll method</strong>: <span tal:content="poll_plugin.title">Title</span>
+            <div tal:content="structure poll_plugin.description">Description</div>
+        </div>
+		
+        <h3 tal:content="poll.title">Title</h3>
+
+        <span tal:replace="structure api.get_poll_state_info(poll)">Poll state info</span>
+
+        <div tal:content="structure poll.description">Description</div>
+        
+        <div tal:condition="wf_state == 'closed'"
+            tal:content="structure poll.render_poll_result()">
+            Poll result
+        </div>
+		
+        <div tal:condition="wf_state in ('private', 'planned')" tal:define="proposals poll.get_proposal_objects()">
+        <tal:iterate condition="proposals" repeat="proposal proposals" >
+            <div class="proposal">
+		        <div class="body"
+				     tal:content="structure proposal.title">Title</div>
+		        <div class="meta"
+				     tal:content="structure api.get_creators_info(proposal.creators, request, portrait=False)">
+				     Creators
+				</div>
+			</div>
+
+        </tal:iterate>
+        </div>
+
+        <div tal:condition="poll_forms[poll.uid]|False" tal:content="structure poll_forms[poll.uid]"></div>
+    </div>
+    </tal:iterate>
+	
+</tal:main>

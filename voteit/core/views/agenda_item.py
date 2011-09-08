@@ -27,6 +27,7 @@ class AgendaItemView(BaseView):
 
         self.response['get_discussions'] = self.get_discussions
         self.response['get_proposals'] = self.get_proposals
+        self.response['get_polls'] = self.get_polls
         self.response['polls'] = self.api.get_restricted_content(self.context, iface=IPoll, sort_on='created')
         
         ci = self.api.content_info
@@ -106,6 +107,13 @@ class AgendaItemView(BaseView):
             self.api.context_has_permission('Retract', context) and \
             context.get_workflow_state() == 'published'
 
+    def get_polls(self, polls, poll_forms):
+        response = {}
+        response['api'] = self.api
+        response['polls'] = polls
+        response['poll_forms'] = poll_forms
+        return render('templates/polls.pt', response, request=self.request)
+
     def get_proposals(self):
         response = {}
         response['proposals'] = self.context.get_content(iface=IProposal, sort_on='created')
@@ -137,7 +145,7 @@ class AgendaItemView(BaseView):
         response['api'] = self.api
         
         return render('templates/discussions.pt', response, request=self.request)
-        
+
     @view_config(context=IAgendaItem, name="discussions", permission=VIEW, renderer='templates/discussions.pt')
     def meeting_messages(self):
         self.response['discussions'] = self.context.get_content(iface=IDiscussionPost, sort_on='created')

@@ -207,7 +207,7 @@ class APIView(object):
         """ Render start and end time of something, if those exist. """
         return self.dt_util.dt_format(context.created)
 
-    def get_creators_info(self, creators, request):
+    def get_creators_info(self, creators, request, portrait=True):
         """ Return template for a set of creators.
             The content of creators should be userids
         """
@@ -220,7 +220,15 @@ class APIView(object):
         response = {}
         response['resource_url'] = resource_url
         response['users'] = users
+        response['portrait'] = portrait
         return render('templates/creators_info.pt', response, request=request)
+
+    def get_poll_state_info(self, poll):
+        response = {}
+        response['api'] = self
+        response['wf_state'] = poll.get_workflow_state()
+        response['poll'] = poll
+        return render('templates/poll_state_info.pt', response, request=self.request)
 
     def context_has_permission(self, permission, context):
         """ Special permission check that is agnostic of the request.context attribute.

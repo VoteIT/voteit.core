@@ -3,7 +3,7 @@
 <tal:iterate repeat="user users">
 	<a tal:condition="user"
 	   tal:attributes="href resource_url(user, request)">
-        <img tal:replace="structure user.get_image_tag()" />
+        <img tal:condition="portrait" tal:replace="structure user.get_image_tag()" />
 	    <span tal:content="user.title">My fullname</span>
 	</a><tal:sep tal:condition="not repeat['user'].end">|</tal:sep>
 </tal:iterate>

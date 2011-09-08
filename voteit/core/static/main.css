@@ -339,6 +339,7 @@ a {
 
 .listing_block {
     margin-top: 1em;
+	clear: both;
 }
 
 /* Workflow states */
@@ -486,9 +487,6 @@ li.notification_message {
 }
 
 /* polls */
-#polls h2 {
-    border-bottom: none;
-}
 #polls h3 {
     color: #666;
     font-weight: normal;
@@ -499,14 +497,9 @@ li.notification_message {
     background-color: #fff;
     padding: 5px 10px;
 }
-#polls .proposal strong {
-    font-weight: normal;
-    color: #ccc;
-}
-#polls .proposal strong {
-    font-weight: normal;
-    color: #ccc;
-    display: block;
+#polls .listing_block {
+	border-bottom: 2px solid #86A3B4;
+	padding-bottom: 10px;
 }
 
 #polls #add_poll {
@@ -517,6 +510,12 @@ li.notification_message {
     font-size: 1.2em;
 	padding-left: 1.5em;
 	padding-right: 1.5em;
+}
+
+#polls .proposal,
+#polls .deform li.field {
+	margin: 5px 0px;
+	border-top: 1px solid #ccc;
 }
 
 /* proposals and discussions */
