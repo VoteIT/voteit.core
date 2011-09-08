@@ -41,8 +41,11 @@ class SiteRoot(BaseContent):
 
 def construct_schema(**kwargs):
     class SiteRootSchema(colander.MappingSchema):
-        title = colander.SchemaNode(colander.String())
+        title = colander.SchemaNode(colander.String(),
+                                    title = _(u"Title"),
+                                    validator=html_string_validator,)
         description = colander.SchemaNode(colander.String(),
+                                          title = _(u"Description"),
                                           missing = u"",
                                           widget=deform.widget.RichTextWidget())
         

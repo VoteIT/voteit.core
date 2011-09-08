@@ -274,7 +274,7 @@ def construct_schema(context=None, request=None, **kwargs):
                                     validator=html_string_validator,)
         description = colander.SchemaNode(colander.String(),
                                           title = _(u"Description"),
-                                          validator=html_string_validator,
+                                          missing=u"",
                                           widget=deform.widget.RichTextWidget(),)
 
         poll_plugin = colander.SchemaNode(colander.String(),
