@@ -10,7 +10,7 @@
 	<div class="content_wrapper">
         <div class="description"
 		     tal:condition="context.description"
-			 tal:content="structure api.nl2br(context.description)">Description</div>
+			 tal:content="structure context.description">Description</div>
     </div>
 </div>
 </body>

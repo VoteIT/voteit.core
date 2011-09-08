@@ -131,6 +131,8 @@ class AgendaItemView(BaseView):
             response['over_limit'] = len(discussions) - limit
         else:
             response['over_limit'] = 0
+            
+        response['limit'] = limit
         
         response['like'] = _(u"Like")
         response['like_this'] = _(u"like this")

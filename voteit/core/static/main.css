@@ -644,4 +644,6 @@ ui-dialog {
     color: #054265;
     border-bottom: 1px solid #86A3B4;
     padding: 0 0 10px 0;
+    text-transform: uppercase;
+    font-weight: bold;
 }

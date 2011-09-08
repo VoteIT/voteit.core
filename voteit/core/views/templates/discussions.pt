@@ -9,6 +9,13 @@
 	   	previous posts
     </a>
 </div>
+<div tal:condition="not limit"
+     class="load_more">
+	<a tal:attributes="href api.resource_url(context, request) + '#discussions'"
+	   i18n:translate="">
+	   	Only show the last 5 posts
+    </a>
+</div>
 
 <tal:iterate condition="discussions" repeat="post discussions">
     <div tal:define="unread api.is_unread(post, True)"

@@ -1,4 +1,6 @@
 import colander
+import deform
+
 from pyramid.security import Allow, Everyone, ALL_PERMISSIONS
 from pyramid.security import DENY_ALL
 from zope.interface import implements
@@ -42,7 +44,7 @@ def construct_schema(**kwargs):
         title = colander.SchemaNode(colander.String())
         description = colander.SchemaNode(colander.String(),
                                           missing = u"",
-                                          validator=html_string_validator,)
+                                          widget=deform.widget.RichTextWidget())
         
     return SiteRootSchema()
 

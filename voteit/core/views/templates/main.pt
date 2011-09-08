@@ -35,6 +35,7 @@
     <script type="text/javascript" src="${request.application_url}/deform/scripts/jquery-ui-timepicker-addon.js"></script>
     <script type="text/javascript" src="${request.application_url}/deform/scripts/jquery.form.js"></script>
     <script type="text/javascript" src="${request.application_url}/deform/scripts/jquery.maskedinput-1.2.2.min.js"></script>
+    <script type="text/javascript" src="${request.application_url}/deform/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
     <script type="text/javascript">
         deform.load()
     </script>
@@ -89,9 +90,6 @@
 
                         <h2 tal:content="context.title">Title</h2>
                     
-                        <div tal:replace="structure api.get_time_info(context, request)">start time and end time macro</div>
-
-						 
                         <tal:state define="state_id context.get_workflow_state()|False">
                             <span tal:condition="state_id">
                                 <span i18n:translate="">State</span>:
@@ -109,7 +107,7 @@
             <div id="content" metal:define-slot="content">
                 <div id="left" metal:define-slot="left" class="column" tal:condition="not form|True">
                     <div class="content_wrapper">
-                        <div class="description" tal:condition="context.description" tal:content="structure api.nl2br(context.description)">Description</div>
+                        <div class="description" tal:condition="context.description" tal:content="structure context.description">Description</div>
                         <div metal:define-slot="left_content"></div>
                     </div>
                 </div> <!-- left column-->
