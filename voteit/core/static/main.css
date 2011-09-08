@@ -646,3 +646,9 @@ ui-dialog {
     text-transform: uppercase;
     font-weight: bold;
 }
+.read_more {
+    color: #054265;
+    padding: 0 20px 10px 0;
+    text-transform: uppercase;
+    font-weight: bold;
+}

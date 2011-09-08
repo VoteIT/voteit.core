@@ -12,7 +12,7 @@
         <div id="add_poll" tal:condition="api.show_moderator_actions and api.context_has_permission('Add Poll', context)">
             <a class="buttonize" tal:attributes="href api.resource_url(context, request) + '@@add?content_type=Poll'"><span i18n:translate="">Add poll</span></a>
         </div>
-        <h2 tal:condition="polls"><span i18n:translate="">Poll(s)</span></h2>
+        <h2 tal:condition="polls"><span i18n:translate="">Poll</span></h2>
 
         <span tal:replace="structure get_polls(polls, poll_forms)">Render poll listing</span>
 
@@ -30,7 +30,7 @@
     </div> <!-- right_content -->
 
     <div metal:fill-slot="left_content" id="proposals">
-        <h2><span i18n:translate="">Proposal(s)</span></h2>
+        <h2><span i18n:translate="">Proposal</span></h2>
 
         <div tal:replace="structure get_proposals()">Proposals listing</div>
         
