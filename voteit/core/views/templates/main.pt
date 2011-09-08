@@ -107,16 +107,16 @@
             </div> <!-- top -->
 
             <div id="content" metal:define-slot="content">
-                <div id="left" class="column" tal:condition="not form|True">
+                <div id="left" metal:define-slot="left" class="column" tal:condition="not form|True">
                     <div class="content_wrapper">
                         <div class="description" tal:condition="context.description" tal:content="structure api.nl2br(context.description)">Description</div>
-                        <div id="content" metal:define-slot="left_content"></div>
+                        <div metal:define-slot="left_content"></div>
                     </div>
                 </div> <!-- left column-->
                 
-                <div id="right" class="column" tal:condition="not form|True">
+                <div id="right" metal:define-slot="right" class="column" tal:condition="not form|True">
                     <div class="content_wrapper">
-                        <div id="content" metal:define-slot="right_content"></div>
+                        <div metal:define-slot="right_content"></div>
                     </div>
                 </div> <!-- right column-->
             </div> <!-- content -->

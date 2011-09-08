@@ -15,7 +15,6 @@ class BaseView(object):
 
         self.response = {}
         self.response['api'] = self.api = APIView(context, request)
-        self.response['show_content_listing'] = True
 
     @view_config(renderer=DEFAULT_TEMPLATE, permission=VIEW)
     def dynamic_view(self):
