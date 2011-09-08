@@ -184,10 +184,15 @@ class APIView(object):
     def get_meeting_actions(self, context, request):
         response = {}
         response['api'] = self
+        response['meetings'] = ()
         if self.userid:
-            response['meetings'] = self.get_restricted_content(self.root, iface=IMeeting, sort_on='title')
-        else:
-            response['meetings'] = ()
+            meetings = self.get_restricted_content(self.root, iface=IMeeting, sort_on='title')
+            
+            #Remove current meeting from list
+            if self.meeting in meetings:
+                meetings.remove(self.meeting)                
+            response['meetings'] = meetings
+
         return render('templates/meeting_actions.pt', response, request=request)
 
     def get_moderator_actions(self, context, request):

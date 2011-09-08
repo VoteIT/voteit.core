@@ -10,11 +10,11 @@
 	-->
 	
 	<tal:meeting_menu condition="meetings">
-        <li class="tab dropdown_menu" >
+        <li class="tab dropdown_menu">
             <a href="#" class="menu_header"><span i18n:translate="">Meetings</span> &raquo;</a>
             <ul class="menu_body">
             	<tal:iterate repeat="meeting meetings">
-	                <li tal:attributes="class meeting == api.meeting and 'selected' or ''">
+	                <li>
 	                	<a tal:attributes="href api.resource_url(meeting, request)"
 	                       tal:content="meeting.title">Meeting Title</a>
 				    </li>
@@ -25,7 +25,7 @@
 
     <tal:administrator condition="api.userid">
         <!-- Administrator actions -->
-        <li class="tab dropdown_menu" >
+        <li class="tab dropdown_menu">
             <a href="#" class="menu_header"><span i18n:translate="">Settings</span> &raquo;</a>
             <ul class="menu_body">
                 <li><a tal:attributes="href request.application_url + '/users/@@list'"
