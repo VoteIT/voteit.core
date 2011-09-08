@@ -19,6 +19,9 @@
 	    <tal:closed condition="agenda_items" repeat="agenda_item agenda_items">
 	        <ul>
 	            <li>
+        	        <span tal:condition="api.show_moderator_actions" tal:replace="structure api.get_moderator_actions(agenda_item, request)">
+                        Cogwheel menu
+                    </span>
 	                <a tal:attributes="href api.resource_url(agenda_item, request)">
 	                    <div tal:content="agenda_item.title">Title</div>
 						<!-- FIXME: Show start and close times for polls instead
