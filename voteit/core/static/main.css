@@ -565,17 +565,24 @@ ui-dialog {
     color: #fff;
     background: #054265;
 }
-
 .cogwheel {
+    float: right;
+}
+.cogwheel .menu_header {
 	width: 1px;
 	padding-right: 15px;
 	height: 1px;
 	padding-bottom: 15px;
 	background: url(icons/icon_settings_lb.png) no-repeat;
 }
-.cogwheel:hover {
+.cogwheel .menu_header:hover {
 	background-image: url(icons/icon_settings.png);
 }
+#main_window .cogwheel .menu_body {
+    right: 0px;
+	left: -12em;
+}
+
 /* listing */
 .creators img {
 	margin: 0px 5px 5px 0px;

@@ -82,13 +82,15 @@
                     <div metal:define-slot="page_heading"
                          id="page_heading"
                          tal:condition="not form|True">
-                        <h2 tal:content="context.title">Title</h2>
-                    
-                        <div tal:replace="structure api.get_time_info(context, request)">start time and end time macro</div>
 
 	                    <span metal:define-slot="action_menu"
 	                         tal:condition="not form|api.context_has_permission('Moderate Meeting', context)"
 	                         tal:content="structure api.get_moderator_actions(context, request)">Cogwheel menu</span>
+
+                        <h2 tal:content="context.title">Title</h2>
+                    
+                        <div tal:replace="structure api.get_time_info(context, request)">start time and end time macro</div>
+
 						 
                         <tal:state define="state_id context.get_workflow_state()|False">
                             <span tal:condition="state_id">
