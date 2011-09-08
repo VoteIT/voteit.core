@@ -15,17 +15,23 @@
         <span class="body" tal:content="structure proposal.title">Title</span>
 
         <div class="meta">
-            <strong class="wf-state"
-                    tal:content="api.translate(proposal.current_state_title(request))">private</strong>
+            <span class="wf-state"
+                    tal:content="api.translate(proposal.current_state_title(request))">private</span>
+
+            <span class="hyphen">&#45;</span>
 
 	        <span class="time" tal:content="api.get_time_created(proposal)"></span>
-	        
+
+	        <span class="hyphen">&#45;</span>
+
 	        <span tal:condition="show_retract(proposal)">
 	        	<a class="retract confirm-retract"
 		           tal:attributes="href api.resource_url(context, request) + '@@state?state=retracted'"
 		           i18n:translate="">Retract</a>
+
+    			<span class="hyphen">&#45;</span>
 	        </span>
-			
+
 	        <span class="expressions" tal:content="structure api.expressions.get_expressions(proposal, 'like', api.userid, like, like_this)"></span>
 		</div>
 		

@@ -359,12 +359,12 @@ a {
 #proposals .wf-state {
 	padding-left: 20px;
 }
-.wf-state-published .wf-state { background: url(icons/icon_doc.png) no-repeat; }
-.wf-state-retracted .wf-state { background: url(icons/icon_doc_retracted.png) no-repeat; }
-.wf-state-unhandled .wf-state { background: url(icons/icon_doc.png) no-repeat; } /*FIXME: Icon */
-.wf-state-voting .wf-state { background: url(icons/icon_lock.png) no-repeat; }
-.wf-state-approved .wf-state { background: url(icons/icon_approved.png) no-repeat; }
-.wf-state-denied .wf-state { background: url(icons/icon_denied.png) no-repeat; }
+.wf-state-published .wf-state { background: url(icons/icon_doc.png) left center no-repeat; }
+.wf-state-retracted .wf-state { background: url(icons/icon_doc_retracted.png) left center no-repeat; }
+.wf-state-unhandled .wf-state { background: url(icons/icon_doc.png) left center no-repeat; } /*FIXME: Icon */
+.wf-state-voting .wf-state { background: url(icons/icon_lock.png) left center no-repeat; }
+.wf-state-approved .wf-state { background: url(icons/icon_approved.png) left center no-repeat; }
+.wf-state-denied .wf-state { background: url(icons/icon_denied.png) left center no-repeat; }
 
 /* Flash messages */
 #flash_messages {
@@ -625,6 +625,11 @@ ui-dialog {
 .meta {
     clear: both;
 	color: #666;
+	font-size: 12px;
+}
+
+.meta .wf-state {
+    padding-top: 2px;
 }
 
 /* minimize */
