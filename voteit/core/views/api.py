@@ -205,7 +205,7 @@ class APIView(object):
         
     def get_time_created(self, context):
         """ Render start and end time of something, if those exist. """
-        return self.dt_util.dt_format(context.created)
+        return self.dt_util.relative_time_format(context.created)
 
     def get_creators_info(self, creators, request):
         """ Return template for a set of creators.

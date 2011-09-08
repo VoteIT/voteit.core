@@ -91,7 +91,7 @@ class DateTimeUtil(object):
     def utcnow(self):
         return utcnow()
 
-#    def relative_time_format(self, datetime):
+    def relative_time_format(self, time):
 #        """ Takes a localized datetime and returns a string based on relative
 #            time from that point. Like "1 minute ago" or similar.
 #        """
@@ -99,6 +99,49 @@ class DateTimeUtil(object):
         #The method format_timedelta in Babel currently exists in trunk:
         #http://svn.edgewall.org/repos/babel/trunk/babel/dates.py
         #Use it when it's available
+        #FIXME this is a temporary solution
+        #http://stackoverflow.com/questions/1551382/python-user-friendly-time-format
+        """
+        Get a datetime object or a int() Epoch timestamp and return a
+        pretty string like 'an hour ago', 'Yesterday', '3 months ago',
+        'just now', etc
+        """
+        time = self.tz_to_utc(time)
+        now = self.utcnow()
+        if type(time) is int:
+            diff = now - datetime.fromtimestamp(time)
+        elif isinstance(time,datetime):
+            diff = now - time 
+        elif not time:
+            diff = now - now
+        second_diff = diff.seconds
+        day_diff = diff.days
+
+        if day_diff < 0:
+            return ''
+
+        if day_diff == 0:
+            if second_diff < 10:
+                return _("just now")
+            if second_diff < 60:
+                return _("${diff} seconds ago", mapping={'diff': str(second_diff)})
+            if second_diff < 120:
+                return  _("1 minute ago")
+            if second_diff < 3600:
+                return _("${diff} minutes ago", mapping={'diff': str(second_diff / 60)})
+            if second_diff < 7200:
+                return "an hour ago"
+            if second_diff < 86400:
+                return _("${diff} hours ago", mapping={'diff': str(second_diff / 3600)})
+        if day_diff == 1:
+            return _("1 day ago")
+        if day_diff < 7:
+            return _("${diff} days ago", mapping={'diff': str(day_diff)})
+        if day_diff < 31:
+            return _("${diff} weeks ago", mapping={'diff': str(day_diff/7)})
+        if day_diff < 365:
+            return _("${diff} months ago", mapping={'diff': str(day_diff/30)})
+        return _("${diff} years ago", mapping={'diff': str(day_diff/365)})
 
 
 def utcnow():
