@@ -43,7 +43,7 @@
         </tal:comment>
         <li class="dropdown_menu menuitem">
             <a 
-			   tal:attributes="href api.resource_url(context, request) + '@@participants'"
+			   tal:attributes="href api.resource_url(context, request) + '@@participant_permissions'"
 			   i18n:translate="">Participants</a>
         </li>
 	</tal:meeting>

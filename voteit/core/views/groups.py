@@ -113,7 +113,7 @@ class EditGroups(object):
         self.response['form'] = self.form.render(appstruct=appstruct)
         return self.response
         
-    @view_config(context=IMeeting, name="participants", renderer=DEFAULT_TEMPLATE, permission=VIEW)
+    @view_config(context=IMeeting, name="participant_permissions", renderer=DEFAULT_TEMPLATE, permission=VIEW)
     def meeting_group_form(self):
         schema = get_groups_schema(self.context)
         add_csrf_token(self.context, self.request, schema)
