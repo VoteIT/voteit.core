@@ -1,3 +1,4 @@
+<!-- DEPRECATED, up for removal -->
 <ul class="action_bar" i18n:domain="voteit.core">
 
     <li class="menuitem" tal:condition="context_has_permission('Edit', context)">

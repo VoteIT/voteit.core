@@ -1,8 +1,8 @@
 <tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core">
 
-<div tal:condition="over_limit">
-	<a class="load_more"
-	   tal:attributes="href api.resource_url(context, request) + '?discussions=all#discussions'"
+<div tal:condition="over_limit"
+     class="load_more">
+	<a tal:attributes="href api.resource_url(context, request) + '?discussions=all#discussions'"
 	   i18n:translate="">
 	   	Show
 		<span tal:content="over_limit" i18n:name="count">5</span>
@@ -13,15 +13,16 @@
 <tal:iterate condition="discussions" repeat="post discussions">
     <div tal:define="unread api.is_unread(post, True)"
          tal:attributes="class unread and 'unread listing_block' or 'listing_block'">
+
+        <span tal:condition="api.show_moderator_actions" tal:replace="structure api.get_moderator_actions(post, request)">
+             Cogwheel menu
+        </span>
+
         <tal:creators tal:replace="structure api.get_creators_info(post.creators, request)">Creators</tal:creators>
         
         <span class="body" tal:content="structure post.get_field_value('text')">text</span>
 
-        <div class="meta">
-	        <span tal:condition="api.show_moderator_actions" tal:replace="structure api.get_moderator_actions(post, request)">
-	             Cogwheel menu
-	        </span>
-	
+        <div class="meta">	
 	        <span class="time" tal:content="api.get_time_created(post)"></span>
 		
 	        <span tal:condition="not api.show_moderator_actions and api.context_has_permission('Delete', post)">

@@ -189,7 +189,7 @@ msgstr "Raderad"
 
 #. Default: "Denied"
 msgid "Denied"
-msgstr "Avslagen"
+msgstr "Avslaget"
 
 #: ./models/agenda_item.py:119
 msgid "Description"

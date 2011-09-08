@@ -1,7 +1,7 @@
 <html i18n:domain="voteit.core">
 <body>
 
-<metal:main define-macro="main" tal:define="agenda_items get_state_ais(state);">
+<metal:main define-macro="main" tal:define="current_ais agenda_items[state];">
 
 <div tal:attributes="class is_closed and 'toggle_area toggle_closed' or 'toggle_area toggle_opened';
                      id '%s-%s' % (api.meeting.uid, state);">
@@ -11,25 +11,62 @@
 	</h4>
 
 	<div class="minimizable_area">
-	    <div class="load_more">
-	        <a tal:attributes="href api.resource_url(context, request) + '?log_%s=all' % state"
-	           i18n:translate="">Show all</a>
-	    </div>
+		
+		<div tal:condition="over_limit[state]" class="load_more">
+		    <a tal:attributes="href api.resource_url(context, request) + '?log_%s=all' % state"
+		       i18n:translate="">
+		        Show
+		        <span tal:content="over_limit[state]" i18n:name="count">5</span>
+		        hidden
+		    </a>
+        </div>
 
-	    <tal:closed condition="agenda_items" repeat="agenda_item agenda_items">
-	        <ul>
-	            <li>
-	                <a tal:attributes="href api.resource_url(agenda_item, request)">
-	                    <div tal:content="agenda_item.title">Title</div>
-						<!-- FIXME: Show start and close times for polls instead
-	                    <div tal:content="structure api.get_time_info(agenda_item, request)">start time and end time macro</div>
-						-->
-	                    <div tal:content="agenda_item.get_field_value('summary')">Summary</div>
-	                </a>
-	            </li>
-	        </ul>
+        <ul class="ai_list">
+	    <tal:closed condition="current_ais" repeat="agenda_item current_ais">
+            <li>
+    	        <span tal:condition="api.show_moderator_actions" tal:replace="structure api.get_moderator_actions(agenda_item, request)">
+                    Cogwheel menu
+                </span>
+                <a tal:attributes="href api.resource_url(agenda_item, request)">
+                    <div tal:content="agenda_item.title">Title</div>
+                    <div tal:content="agenda_item.get_field_value('summary')">Summary</div>
+                </a>
+				<tal:polls define="polls get_polls(agenda_item)" condition="polls">
+					<ul class="meta">
+				    <li tal:repeat="poll polls">
+				    <div>
+						<span i18n:translate="">Poll</span>:
+					    <span tal:content="poll.title">Poll title</span>
+					</div>
+			    	<tal:defs define="wf_state poll.get_workflow_state()">
+			    		<tal:planned condition="wf_state == 'planned'">
+			    			<span i18n:translate="">Expected start time
+                                <span tal:replace="api.dt_util.dt_format(poll.start_time)" i18n:name="start_time" />
+							</span>
+							&mdash;
+                            <span i18n:translate="">Expected end time
+                                <span tal:replace="api.dt_util.dt_format(poll.end_time)" i18n:name="end_time" />
+                            </span>
+			    		</tal:planned>
+						<tal:ongoing condition="wf_state == 'ongoing'">
+							<span i18n:translate="">Currently open</span>
+                            &mdash;
+                            <span i18n:translate="">Expected end time
+                                <span tal:replace="api.dt_util.dt_format(poll.end_time)" i18n:name="end_time" />
+                            </span>
+						</tal:ongoing>
+						<tal:closed condition="wf_state == 'closed'">
+                            <span i18n:translate="">Poll closed</span>
+							<!-- FIXME: Display winning proposals here? -->
+						</tal:closed>
+			    	</tal:defs>
+					</li>
+					</ul>
+				</tal:polls>
+            </li>
 	    </tal:closed>
-	    <tal:no_active condition="not agenda_items" i18n:translate="">
+        </ul>
+	    <tal:no_active condition="not current_ais" i18n:translate="">
 	        (Nothing)
 	    </tal:no_active>
 	
