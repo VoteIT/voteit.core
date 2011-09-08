@@ -7,7 +7,7 @@
 	  i18n:domain="voteit.core">
 <body>
 	
-	<tal:comment condition="nothing">
+	<tal:comment condition="False">
 		A lot of the structure here is dependent on that css classes are named the way
 		the js-script expects it to be. Check static resources before changing anything.
 	</tal:comment>

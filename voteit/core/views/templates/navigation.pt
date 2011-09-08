@@ -1,4 +1,4 @@
-<tal:comment condition="nothing">
+<tal:comment condition="False">
 	FIXME: Update with ajax call
 	The sections that can be closed and opened needs to be rendered with ajax, otherwise
 	they won't be updated when opened/closed. Also, all items will be loaded when the
@@ -55,7 +55,7 @@
 				</h6>
 				
                 <tal:agenda_items define="agenda_items api.get_restricted_content(api.meeting, content_type='AgendaItem', states=section);">
-                    <ul class="section minimizable_area" tal:condition="agenda_items">
+                    <ul class="section minimizable_area">
                     <tal:iterate condition="agenda_items" repeat="agenda_item agenda_items">
                         <li tal:attributes="class api.inside(context, agenda_item) and 'selected' or 'plain'">
                         	<tal:moderator_menu condition="is_moderator">
@@ -91,11 +91,11 @@
 							</div>
                         </li>
                     </tal:iterate>
+					<li tal:condition="not agenda_items">
+						<span i18n:translate="">(Nothing)</span>
+					</li>
                     </ul>
 					
-					<tal:no_entries condition="not agenda_items">
-						<div i18n:translate="">(Nothing)</div>
-					</tal:no_entries>
 	            </tal:agenda_items>
 				
 				<tal:closed_section condition="is_closed">
