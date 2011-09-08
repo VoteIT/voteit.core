@@ -15,7 +15,7 @@ button_register = deform.Button('register', _(u"Register"))
 button_request = deform.Button('request', _(u"Request"))
 button_save = deform.Button('save', _(u"Save"))
 button_update = deform.Button('update', _(u"Update"))
-button_vote = deform.Button('vote', _(u"Vote"))
+button_vote = deform.Button('vote', _(u"add_vote_button", default=u"Vote"))
 button_resend = deform.Button('resend', _(u"Resend"))
 
 

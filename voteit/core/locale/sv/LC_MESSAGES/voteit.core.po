@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
-"POT-Creation-Date: 2011-09-08 16:05+0000\n"
+"POT-Creation-Date: 2011-09-08 18:24+0000\n"
 "PO-Revision-Date: 2011-08-19 10:51+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: sv <LL@li.org>\n"
@@ -35,12 +35,12 @@ msgstr "${val} är tidigare än tidigast möjliga tid ${min}"
 msgid "'${val}' is not valid as date and time"
 msgstr "'{val}' är inte giltigt som datum och tid"
 
-#: ./views/templates/navigation.pt:95
+#: ./views/templates/navigation.pt:93
 #. Default: "(Nothing)"
 msgid "(Nothing)"
 msgstr "(Inget)"
 
-#: ./views/templates/navigation.pt:102
+#: ./views/templates/navigation.pt:100
 #. Default: "(hidden, click above to open)"
 msgid "(hidden, click above to open)"
 msgstr "(gömd, klicka ovan för att öppna)"
@@ -80,7 +80,7 @@ msgstr "Tillagd"
 msgid "Administrator"
 msgstr "Administratör"
 
-#: ./views/templates/navigation.pt:44
+#: ./views/templates/navigation.pt:40
 #. Default: "Agenda"
 msgid "Agenda"
 msgstr "Agenda"
@@ -145,6 +145,11 @@ msgstr "Kontrollera fältet - engångslösenordet stämmer inte"
 #. Default: "Click the link to access this VoteIT meeting:"
 msgid "Click the link to access this VoteIT meeting:"
 msgstr "Klicka på länken för att få tillträde till VoteIT-mötet:"
+
+#: ./views/templates/navigation.pt:40
+#. Default: "Click to go to meeting overview"
+msgid "Click to go to meeting overview"
+msgstr "Klicka för att gå till mötesöversikt"
 
 #. Default: "Closed"
 msgid "Closed"
@@ -232,7 +237,7 @@ msgstr "Redigera din röst"
 msgid "Email"
 msgstr "Epost"
 
-#: ./models/meeting.py:109
+#: ./models/meeting.py:112
 msgid "Email address to send from"
 msgstr "Epostadress att skicka från"
 
@@ -360,6 +365,11 @@ msgstr "Möte"
 msgid "Meeting Access"
 msgstr "Mötestillgång"
 
+#: ./views/templates/meeting_actions.pt:14
+#. Default: "Meetings"
+msgid "Meetings"
+msgstr "Möten"
+
 #: ./views/templates/messages.pt:12
 #. Default: "Messages"
 msgid "Messages"
@@ -374,7 +384,7 @@ msgstr "Moderator"
 msgid "Moderator menu"
 msgstr "Moderatorsmeny"
 
-#: ./models/meeting.py:106
+#: ./models/meeting.py:109
 msgid "Name visible on system mail sent from this meeting"
 msgstr "Avsändarnamn på epost skickat från mötet"
 
@@ -567,7 +577,7 @@ msgstr "Serverloggar"
 msgid "Set state"
 msgstr "Sätt tillstånd"
 
-#: ./views/templates/meeting_actions.pt:15
+#: ./views/templates/meeting_actions.pt:29
 #. Default: "Settings"
 msgid "Settings"
 msgstr "Inställningar"
@@ -703,7 +713,7 @@ msgstr "Användare"
 msgid "View only"
 msgstr "Endast se"
 
-#: ./models/schemas.py:18
+#: ./models/vote.py:29
 msgid "Vote"
 msgstr "Röst"
 
@@ -772,6 +782,11 @@ msgstr "Din röst"
 msgid "Your vote has been updated."
 msgstr "Din röst har uppdaterats."
 
+#: ./models/schemas.py:18
+#. Default: "Vote"
+msgid "add_vote_button"
+msgstr "Rösta"
+
 #: ./models/agenda_item.py:136
 #. you need to open this item yourself.
 #. Default: "No action will be taken automatically when the time has passed, so you need to open this item yourself."
@@ -788,11 +803,6 @@ msgstr "Planerad starttid för dagordningpunkten."
 #. Default: "This could be what was decided. It will show up in the log on the meeting page."
 msgid "ai_summary_description"
 msgstr "Det här kan vara beslut eller andra viktiga noter. Kommer visas i mötesloggen på mötessidan."
-
-#: ./views/templates/navigation.pt:32
-#. Default: "all meetings"
-msgid "all meetings"
-msgstr "alla möten"
 
 #: ./models/user.py:213
 #. retrieve your password.

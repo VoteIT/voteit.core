@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2011-09-08 16:05+0000\n"
+"POT-Creation-Date: 2011-09-08 18:24+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -31,12 +31,12 @@ msgid "'${val}' is not valid as date and time"
 msgstr ""
 
 #. Default: "(Nothing)"
-#: ./views/templates/navigation.pt:95
+#: ./views/templates/navigation.pt:93
 msgid "(Nothing)"
 msgstr ""
 
 #. Default: "(hidden, click above to open)"
-#: ./views/templates/navigation.pt:102
+#: ./views/templates/navigation.pt:100
 msgid "(hidden, click above to open)"
 msgstr ""
 
@@ -78,7 +78,7 @@ msgid "Administrator"
 msgstr ""
 
 #. Default: "Agenda"
-#: ./views/templates/navigation.pt:44
+#: ./views/templates/navigation.pt:40
 msgid "Agenda"
 msgstr ""
 
@@ -142,6 +142,11 @@ msgstr ""
 #. Default: "Click the link to access this VoteIT meeting:"
 #: ./views/templates/invite_ticket_email.pt:13
 msgid "Click the link to access this VoteIT meeting:"
+msgstr ""
+
+#. Default: "Click to go to meeting overview"
+#: ./views/templates/navigation.pt:40
+msgid "Click to go to meeting overview"
 msgstr ""
 
 #. Default: "Closed"
@@ -234,7 +239,7 @@ msgstr ""
 msgid "Email"
 msgstr ""
 
-#: ./models/meeting.py:109
+#: ./models/meeting.py:112
 msgid "Email address to send from"
 msgstr ""
 
@@ -365,6 +370,11 @@ msgstr ""
 msgid "Meeting Access"
 msgstr ""
 
+#. Default: "Meetings"
+#: ./views/templates/meeting_actions.pt:14
+msgid "Meetings"
+msgstr ""
+
 #. Default: "Messages"
 #: ./views/templates/messages.pt:12
 msgid "Messages"
@@ -379,7 +389,7 @@ msgstr ""
 msgid "Moderator menu"
 msgstr ""
 
-#: ./models/meeting.py:106
+#: ./models/meeting.py:109
 msgid "Name visible on system mail sent from this meeting"
 msgstr ""
 
@@ -580,7 +590,7 @@ msgid "Set state"
 msgstr ""
 
 #. Default: "Settings"
-#: ./views/templates/meeting_actions.pt:15
+#: ./views/templates/meeting_actions.pt:29
 msgid "Settings"
 msgstr ""
 
@@ -716,7 +726,7 @@ msgstr ""
 msgid "View only"
 msgstr ""
 
-#: ./models/schemas.py:18
+#: ./models/vote.py:29
 msgid "Vote"
 msgstr ""
 
@@ -785,6 +795,11 @@ msgstr ""
 msgid "Your vote has been updated."
 msgstr ""
 
+#. Default: "Vote"
+#: ./models/schemas.py:18
+msgid "add_vote_button"
+msgstr ""
+
 #. Default: "No action will be taken automatically when the time has passed, so you need to open this item yourself."
 #: ./models/agenda_item.py:136
 msgid "ai_start_time_description"
@@ -798,11 +813,6 @@ msgstr ""
 #. Default: "This could be what was decided. It will show up in the log on the meeting page."
 #: ./models/agenda_item.py:126
 msgid "ai_summary_description"
-msgstr ""
-
-#. Default: "all meetings"
-#: ./views/templates/navigation.pt:32
-msgid "all meetings"
 msgstr ""
 
 #. Default: "UserID already registered. If it was registered by you, try to retrieve your password."
