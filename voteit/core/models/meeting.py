@@ -101,7 +101,7 @@ def construct_schema(**kwargs):
         description = colander.SchemaNode(
             colander.String(),
             missing = u"",
-            widget=deform.widget.TextAreaWidget(rows=10, cols=60))
+            widget=deform.widget.RichTextWidget())
         meeting_mail_name = colander.SchemaNode(colander.String(),
                                                 title = _(u"Name visible on system mail sent from this meeting"),
                                                 default = _(u"VoteIT"),)

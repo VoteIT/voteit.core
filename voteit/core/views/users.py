@@ -198,7 +198,8 @@ class UsersView(object):
         
         self.response['form_resources'] = form_resources
 
-        
+        appstruct = {}
+
         POST = self.request.POST
     
         #Handle submitted information
@@ -274,10 +275,15 @@ class UsersView(object):
             if came_from:
                 url = came_from
             return HTTPFound(location=url, headers=headers)
+            
+            
+        came_from = self.request.GET.get('came_from', None)
+        if came_from:
+            appstruct['came_from'] = came_from
 
         #Render forms
-        self.response['login_form'] = login_form.render()
-        self.response['reg_form'] = reg_form.render()
+        self.response['login_form'] = login_form.render(appstruct)
+        self.response['reg_form'] = reg_form.render(appstruct)
         return self.response
 
 

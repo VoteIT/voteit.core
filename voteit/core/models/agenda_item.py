@@ -118,8 +118,7 @@ def construct_schema(**kwargs):
             colander.String(),
             title = _(u"Description"),
             missing = u"",
-            widget=deform.widget.TextAreaWidget(rows=10, cols=60),
-            validator=html_string_validator,
+            widget=deform.widget.RichTextWidget(),
         )
         summary = colander.SchemaNode(
             colander.String(),
