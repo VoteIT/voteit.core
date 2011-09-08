@@ -21,7 +21,7 @@
 		</span>
 		<a tal:condition="userids and len(userids) > 1" tal:attributes="title ', '.join(userids)">
             <tal:and condition="selected" i18n:translate="">and</tal:and>
-	        <span tal:replace="len(userids)">3</span>
+	        <span tal:replace="len(userids)">3</span> <span i18n:translate="">people</span>
 	        <tal:more condition="selected" i18n:translate="more_in_likes">more</tal:more>
 		</a>
 		<span tal:replace="expl_display_name">Like this</span>
