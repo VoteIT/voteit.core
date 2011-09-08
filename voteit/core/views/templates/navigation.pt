@@ -28,11 +28,6 @@
 
     <tal:inside_meeting condition="api.meeting">
         <div class="block">
-            <a tal:attributes="href api.resource_url(api.root, request)">
-                &laquo; <span i18n:translate="">all meetings</span>
-            </a>
-        </div>
-        <div class="block">
         <div id="add_menu" tal:condition="is_moderator">
             <a tal:attributes="href api.resource_url(api.meeting, request) + '@@add?content_type=AgendaItem'">
             	<img src="${request.application_url}/static/icons/icon_add.png"
@@ -41,8 +36,11 @@
 					 i18n:attributes="alt title" />
 			</a>
         </div>
-        <h5 class="header" i18n:translate="">
-            Agenda
+        <h5 class="header">
+            <a href="${api.resource_url(api.meeting, request)}"
+			   title="Click to go to meeting overview"
+			   i18n:attributes="title"
+			   i18n:translate="">Agenda</a>
         </h5>
 		</div>
         <tal:iterate repeat="section sections">

@@ -58,7 +58,7 @@
 
             <div id="logo-meeting-wrapper">
                 <a id="logo-space"
-                   tal:attributes="href api.logo_link()">
+                   tal:attributes="href api.resource_url(api.root, request)">
                     <img tal:replace="structure api.logo_image_tag()" />
                 </a>
                 

@@ -84,11 +84,6 @@ class APIView(object):
     def unreads(self):
         return Unreads(self.sql_session)
 
-    def logo_link(self):
-        if self.meeting:
-            return resource_url(self.meeting, self.request)
-        return resource_url(self.root, self.request)
-
     def logo_image_tag(self):
         """ Should handle customisations later. """
         url = "%s/static/images/logo.png" % self.request.application_url
@@ -187,7 +182,13 @@ class APIView(object):
         return render('templates/global_actions.pt', response, request=request)
 
     def get_meeting_actions(self, context, request):
-        return render('templates/meeting_actions.pt', {'api':self}, request=request)
+        response = {}
+        response['api'] = self
+        if self.userid:
+            response['meetings'] = self.get_restricted_content(self.root, iface=IMeeting, sort_on='title')
+        else:
+            response['meetings'] = ()
+        return render('templates/meeting_actions.pt', response, request=request)
 
     def get_moderator_actions(self, context, request):
         """ A.k.a. the cogwheel-menu. """
