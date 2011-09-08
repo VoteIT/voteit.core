@@ -357,7 +357,8 @@ a {
 .wf-state-voting {}
 .wf-state-ongoing {}
 
-#proposals .wf-state {
+#proposals .wf-state,
+#polls .wf-state {
 	padding-left: 20px;
 }
 .wf-state-published .wf-state { background: url(icons/icon_doc.png) left center no-repeat; }
@@ -513,7 +514,7 @@ li.notification_message {
 }
 
 #polls .proposal,
-#polls .deform li.field {
+#polls .deform > li {
 	margin: 5px 0px;
 	border-top: 1px solid #ccc;
 }
