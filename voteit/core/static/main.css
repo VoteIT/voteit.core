@@ -653,3 +653,33 @@ ui-dialog {
     text-transform: uppercase;
     font-weight: bold;
 }
+
+/* table listing */
+table.listing > thead > tr > th,
+table.listing > tbody > tr > td {
+    padding: 5px;
+    border-right: 1px solid #fff;
+}
+
+table.listing > thead > tr > th.heading {
+    background: #054265;
+	color: #fff;
+	text-transform: uppercase;
+	font-weight: bold;
+}
+table.listing > tbody > tr > td {
+	font-size: 12px;
+}
+table.listing > tbody > tr.odd > td {
+	background: #dbe0e5;
+}
+table.listing > tbody > tr.even > td {
+	background: #86A3B4;
+}
+
+.yes_icon {
+	padding-left: 20px;
+	height: 16px;
+	display: block;
+	background: url(icons/icon_approved.png) no-repeat;
+}

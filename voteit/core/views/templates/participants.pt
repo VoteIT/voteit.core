@@ -1,0 +1,73 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      metal:use-macro="api.main_template.macros['master']"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="voteit.core">
+<body>
+	
+	
+	<h2 id="page_heading" metal:fill-slot="page_heading" i18n:translate="">
+		Showing
+		<span tal:replace="len(participants)" i18n:name="count">5</span>
+		participants
+	</h2>
+
+    <div metal:fill-slot="content" class="content_wrapper">
+
+        <table class="listing">
+        	<thead>
+        		<tr>
+                    <th i18n:translate="" class="heading">UserID</th>
+                    <th i18n:translate="" class="heading">First name</th>
+                    <th i18n:translate="" class="heading">Last name</th>
+                    <th i18n:translate="" class="heading">Email</th>
+                    <th i18n:translate="" class="heading">Can participate?</th>
+                    <th i18n:translate="" class="heading">Can vote?</th>
+                    <th i18n:translate="" class="heading">Moderator?</th>
+        		</tr>
+        	</thead>
+			<tbody>
+				<tal:iterate repeat="user participants">
+				<tr tal:attributes="class repeat.user.odd and 'odd' or 'even'"
+				    tal:define="principals context_effective_principals(context, user.userid)">
+	                    <td>
+	                    	<a tal:content="user.userid"
+							   href="api.resource_url(user, request)">
+	                    	Userid
+							</a>
+						</td>
+                        <td tal:content="user.get_field_value('first_name')">Hanna</td>
+                        <td tal:content="user.get_field_value('last_name')">VoteIT</td>
+	                    <td>
+                            <a tal:content="user.get_field_value('email')"
+                               tal:attributes="href 'mailto:%s' % user.get_field_value('email')">
+                                voteit@betahaus.net
+                            </a>
+							
+						</td>
+                        <td>
+                            <span tal:condition="'role:Participant' in principals">
+                            	<span class="yes_icon" i18n:translate="">Yes</span>
+                            </span>
+                        </td>
+                        <td>
+                            <span tal:condition="'role:Voter' in principals">
+                                <span class="yes_icon" i18n:translate="">Yes</span>
+                            </span>
+                        </td>
+                        <td>
+                            <span tal:condition="'role:Moderator' in principals">
+                                <span class="yes_icon" i18n:translate="">Yes</span>                                
+							</span>
+                        </td>
+
+				</tr>
+				</tal:iterate>
+			</tbody>
+        </table>
+		
+    </div> <!-- content -->
+</body>
+</html>
