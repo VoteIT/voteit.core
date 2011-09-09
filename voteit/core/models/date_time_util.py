@@ -5,6 +5,7 @@ import pytz
 from pyramid.i18n import get_locale_name
 from pyramid.threadlocal import get_current_request
 from babel.dates import format_date
+from babel.dates import format_time
 from babel.dates import format_datetime
 from zope.interface import implements
 
@@ -34,6 +35,10 @@ class DateTimeUtil(object):
         localtime = self.utc_to_tz(value)
         return format_date(localtime, format=format, locale=self.locale)
 
+    def t_format(self, value, format='short'):
+        localtime = self.utc_to_tz(value)
+        return format_time(localtime, format=format, locale=self.locale)
+    
     def dt_format(self, value, format='short'):
         """ Format the given datetime in the given format.
             Will also convert to current timezone from utc.
@@ -92,28 +97,18 @@ class DateTimeUtil(object):
         return utcnow()
 
     def relative_time_format(self, time):
-#        """ Takes a localized datetime and returns a string based on relative
-#            time from that point. Like "1 minute ago" or similar.
-#        """
-        #FIXME: Implement relative time
-        #The method format_timedelta in Babel currently exists in trunk:
-        #http://svn.edgewall.org/repos/babel/trunk/babel/dates.py
-        #Use it when it's available
-        #FIXME this is a temporary solution
-        #http://stackoverflow.com/questions/1551382/python-user-friendly-time-format
-        """
-        Get a datetime object or a int() Epoch timestamp and return a
-        pretty string like 'an hour ago', 'Yesterday', '3 months ago',
-        'just now', etc
+        """ Get a datetime object or a int() Epoch timestamp and return a
+            pretty string like 'an hour ago', 'Yesterday', '3 months ago',
+            'just now', etc
         """
         time = self.tz_to_utc(time)
         now = self.utcnow()
         if type(time) is int:
             diff = now - datetime.fromtimestamp(time)
-        elif isinstance(time,datetime):
+        elif isinstance(time, datetime):
             diff = now - time 
         elif not time:
-            diff = now - now
+            diff = now - now #Haha :)
         second_diff = diff.seconds
         day_diff = diff.days
 
@@ -122,7 +117,7 @@ class DateTimeUtil(object):
 
         if day_diff == 0:
             if second_diff < 10:
-                return _("just now")
+                return _("Just now")
             if second_diff < 60:
                 return _("${diff} seconds ago", mapping={'diff': str(second_diff)})
             if second_diff < 120:
@@ -130,18 +125,12 @@ class DateTimeUtil(object):
             if second_diff < 3600:
                 return _("${diff} minutes ago", mapping={'diff': str(second_diff / 60)})
             if second_diff < 7200:
-                return "an hour ago"
+                return "1 hour ago"
             if second_diff < 86400:
                 return _("${diff} hours ago", mapping={'diff': str(second_diff / 3600)})
-        if day_diff == 1:
-            return _("1 day ago")
-        if day_diff < 7:
-            return _("${diff} days ago", mapping={'diff': str(day_diff)})
-        if day_diff < 31:
-            return _("${diff} weeks ago", mapping={'diff': str(day_diff/7)})
-        if day_diff < 365:
-            return _("${diff} months ago", mapping={'diff': str(day_diff/30)})
-        return _("${diff} years ago", mapping={'diff': str(day_diff/365)})
+
+        #If it's longer than 7 days, just run the regular localization
+        return self.dt_format(time)
 
 
 def utcnow():

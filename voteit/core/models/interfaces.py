@@ -343,6 +343,9 @@ class IDateTimeUtil(Interface):
     def d_format(value, format='short'):
         """ Return date formatted according to current locale."""
 
+    def t_format(value, format='short'):
+        """ Return time formatted according to current locale."""
+
     def dt_format(value, format='short'):
         """ Return date and time formatted according to current locale."""
 

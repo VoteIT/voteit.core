@@ -1,11 +1,13 @@
 import unittest
 from datetime import datetime
 from datetime import timedelta
-
 import pytz
 
+
+from pyramid.i18n import get_localizer
 from pyramid import testing
 from zope.interface.verify import verifyObject
+
 from voteit.core.models.interfaces import IDateTimeUtil
 
 
@@ -36,7 +38,12 @@ class DateTimeUtilityTests(unittest.TestCase):
         obj = self._make_obj()
         date = obj.localize(datetime.strptime('1999-12-13', "%Y-%m-%d"))
         self.assertEqual(obj.d_format(date), u'12/13/99')
-    
+
+    def test_t_format(self):
+        obj = self._make_obj()
+        date_and_time = obj.localize(datetime.strptime('1999-12-14 19:12', "%Y-%m-%d %H:%M"))
+        self.assertEqual(obj.t_format(date_and_time), u'7:12 PM')
+
     def test_dt_format(self):
         obj = self._make_obj()
         date_and_time = obj.localize(datetime.strptime('1999-12-14 19:12', "%Y-%m-%d %H:%M"))
@@ -105,3 +112,40 @@ class DateTimeUtilityTests(unittest.TestCase):
 
         self.assertNotEqual(l_dt1 - l_dt2, timedelta(days=122))
         self.assertEquals(l_dt1 - l_dt2, timedelta(days=122, hours=1))
+
+    def test_relative_time_format(self):
+        request = testing.DummyRequest()
+        locale = get_localizer(request)
+        trans = locale.translate
+        
+        obj = self._make_obj()
+        now = obj.utcnow()
+        fut = obj.relative_time_format
+        
+        #Just now
+        self.assertEqual(fut(now), u"Just now")
+
+        #30 seconds ago - is this really a smart test? :)
+        now = obj.utcnow()
+        out = fut(now - timedelta(seconds=30))
+        self.assertEqual(trans(out), u"30 seconds ago")
+
+        #90 seconds ago - I.e. after 1 minute
+        out = fut(now - timedelta(seconds=90))
+        self.assertEqual(trans(out), u"1 minute ago")
+
+        #5 minutes ago
+        out = fut(now - timedelta(minutes=5))
+        self.assertEqual(trans(out), u"5 minutes ago")
+
+        #1 hour ago
+        out = fut(now - timedelta(hours=1, seconds=1))
+        self.assertEqual(trans(out), u"1 hour ago")
+
+        #5 hours ago
+        out = fut(now - timedelta(hours=6, seconds=1))
+        self.assertEqual(trans(out), u"6 hours ago")
+        
+        #After about 1 day, return regular date time format
+        date = obj.localize( datetime.strptime('1999-08-14 18:12', "%Y-%m-%d %H:%M") )
+        self.assertEqual(fut(date), u'8/14/99 6:12 PM')
