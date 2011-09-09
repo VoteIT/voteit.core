@@ -59,6 +59,7 @@
             from_state="planned"
             to_state="ongoing"
             permission="Change Workflow State"
+			callback="voteit.core.models.poll.ongoing_poll_callback"
         />
 
 		<transition
