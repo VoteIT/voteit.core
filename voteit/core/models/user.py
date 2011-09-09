@@ -223,7 +223,22 @@ def construct_schema(**kwargs):
             first_name = first_name_node
             last_name = last_name_node
             came_from = came_from_node
-        return AddUserSchema()
+
+        #Move password field last and userid first
+        #FIXME: Is there no smarter way of doing this!?
+        au_schema =  AddUserSchema()
+        new_child_order = []
+        for id in ('userid', 'email', 'first_name', 'last_name'):
+            new_child_order.append(au_schema[id])
+        
+        #Fetch anything we might have missed
+        for old_obj in au_schema.children:
+            if old_obj not in new_child_order:
+                new_child_order.append(old_obj)
+
+        au_schema.children = new_child_order
+            
+        return au_schema
 
     if type == 'edit':
         class EditUserSchema(colander.Schema):
