@@ -120,8 +120,6 @@ def get_groups_schema(context):
             validator=colander.OneOf(user_choice),
             widget = userid_widget,
             )
-        email = colander.SchemaNode(
-            colander.String())
         groups = colander.SchemaNode(
             deform.Set(allow_empty=True),
             widget=deform.widget.CheckboxChoiceWidget(values=group_choices,
