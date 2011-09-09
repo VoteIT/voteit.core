@@ -200,7 +200,7 @@ class MeetingView(BaseView):
         return self.response
 
 
-    @view_config(name="manage_tickets", context=IMeeting, renderer="templates/base_view.pt", permission=security.MANAGE_GROUPS)
+    @view_config(name="manage_tickets", context=IMeeting, renderer="templates/base_edit.pt", permission=security.MANAGE_GROUPS)
     def manage_tickets(self):
         """ A form for handling and reviewing already sent tickets.
         """

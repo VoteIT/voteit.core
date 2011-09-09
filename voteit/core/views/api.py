@@ -190,8 +190,9 @@ class APIView(object):
             
             #Remove current meeting from list
             if self.meeting in meetings:
-                meetings.remove(self.meeting)                
+                meetings.remove(self.meeting)
             response['meetings'] = meetings
+        response['is_moderator'] = self.context_has_permission(security.MODERATE_MEETING, context)
 
         return render('templates/meeting_actions.pt', response, request=request)
 
