@@ -10,5 +10,6 @@ class JavaScript(BaseView):
     
     @view_config(context=ISiteRoot, name="config.js", permission=VIEW, renderer='../static/config.js.pt')
     def javascript_config(self):
-        self.request.response_content_type = 'text/javascript;;charset=utf-8'
+        #Note that self.request.response is not the same as self.response which is our dict
+        self.request.response.content_type = 'text/javascript;;charset=utf-8'
         return self.response
