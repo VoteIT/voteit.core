@@ -32,24 +32,6 @@
         </li>
         </tal:siteroot>
 
-        <tal:meeting condition="context.content_type == 'Meeting'">
-        <tal:comment condition="False">
-            Common functions for meeting.
-        </tal:comment>
-        <li class="menuitem">
-            <a tal:attributes="href api.resource_url(context, request) + '@@participant_permissions'"
-                i18n:translate="">Edit permissions</a>
-        </li>
-        <li class="menuitem" tal:condition="context.get_workflow_state() != 'private'">
-            <a tal:attributes="href api.resource_url(context, request) + '@@add_tickets'"
-               i18n:translate="">Invite participants</a>
-        </li>
-        <li class="menuitem" tal:condition="context.get_workflow_state() != 'private'">
-            <a tal:attributes="href api.resource_url(context, request) + '@@manage_tickets'"
-               i18n:translate="">Manage invites</a>
-        </li>
-        </tal:meeting>
-
         <tal:add_content tal:condition="
                                         (context.content_type == 'SiteRoot' or context.content_type == 'Meeting') and
                                         addable_types|False">

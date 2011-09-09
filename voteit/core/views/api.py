@@ -190,8 +190,9 @@ class APIView(object):
             
             #Remove current meeting from list
             if self.meeting in meetings:
-                meetings.remove(self.meeting)                
+                meetings.remove(self.meeting)
             response['meetings'] = meetings
+        response['is_moderator'] = self.context_has_permission(security.MODERATE_MEETING, context)
 
         return render('templates/meeting_actions.pt', response, request=request)
 
@@ -211,7 +212,7 @@ class APIView(object):
         
     def get_time_created(self, context):
         """ Render start and end time of something, if those exist. """
-        return self.dt_util.dt_format(context.created)
+        return self.dt_util.relative_time_format(context.created)
 
     def get_creators_info(self, creators, request, portrait=True):
         """ Return template for a set of creators.
