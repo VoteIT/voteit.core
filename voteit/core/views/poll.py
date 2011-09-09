@@ -55,11 +55,9 @@ class PollView(object):
                 self.response['form'] = e.render()
                 return self.response
 
-            old_proposals = self.context.proposal_uids
             updated = self.context.set_field_appstruct(appstruct)
 
             if updated:
-                self.context.proposal_uids.update(old_proposals)
                 self.api.flash_messages.add(_(u"Successfully updated"))
                 #TODO: This should probably not be fired here, instead it should be fired by the object
                 objectEventNotify(ObjectUpdatedEvent(self.context))

@@ -243,9 +243,9 @@ def construct_schema(context=None, request=None, **kwargs):
 
     #FIXME: The new object should probably be sent to construct schema
     #for now, we can fake this
-    poll = Poll()
+    fake_poll = Poll()
 
-    for (name, plugin) in request.registry.getAdapters([poll], IPollPlugin):
+    for (name, plugin) in request.registry.getAdapters([fake_poll], IPollPlugin):
         plugin_choices.add((name, plugin.title))
 
     #Proposals to vote on
@@ -257,6 +257,13 @@ def construct_schema(context=None, request=None, **kwargs):
     #Get valid proposals - should be in states 'published' to be selectable
     for prop in agenda_item.get_content(iface=IProposal, states='published', sort_on='title'):
         proposal_choices.add((prop.uid, prop.title, ))
+        
+    # get currently chosen proposals
+    if IPoll.providedBy(context):
+        for prop in context.get_proposal_objects():
+            proposal_choices.add((prop.uid, prop.title, ))
+            
+    proposal_choices = sorted(proposal_choices, key=lambda proposal: proposal[1].lower())
         
     #Note: The message factory shouldn't process mappings here, it's handled by deform!
     _earliest_start = colander.Range(min=dt_util.localnow(),
@@ -283,11 +290,12 @@ def construct_schema(context=None, request=None, **kwargs):
                                                           default=u"Each poll method should contain information about what it does."),
                                           widget=deform.widget.SelectWidget(values=plugin_choices),)
                                           
-        proposals = colander.SchemaNode(deform.Set(allow_empty=False if context.get_workflow_state() != u'planned' else True), #When editing and the poll is in state "planned" this could be empty
+        proposals = colander.SchemaNode(deform.Set(allow_empty=True), 
                                         name="proposals",
                                         title = _(u"Proposals"),
                                         description = _(u"poll_select_proposals_description",
                                                         default=u"Only proposals in the state 'published' can be selected here."),
+                                        missing=set(),
                                         widget=deform.widget.CheckboxChoiceWidget(values=proposal_choices),)
 
         start_time = colander.SchemaNode(
@@ -337,3 +345,11 @@ def planned_poll_callback(content, info):
                 default=u"${count} selected proposals were set in the 'locked for vote' state. They can no longer be edited or retracted by normal users.",
                 mapping={'count':count})
         fm.add(msg)
+        
+def ongoing_poll_callback(content, info):
+    """ Workflow callback when a poll is set in the ongoing state.
+        This method will raise an exeption if there is no propsoals in the poll.
+    """
+    
+    if not content.proposal_uids:
+        raise ValueError('A poll with no proposal can not be set to ongoing')
