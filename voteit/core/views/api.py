@@ -84,11 +84,6 @@ class APIView(object):
     def unreads(self):
         return Unreads(self.sql_session)
 
-    def logo_link(self):
-        if self.meeting:
-            return resource_url(self.meeting, self.request)
-        return resource_url(self.root, self.request)
-
     def logo_image_tag(self):
         """ Should handle customisations later. """
         url = "%s/static/images/logo.png" % self.request.application_url
@@ -187,7 +182,18 @@ class APIView(object):
         return render('templates/global_actions.pt', response, request=request)
 
     def get_meeting_actions(self, context, request):
-        return render('templates/meeting_actions.pt', {'api':self}, request=request)
+        response = {}
+        response['api'] = self
+        response['meetings'] = ()
+        if self.userid:
+            meetings = self.get_restricted_content(self.root, iface=IMeeting, sort_on='title')
+            
+            #Remove current meeting from list
+            if self.meeting in meetings:
+                meetings.remove(self.meeting)                
+            response['meetings'] = meetings
+
+        return render('templates/meeting_actions.pt', response, request=request)
 
     def get_moderator_actions(self, context, request):
         """ A.k.a. the cogwheel-menu. """
@@ -207,7 +213,7 @@ class APIView(object):
         """ Render start and end time of something, if those exist. """
         return self.dt_util.relative_time_format(context.created)
 
-    def get_creators_info(self, creators, request):
+    def get_creators_info(self, creators, request, portrait=True):
         """ Return template for a set of creators.
             The content of creators should be userids
         """
@@ -220,7 +226,15 @@ class APIView(object):
         response = {}
         response['resource_url'] = resource_url
         response['users'] = users
+        response['portrait'] = portrait
         return render('templates/creators_info.pt', response, request=request)
+
+    def get_poll_state_info(self, poll):
+        response = {}
+        response['api'] = self
+        response['wf_state'] = poll.get_workflow_state()
+        response['poll'] = poll
+        return render('templates/poll_state_info.pt', response, request=self.request)
 
     def context_has_permission(self, permission, context):
         """ Special permission check that is agnostic of the request.context attribute.

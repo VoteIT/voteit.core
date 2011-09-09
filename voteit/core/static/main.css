@@ -339,6 +339,7 @@ a {
 
 .listing_block {
     margin-top: 1em;
+	clear: both;
 }
 
 /* Workflow states */
@@ -356,7 +357,8 @@ a {
 .wf-state-voting {}
 .wf-state-ongoing {}
 
-#proposals .wf-state {
+#proposals .wf-state,
+#polls .wf-state {
 	padding-left: 20px;
 }
 .wf-state-published .wf-state { background: url(icons/icon_doc.png) left center no-repeat; }
@@ -486,9 +488,6 @@ li.notification_message {
 }
 
 /* polls */
-#polls h2 {
-    border-bottom: none;
-}
 #polls h3 {
     color: #666;
     font-weight: normal;
@@ -499,14 +498,9 @@ li.notification_message {
     background-color: #fff;
     padding: 5px 10px;
 }
-#polls .proposal strong {
-    font-weight: normal;
-    color: #ccc;
-}
-#polls .proposal strong {
-    font-weight: normal;
-    color: #ccc;
-    display: block;
+#polls .listing_block {
+	border-bottom: 2px solid #86A3B4;
+	padding-bottom: 10px;
 }
 
 #polls #add_poll {
@@ -517,6 +511,12 @@ li.notification_message {
     font-size: 1.2em;
 	padding-left: 1.5em;
 	padding-right: 1.5em;
+}
+
+#polls .proposal,
+#polls .deform > li {
+	margin: 5px 0px;
+	border-top: 1px solid #ccc;
 }
 
 /* proposals and discussions */
@@ -646,4 +646,40 @@ ui-dialog {
     padding: 0 0 10px 0;
     text-transform: uppercase;
     font-weight: bold;
+}
+.read_more {
+    color: #054265;
+    padding: 0 20px 10px 0;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+/* table listing */
+table.listing > thead > tr > th,
+table.listing > tbody > tr > td {
+    padding: 5px;
+    border-right: 1px solid #fff;
+}
+
+table.listing > thead > tr > th.heading {
+    background: #054265;
+	color: #fff;
+	text-transform: uppercase;
+	font-weight: bold;
+}
+table.listing > tbody > tr > td {
+	font-size: 12px;
+}
+table.listing > tbody > tr.odd > td {
+	background: #dbe0e5;
+}
+table.listing > tbody > tr.even > td {
+	background: #fff;
+}
+
+.yes_icon {
+	padding-left: 20px;
+	height: 16px;
+	display: block;
+	background: url(icons/icon_approved.png) no-repeat;
 }

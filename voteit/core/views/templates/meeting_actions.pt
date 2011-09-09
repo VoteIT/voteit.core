@@ -8,17 +8,27 @@
            i18n:translate="">Meeting search</a>
     </li>
 	-->
-
-    <tal:administrator condition="api.userid">
-        <!-- Administrator actions -->
-        <li class="tab dropdown_menu" >
-            <a href="#" class="menu_header"><span i18n:translate="">Settings</span> &raquo;</a>
+	
+	<tal:meeting_menu condition="meetings">
+        <li class="tab dropdown_menu">
+            <a href="#" class="menu_header"><span i18n:translate="">Meetings</span> &raquo;</a>
             <ul class="menu_body">
-                <li><a tal:attributes="href request.application_url + '/users/@@list'"
-                       i18n:translate="">Users</a></li>
+            	<tal:iterate repeat="meeting meetings">
+	                <li>
+	                	<a tal:attributes="href api.resource_url(meeting, request)"
+	                       tal:content="meeting.title">Meeting Title</a>
+				    </li>
+				</tal:iterate>
             </ul>
+        </li>		
+	</tal:meeting_menu>
+
+    <tal:participants condition="api.userid and api.meeting">
+        <li class="tab">
+            <a tal:attributes="href '%s@@participants' % api.resource_url(api.meeting, request);"
+                       i18n:translate="">Participants</a>
         </li>
-    </tal:administrator>
+    </tal:participants>
     
 	<!-- FIXME: Not implemented properly yet
     <tal:authenticated condition="api.userid">

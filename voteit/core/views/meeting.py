@@ -68,6 +68,24 @@ class MeetingView(BaseView):
     def _is_section_closed(self, section):
         return self.request.cookies.get(section, None)
 
+    @view_config(name="participants", context=IMeeting, renderer="templates/participants.pt", permission=security.VIEW)
+    def participants_view(self):
+        """ List all participants in this meeting, and their permissions. """
+        users = self.api.root.users
+        
+        results = []
+        for userid in security.find_authorized_userids(self.context, (security.VIEW,)):
+            user = users.get(userid, None)
+            if user:
+                results.append(user)
+        
+        def _sorter(obj):
+            return obj.get_field_value('first_name')
+
+        self.response['participants'] = tuple(sorted(results, key = _sorter))
+        self.response['context_effective_principals'] = security.context_effective_principals
+        return self.response
+
     @view_config(name="meeting_access", context=IMeeting, renderer="templates/meeting_access.pt", permission=security.VIEW)
     def meeting_access(self):
         self.response['security_appstruct'] = self.context.get_security_appstruct()['userids_and_groups']

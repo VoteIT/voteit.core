@@ -75,7 +75,7 @@ class Proposal(BaseContent, WorkflowAware):
 def construct_schema(**kwargs):
     class ProposalSchema(colander.MappingSchema):
         title = colander.SchemaNode(colander.String(),
-                                    title = _(u"Proposal"),
+                                    title = _(u"I propose:"),
                                     validator=html_string_validator,
                                     widget=deform.widget.TextAreaWidget(rows=3, cols=40),)
     return ProposalSchema()

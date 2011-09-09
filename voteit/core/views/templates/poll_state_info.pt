@@ -1,0 +1,28 @@
+<tal:main 
+    xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+    i18n:domain="voteit.core">
+
+<div class="poll_state_info meta">
+	<tal:planned condition="wf_state == 'planned'">
+	    <span i18n:translate="">Expected start time
+	        <span tal:replace="api.dt_util.dt_format(poll.start_time)" i18n:name="start_time" />
+	    </span>
+	    &mdash;
+	    <span i18n:translate="">Expected end time
+	        <span tal:replace="api.dt_util.dt_format(poll.end_time)" i18n:name="end_time" />
+	    </span>
+	</tal:planned>
+	<tal:ongoing condition="wf_state == 'ongoing'">
+	    <span i18n:translate="">Currently open</span>
+	    &mdash;
+	    <span i18n:translate="">Expected end time
+	        <span tal:replace="api.dt_util.dt_format(poll.end_time)" i18n:name="end_time" />
+	    </span>
+	</tal:ongoing>
+	<tal:closed condition="wf_state == 'closed'">
+	    <span i18n:translate="">Poll closed</span>
+	    <!-- FIXME: Display winning proposals here? -->
+	</tal:closed>
+</div>
+
+</tal:main>

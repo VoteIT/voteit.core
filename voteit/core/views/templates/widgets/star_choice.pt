@@ -1,8 +1,11 @@
 <tal:main
-      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
-      i18n:domain="voteit.core">
+    xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+    i18n:domain="voteit.core">
 <div class="deformSet"> 
     <input type="hidden" name="__start__" value="${field.name}:rename"/>
+
+    <div class="star_description meta" tal:content="structure field.description">Description</div>
+	
     <tal:loop tal:repeat="choice field.widget.values">
       <input tal:attributes="checked choice[0] == cstruct;
                              class string:${field.widget.css_class} star"

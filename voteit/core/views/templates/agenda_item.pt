@@ -7,75 +7,38 @@
 	  i18n:domain="voteit.core">
 <body>
 
-    <div id="content" metal:fill-slot="top_content">
-        <div id="polls">
-            <div id="add_poll" tal:condition="api.show_moderator_actions and api.context_has_permission('Add Poll', context)">
-                <a class="buttonize" tal:attributes="href api.resource_url(context, request) + '@@add?content_type=Poll'"><span i18n:translate="">Add poll</span></a>
-            </div>
-            <h2 tal:condition="polls"><span i18n:translate="">Poll(s)</span></h2>
-            <tal:iterate condition="polls" repeat="poll polls">
-                <div tal:define="poll_plugin poll.get_poll_plugin();
-                                 state_id poll.get_workflow_state();
-                                 unread api.is_unread(poll, True);"
-                     tal:attributes="class unread and 'unread listing_block' or 'listing_block'">
-                    <div class="poll_type">
-                        <strong i18n:translate="">Poll method</strong>: <span tal:content="poll_plugin.title">Title</span>
-                        <div tal:content="structure poll_plugin.description">Description</div>
-                    </div>
-                    <h3 tal:content="poll.title">Title</h3>
-                    <div class="wf-info">
-                        <span i18n:translate="">State</span>:
-                        <strong tal:attributes="class 'wf-state-%s' % state_id"
-                                tal:content="state_id">open</strong>
-                    </div>
-                    <div tal:content="poll.description">Description</div>
-                    
-                    <div tal:condition="state_id == 'closed'"
-                        tal:content="structure poll.render_poll_result()">
-                        Poll result
-                    </div>
-                    <div tal:condition="state_id == 'private'" tal:define="proposals poll.get_proposal_objects()">
-                    <tal:iterate condition="proposals" repeat="proposal proposals" >
-                        <div class="proposal">
-                            <strong tal:content="structure proposal.title"></strong>
-                            <tal:creators tal:replace="structure api.get_creators_info(proposal.creators, request)">Creators</tal:creators>
-                        </div>
-                    </tal:iterate>
-                    </div>
+    <div id="polls" metal:fill-slot="top_content">
+        	
+        <div id="add_poll" tal:condition="api.show_moderator_actions and api.context_has_permission('Add Poll', context)">
+            <a class="buttonize" tal:attributes="href api.resource_url(context, request) + '@@add?content_type=Poll'"><span i18n:translate="">Add poll</span></a>
+        </div>
+        <h2 tal:condition="polls"><span i18n:translate="">Poll</span></h2>
 
-                    <div tal:replace="structure api.get_action_bar(poll, request)">Action bar</div>
-                    <div tal:condition="poll_forms[poll.uid]|False" tal:content="structure poll_forms[poll.uid]"></div>
-                </div>
-            </tal:iterate>
-        </div> <!-- polls -->
+        <span tal:replace="structure get_polls(polls, poll_forms)">Render poll listing</span>
+
     </div> <!-- top_content -->
-        
 
-    <div id="content" metal:fill-slot="right_content">
-        <div id="discussions">
-            <h2><span i18n:translate="">Discussion</span></h2>
-                
-            <div tal:replace="structure get_discussions()">Discussion listing</div>
+    <div metal:fill-slot="right_content" id="discussions">
+        <h2><span i18n:translate="">Discussion</span></h2>
+            
+        <div tal:replace="structure get_discussions()">Discussion listing</div>
 
-            <div class="discussion_form" tal:condition="discussion_form|False">
-                <tal:creators tal:replace="structure api.get_creators_info((api.userid, ), request)">Creators</tal:creators>
-                <span tal:replace="structure discussion_form">Discussion form</span>
-            </div>
+        <div class="discussion_form" tal:condition="discussion_form|False">
+            <tal:creators tal:replace="structure api.get_creators_info((api.userid, ), request)">Creators</tal:creators>
+            <span tal:replace="structure discussion_form">Discussion form</span>
         </div>
     </div> <!-- right_content -->
 
-    <div id="content" metal:fill-slot="left_content">
-        <div id="proposals">
-            <h2><span i18n:translate="">Proposal(s)</span></h2>
+    <div metal:fill-slot="left_content" id="proposals">
+        <h2><span i18n:translate="">Proposal</span></h2>
 
-            <div tal:replace="structure get_proposals()">Proposals listing</div>
-            
-            <div class="proposal_form" tal:condition="proposal_form|False">
-                <tal:creators tal:replace="structure api.get_creators_info((api.userid, ), request)">Creators</tal:creators>
-                <span tal:replace="structure proposal_form">Proposal form</span>
-            </div>
-
+        <div tal:replace="structure get_proposals()">Proposals listing</div>
+        
+        <div class="proposal_form" tal:condition="proposal_form|False">
+            <tal:creators tal:replace="structure api.get_creators_info((api.userid, ), request)">Creators</tal:creators>
+            <span tal:replace="structure proposal_form">Proposal form</span>
         </div>
+
     </div> <!-- left_content -->
 </body>
 </html>

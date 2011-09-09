@@ -267,11 +267,15 @@ def construct_schema(context=None, request=None, **kwargs):
     #base schema
     local_tz = dt_util.timezone
 
+
     class PollSchema(colander.MappingSchema):
         title = colander.SchemaNode(colander.String(),
-            validator=html_string_validator,)
+                                    title = _(u"Title"),
+                                    validator=html_string_validator,)
         description = colander.SchemaNode(colander.String(),
-            validator=html_string_validator,)
+                                          title = _(u"Description"),
+                                          missing=u"",
+                                          widget=deform.widget.RichTextWidget(),)
 
         poll_plugin = colander.SchemaNode(colander.String(),
                                           title = _(u"Poll method to use"),
