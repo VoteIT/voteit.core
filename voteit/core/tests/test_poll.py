@@ -29,9 +29,13 @@ class PollTests(unittest.TestCase):
         """ Poll object need to be in the context of an Agenda Item to work properly
         """
         from voteit.core.models.poll import Poll
+        from voteit.core.models.proposal import Proposal
         from voteit.core.models.agenda_item import AgendaItem
         ai = AgendaItem()
         ai['poll'] = Poll()
+        
+        proposal = Proposal()
+        ai['poll'].set_field_value('proposals', set(proposal.uid))
 
         return ai['poll']
     
@@ -261,11 +265,17 @@ class PollPermissionTests(unittest.TestCase):
         """ Poll object need to be in the context of an Agenda Item to work properly
         """
         from voteit.core.models.poll import Poll
+        poll = Poll()
+        
+        from voteit.core.models.proposal import Proposal
+        proposal = Proposal()
+        poll.set_field_value('proposals', set(proposal.uid))
+        
         from voteit.core.models.agenda_item import AgendaItem
         ai = AgendaItem()
-        ai['poll'] = Poll()
+        ai['poll'] = poll
 
-        return ai['poll']
+        return poll
 
     def _register_majority_poll(self, poll):
         from voteit.core.app import register_poll_plugin
@@ -317,7 +327,7 @@ class PollPermissionTests(unittest.TestCase):
         self.assertEqual(self.pap(poll, security.ADD_VOTE), voter)
 
         self.assertEqual(self.pap(poll, security.CHANGE_WORKFLOW_STATE), admin | moderator)
-
+        
     def test_closed_or_canceled(self):
         request = testing.DummyRequest()
         poll = self._make_obj()
@@ -333,3 +343,14 @@ class PollPermissionTests(unittest.TestCase):
         self.assertEqual(self.pap(poll, security.DELETE), set())
         
         self.assertEqual(self.pap(poll, security.ADD_VOTE), set())
+
+    def test_ongoing_wo_proposal(self):
+        request = testing.DummyRequest()
+        poll = self._make_obj()
+        
+        # remove all proposals on poll
+        poll.set_field_value('proposals', set())
+
+        poll.set_workflow_state(request, 'planned')
+        
+        self.assertRaises(ValueError, poll.set_workflow_state, request, 'ongoing')

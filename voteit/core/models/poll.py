@@ -351,5 +351,5 @@ def ongoing_poll_callback(content, info):
         This method will raise an exeption if there is no propsoals in the poll.
     """
     
-    if not content.get_proposal_objects():
+    if not content.proposal_uids:
         raise ValueError('A poll with no proposal can not be set to ongoing')

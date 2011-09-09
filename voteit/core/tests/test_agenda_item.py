@@ -36,7 +36,11 @@ class AgendaItemTests(unittest.TestCase):
     
     def _make_poll(self):
         from voteit.core.models.poll import Poll
-        return Poll()
+        poll = Poll()
+        
+        poll.set_field_value('proposals', set(self._make_proposal().uid))
+        
+        return poll
 
     def test_verify_implementation(self):
         from voteit.core.models.interfaces import IAgendaItem
