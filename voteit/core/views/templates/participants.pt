@@ -34,7 +34,7 @@
 				    tal:define="principals context_effective_principals(context, user.userid)">
 	                    <td>
 	                    	<a tal:content="user.userid"
-							   href="api.resource_url(user, request)">
+							   href="${api.resource_url(user, request)}">
 	                    	Userid
 							</a>
 						</td>
@@ -59,7 +59,7 @@
                         </td>
                         <td>
                             <span tal:condition="'role:Moderator' in principals">
-                                <span class="yes_icon" i18n:translate="">Yes</span>                                
+                                <span class="yes_icon" i18n:translate="">Yes</span>
 							</span>
                         </td>
 
