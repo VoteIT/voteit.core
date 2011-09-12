@@ -409,28 +409,6 @@ li.notification_message {
 	margin-bottom: 10px;
 }
 
-/* Buttonize */
-.buttonize,
-.buttons button {
-	border: 1px solid #ccc;
-	background: #eff0f2;
-	margin: 0px;
-	padding: 0.25em 0.5em;
-	color: #054265;
-    border-radius: 0.3em;
-    -webkit-border-radius: 0.3em;
-    -moz-border-radius: 0.3em;
-	font-size: 0.8em;
-	font-weight: bold;
-	text-transform:uppercase;
-}
-.buttonize.selected {
-}
-.buttonize:hover,
-.buttons button:hover {
-    color: #000;
-}
-
 /* meeting overview */
 #meeting_overview {
 	color: #054265;
@@ -682,4 +660,26 @@ table.listing > tbody > tr.even > td {
 	height: 16px;
 	display: block;
 	background: url(icons/icon_approved.png) no-repeat;
+}
+
+/* Form stuff */
+.buttonize,
+.buttons button {
+    border: 1px solid #ccc;
+    background: #eff0f2;
+    margin: 0px;
+    padding: 0.5em 1em;
+    color: #054265;
+    border-radius: 0.5em;
+    -webkit-border-radius: 0.5em;
+    -moz-border-radius: 0.5em;
+    text-transform:uppercase;
+	font-size: 12px;
+	font-weight: bold;
+}
+.buttonize.selected {
+}
+.buttonize:hover,
+.buttons button:hover {
+    cursor: pointer;
 }
