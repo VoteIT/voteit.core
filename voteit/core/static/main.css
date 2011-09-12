@@ -268,13 +268,13 @@ a {
 	height: 15px;
 }
 #navigation .discussions {
-    background: url(images/gfx_disk_lb.png) no-repeat 0 3px;
+    background: url(icons/icon_disc_lb.png) no-repeat;
 }
 #navigation .proposals {
-    background: url(images/gfx_prop_lb.png) no-repeat 0 3px;
+    background: url(icons/icon_proposal_lb.png) no-repeat;
 }
 #navigation .polls {
-    background: url(images/gfx_star_db.png) no-repeat 0 3px;
+    background: url(icons/icon_vote_lb.png) no-repeat;
 }
 #navigation .ai_info {
 	clear: both;
