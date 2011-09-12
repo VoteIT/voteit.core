@@ -227,7 +227,7 @@ a {
 }
 #meeting-actions-menu .dropdown_menu .menu_body {
 	top: 40px;
-    background: url(images/meetingmenu_bg_opacity30.png) repeat;
+    background: #fff url(images/meetingmenu_bg_opacity30.png) repeat;
 }
 
 /* Left side navigation (Agenda) */
