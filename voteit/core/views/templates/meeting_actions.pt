@@ -9,6 +9,21 @@
     </li>
 	-->
 	
+	<tal:polls tal:condition="polls_metadata|False">
+
+        <li class="tab dropdown_menu">
+            <a href="#" class="menu_header"><span i18n:translate="">My polls</span> &raquo;</a>
+            <ul class="menu_body">
+            	
+                <li tal:repeat="poll_metadata polls_metadata">
+                    <a i18n:translate="">${poll_metadata['title']}</a>
+                </li>
+
+            </ul>
+        </li>
+
+	</tal:polls>
+	
     <tal:meeting condition="api.meeting and is_moderator">
         <li class="tab dropdown_menu">
             <a href="#" class="menu_header"><span i18n:translate="">Moderator menu</span> &raquo;</a>
@@ -29,9 +44,9 @@
         </li>
     </tal:meeting>
 	
-	<tal:meeting_menu condition="meetings">
+	<tal:meeting_menu condition="meetings|False">
         <li class="tab dropdown_menu">
-            <a href="#" class="menu_header"><span i18n:translate="">Meetings</span> &raquo;</a>
+            <a href="#" class="menu_header"><span i18n:translate="">My meetings</span> &raquo;</a>
             <ul class="menu_body">
             	<tal:iterate repeat="meeting meetings">
 	                <li>

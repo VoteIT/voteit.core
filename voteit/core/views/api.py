@@ -10,6 +10,7 @@ from pyramid.location import lineage
 from pyramid.location import inside
 from pyramid.traversal import find_interface
 from pyramid.traversal import find_root
+from pyramid.traversal import resource_path
 from pyramid.exceptions import Forbidden
 from pyramid.interfaces import IAuthenticationPolicy
 from pyramid.interfaces import IAuthorizationPolicy
@@ -18,6 +19,9 @@ from pyramid.i18n import get_locale_name, get_localizer
 from webob.exc import HTTPFound
 from repoze.workflow import get_workflow
 from webhelpers.html.converters import nl2br
+from repoze.catalog.query import Eq
+#from repoze.catalog.query import Contains
+from repoze.catalog.query import Name
 
 from voteit.core import VoteITMF as _
 from voteit.core import security
@@ -30,6 +34,7 @@ from voteit.core.views.macros import FlashMessages
 from voteit.core.views.expressions import ExpressionsView
 from voteit.core.models.unread import Unreads
 from voteit.core.models.message import Messages
+
 
 
 class APIView(object):
@@ -184,14 +189,30 @@ class APIView(object):
     def get_meeting_actions(self, context, request):
         response = {}
         response['api'] = self
-        response['meetings'] = ()
         if self.userid:
+            #Authenticated
+            #Get available meetings outside of this context
             meetings = self.get_restricted_content(self.root, iface=IMeeting, sort_on='title')
-            
             #Remove current meeting from list
             if self.meeting in meetings:
                 meetings.remove(self.meeting)
             response['meetings'] = meetings
+
+            #Voter?
+            if self.meeting and security.ROLE_VOTER in self.context_effective_principals(self.context):
+                MEETING_MENU_QUERY = Eq('path', Name('path')) & Eq('content_type', Name('content_type'))
+                
+                cat = self.root.catalog
+                
+                query_params = {}
+                query_params['content_type'] = 'Poll'
+                query_params['path'] = resource_path(self.meeting)
+
+                #FIXME: PERMISSION
+                num, poll_ids = cat.query(MEETING_MENU_QUERY, names = query_params)
+                
+                response['polls_metadata'] = [cat.document_map.get_metadata(x) for x in poll_ids]                    
+
         response['is_moderator'] = self.context_has_permission(security.MODERATE_MEETING, context)
 
         return render('templates/meeting_actions.pt', response, request=request)
