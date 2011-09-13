@@ -374,18 +374,21 @@ a {
 }
 
 #flash_messages .message {
-    padding: 0.25em 0.5em;
-    border-radius: 0.5em;
-    -webkit-border-radius: 0.5em;
-    -moz-border-radius: 0.5em;
+    padding: 5px 5px 5px 30px;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
     box-shadow: 0 0 1em 0 #888;
     -moz-box-shadow: 0 0 0.5em 0 #888;
     -webkit-box-shadow: 0 0 0.5em #888;
 	/* Info is default */
-    border: 1px solid #996;
-    background: #ffffe3;
+    border: 1px solid #CCC;
+    background: #FFF8E0 url(icons/icon_info.png) no-repeat 5px 6px;
 	float: left;
 	clear: both;
+    font-style: italic;
+	font-size: 14px;
+	color: #054265;
 }
 #flash_messages .info {
 }
@@ -393,11 +396,6 @@ a {
     border-color: red;
     background-color: #fdc;
 }
-#flash_messages .you {
-    border-color: #75ad0a;
-    background-color: rgb(207,249,159);
-}
-
 div.unread.listing_block {
 	margin-left: -5px;
 	padding-left: 5px;
