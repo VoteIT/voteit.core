@@ -12,7 +12,12 @@
 		the js-script expects it to be. Check static resources before changing anything.
 	</tal:comment>
 	
-	<div id="content" metal:fill-slot="right_content">
+	<div metal:fill-slot="left">
+        <div class="description" tal:condition="context.description" tal:content="structure context.description">Description</div>
+
+	</div>
+	
+	<div metal:fill-slot="right">
 	    <div id="meeting_overview">
 	    	
             <div tal:define="state string:closed;

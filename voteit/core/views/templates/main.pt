@@ -105,17 +105,16 @@
             </div> <!-- top -->
 
             <div id="content" metal:define-slot="content">
-                <div id="left" metal:define-slot="left" class="column" tal:condition="not form|True">
-                    <div class="content_wrapper">
-                        <div class="description" tal:condition="context.description" tal:content="structure context.description">Description</div>
-                        <div metal:define-slot="left_content"></div>
-                    </div>
+                <div id="left" class="column" tal:condition="not form|True">
+                	<div class="content_wrapper">
+                	   <metal:left define-slot="left"></metal:left>
+					</div>
                 </div> <!-- left column-->
                 
-                <div id="right" metal:define-slot="right" class="column" tal:condition="not form|True">
+                <div id="right" class="column" tal:condition="not form|True">
                     <div class="content_wrapper">
-                        <div metal:define-slot="right_content"></div>
-                    </div>
+                	   <metal:right define-slot="right"></metal:right>
+                	</div>
                 </div> <!-- right column-->
             </div> <!-- content -->
 

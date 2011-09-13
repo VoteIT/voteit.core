@@ -18,7 +18,7 @@
 
     </div> <!-- top_content -->
 
-    <div metal:fill-slot="right_content" id="discussions">
+    <div metal:fill-slot="right" id="discussions">
         <h2><span i18n:translate="">Discussion</span></h2>
             
         <div tal:replace="structure get_discussions()">Discussion listing</div>
@@ -29,7 +29,9 @@
         </div>
     </div> <!-- right_content -->
 
-    <div metal:fill-slot="left_content" id="proposals">
+    <div metal:fill-slot="left" id="proposals">
+        <div class="description" tal:condition="context.description" tal:content="structure context.description">Description</div>
+
         <h2><span i18n:translate="">Proposal</span></h2>
 
         <div tal:replace="structure get_proposals()">Proposals listing</div>
