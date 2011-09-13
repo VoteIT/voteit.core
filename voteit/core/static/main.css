@@ -374,7 +374,7 @@ a {
 }
 
 #flash_messages .message {
-    padding: 5px 5px 5px 30px;
+    padding: 5px 15px 5px 30px;
     border-radius: 5px;
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
@@ -395,6 +395,11 @@ a {
 #flash_messages .error {
     border-color: red;
     background-color: #fdc;
+}
+#flash_messages .close_message {
+    font-weight: bold;
+	font-style: normal;
+	margin-left: 1em;
 }
 div.unread.listing_block {
 	margin-left: -5px;

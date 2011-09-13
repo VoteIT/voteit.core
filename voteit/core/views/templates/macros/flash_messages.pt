@@ -4,7 +4,7 @@
 		<div tal:attributes="class 'message %s'.strip() % flash['type']">
 			<span tal:content="structure flash['msg']">Message</span>
 			<a href="#" title="Close message"
-			   class="close_message buttonize"
+			   class="close_message"
 			   tal:condition="flash['close_button']"
 			   i18n:translate="">OK</a>
         </div>
