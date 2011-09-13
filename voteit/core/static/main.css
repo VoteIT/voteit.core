@@ -657,4 +657,5 @@ table.listing > tbody > tr.even > td {
 .buttonize:hover,
 .buttons button:hover {
     cursor: pointer;
+    border: 1px solid #054265;
 }
