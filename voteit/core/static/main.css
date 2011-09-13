@@ -308,16 +308,10 @@ a {
 #main_window #right {
 }
 
-#page_heading h2 {
-    font-size: 24px;
-    font-weight: normal;
-    color: #000;
-    border-bottom: 1px solid #86A3B4;
-}
-
-#page_heading .description {
-    font-size: 14px;
-    line-height: 1.5em;
+#main_window h1,
+#main_window h2 {
+    border-bottom: 2px solid #86A3B4;
+    padding-bottom: 0.5em;
 }
 
 /* Action bar class */
@@ -456,16 +450,6 @@ li.notification_message {
     cursor: pointer;
     color: #054265;
 	text-decoration: none;
-}
-
-
-/* agenda item */
-#polls h2,
-#discussions h2,
-#proposals h2 {
-    font-weight: normal;
-    color: #054265;
-    border-bottom: 2px solid #86A3B4;
 }
 
 /* polls */
