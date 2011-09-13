@@ -9,8 +9,6 @@
     <h1 i18n:translate="">VoteIT logs</h1>
 </div>
 
-<div metal:fill-slot="action_bar"></div>
-
 <div metal:fill-slot="content">
     <ul>
     <tal:iterate repeat="filename logfiles">

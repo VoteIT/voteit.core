@@ -314,18 +314,6 @@ a {
     padding-bottom: 0.5em;
 }
 
-/* Action bar class */
-.action_bar {
-    clear: both;
-	white-space: nowrap;
-	list-style: none;
-}
-.action_bar li.menuitem { 
-	margin-left: 0.5em;
-	display: inline;
-}
-/* end action bar */
-
 .column {
     float: left;
     width: 49%

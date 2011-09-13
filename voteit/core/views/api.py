@@ -160,26 +160,6 @@ class APIView(object):
         
         return render('templates/navigation.pt', response, request=self.request)
 
-    def get_action_bar(self, context, request):
-        """ Get the action-bar for a specific context """
-
-        def _show_retract():
-            return context.content_type == 'Proposal' and \
-                self.context_has_permission('Retract', context) and \
-                context.get_workflow_state() == 'published'
-        
-        response = {}
-        response['api'] = self
-        response['addable_types'] = self._get_addable_types(context, request)
-        response['context'] = context
-        if getattr(context, 'workflow', None):
-            response['states'] = context.get_available_workflow_states(request)
-        response['context_has_permission'] = self.context_has_permission
-        response['show_retract'] = _show_retract
-        response['is_moderator'] = self.context_has_permission(security.MODERATE_MEETING, context)
-        
-        return render('templates/action_bar.pt', response, request=request)
-
     def get_global_actions(self, context, request):
         response = {}
         response['api'] = self
