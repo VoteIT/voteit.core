@@ -482,32 +482,7 @@ class IHelpUtil(Interface):
     def get(id, locale=None):
         """ Get HTML for an id. If lang is not specified, get the already set lang.
         """
-    
 
-class IMessage(Interface):
-    """ Messages are stored in a relational database and behave like notifications.
-    """
-
-class IMessages(Interface):
-    """ Handle messages.
-        This behaves like an adapter on a request.
-    """
-    
-    def __init__(session):
-        """ Object needs a request to adapt. """
-
-    def add(meetinguid, message, tag=None, contextuid=None, userid=None):
-        """ Add a message. """
-        
-    def retrieve_messages(meetinguid, tag=None, contextuid=None, userid=None):
-        """ Retrieve a set of messages in meetinguid. """
-
-    def mark_read(messageid, userid):
-        """ Mark message as read. """
-
-    def unreadcount_in_meeting(meetinguid, userid):
-        """ Count unread messages for a meeting. (Identified by its uid)
-        """
 
 class ICatalogMetadata(Interface):
     """ An adapter to fetch metadata for the catalog.

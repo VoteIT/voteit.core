@@ -65,14 +65,6 @@
         </li>
     </tal:participants>
     
-	<!-- FIXME: Not implemented properly yet
-    <tal:authenticated condition="api.userid">
-        <li class="tab" tal:condition="api.meeting"><a tal:attributes="href api.resource_url(api.meeting, request) + '@@messages'">
-            <span i18n:translate="">Messages</span>
-            <span class="unread">(<span tal:content="api.msg_count" />)</span> &raquo;
-        </a></li>
-    </tal:authenticated>
-	-->
 </ul>
 
 </tal:main>

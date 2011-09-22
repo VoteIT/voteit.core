@@ -33,7 +33,6 @@ from voteit.core.models.log import Logs
 from voteit.core.views.macros import FlashMessages
 from voteit.core.views.expressions import ExpressionsView
 from voteit.core.models.unread import Unreads
-from voteit.core.models.message import Messages
 
 
 
@@ -53,12 +52,7 @@ class APIView(object):
         if self.userid:
             self.user_profile = self.get_user(self.userid)
             self.user_profile_url = resource_url(self.user_profile, request)
-            self.messages_adapter = Messages(self.sql_session)
         
-        #Only in meeting context
-        if self.userid and self.meeting:
-            self.msg_count = self.messages_adapter.unreadcount_in_meeting(self.meeting.uid, self.userid)
-                
         #Authentication / Authorization utils. 
         self.authn_policy = request.registry.getUtility(IAuthenticationPolicy)
         self.authz_policy = request.registry.getUtility(IAuthorizationPolicy)
