@@ -12,6 +12,7 @@ from voteit.core import security
 from voteit.core.models.interfaces import IDiscussionPost
 from voteit.core.models.interfaces import ICatalogMetadataEnabled
 from voteit.core.models.base_content import BaseContent
+from voteit.core.models.unread_aware import UnreadAware
 from voteit.core.validators import html_string_validator
 
 ACL =  {}
@@ -31,7 +32,7 @@ ACL['closed'] = [(Allow, security.ROLE_ADMIN, security.VIEW),
                 ]
 
 
-class DiscussionPost(BaseContent):
+class DiscussionPost(BaseContent, UnreadAware):
     """ Discussion post content
     """
     implements(IDiscussionPost, ICatalogMetadataEnabled)

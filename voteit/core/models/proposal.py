@@ -7,12 +7,12 @@ from pyramid.traversal import find_interface
 from voteit.core import VoteITMF as _
 from voteit.core import security
 from voteit.core.models.base_content import BaseContent
+from voteit.core.models.unread_aware import UnreadAware
 from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IProposal
 from voteit.core.models.interfaces import ICatalogMetadataEnabled
 from voteit.core.models.workflow_aware import WorkflowAware
 from voteit.core.validators import html_string_validator
-
 
 ACL = {}
 ACL['published'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, security.EDIT, security.DELETE, security.RETRACT, security.MODERATE_MEETING, )),
@@ -37,7 +37,7 @@ ACL['closed'] = [(Allow, security.ROLE_ADMIN, security.VIEW),
                  DENY_ALL,
                 ]
 
-class Proposal(BaseContent, WorkflowAware):
+class Proposal(BaseContent, WorkflowAware, UnreadAware):
     """ Proposal content.
         about states:
         'published' is used in ongoing meetings. This proposal is a candidate for a future poll.

@@ -66,19 +66,19 @@
 	                                <div tal:content="agenda_item.get_field_value('title')">Agenda item title</div>
 									<div class="ai_info">
 		                                <span class="proposals cinfo"
-		                                      tal:define="unread_count api.get_unread(agenda_item, content_type='Proposal')">
+		                                      tal:define="unread_count api.get_unread_count(agenda_item, content_type='Proposal')">
 											<span class="total"
 											      tal:content="len(agenda_item.get_content(content_type='Proposal'))">0</span>
 		                                    <span class="unread" tal:condition="unread_count" tal:content="string:($unread_count)">(2)</span>
 										</span>
 		                                <span class="discussions cinfo"
-										      tal:define="unread_count api.get_unread(agenda_item, content_type='DiscussionPost')">
+										      tal:define="unread_count api.get_unread_count(agenda_item, content_type='DiscussionPost')">
 											<span class="total"
 											      tal:content="len(agenda_item.get_content(content_type='DiscussionPost'))">0</span>
 										    <span class="unread" tal:condition="unread_count" tal:content="string:($unread_count)">(2)</span>
 										</span>
 	                                    <span class="polls cinfo"
-	                                          tal:define="unread_count api.get_unread(agenda_item, content_type='Poll')">
+	                                          tal:define="unread_count api.get_unread_count(agenda_item, content_type='Poll')">
 	                                        <span class="total"
 	                                              tal:content="len(agenda_item.get_content(content_type='Poll'))">0</span>
 	                                        <span class="unread" tal:condition="unread_count" tal:content="string:($unread_count)">(2)</span>

@@ -128,7 +128,6 @@ def populate_sql_database(config):
     from voteit.core.models.log import logs_tags
     from voteit.core.models.log import Log
     from voteit.core.models.log import LogTag
-    from voteit.core.models.unread import Unread
     #Create tables
     RDB_Base.metadata.create_all(sql_util.engine)
     

@@ -32,8 +32,6 @@ from voteit.core.models.interfaces import ISQLSession
 from voteit.core.models.log import Logs
 from voteit.core.views.macros import FlashMessages
 from voteit.core.views.expressions import ExpressionsView
-from voteit.core.models.unread import Unreads
-
 
 
 class APIView(object):
@@ -258,21 +256,17 @@ class APIView(object):
         
         return effective_principals
         
-    def get_unread(self, context, content_type=None):
-        contents = context.get_content(content_type=content_type)
+    def get_unread_count(self, context, content_type=None):
         unread_count = 0
-        for content in contents:
-            if len(self.unreads.retrieve(self.userid, content.uid)) > 0:
-                unread_count = unread_count+1
+        for obj in context.get_content(content_type=content_type):
+            if self.userid in obj.get_unread_userids():
+                unread_count += 1
         return unread_count
         
     def is_unread(self, context, mark=False):
-        unread_items = self.unreads.retrieve(self.userid, context.uid)
-        if unread_items:
-            # there should only be one anyways
-            for unread_item in unread_items:
-                if mark and not unread_item.persistent:
-                    self.unreads.remove(self.userid, context.uid)
+        if self.userid in context.get_unread_userids():
+            if mark:
+                context.mark_as_read(self.userid)
             return True
         return False
         
