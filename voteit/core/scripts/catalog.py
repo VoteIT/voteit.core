@@ -26,6 +26,9 @@ def update_catalog():
     worker = ScriptWorker('update_catalog')
     
     cat = worker.root.catalog
+    print "Clearing old data from catalog"
+    cat.clear()
+    
     updated_indexes = update_indexes(cat, reindex=False)
     if updated_indexes:
         print "The following indexes were added: %s" % ", ".join(updated_indexes)
@@ -33,7 +36,7 @@ def update_catalog():
     
     contents = find_all_base_content(worker.root)
     content_count = len(contents)
-    
+        
     #Note: There might be catalog aware models outside of this scope.
     #In that case, we need some way of finding them
     
@@ -52,6 +55,7 @@ def update_catalog():
     print "Update complete - reindexed %s objects" % content_count
     print "Committing to database"
     transaction.commit()
+    print "Done"
     
     worker.shutdown()
     

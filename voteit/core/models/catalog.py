@@ -144,6 +144,19 @@ def reindex_object_security(catalog, obj):
         if ISecurityAware.providedBy(contained):
             reindex_object_security(catalog, contained)
 
+def resolve_catalog_docid(catalog, root, docid):
+    """ Takes a catalog docid and returns object that was indexed.
+        This method should only be used when it's really necessary to have the object,
+        since it will make it slower to retrieve objects.
+    """
+    path = catalog.document_map.address_for_docid(docid)
+    if path is None:
+        return ValueError("Nothing found in catalog with docid '%s'" % docid)
+    try:
+        return find_resource(root, path)
+    except Exception:
+        import pdb;pdb.set_trace()
+
 #Indexes
 def get_title(object, default):
     return object.title

@@ -30,6 +30,7 @@ from voteit.core.models.interfaces import IDateTimeUtil
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.views.macros import FlashMessages
 from voteit.core.views.user_tags import UserTagsView
+from voteit.core.models.catalog import resolve_catalog_docid
 
 
 class APIView(object):
@@ -272,3 +273,7 @@ class APIView(object):
                 results.append(candidate)
             
         return results
+
+    def resolve_catalog_docid(self, docid):
+        """ Take a catalog docid and fetch its object. Convenience wrapper for api view"""
+        return resolve_catalog_docid(self.root.catalog, self.root, docid)
