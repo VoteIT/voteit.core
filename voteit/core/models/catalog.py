@@ -48,6 +48,9 @@ def update_indexes(catalog, reindex=True):
         an index has been added or removed.
         Will return a set of indexes changed regardless.
     """
+    if reindex and full_reindex:
+        raise ValueError("Can't use both reindex and full_reindex at the same time")
+    
     indexes = {
         'title': CatalogFieldIndex(get_title),
         'sortable_title': CatalogFieldIndex(get_sortable_title),
@@ -66,17 +69,15 @@ def update_indexes(catalog, reindex=True):
     
     changed_indexes = set()
     
+    # remove indexes
+    for name in catalog.keys():
+        if name not in indexes:
+            del catalog[name]            
+
     # add indexes
     for name, index in indexes.iteritems():
         if name not in catalog:
             catalog[name] = index
-            if reindex:
-                changed_indexes.add(name)
-    
-    # remove indexes
-    for name in catalog.keys():
-        if name not in indexes:
-            del catalog[name]
             if reindex:
                 changed_indexes.add(name)
     
@@ -87,16 +88,13 @@ def update_indexes(catalog, reindex=True):
 
 
 def reindex_indexes(catalog):
+    """ Warning! This will only update things that already are in the catalog! """
     root = find_root(catalog)
     for path, docid in catalog.document_map.address_to_docid.items():
 
-        #FIXME: Handle key error. Output where?
         obj = find_resource(root, path)
         reindex_object(catalog, obj)
         
-        #FIXME: Commit will be handled by the regular transactionmanager
-        #if this is part of a request. Should we turn this into a script?
-
 
 def index_object(catalog, obj):
     """ Index an object and add metadata. """

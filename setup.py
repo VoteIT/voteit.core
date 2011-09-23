@@ -52,6 +52,7 @@ setup(name='voteit.core',
       main = voteit.core:main
       [console_scripts]
       crontick = voteit.core.scripts.crontick:crontick
+      update_catalog = voteit.core.scripts.catalog:update_catalog
       """,
       paster_plugins=['pyramid'],
       message_extractors = { '.': [
