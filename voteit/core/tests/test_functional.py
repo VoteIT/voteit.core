@@ -12,7 +12,6 @@ _settings = {
     'default_timezone_name': 'Europe/Stockholm',
     'available_languages': 'en sv',
     'zodb_uri': 'file://%(here)s/../var/Data.fs?connection_cache_size=20000',
-    'sqlite_file': 'sqlite:///%(here)s/../var/sqlite.db',
 
     #VoteIT content types
     'content_types': """

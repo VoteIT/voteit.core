@@ -22,8 +22,6 @@ requires = [
     'slugify',
     'webtest',
     'zope.testbrowser',
-    'sqlalchemy',
-    'zope.sqlalchemy',
     'webhelpers',
     'repoze.catalog',
     'lingua',

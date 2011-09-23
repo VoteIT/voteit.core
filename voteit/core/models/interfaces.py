@@ -440,42 +440,6 @@ class IDiscussionPost(Interface):
     """
 
 
-class IUnreads(Interface):
-    """ Handle messages.
-        This behaves like an adapter on a sql db session.
-    """
-    
-    def __init__(session):
-        """ Object needs a session to adapt. """
-
-    def add(userid, contextuid):
-        """ Add an unread. """
-        
-    def remove(userid, contextuid):
-        """ Remove an unread. """
-    
-    def remove_user(userid):
-        """ Remove an unread. """
-        
-    def remove_context(contextuid):
-        """ Remove an unread. """
-        
-    def retrieve(userid, contextuid=None):
-        """ Retrieve unreads. """
-
-
-class ISQLSession(Interface):
-    
-    engine = Attribute("SQL engine")
-    session_factory = Attribute("SQL session factory, must be a scoped session.")
-    
-    def __init__(engine):
-        """ Engine to create a session from """
-    
-    def __call__():
-        """ Returns session. """
-
-
 class IHelpUtil(Interface):
     """ Registers and fetches help texts for a specific topic.
         Needs a set locale to work.

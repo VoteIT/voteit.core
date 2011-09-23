@@ -13,9 +13,6 @@ from zope.component import getUtility
 from zope.component.factory import Factory
 from zope.component.interfaces import IFactory
 
-from sqlalchemy import create_engine
-from zope.sqlalchemy import ZopeTransactionExtension
-
 from voteit.core.models.interfaces import ICatalogMetadata
 from voteit.core.models.interfaces import IContentUtility
 from voteit.core.models.interfaces import ICatalogMetadataEnabled
@@ -23,7 +20,6 @@ from voteit.core.models.interfaces import IHelpUtil
 from voteit.core.models.interfaces import IPollPlugin
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IPollPlugin
-from voteit.core.models.interfaces import ISQLSession
 from voteit.core.models.interfaces import IDateTimeUtil
 
 
@@ -59,26 +55,6 @@ def register_catalog_metadata_adapter(config):
     from voteit.core.models.catalog import CatalogMetadata
     config.registry.registerAdapter(CatalogMetadata, (ICatalogMetadataEnabled,), ICatalogMetadata)
 
-
-def add_sql_session_util(config, sqlite_file=None):
-    settings = config.registry.settings
-
-    if sqlite_file is None:
-        sqlite_file = settings.get('sqlite_file')
-        if sqlite_file is None:
-            raise ValueError("""
-A path to an SQLite db file needs to be specified.
-Something like: 'sqlite_file = sqlite:///%(here)s/../var/sqlite.db'
-added in paster setup. (Either development.ini or production.ini)
-
-Alternatively, you can pass sqlite_file as an argument to this method.
-            """)
-    
-    engine = create_engine(sqlite_file)
-
-    from voteit.core.models.sql_session import SQLSession
-    util = SQLSession(engine)
-    config.registry.registerUtility(util, ISQLSession)
 
 def add_date_time_util(config, locale=None, timezone_name=None):
     """ """
@@ -119,18 +95,6 @@ def add_help_util(config, locale=None):
 
     #Register the utility
     config.registry.registerUtility(util, IHelpUtil)
-
-def populate_sql_database(config):
-    from voteit.core import RDB_Base
-    
-    sql_util = config.registry.getUtility(ISQLSession)
-    
-    #Touch all modules that are SQL-based
-
-    #Create tables
-    RDB_Base.metadata.create_all(sql_util.engine)
-    
-    session = sql_util()
 
 
 def include_zcml(config):

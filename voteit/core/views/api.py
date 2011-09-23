@@ -28,7 +28,6 @@ from voteit.core import security
 from voteit.core.models.interfaces import IContentUtility
 from voteit.core.models.interfaces import IDateTimeUtil
 from voteit.core.models.interfaces import IMeeting
-from voteit.core.models.interfaces import ISQLSession
 from voteit.core.views.macros import FlashMessages
 from voteit.core.views.user_tags import UserTagsView
 
@@ -42,7 +41,6 @@ class APIView(object):
         
         self.resource_url = resource_url
         self.root = find_root(context)
-        self.sql_session = request.registry.getUtility(ISQLSession)()
 
         #Authentication- / User-related
         self.userid = authenticated_userid(request)
@@ -72,10 +70,6 @@ class APIView(object):
     @reify
     def show_moderator_actions(self):
         return self.context_has_permission(security.MODERATE_MEETING, self.meeting)
-
-    @reify
-    def unreads(self):
-        return Unreads(self.sql_session)
 
     @reify
     def user_tags_view(self):

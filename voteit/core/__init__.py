@@ -3,13 +3,10 @@ from pyramid.session import UnencryptedCookieSessionFactoryConfig
 from repoze.zodbconn.finder import PersistentApplicationFinder
 from pyramid.config import Configurator
 
-from sqlalchemy.ext.declarative import declarative_base
-
 
 #Must be before all of this packages imports since some other methods might import it
 PROJECTNAME = 'voteit.core'
 VoteITMF = TranslationStringFactory(PROJECTNAME)
-RDB_Base = declarative_base()
 
 
 def main(global_config, **settings):
@@ -41,10 +38,8 @@ def main(global_config, **settings):
     #FIXME: Rework into includes instead. It doesn't make sense to have separate
     #methods when there's already an established procedure to include things
     app.register_catalog_metadata_adapter(config)
-    app.add_sql_session_util(config)
     app.add_date_time_util(config)
     app.add_help_util(config)
-    app.populate_sql_database(config)
     app.register_content_types(config)
     app.register_poll_plugins(config)
     

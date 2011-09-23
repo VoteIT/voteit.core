@@ -15,7 +15,6 @@ from voteit.core.bootstrap import bootstrap_voteit
 from voteit.core.models.interfaces import IContentUtility
 from voteit.core.interfaces import IObjectUpdatedEvent
 from voteit.core.events import ObjectUpdatedEvent
-from voteit.core.testing import testing_sql_session
 from voteit.core import security
 from voteit.core.security import groupfinder
 from voteit.core.models.date_time_util import utcnow
@@ -42,7 +41,6 @@ class CatalogTestCase(unittest.TestCase):
         register_content_types(self.config)
         register_catalog_metadata_adapter(self.config)
 
-        testing_sql_session(self.config) #To register session utility   
         self.config.scan('voteit.core.subscribers.catalog')
 
         self.root = bootstrap_voteit(registry=self.config.registry, echo=False)
