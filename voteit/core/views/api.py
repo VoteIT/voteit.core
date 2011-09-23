@@ -31,7 +31,7 @@ from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import ISQLSession
 from voteit.core.models.log import Logs
 from voteit.core.views.macros import FlashMessages
-from voteit.core.views.expressions import ExpressionsView
+from voteit.core.views.user_tags import UserTagsView
 
 
 class APIView(object):
@@ -65,7 +65,6 @@ class APIView(object):
 
         #macros
         self.flash_messages = FlashMessages(request)
-        self.expressions = ExpressionsView(request)
         
         self.logs = Logs(self.sql_session)
         
@@ -80,6 +79,10 @@ class APIView(object):
     @reify
     def unreads(self):
         return Unreads(self.sql_session)
+
+    @reify
+    def user_tags_view(self):
+        return UserTagsView(self.request)
 
     def logo_image_tag(self):
         """ Should handle customisations later. """

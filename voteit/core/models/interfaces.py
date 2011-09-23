@@ -131,6 +131,14 @@ class IUnreadAware(Interface):
         """ Returns a frozenset of all userids who haven't read this context. """
 
 
+class IUserTags(Interface):
+    """ Adapter for things that can have usertags.
+        The difference to normal tags is that users choose to stand behind them.
+        Typical example would be 'like', but it might also be used for other functionality,
+        like a dynamic rss feed.
+    """
+
+
 class ISiteRoot(Interface):
     """ Singleton that is used as the site root. """
 
@@ -406,24 +414,6 @@ class IDateTimeUtil(Interface):
         """
 
 
-class IExpressions(Interface):
-    """ Handle user expressions like 'Like' or 'Support'.
-        This behaves like an adapter on a sql db session.
-    """
-    
-    def __init__(session):
-        """ Object needs a session to adapt. """
-
-    def add(tag, userid, uid):
-        """ Add an expression. """
-
-    def retrieve_userids(tag, uid):
-        """ Retrieve a set of all userids who've set tag on uid. """
-
-    def remove(tag, userid, uid):
-        """ Remove where tag and userid and uid match. """
-
-        
 class ILogs(Interface):
     """ Handle logs.
         This behaves like an adapter on a sql db session.

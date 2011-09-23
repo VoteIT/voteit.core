@@ -31,9 +31,9 @@ $(document).ready(function () {
     );
 });
 
-/*  Expression methods */
+/*  User tag methods */
 $(document).ready(function() {
-    $(".expression_form").live('submit', function(event) {
+    $(".user_tag_form").live('submit', function(event) {
         /* stop form from submitting normally */
         event.preventDefault(); 
             
@@ -54,7 +54,6 @@ $(document).ready(function() {
         );
     });
 });
-
 
 /* helpbuttons */
 $(document).ready(function() {

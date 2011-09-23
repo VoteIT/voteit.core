@@ -42,7 +42,7 @@
                 <span class="hyphen">&#45;</span>
 	        </span>
 
-	        <span class="expressions" tal:content="structure api.expressions.get_expressions(post, 'like', api.userid, like, like_this)"></span>
+	        <span class="user_tags" tal:content="structure api.user_tags_view.get_user_tag(post, 'like', like, like_this)"></span>
 		</div>
         <div class="clear"><!-- --></div>
     </div>

@@ -427,11 +427,11 @@ li.notification_message {
     border-bottom: #ccc 1px solid;
 }
 
-/* expressions */
-.expression_form {
+/* User tags */
+.user_tag_form {
     display: inline;
 }
-.expression_button { 
+.user_tag_button {
     background-color: transparent; 
     border: 0; 
     padding: 0;

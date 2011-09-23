@@ -124,7 +124,6 @@ def populate_sql_database(config):
     sql_util = config.registry.getUtility(ISQLSession)
     
     #Touch all modules that are SQL-based
-    from voteit.core.models.expression import Expression
     from voteit.core.models.log import logs_tags
     from voteit.core.models.log import Log
     from voteit.core.models.log import LogTag
