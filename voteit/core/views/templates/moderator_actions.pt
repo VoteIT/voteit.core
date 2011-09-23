@@ -27,7 +27,7 @@
             Common functions for siteroot
         </tal:comment>
         <li class="menuitem">
-            <a tal:attributes="href api.resource_url(context, request) + '@@logs'"
+            <a tal:attributes="href api.resource_url(context, request) + '@@server_logs'"
                i18n:translate="">Server logs</a>
         </li>
         </tal:siteroot>

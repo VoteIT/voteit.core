@@ -5,25 +5,40 @@
       metal:use-macro="api.main_template.macros['master']"
 	  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
 	  i18n:domain="voteit.core">
-<div metal:fill-slot="page_heading">
-    <h1 i18n:translate="">VoteIT logs</h1>
-</div>
+<body>
+    <h2 i18n:translate="">Log entries</h2>
 
-<div metal:fill-slot="content" class="content_wrapper">
-    <ul>
-    <tal:iterate repeat="filename logfiles">
-        <li><a tal:attributes="href string:?file=$filename" tal:content="filename">
-            Filename
-        </a></li>
-    </tal:iterate>
-    </ul>
-    
-    <h3 tal:condition="not current_log" i18n:translate="">Select a log above</h3>
-    <h3 tal:condition="current_log">
-    	<span i18n:translate="">Current log</span>:
-		<span tal:replace="current_log">logfile</span>
-	</h3>
-    <pre cols="80" rows="40" tal:content="logdata" tal:condition="logdata">Log content</pre>
-</div>
+    <div metal:fill-slot="content" class="content_wrapper">
 
+        <table class="listing">
+            <thead>
+                <tr>
+                    <th i18n:translate="" class="heading">Message</th>
+                    <th i18n:translate="" class="heading">Time</th>
+                    <!--<th i18n:translate="" class="heading">Context UID</th>--><!-- FIXME: Should be looked up -->
+                    <th i18n:translate="" class="heading">Tags</th>
+                    <th i18n:translate="" class="heading">UserID</th>
+                    <th i18n:translate="" class="heading">Scripted</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tal:iterate repeat="entry entries">
+                <tr tal:attributes="class repeat.entry.odd and 'odd' or 'even'">
+                	<td>${entry.message}</td>
+                    <td>${dt_format(entry.created)}</td>
+                    <!--<td>${entry.context_uid}</td>-->
+					<td>
+						<tal:iter repeat="tag entry.tags">
+							${tag}<tal:sep condition="not repeat.tag.end">,</tal:sep>
+						</tal:iter>
+					</td>
+                    <td>${entry.userid and entry.userid or ''}</td>
+                    <td>${entry.scripted and entry.scripted or ''}</td>
+                </tr>
+                </tal:iterate>
+            </tbody>
+        </table>
+	</div>
+
+</body>
 </html>

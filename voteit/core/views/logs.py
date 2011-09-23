@@ -1,44 +1,22 @@
-import os
-import sys
-
 from pyramid.view import view_config
-from pyramid.decorator import reify
 
 from voteit.core.views.base_view import BaseView
+from voteit.core.models.interfaces import ILogHandler
+from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import ISiteRoot
-from voteit.core.security import MANAGE_SERVER
+from voteit.core.security import VIEW
+
+
+LOG_TEMPLATE = "templates/logs.pt"
 
 
 class LogsView(BaseView):
-    
-    @reify
-    def _logdir(self):
-        #FIXME: Rewrite when logging is read from the paster conf files
-        me = sys.argv[0]
-        me = os.path.abspath(me)        
-        buildoutpath = os.path.dirname(os.path.dirname(me))
-        rel = os.path.join(buildoutpath, 'var', 'log')
-        return os.path.abspath(os.path.normpath(rel))
-    
-    @reify
-    def logfile_ids(self):
-        return [x for x in os.listdir(self._logdir) if x.endswith('.log')]
-    
-    @view_config(name="logs", context=ISiteRoot, permission=MANAGE_SERVER, renderer="templates/logs.pt")
-    def log_view(self):
-        """ Choose a log and display + format its content. """
+
+    @view_config(name="logs", context=IMeeting, renderer=LOG_TEMPLATE, permission=VIEW)
+    @view_config(name="logs", context=ISiteRoot, renderer=LOG_TEMPLATE, permission=VIEW)
+    def logs_view(self):
+        log_handler = self.request.registry.getAdapter(self.context, ILogHandler)
+        self.response['entries'] = log_handler.log_storage.values()
+        self.response['dt_format'] = self.api.dt_util.dt_format
         
-        #Load log?
-        file = self.request.GET.get('file', None)
-        logdata = None
-        if file in self.logfile_ids:
-            #Formatting?
-            filepath = os.path.join(self._logdir, file)
-            with open(filepath, 'r') as f:
-                #Perhaps we should format it in a nicer way
-                logdata = f.read()
-        
-        self.response['logfiles'] = self.logfile_ids
-        self.response['current_log'] = file
-        self.response['logdata'] = logdata
         return self.response

@@ -29,7 +29,6 @@ from voteit.core.models.interfaces import IContentUtility
 from voteit.core.models.interfaces import IDateTimeUtil
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import ISQLSession
-from voteit.core.models.log import Logs
 from voteit.core.views.macros import FlashMessages
 from voteit.core.views.user_tags import UserTagsView
 
@@ -65,8 +64,6 @@ class APIView(object):
 
         #macros
         self.flash_messages = FlashMessages(request)
-        
-        self.logs = Logs(self.sql_session)
         
         self.nl2br = nl2br
         

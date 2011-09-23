@@ -414,19 +414,25 @@ class IDateTimeUtil(Interface):
         """
 
 
-class ILogs(Interface):
-    """ Handle logs.
-        This behaves like an adapter on a sql db session.
-    """
-    
-    def __init__(session):
-        """ Object needs a request to adapt. """
+class ILogHandler(Interface):
+    """ An adapter for meetings that handle logging. """
 
-    def add(meetinguid, message, tags=None, userid=None):
-        """ Add a log entry. """
-        
-    def retrieve_entries(meetinguid, tags=None, userid=None):
-        """ Retrieve a set of log entries in meetinguid. """
+    def __init__(context):
+        """ Object needs a meeting to adapt. """
+
+
+class ILogEntry(Interface):
+    """ A persistent log entry. """
+
+    created = Attribute("When it was created, in UTC time.")
+    context_uid = Attribute("UID of the context that triggered this log entry.")
+    message = Attribute("Message")
+    tags = Attribute("Tags, works pretty much like categories for log entry.")
+    userid = Attribute("userid, if a person triggered this event.")
+    scripted = Attribute("If a script triggered the event, store script name/id here.")
+
+    def __init__(context_uid, message, tags=(), userid=None, scripted=None):
+        """ Create a log entry. """
 
 
 class IDiscussionPost(Interface):

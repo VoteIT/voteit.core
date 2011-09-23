@@ -255,12 +255,6 @@ class MeetingView(BaseView):
 
         self.response['form'] = self.form.render()
         return self.response
-
-    @view_config(name="protocol", context=IMeeting, renderer="templates/protocol.pt", permission=security.VIEW)
-    def protocol(self):
-        self.response['log'] = self.api.logs.retrieve_entries(self.context.uid)
-        
-        return self.response
         
     @view_config(context=IMeeting, name="log", permission=security.VIEW, renderer='templates/log.pt')
     def meeting_messages(self):

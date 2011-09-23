@@ -16,7 +16,7 @@ from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import ICatalogMetadataEnabled
 from voteit.core.models.workflow_aware import WorkflowAware
 from voteit.core.validators import html_string_validator
-from voteit.core.models.log import Logs
+
 
 _MODERATOR_DEFAULTS = (security.VIEW, security.EDIT, security.MANAGE_GROUPS,
                        security.MODERATE_MEETING, security.DELETE, security.CHANGE_WORKFLOW_STATE, )

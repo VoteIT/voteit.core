@@ -50,6 +50,7 @@ def main(global_config, **settings):
     
     #Component includes
     config.include('voteit.core.models.user_tags')
+    config.include('voteit.core.models.logs')
     
     config.add_static_view('static', '%s:static' % PROJECTNAME)
     config.add_static_view('deform', 'deform:static')

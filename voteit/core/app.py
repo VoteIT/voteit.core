@@ -10,6 +10,8 @@ from pyramid.events import subscriber
 from pyramid.config import Configurator
 from zope.interface.verify import verifyClass
 from zope.component import getUtility
+from zope.component.factory import Factory
+from zope.component.interfaces import IFactory
 
 from sqlalchemy import create_engine
 from zope.sqlalchemy import ZopeTransactionExtension
@@ -124,9 +126,7 @@ def populate_sql_database(config):
     sql_util = config.registry.getUtility(ISQLSession)
     
     #Touch all modules that are SQL-based
-    from voteit.core.models.log import logs_tags
-    from voteit.core.models.log import Log
-    from voteit.core.models.log import LogTag
+
     #Create tables
     RDB_Base.metadata.create_all(sql_util.engine)
     
@@ -160,6 +160,10 @@ def register_content_info(schema, type_class, verify=True, registry=None):
     obj = util.create(schema, type_class)
     util.add(obj, verify=verify)
 
+
+def register_factory(config, cls, name):
+    factory = Factory(cls, name) 
+    config.registry.registerUtility(factory, IFactory, name)
 
 
 @subscriber(ApplicationCreated)
