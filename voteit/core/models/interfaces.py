@@ -470,6 +470,17 @@ class ICatalogMetadata(Interface):
         it adapts voteit.core.models.interfaces.ICatalogMetadataEnabled
         which is just a marker interface.
     """
+    special_indexes = Attribute("A dict of iface:method name that should be run to extend the metadata for a specific iface.")
+    
+    def __init__(context):
+        """ Object to adapt """
+        
+    def __call__():
+        """ Return metadata for adapted object. """
+    
+    def get_agenda_item_specific(results):
+        """ Update results with agenda item specific metadata. """
+
 
 #Marker interfaces
 class ICatalogMetadataEnabled(Interface):

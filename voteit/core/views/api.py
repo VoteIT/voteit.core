@@ -276,3 +276,10 @@ class APIView(object):
     def resolve_catalog_docid(self, docid):
         """ Take a catalog docid and fetch its object. Convenience wrapper for api view"""
         return resolve_catalog_docid(self.root.catalog, self.root, docid)
+
+    def get_metadata_for_query(self, **kwargs):
+        """ Return metadata for catalog search result. """
+        cat = self.root.catalog
+        num, docids = cat.search(**kwargs)
+        metadata = [cat.document_map.get_metadata(x) for x in docids]
+        return tuple(metadata)

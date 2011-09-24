@@ -4,8 +4,6 @@ from voteit.core.scripts.worker import ScriptWorker
 from voteit.core.models.catalog import update_indexes, index_object
 from voteit.core.models.interfaces import IBaseContent
 
-#def update_indexes(catalog, reindex=True, full_reindex_catalog=False):
-
 
 def find_all_base_content(context):
     """ Traverser that will find all objects from context and below

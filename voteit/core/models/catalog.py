@@ -12,8 +12,9 @@ from pyramid.traversal import find_root
 from pyramid.traversal import resource_path
 from pyramid.security import principals_allowed_by_permission
 
-from voteit.core.models.interfaces import ICatalogMetadataEnabled,\
-    ISecurityAware
+from voteit.core.models.interfaces import IAgendaItem
+from voteit.core.models.interfaces import ICatalogMetadataEnabled
+from voteit.core.models.interfaces import ISecurityAware
 from voteit.core.models.interfaces import IWorkflowAware
 from voteit.core.models.interfaces import ICatalogMetadata
 from voteit.core.security import NEVER_EVER_PRINCIPAL
@@ -22,6 +23,8 @@ from voteit.core.security import VIEW
 
 SEARCHABLE_TEXT_INDEXES = ('title',
                            'description',)
+_marker = object()
+
 
 class CatalogMetadata(object):
     """ An adapter to fetch metadata for the catalog.
@@ -29,6 +32,7 @@ class CatalogMetadata(object):
     """
     implements(ICatalogMetadata)
     adapts(ICatalogMetadataEnabled)
+    special_indexes = {IAgendaItem:'get_agenda_item_specific'}
     
     def __init__(self, context):
         self.context = context
@@ -36,11 +40,23 @@ class CatalogMetadata(object):
     def __call__(self):
         """ Return a dict of metadata values for an object. """
         #FIXME: Should fields be configurable, or should we just fetch all?
-        result = {
-            'title':self.context.title,
-            'created':self.context.created,
+        results = {
+            'title':get_title(self.context, _marker),
+            'created':self.context.created, #Exception, since the get_created method returns unixtime
+            'path':get_path(self.context, _marker),
         }
-        return result
+        #Use special metadata?
+        for (iface, method_name) in self.special_indexes.items():
+            if iface.providedBy(self.context):
+                method = getattr(self, method_name)
+                method(results)
+
+        return results
+
+    def get_agenda_item_specific(self, results):
+        results['discussion_count'] = len(self.context.get_content(content_type='Discussion'))
+        results['poll_count'] = len(self.context.get_content(content_type='Poll'))
+        results['proposal_count'] = len(self.context.get_content(content_type='Proposal'))
 
 
 def update_indexes(catalog, reindex=True):
