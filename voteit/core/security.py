@@ -70,8 +70,13 @@ NEVER_EVER_PRINCIPAL = 'NO ONE no way NO HOW'
 def groupfinder(name, request):
     """ Get groups for the current user. See models/security_aware.py
         This is also a callback for the Authorization policy.
+        In some cases, like automated scripts when nobody is logged in,
+        request won't have a context. In that case, no groups should exist.
     """
-    return request.context.get_groups(name)
+    context = getattr(request, 'context', None)
+    if context:
+        return context.get_groups(name)
+    return ()
 
 #Authentication policies
 authn_policy = AuthTktAuthenticationPolicy(secret='sosecret',
