@@ -30,6 +30,7 @@ from voteit.core.models.interfaces import IDateTimeUtil
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.views.macros import FlashMessages
 from voteit.core.views.user_tags import UserTagsView
+from voteit.core.models.catalog import metadata_for_query
 from voteit.core.models.catalog import resolve_catalog_docid
 
 
@@ -166,18 +167,7 @@ class APIView(object):
             response['meetings'] = meetings
 
             if self.meeting:
-                MEETING_MENU_QUERY = Eq('path', Name('path')) & Eq('content_type', Name('content_type'))
-                
-                cat = self.root.catalog
-                
-                query_params = {}
-                query_params['content_type'] = 'Poll'
-                query_params['path'] = resource_path(self.meeting)
-
-                #FIXME: PERMISSION
-                num, poll_ids = cat.query(MEETING_MENU_QUERY, names = query_params)
-                
-                response['polls_metadata'] = [cat.document_map.get_metadata(x) for x in poll_ids]                    
+                response['polls_metadata'] = self.get_metadata_for_query(content_type = 'Poll', path = resource_path(self.meeting))                
 
         response['is_moderator'] = self.context_has_permission(security.MODERATE_MEETING, context)
 
@@ -279,7 +269,5 @@ class APIView(object):
 
     def get_metadata_for_query(self, **kwargs):
         """ Return metadata for catalog search result. """
-        cat = self.root.catalog
-        num, docids = cat.search(**kwargs)
-        metadata = [cat.document_map.get_metadata(x) for x in docids]
-        return tuple(metadata)
+        return metadata_for_query(self.root.catalog, **kwargs)
+

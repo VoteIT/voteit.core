@@ -23,7 +23,6 @@ from voteit.core.security import VIEW
 
 SEARCHABLE_TEXT_INDEXES = ('title',
                            'description',)
-_marker = object()
 
 
 class CatalogMetadata(object):
@@ -32,7 +31,8 @@ class CatalogMetadata(object):
     """
     implements(ICatalogMetadata)
     adapts(ICatalogMetadataEnabled)
-    special_indexes = {IAgendaItem:'get_agenda_item_specific'}
+    special_indexes = {IAgendaItem:'get_agenda_item_specific',
+                       IWorkflowAware:'get_workflow_specific',}
     
     def __init__(self, context):
         self.context = context
@@ -41,10 +41,13 @@ class CatalogMetadata(object):
         """ Return a dict of metadata values for an object. """
         #FIXME: Should fields be configurable, or should we just fetch all?
         results = {
-            'title':get_title(self.context, _marker),
+            'title':get_title(self.context, None),
             'created':self.context.created, #Exception, since the get_created method returns unixtime
-            'path':get_path(self.context, _marker),
+            'path':get_path(self.context, None),
+            'content_type':get_content_type(self.context, None),
+            'uid':get_uid(self.context, None),
         }
+
         #Use special metadata?
         for (iface, method_name) in self.special_indexes.items():
             if iface.providedBy(self.context):
@@ -57,6 +60,9 @@ class CatalogMetadata(object):
         results['discussion_count'] = len(self.context.get_content(content_type='Discussion'))
         results['poll_count'] = len(self.context.get_content(content_type='Poll'))
         results['proposal_count'] = len(self.context.get_content(content_type='Proposal'))
+
+    def get_workflow_specific(self, results):
+        results['workflow_state'] = get_workflow_state(self.context, None)
 
 
 def update_indexes(catalog, reindex=True):
@@ -172,6 +178,12 @@ def resolve_catalog_docid(catalog, root, docid):
     if path is None:
         return ValueError("Nothing found in catalog with docid '%s'" % docid)
     return find_resource(root, path)
+
+def metadata_for_query(catalog, **kwargs):
+    num, docids = catalog.search(**kwargs)
+    metadata = [catalog.document_map.get_metadata(x) for x in docids]
+    return tuple(metadata)
+
 
 #Indexes
 def get_title(object, default):
