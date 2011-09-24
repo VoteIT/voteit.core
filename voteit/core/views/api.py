@@ -176,7 +176,6 @@ class APIView(object):
 
                 #FIXME: PERMISSION
                 num, poll_ids = cat.query(MEETING_MENU_QUERY, names = query_params)
-                print poll_ids
                 
                 response['polls_metadata'] = [cat.document_map.get_metadata(x) for x in poll_ids]                    
 
