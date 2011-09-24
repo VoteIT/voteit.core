@@ -165,8 +165,7 @@ class APIView(object):
                 meetings.remove(self.meeting)
             response['meetings'] = meetings
 
-            #Voter?
-            if self.meeting and security.ROLE_VOTER in self.context_effective_principals(self.context):
+            if self.meeting:
                 MEETING_MENU_QUERY = Eq('path', Name('path')) & Eq('content_type', Name('content_type'))
                 
                 cat = self.root.catalog
@@ -177,6 +176,7 @@ class APIView(object):
 
                 #FIXME: PERMISSION
                 num, poll_ids = cat.query(MEETING_MENU_QUERY, names = query_params)
+                print poll_ids
                 
                 response['polls_metadata'] = [cat.document_map.get_metadata(x) for x in poll_ids]                    
 

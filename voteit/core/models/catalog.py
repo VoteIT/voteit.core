@@ -48,8 +48,6 @@ def update_indexes(catalog, reindex=True):
         an index has been added or removed.
         Will return a set of indexes changed regardless.
     """
-    if reindex and full_reindex:
-        raise ValueError("Can't use both reindex and full_reindex at the same time")
     
     indexes = {
         'title': CatalogFieldIndex(get_title),
@@ -98,6 +96,11 @@ def reindex_indexes(catalog):
 
 def index_object(catalog, obj):
     """ Index an object and add metadata. """
+    #Check if object already exists
+    if catalog.document_map.docid_for_address(resource_path(obj)) is not None:
+        reindex_object(catalog, obj)
+        return
+
     obj_id = catalog.document_map.add(resource_path(obj))
     catalog.index_doc(obj_id, obj)
     
@@ -152,10 +155,7 @@ def resolve_catalog_docid(catalog, root, docid):
     path = catalog.document_map.address_for_docid(docid)
     if path is None:
         return ValueError("Nothing found in catalog with docid '%s'" % docid)
-    try:
-        return find_resource(root, path)
-    except Exception:
-        import pdb;pdb.set_trace()
+    return find_resource(root, path)
 
 #Indexes
 def get_title(object, default):

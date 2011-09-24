@@ -11,8 +11,8 @@ def find_all_base_content(context):
     """ Traverser that will find all objects from context and below
         implementing IBaseContent, which is stings that the catalog care about.
     """
-    def _recurse(context, results):
-        for obj in context.values():
+    def _recurse(base, results):
+        for obj in base.values():
             if IBaseContent.providedBy(obj):
                 results.add(obj)
             _recurse(obj, results)
