@@ -15,6 +15,7 @@ from voteit.core.models.interfaces import IProposal
 from voteit.core.models.interfaces import IVote
 from voteit.core.security import VIEW, EDIT, ADD_VOTE
 from voteit.core.models.schemas import button_add, button_cancel, button_vote
+from pyramid.traversal import resource_path
 
 
 
@@ -128,15 +129,21 @@ class AgendaItemView(BaseView):
         """ Get discussions for a specific context """
         
         limit = 5
-        if 'discussions' in self.request.GET and self.request.GET['discussions'] == 'all':
+        if self.request.GET.get('discussions', '') == 'all':
             limit = 0
         
-        discussions = self.context.get_content(iface=IDiscussionPost, sort_on='created')
+        path = resource_path(self.context)
+        #Returns tuple of (item_count, list of docids)
+        count, docids = self.api.search_catalog(path=path, content_type='DiscussionPost', sort_index='created')
+        docids = tuple(docids) #Convert, since it's a generator
         
+        #Only fetch metadata that is within limit
+        discussions = [self.api.resolve_catalog_docid(x) for x in docids[-limit:]]
+
         response = {}
-        response['discussions'] = discussions[-limit:]
-        if limit and limit < len(discussions):
-            response['over_limit'] = len(discussions) - limit
+        response['discussions'] = tuple(discussions)
+        if limit and limit < count:
+            response['over_limit'] = count - limit
         else:
             response['over_limit'] = 0
             

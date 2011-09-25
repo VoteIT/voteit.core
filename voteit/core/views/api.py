@@ -241,6 +241,7 @@ class APIView(object):
         return effective_principals
         
     def is_unread(self, context, mark=False):
+        """ Check if something is unread. """
         if self.userid in context.get_unread_userids():
             if mark:
                 context.mark_as_read(self.userid)
