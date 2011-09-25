@@ -279,7 +279,7 @@ class CatalogMetadataTests(CatalogTestCase):
         metadata = self.get_metadata(doc_id)
         
         self.assertTrue('title' in metadata)
-        self.assertEqual(metadata['title'], 'Testing catalog')        
+        self.assertEqual(metadata['title'], 'Testing catalog')
         
     def test_created(self):
         """ created actually stores unix-time. Note that it's very
@@ -293,3 +293,28 @@ class CatalogMetadataTests(CatalogTestCase):
         
         self.assertEqual(obj.created, metadata['created'])
         self.assertTrue(isinstance(metadata['created'], datetime))
+
+    def test_path(self):
+        obj = self._add_mock_meeting()
+        result = self.search(title = 'Testing catalog')
+        doc_id = result[1][0]
+        metadata = self.get_metadata(doc_id)
+        
+        self.assertEqual(metadata['path'], '/meeting')
+        
+    def test_content_type(self):
+        obj = self._add_mock_meeting()
+        result = self.search(title = 'Testing catalog')
+        doc_id = result[1][0]
+        metadata = self.get_metadata(doc_id)
+        
+        self.assertEqual(metadata['content_type'], 'Meeting')
+
+    def test_uid(self):
+        obj = self._add_mock_meeting()
+        result = self.search(title = 'Testing catalog')
+        doc_id = result[1][0]
+        metadata = self.get_metadata(doc_id)
+        
+        self.assertEqual(metadata['uid'], obj.uid)
+        
