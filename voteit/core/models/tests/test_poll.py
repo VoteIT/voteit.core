@@ -183,29 +183,29 @@ class PollTests(unittest.TestCase):
         #Initial state
         self.assertEqual(obj.get_workflow_state(), u'private')
         
-        #private -> planned
-        obj.make_workflow_transition(request, 'private_to_planned')
-        self.assertEqual(obj.get_workflow_state(), u'planned')
+        #private -> upcoming
+        obj.make_workflow_transition(request, 'private_to_upcoming')
+        self.assertEqual(obj.get_workflow_state(), u'upcoming')
 
-        #planned -> private
-        obj.make_workflow_transition(request, 'planned_to_private')
+        #upcoming -> private
+        obj.make_workflow_transition(request, 'upcoming_to_private')
         self.assertEqual(obj.get_workflow_state(), u'private')
 
-        #planned -> ongoing
+        #upcoming -> ongoing
         obj.initialize_workflow()
-        obj.set_workflow_state(request, 'planned')
-        obj.make_workflow_transition(request, 'planned_to_ongoing')
+        obj.set_workflow_state(request, 'upcoming')
+        obj.make_workflow_transition(request, 'upcoming_to_ongoing')
         self.assertEqual(obj.get_workflow_state(), u'ongoing')
 
-        #planned -> canceled
+        #upcoming -> canceled
         obj.initialize_workflow()
-        obj.set_workflow_state(request, 'planned')
-        obj.make_workflow_transition(request, 'planned_to_canceled')
+        obj.set_workflow_state(request, 'upcoming')
+        obj.make_workflow_transition(request, 'upcoming_to_canceled')
         self.assertEqual(obj.get_workflow_state(), u'canceled')
 
         #ongoing -> closed
         obj.initialize_workflow()
-        obj.set_workflow_state(request, 'planned')
+        obj.set_workflow_state(request, 'upcoming')
         obj.set_workflow_state(request, 'ongoing')
         obj.make_workflow_transition(request, 'ongoing_to_closed')
         self.assertEqual(obj.get_workflow_state(), u'closed')
@@ -220,10 +220,10 @@ class PollTests(unittest.TestCase):
         
         #Private - Initial state
         result = self._extract_transition_names(obj.get_available_workflow_states(request))
-        self.assertEqual(result, set([u'planned']))
+        self.assertEqual(result, set([u'upcoming']))
         
-        #Planned
-        obj.set_workflow_state(request, 'planned')
+        #upcoming
+        obj.set_workflow_state(request, 'upcoming')
         result = self._extract_transition_names(obj.get_available_workflow_states(request))
         self.assertEqual(result, set([u'private', u'ongoing', u'canceled']))
 
@@ -234,14 +234,14 @@ class PollTests(unittest.TestCase):
 
         #Canceled
         obj.initialize_workflow()
-        obj.set_workflow_state(request, 'planned')
+        obj.set_workflow_state(request, 'upcoming')
         obj.set_workflow_state(request, 'canceled')
         result = self._extract_transition_names(obj.get_available_workflow_states(request))
         self.assertEqual(result, set())
 
         #Closed
         obj.initialize_workflow()
-        obj.set_workflow_state(request, 'planned')
+        obj.set_workflow_state(request, 'upcoming')
         obj.set_workflow_state(request, 'ongoing')
         obj.set_workflow_state(request, 'closed')
         result = self._extract_transition_names(obj.get_available_workflow_states(request))
@@ -297,10 +297,10 @@ class PollPermissionTests(unittest.TestCase):
 
         self.assertEqual(self.pap(poll, security.CHANGE_WORKFLOW_STATE), admin | moderator)
 
-    def test_planned(self):
+    def test_upcoming(self):
         poll = self._make_obj()
         request = testing.DummyRequest()
-        poll.set_workflow_state(request, 'planned')
+        poll.set_workflow_state(request, 'upcoming')
         
         self.assertEqual(self.pap(poll, security.VIEW), admin | moderator | participant | viewer | voter)
         
@@ -315,7 +315,7 @@ class PollPermissionTests(unittest.TestCase):
     def test_ongoing(self):
         request = testing.DummyRequest()
         poll = self._make_obj()
-        poll.set_workflow_state(request, 'planned')
+        poll.set_workflow_state(request, 'upcoming')
         poll.set_workflow_state(request, 'ongoing')
         
         self.assertEqual(self.pap(poll, security.VIEW), admin | moderator | participant | viewer | voter)
@@ -332,7 +332,7 @@ class PollPermissionTests(unittest.TestCase):
         request = testing.DummyRequest()
         poll = self._make_obj()
         self._register_majority_poll(poll)
-        poll.set_workflow_state(request, 'planned')
+        poll.set_workflow_state(request, 'upcoming')
         poll.set_workflow_state(request, 'ongoing')
         poll.set_workflow_state(request, 'closed')
         
@@ -351,6 +351,6 @@ class PollPermissionTests(unittest.TestCase):
         # remove all proposals on poll
         poll.set_field_value('proposals', set())
 
-        poll.set_workflow_state(request, 'planned')
+        poll.set_workflow_state(request, 'upcoming')
         
         self.assertRaises(ValueError, poll.set_workflow_state, request, 'ongoing')

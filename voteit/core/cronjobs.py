@@ -19,7 +19,7 @@ def open_polls(worker, unixnow):
     cat = worker.root.catalog
     res_addr = cat.document_map.address_for_docid
     
-    q_str = "start_time <= %s and workflow_state == 'planned' and content_type == 'Poll'" % unixnow
+    q_str = "start_time <= %s and workflow_state == 'upcoming' and content_type == 'Poll'" % unixnow
     for id in cat.query(q_str)[1]:
         path = res_addr(id)
         obj = find_resource(worker.root, path)

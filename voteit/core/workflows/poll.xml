@@ -19,8 +19,8 @@
 			<key name="description" value=""/>
 		</state>
 
-        <state name="planned">
-            <key name="title" value="Planned" i18n:attributes="value" />
+        <state name="upcoming">
+            <key name="title" value="Upcoming" i18n:attributes="value" />
             <key name="description" value=""/>
         </state>
 
@@ -40,31 +40,31 @@
 		</state>
 
 		<transition
-			name="private_to_planned"
+			name="private_to_upcoming"
 			from_state="private"
-			to_state="planned"
+			to_state="upcoming"
 			permission="Change Workflow State"
-            callback="voteit.core.models.poll.planned_poll_callback"
+            callback="voteit.core.models.poll.upcoming_poll_callback"
 		/>
 		
 		<transition
-			name="planned_to_private"
-			from_state="planned"
+			name="upcoming_to_private"
+			from_state="upcoming"
 			to_state="private"
 			permission="Change Workflow State"
 		/>
 		
         <transition
-            name="planned_to_ongoing"
-            from_state="planned"
+            name="upcoming_to_ongoing"
+            from_state="upcoming"
             to_state="ongoing"
             permission="Change Workflow State"
 			callback="voteit.core.models.poll.ongoing_poll_callback"
         />
 
 		<transition
-			name="planned_to_canceled"
-			from_state="planned"
+			name="upcoming_to_canceled"
+			from_state="upcoming"
 			to_state="canceled"
 			permission="Change Workflow State"
 		/>

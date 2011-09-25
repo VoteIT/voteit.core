@@ -79,7 +79,7 @@ class VotePermissionTests(unittest.TestCase):
         ai = self._make_ai()
         poll = self._make_poll()
         ai['poll'] = poll
-        poll.set_workflow_state(request, 'planned')
+        poll.set_workflow_state(request, 'upcoming')
         poll.set_workflow_state(request, 'ongoing')
         
         obj = self._make_obj()
@@ -99,7 +99,7 @@ class VotePermissionTests(unittest.TestCase):
         ai = self._make_ai()
         poll = self._make_poll()
         ai['poll'] = poll
-        poll.set_workflow_state(request, 'planned')
+        poll.set_workflow_state(request, 'upcoming')
         poll.set_workflow_state(request, 'ongoing')
         poll.set_workflow_state(request, 'closed')
         

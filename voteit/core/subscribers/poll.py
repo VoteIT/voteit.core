@@ -7,11 +7,11 @@ from voteit.core.interfaces import IObjectUpdatedEvent
 
 @subscriber([IPoll, IObjectUpdatedEvent])
 def change_states_proposals(obj, event):
-    """ Change state on proposals when adding them to planed poll. """
+    """ Change state on proposals when adding them to upcoming poll. """
 
     request = get_current_request()
     
-    if obj.get_workflow_state() == 'planned':
+    if obj.get_workflow_state() == 'upcoming':
         for proposal in obj.get_proposal_objects():
             if proposal.get_workflow_state() != 'voting':
                 proposal.set_workflow_state(request, 'voting')

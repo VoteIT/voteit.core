@@ -67,7 +67,7 @@ class AgendaItemTests(unittest.TestCase):
         obj = self._make_obj()
 
         obj['poll'] = self._make_poll()
-        obj['poll'].set_workflow_state(request, 'planned')
+        obj['poll'].set_workflow_state(request, 'upcoming')
         obj['poll'].set_workflow_state(request, 'ongoing')
 
         obj.set_workflow_state(request, 'inactive')

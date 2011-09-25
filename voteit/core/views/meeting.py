@@ -59,7 +59,7 @@ class MeetingView(BaseView):
         return self.response
 
     def _get_polls(self, agenda_item):
-        return agenda_item.get_content(iface=IPoll, states=('planned', 'ongoing', 'closed'), sort_on='start_time')
+        return agenda_item.get_content(iface=IPoll, states=('upcoming', 'ongoing', 'closed'), sort_on='start_time')
 
     @property
     def section_overview_macro(self):

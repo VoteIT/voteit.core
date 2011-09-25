@@ -27,15 +27,15 @@ from voteit.core.validators import html_string_validator
 from voteit.core.fields import TZDateTime
 
 
-_PLANNED_PERMS = (security.VIEW, security.EDIT, security.DELETE, security.CHANGE_WORKFLOW_STATE, security.MODERATE_MEETING, )
+_UPCOMING_PERMS = (security.VIEW, security.EDIT, security.DELETE, security.CHANGE_WORKFLOW_STATE, security.MODERATE_MEETING, )
 
 ACL = {}
-ACL['private'] = [(Allow, security.ROLE_ADMIN, _PLANNED_PERMS),
-                  (Allow, security.ROLE_MODERATOR, _PLANNED_PERMS),
+ACL['private'] = [(Allow, security.ROLE_ADMIN, _UPCOMING_PERMS),
+                  (Allow, security.ROLE_MODERATOR, _UPCOMING_PERMS),
                   DENY_ALL,
                    ]
-ACL['planned'] = [(Allow, security.ROLE_ADMIN, _PLANNED_PERMS),
-                  (Allow, security.ROLE_MODERATOR, _PLANNED_PERMS),
+ACL['upcoming'] = [(Allow, security.ROLE_ADMIN, _UPCOMING_PERMS),
+                  (Allow, security.ROLE_MODERATOR, _UPCOMING_PERMS),
                   (Allow, security.ROLE_PARTICIPANT, security.VIEW),
                   (Allow, security.ROLE_VOTER, security.VIEW),
                   (Allow, security.ROLE_VIEWER, security.VIEW),
@@ -71,8 +71,8 @@ class Poll(BaseContent, WorkflowAware, UnreadAware):
         state = self.get_workflow_state()
         if state == u'private':
             return ACL['private']
-        if state == u'planned':
-            return ACL['planned']
+        if state == u'upcoming':
+            return ACL['upcoming']
         if state == u'ongoing':
             return ACL['ongoing']
         return ACL['closed'] #As default - don't traverse to parent
@@ -325,8 +325,8 @@ def closing_poll_callback(content, info):
     content.close_poll()
 
 
-def planned_poll_callback(content, info):
-    """ Workflow callback when a poll is set in the planned state.
+def upcoming_poll_callback(content, info):
+    """ Workflow callback when a poll is set in the upcoming state.
         This method sets all proposals in the locked for vote-state.
     """
     request = get_current_request() #This is an exception - won't be called many times.
@@ -337,8 +337,8 @@ def planned_poll_callback(content, info):
             count += 1
 
     fm = FlashMessages(request)
-    msg = _('poll_planned_state_notice',
-            default=u"Setting poll in planned state. It's now visible for meeting participants.")
+    msg = _('poll_upcoming_state_notice',
+            default=u"Setting poll in upcoming state. It's now visible for meeting participants.")
     fm.add(msg)
     if count:
         #FIXME: Translation mappings

@@ -113,7 +113,7 @@ class MPIntegrationTests(unittest.TestCase):
     
     def _close_poll(self):
         request = testing.DummyRequest()
-        self.poll.set_workflow_state(request, 'planned')
+        self.poll.set_workflow_state(request, 'upcoming')
         self.poll.set_workflow_state(request, 'ongoing')
         self.poll.set_workflow_state(request, 'closed')
 
