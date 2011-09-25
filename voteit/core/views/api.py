@@ -132,22 +132,23 @@ class APIView(object):
 
         response = {}
         response['api'] = self
-        response['context_has_permission'] = self.context_has_permission
-        if self.meeting:
-            response['is_moderator'] = self.context_has_permission(security.MODERATE_MEETING, self.meeting)
-        else:
-            response['is_moderator'] = False
-        if response['is_moderator']:
-            response['sections'] = ('closed', 'ongoing', 'upcoming', 'private')
-        else:
-            response['sections'] = ('closed', 'ongoing', 'upcoming')
 
-        closed_sections = set()
-        for section in response['sections']:
-            if self.request.cookies.get("%s-%s" % (self.meeting.uid, section)):
-                closed_sections.add(section)
-        response['closed_sections'] = closed_sections
-                
+        if self.meeting:
+            #In meeting context
+            response['is_moderator'] = self.context_has_permission(security.MODERATE_MEETING, self.meeting)
+            if response['is_moderator']:
+                response['sections'] = ('closed', 'ongoing', 'upcoming', 'private')
+            else:
+                response['sections'] = ('closed', 'ongoing', 'upcoming')
+            closed_sections = set()
+            for section in response['sections']:
+                if self.request.cookies.get("%s-%s" % (self.meeting.uid, section)):
+                    closed_sections.add(section)
+            response['closed_sections'] = closed_sections
+        else:
+            #Not in meeting context
+            response['is_moderator'] = False
+
         return render('templates/navigation.pt', response, request=self.request)
 
     def get_global_actions(self, context, request):
