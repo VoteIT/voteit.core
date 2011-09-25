@@ -16,6 +16,7 @@ class WorkflowStateChange(object):
 class ObjectUpdatedEvent(object):
     implements(IObjectUpdatedEvent)
     
-    def __init__(self, object):
+    def __init__(self, object, indexes=(), metadata=True):
         self.object = object
-        #FIXME: Update with keywords for metadata and catalog indexes to reindex.
+        self.indexes = indexes
+        self.metadata = metadata

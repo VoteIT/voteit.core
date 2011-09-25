@@ -38,7 +38,7 @@ class UnreadAware(object):
         """
         if userid in self.get_unread_userids():
             self.unread_storage.remove(userid)
-            objectEventNotify(ObjectUpdatedEvent(self))
+            objectEventNotify(ObjectUpdatedEvent(self, indexes=('unread',), metadata=False))
 
     def get_unread_userids(self):
         return frozenset(self.unread_storage.keys())

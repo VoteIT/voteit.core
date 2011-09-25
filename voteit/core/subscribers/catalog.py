@@ -31,9 +31,13 @@ def object_added(obj, event):
 @subscriber([IBaseContent, IObjectUpdatedEvent])
 @subscriber([IBaseContent, IWorkflowStateChange])
 def object_updated(obj, event):
-    """ Reindex a base content object"""
+    """ Reindex a base content object.
+        IObjectUpdatedEvent has attributes indexes and metadata to avoid updating catalog if it's not needed.
+    """
     root = find_interface(obj, ISiteRoot)
-    reindex_object(root.catalog, obj)
+    indexes = getattr(event, 'indexes', ())
+    metadata = getattr(event, 'metadata', True)
+    reindex_object(root.catalog, obj, indexes=indexes, metadata=metadata)
 
 @subscriber([IBaseContent, IObjectWillBeRemovedEvent])
 def object_removed(obj, event):

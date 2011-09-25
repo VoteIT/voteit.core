@@ -141,6 +141,7 @@ def reindex_object(catalog, obj, indexes=(), metadata=True):
     obj_id = catalog.document_map.docid_for_address(resource_path(obj))
     if obj_id is None:
         #This is a special case when an object that isn't indexed tries to be reindexed
+        #Note that indexes and metadata parameter is ignored in that case
         index_object(catalog, obj) #Do reindex instead
         return
 
