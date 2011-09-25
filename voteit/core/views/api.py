@@ -127,9 +127,6 @@ class APIView(object):
         """ Is the current context inside a meeting, or a meeting itself? """
         return find_interface(self.context, IMeeting)
 
-    def _is_section_closed(self, section):
-        return self.request.cookies.get(section, None)
-
     def get_navigation(self):
         """ Get navigatoin """
 
@@ -144,8 +141,13 @@ class APIView(object):
             response['sections'] = ('closed', 'active', 'inactive', 'private')
         else:
             response['sections'] = ('closed', 'active', 'inactive')
-        response['is_section_closed'] = self._is_section_closed
-        
+
+        closed_sections = set()
+        for section in response['sections']:
+            if self.request.cookies.get("%s-%s" % (self.meeting.uid, section)):
+                closed_sections.add(section)
+        response['closed_sections'] = closed_sections
+                
         return render('templates/navigation.pt', response, request=self.request)
 
     def get_global_actions(self, context, request):

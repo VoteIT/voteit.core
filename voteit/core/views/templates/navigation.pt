@@ -44,14 +44,15 @@
         </h5>
 		</div>
         <tal:iterate repeat="section sections">
-			<tal:section tal:define="is_closed is_section_closed('%s-%s' % (api.meeting.uid, section))">
+			<tal:section tal:define="is_closed section in closed_sections">
             <div tal:attributes="id '%s-%s' % (api.meeting.uid, section);
                                  class is_closed and 'toggle_area toggle_closed block' or 'toggle_area toggle_opened block';">
                                  	
                 <h6 tal:attributes="class 'toggle_minimize %s' % section">
-                	<span tal:content="api.translate(section.title())">Section title</span>
+                	<a href="${request.url}" tal:content="api.translate(section.title())">Section title</a>
 				</h6>
 				
+				<tal:open_section condition="not is_closed">
                 <tal:agenda_items define="agenda_items api.get_restricted_content(api.meeting, content_type='AgendaItem', states=section);">
                     <ul class="section minimizable_area">
                     <tal:iterate condition="agenda_items" repeat="agenda_item agenda_items">
@@ -95,6 +96,7 @@
                     </ul>
 					
 	            </tal:agenda_items>
+				</tal:open_section>
 				
 				<tal:closed_section condition="is_closed">
                     <div class="minimizable_inverted" i18n:translate="">(hidden, click above to open)</div>
