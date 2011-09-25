@@ -14,9 +14,11 @@ from voteit.core.models.catalog import unindex_object
 
 
 def _update_if_ai_parent(catalog, obj):
-    """ Since AIs keep track of count of Poll, Proposal and Discussion objects. """
+    """ Since AIs keep track of count of Poll, Proposal and Discussion objects.
+        Only needed for add and remove.
+    """
     parent = getattr(obj, '__parent__', None)
-    if parent and IAgendaItem.providedBy(parent):
+    if IAgendaItem.providedBy(parent):
         reindex_object(catalog, parent)
 
 @subscriber([IBaseContent, IObjectAddedEvent])
@@ -32,7 +34,6 @@ def object_updated(obj, event):
     """ Reindex a base content object"""
     root = find_interface(obj, ISiteRoot)
     reindex_object(root.catalog, obj)
-    _update_if_ai_parent(root.catalog, obj)
 
 @subscriber([IBaseContent, IObjectWillBeRemovedEvent])
 def object_removed(obj, event):

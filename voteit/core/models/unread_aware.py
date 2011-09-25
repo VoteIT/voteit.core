@@ -1,9 +1,13 @@
 from zope.interface import implements
 from BTrees.OOBTree import OOSet
+from pyramid.traversal import find_root
+from zope.component.event import objectEventNotify
 
 from voteit.core.security import find_authorized_userids
 from voteit.core.security import VIEW
 from voteit.core.models.interfaces import IUnreadAware
+from voteit.core.models.catalog import reindex_object
+from voteit.core.events import ObjectUpdatedEvent
 
 
 class UnreadAware(object):
@@ -34,6 +38,7 @@ class UnreadAware(object):
         """
         if userid in self.get_unread_userids():
             self.unread_storage.remove(userid)
+            objectEventNotify(ObjectUpdatedEvent(self))
 
     def get_unread_userids(self):
         return frozenset(self.unread_storage.keys())

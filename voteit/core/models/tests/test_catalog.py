@@ -3,8 +3,6 @@ from datetime import datetime
 from calendar import timegm
 
 from pyramid import testing
-from pyramid.authentication import AuthTktAuthenticationPolicy
-from pyramid.authorization import ACLAuthorizationPolicy
 from pyramid.security import remember, principals_allowed_by_permission
 from zope.interface.verify import verifyObject
 from zope.component.event import objectEventNotify
@@ -17,12 +15,9 @@ from voteit.core.interfaces import IObjectUpdatedEvent
 from voteit.core.events import ObjectUpdatedEvent
 from voteit.core import security
 from voteit.core.security import groupfinder
+from voteit.core.security import authn_policy
+from voteit.core.security import authz_policy
 from voteit.core.models.date_time_util import utcnow
-
-
-authn_policy = AuthTktAuthenticationPolicy(secret='sosecret',
-                                           callback=groupfinder)
-authz_policy = ACLAuthorizationPolicy()
 
 
 class CatalogTestCase(unittest.TestCase):
@@ -45,6 +40,7 @@ class CatalogTestCase(unittest.TestCase):
 
         self.root = bootstrap_voteit(registry=self.config.registry, echo=False)
         self.query = self.root.catalog.query
+        self.search = self.root.catalog.search
         self.get_metadata = self.root.catalog.document_map.get_metadata
         self.content_types = self.config.registry.getUtility(IContentUtility)
         self.config.include('pyramid_zcml')
@@ -252,6 +248,24 @@ class CatalogIndexTests(CatalogTestCase):
         self.assertEqual(self.query("end_time == %s and path == '/meeting'" % now_unix)[0], 1)
         qy = ("%s < end_time < %s and path == '/meeting'" % (now_unix-1, now_unix+1))
         self.assertEqual(self.query(qy)[0], 1)
+
+    def test_unread(self):
+        meeting = self._add_mock_meeting()
+        self.config.setup_registry(authorization_policy=authz_policy, authentication_policy=authn_policy)
+        #Discussion posts are unread aware
+        from voteit.core.models.discussion_post import DiscussionPost
+        obj = DiscussionPost()
+        obj.title = 'Hello'
+        meeting['post'] = obj
+        obj.mark_all_unread()
+        from voteit.core.models.catalog import reindex_indexes
+        reindex_indexes(self.root.catalog)
+        
+        self.assertEqual(self.search(unread='admin')[0], 1)
+        
+        obj.mark_as_read('admin')
+        
+        self.assertEqual(self.search(unread='admin')[0], 0)
 
 
 class CatalogMetadataTests(CatalogTestCase):

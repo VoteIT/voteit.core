@@ -4,22 +4,14 @@ from datetime import datetime
 from pyramid import testing
 from pyramid.traversal import resource_path
 from zope.interface import implements
+from zope.interface.verify import verifyObject
 
 from voteit.core.models.interfaces import ICatalogMetadataEnabled
 from voteit.core.models.site import SiteRoot
-
-
-class DummyMetadataContext(object):
-    implements(ICatalogMetadataEnabled)
-    __name__ = 'dummy' #Path will be same for all dummies
-    
-    def __init__(self):
-        self.title = u"Hello world"
-        self.created = datetime.now()
         
 
 class CatalogMetadataTests(unittest.TestCase):
-    """ Testcase for CatalogMetadata adapter. The adapter is also covered in the catalog tests.
+    """ Testcase for CatalogMetadata adapter. The metadata is covered in the catalog tests.
     """
     def setUp(self):
         self.config = testing.setUp()
@@ -28,28 +20,33 @@ class CatalogMetadataTests(unittest.TestCase):
     def tearDown(self):
         testing.tearDown()
 
-    def _make_obj(self, context):
+    def _make_obj(self):
         from voteit.core.models.catalog import CatalogMetadata
-        return CatalogMetadata(context)
-    
+        from voteit.core.models.base_content import BaseContent
+        return CatalogMetadata(BaseContent())
+
+    def test_interface(self):
+        from voteit.core.models.interfaces import ICatalogMetadata
+        obj = self._make_obj()
+        verifyObject(ICatalogMetadata, obj)
+
     def test_add_and_get_metadata(self):
-        context = DummyMetadataContext()
-        obj = self._make_obj(context)
+        obj = self._make_obj()
         
         dm = self.root.catalog.document_map
         
-        doc_id = dm.add(resource_path(context))
+        doc_id = dm.add(resource_path(obj.context))
         dm.add_metadata(doc_id, obj())
         
         metadata = dm.get_metadata(doc_id)
-        self.assertEqual(metadata['title'], context.title)
-        self.assertEqual(metadata['created'], context.created)
+        self.assertEqual(metadata['title'], obj.context.title)
+        self.assertEqual(metadata['created'], obj.context.created)
         
     def test_returned_metadata(self):
-        context = DummyMetadataContext()
-        obj = self._make_obj(context)
+        obj = self._make_obj()
         result = obj()
         
-        self.assertEqual(result['title'], context.title)
-        self.assertEqual(result['created'], context.created)
+        self.assertEqual(result['title'], obj.context.title)
+        self.assertEqual(result['created'], obj.context.created)
+    
         

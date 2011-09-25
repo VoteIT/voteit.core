@@ -240,13 +240,6 @@ class APIView(object):
         
         return effective_principals
         
-    def get_unread_count(self, context, content_type=None):
-        unread_count = 0
-        for obj in context.get_content(content_type=content_type):
-            if self.userid in obj.get_unread_userids():
-                unread_count += 1
-        return unread_count
-        
     def is_unread(self, context, mark=False):
         if self.userid in context.get_unread_userids():
             if mark:
@@ -262,6 +255,16 @@ class APIView(object):
                 results.append(candidate)
             
         return results
+
+    def search_catalog(self, context=None, **kwargs):
+        """ Same as catalog.search, but also extracts path from context if it's specified.
+            returns the same tuple with (itemcount, docid_set) as result.
+        """
+        if context is not None:
+            if 'path' in kwargs:
+                ValueError("Can't specify both context and path")
+            kwargs['path'] = resource_path(context)
+        return self.root.catalog.search(**kwargs)
 
     def resolve_catalog_docid(self, docid):
         """ Take a catalog docid and fetch its object. Convenience wrapper for api view"""

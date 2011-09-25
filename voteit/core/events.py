@@ -18,3 +18,4 @@ class ObjectUpdatedEvent(object):
     
     def __init__(self, object):
         self.object = object
+        #FIXME: Update with keywords for metadata and catalog indexes to reindex.

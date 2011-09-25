@@ -17,6 +17,7 @@ from voteit.core.models.interfaces import ICatalogMetadataEnabled
 from voteit.core.models.interfaces import ISecurityAware
 from voteit.core.models.interfaces import IWorkflowAware
 from voteit.core.models.interfaces import ICatalogMetadata
+from voteit.core.models.interfaces import IUnreadAware
 from voteit.core.security import NEVER_EVER_PRINCIPAL
 from voteit.core.security import VIEW
 
@@ -85,6 +86,7 @@ def update_indexes(catalog, reindex=True):
         'searchable_text' : CatalogTextIndex(get_searchable_text),
         'start_time' : CatalogFieldIndex(get_start_time),
         'end_time' : CatalogFieldIndex(get_end_time),
+        'unread': CatalogKeywordIndex(get_unread),
     }
     
     changed_indexes = set()
@@ -132,18 +134,24 @@ def index_object(catalog, obj):
         catalog.document_map.add_metadata(obj_id, metadata())
 
 
-def reindex_object(catalog, obj):
-    """ Reindex an object and update metadata. """
+def reindex_object(catalog, obj, indexes=(), metadata=True):
+    """ Reindex an object and update metadata.
+        It's possible to not update metadata and to only update some indexes.
+    """
     obj_id = catalog.document_map.docid_for_address(resource_path(obj))
     if obj_id is None:
         #This is a special case when an object that isn't indexed tries to be reindexed
         index_object(catalog, obj) #Do reindex instead
         return
 
-    catalog.reindex_doc(obj_id, obj)
+    if not indexes:
+        catalog.reindex_doc(obj_id, obj)
+    else:
+        for index in indexes:
+            catalog[index].reindex_doc(obj_id, obj)
 
     #Add metadata
-    if ICatalogMetadataEnabled.providedBy(obj):
+    if metadata and ICatalogMetadataEnabled.providedBy(obj):
         metadata = getAdapter(obj, ICatalogMetadata)
         catalog.document_map.add_metadata(obj_id, metadata())
 
@@ -190,6 +198,9 @@ def get_title(object, default):
     return object.title
 
 def get_sortable_title(object, default):
+    title = object.title
+    if not title:
+        return default
     return object.title.lower()
 
 def get_description(object, default):
@@ -252,3 +263,12 @@ def get_end_time(object, default):
     if value and value != default:
         return timegm(value.timetuple())
     return default
+
+def get_unread(object, default):
+    if not IUnreadAware.providedBy(object):
+        return default
+    userids = object.get_unread_userids()
+    if userids:
+        return userids
+    return default
+
