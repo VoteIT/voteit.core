@@ -24,8 +24,8 @@
 			<key name="description" value=""/>
 		</state>
 
-		<state name="active">
-			<key name="title" value="Active" i18n:attributes="value" />
+		<state name="ongoing">
+			<key name="title" value="Ongoing" i18n:attributes="value" />
 			<key name="description" value=""/>
 		</state>
 
@@ -42,9 +42,9 @@
 		/>
 
 		<transition
-			name="upcoming_to_active"
+			name="upcoming_to_ongoing"
 			from_state="upcoming"
-			to_state="active"
+			to_state="ongoing"
 			permission="Change Workflow State"
 		/>
 		
@@ -56,24 +56,24 @@
 		/>
 		
 		<transition
-			name="active_to_upcoming"
-			from_state="active"
+			name="ongoing_to_upcoming"
+			from_state="ongoing"
 			to_state="upcoming"
 			permission="Change Workflow State"
 		/>
 
 		<transition
-			name="active_to_closed"
-			from_state="active"
+			name="ongoing_to_closed"
+			from_state="ongoing"
 			to_state="closed"
 			permission="Change Workflow State"
             callback="voteit.core.models.agenda_item.closing_agenda_item_callback"
 		/>
 		
 		<transition
-			name="closed_to_active"
+			name="closed_to_ongoing"
 			from_state="closed"
-			to_state="active"
+			to_state="ongoing"
 			permission="Change Workflow State"
 		/>
 		

@@ -138,9 +138,9 @@ class APIView(object):
         else:
             response['is_moderator'] = False
         if response['is_moderator']:
-            response['sections'] = ('closed', 'active', 'upcoming', 'private')
+            response['sections'] = ('closed', 'ongoing', 'upcoming', 'private')
         else:
-            response['sections'] = ('closed', 'active', 'upcoming')
+            response['sections'] = ('closed', 'ongoing', 'upcoming')
 
         closed_sections = set()
         for section in response['sections']:

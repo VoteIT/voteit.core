@@ -120,9 +120,9 @@ def includeme(config):
 
 def closing_meeting_callback(context, info):
     """ Callback for workflow action. When a meeting is closed,
-        raise an exception if any agenda item is active.
+        raise an exception if any agenda item is ongoing.
     """
     #get_content returns a generator. It's "True" even if it's empty!
-    if tuple(context.get_content(iface=IAgendaItem, states='active')):
-        raise Exception("This meeting still has open Agenda items in it. You can't close it until they're closed.")
+    if tuple(context.get_content(iface=IAgendaItem, states='ongoing')):
+        raise Exception("This meeting still has ongoing Agenda items in it. You can't close it until they're closed.")
 

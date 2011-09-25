@@ -167,8 +167,8 @@ a {
 #meeting_overview h4.closed span {
     background: url(icons/icon_past.png) no-repeat;
 }
-#navigation h6.active span,
-#meeting_overview h4.active span {
+#navigation h6.ongoing span,
+#meeting_overview h4.ongoing span {
     background: url(icons/icon_ongoing.png) no-repeat;
 }
 #navigation h6.upcoming span,
@@ -325,7 +325,7 @@ a {
 }
 
 /* Workflow states */
-.wf-state-active {}
+.wf-state-ongoing {}
 .wf-state-approved {}
 .wf-state-canceled {}
 .wf-state-closed {}

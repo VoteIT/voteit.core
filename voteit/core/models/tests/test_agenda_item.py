@@ -55,11 +55,11 @@ class AgendaItemTests(unittest.TestCase):
         request = testing.DummyRequest()
         obj['proposal'] = self._make_proposal() #Should be published as initial state
         obj.set_workflow_state(request, 'upcoming')
-        obj.set_workflow_state(request, 'active')
+        obj.set_workflow_state(request, 'ongoing')
         obj.set_workflow_state(request ,'closed')
         self.assertEqual(obj['proposal'].get_workflow_state(), u'unhandled')
 
-    def test_workflow_closed_state_active_poll_exception(self):
+    def test_workflow_closed_state_ongoing_poll_exception(self):
         """ When you try to close an agenda items that has an ongoing
             poll in it, it should raise an exception.
         """
@@ -71,7 +71,7 @@ class AgendaItemTests(unittest.TestCase):
         obj['poll'].set_workflow_state(request, 'ongoing')
 
         obj.set_workflow_state(request, 'upcoming')
-        obj.set_workflow_state(request, 'active')
+        obj.set_workflow_state(request, 'ongoing')
         self.assertRaises(Exception, obj.set_workflow_state, 'closed')
 
     def test_timestamp_added_on_close(self):
@@ -79,7 +79,7 @@ class AgendaItemTests(unittest.TestCase):
         request = testing.DummyRequest()
         obj = self._make_obj()
         obj.set_workflow_state(request, 'upcoming')
-        obj.set_workflow_state(request, 'active')
+        obj.set_workflow_state(request, 'ongoing')
         self.assertFalse(isinstance(obj.end_time, datetime))
         obj.set_workflow_state(request, 'closed')
         self.assertTrue(isinstance(obj.end_time, datetime))
@@ -131,18 +131,18 @@ class AgendaItemPermissionTests(unittest.TestCase):
         #Change workflow state
         self.assertEqual(self.pap(obj, security.CHANGE_WORKFLOW_STATE), admin | moderator)
 
-    def test_active_with_closed_meeting(self):
+    def test_ongoing_with_closed_meeting(self):
         #FIXME: This workflow state combination should never happen with the current configuration of the site
         #We might want to remove this test, or change the raised exception so it happends on the workflow change instead.
         request = testing.DummyRequest()
         obj = self._make_obj()
         
         obj.set_workflow_state(request, 'upcoming')
-        obj.set_workflow_state(request, 'active')
+        obj.set_workflow_state(request, 'ongoing')
         
         meeting = self._make_meeting()
         meeting.set_workflow_state(request, 'upcoming')
-        meeting.set_workflow_state(request, 'active')
+        meeting.set_workflow_state(request, 'ongoing')
         meeting.set_workflow_state(request, 'closed')
         
         meeting['ai'] = obj
@@ -168,16 +168,16 @@ class AgendaItemPermissionTests(unittest.TestCase):
         #Change workflow state
         self.assertEqual(self.pap(obj, security.CHANGE_WORKFLOW_STATE), set())
 
-    def test_active_with_active_meeting(self):
+    def test_ongoing_with_ongoing_meeting(self):
         request = testing.DummyRequest()
         obj = self._make_obj()
         
         obj.set_workflow_state(request, 'upcoming')
-        obj.set_workflow_state(request, 'active')
+        obj.set_workflow_state(request, 'ongoing')
         
         meeting = self._make_meeting()
         meeting.set_workflow_state(request, 'upcoming')
-        meeting.set_workflow_state(request, 'active')
+        meeting.set_workflow_state(request, 'ongoing')
         
         meeting['ai'] = obj
         
@@ -207,12 +207,12 @@ class AgendaItemPermissionTests(unittest.TestCase):
         obj = self._make_obj()
         
         obj.set_workflow_state(request, 'upcoming')
-        obj.set_workflow_state(request, 'active')
+        obj.set_workflow_state(request, 'ongoing')
         obj.set_workflow_state(request, 'closed')
         
         meeting = self._make_meeting()
         meeting.set_workflow_state(request, 'upcoming')
-        meeting.set_workflow_state(request, 'active')
+        meeting.set_workflow_state(request, 'ongoing')
         meeting.set_workflow_state(request, 'closed')
         
         meeting['ai'] = obj
@@ -243,12 +243,12 @@ class AgendaItemPermissionTests(unittest.TestCase):
         obj = self._make_obj()
         
         obj.set_workflow_state(request, 'upcoming')
-        obj.set_workflow_state(request, 'active')
+        obj.set_workflow_state(request, 'ongoing')
         obj.set_workflow_state(request, 'closed')
         
         meeting = self._make_meeting()
         meeting.set_workflow_state(request, 'upcoming')
-        meeting.set_workflow_state(request, 'active')
+        meeting.set_workflow_state(request, 'ongoing')
         
         meeting['ai'] = obj
         

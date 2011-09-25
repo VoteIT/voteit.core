@@ -34,7 +34,7 @@ class MeetingView(BaseView):
         self.response['check_section_closed'] = self._is_section_closed
         self.response['section_overview_macro'] = self.section_overview_macro
         
-        states = ('active', 'upcoming', 'closed')
+        states = ('ongoing', 'upcoming', 'closed')
         over_limit = {}
         agenda_items = {}
         for state in states:
@@ -258,7 +258,7 @@ class MeetingView(BaseView):
         
     @view_config(context=IMeeting, name="log", permission=security.VIEW, renderer='templates/log.pt')
     def meeting_messages(self):
-        state = self.request.GET.get('state', 'active')
+        state = self.request.GET.get('state', 'ongoing')
 
         self.response = {}
         self.response['log'] = self.context.get_content(iface=IAgendaItem, states=state, sort_on='agenda_item_id')

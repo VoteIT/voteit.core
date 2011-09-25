@@ -83,8 +83,8 @@ class SecurityTests(unittest.TestCase):
         obj = Meeting()
         
         #Regular wf method doesn't work
-        self.assertRaises(WorkflowError, obj.set_workflow_state, request, 'active')
+        self.assertRaises(WorkflowError, obj.set_workflow_state, request, 'ongoing')
         
         #But unrestricted does
-        security.unrestricted_wf_transition_to(obj, 'active')
-        self.assertEqual(obj.get_workflow_state(), 'active')
+        security.unrestricted_wf_transition_to(obj, 'ongoing')
+        self.assertEqual(obj.get_workflow_state(), 'ongoing')

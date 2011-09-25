@@ -40,23 +40,23 @@ class MeetingTests(unittest.TestCase):
         obj = self._make_obj()
         self.assertTrue(verifyObject(IMeeting, obj))
 
-    def test_closing_meeting_with_active_ais(self):
-        """ Closing a meeting with active agenda items should raise an exception. """
+    def test_closing_meeting_with_ongoing_ais(self):
+        """ Closing a meeting with ongoing agenda items should raise an exception. """
         request = testing.DummyRequest()
         ai = self._make_ai()
         ai.set_workflow_state(request, 'upcoming')
-        ai.set_workflow_state(request, 'active')
+        ai.set_workflow_state(request, 'ongoing')
         obj = self._make_obj()
         obj['ai'] = ai
         
-        obj.set_workflow_state(request, 'active')
+        obj.set_workflow_state(request, 'ongoing')
         self.assertRaises(Exception, obj.set_workflow_state, 'closed')
 
     def test_timestamp_added_on_close(self):
         self.config.scan('voteit.core.subscribers.timestamps') #To add subscriber
         request = testing.DummyRequest()
         obj = self._make_obj()
-        obj.set_workflow_state(request, 'active')
+        obj.set_workflow_state(request, 'ongoing')
         self.assertFalse(isinstance(obj.end_time, datetime))
         obj.set_workflow_state(request, 'closed')
         self.assertTrue(isinstance(obj.end_time, datetime))
@@ -137,10 +137,10 @@ class MeetingPermissionTests(unittest.TestCase):
         #Add vote
         self.assertEqual(self.pap(obj, security.ADD_VOTE), set())
 
-    def test_active(self):
+    def test_ongoing(self):
         request = testing.DummyRequest()
         obj = self._make_obj()
-        obj.set_workflow_state(request, 'active')
+        obj.set_workflow_state(request, 'ongoing')
         
         #View
         self.assertEqual(self.pap(obj, security.VIEW), admin | moderator | viewer | participant | owner)
@@ -169,7 +169,7 @@ class MeetingPermissionTests(unittest.TestCase):
     def test_closed(self):
         request = testing.DummyRequest()
         obj = self._make_obj()
-        obj.set_workflow_state(request, 'active')
+        obj.set_workflow_state(request, 'ongoing')
         obj.set_workflow_state(request, 'closed')
         
         #View

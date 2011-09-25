@@ -27,7 +27,7 @@
 				</div>
 			</div>
 
-            <div tal:define="state string:active;
+            <div tal:define="state string:ongoing;
                              is_closed check_section_closed('%s-%s' % (api.meeting.uid, state));">
                 <div metal:use-macro="section_overview_macro">
                     <span metal:fill-slot="heading" i18n:translate="">This is happening now</span>

@@ -47,9 +47,9 @@
             </li>
 	    </tal:closed>
         </ul>
-	    <tal:no_active condition="not current_ais" i18n:translate="">
+	    <tal:no_ongoing condition="not current_ais" i18n:translate="">
 	        (Nothing)
-	    </tal:no_active>
+	    </tal:no_ongoing>
 	
 	</div>
 	<div class="minimizable_inverted" i18n:translate="">(hidden, click above to open)</div>

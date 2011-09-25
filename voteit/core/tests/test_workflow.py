@@ -52,27 +52,27 @@ class WorkflowTests(unittest.TestCase):
 
         self.assertEqual(obj.get_workflow_state(), u'upcoming')
 
-        obj.make_workflow_transition(request, 'upcoming_to_active')
-        self.assertEqual(obj.get_workflow_state(), u'active')
+        obj.make_workflow_transition(request, 'upcoming_to_ongoing')
+        self.assertEqual(obj.get_workflow_state(), u'ongoing')
 
         obj.initialize_workflow()
         obj.make_workflow_transition(request, 'upcoming_to_closed')
         self.assertEqual(obj.get_workflow_state(), u'closed')
 
         obj.initialize_workflow()
-        obj.make_workflow_transition(request, 'upcoming_to_active')
-        obj.make_workflow_transition(request, 'active_to_upcoming')
+        obj.make_workflow_transition(request, 'upcoming_to_ongoing')
+        obj.make_workflow_transition(request, 'ongoing_to_upcoming')
         self.assertEqual(obj.get_workflow_state(), u'upcoming')
 
         obj.initialize_workflow()
-        obj.make_workflow_transition(request, 'upcoming_to_active')
-        obj.make_workflow_transition(request, 'active_to_closed')
+        obj.make_workflow_transition(request, 'upcoming_to_ongoing')
+        obj.make_workflow_transition(request, 'ongoing_to_closed')
         self.assertEqual(obj.get_workflow_state(), u'closed')
         
         obj.initialize_workflow()
         obj.make_workflow_transition(request, 'upcoming_to_closed')
-        obj.make_workflow_transition(request, 'closed_to_active')
-        self.assertEqual(obj.get_workflow_state(), u'active')
+        obj.make_workflow_transition(request, 'closed_to_ongoing')
+        self.assertEqual(obj.get_workflow_state(), u'ongoing')
         
         
     def test_agenda_item_states(self):
@@ -86,8 +86,8 @@ class WorkflowTests(unittest.TestCase):
         obj.make_workflow_transition(request, 'private_to_upcoming')
         self.assertEqual(obj.get_workflow_state(), u'upcoming')
 
-        obj.make_workflow_transition(request, 'upcoming_to_active')
-        self.assertEqual(obj.get_workflow_state(), u'active')
+        obj.make_workflow_transition(request, 'upcoming_to_ongoing')
+        self.assertEqual(obj.get_workflow_state(), u'ongoing')
 
         obj.initialize_workflow()
         obj.make_workflow_transition(request, 'private_to_upcoming')
@@ -96,21 +96,21 @@ class WorkflowTests(unittest.TestCase):
 
         obj.initialize_workflow()
         obj.make_workflow_transition(request, 'private_to_upcoming')
-        obj.make_workflow_transition(request, 'upcoming_to_active')
-        obj.make_workflow_transition(request, 'active_to_upcoming')
+        obj.make_workflow_transition(request, 'upcoming_to_ongoing')
+        obj.make_workflow_transition(request, 'ongoing_to_upcoming')
         self.assertEqual(obj.get_workflow_state(), u'upcoming')
 
         obj.initialize_workflow()
         obj.make_workflow_transition(request, 'private_to_upcoming')
-        obj.make_workflow_transition(request, 'upcoming_to_active')
-        obj.make_workflow_transition(request, 'active_to_closed')
+        obj.make_workflow_transition(request, 'upcoming_to_ongoing')
+        obj.make_workflow_transition(request, 'ongoing_to_closed')
         self.assertEqual(obj.get_workflow_state(), u'closed')
         
         obj.initialize_workflow()
         obj.make_workflow_transition(request, 'private_to_upcoming')
         obj.make_workflow_transition(request, 'upcoming_to_closed')
-        obj.make_workflow_transition(request, 'closed_to_active')
-        self.assertEqual(obj.get_workflow_state(), u'active')
+        obj.make_workflow_transition(request, 'closed_to_ongoing')
+        self.assertEqual(obj.get_workflow_state(), u'ongoing')
         
         
     def test_proposal_states(self):

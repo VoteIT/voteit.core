@@ -70,13 +70,13 @@ class ProposalPermissionTests(unittest.TestCase):
         #Retract
         self.assertEqual(self.pap(obj, security.RETRACT), admin | moderator | owner)
 
-    def test_retracted_in_active_ai(self):
+    def test_retracted_in_ongoing_ai(self):
         request = testing.DummyRequest()
         obj = self._make_obj()
         obj.set_workflow_state(request, 'retracted')
         ai = self._make_ai()
         ai.set_workflow_state(request, 'upcoming')
-        ai.set_workflow_state(request, 'active')
+        ai.set_workflow_state(request, 'ongoing')
         ai['prop'] = obj
 
         #View
@@ -97,7 +97,7 @@ class ProposalPermissionTests(unittest.TestCase):
         obj.set_workflow_state(request, 'retracted')
         ai = self._make_ai()
         ai.set_workflow_state(request, 'upcoming')
-        ai.set_workflow_state(request, 'active')
+        ai.set_workflow_state(request, 'ongoing')
         ai.set_workflow_state(request, 'closed')
         ai['prop'] = obj
 
@@ -119,7 +119,7 @@ class ProposalPermissionTests(unittest.TestCase):
         obj.set_workflow_state(request, 'unhandled')
         ai = self._make_ai()
         ai.set_workflow_state(request, 'upcoming')
-        ai.set_workflow_state(request, 'active')
+        ai.set_workflow_state(request, 'ongoing')
         ai.set_workflow_state(request, 'closed')
         ai['prop'] = obj
 
@@ -135,14 +135,14 @@ class ProposalPermissionTests(unittest.TestCase):
         #Retract
         self.assertEqual(self.pap(obj, security.RETRACT), set())
 
-    def test_approved_in_active_ai(self):
+    def test_approved_in_ongoing_ai(self):
         request = testing.DummyRequest()
         obj = self._make_obj()
         obj.set_workflow_state(request, 'voting')
         obj.set_workflow_state(request, 'approved')
         ai = self._make_ai()
         ai.set_workflow_state(request, 'upcoming')
-        ai.set_workflow_state(request, 'active')
+        ai.set_workflow_state(request, 'ongoing')
         ai['prop'] = obj
 
         #View
@@ -164,7 +164,7 @@ class ProposalPermissionTests(unittest.TestCase):
         obj.set_workflow_state(request, 'approved')
         ai = self._make_ai()
         ai.set_workflow_state(request, 'upcoming')
-        ai.set_workflow_state(request, 'active')
+        ai.set_workflow_state(request, 'ongoing')
         ai.set_workflow_state(request, 'closed')
         ai['prop'] = obj
 
@@ -177,14 +177,14 @@ class ProposalPermissionTests(unittest.TestCase):
         #Delete
         self.assertEqual(self.pap(obj, security.DELETE), set())
 
-    def test_denied_in_active_ai(self):
+    def test_denied_in_ongoing_ai(self):
         request = testing.DummyRequest()
         obj = self._make_obj()
         obj.set_workflow_state(request, 'voting')
         obj.set_workflow_state(request, 'denied')
         ai = self._make_ai()
         ai.set_workflow_state(request, 'upcoming')
-        ai.set_workflow_state(request, 'active')
+        ai.set_workflow_state(request, 'ongoing')
         ai['prop'] = obj
 
         #View
