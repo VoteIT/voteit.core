@@ -120,8 +120,8 @@ class BaseContentTests(unittest.TestCase):
         meeting['ai2'] = ai2
         
         self.assertEqual(meeting.get_content(sort_on = 'title', states='private'), (ai2, ai1))
-        self.assertEqual(meeting.get_content(sort_on = 'title', states=('private', 'inactive')), (ai2, ai1))
+        self.assertEqual(meeting.get_content(sort_on = 'title', states=('private', 'upcoming')), (ai2, ai1))
         request = testing.DummyRequest()
-        ai1.set_workflow_state(request, 'inactive')
+        ai1.set_workflow_state(request, 'upcoming')
         self.assertEqual(meeting.get_content(sort_on = 'title', states='private'), (ai2,))
-        self.assertEqual(meeting.get_content(sort_on = 'title', states=('private', 'inactive',)), (ai2, ai1))
+        self.assertEqual(meeting.get_content(sort_on = 'title', states=('private', 'upcoming',)), (ai2, ai1))

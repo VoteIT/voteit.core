@@ -34,7 +34,7 @@ class MeetingView(BaseView):
         self.response['check_section_closed'] = self._is_section_closed
         self.response['section_overview_macro'] = self.section_overview_macro
         
-        states = ('active', 'inactive', 'closed')
+        states = ('active', 'upcoming', 'closed')
         over_limit = {}
         agenda_items = {}
         for state in states:

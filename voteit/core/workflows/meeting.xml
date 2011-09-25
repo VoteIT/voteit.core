@@ -9,13 +9,13 @@
 		type="Meeting"
 		name="Meeting Workflow"
 		state_attr="state"
-		initial_state="inactive"
+		initial_state="upcoming"
 		content_types="voteit.core.models.interfaces.IMeeting"
         permission_checker="pyramid.security.has_permission"
 	>
 
-		<state name="inactive">
-			<key name="title" value="Inactive" i18n:attributes="value" />
+		<state name="upcoming">
+			<key name="title" value="Upcoming" i18n:attributes="value" />
 			<key name="description" value=""/>
 		</state>
 
@@ -30,23 +30,23 @@
 		</state>
 
 		<transition
-			name="inactive_to_active"
-			from_state="inactive"
+			name="upcoming_to_active"
+			from_state="upcoming"
 			to_state="active"
 			permission="Edit"
 		/>
 		
 		<transition
-			name="inactive_to_closed"
-			from_state="inactive"
+			name="upcoming_to_closed"
+			from_state="upcoming"
 			to_state="closed"
 			permission="Edit"
 		/>
 		
 		<transition
-			name="active_to_inactive"
+			name="active_to_upcoming"
 			from_state="active"
-			to_state="inactive"
+			to_state="upcoming"
 			permission="Edit"
 		/>
 

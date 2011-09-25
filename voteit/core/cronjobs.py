@@ -14,7 +14,7 @@ from voteit.core.security import unrestricted_wf_transition_to
 
 
 def open_polls(worker, unixnow):
-    """ Start polls that are inactive and have passed their start time. """
+    """ Start polls that are upcoming and have passed their start time. """
     print "=== Open running"
     cat = worker.root.catalog
     res_addr = cat.document_map.address_for_docid

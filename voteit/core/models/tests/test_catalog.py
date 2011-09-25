@@ -175,7 +175,7 @@ class CatalogIndexTests(CatalogTestCase):
 
     def test_workflow_state(self):
         self._add_mock_meeting()
-        self.assertEqual(self.query("workflow_state == 'inactive'")[0], 1)
+        self.assertEqual(self.query("workflow_state == 'upcoming'")[0], 1)
 
     def test_path(self):
         self._add_mock_meeting()

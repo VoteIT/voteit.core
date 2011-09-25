@@ -46,7 +46,7 @@ class WorkflowAwareTests(unittest.TestCase):
         
         obj = self._make_obj()
         request = testing.DummyRequest()
-        obj.set_workflow_state(request, 'inactive')
+        obj.set_workflow_state(request, 'upcoming')
         
         event_obj = events[0][0]
         event = events[0][1]
@@ -58,5 +58,5 @@ class WorkflowAwareTests(unittest.TestCase):
         obj = self._make_obj()
         request = testing.DummyRequest()
         self.assertEqual(obj.current_state_title(request), u'Private')
-        obj.set_workflow_state(request, 'inactive')
-        self.assertEqual(obj.current_state_title(request), u'Inactive')
+        obj.set_workflow_state(request, 'upcoming')
+        self.assertEqual(obj.current_state_title(request), u'Upcoming')

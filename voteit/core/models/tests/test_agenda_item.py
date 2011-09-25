@@ -54,7 +54,7 @@ class AgendaItemTests(unittest.TestCase):
         obj = self._make_obj()
         request = testing.DummyRequest()
         obj['proposal'] = self._make_proposal() #Should be published as initial state
-        obj.set_workflow_state(request, 'inactive')
+        obj.set_workflow_state(request, 'upcoming')
         obj.set_workflow_state(request, 'active')
         obj.set_workflow_state(request ,'closed')
         self.assertEqual(obj['proposal'].get_workflow_state(), u'unhandled')
@@ -70,7 +70,7 @@ class AgendaItemTests(unittest.TestCase):
         obj['poll'].set_workflow_state(request, 'upcoming')
         obj['poll'].set_workflow_state(request, 'ongoing')
 
-        obj.set_workflow_state(request, 'inactive')
+        obj.set_workflow_state(request, 'upcoming')
         obj.set_workflow_state(request, 'active')
         self.assertRaises(Exception, obj.set_workflow_state, 'closed')
 
@@ -78,7 +78,7 @@ class AgendaItemTests(unittest.TestCase):
         self.config.scan('voteit.core.subscribers.timestamps') #To add subscriber
         request = testing.DummyRequest()
         obj = self._make_obj()
-        obj.set_workflow_state(request, 'inactive')
+        obj.set_workflow_state(request, 'upcoming')
         obj.set_workflow_state(request, 'active')
         self.assertFalse(isinstance(obj.end_time, datetime))
         obj.set_workflow_state(request, 'closed')
@@ -137,11 +137,11 @@ class AgendaItemPermissionTests(unittest.TestCase):
         request = testing.DummyRequest()
         obj = self._make_obj()
         
-        obj.set_workflow_state(request, 'inactive')
+        obj.set_workflow_state(request, 'upcoming')
         obj.set_workflow_state(request, 'active')
         
         meeting = self._make_meeting()
-        meeting.set_workflow_state(request, 'inactive')
+        meeting.set_workflow_state(request, 'upcoming')
         meeting.set_workflow_state(request, 'active')
         meeting.set_workflow_state(request, 'closed')
         
@@ -172,11 +172,11 @@ class AgendaItemPermissionTests(unittest.TestCase):
         request = testing.DummyRequest()
         obj = self._make_obj()
         
-        obj.set_workflow_state(request, 'inactive')
+        obj.set_workflow_state(request, 'upcoming')
         obj.set_workflow_state(request, 'active')
         
         meeting = self._make_meeting()
-        meeting.set_workflow_state(request, 'inactive')
+        meeting.set_workflow_state(request, 'upcoming')
         meeting.set_workflow_state(request, 'active')
         
         meeting['ai'] = obj
@@ -206,12 +206,12 @@ class AgendaItemPermissionTests(unittest.TestCase):
         request = testing.DummyRequest()
         obj = self._make_obj()
         
-        obj.set_workflow_state(request, 'inactive')
+        obj.set_workflow_state(request, 'upcoming')
         obj.set_workflow_state(request, 'active')
         obj.set_workflow_state(request, 'closed')
         
         meeting = self._make_meeting()
-        meeting.set_workflow_state(request, 'inactive')
+        meeting.set_workflow_state(request, 'upcoming')
         meeting.set_workflow_state(request, 'active')
         meeting.set_workflow_state(request, 'closed')
         
@@ -242,12 +242,12 @@ class AgendaItemPermissionTests(unittest.TestCase):
         request = testing.DummyRequest()
         obj = self._make_obj()
         
-        obj.set_workflow_state(request, 'inactive')
+        obj.set_workflow_state(request, 'upcoming')
         obj.set_workflow_state(request, 'active')
         obj.set_workflow_state(request, 'closed')
         
         meeting = self._make_meeting()
-        meeting.set_workflow_state(request, 'inactive')
+        meeting.set_workflow_state(request, 'upcoming')
         meeting.set_workflow_state(request, 'active')
         
         meeting['ai'] = obj

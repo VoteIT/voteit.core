@@ -75,7 +75,7 @@ class ProposalPermissionTests(unittest.TestCase):
         obj = self._make_obj()
         obj.set_workflow_state(request, 'retracted')
         ai = self._make_ai()
-        ai.set_workflow_state(request, 'inactive')
+        ai.set_workflow_state(request, 'upcoming')
         ai.set_workflow_state(request, 'active')
         ai['prop'] = obj
 
@@ -96,7 +96,7 @@ class ProposalPermissionTests(unittest.TestCase):
         obj = self._make_obj()
         obj.set_workflow_state(request, 'retracted')
         ai = self._make_ai()
-        ai.set_workflow_state(request, 'inactive')
+        ai.set_workflow_state(request, 'upcoming')
         ai.set_workflow_state(request, 'active')
         ai.set_workflow_state(request, 'closed')
         ai['prop'] = obj
@@ -118,7 +118,7 @@ class ProposalPermissionTests(unittest.TestCase):
         obj = self._make_obj()
         obj.set_workflow_state(request, 'unhandled')
         ai = self._make_ai()
-        ai.set_workflow_state(request, 'inactive')
+        ai.set_workflow_state(request, 'upcoming')
         ai.set_workflow_state(request, 'active')
         ai.set_workflow_state(request, 'closed')
         ai['prop'] = obj
@@ -141,7 +141,7 @@ class ProposalPermissionTests(unittest.TestCase):
         obj.set_workflow_state(request, 'voting')
         obj.set_workflow_state(request, 'approved')
         ai = self._make_ai()
-        ai.set_workflow_state(request, 'inactive')
+        ai.set_workflow_state(request, 'upcoming')
         ai.set_workflow_state(request, 'active')
         ai['prop'] = obj
 
@@ -163,7 +163,7 @@ class ProposalPermissionTests(unittest.TestCase):
         obj.set_workflow_state(request, 'voting')
         obj.set_workflow_state(request, 'approved')
         ai = self._make_ai()
-        ai.set_workflow_state(request, 'inactive')
+        ai.set_workflow_state(request, 'upcoming')
         ai.set_workflow_state(request, 'active')
         ai.set_workflow_state(request, 'closed')
         ai['prop'] = obj
@@ -183,7 +183,7 @@ class ProposalPermissionTests(unittest.TestCase):
         obj.set_workflow_state(request, 'voting')
         obj.set_workflow_state(request, 'denied')
         ai = self._make_ai()
-        ai.set_workflow_state(request, 'inactive')
+        ai.set_workflow_state(request, 'upcoming')
         ai.set_workflow_state(request, 'active')
         ai['prop'] = obj
 

@@ -171,8 +171,8 @@ a {
 #meeting_overview h4.active span {
     background: url(icons/icon_ongoing.png) no-repeat;
 }
-#navigation h6.inactive span,
-#meeting_overview h4.inactive span {
+#navigation h6.upcoming span,
+#meeting_overview h4.upcoming span {
     background: url(icons/icon_upcoming.png) no-repeat;
 }
 #navigation h6.private span {
@@ -330,7 +330,6 @@ a {
 .wf-state-canceled {}
 .wf-state-closed {}
 .wf-state-denied {}
-.wf-state-inactive {}
 .wf-state-upcoming {}
 .wf-state-private {}
 .wf-state-published {}

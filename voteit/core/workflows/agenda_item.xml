@@ -19,8 +19,8 @@
 			<key name="description" value=""/>
 		</state>
 
-		<state name="inactive">
-			<key name="title" value="Inactive" i18n:attributes="value" />
+		<state name="upcoming">
+			<key name="title" value="Upcoming" i18n:attributes="value" />
 			<key name="description" value=""/>
 		</state>
 
@@ -35,30 +35,30 @@
 		</state>
 
 		<transition
-			name="private_to_inactive"
+			name="private_to_upcoming"
 			from_state="private"
-			to_state="inactive"
+			to_state="upcoming"
 			permission="Change Workflow State"
 		/>
 
 		<transition
-			name="inactive_to_active"
-			from_state="inactive"
+			name="upcoming_to_active"
+			from_state="upcoming"
 			to_state="active"
 			permission="Change Workflow State"
 		/>
 		
 		<transition
-			name="inactive_to_closed"
-			from_state="inactive"
+			name="upcoming_to_closed"
+			from_state="upcoming"
 			to_state="closed"
 			permission="Change Workflow State"
 		/>
 		
 		<transition
-			name="active_to_inactive"
+			name="active_to_upcoming"
 			from_state="active"
-			to_state="inactive"
+			to_state="upcoming"
 			permission="Change Workflow State"
 		/>
 
@@ -78,9 +78,9 @@
 		/>
 		
 		<transition
-			name="closed_to_inactive"
+			name="closed_to_upcoming"
 			from_state="closed"
-			to_state="inactive"
+			to_state="upcoming"
 			permission="Change Workflow State"
 		/>
 

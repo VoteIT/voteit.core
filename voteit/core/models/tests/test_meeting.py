@@ -44,7 +44,7 @@ class MeetingTests(unittest.TestCase):
         """ Closing a meeting with active agenda items should raise an exception. """
         request = testing.DummyRequest()
         ai = self._make_ai()
-        ai.set_workflow_state(request, 'inactive')
+        ai.set_workflow_state(request, 'upcoming')
         ai.set_workflow_state(request, 'active')
         obj = self._make_obj()
         obj['ai'] = ai
@@ -75,7 +75,7 @@ class MeetingTests(unittest.TestCase):
         self.assertEqual(obj.start_time, None)
         
         #Publish ai1 to use its time
-        ai1.set_workflow_state(request, 'inactive')
+        ai1.set_workflow_state(request, 'upcoming')
         self.assertEqual(obj.start_time, ai1time)
 
         #Add anotherone
@@ -88,7 +88,7 @@ class MeetingTests(unittest.TestCase):
         self.assertEqual(obj.start_time, ai1time)
         
         #Publishing ai2 makes it take precedence
-        ai2.set_workflow_state(request, 'inactive')
+        ai2.set_workflow_state(request, 'upcoming')
         self.assertEqual(obj.start_time, ai2time)
         
 class MeetingPermissionTests(unittest.TestCase):
@@ -109,7 +109,7 @@ class MeetingPermissionTests(unittest.TestCase):
         from voteit.core.models.meeting import Meeting
         return Meeting()
 
-    def test_inactive(self):
+    def test_upcoming(self):
         request = testing.DummyRequest()
         obj = self._make_obj()
         
