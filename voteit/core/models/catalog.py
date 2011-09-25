@@ -13,11 +13,14 @@ from pyramid.traversal import resource_path
 from pyramid.security import principals_allowed_by_permission
 
 from voteit.core.models.interfaces import IAgendaItem
+from voteit.core.models.interfaces import IUserTags
 from voteit.core.models.interfaces import ICatalogMetadataEnabled
 from voteit.core.models.interfaces import ISecurityAware
 from voteit.core.models.interfaces import IWorkflowAware
 from voteit.core.models.interfaces import ICatalogMetadata
 from voteit.core.models.interfaces import IUnreadAware
+from voteit.core.models.interfaces import IDiscussionPost
+from voteit.core.models.interfaces import IProposal
 from voteit.core.security import NEVER_EVER_PRINCIPAL
 from voteit.core.security import VIEW
 
@@ -40,13 +43,14 @@ class CatalogMetadata(object):
 
     def __call__(self):
         """ Return a dict of metadata values for an object. """
-        #FIXME: Should fields be configurable, or should we just fetch all?
         results = {
             'title':get_title(self.context, None),
             'created':self.context.created, #Exception, since the get_created method returns unixtime
+            'creators':get_creators(self.context, ()),
             'path':get_path(self.context, None),
             'content_type':get_content_type(self.context, None),
             'uid':get_uid(self.context, None),
+            'like_userids':get_like_userids(self.context, ()),
         }
 
         #Use special metadata?
@@ -87,6 +91,7 @@ def update_indexes(catalog, reindex=True):
         'start_time' : CatalogFieldIndex(get_start_time),
         'end_time' : CatalogFieldIndex(get_end_time),
         'unread': CatalogKeywordIndex(get_unread),
+        'like_userids': CatalogKeywordIndex(get_like_userids),
     }
     
     changed_indexes = set()
@@ -222,7 +227,9 @@ def get_path(object, default):
     return resource_path(object)
 
 def get_creators(object, default):
-    return object.creators and tuple(object.creators) or ()
+    if object.creators:
+        return tuple(object.creators)
+    return default
 
 def get_created(object, default):
     """ The created time is stored in the catalog as unixtime.
@@ -273,3 +280,18 @@ def get_unread(object, default):
         return userids
     return default
 
+def get_like_userids(object, default):
+    """ Returns all userids who 'like' something.
+        We only use like for Discussions and Proposals.
+        Warning! An empty list doesn't update the catalog.
+        If default is returned to an index, it will cause that index to remove index,
+        which is the correct behaviour for the catalog.
+    """
+    if IDiscussionPost.providedBy(object) or IProposal.providedBy(object):
+        user_tags = getAdapter(object, IUserTags)
+        likes = user_tags.userids_for_tag('like')
+        if likes:
+            return likes
+        
+    return default
+    

@@ -37,6 +37,7 @@ class CatalogTestCase(unittest.TestCase):
         register_catalog_metadata_adapter(self.config)
 
         self.config.scan('voteit.core.subscribers.catalog')
+        self.config.include('voteit.core.models.user_tags')
 
         self.root = bootstrap_voteit(registry=self.config.registry, echo=False)
         self.query = self.root.catalog.query
@@ -267,6 +268,25 @@ class CatalogIndexTests(CatalogTestCase):
         
         self.assertEqual(self.search(unread='admin')[0], 0)
 
+    def test_like_userids(self):
+        meeting = self._add_mock_meeting()
+        from voteit.core.models.discussion_post import DiscussionPost
+        obj = DiscussionPost()
+        obj.title = 'Hello'
+        meeting['post'] = obj
+        
+        self.assertEqual(self.search(like_userids='admin')[0], 0)
+        
+        #Set like
+        from voteit.core.models.interfaces import IUserTags
+        user_tags = self.config.registry.getAdapter(obj, IUserTags)
+        user_tags.add('like', 'admin')
+        
+        self.assertEqual(self.search(like_userids='admin')[0], 1)
+        
+        user_tags.remove('like', 'admin')
+        self.assertEqual(self.search(like_userids='admin')[0], 0)
+
 
 class CatalogMetadataTests(CatalogTestCase):
     """ Test metadata creation. This test also covers catalog subscribers.
@@ -317,4 +337,26 @@ class CatalogMetadataTests(CatalogTestCase):
         metadata = self.get_metadata(doc_id)
         
         self.assertEqual(metadata['uid'], obj.uid)
+
+    def test_like_userids(self):
+        meeting = self._add_mock_meeting()
+        from voteit.core.models.discussion_post import DiscussionPost
+        obj = DiscussionPost()
+        meeting['post'] = obj
         
+        def _get_metadata():
+            result = self.search(content_type = 'DiscussionPost')
+            doc_id = result[1][0]
+            return self.get_metadata(doc_id)
+        
+        self.assertEqual(_get_metadata()['like_userids'], ())
+
+        #Set like
+        from voteit.core.models.interfaces import IUserTags
+        user_tags = self.config.registry.getAdapter(obj, IUserTags)
+        user_tags.add('like', 'admin')
+
+        self.assertEqual(_get_metadata()['like_userids'], set(('admin',)))
+        
+        user_tags.remove('like', 'admin')
+        self.assertEqual(_get_metadata()['like_userids'], ())
