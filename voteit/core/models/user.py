@@ -14,6 +14,7 @@ from zope.interface import implements
 from repoze.folder import unicodify
 from pyramid.url import resource_url
 from pyramid.security import Allow
+from pyramid.security import DENY_ALL
 from pyramid.traversal import find_interface
 from pyramid_mailer import get_mailer
 from pyramid_mailer.message import Message
@@ -47,8 +48,9 @@ class User(BaseContent):
     allowed_contexts = ('Users',)
     add_permission = security.ADD_USER
     
-    __acl__ = [(Allow, security.ROLE_ADMIN, security.EDIT),
-               (Allow, security.ROLE_OWNER, [security.EDIT, security.CHANGE_PASSWORD])]
+    __acl__ = [(Allow, security.ROLE_ADMIN, (security.EDIT, security.VIEW,)),
+               (Allow, security.ROLE_OWNER, (security.EDIT, security.VIEW, security.CHANGE_PASSWORD,)),
+               DENY_ALL]
     
     @property
     def userid(self):

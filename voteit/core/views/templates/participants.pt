@@ -6,19 +6,19 @@
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
       i18n:domain="voteit.core">
 <body>
-	
-	
-	<h2 id="page_heading" metal:fill-slot="page_heading" i18n:translate="">
-		Showing
-		<span tal:replace="len(participants)" i18n:name="count">5</span>
-		participants
-	</h2>
+    
+    
+    <h2 id="page_heading" metal:fill-slot="page_heading" i18n:translate="">
+        Showing
+        <span tal:replace="len(participants)" i18n:name="count">5</span>
+        participants
+    </h2>
 
     <div metal:fill-slot="content" class="content_wrapper">
 
         <table class="listing">
-        	<thead>
-        		<tr>
+            <thead>
+                <tr>
                     <th i18n:translate="" class="heading">UserID</th>
                     <th i18n:translate="" class="heading">First name</th>
                     <th i18n:translate="" class="heading">Last name</th>
@@ -26,30 +26,31 @@
                     <th i18n:translate="" class="heading">Can participate?</th>
                     <th i18n:translate="" class="heading">Can vote?</th>
                     <th i18n:translate="" class="heading">Moderator?</th>
-        		</tr>
-        	</thead>
-			<tbody>
-				<tal:iterate repeat="user participants">
-				<tr tal:attributes="class repeat.user.odd and 'odd' or 'even'"
-				    tal:define="principals context_effective_principals(context, user.userid)">
-	                    <td>
-	                    	<a tal:content="user.userid"
-							   href="${api.resource_url(user, request)}">
-	                    	Userid
-							</a>
-						</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tal:iterate repeat="user participants">
+                <tr tal:attributes="class repeat.user.odd and 'odd' or 'even'"
+                    tal:define="principals context_effective_principals(context, user.userid)">
+                        <td>
+                            <a tal:content="user.userid"
+                               class="inlineinfo"
+                               href="${api.get_userinfo_url(user.userid)}">
+                            Userid
+                            </a>
+                        </td>
                         <td tal:content="user.get_field_value('first_name')">Hanna</td>
                         <td tal:content="user.get_field_value('last_name')">VoteIT</td>
-	                    <td>
+                        <td>
                             <a tal:content="user.get_field_value('email')"
                                tal:attributes="href 'mailto:%s' % user.get_field_value('email')">
                                 voteit@betahaus.net
                             </a>
-							
-						</td>
+                            
+                        </td>
                         <td>
                             <span tal:condition="'role:Participant' in principals">
-                            	<span class="yes_icon" i18n:translate="">Yes</span>
+                                <span class="yes_icon" i18n:translate="">Yes</span>
                             </span>
                         </td>
                         <td>
@@ -60,14 +61,14 @@
                         <td>
                             <span tal:condition="'role:Moderator' in principals">
                                 <span class="yes_icon" i18n:translate="">Yes</span>
-							</span>
+                            </span>
                         </td>
 
-				</tr>
-				</tal:iterate>
-			</tbody>
+                </tr>
+                </tal:iterate>
+            </tbody>
         </table>
-		
+        
     </div> <!-- content -->
 </body>
 </html>
