@@ -255,13 +255,3 @@ class MeetingView(BaseView):
 
         self.response['form'] = self.form.render()
         return self.response
-        
-    @view_config(context=IMeeting, name="log", permission=security.VIEW, renderer='templates/log.pt')
-    def meeting_messages(self):
-        state = self.request.GET.get('state', 'ongoing')
-
-        self.response = {}
-        self.response['log'] = self.context.get_content(iface=IAgendaItem, states=state, sort_on='agenda_item_id')
-        self.response['api'] = self.api
-
-        return self.response

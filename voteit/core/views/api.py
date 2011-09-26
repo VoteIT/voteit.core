@@ -127,6 +127,13 @@ class APIView(object):
         """ Is the current context inside a meeting, or a meeting itself? """
         return find_interface(self.context, IMeeting)
 
+    @reify
+    def meeting_state(self):
+        """ Current wf state of meeting if you're inside a meeting. """
+        if not self.meeting:
+            return
+        return self.meeting.get_workflow_state()
+
     def get_navigation(self):
         """ Get navigatoin """
 
@@ -204,10 +211,14 @@ class APIView(object):
             if user:
                 users.add(user)
         
+        meeting_url = resource_url(self.meeting, request)
+        def _userinfo_url(userid):
+            return "%s_userinfo?userid=%s" % (meeting_url, userid)
+        
         response = {}
-        response['resource_url'] = resource_url
         response['users'] = users
         response['portrait'] = portrait
+        response['userinfo_url'] = _userinfo_url
         return render('templates/creators_info.pt', response, request=request)
 
     def get_poll_state_info(self, poll):
@@ -277,4 +288,3 @@ class APIView(object):
     def get_metadata_for_query(self, **kwargs):
         """ Return metadata for catalog search result. """
         return metadata_for_query(self.root.catalog, **kwargs)
-

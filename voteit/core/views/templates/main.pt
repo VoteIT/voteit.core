@@ -53,8 +53,8 @@
             </div>
 
             <div id="meeting-actions" tal:content="structure api.get_meeting_actions(context, request)">
-	            Meeting actions - like who's in a meeting, search etc
-			</div>
+                Meeting actions - like who's in a meeting, search etc
+            </div>
 
             <div id="logo-meeting-wrapper">
                 <a id="logo-space"
@@ -67,7 +67,7 @@
                 </h1>
             </div>
 
-		</div>
+        </div>
 
         <div id="rightcol-wrapper"><div id="leftcol-wrapper">
         <div id="navigation">
@@ -78,23 +78,32 @@
             <div id="top">
                 <div class="content_wrapper">
 
+                    <div id="notify-meetingstate" class="content_wrapper" tal:condition="api.meeting_state">
+                        <tal:upcoming condition="api.meeting_state == 'upcoming'">
+                            <span class="message" i18n:translate="">This meeting hasn't started yet.</span>
+                        </tal:upcoming>
+                        <tal:closed condition="api.meeting_state == 'closed'">
+                            <span class="message" i18n:translate="">This meeting has closed.</span>
+                        </tal:closed>
+                    </div>
+
                     <tal:messages replace="structure api.flash_messages()">Messages</tal:messages>
 
                     <div metal:define-slot="page_heading"
                          id="page_heading"
                          tal:condition="not form|True">
 
-	                    <span metal:define-slot="action_menu"
-	                         tal:condition="not form|api.context_has_permission('Moderate Meeting', context)"
-	                         tal:content="structure api.get_moderator_actions(context, request)">Cogwheel menu</span>
+                        <span metal:define-slot="action_menu"
+                             tal:condition="not form|api.context_has_permission('Moderate Meeting', context)"
+                             tal:content="structure api.get_moderator_actions(context, request)">Cogwheel menu</span>
 
                         <h2 tal:content="context.title">Title</h2>
 
                         <tal:state define="state_id context.get_workflow_state()|False">
                             <span tal:condition="state_id">
                                 <span i18n:translate="">State</span>:
-					            <strong tal:attributes="class 'wf-state-%s' % state_id"
-					                    tal:content="api.translate(context.current_state_title(request))">private</strong>
+                                <strong tal:attributes="class 'wf-state-%s' % state_id"
+                                        tal:content="api.translate(context.current_state_title(request))">private</strong>
 
                             </span>
                         </tal:state>
@@ -106,25 +115,25 @@
 
             <div id="content" metal:define-slot="content">
                 <div id="left" class="column" tal:condition="not form|True">
-                	<div class="content_wrapper">
-                	   <metal:left define-slot="left"></metal:left>
-					</div>
+                    <div class="content_wrapper">
+                       <metal:left define-slot="left"></metal:left>
+                    </div>
                 </div> <!-- left column-->
                 
                 <div id="right" class="column" tal:condition="not form|True">
                     <div class="content_wrapper">
-                	   <metal:right define-slot="right"></metal:right>
-                	</div>
+                       <metal:right define-slot="right"></metal:right>
+                    </div>
                 </div> <!-- right column-->
             </div> <!-- content -->
 
             <div metal:define-slot="form" tal:condition="form|False" class="content_wrapper" tal:content="structure form">Form</div>
             
         </div> <!-- main_window -->
-		
-		</div></div><!-- wrappers -->
-		
-		
+        
+        </div></div><!-- wrappers -->
+        
+        
         <div class="clear"></div>
     </div> <!-- page_wrapper -->
 
