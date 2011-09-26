@@ -92,12 +92,12 @@ a {
 .dropdown_menu .menu_body li {
 	white-space: nowrap;
 }
-.dropdown_menu .menu_body a {
+.dropdown_menu .menu_body a,
+.dropdown_menu .menu_body .readonly {
 	display: block;
     margin-left: -1em;
     margin-right: -1em;
 	padding: 0.25em 1em;
-
 }
 .dropdown_menu .menu_body a:hover {
 	color: #fff;
@@ -160,7 +160,6 @@ a {
 }
 
 /* State icons */
-#meeting_overview h4 span,
 .iconpadding > span {
     padding-left: 20px;
 }
@@ -542,7 +541,6 @@ ui-dialog {
 .action_menu.dropdown_menu .menu_body {
     top: -1em;
     right: -12em;
-    width: 10em;
     padding: 0 1em;
 }
 .action_menu li {
@@ -573,9 +571,16 @@ ui-dialog {
 .cogwheel .menu_header:hover {
 	background-image: url(icons/icon_settings.png);
 }
+.cogwheel .menusection {
+	display: block;
+    font-weight: bold;
+	margin-top: 0.5em;
+	padding-bottom: 0.25em;
+	margin-bottom: 0.25em;
+	border-bottom: 1px solid #054265;
+}
 #main_window .cogwheel .menu_body {
-    right: 0px;
-	left: -12em;
+    right: 18px;
 }
 
 /* listing */
