@@ -6,6 +6,7 @@ from zope.interface import implements
 from repoze.folder.interfaces import IObjectAddedEvent
 from pyramid.security import Allow, DENY_ALL
 from pyramid.events import subscriber
+from pyramid.traversal import find_root
 
 from voteit.core import VoteITMF as _
 from voteit.core import security
@@ -14,6 +15,7 @@ from voteit.core.models.interfaces import ICatalogMetadataEnabled
 from voteit.core.models.base_content import BaseContent
 from voteit.core.models.unread_aware import UnreadAware
 from voteit.core.validators import html_string_validator
+from voteit.core.validators import at_userid_validator
 
 ACL =  {}
 ACL['open'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, security.DELETE, )),
@@ -57,11 +59,18 @@ class DiscussionPost(BaseContent, UnreadAware):
     title = property(_get_title, _set_title)
 
 
-def construct_schema(**kwargs):
+def construct_schema(context=None, **kwargs):
+    if context is None:
+        KeyError("'context' is a required keyword for Discussion Post schemas. See construct_schema in the discussion post module.")
+        
+    root = find_root(context)
+    def _at_userid_validator(node, value):
+        at_userid_validator(node, value, root.users)
+
     class Schema(colander.Schema):
         text = colander.SchemaNode(colander.String(),
                                     title = _(u"Text"),
-                                    validator=html_string_validator,
+                                    validator=colander.All(html_string_validator, _at_userid_validator),
                                     widget=deform.widget.TextAreaWidget(rows=3, cols=40),)
     return Schema()
 

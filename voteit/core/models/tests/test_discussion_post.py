@@ -1,6 +1,7 @@
 import unittest
 
 from pyramid import testing
+from pyramid.url import resource_url
 from zope.interface.verify import verifyObject
 
 
@@ -12,10 +13,51 @@ class DiscussionTests(unittest.TestCase):
         testing.tearDown()
 
     def _make_obj(self):
-        from voteit.core.models.discussion_post import DiscussionPost        
+        from voteit.core.models.discussion_post import DiscussionPost
         return DiscussionPost()
 
     def test_verify_obj_implementation(self):
         from voteit.core.models.interfaces import IDiscussionPost
         obj = self._make_obj()
         self.assertTrue(verifyObject(IDiscussionPost, obj))
+        
+    def test_transform_text_subscriber(self):
+        request = testing.DummyRequest()
+        self.config = testing.setUp(request=request)
+
+        from voteit.core.app import register_content_types
+        from voteit.core.app import register_catalog_metadata_adapter
+        ct = """
+            voteit.core.models.site
+            voteit.core.models.user
+            voteit.core.models.users
+        """
+        self.config.registry.settings['content_types'] = ct
+        register_content_types(self.config)
+        register_catalog_metadata_adapter(self.config)
+        
+        self.config.scan('voteit.core.subscribers.transform_text')
+        self.config.include('voteit.core.models.user_tags')
+
+        from voteit.core.bootstrap import bootstrap_voteit
+        self.root = bootstrap_voteit(registry=self.config.registry, echo=False)
+        
+        obj = self._make_obj()
+        obj.set_field_value('text', 'test\ntest')
+        self.root['p1'] = obj
+        self.assertEqual(obj.get_field_value('text'), 'test<br />\ntest')
+
+        obj = self._make_obj()
+        obj.set_field_value('text', 'http://www.voteit.se')
+        self.root['p2'] = obj
+        self.assertEqual(obj.get_field_value('text'), '<a href="http://www.voteit.se">http://www.voteit.se</a>')
+        
+        obj = self._make_obj()
+        obj.set_field_value('text', '@admin')
+        self.root['p3'] = obj
+        text = '<a href="%s" title="%s">%s</a>' % (
+                resource_url(self.root.users['admin'], request),
+                self.root.users['admin'].title,
+                'admin',
+            )
+        self.assertEqual(obj.get_field_value('text'), text)
