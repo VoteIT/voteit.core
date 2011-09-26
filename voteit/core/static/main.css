@@ -675,10 +675,10 @@ table.listing > tbody > tr.even > td {
     border: 1px solid #054265;
 }
 .buttonize.large {
-    font-size: 1.2em;
-    padding-left: 1.5em;
-    padding-right: 1.5em;
-	margin: 0 0 1em 1em;
+    font-size: 110%;
+    padding-left: 1em;
+    padding-right: 1em;
+	margin: 0 0 1em 0.5em;
 }
 
 .moderator-help-buttons {
