@@ -84,6 +84,7 @@ a {
     position: absolute;
     display: none;
     top: 1.25em;
+	right: 0px;
     padding: 1em;
     background: #fff;
 	z-index: 99;
