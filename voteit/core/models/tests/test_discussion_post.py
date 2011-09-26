@@ -55,7 +55,7 @@ class DiscussionTests(unittest.TestCase):
         obj = self._make_obj()
         obj.set_field_value('text', '@admin')
         self.root['p3'] = obj
-        text = '<a href="%s" title="%s">%s</a>' % (
+        text = '<a href="%s" title="%s" class="inlineinfo">%s</a>' % (
                 resource_url(self.root.users['admin'], request),
                 self.root.users['admin'].title,
                 'admin',

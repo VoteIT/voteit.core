@@ -65,7 +65,7 @@ class ProposalTests(unittest.TestCase):
         obj = self._make_obj()
         obj.set_field_value('title', '@admin')
         self.root['p3'] = obj
-        title = '<a href="%s" title="%s">%s</a>' % (
+        title = '<a href="%s" title="%s" class="inlineinfo">%s</a>' % (
                 resource_url(self.root.users['admin'], request),
                 self.root.users['admin'].title,
                 'admin',
