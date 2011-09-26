@@ -5,11 +5,12 @@ import re
 from pyramid.url import resource_url
 from pyramid.events import subscriber
 from pyramid.threadlocal import get_current_request
-from pyramid.traversal import find_root
+from pyramid.traversal import find_root, find_interface
 from repoze.folder.interfaces import IObjectAddedEvent
 from webhelpers.html.converters import nl2br
 
 from voteit.core.models.interfaces import ISiteRoot
+from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import IProposal
 from voteit.core.models.interfaces import IDiscussionPost
 from voteit.core.interfaces import IObjectUpdatedEvent
@@ -23,6 +24,7 @@ def urls_to_links(text):
 
 def at_userid_link(text, obj):
     root = find_root(obj)
+    meeting = find_interface(obj, IMeeting)
     users = root.users
     request = get_current_request()
 
@@ -31,9 +33,10 @@ def at_userid_link(text, obj):
     for (space, userid) in re.findall(regexp, text):
         if userid in users:
             user = users[userid]
-            link = '%s<a href="%s" title="%s" class="inlineinfo">%s</a>' % (
+            link = '%s<a href="%s_userinfo?userid=%s" title="%s" class="inlineinfo">%s</a>' % (
                 space,
-                resource_url(user, request),
+                resource_url(meeting, request),
+                userid,
                 user.title,
                 userid,
             )

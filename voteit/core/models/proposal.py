@@ -77,9 +77,8 @@ def construct_schema(context=None, **kwargs):
     if context is None:
         KeyError("'context' is a required keyword for Proposal schemas. See construct_schema in the proposal module.")
         
-    root = find_root(context)
     def _at_userid_validator(node, value):
-        at_userid_validator(node, value, root.users)
+        at_userid_validator(node, value, context)
 
     class ProposalSchema(colander.MappingSchema):
         title = colander.SchemaNode(colander.String(),

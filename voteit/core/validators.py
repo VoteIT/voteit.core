@@ -2,7 +2,11 @@ import re
 import colander
 from webhelpers.html.tools import strip_tags
 from webhelpers.html.converters import nl2br
+from pyramid.traversal import find_interface, find_root
 
+from voteit.core.models.interfaces import IMeeting
+from voteit.core.security import find_authorized_userids
+from voteit.core.security import VIEW
 from voteit.core import VoteITMF as _
 
 
@@ -51,17 +55,20 @@ def multiple_email_validator(node, value):
         raise colander.Invalid(node, _(u"The following adresses is invalid: ${emails}", mapping={'emails': emails}))
 
 
-def at_userid_validator(node, value, users):
+def at_userid_validator(node, value, obj):
     """
         checks that the userid in '@userid' realy is a userid in the system
     """
-    from voteit.core.models.user import userid_regexp
+    meeting = find_interface(obj, IMeeting)
 
+    from voteit.core.models.user import userid_regexp
     regexp = r'(\A|\s)@('+userid_regexp+r')'
+
     reg = re.compile(regexp)
     invalid = []
     for (space, userid) in re.findall(regexp, value):
-        if not userid in users:
+        #Check if requested userid has permission in meeting
+        if not userid in find_authorized_userids(meeting, (VIEW,)):
             invalid.append(userid)
             
     if invalid:
