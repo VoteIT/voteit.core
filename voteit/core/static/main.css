@@ -29,6 +29,10 @@ a {
     color: #054265;
 	text-decoration: none;
 }
+p {
+    margin-bottom: 0.5em;
+	line-height: 1.25em;
+}
 .content_wrapper {
 	padding: 10px;
 }
@@ -685,3 +689,8 @@ table.listing > tbody > tr.even > td {
     float: right;
 	
 }
+.userinfo .profile-pic {
+    float: right;
+	margin: 0px 0px 1em 1em;
+}
+

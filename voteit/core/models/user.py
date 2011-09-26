@@ -55,12 +55,24 @@ class User(BaseContent):
         """ Convention - name should always be same as userid """
         return self.__name__
     
-    def get_image_tag(self, size=40):
+    def get_image_tag(self, size=40, **kwargs):
+        """ Get image tag. Always square, so size is enough.
+            Other keyword args will be converted to html properties.
+            Appends class 'profile-pic' to tag if class isn't part of keywords.
+        """
+        
         email_hash = self.get_field_value('email_hash', None)
         tag = '<img src="http://www.gravatar.com/avatar/'
         if email_hash:
             tag += email_hash
-        tag += '?d=mm&s=%(size)s" height="%(size)s" width="%(size)s" />' % {'size':size}
+        tag += '?d=mm&s=%(size)s" height="%(size)s" width="%(size)s"' % {'size':size}
+        
+        for (k, v) in kwargs.items():
+            tag += ' %s="%s"' % (k, v)
+        if not 'class' in kwargs:
+            tag += ' class="profile-pic"'
+        tag += ' />'
+        
         return tag
 
     def get_password(self):
