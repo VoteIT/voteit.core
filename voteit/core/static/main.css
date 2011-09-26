@@ -350,11 +350,13 @@ a {
 .wf-state-denied .wf-state { background: url(icons/icon_denied.png) left center no-repeat; }
 
 /* Flash messages */
-#flash_messages {
+#flash_messages,
+#notify-meetingstate {
 	clear: both;
 }
 
-#flash_messages .message {
+#flash_messages .message,
+#notify-meetingstate .message {
     padding: 5px 15px 5px 30px;
     border-radius: 5px;
     -webkit-border-radius: 5px;
