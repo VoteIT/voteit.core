@@ -63,9 +63,8 @@ def construct_schema(context=None, **kwargs):
     if context is None:
         KeyError("'context' is a required keyword for Discussion Post schemas. See construct_schema in the discussion post module.")
         
-    root = find_root(context)
     def _at_userid_validator(node, value):
-        at_userid_validator(node, value, root.users)
+        at_userid_validator(node, value, context)
 
     class Schema(colander.Schema):
         text = colander.SchemaNode(colander.String(),

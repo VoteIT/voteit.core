@@ -42,21 +42,26 @@ class DiscussionTests(unittest.TestCase):
         from voteit.core.bootstrap import bootstrap_voteit
         self.root = bootstrap_voteit(registry=self.config.registry, echo=False)
         
+        from voteit.core.models.meeting import Meeting
+        meeting = Meeting()
+        self.root['m1'] = meeting
+        
         obj = self._make_obj()
         obj.set_field_value('text', 'test\ntest')
-        self.root['p1'] = obj
+        meeting['p1'] = obj
         self.assertEqual(obj.get_field_value('text'), 'test<br />\ntest')
 
         obj = self._make_obj()
         obj.set_field_value('text', 'http://www.voteit.se')
-        self.root['p2'] = obj
+        meeting['p2'] = obj
         self.assertEqual(obj.get_field_value('text'), '<a href="http://www.voteit.se">http://www.voteit.se</a>')
         
         obj = self._make_obj()
         obj.set_field_value('text', '@admin')
-        self.root['p3'] = obj
-        text = '<a href="%s" title="%s">%s</a>' % (
-                resource_url(self.root.users['admin'], request),
+        meeting['p3'] = obj
+        text = '<a href="%s_userinfo?userid=%s" title="%s" class="inlineinfo">%s</a>' % (
+                resource_url(meeting, request),
+                'admin',
                 self.root.users['admin'].title,
                 'admin',
             )
