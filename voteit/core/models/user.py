@@ -29,6 +29,8 @@ from voteit.core.validators import password_validation
 from voteit.core.validators import html_string_validator
 from voteit.core.models.date_time_util import utcnow
 
+userid_regexp = r"[a-zA-Z]{1}[\w-]{1,14}"
+
 
 def get_sha_password(password):
     """ Encode a plaintext password to sha1. """
@@ -206,7 +208,7 @@ def construct_schema(**kwargs):
                 - unique
                 - doesn't contain bogus chars
             """
-            pattern = re.compile(r'^[a-zA-Z]{1}[\w-]{1,14}$')
+            pattern = re.compile(r'^'+userid_regexp+r'$')
             if not pattern.match(value):
                 raise colander.Invalid(node, _('userid_char_error', default=u"UserID must be 3-15 chars, start with a-zA-Z and only contain regular latin chars, numbers, minus and underscore."))
             if value in context:
