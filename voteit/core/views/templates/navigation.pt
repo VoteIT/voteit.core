@@ -48,7 +48,7 @@
             <div tal:attributes="id '%s-%s' % (api.meeting.uid, section);
                                  class is_closed and 'toggle_area toggle_closed block' or 'toggle_area toggle_opened block';">
                                  	
-                <h6 tal:attributes="class 'toggle_minimize %s' % section">
+                <h6 class="toggle_minimize iconpadding ${section}">
                 	<span><a href="${request.url}" tal:content="api.translate(section.title())">Section title</a></span>
 				</h6>
 				
