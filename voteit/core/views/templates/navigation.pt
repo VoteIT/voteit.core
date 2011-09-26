@@ -49,7 +49,7 @@
                                  class is_closed and 'toggle_area toggle_closed block' or 'toggle_area toggle_opened block';">
                                  	
                 <h6 tal:attributes="class 'toggle_minimize %s' % section">
-                	<a href="${request.url}" tal:content="api.translate(section.title())">Section title</a>
+                	<span><a href="${request.url}" tal:content="api.translate(section.title())">Section title</a></span>
 				</h6>
 				
 				<tal:open_section condition="not is_closed">
