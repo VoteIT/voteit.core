@@ -522,6 +522,20 @@ li.notification_message {
     float: right;
 }
 
+/* Large heading icons */
+.large-icon {
+    padding-left: 40px;
+}
+.large-icon.discussions {
+    background: url(icons/icon_disc_lb.png) no-repeat top left;
+}
+.large-icon.polls {
+    background: url(icons/icon_vote_lb.png) no-repeat top left;
+}
+.large-icon.proposals {
+    background: url(icons/icon_proposal_lb.png) no-repeat top left;
+}
+
 /* confirm dialog */
 ui-dialog {
     background-color: #000;
