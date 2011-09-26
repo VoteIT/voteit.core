@@ -539,8 +539,15 @@ li.notification_message {
 .large-icon.polls {
     background: url(icons/icon_vote_lb.png) no-repeat top left;
 }
+.large-icon.polls-dark {
+    background: url(icons/icon_vote.png) no-repeat top left;
+}
 .large-icon.proposals {
     background: url(icons/icon_proposal_lb.png) no-repeat top left;
+}
+
+.iconpadding > .cog-dark {
+    background: url(icons/icon_settings.png) no-repeat top left;
 }
 
 /* confirm dialog */

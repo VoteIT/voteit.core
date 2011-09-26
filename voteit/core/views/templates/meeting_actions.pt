@@ -5,9 +5,10 @@
     <tal:polls tal:condition="polls_metadata|False">
 
         <li class="tab dropdown_menu">
-            <a href="#" class="menu_header"><span i18n:translate="">My polls</span> &raquo;</a>
+            <a href="#" class="menu_header">
+                <span class="large-icon polls-dark" i18n:translate="">My polls</span> &raquo;
+            </a>
             <ul class="menu_body">
-                
                 <tal:section repeat="section sections">
                     <tal:defs define="metadatas polls_metadata[section]">
                     <tal:exists condition="metadatas">
@@ -28,7 +29,9 @@
     
     <tal:meeting condition="api.meeting and is_moderator">
         <li class="tab dropdown_menu">
-            <a href="#" class="menu_header"><span i18n:translate="">Moderator menu</span> &raquo;</a>
+            <a href="#" class="menu_header iconpadding">
+            	<span class="cog-dark" i18n:translate="">Moderator menu</span> &raquo;
+			</a>
             <ul class="menu_body">
                 <li>
                     <a tal:attributes="href api.resource_url(api.meeting, request) + '@@participant_permissions'"
