@@ -452,16 +452,6 @@ li.notification_message {
 	padding-bottom: 10px;
 }
 
-#polls #add_poll {
-    float: right;
-}
-
-#polls #add_poll .buttonize {
-    font-size: 1.2em;
-	padding-left: 1.5em;
-	padding-right: 1.5em;
-}
-
 #polls .proposal,
 #polls .deform > li {
 	margin: 5px 0px;
@@ -675,4 +665,15 @@ table.listing > tbody > tr.even > td {
 .buttons button:hover {
     cursor: pointer;
     border: 1px solid #054265;
+}
+.buttonize.large {
+    font-size: 1.2em;
+    padding-left: 1.5em;
+    padding-right: 1.5em;
+	margin: 0 0 1em 1em;
+}
+
+.moderator-help-buttons {
+    float: right;
+	
 }
