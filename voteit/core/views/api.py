@@ -108,11 +108,6 @@ class APIView(object):
         user = self.root.users.get(userid)
         cache[userid] = user
         return user
-
-    def format_feed_time(self, value):
-        """ Lordag 3 apr 2010, 01:10
-        """
-        return strftime("%A %d %B %Y, %H:%M", value)
     
     def _get_addable_types(self, context, request):
         context_type = getattr(context, 'content_type', '')
