@@ -6,7 +6,7 @@
 <div tal:attributes="class is_closed and 'toggle_area toggle_closed' or 'toggle_area toggle_opened';
                      id '%s-%s' % (api.meeting.uid, state);">
 
-	<h4 tal:attributes="class string:toggle_minimize $state">
+	<h4 class="toggle_minimize iconpadding ${state}">
 	    <metal:heading define-slot="heading">Heading here</metal:heading>
 	</h4>
 

@@ -117,13 +117,13 @@ voteit.minimize = {
 			min_parent = $(this).parents('.toggle_area');
 			// Set parent class as opened or closed
 			//FIXME: Load page with ajax
-			// min_parent.toggleClass('toggle_opened').toggleClass('toggle_closed');
             var cookie_id = min_parent.attr('id');
             if (min_parent.hasClass('toggle_opened')) {
                 $.cookie(cookie_id, 1);
             } else {
                 $.cookie(cookie_id, null);
             }
+			min_parent.toggleClass('toggle_opened').toggleClass('toggle_closed');
         })
     }
 }

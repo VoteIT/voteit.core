@@ -84,6 +84,7 @@ a {
     position: absolute;
     display: none;
     top: 1.25em;
+	right: 0px;
     padding: 1em;
     background: #fff;
 	z-index: 99;
@@ -159,23 +160,20 @@ a {
 }
 
 /* State icons */
-#navigation h6 span,
-#meeting_overview h4 span {
+#meeting_overview h4 span,
+.iconpadding > span {
     padding-left: 20px;
 }
-#navigation h6.closed span,
-#meeting_overview h4.closed span {
+.iconpadding.closed > span {
     background: url(icons/icon_past.png) no-repeat;
 }
-#navigation h6.ongoing span,
-#meeting_overview h4.ongoing span {
+.iconpadding.ongoing > span {
     background: url(icons/icon_ongoing.png) no-repeat;
 }
-#navigation h6.upcoming span,
-#meeting_overview h4.upcoming span {
+.iconpadding.upcoming > span {
     background: url(icons/icon_upcoming.png) no-repeat;
 }
-#navigation h6.private span {
+.iconpadding.private > span {
     background: url(icons/icon_upcoming_red.png) no-repeat;
 }
 /* End state icons */
@@ -262,7 +260,7 @@ a {
 }
 
 #navigation .cinfo {
-    width: 40px;
+    width: 50px;
     float: left;
     padding: 3px 0 3px 35px;
 	height: 15px;
@@ -272,9 +270,6 @@ a {
 }
 #navigation .proposals {
     background: url(icons/icon_proposal_lb.png) no-repeat;
-}
-#navigation .polls {
-    background: url(icons/icon_vote_lb.png) no-repeat;
 }
 #navigation .ai_info {
 	clear: both;
@@ -534,8 +529,15 @@ li.notification_message {
 .large-icon.polls {
     background: url(icons/icon_vote_lb.png) no-repeat top left;
 }
+.large-icon.polls-dark {
+    background: url(icons/icon_vote.png) no-repeat top left;
+}
 .large-icon.proposals {
     background: url(icons/icon_proposal_lb.png) no-repeat top left;
+}
+
+.iconpadding > .cog-dark {
+    background: url(icons/icon_settings.png) no-repeat top left;
 }
 
 /* confirm dialog */

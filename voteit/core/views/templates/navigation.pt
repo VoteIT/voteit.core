@@ -48,7 +48,7 @@
             <div tal:attributes="id '%s-%s' % (api.meeting.uid, section);
                                  class is_closed and 'toggle_area toggle_closed block' or 'toggle_area toggle_opened block';">
                                  	
-                <h6 tal:attributes="class 'toggle_minimize %s' % section">
+                <h6 class="toggle_minimize iconpadding ${section}">
                 	<span><a href="${request.url}" tal:content="api.translate(section.title())">Section title</a></span>
 				</h6>
 				
@@ -78,12 +78,6 @@
 											      tal:content="api.search_catalog(agenda_item, content_type='DiscussionPost')[0]">0</span>
 										    <span class="unread" tal:condition="unread_count" tal:content="string:($unread_count)">(2)</span>
 										</span>
-	                                    <span class="polls cinfo"
-	                                          tal:define="unread_count api.search_catalog(agenda_item, content_type='Poll', unread=api.userid)[0]">
-	                                        <span class="total"
-	                                              tal:content="api.search_catalog(agenda_item, content_type='Poll')[0]">0</span>
-	                                        <span class="unread" tal:condition="unread_count" tal:content="string:($unread_count)">(2)</span>
-	                                    </span>
 									</div>
 									<div class="clear"><!-- --></div>
 	                            </a>

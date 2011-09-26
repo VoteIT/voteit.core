@@ -34,6 +34,10 @@ from voteit.core.models.catalog import metadata_for_query
 from voteit.core.models.catalog import resolve_catalog_docid
 
 
+MODERATOR_SECTIONS = ('closed', 'ongoing', 'upcoming', 'private',)
+REGULAR_SECTIONS = ('closed', 'ongoing', 'upcoming',)
+
+
 class APIView(object):
     """ Convenience methods for templates """
         
@@ -142,11 +146,11 @@ class APIView(object):
 
         if self.meeting:
             #In meeting context
-            response['is_moderator'] = self.context_has_permission(security.MODERATE_MEETING, self.meeting)
+            response['is_moderator'] = self.show_moderator_actions
             if response['is_moderator']:
-                response['sections'] = ('closed', 'ongoing', 'upcoming', 'private')
+                response['sections'] = MODERATOR_SECTIONS
             else:
-                response['sections'] = ('closed', 'ongoing', 'upcoming')
+                response['sections'] = REGULAR_SECTIONS
             closed_sections = set()
             for section in response['sections']:
                 if self.request.cookies.get("%s-%s" % (self.meeting.uid, section)):
@@ -177,8 +181,20 @@ class APIView(object):
             response['meetings'] = meetings
 
             if self.meeting:
-                response['polls_metadata'] = self.get_metadata_for_query(content_type = 'Poll', path = resource_path(self.meeting))                
+                if self.show_moderator_actions:
+                    sections = MODERATOR_SECTIONS
+                else:
+                    sections = REGULAR_SECTIONS
 
+                response['sections'] = sections
+                metadata = {}
+                meeting_path = resource_path(self.meeting)
+                for section in sections:
+                    metadata[section] = self.get_metadata_for_query(content_type = 'Poll',
+                                                                    path = meeting_path,
+                                                                    workflow_state = section)
+
+                response['polls_metadata'] = metadata
         response['is_moderator'] = self.context_has_permission(security.MODERATE_MEETING, context)
 
         return render('templates/meeting_actions.pt', response, request=request)

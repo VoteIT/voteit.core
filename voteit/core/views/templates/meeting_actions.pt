@@ -1,28 +1,37 @@
 <tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core">
 
 <ul id="meeting-actions-menu">
-	
-	<tal:polls tal:condition="polls_metadata|False">
+    
+    <tal:polls tal:condition="polls_metadata|False">
 
         <li class="tab dropdown_menu">
-            <a href="#" class="menu_header"><span i18n:translate="">My polls</span> &raquo;</a>
+            <a href="#" class="menu_header">
+                <span class="large-icon polls-dark" i18n:translate="">My polls</span> &raquo;
+            </a>
             <ul class="menu_body">
-            	
-                <li tal:repeat="poll_metadata polls_metadata">
-                    <a href="${poll_metadata['path']}">
-                    	${poll_metadata['title']} |
-                        ${api.translate(poll_metadata['workflow_state'].title())}
-					</a>
-                </li>
+                <tal:section repeat="section sections">
+                    <tal:defs define="metadatas polls_metadata[section]">
+                    <tal:exists condition="metadatas">
+                        <li class="iconpadding ${section}"><span>${api.translate(section.title())}</span></li>
+                        <li tal:repeat="poll_metadata metadatas">
+                            <a href="${poll_metadata['path']}">
+                                ${poll_metadata['title']}
+                            </a>
+                        </li>
+                    </tal:exists>
+                    </tal:defs>
+                </tal:section>
 
             </ul>
         </li>
 
-	</tal:polls>
-	
+    </tal:polls>
+    
     <tal:meeting condition="api.meeting and is_moderator">
         <li class="tab dropdown_menu">
-            <a href="#" class="menu_header"><span i18n:translate="">Moderator menu</span> &raquo;</a>
+            <a href="#" class="menu_header iconpadding">
+            	<span class="cog-dark" i18n:translate="">Moderator menu</span> &raquo;
+			</a>
             <ul class="menu_body">
                 <li>
                     <a tal:attributes="href api.resource_url(api.meeting, request) + '@@participant_permissions'"
@@ -39,20 +48,20 @@
             </ul>
         </li>
     </tal:meeting>
-	
-	<tal:meeting_menu condition="meetings|False">
+    
+    <tal:meeting_menu condition="meetings|False">
         <li class="tab dropdown_menu">
             <a href="#" class="menu_header"><span i18n:translate="">My meetings</span> &raquo;</a>
             <ul class="menu_body">
-            	<tal:iterate repeat="meeting meetings">
-	                <li>
-	                	<a tal:attributes="href api.resource_url(meeting, request)"
-	                       tal:content="meeting.title">Meeting Title</a>
-				    </li>
-				</tal:iterate>
+                <tal:iterate repeat="meeting meetings">
+                    <li>
+                        <a tal:attributes="href api.resource_url(meeting, request)"
+                           tal:content="meeting.title">Meeting Title</a>
+                    </li>
+                </tal:iterate>
             </ul>
         </li>
-	</tal:meeting_menu>
+    </tal:meeting_menu>
 
     <tal:participants condition="api.userid and api.meeting">
         <li class="tab">
