@@ -211,10 +211,14 @@ class APIView(object):
             if user:
                 users.add(user)
         
+        meeting_url = resource_url(self.meeting, request)
+        def _userinfo_url(userid):
+            return "%s_userinfo?userid=%s" % (meeting_url, userid)
+        
         response = {}
-        response['resource_url'] = resource_url
         response['users'] = users
         response['portrait'] = portrait
+        response['userinfo_url'] = _userinfo_url
         return render('templates/creators_info.pt', response, request=request)
 
     def get_poll_state_info(self, poll):
