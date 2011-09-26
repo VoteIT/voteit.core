@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2011-09-09 10:25+0000\n"
+"POT-Creation-Date: 2011-09-26 06:25+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,6 +22,22 @@ msgstr ""
 msgid "${access_count} pending access request(s)"
 msgstr ""
 
+#: ./subscribers/logs.py:74
+msgid "${ctype} in ${path} updated"
+msgstr ""
+
+#: ./subscribers/logs.py:59
+msgid "${ctype} in path ${path} changed state from '${old_state}' to '${new_state}'"
+msgstr ""
+
+#: ./subscribers/logs.py:47
+msgid "${ctype} removed from ${path}"
+msgstr ""
+
+#: ./subscribers/logs.py:35
+msgid "${ctype} was added to ${path}"
+msgstr ""
+
 #: ./models/date_time_util.py:130
 msgid "${diff} hours ago"
 msgstr ""
@@ -34,7 +50,7 @@ msgstr ""
 msgid "${diff} seconds ago"
 msgstr ""
 
-#: ./models/poll.py:270
+#: ./models/poll.py:271
 msgid "${val} is earlier than earliest date ${min}"
 msgstr ""
 
@@ -43,12 +59,12 @@ msgid "'${val}' is not valid as date and time"
 msgstr ""
 
 #. Default: "(Nothing)"
-#: ./views/templates/navigation.pt:93
+#: ./views/templates/navigation.pt:94
 msgid "(Nothing)"
 msgstr ""
 
 #. Default: "(hidden, click above to open)"
-#: ./views/templates/navigation.pt:100
+#: ./views/templates/navigation.pt:102
 msgid "(hidden, click above to open)"
 msgstr ""
 
@@ -60,14 +76,8 @@ msgstr ""
 msgid "About you"
 msgstr ""
 
-#. Default: "Active"
-#: ./workflows/agenda_item.xml
-#: ./workflows/meeting.xml
-msgid "Active"
-msgstr ""
-
 #. Default: "Add"
-#: ./views/templates/action_bar.pt:112
+#: ./views/templates/moderator_actions.pt:40
 msgid "Add"
 msgstr ""
 
@@ -84,12 +94,7 @@ msgstr ""
 msgid "Add poll"
 msgstr ""
 
-#. Default: "Added"
-#: ./views/templates/messages.pt:16
-msgid "Added"
-msgstr ""
-
-#: ./bootstrap.py:37
+#: ./bootstrap.py:36
 msgid "Administrator"
 msgstr ""
 
@@ -156,11 +161,6 @@ msgstr ""
 msgid "Change password"
 msgstr ""
 
-#. Default: "Change vote"
-#: ./views/templates/action_bar.pt:22
-msgid "Change vote"
-msgstr ""
-
 #: ./models/invite_ticket.py:124
 msgid "Check this field - token doesn't match"
 msgstr ""
@@ -182,11 +182,6 @@ msgstr ""
 msgid "Closed"
 msgstr ""
 
-#. Default: "Content"
-#: ./views/templates/action_bar.pt:108
-msgid "Content"
-msgstr ""
-
 #: ./models/invite_ticket.py:119
 msgid "Couldn't find any invitation for this email address."
 msgstr ""
@@ -196,7 +191,7 @@ msgid "Current invitations"
 msgstr ""
 
 #. Default: "Current log"
-#: ./views/templates/logs.pt:25
+#: ./views/templates/server_logs.pt:23
 msgid "Current log"
 msgstr ""
 
@@ -206,13 +201,8 @@ msgid "Currently open"
 msgstr ""
 
 #. Default: "Delete"
-#: ./views/templates/action_bar.pt:10
+#: ./views/templates/discussions.pt:38
 msgid "Delete"
-msgstr ""
-
-#. Default: "Delete vote"
-#: ./views/templates/action_bar.pt:28
-msgid "Delete vote"
 msgstr ""
 
 #: ./views/base_edit.py:160
@@ -237,7 +227,7 @@ msgstr ""
 msgid "Discussion"
 msgstr ""
 
-#: ./models/discussion_post.py:39
+#: ./models/discussion_post.py:40
 msgid "Discussion Post"
 msgstr ""
 
@@ -247,12 +237,12 @@ msgid "Don't want to register now?"
 msgstr ""
 
 #. Default: "Edit"
-#: ./views/templates/action_bar.pt:5
+#: ./views/templates/moderator_actions.pt:14
 msgid "Edit"
 msgstr ""
 
 #. Default: "Edit permissions"
-#: ./views/templates/meeting_actions.pt:17
+#: ./views/templates/meeting_actions.pt:28
 msgid "Edit permissions"
 msgstr ""
 
@@ -290,7 +280,7 @@ msgstr ""
 msgid "Email sent."
 msgstr ""
 
-#: ./models/poll.py:309
+#: ./models/poll.py:310
 msgid "End time of this poll."
 msgstr ""
 
@@ -339,12 +329,6 @@ msgstr ""
 msgid "I propose:"
 msgstr ""
 
-#. Default: "Inactive"
-#: ./workflows/agenda_item.xml
-#: ./workflows/meeting.xml
-msgid "Inactive"
-msgstr ""
-
 #: ./models/invite_ticket.py:107
 msgid "Invalid email address."
 msgstr ""
@@ -354,7 +338,7 @@ msgid "Invalid security token. Did you click the link in your email?"
 msgstr ""
 
 #. Default: "Invite participants"
-#: ./views/templates/action_bar.pt:94
+#: ./views/templates/meeting_actions.pt:32
 msgid "Invite participants"
 msgstr ""
 
@@ -371,13 +355,18 @@ msgstr ""
 msgid "Less than 100 chars please."
 msgstr ""
 
-#: ./views/agenda_item.py:120
+#: ./views/agenda_item.py:121
 msgid "Like"
 msgstr ""
 
 #. Default: "Locked for voting"
 #: ./workflows/proposal.xml
 msgid "Locked for voting"
+msgstr ""
+
+#. Default: "Log entries"
+#: ./views/templates/logs.pt:9
+msgid "Log entries"
 msgstr ""
 
 #. Default: "Login"
@@ -399,7 +388,7 @@ msgid "Majority Poll"
 msgstr ""
 
 #. Default: "Manage invites"
-#: ./views/templates/action_bar.pt:101
+#: ./views/templates/meeting_actions.pt:36
 msgid "Manage invites"
 msgstr ""
 
@@ -411,14 +400,9 @@ msgstr ""
 msgid "Meeting Access"
 msgstr ""
 
-#. Default: "Meetings"
-#: ./views/templates/meeting_actions.pt:34
-msgid "Meetings"
-msgstr ""
-
-#. Default: "Messages"
-#: ./views/templates/messages.pt:12
-msgid "Messages"
+#. Default: "Message"
+#: ./views/templates/logs.pt:16
+msgid "Message"
 msgstr ""
 
 #: ./security.py:57
@@ -426,13 +410,23 @@ msgid "Moderator"
 msgstr ""
 
 #. Default: "Moderator menu"
-#: ./views/templates/meeting_actions.pt:14
+#: ./views/templates/meeting_actions.pt:25
 msgid "Moderator menu"
 msgstr ""
 
 #. Default: "Moderator?"
 #: ./views/templates/participants.pt:28
 msgid "Moderator?"
+msgstr ""
+
+#. Default: "My meetings"
+#: ./views/templates/meeting_actions.pt:45
+msgid "My meetings"
+msgstr ""
+
+#. Default: "My polls"
+#: ./views/templates/meeting_actions.pt:8
+msgid "My polls"
 msgstr ""
 
 #: ./models/meeting.py:109
@@ -446,11 +440,6 @@ msgstr ""
 
 #: ./models/invite_ticket.py:147
 msgid "No HTML tags allowed."
-msgstr ""
-
-#. Default: "No messages"
-#: ./views/templates/messages.pt:25
-msgid "No messages"
 msgstr ""
 
 #. Default: "No results"
@@ -468,6 +457,8 @@ msgid "OK"
 msgstr ""
 
 #. Default: "Ongoing"
+#: ./workflows/agenda_item.xml
+#: ./workflows/meeting.xml
 #: ./workflows/poll.xml
 msgid "Ongoing"
 msgstr ""
@@ -487,7 +478,7 @@ msgid "Participant"
 msgstr ""
 
 #. Default: "Participants"
-#: ./views/templates/action_bar.pt:45
+#: ./views/templates/meeting_actions.pt:59
 msgid "Participants"
 msgstr ""
 
@@ -501,11 +492,6 @@ msgstr ""
 
 #: ./views/users.py:158
 msgid "Password set. You may login now."
-msgstr ""
-
-#. Default: "Planned"
-#: ./workflows/poll.xml
-msgid "Planned"
 msgstr ""
 
 #. Default: "Poll"
@@ -523,17 +509,12 @@ msgstr ""
 msgid "Poll method"
 msgstr ""
 
-#: ./models/poll.py:288
+#: ./models/poll.py:289
 msgid "Poll method to use"
 msgstr ""
 
-#. Default: "Poll raw data"
-#: ./views/templates/action_bar.pt:34
-msgid "Poll raw data"
-msgstr ""
-
 #. Default: "Poll settings"
-#: ./views/templates/action_bar.pt:87
+#: ./views/templates/moderator_actions.pt:49
 msgid "Poll settings"
 msgstr ""
 
@@ -544,11 +525,11 @@ msgid "Private"
 msgstr ""
 
 #. Default: "Proposal"
-#: ./views/templates/agenda_item.pt:33
+#: ./views/templates/agenda_item.pt:35
 msgid "Proposal"
 msgstr ""
 
-#: ./models/poll.py:295
+#: ./models/poll.py:296
 msgid "Proposals"
 msgstr ""
 
@@ -562,7 +543,7 @@ msgstr ""
 msgid "Register"
 msgstr ""
 
-#: ./bootstrap.py:31
+#: ./bootstrap.py:30
 msgid "Registered users"
 msgstr ""
 
@@ -576,7 +557,7 @@ msgstr ""
 msgid "Remember that you need to click this link to gain access to the meeting you're invited to."
 msgstr ""
 
-#: ./views/expressions.py:76
+#: ./views/user_tags.py:69
 msgid "Remove ${display_name}"
 msgstr ""
 
@@ -589,7 +570,7 @@ msgid "Resend"
 msgstr ""
 
 #. Default: "Retract"
-#: ./views/templates/action_bar.pt:61
+#: ./views/templates/proposals.pt:28
 msgid "Retract"
 msgstr ""
 
@@ -606,6 +587,11 @@ msgstr ""
 msgid "Save"
 msgstr ""
 
+#. Default: "Scripted"
+#: ./views/templates/logs.pt:21
+msgid "Scripted"
+msgstr ""
+
 #. Default: "Search"
 #: ./views/templates/search_result.pt:24
 msgid "Search"
@@ -617,7 +603,7 @@ msgid "Search above"
 msgstr ""
 
 #. Default: "Select a log above"
-#: ./views/templates/logs.pt:23
+#: ./views/templates/server_logs.pt:21
 msgid "Select a log above"
 msgstr ""
 
@@ -626,12 +612,12 @@ msgid "Send meeting invitations"
 msgstr ""
 
 #. Default: "Server logs"
-#: ./views/templates/action_bar.pt:72
+#: ./views/templates/moderator_actions.pt:30
 msgid "Server logs"
 msgstr ""
 
 #. Default: "Set state"
-#: ./views/templates/action_bar.pt:122
+#: ./views/templates/moderator_actions.pt:55
 msgid "Set state"
 msgstr ""
 
@@ -659,7 +645,7 @@ msgstr ""
 msgid "Site root"
 msgstr ""
 
-#: ./models/poll.py:303
+#: ./models/poll.py:304
 msgid "Start time of this poll."
 msgstr ""
 
@@ -680,7 +666,12 @@ msgstr ""
 msgid "Summary of this item."
 msgstr ""
 
-#: ./models/discussion_post.py:62
+#. Default: "Tags"
+#: ./views/templates/logs.pt:19
+msgid "Tags"
+msgstr ""
+
+#: ./models/discussion_post.py:63
 msgid "Text"
 msgstr ""
 
@@ -702,12 +693,12 @@ msgid "The time that the server think it is. If this is wrong, you need to chang
 msgstr ""
 
 #. Default: "This has happened"
-#: ./views/templates/meeting.pt:21
+#: ./views/templates/meeting.pt:26
 msgid "This has happened"
 msgstr ""
 
 #. Default: "This is happening now"
-#: ./views/templates/meeting.pt:28
+#: ./views/templates/meeting.pt:33
 msgid "This is happening now"
 msgstr ""
 
@@ -716,8 +707,13 @@ msgid "This is your vote"
 msgstr ""
 
 #. Default: "This will happen"
-#: ./views/templates/meeting.pt:35
+#: ./views/templates/meeting.pt:40
 msgid "This will happen"
+msgstr ""
+
+#. Default: "Time"
+#: ./views/templates/logs.pt:17
+msgid "Time"
 msgstr ""
 
 #: ./models/agenda_item.py:114
@@ -733,9 +729,11 @@ msgstr ""
 msgid "Unhandled"
 msgstr ""
 
-#. Default: "Unread"
-#: ./views/templates/messages.pt:17
-msgid "Unread"
+#. Default: "Upcoming"
+#: ./workflows/agenda_item.xml
+#: ./workflows/meeting.xml
+#: ./workflows/poll.xml
+msgid "Upcoming"
 msgstr ""
 
 #: ./models/schemas.py:17
@@ -752,7 +750,7 @@ msgid "User"
 msgstr ""
 
 #. Default: "UserID"
-#: ./views/templates/participants.pt:22
+#: ./views/templates/logs.pt:20
 msgid "UserID"
 msgstr ""
 
@@ -781,12 +779,12 @@ msgstr ""
 msgid "Vote for one"
 msgstr ""
 
-#: ./bootstrap.py:26
+#: ./bootstrap.py:25
 msgid "VoteIT"
 msgstr ""
 
 #. Default: "VoteIT logs"
-#: ./views/templates/logs.pt:9
+#: ./views/templates/server_logs.pt:9
 msgid "VoteIT logs"
 msgstr ""
 
@@ -813,15 +811,15 @@ msgid "Yes"
 msgstr ""
 
 #. Default: "You"
-#: ./views/templates/macros/expressions.pt:17
+#: ./views/templates/snippets/user_tag.pt:17
 msgid "You"
 msgstr ""
 
-#: ./models/poll.py:310
+#: ./models/poll.py:311
 msgid "You need to close it yourself."
 msgstr ""
 
-#: ./models/poll.py:304
+#: ./models/poll.py:305
 msgid "You need to open it yourself."
 msgstr ""
 
@@ -878,7 +876,7 @@ msgid "already_voted_poll_open"
 msgstr ""
 
 #. Default: "and"
-#: ./views/templates/macros/expressions.pt:19
+#: ./views/templates/snippets/user_tag.pt:19
 msgid "and"
 msgstr ""
 
@@ -887,13 +885,8 @@ msgstr ""
 msgid "bio_visible_notice"
 msgstr ""
 
-#. Default: "by"
-#: ./views/templates/protocol.pt:19
-msgid "by"
-msgstr ""
-
 #. Default: "Proposal '${name}' already in state ${state}"
-#: ./models/poll.py:179
+#: ./models/poll.py:180
 msgid "change_prop_state_already_that_state_error"
 msgstr ""
 
@@ -907,7 +900,7 @@ msgstr ""
 msgid "invitation_default_text"
 msgstr ""
 
-#: ./views/agenda_item.py:121
+#: ./views/agenda_item.py:122
 msgid "like this"
 msgstr ""
 
@@ -917,38 +910,38 @@ msgid "login_to_access_meeting_notice"
 msgstr ""
 
 #. Default: "more"
-#: ./views/templates/macros/expressions.pt:25
+#: ./views/templates/snippets/user_tag.pt:25
 msgid "more_in_likes"
 msgstr ""
 
 #. Default: "people"
-#: ./views/templates/macros/expressions.pt:24
+#: ./views/templates/snippets/user_tag.pt:24
 msgid "people"
 msgstr ""
 
 #. Default: "Poll closed. Proposals might have been adjusted as approved or denied depending on outcome of the poll."
-#: ./models/poll.py:196
+#: ./models/poll.py:197
 msgid "poll_closed_info"
 msgstr ""
 
 #. Default: "${count} selected proposals were set in the 'locked for vote' state. They can no longer be edited or retracted by normal users."
-#: ./models/poll.py:344
+#: ./models/poll.py:345
 msgid "poll_closed_proposals_locked_notice"
 msgstr ""
 
 #. Default: "Each poll method should contain information about what it does."
-#: ./models/poll.py:289
+#: ./models/poll.py:290
 msgid "poll_method_description"
 msgstr ""
 
-#. Default: "Setting poll in planned state. It's now visible for meeting participants."
-#: ./models/poll.py:339
-msgid "poll_planned_state_notice"
+#. Default: "Only proposals in the state 'published' can be selected here."
+#: ./models/poll.py:297
+msgid "poll_select_proposals_description"
 msgstr ""
 
-#. Default: "Only proposals in the state 'published' can be selected here."
-#: ./models/poll.py:296
-msgid "poll_select_proposals_description"
+#. Default: "Setting poll in upcoming state. It's now visible for meeting participants."
+#: ./models/poll.py:340
+msgid "poll_upcoming_state_notice"
 msgstr ""
 
 #. Default: "The image above comes from the <a href=\"http://www.gravatar.com\" target=\"_blank\">Gravatar network</a>. It's taken from your current email address. If you want to change the picture, simply go to the Gravatar site and change your picture for the email you use in VoteIT."
@@ -957,12 +950,12 @@ msgid "profile_gravatar_explanation"
 msgstr ""
 
 #. Default: "Proposal with id '${name}' couldn't be set as ${state}. You should do this manually."
-#: ./models/poll.py:191
+#: ./models/poll.py:192
 msgid "prop_state_change_error"
 msgstr ""
 
 #. Default: "Proposal '${name}' set as ${state}"
-#: ./models/poll.py:186
+#: ./models/poll.py:187
 msgid "prop_state_changed_notice"
 msgstr ""
 
