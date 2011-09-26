@@ -367,6 +367,9 @@ a {
 	font-size: 14px;
 	color: #054265;
 }
+#notify-meetingstate .message {
+    background-image: url(icons/icon_lock.png);
+}
 #flash_messages .info {
 }
 #flash_messages .error {
