@@ -670,6 +670,7 @@ table.listing > tbody > tr.even > td {
     text-transform:uppercase;
 	font-size: 12px;
 	font-weight: bold;
+	white-space: nowrap;
 }
 .buttonize.selected {
 }
@@ -684,9 +685,9 @@ table.listing > tbody > tr.even > td {
     padding-right: 1em;
 	margin: 0 0 1em 0.5em;
 }
-
 .moderator-help-buttons {
     float: right;
+	clear: both;
 	
 }
 .userinfo .profile-pic {

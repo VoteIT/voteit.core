@@ -261,10 +261,9 @@ def construct_schema(**kwargs):
             email = email_node
             first_name = first_name_node
             last_name = last_name_node
-            biography = colander.SchemaNode(colander.String(),
+            about_you = colander.SchemaNode(colander.String(),
                 title = _(u"About you"),
-                description = _('bio_visible_notice',
-                                default=u"Please note that anything you type here will be visible to all registered users, even if they're not in the same meeting as you."),
+                description = _(u"Please note that anything you type here will be visible to all users in the same meeting as you."),
                 widget = deform.widget.TextAreaWidget(rows=10, cols=60),
                 missing=u"",
                 validator=html_string_validator,)
