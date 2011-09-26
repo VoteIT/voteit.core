@@ -78,12 +78,6 @@
 											      tal:content="api.search_catalog(agenda_item, content_type='DiscussionPost')[0]">0</span>
 										    <span class="unread" tal:condition="unread_count" tal:content="string:($unread_count)">(2)</span>
 										</span>
-	                                    <span class="polls cinfo"
-	                                          tal:define="unread_count api.search_catalog(agenda_item, content_type='Poll', unread=api.userid)[0]">
-	                                        <span class="total"
-	                                              tal:content="api.search_catalog(agenda_item, content_type='Poll')[0]">0</span>
-	                                        <span class="unread" tal:condition="unread_count" tal:content="string:($unread_count)">(2)</span>
-	                                    </span>
 									</div>
 									<div class="clear"><!-- --></div>
 	                            </a>

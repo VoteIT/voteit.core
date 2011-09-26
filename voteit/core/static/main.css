@@ -259,7 +259,7 @@ a {
 }
 
 #navigation .cinfo {
-    width: 40px;
+    width: 50px;
     float: left;
     padding: 3px 0 3px 35px;
 	height: 15px;
@@ -269,9 +269,6 @@ a {
 }
 #navigation .proposals {
     background: url(icons/icon_proposal_lb.png) no-repeat;
-}
-#navigation .polls {
-    background: url(icons/icon_vote_lb.png) no-repeat;
 }
 #navigation .ai_info {
 	clear: both;
