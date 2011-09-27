@@ -1,9 +1,11 @@
 import unittest
 
 from pyramid import testing
+from pyramid.traversal import find_interface
 from zope.interface.verify import verifyObject
 
 from voteit.core.app import register_poll_plugin
+from voteit.core.models.interfaces import IAgendaItem
 
     
 class MPUnitTests(unittest.TestCase):
@@ -113,11 +115,17 @@ class MPIntegrationTests(unittest.TestCase):
     
     def _close_poll(self):
         request = testing.DummyRequest()
+        
+        ai = find_interface(self.poll, IAgendaItem)
+        ai.set_workflow_state(request, 'upcoming')
+        ai.set_workflow_state(request, 'ongoing')
+        
         self.poll.set_workflow_state(request, 'upcoming')
         self.poll.set_workflow_state(request, 'ongoing')
         self.poll.set_workflow_state(request, 'closed')
 
     def test_poll_result_created(self):
+    
         self._add_votes()
         self._close_poll()
 

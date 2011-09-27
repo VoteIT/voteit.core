@@ -347,10 +347,13 @@ def upcoming_poll_callback(content, info):
                 mapping={'count':count})
         fm.add(msg)
         
-def ongoing_poll_callback(content, info):
+def ongoing_poll_callback(context, info):
     """ Workflow callback when a poll is set in the ongoing state.
-        This method will raise an exeption if there is no propsoals in the poll.
+        This method will raise an exeption if the parent agenda item is not ongoing or if there is no propsoals in the poll.
     """
-    
-    if not content.proposal_uids:
+    ai = find_interface(context, IAgendaItem)
+    if ai and ai.get_workflow_state() != 'ongoing':
+        raise Exception("You can't set a poll to ongoing if the agenda item is not ongoing")
+
+    if not context.proposal_uids:
         raise ValueError('A poll with no proposal can not be set to ongoing')

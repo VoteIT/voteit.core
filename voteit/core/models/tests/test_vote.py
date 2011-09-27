@@ -77,6 +77,8 @@ class VotePermissionTests(unittest.TestCase):
     def test_ongoing_poll_context(self):
         request = testing.DummyRequest()
         ai = self._make_ai()
+        ai.set_workflow_state(request, 'upcoming')
+        ai.set_workflow_state(request, 'ongoing')
         poll = self._make_poll()
         ai['poll'] = poll
         poll.set_workflow_state(request, 'upcoming')
@@ -97,6 +99,8 @@ class VotePermissionTests(unittest.TestCase):
     def test_closed_poll_context(self):
         request = testing.DummyRequest()
         ai = self._make_ai()
+        ai.set_workflow_state(request, 'upcoming')
+        ai.set_workflow_state(request, 'ongoing')
         poll = self._make_poll()
         ai['poll'] = poll
         poll.set_workflow_state(request, 'upcoming')

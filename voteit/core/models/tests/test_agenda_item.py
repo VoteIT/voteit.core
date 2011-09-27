@@ -29,6 +29,10 @@ class AgendaItemTests(unittest.TestCase):
     def _make_obj(self):
         from voteit.core.models.agenda_item import AgendaItem
         return AgendaItem()
+        
+    def _make_meeting(self):
+        from voteit.core.models.meeting import Meeting
+        return Meeting()
 
     def _make_proposal(self):
         from voteit.core.models.proposal import Proposal
@@ -65,13 +69,14 @@ class AgendaItemTests(unittest.TestCase):
         """
         request = testing.DummyRequest()
         obj = self._make_obj()
+        
+        obj.set_workflow_state(request, 'upcoming')
+        obj.set_workflow_state(request, 'ongoing')
 
         obj['poll'] = self._make_poll()
         obj['poll'].set_workflow_state(request, 'upcoming')
         obj['poll'].set_workflow_state(request, 'ongoing')
 
-        obj.set_workflow_state(request, 'upcoming')
-        obj.set_workflow_state(request, 'ongoing')
         self.assertRaises(Exception, obj.set_workflow_state, 'closed')
 
     def test_timestamp_added_on_close(self):
@@ -83,6 +88,20 @@ class AgendaItemTests(unittest.TestCase):
         self.assertFalse(isinstance(obj.end_time, datetime))
         obj.set_workflow_state(request, 'closed')
         self.assertTrue(isinstance(obj.end_time, datetime))
+        
+    def test_workflow_state_to_ongoing(self):
+        """ When you try to set state to ongoing on agenda item and 
+            meeting is not ongoing an exception should be raised.
+        """
+        request = testing.DummyRequest()
+        
+        meeting = self._make_meeting()
+        
+        obj = self._make_obj()
+        meeting['agenda_item'] = obj
+
+        obj.set_workflow_state(request, 'upcoming')
+        self.assertRaises(Exception, obj.set_workflow_state, 'ongoing')
 
 
 class AgendaItemPermissionTests(unittest.TestCase):

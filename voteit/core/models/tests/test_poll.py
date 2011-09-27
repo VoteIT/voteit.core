@@ -5,7 +5,9 @@ from zope.interface.verify import verifyObject
 from zope.component import queryUtility
 from pyramid.threadlocal import get_current_registry
 from pyramid.authorization import ACLAuthorizationPolicy
+from pyramid.traversal import find_interface
 
+from voteit.core.models.interfaces import IAgendaItem
 from voteit.core import security
 
 admin = set([security.ROLE_ADMIN])
@@ -38,7 +40,7 @@ class PollTests(unittest.TestCase):
         ai['poll'].set_field_value('proposals', set(proposal.uid))
 
         return ai['poll']
-    
+        
     def _register_majority_poll(self, poll):
         from voteit.core.app import register_poll_plugin
         from voteit.core.plugins.majority_poll import MajorityPollPlugin
@@ -177,6 +179,11 @@ class PollTests(unittest.TestCase):
         
         #Setup for proper test
         obj = self._make_obj()
+        
+        ai = find_interface(obj, IAgendaItem)
+        ai.set_workflow_state(request, 'upcoming')
+        ai.set_workflow_state(request, 'ongoing')
+
         self._register_majority_poll(obj)
         obj.set_field_value('poll_plugin', u'majority_poll')
         
@@ -211,10 +218,15 @@ class PollTests(unittest.TestCase):
         self.assertEqual(obj.get_workflow_state(), u'closed')
 
     def test_available_transitions(self):
+        request = testing.DummyRequest()
         
         #Setup for proper test
         obj = self._make_obj()
-        request = testing.DummyRequest()
+        
+        ai = find_interface(obj, IAgendaItem)
+        ai.set_workflow_state(request, 'upcoming')
+        ai.set_workflow_state(request, 'ongoing')
+
         self._register_majority_poll(obj)
         obj.set_field_value('poll_plugin', u'majority_poll')
         
@@ -246,6 +258,18 @@ class PollTests(unittest.TestCase):
         obj.set_workflow_state(request, 'closed')
         result = self._extract_transition_names(obj.get_available_workflow_states(request))
         self.assertEqual(result, set())
+        
+
+    def test_workflow_state_to_ongoing(self):
+        """ When you try to set state to ongoing on poll and 
+            agenda item is not ongoing an exception should be raised.
+        """
+        request = testing.DummyRequest()
+        
+        obj = self._make_obj()
+        
+        obj.set_workflow_state(request, 'upcoming')
+        self.assertRaises(Exception, obj.set_workflow_state, 'ongoing')
 
 
 class PollPermissionTests(unittest.TestCase):
@@ -315,6 +339,9 @@ class PollPermissionTests(unittest.TestCase):
     def test_ongoing(self):
         request = testing.DummyRequest()
         poll = self._make_obj()
+        ai = find_interface(poll, IAgendaItem)
+        ai.set_workflow_state(request, 'upcoming')
+        ai.set_workflow_state(request, 'ongoing')
         poll.set_workflow_state(request, 'upcoming')
         poll.set_workflow_state(request, 'ongoing')
         
@@ -331,6 +358,9 @@ class PollPermissionTests(unittest.TestCase):
     def test_closed_or_canceled(self):
         request = testing.DummyRequest()
         poll = self._make_obj()
+        ai = find_interface(poll, IAgendaItem)
+        ai.set_workflow_state(request, 'upcoming')
+        ai.set_workflow_state(request, 'ongoing')
         self._register_majority_poll(poll)
         poll.set_workflow_state(request, 'upcoming')
         poll.set_workflow_state(request, 'ongoing')
@@ -347,6 +377,10 @@ class PollPermissionTests(unittest.TestCase):
     def test_ongoing_wo_proposal(self):
         request = testing.DummyRequest()
         poll = self._make_obj()
+        
+        ai = find_interface(poll, IAgendaItem)
+        ai.set_workflow_state(request, 'upcoming')
+        ai.set_workflow_state(request, 'ongoing')
         
         # remove all proposals on poll
         poll.set_field_value('proposals', set())

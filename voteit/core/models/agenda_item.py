@@ -159,3 +159,11 @@ def closing_agenda_item_callback(context, info):
         raise Exception("You can't close an agenda item that has ongoing polls in it. Close the polls first!")
     for proposal in context.get_content(iface=IProposal, states='published'):
         proposal.set_workflow_state(request, 'unhandled')
+       
+
+def ongoing_agenda_item_callback(context, info):
+    """ Callback for workflow action. An agenda item can't be set as ongoing when meeting is not ongoing
+    """
+    meeting = find_interface(context, IMeeting)
+    if meeting and meeting.get_workflow_state() != 'ongoing':
+        raise Exception("You can't set an agenda item to ongoing if the meeting is not ongoing")
