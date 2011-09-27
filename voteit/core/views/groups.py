@@ -83,7 +83,7 @@ class EditGroups(object):
         add_csrf_token(self.context, self.request, schema)
 
         self.form = Form(schema, buttons=(button_save, button_cancel))
-        self.response['form_resources'] = self.form.get_widget_resources()
+        self.api.register_form_resources(self.form)
 
         post = self.request.POST
         if 'save' in post:
@@ -119,7 +119,7 @@ class EditGroups(object):
         add_csrf_token(self.context, self.request, schema)
 
         self.form = Form(schema, buttons=('save', 'cancel'))
-        self.response['form_resources'] = self.form.get_widget_resources()
+        self.api.register_form_resources(self.form)
 
         post = self.request.POST
         if 'save' in post:

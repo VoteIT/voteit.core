@@ -50,7 +50,7 @@ class BaseEdit(object):
         add_csrf_token(self.context, self.request, schema)
             
         self.form = Form(schema, buttons=(button_add, button_cancel))
-        self.response['form_resources'] = self.form.get_widget_resources()
+        self.api.register_form_resources(self.form)
         appstruct = {}
 
         post = self.request.POST
@@ -103,7 +103,7 @@ class BaseEdit(object):
         add_csrf_token(self.context, self.request, schema)
 
         self.form = Form(schema, buttons=(button_update, button_cancel))
-        self.response['form_resources'] = self.form.get_widget_resources()
+        self.api.register_form_resources(self.form)
 
         post = self.request.POST
         if 'update' in post:
@@ -147,7 +147,7 @@ class BaseEdit(object):
         add_csrf_token(self.context, self.request, schema)
         
         self.form = Form(schema, buttons=(button_delete, button_cancel))
-        self.response['form_resources'] = self.form.get_widget_resources()
+        self.api.register_form_resources(self.form)
 
         post = self.request.POST
         if 'delete' in post:

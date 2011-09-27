@@ -55,7 +55,7 @@ class UsersView(object):
         add_csrf_token(self.context, self.request, schema)
 
         self.form = Form(schema, buttons=(button_add, button_cancel))
-        self.response['form_resources'] = self.form.get_widget_resources()
+        self.api.register_form_resources(self.form)
 
         post = self.request.POST
         if 'add' in post:
@@ -126,7 +126,7 @@ class UsersView(object):
         add_csrf_token(self.context, self.request, schema)
 
         self.form = Form(schema, buttons=(button_update, button_cancel))
-        self.response['form_resources'] = self.form.get_widget_resources()
+        self.api.register_form_resources(self.form)
 
         post = self.request.POST
         if 'update' in post:
@@ -158,7 +158,7 @@ class UsersView(object):
         schema = content_util['User'].schema(context=self.context, request=self.request, type='token_password_change')
 
         self.form = Form(schema, buttons=(button_change, button_cancel))
-        self.response['form_resources'] = self.form.get_widget_resources()
+        self.api.register_form_resources(self.form)
 
         post = self.request.POST
         if 'change' in post:
@@ -205,15 +205,8 @@ class UsersView(object):
         login_form = Form(login_schema, buttons=(button_login,))
         reg_form = Form(register_schema, buttons=(button_register,))
 
-        #Join form resources
-        form_resources = login_form.get_widget_resources()
-        for (k, v) in reg_form.get_widget_resources().items():
-            if k in form_resources:
-                form_resources[k].extend(v)
-            else:
-                form_resources[k] = v
-        
-        self.response['form_resources'] = form_resources
+        self.api.register_form_resources(login_form)
+        self.api.register_form_resources(reg_form)
 
         appstruct = {}
 
@@ -311,7 +304,7 @@ class UsersView(object):
         
         schema = content_util['User'].schema(context=self.context, request=self.request, type='request_password')
         form = Form(schema, buttons=(button_request, button_cancel))
-        self.response['form_resources'] = form.get_widget_resources()
+        self.api.register_form_resources(form)
     
         #Handle submitted information
         if 'request' in self.request.POST:

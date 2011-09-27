@@ -35,7 +35,6 @@ class AgendaItemView(BaseView):
         url = resource_url(self.context, self.request)
         
         poll_forms = {}
-        poll_form_resources = {}
         for poll in self.response['polls']:
             #Check if the users vote exists already
             userid = self.api.userid
@@ -50,21 +49,22 @@ class AgendaItemView(BaseView):
                 appstruct = vote.get_vote_data()
                 
                 form = Form(poll_schema)
+                self.api.register_form_resources(form)
                 poll_forms[poll.uid] = form.render(appstruct=appstruct, readonly=True)
-                poll_form_resources = form.get_widget_resources()
 
             else: 
                 if has_permission(ADD_VOTE, poll, self.request):
                     poll_url = resource_url(poll, self.request)
                     form = Form(poll_schema, action=poll_url+"@@vote", buttons=(button_vote, button_cancel))
+                    self.api.register_form_resources(form)
                     poll_forms[poll.uid] = form.render()
-                    poll_form_resources = form.get_widget_resources()
 
         
         #Proposal form
         if has_permission(ci['Proposal'].add_permission, self.context, self.request):
             prop_schema = ci['Proposal'].schema(context=self.context, request=self.request, type='add')
             prop_form = Form(prop_schema, action=url+"@@add?content_type=Proposal", buttons=(button_add,))
+            self.api.register_form_resources(prop_form)
         else:
             prop_form = None
 
@@ -72,31 +72,10 @@ class AgendaItemView(BaseView):
         if has_permission(ci['DiscussionPost'].add_permission, self.context, self.request):
             discussion_schema = ci['DiscussionPost'].schema(context=self.context, request=self.request, type='add')
             discussion_form = Form(discussion_schema, action=url+"@@add?content_type=DiscussionPost", buttons=(button_add,))
+            self.api.register_form_resources(discussion_form)
         else:
             discussion_form = None
 
-        #Join resources
-        form_resources = {}
-        if prop_form:
-            for (k, v) in prop_form.get_widget_resources().items():
-                if k in form_resources:
-                    form_resources[k].extend(v)
-                else:
-                    form_resources[k] = v
-        if discussion_form:
-            for (k, v) in discussion_form.get_widget_resources().items():
-                if k in form_resources:
-                    form_resources[k].extend(v)
-                else:
-                    form_resources[k] = v
-        if poll_form_resources:
-            for (k, v) in poll_form_resources.items():
-                if k in form_resources:
-                    form_resources[k].extend(v)
-                else:
-                    form_resources[k] = v
-        
-        self.response['form_resources'] = form_resources
         self.response['poll_forms'] = poll_forms
         self.response['proposal_form'] = prop_form and prop_form.render()
         self.response['discussion_form'] = discussion_form and discussion_form.render()

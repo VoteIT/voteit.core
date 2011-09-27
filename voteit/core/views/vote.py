@@ -61,7 +61,7 @@ class VoteView(object):
             raise Forbidden("You've already voted and the poll is closed.")
 
         self.form = Form(self.schema, buttons=(button_vote, button_cancel))
-        self.response['form_resources'] = self.form.get_widget_resources()
+        self.api.register_form_resources(self.form)
 
         post = self.request.POST
         if 'vote' in post:
@@ -109,7 +109,7 @@ class VoteView(object):
         #FIXME: Allow plugin to override renderer?
        
         self.form = Form(self.schema, buttons=(button_update, button_cancel))
-        self.response['form_resources'] = self.form.get_widget_resources()
+        self.api.register_form_resources(self.form)
 
         post = self.request.POST
         if 'update' in post:
@@ -151,7 +151,7 @@ class VoteView(object):
         add_csrf_token(self.context, self.request, schema)
         
         self.form = Form(schema, buttons=(button_delete, button_cancel))
-        self.response['form_resources'] = self.form.get_widget_resources()
+        self.api.register_form_resources(self.form)
 
         post = self.request.POST
         if 'delete' in post:
@@ -181,7 +181,7 @@ class VoteView(object):
     def view_vote(self):
 
         self.form = Form(self.schema, buttons=())
-        self.response['form_resources'] = self.form.get_widget_resources()
+        self.api.register_form_resources(self.form)
 
         msg = _(u"This is your vote")
         self.api.flash_messages.add(msg, close_button=False)

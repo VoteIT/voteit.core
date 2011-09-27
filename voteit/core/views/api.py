@@ -1,5 +1,6 @@
 from time import strftime
 
+from deform import Form
 from pyramid.renderers import get_renderer, render
 from pyramid.security import authenticated_userid
 from pyramid.security import Allowed
@@ -20,7 +21,6 @@ from webob.exc import HTTPFound
 from repoze.workflow import get_workflow
 from webhelpers.html.converters import nl2br
 from repoze.catalog.query import Eq
-#from repoze.catalog.query import Contains
 from repoze.catalog.query import Name
 
 from voteit.core import VoteITMF as _
@@ -32,6 +32,7 @@ from voteit.core.views.macros import FlashMessages
 from voteit.core.views.user_tags import UserTagsView
 from voteit.core.models.catalog import metadata_for_query
 from voteit.core.models.catalog import resolve_catalog_docid
+from voteit.core.models.schemas import button_login
 
 
 MODERATOR_SECTIONS = ('closed', 'ongoing', 'upcoming', 'private',)
@@ -58,8 +59,6 @@ class APIView(object):
         self.authn_policy = request.registry.getUtility(IAuthenticationPolicy)
         self.authz_policy = request.registry.getUtility(IAuthorizationPolicy)
 
-        #request.application_url
-        self.main_template = get_renderer('templates/main.pt').implementation()
         self.content_info = request.registry.getUtility(IContentUtility)
         self.addable_types = self._get_addable_types(context, request)
         self.lineage = lineage(context)
@@ -72,6 +71,14 @@ class APIView(object):
         self.nl2br = nl2br
         
         self.locale = get_locale_name(request)
+        
+        #Used by deform to keep track for form resources
+        self.form_resources = {}
+        self.navigation_html = self._get_navigation()
+
+        #Main macro
+        self.main_template = get_renderer('templates/main.pt').implementation()
+
 
     @reify
     def show_moderator_actions(self):
@@ -86,6 +93,12 @@ class APIView(object):
         url = "%s/static/images/logo.png" % self.request.application_url
         return '<img src="%(url)s" height="%(h)s" width="%(w)s" id="logo" />' % {'url':url, 'h':31, 'w':85}
 
+    def register_form_resources(self, form):
+        """ Append form resources if they don't already exist in self.form_resources """
+        for (k, v) in form.get_widget_resources().items():
+            if k not in self.form_resources:
+                self.form_resources[k] = set()
+            self.form_resources[k].update(v)
 
     def translate(self, *args, **kwargs):
         """ Hook into the translation string machinery.
@@ -140,11 +153,23 @@ class APIView(object):
             return
         return resource_url(self.meeting, self.request)
 
-    def get_navigation(self):
-        """ Get navigatoin """
+    def _get_navigation(self):
+        """ Get navigatoin. Don't use this method directly, instead get
+            the results from self.navigation_html.
+        """
 
         response = {}
         response['api'] = self
+        
+        #Login form if user isn't authenticated
+        if not self.userid:
+            login_schema = self.content_info['User'].schema(context=self.context, request=self.request, type='login')
+            action_url = resource_url(self.root, self.request) + 'login'
+            login_form = Form(login_schema, buttons=(button_login,), action=action_url)
+    
+            #Render forms
+            self.register_form_resources(login_form)
+            response['login_form'] = login_form.render()        
 
         if self.meeting:
             #In meeting context
