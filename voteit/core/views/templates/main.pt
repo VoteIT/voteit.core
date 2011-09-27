@@ -46,7 +46,7 @@
 </head>
 <body>
     <div id="page_wrapper">
-
+        <div id="main-content-wrapper">
         <div id="header">
              <div id="global-actions" tal:content="structure api.get_global_actions(context, request)">
                 Global actions toolbar - like login, profile etc
@@ -126,6 +126,8 @@
         
         
         <div class="clear"></div>
+		</div><!-- main-content-wrapper -->
+		<div id="footer">Hello</div>
     </div> <!-- page_wrapper -->
 
 </body>
