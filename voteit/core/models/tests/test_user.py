@@ -7,6 +7,7 @@ from zope.interface.verify import verifyObject
 from zope.component.event import objectEventNotify
 from pyramid_mailer import get_mailer
 from repoze.folder.events import ObjectAddedEvent
+from pyramid.url import resource_url
 
 from voteit.core.models.date_time_util import utcnow
 
@@ -102,6 +103,48 @@ class UserTests(unittest.TestCase):
         
         self.assertEqual(obj.get_image_tag(size=45),
                          '<img src="http://www.gravatar.com/avatar/4b3cdf9adfc6258a102ab90eb64565ea?d=mm&s=45" height="45" width="45" />')
+                         
+    def test_mentioned_email(self):
+        request = testing.DummyRequest()
+        self.config = testing.setUp(request=request)
+        self.config.include('pyramid_mailer.testing')
+
+        from voteit.core.app import register_content_types
+        from voteit.core.app import register_catalog_metadata_adapter
+        ct = """
+            voteit.core.models.site
+            voteit.core.models.user
+            voteit.core.models.users
+        """
+        self.config.registry.settings['content_types'] = ct
+        register_content_types(self.config)
+        register_catalog_metadata_adapter(self.config)
+
+        self.config.scan('voteit.core.subscribers.transform_text')
+        self.config.include('voteit.core.models.user_tags')
+
+        from voteit.core.bootstrap import bootstrap_voteit
+        self.root = bootstrap_voteit(registry=self.config.registry, echo=False)
+        self.root.users['admin'].set_field_value('email', 'admin@voteit.se')
+
+        from voteit.core.models.meeting import Meeting
+        meeting = Meeting()
+        self.root['meeting'] = meeting
+        
+        from voteit.core.models.agenda_item import AgendaItem
+        agenda_item = AgendaItem()
+        meeting['agenda_item'] = agenda_item
+
+        from voteit.core.models.discussion_post import DiscussionPost
+        discussion_post = DiscussionPost()
+        discussion_post.set_field_value('text', '@admin')
+        agenda_item['discussion_post'] = discussion_post
+
+        mailer = get_mailer(request)
+        self.assertEqual(len(mailer.outbox), 1)
+        
+        msg = mailer.outbox[0]
+        self.failUnless(resource_url(discussion_post, request) in msg.html)
 
 
 class RequestPasswordTokenTests(unittest.TestCase):

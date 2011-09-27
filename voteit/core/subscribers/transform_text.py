@@ -40,6 +40,7 @@ def at_userid_link(text, obj):
                 user.title,
                 userid,
             )
+            user.send_mention_notification(obj, request)
             text = text.replace(space+'@'+userid, link)
     
     return text
