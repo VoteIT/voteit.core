@@ -625,7 +625,7 @@ msgstr "Visa ${count} föregående inlägg"
 #: ./views/templates/participants.pt:13
 #. Default: "Showing ${count} participants"
 msgid "Showing ${count} participants"
-msgstr "VIsar ${count} deltagare"
+msgstr "Visar ${count} deltagare"
 
 #: ./views/templates/invite_ticket_email.pt:18
 #. Default: "Simply login after clicking this link."
