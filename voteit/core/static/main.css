@@ -40,7 +40,7 @@ p {
     background: url(images/bubble_big.png) no-repeat -160px 60px;
 }
 #main_window {
-    background: #fff;
+    background: #fff url(images/bubble_big.png) no-repeat 80% 50px;
 	line-height: 1.5em;
 }
 
