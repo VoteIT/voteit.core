@@ -17,7 +17,7 @@ from voteit.core.interfaces import IObjectUpdatedEvent
 from voteit.core.models.user import userid_regexp
 
 def urls_to_links(text):
-    reg = re.compile(r"(http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+)")
+    reg = re.compile(r"(http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+#]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+)")
     text = reg.sub(r'<a href="\1">\1</a>', text)
     
     return text
