@@ -106,7 +106,7 @@ msgstr "Administratör"
 #: ./views/templates/navigation.pt:40
 #. Default: "Agenda"
 msgid "Agenda"
-msgstr "Agenda"
+msgstr "Dagordning"
 
 #: ./models/agenda_item.py:52
 msgid "Agenda item"
@@ -841,7 +841,7 @@ msgstr "Rösta"
 #. you need to open this item yourself.
 #. Default: "No action will be taken automatically when the time has passed, so you need to open this item yourself."
 msgid "ai_start_time_description"
-msgstr "Det här kan vara beslut eller andra viktiga noter. Kommer visas i mötesloggen på mötessidan."
+msgstr "Inget händer automatiskt när denna tid passerats. Du kommer behöva aktivera det själv."
 
 #: ./models/agenda_item.py:134
 #. Default: "Estimated start time of this Agenda Item."

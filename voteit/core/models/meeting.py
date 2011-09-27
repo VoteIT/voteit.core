@@ -99,10 +99,12 @@ def construct_schema(**kwargs):
     class MeetingSchema(colander.MappingSchema):
         title = colander.SchemaNode(colander.String(),
                                     title = _(u"Title"),
+                                    description = _(u"Set a title for the meeting that separates it from previous meetings"),
                                     validator=html_string_validator,)
         description = colander.SchemaNode(
             colander.String(),
             title = _(u"Description"),
+            description = _(u"The description greets the participants each time they enter the meeting. You can include things like information about the meeting, how to contact the moderator and your logo."),
             missing = u"",
             widget=deform.widget.RichTextWidget())
         meeting_mail_name = colander.SchemaNode(colander.String(),
