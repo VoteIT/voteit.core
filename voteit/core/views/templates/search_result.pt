@@ -6,20 +6,6 @@
 	  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
 	  i18n:domain="voteit.core">
 
-<tal:deform tal:condition="form|False" metal:fill-slot="head">
-    <tal:css repeat="css_file form_resources['css']|[]">
-        <link rel="stylesheet"
-              tal:attributes="href string:/deform/${css_file}" type="text/css" />
-    </tal:css>
-    <tal:js repeat="js_file form_resources['js']|[]">
-        <script type="text/javascript"
-                tal:attributes="src string:/deform/${js_file}"></script>
-    </tal:js>
-    <script type="text/javascript">
-        deform.load()
-    </script>
-</tal:deform>
-
 <metal:heading fill-slot="page_heading">
 	<h3 i18n:translate="">Search</h3>
 </metal:heading>

@@ -120,7 +120,7 @@ class MeetingView(BaseView):
         add_csrf_token(self.context, self.request, schema)
 
         self.form = deform.Form(schema, buttons=(button_add, button_cancel))
-        self.response['form_resources'] = self.form.get_widget_resources()
+        self.api.register_form_resources(self.form)
 
         if 'add' in self.request.POST or \
             'email' in self.request.GET and 'token' in self.request.GET:
@@ -164,7 +164,7 @@ class MeetingView(BaseView):
         add_csrf_token(self.context, self.request, schema)
 
         self.form = deform.Form(schema, buttons=(button_add, button_cancel))
-        self.response['form_resources'] = self.form.get_widget_resources()
+        self.api.register_form_resources(self.form)
 
         post = self.request.POST
         if 'add' in post:
@@ -209,7 +209,7 @@ class MeetingView(BaseView):
         add_csrf_token(self.context, self.request, schema)
             
         self.form = deform.Form(schema, buttons=(button_resend, button_delete, button_cancel,))
-        self.response['form_resources'] = self.form.get_widget_resources()
+        self.api.register_form_resources(self.form)
 
         post = self.request.POST
 

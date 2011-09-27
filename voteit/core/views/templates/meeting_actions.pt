@@ -12,7 +12,7 @@
                 <tal:section repeat="section sections">
                     <tal:defs define="metadatas polls_metadata[section]">
                     <tal:exists condition="metadatas">
-                        <li class="iconpadding ${section}"><span>${api.translate(section.title())}</span></li>
+                        <li class="readonly iconpadding ${section}"><span>${api.translate(section.title())}</span></li>
                         <li tal:repeat="poll_metadata metadatas">
                             <a href="${poll_metadata['path']}">
                                 ${poll_metadata['title']}
@@ -44,6 +44,10 @@
                 <li tal:condition="context.get_workflow_state() != 'private'">
                     <a tal:attributes="href api.resource_url(api.meeting, request) + '@@manage_tickets'"
                        i18n:translate="">Manage invites</a>
+                </li>
+                <li>
+                    <a tal:attributes="href api.resource_url(api.meeting, request) + '@@logs'"
+                       i18n:translate="">Meeting actions log</a>
                 </li>
             </ul>
         </li>

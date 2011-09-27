@@ -1,22 +1,24 @@
 <tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core">
-<div id="userinfo" class="content_wrapper">
+<div class="userinfo" class="content_wrapper">
 
-    <tal:user_visible condition="info_context is not None">
-    <div><span i18n:translate="">Email</span>: <span tal:content="info_context.get_field_value('email')"></span></div>
-    <div>
-    	<span i18n:translate="">Biography</span>:
-		<span tal:content="structure nl2br(info_context.get_field_value('biography'))"></span>
-	</div>
-    <div>
-        <img tal:replace="structure info_context.get_image_tag(size=100)" />
-    </div>
+    <tal:user_visible condition="user is not None">
+	    <img tal:replace="structure user.get_image_tag(size=100)" />
+    	<h4>
+	        <span tal:content="user.title">My fullname</span>
+	        <span>(${user.userid})</span>
+		</h4>
+
+        <p>
+    	<h6><span i18n:translate="">Email</span>:</h6>
+		<span tal:content="user.get_field_value('email')"></span>
+		</p>
+	    	<h6><span i18n:translate="">About me</span>:</h6>
+			<div tal:content="structure user.get_field_value('about_me')"></div>
 	</tal:user_visible>
-	<tal:user_not_found condition="info_context is None">
-        <span i18n:translate="">Couldn't find any user with userid <span i18n:name="userid">${info_userid}</span></span>
+
+	<tal:user_not_found condition="user is None">
+        <p i18n:translate="">Couldn't find any user with userid <span i18n:name="userid">${info_userid}</span></p>
 	</tal:user_not_found>
-
-
-    Close
 
 </div>
 </tal:main>

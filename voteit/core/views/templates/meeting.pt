@@ -11,7 +11,24 @@
 		A lot of the structure here is dependent on that css classes are named the way
 		the js-script expects it to be. Check static resources before changing anything.
 	</tal:comment>
-	
+
+    <div metal:fill-slot="top_content"
+	     class="moderator-help-buttons"
+	     tal:condition="api.show_moderator_actions">
+        <a class="buttonize large"
+		   tal:condition="api.context_has_permission('Add Agenda Item', context)"
+		   tal:attributes="href api.resource_url(context, request) + '@@add?content_type=AgendaItem'">
+            <span i18n:translate="">Add</span>
+            <span i18n:translate="">Agenda item</span>
+		</a>
+        <a class="buttonize large"
+           tal:condition="api.context_has_permission('Moderate Meeting', context)"
+           tal:attributes="href api.resource_url(context, request) + '@@add_tickets'">
+            <span i18n:translate="">Invite participants</span>
+        </a>
+    </div>
+
+
 	<div metal:fill-slot="left">
         <div class="description" tal:condition="context.description" tal:content="structure context.description">Description</div>
 

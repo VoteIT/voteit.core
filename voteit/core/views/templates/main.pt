@@ -26,19 +26,19 @@
     <script type="text/javascript" src="${request.application_url}/static/jquery.easy-confirm-dialog.js"></script>
     <script type="text/javascript" src="${request.application_url}/static/jquery.cookie.js"></script>
 
-    <tal:deform tal:condition="form_resources|False">
-    <tal:css repeat="css_file form_resources['css']|[]">
-    <link rel="stylesheet"
-          tal:attributes="href string:/deform/${css_file}" type="text/css" />
-    </tal:css>
-    <script type="text/javascript" src="${request.application_url}/deform/scripts/deform.js"></script>
-    <script type="text/javascript" src="${request.application_url}/deform/scripts/jquery-ui-timepicker-addon.js"></script>
-    <script type="text/javascript" src="${request.application_url}/deform/scripts/jquery.form.js"></script>
-    <script type="text/javascript" src="${request.application_url}/deform/scripts/jquery.maskedinput-1.2.2.min.js"></script>
-    <script type="text/javascript" src="${request.application_url}/deform/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
-    <script type="text/javascript">
-        deform.load()
-    </script>
+    <tal:deform tal:condition="api.form_resources">
+	    <tal:css repeat="css_file api.form_resources['css']|()">
+		    <link rel="stylesheet"
+		          tal:attributes="href string:/deform/${css_file}" type="text/css" />
+	    </tal:css>
+	    <script type="text/javascript" src="${request.application_url}/deform/scripts/deform.js"></script>
+	    <script type="text/javascript" src="${request.application_url}/deform/scripts/jquery-ui-timepicker-addon.js"></script>
+	    <script type="text/javascript" src="${request.application_url}/deform/scripts/jquery.form.js"></script>
+	    <script type="text/javascript" src="${request.application_url}/deform/scripts/jquery.maskedinput-1.2.2.min.js"></script>
+	    <script type="text/javascript" src="${request.application_url}/deform/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
+	    <script type="text/javascript">
+	        deform.load()
+	    </script>
     </tal:deform>
 
     <metal:head define-slot="head"></metal:head>
@@ -71,7 +71,7 @@
 
         <div id="rightcol-wrapper"><div id="leftcol-wrapper">
         <div id="navigation">
-            <div tal:replace="structure api.get_navigation()">Navigation</div>
+            <div tal:replace="structure api.navigation_html">Navigation</div>
         </div>
 
         <div id="main_window">
@@ -98,15 +98,6 @@
                              tal:content="structure api.get_moderator_actions(context, request)">Cogwheel menu</span>
 
                         <h2 tal:content="context.title">Title</h2>
-
-                        <tal:state define="state_id context.get_workflow_state()|False">
-                            <span tal:condition="state_id">
-                                <span i18n:translate="">State</span>:
-                                <strong tal:attributes="class 'wf-state-%s' % state_id"
-                                        tal:content="api.translate(context.current_state_title(request))">private</strong>
-
-                            </span>
-                        </tal:state>
 
                     </div> <!-- page_heading -->
                     <div id="top_content" metal:define-slot="top_content" tal:condition="not form|True"></div>

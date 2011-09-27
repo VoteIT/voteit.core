@@ -2,7 +2,7 @@
 <span class="creators" tal:condition="users">
 <tal:iterate repeat="user users">
 	<a tal:condition="user"
-	   href="${userinfo_url(user.userid)}"
+	   href="${get_userinfo_url(user.userid)}"
 	   class="inlineinfo">
         <img tal:condition="portrait" tal:replace="structure user.get_image_tag()" />
         <span tal:content="user.title">My fullname</span>

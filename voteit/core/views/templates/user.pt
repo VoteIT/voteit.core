@@ -3,26 +3,34 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
       xmlns:tal="http://xml.zope.org/namespaces/tal"
       metal:use-macro="api.main_template.macros['master']"
-	  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
-	  i18n:domain="voteit.core">
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="voteit.core">
 <body>
-<div metal:fill-slot="content">
-	<div>
-        <a tal:attributes="href api.user_profile_url + '@@edit'"
-           i18n:translate="">Edit your profile and settings.</a><br/>
-		<a tal:attributes="href api.user_profile_url + '@@change_password'"
-		   i18n:translate="">Change password</a>
-	</div>
-	<div><span i18n:translate="">Email</span>: <span tal:content="context.get_field_value('email')"></span></div>
-	<div><span i18n:translate="">Biography</span>: <span tal:content="structure api.nl2br(context.get_field_value('biography'))"></span></div>
-	<div>
-		<img tal:replace="structure context.get_image_tag(size=100)" />
-		<div i18n:translate="profile_gravatar_explanation">
-			The image above comes from the <a href="http://www.gravatar.com" target="_blank">Gravatar network</a>.
-			It's taken from your current email address. If you want to change the picture, simply go to
-			the Gravatar site and change your picture for the email you use in VoteIT.
-		</div>
-	</div>
-</div>
+    <div metal:fill-slot="left">
+        <div tal:replace="structure user_info"></div>
+
+    </div>
+    
+    <div metal:fill-slot="right">
+        <div class="moderator-help-buttons">
+            <a tal:attributes="href api.user_profile_url + '@@edit'"
+               tal:condition="api.context_has_permission('Edit', context)"
+               class="buttonize large"
+               i18n:translate="">Change settings</a>
+            <a tal:attributes="href api.user_profile_url + '@@change_password'"
+               tal:condition="api.context_has_permission('Change Password', context)"
+               class="buttonize large"
+               i18n:translate="">Change password</a>
+        </div>
+        <div class="clear"><!-- --></div>
+        <br/><br/>
+        <div tal:condition="api.context_has_permission('Edit', context)" class="meta" i18n:translate="profile_gravatar_explanation">
+            The profile image comes from the <a href="http://www.gravatar.com" target="_blank">Gravatar network</a>.
+            It's taken from your current email address. If you want to change the picture, simply go to
+            the Gravatar site and change your picture for the email you use in VoteIT.
+        </div>
+
+    </div>
+
 </body>
 </html>

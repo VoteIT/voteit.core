@@ -1,8 +1,10 @@
 import string
 from random import choice
+from uuid import uuid4
 
 import colander
 import deform
+from repoze.folder import Folder
 from zope.component import getUtility
 from zope.interface import implements
 from pyramid_mailer import get_mailer
@@ -11,7 +13,6 @@ from pyramid.traversal import find_interface
 from pyramid.url import resource_url
 from pyramid.exceptions import Forbidden
 from pyramid.security import authenticated_userid
-from persistent import Persistent
 from pyramid.renderers import render
 
 from voteit.core import VoteITMF as _
@@ -31,7 +32,7 @@ SELECTABLE_ROLES = (security.ROLE_MODERATOR,
                     )
 
 
-class InviteTicket(Persistent, WorkflowAware):
+class InviteTicket(Folder, WorkflowAware):
     """ Invite ticket. Send these to give access to new users.
         See IInviteTicket for more info.
     """
@@ -52,6 +53,8 @@ class InviteTicket(Persistent, WorkflowAware):
         self.claimed_by = None
         self.token = ''.join([choice(string.letters + string.digits) for x in range(30)])
         self.sent_dates = []
+        self.uid = uuid4()
+        super(InviteTicket, self).__init__()
 
     def send(self, request):
         """ Send message about invite ticket. """

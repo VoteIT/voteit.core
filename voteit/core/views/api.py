@@ -1,5 +1,6 @@
 from time import strftime
 
+from deform import Form
 from pyramid.renderers import get_renderer, render
 from pyramid.security import authenticated_userid
 from pyramid.security import Allowed
@@ -20,7 +21,6 @@ from webob.exc import HTTPFound
 from repoze.workflow import get_workflow
 from webhelpers.html.converters import nl2br
 from repoze.catalog.query import Eq
-#from repoze.catalog.query import Contains
 from repoze.catalog.query import Name
 
 from voteit.core import VoteITMF as _
@@ -32,6 +32,7 @@ from voteit.core.views.macros import FlashMessages
 from voteit.core.views.user_tags import UserTagsView
 from voteit.core.models.catalog import metadata_for_query
 from voteit.core.models.catalog import resolve_catalog_docid
+from voteit.core.models.schemas import button_login
 
 
 MODERATOR_SECTIONS = ('closed', 'ongoing', 'upcoming', 'private',)
@@ -58,8 +59,6 @@ class APIView(object):
         self.authn_policy = request.registry.getUtility(IAuthenticationPolicy)
         self.authz_policy = request.registry.getUtility(IAuthorizationPolicy)
 
-        #request.application_url
-        self.main_template = get_renderer('templates/main.pt').implementation()
         self.content_info = request.registry.getUtility(IContentUtility)
         self.addable_types = self._get_addable_types(context, request)
         self.lineage = lineage(context)
@@ -72,6 +71,14 @@ class APIView(object):
         self.nl2br = nl2br
         
         self.locale = get_locale_name(request)
+        
+        #Used by deform to keep track for form resources
+        self.form_resources = {}
+        self.navigation_html = self._get_navigation()
+
+        #Main macro
+        self.main_template = get_renderer('templates/main.pt').implementation()
+
 
     @reify
     def show_moderator_actions(self):
@@ -86,6 +93,12 @@ class APIView(object):
         url = "%s/static/images/logo.png" % self.request.application_url
         return '<img src="%(url)s" height="%(h)s" width="%(w)s" id="logo" />' % {'url':url, 'h':31, 'w':85}
 
+    def register_form_resources(self, form):
+        """ Append form resources if they don't already exist in self.form_resources """
+        for (k, v) in form.get_widget_resources().items():
+            if k not in self.form_resources:
+                self.form_resources[k] = set()
+            self.form_resources[k].update(v)
 
     def translate(self, *args, **kwargs):
         """ Hook into the translation string machinery.
@@ -108,11 +121,6 @@ class APIView(object):
         user = self.root.users.get(userid)
         cache[userid] = user
         return user
-
-    def format_feed_time(self, value):
-        """ Lordag 3 apr 2010, 01:10
-        """
-        return strftime("%A %d %B %Y, %H:%M", value)
     
     def _get_addable_types(self, context, request):
         context_type = getattr(context, 'content_type', '')
@@ -138,11 +146,30 @@ class APIView(object):
             return
         return self.meeting.get_workflow_state()
 
-    def get_navigation(self):
-        """ Get navigatoin """
+    @reify
+    def meeting_url(self):
+        """ Cache lookup of meeting url since it will be used a lot. """
+        if not self.meeting:
+            return
+        return resource_url(self.meeting, self.request)
+
+    def _get_navigation(self):
+        """ Get navigatoin. Don't use this method directly, instead get
+            the results from self.navigation_html.
+        """
 
         response = {}
         response['api'] = self
+        
+        #Login form if user isn't authenticated
+        if not self.userid:
+            login_schema = self.content_info['User'].schema(context=self.context, request=self.request, type='login')
+            action_url = resource_url(self.root, self.request) + 'login'
+            login_form = Form(login_schema, buttons=(button_login,), action=action_url)
+    
+            #Render forms
+            self.register_form_resources(login_form)
+            response['login_form'] = login_form.render()        
 
         if self.meeting:
             #In meeting context
@@ -217,6 +244,12 @@ class APIView(object):
         """ Render start and end time of something, if those exist. """
         return self.dt_util.relative_time_format(context.created)
 
+    def get_userinfo_url(self, userid):
+        if self.meeting_url is None:
+            raise ValueError("get_userinfo_url was called when api.meeting_url was None. Are you outside of a meeting context?")
+        assert isinstance(userid, basestring)
+        return "%s_userinfo?userid=%s" % (self.meeting_url, userid)
+
     def get_creators_info(self, creators, request, portrait=True):
         """ Return template for a set of creators.
             The content of creators should be userids
@@ -227,14 +260,10 @@ class APIView(object):
             if user:
                 users.add(user)
         
-        meeting_url = resource_url(self.meeting, request)
-        def _userinfo_url(userid):
-            return "%s_userinfo?userid=%s" % (meeting_url, userid)
-        
         response = {}
         response['users'] = users
         response['portrait'] = portrait
-        response['userinfo_url'] = _userinfo_url
+        response['get_userinfo_url'] = self.get_userinfo_url
         return render('templates/creators_info.pt', response, request=request)
 
     def get_poll_state_info(self, poll):

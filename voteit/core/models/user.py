@@ -14,6 +14,7 @@ from zope.interface import implements
 from repoze.folder import unicodify
 from pyramid.url import resource_url
 from pyramid.security import Allow
+from pyramid.security import DENY_ALL
 from pyramid.traversal import find_interface
 from pyramid_mailer import get_mailer
 from pyramid_mailer.message import Message
@@ -50,20 +51,33 @@ class User(BaseContent):
     allowed_contexts = ('Users',)
     add_permission = security.ADD_USER
     
-    __acl__ = [(Allow, security.ROLE_ADMIN, security.EDIT),
-               (Allow, security.ROLE_OWNER, [security.EDIT, security.CHANGE_PASSWORD])]
+    __acl__ = [(Allow, security.ROLE_ADMIN, (security.EDIT, security.VIEW,)),
+               (Allow, security.ROLE_OWNER, (security.EDIT, security.VIEW, security.CHANGE_PASSWORD,)),
+               DENY_ALL]
     
     @property
     def userid(self):
         """ Convention - name should always be same as userid """
         return self.__name__
     
-    def get_image_tag(self, size=40):
+    def get_image_tag(self, size=40, **kwargs):
+        """ Get image tag. Always square, so size is enough.
+            Other keyword args will be converted to html properties.
+            Appends class 'profile-pic' to tag if class isn't part of keywords.
+        """
+        
         email_hash = self.get_field_value('email_hash', None)
         tag = '<img src="http://www.gravatar.com/avatar/'
         if email_hash:
             tag += email_hash
-        tag += '?d=mm&s=%(size)s" height="%(size)s" width="%(size)s" />' % {'size':size}
+        tag += '?d=mm&s=%(size)s" height="%(size)s" width="%(size)s"' % {'size':size}
+        
+        for (k, v) in kwargs.items():
+            tag += ' %s="%s"' % (k, v)
+        if not 'class' in kwargs:
+            tag += ' class="profile-pic"'
+        tag += ' />'
+        
         return tag
 
     def get_password(self):
@@ -275,10 +289,9 @@ def construct_schema(**kwargs):
             email = email_node
             first_name = first_name_node
             last_name = last_name_node
-            biography = colander.SchemaNode(colander.String(),
+            about_you = colander.SchemaNode(colander.String(),
                 title = _(u"About you"),
-                description = _('bio_visible_notice',
-                                default=u"Please note that anything you type here will be visible to all registered users, even if they're not in the same meeting as you."),
+                description = _(u"Please note that anything you type here will be visible to all users in the same meeting as you."),
                 widget = deform.widget.TextAreaWidget(rows=10, cols=60),
                 missing=u"",
                 validator=html_string_validator,)

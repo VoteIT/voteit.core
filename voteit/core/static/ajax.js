@@ -136,26 +136,29 @@ $(document).ready(function() {
             return false;
         });
         $(this).qtip({
-            content: { url: this.href },
+            content: { url: this.href,
+			           title: {text: voteit.translation['user-info'],
+					           button: voteit.translation['close']}
+			 },
             show: 'click',
             hide: 'unfocus',
             position: {
                 corner: {
-                    target: 'rightMiddle',
-                    tooltip: 'leftTop',
+                    target: 'bottomMiddle',
+                    tooltip: 'topMiddle',
                 }
             },
             style: { 
                 tip: true,
-                name: 'blue',
+                //name: 'blue',
                 border: {
                     width: 2,
                     radius: 5,
                 },
-                width: { min: 200 },
+                width: { min: 400 },
                 textAlign: 'justify',
             },
         });
-    })
+    });
 })
 

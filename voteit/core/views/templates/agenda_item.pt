@@ -9,8 +9,11 @@
 
     <div id="polls" metal:fill-slot="top_content">
         	
-        <div id="add_poll" tal:condition="api.show_moderator_actions and api.context_has_permission('Add Poll', context)">
-            <a class="buttonize" tal:attributes="href api.resource_url(context, request) + '@@add?content_type=Poll'"><span i18n:translate="">Add poll</span></a>
+        <div class="moderator-help-buttons"
+		     tal:condition="api.show_moderator_actions and api.context_has_permission('Add Poll', context)">
+            <a class="buttonize large" tal:attributes="href api.resource_url(context, request) + '@@add?content_type=Poll'">
+            	<span i18n:translate="">Add poll</span>
+			</a>
         </div>
         <h2 tal:condition="polls" class="large-icon polls"><span i18n:translate="">Poll</span></h2>
 

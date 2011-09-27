@@ -8,7 +8,14 @@
             xmlns:i18n="http://xml.zope.org/namespaces/i18n"
             i18n:domain="voteit.core">
 
-    <tal:root condition="not api.meeting">
+    <tal:anon condition="not api.userid">
+
+	    <div class="block">
+	        <div tal:replace="structure login_form"></div>
+		</div>
+    </tal:anon>
+
+    <tal:root condition="api.userid and not api.meeting">
     <div class="block">
     <div id="add_menu" tal:condition="api.context_has_permission('Add Meeting', api.root)">
         <a class="add_button" tal:attributes="href api.resource_url(api.root, request) + '@@add?content_type=Meeting'">
