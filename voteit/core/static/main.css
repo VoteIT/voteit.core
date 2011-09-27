@@ -274,7 +274,7 @@ p {
 #navigation .proposals {
     background: url(icons/icon_proposal_lb.png) no-repeat;
 }
-#navigation .ai_info {
+#navigation .info {
 	clear: both;
 }
 
@@ -286,7 +286,7 @@ p {
     float: right;
 	margin-top: 5px;
 }
-#navigation .agenda_item {
+#navigation .item {
 	padding: 5px 0px;
 	border-bottom: 1px solid #ccc;
 }

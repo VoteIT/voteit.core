@@ -79,9 +79,13 @@ class APIView(object):
         #Main macro
         self.main_template = get_renderer('templates/main.pt').implementation()
 
-
     @reify
     def show_moderator_actions(self):
+        """ Show moderator actions? Falls back to MANAGE_SERVER if outside of
+            a meeting context.
+        """
+        if self.meeting is None:
+            return self.context_has_permission(security.MANAGE_SERVER, self.root)
         return self.context_has_permission(security.MODERATE_MEETING, self.meeting)
 
     @reify
@@ -160,6 +164,7 @@ class APIView(object):
 
         response = {}
         response['api'] = self
+        response['nav_section'] = self._get_navigation_section
         
         #Login form if user isn't authenticated
         if not self.userid:
@@ -169,7 +174,7 @@ class APIView(object):
     
             #Render forms
             self.register_form_resources(login_form)
-            response['login_form'] = login_form.render()        
+            response['login_form'] = login_form.render()
 
         if self.meeting:
             #In meeting context
@@ -186,8 +191,23 @@ class APIView(object):
         else:
             #Not in meeting context
             response['is_moderator'] = False
+        
+        #Outside of meeting context and authenticated
+        if self.userid and not self.meeting:
+            response['sections'] = REGULAR_SECTIONS
+            closed_sections = set()
+            for section in response['sections']:
+                if self.request.cookies.get("%s-%s" % (self.root.uid, section)):
+                    closed_sections.add(section)
+            response['closed_sections'] = closed_sections
 
         return render('templates/navigation.pt', response, request=self.request)
+
+    def _get_navigation_section(self, contents):
+        response = {}
+        response['api'] = self
+        response['contents'] = contents
+        return render('templates/snippets/navigation_section.pt', response, request=self.request)
 
     def get_global_actions(self, context, request):
         response = {}
