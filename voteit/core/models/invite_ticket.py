@@ -67,7 +67,7 @@ class InviteTicket(Folder, WorkflowAware):
         response['access_link'] = form_url + '?email=%s&token=%s' % (self.email, self.token)
         response['message'] = self.message
         
-        sender = meeting.get_field_value('meeting_mail_address')
+        sender = "%s <%s>" % (meeting.get_field_value('meeting_mail_name'), meeting.get_field_value('meeting_mail_address'))
         body_html = render('../views/templates/invite_ticket_email.pt', response, request=request)
 
         msg = Message(subject=_(u"VoteIT meeting invitation"),
