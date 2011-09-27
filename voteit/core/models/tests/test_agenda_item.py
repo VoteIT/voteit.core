@@ -102,6 +102,9 @@ class AgendaItemTests(unittest.TestCase):
 
         obj.set_workflow_state(request, 'upcoming')
         self.assertRaises(Exception, obj.set_workflow_state, 'ongoing')
+        
+        meeting.set_workflow_state(request, 'ongoing')
+        obj.set_workflow_state(request, 'ongoing')
 
 
 class AgendaItemPermissionTests(unittest.TestCase):

@@ -270,6 +270,12 @@ class PollTests(unittest.TestCase):
         
         obj.set_workflow_state(request, 'upcoming')
         self.assertRaises(Exception, obj.set_workflow_state, 'ongoing')
+        
+        ai = find_interface(obj, IAgendaItem)
+        ai.set_workflow_state(request, 'upcoming')
+        ai.set_workflow_state(request, 'ongoing')
+        
+        obj.set_workflow_state(request, 'ongoing')
 
 
 class PollPermissionTests(unittest.TestCase):
