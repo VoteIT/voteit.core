@@ -23,9 +23,10 @@
                     <th i18n:translate="" class="heading">First name</th>
                     <th i18n:translate="" class="heading">Last name</th>
                     <th i18n:translate="" class="heading">Email</th>
-                    <th i18n:translate="" class="heading">Can participate?</th>
-                    <th i18n:translate="" class="heading">Can vote?</th>
-                    <th i18n:translate="" class="heading">Moderator?</th>
+                    <th i18n:translate="" class="heading">Viewer</th>
+                    <th i18n:translate="" class="heading">Attend</th>
+                    <th i18n:translate="" class="heading">Voter</th>
+                    <th i18n:translate="" class="heading">Moderate</th>
                 </tr>
             </thead>
             <tbody>
@@ -47,6 +48,11 @@
                                 voteit@betahaus.net
                             </a>
                             
+                        </td>
+                        <td>
+                            <span>
+                                <span class="yes_icon" i18n:translate="">Yes</span>
+                            </span>
                         </td>
                         <td>
                             <span tal:condition="'role:Participant' in principals">
