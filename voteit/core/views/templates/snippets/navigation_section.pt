@@ -12,7 +12,7 @@
 	                <a tal:attributes="href api.resource_url(obj, request)">
 	                    <div tal:content="obj.get_field_value('title')">Title</div>
 						
-	                    <div tal:condition="obj.content_type == 'Agenda item'" class="info">
+	                    <div tal:condition="obj.content_type == 'AgendaItem'" class="info">
 	                        <span class="proposals cinfo"
 	                              tal:define="unread_count api.search_catalog(obj, content_type='Proposal', unread=api.userid)[0]">
 	                            <span class="total"
