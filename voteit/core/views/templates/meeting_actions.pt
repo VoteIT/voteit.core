@@ -12,7 +12,7 @@
                 <tal:section repeat="section sections">
                     <tal:defs define="metadatas polls_metadata[section]">
                     <tal:exists condition="metadatas">
-                        <li class="iconpadding ${section}"><span>${api.translate(section.title())}</span></li>
+                        <li class="readonly iconpadding ${section}"><span>${api.translate(section.title())}</span></li>
                         <li tal:repeat="poll_metadata metadatas">
                             <a href="${poll_metadata['path']}">
                                 ${poll_metadata['title']}

@@ -99,15 +99,6 @@
 
                         <h2 tal:content="context.title">Title</h2>
 
-                        <tal:state define="state_id context.get_workflow_state()|False">
-                            <span tal:condition="state_id">
-                                <span i18n:translate="">State</span>:
-                                <strong tal:attributes="class 'wf-state-%s' % state_id"
-                                        tal:content="api.translate(context.current_state_title(request))">private</strong>
-
-                            </span>
-                        </tal:state>
-
                     </div> <!-- page_heading -->
                     <div id="top_content" metal:define-slot="top_content" tal:condition="not form|True"></div>
                 </div> <!-- content_wrapper -->

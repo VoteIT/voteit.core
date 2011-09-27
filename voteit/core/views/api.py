@@ -108,11 +108,6 @@ class APIView(object):
         user = self.root.users.get(userid)
         cache[userid] = user
         return user
-
-    def format_feed_time(self, value):
-        """ Lordag 3 apr 2010, 01:10
-        """
-        return strftime("%A %d %B %Y, %H:%M", value)
     
     def _get_addable_types(self, context, request):
         context_type = getattr(context, 'content_type', '')
@@ -137,6 +132,13 @@ class APIView(object):
         if not self.meeting:
             return
         return self.meeting.get_workflow_state()
+
+    @reify
+    def meeting_url(self):
+        """ Cache lookup of meeting url since it will be used a lot. """
+        if not self.meeting:
+            return
+        return resource_url(self.meeting, self.request)
 
     def get_navigation(self):
         """ Get navigatoin """
@@ -217,6 +219,12 @@ class APIView(object):
         """ Render start and end time of something, if those exist. """
         return self.dt_util.relative_time_format(context.created)
 
+    def get_userinfo_url(self, userid):
+        if self.meeting_url is None:
+            raise ValueError("get_userinfo_url was called when api.meeting_url was None. Are you outside of a meeting context?")
+        assert isinstance(userid, basestring)
+        return "%s_userinfo?userid=%s" % (self.meeting_url, userid)
+
     def get_creators_info(self, creators, request, portrait=True):
         """ Return template for a set of creators.
             The content of creators should be userids
@@ -227,14 +235,10 @@ class APIView(object):
             if user:
                 users.add(user)
         
-        meeting_url = resource_url(self.meeting, request)
-        def _userinfo_url(userid):
-            return "%s_userinfo?userid=%s" % (meeting_url, userid)
-        
         response = {}
         response['users'] = users
         response['portrait'] = portrait
-        response['userinfo_url'] = _userinfo_url
+        response['get_userinfo_url'] = self.get_userinfo_url
         return render('templates/creators_info.pt', response, request=request)
 
     def get_poll_state_info(self, poll):

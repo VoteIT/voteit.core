@@ -1,27 +1,39 @@
-from pyramid.view import view_config
-import colander
 import urllib
+
+import colander
+from pyramid.view import view_config
 from deform import Form
 from deform.exception import ValidationFailure
 from pyramid.httpexceptions import HTTPFound
 from pyramid.url import resource_url
 from pyramid.security import remember
 from pyramid.security import forget
+from pyramid.renderers import render
 
 from voteit.core import VoteITMF as _
 from voteit.core.models.interfaces import IContentUtility
 from voteit.core.models.interfaces import ISiteRoot
 from voteit.core.models.interfaces import IUser
 from voteit.core.models.interfaces import IUsers
-from voteit.core.views.api import APIView
-from voteit.core.security import CHANGE_PASSWORD, ROLE_OWNER
-from voteit.core.models.schemas import add_csrf_token, button_add, button_cancel,\
-    button_update, button_change, button_login, button_register, button_request
 from voteit.core.models.user import get_sha_password
+from voteit.core.views.api import APIView
+from voteit.core.security import CHANGE_PASSWORD
+from voteit.core.security import ROLE_OWNER
+from voteit.core.security import VIEW
+from voteit.core.models.schemas import add_csrf_token
+from voteit.core.models.schemas import button_add
+from voteit.core.models.schemas import button_cancel
+from voteit.core.models.schemas import button_change
+from voteit.core.models.schemas import button_login
+from voteit.core.models.schemas import button_register
+from voteit.core.models.schemas import button_request
+from voteit.core.models.schemas import button_update
+from voteit.core.views.userinfo import USERINFO_TPL
 
 
 DEFAULT_TEMPLATE = "templates/base_edit.pt"
 LOGIN_REGISTER_TPL = "templates/login_register.pt"
+
 
 class UsersView(object):
     """ View class for adding, editing or deleting users.
@@ -94,12 +106,17 @@ class UsersView(object):
         self.response['form'] = self.form.render()
         return self.response
 
-    @view_config(context=IUsers, name="list", renderer='templates/list_users.pt')
+    @view_config(context=IUsers, renderer='templates/list_users.pt', permission=VIEW)
     def list_users(self):
         return self.response
 
-    @view_config(context=IUser, renderer='templates/user.pt')
+    @view_config(context=IUser, renderer='templates/user.pt', permission=VIEW)
     def view_user(self):
+        user_info_response = {}
+        user_info_response['user'] = self.context
+        user_info_response['info_userid'] = self.context.userid
+        
+        self.response['user_info'] = render(USERINFO_TPL, user_info_response, request=self.request)
         return self.response
 
     @view_config(context=IUser, name="change_password", renderer=DEFAULT_TEMPLATE, permission=CHANGE_PASSWORD)
@@ -288,7 +305,7 @@ class UsersView(object):
 
 
     @view_config(context=ISiteRoot, name='request_password',
-                 renderer='templates/base_edit.pt')
+                 renderer=DEFAULT_TEMPLATE)
     def request_password(self):
         content_util = self.request.registry.getUtility(IContentUtility)
         

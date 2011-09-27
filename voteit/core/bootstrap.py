@@ -12,6 +12,8 @@ def bootstrap_voteit(registry=None, echo=True):
         - Users folder
         - An administrative user with login: admin and pass: admin
     """
+    from voteit.core.security import ROLE_OWNER
+    
     if registry is None:
         registry = get_current_registry()
     
@@ -34,6 +36,7 @@ def bootstrap_voteit(registry=None, echo=True):
     admin.set_password('admin')
     admin.set_field_value('first_name', _(u'VoteIT'))
     admin.set_field_value('last_name', _(u'Administrator'))
+    admin.add_groups('admin', (ROLE_OWNER,))
     users['admin'] = admin
     
     #Add admin to group managers

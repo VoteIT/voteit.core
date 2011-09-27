@@ -29,6 +29,10 @@ a {
     color: #054265;
 	text-decoration: none;
 }
+p {
+    margin-bottom: 0.5em;
+	line-height: 1.25em;
+}
 .content_wrapper {
 	padding: 10px;
 }
@@ -367,6 +371,9 @@ a {
 	font-size: 14px;
 	color: #054265;
 }
+#notify-meetingstate .message {
+    background-image: url(icons/icon_lock.png);
+}
 #flash_messages .info {
 }
 #flash_messages .error {
@@ -663,6 +670,7 @@ table.listing > tbody > tr.even > td {
     text-transform:uppercase;
 	font-size: 12px;
 	font-weight: bold;
+	white-space: nowrap;
 }
 .buttonize.selected {
 }
@@ -672,13 +680,18 @@ table.listing > tbody > tr.even > td {
     border: 1px solid #054265;
 }
 .buttonize.large {
-    font-size: 1.2em;
-    padding-left: 1.5em;
-    padding-right: 1.5em;
-	margin: 0 0 1em 1em;
+    font-size: 110%;
+    padding-left: 1em;
+    padding-right: 1em;
+	margin: 0 0 1em 0.5em;
 }
-
 .moderator-help-buttons {
     float: right;
+	clear: both;
 	
 }
+.userinfo .profile-pic {
+    float: right;
+	margin: 0px 0px 1em 1em;
+}
+

@@ -12,7 +12,10 @@ from voteit.core.security import find_authorized_userids
 from voteit.core.security import VIEW
 
 
-@view_config(context=IMeeting, name="_userinfo", permission=VIEW, renderer='templates/snippets/userinfo.pt')
+USERINFO_TPL = 'templates/snippets/userinfo.pt'
+
+
+@view_config(context=IMeeting, name="_userinfo", permission=VIEW, renderer=USERINFO_TPL)
 def user_info(context, request):
     """ Special view to allow other meeting participants to see information about a user
         who's in the same meeting as them.
@@ -31,12 +34,12 @@ def user_info(context, request):
     if info_userid in find_authorized_userids(context, (VIEW,)):
         #User is allowed here, so do lookup
         root = find_root(context)
-        info_context = root.users.get(info_userid)
+        user = root.users.get(info_userid)
     else:
-        info_context = None
+        user = None
 
     response = {}
-    response['info_context'] = info_context
+    response['user'] = user
     response['info_userid'] = info_userid
     response['nl2br'] = nl2br
     return response
