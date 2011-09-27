@@ -12,6 +12,7 @@ class PrintingMailer(object):
         Send, but really print content of message
         """
         
+        print "From: %s " % message.sender
         print "Subject: %s" % message.subject
         print "To: %s" % ", ".join(message.recipients)
         print "======================================"
