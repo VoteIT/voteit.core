@@ -1,0 +1,40 @@
+<tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core">
+
+    <ul class="section minimizable_area">
+	    <tal:iterate condition="contents" repeat="obj contents">
+	        <li tal:attributes="class api.inside(context, obj) and 'selected' or 'plain'">
+	            <tal:moderator_menu condition="api.show_moderator_actions">
+	                <span tal:replace="structure api.get_moderator_actions(obj, request)">
+	                     Cogwheel menu
+	                </span>
+	            </tal:moderator_menu>
+	            <div class="item">
+	                <a tal:attributes="href api.resource_url(obj, request)">
+	                    <div tal:content="obj.get_field_value('title')">Title</div>
+						
+	                    <div tal:condition="obj.content_type == 'Agenda item'" class="info">
+	                        <span class="proposals cinfo"
+	                              tal:define="unread_count api.search_catalog(obj, content_type='Proposal', unread=api.userid)[0]">
+	                            <span class="total"
+	                                  tal:content="api.search_catalog(obj, content_type='Proposal')[0]">0</span>
+	                            <span class="unread" tal:condition="unread_count" tal:content="string:($unread_count)">(2)</span>
+	                        </span>
+	                        <span class="discussions cinfo"
+	                              tal:define="unread_count api.search_catalog(obj, content_type='DiscussionPost', unread=api.userid)[0]">
+	                            <span class="total"
+	                                  tal:content="api.search_catalog(obj, content_type='DiscussionPost')[0]">0</span>
+	                            <span class="unread" tal:condition="unread_count" tal:content="string:($unread_count)">(2)</span>
+	                        </span>
+	                    </div>
+						
+	                    <div class="clear"><!-- --></div>
+	                </a>
+	            </div>
+	        </li>
+	    </tal:iterate>
+	    <li tal:condition="not contents">
+	        <span i18n:translate="">(Nothing)</span>
+	    </li>
+    </ul>
+
+</tal:main>

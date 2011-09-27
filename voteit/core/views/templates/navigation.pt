@@ -1,110 +1,84 @@
-<tal:comment condition="False">
-	FIXME: Update with ajax call
-	The sections that can be closed and opened needs to be rendered with ajax, otherwise
-	they won't be updated when opened/closed. Also, all items will be loaded when the
-	section is collapsed, which means that there will be no preformance increase.
-</tal:comment>
 <metal:main define-macro="navigation"
             xmlns:i18n="http://xml.zope.org/namespaces/i18n"
             i18n:domain="voteit.core">
 
     <tal:anon condition="not api.userid">
-
 	    <div class="block">
 	        <div tal:replace="structure login_form"></div>
 		</div>
     </tal:anon>
 
     <tal:root condition="api.userid and not api.meeting">
-    <div class="block">
-    <div id="add_menu" tal:condition="api.context_has_permission('Add Meeting', api.root)">
-        <a class="add_button" tal:attributes="href api.resource_url(api.root, request) + '@@add?content_type=Meeting'">
-        	<img src="${request.application_url}/static/icons/icon_add.png" alt="Add meeting" title="Add meeting" i18n:attributes="alt title" />
-		</a>
-    </div>
-    <h5 class="header" i18n:translate="">Available meetings</h5>
-    <tal:iterate repeat="meeting api.get_restricted_content(api.root, content_type='Meeting')">
-        <h6>
-            <a tal:attributes="href api.resource_url(meeting, request)"
-               tal:content="meeting.get_field_value('title')">Meeting title</a>
-        </h6>
-        
-    </tal:iterate>
-	</div>
+        <div class="block">
+			<div id="add_menu" tal:condition="api.context_has_permission('Add Meeting', api.root)">
+			    <a class="add_button" tal:attributes="href api.resource_url(api.root, request) + '@@add?content_type=Meeting'">
+			        <img src="${request.application_url}/static/icons/icon_add.png"
+					     alt="Add meeting" title="Add meeting"
+						 i18n:attributes="alt title" />
+			    </a>
+			</div>
+	        <h5 class="header">
+	            <a href="${api.resource_url(api.root, request)}"
+	               title="Select a meeting below"
+	               i18n:attributes="title"
+	               i18n:translate="">Meetings</a>
+	        </h5>
+        </div>
+		
+        <tal:iterate repeat="section sections">
+            <tal:section tal:define="is_closed section in closed_sections">
+            <div tal:attributes="id '%s-%s' % (api.root.uid, section);
+                                 class is_closed and 'toggle_area toggle_closed block' or 'toggle_area toggle_opened block';">
+                <h6 class="toggle_minimize iconpadding ${section}">
+                    <span><a href="${request.url}" tal:content="api.translate(section.title())">Section title</a></span>
+                </h6>
+                <tal:open_section condition="not is_closed">
+            	    <tal:section define="meetings api.get_restricted_content(api.root, content_type='Meeting', states=section);">
+            	    	${nav_section(meetings)}
+                    </tal:section>
+                </tal:open_section>
+                
+                <tal:closed_section condition="is_closed">
+                    <div class="minimizable_inverted" i18n:translate="">(hidden, click above to open)</div>
+                </tal:closed_section>
+            </div>
+            </tal:section>
+        </tal:iterate>
     </tal:root>
 
     <tal:inside_meeting condition="api.meeting">
         <div class="block">
-        <div id="add_menu" tal:condition="is_moderator">
-            <a tal:attributes="href api.resource_url(api.meeting, request) + '@@add?content_type=AgendaItem'">
-            	<img src="${request.application_url}/static/icons/icon_add.png"
-				     alt="Add agenda item"
-					 title="Add agenda item"
-					 i18n:attributes="alt title" />
-			</a>
-        </div>
-        <h5 class="header">
-            <a href="${api.resource_url(api.meeting, request)}"
-			   title="Click to go to meeting overview"
-			   i18n:attributes="title"
-			   i18n:translate="">Agenda</a>
-        </h5>
+	        <div id="add_menu" tal:condition="is_moderator">
+	            <a tal:attributes="href api.resource_url(api.meeting, request) + '@@add?content_type=AgendaItem'">
+	            	<img src="${request.application_url}/static/icons/icon_add.png"
+					     alt="Add agenda item"
+						 title="Add agenda item"
+						 i18n:attributes="alt title" />
+				</a>
+	        </div>
+	        <h5 class="header">
+	            <a href="${api.resource_url(api.meeting, request)}"
+				   title="Click to go to meeting overview"
+				   i18n:attributes="title"
+				   i18n:translate="">Agenda</a>
+	        </h5>
 		</div>
         <tal:iterate repeat="section sections">
 			<tal:section tal:define="is_closed section in closed_sections">
             <div tal:attributes="id '%s-%s' % (api.meeting.uid, section);
                                  class is_closed and 'toggle_area toggle_closed block' or 'toggle_area toggle_opened block';">
-                                 	
                 <h6 class="toggle_minimize iconpadding ${section}">
                 	<span><a href="${request.url}" tal:content="api.translate(section.title())">Section title</a></span>
 				</h6>
-				
 				<tal:open_section condition="not is_closed">
-                <tal:agenda_items define="agenda_items api.get_restricted_content(api.meeting, content_type='AgendaItem', states=section);">
-                    <ul class="section minimizable_area">
-                    <tal:iterate condition="agenda_items" repeat="agenda_item agenda_items">
-                        <li tal:attributes="class api.inside(context, agenda_item) and 'selected' or 'plain'">
-                        	<tal:moderator_menu condition="is_moderator">
-	                        	<span tal:replace="structure api.get_moderator_actions(agenda_item, request)">
-								     Cogwheel menu
-								</span>
-							</tal:moderator_menu>
-							<div class="agenda_item">
-	                            <a tal:attributes="href api.resource_url(agenda_item, request)">
-	                                <div tal:content="agenda_item.get_field_value('title')">Agenda item title</div>
-									<div class="ai_info">
-		                                <span class="proposals cinfo"
-		                                      tal:define="unread_count api.search_catalog(agenda_item, content_type='Proposal', unread=api.userid)[0]">
-											<span class="total"
-											      tal:content="api.search_catalog(agenda_item, content_type='Proposal')[0]">0</span>
-		                                    <span class="unread" tal:condition="unread_count" tal:content="string:($unread_count)">(2)</span>
-										</span>
-		                                <span class="discussions cinfo"
-										      tal:define="unread_count api.search_catalog(agenda_item, content_type='DiscussionPost', unread=api.userid)[0]">
-											<span class="total"
-											      tal:content="api.search_catalog(agenda_item, content_type='DiscussionPost')[0]">0</span>
-										    <span class="unread" tal:condition="unread_count" tal:content="string:($unread_count)">(2)</span>
-										</span>
-									</div>
-									<div class="clear"><!-- --></div>
-	                            </a>
-							</div>
-                        </li>
-                    </tal:iterate>
-					<li tal:condition="not agenda_items">
-						<span i18n:translate="">(Nothing)</span>
-					</li>
-                    </ul>
-					
-	            </tal:agenda_items>
+	                <tal:agenda_items define="agenda_items api.get_restricted_content(api.meeting, content_type='AgendaItem', states=section);">
+	                        ${nav_section(agenda_items)}
+		            </tal:agenda_items>
 				</tal:open_section>
-				
 				<tal:closed_section condition="is_closed">
                     <div class="minimizable_inverted" i18n:translate="">(hidden, click above to open)</div>
 				</tal:closed_section>
-				
             </div>
-
 		    </tal:section>
         </tal:iterate>
     </tal:inside_meeting>
