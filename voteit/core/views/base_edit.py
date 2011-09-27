@@ -73,7 +73,9 @@ class BaseEdit(object):
             name = self.generate_slug(obj.title)
             self.context[name] = obj
             
-            self.api.flash_messages.add(_(u"Successfully added"))
+            #Only show message if new object isn't discussion or proposal
+            if content_type not in ('DiscussionPost', 'Proposal',):
+                self.api.flash_messages.add(_(u"Successfully added"))
 
             url = resource_url(obj, self.request)
             return HTTPFound(location=url)
