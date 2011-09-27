@@ -13,7 +13,7 @@
      class="load_more">
 	<a tal:attributes="href api.resource_url(context, request) + '#discussions'"
 	   i18n:translate="">
-	   	Only show the last 5 posts
+	   	Show the last 5 posts
     </a>
 </div>
 

@@ -461,8 +461,8 @@ msgstr "Pågående"
 
 #: ./views/templates/discussions.pt:14
 #. Default: "Only show the last 5 posts"
-msgid "Only show the last 5 posts"
-msgstr "Visa bara 5 senaste posterna"
+msgid "Show the last 5 posts"
+msgstr "Visa 5 senaste inlägg"
 
 #. Default: "Open"
 msgid "Open"
