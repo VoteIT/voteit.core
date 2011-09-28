@@ -42,10 +42,10 @@ class RecaptchaWidget(CheckedInputWidget):
             raise Invalid(field.schema, 'No input')
         if not challenge:
             raise Invalid(field.schema, 'Missing challenge')
-        privatekey = get_settings()['captcha_private_key']
         request = get_current_request()
+        captcha_private_key = request.registry.settings['captcha_private_key']
         remoteip = request.remote_addr
-        data = urlencode(dict(privatekey=privatekey,
+        data = urlencode(dict(privatekey=captcha_private_key,
                               remoteip=remoteip,
                               challenge=challenge,
                               response=response))
