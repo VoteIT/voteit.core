@@ -39,12 +39,14 @@ p {
 }
 #page_wrapper {
     background: url(images/bubble_big.png) no-repeat -160px 60px;
+	width: 100%;
+	display: block;
+	min-height: 100%;
 }
 #main_window {
 	line-height: 1.5em;
 }
 
-/* positioning */
 #leftcol-wrapper,
 #rightcol-wrapper {
     float: left;
@@ -58,16 +60,9 @@ p {
 #rightcol-wrapper {
     overflow:hidden;
 }
-#page_wrapper {
-	float: left;
-	width: 100%;
-	display: block;
-	position: relative;
-	min-width: 100%;
-	min-height: 100%;
-}
 #main-content-wrapper {
     position: relative;
+	min-height: 100%;
 	padding-bottom: 100px;
     background: url(images/bubble_small.png) no-repeat 98% 40px;
 }
@@ -100,6 +95,14 @@ p {
     display: block;
     overflow: hidden;
     text-align: center;
+}
+#footer-logos {
+    position: absolute;
+	height: 54px;
+	bottom: 10px;
+	left: 0px;
+	right: 0px;
+	background: url(images/logos_footer.png) no-repeat 50% 100%;
 }
 
 /* Generic classes for positioning columns */

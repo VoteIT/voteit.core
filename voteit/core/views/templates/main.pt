@@ -127,7 +127,14 @@
         
         <div class="clear"></div>
 		</div><!-- main-content-wrapper -->
-		<div id="footer">Hello</div>
+		<div id="footer">
+			<a href="http://www.voteit.se">www.voteit.se</a>
+			&mdash;
+			<a href="http://wiki.voteit.se">Wiki</a>
+			<br/>
+
+			<div id="footer-logos"></div>
+        </div>
     </div> <!-- page_wrapper -->
 
 </body>
