@@ -1,21 +1,19 @@
-import httplib2
 from urllib import urlencode
 
-import colander
+import httplib2
 from colander import null
 from colander import Invalid
-
 from deform.widget import CheckedInputWidget
 from deform.widget import RadioChoiceWidget
-
-from pyramid.settings import get_settings
 from pyramid.threadlocal import get_current_request
+
 
 class StarWidget(RadioChoiceWidget):
     #FIXME: the resources for this widget is now hardcoded into main.pt, they should be added through deform resource manager
     #requirements = ( ('jquery.rating', None), )
     template = 'star_choice'
     readonly_template = 'readonly/star_choice'
+
 
 class RecaptchaWidget(CheckedInputWidget):
     template = 'captcha'
@@ -29,8 +27,10 @@ class RecaptchaWidget(CheckedInputWidget):
             cstruct = ''
         confirm = getattr(field, 'confirm', '')
         template = readonly and self.readonly_template or self.template
+        request = get_current_request()
+        captcha_public_key = request.registry.settings['captcha_public_key']
         return field.renderer(template, field=field, cstruct=cstruct,
-                              public_key=get_settings()['captcha_public_key'],
+                              public_key=captcha_public_key,
                               )
 
     def deserialize(self, field, pstruct):
@@ -58,7 +58,7 @@ class RecaptchaWidget(CheckedInputWidget):
         except AttributeError as e:
             if e=="'NoneType' object has no attribute 'makefile'":
                 ## XXX: catch a possible httplib regression in 2.7 where
-                ## XXX: there is no connextion made to the socker so
+                ## XXX: there is no connection made to the socker so
                 ## XXX sock is still None when makefile is called.
                 raise Invalid(field.schema,
                               "Could not connect to the captcha service.")

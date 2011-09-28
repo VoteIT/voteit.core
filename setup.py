@@ -25,6 +25,7 @@ requires = [
     'webhelpers',
     'repoze.catalog',
     'lingua',
+    'httplib2',
     ]
 
 setup(name='voteit.core',
