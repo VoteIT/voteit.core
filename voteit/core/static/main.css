@@ -41,7 +41,6 @@ p {
     background: url(images/bubble_big.png) no-repeat -160px 60px;
 }
 #main_window {
-    background: #fff url(images/bubble_big.png) no-repeat 80% 50px;
 	line-height: 1.5em;
 }
 
@@ -70,6 +69,7 @@ p {
 #main-content-wrapper {
     position: relative;
 	padding-bottom: 100px;
+    background: url(images/bubble_small.png) no-repeat 98% 40px;
 }
 #navigation {
 	position: relative;
