@@ -283,7 +283,7 @@ def construct_schema(context=None, request=None, **kwargs):
         description = colander.SchemaNode(colander.String(),
                                           title = _(u"Description"),
                                           missing=u"",
-                                          description = _(u"Explain your choice of poll method and who you plan the different polls in the agenda item."),
+                                          description = _(u"Explain your choice of poll method and your plan for the different polls in the agenda item."),
                                           widget=deform.widget.RichTextWidget(),)
 
         poll_plugin = colander.SchemaNode(colander.String(),
