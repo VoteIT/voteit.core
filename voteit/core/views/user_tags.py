@@ -55,6 +55,8 @@ class UserTagsView(object):
             return Response(self.get_user_tag(request.context, tag, display_name, expl_display_name))
 
     def get_user_tag(self, context, tag, display_name, expl_display_name):
+        from voteit.core.views.api import APIView
+        api = APIView(context, self.request)
         user_tags = self.request.registry.getAdapter(context, IUserTags)
         userids = list(user_tags.userids_for_tag(tag))
         
@@ -63,6 +65,7 @@ class UserTagsView(object):
         response['toggle_url'] = "%s_set_user_tag" % resource_url(context, self.request)
         response['tag'] = tag
         response['display_name'] = display_name
+        response['get_userinfo_url'] = api.get_userinfo_url
         
         if self.userid and self.userid in userids:
             #Note: It's not possible to have nested translation strings. Hence this
