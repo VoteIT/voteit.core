@@ -86,11 +86,11 @@ msgstr "1 minut sedan"
 #: ./models/user.py:293
 #: ./views/templates/snippets/userinfo.pt:15
 msgid "About me"
-msgstr ""
+msgstr "Information om mig"
 
 #: ./views/templates/moderator_actions.pt:6
 msgid "Actions here"
-msgstr ""
+msgstr "Funktioner här"
 
 #. Default: "Add"
 #: ./models/schemas.py:9
@@ -139,7 +139,7 @@ msgstr "Är du säker på att du vill radera detta objekt?"
 
 #: ./views/templates/participants.pt:27
 msgid "Attend"
-msgstr ""
+msgstr "Förslagsrätt"
 
 #: ./models/agenda_item.py:115
 msgid "Avoid a title with more than 20 characters"
@@ -174,11 +174,11 @@ msgstr "Ändra lösenord"
 
 #: ./views/templates/user.pt:16
 msgid "Change settings"
-msgstr ""
+msgstr "Ändra profil"
 
 #: ./views/templates/moderator_actions.pt:46
 msgid "Change workflow state"
-msgstr ""
+msgstr "Ändra tillstånd"
 
 #: ./models/invite_ticket.py:127
 msgid "Check this field - token doesn't match"
@@ -207,7 +207,7 @@ msgstr "Kan inte hitta någon inbjudan för denna epostadress."
 
 #: ./views/templates/snippets/userinfo.pt:20
 msgid "Couldn't find any user with userid ${userid}"
-msgstr ""
+msgstr "Kudne inte hitta någon användare med användarID ${userid}"
 
 #: ./models/invite_ticket.py:166
 #: ./views/meeting.py:253
@@ -249,7 +249,7 @@ msgstr "Beskrivning"
 
 #: ./plugins/majority_poll.py:19
 msgid "Description of majority poll"
-msgstr "Beskrivning av majoritetsomröstning"
+msgstr "Rösta på ett av flera alternativ. När omröstningen avslutas utses det yrkande som fått egen majoritet av de avgivna rösterna som vinnande"
 
 #. Default: "Discussion"
 #: ./views/templates/agenda_item.pt:25
@@ -437,7 +437,7 @@ msgstr "Mötestillgång"
 
 #: ./views/templates/meeting_actions.pt:49
 msgid "Meeting actions log"
-msgstr ""
+msgstr "Möteslogg"
 
 #. Default: "Meetings"
 #: ./views/templates/meeting_actions.pt:58
@@ -452,7 +452,7 @@ msgstr "Meddelande"
 
 #: ./views/templates/participants.pt:29
 msgid "Moderate"
-msgstr ""
+msgstr "Moderera"
 
 #: ./security.py:57
 msgid "Moderator"
@@ -553,7 +553,7 @@ msgstr "Inställningar för omröstning"
 
 #: ./views/templates/meeting_actions.pt:9
 msgid "Polls"
-msgstr ""
+msgstr "Omröstningar"
 
 #. Default: "Private"
 #: ./workflows/agenda_item.xml
@@ -648,7 +648,7 @@ msgstr "Välj logg ovan"
 
 #: ./views/templates/navigation.pt:21
 msgid "Select a meeting below"
-msgstr ""
+msgstr "Välj ett möte nedan"
 
 #: ./views/meeting.py:197
 msgid "Send meeting invitations"
@@ -729,7 +729,7 @@ msgstr "Förljande adress(er) är ogiltiga: ${emails}"
 
 #: ./validators.py:76
 msgid "The following userids is invalid: ${userids}"
-msgstr ""
+msgstr "Följande användarIDn är ogiltiga: ${userids}"
 
 #. Default: "The time that the server think it is. If this is wrong, you need to change the server time."
 #: ./views/templates/global_actions.pt:5
@@ -752,11 +752,11 @@ msgstr "Detta är din röst"
 
 #: ./views/templates/main.pt:86
 msgid "This meeting has closed."
-msgstr ""
+msgstr "Detta möte är stängt och kan inte ändras."
 
 #: ./views/templates/main.pt:83
 msgid "This meeting hasn't started yet."
-msgstr ""
+msgstr "Detta möte har inte startats ännu."
 
 #. Default: "This will happen"
 #: ./views/templates/meeting.pt:57
@@ -826,7 +826,7 @@ msgstr "Användare"
 
 #: ./models/meeting.py:124
 msgid "Verify you are human"
-msgstr ""
+msgstr "Visa att du är en människa"
 
 #: ./security.py:60
 msgid "View only"
@@ -834,7 +834,7 @@ msgstr "Endast se"
 
 #: ./views/templates/participants.pt:26
 msgid "Viewer"
-msgstr ""
+msgstr "Närvarorätt"
 
 #: ./models/vote.py:29
 msgid "Vote"
@@ -884,7 +884,7 @@ msgstr "Du"
 
 #: ./models/user.py:160
 msgid "You have been mentioned in VoteIT"
-msgstr ""
+msgstr "Du har blivit nämnd i VoteIT"
 
 #: ./models/poll.py:313
 msgid "You need to close it yourself."
@@ -966,7 +966,7 @@ msgstr "Yrkande '${name}' är redan i tillståndet ${state}"
 
 #: ./views/templates/moderator_actions.pt:52
 msgid "current"
-msgstr ""
+msgstr "aktuell"
 
 #. Default: "Deleting ${count_emails} invites"
 #: ./views/meeting.py:239
@@ -991,7 +991,7 @@ msgstr "För att få tillgång till mötet så behöver du använda länken i en
 #. Default: "This is to prevent spambots from creating meetings"
 #: ./models/meeting.py:125
 msgid "meeting_captcha_description"
-msgstr ""
+msgstr "Detta finns för att förhindra spambottar från att skapa möten"
 
 #. Default: "The description is visible on the first page of the meeting. You can include things like information about the meeting, how to contact the moderator and your logo."
 #: ./models/meeting.py:110
@@ -1006,7 +1006,7 @@ msgstr "Ange en titel för mötet som särskiljer det från föreningens andra m
 #. Default: "You have been mentioned in ${meeting} on ${agenda_item}. Click the following link to go there, ${link}."
 #: ./models/user.py:156
 msgid "mentioned_notification"
-msgstr ""
+msgstr "Du har nämnts i mötet ${meeting} under punkten ${agenda_item}. Klicka på följande länk för att gå dit: ${link}."
 
 #. Default: "more"
 #: ./views/templates/snippets/user_tag.pt:27
@@ -1094,7 +1094,7 @@ msgstr "titel"
 #. Default: "Please note that anything you type here will be visible to all users in the same meeting as you."
 #: ./models/user.py:294
 msgid "user_about_me_description"
-msgstr ""
+msgstr "Vänligen notera att allting du skriver här blir synligt för alla användare som är deltagare i samma möte som du."
 
 #. regular latin chars, numbers, minus and underscore.
 #. Default: "UserID must be 3-15 chars, start with a-zA-Z and only contain regular latin chars, numbers, minus and underscore."
