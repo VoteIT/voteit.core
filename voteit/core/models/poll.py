@@ -283,22 +283,21 @@ def construct_schema(context=None, request=None, **kwargs):
         description = colander.SchemaNode(colander.String(),
                                           title = _(u"Description"),
                                           missing=u"",
-                                          description = _(u"Explain your choice of poll method and your plan for the different polls in the agenda item."),
+                                          description = _(u"poll_description_description",
+                                                          default=u"Explain your choice of poll method and your plan for the different polls in the agenda item."),
                                           widget=deform.widget.RichTextWidget(),)
 
         poll_plugin = colander.SchemaNode(colander.String(),
                                           title = _(u"Poll method to use"),
-                                          description = _(u"Read in the help wiki about pros and cons of different polling methods."),
-                                          #description = _(u"poll_method_description",
-                                          #                default=u"Each poll method should contain information about what it does."),
+                                          description = _(u"poll_poll_plugin_description",
+                                                          default=u"Read in the help wiki about pros and cons of different polling methods."),
                                           widget=deform.widget.SelectWidget(values=plugin_choices),)
                                           
         proposals = colander.SchemaNode(deform.Set(allow_empty=True), 
                                         name="proposals",
                                         title = _(u"Proposals"),
-                                        description = _(u"Only proposals in the state 'published' can be selected"),
-                                        #description = _(u"poll_select_proposals_description",
-                                        #                default=u"Only proposals in the state 'published' can be selected here."),
+                                        description = _(u"poll_proposals_description",
+                                                        default=u"Only proposals in the state 'published' can be selected"),
                                         missing=set(),
                                         widget=deform.widget.CheckboxChoiceWidget(values=proposal_choices),)
 

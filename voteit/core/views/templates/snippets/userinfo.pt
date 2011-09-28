@@ -11,9 +11,9 @@
     	<h6><span i18n:translate="">Email</span>:</h6>
         <p>
 		<span tal:content="user.get_field_value('email')"></span>
-		</p>
-	    	<h6><span i18n:translate="">About me</span>:</h6>
-			<div tal:content="structure user.get_field_value('about_me')"></div>
+		
+    	<h6><span i18n:translate="">About me</span>:</h6>
+		<div tal:content="structure user.get_field_value('about_me')"></div>
 	</tal:user_visible>
 
 	<tal:user_not_found condition="user is None">

@@ -145,6 +145,26 @@ msgstr ""
 msgid "Avoid a title with more than 20 characters"
 msgstr ""
 
+#: ./views/templates/navigation.pt:18
+#. Default: "Available meetings"
+msgid "Available meetings"
+msgstr "Tillgängliga möten"
+
+#: ./views/templates/user.pt:17
+#. Default: "Biography"
+msgid "Biography"
+msgstr "Biografi"
+
+#: ./views/templates/participants.pt:26
+#. Default: "Can participate?"
+msgid "Can participate?"
+msgstr "Närvarorätt"
+
+#: ./views/templates/participants.pt:27
+#. Default: "Can vote?"
+msgid "Can vote?"
+msgstr "Rösträtt"
+
 #: ./models/schemas.py:10
 msgid "Cancel"
 msgstr "Avbryt"
@@ -222,7 +242,7 @@ msgstr "Nuvarande logg"
 #. Default: "Currently open"
 #: ./views/templates/poll_state_info.pt:16
 msgid "Currently open"
-msgstr "Öppen nu"
+msgstr "Öppen"
 
 #. Default: "Delete"
 #: ./models/schemas.py:12
@@ -467,13 +487,20 @@ msgstr "Moderator"
 msgid "Moderator menu"
 msgstr "Moderatorsmeny"
 
-#: ./views/templates/meeting_actions.pt:58
-msgid "My meetings"
-msgstr ""
+#: ./views/templates/participants.pt:28
+#. Default: "Moderator?"
+msgid "Moderator?"
+msgstr "Moderator?"
 
-#: ./views/templates/meeting_actions.pt:9
+#: ./views/templates/meeting_actions.pt:45
+#. Default: "My meetings"
+msgid "My meetings"
+msgstr "Möten"
+
+#: ./views/templates/meeting_actions.pt:8
+#. Default: "My polls"
 msgid "My polls"
-msgstr ""
+msgstr "Omröstningar"
 
 #: ./models/meeting.py:113
 msgid "Name visible on system mail sent from this meeting"
@@ -513,6 +540,11 @@ msgstr "Pågående"
 #: ./models/poll.py:299
 msgid "Only proposals in the state 'published' can be selected"
 msgstr ""
+
+#: ./views/templates/discussions.pt:14
+#. Default: "Only show the last 5 posts"
+msgid "Only show the last 5 posts"
+msgstr "Visa bara 5 senaste inläggen"
 
 #. Default: "Open"
 #: ./workflows/invite_ticket.xml
