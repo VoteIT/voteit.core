@@ -1,0 +1,16 @@
+<input type="hidden" name="__start__" value="${field.name}:mapping"/>
+    <script type="text/javascript"
+       src="http://www.google.com/recaptcha/api/challenge?k=${public_key}">
+    </script>
+    <noscript>
+      <iframe src="http://www.google.com/recaptcha/api/noscript?k=${public_key}"
+	      height="300" width="500" frameborder="0"></iframe><br />
+      <input type="text"
+	     name="recaptcha_challenge_field"
+	     id="${field.oid}"/>
+
+      <input type="hidden"
+	     name="recaptcha_response_field"
+	     id="${field.oid}-recaptcha_response_field"/>
+    </noscript>
+<input type="hidden" name="__end__" value="${field.name}:mapping"/>
