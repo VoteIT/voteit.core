@@ -6,7 +6,7 @@
 
         <li class="tab dropdown_menu">
             <a href="#" class="menu_header">
-                <span class="large-icon polls-dark" i18n:translate="">My polls</span> &raquo;
+                <span class="large-icon polls-dark" i18n:translate="">Polls</span> &raquo;
             </a>
             <ul class="menu_body">
                 <tal:section repeat="section sections">
@@ -55,7 +55,7 @@
     
     <tal:meeting_menu condition="meetings|False">
         <li class="tab dropdown_menu">
-            <a href="#" class="menu_header"><span i18n:translate="">My meetings</span> &raquo;</a>
+            <a href="#" class="menu_header"><span i18n:translate="">Meetings</span> &raquo;</a>
             <ul class="menu_body">
                 <tal:iterate repeat="meeting meetings">
                     <li>
