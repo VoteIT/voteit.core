@@ -125,7 +125,7 @@ class DateTimeUtil(object):
             if second_diff < 3600:
                 return _("${diff} minutes ago", mapping={'diff': str(second_diff / 60)})
             if second_diff < 7200:
-                return "1 hour ago"
+                return _("1 hour ago")
             if second_diff < 86400:
                 return _("${diff} hours ago", mapping={'diff': str(second_diff / 3600)})
 

@@ -8,8 +8,8 @@
 	        <span>(${user.userid})</span>
 		</h4>
 
-        <p>
     	<h6><span i18n:translate="">Email</span>:</h6>
+        <p>
 		<span tal:content="user.get_field_value('email')"></span>
 		</p>
 	    	<h6><span i18n:translate="">About me</span>:</h6>
