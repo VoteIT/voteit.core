@@ -94,8 +94,10 @@ class Meeting(BaseContent, WorkflowAware):
         ticket.send(request)
 
 
-def construct_schema(**kwargs):
+def construct_schema(context=None, request=None, **kwargs):
     type = kwargs.get('type', None)
+    assert request
+    assert context
     
     #Default schema
     class MeetingSchema(colander.MappingSchema):
@@ -119,13 +121,15 @@ def construct_schema(**kwargs):
                                                 default = u"noreply@somehost.voteit",
                                                 validator = colander.All(colander.Email(msg = _(u"Invalid email address.")), html_string_validator,),)
         if type == 'add':
-            captcha = colander.SchemaNode(colander.String(),
-                                          #FIXME: write a good title and description here
-                                          title=_(u"Verify you are human"),
-                                          description = _(u"meeting_captcha_description",
-                                                          default=u"This is to prevent spambots from creating meetings"),
-                                          missing=u"",
-                                          widget=RecaptchaWidget(),)
+            settings = request.registry.settings
+            if settings.get('captcha_public_key', None) and settings.get('captcha_private_key', None):
+                captcha = colander.SchemaNode(colander.String(),
+                                              #FIXME: write a good title and description here
+                                              title=_(u"Verify you are human"),
+                                              description = _(u"meeting_captcha_description",
+                                                              default=u"This is to prevent spambots from creating meetings"),
+                                              missing=u"",
+                                              widget=RecaptchaWidget(),)
 
     return MeetingSchema()
 
