@@ -132,13 +132,13 @@ msgstr "Biografi"
 
 #: ./views/templates/participants.pt:26
 #. Default: "Can participate?"
-msgid "Can participate?"
-msgstr "Kan delta?"
+msgid "Participator"
+msgstr "Närvarorätt"
 
 #: ./views/templates/participants.pt:27
 #. Default: "Can vote?"
-msgid "Can vote?"
-msgstr "Kan rösta?"
+msgid "Voter"
+msgstr "Rösträtt"
 
 #: ./models/schemas.py:10
 msgid "Cancel"
@@ -220,7 +220,7 @@ msgstr "Beskrivning"
 
 #: ./plugins/majority_poll.py:19
 msgid "Description of majority poll"
-msgstr ""
+msgstr "Beskrivning av majoritetsomröstning"
 
 #: ./views/templates/agenda_item.pt:22
 #. Default: "Discussion"
@@ -419,14 +419,14 @@ msgid "Moderator?"
 msgstr "Moderator?"
 
 #: ./views/templates/meeting_actions.pt:45
-#. Default: "My meetings"
-msgid "My meetings"
-msgstr "Mina möten"
+#. Default: "Meetings"
+msgid "Meetings"
+msgstr "Möten"
 
 #: ./views/templates/meeting_actions.pt:8
-#. Default: "My polls"
-msgid "My polls"
-msgstr "Mina omröstningar"
+#. Default: "Polls"
+msgid "Polls"
+msgstr "Omröstningar"
 
 #: ./models/meeting.py:109
 msgid "Name visible on system mail sent from this meeting"
@@ -647,11 +647,11 @@ msgstr "Tillstånd"
 
 #: ./views/base_edit.py:76
 msgid "Successfully added"
-msgstr "Tillagd"
+msgstr "Tillagt"
 
 #: ./views/base_edit.py:122
 msgid "Successfully updated"
-msgstr "Uppdaterat"
+msgstr "Uppdaterad"
 
 #: ./models/agenda_item.py:125
 msgid "Summary of this item."
@@ -900,7 +900,7 @@ msgstr "gillar detta"
 #. should have been mailed to you. If you've aldready registered, please login.
 #. Default: "To gain access to a meeting you need to use an access ticket that should have been mailed to you. If you've aldready registered, please login."
 msgid "login_to_access_meeting_notice"
-msgstr "För att få tillgång till mötet så behöver du använda en inbjudan som borde ha mailats till dig. Om du redan finns registrerad, vänligen logga in."
+msgstr "För att få tillgång till mötet så behöver du använda länken i en inbjudan som borde ha mailats till dig. Om du redan finns registrerad, vänligen logga in."
 
 #: ./views/templates/snippets/user_tag.pt:25
 #. Default: "more"
@@ -921,7 +921,7 @@ msgstr "Omröstningen stängd. Yrkanden kan ha justerats som bifallna eller avsl
 #: ./models/poll.py:345
 #. Default: "${count} selected proposals were set in the 'locked for vote' state. They can no longer be edited or retracted by normal users."
 msgid "poll_closed_proposals_locked_notice"
-msgstr "${count} valda yrkanden har satts i tillståndet 'låst för omröstning'. De kan inte längre ändras eller dras tillbaka av normala användare."
+msgstr "De ${count} yrkanden som ingår i omröstningen har satts i tillståndet 'låst för omröstning'. De kan inte längre ändras eller dras tillbaka av icke moderatorer."
 
 #: ./models/poll.py:290
 #. Default: "Each poll method should contain information about what it does."
@@ -936,12 +936,12 @@ msgstr "Bara yrkanden i tillståndet 'Publicerad' kan väljas här."
 #: ./models/poll.py:340
 #. Default: "Setting poll in upcoming state. It's now visible for meeting participants."
 msgid "poll_upcoming_state_notice"
-msgstr "Sätter omröstning i tillståndet kommande. Den är nu synlig för mötesdeltagare."
+msgstr "Omröstning är nu i tillståndet 'kommande'. Den är nu synlig för mötesdeltagare."
 
 #: ./views/templates/user.pt:20
 #. Default: "The image above comes from the <a href=\"http://www.gravatar.com\" target=\"_blank\">Gravatar network</a>. It's taken from your current email address. If you want to change the picture, simply go to the Gravatar site and change your picture for the email you use in VoteIT."
 msgid "profile_gravatar_explanation"
-msgstr "Bilden ovan kommer från <a href=\"http://www.gravatar.com\" target=\"_blank\">Gravatar</a>. Den är tagen från din epostadress. Om du vill ändra bild, gå till Gravatar och ändra bild för den epostadress du använder i VoteIT."
+msgstr "Bilden ovan kommer från <a href=\"http://www.gravatar.com\" target=\"_blank\">Gravatar</a>. Den är hämtad från din epostadress. Om du vill ändra bild, gå till Gravatar och ändra bild för den epostadress du använder i VoteIT."
 
 #: ./models/poll.py:192
 #. do this manually.
@@ -987,13 +987,13 @@ msgstr "AnvändarID måste vara 3-15 tecken, starta med a-zA-Z och bara innehål
 
 #: ./models/user.py:219
 #. later.
-#. Default: "Used like a nick-name and as a unique id. You can't change this later."
+#. Default: "Used like a nick-name, with @-links and as a unique id. You can't change this later."
 msgid "userid_description"
-msgstr "Används som smeknamn och som unikt ID. Du kan inte ändra detta senare."
+msgstr "Används som smeknamn, vid @-länkar och som unikt ID. Du kan inte ändra detta senare."
 
 #: ./models/vote.py:34
 #. it if you wish.
 #. Default: "This is your vote. While the poll is open, you can delete or change it if you wish."
 msgid "your_vote_description"
-msgstr "Detta är din röst. Medan omröstningen är öppen så kan du radera eller ändra den."
+msgstr "Detta är din röst. Medan omröstningen är öppen kan du radera eller ändra den."
 

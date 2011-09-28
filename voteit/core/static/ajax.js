@@ -160,5 +160,13 @@ $(document).ready(function() {
             },
         });
     });
-})
+});
 
+/* descriptions */
+$(document).ready(function() {
+    $('label.desc').each(function() {
+        var desc = $(this).attr('title');
+        if(desc != '')
+            $(this).after('<p>'+desc+'</p>');
+    });
+});
