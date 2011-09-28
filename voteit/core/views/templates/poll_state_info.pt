@@ -21,7 +21,6 @@
 	</tal:ongoing>
 	<tal:closed condition="wf_state == 'closed'">
 	    <span i18n:translate="">Poll closed</span>
-	    <!-- FIXME: Display winning proposals here? -->
 	</tal:closed>
 </div>
 

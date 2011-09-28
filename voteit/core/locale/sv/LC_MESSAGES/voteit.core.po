@@ -199,7 +199,7 @@ msgstr "Nuvarande logg"
 #: ./views/templates/poll_state_info.pt:16
 #. Default: "Currently open"
 msgid "Currently open"
-msgstr "Nu öppna"
+msgstr "Öppen nu"
 
 #: ./views/templates/discussions.pt:38
 #. Default: "Delete"
