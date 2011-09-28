@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2011-09-28 11:50+0000\n"
+"POT-Creation-Date: 2011-09-28 15:53+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -222,7 +222,7 @@ msgid "Denied"
 msgstr ""
 
 #: ./models/agenda_item.py:120
-#: ./models/meeting.py:108
+#: ./models/meeting.py:109
 #: ./models/poll.py:284
 msgid "Description"
 msgstr ""
@@ -263,7 +263,7 @@ msgstr ""
 msgid "Email"
 msgstr ""
 
-#: ./models/meeting.py:116
+#: ./models/meeting.py:118
 msgid "Email address to send from"
 msgstr ""
 
@@ -283,7 +283,7 @@ msgstr ""
 msgid "Email sent."
 msgstr ""
 
-#: ./models/poll.py:313
+#: ./models/poll.py:312
 msgid "End time of this poll."
 msgstr ""
 
@@ -293,10 +293,6 @@ msgstr ""
 
 #: ./views/templates/poll_state_info.pt:8
 msgid "Expected start time ${start_time}"
-msgstr ""
-
-#: ./models/poll.py:286
-msgid "Explain your choice of poll method and your plan for the different polls in the agenda item."
 msgstr ""
 
 #: ./models/user.py:220
@@ -333,7 +329,7 @@ msgid "I propose:"
 msgstr ""
 
 #: ./models/invite_ticket.py:110
-#: ./models/meeting.py:118
+#: ./models/meeting.py:120
 #: ./models/user.py:196
 msgid "Invalid email address."
 msgstr ""
@@ -406,6 +402,7 @@ msgstr ""
 msgid "Meeting actions log"
 msgstr ""
 
+#: ./views/templates/meeting_actions.pt:58
 #: ./views/templates/navigation.pt:21
 msgid "Meetings"
 msgstr ""
@@ -427,15 +424,7 @@ msgstr ""
 msgid "Moderator menu"
 msgstr ""
 
-#: ./views/templates/meeting_actions.pt:58
-msgid "My meetings"
-msgstr ""
-
-#: ./views/templates/meeting_actions.pt:9
-msgid "My polls"
-msgstr ""
-
-#: ./models/meeting.py:113
+#: ./models/meeting.py:115
 msgid "Name visible on system mail sent from this meeting"
 msgstr ""
 
@@ -466,10 +455,6 @@ msgstr ""
 msgid "Ongoing"
 msgstr ""
 
-#: ./models/poll.py:299
-msgid "Only proposals in the state 'published' can be selected"
-msgstr ""
-
 #: ./workflows/invite_ticket.xml
 msgid "Open"
 msgstr ""
@@ -494,14 +479,6 @@ msgstr ""
 msgid "Password set. You may login now."
 msgstr ""
 
-#: ./models/agenda_item.py:121
-msgid "Place the the agenda item background information here. You can put links to external documents and memos. An image makes it easier for the participants to remember where that are in the meeting."
-msgstr ""
-
-#: ./models/user.py:294
-msgid "Please note that anything you type here will be visible to all users in the same meeting as you."
-msgstr ""
-
 #: ./models/poll.py:65
 #: ./views/templates/agenda_item.pt:18
 #: ./views/templates/macros/meeting_overview_section.pt:38
@@ -516,12 +493,16 @@ msgstr ""
 msgid "Poll method"
 msgstr ""
 
-#: ./models/poll.py:290
+#: ./models/poll.py:291
 msgid "Poll method to use"
 msgstr ""
 
 #: ./views/templates/moderator_actions.pt:41
 msgid "Poll settings"
+msgstr ""
+
+#: ./views/templates/meeting_actions.pt:9
+msgid "Polls"
 msgstr ""
 
 #: ./workflows/agenda_item.xml
@@ -540,10 +521,6 @@ msgstr ""
 
 #: ./workflows/proposal.xml
 msgid "Published"
-msgstr ""
-
-#: ./models/poll.py:291
-msgid "Read in the help wiki about pros and cons of different polling methods."
 msgstr ""
 
 #: ./models/schemas.py:14
@@ -619,10 +596,6 @@ msgstr ""
 msgid "Server logs"
 msgstr ""
 
-#: ./models/meeting.py:104
-msgid "Set a title for the meeting that separates it from previous meetings"
-msgstr ""
-
 #: ./views/templates/macros/meeting_overview_section.pt:19
 msgid "Show ${count} hidden"
 msgstr ""
@@ -647,7 +620,7 @@ msgstr ""
 msgid "Site root"
 msgstr ""
 
-#: ./models/poll.py:307
+#: ./models/poll.py:306
 msgid "Start time of this poll."
 msgstr ""
 
@@ -661,7 +634,7 @@ msgstr ""
 msgid "Successfully updated"
 msgstr ""
 
-#: ./models/agenda_item.py:127
+#: ./models/agenda_item.py:128
 msgid "Summary of this item."
 msgstr ""
 
@@ -679,10 +652,6 @@ msgstr ""
 
 #: ./models/invite_ticket.py:113
 msgid "The access token your received in your email."
-msgstr ""
-
-#: ./models/meeting.py:109
-msgid "The description greets the participants each time they enter the meeting. You can include things like information about the meeting, how to contact the moderator and your logo."
 msgstr ""
 
 #: ./validators.py:55
@@ -705,14 +674,6 @@ msgstr ""
 msgid "This is happening now"
 msgstr ""
 
-#: ./models/agenda_item.py:139
-msgid "This is information to the participants on when the agenda item is planned to start. It will not happen by itself, you will have to change the status of the agenda item on it's gears icon."
-msgstr ""
-
-#: ./models/meeting.py:123
-msgid "This is to prevent spambots creating meetings"
-msgstr ""
-
 #: ./views/vote.py:186
 msgid "This is your vote"
 msgstr ""
@@ -723,10 +684,6 @@ msgstr ""
 
 #: ./views/templates/main.pt:83
 msgid "This meeting hasn't started yet."
-msgstr ""
-
-#: ./models/agenda_item.py:128
-msgid "This summary shows up to the right on the first page. Write a short summary on what is going on or what has been decided. This should be updated as the meeting progresses."
 msgstr ""
 
 #: ./views/templates/meeting.pt:57
@@ -788,7 +745,7 @@ msgstr ""
 msgid "Users"
 msgstr ""
 
-#: ./models/meeting.py:122
+#: ./models/meeting.py:124
 msgid "Verify you are human"
 msgstr ""
 
@@ -809,7 +766,7 @@ msgid "Vote for one"
 msgstr ""
 
 #: ./bootstrap.py:27
-#: ./models/meeting.py:114
+#: ./models/meeting.py:116
 msgid "VoteIT"
 msgstr ""
 
@@ -846,11 +803,11 @@ msgstr ""
 msgid "You have been mentioned in VoteIT"
 msgstr ""
 
-#: ./models/poll.py:314
+#: ./models/poll.py:313
 msgid "You need to close it yourself."
 msgstr ""
 
-#: ./models/poll.py:308
+#: ./models/poll.py:307
 msgid "You need to open it yourself."
 msgstr ""
 
@@ -880,8 +837,23 @@ msgstr ""
 msgid "add_vote_button"
 msgstr ""
 
+#. Default: "Place the the agenda item background information here. You can link to external documents and memos. It's also a good idea to add an image, it will make it easier for participants to quickly see which page they're on."
+#: ./models/agenda_item.py:121
+msgid "agenda_item_description_description"
+msgstr ""
+
+#. Default: "This is information to the participants on when the agenda item is planned to start. It will not happen by itself, you will have to change the status of the agenda item on it's gears icon."
+#: ./models/agenda_item.py:141
+msgid "agenda_item_start_time_description"
+msgstr ""
+
+#. Default: "This summary shows up to the right on the meetings first page. Write a short summary on what is going on or what has been decided. This should be updated as the meeting progresses."
+#: ./models/agenda_item.py:129
+msgid "agenda_item_summary_description"
+msgstr ""
+
 #. Default: "Estimated start time of this Agenda Item."
-#: ./models/agenda_item.py:137
+#: ./models/agenda_item.py:139
 msgid "ai_start_time_title"
 msgstr ""
 
@@ -927,6 +899,21 @@ msgstr ""
 msgid "login_to_access_meeting_notice"
 msgstr ""
 
+#. Default: "This is to prevent spambots from creating meetings"
+#: ./models/meeting.py:125
+msgid "meeting_captcha_description"
+msgstr ""
+
+#. Default: "The description is visible on the first page of the meeting. You can include things like information about the meeting, how to contact the moderator and your logo."
+#: ./models/meeting.py:110
+msgid "meeting_description_description"
+msgstr ""
+
+#. Default: "Set a title for the meeting that separates it from previous meetings"
+#: ./models/meeting.py:104
+msgid "meeting_title_description"
+msgstr ""
+
 #. Default: "You have been mentioned in ${meeting} on ${agenda_item}. Click the following link to go there, ${link}."
 #: ./models/user.py:156
 msgid "mentioned_notification"
@@ -947,12 +934,27 @@ msgid "poll_closed_info"
 msgstr ""
 
 #. Default: "${count} selected proposals were set in the 'locked for vote' state. They can no longer be edited or retracted by normal users."
-#: ./models/poll.py:348
+#: ./models/poll.py:347
 msgid "poll_closed_proposals_locked_notice"
 msgstr ""
 
+#. Default: "Explain your choice of poll method and your plan for the different polls in the agenda item."
+#: ./models/poll.py:286
+msgid "poll_description_description"
+msgstr ""
+
+#. Default: "Read in the help wiki about pros and cons of different polling methods."
+#: ./models/poll.py:292
+msgid "poll_poll_plugin_description"
+msgstr ""
+
+#. Default: "Only proposals in the state 'published' can be selected"
+#: ./models/poll.py:299
+msgid "poll_proposals_description"
+msgstr ""
+
 #. Default: "Setting poll in upcoming state. It's now visible for meeting participants."
-#: ./models/poll.py:343
+#: ./models/poll.py:342
 msgid "poll_upcoming_state_notice"
 msgstr ""
 
@@ -995,12 +997,17 @@ msgstr ""
 msgid "title"
 msgstr ""
 
+#. Default: "Please note that anything you type here will be visible to all users in the same meeting as you."
+#: ./models/user.py:294
+msgid "user_about_me_description"
+msgstr ""
+
 #. Default: "UserID must be 3-15 chars, start with a-zA-Z and only contain regular latin chars, numbers, minus and underscore."
 #: ./models/user.py:255
 msgid "userid_char_error"
 msgstr ""
 
-#. Default: "Used like a nick-name and as a unique id. You can't change this later."
+#. Default: "Used as a nickname, in @-links and as a unique id. You can't change this later."
 #: ./models/user.py:263
 msgid "userid_description"
 msgstr ""
