@@ -143,7 +143,7 @@ msgstr ""
 
 #: ./models/agenda_item.py:115
 msgid "Avoid a title with more than 20 characters"
-msgstr ""
+msgstr "Undvik att skriva fler än 20 tecken"
 
 #: ./models/schemas.py:10
 msgid "Cancel"
@@ -888,11 +888,11 @@ msgstr ""
 
 #: ./models/poll.py:313
 msgid "You need to close it yourself."
-msgstr "Du behöver stänga den själv."
+msgstr "Du kommer behöva stänga omröstningen själv."
 
 #: ./models/poll.py:307
 msgid "You need to open it yourself."
-msgstr "Du behöver öppna den själv."
+msgstr "Du kommer behöva öppna omröstningen själv."
 
 #. Default: "You voted in this poll. Click above to show your vote."
 #: ./views/templates/polls.pt:50
@@ -925,17 +925,17 @@ msgstr "Rösta"
 #. Default: "Place the the agenda item background information here. You can link to external documents and memos. It's also a good idea to add an image, it will make it easier for participants to quickly see which page they're on."
 #: ./models/agenda_item.py:121
 msgid "agenda_item_description_description"
-msgstr ""
+msgstr "Lägg in bakgrundsfakta om dagordningspunkten här. Länka gärna till externa dokument och underlag. En bild här gör det lättare för deltagarna att komma ihåg vilken dagordningspunkt de är inne i."
 
 #. Default: "This is information to the participants on when the agenda item is planned to start. It will not happen by itself, you will have to change the status of the agenda item on it's gears icon."
 #: ./models/agenda_item.py:141
 msgid "agenda_item_start_time_description"
-msgstr ""
+msgstr "Denna tidpunkt är information till deltagarna om när dagordningspunkten är planerad att börja behandlas. Inget kommer hända av sig själv, du kommer behöva ändra tillståndet för punkten själv med kugghjulet."
 
 #. Default: "This summary shows up to the right on the meetings first page. Write a short summary on what is going on or what has been decided. This should be updated as the meeting progresses."
 #: ./models/agenda_item.py:129
 msgid "agenda_item_summary_description"
-msgstr ""
+msgstr "Denna sammanfattning visas till höger på förstasidan. Skriv kortfattat vad som är på gång eller vad som har beslutats. Denna bör uppdateras under mötets gång."
 
 #. Default: "Estimated start time of this Agenda Item."
 #: ./models/agenda_item.py:139
@@ -996,12 +996,12 @@ msgstr ""
 #. Default: "The description is visible on the first page of the meeting. You can include things like information about the meeting, how to contact the moderator and your logo."
 #: ./models/meeting.py:110
 msgid "meeting_description_description"
-msgstr ""
+msgstr "Beskrivningen möter deltagarna varje gång de öppnar mötet. Lägg gärna in information om mötet, hur man kontaktar mötesordföranden och föreningens logga här."
 
 #. Default: "Set a title for the meeting that separates it from previous meetings"
 #: ./models/meeting.py:104
 msgid "meeting_title_description"
-msgstr ""
+msgstr "Ange en titel för mötet som särskiljer det från föreningens andra möten"
 
 #. Default: "You have been mentioned in ${meeting} on ${agenda_item}. Click the following link to go there, ${link}."
 #: ./models/user.py:156
@@ -1032,17 +1032,17 @@ msgstr "De ${count} yrkanden som ingår i omröstningen har satts i tillståndet
 #. Default: "Explain your choice of poll method and your plan for the different polls in the agenda item."
 #: ./models/poll.py:286
 msgid "poll_description_description"
-msgstr ""
+msgstr "Förklara ditt val av omröstningsmetod och hur du planerat de olika omröstningarna i dagordninspunkten."
 
 #. Default: "Read in the help wiki about pros and cons of different polling methods."
 #: ./models/poll.py:292
 msgid "poll_poll_plugin_description"
-msgstr ""
+msgstr "Läs mer i hjälpen om olika metoder och dess för- och nackdelar."
 
 #. Default: "Only proposals in the state 'published' can be selected"
 #: ./models/poll.py:299
 msgid "poll_proposals_description"
-msgstr ""
+msgstr "Endast yrkanden i tillståndet 'publicerad' kan väljas."
 
 #. Default: "Setting poll in upcoming state. It's now visible for meeting participants."
 #: ./models/poll.py:342
