@@ -260,7 +260,7 @@ def construct_schema(**kwargs):
         class AddUserSchema(colander.Schema):
             userid = colander.SchemaNode(colander.String(),
                                          title = _(u"UserID"),
-                                         description = _('userid_description', default=u"Used like a nick-name and as a unique id. You can't change this later."),
+                                         description = _('userid_description', default=u"Used as a nickname, in @-links and as a unique id. You can't change this later."),
                                          validator=_userid_validation)
             password = password_node
             email = email_node
@@ -291,7 +291,8 @@ def construct_schema(**kwargs):
             last_name = last_name_node
             about_me = colander.SchemaNode(colander.String(),
                 title = _(u"About me"),
-                description = _(u"Please note that anything you type here will be visible to all users in the same meeting as you."),
+                description = _(u"user_about_me_description",
+                                default=u"Please note that anything you type here will be visible to all users in the same meeting as you."),
                 widget = deform.widget.TextAreaWidget(rows=10, cols=60),
                 missing=u"",
                 validator=html_string_validator,)

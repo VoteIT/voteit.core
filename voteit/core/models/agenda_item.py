@@ -118,14 +118,16 @@ def construct_schema(**kwargs):
         description = colander.SchemaNode(
             colander.String(),
             title = _(u"Description"),
-            description = _(u"Place the the agenda item background information here. You can put links to external documents and memos. An image makes it easier for the participants to remember where that are in the meeting."),
+            description = _(u"agenda_item_description_description",
+                            default=u"Place the the agenda item background information here. You can link to external documents and memos. It's also a good idea to add an image, it will make it easier for participants to quickly see which page they're on."),
             missing = u"",
             widget=deform.widget.RichTextWidget(),
         )
         summary = colander.SchemaNode(
             colander.String(),
             title = _(u"Summary of this item."),
-            description = _(u"This summary shows up to the right on the first page. Write a short summary on what is going on or what has been decided. This should be updated as the meeting progresses."),
+            description = _(u"agenda_item_summary_description",
+                            default=u"This summary shows up to the right on the meetings first page. Write a short summary on what is going on or what has been decided. This should be updated as the meeting progresses."),
             #description = _('ai_summary_description',
             #                default=u"This could be what was decided. It will show up in the log on the meeting page."),
             widget=deform.widget.TextAreaWidget(rows=10, cols=60),
@@ -136,7 +138,8 @@ def construct_schema(**kwargs):
             TZDateTime(local_tz),
             title = _('ai_start_time_title',
                       default=u"Estimated start time of this Agenda Item."),
-            description = _(u"This is information to the participants on when the agenda item is planned to start. It will not happen by itself, you will have to change the status of the agenda item on it's gears icon."),
+            description = _(u"agenda_item_start_time_description",
+                            default=u"This is information to the participants on when the agenda item is planned to start. It will not happen by itself, you will have to change the status of the agenda item on it's gears icon."),
             #description = _('ai_start_time_description',
             #                default=u"No action will be taken automatically when the time has passed, so you need to open this item yourself."),
             widget=deform.widget.DateTimeInputWidget(options={'timeFormat': 'hh:mm'}),
