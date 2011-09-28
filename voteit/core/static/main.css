@@ -102,6 +102,37 @@ p {
     text-align: center;
 }
 
+/* Generic classes for positioning columns */
+.col-20-80,
+.col-50-50 {
+    float: left;
+    width: 100%;
+    display: block;
+    position: relative;
+}
+.column {
+    position: relative;
+    float: left;
+    left: 100%;
+}
+.col-20-80 .column-1 {
+    margin-left: -100%;
+    width: 20%;
+}
+.col-20-80 .column-2 {
+    margin-left: -80%;
+    width: 80%;
+}
+.col-50-50 .column-1 {
+    margin-left: -100%;
+    width: 50%;
+}
+.col-50-50 .column-2 {
+    margin-left: -50%;
+    width: 50%;
+}
+/* end col classes */
+
 /* dropdown menu */
 .dropdown_menu {
 	position: relative;
@@ -319,27 +350,11 @@ p {
 }
 
 /* Main window */
-#main_window #top {
-}
-#main_window .column {
-    float: left;
-}
-#main_window #left {
-}
-#main_window #right {
-}
-
 #main_window h1,
 #main_window h2 {
     border-bottom: 2px solid #86A3B4;
     padding-bottom: 0.5em;
 }
-
-.column {
-    float: left;
-    width: 49%
-}
-
 .listing_block {
     margin-top: 1em;
 	clear: both;
