@@ -16,6 +16,7 @@ from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import ICatalogMetadataEnabled
 from voteit.core.models.workflow_aware import WorkflowAware
 from voteit.core.validators import html_string_validator
+from voteit.core.widgets import RecaptchaWidget
 
 
 _MODERATOR_DEFAULTS = (security.VIEW, security.EDIT, security.MANAGE_GROUPS,
@@ -94,6 +95,7 @@ class Meeting(BaseContent, WorkflowAware):
 
 
 def construct_schema(**kwargs):
+    type = kwargs.get('type', None)
     
     #Default schema
     class MeetingSchema(colander.MappingSchema):
@@ -114,6 +116,14 @@ def construct_schema(**kwargs):
                                                 title = _(u"Email address to send from"),
                                                 default = u"noreply@somehost.voteit",
                                                 validator = colander.All(colander.Email(msg = _(u"Invalid email address.")), html_string_validator,),)
+        if type == 'add':
+            captcha = colander.SchemaNode(colander.String(),
+                                          #FIXME: write a good title and description here
+                                          title=_(u"Verify you are human"),
+                                          description = _(u"This is to prevent spambots creating meetings"),
+                                          missing=u"",
+                                          widget=RecaptchaWidget(),)
+
     return MeetingSchema()
 
 def includeme(config):

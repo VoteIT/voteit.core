@@ -25,7 +25,7 @@ class SiteRoot(BaseContent):
 
     __acl__ = [(Allow, security.ROLE_ADMIN, ALL_PERMISSIONS),
                (Allow, security.ROLE_OWNER, (security.EDIT, security.CHANGE_PASSWORD, )),
-               (Allow, Everyone, security.VIEW),
+               (Allow, Everyone, (security.VIEW, security.ADD_MEETING)),
                DENY_ALL]
 
     def __init__(self):
