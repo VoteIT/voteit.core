@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
-"POT-Creation-Date: 2011-09-30 16:55+0000\n"
+"POT-Creation-Date: 2011-09-30 18:43+0000\n"
 "PO-Revision-Date: 2011-09-28 14:00+0100\n"
 "Last-Translator: Fredrik Nilson <fredrik@betahaus.net>\n"
 "Language-Team: sv <LL@li.org>\n"
@@ -935,10 +935,10 @@ msgstr "Rösta"
 msgid "agenda_item_description_description"
 msgstr "Lägg in bakgrundsfakta om dagordningspunkten här. Länka gärna till externa dokument och underlag. En bild här gör det lättare för deltagarna att komma ihåg vilken dagordningspunkt de är inne i."
 
-#. Default: "This is information to the participants on when the agenda item is planned to start. It will not happen by itself, you will have to change the status of the agenda item on it's gears icon."
+#. Default: "This setting only sets the order for the agenda item's in the Agenda. You will still have to change the state of the agenda item manually with the gear beside it's name."
 #: ./models/agenda_item.py:116
 msgid "agenda_item_start_time_description"
-msgstr "Denna tidpunkt är information till deltagarna om när dagordningspunkten är planerad att börja behandlas. Inget kommer hända av sig själv, du kommer behöva ändra tillståndet för punkten själv med kugghjulet."
+msgstr "Denna tidsinställning bestämmer endast ordningen på dagordningspunkterna i dagordningen. Du behöver oberoende av denna ändra tillstånd på dagordningspunkten manuellt med kugghjulet bredvid dess namn."
 
 #. Default: "This summary shows up to the right on the meetings first page. Write a short summary on what is going on or what has been decided. This should be updated as the meeting progresses."
 #: ./models/agenda_item.py:104
