@@ -1093,7 +1093,7 @@ msgstr "titel"
 #. Default: "Please note that anything you type here will be visible to all users in the same meeting as you."
 #: ./models/user.py:294
 msgid "user_about_me_description"
-msgstr "Vänligen notera att allting du skriver här blir synligt för alla användare som är deltagare i samma möte som du."
+msgstr "Vänligen notera att det du skriver här blir synligt för alla användare som är deltagare i samma möte som du."
 
 #. regular latin chars, numbers, minus and underscore.
 #. Default: "UserID must be 3-15 chars, start with a-zA-Z and only contain regular latin chars, numbers, minus and underscore."
@@ -1104,9 +1104,8 @@ msgstr "AnvändarID måste vara 3-15 tecken, starta med a-zA-Z och bara innehål
 #. later.
 #. Default: "Used as a nickname, in @-links and as a unique id. You can't change this later."
 #: ./models/user.py:263
-#, fuzzy
 msgid "userid_description"
-msgstr "Används som smeknamn, vid @-länkar och som unikt ID. Du kan inte ändra detta senare."
+msgstr "Används som kortnamn (nick), vid @-länkar och som unikt ID. Du kan inte ändra detta senare."
 
 #. it if you wish.
 #. Default: "This is your vote. While the poll is open, you can delete or change it if you wish."
