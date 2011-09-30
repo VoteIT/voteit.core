@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2011-09-28 15:53+0000\n"
+"POT-Creation-Date: 2011-09-30 16:55+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -129,7 +129,7 @@ msgstr ""
 msgid "Attend"
 msgstr ""
 
-#: ./models/agenda_item.py:115
+#: ./models/agenda_item.py:90
 msgid "Avoid a title with more than 20 characters"
 msgstr ""
 
@@ -193,7 +193,7 @@ msgstr ""
 msgid "Couldn't find any user with userid ${userid}"
 msgstr ""
 
-#: ./models/invite_ticket.py:166
+#: ./models/invite_ticket.py:168
 #: ./views/meeting.py:253
 msgid "Current invitations"
 msgstr ""
@@ -221,8 +221,8 @@ msgstr ""
 msgid "Denied"
 msgstr ""
 
-#: ./models/agenda_item.py:120
-#: ./models/meeting.py:109
+#: ./models/agenda_item.py:95
+#: ./models/meeting.py:111
 #: ./models/poll.py:284
 msgid "Description"
 msgstr ""
@@ -263,7 +263,7 @@ msgstr ""
 msgid "Email"
 msgstr ""
 
-#: ./models/meeting.py:118
+#: ./models/meeting.py:120
 msgid "Email address to send from"
 msgstr ""
 
@@ -271,7 +271,7 @@ msgstr ""
 msgid "Email address your invitation was sent to."
 msgstr ""
 
-#: ./models/invite_ticket.py:144
+#: ./models/invite_ticket.py:145
 msgid "Email addresses to give the role above."
 msgstr ""
 
@@ -300,7 +300,7 @@ msgstr ""
 msgid "First name"
 msgstr ""
 
-#: ./views/templates/login_register.pt:16
+#: ./views/templates/login_register.pt:12
 msgid "Forgot password?"
 msgstr ""
 
@@ -329,7 +329,7 @@ msgid "I propose:"
 msgstr ""
 
 #: ./models/invite_ticket.py:110
-#: ./models/meeting.py:120
+#: ./models/meeting.py:122
 #: ./models/user.py:196
 msgid "Invalid email address."
 msgstr ""
@@ -370,7 +370,7 @@ msgstr ""
 
 #: ./models/schemas.py:13
 #: ./views/templates/global_actions.pt:24
-#: ./views/templates/login_register.pt:14
+#: ./views/templates/login_register.pt:10
 msgid "Login"
 msgstr ""
 
@@ -424,7 +424,7 @@ msgstr ""
 msgid "Moderator menu"
 msgstr ""
 
-#: ./models/meeting.py:115
+#: ./models/meeting.py:117
 msgid "Name visible on system mail sent from this meeting"
 msgstr ""
 
@@ -432,7 +432,7 @@ msgstr ""
 msgid "Need to register?"
 msgstr ""
 
-#: ./models/invite_ticket.py:150
+#: ./models/invite_ticket.py:152
 msgid "No HTML tags allowed."
 msgstr ""
 
@@ -447,6 +447,10 @@ msgstr ""
 
 #: ./views/templates/macros/flash_messages.pt:6
 msgid "OK"
+msgstr ""
+
+#: ./models/invite_ticket.py:138
+msgid "One user can have more than one role. Note that to be able to propose, discuss and vote the users needs to be participant AND voter."
 msgstr ""
 
 #: ./workflows/agenda_item.xml
@@ -532,7 +536,7 @@ msgstr ""
 msgid "Registered users"
 msgstr ""
 
-#: ./views/templates/login_register.pt:25
+#: ./views/templates/login_register.pt:17
 msgid "Registration"
 msgstr ""
 
@@ -592,6 +596,10 @@ msgstr ""
 msgid "Send meeting invitations"
 msgstr ""
 
+#: ./models/invite_ticket.py:146
+msgid "Separate email adresses with a single line break"
+msgstr ""
+
 #: ./views/templates/moderator_actions.pt:23
 msgid "Server logs"
 msgstr ""
@@ -634,7 +642,7 @@ msgstr ""
 msgid "Successfully updated"
 msgstr ""
 
-#: ./models/agenda_item.py:128
+#: ./models/agenda_item.py:103
 msgid "Summary of this item."
 msgstr ""
 
@@ -694,8 +702,8 @@ msgstr ""
 msgid "Time"
 msgstr ""
 
-#: ./models/agenda_item.py:114
-#: ./models/meeting.py:103
+#: ./models/agenda_item.py:89
+#: ./models/meeting.py:105
 #: ./models/poll.py:281
 msgid "Title"
 msgstr ""
@@ -745,7 +753,7 @@ msgstr ""
 msgid "Users"
 msgstr ""
 
-#: ./models/meeting.py:124
+#: ./models/meeting.py:128
 msgid "Verify you are human"
 msgstr ""
 
@@ -766,7 +774,7 @@ msgid "Vote for one"
 msgstr ""
 
 #: ./bootstrap.py:27
-#: ./models/meeting.py:116
+#: ./models/meeting.py:118
 msgid "VoteIT"
 msgstr ""
 
@@ -787,7 +795,7 @@ msgstr ""
 msgid "Warm regards, The VoteIT team"
 msgstr ""
 
-#: ./models/invite_ticket.py:149
+#: ./models/invite_ticket.py:151
 msgid "Welcome text of the email that will be sent"
 msgstr ""
 
@@ -838,22 +846,22 @@ msgid "add_vote_button"
 msgstr ""
 
 #. Default: "Place the the agenda item background information here. You can link to external documents and memos. It's also a good idea to add an image, it will make it easier for participants to quickly see which page they're on."
-#: ./models/agenda_item.py:121
+#: ./models/agenda_item.py:96
 msgid "agenda_item_description_description"
 msgstr ""
 
 #. Default: "This is information to the participants on when the agenda item is planned to start. It will not happen by itself, you will have to change the status of the agenda item on it's gears icon."
-#: ./models/agenda_item.py:141
+#: ./models/agenda_item.py:116
 msgid "agenda_item_start_time_description"
 msgstr ""
 
 #. Default: "This summary shows up to the right on the meetings first page. Write a short summary on what is going on or what has been decided. This should be updated as the meeting progresses."
-#: ./models/agenda_item.py:129
+#: ./models/agenda_item.py:104
 msgid "agenda_item_summary_description"
 msgstr ""
 
 #. Default: "Estimated start time of this Agenda Item."
-#: ./models/agenda_item.py:139
+#: ./models/agenda_item.py:114
 msgid "ai_start_time_title"
 msgstr ""
 
@@ -886,7 +894,7 @@ msgid "deleting_invites_notice"
 msgstr ""
 
 #. Default: "You've received a meeting invitation for a VoteIT meeting."
-#: ./models/invite_ticket.py:152
+#: ./models/invite_ticket.py:154
 msgid "invitation_default_text"
 msgstr ""
 
@@ -894,23 +902,23 @@ msgstr ""
 msgid "like this"
 msgstr ""
 
-#. Default: "To gain access to a meeting you need to use an access ticket that should have been mailed to you. If you've aldready registered, please login."
+#. Default: "Welcome to VoteIT. To open the meeting you have been invited to please register in the form below. If you are already registered, please login."
 #: ./views/meeting.py:110
 msgid "login_to_access_meeting_notice"
 msgstr ""
 
 #. Default: "This is to prevent spambots from creating meetings"
-#: ./models/meeting.py:125
+#: ./models/meeting.py:129
 msgid "meeting_captcha_description"
 msgstr ""
 
 #. Default: "The description is visible on the first page of the meeting. You can include things like information about the meeting, how to contact the moderator and your logo."
-#: ./models/meeting.py:110
+#: ./models/meeting.py:112
 msgid "meeting_description_description"
 msgstr ""
 
 #. Default: "Set a title for the meeting that separates it from previous meetings"
-#: ./models/meeting.py:104
+#: ./models/meeting.py:106
 msgid "meeting_title_description"
 msgstr ""
 
