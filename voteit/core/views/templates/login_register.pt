@@ -6,30 +6,17 @@
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
       i18n:domain="voteit.core">
 <body>
+    <div metal:fill-slot="left">
+        <h1 i18n:translate="">Login</h1>
+        <div tal:condition="login_form|False" tal:replace="structure login_form">Login form</div>
+        <div><a href="@@request_password" i18n:translate="">Forgot password?</a></div>
+        
+    </div>
 
-    <div id="content" metal:fill-slot="content">
-        <div class="column">
-            <div class="content_wrapper">
-                <div id="login">
-                    <h1 i18n:translate="">Login</h1>
-                    <div tal:condition="login_form|False" tal:replace="structure login_form">Login form</div>
-                    <div><a href="@@request_password" i18n:translate="">Forgot password?</a></div>
-                    
-                </div>
-            </div>
-        </div>
-
-        <div class="column">
-            <div class="content_wrapper">
-                <div id="registration">
-                    <h1 i18n:translate="">Registration</h1>
-                    <div tal:condition="reg_form|False" tal:replace="structure reg_form">Reg form</div>
-                
-                </div>
-            </div>
-        </div>
-        <div class="clear"><!-- --></div>
-
+    <div metal:fill-slot="right">
+        <h1 i18n:translate="">Registration</h1>
+        <div tal:condition="reg_form|False" tal:replace="structure reg_form">Reg form</div>
+    
     </div>
 </body>
 </html>
