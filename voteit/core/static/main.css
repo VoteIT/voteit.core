@@ -220,7 +220,7 @@ p {
     background: url(images/meetingmenu_bg_opacity30.png) repeat;
 }
 
-/* State icons */
+/* Icons */
 .iconpadding > span {
     padding-left: 20px;
 }
@@ -236,7 +236,24 @@ p {
 .iconpadding.private > span {
     background: url(icons/icon_upcoming_red.png) no-repeat;
 }
-/* End state icons */
+.iconpadding.proposal {
+    background: url(icons/icon_proposal_lb.png) no-repeat left 25%;
+}
+.iconpadding.discussion {
+    background: url(icons/icon_disc_lb.png) no-repeat left 25%;
+}
+.iconpadding.poll {
+    background: url(icons/icon_poll_lb.png) no-repeat left 25%;
+}
+.iconpadding.poll-dark {
+    background: url(icons/icon_poll.png) no-repeat;
+}
+
+.iconpadding > .cog-dark {
+    background: url(icons/icon_settings.png) no-repeat top left;
+}
+
+/* End icons */
 
 /* Action areas in #header */
 #global-actions-menu {
@@ -320,16 +337,11 @@ p {
 }
 
 #navigation .cinfo {
-    width: 50px;
     float: left;
-    padding: 3px 0 3px 35px;
-	height: 15px;
+	margin: 5px 0px;
 }
-#navigation .discussions {
-    background: url(icons/icon_disc_lb.png) no-repeat;
-}
-#navigation .proposals {
-    background: url(icons/icon_proposal_lb.png) no-repeat;
+#navigation .cinfo.proposal {
+    width: 80px;
 }
 #navigation .info {
 	clear: both;
@@ -492,7 +504,6 @@ li.notification_message {
     border: 1px solid #86A3B4;
     background-color: #fff;
     padding: 5px 10px;
-	margin-top: 10px;
 }
 #polls .listing_block {
 	border-bottom: 2px solid #86A3B4;
@@ -556,27 +567,6 @@ li.notification_message {
 #proposals .proposal_form button,
 #discussions .discussion_form button {
     float: right;
-}
-
-/* Large heading icons */
-.large-icon {
-    padding-left: 40px;
-}
-.large-icon.discussions {
-    background: url(icons/icon_disc_lb.png) no-repeat top left;
-}
-.large-icon.polls {
-    background: url(icons/icon_vote_lb.png) no-repeat top left;
-}
-.large-icon.polls-dark {
-    background: url(icons/icon_vote.png) no-repeat top left;
-}
-.large-icon.proposals {
-    background: url(icons/icon_proposal_lb.png) no-repeat top left;
-}
-
-.iconpadding > .cog-dark {
-    background: url(icons/icon_settings.png) no-repeat top left;
 }
 
 /* confirm dialog */

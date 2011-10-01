@@ -2,30 +2,27 @@
 
 <ul id="meeting-actions-menu">
     
-    <tal:polls tal:condition="polls_metadata|False">
-
-        <li class="tab dropdown_menu">
-            <a href="#" class="menu_header">
-                <span class="large-icon polls-dark" i18n:translate="">Polls</span> &raquo;
-            </a>
-            <ul class="menu_body">
-                <tal:section repeat="section sections">
-                    <tal:defs define="metadatas polls_metadata[section]">
-                    <tal:exists condition="metadatas">
-                        <li class="readonly iconpadding ${section}"><span>${api.translate(section.title())}</span></li>
-                        <li tal:repeat="poll_metadata metadatas">
-                            <a href="${poll_metadata['path']}">
-                                ${poll_metadata['title']}
-                            </a>
-                        </li>
-                    </tal:exists>
-                    </tal:defs>
-                </tal:section>
-
-            </ul>
-        </li>
-
-    </tal:polls>
+    <li class="tab dropdown_menu" tal:condition="show_polls|False">
+        <a href="#" class="menu_header">
+        	<span class="iconpadding poll-dark">
+                <span i18n:translate="">Polls</span> &raquo;
+			</span>
+        </a>
+        <ul class="menu_body">
+            <tal:section repeat="section sections">
+                <tal:defs define="metadatas polls_metadata[section]">
+                <tal:exists condition="metadatas">
+                    <li class="readonly iconpadding ${section}"><span>${api.translate(section.title())}</span></li>
+                    <li tal:repeat="poll_metadata metadatas">
+                        <a href="${poll_metadata['path']}">
+                            ${poll_metadata['title']}
+                        </a>
+                    </li>
+                </tal:exists>
+                </tal:defs>
+            </tal:section>
+        </ul>
+    </li>
     
     <tal:meeting condition="api.meeting and is_moderator">
         <li class="tab dropdown_menu">

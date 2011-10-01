@@ -15,14 +15,14 @@
             	<span i18n:translate="">Add poll</span>
 			</a>
         </div>
-        <h2 tal:condition="polls" class="large-icon polls"><span i18n:translate="">Poll</span></h2>
+        <h2 tal:condition="polls" class="iconpadding poll"><span i18n:translate="">Poll</span></h2>
 
         <span tal:replace="structure get_polls(polls, poll_forms)">Render poll listing</span>
 
     </div> <!-- top_content -->
 
     <div metal:fill-slot="right" id="discussions">
-        <h2 class="large-icon discussions"><span i18n:translate="">Discussion</span></h2>
+        <h2 class="iconpadding discussion"><span i18n:translate="">Discussion</span></h2>
             
         <div tal:replace="structure get_discussions()">Discussion listing</div>
 
@@ -35,7 +35,7 @@
     <div metal:fill-slot="left" id="proposals">
         <div class="description" tal:condition="context.description" tal:content="structure context.description">Description</div>
 
-        <h2 class="large-icon proposals"><span i18n:translate="">Proposal</span></h2>
+        <h2 class="iconpadding proposal"><span i18n:translate="">Proposal</span></h2>
 
         <div tal:replace="structure get_proposals()">Proposals listing</div>
         

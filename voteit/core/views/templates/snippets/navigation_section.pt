@@ -13,17 +13,21 @@
 	                    <div tal:content="obj.get_field_value('title')">Title</div>
 						
 	                    <div tal:condition="obj.content_type == 'AgendaItem'" class="info">
-	                        <span class="proposals cinfo"
+	                        <span class="iconpadding proposal cinfo"
 	                              tal:define="unread_count api.search_catalog(obj, content_type='Proposal', unread=api.userid)[0]">
-	                            <span class="total"
-	                                  tal:content="api.search_catalog(obj, content_type='Proposal')[0]">0</span>
-	                            <span class="unread" tal:condition="unread_count" tal:content="string:($unread_count)">(2)</span>
+	                            <span>
+		                            <span class="total"
+		                                  tal:content="api.search_catalog(obj, content_type='Proposal')[0]">0</span>
+		                            <span class="unread" tal:condition="unread_count">(${unread_count})</span>
+								</span>
 	                        </span>
-	                        <span class="discussions cinfo"
+	                        <span class="iconpadding discussion cinfo"
 	                              tal:define="unread_count api.search_catalog(obj, content_type='DiscussionPost', unread=api.userid)[0]">
-	                            <span class="total"
-	                                  tal:content="api.search_catalog(obj, content_type='DiscussionPost')[0]">0</span>
-	                            <span class="unread" tal:condition="unread_count" tal:content="string:($unread_count)">(2)</span>
+	                            <span>
+									<span class="total"
+		                                  tal:content="api.search_catalog(obj, content_type='DiscussionPost')[0]">0</span>
+		                            <span class="unread" tal:condition="unread_count">(${unread_count})</span>
+								</span>
 	                        </span>
 	                    </div>
 						
