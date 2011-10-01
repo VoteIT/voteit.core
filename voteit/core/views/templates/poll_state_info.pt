@@ -3,7 +3,7 @@
     i18n:domain="voteit.core">
 
 <div class="poll_state_info meta">
-	<tal:upcoming condition="wf_state == 'upcoming'">
+	<tal:upcoming condition="wf_state in ('upcoming', 'private')">
 	    <span i18n:translate="">Expected start time
 	        <span tal:replace="api.dt_util.dt_format(poll.start_time)" i18n:name="start_time" />
 	    </span>

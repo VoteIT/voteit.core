@@ -11,16 +11,24 @@
 	         Cogwheel menu
 	    </span>
 
-        <div class="poll_type">
-            <strong i18n:translate="">Poll method</strong>: <span tal:content="poll_plugin.title">Title</span>
-            <div tal:content="structure poll_plugin.description">Description</div>
-        </div>
-		
         <h3 tal:content="poll.title">Title</h3>
 
-        <span tal:replace="structure api.get_poll_state_info(poll)">Poll state info</span>
+        <div class="col-50-50">
+        	
+            <div class="column column-1">
+		        <div tal:replace="structure api.get_poll_state_info(poll)">Poll state info</div>
+				<div class="description"
+				     tal:content="structure poll.description">Description</div>
+            </div>
 
-        <div tal:content="structure poll.description">Description</div>
+	        <div class="column column-2">
+	        	<div class="poll_type">
+		            <strong i18n:translate="">Poll method</strong>: <span tal:content="poll_plugin.title">Title</span>
+		            <div tal:content="structure poll_plugin.description">Description</div>
+				</div>
+	        </div>
+			
+		</div>
         
         <div tal:condition="wf_state == 'closed'"
             tal:content="structure poll.render_poll_result()">
@@ -54,6 +62,7 @@
 	        <div tal:condition="poll_forms[poll.uid]|False" tal:content="structure poll_forms[poll.uid]"></div>
 		</tal:user_not_voted>
 
+        <div class="clear"><!-- --></div>
     </div>
     </tal:iterate>
 	
