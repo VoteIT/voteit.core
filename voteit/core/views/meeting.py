@@ -108,8 +108,8 @@ class MeetingView(BaseView):
         """
         if not self.api.userid:
             msg = _('login_to_access_meeting_notice',
-                    default=u"To gain access to a meeting you need to use an access ticket that should have been mailed to you. If you've aldready registered, please login.")
-            self.api.flash_messages.add(msg, type='error')
+                    default=u"Welcome to VoteIT. To open the meeting you have been invited to please register in the form below. If you are already registered, please login.")
+            self.api.flash_messages.add(msg, type='info')
 
             came_from = urllib.quote(self.request.url)
             url = "%s@@login?came_from=%s" % (resource_url(self.api.root, self.request), came_from)

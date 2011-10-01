@@ -135,6 +135,7 @@ def construct_schema(context=None, request=None, type=None):
             roles = colander.SchemaNode(
                 deform.Set(),
                 title = _(u"Roles"),
+                description = _(u'One user can have more than one role. Note that to be able to propose, discuss and vote the users needs to be participant AND voter.'),
                 widget = deform.widget.CheckboxChoiceWidget(values=security.MEETING_ROLES,),
             )
             #FIXME: Proper validation or even a list of emails widget.
@@ -142,7 +143,8 @@ def construct_schema(context=None, request=None, type=None):
             #FIXME: Add custom subject line. No sense in having it static!
             emails = colander.SchemaNode(colander.String(),
                                          title = _(u"Email addresses to give the role above."),
-                                         widget = deform.widget.TextAreaWidget(rows=5, cols=40),
+                                         description = _(u'Separate email adresses with a single line break'),
+                                         widget = deform.widget.TextAreaWidget(rows=7, cols=40),
                                          validator = colander.All(html_string_validator, multiple_email_validator),
             )
             message = colander.SchemaNode(colander.String(),

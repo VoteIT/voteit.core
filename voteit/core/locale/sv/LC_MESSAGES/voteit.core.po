@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
-"POT-Creation-Date: 2011-09-28 15:53+0000\n"
+"POT-Creation-Date: 2011-09-30 18:43+0000\n"
 "PO-Revision-Date: 2011-09-28 14:00+0100\n"
 "Last-Translator: Fredrik Nilson <fredrik@betahaus.net>\n"
 "Language-Team: sv <LL@li.org>\n"
@@ -141,7 +141,7 @@ msgstr "Är du säker på att du vill radera detta objekt?"
 msgid "Attend"
 msgstr "Förslagsrätt"
 
-#: ./models/agenda_item.py:115
+#: ./models/agenda_item.py:90
 msgid "Avoid a title with more than 20 characters"
 msgstr "Undvik att skriva fler än 20 tecken"
 
@@ -209,7 +209,7 @@ msgstr "Kan inte hitta någon inbjudan för denna epostadress."
 msgid "Couldn't find any user with userid ${userid}"
 msgstr "Kudne inte hitta någon användare med användarID ${userid}"
 
-#: ./models/invite_ticket.py:166
+#: ./models/invite_ticket.py:168
 #: ./views/meeting.py:253
 msgid "Current invitations"
 msgstr "Nuvarande inbjudningar"
@@ -241,8 +241,8 @@ msgstr "Raderad"
 msgid "Denied"
 msgstr "Avslaget"
 
-#: ./models/agenda_item.py:120
-#: ./models/meeting.py:109
+#: ./models/agenda_item.py:95
+#: ./models/meeting.py:111
 #: ./models/poll.py:284
 msgid "Description"
 msgstr "Beskrivning"
@@ -288,7 +288,7 @@ msgstr "Redigera din röst"
 msgid "Email"
 msgstr "Epost"
 
-#: ./models/meeting.py:118
+#: ./models/meeting.py:120
 msgid "Email address to send from"
 msgstr "Epostadress att skicka från"
 
@@ -296,7 +296,7 @@ msgstr "Epostadress att skicka från"
 msgid "Email address your invitation was sent to."
 msgstr "Epostadressen din inbjudan skickades till."
 
-#: ./models/invite_ticket.py:144
+#: ./models/invite_ticket.py:145
 msgid "Email addresses to give the role above."
 msgstr "Epostadresser som ska ha rollerna ovan."
 
@@ -329,7 +329,7 @@ msgid "First name"
 msgstr "Förnamn"
 
 #. Default: "Forgot password?"
-#: ./views/templates/login_register.pt:16
+#: ./views/templates/login_register.pt:12
 msgid "Forgot password?"
 msgstr "Glömt lösenord?"
 
@@ -359,7 +359,7 @@ msgid "I propose:"
 msgstr "Jag yrkar:"
 
 #: ./models/invite_ticket.py:110
-#: ./models/meeting.py:120
+#: ./models/meeting.py:122
 #: ./models/user.py:196
 msgid "Invalid email address."
 msgstr "Ogiltig epostadress"
@@ -405,7 +405,7 @@ msgstr "Logginlägg"
 #. Default: "Login"
 #: ./models/schemas.py:13
 #: ./views/templates/global_actions.pt:24
-#: ./views/templates/login_register.pt:14
+#: ./views/templates/login_register.pt:10
 msgid "Login"
 msgstr "Logga in"
 
@@ -464,7 +464,7 @@ msgstr "Moderator"
 msgid "Moderator menu"
 msgstr "Moderatorsmeny"
 
-#: ./models/meeting.py:115
+#: ./models/meeting.py:117
 msgid "Name visible on system mail sent from this meeting"
 msgstr "Avsändarnamn på epost skickat från mötet"
 
@@ -473,7 +473,7 @@ msgstr "Avsändarnamn på epost skickat från mötet"
 msgid "Need to register?"
 msgstr "Behöver du registrera dig?"
 
-#: ./models/invite_ticket.py:150
+#: ./models/invite_ticket.py:152
 msgid "No HTML tags allowed."
 msgstr "Inga HTML-taggar tillåtna."
 
@@ -491,6 +491,10 @@ msgstr "Inget uppdaterat"
 #: ./views/templates/macros/flash_messages.pt:6
 msgid "OK"
 msgstr "OK"
+
+#: ./models/invite_ticket.py:138
+msgid "One user can have more than one role. Note that to be able to propose, discuss and vote the users needs to be participant AND voter."
+msgstr "En användare kan ha flera roller. Notera att för at kunna yrka, debattera och rösta måste användare ha både rättigheten Deltagare OCH Rösträtt."
 
 #. Default: "Ongoing"
 #: ./workflows/agenda_item.xml
@@ -587,7 +591,7 @@ msgid "Registered users"
 msgstr "Registrerade användare"
 
 #. Default: "Registration"
-#: ./views/templates/login_register.pt:25
+#: ./views/templates/login_register.pt:17
 msgid "Registration"
 msgstr "Registrering"
 
@@ -654,6 +658,10 @@ msgstr "Välj ett möte nedan"
 msgid "Send meeting invitations"
 msgstr "Skicka mötesinbjudningar"
 
+#: ./models/invite_ticket.py:146
+msgid "Separate email adresses with a single line break"
+msgstr "Skilj epostadresser åt med en enkel radbrytning"
+
 #. Default: "Server logs"
 #: ./views/templates/moderator_actions.pt:23
 msgid "Server logs"
@@ -702,7 +710,7 @@ msgstr "Tillagt"
 msgid "Successfully updated"
 msgstr "Uppdaterad"
 
-#: ./models/agenda_item.py:128
+#: ./models/agenda_item.py:103
 msgid "Summary of this item."
 msgstr "Sammanfattning av denna punkt."
 
@@ -768,8 +776,8 @@ msgstr "Detta kommer att hända"
 msgid "Time"
 msgstr "Tid"
 
-#: ./models/agenda_item.py:114
-#: ./models/meeting.py:103
+#: ./models/agenda_item.py:89
+#: ./models/meeting.py:105
 #: ./models/poll.py:281
 msgid "Title"
 msgstr "Titel"
@@ -824,7 +832,7 @@ msgstr "AnvändarID eller epost hittades inte"
 msgid "Users"
 msgstr "Användare"
 
-#: ./models/meeting.py:124
+#: ./models/meeting.py:128
 msgid "Verify you are human"
 msgstr "Visa att du är en människa"
 
@@ -845,7 +853,7 @@ msgid "Vote for one"
 msgstr "Rösta på en"
 
 #: ./bootstrap.py:27
-#: ./models/meeting.py:116
+#: ./models/meeting.py:118
 msgid "VoteIT"
 msgstr "VoteIT"
 
@@ -868,7 +876,7 @@ msgstr "Rösträtt"
 msgid "Warm regards, The VoteIT team"
 msgstr "Varma hälsningar, VoteIT-teamet"
 
-#: ./models/invite_ticket.py:149
+#: ./models/invite_ticket.py:151
 msgid "Welcome text of the email that will be sent"
 msgstr "Välkomsttext i brevet som kommer skickas"
 
@@ -923,22 +931,22 @@ msgid "add_vote_button"
 msgstr "Rösta"
 
 #. Default: "Place the the agenda item background information here. You can link to external documents and memos. It's also a good idea to add an image, it will make it easier for participants to quickly see which page they're on."
-#: ./models/agenda_item.py:121
+#: ./models/agenda_item.py:96
 msgid "agenda_item_description_description"
 msgstr "Lägg in bakgrundsfakta om dagordningspunkten här. Länka gärna till externa dokument och underlag. En bild här gör det lättare för deltagarna att komma ihåg vilken dagordningspunkt de är inne i."
 
-#. Default: "This is information to the participants on when the agenda item is planned to start. It will not happen by itself, you will have to change the status of the agenda item on it's gears icon."
-#: ./models/agenda_item.py:141
+#. Default: "This setting only sets the order for the agenda item's in the Agenda. You will still have to change the state of the agenda item manually with the gear beside it's name."
+#: ./models/agenda_item.py:116
 msgid "agenda_item_start_time_description"
-msgstr "Denna tidpunkt är information till deltagarna om när dagordningspunkten är planerad att börja behandlas. Inget kommer hända av sig själv, du kommer behöva ändra tillståndet för punkten själv med kugghjulet."
+msgstr "Denna tidsinställning bestämmer endast ordningen på dagordningspunkterna i dagordningen. Du behöver oberoende av denna ändra tillstånd på dagordningspunkten manuellt med kugghjulet bredvid dess namn."
 
 #. Default: "This summary shows up to the right on the meetings first page. Write a short summary on what is going on or what has been decided. This should be updated as the meeting progresses."
-#: ./models/agenda_item.py:129
+#: ./models/agenda_item.py:104
 msgid "agenda_item_summary_description"
 msgstr "Denna sammanfattning visas till höger på förstasidan. Skriv kortfattat vad som är på gång eller vad som har beslutats. Denna bör uppdateras under mötets gång."
 
 #. Default: "Estimated start time of this Agenda Item."
-#: ./models/agenda_item.py:139
+#: ./models/agenda_item.py:114
 msgid "ai_start_time_title"
 msgstr "Planerad starttid för dagordningpunkten."
 
@@ -974,7 +982,7 @@ msgid "deleting_invites_notice"
 msgstr "Raderar ${count_emails} inbjudningar"
 
 #. Default: "You've received a meeting invitation for a VoteIT meeting."
-#: ./models/invite_ticket.py:152
+#: ./models/invite_ticket.py:154
 msgid "invitation_default_text"
 msgstr "Du har fått en inbjudan till ett VoteIT-möte."
 
@@ -983,23 +991,23 @@ msgid "like this"
 msgstr "gillar detta"
 
 #. should have been mailed to you. If you've aldready registered, please login.
-#. Default: "To gain access to a meeting you need to use an access ticket that should have been mailed to you. If you've aldready registered, please login."
+#. Default: "Welcome to VoteIT. To open the meeting you have been invited to please register in the form below. If you are already registered, please login."
 #: ./views/meeting.py:110
 msgid "login_to_access_meeting_notice"
-msgstr "För att få tillgång till mötet så behöver du använda länken i en inbjudan som borde ha mailats till dig. Om du redan finns registrerad, vänligen logga in."
+msgstr "Välkommen till VoteIT. För att öppna det möte du är inbjuden till måste du nu registrera dig i formuläret nedan. Om du redan är registrerad, vänligen logga in."
 
 #. Default: "This is to prevent spambots from creating meetings"
-#: ./models/meeting.py:125
+#: ./models/meeting.py:129
 msgid "meeting_captcha_description"
 msgstr "Detta finns för att förhindra spambottar från att skapa möten"
 
 #. Default: "The description is visible on the first page of the meeting. You can include things like information about the meeting, how to contact the moderator and your logo."
-#: ./models/meeting.py:110
+#: ./models/meeting.py:112
 msgid "meeting_description_description"
 msgstr "Beskrivningen möter deltagarna varje gång de öppnar mötet. Lägg gärna in information om mötet, hur man kontaktar mötesordföranden och föreningens logga här."
 
 #. Default: "Set a title for the meeting that separates it from previous meetings"
-#: ./models/meeting.py:104
+#: ./models/meeting.py:106
 msgid "meeting_title_description"
 msgstr "Ange en titel för mötet som särskiljer det från föreningens andra möten"
 
@@ -1051,7 +1059,6 @@ msgstr "Omröstning är nu i tillståndet 'kommande'. Den är nu synlig för mö
 
 #. Default: "The profile image comes from the <a href=\"http://www.gravatar.com\" target=\"_blank\">Gravatar network</a>. It's taken from your current email address. If you want to change the picture, simply go to the Gravatar site and change your picture for the email you use in VoteIT."
 #: ./views/templates/user.pt:27
-#, fuzzy
 msgid "profile_gravatar_explanation"
 msgstr "Bilden ovan kommer från <a href=\"http://www.gravatar.com\" target=\"_blank\">Gravatar</a>. Den är hämtad från din epostadress. Om du vill ändra bild, gå till Gravatar och ändra bild för den epostadress du använder i VoteIT."
 
@@ -1094,7 +1101,7 @@ msgstr "titel"
 #. Default: "Please note that anything you type here will be visible to all users in the same meeting as you."
 #: ./models/user.py:294
 msgid "user_about_me_description"
-msgstr "Vänligen notera att allting du skriver här blir synligt för alla användare som är deltagare i samma möte som du."
+msgstr "Vänligen notera att det du skriver här blir synligt för alla användare som är deltagare i samma möte som du."
 
 #. regular latin chars, numbers, minus and underscore.
 #. Default: "UserID must be 3-15 chars, start with a-zA-Z and only contain regular latin chars, numbers, minus and underscore."
@@ -1105,9 +1112,8 @@ msgstr "AnvändarID måste vara 3-15 tecken, starta med a-zA-Z och bara innehål
 #. later.
 #. Default: "Used as a nickname, in @-links and as a unique id. You can't change this later."
 #: ./models/user.py:263
-#, fuzzy
 msgid "userid_description"
-msgstr "Används som smeknamn, vid @-länkar och som unikt ID. Du kan inte ändra detta senare."
+msgstr "Används som kortnamn (nick), vid @-länkar och som unikt ID. Du kan inte ändra detta senare."
 
 #. it if you wish.
 #. Default: "This is your vote. While the poll is open, you can delete or change it if you wish."

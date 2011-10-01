@@ -114,7 +114,7 @@ def construct_schema(**kwargs):
             title = _('ai_start_time_title',
                       default=u"Estimated start time of this Agenda Item."),
             description = _(u"agenda_item_start_time_description",
-                            default=u"This is information to the participants on when the agenda item is planned to start. It will not happen by itself, you will have to change the status of the agenda item on it's gears icon."),
+                            default=u"This setting only sets the order for the agenda item's in the Agenda. You will still have to change the state of the agenda item manually with the gear beside it's name."),
             #description = _('ai_start_time_description',
             #                default=u"No action will be taken automatically when the time has passed, so you need to open this item yourself."),
             widget=deform.widget.DateTimeInputWidget(options={'timeFormat': 'hh:mm'}),
