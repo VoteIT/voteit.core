@@ -356,7 +356,7 @@ class CatalogMetadataTests(CatalogTestCase):
         user_tags = self.config.registry.getAdapter(obj, IUserTags)
         user_tags.add('like', 'admin')
 
-        self.assertEqual(_get_metadata()['like_userids'], set(('admin',)))
+        self.assertEqual(_get_metadata()['like_userids'], ('admin',))
         
         user_tags.remove('like', 'admin')
         self.assertEqual(_get_metadata()['like_userids'], ())

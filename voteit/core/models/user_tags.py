@@ -1,7 +1,8 @@
 import re
 
-from zope.interface import implements
 from BTrees.OOBTree import OOBTree
+from BTrees.OOBTree import OOSet
+from zope.interface import implements
 from zope.component.event import objectEventNotify
 
 from voteit.core.models.interfaces import IUserTags
@@ -34,7 +35,7 @@ class UserTags(object):
         if not TAG_PATTERN.match(tag):
             raise ValueError("'tag' doesn't conform to tag standard: '^[a-zA-Z\_\-]{3,15}$'")
         if tag not in self.tags_storage:
-            self.tags_storage[tag] = set()
+            self.tags_storage[tag] = OOSet()
 
         if userid not in self.tags_storage[tag]:
             self.tags_storage[tag].add(userid)
@@ -42,7 +43,7 @@ class UserTags(object):
                 self._notify()
 
     def userids_for_tag(self, tag):
-        return self.tags_storage.get(tag, ())
+        return tuple(self.tags_storage.get(tag, ()))
 
     def remove(self, tag, userid):
         if userid in self.tags_storage.get(tag, ()):
