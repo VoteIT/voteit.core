@@ -482,11 +482,11 @@ li.notification_message {
     border-bottom: #ccc 1px solid;
 }
 
-/* User tags */
-.user_tag_form {
+/* Inline forms, like user tags */
+.inline_form {
     display: inline;
 }
-.user_tag_button {
+.inline_form .inline_submit {
     background-color: transparent; 
     border: 0; 
     padding: 0;

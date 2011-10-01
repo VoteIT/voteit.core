@@ -1,4 +1,4 @@
-from pyramid.security import authenticated_userid, has_permission
+from pyramid.security import authenticated_userid
 from pyramid.exceptions import Forbidden
 from pyramid.httpexceptions import HTTPFound
 from pyramid.renderers import render
