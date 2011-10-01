@@ -8,7 +8,10 @@
 <body>
 
     <div id="polls" metal:fill-slot="top_content">
-        	
+
+        <div class="description" tal:condition="context.description" tal:content="structure context.description">Description</div>
+
+
         <div class="moderator-help-buttons"
 		     tal:condition="api.show_moderator_actions and api.context_has_permission('Add Poll', context)">
             <a class="buttonize large" tal:attributes="href api.resource_url(context, request) + '@@add?content_type=Poll'">
@@ -33,8 +36,6 @@
     </div> <!-- right_content -->
 
     <div metal:fill-slot="left" id="proposals">
-        <div class="description" tal:condition="context.description" tal:content="structure context.description">Description</div>
-
         <h2 class="iconpadding proposal"><span i18n:translate="">Proposal</span></h2>
 
         <div tal:replace="structure get_proposals()">Proposals listing</div>
