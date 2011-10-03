@@ -5,7 +5,10 @@
     <li class="tab dropdown_menu" tal:condition="show_polls|False">
         <a href="#" class="menu_header">
         	<span class="iconpadding poll-dark">
-                <span i18n:translate="">Polls</span> &raquo;
+                <span>
+	        		<tal:unread condition="unread_polls_count">(${unread_polls_count})</tal:unread>
+                	<tal:polls i18n:translate="">Polls</tal:polls> &raquo;
+				</span>
 			</span>
         </a>
         <ul class="menu_body">
@@ -14,7 +17,8 @@
                 <tal:exists condition="metadatas">
                     <li class="readonly iconpadding ${section}"><span>${api.translate(section.title())}</span></li>
                     <li tal:repeat="poll_metadata metadatas">
-                        <a href="${poll_metadata['path']}">
+                        <a href="${poll_metadata['path']}"
+						   tal:attributes="class api.userid in poll_metadata.get('unread',()) and 'unread' or ''">
                             ${poll_metadata['title']}
                         </a>
                     </li>
