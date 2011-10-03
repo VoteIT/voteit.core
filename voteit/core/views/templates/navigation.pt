@@ -70,17 +70,19 @@
                 <h6 class="toggle_minimize iconpadding ${section}">
                 	<span><a href="${request.url}" tal:content="api.translate(section.title())">Section title</a></span>
 				</h6>
+				<div class="section minimizable_area">
 				<tal:open_section condition="not is_closed">
 	                <tal:agenda_items define="agenda_items api.get_restricted_content(api.meeting, content_type='AgendaItem', states=section);">
 	                        ${nav_section(agenda_items)}
 		            </tal:agenda_items>
 				</tal:open_section>
-				<tal:closed_section condition="is_closed">
-                    <div class="minimizable_inverted" i18n:translate="">(hidden, click above to open)</div>
-				</tal:closed_section>
+				</div>
+                <div class="minimizable_inverted" i18n:translate="">(hidden, click above to open)</div>
             </div>
 		    </tal:section>
         </tal:iterate>
     </tal:inside_meeting>
+    
+    <div id="ajaxtest"></div>
 
 </metal:main>

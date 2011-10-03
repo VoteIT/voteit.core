@@ -111,23 +111,21 @@ $(document).ready(function() {
  *   <elem class="minimizable_inverted">Stuff that will only be visible when it's minimized</elem>
  * </elem>
  */
-voteit.minimize = {
-    init: function(){
-        $('.toggle_minimize').live('click', function() {
-			min_parent = $(this).parents('.toggle_area');
-			// Set parent class as opened or closed
-			//FIXME: Load page with ajax
-            var cookie_id = min_parent.attr('id');
-            if (min_parent.hasClass('toggle_opened')) {
-                $.cookie(cookie_id, 1);
-            } else {
-                $.cookie(cookie_id, null);
-            }
-			min_parent.toggleClass('toggle_opened').toggleClass('toggle_closed');
-        })
-    }
-}
-$(document).ready(voteit.minimize.init);
+$(document).ready(function() {
+    $('.toggle_minimize').live('click', function(event) {
+		min_parent = $(this).parents('.toggle_area');
+		// set cookie for opened or closed
+        var cookie_id = min_parent.attr('id');
+        if (min_parent.hasClass('toggle_opened')) {
+            $.cookie(cookie_id, 1);
+        } else {
+            $.cookie(cookie_id, null);
+		    location.reload();
+        }
+		// Set parent class as opened or closed
+		min_parent.toggleClass('toggle_opened').toggleClass('toggle_closed');
+    })
+});
 
 /* profile popup */
 $(document).ready(function() {
