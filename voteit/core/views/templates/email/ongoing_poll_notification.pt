@@ -10,7 +10,7 @@
 
 <h1 i18n:translate="">You can now vote</h1>
 
-<div i18n:translate="">A poll has just opened in the meeting
+<div i18n:translate="ongoing_poll_email_text">A poll has just opened in the meeting
     <a href="meeting_url" tal:content="meeting.title" i18n:name="meeting_title">Title</a>.
     To get there, follow this link:
 </div>
