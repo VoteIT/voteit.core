@@ -104,14 +104,14 @@
                 </div> <!-- content_wrapper -->
             </div> <!-- top -->
 
-            <div id="content" class="col-50-50" metal:define-slot="content">
-                <div id="left" class="column column-1" tal:condition="not form|True">
+            <div id="content" class="col-50-50" metal:define-slot="content" tal:condition="not form|True">
+                <div id="left" class="column column-1">
                     <div class="content_wrapper">
                        <metal:left define-slot="left"></metal:left>
                     </div>
                 </div> <!-- left column-->
                 
-                <div id="right" class="column column-2" tal:condition="not form|True">
+                <div id="right" class="column column-2">
                     <div class="content_wrapper">
                        <metal:right define-slot="right"></metal:right>
                     </div>
