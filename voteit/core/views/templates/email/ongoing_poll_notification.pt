@@ -1,0 +1,21 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="voteit.core">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+
+<h1 i18n:translate="">You can now vote</h1>
+
+<div i18n:translate="ongoing_poll_email_text">A poll has just opened in the meeting
+    <a href="meeting_url" tal:content="meeting.title" i18n:name="meeting_title">Title</a>.
+    To get there, follow this link:
+</div>
+
+<a href="${poll_url}">${poll_url}</a>
+
+</body>
+</html>

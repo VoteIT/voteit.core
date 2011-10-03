@@ -72,7 +72,7 @@
 				</h6>
 				<div class="section minimizable_area">
 				<tal:open_section condition="not is_closed">
-	                <tal:agenda_items define="agenda_items api.get_restricted_content(api.meeting, content_type='AgendaItem', states=section);">
+	                <tal:agenda_items define="agenda_items api.get_restricted_content(api.meeting, content_type='AgendaItem', states=section, sort_on='start_time');">
 	                        ${nav_section(agenda_items)}
 		            </tal:agenda_items>
 				</tal:open_section>

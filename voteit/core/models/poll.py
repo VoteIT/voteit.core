@@ -8,6 +8,10 @@ from pyramid.threadlocal import get_current_request
 from repoze.workflow.workflow import WorkflowError
 from zope.component import getAdapter
 from zope.component import getUtility
+from pyramid.url import resource_url
+from pyramid_mailer import get_mailer
+from pyramid_mailer.message import Message
+from pyramid.renderers import render
 
 from voteit.core import security
 from voteit.core import VoteITMF as _
@@ -17,6 +21,7 @@ from voteit.core.models.unread_aware import UnreadAware
 from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import ICatalogMetadataEnabled
 from voteit.core.models.interfaces import IDateTimeUtil
+from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IPollPlugin
 from voteit.core.models.interfaces import IProposal
@@ -25,6 +30,8 @@ from voteit.core.models.interfaces import IDateTimeUtil
 from voteit.core.views.macros import FlashMessages
 from voteit.core.validators import html_string_validator
 from voteit.core.fields import TZDateTime
+
+
 
 
 _UPCOMING_PERMS = (security.VIEW, security.EDIT, security.DELETE, security.CHANGE_WORKFLOW_STATE, security.MODERATE_MEETING, )
@@ -359,3 +366,47 @@ def ongoing_poll_callback(context, info):
 
     if not context.proposal_uids:
         raise ValueError('A poll with no proposal can not be set to ongoing')
+
+
+def email_voters_about_ongoing_poll(poll, request=None):
+    """ Email voters about that a poll they have voting permission in is open.
+        I.e. in state ongoing.
+        This function is triggered by a workflow subscriber, so not all functionality
+        is nested in the workflow callback. (It would make permission tests very
+        annoying and hard to write otherwise)
+    """
+    if request is None:
+        request = get_current_request()
+    userids = security.find_authorized_userids(poll, (security.ADD_VOTE,))
+
+    meeting = find_interface(poll, IMeeting)
+    assert meeting
+
+    root = find_root(meeting)
+    users = root['users']
+    email_addresses = set()
+    for userid in userids:
+        user = users.get(userid)
+        #In case user is deleted
+        if not user:
+            continue
+        email = user.get_field_value('email')
+        if email:
+            email_addresses.add(email)
+
+    response = {}
+    response['meeting'] = meeting
+    response['meeting_url'] = resource_url(meeting, request)
+    response['poll_url'] = resource_url(poll, request)
+
+    sender = "%s <%s>" % (meeting.get_field_value('meeting_mail_name'), meeting.get_field_value('meeting_mail_address'))
+    body_html = render('../views/templates/email/ongoing_poll_notification.pt', response, request=request)
+
+    mailer = get_mailer(request)
+    #We need to send individual messages anyway
+    for email in email_addresses:
+        msg = Message(subject=_(u"VoteIT: Open poll"),
+                      sender = sender,
+                      recipients=[email,],
+                      html=body_html)
+        mailer.send(msg)
