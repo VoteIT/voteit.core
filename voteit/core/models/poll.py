@@ -402,10 +402,11 @@ def email_voters_about_ongoing_poll(poll, request=None):
     sender = "%s <%s>" % (meeting.get_field_value('meeting_mail_name'), meeting.get_field_value('meeting_mail_address'))
     body_html = render('../views/templates/email/ongoing_poll_notification.pt', response, request=request)
 
-    msg = Message(subject=_(u"VoteIT: Open poll"),
-                  sender = sender,
-                  recipients=email_addresses,
-                  html=body_html)
-
     mailer = get_mailer(request)
-    mailer.send(msg)
+    #We need to send individual messages anyway
+    for email in email_addresses:
+        msg = Message(subject=_(u"VoteIT: Open poll"),
+                      sender = sender,
+                      recipients=[email,],
+                      html=body_html)
+        mailer.send(msg)
