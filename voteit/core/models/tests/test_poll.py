@@ -6,6 +6,7 @@ from zope.component import queryUtility
 from pyramid.threadlocal import get_current_registry
 from pyramid.authorization import ACLAuthorizationPolicy
 from pyramid.traversal import find_interface
+from pyramid_mailer import get_mailer
 
 from voteit.core.models.interfaces import IAgendaItem
 from voteit.core import security
@@ -277,6 +278,70 @@ class PollTests(unittest.TestCase):
         
         obj.set_workflow_state(request, 'ongoing')
 
+    def test_ongoing_wo_proposal(self):
+        request = testing.DummyRequest()
+        poll = self._make_obj()
+        
+        ai = find_interface(poll, IAgendaItem)
+        ai.set_workflow_state(request, 'upcoming')
+        ai.set_workflow_state(request, 'ongoing')
+        
+        # remove all proposals on poll
+        poll.set_field_value('proposals', set())
+
+        poll.set_workflow_state(request, 'upcoming')
+        
+        self.assertRaises(ValueError, poll.set_workflow_state, request, 'ongoing')
+
+    def test_email_voters_about_ongoing_poll(self):
+        #FIXME: Parts of this test should be turned into a site fixture that can be reusable
+        from voteit.core.bootstrap import bootstrap_voteit
+        from voteit.core.models.meeting import Meeting
+        from voteit.core.models.poll import Poll
+        from voteit.core.app import register_content_types
+        from voteit.core.security import authn_policy
+        from voteit.core.security import authz_policy
+        from voteit.core.security import unrestricted_wf_transition_to
+        
+        request = testing.DummyRequest()
+        self.config = testing.setUp(request=request, registry=self.config.registry)
+        self.config.setup_registry(authentication_policy=authn_policy,
+                                   authorization_policy=authz_policy)
+        self.config.include('pyramid_mailer.testing')
+        self.config.scan('voteit.core.subscribers.poll')
+        ct = """
+    voteit.core.models.meeting
+    voteit.core.models.site
+    voteit.core.models.user
+    voteit.core.models.users
+        """
+        self.config.registry.settings['content_types'] = ct
+        register_content_types(self.config)
+        mailer = get_mailer(request)
+
+        root = bootstrap_voteit(self.config.registry, echo=False)
+        root['users']['admin'].set_field_value('email', 'this@that.com')
+        
+        meeting = root['meeting'] = Meeting()
+        meeting.add_groups('admin', [security.ROLE_VOTER])
+        unrestricted_wf_transition_to(meeting, 'ongoing')
+        
+        meeting['ai'] = self._agenda_item_with_proposals_fixture()
+        ai = meeting['ai']
+        unrestricted_wf_transition_to(ai, 'upcoming')
+        unrestricted_wf_transition_to(ai, 'ongoing')
+        
+        ai['poll'] = Poll()
+        poll = ai['poll']
+        poll.set_field_value('proposals', set([ai['prop1'].uid, ai['prop2'].uid]))
+        unrestricted_wf_transition_to(poll, 'upcoming')
+
+        #Okay, so this is the actual test...
+        self.assertEqual(len(mailer.outbox), 0)
+        unrestricted_wf_transition_to(poll, 'ongoing')
+        self.assertEqual(len(mailer.outbox), 1)
+        self.failUnless('this@that.com' in mailer.outbox[0].recipients)
+
 
 class PollPermissionTests(unittest.TestCase):
 
@@ -379,18 +444,3 @@ class PollPermissionTests(unittest.TestCase):
         self.assertEqual(self.pap(poll, security.DELETE), set())
         
         self.assertEqual(self.pap(poll, security.ADD_VOTE), set())
-
-    def test_ongoing_wo_proposal(self):
-        request = testing.DummyRequest()
-        poll = self._make_obj()
-        
-        ai = find_interface(poll, IAgendaItem)
-        ai.set_workflow_state(request, 'upcoming')
-        ai.set_workflow_state(request, 'ongoing')
-        
-        # remove all proposals on poll
-        poll.set_field_value('proposals', set())
-
-        poll.set_workflow_state(request, 'upcoming')
-        
-        self.assertRaises(ValueError, poll.set_workflow_state, request, 'ongoing')

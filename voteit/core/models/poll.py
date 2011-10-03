@@ -367,16 +367,17 @@ def ongoing_poll_callback(context, info):
     if not context.proposal_uids:
         raise ValueError('A poll with no proposal can not be set to ongoing')
 
-    email_voters_about_ongoing_poll(context)
-
 
 def email_voters_about_ongoing_poll(poll, request=None):
     """ Email voters about that a poll they have voting permission in is open.
         I.e. in state ongoing.
+        This function is triggered by a workflow subscriber, so not all functionality
+        is nested in the workflow callback. (It would make permission tests very
+        annoying and hard to write otherwise)
     """
     if request is None:
         request = get_current_request()
-    userids = security.find_authorized_userids(poll, security.ADD_VOTE)
+    userids = security.find_authorized_userids(poll, (security.ADD_VOTE,))
 
     meeting = find_interface(poll, IMeeting)
     assert meeting
@@ -385,7 +386,7 @@ def email_voters_about_ongoing_poll(poll, request=None):
     users = root['users']
     email_addresses = set()
     for userid in userids:
-        user = users.get('userid')
+        user = users.get(userid)
         #In case user is deleted
         if not user:
             continue
