@@ -112,7 +112,7 @@ $(document).ready(function() {
  * </elem>
  */
 $(document).ready(function() {
-    $('.toggle_minimize').live('click', function(event) {
+    $('#navigation .toggle_minimize').live('click', function(event) {
 		min_parent = $(this).parents('.toggle_area');
 		// set cookie for opened or closed
         var cookie_id = min_parent.attr('id');
@@ -121,6 +121,22 @@ $(document).ready(function() {
         } else {
             $.cookie(cookie_id, null);
 		    location.reload();
+        }
+		// Set parent class as opened or closed
+		min_parent.toggleClass('toggle_opened').toggleClass('toggle_closed');
+    })
+});
+
+/* Poll result */
+$(document).ready(function() {
+    $('#polls .toggle_minimize').live('click', function(event) {
+		min_parent = $(this).parents('.toggle_area');
+		// set cookie for opened or closed
+        var cookie_id = min_parent.attr('id');
+        if (min_parent.hasClass('toggle_opened')) {
+            $.cookie(cookie_id, 1);
+        } else {
+            $.cookie(cookie_id, null);
         }
 		// Set parent class as opened or closed
 		min_parent.toggleClass('toggle_opened').toggleClass('toggle_closed');
