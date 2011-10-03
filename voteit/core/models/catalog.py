@@ -44,13 +44,14 @@ class CatalogMetadata(object):
     def __call__(self):
         """ Return a dict of metadata values for an object. """
         results = {
-            'title':get_title(self.context, None),
-            'created':self.context.created, #Exception, since the get_created method returns unixtime
-            'creators':get_creators(self.context, ()),
-            'path':get_path(self.context, None),
-            'content_type':get_content_type(self.context, None),
-            'uid':get_uid(self.context, None),
-            'like_userids':get_like_userids(self.context, ()),
+            'title': get_title(self.context, None),
+            'created': self.context.created, #Exception, since the get_created method returns unixtime
+            'creators': get_creators(self.context, ()),
+            'path': get_path(self.context, None),
+            'content_type': get_content_type(self.context, None),
+            'uid': get_uid(self.context, None),
+            'like_userids': get_like_userids(self.context, ()),
+            'unread': get_unread(self.context, ()),
         }
 
         #Use special metadata?
