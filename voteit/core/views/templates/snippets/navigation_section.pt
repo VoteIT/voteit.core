@@ -1,6 +1,6 @@
 <tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core">
 
-    <ul class="section minimizable_area">
+    <ul class="section">
 	    <tal:iterate condition="contents" repeat="obj contents">
 	        <li tal:attributes="class api.inside(context, obj) and 'selected' or 'plain'">
 	            <tal:moderator_menu condition="api.show_moderator_actions">

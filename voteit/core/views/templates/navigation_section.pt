@@ -1,1 +1,7 @@
+<tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core">
+
+<div class="section minimizable_area">
 ${api._get_navigation_section(agenda_items)}
+</div>
+
+</tal:main>

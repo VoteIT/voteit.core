@@ -17,18 +17,17 @@ $(document).ready(function () {
     $('.dropdown_menu .menu_header').live('click', function(event) {
         return false;
     });
-    $('.dropdown_menu').hover(
-        function () {
+    $('.dropdown_menu').live('mouseover mouseout', function(event) {
+        if (event.type == "mouseover") {
             //show its submenu
             $(this).find('.menu_body').slideDown(100);
             $(this).find('.menu_header').addClass('hover');
-        },
-        function () {
+        } else {
             //hide its submenu
             $(this).find('.menu_body').slideUp(100);
             $(this).find('.menu_header').removeClass('hover');
         }
-    );
+    });
 });
 
 /*  User tag methods */
@@ -111,23 +110,44 @@ $(document).ready(function() {
  *   <elem class="minimizable_inverted">Stuff that will only be visible when it's minimized</elem>
  * </elem>
  */
-voteit.minimize = {
-    init: function(){
-        $('.toggle_minimize').live('click', function() {
-			min_parent = $(this).parents('.toggle_area');
-			// Set parent class as opened or closed
-			//FIXME: Load page with ajax
-            var cookie_id = min_parent.attr('id');
-            if (min_parent.hasClass('toggle_opened')) {
-                $.cookie(cookie_id, 1);
-            } else {
-                $.cookie(cookie_id, null);
-            }
-			min_parent.toggleClass('toggle_opened').toggleClass('toggle_closed');
-        })
-    }
-}
-$(document).ready(voteit.minimize.init);
+$(document).ready(function() {
+    $('#navigation .toggle_minimize').live('click', function(event) {
+        event.preventDefault(); 
+		min_parent = $(this).parents('.toggle_area');
+		// set cookie for opened or closed
+        var cookie_id = min_parent.attr('id');
+        if (min_parent.hasClass('toggle_opened')) {
+            $.cookie(cookie_id, 1);
+        } else {
+            $.cookie(cookie_id, null);
+            section = cookie_id.substring(cookie_id.lastIndexOf('-')+1);
+		    // Load page with ajax
+            parent = $(this).parent();
+            section_div = parent.find('div.section');
+        	$('<div>').load('navigation_section?section='+section+' div.section.minimizable_area', function() {
+            	section_div.replaceWith($(this).find("div.section"))
+        	});
+        }
+		// Set parent class as opened or closed
+		min_parent.toggleClass('toggle_opened').toggleClass('toggle_closed');
+    })
+});
+
+$(document).ready(function() {
+    $('#meeting_overview .toggle_minimize').live('click', function(event) {
+        event.preventDefault(); 
+		min_parent = $(this).parents('.toggle_area');
+		// set cookie for opened or closed
+        var cookie_id = min_parent.attr('id');
+        if (min_parent.hasClass('toggle_opened')) {
+            $.cookie(cookie_id, 1);
+        } else {
+            $.cookie(cookie_id, null);
+        }
+		// Set parent class as opened or closed
+		min_parent.toggleClass('toggle_opened').toggleClass('toggle_closed');
+    })
+});
 
 /* profile popup */
 $(document).ready(function() {
