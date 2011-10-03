@@ -65,7 +65,7 @@
                             </span>
                         </td>
                         <td>
-                            <span tal:condition="'role:Moderator' in principals">
+                            <span tal:condition="'role:Moderator' in principals or 'role:Admin' in principals">
                                 <span class="yes_icon" i18n:translate="">Yes</span>
                             </span>
                         </td>
