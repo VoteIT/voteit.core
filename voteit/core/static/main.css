@@ -112,6 +112,7 @@ p {
     width: 100%;
     display: block;
     position: relative;
+    clear: both;
 }
 .column {
     position: relative;
