@@ -5,8 +5,7 @@
 			<span tal:content="structure flash['msg']">Message</span>
 			<a href="#" title="Close message"
 			   class="close_message"
-			   tal:condition="flash['close_button']"
-			   i18n:translate="">OK</a>
+			   tal:condition="flash['close_button']">X</a>
         </div>
 	</tal:iterate>
 	<div class="clear"><!-- --></div>
