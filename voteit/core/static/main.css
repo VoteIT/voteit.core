@@ -289,7 +289,7 @@ p {
     padding: 10px;
 }
 #meeting-actions-menu .unread {
-    font-weight: normal;
+    border-left: solid 3px #054265;   
 }
 #meeting-actions-menu li.tab { 
     float: left;

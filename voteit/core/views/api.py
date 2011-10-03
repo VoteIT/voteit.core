@@ -228,12 +228,14 @@ class APIView(object):
             response['meetings'] = meetings
 
             if self.meeting:
+                #Sections
                 if self.show_moderator_actions:
                     sections = MODERATOR_SECTIONS
                 else:
                     sections = REGULAR_SECTIONS
-
                 response['sections'] = sections
+
+                #Metadata
                 metadata = {}
                 meeting_path = resource_path(self.meeting)
                 show_polls = False
@@ -243,9 +245,13 @@ class APIView(object):
                                                                     workflow_state = section)
                     if metadata[section]:
                         show_polls = True
-                
                 response['show_polls'] = show_polls
                 response['polls_metadata'] = metadata
+
+                #Unread
+                num, results = self.search_catalog(content_type = 'Poll', path = meeting_path, unread=self.userid)
+                response['unread_polls_count'] = num
+
         response['is_moderator'] = self.context_has_permission(security.MODERATE_MEETING, context)
 
         return render('templates/meeting_actions.pt', response, request=request)

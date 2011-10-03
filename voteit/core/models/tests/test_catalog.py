@@ -360,3 +360,23 @@ class CatalogMetadataTests(CatalogTestCase):
         
         user_tags.remove('like', 'admin')
         self.assertEqual(_get_metadata()['like_userids'], ())
+
+    def test_unread(self):
+        meeting = self._add_mock_meeting()
+        self.config.setup_registry(authorization_policy=authz_policy, authentication_policy=authn_policy)
+        #Discussion posts are unread aware
+        from voteit.core.models.discussion_post import DiscussionPost
+        obj = DiscussionPost()
+        obj.title = 'Hello'
+        meeting['post'] = obj
+        obj.mark_all_unread()
+        from voteit.core.models.catalog import reindex_indexes
+        reindex_indexes(self.root.catalog)
+
+        def _get_metadata():
+            result = self.search(content_type = 'DiscussionPost')
+            doc_id = result[1][0]
+            return self.get_metadata(doc_id)
+        
+        self.assertEqual(_get_metadata()['unread'], frozenset(['admin']) )
+        
