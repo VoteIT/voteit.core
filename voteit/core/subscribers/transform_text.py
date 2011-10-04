@@ -33,7 +33,7 @@ def at_userid_link(text, obj):
     for (space, userid) in re.findall(regexp, text):
         if userid in users:
             user = users[userid]
-            link = '%s<a href="%s_userinfo?userid=%s" title="%s" class="inlineinfo">%s</a>' % (
+            link = '%s<a href="%s_userinfo?userid=%s" title="%s" class="inlineinfo">@%s</a>' % (
                 space,
                 resource_url(meeting, request),
                 userid,
