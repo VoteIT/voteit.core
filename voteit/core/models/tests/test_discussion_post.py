@@ -59,7 +59,7 @@ class DiscussionTests(unittest.TestCase):
         obj = self._make_obj()
         obj.set_field_value('text', '@admin')
         meeting['p3'] = obj
-        text = '<a href="%s_userinfo?userid=%s" title="%s" class="inlineinfo">%s</a>' % (
+        text = '<a href="%s_userinfo?userid=%s" title="%s" class="inlineinfo">@%s</a>' % (
                 resource_url(meeting, request),
                 'admin',
                 self.root.users['admin'].title,
