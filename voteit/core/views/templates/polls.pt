@@ -30,11 +30,13 @@
 			
 		</div>
         
+        <div class="clear"><!-- --></div>
+
         <div tal:condition="wf_state == 'closed'"
             tal:content="structure poll.render_poll_result()">
             Poll result
         </div>
-		
+
         <div tal:condition="wf_state in ('private', 'upcoming')" tal:define="proposals poll.get_proposal_objects()">
         <tal:iterate condition="proposals" repeat="proposal proposals" >
             <div class="proposal">
