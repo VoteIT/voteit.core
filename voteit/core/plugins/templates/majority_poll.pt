@@ -1,4 +1,5 @@
-<h1>Poll result</h1>
+<tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core">
+<h1 i18n:translate="">Poll result</h1>
 <div tal:condition="result">
     <tal:iterate repeat="item result">
     	<div>
@@ -13,3 +14,4 @@
 		</div>
     </tal:iterate>
 </div>
+</tal:main>
