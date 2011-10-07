@@ -4,6 +4,7 @@ from pyramid.i18n import get_localizer
 from pyramid.response import Response
 from pyramid.url import resource_url
 from pyramid.renderers import render
+from pyramid.httpexceptions import HTTPFound
 
 from voteit.core.models.interfaces import IUserTags
 from voteit.core.models.interfaces import IBaseContent
