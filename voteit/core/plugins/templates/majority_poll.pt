@@ -9,7 +9,7 @@
 			</strong>
 			&mdash;
 			<tal:proposal tal:define="proposal get_proposal_by_uid(item['uid']['proposal'])">
-				<span tal:content="proposal.title">Title</span>
+				<span tal:content="structure proposal.title">Title</span>
 			</tal:proposal>
 		</div>
     </tal:iterate>
