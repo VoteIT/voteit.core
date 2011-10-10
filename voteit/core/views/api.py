@@ -258,7 +258,6 @@ class APIView(object):
 
         response = {}
         response['api'] = self
-        response['addable_types'] = self.get_addable_types(context, request)
         response['context'] = context
         if getattr(context, 'workflow', None):
             response['states'] = context.get_available_workflow_states(request)
@@ -335,6 +334,7 @@ class APIView(object):
         return False
         
     def get_restricted_content(self, context, content_type=None, iface=None, states=None, sort_on=None, sort_reverse=False):
+        """ Use this method carefully. It might be pretty expensive to run. """
         candidates = context.get_content(content_type=content_type, iface=iface, states=states, sort_on=sort_on, sort_reverse=sort_reverse)
         results = []
         for candidate in candidates:

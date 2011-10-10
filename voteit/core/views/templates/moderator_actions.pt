@@ -25,16 +25,6 @@
         </li>
         </tal:siteroot>
 
-        <tal:add_content tal:condition="(context.content_type == 'SiteRoot' or context.content_type == 'Meeting') and
-                                        addable_types|False">
-            <tal:iterate tal:repeat="type_name addable_types">
-                <li><a tal:attributes="href string:@@add?content_type=$type_name">
-                    <span i18n:translate="">Add</span>
-                    <span tal:replace="api.translate(type_name)">somestuff</span>
-                </a></li>
-            </tal:iterate>
-        </tal:add_content>
-
         <li tal:condition="context.content_type == 'Poll' and
                                context_has_permission('Edit', context) and
                                context.get_poll_plugin().get_settings_schema()|False">
