@@ -1,22 +1,28 @@
+import colander
 from pyramid.exceptions import Forbidden
 from pyramid.view import view_config
-from pyramid.traversal import find_root, find_interface
+from pyramid.traversal import find_interface
 from pyramid.url import resource_url
 from pyramid.security import has_permission
-import colander
 from deform import Form
 from deform.exception import ValidationFailure
-from webob.exc import HTTPFound
+from pyramid.httpexceptions import HTTPFound
 
 from voteit.core import VoteITMF as _
 from voteit.core.views.api import APIView
-from voteit.core.security import ROLE_OWNER, EDIT, DELETE, ADD_VOTE, VIEW
+from voteit.core.security import ROLE_OWNER
+from voteit.core.security import EDIT
+from voteit.core.security import DELETE
+from voteit.core.security import ADD_VOTE
+from voteit.core.security import VIEW
 from voteit.core.models.interfaces import IVote
 from voteit.core.models.interfaces import IPoll
-from voteit.core.models.interfaces import IPollPlugin
 from voteit.core.models.interfaces import IAgendaItem
-from voteit.core.models.schemas import add_csrf_token, button_vote,\
-    button_cancel, button_update, button_delete
+from voteit.core.models.schemas import add_csrf_token
+from voteit.core.models.schemas import button_vote
+from voteit.core.models.schemas import button_cancel
+from voteit.core.models.schemas import button_update
+from voteit.core.models.schemas import button_delete
 
 DEFAULT_TEMPLATE = "templates/base_edit.pt"
 
@@ -42,9 +48,7 @@ class VoteView(object):
 
     @view_config(context=IPoll, name="vote", renderer=DEFAULT_TEMPLATE, permission=ADD_VOTE)
     def add_vote(self):
-        """ Add a Vote to a Poll. """
-        #FIXME: Allow plugin to override renderer
-        
+        """ Add a Vote to a Poll. """        
         #Check if the users vote exists already
         userid = self.api.userid
         if userid in self.context:
@@ -60,16 +64,15 @@ class VoteView(object):
             
             raise Forbidden("You've already voted and the poll is closed.")
 
-        self.form = Form(self.schema, buttons=(button_vote, button_cancel))
-        self.api.register_form_resources(self.form)
+        form = Form(self.schema, buttons=(button_vote, button_cancel))
+        self.api.register_form_resources(form)
 
         post = self.request.POST
         if 'vote' in post:
             controls = post.items()
             try:
                 #appstruct is deforms convention. It will be the submitted data in a dict.
-                appstruct = self.form.validate(controls)
-                #FIXME: validate name - it must be unique and url-id-like
+                appstruct = form.validate(controls)
             except ValidationFailure, e:
                 self.response['form'] = e.render()
                 return self.response
@@ -100,7 +103,7 @@ class VoteView(object):
         #No action - Render edit form
         msg = _(u"Add a vote")
         self.api.flash_messages.add(msg, close_button=False)
-        self.response['form'] = self.form.render()
+        self.response['form'] = form.render()
         return self.response
 
     @view_config(context=IVote, name="edit", renderer=DEFAULT_TEMPLATE, permission=EDIT)
@@ -108,15 +111,15 @@ class VoteView(object):
         """ Edit vote, only for the owner of the vote. """
         #FIXME: Allow plugin to override renderer?
        
-        self.form = Form(self.schema, buttons=(button_update, button_cancel))
-        self.api.register_form_resources(self.form)
+        form = Form(self.schema, buttons=(button_update, button_cancel))
+        self.api.register_form_resources(form)
 
         post = self.request.POST
         if 'update' in post:
             controls = post.items()
             try:
                 #appstruct is deforms convention. It will be the submitted data in a dict.
-                appstruct = self.form.validate(controls)
+                appstruct = form.validate(controls)
             except ValidationFailure, e:
                 self.response['form'] = e.render()
                 return self.response
@@ -141,7 +144,7 @@ class VoteView(object):
         msg = _(u"Edit your vote")
         self.api.flash_messages.add(msg, close_button=False)
         appstruct = self.context.get_vote_data()
-        self.response['form'] = self.form.render(appstruct=appstruct)
+        self.response['form'] = form.render(appstruct=appstruct)
         return self.response
         
     @view_config(context=IVote, name="delete", permission=DELETE, renderer=DEFAULT_TEMPLATE)
@@ -150,8 +153,8 @@ class VoteView(object):
         schema = colander.Schema()
         add_csrf_token(self.context, self.request, schema)
         
-        self.form = Form(schema, buttons=(button_delete, button_cancel))
-        self.api.register_form_resources(self.form)
+        form = Form(schema, buttons=(button_delete, button_cancel))
+        self.api.register_form_resources(form)
 
         post = self.request.POST
         if 'delete' in post:
@@ -174,18 +177,17 @@ class VoteView(object):
         #No action - Render edit form
         msg = _(u"Are you sure you want to delete this item?")
         self.api.flash_messages.add(msg, close_button=False)
-        self.response['form'] = self.form.render()
+        self.response['form'] = form.render()
         return self.response
 
     @view_config(context=IVote, renderer='templates/base_readonly_form.pt', permission=VIEW)
     def view_vote(self):
-
-        self.form = Form(self.schema, buttons=())
-        self.api.register_form_resources(self.form)
+        form = Form(self.schema, buttons=())
+        self.api.register_form_resources(form)
 
         msg = _(u"This is your vote")
         self.api.flash_messages.add(msg, close_button=False)
 
         appstruct = self.context.get_vote_data()
-        self.response['readonly_form'] = self.form.render(appstruct=appstruct, readonly=True)
+        self.response['readonly_form'] = form.render(appstruct=appstruct, readonly=True)
         return self.response

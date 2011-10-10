@@ -9,7 +9,6 @@ from pyramid.events import ApplicationCreated
 from pyramid.events import subscriber
 from pyramid.config import Configurator
 from zope.interface.verify import verifyClass
-from zope.component import getUtility
 
 from voteit.core.models.interfaces import ICatalogMetadata
 from voteit.core.models.interfaces import ICatalogMetadataEnabled

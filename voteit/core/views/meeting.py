@@ -1,12 +1,14 @@
-from pyramid.renderers import get_renderer, render
+import urllib
+
+from deform import Form
+from deform.exception import ValidationFailure
+from pyramid.renderers import get_renderer
 from pyramid.security import has_permission
 from pyramid.view import view_config
-from webob.exc import HTTPFound
-import deform
-import urllib
-from deform.exception import ValidationFailure
-from pyramid.exceptions import Forbidden
+from pyramid.httpexceptions import HTTPFound
 from pyramid.url import resource_url
+from betahaus.pyracont.factories import createContent
+from betahaus.pyracont.factories import createSchema
 
 from voteit.core import security
 from voteit.core import VoteITMF as _
@@ -14,9 +16,12 @@ from voteit.core.views.base_view import BaseView
 from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IMeeting
-from voteit.core.models.schemas import add_csrf_token, button_add, button_cancel,\
-    button_resend, button_delete
-from voteit.core.schemas.invite_ticket import token_form_validator
+from voteit.core.models.schemas import add_csrf_token
+from voteit.core.models.schemas import button_add
+from voteit.core.models.schemas import button_cancel
+from voteit.core.models.schemas import button_resend
+from voteit.core.models.schemas import button_delete
+from voteit.core.validators import deferred_token_form_validator
 
 
 class MeetingView(BaseView):
@@ -115,22 +120,19 @@ class MeetingView(BaseView):
             came_from = urllib.quote(self.request.url)
             url = "%s@@login?came_from=%s" % (resource_url(self.api.root, self.request), came_from)
             return HTTPFound(location=url)
-        
-        ci = self.api.content_info['InviteTicket']
-        #FIXME: Schema must be passed with init_kw validator = token_form_validator
-        ###
-        schema = ci.schema(context=self.context, request=self.request, type='claim')
+
+        schema = createSchema('ClaimTicketSchema', validator = deferred_token_form_validator).bind(context=self.context, request=self.request)
         add_csrf_token(self.context, self.request, schema)
 
-        self.form = deform.Form(schema, buttons=(button_add, button_cancel))
-        self.api.register_form_resources(self.form)
+        form = Form(schema, buttons=(button_add, button_cancel))
+        self.api.register_form_resources(form)
 
         if 'add' in self.request.POST or \
             'email' in self.request.GET and 'token' in self.request.GET:
 
             controls = self.request.params.items()
             try:
-                appstruct = self.form.validate(controls)
+                appstruct = form.validate(controls)
             except ValidationFailure, e:
                 self.response['form'] = e.render()
                 return self.response
@@ -151,7 +153,7 @@ class MeetingView(BaseView):
         #No action - Render add form
         msg = _(u"Meeting Access")
         self.api.flash_messages.add(msg, close_button=False)
-        self.response['form'] = self.form.render()
+        self.response['form'] = form.render()
         return self.response
 
     
@@ -162,18 +164,17 @@ class MeetingView(BaseView):
             should have once they register. When the form is submitted, it will also email
             users.
         """
-        ci = self.api.content_info['InviteTicket']
-        schema = ci.schema(context=self.context, request=self.request, type='add')
+        schema = createSchema('AddTicketsSchema').bind(context=self.context, request=self.request)
         add_csrf_token(self.context, self.request, schema)
 
-        self.form = deform.Form(schema, buttons=(button_add, button_cancel))
-        self.api.register_form_resources(self.form)
+        form = Form(schema, buttons=(button_add, button_cancel))
+        self.api.register_form_resources(form)
 
         post = self.request.POST
         if 'add' in post:
             controls = post.items()
             try:
-                appstruct = self.form.validate(controls)
+                appstruct = form.validate(controls)
             except ValidationFailure, e:
                 self.response['form'] = e.render()
                 return self.response
@@ -181,7 +182,7 @@ class MeetingView(BaseView):
             emails = appstruct['emails'].splitlines()
             message = appstruct['message']
             for email in emails:
-                obj = ci.type_class(email, appstruct['roles'], message)
+                obj = createContent('InviteTicket', email, appstruct['roles'], message)
                 self.context.add_invite_ticket(obj, self.request) #Will also email user
             
             msg = _('sent_tickets_text', default=u"Successfully added and sent ${mail_count} invites", mapping={'mail_count':len(emails)} )
@@ -199,7 +200,7 @@ class MeetingView(BaseView):
         #No action - Render add form
         msg = _(u"Send meeting invitations")
         self.api.flash_messages.add(msg, close_button=False)
-        self.response['form'] = self.form.render()
+        self.response['form'] = form.render()
         return self.response
 
 
@@ -207,12 +208,11 @@ class MeetingView(BaseView):
     def manage_tickets(self):
         """ A form for handling and reviewing already sent tickets.
         """
-        ci = self.api.content_info['InviteTicket']
-        schema = ci.schema(context=self.context, request=self.request, type='manage')
+        schema = createSchema('ManageTicketsSchema').bind(context=self.context, request=self.request)
         add_csrf_token(self.context, self.request, schema)
             
-        self.form = deform.Form(schema, buttons=(button_resend, button_delete, button_cancel,))
-        self.api.register_form_resources(self.form)
+        form = Form(schema, buttons=(button_resend, button_delete, button_cancel,))
+        self.api.register_form_resources(form)
 
         post = self.request.POST
 
@@ -220,7 +220,7 @@ class MeetingView(BaseView):
         if 'resend' in post or 'delete' in post:
             controls = post.items()
             try:
-                appstruct = self.form.validate(controls)
+                appstruct = form.validate(controls)
                 emails = appstruct['emails']
             except ValidationFailure, e:
                 self.response['form'] = e.render()
@@ -256,7 +256,7 @@ class MeetingView(BaseView):
         msg = _(u"Current invitations")
         self.api.flash_messages.add(msg, close_button=False)
 
-        self.response['form'] = self.form.render()
+        self.response['form'] = form.render()
         return self.response
         
     @view_config(name="navigation_section", context=IMeeting, renderer="templates/navigation_section.pt", permission=security.VIEW)

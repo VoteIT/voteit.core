@@ -462,7 +462,3 @@ class ICatalogMetadataEnabled(Interface):
         The interface itself doesn't do anything, but the ICatalogMetadata
         adapter is registered for it.
     """
-
-class IContentUtility(Interface):
-    """ """
-    #FIXME: Remove

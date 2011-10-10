@@ -6,10 +6,10 @@ from betahaus.pyracont.decorators import schema_factory
 
 from voteit.core import VoteITMF as _
 from voteit.core.validators import html_string_validator
-from voteit.core.validators import unique_email_validator
+from voteit.core.validators import deferred_unique_email_validator
 from voteit.core.validators import password_validation
-from voteit.core.validators import new_userid_validator
-from voteit.core.validators import password_token_validator
+from voteit.core.validators import deferred_new_userid_validator
+from voteit.core.validators import deferred_password_token_validator
 
 
 @colander.deferred
@@ -27,7 +27,7 @@ def password_node():
 def email_node():
     return colander.SchemaNode(colander.String(),
                                title=_(u"Email"),
-                               validator=unique_email_validator,)
+                               validator=deferred_unique_email_validator,)
 
 def first_name_node():
     return colander.SchemaNode(colander.String(),
@@ -53,7 +53,7 @@ class AddUserSchema(colander.Schema):
                                  title = _(u"UserID"),
                                  description = _('userid_description',
                                                  default=u"Used as a nickname, in @-links and as a unique id. You can't change this later. Note that it's case sensitive!"),
-                                 validator=new_userid_validator,)
+                                 validator=deferred_new_userid_validator,)
     password = password_node()
     email = email_node()
     first_name = first_name_node()
@@ -101,7 +101,7 @@ class RequestNewPasswordSchema(colander.Schema):
 class TokenPasswordChangeSchema(colander.Schema):
     #FIXME: Implement captcha here to avoid bruteforce
     token = colander.SchemaNode(colander.String(),
-                                validator = password_token_validator,
+                                validator = deferred_password_token_validator,
                                 missing = u'',
                                 widget = deform.widget.HiddenWidget(),)
     password = password_node()

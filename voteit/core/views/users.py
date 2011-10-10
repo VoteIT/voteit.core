@@ -1,6 +1,5 @@
 import urllib
 
-import colander
 from pyramid.view import view_config
 from deform import Form
 from deform.exception import ValidationFailure
@@ -9,6 +8,8 @@ from pyramid.url import resource_url
 from pyramid.security import remember
 from pyramid.security import forget
 from pyramid.renderers import render
+from betahaus.pyracont.factories import createContent
+from betahaus.pyracont.factories import createSchema
 
 from voteit.core import VoteITMF as _
 from voteit.core.models.interfaces import ISiteRoot
@@ -48,26 +49,23 @@ class UsersView(object):
 
     @view_config(context=IUsers, name="add", renderer=DEFAULT_TEMPLATE)
     def add_form(self):
-        #FIXME: Utility might need to handle different schemas here?
-        content_util = self.request.registry.getUtility(IContentUtility)
-        schema = content_util['User'].schema(context=self.context, request=self.request, type='add')
+        schema = createSchema('AddUserSchema').bind(context=self.context, request=self.request)
         add_csrf_token(self.context, self.request, schema)
 
-        self.form = Form(schema, buttons=(button_add, button_cancel))
-        self.api.register_form_resources(self.form)
+        form = Form(schema, buttons=(button_add, button_cancel))
+        self.api.register_form_resources(form)
 
         post = self.request.POST
         if 'add' in post:
             controls = post.items()
             try:
                 #appstruct is deforms convention. It will be the submitted data in a dict.
-                appstruct = self.form.validate(controls)
-                #FIXME: validate name - it must be unique and url-id-like
+                appstruct = form.validate(controls)
             except ValidationFailure, e:
                 self.response['form'] = e.render()
                 return self.response
             
-            obj = content_util['User'].type_class()
+            obj = createContent('User')
             
             if appstruct['password']:
                 #At this point the validation should have been done
@@ -102,7 +100,7 @@ class UsersView(object):
         #No action - Render add form
         msg = _(u"Add new user")
         self.api.flash_messages.add(msg, close_button=False)
-        self.response['form'] = self.form.render()
+        self.response['form'] = form.render()
         return self.response
 
     @view_config(context=IUsers, renderer='templates/list_users.pt', permission=VIEW)
@@ -120,20 +118,18 @@ class UsersView(object):
 
     @view_config(context=IUser, name="change_password", renderer=DEFAULT_TEMPLATE, permission=CHANGE_PASSWORD)
     def password_form(self):
-        content_util = self.request.registry.getUtility(IContentUtility)
-        schema = content_util['User'].schema(context=self.context, request=self.request, type='change_password')
+        schema = createSchema('ChangePasswordSchema').bind(context=self.context, request=self.request)
         add_csrf_token(self.context, self.request, schema)
 
-        self.form = Form(schema, buttons=(button_update, button_cancel))
-        self.api.register_form_resources(self.form)
+        form = Form(schema, buttons=(button_update, button_cancel))
+        self.api.register_form_resources(form)
 
         post = self.request.POST
         if 'update' in post:
             controls = post.items()
             try:
                 #appstruct is deforms convention. It will be the submitted data in a dict.
-                appstruct = self.form.validate(controls)
-                #FIXME: validate name - it must be unique and url-id-like
+                appstruct = form.validate(controls)
             except ValidationFailure, e:
                 self.response['form'] = e.render()
                 return self.response
@@ -148,23 +144,22 @@ class UsersView(object):
             return HTTPFound(location=url)
 
         #No action - Render edit form
-        self.response['form'] = self.form.render()
+        self.response['form'] = form.render()
         return self.response
 
     @view_config(context=IUser, name="token_pw", renderer=DEFAULT_TEMPLATE)
     def token_password_change(self):
-        content_util = self.request.registry.getUtility(IContentUtility)
-        schema = content_util['User'].schema(context=self.context, request=self.request, type='token_password_change')
+        schema = createSchema('TokenPasswordChangeSchema').bind(context=self.context, request=self.request)
 
-        self.form = Form(schema, buttons=(button_change, button_cancel))
-        self.api.register_form_resources(self.form)
+        form = Form(schema, buttons=(button_change, button_cancel))
+        self.api.register_form_resources(form)
 
         post = self.request.POST
         if 'change' in post:
             controls = post.items()
             try:
                 #appstruct is deforms convention. It will be the submitted data in a dict.
-                appstruct = self.form.validate(controls)
+                appstruct = form.validate(controls)
             except ValidationFailure, e:
                 self.response['form'] = e.render()
                 return self.response
@@ -189,17 +184,16 @@ class UsersView(object):
 
         #Everything seems okay. Render form
         appstruct = dict(token = token)
-        self.response['form'] = self.form.render(appstruct=appstruct)
+        self.response['form'] = form.render(appstruct=appstruct)
         return self.response
 
     @view_config(context=ISiteRoot, name="register", renderer=LOGIN_REGISTER_TPL)
     @view_config(context=ISiteRoot, name='login', renderer=LOGIN_REGISTER_TPL)
     def login_or_register(self):
-        content_util = self.request.registry.getUtility(IContentUtility)
         users = self.api.root.users
         
-        login_schema = content_util['User'].schema(context=self.context, request=self.request, type='login')
-        register_schema = content_util['User'].schema(context=users, request=self.request, type='registration')
+        login_schema = createSchema('LoginSchema').bind(context=self.context, request=self.request)        
+        register_schema = createSchema('AddUserSchema').bind(context=self.context, request=self.request)
 
         login_form = Form(login_schema, buttons=(button_login,))
         reg_form = Form(register_schema, buttons=(button_register,))
@@ -249,13 +243,11 @@ class UsersView(object):
             try:
                 #appstruct is deforms convention. It will be the submitted data in a dict.
                 appstruct = reg_form.validate(controls)
-                #FIXME: validate name - it must be unique and url-id-like
             except ValidationFailure, e:
                 self.response['reg_form'] = e.render()
                 return self.response
             
-            obj = content_util['User'].type_class()
-            
+            obj = createContent('User')
             obj.set_password(appstruct['password'])
                 
             #Remove the field since it's handled - to avoid blanking the already set password
@@ -298,10 +290,8 @@ class UsersView(object):
 
     @view_config(context=ISiteRoot, name='request_password',
                  renderer=DEFAULT_TEMPLATE)
-    def request_password(self):
-        content_util = self.request.registry.getUtility(IContentUtility)
-        
-        schema = content_util['User'].schema(context=self.context, request=self.request, type='request_password')
+    def request_password(self):        
+        schema = createSchema('RequestNewPasswordSchema').schema(context=self.context, request=self.request)
         form = Form(schema, buttons=(button_request, button_cancel))
         self.api.register_form_resources(form)
     

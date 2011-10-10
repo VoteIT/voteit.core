@@ -7,22 +7,6 @@ from voteit.core.validators import multiple_email_validator
 from voteit.core import security
 from voteit.core import VoteITMF as _
 
-        
-def token_form_validator(form, value):
-    value['email']
-    value['token']
-    
-    token = context.invite_tickets.get(value['email'])
-    if not token:
-        exc = colander.Invalid(form, 'Incorrect email')
-        exc['token'] = _(u"Couldn't find any invitation for this email address.")
-        raise exc
-    
-    if token.token != value['token']:
-        exc = colander.Invalid(form, _(u"Email matches, but token doesn't"))
-        exc['token'] = _(u"Check this field - token doesn't match")
-        raise exc
-
 
 @schema_factory('ClaimTicketSchema')
 class ClaimTicketSchema(colander.Schema):
@@ -36,7 +20,7 @@ class ClaimTicketSchema(colander.Schema):
 
             
 @schema_factory('AddTicketsSchema')
-class AddTicketSchema(colander.Schema):
+class AddTicketsSchema(colander.Schema):
     roles = colander.SchemaNode(
         deform.Set(),
         title = _(u"Roles"),

@@ -1,8 +1,7 @@
-from pyramid.threadlocal import get_current_registry
+from betahaus.pyracont.factories import createContent
 
 from voteit.core import VoteITMF as _
 from voteit.core.security import ROLE_ADMIN
-from betahaus.pyracont.factories import createContent
 
 
 def bootstrap_voteit(echo=True):

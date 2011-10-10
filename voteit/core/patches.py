@@ -4,7 +4,6 @@ import os
 from pkg_resources import resource_filename
 
 from deform import Form
-from pyramid.i18n import get_locale_name
 from pyramid.i18n import get_localizer
 from pyramid.threadlocal import get_current_request
 

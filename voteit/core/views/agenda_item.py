@@ -1,10 +1,13 @@
-from pyramid.renderers import get_renderer, render
+import colander
+from deform import Form
+from pyramid.renderers import get_renderer
+from pyramid.renderers import render
 from pyramid.view import view_config
 from pyramid.url import resource_url
 from pyramid.security import has_permission
-from webob.exc import HTTPFound
-from deform import Form
-import colander
+from pyramid.httpexceptions import HTTPFound
+from pyramid.traversal import resource_path
+from betahaus.pyracont.factories import createSchema
 
 from voteit.core import VoteITMF as _
 from voteit.core.views.base_view import BaseView
@@ -13,10 +16,14 @@ from voteit.core.models.interfaces import IDiscussionPost
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IProposal
 from voteit.core.models.interfaces import IVote
-from voteit.core.security import VIEW, EDIT, ADD_VOTE
-from voteit.core.models.schemas import button_add, button_cancel, button_vote
-from pyramid.traversal import resource_path
-
+from voteit.core.security import VIEW
+from voteit.core.security import EDIT
+from voteit.core.security import ADD_VOTE
+from voteit.core.security import ADD_PROPOSAL
+from voteit.core.security import ADD_DISCUSSION_POST
+from voteit.core.models.schemas import button_add
+from voteit.core.models.schemas import button_cancel
+from voteit.core.models.schemas import button_vote
 
 
 class AgendaItemView(BaseView):
@@ -31,7 +38,6 @@ class AgendaItemView(BaseView):
         self.response['get_polls'] = self.get_polls
         self.response['polls'] = self.api.get_restricted_content(self.context, iface=IPoll, sort_on='created')
         
-        ci = self.api.content_info
         url = resource_url(self.context, self.request)
         
         poll_forms = {}
@@ -61,16 +67,16 @@ class AgendaItemView(BaseView):
 
         
         #Proposal form
-        if has_permission(ci['Proposal'].add_permission, self.context, self.request):
-            prop_schema = ci['Proposal'].schema(context=self.context, request=self.request, type='add')
+        if has_permission(ADD_PROPOSAL, self.context, self.request):
+            prop_schema = createSchema('ProposalSchema').bind(context=self.context, request=self.request)
             prop_form = Form(prop_schema, action=url+"@@add?content_type=Proposal", buttons=(button_add,))
             self.api.register_form_resources(prop_form)
         else:
             prop_form = None
 
         #Discussion form
-        if has_permission(ci['DiscussionPost'].add_permission, self.context, self.request):
-            discussion_schema = ci['DiscussionPost'].schema(context=self.context, request=self.request, type='add')
+        if has_permission(ADD_DISCUSSION_POST, self.context, self.request):
+            discussion_schema = createSchema('DiscussionPostSchema').bind(context=self.context, request=self.request)
             discussion_form = Form(discussion_schema, action=url+"@@add?content_type=DiscussionPost", buttons=(button_add,))
             self.api.register_form_resources(discussion_form)
         else:

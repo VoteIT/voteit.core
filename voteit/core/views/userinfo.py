@@ -1,7 +1,5 @@
 from pyramid.security import authenticated_userid
 from pyramid.exceptions import Forbidden
-from pyramid.httpexceptions import HTTPFound
-from pyramid.renderers import render
 from pyramid.traversal import find_root
 from pyramid.view import view_config
 from webhelpers.html.converters import nl2br

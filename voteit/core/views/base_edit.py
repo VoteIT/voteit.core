@@ -1,26 +1,27 @@
 from datetime import timedelta
 
 from pyramid.view import view_config
-from pyramid.renderers import get_renderer
-from pyramid.traversal import find_root, find_interface
 from pyramid.url import resource_url
 from pyramid.security import has_permission
 from pyramid.exceptions import Forbidden
 from zope.component.event import objectEventNotify
-
 import colander
 from deform import Form
 from deform.exception import ValidationFailure
-from webob.exc import HTTPFound
+from pyramid.httpexceptions import HTTPFound
 from slugify import slugify
+from betahaus.pyracont.factories import createContent
+from betahaus.pyracont.factories import createSchema
 
 from voteit.core.views.api import APIView
 from voteit.core import VoteITMF as _
-from voteit.core.security import ROLE_OWNER, EDIT, DELETE, VIEW
-from voteit.core.models.schemas import add_csrf_token, button_add, button_cancel,\
-    button_update, button_delete
-from voteit.core.events import ObjectUpdatedEvent
+from voteit.core.security import ROLE_OWNER, EDIT, DELETE
 from voteit.core.models.schemas import add_csrf_token
+from voteit.core.models.schemas import button_add
+from voteit.core.models.schemas import button_cancel
+from voteit.core.models.schemas import button_update
+from voteit.core.models.schemas import button_delete
+from voteit.core.events import ObjectUpdatedEvent
 
 
 DEFAULT_TEMPLATE = "templates/base_edit.pt"
@@ -39,14 +40,14 @@ class BaseEdit(object):
     @view_config(name="add", renderer=DEFAULT_TEMPLATE)
     def add_form(self):
         content_type = self.request.params.get('content_type')
-        ftis = self.api.content_info
         
         #Permission check
-        add_permission = getattr(ftis[content_type], 'add_permission', None)
+        add_permission = self.api.content_types_add_perm(content_type)
         if not has_permission(add_permission, self.context, self.request):
             raise Forbidden("You're not allowed to add '%s' in this context." % content_type)
         
-        schema = ftis[content_type].schema(context=self.context, request=self.request, type='add')
+        schema_name = self.api.get_schema_name(content_type, 'add')
+        schema = createSchema(schema_name).bind(context=self.context, request=self.request)
         add_csrf_token(self.context, self.request, schema)
             
         self.form = Form(schema, buttons=(button_add, button_cancel))
@@ -59,12 +60,11 @@ class BaseEdit(object):
             try:
                 #appstruct is deforms convention. It will be the submitted data in a dict.
                 appstruct = self.form.validate(controls)
-                #FIXME: validate name - it must be unique and url-id-like
             except ValidationFailure, e:
                 self.response['form'] = e.render()
                 return self.response
             
-            obj = ftis[content_type].type_class()
+            obj = createContent(content_type)
             obj.set_field_appstruct(appstruct)
             
             if self.api.userid:
@@ -100,8 +100,8 @@ class BaseEdit(object):
     @view_config(name="edit", renderer=DEFAULT_TEMPLATE, permission=EDIT)
     def edit_form(self):
         content_type = self.context.content_type
-        ftis = self.api.content_info
-        schema = ftis[content_type].schema(context=self.context, request=self.request, type='edit')
+        schema_name = self.api.get_schema_name(content_type, 'edit')
+        schema = createSchema(schema_name).bind(context=self.context, request=self.request)
         add_csrf_token(self.context, self.request, schema)
 
         self.form = Form(schema, buttons=(button_update, button_cancel))
@@ -113,7 +113,6 @@ class BaseEdit(object):
             try:
                 #appstruct is deforms convention. It will be the submitted data in a dict.
                 appstruct = self.form.validate(controls)
-                #FIXME: validate name - it must be unique and url-id-like
             except ValidationFailure, e:
                 self.response['form'] = e.render()
                 return self.response

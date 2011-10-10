@@ -1,7 +1,7 @@
 from pyramid.traversal import find_interface
 from pyramid.view import view_config
 from pyramid.url import resource_url
-from webob.exc import HTTPFound
+from pyramid.httpexceptions import HTTPFound
 from pyramid.exceptions import NotFound
 
 from voteit.core.models.interfaces import IAgendaItem

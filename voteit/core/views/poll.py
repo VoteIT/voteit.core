@@ -1,14 +1,9 @@
 from pyramid.view import view_config
 from pyramid.url import resource_url
-from pyramid.renderers import get_renderer
-from pyramid.traversal import find_root, find_interface
 from pyramid.exceptions import Forbidden
-from pyramid.response import Response
-from zope.component import queryUtility
-from zope.component.interfaces import ComponentLookupError
 from deform import Form
 from deform.exception import ValidationFailure
-from webob.exc import HTTPFound
+from pyramid.httpexceptions import HTTPFound
 from zope.component.event import objectEventNotify
 
 from voteit.core.views.api import APIView
@@ -17,11 +12,10 @@ from voteit.core.security import EDIT, VIEW
 from voteit.core.models.interfaces import IPoll
 from voteit.core.events import ObjectUpdatedEvent
 from voteit.core.models.schemas import add_csrf_token
-from voteit.core.models.schemas import button_add
 from voteit.core.models.schemas import button_cancel
 from voteit.core.models.schemas import button_update
-from voteit.core.models.schemas import button_delete
 from voteit.core.models.schemas import button_save
+from betahaus.pyracont.factories import createSchema
 
 
 class PollView(object):
@@ -37,20 +31,19 @@ class PollView(object):
     @view_config(context=IPoll, name="edit", renderer='templates/base_edit.pt', permission=EDIT)
     def edit_form(self):
         content_type = self.context.content_type
-        ftis = self.api.content_info
-        schema = ftis[content_type].schema(context=self.context, request=self.request, type='edit')
+        schema_name = self.api.get_schema_name(content_type, 'edit')
+        schema = createSchema(schema_name).bind(context=self.context, request=self.request)
         add_csrf_token(self.context, self.request, schema)
 
-        self.form = Form(schema, buttons=(button_update, button_cancel))
-        self.api.register_form_resources(self.form)
+        form = Form(schema, buttons=(button_update, button_cancel))
+        self.api.register_form_resources(form)
 
         post = self.request.POST
         if 'update' in post:
             controls = post.items()
             try:
                 #appstruct is deforms convention. It will be the submitted data in a dict.
-                appstruct = self.form.validate(controls)
-                #FIXME: validate name - it must be unique and url-id-like
+                appstruct = form.validate(controls)
             except ValidationFailure, e:
                 self.response['form'] = e.render()
                 return self.response
@@ -76,7 +69,7 @@ class PollView(object):
         msg = _(u"Edit")
         self.api.flash_messages.add(msg, close_button=False)
         appstruct = self.context.get_field_appstruct(schema)
-        self.response['form'] = self.form.render(appstruct=appstruct)
+        self.response['form'] = form.render(appstruct=appstruct)
         return self.response
 
     @view_config(context=IPoll, name="poll_config", renderer='templates/base_edit.pt', permission=EDIT)
@@ -93,16 +86,15 @@ class PollView(object):
             raise Forbidden("No settings for this poll")
         add_csrf_token(self.context, self.request, schema)
 
-        self.form = Form(schema, buttons=(button_save, button_cancel))
-        self.api.register_form_resources(self.form)
+        form = Form(schema, buttons=(button_save, button_cancel))
+        self.api.register_form_resources(form)
 
         post = self.request.POST
         if 'save' in post:
             controls = post.items()
             try:
                 #appstruct is deforms convention. It will be the submitted data in a dict.
-                appstruct = self.form.validate(controls)
-                #FIXME: validate name - it must be unique and url-id-like
+                appstruct = form.validate(controls)
             except ValidationFailure, e:
                 self.response['form'] = e.render()
                 return self.response
@@ -118,7 +110,7 @@ class PollView(object):
             url = resource_url(self.context, self.request)
             return HTTPFound(location=url)
 
-        self.response['form'] = self.form.render(appstruct=self.context.poll_settings)
+        self.response['form'] = form.render(appstruct=self.context.poll_settings)
         return self.response
         
     @view_config(context=IPoll)

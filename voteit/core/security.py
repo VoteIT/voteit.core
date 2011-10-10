@@ -95,13 +95,13 @@ def find_authorized_userids(context, permissions):
         
         Warning: This method will of course consume CPU. Use it where appropriate.
     """
-    authz_policy = getUtility(IAuthorizationPolicy)
+    authz_pol = getUtility(IAuthorizationPolicy)
     root = find_root(context)
     allowed_userids = set()
     
     for userid in root.users.keys():
         principals = context_effective_principals(context, userid)
-        res = [authz_policy.permits(context, principals, perm) for perm in permissions]
+        res = [authz_pol.permits(context, principals, perm) for perm in permissions]
         if len(res) == sum(res): #Bool true counts as 1, and false as 0
             allowed_userids.add(userid)
     return allowed_userids

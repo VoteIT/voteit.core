@@ -20,7 +20,7 @@ class RecaptchaWidget(CheckedInputWidget):
     readonly_template = 'captcha'
     requirements = ()
     url = "http://www.google.com/recaptcha/api/verify"
-    headers={'Content-type': 'application/x-www-form-urlencoded'}
+    headers = {'Content-type': 'application/x-www-form-urlencoded'}
 
     def serialize(self, field, cstruct, readonly=False):
         if cstruct in (null, None):
@@ -56,7 +56,7 @@ class RecaptchaWidget(CheckedInputWidget):
                                       headers=self.headers,
                                       body=data)
         except AttributeError as e:
-            if e=="'NoneType' object has no attribute 'makefile'":
+            if e == "'NoneType' object has no attribute 'makefile'":
                 ## XXX: catch a possible httplib regression in 2.7 where
                 ## XXX: there is no connection made to the socker so
                 ## XXX sock is still None when makefile is called.

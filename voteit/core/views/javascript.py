@@ -1,5 +1,4 @@
 from pyramid.view import view_config
-from pyramid.response  import Response
 
 from voteit.core.models.interfaces import ISiteRoot
 from voteit.core.views.base_view import BaseView

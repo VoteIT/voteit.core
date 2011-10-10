@@ -5,7 +5,7 @@ The reason for this is to allow them to be included in templates and to
 be reloaded by Ajax requests.
 """
 from pyramid.view import view_config
-from pyramid.renderers import render, get_renderer
+from pyramid.renderers import render
 
 
 FLASH_TEMPLATE = 'templates/macros/flash_messages.pt'

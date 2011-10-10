@@ -6,11 +6,9 @@ from pyramid.response import Response
 from pyramid.security import authenticated_userid
 from pyramid.interfaces import IAuthorizationPolicy
 from pyramid.url import resource_url
-
-from webob.exc import HTTPFound
+from pyramid.httpexceptions import HTTPFound
 
 from voteit.core import security
-
 from voteit.core.models.interfaces import ISiteRoot
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import IAgendaItem

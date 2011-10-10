@@ -2,12 +2,15 @@ import datetime
 import iso8601
 
 from zope.component import getUtility
-from pyramid.threadlocal import get_current_registry
-from colander import DateTime, Invalid, null, _
+from colander import SchemaType
+from colander import Invalid
+from colander import null
+
 from voteit.core.models.interfaces import IDateTimeUtil
+from voteit.core import VoteITMF as _
 
 
-class TZDateTime(DateTime):
+class TZDateTime(SchemaType):
     """ A type representing a timezone-aware datetime object.
 
     It respects the timezone specified on creation. The datetime coming from
@@ -15,12 +18,6 @@ class TZDateTime(DateTime):
     is converted to UTC during deserialization. Serialization converts it back
     to the local timezone, so the conversion process is transparent to the user.
     """
-
-    def __init__(self):
-        super(TZDateTime, self).__init__()
-
-        registry = get_current_registry()
-
     def serialize(self, node, appstruct):
         dt_util = getUtility(IDateTimeUtil)
         if appstruct is null:
@@ -34,9 +31,8 @@ class TZDateTime(DateTime):
                           _("'${val}' is not valid as date and time",
                             mapping={'val':appstruct})
                           )
-
+        #FIXME: Don't use strftime, util already has a method for that
         return dt_util.utc_to_tz(appstruct).strftime('%Y-%m-%d %H:%M')
-
 
     def deserialize(self, node, cstruct):
         dt_util = getUtility(IDateTimeUtil)

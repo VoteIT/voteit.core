@@ -1,9 +1,6 @@
-from time import strftime
-
 from deform import Form
 from pyramid.renderers import get_renderer, render
 from pyramid.security import authenticated_userid
-from pyramid.security import Allowed
 from pyramid.security import Authenticated
 from pyramid.security import Everyone
 from pyramid.url import resource_url
@@ -12,21 +9,16 @@ from pyramid.location import inside
 from pyramid.traversal import find_interface
 from pyramid.traversal import find_root
 from pyramid.traversal import resource_path
-from pyramid.exceptions import Forbidden
 from pyramid.interfaces import IAuthenticationPolicy
 from pyramid.interfaces import IAuthorizationPolicy
 from pyramid.decorator import reify
-from pyramid.i18n import get_locale_name, get_localizer
-from webob.exc import HTTPFound
-from repoze.workflow import get_workflow
+from pyramid.i18n import get_locale_name
 from webhelpers.html.converters import nl2br
-from repoze.catalog.query import Eq
-from repoze.catalog.query import Name
 from betahaus.pyracont.interfaces import IContentFactory
+from betahaus.pyracont.factories import createSchema
 
 from voteit.core import VoteITMF as _
 from voteit.core import security
-from voteit.core.models.interfaces import IContentUtility
 from voteit.core.models.interfaces import IDateTimeUtil
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.views.macros import FlashMessages
@@ -60,7 +52,6 @@ class APIView(object):
         self.authn_policy = request.registry.getUtility(IAuthenticationPolicy)
         self.authz_policy = request.registry.getUtility(IAuthorizationPolicy)
 
-        self.addable_types = self._get_addable_types(context, request)
         self.lineage = lineage(context)
         self.inside = inside
         self.dt_util = request.registry.getUtility(IDateTimeUtil)
@@ -125,17 +116,23 @@ class APIView(object):
         user = self.root.users.get(userid)
         cache[userid] = user
         return user
-    
-    def _get_addable_types(self, context, request):
+
+    def get_addable_types(self, context, request):
         context_type = getattr(context, 'content_type', '')
         if not context_type:
             return ()
         
         addable_names = set()
         for (name, factory) in request.registry.getUtilitiesFor(IContentFactory):
-            if context_type in factory._callable.allowed_contexts and \
-                self.context_has_permission(factory._callable.add_permission, context):
-                addable_names.add(type.type_class.content_type)
+            if context_type not in getattr(factory._callable, 'allowed_contexts', ()):
+                continue
+            add_perm = getattr(factory._callable, 'add_permission', None)
+            if add_perm is None:
+                continue
+            if not self.context_has_permission(add_perm, context):
+                continue
+            #Type is addable
+            addable_names.add(name)
         return tuple(addable_names)
         
     @reify
@@ -168,7 +165,7 @@ class APIView(object):
         
         #Login form if user isn't authenticated
         if not self.userid:
-            login_schema = self.content_info['User'].schema(context=self.context, request=self.request, type='login')
+            login_schema = createSchema('LoginSchema').bind(context=self.context, request=self.request)
             action_url = resource_url(self.root, self.request) + 'login'
             login_form = Form(login_schema, buttons=(button_login,), action=action_url)
     
@@ -261,7 +258,7 @@ class APIView(object):
 
         response = {}
         response['api'] = self
-        response['addable_types'] = self._get_addable_types(context, request)
+        response['addable_types'] = self.get_addable_types(context, request)
         response['context'] = context
         if getattr(context, 'workflow', None):
             response['states'] = context.get_available_workflow_states(request)
@@ -363,3 +360,17 @@ class APIView(object):
     def get_metadata_for_query(self, **kwargs):
         """ Return metadata for catalog search result. """
         return metadata_for_query(self.root.catalog, **kwargs)
+
+    def get_content_factory(self, content_type):
+        return self.request.registry.getUtility(IContentFactory, name=content_type)
+
+    def content_types_add_perm(self, content_type):
+        factory = self.get_content_factory(content_type)
+        return getattr(factory._callable, 'add_permission', None)
+
+    def get_schema_name(self, content_type, action):
+        """ Will raise ComponentLookupError if content_type doesn't exist
+            Will raise KeyError if action doesn't exist.
+        """
+        factory = self.get_content_factory(content_type)
+        return factory._callable.schemas[action]
