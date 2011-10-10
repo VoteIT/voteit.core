@@ -4,10 +4,15 @@ from webhelpers.html.tools import strip_tags
 from webhelpers.html.converters import nl2br
 from pyramid.traversal import find_interface, find_root
 
-from voteit.core.models.interfaces import IMeeting
+from voteit.core.models.interfaces import IMeeting, IUser
 from voteit.core.security import find_authorized_userids
 from voteit.core.security import VIEW
 from voteit.core import VoteITMF as _
+from voteit.core.models.user import USERID_REGEXP
+
+
+AT_USERID_PATTERN = re.compile(r'(\A|\s)@('+USERID_REGEXP+r')')
+NEW_USERID_PATTERN = re.compile(r'^'+USERID_REGEXP+r'$')
 
 
 def password_validation(node, value):
@@ -55,22 +60,95 @@ def multiple_email_validator(node, value):
         raise colander.Invalid(node, _(u"The following adresses is invalid: ${emails}", mapping={'emails': emails}))
 
 
-def at_userid_validator(node, value, obj):
+class UserIDInMeeting(object):
+    """ Validator which succeeds if @-sign points to a user that exists in this meeting.
     """
-        checks that the userid in '@userid' realy is a userid in the system
-    """
-    meeting = find_interface(obj, IMeeting)
+    def __init__(self, context):
+        self.context = context
 
-    from voteit.core.models.user import userid_regexp
-    regexp = r'(\A|\s)@('+userid_regexp+r')'
+    def __call__(self, node, value):
+        meeting = find_interface(self.context, IMeeting)
+        invalid = set()
+        valid_userids =  find_authorized_userids(meeting, (VIEW,))
+        for (space, userid) in re.findall(AT_USERID_PATTERN, value):
+            #Check if requested userid has permission in meeting
+            if not userid in valid_userids:
+                invalid.add(userid)
+                
+            if invalid:
+                userids = ", ".join(invalid)
+                raise colander.Invalid(node, _(u"userid_validator_error",
+                                               default=u"The following userids is invalid: ${userids}. Remember that userids are case sensitive.",
+                                               mapping={'userids': userids}))
 
-    reg = re.compile(regexp)
-    invalid = []
-    for (space, userid) in re.findall(regexp, value):
-        #Check if requested userid has permission in meeting
-        if not userid in find_authorized_userids(meeting, (VIEW,)):
-            invalid.append(userid)
-            
-    if invalid:
-        userids = ", ".join(invalid)
-        raise colander.Invalid(node, _(u"The following userids is invalid: ${userids}", mapping={'userids': userids}))
+@colander.deferred
+def deferred_at_userid_validator(node, kw):
+    context = kw['context']
+    return UserIDInMeeting(context)
+
+
+class NewUniqueUserID(object):
+    """ Check if UserID is unique globally in the site and that UserID conforms to correct standard. """
+    
+    def __init__(self, context):
+        self.context = context
+
+    def __call__(self, node, value):
+        if not NEW_USERID_PATTERN.match(value):
+            msg = _('userid_char_error',
+                    default=u"UserID must be 3-15 chars, start with a-zA-Z and only contain regular latin chars, numbers, minus and underscore.")
+            raise colander.Invalid(node, msg)
+        
+        root = find_root(context)
+        if value in root.users:
+            msg = _('already_registered_error',
+                    default=u"UserID already registered. If it was registered by you, try to retrieve your password.")
+            raise colander.Invalid(node, msg)
+        
+
+@colander.deferred
+def new_userid_validator(node, kw):
+    context = kw['context']
+    return NewUniqueUserID(context)
+
+
+class UniqueEmail(object):
+    """ Check that email address is valid and unique. """
+    
+    def __init__(self, context):
+        self.context = context
+    
+    def __call__(self, node, value):        
+        default_email_validator = colander.Email(msg=_(u"Invalid email address."))
+        default_email_validator(node, value)
+        #context can be IUser or IUsers
+        users = find_interface(context, IUsers)
+        #User with email exists?
+        match = users.get_user_by_email(value)
+        if match and context != match:
+            #Something was found, and it isn't this context - I.e. some other user
+            msg = _(u"email_not_unique_error",
+                    default=u"Another user has already registered with that email address. If you've lost your password, request a new one instead.")
+            raise colander.Invalid(node, 
+                                   msg)
+
+        
+@colander.deferred
+def unique_email_validator(node, kw):
+    context = kw['context']
+    return UniqueEmail(context)
+
+
+class CheckPasswordToken(object):
+    def __init__(self, context):
+        assert IUser.providedBy(context)
+        self.context = context
+    
+    def __call__(self, node, value):
+        return self.context.validate_password_token(node, value)
+
+
+@colander.deferred
+def password_token_validator(node, kw):
+    context = kw['context']
+    return CheckPasswordToken(context)

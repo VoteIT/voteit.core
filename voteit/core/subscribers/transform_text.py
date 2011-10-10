@@ -14,7 +14,7 @@ from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import IProposal
 from voteit.core.models.interfaces import IDiscussionPost
 from voteit.core.interfaces import IObjectUpdatedEvent
-from voteit.core.models.user import userid_regexp
+from voteit.core.models.user import USERID_REGEXP
 
 def urls_to_links(text):
     reg = re.compile(r"(http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+#]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+)")
@@ -28,7 +28,7 @@ def at_userid_link(text, obj):
     users = root.users
     request = get_current_request()
 
-    regexp = r'(\A|\s)@('+userid_regexp+r')'
+    regexp = r'(\A|\s)@('+USERID_REGEXP+r')'
     reg = re.compile(regexp)
     for (space, userid) in re.findall(regexp, text):
         if userid in users:

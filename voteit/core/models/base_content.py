@@ -24,9 +24,11 @@ class BaseContent(Folder, SecurityAware):
     content_type = None
     allowed_contexts = ()
 
-    def __init__(self):
+    def __init__(self, **kwargs):
+        #FIXME: Compat with betahaus.pyracont.BaseFolder
         self.uid = uuid4()
         self.created = utcnow()
+        self.set_field_appstruct(kwargs)
         super(BaseContent, self).__init__()
 
     @property
@@ -150,24 +152,3 @@ class BaseContent(Folder, SecurityAware):
             results = results[-limit:]
 
         return results
-
-#FIXME: This should probably be done on the field level instead
-#    def transform_mentions(self, key, base_url):
-#        text = self.get_field_value(key)
-#        if text is None:
-#            return ()
-#        
-#        matched_userids = set()
-#        pattern = re.compile(r'(\A|\s)@(\w+)')
-#        
-#        matches = pattern.findall(text)
-#        for match in matches:
-#            #Second position is the userid
-#            matched_userids.add(match[1])
-#        
-#        if matches:
-#            transformed = pattern.sub(r'\1<a href="%s\2">@\2</a>' % base_url, text)
-#            self.set_field_value(key, transformed)
-#            return matched_userids
-#        
-#        return ()

@@ -1,17 +1,17 @@
-import colander
-import deform
 from zope.interface import implements
-from pyramid.traversal import find_interface, find_root
-from pyramid.security import Allow, DENY_ALL, ALL_PERMISSIONS
+from pyramid.traversal import find_interface
+from pyramid.traversal import find_root
+from pyramid.security import Allow
+from pyramid.security import DENY_ALL
 from BTrees.OIBTree import OIBTree
 from pyramid.threadlocal import get_current_request
 from repoze.workflow.workflow import WorkflowError
 from zope.component import getAdapter
-from zope.component import getUtility
 from pyramid.url import resource_url
 from pyramid_mailer import get_mailer
 from pyramid_mailer.message import Message
 from pyramid.renderers import render
+from betahaus.pyracont.decorators import content_factory
 
 from voteit.core import security
 from voteit.core import VoteITMF as _
@@ -20,18 +20,11 @@ from voteit.core.models.workflow_aware import WorkflowAware
 from voteit.core.models.unread_aware import UnreadAware
 from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import ICatalogMetadataEnabled
-from voteit.core.models.interfaces import IDateTimeUtil
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IPollPlugin
-from voteit.core.models.interfaces import IProposal
 from voteit.core.models.interfaces import IVote
-from voteit.core.models.interfaces import IDateTimeUtil
 from voteit.core.views.macros import FlashMessages
-from voteit.core.validators import html_string_validator
-from voteit.core.fields import TZDateTime
-
-
 
 
 _UPCOMING_PERMS = (security.VIEW, security.EDIT, security.DELETE, security.CHANGE_WORKFLOW_STATE, security.MODERATE_MEETING, )
@@ -65,6 +58,7 @@ ACL['closed'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, security.CHANGE_WO
 CLOSED_STATES = ('canceled', 'closed', )
 
 
+@content_factory('Poll', title=_(u"Poll"))
 class Poll(BaseContent, WorkflowAware, UnreadAware):
     """ Poll content. """
     implements(IPoll, ICatalogMetadataEnabled)
@@ -72,6 +66,7 @@ class Poll(BaseContent, WorkflowAware, UnreadAware):
     display_name = _(u"Poll")
     allowed_contexts = ('AgendaItem',)
     add_permission = security.ADD_POLL
+    schemas = {'add': 'PollSchema', 'edit': 'PollSchema'}
 
     @property
     def __acl__(self):
@@ -235,98 +230,6 @@ class Ballots(object):
             self.ballots[value] += 1
         else:
             self.ballots[value] = 1
-
-
-def construct_schema(context=None, request=None, **kwargs):
-    if context is None:
-        KeyError("'context' is a required keyword for Poll schemas. See construct_schema in the poll module.")
-    if request is None:
-        KeyError("'request' is a required keyword for Poll schemas. See construct_schema in the poll module.")
-    type = kwargs.get('type', None)
-
-    dt_util = getUtility(IDateTimeUtil)
-
-    #Add all selectable plugins to schema. This chooses the poll method to use
-    plugin_choices = set()
-
-    #FIXME: The new object should probably be sent to construct schema
-    #for now, we can fake this
-    fake_poll = Poll()
-
-    for (name, plugin) in request.registry.getAdapters([fake_poll], IPollPlugin):
-        plugin_choices.add((name, plugin.title))
-
-    #Proposals to vote on
-    proposal_choices = set()
-    agenda_item = find_interface(context, IAgendaItem)
-    if agenda_item is None:
-        Exception("Couldn't find the agenda item from this polls context")
-        
-    #Get valid proposals - should be in states 'published' to be selectable
-    for prop in agenda_item.get_content(iface=IProposal, states='published', sort_on='title'):
-        proposal_choices.add((prop.uid, prop.title, ))
-        
-    # get currently chosen proposals
-    if IPoll.providedBy(context):
-        for prop in context.get_proposal_objects():
-            proposal_choices.add((prop.uid, prop.title, ))
-            
-    proposal_choices = sorted(proposal_choices, key=lambda proposal: proposal[1].lower())
-        
-    #Note: The message factory shouldn't process mappings here, it's handled by deform!
-    _earliest_start = colander.Range(min=dt_util.localnow(),
-                                     min_err=_('${val} is earlier than earliest date ${min}'),)
-    _earliest_end = colander.Range(min=dt_util.localnow(),
-                                   min_err=_('${val} is earlier than earliest date ${min}'),)
-
-    #base schema
-    local_tz = dt_util.timezone
-
-
-    class PollSchema(colander.MappingSchema):
-        title = colander.SchemaNode(colander.String(),
-                                    title = _(u"Title"),
-                                    validator=html_string_validator,)
-        description = colander.SchemaNode(colander.String(),
-                                          title = _(u"Description"),
-                                          missing=u"",
-                                          description = _(u"poll_description_description",
-                                                          default=u"Explain your choice of poll method and your plan for the different polls in the agenda item."),
-                                          widget=deform.widget.RichTextWidget(),)
-
-        poll_plugin = colander.SchemaNode(colander.String(),
-                                          title = _(u"Poll method to use"),
-                                          description = _(u"poll_poll_plugin_description",
-                                                          default=u"Read in the help wiki about pros and cons of different polling methods."),
-                                          widget=deform.widget.SelectWidget(values=plugin_choices),)
-                                          
-        proposals = colander.SchemaNode(deform.Set(allow_empty=True), 
-                                        name="proposals",
-                                        title = _(u"Proposals"),
-                                        description = _(u"poll_proposals_description",
-                                                        default=u"Only proposals in the state 'published' can be selected"),
-                                        missing=set(),
-                                        widget=deform.widget.CheckboxChoiceWidget(values=proposal_choices),)
-
-        start_time = colander.SchemaNode(
-             TZDateTime(local_tz),
-             title = _(u"Start time of this poll."),
-             description = _(u"You need to open it yourself."),
-             widget=deform.widget.DateTimeInputWidget(options={'timeFormat': 'hh:mm'}),
-        )
-        end_time = colander.SchemaNode(
-             TZDateTime(local_tz),
-             title = _(u"End time of this poll."),
-             description = _(u"You need to close it yourself."),
-             widget=deform.widget.DateTimeInputWidget(options={'timeFormat': 'hh:mm'}),
-        )
-
-    return PollSchema()
-
-
-def includeme(config):
-    from voteit.core.app import register_content_info
-    register_content_info(construct_schema, Poll, registry=config.registry)
 
 
 def closing_poll_callback(content, info):

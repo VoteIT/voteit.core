@@ -5,7 +5,6 @@ from zope.interface.verify import verifyObject
 from BTrees.OOBTree import OOSet
 
 from voteit.core.bootstrap import bootstrap_voteit
-from voteit.core.app import register_content_types
 from voteit.core import security
 
 
@@ -17,16 +16,12 @@ class UnreadAwareTests(unittest.TestCase):
         testing.tearDown()
 
     def _fixture_and_setup(self):
-        self.config.registry.settings['content_types'] = """
-        voteit.core.models.site
-        voteit.core.models.user
-        voteit.core.models.users
-        """
         self.config.include('pyramid_zcml')
         self.config.load_zcml('voteit.core:configure.zcml')
-        register_content_types(self.config)
-
-        root = bootstrap_voteit(registry=self.config.registry, echo=False)
+        self.config.scan('voteit.core.models.site')
+        self.config.scan('voteit.core.models.user')
+        self.config.scan('voteit.core.models.users')
+        root = bootstrap_voteit(echo=False)
         from voteit.core.models.user import User
         
         for userid in ('fredrik', 'anders', 'hanna', 'robin'):

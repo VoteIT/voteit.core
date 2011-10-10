@@ -11,7 +11,6 @@ from pyramid.security import forget
 from pyramid.renderers import render
 
 from voteit.core import VoteITMF as _
-from voteit.core.models.interfaces import IContentUtility
 from voteit.core.models.interfaces import ISiteRoot
 from voteit.core.models.interfaces import IUser
 from voteit.core.models.interfaces import IUsers

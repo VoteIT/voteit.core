@@ -2,12 +2,14 @@ from zope.component import adapts
 from zope.interface import implements
 from persistent import Persistent
 from BTrees.LOBTree import LOBTree
-from zope.component import createObject
+from betahaus.pyracont.decorators import content_factory
+from betahaus.pyracont.factories import createContent
 
 from voteit.core.models.interfaces import IBaseContent
 from voteit.core.models.interfaces import ILogHandler
 from voteit.core.models.interfaces import ILogEntry
 from voteit.core.models.date_time_util import utcnow
+from voteit.core import VoteITMF as _
 
 
 class LogHandler(object):
@@ -38,8 +40,8 @@ class LogHandler(object):
             userid: if a user triggered the event, which user did so.
             scripted: if a script triggered the event, store script name here
         """
-        obj = createObject('LogEntry', context_uid, message, tags=tags,
-                           userid=userid, scripted=scripted)
+        obj = createContent('LogEntry', context_uid, message, tags=tags,
+                            userid=userid, scripted=scripted)
         
         for i in range(10):
             k = self._next_free_key()
@@ -49,6 +51,7 @@ class LogHandler(object):
         raise KeyError("Couln't find a free key for logging handler after 10 retries.")
 
 
+@content_factory('LogEntry', title=_(u"Log entry"))
 class LogEntry(Persistent):
     implements(ILogEntry)
 
@@ -65,9 +68,6 @@ def includeme(config):
     """ Include to activate log components.
         like: config.include('voteit.core.models.logs')
     """
-    #Register LogEntry as a factory
-    from voteit.core.app import register_factory
-    register_factory(config, LogEntry, 'LogEntry')
     #Register LogHandler adapter
     config.registry.registerAdapter(LogHandler, (IBaseContent,), ILogHandler)
 

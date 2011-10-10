@@ -26,6 +26,7 @@ requires = [
     'repoze.catalog',
     'lingua',
     'httplib2',
+    'betahaus.pyracont',
     ]
 
 setup(name='voteit.core',

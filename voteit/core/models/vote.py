@@ -2,6 +2,7 @@ from zope.interface import implements
 from pyramid.security import Allow
 from pyramid.security import DENY_ALL
 from pyramid.traversal import find_interface
+from betahaus.pyracont.decorators import content_factory
 
 from voteit.core import security
 from voteit.core import VoteITMF as _
@@ -9,6 +10,7 @@ from voteit.core.models.base_content import BaseContent
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IVote
 from voteit.core.validators import html_string_validator
+
 
 ACL = {}
 ACL['ongoing'] = [(Allow, security.ROLE_OWNER, (security.EDIT, security.VIEW, security.DELETE,)),
@@ -19,12 +21,12 @@ ACL['closed'] = [(Allow, security.ROLE_OWNER,  security.VIEW,),
                   ]
 
 
+@content_factory('Vote', title=_(u"Vote"))
 class Vote(BaseContent):
     """ Vote content. This is not addable through regular content factories.
         It's used as a storage for a users vote by a vote plugin.
     """
     implements(IVote)
-    
     content_type = 'Vote'
     display_name = _(u"Vote")
     allowed_contexts = () #N/A for this content type, it shouldn't be addable the normal way.

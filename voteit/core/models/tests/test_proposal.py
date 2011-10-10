@@ -35,22 +35,17 @@ class ProposalTests(unittest.TestCase):
         request = testing.DummyRequest()
         self.config = testing.setUp(request=request)
 
-        from voteit.core.app import register_content_types
         from voteit.core.app import register_catalog_metadata_adapter
-        ct = """
-            voteit.core.models.site
-            voteit.core.models.user
-            voteit.core.models.users
-        """
-        self.config.registry.settings['content_types'] = ct
-        register_content_types(self.config)
+        self.config.scan('voteit.core.models.site')
+        self.config.scan('voteit.core.models.user')
+        self.config.scan('voteit.core.models.users')
         register_catalog_metadata_adapter(self.config)
         
         self.config.scan('voteit.core.subscribers.transform_text')
         self.config.include('voteit.core.models.user_tags')
 
         from voteit.core.bootstrap import bootstrap_voteit
-        self.root = bootstrap_voteit(registry=self.config.registry, echo=False)
+        self.root = bootstrap_voteit(echo=False)
         
         from voteit.core.models.meeting import Meeting
         meeting = Meeting()

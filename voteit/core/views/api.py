@@ -22,6 +22,7 @@ from repoze.workflow import get_workflow
 from webhelpers.html.converters import nl2br
 from repoze.catalog.query import Eq
 from repoze.catalog.query import Name
+from betahaus.pyracont.interfaces import IContentFactory
 
 from voteit.core import VoteITMF as _
 from voteit.core import security
@@ -59,7 +60,6 @@ class APIView(object):
         self.authn_policy = request.registry.getUtility(IAuthenticationPolicy)
         self.authz_policy = request.registry.getUtility(IAuthorizationPolicy)
 
-        self.content_info = request.registry.getUtility(IContentUtility)
         self.addable_types = self._get_addable_types(context, request)
         self.lineage = lineage(context)
         self.inside = inside
@@ -132,9 +132,9 @@ class APIView(object):
             return ()
         
         addable_names = set()
-        for type in self.content_info.values():
-            if context_type in type.allowed_contexts and \
-                self.context_has_permission(type.add_permission, self.context):
+        for (name, factory) in request.registry.getUtilitiesFor(IContentFactory):
+            if context_type in factory._callable.allowed_contexts and \
+                self.context_has_permission(factory._callable.add_permission, context):
                 addable_names.add(type.type_class.content_type)
         return tuple(addable_names)
         

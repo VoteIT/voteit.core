@@ -298,7 +298,6 @@ class PollTests(unittest.TestCase):
         from voteit.core.bootstrap import bootstrap_voteit
         from voteit.core.models.meeting import Meeting
         from voteit.core.models.poll import Poll
-        from voteit.core.app import register_content_types
         from voteit.core.security import authn_policy
         from voteit.core.security import authz_policy
         from voteit.core.security import unrestricted_wf_transition_to
@@ -309,17 +308,15 @@ class PollTests(unittest.TestCase):
                                    authorization_policy=authz_policy)
         self.config.include('pyramid_mailer.testing')
         self.config.scan('voteit.core.subscribers.poll')
-        ct = """
-    voteit.core.models.meeting
-    voteit.core.models.site
-    voteit.core.models.user
-    voteit.core.models.users
-        """
-        self.config.registry.settings['content_types'] = ct
-        register_content_types(self.config)
+        
+        self.config.scan('voteit.core.models.meeting')
+        self.config.scan('voteit.core.models.site')
+        self.config.scan('voteit.core.models.user')
+        self.config.scan('voteit.core.models.users')
+        
         mailer = get_mailer(request)
 
-        root = bootstrap_voteit(self.config.registry, echo=False)
+        root = bootstrap_voteit(echo=False)
         root['users']['admin'].set_field_value('email', 'this@that.com')
         
         meeting = root['meeting'] = Meeting()

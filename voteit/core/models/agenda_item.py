@@ -1,10 +1,9 @@
-import colander
-import deform
 from zope.interface import implements
 from pyramid.traversal import find_interface
-from pyramid.security import Allow, DENY_ALL, ALL_PERMISSIONS
+from pyramid.security import Allow
+from pyramid.security import DENY_ALL
 from pyramid.threadlocal import get_current_request
-from zope.component import getUtility
+from betahaus.pyracont.decorators import content_factory
 
 from voteit.core import security
 from voteit.core import VoteITMF as _
@@ -15,12 +14,13 @@ from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import IProposal
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import ICatalogMetadataEnabled
-from voteit.core.models.interfaces import IDateTimeUtil
-from voteit.core.validators import html_string_validator
-from voteit.core.fields import TZDateTime
 
 
-_PRIV_MOD_PERMS = (security.VIEW, security.EDIT, security.DELETE, security.MODERATE_MEETING, security.CHANGE_WORKFLOW_STATE, )
+_PRIV_MOD_PERMS = (security.VIEW,
+                   security.EDIT,
+                   security.DELETE,
+                   security.MODERATE_MEETING,
+                   security.CHANGE_WORKFLOW_STATE, )
 
 ACL = {}
 ACL['private'] = [(Allow, security.ROLE_ADMIN, security.REGULAR_ADD_PERMISSIONS),
@@ -45,6 +45,7 @@ ACL['closed_meeting'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, )),
                         ]
 
 
+@content_factory('AgendaItem', title=_(u"Agenda item"))
 class AgendaItem(BaseContent, WorkflowAware):
     """ Agenda Item content. """
     implements(IAgendaItem, ICatalogMetadataEnabled)
@@ -52,6 +53,7 @@ class AgendaItem(BaseContent, WorkflowAware):
     display_name = _(u"Agenda item")
     allowed_contexts = ('Meeting',)
     add_permission = security.ADD_AGENDA_ITEM
+    schemas = {'edit': 'AgendaItemSchema', 'add': 'AgendaItemSchema'}
 
     @property
     def __acl__(self):
@@ -74,59 +76,6 @@ class AgendaItem(BaseContent, WorkflowAware):
     @property
     def end_time(self):
         return self.get_field_value('end_time')
-
-def construct_schema(**kwargs):
-    context = kwargs.get('context', None)
-    if context is None:
-        KeyError("'context' is a required keyword for Agenda Item schemas. See construct_schema in the agenda_item module.")
-
-    dt_util = getUtility(IDateTimeUtil)
-    local_tz = dt_util.timezone
-
-
-    class AgendaItemSchema(colander.MappingSchema):
-        title = colander.SchemaNode(colander.String(),
-            title = _(u"Title"),
-            description = _(u"Avoid a title with more than 20 characters"),
-            validator=html_string_validator,
-        )
-        description = colander.SchemaNode(
-            colander.String(),
-            title = _(u"Description"),
-            description = _(u"agenda_item_description_description",
-                            default=u"Place the the agenda item background information here. You can link to external documents and memos. It's also a good idea to add an image, it will make it easier for participants to quickly see which page they're on."),
-            missing = u"",
-            widget=deform.widget.RichTextWidget(),
-        )
-        summary = colander.SchemaNode(
-            colander.String(),
-            title = _(u"Summary of this item."),
-            description = _(u"agenda_item_summary_description",
-                            default=u"This summary shows up to the right on the meetings first page. Write a short summary on what is going on or what has been decided. This should be updated as the meeting progresses."),
-            #description = _('ai_summary_description',
-            #                default=u"This could be what was decided. It will show up in the log on the meeting page."),
-            widget=deform.widget.TextAreaWidget(rows=10, cols=60),
-            missing = u"",
-            validator=html_string_validator,
-        )
-        start_time = colander.SchemaNode(
-            TZDateTime(local_tz),
-            title = _('ai_start_time_title',
-                      default=u"Estimated start time of this Agenda Item."),
-            description = _(u"agenda_item_start_time_description",
-                            default=u"This setting only sets the order for the agenda item's in the Agenda. You will still have to change the state of the agenda item manually with the gear beside it's name."),
-            #description = _('ai_start_time_description',
-            #                default=u"No action will be taken automatically when the time has passed, so you need to open this item yourself."),
-            widget=deform.widget.DateTimeInputWidget(options={'timeFormat': 'hh:mm'}),
-            missing = None,
-        )
-        #End-time is handled by a subscriber when it is closed
-    return AgendaItemSchema()
-
-
-def includeme(config):
-    from voteit.core.app import register_content_info
-    register_content_info(construct_schema, AgendaItem, registry=config.registry)
 
 
 def closing_agenda_item_callback(context, info):

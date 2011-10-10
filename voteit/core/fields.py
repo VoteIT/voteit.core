@@ -1,6 +1,7 @@
 import datetime
 import iso8601
 
+from zope.component import getUtility
 from pyramid.threadlocal import get_current_registry
 from colander import DateTime, Invalid, null, _
 from voteit.core.models.interfaces import IDateTimeUtil
@@ -15,13 +16,13 @@ class TZDateTime(DateTime):
     to the local timezone, so the conversion process is transparent to the user.
     """
 
-    def __init__(self, default_tzinfo=None):
+    def __init__(self):
         super(TZDateTime, self).__init__()
 
         registry = get_current_registry()
-        self.dt_util = registry.getUtility(IDateTimeUtil)
 
     def serialize(self, node, appstruct):
+        dt_util = getUtility(IDateTimeUtil)
         if appstruct is null:
             return null
 
@@ -34,10 +35,11 @@ class TZDateTime(DateTime):
                             mapping={'val':appstruct})
                           )
 
-        return self.dt_util.utc_to_tz(appstruct).strftime('%Y-%m-%d %H:%M')
+        return dt_util.utc_to_tz(appstruct).strftime('%Y-%m-%d %H:%M')
 
 
     def deserialize(self, node, cstruct):
+        dt_util = getUtility(IDateTimeUtil)
         if not cstruct:
             return null
 
@@ -47,7 +49,7 @@ class TZDateTime(DateTime):
             # python's datetime doesn't deal correctly with DST, so we have
             # to use the pytz localize function instead
             result = result.replace(tzinfo=None)
-            result = self.dt_util.localize(result)
+            result = dt_util.localize(result)
 
         except (iso8601.ParseError, TypeError), e:
             try:
@@ -58,4 +60,4 @@ class TZDateTime(DateTime):
                 raise Invalid(node, _(self.err_template,
                                       mapping={'val':cstruct, 'err':e}))
 
-        return self.dt_util.tz_to_utc(result)
+        return dt_util.tz_to_utc(result)

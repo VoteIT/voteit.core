@@ -27,9 +27,8 @@ class LogHandlerTests(unittest.TestCase):
         return LogHandler(context)
 
     def _register_log_entry_factory(self):
-        from voteit.core.models.logs import LogEntry
-        from voteit.core.app import register_factory
-        register_factory(self.config, LogEntry, 'LogEntry')
+        #FIXME: Detach more?
+        self.config.scan('voteit.core.models.logs')
 
     def test_interface(self):
         obj = self._make_adapted_obj()
@@ -56,6 +55,8 @@ class LogHandlerTests(unittest.TestCase):
         self.config.scan('voteit.core.subscribers.logs')
         #Add log handler
         self.config.include('voteit.core.models.logs')
+        #Add LogEntry content type
+        self.config.scan('voteit.core.models.logs')
 
         from voteit.core.models.site import SiteRoot
         root = SiteRoot()
@@ -98,8 +99,8 @@ class LogEntryTests(unittest.TestCase):
         self.assertEqual(obj.userid, 'hanna')
         self.assertEqual(obj.scripted, 'by robot')
 
-    def test_factory_registered_on_include(self):
-        self.config.include('voteit.core.models.logs')
+    def test_factory_registered_on_scan(self):
+        self.config.scan('voteit.core.models.logs')
         
         factory = self.config.registry.queryUtility(IFactory, 'LogEntry')
         self.failUnless(IFactory.providedBy(factory))

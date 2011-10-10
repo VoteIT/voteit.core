@@ -1,8 +1,8 @@
-import colander
-import deform
 from zope.interface import implements
-from pyramid.security import Allow, DENY_ALL, ALL_PERMISSIONS
-from pyramid.traversal import find_interface, find_root
+from pyramid.security import Allow
+from pyramid.security import DENY_ALL
+from pyramid.traversal import find_interface
+from betahaus.pyracont.decorators import content_factory
 
 from voteit.core import VoteITMF as _
 from voteit.core import security
@@ -12,19 +12,28 @@ from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IProposal
 from voteit.core.models.interfaces import ICatalogMetadataEnabled
 from voteit.core.models.workflow_aware import WorkflowAware
-from voteit.core.validators import html_string_validator
-from voteit.core.validators import at_userid_validator
+
+
+_PUBLISHED_MODERATOR_PERMS = (security.VIEW,
+                              security.EDIT,
+                              security.DELETE,
+                              security.RETRACT,
+                              security.MODERATE_MEETING,)
+_LOCKED_MODERATOR_PERMS = (security.VIEW,
+                           security.EDIT,
+                           security.DELETE,
+                           security.MODERATE_MEETING, )
 
 ACL = {}
-ACL['published'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, security.EDIT, security.DELETE, security.RETRACT, security.MODERATE_MEETING, )),
-                    (Allow, security.ROLE_MODERATOR, (security.VIEW, security.EDIT, security.DELETE, security.RETRACT, security.MODERATE_MEETING, )),
+ACL['published'] = [(Allow, security.ROLE_ADMIN, _PUBLISHED_MODERATOR_PERMS),
+                    (Allow, security.ROLE_MODERATOR, _PUBLISHED_MODERATOR_PERMS),
                     (Allow, security.ROLE_OWNER, (security.VIEW, security.RETRACT, )),
                     (Allow, security.ROLE_PARTICIPANT, (security.VIEW,)),
                     (Allow, security.ROLE_VIEWER, (security.VIEW,)),
                     DENY_ALL,
                 ]
-ACL['locked'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, security.EDIT, security.DELETE, security.MODERATE_MEETING, )),
-                 (Allow, security.ROLE_MODERATOR, (security.VIEW, security.EDIT, security.DELETE, security.MODERATE_MEETING, )),
+ACL['locked'] = [(Allow, security.ROLE_ADMIN, _LOCKED_MODERATOR_PERMS),
+                 (Allow, security.ROLE_MODERATOR, _LOCKED_MODERATOR_PERMS),
                  (Allow, security.ROLE_OWNER, security.VIEW),
                  (Allow, security.ROLE_PARTICIPANT, (security.VIEW,)),
                  (Allow, security.ROLE_VIEWER, (security.VIEW,)),
@@ -38,6 +47,8 @@ ACL['closed'] = [(Allow, security.ROLE_ADMIN, security.VIEW),
                  DENY_ALL,
                 ]
 
+
+@content_factory('Proposal', title=_(u"Proposal"))
 class Proposal(BaseContent, WorkflowAware, UnreadAware):
     """ Proposal content.
         about states:
@@ -58,6 +69,7 @@ class Proposal(BaseContent, WorkflowAware, UnreadAware):
     display_name = _(u"Proposal")
     allowed_contexts = ('AgendaItem',)
     add_permission = security.ADD_PROPOSAL
+    schemas = {'add': 'ProposalSchema'}
 
     @property
     def __acl__(self):
@@ -71,23 +83,3 @@ class Proposal(BaseContent, WorkflowAware, UnreadAware):
             return ACL['closed']
         
         return ACL['locked']
-
-
-def construct_schema(context=None, **kwargs):
-    if context is None:
-        KeyError("'context' is a required keyword for Proposal schemas. See construct_schema in the proposal module.")
-        
-    def _at_userid_validator(node, value):
-        at_userid_validator(node, value, context)
-
-    class ProposalSchema(colander.MappingSchema):
-        title = colander.SchemaNode(colander.String(),
-                                    title = _(u"I propose:"),
-                                    validator=colander.All(html_string_validator, _at_userid_validator),
-                                    widget=deform.widget.TextAreaWidget(rows=3, cols=40),)
-    return ProposalSchema()
-
-
-def includeme(config):
-    from voteit.core.app import register_content_info
-    register_content_info(construct_schema, Proposal, registry=config.registry)

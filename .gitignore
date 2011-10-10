@@ -3,3 +3,4 @@
 *.pyc
 *.pt.py
 .tmp*
+.coverage

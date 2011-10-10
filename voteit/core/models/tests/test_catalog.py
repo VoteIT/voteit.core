@@ -3,14 +3,14 @@ from datetime import datetime
 from calendar import timegm
 
 from pyramid import testing
-from pyramid.security import remember, principals_allowed_by_permission
+from pyramid.security import principals_allowed_by_permission
+from pyramid.security import remember
 from zope.interface.verify import verifyObject
 from zope.component.event import objectEventNotify
+from betahaus.pyracont.factories import createContent
 
-from voteit.core.app import register_content_types
 from voteit.core.app import register_catalog_metadata_adapter
 from voteit.core.bootstrap import bootstrap_voteit
-from voteit.core.models.interfaces import IContentUtility
 from voteit.core.interfaces import IObjectUpdatedEvent
 from voteit.core.events import ObjectUpdatedEvent
 from voteit.core import security
@@ -26,24 +26,19 @@ class CatalogTestCase(unittest.TestCase):
     """
     def setUp(self):
         self.config = testing.setUp()
-        ct = """
-    voteit.core.models.meeting
-    voteit.core.models.site
-    voteit.core.models.user
-    voteit.core.models.users
-        """
-        self.config.registry.settings['content_types'] = ct
-        register_content_types(self.config)
+        self.config.scan('voteit.core.models.meeting')
+        self.config.scan('voteit.core.models.site')
+        self.config.scan('voteit.core.models.user')
+        self.config.scan('voteit.core.models.users')
         register_catalog_metadata_adapter(self.config)
 
         self.config.scan('voteit.core.subscribers.catalog')
         self.config.include('voteit.core.models.user_tags')
 
-        self.root = bootstrap_voteit(registry=self.config.registry, echo=False)
+        self.root = bootstrap_voteit(echo=False)
         self.query = self.root.catalog.query
         self.search = self.root.catalog.search
         self.get_metadata = self.root.catalog.document_map.get_metadata
-        self.content_types = self.config.registry.getUtility(IContentUtility)
         self.config.include('pyramid_zcml')
         self.config.load_zcml('voteit.core:configure.zcml')
 
@@ -51,7 +46,7 @@ class CatalogTestCase(unittest.TestCase):
         testing.tearDown()
 
     def _add_mock_meeting(self):
-        obj = self.content_types['Meeting'].type_class()
+        obj = createContent('Meeting')
         obj.title = 'Testing catalog'
         obj.description = 'To check that everything works as expected.'
         obj.uid = 'simple_uid'
@@ -66,7 +61,7 @@ class CatalogTests(CatalogTestCase):
     def test_indexed_on_add(self):
         title_index = self.root.catalog['title']
         title_count = title_index.documentCount()
-        meeting = self.content_types['Meeting'].type_class()
+        meeting = createContent('Meeting')
         meeting.title = 'hello world'
         
         self.root['meeting'] = meeting
@@ -77,7 +72,7 @@ class CatalogTests(CatalogTestCase):
         title_index = self.root.catalog['title']
         title_count = title_index.documentCount()
 
-        meeting = self.content_types['Meeting'].type_class()
+        meeting = createContent('Meeting')
         meeting.title = 'hello world'
         
         self.root['meeting'] = meeting
@@ -88,7 +83,7 @@ class CatalogTests(CatalogTestCase):
         self.assertEqual(title_index.documentCount(), title_count)
         
     def test_reindexed_on_update(self):
-        meeting = self.content_types['Meeting'].type_class()
+        meeting = createContent('Meeting')
         meeting.title = 'hello world'
         self.root['meeting'] = meeting
         
@@ -103,7 +98,7 @@ class CatalogTests(CatalogTestCase):
         self.assertEqual(query("title == 'me and my little friends'")[0], 1)
 
     def test_update_indexes_when_index_removed(self):
-        meeting = self.content_types['Meeting'].type_class()
+        meeting = createContent('Meeting')
         meeting.title = 'hello world'
         self.root['meeting'] = meeting
         
@@ -120,7 +115,7 @@ class CatalogTests(CatalogTestCase):
         self.failUnless(catalog.get('title'))
     
     def test_reindex_indexes(self):
-        meeting = self.content_types['Meeting'].type_class()
+        meeting = createContent('Meeting')
         meeting.title = 'hello world'
         self.root['meeting'] = meeting
         catalog = self.root.catalog

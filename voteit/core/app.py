@@ -10,11 +10,8 @@ from pyramid.events import subscriber
 from pyramid.config import Configurator
 from zope.interface.verify import verifyClass
 from zope.component import getUtility
-from zope.component.factory import Factory
-from zope.component.interfaces import IFactory
 
 from voteit.core.models.interfaces import ICatalogMetadata
-from voteit.core.models.interfaces import IContentUtility
 from voteit.core.models.interfaces import ICatalogMetadataEnabled
 from voteit.core.models.interfaces import IHelpUtil
 from voteit.core.models.interfaces import IPollPlugin
@@ -33,22 +30,6 @@ def register_poll_plugins(config):
             config.include(poll_plugin)
     else:
         raise ValueError("At least one poll plugin must be used")
-
-
-def register_content_types(config):
-    """ Include content types and their utility IContentUtility """
-    from voteit.core.models.content_utility import ContentUtility
-    
-    config.registry.registerUtility(ContentUtility(), IContentUtility)
-    
-    content_types = config.registry.settings.get('content_types')
-    if content_types is None:
-        raise ValueError("content_types must exist in application configuration."
-                         "It should point to includable modules, like voteit.core.models.meeting")
-    
-    cts = [x.strip() for x in content_types.strip().splitlines()]
-    for content_type in cts:
-        config.include(content_type)
 
 
 def register_catalog_metadata_adapter(config):
@@ -113,21 +94,6 @@ def register_poll_plugin(plugin_class, verify=True, registry=None):
     if registry is None:
         raise ValueError("Missing required keyword argument registry")
     registry.registerAdapter(plugin_class, (IPoll,), IPollPlugin, plugin_class.name)
-
-
-def register_content_info(schema, type_class, verify=True, registry=None):
-    if registry is None:
-        raise ValueError("Missing required keyword argument registry")
-    
-    util = registry.getUtility(IContentUtility)
-    
-    obj = util.create(schema, type_class)
-    util.add(obj, verify=verify)
-
-
-def register_factory(config, cls, name):
-    factory = Factory(cls, name) 
-    config.registry.registerUtility(factory, IFactory, name)
 
 
 @subscriber(ApplicationCreated)

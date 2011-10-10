@@ -2,10 +2,10 @@ from pyramid.threadlocal import get_current_registry
 
 from voteit.core import VoteITMF as _
 from voteit.core.security import ROLE_ADMIN
-from voteit.core.models.interfaces import IContentUtility
+from betahaus.pyracont.factories import createContent
 
 
-def bootstrap_voteit(registry=None, echo=True):
+def bootstrap_voteit(echo=True):
     """ Bootstrap site root.
         Will add:
         - Site root
@@ -13,29 +13,22 @@ def bootstrap_voteit(registry=None, echo=True):
         - An administrative user with login: admin and pass: admin
     """
     from voteit.core.security import ROLE_OWNER
-    
-    if registry is None:
-        registry = get_current_registry()
-    
-    content_util = registry.getUtility(IContentUtility)
 
     if echo:
         print "Bootstrapping site - creating 'admin' user with password 'admin'"
     
     #Add root
-    root = content_util['SiteRoot'].type_class()
-    root.title = _(u"VoteIT")
+    root = createContent('SiteRoot', title=_(u"VoteIT"))
 
     #Add users folder
-    root['users'] = content_util['Users'].type_class()
+    root['users'] = createContent('Users', title=_(u"Registered users"))
     users = root.users
-    users.title = _(u"Registered users")
     
     #Add user admin
-    admin = content_util['User'].type_class()
+    admin = createContent('User',
+                          first_name = _(u'VoteIT'),
+                          last_name = _(u'Administrator'))
     admin.set_password('admin')
-    admin.set_field_value('first_name', _(u'VoteIT'))
-    admin.set_field_value('last_name', _(u'Administrator'))
     admin.add_groups('admin', (ROLE_OWNER,))
     users['admin'] = admin
     

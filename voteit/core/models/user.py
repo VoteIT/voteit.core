@@ -1,15 +1,9 @@
-import re
 import string
 from random import choice
 from hashlib import sha1
 from hashlib import md5
 from datetime import timedelta
-import urllib
 
-from BTrees.OOBTree import OOBTree
-import colander
-import deform
-from zope.component import getUtility
 from zope.interface import implements
 from repoze.folder import unicodify
 from pyramid.url import resource_url
@@ -19,21 +13,19 @@ from pyramid.traversal import find_interface
 from pyramid_mailer import get_mailer
 from pyramid_mailer.message import Message
 from pyramid.i18n import get_localizer
-from pyramid.threadlocal import get_current_request
+from betahaus.pyracont.decorators import content_factory
 
 from voteit.core.models.base_content import BaseContent
 from voteit.core.models.interfaces import IUser
-from voteit.core.models.interfaces import IUsers
 from voteit.core.models.interfaces import ICatalogMetadataEnabled
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import IAgendaItem
 from voteit.core import VoteITMF as _
 from voteit.core import security
-from voteit.core.validators import password_validation
-from voteit.core.validators import html_string_validator
 from voteit.core.models.date_time_util import utcnow
 
-userid_regexp = r"[a-zA-Z]{1}[\w-]{1,14}"
+
+USERID_REGEXP = r"[a-zA-Z]{1}[\w-]{1,14}"
 
 
 def get_sha_password(password):
@@ -43,6 +35,7 @@ def get_sha_password(password):
     return 'SHA1:' + sha1(password).hexdigest()
 
 
+@content_factory('User', title=_(u"User"))
 class User(BaseContent):
     """ Content type for a user. Usable as a profile page. """
     implements(IUser, ICatalogMetadataEnabled)
@@ -165,6 +158,7 @@ class User(BaseContent):
             mailer.send(msg)
 
 
+@content_factory('RequestPasswordToken')
 class RequestPasswordToken(object):
     
     def __init__(self):
@@ -180,149 +174,3 @@ class RequestPasswordToken(object):
             raise ValueError("Token doesn't match.")
         if utcnow() > self.expires:
             raise ValueError("Token expired.")
-        
-
-def construct_schema(**kwargs):
-    context = kwargs.get('context', None)
-    request = kwargs.get('request', None)
-    referer = urllib.quote(request.GET.get('came_from', '/'))
-    type = kwargs.get('type', None)
-    if context is None:
-        KeyError("'context' is a required keyword for User schemas. See construct_schema in the user module.")    
-    if type is None:
-        KeyError("'type' is a required keyword for User schemas. See construct_schema in the user module.")    
-        
-    def _validate_email(node, value):
-        default_email_validator = colander.Email(msg=_(u"Invalid email address."))
-        default_email_validator(node, value)
-        
-        #context can be IUser or IUsers
-        users = find_interface(context, IUsers)
-        
-        #User with email exists?
-        match = users.get_user_by_email(value)
-        if match and context != match:
-            #Something was found, and it isn't this context - I.e. some other user
-            raise colander.Invalid(node, 
-                                   u"Another user has already registered with that email address. "
-                                   "If you've lost your password, request a new one instead.")
-
-    #Common schema nodes
-    password_node = colander.SchemaNode(
-                        colander.String(),
-                        validator=colander.All(password_validation, html_string_validator,),
-                        widget=deform.widget.CheckedPasswordWidget(size=20),
-                        title=_('Password'))
-    email_node = colander.SchemaNode(colander.String(),
-                                     title=_(u"Email"),
-                                     validator=colander.All(_validate_email, html_string_validator,),)
-    first_name_node = colander.SchemaNode(colander.String(),
-                                          title=_(u"First name"),
-                                          validator=html_string_validator,)
-    last_name_node = colander.SchemaNode(colander.String(),
-                                         title=_(u"Last name"),
-                                         missing=u"",
-                                         validator=html_string_validator,)
-
-
-    came_from_node = colander.SchemaNode(colander.String(),
-                                         widget = deform.widget.HiddenWidget(),
-                                         default=referer,)
-
-    if type == 'login':
-        class LoginSchema(colander.Schema):
-            userid = colander.SchemaNode(colander.String(),
-                                         title=_(u"UserID or email address."))
-            password = colander.SchemaNode(colander.String(),
-                                           title=_('Password'),
-                                           widget=deform.widget.PasswordWidget(size=20),)
-            came_from = came_from_node
-
-        return LoginSchema()
-
-    if type in ('add', 'registration'):
-        if not IUsers.providedBy(context):
-            raise TypeError("context for a user registration must be an object that implements IUsers.")
-        
-        def _userid_validation(node, value):
-            """ Context-dependent userid validation.
-                Check that userid is:
-                - unique
-                - doesn't contain bogus chars
-            """
-            pattern = re.compile(r'^'+userid_regexp+r'$')
-            if not pattern.match(value):
-                raise colander.Invalid(node, _('userid_char_error', default=u"UserID must be 3-15 chars, start with a-zA-Z and only contain regular latin chars, numbers, minus and underscore."))
-            if value in context:
-                raise colander.Invalid(node, _('already_registered_error',
-                                               default=u"UserID already registered. If it was registered by you, try to retrieve your password."))
-
-        class AddUserSchema(colander.Schema):
-            userid = colander.SchemaNode(colander.String(),
-                                         title = _(u"UserID"),
-                                         description = _('userid_description', default=u"Used as a nickname, in @-links and as a unique id. You can't change this later."),
-                                         validator=_userid_validation)
-            password = password_node
-            email = email_node
-            first_name = first_name_node
-            last_name = last_name_node
-            came_from = came_from_node
-
-        #Move password field last and userid first
-        #FIXME: Is there no smarter way of doing this!?
-        au_schema =  AddUserSchema()
-        new_child_order = []
-        for id in ('userid', 'email', 'first_name', 'last_name'):
-            new_child_order.append(au_schema[id])
-        
-        #Fetch anything we might have missed
-        for old_obj in au_schema.children:
-            if old_obj not in new_child_order:
-                new_child_order.append(old_obj)
-
-        au_schema.children = new_child_order
-            
-        return au_schema
-
-    if type == 'edit':
-        class EditUserSchema(colander.Schema):
-            email = email_node
-            first_name = first_name_node
-            last_name = last_name_node
-            about_me = colander.SchemaNode(colander.String(),
-                title = _(u"About me"),
-                description = _(u"user_about_me_description",
-                                default=u"Please note that anything you type here will be visible to all users in the same meeting as you."),
-                widget = deform.widget.TextAreaWidget(rows=10, cols=60),
-                missing=u"",
-                validator=html_string_validator,)
-        return EditUserSchema()
-
-    if type == 'change_password':
-        class ChangePasswordSchema(colander.Schema):
-            password = password_node
-        return ChangePasswordSchema()
-    
-    if type == 'request_password':
-        class RequestNewPasswordSchema(colander.Schema):
-            userid_or_email = colander.SchemaNode(colander.String(),
-                                                  title = _(u"UserID or email address."))
-        return RequestNewPasswordSchema()
-    
-    if type == 'token_password_change':
-        class TokenPasswordChangeSchema(colander.Schema):
-            #FIXME: Implement captcha here to avoid bruteforce
-            token = colander.SchemaNode(colander.String(),
-                                        validator = context.validate_password_token,
-                                        missing = u'',
-                                        widget = deform.widget.HiddenWidget(),)
-            password = password_node
-        return TokenPasswordChangeSchema()
-
-    #No schema found
-    raise KeyError("No schema found of type: '%s'" % type)
-
-
-def includeme(config):
-    from voteit.core.app import register_content_info
-    register_content_info(construct_schema, User, registry=config.registry)

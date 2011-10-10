@@ -16,6 +16,7 @@ from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.schemas import add_csrf_token, button_add, button_cancel,\
     button_resend, button_delete
+from voteit.core.schemas.invite_ticket import token_form_validator
 
 
 class MeetingView(BaseView):
@@ -116,6 +117,8 @@ class MeetingView(BaseView):
             return HTTPFound(location=url)
         
         ci = self.api.content_info['InviteTicket']
+        #FIXME: Schema must be passed with init_kw validator = token_form_validator
+        ###
         schema = ci.schema(context=self.context, request=self.request, type='claim')
         add_csrf_token(self.context, self.request, schema)
 
