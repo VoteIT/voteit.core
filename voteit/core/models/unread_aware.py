@@ -22,9 +22,11 @@ class UnreadAware(object):
     def unread_storage(self):
         """ Acts as a storage. Contains all userids of users who haven't read this context.
         """
-        if not hasattr(self, '__unread_storage__'):
+        try:
+            return self.__unread_storage__
+        except AttributeError:
             self.__unread_storage__ = OOSet()
-        return self.__unread_storage__
+            return self.__unread_storage__
     
     def mark_all_unread(self):
         """ Set as unread for all users with view permission.

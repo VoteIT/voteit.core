@@ -20,13 +20,13 @@ class UserTags(object):
     def __init__(self, context):
         """ Context to adapt """
         self.context = context
+        if not hasattr(self.context, '__tags_storage__'):
+            self.context.__tags_storage__ = OOBTree()
     
     @property
     def tags_storage(self):
         """ Acts as a storage.
         """
-        if not hasattr(self.context, '__tags_storage__'):
-            self.context.__tags_storage__ = OOBTree()
         return self.context.__tags_storage__
     
     def add(self, tag, userid):
