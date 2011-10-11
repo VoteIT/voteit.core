@@ -26,13 +26,13 @@ class DateTimeUtilityTests(unittest.TestCase):
         obj = self._make_obj()
         self.assertTrue(verifyObject(IDateTimeUtil, obj))
 
-    def test_add_method(self):
-        from voteit.core.app import add_date_time_util
-        
-        add_date_time_util(self.config, locale='sv', timezone_name='Europe/Stockholm')
+    def test_include_adds_util(self):
+        settings = self.config.registry.settings
+        settings['default_locale_name'] = 'sv'
+        settings['default_timezone_name'] = 'Europe/Stockholm'
+        self.config.include('voteit.core.models.date_time_util')
         util = self.config.registry.queryUtility(IDateTimeUtil)
-        
-        self.failUnless(util)
+        self.failUnless(IDateTimeUtil.providedBy(util))
     
     def test_d_format(self):
         obj = self._make_obj()

@@ -143,3 +143,9 @@ def utcnow():
     naive_utcnow = datetime.utcnow()
     return pytz.utc.localize(naive_utcnow)
 
+
+def includeme(config):
+    locale = config.registry.settings['default_locale_name']
+    timezone_name = config.registry.settings['default_timezone_name']
+    util = DateTimeUtil(locale, timezone_name)
+    config.registry.registerUtility(util, IDateTimeUtil)
