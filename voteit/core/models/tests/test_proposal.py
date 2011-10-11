@@ -35,14 +35,12 @@ class ProposalTests(unittest.TestCase):
         request = testing.DummyRequest()
         self.config = testing.setUp(request=request)
 
-        from voteit.core.app import register_catalog_metadata_adapter
         self.config.scan('voteit.core.models.site')
         self.config.scan('voteit.core.models.user')
-        self.config.scan('voteit.core.models.users')
-        register_catalog_metadata_adapter(self.config)
-        
+        self.config.scan('voteit.core.models.users')        
         self.config.scan('voteit.core.subscribers.transform_text')
         self.config.include('voteit.core.models.user_tags')
+        self.config.include('voteit.core.models.catalog')
 
         from voteit.core.bootstrap import bootstrap_voteit
         self.root = bootstrap_voteit(echo=False)

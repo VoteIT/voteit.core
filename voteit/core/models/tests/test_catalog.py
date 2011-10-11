@@ -9,7 +9,6 @@ from zope.interface.verify import verifyObject
 from zope.component.event import objectEventNotify
 from betahaus.pyracont.factories import createContent
 
-from voteit.core.app import register_catalog_metadata_adapter
 from voteit.core.bootstrap import bootstrap_voteit
 from voteit.core.interfaces import IObjectUpdatedEvent
 from voteit.core.events import ObjectUpdatedEvent
@@ -30,10 +29,9 @@ class CatalogTestCase(unittest.TestCase):
         self.config.scan('voteit.core.models.site')
         self.config.scan('voteit.core.models.user')
         self.config.scan('voteit.core.models.users')
-        register_catalog_metadata_adapter(self.config)
-
         self.config.scan('voteit.core.subscribers.catalog')
         self.config.include('voteit.core.models.user_tags')
+        self.config.include('voteit.core.models.catalog')
 
         self.root = bootstrap_voteit(echo=False)
         self.query = self.root.catalog.query

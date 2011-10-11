@@ -37,13 +37,13 @@ def main(global_config, **settings):
     #FIXME: Pluggable startup procedure?
     #FIXME: Rework into includes instead. It doesn't make sense to have separate
     #methods when there's already an established procedure to include things
-    app.register_catalog_metadata_adapter(config)
     app.register_poll_plugins(config)
     
     #Component includes
     config.include('voteit.core.models.user_tags')
     config.include('voteit.core.models.logs')
     config.include('voteit.core.models.date_time_util')
+    config.include('voteit.core.models.catalog')
     
     config.add_static_view('static', '%s:static' % PROJECTNAME)
     config.add_static_view('deform', 'deform:static')

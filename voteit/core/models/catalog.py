@@ -296,3 +296,8 @@ def get_like_userids(object, default):
         
     return default
     
+
+def includeme(config):
+    """ Register metadata adapter. """
+    config.registry.registerAdapter(CatalogMetadata, (ICatalogMetadataEnabled,), ICatalogMetadata)
+

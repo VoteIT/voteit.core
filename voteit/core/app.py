@@ -10,12 +10,9 @@ from pyramid.events import subscriber
 from pyramid.config import Configurator
 from zope.interface.verify import verifyClass
 
-from voteit.core.models.interfaces import ICatalogMetadata
-from voteit.core.models.interfaces import ICatalogMetadataEnabled
 from voteit.core.models.interfaces import IPollPlugin
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IPollPlugin
-from voteit.core.models.interfaces import IDateTimeUtil
 
 
 def register_poll_plugins(config):
@@ -28,11 +25,6 @@ def register_poll_plugins(config):
             config.include(poll_plugin)
     else:
         raise ValueError("At least one poll plugin must be used")
-
-
-def register_catalog_metadata_adapter(config):
-    from voteit.core.models.catalog import CatalogMetadata
-    config.registry.registerAdapter(CatalogMetadata, (ICatalogMetadataEnabled,), ICatalogMetadata)
 
 
 def include_zcml(config):
