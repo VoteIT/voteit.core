@@ -32,11 +32,13 @@ class SecurityTests(unittest.TestCase):
         testing.tearDown()
 
     def _fixture(self):
+        self.config.scan('betahaus.pyracont.fields.password')
         root = bootstrap_voteit(echo=False)
         from voteit.core.models.user import User
         
+        #Note that creators also fixes ownership
         for userid in ('fredrik', 'anders', 'hanna', 'robin'):
-            root.users[userid] = User()
+            root.users[userid] = User(creators = [userid])
 
         return root
 
@@ -50,8 +52,8 @@ class SecurityTests(unittest.TestCase):
         self.assertEqual(res, set(('admin', 'robin')))
 
     def test_context_effective_principals_admin(self):
-        res = security.context_effective_principals(self.root, 'admin')
-        self.assertEqual(res, ['system.Everyone', 'system.Authenticated', 'admin', 'role:Admin'])
+        res = set(security.context_effective_principals(self.root, 'admin'))
+        self.assertEqual(res, set(['system.Everyone', 'system.Authenticated', 'admin', 'role:Admin', 'role:Owner']))
         
     def test_context_effective_principals_normal_user(self):
         res = security.context_effective_principals(self.root, 'hanna')

@@ -1,6 +1,5 @@
 import string
 from random import choice
-from hashlib import sha1
 from hashlib import md5
 from datetime import timedelta
 
@@ -28,13 +27,6 @@ from voteit.core.models.date_time_util import utcnow
 USERID_REGEXP = r"[a-zA-Z]{1}[\w-]{1,14}"
 
 
-def get_sha_password(password):
-    """ Encode a plaintext password to sha1. """
-    if isinstance(password, unicode):
-        password = password.encode('UTF-8')
-    return 'SHA1:' + sha1(password).hexdigest()
-
-
 @content_factory('User', title=_(u"User"))
 class User(BaseContent):
     """ Content type for a user. Usable as a profile page. """
@@ -43,6 +35,8 @@ class User(BaseContent):
     display_name = _(u"User")
     allowed_contexts = ('Users',)
     add_permission = security.ADD_USER
+    custom_mutators = {'title':'_set_title'}
+    custom_fields = {'password':'PasswordField'}
     
     __acl__ = [(Allow, security.ROLE_ADMIN, (security.EDIT, security.VIEW,)),
                (Allow, security.ROLE_OWNER, (security.EDIT, security.VIEW, security.CHANGE_PASSWORD,)),
@@ -77,12 +71,7 @@ class User(BaseContent):
         return self.get_field_value('password')
     
     def set_password(self, value):
-        """ Encrypt a plaintext password. """
-        if not isinstance(value, unicode):
-            value = unicodify(value)
-        if len(value) < 5:
-            raise ValueError("Password must be longer than 4 chars")
-        value = get_sha_password(value)
+        """ Encrypt a plaintext password. Convenience method for field password for b/c."""
         self.set_field_value('password', value)
 
     #Override title for users

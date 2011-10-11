@@ -21,6 +21,8 @@ class UnreadAwareTests(unittest.TestCase):
         self.config.scan('voteit.core.models.site')
         self.config.scan('voteit.core.models.user')
         self.config.scan('voteit.core.models.users')
+        self.config.scan('betahaus.pyracont.fields.password')
+
         root = bootstrap_voteit(echo=False)
         from voteit.core.models.user import User
         

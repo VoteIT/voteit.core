@@ -11,24 +11,23 @@ def bootstrap_voteit(echo=True):
         - Users folder
         - An administrative user with login: admin and pass: admin
     """
-    from voteit.core.security import ROLE_OWNER
 
     if echo:
         print "Bootstrapping site - creating 'admin' user with password 'admin'"
     
     #Add root
-    root = createContent('SiteRoot', title=_(u"VoteIT"))
+    root = createContent('SiteRoot', title = _(u"VoteIT"), creators = ['admin'])
 
     #Add users folder
-    root['users'] = createContent('Users', title=_(u"Registered users"))
+    root['users'] = createContent('Users', title = _(u"Registered users"), creators = ['admin'])
     users = root.users
     
-    #Add user admin
+    #Add user admin - note that creators also set owner, which is important for changing password
     admin = createContent('User',
+                          password = 'admin',
+                          creators = ['admin'],
                           first_name = _(u'VoteIT'),
                           last_name = _(u'Administrator'))
-    admin.set_password('admin')
-    admin.add_groups('admin', (ROLE_OWNER,))
     users['admin'] = admin
     
     #Add admin to group managers

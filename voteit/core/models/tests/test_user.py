@@ -38,16 +38,18 @@ class UserTests(unittest.TestCase):
         self.assertEqual(obj.userid, obj.__name__) #Convention
         
     def test_get_and_set_password(self):
-        from voteit.core.models.user import get_sha_password
+        self.config.scan('betahaus.pyracont.fields.password')
         pw = 'very_secret'
-        hashed = get_sha_password(pw)
         
         obj = self._make_obj()
-        obj.set_password(pw)
+        field = obj.get_custom_field('password')
+        hashed = field.hash_method(pw)
         
+        obj.set_password(pw)
         self.assertEqual(obj.get_password(), hashed)
     
     def test_empty_password(self):
+        self.config.scan('betahaus.pyracont.fields.password')
         obj = self._make_obj()
         self.assertEqual(obj.get_password(), None)    
 
@@ -114,6 +116,7 @@ class UserTests(unittest.TestCase):
         self.config.scan('voteit.core.subscribers.transform_text')
         self.config.include('voteit.core.models.user_tags')
         self.config.include('voteit.core.models.catalog')
+        self.config.scan('betahaus.pyracont.fields.password')
 
         from voteit.core.bootstrap import bootstrap_voteit
         self.root = bootstrap_voteit(echo=False)

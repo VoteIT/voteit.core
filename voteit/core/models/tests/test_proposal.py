@@ -41,6 +41,7 @@ class ProposalTests(unittest.TestCase):
         self.config.scan('voteit.core.subscribers.transform_text')
         self.config.include('voteit.core.models.user_tags')
         self.config.include('voteit.core.models.catalog')
+        self.config.scan('betahaus.pyracont.fields.password')
 
         from voteit.core.bootstrap import bootstrap_voteit
         self.root = bootstrap_voteit(echo=False)

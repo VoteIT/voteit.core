@@ -44,6 +44,9 @@ def main(global_config, **settings):
     config.include('voteit.core.models.logs')
     config.include('voteit.core.models.date_time_util')
     config.include('voteit.core.models.catalog')
+    #For password storage
+    config.scan('betahaus.pyracont.fields.password')
+    
     
     config.add_static_view('static', '%s:static' % PROJECTNAME)
     config.add_static_view('deform', 'deform:static')

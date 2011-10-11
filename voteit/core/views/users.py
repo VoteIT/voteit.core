@@ -15,10 +15,8 @@ from voteit.core import VoteITMF as _
 from voteit.core.models.interfaces import ISiteRoot
 from voteit.core.models.interfaces import IUser
 from voteit.core.models.interfaces import IUsers
-from voteit.core.models.user import get_sha_password
 from voteit.core.views.api import APIView
 from voteit.core.security import CHANGE_PASSWORD
-from voteit.core.security import ROLE_OWNER
 from voteit.core.security import VIEW
 from voteit.core.models.schemas import add_csrf_token
 from voteit.core.models.schemas import button_add
@@ -65,26 +63,12 @@ class UsersView(object):
                 self.response['form'] = e.render()
                 return self.response
             
-            obj = createContent('User')
-            
-            if appstruct['password']:
-                #At this point the validation should have been done
-                obj.set_password(appstruct['password'])
-                
-            #Remove the field since it's handled - to avoid blanking the already set password
-            if 'password' in appstruct:
-                del appstruct['password']
-            
             #Userid and name should be consistent
             name = appstruct['userid']
             del appstruct['userid']
             
-            obj.set_field_appstruct(appstruct)
-
-            #The user should be owner of the user object
-            obj.add_groups(name, (ROLE_OWNER,))
-
-            #self.context is the site root. Users are stored in the users-property
+            #creators takes care of setting the role owner as well as adding it to creators attr.
+            obj = createContent('User', creators=[name], **appstruct)
             self.context[name] = obj
 
             self.api.flash_messages.add(_(u"Successfully added"))
@@ -228,7 +212,8 @@ class UsersView(object):
                 user = users.get(userid)
             
             if IUser.providedBy(user):
-                if get_sha_password(password) == user.get_password():
+                pw_field = user.get_custom_field('password')
+                if pw_field.check_input(password):
                     headers = remember(self.request, user.__name__)
                     url = resource_url(self.context, self.request)
                     if came_from:
@@ -236,7 +221,6 @@ class UsersView(object):
                     return HTTPFound(location = url,
                                      headers = headers)
             self.response['api'].flash_messages.add(_('Login failed.'), type='error')
-
 
         if 'register' in POST:
             controls = POST.items()
@@ -247,37 +231,24 @@ class UsersView(object):
                 self.response['reg_form'] = e.render()
                 return self.response
             
-            obj = createContent('User')
-            obj.set_password(appstruct['password'])
-                
-            #Remove the field since it's handled - to avoid blanking the already set password
-            if 'password' in appstruct:
-                del appstruct['password']
-            
-            #Userid and name should be consistent
+            #Userid and name should be consistent - and not stored
             name = appstruct['userid']
             del appstruct['userid']
-            
-            for (k, v) in appstruct.items():
-                obj.set_field_value(k, v)
 
-            #The user should be owner of the user object
-            obj.add_groups(name, (ROLE_OWNER,))
-
-            #self.context is the site root. Users are stored in the users-property
-            users[name] = obj
-
-            #FIXME: Validate email address instead!
-            url = "%slogin" % resource_url(self.context, self.request)
-
-            headers = remember(self.request, name)  # login user
-
+            #Came from should not be stored either
             came_from = urllib.unquote(appstruct['came_from'])
             if came_from:
                 url = came_from
+            else:
+                url = "%slogin" % resource_url(self.context, self.request)
+            del appstruct['came_from']
+
+            obj = createContent('User', creators=[name], **appstruct)
+            headers = remember(self.request, name)  # login user
+
             return HTTPFound(location=url, headers=headers)
-            
-            
+
+        #Set came from in form
         came_from = self.request.GET.get('came_from', None)
         if came_from:
             appstruct['came_from'] = came_from

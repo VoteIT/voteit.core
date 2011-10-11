@@ -32,6 +32,7 @@ class CatalogTestCase(unittest.TestCase):
         self.config.scan('voteit.core.subscribers.catalog')
         self.config.include('voteit.core.models.user_tags')
         self.config.include('voteit.core.models.catalog')
+        self.config.scan('betahaus.pyracont.fields.password')
 
         self.root = bootstrap_voteit(echo=False)
         self.query = self.root.catalog.query

@@ -15,7 +15,8 @@ from betahaus.pyracont.factories import createSchema
 
 from voteit.core.views.api import APIView
 from voteit.core import VoteITMF as _
-from voteit.core.security import ROLE_OWNER, EDIT, DELETE
+from voteit.core.security import EDIT
+from voteit.core.security import DELETE
 from voteit.core.models.schemas import add_csrf_token
 from voteit.core.models.schemas import button_add
 from voteit.core.models.schemas import button_cancel
@@ -64,12 +65,13 @@ class BaseEdit(object):
                 self.response['form'] = e.render()
                 return self.response
             
-            obj = createContent(content_type)
-            obj.set_field_appstruct(appstruct)
-            
+            kwargs = {}
             if self.api.userid:
-                obj.creators = [self.api.userid]
-                obj.add_groups(self.api.userid, (ROLE_OWNER,))
+                kwargs['creators'] = [self.api.userid]
+
+            obj = createContent(content_type, **kwargs)
+            obj.set_field_appstruct(appstruct)
+
             name = self.generate_slug(obj.title)
             self.context[name] = obj
             

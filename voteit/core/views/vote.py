@@ -10,7 +10,6 @@ from pyramid.httpexceptions import HTTPFound
 
 from voteit.core import VoteITMF as _
 from voteit.core.views.api import APIView
-from voteit.core.security import ROLE_OWNER
 from voteit.core.security import EDIT
 from voteit.core.security import DELETE
 from voteit.core.security import ADD_VOTE
@@ -80,9 +79,7 @@ class VoteView(object):
             Vote = self.poll_plugin.get_vote_class()
             if not IVote.implementedBy(Vote):
                 raise TypeError("Poll plugins method get_vote_class returned something that didn't implement IVote.")
-            vote = Vote()
-            vote.creators = [userid]
-            vote.add_groups(userid, (ROLE_OWNER,))
+            vote = Vote(creators = [userid])
             vote.set_vote_data(appstruct)
             
             self.context[userid] = vote

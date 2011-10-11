@@ -313,7 +313,8 @@ class PollTests(unittest.TestCase):
         self.config.scan('voteit.core.models.site')
         self.config.scan('voteit.core.models.user')
         self.config.scan('voteit.core.models.users')
-        
+        self.config.scan('betahaus.pyracont.fields.password')
+
         mailer = get_mailer(request)
 
         root = bootstrap_voteit(echo=False)
