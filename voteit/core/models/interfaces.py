@@ -318,20 +318,6 @@ class IPollPlugin(Interface):
             - pyramid.renderers.render
             - pyramid.response.Response
         """
-        
-class IContentTypeInfo(Interface):
-    """ A content type info for VoteIT. Any content addable through
-        the regular add menus needs one of these.
-    """
-    schema = Attribute("Schema class to use for this content")
-    type_class = Attribute("Class to construct content from")
-    
-    allowed_contexts = Attribute("Return a list of content_type names where"
-                                 "this content type is allowed. Taken from"
-                                 "type_class.allowed_contexts.")
-    add_permission = Attribute("Return add_permission from type_class - required to add content.")
-    content_type = Attribute("Returns content_type attribute from type_class."
-                    "Also used to identify the content type in the plugin like: util[<content_type>]")
 
 
 class IDateTimeUtil(Interface):
