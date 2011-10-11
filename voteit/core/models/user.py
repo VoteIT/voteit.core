@@ -37,7 +37,8 @@ class User(BaseContent):
     add_permission = security.ADD_USER
     custom_mutators = {'title':'_set_title'}
     custom_fields = {'password':'PasswordField'}
-    
+    schemas = {'add': 'AddUserSchema', 'edit': 'EditUserSchema'}
+
     __acl__ = [(Allow, security.ROLE_ADMIN, (security.EDIT, security.VIEW,)),
                (Allow, security.ROLE_OWNER, (security.EDIT, security.VIEW, security.CHANGE_PASSWORD,)),
                DENY_ALL]
@@ -75,7 +76,7 @@ class User(BaseContent):
         self.set_field_value('password', value)
 
     #Override title for users
-    def _set_title(self, value):
+    def _set_title(self, value, key=None):
         #Not used for user content type
         pass
     

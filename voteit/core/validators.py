@@ -104,7 +104,7 @@ class NewUniqueUserID(object):
                     default=u"UserID must be 3-15 chars, start with a-zA-Z and only contain regular latin chars, numbers, minus and underscore.")
             raise colander.Invalid(node, msg)
         
-        root = find_root(context)
+        root = find_root(self.context)
         if value in root.users:
             msg = _('already_registered_error',
                     default=u"UserID already registered. If it was registered by you, try to retrieve your password.")
@@ -127,10 +127,10 @@ class UniqueEmail(object):
         default_email_validator = colander.Email(msg=_(u"Invalid email address."))
         default_email_validator(node, value)
         #context can be IUser or IUsers
-        users = find_interface(context, IUsers)
+        users = find_root(self.context).users
         #User with email exists?
         match = users.get_user_by_email(value)
-        if match and context != match:
+        if match and self.context != match:
             #Something was found, and it isn't this context - I.e. some other user
             msg = _(u"email_not_unique_error",
                     default=u"Another user has already registered with that email address. If you've lost your password, request a new one instead.")

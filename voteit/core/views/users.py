@@ -47,13 +47,18 @@ class UsersView(object):
 
     @view_config(context=IUsers, name="add", renderer=DEFAULT_TEMPLATE)
     def add_form(self):
+        post = self.request.POST
+        if 'cancel' in post:
+            self.api.flash_messages.add(_(u"Canceled"))
+            url = resource_url(self.context, self.request)
+            return HTTPFound(location=url)
+
         schema = createSchema('AddUserSchema').bind(context=self.context, request=self.request)
         add_csrf_token(self.context, self.request, schema)
 
         form = Form(schema, buttons=(button_add, button_cancel))
         self.api.register_form_resources(form)
 
-        post = self.request.POST
         if 'add' in post:
             controls = post.items()
             try:
@@ -74,11 +79,6 @@ class UsersView(object):
             self.api.flash_messages.add(_(u"Successfully added"))
 
             url = resource_url(self.context, self.request)            
-            return HTTPFound(location=url)
-
-        if 'cancel' in post:
-            self.api.flash_messages.add(_(u"Canceled"))
-            url = resource_url(self.context, self.request)
             return HTTPFound(location=url)
 
         #No action - Render add form
@@ -244,6 +244,7 @@ class UsersView(object):
             del appstruct['came_from']
 
             obj = createContent('User', creators=[name], **appstruct)
+            self.context.users[name] = obj
             headers = remember(self.request, name)  # login user
 
             return HTTPFound(location=url, headers=headers)
