@@ -35,20 +35,6 @@ def register_catalog_metadata_adapter(config):
     config.registry.registerAdapter(CatalogMetadata, (ICatalogMetadataEnabled,), ICatalogMetadata)
 
 
-def add_date_time_util(config, locale=None, timezone_name=None):
-    """ """
-    from voteit.core.models.date_time_util import DateTimeUtil
-    
-    if locale is None:
-        locale = config.registry.settings.get('default_locale_name')
-
-    if timezone_name is None:
-        timezone_name = config.registry.settings.get('default_timezone_name')
-
-    util = DateTimeUtil(locale, timezone_name)
-    config.registry.registerUtility(util, IDateTimeUtil)
-
-
 def include_zcml(config):
     config.include('pyramid_zcml')
     config.load_zcml('voteit.core:configure.zcml')
