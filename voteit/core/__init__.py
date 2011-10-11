@@ -39,7 +39,6 @@ def main(global_config, **settings):
     #methods when there's already an established procedure to include things
     app.register_catalog_metadata_adapter(config)
     app.add_date_time_util(config)
-    app.add_help_util(config)
     app.register_poll_plugins(config)
     
     #Component includes
