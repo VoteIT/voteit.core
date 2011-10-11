@@ -2,6 +2,8 @@ from pyramid.i18n import TranslationStringFactory
 from pyramid.session import UnencryptedCookieSessionFactoryConfig
 from repoze.zodbconn.finder import PersistentApplicationFinder
 from pyramid.config import Configurator
+from pyramid.authorization import ACLAuthorizationPolicy
+from pyramid.authentication import AuthTktAuthenticationPolicy
 
 
 #Must be before all of this packages imports since some other methods might import it
@@ -13,9 +15,14 @@ def main(global_config, **settings):
     """ This function returns a Pyramid WSGI application.
     """
     import voteit.core.patches
-    from voteit.core.security import authn_policy
-    from voteit.core.security import authz_policy
-    
+    from voteit.core import app
+    from voteit.core.security import groupfinder
+
+    #Authentication policies
+    authn_policy = AuthTktAuthenticationPolicy(secret=settings['tkt_secret'],
+                                               callback=groupfinder)
+    authz_policy = ACLAuthorizationPolicy()
+
     zodb_uri = settings.get('zodb_uri')
     if zodb_uri is None:
         raise ValueError("No 'zodb_uri' in application configuration.")
@@ -33,10 +40,7 @@ def main(global_config, **settings):
                           root_factory=get_root,
                           session_factory = sessionfact,)
     
-    from voteit.core import app
     #FIXME: Pluggable startup procedure?
-    #FIXME: Rework into includes instead. It doesn't make sense to have separate
-    #methods when there's already an established procedure to include things
     app.register_poll_plugins(config)
     
     #Component includes

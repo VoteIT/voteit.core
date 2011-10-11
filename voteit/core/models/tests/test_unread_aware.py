@@ -3,6 +3,8 @@ import unittest
 from pyramid import testing
 from zope.interface.verify import verifyObject
 from BTrees.OOBTree import OOSet
+from pyramid.authorization import ACLAuthorizationPolicy
+from pyramid.authentication import AuthTktAuthenticationPolicy
 
 from voteit.core.bootstrap import bootstrap_voteit
 from voteit.core import security
@@ -41,8 +43,10 @@ class UnreadAwareTests(unittest.TestCase):
         return Proposal()
 
     def _setup_security(self):
-        self.config.setup_registry(authentication_policy=security.authn_policy,
-                                   authorization_policy=security.authz_policy)
+        authn_policy = AuthTktAuthenticationPolicy(secret='secret',
+                                                   callback=security.groupfinder)
+        authz_policy = ACLAuthorizationPolicy()
+        self.config.setup_registry(authorization_policy=authz_policy, authentication_policy=authn_policy)
 
     def test_interface(self):
         from voteit.core.models.interfaces import IUnreadAware

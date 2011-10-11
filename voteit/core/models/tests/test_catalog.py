@@ -8,14 +8,14 @@ from pyramid.security import remember
 from zope.interface.verify import verifyObject
 from zope.component.event import objectEventNotify
 from betahaus.pyracont.factories import createContent
+from pyramid.authorization import ACLAuthorizationPolicy
+from pyramid.authentication import AuthTktAuthenticationPolicy
 
 from voteit.core.bootstrap import bootstrap_voteit
 from voteit.core.interfaces import IObjectUpdatedEvent
 from voteit.core.events import ObjectUpdatedEvent
 from voteit.core import security
 from voteit.core.security import groupfinder
-from voteit.core.security import authn_policy
-from voteit.core.security import authz_policy
 from voteit.core.models.date_time_util import utcnow
 
 
@@ -54,6 +54,12 @@ class CatalogTestCase(unittest.TestCase):
         obj.add_groups('admin', (security.ROLE_ADMIN, security.ROLE_MODERATOR,))
         self.root['meeting'] = obj
         return obj
+
+    def _register_security_policies(self):
+        authn_policy = AuthTktAuthenticationPolicy(secret='secret',
+                                                   callback=groupfinder)
+        authz_policy = ACLAuthorizationPolicy()
+        self.config.setup_registry(authorization_policy=authz_policy, authentication_policy=authn_policy)
 
 
 class CatalogTests(CatalogTestCase):
@@ -132,15 +138,10 @@ class CatalogTests(CatalogTestCase):
 
     def test_reindex_object_security(self):
         from voteit.core.models.catalog import reindex_object_security
-        
-        self.config.setup_registry(authentication_policy=authn_policy,
-                                   authorization_policy=authz_policy)
+        self._register_security_policies()
         
         catalog = self.root.catalog
         obj = self._add_mock_meeting()
-        
-        self.config.setup_registry(authentication_policy=authn_policy,
-                                   authorization_policy=authz_policy)
         reindex_object_security(catalog, obj)
 
         self.assertEqual(self.query("allowed_to_view in any('role:Admin',) and path == '/meeting'")[0], 1)
@@ -192,8 +193,7 @@ class CatalogIndexTests(CatalogTestCase):
         self.assertEqual(self.query(qy)[0], 1)
 
     def test_allowed_to_view(self):
-        self.config.setup_registry(authentication_policy=authn_policy,
-                                   authorization_policy=authz_policy)
+        self._register_security_policies()
         obj = self._add_mock_meeting()
         
         #Owners are not allowed to view meetings. It's exclusive for Admins / Moderators right now
@@ -246,7 +246,7 @@ class CatalogIndexTests(CatalogTestCase):
 
     def test_unread(self):
         meeting = self._add_mock_meeting()
-        self.config.setup_registry(authorization_policy=authz_policy, authentication_policy=authn_policy)
+        self._register_security_policies()
         #Discussion posts are unread aware
         from voteit.core.models.discussion_post import DiscussionPost
         obj = DiscussionPost()
@@ -357,7 +357,7 @@ class CatalogMetadataTests(CatalogTestCase):
 
     def test_unread(self):
         meeting = self._add_mock_meeting()
-        self.config.setup_registry(authorization_policy=authz_policy, authentication_policy=authn_policy)
+        self._register_security_policies()
         #Discussion posts are unread aware
         from voteit.core.models.discussion_post import DiscussionPost
         obj = DiscussionPost()

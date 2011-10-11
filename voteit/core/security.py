@@ -1,6 +1,4 @@
 from zope.component import getUtility
-from pyramid.authorization import ACLAuthorizationPolicy
-from pyramid.authentication import AuthTktAuthenticationPolicy
 from pyramid.interfaces import IAuthorizationPolicy
 from pyramid.traversal import find_root
 from pyramid.security import Authenticated
@@ -77,11 +75,6 @@ def groupfinder(name, request):
     if context:
         return context.get_groups(name)
     return ()
-
-#Authentication policies
-authn_policy = AuthTktAuthenticationPolicy(secret='sosecret',
-                                           callback=groupfinder)
-authz_policy = ACLAuthorizationPolicy()
 
 
 def find_authorized_userids(context, permissions):

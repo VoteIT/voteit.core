@@ -5,6 +5,7 @@ from zope.interface.verify import verifyObject
 from zope.component import queryUtility
 from pyramid.threadlocal import get_current_registry
 from pyramid.authorization import ACLAuthorizationPolicy
+from pyramid.authentication import AuthTktAuthenticationPolicy
 from pyramid.traversal import find_interface
 from pyramid_mailer import get_mailer
 
@@ -62,6 +63,12 @@ class PollTests(unittest.TestCase):
         vote = Vote()
         vote.set_vote_data(vote_data)
         return vote
+
+    def _register_security_policies(self):
+        authn_policy = AuthTktAuthenticationPolicy(secret='secret',
+                                                   callback=security.groupfinder)
+        authz_policy = ACLAuthorizationPolicy()
+        self.config.setup_registry(authorization_policy=authz_policy, authentication_policy=authn_policy)
 
     def test_implements_base_content(self):
         from voteit.core.models.interfaces import IBaseContent
@@ -298,14 +305,13 @@ class PollTests(unittest.TestCase):
         from voteit.core.bootstrap import bootstrap_voteit
         from voteit.core.models.meeting import Meeting
         from voteit.core.models.poll import Poll
-        from voteit.core.security import authn_policy
-        from voteit.core.security import authz_policy
+        
         from voteit.core.security import unrestricted_wf_transition_to
         
         request = testing.DummyRequest()
         self.config = testing.setUp(request=request, registry=self.config.registry)
-        self.config.setup_registry(authentication_policy=authn_policy,
-                                   authorization_policy=authz_policy)
+        self._register_security_policies()
+        
         self.config.include('pyramid_mailer.testing')
         self.config.scan('voteit.core.subscribers.poll')
         
