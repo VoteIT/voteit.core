@@ -1,110 +1,104 @@
-import re
-from uuid import uuid4
+from logging import getLogger
+from datetime import datetime
 
-from repoze.folder import Folder
-from repoze.folder import unicodify
-from zope.component import getUtility
+from betahaus.pyracont import BaseFolder
 from zope.interface import implements
-from BTrees.OOBTree import OOBTree
+from pyramid.threadlocal import get_current_request
+from pyramid.security import authenticated_userid
+from repoze.folder import unicodify
 
 from voteit.core.models.interfaces import IBaseContent
 from voteit.core.models.security_aware import SecurityAware
-from voteit.core.models.date_time_util import utcnow
-import colander
+from voteit.core.security import ROLE_OWNER
 
 #FIXME: This should be changable some way.
 #Things that should never be saved
 RESTRICTED_KEYS = ('csrf_token', )
 
 
-class BaseContent(Folder, SecurityAware):
+class BaseContent(BaseFolder, SecurityAware):
     __doc__ = IBaseContent.__doc__
     implements(IBaseContent)
     add_permission = None
     content_type = None
     allowed_contexts = ()
+    schemas = {}
 
     def __init__(self, **kwargs):
-        #FIXME: Compat with betahaus.pyracont.BaseFolder
-        self.uid = uuid4()
-        self.created = utcnow()
-        self.set_field_appstruct(kwargs)
-        super(BaseContent, self).__init__()
+        """ Initialize class. note that the superclass will create field storage etc
+            on init, so it's important to run super.
+            creators is required in kwargs, this class will try to extract it from
+            current request if it isn't present.
+            Also, owner role will be set for the first in the creators-tuple.
+        """
+        if 'creators' not in kwargs:
+            request = get_current_request()
+            if request is None:
+                #request will be None in some tests
+                userid = None
+            else:
+                userid = authenticated_userid(request)
 
-    @property
-    def _storage(self):
-        storage = getattr(self, '__storage__', None)
-        if storage is None:
-            storage = self.__storage__ =  OOBTree()
-        return storage
+            if userid is None:
+                logger = getLogger('voteit.core')
+                logger.warn("Can't find userid for '%s'. Unable to set owner for this object." % self)
+            else:
+                kwargs['creators'] = (userid,)
 
-    def get_field_value(self, key, default=None):
-        """ Get value. Return default if it doesn't exist. """
-        return self._storage.get(key, default)
+        #Set owner - if it is in kwargs now
+        if 'creators' in kwargs:
+            userid = kwargs['creators'][0]
+            self.add_groups(userid, (ROLE_OWNER,))
+
+        super(BaseContent, self).__init__(**kwargs)
 
     def set_field_value(self, key, value):
-        """ Store value in 'key' in annotations. """
+        """ Override BaseFolders set_field_value.
+            This method aborts if key is in RESTRICTED_KEYS
+        """
         if key in RESTRICTED_KEYS:
             return
-        self._storage[key] = value
+        super(BaseContent, self).set_field_value(key, value)
 
-    def get_field_appstruct(self, schema):
-        """ Get an appstruct from the current field values.
-            Appstruct is just a dictionary. Deform can use it to populate existing fields.
-            The trick with marker is to make sure that None is handled properly.
-        """
-        marker = object()
-        appstruct = {}
-        for field in schema:
-            value = self.get_field_value(field.name, marker)
-            if value != marker:
-                appstruct[field.name] = value
-        return appstruct
-
-    def set_field_appstruct(self, appstruct):
-        updated = set()
-        for (k, v) in appstruct.items():
-            if k in RESTRICTED_KEYS:
-                continue
-            if self.get_field_value(k) != v:
-                self.set_field_value(k, v)
-                updated.add(k)
-        return updated
-
-    #uid
-    def _get_uid(self):
-        return getattr(self, '__UID__', None)
-    
-    def _set_uid(self, value):
-        self.__UID__ = unicodify(value)
-        
-    uid = property(_get_uid, _set_uid)
-
-    #title
     def _get_title(self):
         return self.get_field_value('title', u"")
-    
     def _set_title(self, value):
         self.set_field_value('title', value)
-
     title = property(_get_title, _set_title)
 
     def _get_description(self):
-        return self.get_field_value('description', u"")
-    
+        return self.get_field_value('description', u"")        
     def _set_description(self, value):
         self.set_field_value('description', value)
-
     description = property(_get_description, _set_description)
 
-    #creators
     def _get_creators(self):
-        return getattr(self, '__creators__', ())
-
+        return self.get_field_value('creators', ())
     def _set_creators(self, value):
-        self.__creators__ = tuple(value)
-    
+        value = tuple(value)
+        self.set_field_value('creators', value)
     creators = property(_get_creators, _set_creators)
+        
+    def _get_created(self):
+        return self.get_field_value('created', None)
+    def _set_created(self, value):
+        assert isinstance(value, datetime)
+        self.set_field_value('created', value)
+    created = property(_get_created, _set_created)
+    
+    def _get_modified(self):
+        return self.get_field_value('modified', None)
+    def _set_modified(self, value):
+        assert isinstance(value, datetime)
+        self.set_field_value('modified', value)
+    modified = property(_get_modified, _set_modified)
+
+    def _get_uid(self):
+        return self.get_field_value('uid', None)
+    def _set_uid(self, value):
+        value = unicodify(value)
+        self.set_field_value('uid', value)
+    uid = property(_get_uid, _set_uid)
 
     def get_content(self, content_type=None, iface=None, states=None, sort_on=None, sort_reverse=False, limit=None):
         """ See IBaseContent """

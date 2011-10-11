@@ -11,14 +11,8 @@ class SecurityAwareTests(unittest.TestCase):
         testing.tearDown()
 
     def _make_obj(self):
-        """ Security aware is a mixin class, so we need to add BaseContent too"""
         from voteit.core.models.security_aware import SecurityAware
-        from voteit.core.models.base_content import BaseContent
-        
-        class DummyContent(BaseContent, SecurityAware):
-            pass
-        
-        return DummyContent()
+        return SecurityAware()
 
     def test_verify_object(self):
         from zope.interface.verify import verifyObject

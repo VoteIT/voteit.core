@@ -11,7 +11,6 @@ from voteit.core import VoteITMF as _
 from voteit.core import security
 from voteit.core.models.interfaces import ISiteRoot
 from voteit.core.models.base_content import BaseContent
-from voteit.core.validators import html_string_validator
 from voteit.core.models.catalog import update_indexes
 
 
@@ -30,12 +29,11 @@ class SiteRoot(BaseContent):
                DENY_ALL]
 
     def __init__(self, **kwargs):
+        super(SiteRoot, self).__init__(**kwargs)
         self.catalog = Catalog()
         self.catalog.__parent__ = self #To make traversal work
         self.catalog.document_map = DocumentMap()
-        self.set_field_appstruct(kwargs) #FIXME: Compat with BaseFolder
         update_indexes(self.catalog)
-        super(SiteRoot, self).__init__()
 
     @property
     def users(self):
