@@ -35,12 +35,18 @@ class MajorityPollPlugin(PollPlugin):
         for prop in proposals:
             choices.add((prop.uid, prop.title))
 
+        poll_wf_state = self.context.get_workflow_state()
+        if poll_wf_state == 'ongoing':
+            proposal_title = _(u"Vote for one")
+        else:
+            proposal_title = _(u"You can't change your vote now.")
+
         class Schema(colander.Schema):
             proposal = colander.SchemaNode(
                             colander.String(),
                             validator=colander.OneOf([x[0] for x in choices]),
                             widget=deform.widget.RadioChoiceWidget(values=choices),
-                            title=_(u'Vote for one'),
+                            title=proposal_title,
                             description=u'',)
 
         return Schema()
