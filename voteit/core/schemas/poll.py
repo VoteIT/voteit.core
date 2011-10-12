@@ -45,7 +45,7 @@ def poll_plugin_choices_widget(node, kw):
     for (name, plugin) in request.registry.getAdapters([fake_poll], IPollPlugin):
         plugin_choices.add((name, plugin.title))
 
-    return deform.widget.SelectWidget(values=proposal_choices)
+    return deform.widget.SelectWidget(values=plugin_choices)
 
 
 @colander.deferred
