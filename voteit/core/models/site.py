@@ -1,4 +1,5 @@
 from pyramid.security import Allow
+from pyramid.security import Authenticated
 from pyramid.security import Everyone
 from pyramid.security import ALL_PERMISSIONS
 from pyramid.security import DENY_ALL
@@ -24,8 +25,8 @@ class SiteRoot(BaseContent):
     schemas = {'edit':'SiteRootSchema'}
 
     __acl__ = [(Allow, security.ROLE_ADMIN, ALL_PERMISSIONS),
-               (Allow, security.ROLE_OWNER, (security.EDIT, security.CHANGE_PASSWORD, )),
-               (Allow, Everyone, (security.VIEW, security.ADD_MEETING)),
+               (Allow, Authenticated, (security.ADD_MEETING, )),
+               (Allow, Everyone, (security.VIEW, )),
                DENY_ALL]
 
     def __init__(self, **kwargs):
