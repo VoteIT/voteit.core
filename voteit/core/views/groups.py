@@ -71,7 +71,6 @@ class EditGroups(object):
             context._check_groups(ticket['groups'])
             context.invite_tickets[ticket['email']].roles = tuple(ticket['groups'])
 
-    @view_config(context=IMeeting, name="edit_permissions", renderer=DEFAULT_TEMPLATE, permission=MANAGE_GROUPS)
     @view_config(context=ISiteRoot, name="edit_groups", renderer=DEFAULT_TEMPLATE, permission=MANAGE_GROUPS)
     def root_group_form(self):
         schema = get_groups_schema(self.context)
@@ -129,7 +128,9 @@ class EditGroups(object):
             self.context.update_userids_permissions(appstruct['userids_and_groups'])
             #FIXME: this should be readded later
 #            self.update_tickets_permissions(self.context, appstruct['invitations_and_groups'])
-            
+            url = resource_url(self.context, self.request)
+            return HTTPFound(location=url)
+    
         if 'cancel' in post:
             url = resource_url(self.context, self.request)
             return HTTPFound(location=url)
