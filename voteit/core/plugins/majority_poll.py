@@ -73,11 +73,11 @@ class MajorityPollPlugin(PollPlugin):
     def _get_percentage(self, num):
         return u"%s%%" % (round(num*100, 1))
         
-    def render_result(self):
+    def render_result(self, request):
         response = {}
         response['result'] = self.context.poll_result
         response['get_proposal_by_uid'] = self.context.get_proposal_by_uid
-        return render('templates/majority_poll.pt', response)
+        return render('templates/majority_poll.pt', response, request=request)
 
     def change_states_of(self):
         """ This gets called when a poll has finished.

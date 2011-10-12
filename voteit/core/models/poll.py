@@ -200,11 +200,11 @@ class Poll(BaseContent, WorkflowAware, UnreadAware):
                 default=u"Poll closed. Proposals might have been adjusted as approved or denied depending on outcome of the poll.")
         fm.add(msg)
 
-    def render_poll_result(self):
+    def render_poll_result(self, request):
         """ Render poll result. Calls plugin to calculate result.
         """
         poll_plugin = self.get_poll_plugin()
-        return poll_plugin.render_result()
+        return poll_plugin.render_result(request)
 
     def get_proposal_by_uid(self, uid):
         for prop in self.get_proposal_objects():

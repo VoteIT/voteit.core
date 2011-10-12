@@ -33,7 +33,7 @@
         <div class="clear"><!-- --></div>
 
         <div tal:condition="wf_state == 'closed'"
-            tal:content="structure poll.render_poll_result()">
+            tal:content="structure poll.render_poll_result(request)">
             Poll result
         </div>
 

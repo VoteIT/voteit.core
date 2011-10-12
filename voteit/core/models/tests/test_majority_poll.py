@@ -141,5 +141,6 @@ class MPIntegrationTests(unittest.TestCase):
         self._add_votes()
         self._close_poll()
         plugin = self.poll.get_poll_plugin()
-        self.assertTrue('p1' in plugin.render_result())
+        request = testing.DummyRequest()
+        self.assertTrue('p1' in plugin.render_result(request))
         
