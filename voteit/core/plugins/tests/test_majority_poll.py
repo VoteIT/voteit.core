@@ -32,6 +32,10 @@ class MPUnitTests(unittest.TestCase):
         self.assertTrue(verifyObject(IPollPlugin, obj))
 
     def test_get_vote_schema(self):
+        #Enable workflows
+        self.config.include('pyramid_zcml')
+        self.config.load_zcml('voteit.core:configure.zcml')
+        
         obj = self._make_obj()
         
         #Shouldn't type return a string? :)
