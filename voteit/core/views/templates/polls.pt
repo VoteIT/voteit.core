@@ -55,8 +55,12 @@
 			<div id="users-vote-${poll.uid}" class="toggle_area toggle_closed">
 				<a class="toggle_minimize read_more" i18n:translate="">Your vote</a>
                 <div class="minimizable_area"
-				     tal:condition="poll_forms[poll.uid]|False"
-					 tal:content="structure poll_forms[poll.uid]">Render your vote - readonly form</div>
+				     tal:condition="poll_forms[poll.uid]|False">
+                    <h3 i18n:translate="">You've voted</h3>
+					<div tal:condition="wf_state == 'ongoing'" 
+					     i18n:translate="">If you submit the form again, you'll change your vote. You may do that as long as the poll is open.</div>
+                    <div tal:content="structure poll_forms[poll.uid]">Render your vote</div>
+				</div>
                 <div class="minimizable_inverted meta" i18n:translate="">You voted in this poll. Click above to show your vote.</div>
 			</div>
 		</tal:user_voted>

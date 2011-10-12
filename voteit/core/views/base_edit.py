@@ -23,6 +23,8 @@ from voteit.core.models.schemas import button_cancel
 from voteit.core.models.schemas import button_update
 from voteit.core.models.schemas import button_delete
 from voteit.core.events import ObjectUpdatedEvent
+from voteit.core.models.interfaces import IBaseContent
+from voteit.core.models.interfaces import IWorkflowAware
 
 
 DEFAULT_TEMPLATE = "templates/base_edit.pt"
@@ -38,7 +40,7 @@ class BaseEdit(object):
         self.response = {}
         self.response['api'] = self.api = APIView(context, request)
 
-    @view_config(name="add", renderer=DEFAULT_TEMPLATE)
+    @view_config(context=IBaseContent, name="add", renderer=DEFAULT_TEMPLATE)
     def add_form(self):
         content_type = self.request.params.get('content_type')
         
@@ -99,7 +101,7 @@ class BaseEdit(object):
         self.response['form'] = self.form.render(appstruct=appstruct)
         return self.response
 
-    @view_config(name="edit", renderer=DEFAULT_TEMPLATE, permission=EDIT)
+    @view_config(context=IBaseContent, name="edit", renderer=DEFAULT_TEMPLATE, permission=EDIT)
     def edit_form(self):
         content_type = self.context.content_type
         schema_name = self.api.get_schema_name(content_type, 'edit')
@@ -143,7 +145,7 @@ class BaseEdit(object):
         self.response['form'] = self.form.render(appstruct=appstruct)
         return self.response
 
-    @view_config(name="delete", permission=DELETE, renderer=DEFAULT_TEMPLATE)
+    @view_config(context=IBaseContent, name="delete", permission=DELETE, renderer=DEFAULT_TEMPLATE)
     def delete_form(self):
 
         schema = colander.Schema()
@@ -197,7 +199,7 @@ class BaseEdit(object):
         #If no id was found, don't just continue
         raise KeyError("No unique id could be found")
         
-    @view_config(name="state", renderer=DEFAULT_TEMPLATE)
+    @view_config(context=IWorkflowAware, name="state")
     def state_change(self):
         """ Change workflow state for context.
             Note that if this view is called without the required permission,

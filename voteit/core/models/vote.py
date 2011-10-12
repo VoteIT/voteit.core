@@ -1,8 +1,9 @@
-from zope.interface import implements
+from zope.interface import implementsOnly
 from pyramid.security import Allow
 from pyramid.security import DENY_ALL
 from pyramid.traversal import find_interface
 from betahaus.pyracont.decorators import content_factory
+
 
 from voteit.core import security
 from voteit.core import VoteITMF as _
@@ -10,6 +11,7 @@ from voteit.core.models.base_content import BaseContent
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IVote
 from voteit.core.validators import html_string_validator
+from zope.interface.declarations import classImplementsOnly
 
 
 ACL = {}
@@ -26,14 +28,15 @@ class Vote(BaseContent):
     """ Vote content. This is not addable through regular content factories.
         It's used as a storage for a users vote by a vote plugin.
     """
-    implements(IVote)
+    implementsOnly(IVote) #This blanks out other interfaces!
     content_type = 'Vote'
     display_name = _(u"Vote")
     allowed_contexts = () #N/A for this content type, it shouldn't be addable the normal way.
     add_permission = security.ADD_VOTE
     
     title = _(u"Your vote")
-    description = _('your_vote_description', default=u"This is your vote. While the poll is open, you can delete or change it if you wish.")
+    description = _(u'your_vote_description',
+                    default = _(u"This is your vote. While the poll is open, you can delete or change it if you wish."))
 
     @property
     def __acl__(self):
@@ -50,3 +53,4 @@ class Vote(BaseContent):
     def set_vote_data(self, value):
         """ Set vote data """
         self.__vote_data__ = value
+

@@ -31,7 +31,7 @@ class AgendaItemView(BaseView):
     
     @view_config(context=IAgendaItem, renderer="templates/agenda_item.pt", permission=VIEW)
     def agenda_item_view(self):
-        """ """
+        """ Main overview of Agenda item. """
 
         self.response['get_discussions'] = self.get_discussions
         self.response['get_proposals'] = self.get_proposals
@@ -46,26 +46,28 @@ class AgendaItemView(BaseView):
             userid = self.api.userid
             poll_schema = poll.get_poll_plugin().get_vote_schema()
             appstruct = {}
+            can_vote = has_permission(ADD_VOTE, poll, self.request)
+
+            if can_vote:
+                poll_url = resource_url(poll, self.request)
+                form = Form(poll_schema, action=poll_url+"@@vote", buttons=(button_vote,))
+            else:
+                form = Form(poll_schema)
+            self.api.register_form_resources(form)
+
             if userid in poll:
                 #If editing a vote is allowed, redirect. Editing is only allowed in open polls
                 vote = poll.get(userid)
                 assert IVote.providedBy(vote)
-                
                 #show the users vote and edit button
                 appstruct = vote.get_vote_data()
-                
-                form = Form(poll_schema)
-                self.api.register_form_resources(form)
-                poll_forms[poll.uid] = form.render(appstruct=appstruct, readonly=True)
+                #Poll might still be open, in that case the poll should be changable
+                readonly = not can_vote
+                poll_forms[poll.uid] = form.render(appstruct=appstruct, readonly=readonly)
+            #User has not voted
+            elif can_vote:
+                poll_forms[poll.uid] = form.render()
 
-            else: 
-                if has_permission(ADD_VOTE, poll, self.request):
-                    poll_url = resource_url(poll, self.request)
-                    form = Form(poll_schema, action=poll_url+"@@vote", buttons=(button_vote, button_cancel))
-                    self.api.register_form_resources(form)
-                    poll_forms[poll.uid] = form.render()
-
-        
         #Proposal form
         if has_permission(ADD_PROPOSAL, self.context, self.request):
             prop_schema = createSchema('ProposalSchema').bind(context=self.context, request=self.request)

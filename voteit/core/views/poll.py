@@ -1,21 +1,27 @@
+from deform import Form
+from deform.exception import ValidationFailure
 from pyramid.view import view_config
 from pyramid.url import resource_url
 from pyramid.exceptions import Forbidden
-from deform import Form
-from deform.exception import ValidationFailure
 from pyramid.httpexceptions import HTTPFound
+from pyramid.traversal import find_interface
 from zope.component.event import objectEventNotify
+from betahaus.pyracont.factories import createSchema
 
 from voteit.core.views.api import APIView
 from voteit.core import VoteITMF as _
-from voteit.core.security import EDIT, VIEW
+from voteit.core.security import ADD_VOTE
+from voteit.core.security import EDIT
+from voteit.core.security import VIEW
+from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IPoll
+from voteit.core.models.interfaces import IVote
 from voteit.core.events import ObjectUpdatedEvent
 from voteit.core.models.schemas import add_csrf_token
+from voteit.core.models.schemas import button_vote
 from voteit.core.models.schemas import button_cancel
 from voteit.core.models.schemas import button_update
 from voteit.core.models.schemas import button_save
-from betahaus.pyracont.factories import createSchema
 
 
 class PollView(object):
@@ -136,18 +142,51 @@ class PollView(object):
         #removed the plugin.
         plugin = self.context.get_poll_plugin()
         return plugin.render_raw_data()
-    
-    @view_config(context=IPoll, name="state", renderer='templates/base_edit.pt')
-    def state_change(self):
-        """ Change workflow state for context.
-            Note that if this view is called without the required permission,
-            it will raise a WorkflowError exception. This view should
-            never be linked to without doing the proper permission checks first.
-            (Since the WorkflowError is not the same as Pyramids Forbidden exception,
-            which will be handled by the application.)
-        """
-        state = self.request.params.get('state')
-        self.context.set_workflow_state(self.request, state)
+
+    @view_config(context=IPoll, name="vote", permission=ADD_VOTE, renderer='templates/base_edit.pt')
+    def vote_action(self):
+        """ Adds or updates a users vote. """
+        ai = find_interface(self.context, IAgendaItem)
+        ai_url = resource_url(ai, self.request)
         
-        url = resource_url(self.context.__parent__, self.request)
-        return HTTPFound(location=url)
+        post = self.request.POST
+        if 'vote' not in post:
+            return HTTPFound(location=ai_url)
+
+        poll_plugin = self.context.get_poll_plugin()
+        schema = poll_plugin.get_vote_schema()
+        add_csrf_token(self.context, self.request, schema)
+        form = Form(schema, buttons=(button_vote,))
+
+        userid = self.api.userid
+        controls = post.items()
+        try:
+            #appstruct is deforms convention. It will be the submitted data in a dict.
+            appstruct = form.validate(controls)
+        except ValidationFailure, e:
+            #FIXME: How do we validate this properly, and display the result?
+            self.api.register_form_resources(form)
+            self.response['form'] = e.render()
+            return self.response
+            
+        Vote = poll_plugin.get_vote_class()
+        if not IVote.implementedBy(Vote):
+            raise TypeError("Poll plugins method get_vote_class returned something that didn't implement IVote.")
+
+        #Remove crsf_token from appstruct after validation
+        del appstruct['csrf_token']
+
+        if userid in self.context:
+            vote = self.context[userid]
+            assert IVote.providedBy(vote)
+            vote.set_vote_data(appstruct)
+            msg = _(u"Your vote was updated.")
+        else:
+            vote = Vote(creators = [userid])
+            vote.set_vote_data(appstruct)
+            #To fire events after set_vote_data is done
+            self.context[userid] = vote
+            msg = _(u"Thank you for voting!")
+        self.api.flash_messages.add(msg)
+
+        return HTTPFound(location=ai_url)
