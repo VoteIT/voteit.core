@@ -14,16 +14,21 @@ from voteit.core.models.interfaces import ICatalogMetadataEnabled
 from voteit.core.models.workflow_aware import WorkflowAware
 
 
-_MODERATOR_DEFAULTS = (security.VIEW, security.EDIT, security.MANAGE_GROUPS,
-                       security.MODERATE_MEETING, security.DELETE, security.CHANGE_WORKFLOW_STATE, )
+_MODERATOR_DEFAULTS = (security.VIEW,
+                       security.EDIT,
+                       security.MANAGE_GROUPS,
+                       security.MODERATE_MEETING,
+                       security.DELETE,
+                       security.CHANGE_WORKFLOW_STATE, )
 
 ACL = {}
 ACL['default'] = [(Allow, security.ROLE_ADMIN, security.REGULAR_ADD_PERMISSIONS),
                   (Allow, security.ROLE_ADMIN, _MODERATOR_DEFAULTS),
                   (Allow, security.ROLE_MODERATOR, security.REGULAR_ADD_PERMISSIONS),
                   (Allow, security.ROLE_MODERATOR, _MODERATOR_DEFAULTS),
-                  (Allow, security.ROLE_OWNER, (security.VIEW, security.EDIT, )),
-                  (Allow, security.ROLE_PARTICIPANT, (security.VIEW, security.ADD_PROPOSAL, security.ADD_DISCUSSION_POST, )),
+                  #(Allow, security.ROLE_OWNER, (security.VIEW, security.EDIT, )),
+                  (Allow, security.ROLE_DISCUSS, (security.ADD_DISCUSSION_POST, )),
+                  (Allow, security.ROLE_PROPOSE, (security.ADD_PROPOSAL, )),
                   (Allow, security.ROLE_VIEWER, (security.VIEW,)),
                   (Allow, Authenticated, security.REQUEST_MEETING_ACCESS),
                   DENY_ALL,
@@ -36,8 +41,6 @@ ACL['private'] = [(Allow, security.ROLE_ADMIN, security.REGULAR_ADD_PERMISSIONS)
                 ]
 ACL['closed'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, security.MANAGE_GROUPS, security.DELETE, )),
                  (Allow, security.ROLE_MODERATOR, (security.VIEW, security.MANAGE_GROUPS, )),
-                 (Allow, security.ROLE_OWNER, (security.VIEW, )),
-                 (Allow, security.ROLE_PARTICIPANT, (security.VIEW, )),
                  (Allow, security.ROLE_VIEWER, (security.VIEW, )),
                  DENY_ALL,
                 ]

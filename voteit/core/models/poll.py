@@ -27,7 +27,11 @@ from voteit.core.models.interfaces import IVote
 from voteit.core.views.macros import FlashMessages
 
 
-_UPCOMING_PERMS = (security.VIEW, security.EDIT, security.DELETE, security.CHANGE_WORKFLOW_STATE, security.MODERATE_MEETING, )
+_UPCOMING_PERMS = (security.VIEW,
+                   security.EDIT,
+                   security.DELETE,
+                   security.CHANGE_WORKFLOW_STATE,
+                   security.MODERATE_MEETING, )
 
 ACL = {}
 ACL['private'] = [(Allow, security.ROLE_ADMIN, _UPCOMING_PERMS),
@@ -36,26 +40,20 @@ ACL['private'] = [(Allow, security.ROLE_ADMIN, _UPCOMING_PERMS),
                    ]
 ACL['upcoming'] = [(Allow, security.ROLE_ADMIN, _UPCOMING_PERMS),
                   (Allow, security.ROLE_MODERATOR, _UPCOMING_PERMS),
-                  (Allow, security.ROLE_PARTICIPANT, security.VIEW),
-                  (Allow, security.ROLE_VOTER, security.VIEW),
                   (Allow, security.ROLE_VIEWER, security.VIEW),
                   DENY_ALL,
                    ]
 ACL['ongoing'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, security.CHANGE_WORKFLOW_STATE, security.MODERATE_MEETING, )),
                   (Allow, security.ROLE_MODERATOR, (security.VIEW, security.CHANGE_WORKFLOW_STATE, security.MODERATE_MEETING, )),
-                  (Allow, security.ROLE_PARTICIPANT, security.VIEW),
-                  (Allow, security.ROLE_VOTER, (security.VIEW, security.ADD_VOTE, )),
+                  (Allow, security.ROLE_VOTER, (security.ADD_VOTE, )),
                   (Allow, security.ROLE_VIEWER, security.VIEW),
                   DENY_ALL,
                    ]
-ACL['closed'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, security.CHANGE_WORKFLOW_STATE, )),
-                 (Allow, security.ROLE_MODERATOR, (security.VIEW, security.CHANGE_WORKFLOW_STATE, )),
-                 (Allow, security.ROLE_PARTICIPANT, security.VIEW),
-                 (Allow, security.ROLE_VOTER, security.VIEW),
+ACL['closed'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, )),
+                 (Allow, security.ROLE_MODERATOR, (security.VIEW, )),
                  (Allow, security.ROLE_VIEWER, security.VIEW),
                  DENY_ALL,
                 ]
-CLOSED_STATES = ('canceled', 'closed', )
 
 
 @content_factory('Poll', title=_(u"Poll"))
@@ -71,13 +69,8 @@ class Poll(BaseContent, WorkflowAware, UnreadAware):
     @property
     def __acl__(self):
         state = self.get_workflow_state()
-        if state == u'private':
-            return ACL['private']
-        if state == u'upcoming':
-            return ACL['upcoming']
-        if state == u'ongoing':
-            return ACL['ongoing']
-        return ACL['closed'] #As default - don't traverse to parent
+        #As default - don't traverse to parent
+        return ACL.get(state, 'closed')
 
     @property
     def start_time(self):

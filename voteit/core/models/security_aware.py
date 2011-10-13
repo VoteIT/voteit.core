@@ -48,33 +48,37 @@ class SecurityAware(object):
 
         return tuple(groups)
 
+    def check_groups(self, groups):
+        """ Check dependencies and group names. """
+        self._check_groups(groups)
+        adjusted_groups = set()
+        for group in groups:
+            adjusted_groups.add(group)
+            deps = security.ROLE_DEPENDENCIES.get(group, None)
+            if deps is None:
+                continue
+            adjusted_groups.update(set(deps))
+
+        return adjusted_groups
+
     def add_groups(self, principal, groups):
         """ Add a groups for a principal in this context.
         """
-        self._check_groups(groups)
         groups = set(groups)
         groups.update(self.get_groups(principal))
-        self._groups[principal] = tuple(groups)
+        #Delegate check and set to set_groups
+        self.set_groups(principal, groups)
     
     def set_groups(self, principal, groups):
         """ Set groups for a principal in this context. (This clears any previous setting)
+            Will also take care of role dependencies.
         """
-        self._check_groups(groups)
-        self._groups[principal] = tuple(groups)
-
-    def update_userids_permissions(self, value):
-        """ Set permissions from a list of dicts with the following layout:
-            {'userid':<userid>,'groups':<set of groups that the user should have>}.
-        """
-        #Unset all permissions from users that exist but aren't provided
-        submitted_userids = [x['userid'] for x in value]
-        for userid in self._groups:
-            if userid not in submitted_userids:
-                del self._groups[userid]
-        
-        #Set the new permissions
-        for item in value:
-            self.set_groups(item['userid'], item['groups'])
+        if not groups:
+            if principal in self._groups:
+                del self._groups[principal]
+            return
+        adjusted_groups = self.check_groups(groups)
+        self._groups[principal] = tuple(adjusted_groups)
 
     def get_security(self):
         """ Return the current security settings.
@@ -82,7 +86,19 @@ class SecurityAware(object):
         userids_and_groups = []
         for userid in self._groups:
             userids_and_groups.append({'userid':userid, 'groups':self.get_groups(userid)})
-        return userids_and_groups
+        return tuple(userids_and_groups)
+
+    def set_security(self, value):
+        """ Set current security settings according to value, that is a list of dicts with keys
+            userid and groups. Will also clear any settings for users not present in value.
+        """
+        submitted_userids = [x['userid'] for x in value]
+        for userid in self._groups:
+            if userid not in submitted_userids:
+                del self._groups[userid]
+
+        for item in value:
+            self.set_groups(item['userid'], item['groups'])
 
     def _check_groups(self, groups):
         for group in groups:

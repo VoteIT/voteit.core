@@ -11,7 +11,6 @@ from voteit.core import security
 admin = set([security.ROLE_ADMIN])
 moderator = set([security.ROLE_MODERATOR])
 authenticated = set([Authenticated])
-participant = set([security.ROLE_PARTICIPANT])
 viewer = set([security.ROLE_VIEWER])
 voter = set([security.ROLE_VOTER])
 owner = set([security.ROLE_OWNER])

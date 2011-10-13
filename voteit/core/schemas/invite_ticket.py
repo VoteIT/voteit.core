@@ -54,7 +54,7 @@ def checkbox_of_invited_emails_widget(node, kw):
 
 
 @schema_factory('ManageTicketsSchema')
-class ManageSchema(colander.Schema):
+class ManageTicketsSchema(colander.Schema):
     emails = colander.SchemaNode(
         deform.Set(),
         widget = checkbox_of_invited_emails_widget,

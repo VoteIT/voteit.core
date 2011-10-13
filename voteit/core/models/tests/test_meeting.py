@@ -12,8 +12,10 @@ from zope.interface.verify import verifyObject
 admin = set([security.ROLE_ADMIN])
 moderator = set([security.ROLE_MODERATOR])
 authenticated = set([Authenticated])
-participant = set([security.ROLE_PARTICIPANT])
+discuss = set([security.ROLE_DISCUSS])
+propose = set([security.ROLE_PROPOSE])
 viewer = set([security.ROLE_VIEWER])
+voter = set([security.ROLE_VOTER])
 owner = set([security.ROLE_OWNER])
 
 
@@ -114,10 +116,10 @@ class MeetingPermissionTests(unittest.TestCase):
         obj = self._make_obj()
         
         #View
-        self.assertEqual(self.pap(obj, security.VIEW), admin | moderator | viewer | participant | owner)
+        self.assertEqual(self.pap(obj, security.VIEW), admin | moderator | viewer )
 
         #Edit
-        self.assertEqual(self.pap(obj, security.EDIT), admin | moderator | owner)
+        self.assertEqual(self.pap(obj, security.EDIT), admin | moderator )
         
         #Meeting access
         self.assertEqual(self.pap(obj, security.REQUEST_MEETING_ACCESS), authenticated)
@@ -129,7 +131,10 @@ class MeetingPermissionTests(unittest.TestCase):
         self.assertEqual(self.pap(obj, security.MANAGE_GROUPS), admin | moderator)
 
         #Add proposal
-        self.assertEqual(self.pap(obj, security.ADD_PROPOSAL), admin | moderator | participant )
+        self.assertEqual(self.pap(obj, security.ADD_PROPOSAL), admin | moderator | propose )
+
+        #Add discussion post
+        self.assertEqual(self.pap(obj, security.ADD_DISCUSSION_POST), admin | moderator | discuss )
 
         #Add poll
         self.assertEqual(self.pap(obj, security.ADD_POLL), admin | moderator)
@@ -143,10 +148,10 @@ class MeetingPermissionTests(unittest.TestCase):
         obj.set_workflow_state(request, 'ongoing')
         
         #View
-        self.assertEqual(self.pap(obj, security.VIEW), admin | moderator | viewer | participant | owner)
+        self.assertEqual(self.pap(obj, security.VIEW), admin | moderator | viewer )
 
         #Edit
-        self.assertEqual(self.pap(obj, security.EDIT), admin | moderator | owner)
+        self.assertEqual(self.pap(obj, security.EDIT), admin | moderator )
         
         #Meeting access
         self.assertEqual(self.pap(obj, security.REQUEST_MEETING_ACCESS), authenticated)
@@ -158,7 +163,10 @@ class MeetingPermissionTests(unittest.TestCase):
         self.assertEqual(self.pap(obj, security.MANAGE_GROUPS), admin | moderator)
 
         #Add proposal
-        self.assertEqual(self.pap(obj, security.ADD_PROPOSAL), admin | moderator | participant )
+        self.assertEqual(self.pap(obj, security.ADD_PROPOSAL), admin | moderator | propose )
+
+        #Add discussion post
+        self.assertEqual(self.pap(obj, security.ADD_DISCUSSION_POST), admin | moderator | discuss )
 
         #Add poll
         self.assertEqual(self.pap(obj, security.ADD_POLL), admin | moderator)
@@ -173,7 +181,7 @@ class MeetingPermissionTests(unittest.TestCase):
         obj.set_workflow_state(request, 'closed')
         
         #View
-        self.assertEqual(self.pap(obj, security.VIEW), admin | moderator | viewer | participant | owner)
+        self.assertEqual(self.pap(obj, security.VIEW), admin | moderator | viewer )
 
         #Edit
         self.assertEqual(self.pap(obj, security.EDIT), set())
@@ -189,6 +197,9 @@ class MeetingPermissionTests(unittest.TestCase):
 
         #Add proposal
         self.assertEqual(self.pap(obj, security.ADD_PROPOSAL), set() )
+
+        #Add discussion post
+        self.assertEqual(self.pap(obj, security.ADD_DISCUSSION_POST), set() )
 
         #Add poll
         self.assertEqual(self.pap(obj, security.ADD_POLL), set())

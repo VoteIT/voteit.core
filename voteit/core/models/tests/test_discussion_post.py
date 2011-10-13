@@ -60,3 +60,5 @@ class DiscussionTests(unittest.TestCase):
                 'admin',
             )
         self.assertEqual(obj.get_field_value('text'), text)
+
+    #FIXME: We need proper permission tests here

@@ -33,6 +33,15 @@ class SecurityAwareTests(unittest.TestCase):
         obj.add_groups('tester', ('role:Admin',))
         self.assertEqual(obj.get_groups('tester'), ('group:Hipsters','role:Admin',))
 
+    def test_get_security(self):
+        obj = self._make_obj()
+        self.assertEqual(obj.get_security(), ())
+        groups_set = set(['role:Admin', 'group:Hipsters'])
+        obj.set_groups('robin', groups_set)
+        res = obj.get_security()
+        self.assertEqual(len(res), 1)
+        self.assertEqual(set(res[0]['groups']), groups_set)
+
     def test_set_groups(self):
         obj = self._make_obj()
         obj.set_groups('tester', ['group:Hipsters'])
@@ -43,18 +52,6 @@ class SecurityAwareTests(unittest.TestCase):
     def test_add_bad_group(self):
         obj = self._make_obj()
         self.assertRaises(ValueError, obj.add_groups, 'tester', ['Hipsters'])
-
-    def test_get_security(self):
-        obj = self._make_obj()
-
-        self.assertEqual(obj.get_security(), [])
-        obj.set_groups('robin', ['role:Admin', 'group:Hipsters'])
-        self.assertEqual(obj.get_security(),[{'userid': 'robin', 'groups': ('group:Hipsters', 'role:Admin')}])
-
-    def test_update_userids_permissions(self):
-        obj = self._make_obj()
-        obj.update_userids_permissions([{'userid': 'robin', 'groups': ('group:DeathCab', 'role:Moderator')}])
-        self.assertEqual(obj._groups['robin'], ('group:DeathCab', 'role:Moderator'))
 
     def test_list_all_groups(self):
         obj = self._make_obj()

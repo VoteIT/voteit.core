@@ -145,7 +145,6 @@ class CatalogTests(CatalogTestCase):
         reindex_object_security(catalog, obj)
 
         self.assertEqual(self.query("allowed_to_view in any('role:Admin',) and path == '/meeting'")[0], 1)
-        self.assertEqual(self.query("allowed_to_view in any('role:Participant',) and path == '/meeting'")[0], 1)        
         self.assertEqual(self.query("allowed_to_view in any('role:Viewer',) and path == '/meeting'")[0], 1)        
 
 

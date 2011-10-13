@@ -22,6 +22,12 @@ _PRIV_MOD_PERMS = (security.VIEW,
                    security.MODERATE_MEETING,
                    security.CHANGE_WORKFLOW_STATE, )
 
+_CLOSED_AI_MOD_PERMS = (security.VIEW,
+                        security.CHANGE_WORKFLOW_STATE,
+                        security.ADD_DISCUSSION_POST,
+                        security.MODERATE_MEETING, )
+
+
 ACL = {}
 ACL['private'] = [(Allow, security.ROLE_ADMIN, security.REGULAR_ADD_PERMISSIONS),
                   (Allow, security.ROLE_ADMIN, _PRIV_MOD_PERMS),
@@ -29,17 +35,14 @@ ACL['private'] = [(Allow, security.ROLE_ADMIN, security.REGULAR_ADD_PERMISSIONS)
                   (Allow, security.ROLE_MODERATOR, _PRIV_MOD_PERMS),
                   DENY_ALL,
                 ]
-ACL['closed_ai'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, security.CHANGE_WORKFLOW_STATE,
-                                                  security.ADD_DISCUSSION_POST, security.MODERATE_MEETING, )),
-                    (Allow, security.ROLE_MODERATOR, (security.VIEW, security.CHANGE_WORKFLOW_STATE,
-                                                      security.ADD_DISCUSSION_POST, security.MODERATE_MEETING, )),
-                    (Allow, security.ROLE_PARTICIPANT, (security.VIEW, security.ADD_DISCUSSION_POST, )),
+ACL['closed_ai'] = [(Allow, security.ROLE_ADMIN, _CLOSED_AI_MOD_PERMS),
+                    (Allow, security.ROLE_MODERATOR, _CLOSED_AI_MOD_PERMS),
+                    (Allow, security.ROLE_DISCUSS, (security.ADD_DISCUSSION_POST, )),
                     (Allow, security.ROLE_VIEWER, (security.VIEW, )),
                     DENY_ALL,
                    ]
 ACL['closed_meeting'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, )),
                          (Allow, security.ROLE_MODERATOR, (security.VIEW, )),
-                         (Allow, security.ROLE_PARTICIPANT, (security.VIEW, )),
                          (Allow, security.ROLE_VIEWER, (security.VIEW, )),
                          DENY_ALL,
                         ]

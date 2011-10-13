@@ -97,13 +97,13 @@ class ISecurityAware(Interface):
         """ Set groups for a principal in this context. (This clears any previous setting)
         """
 
-    def update_userids_permissions(value):
-        """ Set permissions from a list of dicts with the following layout:
-            {'userid':<userid>,'groups':<set of groups that the user should have>}.
-        """
-
     def get_security():
         """ Return the current security settings.
+        """
+    
+    def set_security(value):
+        """ Set current security settings according to value, that is a list of dicts with keys
+            userid and groups. Will also clear any settings for users not present in value.
         """
 
     def list_all_groups():

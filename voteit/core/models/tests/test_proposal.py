@@ -10,8 +10,11 @@ from voteit.core import security
 
 admin = set([security.ROLE_ADMIN])
 moderator = set([security.ROLE_MODERATOR])
-participant = set([security.ROLE_PARTICIPANT])
+authenticated = set([Authenticated])
+discuss = set([security.ROLE_DISCUSS])
+propose = set([security.ROLE_PROPOSE])
 viewer = set([security.ROLE_VIEWER])
+voter = set([security.ROLE_VOTER])
 owner = set([security.ROLE_OWNER])
 
 
@@ -100,7 +103,7 @@ class ProposalPermissionTests(unittest.TestCase):
         obj = self._make_obj()
 
         #View
-        self.assertEqual(self.pap(obj, security.VIEW), admin | moderator | viewer | participant | owner)
+        self.assertEqual(self.pap(obj, security.VIEW), admin | moderator | viewer | voter | propose | discuss )
 
         #Edit
         self.assertEqual(self.pap(obj, security.EDIT), admin | moderator)
@@ -109,7 +112,7 @@ class ProposalPermissionTests(unittest.TestCase):
         self.assertEqual(self.pap(obj, security.DELETE), admin | moderator)
 
         #Retract
-        self.assertEqual(self.pap(obj, security.RETRACT), admin | moderator | owner)
+        self.assertEqual(self.pap(obj, security.RETRACT), admin | moderator | owner )
 
     def test_retracted_in_ongoing_ai(self):
         request = testing.DummyRequest()
@@ -121,7 +124,7 @@ class ProposalPermissionTests(unittest.TestCase):
         ai['prop'] = obj
 
         #View
-        self.assertEqual(self.pap(obj, security.VIEW), admin | moderator | viewer | participant | owner)
+        self.assertEqual(self.pap(obj, security.VIEW), admin | moderator | viewer | voter | propose | discuss)
 
         #Edit
         self.assertEqual(self.pap(obj, security.EDIT), admin | moderator)
@@ -143,7 +146,7 @@ class ProposalPermissionTests(unittest.TestCase):
         ai['prop'] = obj
 
         #View
-        self.assertEqual(self.pap(obj, security.VIEW), admin | moderator | viewer | participant | owner)
+        self.assertEqual(self.pap(obj, security.VIEW), admin | moderator | viewer | voter | propose | discuss)
 
         #Edit
         self.assertEqual(self.pap(obj, security.EDIT), set())
@@ -165,7 +168,7 @@ class ProposalPermissionTests(unittest.TestCase):
         ai['prop'] = obj
 
         #View
-        self.assertEqual(self.pap(obj, security.VIEW), admin | moderator | viewer | participant | owner)
+        self.assertEqual(self.pap(obj, security.VIEW), admin | moderator | viewer | voter | propose | discuss)
 
         #Edit
         self.assertEqual(self.pap(obj, security.EDIT), set())
@@ -187,7 +190,7 @@ class ProposalPermissionTests(unittest.TestCase):
         ai['prop'] = obj
 
         #View
-        self.assertEqual(self.pap(obj, security.VIEW), admin | moderator | viewer | participant | owner)
+        self.assertEqual(self.pap(obj, security.VIEW), admin | moderator | viewer | voter | propose | discuss)
 
         #Edit
         self.assertEqual(self.pap(obj, security.EDIT), admin | moderator)
@@ -210,7 +213,7 @@ class ProposalPermissionTests(unittest.TestCase):
         ai['prop'] = obj
 
         #View
-        self.assertEqual(self.pap(obj, security.VIEW), admin | moderator | viewer | participant | owner)
+        self.assertEqual(self.pap(obj, security.VIEW), admin | moderator | viewer | voter | propose | discuss)
 
         #Edit
         self.assertEqual(self.pap(obj, security.EDIT), set())
@@ -229,7 +232,7 @@ class ProposalPermissionTests(unittest.TestCase):
         ai['prop'] = obj
 
         #View
-        self.assertEqual(self.pap(obj, security.VIEW), admin | moderator | viewer | participant | owner)
+        self.assertEqual(self.pap(obj, security.VIEW), admin | moderator | viewer | voter | propose | discuss)
 
         #Edit
         self.assertEqual(self.pap(obj, security.EDIT), admin | moderator)

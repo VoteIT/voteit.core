@@ -92,16 +92,6 @@ class MeetingView(BaseView):
         self.response['context_effective_principals'] = security.context_effective_principals
         return self.response
 
-    @view_config(name="meeting_access", context=IMeeting, renderer="templates/meeting_access.pt", permission=security.VIEW)
-    def meeting_access(self):
-        self.response['security_appstruct'] = self.context.get_security_appstruct()['userids_and_groups']
-        self.response['form'] = True
-        self.response['moderator'] = security.ROLE_MODERATOR
-        self.response['participant'] = security.ROLE_PARTICIPANT
-        self.response['voter'] = security.ROLE_VOTER
-        self.response['viewer'] = security.ROLE_VIEWER
-        return self.response
-
     @view_config(name="ticket", context=IMeeting, renderer="templates/base_edit.pt")
     def claim_ticket(self):
         """ Handle claim of a ticket. It acts in two ways:
@@ -164,13 +154,18 @@ class MeetingView(BaseView):
             should have once they register. When the form is submitted, it will also email
             users.
         """
+        post = self.request.POST
+        if 'cancel' in post:
+            self.api.flash_messages.add(_(u"Canceled"))
+            url = resource_url(self.context, self.request)
+            return HTTPFound(location=url)
+
         schema = createSchema('AddTicketsSchema').bind(context=self.context, request=self.request)
         add_csrf_token(self.context, self.request, schema)
 
         form = Form(schema, buttons=(button_add, button_cancel))
         self.api.register_form_resources(form)
 
-        post = self.request.POST
         if 'add' in post:
             controls = post.items()
             try:
@@ -181,18 +176,13 @@ class MeetingView(BaseView):
             
             emails = appstruct['emails'].splitlines()
             message = appstruct['message']
+            roles = appstruct['roles']
             for email in emails:
-                obj = createContent('InviteTicket', email, appstruct['roles'], message)
+                obj = createContent('InviteTicket', email, roles, message)
                 self.context.add_invite_ticket(obj, self.request) #Will also email user
             
             msg = _('sent_tickets_text', default=u"Successfully added and sent ${mail_count} invites", mapping={'mail_count':len(emails)} )
             self.api.flash_messages.add(msg)
-
-            url = resource_url(self.context, self.request)
-            return HTTPFound(location=url)
-
-        if 'cancel' in post:
-            self.api.flash_messages.add(_(u"Canceled"))
 
             url = resource_url(self.context, self.request)
             return HTTPFound(location=url)
@@ -202,7 +192,6 @@ class MeetingView(BaseView):
         self.api.flash_messages.add(msg, close_button=False)
         self.response['form'] = form.render()
         return self.response
-
 
     @view_config(name="manage_tickets", context=IMeeting, renderer="templates/base_edit.pt", permission=security.MANAGE_GROUPS)
     def manage_tickets(self):

@@ -25,7 +25,8 @@ from voteit.core.models.date_time_util import utcnow
 
 
 SELECTABLE_ROLES = (security.ROLE_MODERATOR,
-                    security.ROLE_PARTICIPANT,
+                    security.ROLE_DISCUSS,
+                    security.ROLE_PROPOSE,
                     security.ROLE_VOTER,
                     security.ROLE_VIEWER,
                     )

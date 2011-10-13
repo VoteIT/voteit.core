@@ -8,13 +8,16 @@ from pyramid.authorization import ACLAuthorizationPolicy
 from pyramid.authentication import AuthTktAuthenticationPolicy
 from pyramid.traversal import find_interface
 from pyramid_mailer import get_mailer
+from pyramid.security import Authenticated
 
 from voteit.core.models.interfaces import IAgendaItem
 from voteit.core import security
 
 admin = set([security.ROLE_ADMIN])
 moderator = set([security.ROLE_MODERATOR])
-participant = set([security.ROLE_PARTICIPANT])
+authenticated = set([Authenticated])
+discuss = set([security.ROLE_DISCUSS])
+propose = set([security.ROLE_PROPOSE])
 viewer = set([security.ROLE_VIEWER])
 voter = set([security.ROLE_VOTER])
 owner = set([security.ROLE_OWNER])
@@ -401,7 +404,7 @@ class PollPermissionTests(unittest.TestCase):
         request = testing.DummyRequest()
         poll.set_workflow_state(request, 'upcoming')
         
-        self.assertEqual(self.pap(poll, security.VIEW), admin | moderator | participant | viewer | voter)
+        self.assertEqual(self.pap(poll, security.VIEW), admin | moderator | viewer )
         
         self.assertEqual(self.pap(poll, security.EDIT), admin | moderator)
         
@@ -420,7 +423,7 @@ class PollPermissionTests(unittest.TestCase):
         poll.set_workflow_state(request, 'upcoming')
         poll.set_workflow_state(request, 'ongoing')
         
-        self.assertEqual(self.pap(poll, security.VIEW), admin | moderator | participant | viewer | voter)
+        self.assertEqual(self.pap(poll, security.VIEW), admin | moderator | viewer )
         
         self.assertEqual(self.pap(poll, security.EDIT), set())
         
@@ -441,7 +444,7 @@ class PollPermissionTests(unittest.TestCase):
         poll.set_workflow_state(request, 'ongoing')
         poll.set_workflow_state(request, 'closed')
         
-        self.assertEqual(self.pap(poll, security.VIEW), admin | moderator | participant | viewer | voter)
+        self.assertEqual(self.pap(poll, security.VIEW), admin | moderator | viewer )
         
         self.assertEqual(self.pap(poll, security.EDIT), set())
         

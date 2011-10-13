@@ -12,8 +12,10 @@ from voteit.core import security
 admin = set([security.ROLE_ADMIN])
 moderator = set([security.ROLE_MODERATOR])
 authenticated = set([Authenticated])
-participant = set([security.ROLE_PARTICIPANT])
+discuss = set([security.ROLE_DISCUSS])
+propose = set([security.ROLE_PROPOSE])
 viewer = set([security.ROLE_VIEWER])
+voter = set([security.ROLE_VOTER])
 owner = set([security.ROLE_OWNER])
 
 
@@ -170,7 +172,7 @@ class AgendaItemPermissionTests(unittest.TestCase):
         meeting['ai'] = obj
 
         #View
-        self.assertEqual(self.pap(obj, security.VIEW), admin | moderator | participant | viewer | owner)
+        self.assertEqual(self.pap(obj, security.VIEW), admin | moderator | viewer)
 
         #Edit
         self.assertEqual(self.pap(obj, security.EDIT), set())
@@ -204,22 +206,22 @@ class AgendaItemPermissionTests(unittest.TestCase):
         meeting['ai'] = obj
         
         #View
-        self.assertEqual(self.pap(obj, security.VIEW), admin | moderator | viewer | participant | owner)
+        self.assertEqual(self.pap(obj, security.VIEW), admin | moderator | viewer )
 
         #Edit
-        self.assertEqual(self.pap(obj, security.EDIT), admin | moderator | owner)
+        self.assertEqual(self.pap(obj, security.EDIT), admin | moderator )
         
         #Delete
         self.assertEqual(self.pap(obj, security.DELETE), admin | moderator)
 
         #Add proposal
-        self.assertEqual(self.pap(obj, security.ADD_PROPOSAL), admin | moderator | participant)
+        self.assertEqual(self.pap(obj, security.ADD_PROPOSAL), admin | moderator | propose)
 
         #Add poll
         self.assertEqual(self.pap(obj, security.ADD_POLL), admin | moderator)
 
         #Add discussion post
-        self.assertEqual(self.pap(obj, security.ADD_DISCUSSION_POST), admin | moderator | participant)
+        self.assertEqual(self.pap(obj, security.ADD_DISCUSSION_POST), admin | moderator | discuss)
 
         #Change workflow state
         self.assertEqual(self.pap(obj, security.CHANGE_WORKFLOW_STATE), admin | moderator)
@@ -240,7 +242,7 @@ class AgendaItemPermissionTests(unittest.TestCase):
         meeting['ai'] = obj
         
         #View
-        self.assertEqual(self.pap(obj, security.VIEW), admin | moderator | viewer | participant)
+        self.assertEqual(self.pap(obj, security.VIEW), admin | moderator | viewer)
 
         #Edit
         self.assertEqual(self.pap(obj, security.EDIT), set())
@@ -275,7 +277,7 @@ class AgendaItemPermissionTests(unittest.TestCase):
         meeting['ai'] = obj
         
         #View
-        self.assertEqual(self.pap(obj, security.VIEW), admin | moderator | viewer | participant)
+        self.assertEqual(self.pap(obj, security.VIEW), admin | moderator | viewer)
 
         #Edit
         self.assertEqual(self.pap(obj, security.EDIT), set())
@@ -290,7 +292,7 @@ class AgendaItemPermissionTests(unittest.TestCase):
         self.assertEqual(self.pap(obj, security.ADD_POLL), set())
 
         #Add discussion post
-        self.assertEqual(self.pap(obj, security.ADD_DISCUSSION_POST), admin | moderator | participant)
+        self.assertEqual(self.pap(obj, security.ADD_DISCUSSION_POST), admin | moderator | discuss)
 
         #Change workflow state
         self.assertEqual(self.pap(obj, security.CHANGE_WORKFLOW_STATE), admin | moderator)

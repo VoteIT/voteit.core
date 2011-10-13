@@ -181,3 +181,23 @@ class TokenFormValidator(object):
 def deferred_token_form_validator(form, kw):
     context = kw['context']
     return TokenFormValidator(context)
+
+
+@colander.deferred
+def deferred_existing_userid_validator(node, kw):
+    context = kw['context']
+    return GlobalExistingUserId(context)
+
+
+class GlobalExistingUserId(object):
+    def __init__(self, context):
+        self.context = context
+    
+    def __call__(self, node, value):
+        root = find_root(self.context)
+        userids = tuple(root.users.keys())
+        if value not in userids:
+            msg = _(u"globally_existing_userid_validation_error",
+                    default=u"UserID not found")
+            raise colander.Invalid(node, 
+                                   msg)

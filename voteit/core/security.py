@@ -12,10 +12,22 @@ from voteit.core import VoteITMF as _
 #Roles, which are the same as groups really
 ROLE_ADMIN = 'role:Admin'
 ROLE_MODERATOR = 'role:Moderator'
-ROLE_PARTICIPANT = 'role:Participant'
-ROLE_VOTER = 'role:Voter'
 ROLE_VIEWER = 'role:Viewer'
+ROLE_DISCUSS = 'role:Discussion'
+ROLE_PROPOSE = 'role:Propose'
+ROLE_VOTER = 'role:Voter'
 ROLE_OWNER = 'role:Owner'
+
+#Some roles are cumulative - admins are always moderators,
+#and discuss, propose and vote requres that you can view. It's always part of respective roles
+#Owner is a separate role that isn't inherited
+
+#Roles dict - with cumulative roles
+#Basically, if for instance role:Voter is set, role:Viewer should _always_ be set as well
+ROLE_DEPENDENCIES = {}
+ROLE_DEPENDENCIES[ROLE_DISCUSS] = (ROLE_VIEWER,)
+ROLE_DEPENDENCIES[ROLE_PROPOSE] = (ROLE_VIEWER,)
+ROLE_DEPENDENCIES[ROLE_VOTER] = (ROLE_VIEWER,)
 
 
 #Global Permissions
@@ -53,9 +65,10 @@ REGULAR_ADD_PERMISSIONS = (ADD_AGENDA_ITEM,
 
 ROOT_ROLES = ((ROLE_ADMIN, _(u'Administrator')),)
 MEETING_ROLES = ((ROLE_MODERATOR, _(u'Moderator')),
-                 (ROLE_PARTICIPANT, _(u'Participant')),
-                 (ROLE_VOTER, _(u'Voter')),
-                 (ROLE_VIEWER, _(u'View only')),
+                 (ROLE_VIEWER, _(u'View')),
+                 (ROLE_DISCUSS, _(u'Discuss (and view)')),
+                 (ROLE_PROPOSE, _(u'Propose (and view)')),
+                 (ROLE_VOTER, _(u'Voter (and view)')),
                 )
 
 
