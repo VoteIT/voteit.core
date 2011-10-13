@@ -14,17 +14,6 @@
                i18n:translate="">Delete</a>
         </li>
 
-        <tal:siteroot tal:condition="context.content_type == 'SiteRoot' and
-                                    context_has_permission('Manage Server', context)">
-        <tal:comment condition="False">
-            Common functions for siteroot
-        </tal:comment>
-        <li>
-            <a tal:attributes="href api.resource_url(context, request) + '@@server_logs'"
-               i18n:translate="">Server logs</a>
-        </li>
-        </tal:siteroot>
-
         <li tal:condition="context.content_type == 'Poll' and
                                context_has_permission('Edit', context) and
                                context.get_poll_plugin().get_settings_schema()|False">

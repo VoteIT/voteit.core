@@ -4,12 +4,12 @@
     
     <li class="tab dropdown_menu" tal:condition="show_polls|False">
         <a href="#" class="menu_header">
-        	<span class="iconpadding poll-dark">
+            <span class="iconpadding poll-dark">
                 <span>
-	        		<tal:unread condition="unread_polls_count">(${unread_polls_count})</tal:unread>
-                	<tal:polls i18n:translate="">Polls</tal:polls> &raquo;
-				</span>
-			</span>
+                    <tal:unread condition="unread_polls_count">(${unread_polls_count})</tal:unread>
+                    <tal:polls i18n:translate="">Polls</tal:polls> &raquo;
+                </span>
+            </span>
         </a>
         <ul class="menu_body">
             <tal:section repeat="section sections">
@@ -18,7 +18,7 @@
                     <li class="readonly iconpadding ${section}"><span>${api.translate(section.title())}</span></li>
                     <li tal:repeat="poll_metadata metadatas">
                         <a href="${poll_metadata['path']}"
-						   tal:attributes="class api.userid in poll_metadata.get('unread',()) and 'unread' or ''">
+                           tal:attributes="class api.userid in poll_metadata.get('unread',()) and 'unread' or ''">
                             ${poll_metadata['title']}
                         </a>
                     </li>
@@ -31,8 +31,8 @@
     <tal:meeting condition="api.meeting and is_moderator">
         <li class="tab dropdown_menu">
             <a href="#" class="menu_header iconpadding">
-            	<span class="cog-dark" i18n:translate="">Moderator menu</span> &raquo;
-			</a>
+                <span class="cog-dark" i18n:translate="">Moderator menu</span> &raquo;
+            </a>
             <ul class="menu_body">
                 <li>
                     <a tal:attributes="href api.resource_url(api.meeting, request) + '@@permissions'"
@@ -74,8 +74,8 @@
                        i18n:translate="">Participants</a>
         </li>
     </tal:participants>
-	
-	<tal:root condition="is_moderator and api.meeting is None">
+    
+    <tal:root condition="is_moderator and api.meeting is None">
         <li class="tab dropdown_menu">
             <a href="#" class="menu_header iconpadding">
                 <span class="cog-dark" i18n:translate="">Admin menu</span> &raquo;
@@ -84,6 +84,10 @@
                 <li>
                     <a tal:attributes="href api.resource_url(api.root, request) + '@@permissions'"
                         i18n:translate="">Edit permissions</a>
+                </li>
+                <li tal:condition="api.context_has_permission('Manage Server', context)">
+                    <a tal:attributes="href api.resource_url(context, request) + '@@server_logs'"
+                       i18n:translate="">Server logs</a>
                 </li>
             </ul>
         </li>
