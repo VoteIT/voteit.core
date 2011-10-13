@@ -285,19 +285,26 @@ class TokenFormValidatorTests(TestCase):
 
 
 class GlobalExistingUserIdTests(TestCase):
-    
+
     def setUp(self):
         self.config = testing.setUp()
 
     def tearDown(self):
         testing.tearDown()
-    
+
     @property
     def _cut(self):
         from voteit.core.validators import GlobalExistingUserId
         return GlobalExistingUserId
 
-    def test_something(self):
-        raise NotImplementedError('Do test')
+    def test_nonexisting_userid(self):
+        context = _fixture(self.config)
+        obj = self._cut(context)
+        node = None
+        self.assertRaises(colander.Invalid, obj, node, 'non_existing_userid')
 
-#FIXME: Full integration test with schema
+    def test_existing_userid(self):
+        context = _fixture(self.config)
+        obj = self._cut(context)
+        node = None
+        self.assertEqual(obj(node, 'admin'), None)
