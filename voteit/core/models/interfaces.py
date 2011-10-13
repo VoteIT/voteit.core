@@ -103,7 +103,8 @@ class ISecurityAware(Interface):
     
     def set_security(value):
         """ Set current security settings according to value, that is a list of dicts with keys
-            userid and groups. Will also clear any settings for users not present in value.
+            userid and groups.
+            Warning! This method will also clear any settings for users not present in value!
         """
 
     def list_all_groups():

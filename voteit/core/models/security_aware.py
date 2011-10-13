@@ -93,7 +93,8 @@ class SecurityAware(object):
             userid and groups. Will also clear any settings for users not present in value.
         """
         submitted_userids = [x['userid'] for x in value]
-        for userid in self._groups:
+        current_userids = self._groups.keys()
+        for userid in current_userids:
             if userid not in submitted_userids:
                 del self._groups[userid]
 
@@ -111,67 +112,3 @@ class SecurityAware(object):
         [groups.update(x) for x in self._groups.values()]
         return groups
 
-
-def get_groups_schema(context):
-    """ Return selectable groups schema. This can be done in a smarter way with
-        deferred schemas, but it can be like this for now.
-    """
-    root = find_root(context)
-    user_choice = tuple(root.users.keys())
-
-    email_choices = [x.email for x in context.invite_tickets.values() if x.get_workflow_state() != u'closed']
-    userid_widget = deform.widget.TextInputWidget(
-        size=10,
-        )
-    if context is root:
-        #Only show administrator as selectable group in root
-        group_choices = security.ROOT_ROLES
-    else:
-        #In other contexts (like Meeting) meeting roles apply
-        group_choices = security.MEETING_ROLES
-
-    class UserIDAndGroupsSchema(colander.Schema):
-        userid = colander.SchemaNode(
-            colander.String(),
-            validator=colander.OneOf(user_choice),
-            widget = userid_widget,
-            )
-        groups = colander.SchemaNode(
-            deform.Set(allow_empty=True),
-            widget=deform.widget.CheckboxChoiceWidget(values=group_choices,
-                                                      missing=colander.null,)
-            )
-    
-    class UserIDsAndGroupsSequenceSchema(colander.SequenceSchema):
-        userid_and_groups = UserIDAndGroupsSchema(title=_(u'Groups for user'),)
-
-
-    class InvitationAndGroupsSchema(colander.Schema):
-        #Userid will always be empty for invitations
-        userid = colander.SchemaNode(
-            colander.String(),
-            widget = userid_widget,
-            missing = None,
-            )
-        email = colander.SchemaNode(
-            colander.String(),
-            validator=colander.OneOf(email_choices),
-            widget = userid_widget,
-            )
-        groups = colander.SchemaNode(
-            deform.Set(allow_empty=True),
-            widget=deform.widget.CheckboxChoiceWidget(values=group_choices,
-                                                      missing=colander.null,
-                                                      css_class="invitation")
-            )
-
-    class InvitationsAndGroupsSequenceSchema(colander.SequenceSchema):
-        invitation_and_groups = InvitationAndGroupsSchema(title=_(u'Groups for invitation'),)
-
-
-    class Schema(colander.Schema):
-        userids_and_groups = UserIDsAndGroupsSequenceSchema(title=_(u'Group settings for users'))
-        #FIXME: this should be readded later
-        #invitations_and_groups = InvitationsAndGroupsSequenceSchema(title=_(u'Invitations'))
-    
-    return Schema()

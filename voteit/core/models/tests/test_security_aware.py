@@ -26,6 +26,21 @@ class SecurityAwareTests(unittest.TestCase):
         obj.add_groups('tester', ['group:Hipsters'])
         self.assertEqual(obj.get_groups('tester'), ('group:Hipsters',))
 
+    def test_get_groups_owner_not_inherited(self):
+        from voteit.core.security import ROLE_OWNER
+        #BaseContent is persistent and security aware
+        from voteit.core.models.base_content import BaseContent
+        root = BaseContent()
+        root.add_groups('tester', [ROLE_OWNER])
+        self.assertEqual(root.get_groups('tester'), (ROLE_OWNER,))
+        obj = BaseContent()
+        obj.add_groups('tester', ['group:Beatles'])
+        root['child'] = obj
+        #Just to make sure traversal is working :)
+        self.assertEqual(root, obj.__parent__)
+        #Should not pick up owner role
+        self.assertEqual(obj.get_groups('tester'), ('group:Beatles',))
+
     def test_add_groups(self):
         obj = self._make_obj()
         obj.add_groups('tester', ['group:Hipsters'])
@@ -42,12 +57,47 @@ class SecurityAwareTests(unittest.TestCase):
         self.assertEqual(len(res), 1)
         self.assertEqual(set(res[0]['groups']), groups_set)
 
+    def test_set_security(self):
+        obj = self._make_obj()
+        groups_set = set(['role:Admin', 'group:Hipsters'])
+        value = [{'userid':'robin', 'groups':groups_set},
+                 {'userid':'fredrik', 'groups':groups_set}]
+        obj.set_security(value)
+        res = obj.get_security()
+        self.assertEqual(len(res), 2)
+        self.assertEqual(set(res[0]['groups']), groups_set)
+
+    def test_set_security_clears_old_value(self):
+        obj = self._make_obj()
+        groups_set = set(['role:Admin', 'group:Hipsters'])
+        value = [{'userid':'robin', 'groups':groups_set},
+                 {'userid':'fredrik', 'groups':groups_set}]
+        obj.set_security(value)
+        value = [{'userid':'robin', 'groups':groups_set}]
+        obj.set_security(value)
+        res = obj.get_security()
+        self.assertEqual(len(res), 1)
+
     def test_set_groups(self):
         obj = self._make_obj()
         obj.set_groups('tester', ['group:Hipsters'])
         self.assertEqual(obj.get_groups('tester'), ('group:Hipsters',))
         obj.set_groups('tester', ('role:Admin',))
         self.assertEqual(obj.get_groups('tester'), ('role:Admin',))
+
+    def test_set_groups_with_dependent_group(self):
+        from voteit.core import security
+        obj = self._make_obj()
+        obj.set_groups('tester', [security.ROLE_PROPOSE])
+        res_set = set(obj.get_groups('tester'))
+        self.assertEqual(res_set, set([security.ROLE_PROPOSE, security.ROLE_VIEWER]))
+
+    def test_set_groups_with_no_groups_specified_deletes_setting(self):
+        obj = self._make_obj()
+        obj.set_groups('tester', ['role:HelloWorld'])
+        self.failUnless('tester' in obj._groups)
+        obj.set_groups('tester', [])
+        self.failIf('tester' in obj._groups)
 
     def test_add_bad_group(self):
         obj = self._make_obj()
