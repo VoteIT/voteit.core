@@ -73,6 +73,7 @@ class SecurityAware(object):
         """ Set groups for a principal in this context. (This clears any previous setting)
             Will also take care of role dependencies.
         """
+        #FIXME: Only set groups if they're actually updated
         if not groups:
             if principal in self._groups:
                 del self._groups[principal]
