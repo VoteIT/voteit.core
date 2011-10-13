@@ -10,6 +10,7 @@ from repoze.folder.events import ObjectAddedEvent
 from pyramid.url import resource_url
 
 from voteit.core.models.date_time_util import utcnow
+from voteit.core.exceptions import TokenValidationError
 
 
 class UserTests(unittest.TestCase):
@@ -54,15 +55,15 @@ class UserTests(unittest.TestCase):
         self.assertEqual(obj.get_password(), None)    
 
     def test_new_request_password_token(self):
+        self.config.scan('voteit.core.models.user')
         obj = self._make_obj()
         request = testing.DummyRequest()
         self.config.include('pyramid_mailer.testing')
-        
         obj.new_request_password_token(request)
-        
         self.failUnless(obj.__token__())
     
     def test_new_request_password_token_mailed(self):
+        self.config.scan('voteit.core.models.user')
         obj = self._make_obj()
         request = testing.DummyRequest()
         self.config.include('pyramid_mailer.testing')
@@ -171,9 +172,9 @@ class RequestPasswordTokenTests(unittest.TestCase):
         obj = self._make_obj()
         obj.token = 'dummy'
         obj.expires = utcnow() - timedelta(days=1)
-        self.assertRaises(ValueError, obj.validate, 'dummy')
+        self.assertRaises(TokenValidationError, obj.validate, 'dummy')
 
     def test_validate_wrong_token(self):
         obj = self._make_obj()
         obj.token = 'dummy'
-        self.assertRaises(ValueError, obj.validate, 'wrong')
+        self.assertRaises(TokenValidationError, obj.validate, 'wrong')

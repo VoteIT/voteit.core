@@ -174,9 +174,24 @@ class IUser(Interface):
         """ Create a new password request token. Used for resetting a users password.
             It will email the link to reset password to that user.
         """
-        
-    def validate_password_token(node, value):
-        """ Deform validator for password token. Ment to be used by Deform forms.
+
+    def get_token():
+        """ Return password request token, or None.
+        """
+
+    def remove_password_token():
+        """ Remove password token. """
+
+    def get_token():
+        """ Get password token, or None. """
+
+    def generate_email_hash():
+        """ Save an md5 hash of an email address.
+            Used to generate urls for gravatar profile images.
+        """
+
+    def send_mention_notification(context, request):
+        """ Sends an email when the user is mentioned in a proposal or a discussion post
         """
 
 

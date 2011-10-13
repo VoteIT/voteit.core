@@ -13,6 +13,7 @@ from pyramid_mailer import get_mailer
 from pyramid_mailer.message import Message
 from pyramid.i18n import get_localizer
 from betahaus.pyracont.decorators import content_factory
+from betahaus.pyracont.factories import createContent
 
 from voteit.core.models.base_content import BaseContent
 from voteit.core.models.interfaces import IUser
@@ -22,6 +23,7 @@ from voteit.core.models.interfaces import IAgendaItem
 from voteit.core import VoteITMF as _
 from voteit.core import security
 from voteit.core.models.date_time_util import utcnow
+from voteit.core.exceptions import TokenValidationError
 
 
 USERID_REGEXP = r"[a-zA-Z]{1}[\w-]{2,14}"
@@ -90,8 +92,7 @@ class User(BaseContent):
         """ Set a new request password token and email user. """
         locale = get_localizer(request)
         
-        #FIXME email user
-        self.__token__ = RequestPasswordToken()
+        self.__token__ = createContent('RequestPasswordToken')
         
         #FIXME: Email should use a proper template
         pw_link = "%stoken_pw?token=%s" % (resource_url(self, request), self.__token__())
@@ -109,10 +110,9 @@ class User(BaseContent):
     def remove_password_token(self):
         self.__token__ = None
 
-    def validate_password_token(self, node, value):
-        """ Validate input from a colander form. See token_password_change schema """
-        #FIXME: We need to handle an error here in a nicer way
-        self.__token__.validate(value)
+    def get_token(self):
+        """ Get password token, or None. """
+        return getattr(self, '__token__', None)
 
     def generate_email_hash(self):
         """ Save an md5 hash of an email address.
@@ -161,6 +161,6 @@ class RequestPasswordToken(object):
     
     def validate(self, value):
         if value != self.token:
-            raise ValueError("Token doesn't match.")
+            raise TokenValidationError("Token doesn't match.")
         if utcnow() > self.expires:
-            raise ValueError("Token expired.")
+            raise TokenValidationError("Token expired.")

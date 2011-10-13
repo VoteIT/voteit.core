@@ -207,7 +207,30 @@ class CheckPasswordTokenTests(TestCase):
         obj = self._cut(user)
         node = None
         self.assertRaises(colander.Invalid, obj, node, "")
-#FIXME: validation is part of usermodel, should be separate
+
+    def test_valid_token(self):
+        #Scan of user package should have been performed in fixture
+        root = _fixture(self.config)
+        request = testing.DummyRequest()
+        self.config.include('pyramid_mailer.testing')
+        user = root.users['tester']
+        user.new_request_password_token(request)
+        
+        token_value = user.__token__()
+        obj = self._cut(user)
+        node = None
+        self.assertEqual(obj(node, token_value), None)
+
+    def test_valid_token_wrong_string_entered(self):
+        #Scan of user package should have been performed in fixture
+        root = _fixture(self.config)
+        request = testing.DummyRequest()
+        self.config.include('pyramid_mailer.testing')
+        user = root.users['tester']
+        user.new_request_password_token(request)
+        obj = self._cut(user)
+        node = None
+        self.assertRaises(colander.Invalid, obj, node, "wrong value for token")
 
 #FIXME: Full integration test with schema
 

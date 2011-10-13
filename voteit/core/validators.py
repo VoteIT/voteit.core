@@ -10,6 +10,7 @@ from voteit.core.models.interfaces import IUser
 from voteit.core.security import find_authorized_userids
 from voteit.core.security import VIEW
 from voteit.core.models.user import USERID_REGEXP
+from voteit.core.exceptions import TokenValidationError
 
 
 AT_USERID_PATTERN = re.compile(r'(\A|\s)@('+USERID_REGEXP+r')')
@@ -156,7 +157,16 @@ class CheckPasswordToken(object):
         self.context = context
     
     def __call__(self, node, value):
-        return self.context.validate_password_token(node, value)
+        token = self.context.get_token()
+        msg = _(u"check_password_token_error",
+                default="Password token doesn't match. Won't allow password change.")
+        exc = colander.Invalid(node, msg)
+        if token is None:
+            raise exc
+        try:
+            token.validate(value)
+        except TokenValidationError:
+            raise exc
 
 
 @colander.deferred
