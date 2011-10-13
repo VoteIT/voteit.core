@@ -88,6 +88,11 @@ class MeetingView(BaseView):
         def _sorter(obj):
             return obj.get_field_value('first_name')
 
+        #Viewer role isn't needed, since only users who can view will be listed here.
+        self.response['role_moderator'] = security.ROLE_MODERATOR
+        self.response['role_discuss'] = security.ROLE_DISCUSS
+        self.response['role_propose'] = security.ROLE_PROPOSE
+        self.response['role_voter'] = security.ROLE_VOTER
         self.response['participants'] = tuple(sorted(results, key = _sorter))
         self.response['context_effective_principals'] = security.context_effective_principals
         return self.response

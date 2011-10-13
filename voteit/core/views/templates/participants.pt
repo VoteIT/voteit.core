@@ -23,8 +23,9 @@
                     <th i18n:translate="" class="heading">First name</th>
                     <th i18n:translate="" class="heading">Last name</th>
                     <th i18n:translate="" class="heading">Email</th>
-                    <th i18n:translate="" class="heading">Viewer</th>
-                    <th i18n:translate="" class="heading">Attend</th>
+                    <th i18n:translate="" class="heading">View</th>
+                    <th i18n:translate="" class="heading">Discuss</th>
+                    <th i18n:translate="" class="heading">Propose</th>
                     <th i18n:translate="" class="heading">Voter</th>
                     <th i18n:translate="" class="heading">Moderate</th>
                 </tr>
@@ -55,17 +56,22 @@
                             </span>
                         </td>
                         <td>
-                            <span tal:condition="'role:Participant' in principals">
+                            <span tal:condition="role_discuss in principals">
                                 <span class="yes_icon" i18n:translate="">Yes</span>
                             </span>
                         </td>
                         <td>
-                            <span tal:condition="'role:Voter' in principals">
+                            <span tal:condition="role_propose in principals">
                                 <span class="yes_icon" i18n:translate="">Yes</span>
                             </span>
                         </td>
                         <td>
-                            <span tal:condition="'role:Moderator' in principals or 'role:Admin' in principals">
+                            <span tal:condition="role_voter in principals">
+                                <span class="yes_icon" i18n:translate="">Yes</span>
+                            </span>
+                        </td>
+                        <td>
+                            <span tal:condition="role_moderator in principals or 'role:Admin' in principals">
                                 <span class="yes_icon" i18n:translate="">Yes</span>
                             </span>
                         </td>
