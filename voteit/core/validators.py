@@ -4,11 +4,11 @@ from webhelpers.html.tools import strip_tags
 from pyramid.traversal import find_interface
 from pyramid.traversal import find_root
 
+from voteit.core import VoteITMF as _
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import IUser
 from voteit.core.security import find_authorized_userids
 from voteit.core.security import VIEW
-from voteit.core import VoteITMF as _
 from voteit.core.models.user import USERID_REGEXP
 
 
@@ -71,15 +71,19 @@ class AtEnabledTextArea(object):
     def __call__(self, node, value):
         #First, check for bad chars, since it requires less CPU
         html_string_validator(node, value)
+        invalid = set()
+        matched_userids = set()
+        #Note: First match object will be blankspace, second the userid.
+        [matched_userids.add(x[1]) for x in re.findall(AT_USERID_PATTERN, value)]
+        if not matched_userids:
+            return
         #Check that user exists in meeting
         meeting = find_interface(self.context, IMeeting)
-        invalid = set()
         valid_userids =  find_authorized_userids(meeting, (VIEW,))
-        for (space, userid) in re.findall(AT_USERID_PATTERN, value):
+        for userid in matched_userids:
             #Check if requested userid has permission in meeting
             if not userid in valid_userids:
                 invalid.add(userid)
-                
             if invalid:
                 userids = ", ".join(invalid)
                 raise colander.Invalid(node, _(u"userid_validator_error",
@@ -118,11 +122,13 @@ def deferred_new_userid_validator(node, kw):
 
 
 class UniqueEmail(object):
-    """ Check that email address is valid and unique. """
-    
+    """ Check that email address is valid and unique.
+        If context is a User, it's okay to set the same email address.
+        (Otherwise it wouldn't be possible to submit the form with our own address :)
+    """
     def __init__(self, context):
         self.context = context
-    
+
     def __call__(self, node, value):        
         default_email_validator = colander.Email(msg=_(u"Invalid email address."))
         default_email_validator(node, value)
