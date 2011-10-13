@@ -55,7 +55,7 @@ class InviteTicket(Folder, WorkflowAware):
         self.claimed_by = None
         self.token = ''.join([choice(string.letters + string.digits) for x in range(30)])
         self.sent_dates = []
-        self.uid = uuid4()
+        self.uid = unicode(uuid4())
         super(InviteTicket, self).__init__()
 
     def send(self, request):
