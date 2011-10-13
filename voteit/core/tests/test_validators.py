@@ -248,7 +248,41 @@ class TokenFormValidatorTests(TestCase):
         from voteit.core.validators import TokenFormValidator
         return TokenFormValidator
 
-#FIXME: Full integration test with schema
+    def _fixture(self):
+        from voteit.core.models.meeting import Meeting
+        from voteit.core.models.invite_ticket import InviteTicket
+        meeting = Meeting()
+
+        ticket = InviteTicket('this@email.com', ['role:Moderator'], 'Welcome to the meeting!')
+        meeting.invite_tickets['this@email.com'] = ticket
+        return meeting
+
+    def _token_schema(self):
+        from voteit.core.schemas.invite_ticket import ClaimTicketSchema
+        return ClaimTicketSchema()
+
+    def test_wrong_context(self):
+        self.assertRaises(AssertionError, self._cut, testing.DummyModel())
+
+    def test_nonexistent_ticket(self):
+        meeting = self._fixture()
+        obj = self._cut(meeting)
+        node = self._token_schema()
+        self.assertRaises(colander.Invalid, obj, node, {'email': 'other@email.com'})
+
+    def test_existing_email_wrong_token(self):
+        meeting = self._fixture()
+        obj = self._cut(meeting)
+        node = self._token_schema()
+        self.assertRaises(colander.Invalid, obj, node, {'email': 'this@email.com', 'token': "i don't exist"})
+
+    def test_correct_token(self):
+        meeting = self._fixture()
+        token_value = meeting.invite_tickets['this@email.com'].token
+        obj = self._cut(meeting)
+        node = self._token_schema()
+        self.assertEqual(obj(node, {'email': 'this@email.com', 'token': token_value}), None)
+
 
 class GlobalExistingUserIdTests(TestCase):
     
@@ -262,4 +296,8 @@ class GlobalExistingUserIdTests(TestCase):
     def _cut(self):
         from voteit.core.validators import GlobalExistingUserId
         return GlobalExistingUserId
+
+    def test_something(self):
+        raise NotImplementedError('Do test')
+
 #FIXME: Full integration test with schema

@@ -177,6 +177,7 @@ def deferred_password_token_validator(node, kw):
 
 class TokenFormValidator(object):
     def __init__(self, context):
+        assert IMeeting.providedBy(context)
         self.context = context
     
     def __call__(self, form, value):
