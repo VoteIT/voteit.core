@@ -5,9 +5,9 @@
     <input type="hidden" name="__start__" value="${field.name}:rename"/>
 
     <div class="star_description meta" tal:content="structure field.description">Description</div>
-	
+
     <tal:loop tal:repeat="choice field.widget.values">
-      <input tal:attributes="checked choice[0] == cstruct;
+        <input tal:attributes="checked choice[0] == cstruct;
                              class string:${field.widget.css_class} star"
              type="radio"
              name="${field.oid}"

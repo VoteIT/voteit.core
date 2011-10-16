@@ -50,9 +50,9 @@ class AgendaItemView(BaseView):
 
             if can_vote:
                 poll_url = resource_url(poll, self.request)
-                form = Form(poll_schema, action=poll_url+"@@vote", buttons=(button_vote,))
+                form = Form(poll_schema, action=poll_url+"@@vote", buttons=(button_vote,), formid=poll.__name__)
             else:
-                form = Form(poll_schema)
+                form = Form(poll_schema, formid=poll.__name__)
             self.api.register_form_resources(form)
 
             if userid in poll:

@@ -1,27 +1,26 @@
 <tal:main
     xmlns:i18n="http://xml.zope.org/namespaces/i18n"
     i18n:domain="voteit.core">
-<div class="deformSet" id="${field.oid}"> 
+<div class="deformSet"> 
     <input type="hidden" name="__start__" value="${field.name}:rename"/>
 
     <div class="star_description meta" tal:content="structure field.description">Description</div>
 
     <tal:loop tal:repeat="choice field.widget.values">
-      <input tal:attributes="checked choice[0] == cstruct;
+        <input tal:attributes="checked choice[0] == cstruct;
                              class string:${field.widget.css_class} star"
              type="radio"
              name="${field.oid}"
              value="${choice[0]}"
-             id="${field.oid}-${repeat.choice.index}"/>
+             id="${field.oid}-${repeat.choice.index}"
+             disabled="disabled" />
     </tal:loop>
     <input type="hidden" name="__end__"/>
 </div>
 <script type="text/javascript">
     if(deform) {
         deform.addCallback('${field.oid}', function(oid) {
-            // unless we set rating on the input explicitly it its not possbile to set readOnly on it
             $('#'+oid).find('input.star').rating();
-            $('#'+oid).find('input.star').rating('readOnly',true);
         });
     }
 </script>
