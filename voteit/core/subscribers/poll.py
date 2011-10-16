@@ -10,7 +10,6 @@ from voteit.core.models.poll import email_voters_about_ongoing_poll
 @subscriber([IPoll, IObjectUpdatedEvent])
 def change_states_proposals(obj, event):
     """ Change state on proposals when adding them to upcoming poll. """
-
     request = get_current_request()
     
     if obj.get_workflow_state() == 'upcoming':

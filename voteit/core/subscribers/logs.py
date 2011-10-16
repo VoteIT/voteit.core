@@ -65,7 +65,7 @@ def log_wf_state_change(obj, event):
 
 @subscriber([IBaseContent, IObjectUpdatedEvent])
 def log_content_updated(obj, event):
-    #Which context to use?
+    #Context is either meeting or site root
     context = _get_logger_context(obj)
     request = get_current_request()
     log_handler = request.registry.getAdapter(context, ILogHandler)
