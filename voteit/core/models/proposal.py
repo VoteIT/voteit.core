@@ -73,7 +73,8 @@ class Proposal(BaseContent, WorkflowAware, UnreadAware):
     display_name = _(u"Proposal")
     allowed_contexts = ('AgendaItem',)
     add_permission = security.ADD_PROPOSAL
-    schemas = {'add': 'ProposalSchema'}
+    schemas = {'add': 'ProposalSchema',
+               'edit': 'ProposalSchema'}
 
     @property
     def __acl__(self):
