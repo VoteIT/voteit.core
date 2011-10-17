@@ -20,7 +20,7 @@ def find_all_base_content(context):
     return results
 
 
-def update_catalog():
+def update_catalog(*args):
     worker = ScriptWorker('update_catalog')
     
     cat = worker.root.catalog
