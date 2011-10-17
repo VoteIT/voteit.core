@@ -4,31 +4,31 @@
     <div tal:define="poll_plugin poll.get_poll_plugin();
                      wf_state poll.get_workflow_state();
                      unread api.is_unread(poll, True);
-					 has_voted api.userid in poll;"
+                     has_voted api.userid in poll;"
          tal:attributes="class unread and 'unread listing_block' or 'listing_block'">
 
-	    <span tal:condition="api.show_moderator_actions" tal:replace="structure api.get_moderator_actions(poll, request)">
-	         Cogwheel menu
-	    </span>
+        <span tal:condition="api.show_moderator_actions" tal:replace="structure api.get_moderator_actions(poll, request)">
+             Cogwheel menu
+        </span>
 
         <h3 tal:content="poll.title">Title</h3>
 
         <div class="col-50-50">
-        	
+            
             <div class="column column-1">
-		        <div tal:replace="structure api.get_poll_state_info(poll)">Poll state info</div>
-				<div class="description"
-				     tal:content="structure poll.description">Description</div>
+                <div tal:replace="structure api.get_poll_state_info(poll)">Poll state info</div>
+                <div class="description"
+                     tal:content="structure poll.description">Description</div>
             </div>
 
-	        <div class="column column-2">
-	        	<div class="poll_type">
-		            <strong i18n:translate="">Poll method</strong>: <span tal:content="poll_plugin.title">Title</span>
-		            <div tal:content="structure poll_plugin.description">Description</div>
-				</div>
-	        </div>
-			
-		</div>
+            <div class="column column-2">
+                <div class="poll_type">
+                    <strong i18n:translate="">Poll method</strong>: <span tal:content="poll_plugin.title">Title</span>
+                    <div tal:content="structure poll_plugin.description">Description</div>
+                </div>
+            </div>
+            
+        </div>
         
         <div class="clear"><!-- --></div>
 
@@ -40,36 +40,37 @@
         <div tal:condition="wf_state in ('private', 'upcoming')" tal:define="proposals poll.get_proposal_objects()">
         <tal:iterate condition="proposals" repeat="proposal proposals" >
             <div class="proposal">
-		        <div class="body"
-				     tal:content="structure proposal.title">Title</div>
-		        <div class="meta"
-				     tal:content="structure api.get_creators_info(proposal.creators, request, portrait=False)">
-				     Creators
-				</div>
-			</div>
+                <div class="body"
+                     tal:content="structure proposal.title">Title</div>
+                <div class="meta"
+                     tal:content="structure api.get_creators_info(proposal.creators, request, portrait=False)">
+                     Creators
+                </div>
+            </div>
 
         </tal:iterate>
         </div>
 
-		<tal:user_voted condition="has_voted">
-			<div id="users-vote-${poll.uid}" class="toggle_area toggle_closed">
-				<a class="toggle_minimize read_more" i18n:translate="">Your vote</a>
+        <tal:user_voted condition="has_voted">
+            <div id="users-vote-${poll.uid}" class="toggle_area toggle_closed">
+                <a class="toggle_minimize read_more" i18n:translate="">Your vote</a>
                 <div class="minimizable_area"
-				     tal:condition="poll_forms[poll.uid]|False">
+                     tal:condition="poll_forms[poll.uid]|False">
                     <h3 i18n:translate="">You've voted</h3>
-					<div tal:condition="wf_state == 'ongoing'" 
-					     i18n:translate="">If you submit the form again, you'll change your vote. You may do that as long as the poll is open.</div>
+                    <div tal:condition="wf_state == 'ongoing'"
+                         class="listing_block"
+                         i18n:translate="">If you submit the form again, you'll change your vote. You may do that as long as the poll is open.</div>
                     <div tal:content="structure poll_forms[poll.uid]">Render your vote</div>
-				</div>
+                </div>
                 <div class="minimizable_inverted meta" i18n:translate="">You voted in this poll. Click above to show your vote.</div>
-			</div>
-		</tal:user_voted>
-		<tal:user_not_voted condition="not has_voted">
-	        <div tal:condition="poll_forms[poll.uid]|False" tal:content="structure poll_forms[poll.uid]"></div>
-		</tal:user_not_voted>
+            </div>
+        </tal:user_voted>
+        <tal:user_not_voted condition="not has_voted">
+            <div tal:condition="poll_forms[poll.uid]|False" tal:content="structure poll_forms[poll.uid]"></div>
+        </tal:user_not_voted>
 
         <div class="clear"><!-- --></div>
     </div>
     </tal:iterate>
-	
+    
 </tal:main>
