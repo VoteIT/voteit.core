@@ -165,13 +165,17 @@ class APIView(object):
         
         #Login form if user isn't authenticated
         if not self.userid:
-            login_schema = createSchema('LoginSchema').bind(context=self.context, request=self.request)
-            action_url = resource_url(self.root, self.request) + 'login'
-            login_form = Form(login_schema, buttons=(button_login,), action=action_url)
-    
-            #Render forms
-            self.register_form_resources(login_form)
-            response['login_form'] = login_form.render()
+            #FIXME: Ticket system makes it a bit of a hassle to make login detached from registration.
+            #We'll do that later. For now, let's just check if user is on login or registration page
+            url = self.request.path_url
+            if url.endswith('login') or url.endswith('register'):
+                response['login_form'] = u""
+            else:
+                login_schema = createSchema('LoginSchema').bind(context=self.context, request=self.request)
+                action_url = resource_url(self.root, self.request) + 'login'
+                login_form = Form(login_schema, buttons=(button_login,), action=action_url)
+                self.register_form_resources(login_form)
+                response['login_form'] = login_form.render()
 
         if self.meeting:
             #In meeting context
@@ -188,7 +192,7 @@ class APIView(object):
         else:
             #Not in meeting context
             response['is_moderator'] = False
-        
+
         #Outside of meeting context and authenticated
         if self.userid and not self.meeting:
             response['sections'] = REGULAR_SECTIONS
