@@ -520,7 +520,12 @@ li.notification_message {
 	margin: 5px 0px;
 	border-top: 1px solid #ccc;
 }
-
+#polls .deform label.desc {
+    font-weight: normal;
+}
+#polls .buttons {
+    text-align: right;
+}
 /* proposals and discussions */
 #proposals .creators img,
 #discussions .creators img {
@@ -738,4 +743,15 @@ table.listing > tbody > tr.even > td {
     float: right;
 	margin: 0px 0px 1em 1em;
 }
-
+/* widget code, perhaps this should be separate */
+.star-rating-control {
+    float: right;
+}
+.starwidget {
+	display: block;
+    padding: 0 0 0.5em 0;
+	border-bottom: 1px solid #ccc;
+}
+.starwidget .meta {
+    float: left;
+}

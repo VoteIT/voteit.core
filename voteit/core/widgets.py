@@ -9,6 +9,10 @@ from pyramid.threadlocal import get_current_request
 
 
 class StarWidget(RadioChoiceWidget):
+    """ Star widget for raiting alternatives.
+        Use keyword creator_info to pass along creator information.
+        See voteit.schulze.models for example code.
+    """
     #FIXME: the resources for this widget is now hardcoded into main.pt, they should be added through deform resource manager
     #requirements = ( ('jquery.rating', None), )
     template = 'star_choice'
