@@ -38,12 +38,13 @@ class BaseContent(BaseFolder, SecurityAware):
                 userid = None
             else:
                 userid = authenticated_userid(request)
-
-            if userid is None:
-                logger = getLogger('voteit.core')
-                logger.warn("Can't find userid for '%s'. Unable to set owner for this object." % self)
-            else:
+            if userid:
                 kwargs['creators'] = (userid,)
+            else:
+                #FIXME: We'd like some sort of logging here,
+                #but if we log in voteit.core, any poll plugin test will die very strangely
+                #It has something with cleanup of logging in multithreading in setuptools
+                pass
 
         #Set owner - if it is in kwargs now
         if 'creators' in kwargs:
