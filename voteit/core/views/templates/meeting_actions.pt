@@ -2,7 +2,7 @@
 
 <ul id="meeting-actions-menu">
     
-    <li class="tab dropdown_menu" tal:condition="show_polls|False">
+    <li class="tab dropdown_menu" tal:condition="api.meeting">
         <a href="#" class="menu_header">
             <span class="iconpadding poll-dark">
                 <span>
@@ -12,7 +12,7 @@
             </span>
         </a>
         <ul class="menu_body">
-            <tal:section repeat="section sections">
+            <tal:section condition="show_polls" repeat="section sections">
                 <tal:defs define="metadatas polls_metadata[section]">
                 <tal:exists condition="metadatas">
                     <li class="readonly iconpadding ${section}"><span>${api.translate(section.title())}</span></li>
@@ -25,6 +25,7 @@
                 </tal:exists>
                 </tal:defs>
             </tal:section>
+			<li tal:condition="not show_polls" i18n:translate="">(No polls yet)</li>
         </ul>
     </li>
     
