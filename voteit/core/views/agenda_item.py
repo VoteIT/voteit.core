@@ -115,9 +115,15 @@ class AgendaItemView(BaseView):
     def get_discussions(self):
         """ Get discussions for a specific context """
         
-        limit = 5
         if self.request.GET.get('discussions', '') == 'all':
             limit = 0
+        else:
+            unread_count, content = self.api.search_catalog(self.context,
+                                                            content_type = 'DiscussionPost',
+                                                            unread = self.api.userid)
+            limit = 5
+            if unread_count > limit:
+                limit = unread_count
         
         path = resource_path(self.context)
         #Returns tuple of (item_count, list of docids)
