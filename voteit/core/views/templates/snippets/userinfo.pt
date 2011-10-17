@@ -14,6 +14,20 @@
 		
     	<h6><span i18n:translate="">About me</span>:</h6>
 		<div tal:content="structure user.get_field_value('about_me')"></div>
+		
+		<div tal:condition="last_entries">
+            <h6><span i18n:translate="">Last added</span>:</h6>
+			<div class="list">
+				<tal:iterate repeat="brain last_entries">
+					<div class="${brain.content_type.lower()} iconpadding">
+						<span class="listitem">
+							<a href="${brain.path}">${truncate(brain.title)}</a>
+						   <div class="meta">${relative_time_format(brain.created)}</div>
+						</span>
+					</div>
+				</tal:iterate>
+			</div>
+		</div>
 	</tal:user_visible>
 
 	<tal:user_not_found condition="user is None">

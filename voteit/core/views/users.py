@@ -26,7 +26,7 @@ from voteit.core.models.schemas import button_login
 from voteit.core.models.schemas import button_register
 from voteit.core.models.schemas import button_request
 from voteit.core.models.schemas import button_update
-from voteit.core.views.userinfo import USERINFO_TPL
+from voteit.core.views.userinfo import user_info_view
 
 
 DEFAULT_TEMPLATE = "templates/base_edit.pt"
@@ -93,11 +93,7 @@ class UsersView(object):
 
     @view_config(context=IUser, renderer='templates/user.pt', permission=VIEW)
     def view_user(self):
-        user_info_response = {}
-        user_info_response['user'] = self.context
-        user_info_response['info_userid'] = self.context.userid
-        
-        self.response['user_info'] = render(USERINFO_TPL, user_info_response, request=self.request)
+        self.response['user_info'] = user_info_view(self.context, self.request, info_userid=self.context.userid)
         return self.response
 
     @view_config(context=IUser, name="change_password", renderer=DEFAULT_TEMPLATE, permission=CHANGE_PASSWORD)

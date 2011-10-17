@@ -169,7 +169,7 @@ $(document).ready(function() {
                     width: 2,
                     radius: 5,
                 },
-                width: { min: 400 },
+                width: { min: 500 },
                 textAlign: 'justify',
             },
         });
