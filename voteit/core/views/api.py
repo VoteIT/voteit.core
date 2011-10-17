@@ -21,7 +21,7 @@ from voteit.core import VoteITMF as _
 from voteit.core import security
 from voteit.core.models.interfaces import IDateTimeUtil
 from voteit.core.models.interfaces import IMeeting
-from voteit.core.views.macros import FlashMessages
+from voteit.core.views.flash_messages import FlashMessages
 from voteit.core.views.user_tags import UserTagsView
 from voteit.core.models.catalog import metadata_for_query
 from voteit.core.models.catalog import resolve_catalog_docid

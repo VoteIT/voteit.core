@@ -24,7 +24,7 @@ from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IPollPlugin
 from voteit.core.models.interfaces import IVote
-from voteit.core.views.macros import FlashMessages
+from voteit.core.views.flash_messages import FlashMessages
 
 
 _UPCOMING_PERMS = (security.VIEW,
