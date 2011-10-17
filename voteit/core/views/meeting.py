@@ -252,14 +252,3 @@ class MeetingView(BaseView):
 
         self.response['form'] = form.render()
         return self.response
-        
-    @view_config(name="navigation_section", context=IMeeting, renderer="templates/navigation_section.pt", permission=security.VIEW)
-    def navigation_section(self):
-        section = self.request.GET.get('section', None)
-        agenda_items = ()
-        if not self.request.cookies.get("%s-%s" % (self.context.uid, section)):
-            if section:
-                agenda_items = self.api.get_restricted_content(self.context, content_type='AgendaItem', states=section)
-            
-        self.response['agenda_items'] = agenda_items 
-        return self.response
