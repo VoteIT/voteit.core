@@ -25,6 +25,7 @@ from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IPollPlugin
 from voteit.core.models.interfaces import IVote
 from voteit.core.views.flash_messages import FlashMessages
+from pyramid.i18n import get_localizer
 
 
 _UPCOMING_PERMS = (security.VIEW,
@@ -156,6 +157,8 @@ class Poll(BaseContent, WorkflowAware, UnreadAware):
     def close_poll(self):
         """ Close the poll. """
         request = get_current_request() #Since this is only used once per poll it should be okay
+        locale = get_localizer(request)
+
         fm = FlashMessages(request)
 
         self._calculate_ballots()
@@ -171,22 +174,25 @@ class Poll(BaseContent, WorkflowAware, UnreadAware):
             proposal = self.get_proposal_by_uid(uid)
 
             #Adjust state?
-            if proposal.get_workflow_state() == state:
+            prop_wf_state = proposal.get_workflow_state()
+            #Message strings can't contain other message strings, so we'll translate the state first
+            translated_state = locale.translate(_(state.title()))
+            if prop_wf_state == state:
                 msg = _('change_prop_state_already_that_state_error',
                         default=u"Proposal '${name}' already in state ${state}",
-                        mapping={'name':proposal.__name__, 'state':state})
+                        mapping={'name':proposal.__name__, 'state':translated_state})
                 fm.add(msg)
             else:
                 try:
                     proposal.set_workflow_state(request, state)
                     msg = _('prop_state_changed_notice',
                             default=u"Proposal '${name}' set as ${state}",
-                            mapping={'name':proposal.__name__, 'state':state})
+                            mapping={'name':proposal.__name__, 'state':translated_state})
                     fm.add(msg)
                 except WorkflowError:
                     msg = _('prop_state_change_error',
                             default=u"Proposal with id '${name}' couldn't be set as ${state}. You should do this manually.",
-                            mapping={'name':proposal.__name__, 'state':state})
+                            mapping={'name':proposal.__name__, 'state':translated_state})
                     fm.add(msg, type='error')
 
         msg = _('poll_closed_info',

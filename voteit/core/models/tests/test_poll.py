@@ -187,6 +187,7 @@ class PollTests(unittest.TestCase):
 
     def test_poll_transitions(self):
         request = testing.DummyRequest()
+        self.config = testing.setUp(registry = self.config.registry, request = request)
         
         #Setup for proper test
         obj = self._make_obj()
@@ -230,6 +231,7 @@ class PollTests(unittest.TestCase):
 
     def test_available_transitions(self):
         request = testing.DummyRequest()
+        self.config = testing.setUp(registry = self.config.registry, request = request)
         
         #Setup for proper test
         obj = self._make_obj()
@@ -435,6 +437,7 @@ class PollPermissionTests(unittest.TestCase):
         
     def test_closed_or_canceled(self):
         request = testing.DummyRequest()
+        self.config = testing.setUp(registry = self.config.registry, request = request)
         poll = self._make_obj()
         ai = find_interface(poll, IAgendaItem)
         ai.set_workflow_state(request, 'upcoming')

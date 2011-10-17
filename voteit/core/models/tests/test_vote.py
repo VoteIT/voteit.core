@@ -97,6 +97,7 @@ class VotePermissionTests(unittest.TestCase):
 
     def test_closed_poll_context(self):
         request = testing.DummyRequest()
+        self.config= testing.setUp(registry=self.config.registry, request=request)
         ai = self._make_ai()
         ai.set_workflow_state(request, 'upcoming')
         ai.set_workflow_state(request, 'ongoing')

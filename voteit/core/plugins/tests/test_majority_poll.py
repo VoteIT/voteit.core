@@ -60,7 +60,7 @@ class MPIntegrationTests(unittest.TestCase):
     """
     
     def setUp(self):
-        self.config = testing.setUp()
+        self.config = testing.setUp(request=testing.DummyRequest())
         
         #Enable workflows
         self.config.include('pyramid_zcml')
