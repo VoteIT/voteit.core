@@ -280,6 +280,22 @@ class CatalogIndexTests(CatalogTestCase):
         user_tags.remove('like', 'admin')
         self.assertEqual(self.search(like_userids='admin')[0], 0)
 
+    def test_voted_userids(self):
+        meeting = self._add_mock_meeting()
+        self._register_security_policies()
+        from voteit.core.models.poll import Poll
+        from voteit.core.models.vote import Vote
+        self.config.scan('voteit.core.subscribers.vote')
+
+        poll = Poll()
+        meeting['poll'] = poll
+
+        poll['v1'] = Vote(creators = ['me'])
+        poll['v2'] = Vote(creators = ['other'])
+
+        result = self.search(content_type = 'Poll', voted_userids = 'me')
+        self.assertEqual(result[0], 1)
+
 
 class CatalogMetadataTests(CatalogTestCase):
     """ Test metadata creation. This test also covers catalog subscribers.
@@ -372,4 +388,20 @@ class CatalogMetadataTests(CatalogTestCase):
             return self.get_metadata(doc_id)
         
         self.assertEqual(_get_metadata()['unread'], frozenset(['admin']) )
-        
+
+    def test_voted_userids(self):
+        meeting = self._add_mock_meeting()
+        self._register_security_policies()
+        from voteit.core.models.poll import Poll
+        from voteit.core.models.vote import Vote
+        self.config.scan('voteit.core.subscribers.vote')
+
+        poll = Poll()
+        meeting['poll'] = poll
+
+        poll['v1'] = Vote(creators = ['me'])
+        poll['v2'] = Vote(creators = ['other'])
+
+        result = self.search(content_type = 'Poll')
+        doc_id = result[1][0]
+        self.assertEqual(self.get_metadata(doc_id)['voted_userids'], frozenset(['me', 'other']) )

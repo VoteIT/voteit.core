@@ -48,5 +48,3 @@ class CatalogMetadataTests(unittest.TestCase):
         
         self.assertEqual(result['title'], obj.context.title)
         self.assertEqual(result['created'], obj.context.created)
-    
-        

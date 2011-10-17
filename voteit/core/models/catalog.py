@@ -20,6 +20,7 @@ from voteit.core.models.interfaces import IWorkflowAware
 from voteit.core.models.interfaces import ICatalogMetadata
 from voteit.core.models.interfaces import IUnreadAware
 from voteit.core.models.interfaces import IDiscussionPost
+from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IProposal
 from voteit.core.security import NEVER_EVER_PRINCIPAL
 from voteit.core.security import VIEW
@@ -36,7 +37,8 @@ class CatalogMetadata(object):
     implements(ICatalogMetadata)
     adapts(ICatalogMetadataEnabled)
     special_indexes = {IAgendaItem:'get_agenda_item_specific',
-                       IWorkflowAware:'get_workflow_specific',}
+                       IWorkflowAware:'get_workflow_specific',
+                       IPoll:'get_poll_specific',}
     
     def __init__(self, context):
         self.context = context
@@ -70,6 +72,9 @@ class CatalogMetadata(object):
     def get_workflow_specific(self, results):
         results['workflow_state'] = get_workflow_state(self.context, None)
 
+    def get_poll_specific(self, results):
+        results['voted_userids'] = get_voted_userids(self.context, ())
+
 
 def update_indexes(catalog, reindex=True):
     """ Add or remove indexes. If reindex is True, also reindex all content if
@@ -93,6 +98,7 @@ def update_indexes(catalog, reindex=True):
         'end_time' : CatalogFieldIndex(get_end_time),
         'unread': CatalogKeywordIndex(get_unread),
         'like_userids': CatalogKeywordIndex(get_like_userids),
+        'voted_userids': CatalogKeywordIndex(get_voted_userids),
     }
     
     changed_indexes = set()
@@ -296,6 +302,17 @@ def get_like_userids(object, default):
         
     return default
     
+def get_voted_userids(object, default):
+    """ Returns all userids who voted in a poll.
+        Warning! An empty list doesn't update the catalog.
+        If default is returned to an index, it will cause that index to remove index,
+        which is the correct behaviour for the catalog.
+    """
+    if not IPoll.providedBy(object):
+        return default
+    voted_userids = object.get_voted_userids()
+    return voted_userids and voted_userids or default
+
 
 def includeme(config):
     """ Register metadata adapter. """
