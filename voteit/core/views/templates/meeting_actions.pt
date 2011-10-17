@@ -1,7 +1,6 @@
 <tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core">
 
 <ul id="meeting-actions-menu">
-    
     <li class="tab dropdown_menu" tal:condition="api.meeting">
         <a href="#" class="menu_header">
             <span class="iconpadding poll-dark">
@@ -67,8 +66,10 @@
             <ul class="menu_body">
                 <tal:iterate repeat="meeting meetings">
                     <li>
-                        <a tal:attributes="href api.resource_url(meeting, request)"
-                           tal:content="meeting.title">Meeting Title</a>
+                        <a tal:attributes="href api.resource_url(meeting, request)">
+                            <tal:current condition="api.meeting == meeting">*</tal:current>
+                            ${meeting.title}
+                        </a>
                     </li>
                 </tal:iterate>
             </ul>
@@ -102,5 +103,4 @@
     </tal:root>
     
 </ul>
-
 </tal:main>

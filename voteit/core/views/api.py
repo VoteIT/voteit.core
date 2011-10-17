@@ -222,11 +222,7 @@ class APIView(object):
         if self.userid:
             #Authenticated
             #Get available meetings outside of this context
-            meetings = self.get_restricted_content(self.root, iface=IMeeting, sort_on='title')
-            #Remove current meeting from list
-            if self.meeting in meetings:
-                meetings.remove(self.meeting)
-            response['meetings'] = meetings
+            response['meetings'] = self.get_restricted_content(self.root, iface=IMeeting, sort_on='title')
 
             if self.meeting:
                 #Sections
