@@ -24,7 +24,7 @@
 	               i18n:translate="">Meetings</a>
 	        </h5>
         </div>
-		
+
         <tal:iterate repeat="section sections">
             <tal:section tal:define="is_closed section in closed_sections">
             <div tal:attributes="id '%s-%s' % (api.root.uid, section);
@@ -82,7 +82,4 @@
 		    </tal:section>
         </tal:iterate>
     </tal:inside_meeting>
-    
-    <div id="ajaxtest"></div>
-
 </metal:main>

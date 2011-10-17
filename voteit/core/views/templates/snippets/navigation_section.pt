@@ -2,7 +2,8 @@
 
     <ul class="section">
 	    <tal:iterate condition="contents" repeat="obj contents">
-	        <li tal:attributes="class api.inside(context, obj) and 'selected' or 'plain'">
+	    	<tal:defs define="current_context api.inside(context, obj)">
+	        <li tal:attributes="class current_context and 'selected' or 'plain'">
 	            <tal:moderator_menu condition="api.show_moderator_actions">
 	                <span tal:replace="structure api.get_moderator_actions(obj, request)">
 	                     Cogwheel menu
@@ -14,7 +15,7 @@
 						
 	                    <div tal:condition="obj.content_type == 'AgendaItem'" class="info">
 	                        <span class="iconpadding proposal cinfo"
-	                              tal:define="unread_count api.search_catalog(obj, content_type='Proposal', unread=api.userid)[0]">
+	                              tal:define="unread_count not current_context and api.search_catalog(obj, content_type='Proposal', unread=api.userid)[0] or 0">
 	                            <span>
 		                            <span class="total"
 		                                  tal:content="api.search_catalog(obj, content_type='Proposal')[0]">0</span>
@@ -22,7 +23,7 @@
 								</span>
 	                        </span>
 	                        <span class="iconpadding discussion cinfo"
-	                              tal:define="unread_count api.search_catalog(obj, content_type='DiscussionPost', unread=api.userid)[0]">
+	                              tal:define="unread_count not current_context and api.search_catalog(obj, content_type='DiscussionPost', unread=api.userid)[0] or 0">
 	                            <span>
 									<span class="total"
 		                                  tal:content="api.search_catalog(obj, content_type='DiscussionPost')[0]">0</span>
@@ -35,6 +36,7 @@
 	                </a>
 	            </div>
 	        </li>
+			</tal:defs>
 	    </tal:iterate>
 	    <li tal:condition="not contents">
 	        <span i18n:translate="">(Nothing)</span>
