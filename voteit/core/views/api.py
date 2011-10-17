@@ -378,3 +378,6 @@ class APIView(object):
         """
         factory = self.get_content_factory(content_type)
         return factory._callable.schemas[action]
+
+    def get_js_config_template(self):
+        return render('templates/snippets/config.js.pt', {}, request=self.request)
