@@ -35,7 +35,7 @@
                 </h6>
                 <tal:open_section condition="not is_closed">
                     <tal:section define="meetings api.get_restricted_content(api.root, content_type='Meeting', states=section);">
-                        ${nav_section(meetings)}
+                        <div tal:replace="structure nav_section(meetings)">Navigation meeting section</div>
                     </tal:section>
                 </tal:open_section>
                 
@@ -75,7 +75,7 @@
                 <div class="section minimizable_area">
                 <tal:open_section condition="not is_closed">
                     <tal:agenda_items define="agenda_items api.get_restricted_content(api.meeting, content_type='AgendaItem', states=section, sort_on='start_time');">
-                            ${nav_section(agenda_items)}
+                            <div tal:replace="structure nav_section(agenda_items)">Navigation agenda item sections</div>
                     </tal:agenda_items>
                 </tal:open_section>
                 </div>
