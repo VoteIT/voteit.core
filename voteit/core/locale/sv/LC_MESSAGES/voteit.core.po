@@ -57,7 +57,7 @@ msgstr "'{val}' är inte giltigt som datum och tid"
 #. Default: "(No polls yet)"
 #: ./views/templates/meeting_actions.pt:33
 msgid "(No polls yet)"
-msgstr ""
+msgstr "(Ännu inga omröstningar)"
 
 #. Default: "(Nothing)"
 #: ./views/templates/macros/meeting_overview_section.pt:50
@@ -104,7 +104,7 @@ msgstr "Lägg till omröstning"
 #. Default: "Admin menu"
 #: ./views/templates/meeting_actions.pt:89
 msgid "Admin menu"
-msgstr ""
+msgstr "Admin meny"
 
 #: ./bootstrap.py:30
 msgid "Administrator"
@@ -188,7 +188,7 @@ msgstr "Kan inte hitta någon inbjudan för denna epostadress."
 #. Default: "Couldn't find any user with userid ${userid}"
 #: ./views/templates/snippets/userinfo.pt:34
 msgid "Couldn't find any user with userid ${userid}"
-msgstr "Kudne inte hitta någon användare med användarID ${userid}"
+msgstr "Kunde inte hitta någon användare med användarnamnet ${userid}"
 
 #: ./schemas/invite_ticket.py:66
 msgid "Current invitations"
@@ -229,11 +229,11 @@ msgstr "Rösta på ett av flera alternativ. När omröstningen avslutas utses de
 #. Default: "Discuss"
 #: ./views/templates/participants.pt:27
 msgid "Discuss"
-msgstr ""
+msgstr "Diskutera"
 
 #: ./security.py:69
 msgid "Discuss (and view)"
-msgstr ""
+msgstr "Diskutera (och läsa)"
 
 #. Default: "Discussion"
 #: ./views/templates/agenda_item.pt:28
@@ -320,7 +320,7 @@ msgstr "Jag yrkar:"
 #. Default: "If you submit the form again, you'll change your vote. You may do that as long as the poll is open."
 #: ./views/templates/polls.pt:60
 msgid "If you submit the form again, you'll change your vote. You may do that as long as the poll is open."
-msgstr ""
+msgstr "Om du röstar igen kommer du ändra din röst. Du kan göra det så länge omröstningen är öppen."
 
 #: ./schemas/invite_ticket.py:15
 msgid "Invalid email address."
@@ -337,7 +337,7 @@ msgstr "Bjud in deltagare"
 
 #: ./models/invite_ticket.py:35
 msgid "Invite ticket"
-msgstr ""
+msgstr "Inbjudningsbiljett"
 
 #: ./models/date_time_util.py:120
 msgid "Just now"
@@ -346,7 +346,7 @@ msgstr "Nyss"
 #. Default: "Last added"
 #: ./views/templates/snippets/userinfo.pt:19
 msgid "Last added"
-msgstr ""
+msgstr "Senast tillagd"
 
 #. Default: "Last name"
 #: ./views/templates/participants.pt:24
@@ -373,7 +373,7 @@ msgstr "Logginlägg"
 
 #: ./models/logs.py:54
 msgid "Log entry"
-msgstr ""
+msgstr "Loggpost"
 
 #. Default: "Login"
 #: ./views/templates/global_actions.pt:24
@@ -503,7 +503,7 @@ msgstr "Omröstningsmetod"
 #. Default: "Poll result"
 #: ./plugins/templates/majority_poll.pt:2
 msgid "Poll result"
-msgstr ""
+msgstr "Omröstningsresultat"
 
 #. Default: "Poll settings"
 #: ./views/templates/moderator_actions.pt:20
@@ -533,11 +533,11 @@ msgstr "Yrkanden"
 #. Default: "Propose"
 #: ./views/templates/participants.pt:28
 msgid "Propose"
-msgstr ""
+msgstr "Yrka"
 
 #: ./security.py:70
 msgid "Propose (and view)"
-msgstr ""
+msgstr "Yrka (och läsa)"
 
 #. Default: "Published"
 #: ./workflows/proposal.xml
@@ -587,7 +587,7 @@ msgstr "Tillbakadragen"
 
 #: ./schemas/permissions.py:58
 msgid "Role settings for users"
-msgstr ""
+msgstr "Rollinställningar för användare"
 
 #: ./schemas/invite_ticket.py:26
 msgid "Roles"
@@ -595,7 +595,7 @@ msgstr "Roller"
 
 #: ./schemas/permissions.py:53
 msgid "Roles for user"
-msgstr ""
+msgstr "Roller för användare"
 
 #: ./models/schemas.py:16
 msgid "Save"
@@ -758,15 +758,15 @@ msgstr "Användare"
 #. Default: "UserID"
 #: ./views/templates/logs.pt:20
 msgid "UserID"
-msgstr "AnvändarID"
+msgstr "Användarnamn"
 
 #: ./schemas/user.py:82
 msgid "UserID or email address."
-msgstr "AnvändarID eller epostadress"
+msgstr "Användarnamn eller epostadress"
 
 #: ./views/users.py:292
 msgid "Username or email not found."
-msgstr "AnvändarID eller epost hittades inte"
+msgstr "Användarnamn eller epost hittades inte"
 
 #. Default: "Users"
 #: ./views/templates/list_users.pt:9
@@ -776,7 +776,7 @@ msgstr "Användare"
 #. Default: "View"
 #: ./views/templates/participants.pt:26
 msgid "View"
-msgstr ""
+msgstr "Läsa"
 
 #: ./models/vote.py:26
 msgid "Vote"
@@ -810,7 +810,7 @@ msgstr "Rösträtt"
 
 #: ./security.py:71
 msgid "Voter (and view)"
-msgstr ""
+msgstr "Rösta (och läsa)"
 
 #. Default: "Warm regards, The VoteIT team"
 #: ./views/templates/invite_ticket_email.pt:26
@@ -838,7 +838,7 @@ msgstr "Du kan nu rösta"
 
 #: ./plugins/majority_poll.py:42
 msgid "You can't change your vote now."
-msgstr ""
+msgstr "Du kan inte ändra din röst nu"
 
 #: ./models/user.py:143
 msgid "You have been mentioned in VoteIT"
@@ -868,7 +868,7 @@ msgstr "Du har fått rätt att delta i mötet. Välkommen!"
 #. Default: "You've voted"
 #: ./views/templates/polls.pt:59
 msgid "You've voted"
-msgstr ""
+msgstr "Du har röstat"
 
 #. Default: "Your vote"
 #: ./views/templates/polls.pt:56
@@ -877,22 +877,22 @@ msgstr "Din röst"
 
 #: ./views/poll.py:183
 msgid "Your vote was updated."
-msgstr ""
+msgstr "Din röst har uppdaterats"
 
 #. Default: "Separate email addresses with a single line break."
 #: ./schemas/invite_ticket.py:39
 msgid "add_tickets_emails_description"
-msgstr ""
+msgstr "Åtskilj epostadresser med radbrytning."
 
 #. Default: "Email addresses to give the roles above."
 #: ./schemas/invite_ticket.py:37
 msgid "add_tickets_emails_titles"
-msgstr ""
+msgstr "Epostadresser till användare vilka ges rollerna ovan."
 
 #. Default: "One user can have more than one role. Note that to be able to propose,\n                        discuss and vote you need respective role. This is selected by default. If you want\n                        to add a user that can only view, select View and uncheck everything else."
 #: ./schemas/invite_ticket.py:28
 msgid "add_tickets_roles_description"
-msgstr ""
+msgstr "En användare kan ha mer än en roll. Notera att för att kunna diskutera, yrka och rösta krävs alla tre rollerna. För att lägga till en användare som bara kan se, markera 'läsa' och avmarkera övriga."
 
 #. Default: "Vote"
 #: ./models/schemas.py:18
@@ -923,7 +923,7 @@ msgstr "Planerad starttid för dagordningpunkten."
 #. Default: "UserID already registered. If it was registered by you, try to retrieve your password."
 #: ./validators.py:114
 msgid "already_registered_error"
-msgstr "AnvändarID redan registrerat. Om det var du som registrerade det så kan du försöka att återställa ditt lösenord."
+msgstr "Användarnamnet är redan registrerat. Om det var du som registrerade det så kan du försöka att återställa ditt lösenord."
 
 #. Default: "and"
 #: ./views/templates/snippets/user_tag.pt:17
@@ -938,12 +938,12 @@ msgstr "Yrkande '${name}' är redan i tillståndet ${state}"
 #. Default: "Password token doesn't match. Won't allow password change."
 #: ./validators.py:161
 msgid "check_password_token_error"
-msgstr ""
+msgstr "Engångslösenordet stämmer inte. Ditt lösenord har inte ändrats."
 
 #. Default: "The access token your received in your email."
 #: ./schemas/invite_ticket.py:18
 msgid "claim_ticket_token_title"
-msgstr ""
+msgstr "Inbjudningskoden som du fick i dett ebrev"
 
 #. Default: "current"
 #: ./views/templates/moderator_actions.pt:31
@@ -958,12 +958,12 @@ msgstr "Raderar ${count_emails} inbjudningar"
 #. Default: "Another user has already registered with that email address. If you've lost your password, request a new one instead."
 #: ./validators.py:142
 msgid "email_not_unique_error"
-msgstr ""
+msgstr "En annan användare har redan registrerats med den epostadressen. Om du har glömt ditt lösenord bör du begära ett nytt istället."
 
 #. Default: "UserID not found"
 #: ./validators.py:217
 msgid "globally_existing_userid_validation_error"
-msgstr ""
+msgstr "Användarnamn hittades inte"
 
 #. Default: "You've received a meeting invitation for a VoteIT meeting."
 #: ./schemas/invite_ticket.py:48
@@ -983,7 +983,7 @@ msgstr "Välkommen till VoteIT. För att öppna det möte du är inbjuden till m
 #. Default: "means you've not voted in that poll."
 #: ./views/templates/meeting_actions.pt:30
 msgid "means you've not voted in that poll."
-msgstr ""
+msgstr "betyder att du inte röstat i omröstningen"
 
 #. Default: "The description is visible on the first page of the meeting. You can include things like information about the meeting, how to contact the moderator and your logo."
 #: ./schemas/meeting.py:20
@@ -1096,23 +1096,21 @@ msgstr "Vänligen notera att det du skriver här blir synligt för alla använda
 #. Default: "UserID must be 3-15 chars, start with a-zA-Z and only contain regular latin chars, numbers, minus and underscore."
 #: ./validators.py:108
 msgid "userid_char_error"
-msgstr "AnvändarID måste vara 3-15 tecken, starta med a-zA-Z och bara innehålla vanliga latinska tecken, nummer, minus eller understreck."
+msgstr "Användarnamn måste vara 3-15 tecken, starta med a-zA-Z och bara innehålla vanliga latinska tecken, nummer, minus eller understreck."
 
 #. later.
 #. Default: "Used as a nickname, in @-links and as a unique id. You can't change this later. Note that it's case sensitive!"
 #: ./schemas/user.py:54
-#, fuzzy
 msgid "userid_description"
-msgstr "Används som kortnamn (nick), vid @-länkar och som unikt ID. Du kan inte ändra detta senare."
+msgstr "Används som kortnamn (nick), vid @-länkar och som unikt ID. Du kan inte ändra detta senare. Tänk på att användarnamnet är skiftlägeskänsligt."
 
 #. Default: "The following userids is invalid: ${userids}. Remember that userids are case sensitive."
 #: ./validators.py:90
 msgid "userid_validator_error"
-msgstr ""
+msgstr "Följande användarnamn är ogiltiga: ${userids}. Kom ihåg att användarnamn är skiftlägeskänsliga."
 
 #. it if you wish.
 #. Default: "This is your vote. While the poll is open, you can delete or change it if you wish."
 #: ./models/vote.py:38
 msgid "your_vote_description"
 msgstr "Detta är din röst. Medan omröstningen är öppen kan du radera eller ändra den."
-
