@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2011-10-17 23:17+0000\n"
+"POT-Creation-Date: 2011-10-18 07:59+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -299,6 +299,10 @@ msgstr ""
 msgid "Forgot password?"
 msgstr ""
 
+#: ./schemas/permissions.py:49
+msgid "Groups"
+msgstr ""
+
 #: ./validators.py:44
 msgid "HTML is not allowed."
 msgstr ""
@@ -580,7 +584,7 @@ msgstr ""
 msgid "Retracted"
 msgstr ""
 
-#: ./schemas/permissions.py:58
+#: ./schemas/permissions.py:60
 msgid "Role settings for users"
 msgstr ""
 
@@ -588,7 +592,7 @@ msgstr ""
 msgid "Roles"
 msgstr ""
 
-#: ./schemas/permissions.py:53
+#: ./schemas/permissions.py:55
 msgid "Roles for user"
 msgstr ""
 
@@ -794,7 +798,7 @@ msgstr ""
 msgid "VoteIT meeting invitation"
 msgstr ""
 
-#: ./models/poll.py:304
+#: ./models/poll.py:310
 msgid "VoteIT: Open poll"
 msgstr ""
 
@@ -925,7 +929,7 @@ msgid "and"
 msgstr ""
 
 #. Default: "Proposal '${name}' already in state ${state}"
-#: ./models/poll.py:175
+#: ./models/poll.py:181
 msgid "change_prop_state_already_that_state_error"
 msgstr ""
 
@@ -1009,12 +1013,12 @@ msgid "people"
 msgstr ""
 
 #. Default: "Poll closed. Proposals might have been adjusted as approved or denied depending on outcome of the poll."
-#: ./models/poll.py:192
+#: ./models/poll.py:198
 msgid "poll_closed_info"
 msgstr ""
 
 #. Default: "${count} selected proposals were set in the 'locked for vote' state. They can no longer be edited or retracted by normal users."
-#: ./models/poll.py:250
+#: ./models/poll.py:256
 msgid "poll_closed_proposals_locked_notice"
 msgstr ""
 
@@ -1034,7 +1038,7 @@ msgid "poll_proposals_description"
 msgstr ""
 
 #. Default: "Setting poll in upcoming state. It's now visible for meeting participants."
-#: ./models/poll.py:245
+#: ./models/poll.py:251
 msgid "poll_upcoming_state_notice"
 msgstr ""
 
@@ -1044,12 +1048,12 @@ msgid "profile_gravatar_explanation"
 msgstr ""
 
 #. Default: "Proposal with id '${name}' couldn't be set as ${state}. You should do this manually."
-#: ./models/poll.py:187
+#: ./models/poll.py:193
 msgid "prop_state_change_error"
 msgstr ""
 
 #. Default: "Proposal '${name}' set as ${state}"
-#: ./models/poll.py:182
+#: ./models/poll.py:188
 msgid "prop_state_changed_notice"
 msgstr ""
 
