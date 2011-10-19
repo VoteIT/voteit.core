@@ -433,6 +433,14 @@ class ICatalogMetadata(Interface):
         """ Update results with agenda item specific metadata. """
 
 
+class IExportImport(Interface):
+    """ Adapter to export or import content.
+        It adapts the site root.
+    """
+    def __init__(context):
+        """ Object to adapt """
+
+
 #Marker interfaces
 class ICatalogMetadataEnabled(Interface):
     """ Marker interface for IBaseContent that should have metadata.

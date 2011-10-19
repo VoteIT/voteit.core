@@ -17,6 +17,7 @@ button_save = deform.Button('save', _(u"Save"))
 button_update = deform.Button('update', _(u"Update"))
 button_vote = deform.Button('vote', _(u"add_vote_button", default=u"Vote"))
 button_resend = deform.Button('resend', _(u"Resend"))
+button_download = deform.Button('download', _(u"Download"))
 
 
 def add_csrf_token(context, request, schema):
