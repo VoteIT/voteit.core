@@ -8,6 +8,7 @@ from pyramid.threadlocal import get_current_request
 from pyramid.traversal import find_root, find_interface
 from repoze.folder.interfaces import IObjectAddedEvent
 from webhelpers.html.converters import nl2br
+from webhelpers.html import HTML, literal
 
 from voteit.core.models.interfaces import ISiteRoot
 from voteit.core.models.interfaces import IMeeting
@@ -17,10 +18,41 @@ from voteit.core.interfaces import IObjectUpdatedEvent
 from voteit.core.models.user import USERID_REGEXP
 
 def urls_to_links(text):
-    reg = re.compile(r"(http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+#]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+)")
-    text = reg.sub(r'<a href="\1">\1</a>', text)
+    # Code borrowed from webhelpers.html.tools, the problems is that it escpaes to text first and we don't want that
     
-    return text
+    AUTO_LINK_RE = re.compile(r"""
+                        (                          # leading text
+                          <\w+.*?>|                # leading HTML tag, or
+                          [^=!:'"/]|               # leading punctuation, or 
+                          ^                        # beginning of line
+                        )
+                        (
+                          (?:https?://)|           # protocol spec, or
+                          (?:www\.)                # www.*
+                        ) 
+                        (
+                          [-\w]+                   # subdomain or domain
+                          (?:\.[-\w]+)*            # remaining subdomains or domain
+                          (?::\d+)?                # port
+                          (?:/(?:(?:[~\w\+%-]|(?:[,.;:][^\s$]))+)?)* # path
+                          (?:\?[\w\+\/%&=.;-]+)?     # query string
+                          (?:\#[\w\-]*)?           # trailing anchor
+                        )
+                        ([\.,"'?!;:]|\s|<|\]|$)       # trailing text
+                           """, re.X)
+                           
+    def handle_match(matchobj):
+        all = matchobj.group()
+        before, prefix, link, after = matchobj.group(1, 2, 3, 4)
+        if re.match(r'<a\s', before, re.I):
+            return all
+        text = literal(prefix + link)
+        if prefix == "www.":
+            prefix = "http://www."
+        a_options = dict()
+        a_options['href'] = literal(prefix + link)
+        return literal(before) + HTML.a(text, **a_options) + literal(after)
+    return re.sub(AUTO_LINK_RE, handle_match, text)
 
 def at_userid_link(text, obj):
     root = find_root(obj)

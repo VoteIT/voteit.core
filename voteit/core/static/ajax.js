@@ -144,6 +144,7 @@ $(document).ready(function() {
 });
 
 /* profile popup */
+/* FIXME: this needs to be fixed so that it gets triggered when stuff is loaded with ajax*/
 $(document).ready(function() {
     $('a.inlineinfo').each(function() {
         $(this).click(function() {
@@ -152,6 +153,40 @@ $(document).ready(function() {
         $(this).qtip({
             content: { url: this.href,
 			           title: {text: voteit.translation['user-info'],
+					           button: voteit.translation['close']}
+			 },
+            show: 'click',
+            hide: 'unfocus',
+            position: {
+                corner: {
+                    target: 'bottomMiddle',
+                    tooltip: 'topMiddle',
+                }
+            },
+            style: { 
+                tip: true,
+                //name: 'blue',
+                border: {
+                    width: 2,
+                    radius: 5,
+                },
+                width: { min: 500 },
+                textAlign: 'justify',
+            },
+        });
+    });
+});
+
+/* more tag popup */
+/* FIXME: this needs to be fixed so that it gets triggered when stuff is loaded with ajax*/
+$(document).ready(function() {
+    $('a.moretag').each(function() {
+        $(this).click(function() {
+            return false;
+        });
+        $(this).qtip({
+            content: { url: this.href,
+			           title: {text: voteit.translation['more-tag-list'],
 					           button: voteit.translation['close']}
 			 },
             show: 'click',

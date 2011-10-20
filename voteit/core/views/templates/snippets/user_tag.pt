@@ -19,11 +19,14 @@
                      class="inlineinfo"
                      tal:content="userids[0]"></a></span>
         </span>
-        <a tal:condition="userids and len(userids) > 1" tal:attributes="title ', '.join(userids)">
+        <span tal:condition="userids and len(userids) > 1">
             <tal:and condition="selected" i18n:translate="">and</tal:and>
-            <span tal:replace="len(userids)">3</span> <span i18n:translate="">people</span>
+            <a href="${tagging_users_url}" class="moretag" tal:attributes="title ', '.join(userids)">
+                <span tal:replace="len(userids)">3</span>
+                <span i18n:translate="">people</span>
+            </a>
             <tal:more condition="selected" i18n:translate="more_in_likes">more</tal:more>
-        </a>
+        </span>
         <span tal:replace="expl_display_name">Like this</span>)
     </tal:has_entries>
     
