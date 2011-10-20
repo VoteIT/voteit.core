@@ -17,15 +17,16 @@ class ExportImport(object):
     def __init__(self, context):
         self.context = context
 
-    def _export_buffer(self, obj):
+    def export_buffer(self, obj):
         f = StringIO()
         obj._p_jar.exportFile(obj._p_oid, f)
         return f
 
     def download_export(self, obj):
-        export = self._export_buffer(obj).getvalue()
+        export = self.export_buffer(obj).getvalue()
+        filename = "%s_voteit_export.zexp" % obj.__name__
         return Response(content_type = 'application/data',
-                        content_disposition = 'inline; filename=hello_world.exp',
+                        content_disposition = 'inline; filename=%s' % filename,
                         body = export)
 
     def import_data(self, parent, name, filedata):
