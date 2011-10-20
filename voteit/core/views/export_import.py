@@ -13,7 +13,6 @@ from voteit.core.security import MANAGE_SERVER
 from voteit.core.models.schemas import button_cancel
 from voteit.core.models.schemas import button_download
 from voteit.core.models.schemas import button_save
-from voteit.core.schemas.tmp_file_storage import tmpstore
 from pyramid.security import has_permission
 
 
@@ -72,7 +71,7 @@ class ExportImportView(BaseView):
             name = appstruct['name']
             filedata = appstruct['upload']
             export_import.import_data(self.context, name, filedata)
-            tmpstore.clear()
+            filedata.clear()
             self.api.flash_messages.add(_(u"Created new objects from import"))
             return HTTPFound(location=redirect_url)
 
