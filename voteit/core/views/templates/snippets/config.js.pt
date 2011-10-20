@@ -8,5 +8,6 @@ voteit.translation = {
     'confirm-state':'<tal:trans i18n:translate="">Are you sure you want to change the state?</tal:trans>',
     'confirm-retract':'<tal:trans i18n:translate="">Are you sure you want to retract this proposal?</tal:trans>',
 	'user-info':'<tal:trans i18n:translate="">About...</tal:trans>',
+	'more-tag-list':'<tal:trans i18n:translate="">More...</tal:trans>',
 };
 </tal:domain>

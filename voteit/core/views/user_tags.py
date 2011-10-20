@@ -8,6 +8,7 @@ from pyramid.httpexceptions import HTTPFound
 
 from voteit.core.models.interfaces import IUserTags
 from voteit.core.models.interfaces import IBaseContent
+from voteit.core.security import VIEW
 from voteit.core import VoteITMF as _
 
 
@@ -54,7 +55,7 @@ class UserTagsView(object):
         else:
             
             return Response(self.get_user_tag(request.context, tag, display_name, expl_display_name))
-
+            
     def get_user_tag(self, context, tag, display_name, expl_display_name):
         from voteit.core.views.api import APIView
         api = APIView(context, self.request)
@@ -84,6 +85,33 @@ class UserTagsView(object):
         response['userids'] = userids
         #This label is for after the listing, could be "4 people like this"
         response['expl_display_name'] = expl_display_name
+        response['tagging_users_url'] =" %s_taggin_users?tag=%s&display_name=%s&expl_display_name=%s" % (resource_url(context, self.request), tag, display_name, expl_display_name)
         
         return render('templates/snippets/user_tag.pt', response, request=self.request)
         
+    @view_config(name="_taggin_users", context=IBaseContent, renderer='templates/snippets/tagging_users.pt', permission=VIEW)
+    def _tagging_users(self):
+        # FIXME: the template needs to be styled som more
+        context = self.request.context
+
+        from voteit.core.views.api import APIView
+        api = APIView(context, self.request)
+
+        tag = self.request.GET['tag']
+        display_name = self.request.GET.get('display_name', _(tag))
+        expl_display_name = self.request.GET.get('expl_display_name', _(tag))
+
+        user_tags = self.request.registry.getAdapter(context, IUserTags)
+        userids = list(user_tags.userids_for_tag(tag))
+        
+        response = {}
+        response['api'] = api
+        response['tag'] = tag
+        response['display_name'] = display_name
+        response['get_userinfo_url'] = api.get_userinfo_url
+        
+        response['userids'] = userids
+
+        response['expl_display_name'] = expl_display_name
+        
+        return response
