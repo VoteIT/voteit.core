@@ -51,6 +51,7 @@ class CatalogMetadata(object):
             'creators': get_creators(self.context, ()),
             'path': get_path(self.context, None),
             'content_type': get_content_type(self.context, None),
+            'workflow_state': get_workflow_state(self.context, None),
             'uid': get_uid(self.context, None),
             'like_userids': get_like_userids(self.context, ()),
             'unread': get_unread(self.context, ()),

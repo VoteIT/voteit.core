@@ -330,7 +330,14 @@ class CatalogMetadataTests(CatalogTestCase):
         metadata = self.get_metadata(doc_id)
         
         self.assertEqual(metadata['path'], '/meeting')
-        
+
+    def test_workflow_state(self):
+        obj = self._add_mock_meeting()
+        result = self.search(title = 'Testing catalog')
+        doc_id = result[1][0]
+        metadata = self.get_metadata(doc_id)
+        self.assertEqual(metadata['workflow_state'], 'upcoming')
+
     def test_content_type(self):
         obj = self._add_mock_meeting()
         result = self.search(title = 'Testing catalog')
