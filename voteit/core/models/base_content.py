@@ -2,11 +2,13 @@ from logging import getLogger
 from datetime import datetime
 
 from betahaus.pyracont import BaseFolder
+from zope.component.event import objectEventNotify
 from zope.interface import implements
 from pyramid.threadlocal import get_current_request
 from pyramid.security import authenticated_userid
 from repoze.folder import unicodify
 
+from voteit.core.events import ObjectUpdatedEvent
 from voteit.core.models.interfaces import IBaseContent
 from voteit.core.models.security_aware import SecurityAware
 from voteit.core.security import ROLE_OWNER
@@ -60,6 +62,13 @@ class BaseContent(BaseFolder, SecurityAware):
         if key in RESTRICTED_KEYS:
             return
         super(BaseContent, self).set_field_value(key, value)
+
+    def set_field_appstruct(self, values, notify=True, mark_modified=True):
+        """ Notify with voteit.core.events.ObjectUpdatedEvent too. """
+        updated = super(BaseContent, self).set_field_appstruct(values, notify=notify, mark_modified=mark_modified)
+        if updated and notify:
+            objectEventNotify(ObjectUpdatedEvent(self, indexes=updated, metadata=True))
+        return updated
 
     def _get_title(self):
         return self.get_field_value('title', u"")
