@@ -43,7 +43,7 @@ class ExportImportTests(unittest.TestCase):
         data_file.write(ei.download_export(context).body)
         data_file.flush()        
         data = {}
-        data['fp'] = open(name, 'rb')
+        data = open(name, 'rb')
         return data
 
     def test_verify_class(self):

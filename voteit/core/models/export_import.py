@@ -31,7 +31,7 @@ class ExportImport(object):
 
     def import_data(self, parent, name, filedata):
         connection = parent._p_jar
-        new_obj = connection.importFile(filedata['fp'])
+        new_obj = connection.importFile(filedata)
         if ISiteRoot.providedBy(new_obj):
             raise ValueError("Importing a new site root is not supported. If you want to import a complete database, simply copy the database file Data.fs")
         parent[name] = new_obj

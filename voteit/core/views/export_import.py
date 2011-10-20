@@ -70,7 +70,7 @@ class ExportImportView(BaseView):
 
             name = appstruct['name']
             filedata = appstruct['upload']
-            export_import.import_data(self.context, name, filedata)
+            export_import.import_data(self.context, name, filedata['fp'])
             filedata.clear()
             self.api.flash_messages.add(_(u"Created new objects from import"))
             return HTTPFound(location=redirect_url)
