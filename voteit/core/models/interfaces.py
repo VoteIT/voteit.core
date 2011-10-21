@@ -273,13 +273,12 @@ class IPoll(Interface):
 class IVote(Interface):
     """ Vote content type.
     """
-
-    def set_vote_data(value):
+    def set_vote_data(value, notify = True):
         """ Set vote data. The data itself could be anything passed
             along by the poll plugin.
         """
         
-    def get_vote_data():
+    def get_vote_data(default = None):
         """ Get the data. The poll plugin should know what to make of it.
         """
 

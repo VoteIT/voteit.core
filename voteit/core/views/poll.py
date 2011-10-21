@@ -177,7 +177,8 @@ class PollView(object):
             msg = _(u"Your vote was updated.")
         else:
             vote = Vote(creators = [userid])
-            vote.set_vote_data(appstruct)
+            #We don't need to send events here, since object added will take care of that
+            vote.set_vote_data(appstruct, notify = False)
             #To fire events after set_vote_data is done
             self.context[userid] = vote
             msg = _(u"Thank you for voting!")
