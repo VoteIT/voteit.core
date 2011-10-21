@@ -51,7 +51,7 @@ class UserTagsView(object):
         expl_display_name = request.POST.get('expl_display_name')
     
         if not request.is_xhr:
-            return HTTPFound(location=resource_url(self.context, request))
+            return HTTPFound(location=resource_url(request.context, request))
         else:
             
             return Response(self.get_user_tag(request.context, tag, display_name, expl_display_name))
