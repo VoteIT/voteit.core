@@ -1,6 +1,7 @@
 from zope.interface import Interface, Attribute
 
 
+#Content type interfaces
 class IBaseContent(Interface):
     """ Base content type that stores values in non-attributes to avoid
         collisions between regular attributes and fields.
@@ -47,97 +48,6 @@ class IBaseContent(Interface):
             sort_on: Key to sort on
             sort_reverse: Reverse sort order
         """
-
-class IWorkflowAware(Interface):
-    """ Mixin class for content that needs workflow. """
-    
-    workflow = Attribute('Get the workflow for this content.')
-
-    def initialize_workflow():
-        """ Initialize workflow. The initial state will be set.
-            If called twice, it will reset to the initial state.
-        """
-    
-    def get_workflow_state():
-        """ Get current workflow state. """
-        
-    def set_workflow_state(request, state):
-        """ Set workflow state. Transition must be available to this state. (No warping ;) """
-
-    def make_workflow_transition(request, transition):
-        """ Set a state by specifying a specific transition to execute.
-            This differs from set_workflow_state in the way that you can control
-            which transition to execute, where set_workflow_state will just
-            execute first available that it finds.
-        """
-    
-    def get_available_workflow_states(request):
-        """ Get all states that the current user can transition to from the current state.
-        """
-
-    def current_state_title(request):
-        """ Return (untranslated) state title for the current state. """
-
-
-class ISecurityAware(Interface):
-    """ Mixin for all content that should handle groups.
-        Principal in this terminology is a userid or a group id.
-    """
-    
-    def get_groups(principal):
-        """ Return groups for a principal in this context.
-            The special group "role:Owner" is never inherited.
-        """
-
-    def add_groups(principal, groups):
-        """ Add a groups for a principal in this context.
-        """
-    
-    def set_groups(principal, groups):
-        """ Set groups for a principal in this context. (This clears any previous setting)
-        """
-
-    def get_security():
-        """ Return the current security settings.
-        """
-    
-    def set_security(value):
-        """ Set current security settings according to value, that is a list of dicts with keys
-            userid and groups.
-            Warning! This method will also clear any settings for users not present in value!
-        """
-
-    def list_all_groups():
-        """ Returns a set of all groups in this context. """
-
-
-class IUnreadAware(Interface):
-    """ Mixin class that provides unread functionality to an object.
-        This means that all users that have access to an object of this kind
-        will have it marked as unread when it is added, or any other action that
-        seems appropriate. (This is normally done with subscribers)
-    """
-    unread_storage = Attribute("Acts as a storage. Contains all userids of users who haven't read this context.")
-    
-    def mark_all_unread():
-        """ Set as unread for all users with view permission.
-        """
-    
-    def mark_as_read(userid):
-        """ Remove a userid from unread_userids if it exist in there.
-            Just a convenience method in case the storage of userids change.
-        """
-
-    def get_unread_userids():
-        """ Returns a frozenset of all userids who haven't read this context. """
-
-
-class IUserTags(Interface):
-    """ Adapter for things that can have usertags.
-        The difference to normal tags is that users choose to stand behind them.
-        Typical example would be 'like', but it might also be used for other functionality,
-        like a dynamic rss feed.
-    """
 
 
 class ISiteRoot(Interface):
@@ -283,6 +193,119 @@ class IVote(Interface):
         """
 
 
+class ILogEntry(Interface):
+    """ A persistent log entry. """
+
+    created = Attribute("When it was created, in UTC time.")
+    context_uid = Attribute("UID of the context that triggered this log entry.")
+    message = Attribute("Message")
+    tags = Attribute("Tags, works pretty much like categories for log entry.")
+    userid = Attribute("userid, if a person triggered this event.")
+    scripted = Attribute("If a script triggered the event, store script name/id here.")
+
+    def __init__(context_uid, message, tags=(), userid=None, scripted=None):
+        """ Create a log entry. """
+
+
+class IDiscussionPost(Interface):
+    """ A discussion post.
+    """
+
+
+#Mixin class interfaces
+class IWorkflowAware(Interface):
+    """ Mixin class for content that needs workflow. """
+    
+    workflow = Attribute('Get the workflow for this content.')
+
+    def initialize_workflow():
+        """ Initialize workflow. The initial state will be set.
+            If called twice, it will reset to the initial state.
+        """
+    
+    def get_workflow_state():
+        """ Get current workflow state. """
+        
+    def set_workflow_state(request, state):
+        """ Set workflow state. Transition must be available to this state. (No warping ;) """
+
+    def make_workflow_transition(request, transition):
+        """ Set a state by specifying a specific transition to execute.
+            This differs from set_workflow_state in the way that you can control
+            which transition to execute, where set_workflow_state will just
+            execute first available that it finds.
+        """
+    
+    def get_available_workflow_states(request):
+        """ Get all states that the current user can transition to from the current state.
+        """
+
+    def current_state_title(request):
+        """ Return (untranslated) state title for the current state. """
+
+
+class ISecurityAware(Interface):
+    """ Mixin for all content that should handle groups.
+        Principal in this terminology is a userid or a group id.
+    """
+    
+    def get_groups(principal):
+        """ Return groups for a principal in this context.
+            The special group "role:Owner" is never inherited.
+        """
+
+    def add_groups(principal, groups):
+        """ Add a groups for a principal in this context.
+        """
+    
+    def set_groups(principal, groups):
+        """ Set groups for a principal in this context. (This clears any previous setting)
+        """
+
+    def get_security():
+        """ Return the current security settings.
+        """
+    
+    def set_security(value):
+        """ Set current security settings according to value, that is a list of dicts with keys
+            userid and groups.
+            Warning! This method will also clear any settings for users not present in value!
+        """
+
+    def list_all_groups():
+        """ Returns a set of all groups in this context. """
+
+
+class IUnreadAware(Interface):
+    """ Mixin class that provides unread functionality to an object.
+        This means that all users that have access to an object of this kind
+        will have it marked as unread when it is added, or any other action that
+        seems appropriate. (This is normally done with subscribers)
+    """
+    unread_storage = Attribute("Acts as a storage. Contains all userids of users who haven't read this context.")
+    
+    def mark_all_unread():
+        """ Set as unread for all users with view permission.
+        """
+    
+    def mark_as_read(userid):
+        """ Remove a userid from unread_userids if it exist in there.
+            Just a convenience method in case the storage of userids change.
+        """
+
+    def get_unread_userids():
+        """ Returns a frozenset of all userids who haven't read this context. """
+
+
+#Adapters
+class IUserTags(Interface):
+    """ Adapter for things that can have usertags.
+        The difference to normal tags is that users choose to stand behind them.
+        Typical example would be 'like', but it might also be used for other functionality,
+        like a dynamic rss feed.
+    """
+
+
 class IPollPlugin(Interface):
     """ A plugin for a poll.
     """
@@ -335,6 +358,58 @@ class IPollPlugin(Interface):
         """
 
 
+
+class ILogHandler(Interface):
+    """ An adapter for meetings that handle logging. """
+
+    def __init__(context):
+        """ Object needs a meeting to adapt. """
+
+
+class ICatalogMetadata(Interface):
+    """ An adapter to fetch metadata for the catalog.
+        it adapts voteit.core.models.interfaces.ICatalogMetadataEnabled
+        which is just a marker interface.
+    """
+    special_indexes = Attribute("A dict of iface:method name that should be run to extend the metadata for a specific iface.")
+    
+    def __init__(context):
+        """ Object to adapt """
+        
+    def __call__():
+        """ Return metadata for adapted object. """
+    
+    def get_agenda_item_specific(results):
+        """ Update results with agenda item specific metadata. """
+
+
+class IExportImport(Interface):
+    """ Adapter to export or import content.
+        It adapts the site root.
+    """
+    def __init__(context):
+        """ Object to adapt """
+    def export_buffer(obj):
+        """ Returns filebuffer created from object to export.
+        """
+
+    def download_export(obj):
+        """ Returns a Response object with an export file.
+            It's ment to be passed to the client as a response, and will initiate download.
+            The Response.body attr should contain everything from export_buffer method.
+        """
+
+    def import_data(parent, name, filedata):
+        """ Import data into site, and index the new objects in the catalog.
+            parent
+                Object where the new data will be stored
+            name
+                Which key the new data will be stored under, ie parent[name]
+            filedata
+                Contains a filebuffer, like an open file stream.
+        """
+
+#Utilities
 class IDateTimeUtil(Interface):
     """ Utility that handles display of datetime formats.
         Also takes care of locale negotiation.
@@ -388,75 +463,6 @@ class IDateTimeUtil(Interface):
         datetime object, whereas this one includes the UTC tz info.
         """
 
-
-class ILogHandler(Interface):
-    """ An adapter for meetings that handle logging. """
-
-    def __init__(context):
-        """ Object needs a meeting to adapt. """
-
-
-class ILogEntry(Interface):
-    """ A persistent log entry. """
-
-    created = Attribute("When it was created, in UTC time.")
-    context_uid = Attribute("UID of the context that triggered this log entry.")
-    message = Attribute("Message")
-    tags = Attribute("Tags, works pretty much like categories for log entry.")
-    userid = Attribute("userid, if a person triggered this event.")
-    scripted = Attribute("If a script triggered the event, store script name/id here.")
-
-    def __init__(context_uid, message, tags=(), userid=None, scripted=None):
-        """ Create a log entry. """
-
-
-class IDiscussionPost(Interface):
-    """ A discussion post.
-    """
-
-
-class ICatalogMetadata(Interface):
-    """ An adapter to fetch metadata for the catalog.
-        it adapts voteit.core.models.interfaces.ICatalogMetadataEnabled
-        which is just a marker interface.
-    """
-    special_indexes = Attribute("A dict of iface:method name that should be run to extend the metadata for a specific iface.")
-    
-    def __init__(context):
-        """ Object to adapt """
-        
-    def __call__():
-        """ Return metadata for adapted object. """
-    
-    def get_agenda_item_specific(results):
-        """ Update results with agenda item specific metadata. """
-
-
-class IExportImport(Interface):
-    """ Adapter to export or import content.
-        It adapts the site root.
-    """
-    def __init__(context):
-        """ Object to adapt """
-    def export_buffer(obj):
-        """ Returns filebuffer created from object to export.
-        """
-
-    def download_export(obj):
-        """ Returns a Response object with an export file.
-            It's ment to be passed to the client as a response, and will initiate download.
-            The Response.body attr should contain everything from export_buffer method.
-        """
-
-    def import_data(parent, name, filedata):
-        """ Import data into site, and index the new objects in the catalog.
-            parent
-                Object where the new data will be stored
-            name
-                Which key the new data will be stored under, ie parent[name]
-            filedata
-                Contains a filebuffer, like an open file stream.
-        """
 
 #Marker interfaces
 class ICatalogMetadataEnabled(Interface):
