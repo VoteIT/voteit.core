@@ -26,7 +26,7 @@ class BaseContent(BaseFolder, SecurityAware):
     allowed_contexts = ()
     schemas = {}
 
-    def __init__(self, **kwargs):
+    def __init__(self, data=None, **kwargs):
         """ Initialize class. note that the superclass will create field storage etc
             on init, so it's important to run super.
             creators is required in kwargs, this class will try to extract it from
@@ -53,7 +53,7 @@ class BaseContent(BaseFolder, SecurityAware):
             userid = kwargs['creators'][0]
             self.add_groups(userid, (ROLE_OWNER,))
 
-        super(BaseContent, self).__init__(**kwargs)
+        super(BaseContent, self).__init__(data=data, **kwargs)
 
     def set_field_value(self, key, value):
         """ Override BaseFolders set_field_value.

@@ -1,8 +1,11 @@
-from zope.interface import Interface, Attribute
+from zope.interface import Attribute
+from zope.interface import Interface
+
+from betahaus.pyracont.interfaces import IBaseFolder
 
 
 #Content type interfaces
-class IBaseContent(Interface):
+class IBaseContent(IBaseFolder):
     """ Base content type that stores values in non-attributes to avoid
         collisions between regular attributes and fields.
         It expects validation to be done on the form level.
@@ -50,11 +53,11 @@ class IBaseContent(Interface):
         """
 
 
-class ISiteRoot(Interface):
+class ISiteRoot(IBaseFolder):
     """ Singleton that is used as the site root. """
 
 
-class IUsers(Interface):
+class IUsers(IBaseFolder):
     """ Contains all users. """
     
     def get_user_by_email(email):
@@ -63,7 +66,7 @@ class IUsers(Interface):
         """
 
 
-class IUser(Interface):
+class IUser(IBaseFolder):
     """ A user object. """
     
     userid = Attribute("The userid is always the same as __name__, meaning "
@@ -105,11 +108,11 @@ class IUser(Interface):
         """
 
 
-class IAgendaItem(Interface):
+class IAgendaItem(IBaseFolder):
     """ Agenda item content """
 
 
-class IMeeting(Interface):
+class IMeeting(IBaseFolder):
     """ Meeting content type """
 
     def add_invite_ticket(ticket, request):
@@ -119,33 +122,17 @@ class IMeeting(Interface):
             in that case be the meeting.
         """
 
-class IInviteTicket(Interface):
-    """ Invite ticket - these track invitations to meetings. """
-    email = Attribute("Email address this invite is for.")
-    roles = Attribute("Roles to assign to this user once the ticket is used.")
-    created = Attribute("Creation date")
-    closed = Attribute("Close date (When the ticket was used)")
-    token = Attribute("Security token that was part of the email. "
-                      "Used in combinaton with an email address to gain entry to a meeting.")
-    sent_dates = Attribute("A list of dates when an email was sent. (Each resend gets saved here)")
-    claimed_by = Attribute("The userid of the user who claimed (used) this ticket.")
-    
-    def send(request):
-        """ Send an invite or reminder to the email address that's set in
-            the email attribute. Each time will be logged in sent_dates.
-        """
 
-    def claim(request):
-        """ Use the ticket to gain access. Called by ticket form - see:
-            views/meeting.py
-        """
+class IDiscussionPost(IBaseFolder):
+    """ A discussion post.
+    """
 
 
-class IProposal(Interface):
+class IProposal(IBaseFolder):
     """ Proposal content type. """
 
 
-class IPoll(Interface):
+class IPoll(IBaseFolder):
     """ Poll content type. """
     proposal_uids = Attribute("Contains a set of UIDs for all proposals this poll is about.")
     poll_plugin_name = Attribute("Returns the name of the selected voting utility.")
@@ -207,9 +194,26 @@ class ILogEntry(Interface):
         """ Create a log entry. """
 
 
-class IDiscussionPost(Interface):
-    """ A discussion post.
-    """
+class IInviteTicket(Interface):
+    """ Invite ticket - these track invitations to meetings. """
+    email = Attribute("Email address this invite is for.")
+    roles = Attribute("Roles to assign to this user once the ticket is used.")
+    created = Attribute("Creation date")
+    closed = Attribute("Close date (When the ticket was used)")
+    token = Attribute("Security token that was part of the email. "
+                      "Used in combinaton with an email address to gain entry to a meeting.")
+    sent_dates = Attribute("A list of dates when an email was sent. (Each resend gets saved here)")
+    claimed_by = Attribute("The userid of the user who claimed (used) this ticket.")
+    
+    def send(request):
+        """ Send an invite or reminder to the email address that's set in
+            the email attribute. Each time will be logged in sent_dates.
+        """
+
+    def claim(request):
+        """ Use the ticket to gain access. Called by ticket form - see:
+            views/meeting.py
+        """
 
 
 #Mixin class interfaces
