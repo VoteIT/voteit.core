@@ -6,13 +6,12 @@ here = os.path.abspath(os.path.dirname(__file__))
 README = open(os.path.join(here, 'README.txt')).read()
 CHANGES = open(os.path.join(here, 'CHANGES.txt')).read()
 
-requires = [
+requires = (
     'pyramid>=1.2',
     'pyramid_mailer',
     'pyramid_zcml',
-    'repoze.zodbconn',
-    'repoze.tm2>=1.0b1', # default_commit_veto
-    'repoze.retry',
+    'pyramid_zodbconn',
+    'pyramid_tm',
     'repoze.folder',
     'repoze.workflow',
     'ZODB3',
@@ -27,7 +26,9 @@ requires = [
     'lingua',
     'httplib2',
     'betahaus.pyracont',
-    ]
+    'pyramid_debugtoolbar', #Won't be active unless included
+    )
+
 
 setup(name='voteit.core',
       version='0.0',
@@ -53,7 +54,6 @@ setup(name='voteit.core',
       [paste.app_factory]
       main = voteit.core:main
       [console_scripts]
-      crontick = voteit.core.scripts.crontick:crontick
       update_catalog = voteit.core.scripts.catalog:update_catalog
       """,
       paster_plugins=['pyramid'],

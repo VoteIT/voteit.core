@@ -1,6 +1,7 @@
 from pyramid.i18n import TranslationStringFactory
 from pyramid.session import UnencryptedCookieSessionFactoryConfig
-from repoze.zodbconn.finder import PersistentApplicationFinder
+from pyramid_zodbconn import get_connection
+
 from pyramid.config import Configurator
 from pyramid.authorization import ACLAuthorizationPolicy
 from pyramid.authentication import AuthTktAuthenticationPolicy
@@ -19,6 +20,7 @@ def main(global_config, **settings):
     import voteit.core.patches
 
     config = default_configurator(settings)
+
     config.include(required_components)
     config.include(register_plugins)
     config.hook_zca()
@@ -32,21 +34,11 @@ def default_configurator(settings):
     authn_policy = AuthTktAuthenticationPolicy(secret=settings['tkt_secret'],
                                                callback=groupfinder)
     authz_policy = ACLAuthorizationPolicy()
-
-    zodb_uri = settings.get('zodb_uri')
-    if zodb_uri is None:
-        raise ValueError("No 'zodb_uri' in application configuration.")
-
-    finder = PersistentApplicationFinder(zodb_uri, appmaker)
-    def get_root(request):
-        return finder(request.environ)
-
     sessionfact = UnencryptedCookieSessionFactoryConfig('messages')
-
     return Configurator(settings=settings,
                         authentication_policy=authn_policy,
                         authorization_policy=authz_policy,
-                        root_factory=get_root,
+                        root_factory=root_factory,
                         session_factory = sessionfact,)
 
 
@@ -63,8 +55,9 @@ def required_components(config):
     #Include all poll plugins from paster .ini config
     config.include(register_poll_plugins)
 
-    config.add_static_view('static', '%s:static' % PROJECTNAME)
-    config.add_static_view('deform', 'deform:static')
+    cache_ttl_seconds = int(config.registry.settings.get('cache_ttl_seconds', 7200))
+    config.add_static_view('static', '%s:static' % PROJECTNAME, cache_max_age = cache_ttl_seconds)
+    config.add_static_view('deform', 'deform:static', cache_max_age = cache_ttl_seconds)
 
     #Set which mailer to use
     config.include(config.registry.settings['mailer'])
@@ -98,6 +91,11 @@ def register_plugins(config):
     if plugins is not None:
         for plugin in plugins.strip().splitlines():
             config.include(plugin)
+
+
+def root_factory(request):
+    conn = get_connection(request)
+    return appmaker(conn.root())
 
 
 def appmaker(zodb_root):
