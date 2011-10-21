@@ -3,7 +3,7 @@ from pyramid.security import Allow
 from pyramid.security import DENY_ALL
 from pyramid.traversal import find_interface
 from betahaus.pyracont.decorators import content_factory
-
+from zope.component.event import objectEventNotify
 
 from voteit.core import security
 from voteit.core import VoteITMF as _
@@ -11,7 +11,7 @@ from voteit.core.models.base_content import BaseContent
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IVote
 from voteit.core.validators import html_string_validator
-from zope.interface.declarations import classImplementsOnly
+from voteit.core.events import ObjectUpdatedEvent
 
 
 ACL = {}
@@ -46,11 +46,16 @@ class Vote(BaseContent):
             return ACL['ongoing']
         return ACL['closed']
 
-    def get_vote_data(self):
+    def get_vote_data(self, default = None):
         """ Get vote data. """
-        return getattr(self, '__vote_data__', None)
+        return getattr(self, '__vote_data__', default)
 
-    def set_vote_data(self, value):
+    def set_vote_data(self, value, notify = True):
         """ Set vote data """
+        marker = object()
+        current_val = self.get_vote_data(marker)
+        if value == current_val:
+            return
         self.__vote_data__ = value
-
+        if notify:
+            objectEventNotify(ObjectUpdatedEvent(self))

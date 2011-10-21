@@ -5,7 +5,6 @@ from pyramid.url import resource_url
 from pyramid.exceptions import Forbidden
 from pyramid.httpexceptions import HTTPFound
 from pyramid.traversal import find_interface
-from zope.component.event import objectEventNotify
 from betahaus.pyracont.factories import createSchema
 
 from voteit.core.views.api import APIView
@@ -16,7 +15,6 @@ from voteit.core.security import VIEW
 from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IVote
-from voteit.core.events import ObjectUpdatedEvent
 from voteit.core.models.schemas import add_csrf_token
 from voteit.core.models.schemas import button_vote
 from voteit.core.models.schemas import button_cancel
@@ -55,11 +53,8 @@ class PollView(object):
                 return self.response
 
             updated = self.context.set_field_appstruct(appstruct)
-
             if updated:
                 self.api.flash_messages.add(_(u"Successfully updated"))
-                #TODO: This should probably not be fired here, instead it should be fired by the object
-                objectEventNotify(ObjectUpdatedEvent(self.context))
             else:
                 self.api.flash_messages.add(_(u"Nothing updated"))
 
@@ -130,13 +125,12 @@ class PollView(object):
     def poll_raw_data(self):
         """ View for all ballots. See intefaces.IPollPlugin.render_raw_data
         """
-        
         #Poll closed?
         if self.context.get_workflow_state() != 'closed':
             self.api.flash_messages.add("Poll not closed yet", type='error')
             url = resource_url(self.context, self.request)
             return HTTPFound(location=url)
-        
+
         #This will generate a ComponentLookupError if the plugin isn't found,
         #however, that should never happen for a closed poll unless someone
         #removed the plugin.
@@ -183,7 +177,8 @@ class PollView(object):
             msg = _(u"Your vote was updated.")
         else:
             vote = Vote(creators = [userid])
-            vote.set_vote_data(appstruct)
+            #We don't need to send events here, since object added will take care of that
+            vote.set_vote_data(appstruct, notify = False)
             #To fire events after set_vote_data is done
             self.context[userid] = vote
             msg = _(u"Thank you for voting!")

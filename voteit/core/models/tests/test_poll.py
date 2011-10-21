@@ -2,8 +2,6 @@ import unittest
 
 from pyramid import testing
 from zope.interface.verify import verifyObject
-from zope.component import queryUtility
-from pyramid.threadlocal import get_current_registry
 from pyramid.authorization import ACLAuthorizationPolicy
 from pyramid.authentication import AuthTktAuthenticationPolicy
 from pyramid.traversal import find_interface
@@ -47,10 +45,7 @@ class PollTests(unittest.TestCase):
         return ai['poll']
         
     def _register_majority_poll(self, poll):
-        from voteit.core.app import register_poll_plugin
-        from voteit.core.plugins.majority_poll import MajorityPollPlugin
-        registry = get_current_registry()
-        register_poll_plugin(MajorityPollPlugin, registry=registry)
+        self.config.include('voteit.core.plugins.majority_poll')
 
     def _agenda_item_with_proposals_fixture(self):
         """ Create an agenda item with a poll and two proposals. """
@@ -382,10 +377,7 @@ class PollPermissionTests(unittest.TestCase):
         return poll
 
     def _register_majority_poll(self, poll):
-        from voteit.core.app import register_poll_plugin
-        from voteit.core.plugins.majority_poll import MajorityPollPlugin
-        registry = get_current_registry()
-        register_poll_plugin(MajorityPollPlugin, registry=registry)
+        self.config.include('voteit.core.plugins.majority_poll')
         poll.set_field_value('poll_plugin', u'majority_poll')
 
     def test_private(self):

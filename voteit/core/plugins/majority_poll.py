@@ -119,7 +119,10 @@ class MajorityPollPlugin(PollPlugin):
     def render_raw_data(self):
         return Response(unicode(self.context.ballots))
 
+
 def includeme(config):
-    from voteit.core.app import register_poll_plugin
-    register_poll_plugin(MajorityPollPlugin, registry=config.registry)
-    
+    """ Include majority poll as a usable method.
+    """
+    from voteit.core.models.interfaces import IPoll
+    from voteit.core.models.interfaces import IPollPlugin
+    config.registry.registerAdapter(MajorityPollPlugin, (IPoll,), IPollPlugin, MajorityPollPlugin.name)

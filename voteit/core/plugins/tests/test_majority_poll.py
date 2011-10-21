@@ -4,7 +4,6 @@ from pyramid import testing
 from pyramid.traversal import find_interface
 from zope.interface.verify import verifyObject
 
-from voteit.core.app import register_poll_plugin
 from voteit.core.models.interfaces import IAgendaItem
 
     
@@ -67,8 +66,7 @@ class MPIntegrationTests(unittest.TestCase):
         self.config.load_zcml('voteit.core:configure.zcml')
         
         #Register poll plugin
-        from voteit.core.plugins.majority_poll import MajorityPollPlugin
-        register_poll_plugin(MajorityPollPlugin, verify=0, registry=self.config.registry)
+        self.config.include('voteit.core.plugins.majority_poll')
 
         #Add agenda item - needed for lookups
         from voteit.core.models.agenda_item import AgendaItem
@@ -80,6 +78,7 @@ class MPIntegrationTests(unittest.TestCase):
         #Wrap in correct context
         self.poll = ai['poll']
         #Select plugin to use
+        from voteit.core.plugins.majority_poll import MajorityPollPlugin
         self.poll.set_field_value('poll_plugin', MajorityPollPlugin.name)
         
         #Add proposals

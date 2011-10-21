@@ -1,5 +1,5 @@
 from transaction import commit
-from repoze.zodbconn.uri import db_from_uri
+from pyramid_zodbconn import db_from_uri
 
 from voteit.core.bootstrap import bootstrap_voteit
 

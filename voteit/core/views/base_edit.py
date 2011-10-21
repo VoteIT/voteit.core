@@ -4,7 +4,6 @@ from pyramid.view import view_config
 from pyramid.url import resource_url
 from pyramid.security import has_permission
 from pyramid.exceptions import Forbidden
-from zope.component.event import objectEventNotify
 import colander
 from deform import Form
 from deform.exception import ValidationFailure
@@ -22,7 +21,6 @@ from voteit.core.models.schemas import button_add
 from voteit.core.models.schemas import button_cancel
 from voteit.core.models.schemas import button_update
 from voteit.core.models.schemas import button_delete
-from voteit.core.events import ObjectUpdatedEvent
 from voteit.core.models.interfaces import IBaseContent
 from voteit.core.models.interfaces import IWorkflowAware
 
@@ -53,27 +51,25 @@ class BaseEdit(object):
         schema = createSchema(schema_name).bind(context=self.context, request=self.request)
         add_csrf_token(self.context, self.request, schema)
             
-        self.form = Form(schema, buttons=(button_add, button_cancel))
-        self.api.register_form_resources(self.form)
-        appstruct = {}
+        form = Form(schema, buttons=(button_add, button_cancel))
+        self.api.register_form_resources(form)
 
         post = self.request.POST
         if 'add' in post:
             controls = post.items()
             try:
                 #appstruct is deforms convention. It will be the submitted data in a dict.
-                appstruct = self.form.validate(controls)
+                appstruct = form.validate(controls)
             except ValidationFailure, e:
                 self.response['form'] = e.render()
                 return self.response
             
             kwargs = {}
+            kwargs.update(appstruct)
             if self.api.userid:
                 kwargs['creators'] = [self.api.userid]
 
             obj = createContent(content_type, **kwargs)
-            obj.set_field_appstruct(appstruct)
-
             name = self.generate_slug(obj.title)
             self.context[name] = obj
             
@@ -93,12 +89,7 @@ class BaseEdit(object):
         #No action - Render add form
         msg = _(u"Add")
         self.api.flash_messages.add(msg, close_button=False)
-        #FIXME: this should probably be handled in a more graceful way, but since almost every content type is added here this must go here
-        if not 'start_time' in appstruct:
-            appstruct['start_time'] = self.api.dt_util.localnow()
-        if not 'end_time' in appstruct:
-            appstruct['end_time'] = self.api.dt_util.localnow() + timedelta(hours=6)
-        self.response['form'] = self.form.render(appstruct=appstruct)
+        self.response['form'] = form.render()
         return self.response
 
     @view_config(context=IBaseContent, name="edit", renderer=DEFAULT_TEMPLATE, permission=EDIT)
@@ -108,15 +99,15 @@ class BaseEdit(object):
         schema = createSchema(schema_name).bind(context=self.context, request=self.request)
         add_csrf_token(self.context, self.request, schema)
 
-        self.form = Form(schema, buttons=(button_update, button_cancel))
-        self.api.register_form_resources(self.form)
+        form = Form(schema, buttons=(button_update, button_cancel))
+        self.api.register_form_resources(form)
 
         post = self.request.POST
         if 'update' in post:
             controls = post.items()
             try:
                 #appstruct is deforms convention. It will be the submitted data in a dict.
-                appstruct = self.form.validate(controls)
+                appstruct = form.validate(controls)
             except ValidationFailure, e:
                 self.response['form'] = e.render()
                 return self.response
@@ -125,8 +116,6 @@ class BaseEdit(object):
 
             if updated:
                 self.api.flash_messages.add(_(u"Successfully updated"))
-                #TODO: This should probably not be fired here, instead it should be fired by the object
-                objectEventNotify(ObjectUpdatedEvent(self.context))
             else:
                 self.api.flash_messages.add(_(u"Nothing updated"))
 
@@ -142,7 +131,7 @@ class BaseEdit(object):
         msg = _(u"Edit")
         self.api.flash_messages.add(msg, close_button=False)
         appstruct = self.context.get_field_appstruct(schema)
-        self.response['form'] = self.form.render(appstruct=appstruct)
+        self.response['form'] = form.render(appstruct=appstruct)
         return self.response
 
     @view_config(context=IBaseContent, name="delete", permission=DELETE, renderer=DEFAULT_TEMPLATE)
@@ -151,8 +140,8 @@ class BaseEdit(object):
         schema = colander.Schema()
         add_csrf_token(self.context, self.request, schema)
         
-        self.form = Form(schema, buttons=(button_delete, button_cancel))
-        self.api.register_form_resources(self.form)
+        form = Form(schema, buttons=(button_delete, button_cancel))
+        self.api.register_form_resources(form)
 
         post = self.request.POST
         if 'delete' in post:
@@ -175,7 +164,7 @@ class BaseEdit(object):
         #No action - Render edit form
         msg = _(u"Are you sure you want to delete this item?")
         self.api.flash_messages.add(msg, close_button=False)
-        self.response['form'] = self.form.render()
+        self.response['form'] = form.render()
         return self.response
 
     def generate_slug(self, text, limit=40):
