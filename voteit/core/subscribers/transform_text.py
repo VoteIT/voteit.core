@@ -8,7 +8,8 @@ from pyramid.threadlocal import get_current_request
 from pyramid.traversal import find_root, find_interface
 from repoze.folder.interfaces import IObjectAddedEvent
 from webhelpers.html.converters import nl2br
-from webhelpers.html import HTML, literal
+from webhelpers.html.tools import auto_link
+from webhelpers.html import HTML
 
 from voteit.core.models.interfaces import ISiteRoot
 from voteit.core.models.interfaces import IMeeting
@@ -18,41 +19,7 @@ from voteit.core.interfaces import IObjectUpdatedEvent
 from voteit.core.models.user import USERID_REGEXP
 
 def urls_to_links(text):
-    # Code borrowed from webhelpers.html.tools, the problems is that it escpaes to text first and we don't want that
-    
-    AUTO_LINK_RE = re.compile(r"""
-                        (                          # leading text
-                          <\w+.*?>|                # leading HTML tag, or
-                          [^=!:'"/]|               # leading punctuation, or 
-                          ^                        # beginning of line
-                        )
-                        (
-                          (?:https?://)|           # protocol spec, or
-                          (?:www\.)                # www.*
-                        ) 
-                        (
-                          [-\w]+                   # subdomain or domain
-                          (?:\.[-\w]+)*            # remaining subdomains or domain
-                          (?::\d+)?                # port
-                          (?:/(?:(?:[~\w\+%-]|(?:[,.;:][^\s$]))+)?)* # path
-                          (?:\?[\w\+\/%&=.;-]+)?     # query string
-                          (?:\#[\w\-]*)?           # trailing anchor
-                        )
-                        ([\.,"'?!;:]|\s|<|\]|$)       # trailing text
-                           """, re.X)
-                           
-    def handle_match(matchobj):
-        all = matchobj.group()
-        before, prefix, link, after = matchobj.group(1, 2, 3, 4)
-        if re.match(r'<a\s', before, re.I):
-            return all
-        text = literal(prefix + link)
-        if prefix == "www.":
-            prefix = "http://www."
-        a_options = dict()
-        a_options['href'] = literal(prefix + link)
-        return literal(before) + HTML.a(text, **a_options) + literal(after)
-    return re.sub(AUTO_LINK_RE, handle_match, text)
+    return auto_link(text, link='urls')
 
 def at_userid_link(text, obj):
     root = find_root(obj)
@@ -61,40 +28,38 @@ def at_userid_link(text, obj):
     request = get_current_request()
 
     regexp = r'(\A|\s)@('+USERID_REGEXP+r')'
-    reg = re.compile(regexp)
-    for (space, userid) in re.findall(regexp, text):
+    def handle_match(matchobj):
+        all = matchobj.group()
+        space, userid = matchobj.group(1, 2)
         if userid in users:
             user = users[userid]
-            link = '%s<a href="%s_userinfo?userid=%s" title="%s" class="inlineinfo">@%s</a>' % (
-                space,
-                resource_url(meeting, request),
-                userid,
-                user.title,
-                userid,
-            )
             user.send_mention_notification(obj, request)
-            text = text.replace(space+'@'+userid, link)
-    
-    return text
+            a_options = dict()
+            a_options['href'] = "%s_userinfo?userid=%s" % (resource_url(meeting, request), userid)
+            a_options['title'] = user.title
+            a_options['class'] = "inlineinfo"
+            return HTML.a('@'+userid, **a_options)
+        else:
+            return space+'@'+userid
+            
+    return re.sub(regexp, handle_match, text)
 
 @subscriber([IProposal, IObjectAddedEvent])
 def transform_title(obj, event):
     text = obj.get_field_value('title')
 
-    # nl2br returns an object that automagicaly escapes html, so we converts it to a unicode string
-    text = unicode(nl2br(text))
     text = urls_to_links(text)
     text = at_userid_link(text, obj)
-
+    text = nl2br(text)
+    
     obj.set_field_value('title', text)
 
 @subscriber([IDiscussionPost, IObjectAddedEvent])
 def transform_text(obj, event):
     text = obj.get_field_value('text')
 
-    # nl2br returns an object that automagicaly escapes html, so we converts it to a unicode string
-    text = unicode(nl2br(text))
     text = urls_to_links(text)
     text = at_userid_link(text, obj)
+    text = nl2br(text)
 
     obj.set_field_value('text', text)

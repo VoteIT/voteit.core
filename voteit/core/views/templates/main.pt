@@ -14,6 +14,7 @@
     
     <link href="${request.application_url}/static/reset.css" rel="stylesheet" type="text/css" />
     <link href="${request.application_url}/static/main.css" rel="stylesheet" type="text/css" />
+    <link href="${request.application_url}/static/jquery.qtip.css" rel="stylesheet" type="text/css" />
     <link href="${request.application_url}/static/smoothness/jquery-ui-1.8.16.custom.css" rel="stylesheet" type="text/css" />
     <script type="text/javascript" tal:content="structure api.get_js_config_template()">js config code</script>
     <script type="text/javascript" src="${request.application_url}/deform/scripts/jquery-1.4.2.min.js"></script>

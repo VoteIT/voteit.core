@@ -34,8 +34,9 @@ $(document).ready(function () {
 /*  User tag methods */
 $(document).ready(function() {
     $(".user_tag_form").live('submit', function(event) {
-        /* stop form from submitting normally */
-        event.preventDefault(); 
+        /* stop form from submitting normally 
+        IE might throw an error calling preventDefault(), so use a try/catch block. */
+        try { event.preventDefault(); } catch(e) {}
             
         /* get some values from elements on the page: */
         var $form = $( this ),
@@ -113,102 +114,114 @@ $(document).ready(function() {
  */
 $(document).ready(function() {
     $('#navigation .toggle_minimize').live('click', function(event) {
-		min_parent = $(this).parents('.toggle_area');
-		// set cookie for opened or closed
+        min_parent = $(this).parents('.toggle_area');
+        // set cookie for opened or closed
         var cookie_id = min_parent.attr('id');
         if (min_parent.hasClass('toggle_opened')) {
             $.cookie(cookie_id, 1);
         } else {
             $.cookie(cookie_id, null);
-		    location.reload();
+            location.reload();
         }
-		// Set parent class as opened or closed
-		min_parent.toggleClass('toggle_opened').toggleClass('toggle_closed');
+        // Set parent class as opened or closed
+        min_parent.toggleClass('toggle_opened').toggleClass('toggle_closed');
     })
 });
 
 /* Poll result */
 $(document).ready(function() {
     $('#polls .toggle_minimize').live('click', function(event) {
-		min_parent = $(this).parents('.toggle_area');
-		// set cookie for opened or closed
+        min_parent = $(this).parents('.toggle_area');
+        // set cookie for opened or closed
         var cookie_id = min_parent.attr('id');
         if (min_parent.hasClass('toggle_opened')) {
             $.cookie(cookie_id, 1);
         } else {
             $.cookie(cookie_id, null);
         }
-		// Set parent class as opened or closed
-		min_parent.toggleClass('toggle_opened').toggleClass('toggle_closed');
+        // Set parent class as opened or closed
+        min_parent.toggleClass('toggle_opened').toggleClass('toggle_closed');
     })
 });
 
 /* profile popup */
-/* FIXME: this needs to be fixed so that it gets triggered when stuff is loaded with ajax*/
-$(document).ready(function() {
-    $('a.inlineinfo').each(function() {
-        $(this).click(function() {
-            return false;
-        });
-        $(this).qtip({
-            content: { url: this.href,
-			           title: {text: voteit.translation['user-info'],
-					           button: voteit.translation['close']}
-			 },
-            show: 'click',
-            hide: 'unfocus',
-            position: {
-                corner: {
-                    target: 'bottomMiddle',
-                    tooltip: 'topMiddle',
-                }
+$('a.inlineinfo').live('click', function(event) {
+    /* stop form from submitting normally 
+    IE might throw an error calling preventDefault(), so use a try/catch block. */
+    try { event.preventDefault(); } catch(e) {}
+    event.preventDefault(); 
+    
+    $(this).qtip({
+        overwrite: false, // Make sure the tooltip won't be overridden once created
+        content: { 
+           title: {
+                text: voteit.translation['user-info'],
+                button: voteit.translation['close'],
             },
-            style: { 
-                tip: true,
-                //name: 'blue',
-                border: {
-                    width: 2,
-                    radius: 5,
-                },
-                width: { min: 500 },
-                textAlign: 'justify',
+            text: voteit.translation['loading'], // The text to use whilst the AJAX request is loading
+            ajax: { 
+                url: this.href,
             },
-        });
-    });
+        },
+        show: {
+            event: event.type, // Use the same show event as the one that triggered the event handler
+            ready: true, // Show the tooltip as soon as it's bound, vital so it shows up the first time you hover!
+            effect: false,
+        },
+        hide: {
+            event: "unfocus",
+            effect: false,
+        },
+        position: {
+            at: "bottom center",
+            my: "top center",
+        },
+        style: { 
+            classes: 'inlineinfo-popup',
+            widget: true,
+            tip: true,
+        },
+    }, event);
 });
 
 /* more tag popup */
-/* FIXME: this needs to be fixed so that it gets triggered when stuff is loaded with ajax*/
-$(document).ready(function() {
-    $('a.moretag').each(function() {
-        $(this).click(function() {
-            return false;
-        });
-        $(this).qtip({
-            content: { url: this.href,
-			           title: {text: voteit.translation['more-tag-list'],
-					           button: voteit.translation['close']}
-			 },
-            show: 'click',
-            hide: 'unfocus',
-            position: {
-                corner: {
-                    target: 'bottomMiddle',
-                    tooltip: 'topMiddle',
-                }
+$('a.moretag').live('click', function(event) {
+    /* stop form from submitting normally 
+    IE might throw an error calling preventDefault(), so use a try/catch block. */
+    try { event.preventDefault(); } catch(e) {}
+    event.preventDefault(); 
+    
+    $(this).qtip({
+        overwrite: false, // Make sure the tooltip won't be overridden once created
+                content: { 
+           title: {
+                text: voteit.translation['more-tag-list'],
+                button: voteit.translation['close'],
             },
-            style: { 
-                tip: true,
-                //name: 'blue',
-                border: {
-                    width: 2,
-                    radius: 5,
-                },
-                width: { min: 500 },
-                textAlign: 'justify',
+            text: voteit.translation['loading'], // The text to use whilst the AJAX request is loading
+            ajax: { 
+                url: this.href,
             },
-        });
-    });
+        },
+        show: {
+            event: event.type, // Use the same show event as the one that triggered the event handler
+            ready: true, // Show the tooltip as soon as it's bound, vital so it shows up the first time you hover!
+            effect: false,
+        },
+        hide: {
+            event: "unfocus",
+            effect: false,
+        },
+        position: {
+            at: "bottom center",
+            my: "top center",
+        },
+        style: { 
+            classes: 'moretag-popup',
+            widget: true,
+            tip: true,
+        },
+    }, event);
 });
 
 /* descriptions */
