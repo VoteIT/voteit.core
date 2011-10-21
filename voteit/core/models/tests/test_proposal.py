@@ -66,12 +66,14 @@ class ProposalTests(unittest.TestCase):
         obj = self._make_obj()
         obj.set_field_value('title', '@admin')
         meeting['p3'] = obj
-        title = '<a href="%s_userinfo?userid=%s" title="%s" class="inlineinfo">@%s</a>' % (
-                resource_url(meeting, request),
-                'admin',
-                self.root.users['admin'].title,
-                'admin',
-            )
+
+        from webhelpers.html import HTML
+        a_options = dict()
+        a_options['href'] = "%s_userinfo?userid=%s" % (resource_url(meeting, request), 'admin')
+        a_options['title'] = self.root.users['admin'].title
+        a_options['class'] = "inlineinfo"
+        title = HTML.a('@admin', **a_options)
+
         self.assertEqual(obj.get_field_value('title'), title)
 
 
