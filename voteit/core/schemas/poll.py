@@ -11,24 +11,8 @@ from voteit.core.models.interfaces import IProposal
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IPollPlugin
 from voteit.core.fields import TZDateTime
-
-
-def start_time_node():
-    return colander.SchemaNode(
-         TZDateTime(),
-         title = _(u"Start time of this poll."),
-         description = _(u"You need to open it yourself."),
-         widget=deform.widget.DateTimeInputWidget(options={'timeFormat': 'hh:mm'}),
-    )
-
-
-def end_time_node():
-    return colander.SchemaNode(
-         TZDateTime(),
-         title = _(u"End time of this poll."),
-         description = _(u"You need to close it yourself."),
-         widget=deform.widget.DateTimeInputWidget(options={'timeFormat': 'hh:mm'}),
-    )
+from voteit.core.schemas.common import deferred_default_end_time
+from voteit.core.schemas.common import deferred_default_start_time
 
 
 @colander.deferred
@@ -67,7 +51,6 @@ def proposal_choices_widget(node, kw):
             proposal_choices.add((prop.uid, prop.title, ))
 
     proposal_choices = sorted(proposal_choices, key=lambda proposal: proposal[1].lower())
-
     return deform.widget.CheckboxChoiceWidget(values=proposal_choices)
 
 
@@ -96,5 +79,18 @@ class PollSchema(colander.MappingSchema):
                                                     default=u"Only proposals in the state 'published' can be selected"),
                                     missing=set(),
                                     widget=proposal_choices_widget,)
-    start_time = start_time_node()
-    end_time = end_time_node()
+    start_time = colander.SchemaNode(
+         TZDateTime(),
+         title = _(u"Start time of this poll."),
+         description = _(u"You need to open it yourself."),
+         widget=deform.widget.DateTimeInputWidget(options={'timeFormat': 'hh:mm'}),
+         default = deferred_default_start_time,
+    )
+    end_time = colander.SchemaNode(
+         TZDateTime(),
+         title = _(u"End time of this poll."),
+         description = _(u"poll_end_time_description",
+                         default = u"You need to close it yourself. A good default value is one day later."),
+         widget=deform.widget.DateTimeInputWidget(options={'timeFormat': 'hh:mm'}),
+         default = deferred_default_end_time,
+    )

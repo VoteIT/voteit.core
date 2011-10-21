@@ -125,13 +125,12 @@ class PollView(object):
     def poll_raw_data(self):
         """ View for all ballots. See intefaces.IPollPlugin.render_raw_data
         """
-        
         #Poll closed?
         if self.context.get_workflow_state() != 'closed':
             self.api.flash_messages.add("Poll not closed yet", type='error')
             url = resource_url(self.context, self.request)
             return HTTPFound(location=url)
-        
+
         #This will generate a ComponentLookupError if the plugin isn't found,
         #however, that should never happen for a closed poll unless someone
         #removed the plugin.

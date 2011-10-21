@@ -53,7 +53,6 @@ class BaseEdit(object):
             
         form = Form(schema, buttons=(button_add, button_cancel))
         self.api.register_form_resources(form)
-        appstruct = {}
 
         post = self.request.POST
         if 'add' in post:
@@ -90,12 +89,7 @@ class BaseEdit(object):
         #No action - Render add form
         msg = _(u"Add")
         self.api.flash_messages.add(msg, close_button=False)
-        #FIXME: this should probably be handled in a more graceful way, but since almost every content type is added here this must go here
-        if not 'start_time' in appstruct:
-            appstruct['start_time'] = self.api.dt_util.localnow()
-        if not 'end_time' in appstruct:
-            appstruct['end_time'] = self.api.dt_util.localnow() + timedelta(hours=6)
-        self.response['form'] = form.render(appstruct=appstruct)
+        self.response['form'] = form.render()
         return self.response
 
     @view_config(context=IBaseContent, name="edit", renderer=DEFAULT_TEMPLATE, permission=EDIT)
