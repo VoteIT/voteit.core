@@ -85,12 +85,12 @@ class UserTagsView(object):
         response['userids'] = userids
         #This label is for after the listing, could be "4 people like this"
         response['expl_display_name'] = expl_display_name
-        response['tagging_users_url'] =" %s_taggin_users?tag=%s&display_name=%s&expl_display_name=%s" % (resource_url(context, self.request), tag, display_name, expl_display_name)
+        response['tagging_users_url'] =" %s_tagging_users?tag=%s&display_name=%s&expl_display_name=%s" % (resource_url(context, self.request), tag, display_name, expl_display_name)
         
         return render('templates/snippets/user_tag.pt', response, request=self.request)
         
-    @view_config(name="_taggin_users", context=IBaseContent, renderer='templates/snippets/tagging_users.pt', permission=VIEW)
-    def _tagging_users(self):
+    @view_config(name="_tagging_users", context=IBaseContent, renderer='templates/snippets/tagging_users.pt', permission=VIEW)
+    def tagging_users(self):
         # FIXME: the template needs to be styled som more
         context = self.request.context
 
