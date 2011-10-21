@@ -65,6 +65,12 @@ class BaseContent(BaseFolder, SecurityAware):
 
     def set_field_appstruct(self, values, notify=True, mark_modified=True):
         """ Notify with voteit.core.events.ObjectUpdatedEvent too. """
+        #Remove restricted keys, in case they're present
+        #This might be changed to raise an error instead in time
+        for restricted_key in RESTRICTED_KEYS:
+            if restricted_key in values:
+                del values[restricted_key]
+        
         updated = super(BaseContent, self).set_field_appstruct(values, notify=notify, mark_modified=mark_modified)
         if updated and notify:
             objectEventNotify(ObjectUpdatedEvent(self, indexes=updated, metadata=True))

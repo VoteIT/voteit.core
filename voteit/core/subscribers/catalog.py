@@ -35,9 +35,12 @@ def object_updated(obj, event):
         IObjectUpdatedEvent has attributes indexes and metadata to avoid updating catalog if it's not needed.
     """
     root = find_interface(obj, ISiteRoot)
-    indexes = getattr(event, 'indexes', ())
+    indexes = set()
+    for key in getattr(event, 'indexes', ()):
+        if key in root.catalog:
+            indexes.add(key)
     metadata = getattr(event, 'metadata', True)
-    reindex_object(root.catalog, obj, indexes=indexes, metadata=metadata)
+    reindex_object(root.catalog, obj, indexes = indexes, metadata = metadata)
 
 @subscriber([IBaseContent, IObjectWillBeRemovedEvent])
 def object_removed(obj, event):

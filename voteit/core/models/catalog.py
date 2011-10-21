@@ -147,7 +147,7 @@ def index_object(catalog, obj):
         catalog.document_map.add_metadata(obj_id, metadata())
 
 
-def reindex_object(catalog, obj, indexes=(), metadata=True):
+def reindex_object(catalog, obj, indexes = (), metadata = True):
     """ Reindex an object and update metadata.
         It's possible to not update metadata and to only update some indexes.
     """
