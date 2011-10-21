@@ -113,33 +113,33 @@ $(document).ready(function() {
  */
 $(document).ready(function() {
     $('#navigation .toggle_minimize').live('click', function(event) {
-		min_parent = $(this).parents('.toggle_area');
-		// set cookie for opened or closed
+        min_parent = $(this).parents('.toggle_area');
+        // set cookie for opened or closed
         var cookie_id = min_parent.attr('id');
         if (min_parent.hasClass('toggle_opened')) {
             $.cookie(cookie_id, 1);
         } else {
             $.cookie(cookie_id, null);
-		    location.reload();
+            location.reload();
         }
-		// Set parent class as opened or closed
-		min_parent.toggleClass('toggle_opened').toggleClass('toggle_closed');
+        // Set parent class as opened or closed
+        min_parent.toggleClass('toggle_opened').toggleClass('toggle_closed');
     })
 });
 
 /* Poll result */
 $(document).ready(function() {
     $('#polls .toggle_minimize').live('click', function(event) {
-		min_parent = $(this).parents('.toggle_area');
-		// set cookie for opened or closed
+        min_parent = $(this).parents('.toggle_area');
+        // set cookie for opened or closed
         var cookie_id = min_parent.attr('id');
         if (min_parent.hasClass('toggle_opened')) {
             $.cookie(cookie_id, 1);
         } else {
             $.cookie(cookie_id, null);
         }
-		// Set parent class as opened or closed
-		min_parent.toggleClass('toggle_opened').toggleClass('toggle_closed');
+        // Set parent class as opened or closed
+        min_parent.toggleClass('toggle_opened').toggleClass('toggle_closed');
     })
 });
 
@@ -152,9 +152,9 @@ $(document).ready(function() {
         });
         $(this).qtip({
             content: { url: this.href,
-			           title: {text: voteit.translation['user-info'],
-					           button: voteit.translation['close']}
-			 },
+                       title: {text: voteit.translation['user-info'],
+                               button: voteit.translation['close']}
+             },
             show: 'click',
             hide: 'unfocus',
             position: {
@@ -186,9 +186,9 @@ $(document).ready(function() {
         });
         $(this).qtip({
             content: { url: this.href,
-			           title: {text: voteit.translation['more-tag-list'],
-					           button: voteit.translation['close']}
-			 },
+                       title: {text: voteit.translation['more-tag-list'],
+                               button: voteit.translation['close']}
+             },
             show: 'click',
             hide: 'unfocus',
             position: {
