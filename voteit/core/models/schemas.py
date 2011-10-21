@@ -5,6 +5,7 @@ from pyramid.exceptions import Forbidden
 
 from voteit.core import VoteITMF as _
 
+#FIXME: Should this be here?
 
 button_add = deform.Button('add', _(u"Add"))
 button_cancel = deform.Button('cancel', _(u"Cancel"))

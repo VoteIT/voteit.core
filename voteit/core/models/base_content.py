@@ -118,20 +118,19 @@ class BaseContent(BaseFolder, SecurityAware):
 
     def get_content(self, content_type=None, iface=None, states=None, sort_on=None, sort_reverse=False, limit=None):
         """ See IBaseContent """
-        results = set()
-
+        results = []
         for candidate in self.values():
-            
+
             #Specific content_type?
             if content_type is not None:
                 if getattr(candidate, 'content_type', '') != content_type:
                     continue
-            
+
             #Specific interface?
             if iface is not None:
                 if not iface.providedBy(candidate):
                     continue
-            
+
             #Specific workflow state?
             if states is not None:
                 #All objects might not have a workflow. In that case they won't have the method get_workflow_state
@@ -148,17 +147,14 @@ class BaseContent(BaseFolder, SecurityAware):
                 except AttributeError:
                     continue
             
-            results.add(candidate)
+            results.append(candidate)
 
-        if sort_on is None:
-            return tuple(results)
-        
-        def _sorter(obj):
-            return getattr(obj, sort_on)
-
-        results = tuple(sorted(results, key = _sorter, reverse = sort_reverse))
+        if sort_on:
+            def _sorter(obj):
+                return getattr(obj, sort_on)
+            results = sorted(results, key = _sorter, reverse = sort_reverse)
         
         if limit:
             results = results[-limit:]
 
-        return results
+        return tuple(results)
