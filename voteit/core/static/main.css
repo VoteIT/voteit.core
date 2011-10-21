@@ -778,3 +778,21 @@ div.star-rating{background:transparent!important;overflow:hidden!important}
 .tagging_users img {
     float: left;
 }
+
+/* qtip styling */
+.moretag-popup .ui-tooltip-content,
+.inlineinfo-popup .ui-tooltip-content {
+	border-width: 2px;
+	-webkit-border-bottom-right-radius: 5px;
+	-moz-border-bottom-right-radius: 5px;
+	border-bottom-right-radius: 5px;
+		-webkit-border-bottom-left-radius: 5px;
+	-moz-border-bottom-left-radius: 5px;
+	border-bottom-left-radius: 5px;
+	text-align: justify;
+}
+
+.moretag-popup.ui-tooltip, 
+.inlineinfo-popup.ui-tooltip {
+	min-width: 500px;
+}
