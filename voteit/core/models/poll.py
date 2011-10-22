@@ -243,7 +243,7 @@ def upcoming_poll_callback(content, info):
     """ Workflow callback when a poll is set in the upcoming state.
         This method sets all proposals in the locked for vote-state.
     """
-    request = get_current_request() #This is an exception - won't be called many times.
+    request = get_current_request()
     count = 0
     for proposal in content.get_proposal_objects():
         if 'voting' in [x['name'] for x in proposal.get_available_workflow_states(request)]:
@@ -267,8 +267,8 @@ def ongoing_poll_callback(context, info):
         This method will raise an exeption if the parent agenda item is not ongoing or if there is no propsoals in the poll.
     """
     ai = find_interface(context, IAgendaItem)
-    if ai and ai.get_workflow_state() != 'ongoing':
-        raise Exception("You can't set a poll to ongoing if the agenda item is not ongoing")
+    if ai.get_workflow_state() != 'ongoing':
+        raise WorkflowError("You can't set a poll to ongoing if the agenda item is not ongoing")
 
     if not context.proposal_uids:
         raise ValueError('A poll with no proposal can not be set to ongoing')
@@ -292,11 +292,9 @@ def email_voters_about_ongoing_poll(poll, request=None):
     users = root['users']
     email_addresses = set()
     for userid in userids:
-        user = users.get(userid)
-        #In case user is deleted
-        if not user:
-            continue
-        email = user.get_field_value('email')
+        #In case user is deleted, they won't have the required permission either
+        #find_authorized_userids loops through the users folder
+        email = users[userid].get_field_value('email')
         if email:
             email_addresses.add(email)
 
