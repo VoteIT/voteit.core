@@ -1,9 +1,6 @@
-from datetime import timedelta
 from datetime import datetime
-import pytz
 
-from pyramid.i18n import get_locale_name
-from pyramid.threadlocal import get_current_request
+import pytz
 from babel.dates import format_date
 from babel.dates import format_time
 from babel.dates import format_datetime
@@ -22,6 +19,7 @@ class DateTimeUtil(object):
     timezone_name = None
 
     def __init__(self, locale='en', timezone_name='Europe/Stockholm'):
+        #FIXME: get default timezone instead of Europe/Stockholm
         self.set_locale(locale)
         self.timezone = pytz.timezone(timezone_name)
 
@@ -101,19 +99,22 @@ class DateTimeUtil(object):
             pretty string like 'an hour ago', 'Yesterday', '3 months ago',
             'just now', etc
         """
-        time = self.tz_to_utc(time)
+        if isinstance(time, int):
+            time = datetime.fromtimestamp(time, pytz.utc)
+        #Check if timezone is naive, convert
+        if time.tzinfo is None:
+            raise ValueError("Not possible to use relative_time_format with timezone naive datetimes.")
+        elif time.tzinfo is not pytz.utc:
+            time = self.tz_to_utc(time)
+
         now = self.utcnow()
-        if type(time) is int:
-            diff = now - datetime.fromtimestamp(time)
-        elif isinstance(time, datetime):
-            diff = now - time 
-        elif not time:
-            diff = now - now #Haha :)
+        diff = now - time
         second_diff = diff.seconds
         day_diff = diff.days
 
         if day_diff < 0:
-            return ''
+            #FIXME: Shouldn't future be handled as well? :)
+            return self.dt_format(time)
 
         if day_diff == 0:
             if second_diff < 10:

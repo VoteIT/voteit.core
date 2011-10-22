@@ -1,9 +1,9 @@
 import unittest
 from datetime import datetime
 from datetime import timedelta
+from calendar import timegm
+
 import pytz
-
-
 from pyramid.i18n import get_localizer
 from pyramid import testing
 from zope.interface.verify import verifyObject
@@ -149,3 +149,33 @@ class DateTimeUtilityTests(unittest.TestCase):
         #After about 1 day, return regular date time format
         date = obj.localize( datetime.strptime('1999-08-14 18:12', "%Y-%m-%d %H:%M") )
         self.assertEqual(fut(date), u'8/14/99 6:12 PM')
+
+    def test_relative_time_format_from_timestamp(self):
+        request = testing.DummyRequest()
+        locale = get_localizer(request)
+        trans = locale.translate
+
+        obj = self._make_obj()
+        time = obj.utcnow() - timedelta(minutes=5)
+        timestamp = timegm(time.timetuple())
+        fut = obj.relative_time_format
+        out = fut(timestamp)
+        self.assertEqual(trans(out), u"5 minutes ago")
+
+    def test_relative_time_format_no_tz_set(self):
+        obj = self._make_obj()
+        self.assertRaises(ValueError, obj.relative_time_format, datetime.now())
+
+    def test_relative_time_format_future(self):
+        """ Time in future isn't supported yet, so a regular displayed date is returned """
+        request = testing.DummyRequest()
+        locale = get_localizer(request)
+        trans = locale.translate
+
+        obj = self._make_obj()
+        now = obj.utcnow()
+        time = now + timedelta(minutes = 10)
+
+        fut = obj.relative_time_format
+        out = fut(time)
+        self.assertEqual(fut(time), obj.dt_format(time))
