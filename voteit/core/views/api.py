@@ -52,7 +52,6 @@ class APIView(object):
         self.authn_policy = request.registry.getUtility(IAuthenticationPolicy)
         self.authz_policy = request.registry.getUtility(IAuthorizationPolicy)
 
-        self.lineage = lineage(context)
         self.inside = inside
         self.dt_util = request.registry.getUtility(IDateTimeUtil)
 
