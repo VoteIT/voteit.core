@@ -34,4 +34,3 @@ class FlashMessages(object):
     def inline(self):
         response = dict(messages = self._get_messages(),)
         return response
-

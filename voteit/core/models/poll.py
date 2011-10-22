@@ -1,16 +1,17 @@
+from BTrees.OIBTree import OIBTree
 from zope.interface import implements
+from zope.component import getAdapter
 from pyramid.traversal import find_interface
 from pyramid.traversal import find_root
 from pyramid.security import Allow
 from pyramid.security import DENY_ALL
-from BTrees.OIBTree import OIBTree
 from pyramid.threadlocal import get_current_request
-from repoze.workflow.workflow import WorkflowError
-from zope.component import getAdapter
 from pyramid.url import resource_url
 from pyramid_mailer import get_mailer
 from pyramid_mailer.message import Message
 from pyramid.renderers import render
+from pyramid.i18n import get_localizer
+from repoze.workflow.workflow import WorkflowError
 from betahaus.pyracont.decorators import content_factory
 
 from voteit.core import security
@@ -25,7 +26,6 @@ from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IPollPlugin
 from voteit.core.models.interfaces import IVote
 from voteit.core.views.flash_messages import FlashMessages
-from pyramid.i18n import get_localizer
 
 
 _UPCOMING_PERMS = (security.VIEW,
@@ -156,23 +156,26 @@ class Poll(BaseContent, WorkflowAware, UnreadAware):
 
     def close_poll(self):
         """ Close the poll. """
-        request = get_current_request() #Since this is only used once per poll it should be okay
-        locale = get_localizer(request)
-
-        fm = FlashMessages(request)
-
         self._calculate_ballots()
-
         poll_plugin = self.get_poll_plugin()
         poll_plugin.handle_close()
+        uid_states = poll_plugin.change_states_of()
+        if uid_states:
+            self.adjust_proposal_states(uid_states)
 
-        handle_uids = poll_plugin.change_states_of()
+    def adjust_proposal_states(self, uid_states, request = None):
+        assert isinstance(uid_states, dict)
+        
+        if request is None:
+            request = get_current_request()
+        locale = get_localizer(request)
 
-        for (uid, state) in handle_uids.items():
+        fm = FlashMessages(request)        
+
+        for (uid, state) in uid_states.items():
             if uid not in self.proposal_uids:
                 raise ValueError("The poll plugins close() method returned a uid that doesn't exist in this poll.")
             proposal = self.get_proposal_by_uid(uid)
-
             #Adjust state?
             prop_wf_state = proposal.get_workflow_state()
             #Message strings can't contain other message strings, so we'll translate the state first
@@ -257,7 +260,8 @@ def upcoming_poll_callback(content, info):
                 default=u"${count} selected proposals were set in the 'locked for vote' state. They can no longer be edited or retracted by normal users.",
                 mapping={'count':count})
         fm.add(msg)
-        
+
+
 def ongoing_poll_callback(context, info):
     """ Workflow callback when a poll is set in the ongoing state.
         This method will raise an exeption if the parent agenda item is not ongoing or if there is no propsoals in the poll.
