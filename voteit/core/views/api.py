@@ -16,6 +16,7 @@ from pyramid.i18n import get_locale_name
 from webhelpers.html.converters import nl2br
 from betahaus.pyracont.interfaces import IContentFactory
 from betahaus.pyracont.factories import createSchema
+from betahaus.viewcomponent import render_view_group
 
 from voteit.core import VoteITMF as _
 from voteit.core import security
@@ -377,3 +378,6 @@ class APIView(object):
 
     def get_js_config_template(self):
         return render('templates/snippets/config.js.pt', {}, request=self.request)
+
+    def render_view_group(self, context, request, name):
+        return render_view_group(context, request, name, api=self)

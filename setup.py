@@ -27,6 +27,7 @@ requires = (
     'lingua',
     'httplib2',
     'betahaus.pyracont',
+    'betahaus.viewcomponent',
     'pyramid_debugtoolbar', #Won't be active unless included
     )
 

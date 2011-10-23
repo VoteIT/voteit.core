@@ -65,6 +65,7 @@ def required_components(config):
                                 'colander:locale/',
                                 '%s:locale/' % PROJECTNAME,)
     config.scan(PROJECTNAME)
+    config.include(adjust_view_component_order)
 
 
 def register_poll_plugins(config):
@@ -104,3 +105,14 @@ def appmaker(zodb_root):
         import transaction
         transaction.commit()
     return zodb_root['app_root']
+
+
+def adjust_view_component_order(config):
+    from betahaus.viewcomponent.interfaces import IViewGroup
+    prefix = "vieworder."
+    lprefix = len(prefix)
+    for (k, v) in config.registry.settings.items():
+        if k.startswith(prefix):
+            name = k[lprefix:]
+            util = config.registry.getUtility(IViewGroup, name = name)
+            util.order = v.strip().splitlines()
