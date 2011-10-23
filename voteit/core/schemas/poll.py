@@ -10,7 +10,7 @@ from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IProposal
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IPollPlugin
-from voteit.core.fields import TZDateTime
+from voteit.core.schemas.tzdatetime import TZDateTime
 from voteit.core.schemas.common import deferred_default_end_time
 from voteit.core.schemas.common import deferred_default_start_time
 

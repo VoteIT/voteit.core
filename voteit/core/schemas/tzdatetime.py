@@ -32,6 +32,7 @@ class TZDateTime(SchemaType):
                             mapping={'val':appstruct})
                           )
         #FIXME: Don't use strftime, util already has a method for that
+        #FIXME: Output format must be taken from the current locale
         return dt_util.utc_to_tz(appstruct).strftime('%Y-%m-%d %H:%M')
 
     def deserialize(self, node, cstruct):
@@ -40,6 +41,7 @@ class TZDateTime(SchemaType):
             return null
 
         try:
+            #FIXME: Imput format must be from the current locale
             result = datetime.datetime.strptime(cstruct, "%Y-%m-%dT%H:%M")
 
             # python's datetime doesn't deal correctly with DST, so we have

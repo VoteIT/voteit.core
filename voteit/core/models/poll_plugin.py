@@ -24,30 +24,30 @@ class PollPlugin(object):
         """ Return the schema of how a vote should be structured.
             This is used to render a voting form.
         """
-        raise NotImplementedError("Must be provided by subclass")
+        raise NotImplementedError("Must be provided by subclass") # pragma : no cover
     
     def get_vote_class(self):
         """ Get the vote class to use for this poll. Normally it's the
             voteit.core.models.vote.Vote class.
         """
-        return Vote
+        return Vote # pragma : no cover
 
     def get_settings_schema(self):
         """ Get an instance of the schema used to render a form for editing settings.
             If this is None, this poll method doesn't have any settings.
         """
-        return None
+        return None # pragma : no cover
 
     def handle_close(self):
         """ Handle closing of the poll.
         """
-        raise NotImplementedError("Must be provided by subclass")
+        raise NotImplementedError("Must be provided by subclass") # pragma : no cover
 
     def render_result(self, request):
         """ Return rendered html with result display. Called by the poll view
             when the poll has finished.
         """
-        raise NotImplementedError("Must be provided by subclass")
+        raise NotImplementedError("Must be provided by subclass") # pragma : no cover
 
     def change_states_of(self):
         """ This gets called when a poll has finished.
@@ -57,7 +57,7 @@ class PollPlugin(object):
             and you have to do it manually.
             It's not required to return anything.
         """
-        return {}
+        return {} # pragma : no cover
 
     def render_raw_data(self):
         """ Return rendered html with raw data from this poll.
@@ -71,4 +71,4 @@ class PollPlugin(object):
             - pyramid.renderers.render
             - pyramid.response.Response
         """
-        raise NotImplementedError("Must be provided by subclass")
+        raise NotImplementedError("Must be provided by subclass") # pragma : no cover

@@ -4,7 +4,7 @@ import deform
 
 from voteit.core import VoteITMF as _
 from voteit.core.validators import html_string_validator
-from voteit.core.fields import TZDateTime
+from voteit.core.schemas.tzdatetime import TZDateTime
 from voteit.core.schemas.common import deferred_default_start_time
 
 
