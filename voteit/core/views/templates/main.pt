@@ -58,7 +58,7 @@
             <div id="logo-meeting-wrapper">
                 <a id="logo-space"
                    tal:attributes="href api.resource_url(api.root, request)">
-                    <img tal:replace="structure api.logo_image_tag()" />
+                    <img tal:replace="structure api.render_single_view_component(context, request, 'main', 'logo_tag')" />
                 </a>
                 
                 <h1 id="meeting-name-space" tal:condition="api.meeting">

@@ -17,11 +17,11 @@ def action_register(context, request, va, **kw):
 @view_action('global_actions_authenticated', 'user_profile')
 def user_profile_action(context, request, va, **kw):
     api = kw['api']
-    return u"""<li><a href="%s" class="user icon"><span>%s</span>""" % (api.user_profile_url, api.user_profile.title)
+    return u"""<li><a href="%s" class="user icon"><span>%s</span></a></li>""" % (api.user_profile_url, api.user_profile.title)
 
 
 @view_action('global_actions_authenticated', 'logout')
 def logout_action(context, request, va, **kw):
     link = request.application_url + '/@@logout'
     logout = _(u"Logout")
-    return u"""<li><a href="%s" class="logout icon"><span>%s</span>""" % (link, logout)
+    return u"""<li><a href="%s" class="logout icon"><span>%s</span></a></li>""" % (link, logout)

@@ -17,6 +17,7 @@ from webhelpers.html.converters import nl2br
 from betahaus.pyracont.interfaces import IContentFactory
 from betahaus.pyracont.factories import createSchema
 from betahaus.viewcomponent import render_view_group
+from betahaus.viewcomponent.interfaces import IViewGroup
 
 from voteit.core import VoteITMF as _
 from voteit.core import security
@@ -82,11 +83,6 @@ class APIView(object):
     @reify
     def user_tags_view(self):
         return UserTagsView(self.request)
-
-    def logo_image_tag(self):
-        """ Should handle customisations later. """
-        url = "%s/static/images/logo.png" % self.request.application_url
-        return '<img src="%(url)s" height="%(h)s" width="%(w)s" id="logo" />' % {'url':url, 'h':31, 'w':85}
 
     def register_form_resources(self, form):
         """ Append form resources if they don't already exist in self.form_resources """
@@ -381,3 +377,7 @@ class APIView(object):
 
     def render_view_group(self, context, request, name):
         return render_view_group(context, request, name, api=self)
+
+    def render_single_view_component(self, context, request, group, key):
+        util = request.registry.getUtility(IViewGroup, name = group)
+        return util[key](context, request, api = self)
