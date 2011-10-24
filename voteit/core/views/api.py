@@ -375,9 +375,9 @@ class APIView(object):
     def get_js_config_template(self):
         return render('templates/snippets/config.js.pt', {}, request=self.request)
 
-    def render_view_group(self, context, request, name):
-        return render_view_group(context, request, name, api=self)
+    def render_view_group(self, context, request, name, **kw):
+        return render_view_group(context, request, name, api=self, **kw)
 
-    def render_single_view_component(self, context, request, group, key):
+    def render_single_view_component(self, context, request, group, key, **kw):
         util = request.registry.getUtility(IViewGroup, name = group)
-        return util[key](context, request, api = self)
+        return util[key](context, request, api = self, **kw)

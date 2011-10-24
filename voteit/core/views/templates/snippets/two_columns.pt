@@ -1,0 +1,16 @@
+<tal:main
+    xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+    i18n:domain="voteit.core">
+<div class="col-50-50">
+    <div id="left" class="column column-1">
+        <div class="content_wrapper">
+           <span tal:replace="structure column_one">col1</span>
+        </div>
+    </div>
+    <div id="right" class="column column-2">
+        <div class="content_wrapper">
+           <span tal:replace="structure column_two">col2</span>
+        </div>
+    </div> <!-- right column-->
+</div>
+</tal:main>

@@ -27,14 +27,12 @@
             <span i18n:translate="">Invite participants</span>
         </a>
     </div>
-
-
-	<div metal:fill-slot="left">
-        <div class="description" tal:condition="context.description" tal:content="structure context.description">Description</div>
-
-	</div>
 	
-	<div metal:fill-slot="right">
+	<div metal:fill-slot="content" id="content">
+       <tal:columns replace="structure meeting_columns">Columns</tal:columns>
+    </div>
+	
+	<!-- FIXME: Remove -->
 	    <div id="meeting_overview">
 	    	
             <div tal:define="state string:closed;
@@ -59,6 +57,5 @@
             </div>
 
         </div>
-	</div>
 </body>
 </html>

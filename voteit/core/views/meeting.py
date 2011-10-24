@@ -17,6 +17,7 @@ from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.schemas import add_csrf_token
+from voteit.core.models.schemas import button_save
 from voteit.core.models.schemas import button_add
 from voteit.core.models.schemas import button_cancel
 from voteit.core.models.schemas import button_resend
@@ -62,6 +63,13 @@ class MeetingView(BaseView):
         self.response['over_limit'] = over_limit
         self.response['get_polls'] = self._get_polls
         
+        colkwargs = dict(group_name = 'meeting_widgets',
+                         col_one = self.context.get_field_value('meeting_left_widget', 'description_richtext'),
+                         col_two = self.context.get_field_value('meeting_right_widget', None),
+                         )
+        self.response['meeting_columns'] = self.api.render_single_view_component(self.context, self.request,
+                                                                                 'main', 'columns',
+                                                                                 **colkwargs)
         return self.response
 
     def _get_polls(self, agenda_item):
@@ -218,7 +226,7 @@ class MeetingView(BaseView):
                 emails = appstruct['emails']
             except ValidationFailure, e:
                 self.response['form'] = e.render()
-
+                return self.response
         if emails and 'resend' in post:
             for email in emails:
                 self.context.invite_tickets[email].send(self.request)
@@ -249,6 +257,41 @@ class MeetingView(BaseView):
         #No action - Render add form
         msg = _(u"Current invitations")
         self.api.flash_messages.add(msg, close_button=False)
-
         self.response['form'] = form.render()
+        return self.response
+
+    @view_config(name="manage_layout", context=IMeeting, renderer="templates/base_edit.pt", permission=security.MODERATE_MEETING)
+    def manage_layout(self):
+        """ Manage layout
+        """
+        schema = createSchema('LayoutSchema').bind(context=self.context, request=self.request)
+        add_csrf_token(self.context, self.request, schema)
+            
+        form = Form(schema, buttons=(button_save, button_cancel,))
+        self.api.register_form_resources(form)
+
+        post = self.request.POST
+
+        if 'save' in post:
+            controls = post.items()
+            try:
+                appstruct = form.validate(controls)
+            except ValidationFailure, e:
+                self.response['form'] = e.render()
+                return self.response
+            self.context.set_field_appstruct(appstruct)
+            url = resource_url(self.context, self.request)
+            return HTTPFound(location=url)
+
+        if 'cancel' in post:
+            self.api.flash_messages.add(_(u"Canceled"))
+
+            url = resource_url(self.context, self.request)
+            return HTTPFound(location=url)
+
+        #No action - Render form
+        appstruct = self.context.get_field_appstruct(schema)
+        msg = _(u"Layout")
+        self.api.flash_messages.add(msg, close_button=False)
+        self.response['form'] = form.render(appstruct)
         return self.response
