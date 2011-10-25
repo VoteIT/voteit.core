@@ -29,6 +29,7 @@ class MeetingSchema(colander.MappingSchema):
                                             default = u"noreply@somehost.voteit",
                                             validator = colander.All(colander.Email(msg = _(u"Invalid email address.")), html_string_validator,),)
 
+
 #FIXME: Captcha add schema
 #class CaptchaAddMeetingSchema(MeetingSchema):
 #

@@ -65,6 +65,7 @@ def required_components(config):
                                 'colander:locale/',
                                 '%s:locale/' % PROJECTNAME,)
     config.scan(PROJECTNAME)
+    config.include(adjust_default_view_component_order)
     config.include(adjust_view_component_order)
 
 
@@ -116,3 +117,10 @@ def adjust_view_component_order(config):
             name = k[lprefix:]
             util = config.registry.getUtility(IViewGroup, name = name)
             util.order = v.strip().splitlines()
+
+def adjust_default_view_component_order(config):
+    from betahaus.viewcomponent.interfaces import IViewGroup
+    from voteit.core.view_component_order import DEFAULT_VC_ORDER
+    for (name, items) in DEFAULT_VC_ORDER:
+        util = config.registry.getUtility(IViewGroup, name = name)
+        util.order = items

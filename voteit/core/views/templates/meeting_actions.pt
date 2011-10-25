@@ -56,6 +56,10 @@
                     <a tal:attributes="href api.resource_url(api.meeting, request) + '@@logs'"
                        i18n:translate="">Meeting actions log</a>
                 </li>
+                <li>
+                    <a tal:attributes="href api.resource_url(api.meeting, request) + '@@manage_layout'"
+                       i18n:translate="">Layout and widgets</a>
+                </li>
             </ul>
         </li>
     </tal:meeting>
