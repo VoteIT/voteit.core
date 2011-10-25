@@ -11,11 +11,15 @@
         </metal:page_title>
     <meta name="keywords" content="python web application" />
     <meta name="description" content="pyramid web application" />
+	
+	<!-- FIXME: This needs to be cleaned up. Perhaps using fanstatic, or tweens? -->
     
     <link href="${request.application_url}/static/reset.css" rel="stylesheet" type="text/css" />
     <link href="${request.application_url}/static/main.css" rel="stylesheet" type="text/css" />
     <link href="${request.application_url}/static/jquery.qtip.css" rel="stylesheet" type="text/css" />
     <link href="${request.application_url}/static/smoothness/jquery-ui-1.8.16.custom.css" rel="stylesheet" type="text/css" />
+	<!-- FIXME: Many of the deform includes are redundant -->
+    <link href="${request.application_url}/deform/css/form.css" rel="stylesheet" type="text/css" />
     <script type="text/javascript" tal:content="structure api.get_js_config_template()">js config code</script>
     <script type="text/javascript" src="${request.application_url}/deform/scripts/jquery-1.4.2.min.js"></script>
     <script type="text/javascript" src="${request.application_url}/static/jquery-ui-1.8.15.custom.min.js"></script>
@@ -69,8 +73,8 @@
         </div>
 
         <div id="rightcol-wrapper"><div id="leftcol-wrapper">
-        <div id="navigation">
-            <div tal:replace="structure api.navigation_html">Navigation</div>
+        <div id="navigation" tal:content="structure api.render_single_view_component(context, request, 'main', 'navigation')">
+            Meeting Navigation
         </div>
 
         <div id="main_window">

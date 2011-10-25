@@ -9,6 +9,7 @@ from pyramid.location import inside
 from pyramid.traversal import find_interface
 from pyramid.traversal import find_root
 from pyramid.traversal import resource_path
+from pyramid.traversal import find_resource
 from pyramid.interfaces import IAuthenticationPolicy
 from pyramid.interfaces import IAuthorizationPolicy
 from pyramid.decorator import reify
@@ -21,6 +22,7 @@ from betahaus.viewcomponent.interfaces import IViewGroup
 
 from voteit.core import VoteITMF as _
 from voteit.core import security
+from voteit.core.models.interfaces import IBaseContent
 from voteit.core.models.interfaces import IDateTimeUtil
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.views.flash_messages import FlashMessages
@@ -66,7 +68,7 @@ class APIView(object):
         
         #Used by deform to keep track for form resources
         self.form_resources = {}
-        self.navigation_html = self._get_navigation()
+        #self.navigation_html = self._get_navigation()
 
         #Main macro
         self.main_template = get_renderer('templates/main.pt').implementation()
@@ -150,62 +152,6 @@ class APIView(object):
             return
         return resource_url(self.meeting, self.request)
 
-    def _get_navigation(self):
-        """ Get navigatoin. Don't use this method directly, instead get
-            the results from self.navigation_html.
-        """
-
-        response = {}
-        response['api'] = self
-        response['nav_section'] = self._get_navigation_section
-        
-        #Login form if user isn't authenticated
-        if not self.userid:
-            #FIXME: Ticket system makes it a bit of a hassle to make login detached from registration.
-            #We'll do that later. For now, let's just check if user is on login or registration page
-            url = self.request.path_url
-            if url.endswith('login') or url.endswith('register'):
-                response['login_form'] = u""
-            else:
-                login_schema = createSchema('LoginSchema').bind(context=self.context, request=self.request)
-                action_url = resource_url(self.root, self.request) + 'login'
-                login_form = Form(login_schema, buttons=(button_login,), action=action_url)
-                self.register_form_resources(login_form)
-                response['login_form'] = login_form.render()
-
-        if self.meeting:
-            #In meeting context
-            response['is_moderator'] = self.show_moderator_actions
-            if response['is_moderator']:
-                response['sections'] = MODERATOR_SECTIONS
-            else:
-                response['sections'] = REGULAR_SECTIONS
-            closed_sections = set()
-            for section in response['sections']:
-                if self.request.cookies.get("%s-%s" % (self.meeting.uid, section)):
-                    closed_sections.add(section)
-            response['closed_sections'] = closed_sections
-        else:
-            #Not in meeting context
-            response['is_moderator'] = False
-
-        #Outside of meeting context and authenticated
-        if self.userid and not self.meeting:
-            response['sections'] = REGULAR_SECTIONS
-            closed_sections = set()
-            for section in response['sections']:
-                if self.request.cookies.get("%s-%s" % (self.root.uid, section)):
-                    closed_sections.add(section)
-            response['closed_sections'] = closed_sections
-
-        return render('templates/navigation.pt', response, request=self.request)
-
-    def _get_navigation_section(self, contents):
-        response = {}
-        response['api'] = self
-        response['contents'] = contents
-        return render('templates/snippets/navigation_section.pt', response, request=self.request)
-
     def get_global_actions(self, context, request):
         response = {}
         response['api'] = self
@@ -251,7 +197,10 @@ class APIView(object):
 
     def get_moderator_actions(self, context, request):
         """ A.k.a. the cogwheel-menu. """
-
+        #If context is a brain, get the object
+        if not IBaseContent.providedBy(context):
+            #Assume brain
+            context = find_resource(self.root, context['path'])
         response = {}
         response['api'] = self
         response['context'] = context
@@ -259,7 +208,6 @@ class APIView(object):
             response['states'] = context.get_available_workflow_states(request)
         response['context_has_permission'] = self.context_has_permission
         response['is_moderator'] = self.context_has_permission(security.MODERATE_MEETING, context)
-
         return render('templates/moderator_actions.pt', response, request=request)
         
     def get_time_created(self, context):
@@ -276,13 +224,11 @@ class APIView(object):
         """ Return template for a set of creators.
             The content of creators should be userids
         """
-        
         users = set()
         for userid in creators:
             user = self.get_user(userid)
             if user:
                 users.add(user)
-        
         response = {}
         response['users'] = users
         response['portrait'] = portrait
