@@ -2,7 +2,6 @@ import urllib
 
 from deform import Form
 from deform.exception import ValidationFailure
-from pyramid.renderers import get_renderer
 from pyramid.security import has_permission
 from pyramid.view import view_config
 from pyramid.httpexceptions import HTTPFound
@@ -13,7 +12,6 @@ from betahaus.pyracont.factories import createSchema
 from voteit.core import security
 from voteit.core import VoteITMF as _
 from voteit.core.views.base_view import BaseView
-from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.schemas import add_csrf_token
@@ -33,34 +31,14 @@ class MeetingView(BaseView):
             it should allow users to request access if unauthorized is raised.
         """
         if not has_permission(security.VIEW, self.context, self.request):
-            self.api.flash_messages.add(_(u"You're not allowed access to this meeting."), type='error')
-            
+            if self.api.userid:
+                msg = _(u"You're not allowed access to this meeting.")
+            else:
+                msg = _(u"You're not logged in - before you can access meetings you need to do that.")
+            self.api.flash_messages.add(msg, type='error')
             url = self.api.resource_url(self.api.root, self.request)
             return HTTPFound(location = url)
-        
-        self.response['check_section_closed'] = self._is_section_closed
-        self.response['section_overview_macro'] = self.section_overview_macro
-        
-        states = ('ongoing', 'upcoming', 'closed')
-        over_limit = {}
-        agenda_items = {}
-        for state in states:
-            if 'log_'+state in self.request.GET and self.request.GET['log_'+state] == 'all':
-                limit = 0
-            else:
-                limit = 5
-            ais = self.context.get_content(iface=IAgendaItem, states=state, sort_on='start_time')
-            if limit and len(ais) > limit:
-                #Over limit
-                over_limit[state] = len(ais) - limit
-                agenda_items[state] = ais[-limit:] #Only the 5 last entries
-            else:
-                #Not over limit
-                over_limit[state] = 0
-                agenda_items[state] = ais
-        
-        self.response['agenda_items'] = agenda_items
-        self.response['over_limit'] = over_limit
+
         self.response['get_polls'] = self._get_polls
         
         colkwargs = dict(group_name = 'meeting_widgets',
@@ -74,13 +52,6 @@ class MeetingView(BaseView):
 
     def _get_polls(self, agenda_item):
         return agenda_item.get_content(iface=IPoll, states=('upcoming', 'ongoing', 'closed'), sort_on='start_time')
-
-    @property
-    def section_overview_macro(self):
-        return get_renderer('templates/macros/meeting_overview_section.pt').implementation().macros['main']
-
-    def _is_section_closed(self, section):
-        return self.request.cookies.get(section, None)
 
     @view_config(name="participants", context=IMeeting, renderer="templates/participants.pt", permission=security.VIEW)
     def participants_view(self):
