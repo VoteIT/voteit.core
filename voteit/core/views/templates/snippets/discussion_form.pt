@@ -1,0 +1,8 @@
+<tal:main
+    xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+    i18n:domain="voteit.core">
+<div class="discussion_form">
+    <tal:creators tal:replace="structure api.get_creators_info((api.userid, ), request)">Creators</tal:creators>
+    <span tal:replace="structure form">Discussion form</span>
+</div>
+</tal:main>

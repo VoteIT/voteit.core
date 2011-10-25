@@ -11,7 +11,6 @@
 
         <div class="description" tal:condition="context.description" tal:content="structure context.description">Description</div>
 
-
         <div class="moderator-help-buttons"
 		     tal:condition="api.show_moderator_actions and api.context_has_permission('Add Poll', context)">
             <a class="buttonize large" tal:attributes="href api.resource_url(context, request) + '@@add?content_type=Poll'">
@@ -24,27 +23,9 @@
 
     </div> <!-- top_content -->
 
-    <div metal:fill-slot="right" id="discussions">
-        <h2 class="iconpadding discussion"><span i18n:translate="">Discussion</span></h2>
-            
-        <div tal:replace="structure get_discussions()">Discussion listing</div>
+    <div metal:fill-slot="content" id="content">
+       <tal:columns replace="structure ai_columns">Columns</tal:columns>
+    </div>
 
-        <div class="discussion_form" tal:condition="discussion_form|False">
-            <tal:creators tal:replace="structure api.get_creators_info((api.userid, ), request)">Creators</tal:creators>
-            <span tal:replace="structure discussion_form">Discussion form</span>
-        </div>
-    </div> <!-- right_content -->
-
-    <div metal:fill-slot="left" id="proposals">
-        <h2 class="iconpadding proposal"><span i18n:translate="">Proposal</span></h2>
-
-        <div tal:replace="structure get_proposals()">Proposals listing</div>
-        
-        <div class="proposal_form" tal:condition="proposal_form|False">
-            <tal:creators tal:replace="structure api.get_creators_info((api.userid, ), request)">Creators</tal:creators>
-            <span tal:replace="structure proposal_form">Proposal form</span>
-        </div>
-
-    </div> <!-- left_content -->
 </body>
 </html>

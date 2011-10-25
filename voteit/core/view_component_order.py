@@ -1,0 +1,9 @@
+#Default view component order
+
+DEFAULT_VC_ORDER = (
+    ('discussions', ('listing', 'add_form')),
+    ('proposals', ('listing', 'add_form')),
+    ('global_actions_anon', ('login', 'register')),
+    ('global_actions_authenticated', ('user_profile', 'logout')),
+
+)
