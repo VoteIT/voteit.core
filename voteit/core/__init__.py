@@ -18,9 +18,7 @@ def main(global_config, **settings):
         be sure to include the same things at least.
     """
     import voteit.core.patches
-
     config = default_configurator(settings)
-
     config.include(required_components)
     config.include(register_plugins)
     config.hook_zca()
@@ -124,3 +122,15 @@ def adjust_default_view_component_order(config):
     for (name, items) in DEFAULT_VC_ORDER:
         util = config.registry.getUtility(IViewGroup, name = name)
         util.order = items
+
+
+def includeme(config):
+    """ Called when voteit.core is used as a component of another application.
+        It should load its default components, but not make too much assumptions.
+        This is also a good plugin point for other applications integration tests.
+        It's important that hook_zca is run in the calling package, otherwise
+        workflows won't work.
+        Compare with startup in main.
+        Note that you still need to add all the things added in the default_configurator method.
+    """
+    config.include(required_components)
