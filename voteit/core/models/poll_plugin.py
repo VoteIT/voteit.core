@@ -1,5 +1,6 @@
 from zope.interface import implements
 from zope.component import adapts
+from pyramid.response import Response
 
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IPollPlugin
@@ -71,4 +72,4 @@ class PollPlugin(object):
             - pyramid.renderers.render
             - pyramid.response.Response
         """
-        raise NotImplementedError("Must be provided by subclass") # pragma : no cover
+        return Response(unicode(self.context.ballots))
