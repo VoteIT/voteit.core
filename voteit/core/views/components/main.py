@@ -35,14 +35,3 @@ def columns(context, request, *args, **kwargs):
     else:
         response['column_two'] = "Error: Can't find view action '%s' in group '%s'." % (col_two_name, group_name)
     return render('../templates/snippets/two_columns.pt', response, request = request)
-
-
-@view_action('main', 'cogwheel_metadata')
-def cogwheel_menu_metadata(context, request, va, **kwargs):
-    """ Adapted version that will render when context is metadata.
-    """
-    pass
-
-@view_action('main', 'cogwheel')
-def cogwheel_menu(context, request, va, **kwargs):
-    pass

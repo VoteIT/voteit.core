@@ -224,6 +224,7 @@ class APIView(object):
         """ Return template for a set of creators.
             The content of creators should be userids
         """
+        #FIXME: Use view component and catalog query with metadata instead
         users = set()
         for userid in creators:
             user = self.get_user(userid)
