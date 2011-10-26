@@ -3,6 +3,7 @@ from pyramid.renderers import render
 from pyramid.view import view_config
 from pyramid.url import resource_url
 from pyramid.security import has_permission
+from zope.component.interfaces import ComponentLookupError
 
 from voteit.core import VoteITMF as _
 from voteit.core.views.base_view import BaseView
@@ -13,7 +14,6 @@ from voteit.core.models.interfaces import IVote
 from voteit.core.security import VIEW
 from voteit.core.security import ADD_VOTE
 from voteit.core.models.schemas import button_vote
-from zope.component.interfaces import ComponentLookupError
 
 
 class AgendaItemView(BaseView):

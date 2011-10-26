@@ -13,6 +13,7 @@ from pyramid.renderers import render
 from pyramid.i18n import get_localizer
 from repoze.workflow.workflow import WorkflowError
 from betahaus.pyracont.decorators import content_factory
+from pyramid.httpexceptions import HTTPForbidden
 
 from voteit.core import security
 from voteit.core import VoteITMF as _
@@ -268,10 +269,16 @@ def ongoing_poll_callback(context, info):
     """
     ai = find_interface(context, IAgendaItem)
     if ai.get_workflow_state() != 'ongoing':
-        raise WorkflowError("You can't set a poll to ongoing if the agenda item is not ongoing")
-
+        err_msg = _(u"error_poll_cant_be_ongoing_unless_ai_is",
+                    default = u"You can't set a poll to ongoing if the agenda item is not ongoing.")
+        raise HTTPForbidden(err_msg)
     if not context.proposal_uids:
-        raise ValueError('A poll with no proposal can not be set to ongoing')
+        request = get_current_request()
+        edit_tag = '<a href="%sedit"><b>%s</b></a>' % (resource_url(context, request), context.title)
+        err_msg = _(u"error_no_proposals_in_poll",
+                    default = u"A poll with no proposal can not be set to ongoing. Click link to edit: ${tag}",
+                    mapping = {'tag': edit_tag})
+        raise HTTPForbidden(err_msg)
 
 
 def email_voters_about_ongoing_poll(poll, request=None):

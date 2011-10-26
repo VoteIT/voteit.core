@@ -19,6 +19,7 @@ from voteit.core import security
 from voteit.core.testing_helpers import register_security_policies
 from voteit.core.testing_helpers import active_poll_fixture
 from voteit.core.testing_helpers import register_workflows
+from pyramid.httpexceptions import HTTPForbidden
 
 
 admin = set([security.ROLE_ADMIN])
@@ -32,6 +33,7 @@ owner = set([security.ROLE_OWNER])
 
 
 
+#FIXME: Perhaps we should split wf callback tests?
 
 
 class PollTests(unittest.TestCase):
@@ -295,8 +297,9 @@ class PollTests(unittest.TestCase):
         obj.set_workflow_state(request, 'ongoing')
 
     def test_ongoing_wo_proposal(self):
-        register_workflows(self.config)
         request = testing.DummyRequest()
+        self.config = testing.setUp(registry = self.config.registry, request = request)
+        register_workflows(self.config)
         poll = self._make_obj()
         ai = find_interface(poll, IAgendaItem)
         ai.set_workflow_state(request, 'upcoming')
@@ -304,7 +307,7 @@ class PollTests(unittest.TestCase):
         # remove all proposals on poll
         poll.set_field_value('proposals', set())
         poll.set_workflow_state(request, 'upcoming')
-        self.assertRaises(ValueError, poll.set_workflow_state, request, 'ongoing')
+        self.assertRaises(HTTPForbidden, poll.set_workflow_state, request, 'ongoing')
 
     def test_render_poll_result(self):
         #note: This shouldn't test the template since that's covered by each plugin
@@ -356,7 +359,7 @@ class PollMethodsTests(unittest.TestCase):
         root = active_poll_fixture(self.config)
         ai = root['meeting']['ai']
         security.unrestricted_wf_transition_to(ai, 'upcoming')
-        self.assertRaises(WorkflowError, security.unrestricted_wf_transition_to, ai['poll'], 'ongoing')
+        self.assertRaises(HTTPForbidden, security.unrestricted_wf_transition_to, ai['poll'], 'ongoing')
 
 
 class PollPermissionTests(unittest.TestCase):

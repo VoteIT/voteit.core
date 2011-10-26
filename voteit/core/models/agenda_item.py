@@ -4,6 +4,7 @@ from pyramid.security import Allow
 from pyramid.security import DENY_ALL
 from pyramid.threadlocal import get_current_request
 from betahaus.pyracont.decorators import content_factory
+from pyramid.httpexceptions import HTTPForbidden
 
 from voteit.core import security
 from voteit.core import VoteITMF as _
@@ -90,7 +91,9 @@ def closing_agenda_item_callback(context, info):
     request = get_current_request() #Should be okay to use here since this method is called very seldom.
     #get_content returns a generator. It's "True" even if it's empty!
     if tuple(context.get_content(iface=IPoll, states='ongoing')):
-        raise Exception("You can't close an agenda item that has ongoing polls in it. Close the polls first!")
+        err_msg = _(u"error_polls_not_closed_cant_close_ai",
+                    default = u"You can't close an agenda item that has ongoing polls in it. Close the polls first!")
+        raise HTTPForbidden(err_msg)
     for proposal in context.get_content(iface=IProposal, states='published'):
         proposal.set_workflow_state(request, 'unhandled')
        
@@ -100,4 +103,6 @@ def ongoing_agenda_item_callback(context, info):
     """
     meeting = find_interface(context, IMeeting)
     if meeting and meeting.get_workflow_state() != 'ongoing':
-        raise Exception("You can't set an agenda item to ongoing if the meeting is not ongoing")
+        err_msg = _(u"error_ai_cannot_be_ongoing_in_not_ongoing_meeting",
+                    default = u"You can't set an agenda item to ongoing if the meeting is not ongoing.")
+        raise HTTPForbidden(err_msg)

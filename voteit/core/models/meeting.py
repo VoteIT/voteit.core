@@ -4,6 +4,7 @@ from pyramid.security import Allow
 from pyramid.security import Authenticated
 from pyramid.security import DENY_ALL
 from betahaus.pyracont.decorators import content_factory
+from pyramid.httpexceptions import HTTPForbidden
 
 from voteit.core import VoteITMF as _
 from voteit.core import security
@@ -102,5 +103,7 @@ def closing_meeting_callback(context, info):
     """
     #get_content returns a generator. It's "True" even if it's empty!
     if tuple(context.get_content(iface=IAgendaItem, states='ongoing')):
-        raise Exception("This meeting still has ongoing Agenda items in it. You can't close it until they're closed.")
+        err_msg = _(u"error_cant_close_meeting_with_ongoing_ais",
+                    default = u"This meeting still has ongoing Agenda items in it. You can't close it until they're closed.")
+        raise HTTPForbidden(err_msg)
 
