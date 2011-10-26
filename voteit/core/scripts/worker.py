@@ -46,7 +46,7 @@ class ScriptWorker(object):
         #Start wsgi stuff
         config = os.path.join(self.buildoutpath, 'etc', 'development.ini') #FIXME: buildout info for script?
         config = os.path.abspath(os.path.normpath(config))
-        self.app = loadapp('config:%s' % config, name='voteit.core')
+        self.app = loadapp('config:%s' % config, name='main')
         self.root, self.closer = get_root(self.app)
         
         print 'Worker initialized'
