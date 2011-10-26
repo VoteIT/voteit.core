@@ -25,6 +25,7 @@ from voteit.core.models.interfaces import IProposal
 from voteit.core.security import NEVER_EVER_PRINCIPAL
 from voteit.core.security import VIEW
 from voteit.core.security import find_authorized_userids
+from zope.component.interfaces import ComponentLookupError
 
 
 SEARCHABLE_TEXT_INDEXES = ('title',
@@ -262,8 +263,12 @@ def get_view_meeting_userids(object, default):
     """ Userids that are allowed to view a meeting. Only index meeting contexts. """
     if not IMeeting.providedBy(object):
         return default
-    userids = find_authorized_userids(object, [VIEW])
-    return userids and userids or default
+    try:
+        userids = find_authorized_userids(object, [VIEW])
+        return userids and userids or default
+    except ComponentLookupError: # pragma : no cover
+        #This is to avoid having security fixture for each catalog test.
+        return default
 
 def get_searchable_text(object, default):
     """ Searchable text is basically all textfields that should be

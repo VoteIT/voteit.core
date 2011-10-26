@@ -30,10 +30,10 @@ class SiteRoot(BaseContent):
                DENY_ALL]
 
     def __init__(self, data=None, **kwargs):
-        super(SiteRoot, self).__init__(data=data, **kwargs)
         self.catalog = Catalog()
         self.catalog.__parent__ = self #To make traversal work
         self.catalog.document_map = DocumentMap()
+        super(SiteRoot, self).__init__(data=data, **kwargs)
         update_indexes(self.catalog)
 
     @property

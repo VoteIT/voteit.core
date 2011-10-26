@@ -71,21 +71,17 @@ class SecurityAware(object):
         #Delegate check and set to set_groups
         self.set_groups(principal, groups)
     
-    def set_groups(self, principal, groups, event = True):
+    def set_groups(self, principal, groups):
         """ Set groups for a principal in this context. (This clears any previous setting)
             Will also take care of role dependencies.
         """
         if not groups:
             if principal in self._groups:
                 del self._groups[principal]
-                if event:
-                    self._notify()
             return
         adjusted_groups = self.check_groups(groups)
         if adjusted_groups != set(self.get_groups(principal)):
             self._groups[principal] = tuple(adjusted_groups)
-            if event:
-                self._notify()
 
     def get_security(self):
         """ Return the current security settings.
@@ -95,9 +91,10 @@ class SecurityAware(object):
             userids_and_groups.append({'userid':userid, 'groups':self.get_groups(userid)})
         return tuple(userids_and_groups)
 
-    def set_security(self, value):
+    def set_security(self, value, event = True):
         """ Set current security settings according to value, that is a list of dicts with keys
             userid and groups. Will also clear any settings for users not present in value.
+            Will also send an event to update catalog.
         """
         submitted_userids = [x['userid'] for x in value]
         current_userids = self._groups.keys()
@@ -106,13 +103,9 @@ class SecurityAware(object):
                 del self._groups[userid]
 
         for item in value:
-            self.set_groups(item['userid'], item['groups'], event = False)
-        self._notify()
-
-    def _notify(self):
+            self.set_groups(item['userid'], item['groups'])
         #Only update specific index?
         objectEventNotify(ObjectUpdatedEvent(self, metadata=True))
-
 
     def _check_groups(self, groups):
         for group in groups:
