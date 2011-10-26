@@ -26,10 +26,6 @@ from voteit.core.models.catalog import metadata_for_query
 from voteit.core.models.catalog import resolve_catalog_docid
 
 
-MODERATOR_SECTIONS = ('closed', 'ongoing', 'upcoming', 'private',)
-REGULAR_SECTIONS = ('closed', 'ongoing', 'upcoming',)
-
-
 class APIView(object):
     """ Convenience methods for templates """
         
@@ -142,42 +138,6 @@ class APIView(object):
         if not self.meeting:
             return
         return resource_url(self.meeting, self.request)
-
-    def get_meeting_actions(self, context, request):
-        response = {}
-        response['api'] = self
-        if self.userid:
-            #Authenticated
-            #Get available meetings outside of this context
-            response['meetings'] = self.get_restricted_content(self.root, iface=IMeeting, sort_on='title')
-            if self.meeting:
-                #Sections
-                if self.show_moderator_actions:
-                    sections = MODERATOR_SECTIONS
-                else:
-                    sections = REGULAR_SECTIONS
-                response['sections'] = sections
-
-                #Metadata
-                metadata = {}
-                meeting_path = resource_path(self.meeting)
-                show_polls = False
-                for section in sections:
-                    metadata[section] = self.get_metadata_for_query(content_type = 'Poll',
-                                                                    path = meeting_path,
-                                                                    workflow_state = section)
-                    if metadata[section]:
-                        show_polls = True
-                response['show_polls'] = show_polls
-                response['polls_metadata'] = metadata
-
-                #Unread
-                num, results = self.search_catalog(content_type = 'Poll', path = meeting_path, unread=self.userid)
-                response['unread_polls_count'] = num
-
-        response['is_moderator'] = self.context_has_permission(security.MODERATE_MEETING, context)
-
-        return render('templates/meeting_actions.pt', response, request=request)
 
     def get_moderator_actions(self, context, request):
         """ A.k.a. the cogwheel-menu. """

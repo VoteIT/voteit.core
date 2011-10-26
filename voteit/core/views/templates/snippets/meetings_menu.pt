@@ -1,0 +1,15 @@
+<tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core">
+<li class="tab dropdown_menu">
+    <a href="#" class="menu_header"><span>${menu_title}</span> &raquo;</a>
+    <ul class="menu_body">
+        <tal:iterate repeat="meeting meetings">
+            <li>
+                <a tal:attributes="href meeting['path']">
+                    <tal:current condition="api.meeting.uid == meeting['uid']|False">*</tal:current>
+                    ${meeting.title}
+                </a>
+            </li>
+        </tal:iterate>
+    </ul>
+</li>
+</tal:main>

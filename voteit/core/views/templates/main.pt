@@ -51,11 +51,13 @@
     <div id="page_wrapper">
         <div id="main-content-wrapper">
         <div id="header">
-             <div id="global-actions" tal:content="structure api.render_single_view_component(context, request, 'main', 'global_actions')">
+             <div id="global-actions"
+			      tal:content="structure api.render_single_view_component(context, request, 'main', 'global_actions')">
                 Global actions toolbar - like login, profile etc
             </div>
 
-            <div id="meeting-actions" tal:content="structure api.get_meeting_actions(context, request)">
+            <div id="meeting-actions"
+			     tal:content="structure api.render_single_view_component(context, request, 'main', 'meeting_actions')">
                 Meeting actions - like who's in a meeting, search etc
             </div>
 
