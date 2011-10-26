@@ -16,7 +16,7 @@
 
         <div class="meta">
             <span class="wf-state"
-                    tal:content="api.translate(proposal.current_state_title(request))">private</span>
+                    tal:content="api.tstring(proposal.current_state_title(request))">private</span>
 
             <span class="hyphen">&#45;</span>
 

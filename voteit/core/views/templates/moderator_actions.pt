@@ -2,8 +2,8 @@
 <span class="action_menu dropdown_menu cogwheel">
     <a class="menu_header" title="Moderator menu" i18n:attributes="title">&nbsp;</a>
     <ul class="menu_body">
-    	
-		<li><span class="menusection" i18n:translate="">Actions here</span></li>
+        
+        <li><span class="menusection" i18n:translate="">Actions here</span></li>
 
         <li tal:condition="context_has_permission('Edit', context)">
             <a tal:attributes="href api.resource_url(context, request) + '@@edit'"
@@ -22,28 +22,28 @@
         </li>
 
         <tal:wf define="state_id context.get_workflow_state()|False" condition="state_id">
-	    	<li><span class="menusection" i18n:translate="">Change workflow state</span></li>
-			
-	        <li tal:condition="state_id">
-	            <span class="readonly iconpadding ${state_id}">
-	            	<span>
-		            	${api.translate(state_id.title())}
-						- (<span i18n:translate="">current</span>)
-					</span>
-	            </span>
-	        </li>
-	
-	        <tal:states tal:condition="states|False">
-	            <tal:iterate repeat="state states">
-	            <li>
-	                <a class="confirm-state iconpadding ${state.name}"
-					   tal:attributes="href api.resource_url(context, request) + '@@state' + '?state=' + state.name">
-	                   	<span tal:content="api.translate(state.title)">Title</span>
-	                </a>
-	            </li>
-	            </tal:iterate>
-	        </tal:states>
-		</tal:wf>
+            <li><span class="menusection" i18n:translate="">Change workflow state</span></li>
+            
+            <li tal:condition="state_id">
+                <span class="readonly iconpadding ${state_id}">
+                    <span>
+                        ${api.tstring(state_id.title())}
+                        - (<span i18n:translate="">current</span>)
+                    </span>
+                </span>
+            </li>
+    
+            <tal:states tal:condition="states|False">
+                <tal:iterate repeat="state states">
+                <li>
+                    <a class="confirm-state iconpadding ${state.name}"
+                       tal:attributes="href api.resource_url(context, request) + '@@state' + '?state=' + state.name">
+                        <span tal:content="api.tstring(state.title)">Title</span>
+                    </a>
+                </li>
+                </tal:iterate>
+            </tal:states>
+        </tal:wf>
 
     </ul>
 </span>

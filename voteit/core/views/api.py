@@ -10,6 +10,7 @@ from pyramid.traversal import find_resource
 from pyramid.interfaces import IAuthenticationPolicy
 from pyramid.interfaces import IAuthorizationPolicy
 from pyramid.decorator import reify
+from pyramid.i18n import get_localizer
 from webhelpers.html.converters import nl2br
 from betahaus.pyracont.interfaces import IContentFactory
 from betahaus.viewcomponent import render_view_group
@@ -73,6 +74,10 @@ class APIView(object):
     def user_tags_view(self):
         return UserTagsView(self.request)
 
+    @reify
+    def translate(self):
+        return get_localizer(self.request).translate
+
     def register_form_resources(self, form):
         """ Append form resources if they don't already exist in self.form_resources """
         for (k, v) in form.get_widget_resources().items():
@@ -80,7 +85,7 @@ class APIView(object):
                 self.form_resources[k] = set()
             self.form_resources[k].update(v)
 
-    def translate(self, *args, **kwargs):
+    def tstring(self, *args, **kwargs):
         """ Hook into the translation string machinery.
             See the i18n section of the Pyramid Docs.
         """ 

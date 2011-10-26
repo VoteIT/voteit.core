@@ -30,7 +30,7 @@ def meetings_menu(context, request, va, **kw):
     )
     response = {}
     response['api'] = api
-    response['menu_title'] = va.title
+    response['menu_title'] = api.translate(va.title)
     response['meetings'] = api.get_metadata_for_query(**query)
     return render('../templates/snippets/meetings_menu.pt', response, request = request)
 
@@ -82,18 +82,18 @@ def participants_tab(context, request, va, **kw):
     if not api.userid or not api.meeting:
         return ''
     link = '%s@@participants' % api.resource_url(api.meeting, request)
-    return """ <li class="tab"><a href="%s">%s</a></li>"""  % (link, va.title)
+    return """ <li class="tab"><a href="%s">%s</a></li>"""  % (link, api.translate(va.title))
 
 
 @view_action('meeting_actions', 'admin_menu', title = _(u"Admin menu"), permission = MANAGE_SERVER)
-def admin_menu(context, request, va, **kw):
+@view_action('meeting_actions', 'moderator_menu', title = _(u"Moderator"), permission = MODERATE_MEETING)
+def generic_menu(context, request, va, **kw):
     api = kw['api']
-    return """ <li class="tab dropdown_menu">
-        <a href="#" class="menu_header iconpadding">
-            <span class="cog-dark">%s</span> &raquo;
-        </a>
-        <ul class="menu_body">%s</ul>
-    </li>""" % (va.title, api.render_view_group(api.root, request, 'admin_menu'))
+    response = {}
+    response['menu_title'] = va.title
+    response['menu_css_cls'] = 'cog-dark'
+    response['rendered_menu'] = api.render_view_group(api.root, request, va.name)
+    return render('../templates/snippets/generic_meeting_menu.pt', response, request = request)
 
 
 @view_action('admin_menu', 'edit_root_permissions', title = _(u"Root permissions"), link = "@@permissions")
@@ -102,21 +102,7 @@ def generic_root_menu_link(context, request, va, **kw):
     """ This is for simple menu items for the root """
     api = kw['api']
     url = api.resource_url(api.root, request) + va.kwargs['link']
-    return """<li><a href="%s">%s</a></li>""" % (url, va.title)
-
-
-@view_action('meeting_actions', 'moderator_menu', title = _(u"Moderator"), permission = MODERATE_MEETING)
-def moderator_menu(context, request, va, **kw):
-    """ Moderator menu is a submenu of the 'main', 'meeting_actions' """
-    api = kw['api']
-    if not api.meeting:
-        return ''
-    return """ <li class="tab dropdown_menu">
-        <a href="#" class="menu_header iconpadding">
-            <span class="cog-dark">%s</span> &raquo;
-        </a>
-        <ul class="menu_body">%s</ul>
-    </li>""" % (va.title, api.render_view_group(api.meeting, request, 'moderator_menu'))
+    return """<li><a href="%s">%s</a></li>""" % (url, api.translate(va.title))
 
 
 @view_action('moderator_menu', 'permissions', title = _(u"Edit permissions"), link = "@@permissions")
@@ -128,41 +114,4 @@ def generic_moderator_menu_link(context, request, va, **kw):
     """ This is for simple menu items for the meeting root """
     api = kw['api']
     url = api.resource_url(api.meeting, request) + va.kwargs['link']
-    return """<li><a href="%s">%s</a></li>""" % (url, va.title)
-
-#
-#def get_meeting_actions(self, context, request):
-#    response = {}
-#    response['api'] = self
-#    if self.userid:
-#        #Authenticated
-#        #Get available meetings outside of this context
-#        response['meetings'] = self.get_restricted_content(self.root, iface=IMeeting, sort_on='title')
-#        if self.meeting:
-#            #Sections
-#            if self.show_moderator_actions:
-#                sections = MODERATOR_SECTIONS
-#            else:
-#                sections = REGULAR_SECTIONS
-#            response['sections'] = sections
-#
-#            #Metadata
-#            metadata = {}
-#            meeting_path = resource_path(self.meeting)
-#            show_polls = False
-#            for section in sections:
-#                metadata[section] = self.get_metadata_for_query(content_type = 'Poll',
-#                                                                path = meeting_path,
-#                                                                workflow_state = section)
-#                if metadata[section]:
-#                    show_polls = True
-#            response['show_polls'] = show_polls
-#            response['polls_metadata'] = metadata
-#
-#            #Unread
-#            num, results = self.search_catalog(content_type = 'Poll', path = meeting_path, unread=self.userid)
-#            response['unread_polls_count'] = num
-#
-#    response['is_moderator'] = self.context_has_permission(security.MODERATE_MEETING, context)
-#
-#    return render('templates/meeting_actions.pt', response, request=request)
+    return """<li><a href="%s">%s</a></li>""" % (url, api.translate(va.title))
