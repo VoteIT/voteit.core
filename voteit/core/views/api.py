@@ -1,11 +1,8 @@
-from deform import Form
 from pyramid.renderers import get_renderer, render
 from pyramid.security import authenticated_userid
 from pyramid.security import Authenticated
 from pyramid.security import Everyone
 from pyramid.url import resource_url
-from pyramid.location import lineage
-from pyramid.location import inside
 from pyramid.traversal import find_interface
 from pyramid.traversal import find_root
 from pyramid.traversal import resource_path
@@ -13,10 +10,8 @@ from pyramid.traversal import find_resource
 from pyramid.interfaces import IAuthenticationPolicy
 from pyramid.interfaces import IAuthorizationPolicy
 from pyramid.decorator import reify
-from pyramid.i18n import get_locale_name
 from webhelpers.html.converters import nl2br
 from betahaus.pyracont.interfaces import IContentFactory
-from betahaus.pyracont.factories import createSchema
 from betahaus.viewcomponent import render_view_group
 from betahaus.viewcomponent.interfaces import IViewGroup
 
@@ -29,7 +24,6 @@ from voteit.core.views.flash_messages import FlashMessages
 from voteit.core.views.user_tags import UserTagsView
 from voteit.core.models.catalog import metadata_for_query
 from voteit.core.models.catalog import resolve_catalog_docid
-from voteit.core.models.schemas import button_login
 
 
 MODERATOR_SECTIONS = ('closed', 'ongoing', 'upcoming', 'private',)
@@ -56,15 +50,12 @@ class APIView(object):
         self.authn_policy = request.registry.getUtility(IAuthenticationPolicy)
         self.authz_policy = request.registry.getUtility(IAuthorizationPolicy)
 
-        self.inside = inside
         self.dt_util = request.registry.getUtility(IDateTimeUtil)
 
         #macros
         self.flash_messages = FlashMessages(request)
         
         self.nl2br = nl2br
-        
-        self.locale = get_locale_name(request)
         
         #Used by deform to keep track for form resources
         self.form_resources = {}
@@ -132,7 +123,7 @@ class APIView(object):
             #Type is addable
             addable_names.add(name)
         return tuple(addable_names)
-        
+
     @reify
     def meeting(self):
         """ Is the current context inside a meeting, or a meeting itself? """
@@ -165,7 +156,6 @@ class APIView(object):
             #Authenticated
             #Get available meetings outside of this context
             response['meetings'] = self.get_restricted_content(self.root, iface=IMeeting, sort_on='title')
-
             if self.meeting:
                 #Sections
                 if self.show_moderator_actions:
