@@ -1,5 +1,17 @@
+from pyramid.renderers import render
 from betahaus.viewcomponent import view_action
+
 from voteit.core import VoteITMF as _
+
+
+@view_action('main', 'global_actions')
+def global_actions(context, request, va, **kw):
+    """ The main global actions view component which will render the rest of them. """
+    api = kw['api']
+    response = {}
+    response['api'] = api
+    response['meeting_time'] = api.dt_util.dt_format(api.dt_util.utcnow())
+    return render('../templates/snippets/global_actions.pt', response, request = request)
 
 
 @view_action('global_actions_anon', 'login')

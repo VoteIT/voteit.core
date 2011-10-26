@@ -6,13 +6,10 @@
 	       tal:content="meeting_time"
 		   title="The time that the server think it is. If this is wrong, you need to change the server time."
 		   i18n:attributes="title">1999</a></li>
-	
     <tal:authenticated condition="api.userid">
         <div tal:replace="structure api.render_view_group(context, request, 'global_actions_authenticated')">Actions</div>
     </tal:authenticated>
-
     <tal:anon condition="not api.userid">
-        <!-- Unauthenticated user actions -->
         <div tal:replace="structure api.render_view_group(context, request, 'global_actions_anon')">Actions</div>
     </tal:anon>
 </ul>

@@ -143,12 +143,6 @@ class APIView(object):
             return
         return resource_url(self.meeting, self.request)
 
-    def get_global_actions(self, context, request):
-        response = {}
-        response['api'] = self
-        response['meeting_time'] = self.dt_util.dt_format(self.dt_util.utcnow())
-        return render('templates/global_actions.pt', response, request=request)
-
     def get_meeting_actions(self, context, request):
         response = {}
         response['api'] = self
