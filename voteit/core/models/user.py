@@ -83,7 +83,7 @@ class User(BaseContent):
         pass
     
     def _get_title(self):
-        out = "%s %s" % ( self.get_field_value('first_name'), self.get_field_value('last_name') )
+        out = "%s %s" % ( self.get_field_value('first_name', ''), self.get_field_value('last_name', '') )
         return out.strip()
 
     title = property(_get_title, _set_title)

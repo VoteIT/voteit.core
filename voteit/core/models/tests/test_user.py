@@ -37,7 +37,15 @@ class UserTests(unittest.TestCase):
         
         self.assertEqual(obj.userid, u'my_userid')
         self.assertEqual(obj.userid, obj.__name__) #Convention
-        
+
+    def test_title_is_fullname(self):
+        obj = self._make_obj()
+        self.assertEqual(obj.title, '')
+        obj.set_field_value('first_name', 'John')
+        self.assertEqual(obj.title, 'John')
+        obj.set_field_value('last_name', 'Doe')
+        self.assertEqual(obj.title, 'John Doe')
+
     def test_get_and_set_password(self):
         self.config.scan('betahaus.pyracont.fields.password')
         pw = 'very_secret'
