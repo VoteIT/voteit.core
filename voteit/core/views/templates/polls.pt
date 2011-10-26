@@ -1,7 +1,7 @@
 <tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core">
 
     <tal:iterate condition="polls" repeat="poll polls">
-    <div tal:define="poll_plugin poll.get_poll_plugin();
+    <div tal:define="poll_plugin poll.get_poll_plugin()|None;
                      wf_state poll.get_workflow_state();
                      unread api.is_unread(poll, True);
                      has_voted api.userid in poll;"
@@ -23,8 +23,8 @@
 
             <div class="column column-2">
                 <div class="poll_type">
-                    <strong i18n:translate="">Poll method</strong>: <span tal:content="poll_plugin.title">Title</span>
-                    <div tal:content="structure poll_plugin.description">Description</div>
+                    <strong i18n:translate="">Poll method</strong>: <span tal:content="poll_plugin.title|string:Broken plugin">Title</span>
+                    <div tal:content="structure poll_plugin.description|string:">Description</div>
                 </div>
             </div>
             
@@ -33,7 +33,7 @@
         <div class="clear"><!-- --></div>
 
         <div tal:condition="wf_state == 'closed'"
-            tal:content="structure poll.render_poll_result(request)">
+            tal:content="structure poll.render_poll_result(request)|string:Broken plugin">
             Poll result
         </div>
 
@@ -51,7 +51,7 @@
         </tal:iterate>
         </div>
 
-        <tal:user_voted condition="has_voted">
+        <tal:user_voted condition="has_voted and poll_plugin">
             <div id="users-vote-${poll.uid}" class="toggle_area toggle_closed">
                 <a class="toggle_minimize read_more" i18n:translate="">Your vote</a>
                 <div class="minimizable_area"

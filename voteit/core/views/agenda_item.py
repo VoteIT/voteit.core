@@ -13,6 +13,7 @@ from voteit.core.models.interfaces import IVote
 from voteit.core.security import VIEW
 from voteit.core.security import ADD_VOTE
 from voteit.core.models.schemas import button_vote
+from zope.component.interfaces import ComponentLookupError
 
 
 class AgendaItemView(BaseView):
@@ -27,7 +28,16 @@ class AgendaItemView(BaseView):
         for poll in self.response['polls']:
             #Check if the users vote exists already
             userid = self.api.userid
-            poll_schema = poll.get_poll_plugin().get_vote_schema()
+            try:
+                plugin = poll.get_poll_plugin()
+            except ComponentLookupError:
+                err_msg = _(u"plugin_missing_error",
+                            default = u"Can't find any poll plugin with name '${name}'. Perhaps that package has been uninstalled?",
+                            mapping = {'name': poll.get_field_value('poll_plugin')})
+                self.api.flash_messages.add(err_msg, type="error")
+                poll_forms[poll.uid] = ''
+                continue
+            poll_schema = plugin.get_vote_schema()
             appstruct = {}
             can_vote = has_permission(ADD_VOTE, poll, self.request)
 
