@@ -6,5 +6,5 @@ DEFAULT_VC_ORDER = (
     ('global_actions_anon', ('login', 'register')),
     ('global_actions_authenticated', ('user_profile', 'logout')),
     ('navigation_sections', ('closed', 'ongoing', 'upcoming', 'private')),
-
+    ('meeting_actions', ('polls', 'moderator_menu', 'admin_menu', 'meetings', 'participants',)),
 )
