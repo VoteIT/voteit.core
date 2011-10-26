@@ -2,9 +2,11 @@ from BTrees.OOBTree import OOBTree
 from pyramid.location import lineage
 from pyramid.traversal import find_root
 from zope.interface import implements
+from zope.component.event import objectEventNotify
 import colander
 import deform
 
+from voteit.core.events import ObjectUpdatedEvent
 from voteit.core.models.interfaces import ISecurityAware
 from voteit.core import security
 from voteit.core import VoteITMF as _
@@ -69,17 +71,21 @@ class SecurityAware(object):
         #Delegate check and set to set_groups
         self.set_groups(principal, groups)
     
-    def set_groups(self, principal, groups):
+    def set_groups(self, principal, groups, event = True):
         """ Set groups for a principal in this context. (This clears any previous setting)
             Will also take care of role dependencies.
         """
         if not groups:
             if principal in self._groups:
                 del self._groups[principal]
+                if event:
+                    self._notify()
             return
         adjusted_groups = self.check_groups(groups)
         if adjusted_groups != set(self.get_groups(principal)):
             self._groups[principal] = tuple(adjusted_groups)
+            if event:
+                self._notify()
 
     def get_security(self):
         """ Return the current security settings.
@@ -100,7 +106,13 @@ class SecurityAware(object):
                 del self._groups[userid]
 
         for item in value:
-            self.set_groups(item['userid'], item['groups'])
+            self.set_groups(item['userid'], item['groups'], event = False)
+        self._notify()
+
+    def _notify(self):
+        #Only update specific index?
+        objectEventNotify(ObjectUpdatedEvent(self, metadata=True))
+
 
     def _check_groups(self, groups):
         for group in groups:

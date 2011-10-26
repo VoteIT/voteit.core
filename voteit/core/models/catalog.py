@@ -12,7 +12,7 @@ from pyramid.traversal import find_root
 from pyramid.traversal import resource_path
 from pyramid.security import principals_allowed_by_permission
 
-from voteit.core.models.interfaces import IAgendaItem
+from voteit.core.models.interfaces import IAgendaItem, IMeeting
 from voteit.core.models.interfaces import IUserTags
 from voteit.core.models.interfaces import ICatalogMetadataEnabled
 from voteit.core.models.interfaces import ISecurityAware
@@ -24,6 +24,7 @@ from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IProposal
 from voteit.core.security import NEVER_EVER_PRINCIPAL
 from voteit.core.security import VIEW
+from voteit.core.security import find_authorized_userids
 
 
 SEARCHABLE_TEXT_INDEXES = ('title',
@@ -94,6 +95,7 @@ def update_indexes(catalog, reindex=True):
         'creators': CatalogKeywordIndex(get_creators),
         'created': CatalogFieldIndex(get_created),
         'allowed_to_view': CatalogKeywordIndex(get_allowed_to_view),
+        'view_meeting_userids': CatalogKeywordIndex(get_view_meeting_userids),
         'searchable_text' : CatalogTextIndex(get_searchable_text),
         'start_time' : CatalogFieldIndex(get_start_time),
         'end_time' : CatalogFieldIndex(get_end_time),
@@ -255,6 +257,13 @@ def get_allowed_to_view(object, default):
         # to be no matches.
         principals = [NEVER_EVER_PRINCIPAL,]
     return principals
+
+def get_view_meeting_userids(object, default):
+    """ Userids that are allowed to view a meeting. Only index meeting contexts. """
+    if not IMeeting.providedBy(object):
+        return default
+    userids = find_authorized_userids(object, [VIEW])
+    return userids and userids or default
 
 def get_searchable_text(object, default):
     """ Searchable text is basically all textfields that should be
