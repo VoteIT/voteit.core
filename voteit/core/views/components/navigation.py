@@ -21,7 +21,6 @@ def navigation(context, request, va, **kwargs):
 
 @view_action('navigation', 'login', hello = 'bla')
 def login_box(context, request, va, **kwargs):
-    import pdb;pdb.set_trace()
     api = kwargs['api']
 
     #FIXME: Ticket system makes it a bit of a hassle to make login detached from registration.
