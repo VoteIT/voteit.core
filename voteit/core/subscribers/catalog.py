@@ -11,6 +11,7 @@ from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.catalog import index_object
 from voteit.core.models.catalog import reindex_object
 from voteit.core.models.catalog import unindex_object
+from voteit.core.scripts.catalog import find_all_base_content
 
 
 def _update_if_ai_parent(catalog, obj):
@@ -44,7 +45,9 @@ def object_updated(obj, event):
 
 @subscriber([IBaseContent, IObjectWillBeRemovedEvent])
 def object_removed(obj, event):
-    """ Remove an index for a base content object"""
+    """ Remove an index for a base content object. Also, remove all contained."""
     root = find_interface(obj, ISiteRoot)
+    for child in find_all_base_content(obj):
+        unindex_object(root.catalog, child)
     unindex_object(root.catalog, obj)
     _update_if_ai_parent(root.catalog, obj)
