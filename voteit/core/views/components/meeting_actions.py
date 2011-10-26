@@ -23,6 +23,8 @@ def meeting_actions(context, request, va, **kw):
 @view_action('meeting_actions', 'meetings', title = _(u"Meetings"))
 def meetings_menu(context, request, va, **kw):
     api = kw['api']
+    if not api.userid:
+        return ''
     principals = api.context_effective_principals(api.root)
     query = dict(
         content_type = 'Meeting',
