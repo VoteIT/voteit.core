@@ -1,11 +1,22 @@
 import colander
 import deform
 from betahaus.pyracont.decorators import schema_factory
+from betahaus.viewcomponent.interfaces import IViewGroup
 
 from voteit.core.validators import html_string_validator
 from voteit.core.widgets import RecaptchaWidget
 from voteit.core import VoteITMF as _
 
+@colander.deferred
+def deferred_access_policy_widget(node, kw):
+    request = kw['request']
+    view_group = request.registry.getUtility(IViewGroup, name = 'request_meeting_access')
+    choices = []
+    for (name, va) in view_group.items():
+        choices.append((name, va.title))
+    if not choices:
+        raise ValueError("Can't find anything in the request_meeting_access view group. There's no way to select any policy on how to gain access to the meeting.")
+    return deform.widget.RadioChoiceWidget(values = choices)
 
 @schema_factory('MeetingSchema')
 class MeetingSchema(colander.MappingSchema):
@@ -28,6 +39,10 @@ class MeetingSchema(colander.MappingSchema):
                                             title = _(u"Email address to send from"),
                                             default = u"noreply@somehost.voteit",
                                             validator = colander.All(colander.Email(msg = _(u"Invalid email address.")), html_string_validator,),)
+    access_policy = colander.SchemaNode(colander.String(),
+                                        title = _(u"Meeting access policy"),
+                                        widget = deferred_access_policy_widget,
+                                        default = "invite_only",)
 
 
 #FIXME: Captcha add schema

@@ -63,25 +63,29 @@ class SecurityAware(object):
 
         return adjusted_groups
 
-    def add_groups(self, principal, groups):
+    def add_groups(self, principal, groups, event = False):
         """ Add a groups for a principal in this context.
         """
         groups = set(groups)
         groups.update(self.get_groups(principal))
         #Delegate check and set to set_groups
-        self.set_groups(principal, groups)
+        self.set_groups(principal, groups, event = event)
     
-    def set_groups(self, principal, groups):
+    def set_groups(self, principal, groups, event = False):
         """ Set groups for a principal in this context. (This clears any previous setting)
             Will also take care of role dependencies.
         """
         if not groups:
             if principal in self._groups:
                 del self._groups[principal]
+                if event:
+                    self._notify()
             return
         adjusted_groups = self.check_groups(groups)
         if adjusted_groups != set(self.get_groups(principal)):
             self._groups[principal] = tuple(adjusted_groups)
+            if event:
+                self._notify()
 
     def get_security(self):
         """ Return the current security settings.
@@ -104,13 +108,17 @@ class SecurityAware(object):
 
         for item in value:
             self.set_groups(item['userid'], item['groups'])
-        #Only update specific index?
-        objectEventNotify(ObjectUpdatedEvent(self, metadata=True))
+        if event:
+            self._notify()
 
     def _check_groups(self, groups):
         for group in groups:
             if not group.startswith(NAMESPACES):
                 raise ValueError('Groups need to start with either "group:" or "role:"')
+
+    def _notify(self):
+        #Only update specific index?
+        objectEventNotify(ObjectUpdatedEvent(self, metadata=True))
 
     def list_all_groups(self):
         """ Returns a set of all groups in this context. """

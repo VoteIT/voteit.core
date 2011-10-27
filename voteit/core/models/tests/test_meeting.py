@@ -122,7 +122,7 @@ class MeetingPermissionTests(unittest.TestCase):
         self.assertEqual(self.pap(obj, security.EDIT), admin | moderator )
         
         #Meeting access
-        self.assertEqual(self.pap(obj, security.REQUEST_MEETING_ACCESS), authenticated)
+        self.assertEqual(self.pap(obj, security.REQUEST_MEETING_ACCESS), set())
         
         #Delete
         self.assertEqual(self.pap(obj, security.DELETE), admin | moderator)
@@ -154,7 +154,7 @@ class MeetingPermissionTests(unittest.TestCase):
         self.assertEqual(self.pap(obj, security.EDIT), admin | moderator )
         
         #Meeting access
-        self.assertEqual(self.pap(obj, security.REQUEST_MEETING_ACCESS), authenticated)
+        self.assertEqual(self.pap(obj, security.REQUEST_MEETING_ACCESS), set())
         
         #Delete
         self.assertEqual(self.pap(obj, security.DELETE), admin | moderator)

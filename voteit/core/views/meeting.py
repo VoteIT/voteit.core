@@ -3,6 +3,7 @@ import urllib
 from deform import Form
 from deform.exception import ValidationFailure
 from pyramid.security import has_permission
+from pyramid.security import NO_PERMISSION_REQUIRED
 from pyramid.view import view_config
 from pyramid.httpexceptions import HTTPFound
 from pyramid.url import resource_url
@@ -21,18 +22,21 @@ from voteit.core.models.schemas import button_cancel
 from voteit.core.models.schemas import button_resend
 from voteit.core.models.schemas import button_delete
 from voteit.core.validators import deferred_token_form_validator
+from betahaus.viewcomponent.interfaces import IViewGroup
 
 
 class MeetingView(BaseView):
     
-    @view_config(context=IMeeting, renderer="templates/meeting.pt")
+    @view_config(context=IMeeting, renderer="templates/meeting.pt", permission = NO_PERMISSION_REQUIRED)
     def meeting_view(self):
         """ Meeting view behaves a bit differently than regular views since
             it should allow users to request access if unauthorized is raised.
         """
         if not has_permission(security.VIEW, self.context, self.request):
             if self.api.userid:
-                msg = _(u"You're not allowed access to this meeting.")
+                #We delegate permission checks to the request_meeting_access part.
+                url = resource_url(self.context, self.request) + '@@request_access'
+                return HTTPFound(location = url)
             else:
                 msg = _(u"You're not logged in - before you can access meetings you need to do that.")
             self.api.flash_messages.add(msg, type='error')
@@ -265,4 +269,24 @@ class MeetingView(BaseView):
         msg = _(u"Layout")
         self.api.flash_messages.add(msg, close_button=False)
         self.response['form'] = form.render(appstruct)
+        return self.response
+
+    @view_config(name = 'request_access', context = IMeeting,
+                 renderer = "templates/base_edit.pt", permission = NO_PERMISSION_REQUIRED)
+    def request_meeting_access(self):
+        view_group = self.request.registry.getUtility(IViewGroup, name = 'request_meeting_access')
+        access_policy = self.context.get_field_value('access_policy', 'invite_only')
+        va = view_group.get(access_policy, None)
+        if va is None:
+            err_msg = _(u"request_access_view_action_not_found",
+                        default = u"Can't find an action associated with access policy ${policy}.",
+                        mapping = {'policy': access_policy})
+            self.api.flash_messages.add(err_msg, type="error")
+            url = resource_url(self.api.root, self.request)
+            return HTTPFound(location=url)
+        result = va(self.context, self.request, api = self.api)
+        if isinstance(result, HTTPFound):
+            #Redirect instead
+            return result
+        self.response['form'] = result
         return self.response
