@@ -13,7 +13,7 @@ from voteit.core.models.interfaces import IMeeting
 
 
 PUBLIC_TITLE = _(u"meeting_access_public_label",
-                 default = u"All authenticated members are allowed to request access, and will be granted view permission instantly.")
+                 default = u"All authenticated members will be given view permission INSTANTLY if they request it.")
 @view_action('request_meeting_access', 'public', title = PUBLIC_TITLE, interface = IMeeting)
 def public_request_meeting_access(context, request, va, **kw):
     if context.get_field_value('access_policy') != 'public':
