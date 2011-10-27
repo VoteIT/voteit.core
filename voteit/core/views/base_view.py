@@ -5,20 +5,19 @@ from voteit.core.security import VIEW
 from voteit.core.models.interfaces import IBaseContent
 
 
-DEFAULT_TEMPLATE = "templates/base_view.pt"
-
-
 class BaseView(object):
-    """ View class for generic objects """
+    """ Base view class. Subclass this."""
         
     def __init__(self, context, request):
         self.context = context
         self.request = request
-
         self.response = {}
         self.response['api'] = self.api = APIView(context, request)
 
-    @view_config(context=IBaseContent, renderer=DEFAULT_TEMPLATE, permission=VIEW)
+
+class DefaultView(BaseView):
+    """ Default view when something doesn't have a specific view registered. """
+
+    @view_config(context=IBaseContent, renderer="templates/base_view.pt", permission=VIEW)
     def dynamic_view(self):
-        """ """
         return self.response
