@@ -88,8 +88,10 @@ def participants_tab(context, request, va, **kw):
 
 
 @view_action('meeting_actions', 'admin_menu', title = _(u"Admin menu"), permission = MANAGE_SERVER)
-@view_action('meeting_actions', 'moderator_menu', title = _(u"Moderator"), permission = MODERATE_MEETING)
+@view_action('meeting_actions', 'moderator_menu', title = _(u"Moderator"), permission = MODERATE_MEETING, meeting_only = True)
 def generic_menu(context, request, va, **kw):
+    if va.kwargs.get('meeting_only', False) == True:
+        return ''
     api = kw['api']
     response = {}
     response['menu_title'] = va.title
