@@ -3,6 +3,7 @@ from pyramid.url import resource_url
 from pyramid.httpexceptions import HTTPForbidden
 from pyramid.httpexceptions import HTTPFound
 from pyramid.httpexceptions import HTTPNotFound
+from pyramid.security import NO_PERMISSION_REQUIRED
 
 from voteit.core import VoteITMF as _
 from voteit.core import security
@@ -20,7 +21,7 @@ class ExceptionView(object):
         self.request = request
         self.api = APIView(request.context, request)
     
-    @view_config(context=HTTPForbidden)
+    @view_config(context=HTTPForbidden, permission=NO_PERMISSION_REQUIRED)
     def forbidden_view(self):
         """ I.e. 403. Find first context where user has view permission
             if they're logged in, otherwise redirect to login form.
@@ -40,7 +41,7 @@ class ExceptionView(object):
         #Redirect to login
         return HTTPFound(location="%s/@@login?came_from=%s" %(self.request.application_url, self.request.url))
 
-    @view_config(context=HTTPNotFound)
+    @view_config(context=HTTPNotFound, permission=NO_PERMISSION_REQUIRED)
     def not_found_view(self):
         """ I.e. 404.
         """
