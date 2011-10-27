@@ -6,6 +6,7 @@ from pyramid.security import has_permission
 from pyramid.security import NO_PERMISSION_REQUIRED
 from pyramid.view import view_config
 from pyramid.httpexceptions import HTTPFound
+from pyramid.httpexceptions import HTTPRedirection
 from pyramid.url import resource_url
 from betahaus.pyracont.factories import createContent
 from betahaus.pyracont.factories import createSchema
@@ -285,8 +286,7 @@ class MeetingView(BaseView):
             url = resource_url(self.api.root, self.request)
             return HTTPFound(location=url)
         result = va(self.context, self.request, api = self.api)
-        if isinstance(result, Exception):
-            #Redirect instead
-            raise result
+        if isinstance(result, HTTPRedirection):
+            return result
         self.response['form'] = result
         return self.response
