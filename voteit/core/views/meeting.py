@@ -285,8 +285,8 @@ class MeetingView(BaseView):
             url = resource_url(self.api.root, self.request)
             return HTTPFound(location=url)
         result = va(self.context, self.request, api = self.api)
-        if isinstance(result, HTTPFound):
+        if isinstance(result, Exception):
             #Redirect instead
-            return result
+            raise result
         self.response['form'] = result
         return self.response
