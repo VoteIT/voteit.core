@@ -1,5 +1,6 @@
 import colander
 from deform import Form
+from deform.exception import ValidationFailure
 from betahaus.viewcomponent import view_action
 from pyramid.url import resource_url
 from pyramid.httpexceptions import HTTPFound
