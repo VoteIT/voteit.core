@@ -27,23 +27,18 @@ from voteit.core.models.schemas import button_register
 from voteit.core.models.schemas import button_request
 from voteit.core.models.schemas import button_update
 from voteit.core.views.userinfo import user_info_view
+from voteit.core.views.base_view import BaseView
+from voteit.core.views.base_edit import BaseEdit
 
 
 DEFAULT_TEMPLATE = "templates/base_edit.pt"
 LOGIN_REGISTER_TPL = "templates/login_register.pt"
 
 
-class UsersView(object):
+class UsersFormView(BaseEdit):
     """ View class for adding, editing or deleting users.
         It also handles users own login and registration.
     """
-        
-    def __init__(self, context, request):
-        self.context = context
-        self.request = request
-
-        self.response = {}
-        self.response['api'] = self.api = APIView(context, request)
 
     @view_config(context=IUsers, name="add", renderer=DEFAULT_TEMPLATE)
     def add_form(self):
@@ -87,14 +82,7 @@ class UsersView(object):
         self.response['form'] = form.render()
         return self.response
 
-    @view_config(context=IUsers, renderer='templates/list_users.pt', permission=VIEW)
-    def list_users(self):
-        return self.response
 
-    @view_config(context=IUser, renderer='templates/user.pt', permission=VIEW)
-    def view_user(self):
-        self.response['user_info'] = user_info_view(self.context, self.request, info_userid=self.context.userid)
-        return self.response
 
     @view_config(context=IUser, name="change_password", renderer=DEFAULT_TEMPLATE, permission=CHANGE_PASSWORD)
     def password_form(self):
@@ -305,3 +293,16 @@ class UsersView(object):
         headers = forget(self.request)
         return HTTPFound(location = resource_url(self.context, self.request),
                          headers = headers)
+
+
+class UsersView(BaseView):
+    """ Any regular view action without forms. """
+
+    @view_config(context=IUsers, renderer='templates/list_users.pt', permission=VIEW)
+    def list_users(self):
+        return self.response
+
+    @view_config(context=IUser, renderer='templates/user.pt', permission=VIEW)
+    def view_user(self):
+        self.response['user_info'] = user_info_view(self.context, self.request, info_userid=self.context.userid)
+        return self.response

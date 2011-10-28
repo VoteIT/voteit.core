@@ -20,17 +20,11 @@ from voteit.core.models.schemas import button_vote
 from voteit.core.models.schemas import button_cancel
 from voteit.core.models.schemas import button_update
 from voteit.core.models.schemas import button_save
+from voteit.core.views.base_edit import BaseEdit
 
 
-class PollView(object):
+class PollView(BaseEdit):
     """ View class for poll objects """
-        
-    def __init__(self, context, request):
-        self.context = context
-        self.request = request
-
-        self.response = {}
-        self.response['api'] = self.api = APIView(context, request)
         
     @view_config(context=IPoll, name="edit", renderer='templates/base_edit.pt', permission=EDIT)
     def edit_form(self):
