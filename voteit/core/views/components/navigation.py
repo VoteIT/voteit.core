@@ -66,7 +66,7 @@ def navigation_section(context, request, va, **kwargs):
         query['view_meeting_userids'] = api.userid
     else:
         query['content_type'] = 'AgendaItem'
-        #Principals within the meeting that has to do with view will be the same for all agenda items
+        #Principals taken from this context will be okay for a query within the meetings
         query['allowed_to_view'] = {'operator': 'or', 'query': api.context_effective_principals(context)},
 
     
