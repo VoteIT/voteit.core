@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
-"POT-Creation-Date: 2011-10-18 07:59+0000\n"
+"POT-Creation-Date: 2011-10-28 14:07+0000\n"
 "PO-Revision-Date: 2011-09-28 14:00+0100\n"
 "Last-Translator: Fredrik Nilson <fredrik@betahaus.net>\n"
 "Language-Team: sv <LL@li.org>\n"
@@ -22,39 +22,39 @@ msgstr ""
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "Generated-By: Babel 0.9.6\n"
 
-#: ./subscribers/logs.py:74
+#: ./subscribers/logs.py:78
 msgid "${ctype} in ${path} updated"
 msgstr "${ctype} i ${path} uppdaterad"
 
-#: ./subscribers/logs.py:59
+#: ./subscribers/logs.py:62
 msgid "${ctype} in path ${path} changed state from '${old_state}' to '${new_state}'"
 msgstr "${ctype} i sökväg ${path} ändrade tillstånd från '${old_state}' till '${new_state}'"
 
-#: ./subscribers/logs.py:47
+#: ./subscribers/logs.py:50
 msgid "${ctype} removed from ${path}"
 msgstr "${ctype} borttagen från ${path}"
 
-#: ./subscribers/logs.py:35
+#: ./subscribers/logs.py:37
 msgid "${ctype} was added to ${path}"
 msgstr "${ctype} las till i ${path}"
 
-#: ./models/date_time_util.py:130
+#: ./models/date_time_util.py:131
 msgid "${diff} hours ago"
 msgstr "${diff} timmar sedan"
 
-#: ./models/date_time_util.py:126
+#: ./models/date_time_util.py:127
 msgid "${diff} minutes ago"
 msgstr "${diff} minuter sedan"
 
-#: ./models/date_time_util.py:122
+#: ./models/date_time_util.py:123
 msgid "${diff} seconds ago"
 msgstr "${diff} sekunder sedan"
 
-#: ./fields.py:31
+#: ./schemas/tzdatetime.py:31
 msgid "'${val}' is not valid as date and time"
 msgstr "'{val}' är inte giltigt som datum och tid"
 
-#: ./views/templates/meeting_actions.pt:33
+#: ./views/templates/snippets/polls_menu.pt:31
 #. Default: "(No polls yet)"
 msgid "(No polls yet)"
 msgstr "(Ännu inga omröstningar)"
@@ -64,23 +64,41 @@ msgstr "(Ännu inga omröstningar)"
 msgid "(Nothing)"
 msgstr "(Inget)"
 
-#: ./views/templates/navigation.pt:43
+#: ./views/templates/macros/meeting_overview_section.pt:55
 #. Default: "(hidden, click above to open)"
 msgid "(hidden, click above to open)"
 msgstr "(gömd, klicka ovan för att öppna)"
 
-#: ./models/date_time_util.py:128
+#: ./models/date_time_util.py:129
 msgid "1 hour ago"
 msgstr "1 timme sedan"
 
-#: ./models/date_time_util.py:124
+#: ./models/date_time_util.py:125
 msgid "1 minute ago"
 msgstr "1 minut sedan"
+
+#: ./views/exceptions_view.py:48
+#. Default: "Can't find anything at '${path}'. Maybe it has been removed?"
+msgid "404_error_msg"
+msgstr ""
+
+#: ./schemas/layout.py:29
+msgid "<Disable>"
+msgstr ""
 
 #: ./views/templates/snippets/userinfo.pt:15
 #. Default: "About me"
 msgid "About me"
 msgstr "Information om mig"
+
+#: ./views/templates/main.pt:120
+#. Default: "About..."
+msgid "About..."
+msgstr "Om..."
+
+#: ./views/components/request_access.py:38
+msgid "Access granted!"
+msgstr ""
 
 #: ./views/templates/moderator_actions.pt:6
 #. Default: "Actions here"
@@ -96,12 +114,12 @@ msgstr "Lägg till"
 msgid "Add new user"
 msgstr "Lägg till ny användare"
 
-#: ./views/templates/agenda_item.pt:18
+#: ./views/templates/agenda_item.pt:17
 #. Default: "Add poll"
 msgid "Add poll"
 msgstr "Lägg till omröstning"
 
-#: ./views/templates/meeting_actions.pt:89
+#: ./views/components/meeting_actions.py:90
 #. Default: "Admin menu"
 msgid "Admin menu"
 msgstr "Admin meny"
@@ -110,7 +128,7 @@ msgstr "Admin meny"
 msgid "Administrator"
 msgstr "Administratör"
 
-#: ./views/templates/navigation.pt:62
+#: ./views/templates/navigation.pt:46
 #. Default: "Agenda"
 msgid "Agenda"
 msgstr "Dagordning"
@@ -120,27 +138,45 @@ msgstr "Dagordning"
 msgid "Agenda item"
 msgstr "Dagordningspunkt"
 
+#: ./schemas/layout.py:58
+msgid "Agenda item left column widget"
+msgstr ""
+
+#: ./schemas/layout.py:64
+msgid "Agenda item right column widget"
+msgstr ""
+
 #. Default: "Approved"
 msgid "Approved"
 msgstr "Bifallen"
 
-#: ./views/base_edit.py:176
+#: ./views/templates/main.pt:118
+#. Default: "Are you sure you want to change the state?"
+msgid "Are you sure you want to change the state?"
+msgstr ""
+
+#: ./views/base_edit.py:170
 msgid "Are you sure you want to delete this item?"
 msgstr "Är du säker på att du vill radera detta objekt?"
 
-#: ./schemas/agenda_item.py:26
+#: ./views/templates/main.pt:119
+#. Default: "Are you sure you want to retract this proposal?"
+msgid "Are you sure you want to retract this proposal?"
+msgstr ""
+
+#: ./schemas/agenda_item.py:15
 msgid "Avoid a title with more than 20 characters"
 msgstr "Undvik att skriva fler än 20 tecken"
 
-#: ./models/schemas.py:10
+#: ./models/schemas.py:11
 msgid "Cancel"
 msgstr "Avbryt"
 
-#: ./views/base_edit.py:88
+#: ./views/base_edit.py:89
 msgid "Canceled"
 msgstr "Avbruten"
 
-#: ./models/schemas.py:11
+#: ./models/schemas.py:12
 msgid "Change"
 msgstr "Ändra"
 
@@ -168,11 +204,17 @@ msgstr "Kontrollera fältet - engångslösenordet stämmer inte"
 msgid "Click the link to access this VoteIT meeting:"
 msgstr "Klicka på länken för att få tillträde till VoteIT-mötet:"
 
-#: ./views/templates/navigation.pt:62
+#: ./views/templates/navigation.pt:46
 #. Default: "Click to go to meeting overview"
 msgid "Click to go to meeting overview"
 msgstr "Klicka för att gå till mötesöversikt"
 
+#: ./views/templates/main.pt:116
+#. Default: "Close"
+msgid "Close"
+msgstr "Stäng"
+
+#: ./views/components/navigation.py:39
 #. Default: "Closed"
 msgid "Closed"
 msgstr "Stängd"
@@ -185,6 +227,10 @@ msgstr "Kan inte hitta någon inbjudan för denna epostadress."
 #. Default: "Couldn't find any user with userid ${userid}"
 msgid "Couldn't find any user with userid ${userid}"
 msgstr "Kunde inte hitta någon användare med användarnamnet ${userid}"
+
+#: ./views/export_import.py:75
+msgid "Created new objects from import"
+msgstr ""
 
 #: ./schemas/invite_ticket.py:66
 msgid "Current invitations"
@@ -205,7 +251,7 @@ msgstr "Öppen"
 msgid "Delete"
 msgstr "Radera"
 
-#: ./views/base_edit.py:165
+#: ./views/base_edit.py:159
 msgid "Deleted"
 msgstr "Raderad"
 
@@ -213,13 +259,17 @@ msgstr "Raderad"
 msgid "Denied"
 msgstr "Avslaget"
 
-#: ./schemas/agenda_item.py:31
+#: ./schemas/agenda_item.py:20
 msgid "Description"
 msgstr "Beskrivning"
 
 #: ./plugins/majority_poll.py:19
 msgid "Description of majority poll"
 msgstr "Rösta på ett av flera alternativ. När omröstningen avslutas utses det yrkande som fått egen majoritet av de avgivna rösterna som vinnande"
+
+#: ./views/components/meeting.py:9
+msgid "Description richtext field (default left column)"
+msgstr ""
 
 #: ./views/templates/participants.pt:27
 #. Default: "Discuss"
@@ -230,7 +280,7 @@ msgstr "Diskutera"
 msgid "Discuss (and view)"
 msgstr "Diskutera (och läsa)"
 
-#: ./views/templates/agenda_item.pt:28
+#: ./views/templates/snippets/ai_discussions.pt:3
 #. Default: "Discussion"
 msgid "Discussion"
 msgstr "Diskussion"
@@ -239,17 +289,25 @@ msgstr "Diskussion"
 msgid "Discussion Post"
 msgstr "Diskussionsinlägg"
 
+#: ./views/components/agenda_item.py:14
+msgid "Discussions (default right column)"
+msgstr ""
+
 #: ./views/templates/invite_ticket_email.pt:23
 #. Default: "Don't want to register now?"
 msgid "Don't want to register now?"
 msgstr "Vill du inte registrera dig nu?"
+
+#: ./models/schemas.py:21
+msgid "Download"
+msgstr ""
 
 #: ./views/templates/moderator_actions.pt:9
 #. Default: "Edit"
 msgid "Edit"
 msgstr "Redigera"
 
-#: ./views/templates/meeting_actions.pt:44
+#: ./views/components/meeting_actions.py:112
 #. Default: "Edit permissions"
 msgid "Edit permissions"
 msgstr "Redigera rättigheter"
@@ -259,7 +317,7 @@ msgstr "Redigera rättigheter"
 msgid "Email"
 msgstr "Epost"
 
-#: ./schemas/meeting.py:28
+#: ./schemas/meeting.py:39
 msgid "Email address to send from"
 msgstr "Epostadress att skicka från"
 
@@ -275,7 +333,7 @@ msgstr "Epostadressen matchar, men engångslösenordet stämmer inte"
 msgid "Email sent."
 msgstr "Epost skickad."
 
-#: ./schemas/poll.py:28
+#: ./schemas/poll.py:91
 msgid "End time of this poll."
 msgstr "Sluttid för omröstningen."
 
@@ -288,6 +346,14 @@ msgstr "Planerad sluttid ${end_time}"
 #. Default: "Expected start time ${start_time}"
 msgid "Expected start time ${start_time}"
 msgstr "Planerad starttid ${start_time}"
+
+#: ./views/export_import.py:44
+msgid "Export current context"
+msgstr ""
+
+#: ./views/export_import.py:29
+msgid "ExportImport component not included in VoteIT. You need to register it to use this."
+msgstr ""
 
 #: ./views/templates/participants.pt:23
 #. Default: "First name"
@@ -316,10 +382,18 @@ msgstr "Har du ett konto redan?"
 msgid "I propose:"
 msgstr "Jag yrkar:"
 
+#: ./schemas/layout.py:49
+msgid "If no right column widget is selected, this will take up the whole page space."
+msgstr ""
+
 #: ./views/templates/polls.pt:60
 #. Default: "If you submit the form again, you'll change your vote. You may do that as long as the poll is open."
 msgid "If you submit the form again, you'll change your vote. You may do that as long as the poll is open."
 msgstr "Om du röstar igen kommer du ändra din röst. Du kan göra det så länge omröstningen är öppen."
+
+#: ./views/export_import.py:83
+msgid "Import file to current context"
+msgstr ""
 
 #: ./schemas/invite_ticket.py:15
 msgid "Invalid email address."
@@ -338,7 +412,7 @@ msgstr "Bjud in deltagare"
 msgid "Invite ticket"
 msgstr "Inbjudningsbiljett"
 
-#: ./models/date_time_util.py:120
+#: ./models/date_time_util.py:121
 msgid "Just now"
 msgstr "Nyss"
 
@@ -352,13 +426,26 @@ msgstr "Senast tillagd"
 msgid "Last name"
 msgstr "Efternamn"
 
+#: ./views/meeting.py:270
+msgid "Layout"
+msgstr ""
+
+#: ./views/components/meeting_actions.py:114
+msgid "Layout and widgets"
+msgstr "Layout och widgets"
+
 #: ./validators.py:27
 msgid "Less than 100 chars please."
 msgstr "Mindre än 100 tecken tack."
 
-#: ./views/agenda_item.py:108
+#: ./views/components/discussions.py:41
 msgid "Like"
 msgstr "Gilla"
+
+#: ./views/templates/main.pt:122
+#. Default: "Loading..."
+msgid "Loading..."
+msgstr "Laddar..."
 
 #. Default: "Locked for voting"
 msgid "Locked for voting"
@@ -373,7 +460,7 @@ msgstr "Logginlägg"
 msgid "Log entry"
 msgstr "Loggpost"
 
-#: ./views/templates/global_actions.pt:24
+#: ./views/templates/login_register.pt:10
 #. Default: "Login"
 msgid "Login"
 msgstr "Logga in"
@@ -382,34 +469,50 @@ msgstr "Logga in"
 msgid "Login failed."
 msgstr "Inloggning misslyckades."
 
-#: ./views/templates/global_actions.pt:16
+#: ./views/components/global_actions.py:38
 #. Default: "Logout"
 msgid "Logout"
 msgstr "Logga ut"
+
+#: ./schemas/export_import.py:20
+msgid "Lowercase, numbers or hyphen is ok."
+msgstr ""
 
 #: ./plugins/majority_poll.py:17
 msgid "Majority Poll"
 msgstr "Majoritetsomröstning"
 
-#: ./views/templates/meeting_actions.pt:52
+#: ./views/components/meeting_actions.py:116
 #. Default: "Manage invites"
 msgid "Manage invites"
 msgstr "Hantera inbjudningar"
 
-#: ./models/meeting.py:49
+#: ./models/meeting.py:43
 msgid "Meeting"
 msgstr "Möte"
 
-#: ./views/meeting.py:149
+#: ./views/meeting.py:133
 msgid "Meeting Access"
 msgstr "Mötestillgång"
 
-#: ./views/templates/meeting_actions.pt:56
+#: ./schemas/meeting.py:43
+msgid "Meeting access policy"
+msgstr ""
+
+#: ./views/components/meeting_actions.py:113
 #. Default: "Meeting actions log"
 msgid "Meeting actions log"
 msgstr "Möteslogg"
 
-#: ./views/templates/meeting_actions.pt:65
+#: ./schemas/layout.py:48
+msgid "Meeting left column widget"
+msgstr ""
+
+#: ./schemas/layout.py:54
+msgid "Meeting right column widget"
+msgstr ""
+
+#: ./views/templates/navigation.pt:23
 #. Default: "Meetings"
 msgid "Meetings"
 msgstr "Möten"
@@ -428,28 +531,43 @@ msgstr "Moderera"
 msgid "Moderator"
 msgstr "Moderator"
 
-#: ./views/templates/meeting_actions.pt:40
+#: ./views/templates/moderator_actions.pt:3
 #. Default: "Moderator menu"
 msgid "Moderator menu"
 msgstr "Moderatorsmeny"
 
-#: ./schemas/meeting.py:25
+#: ./views/templates/main.pt:121
+#. Default: "More..."
+msgid "More..."
+msgstr "Mer..."
+
+#: ./schemas/meeting.py:36
 msgid "Name visible on system mail sent from this meeting"
 msgstr "Avsändarnamn på epost skickat från mötet"
+
+#: ./schemas/export_import.py:19
+msgid "Name, will be part of the url"
+msgstr ""
 
 #: ./views/templates/invite_ticket_email.pt:20
 #. Default: "Need to register?"
 msgid "Need to register?"
 msgstr "Behöver du registrera dig?"
 
+#: ./views/templates/main.pt:115
+#. Default: "No"
+msgid "No"
+msgstr "Nej"
+
 #: ./schemas/invite_ticket.py:46
 msgid "No HTML tags allowed."
 msgstr "Inga HTML-taggar tillåtna."
 
-#: ./views/base_edit.py:131
+#: ./views/base_edit.py:125
 msgid "Nothing updated"
 msgstr "Inget uppdaterat"
 
+#: ./views/components/navigation.py:40
 #. Default: "Ongoing"
 msgid "Ongoing"
 msgstr "Pågående"
@@ -458,7 +576,11 @@ msgstr "Pågående"
 msgid "Open"
 msgstr "Öppen"
 
-#: ./views/templates/meeting_actions.pt:81
+#: ./views/components/meeting.py:14
+msgid "Overview, displays poll times, winners and similar"
+msgstr ""
+
+#: ./views/components/meeting_actions.py:81
 #. Default: "Participants"
 msgid "Participants"
 msgstr "Deltagare"
@@ -475,7 +597,12 @@ msgstr "Begäran om nytt lösenord från VoteIT"
 msgid "Password set. You may login now."
 msgstr "Lösenord satt. Du kan logga in nu."
 
-#: ./views/templates/agenda_item.pt:21
+#: ./views/templates/main.pt:117
+#. Default: "Please confirm"
+msgid "Please confirm"
+msgstr "Vänligen bekräfta"
+
+#: ./views/templates/agenda_item.pt:20
 #. Default: "Poll"
 msgid "Poll"
 msgstr "Omröstning"
@@ -490,7 +617,7 @@ msgstr "Omröstning stängd"
 msgid "Poll method"
 msgstr "Omröstningsmetod"
 
-#: ./schemas/poll.py:87
+#: ./schemas/poll.py:70
 msgid "Poll method to use"
 msgstr "Omröstningsmetod"
 
@@ -504,23 +631,28 @@ msgstr "Omröstningsresultat"
 msgid "Poll settings"
 msgstr "Inställningar för omröstning"
 
-#: ./views/templates/meeting_actions.pt:9
+#: ./views/components/meeting_actions.py:40
 #. Default: "Polls"
 msgid "Polls"
 msgstr "Omröstningar"
 
+#: ./views/components/navigation.py:42
 #. Default: "Private"
 msgid "Private"
 msgstr "Privat"
 
-#: ./views/templates/agenda_item.pt:39
+#: ./views/templates/snippets/ai_proposals.pt:3
 #. Default: "Proposal"
 msgid "Proposal"
 msgstr "Yrkande"
 
-#: ./schemas/poll.py:94
+#: ./schemas/poll.py:77
 msgid "Proposals"
 msgstr "Yrkanden"
+
+#: ./views/components/agenda_item.py:6
+msgid "Proposals (default left column)"
+msgstr ""
 
 #: ./views/templates/participants.pt:28
 #. Default: "Propose"
@@ -535,7 +667,7 @@ msgstr "Yrka (och läsa)"
 msgid "Published"
 msgstr "Publicerad"
 
-#: ./views/templates/global_actions.pt:22
+#: ./models/schemas.py:15
 #. Default: "Register"
 msgid "Register"
 msgstr "Registrera"
@@ -554,15 +686,15 @@ msgstr "Registrering"
 msgid "Remember that you need to click this link to gain access to the meeting you're invited to."
 msgstr "Kom ihåg att du behöver klicka på länken för att få tillträde till mötet du är inbjuden till."
 
-#: ./views/user_tags.py:73
+#: ./views/user_tags.py:74
 msgid "Remove ${display_name}"
 msgstr "Ta bort ${display_name}"
 
-#: ./models/schemas.py:15
+#: ./models/schemas.py:16
 msgid "Request"
 msgstr "Begär"
 
-#: ./models/schemas.py:19
+#: ./models/schemas.py:20
 msgid "Resend"
 msgstr "Skicka igen"
 
@@ -587,7 +719,11 @@ msgstr "Roller"
 msgid "Roles for user"
 msgstr "Roller för användare"
 
-#: ./models/schemas.py:16
+#: ./views/components/meeting_actions.py:103
+msgid "Root permissions"
+msgstr ""
+
+#: ./models/schemas.py:17
 msgid "Save"
 msgstr "Spara"
 
@@ -601,16 +737,16 @@ msgstr "Skriptad"
 msgid "Select a log above"
 msgstr "Välj logg ovan"
 
-#: ./views/templates/navigation.pt:22
+#: ./views/templates/navigation.pt:23
 #. Default: "Select a meeting below"
 msgid "Select a meeting below"
 msgstr "Välj ett möte nedan"
 
-#: ./views/meeting.py:196
+#: ./views/meeting.py:180
 msgid "Send meeting invitations"
 msgstr "Skicka mötesinbjudningar"
 
-#: ./views/templates/meeting_actions.pt:97
+#: ./views/components/meeting_actions.py:104
 #. Default: "Server logs"
 msgid "Server logs"
 msgstr "Serverloggar"
@@ -644,19 +780,19 @@ msgstr "Logga bara in efter att du klickat på länken."
 msgid "Site root"
 msgstr "Site rot"
 
-#: ./schemas/poll.py:19
+#: ./schemas/poll.py:84
 msgid "Start time of this poll."
 msgstr "Starttid för omröstningen."
 
-#: ./views/base_edit.py:82
+#: ./views/base_edit.py:83
 msgid "Successfully added"
 msgstr "Tillagt"
 
-#: ./views/base_edit.py:127
+#: ./views/base_edit.py:123
 msgid "Successfully updated"
 msgstr "Uppdaterad"
 
-#: ./schemas/agenda_item.py:39
+#: ./schemas/agenda_item.py:28
 msgid "Summary of this item."
 msgstr "Sammanfattning av denna punkt."
 
@@ -669,7 +805,7 @@ msgstr "Taggar"
 msgid "Text"
 msgstr "Text"
 
-#: ./views/poll.py:189
+#: ./views/poll.py:184
 msgid "Thank you for voting!"
 msgstr "Tack för din röst!"
 
@@ -677,32 +813,32 @@ msgstr "Tack för din röst!"
 msgid "The following adresses is invalid: ${emails}"
 msgstr "Förljande adress(er) är ogiltiga: ${emails}"
 
-#: ./views/templates/global_actions.pt:5
+#: ./views/templates/snippets/global_actions.pt:5
 #. Default: "The time that the server think it is. If this is wrong, you need to change the server time."
 msgid "The time that the server think it is. If this is wrong, you need to change the server time."
 msgstr "Tiden som servern tycker att det är just nu. Om detta är fel. behöver ni ändra tiden på servern."
 
-#: ./views/templates/meeting.pt:43
+#: ./views/templates/snippets/meeting_overview.pt:8
 #. Default: "This has happened"
 msgid "This has happened"
 msgstr "Detta har hänt"
 
-#: ./views/templates/meeting.pt:50
+#: ./views/templates/snippets/meeting_overview.pt:14
 #. Default: "This is happening now"
 msgid "This is happening now"
 msgstr "Detta händer nu"
 
-#: ./views/templates/main.pt:84
+#: ./views/templates/main.pt:60
 #. Default: "This meeting has closed."
 msgid "This meeting has closed."
 msgstr "Detta möte är stängt och kan inte ändras."
 
-#: ./views/templates/main.pt:81
+#: ./views/templates/main.pt:57
 #. Default: "This meeting hasn't started yet."
 msgid "This meeting hasn't started yet."
 msgstr "Detta möte har inte startats ännu."
 
-#: ./views/templates/meeting.pt:57
+#: ./views/templates/snippets/meeting_overview.pt:20
 #. Default: "This will happen"
 msgid "This will happen"
 msgstr "Detta kommer att hända"
@@ -712,7 +848,7 @@ msgstr "Detta kommer att hända"
 msgid "Time"
 msgstr "Tid"
 
-#: ./schemas/agenda_item.py:25
+#: ./schemas/agenda_item.py:14
 msgid "Title"
 msgstr "Titel"
 
@@ -724,11 +860,12 @@ msgstr "För kort. Minst 6 tecken krävs."
 msgid "Unhandled"
 msgstr "Ohanterad"
 
+#: ./views/components/navigation.py:41
 #. Default: "Upcoming"
 msgid "Upcoming"
 msgstr "Kommande"
 
-#: ./models/schemas.py:17
+#: ./models/schemas.py:18
 msgid "Update"
 msgstr "Uppdatera"
 
@@ -785,7 +922,7 @@ msgstr "VoteIT-loggar"
 msgid "VoteIT meeting invitation"
 msgstr "VoteIT mötesinbjudan"
 
-#: ./models/poll.py:310
+#: ./models/poll.py:319
 msgid "VoteIT: Open poll"
 msgstr "VoteIT: Pågående omröstning"
 
@@ -807,7 +944,7 @@ msgstr "Varma hälsningar, VoteIT-teamet"
 msgid "Welcome text of the email that will be sent"
 msgstr "Välkomsttext i brevet som kommer skickas"
 
-#: ./views/templates/participants.pt:55
+#: ./views/templates/main.pt:114
 #. Default: "Yes"
 msgid "Yes"
 msgstr "Ja"
@@ -830,11 +967,7 @@ msgstr "Du kan inte ändra din röst nu"
 msgid "You have been mentioned in VoteIT"
 msgstr "Du har blivit nämnd i VoteIT"
 
-#: ./schemas/poll.py:29
-msgid "You need to close it yourself."
-msgstr "Du kommer behöva stänga omröstningen själv."
-
-#: ./schemas/poll.py:20
+#: ./schemas/poll.py:85
 msgid "You need to open it yourself."
 msgstr "Du kommer behöva öppna omröstningen själv."
 
@@ -843,11 +976,11 @@ msgstr "Du kommer behöva öppna omröstningen själv."
 msgid "You voted in this poll. Click above to show your vote."
 msgstr "Du har redan röstat. Klicka ovan om du vill se din röst."
 
-#: ./views/meeting.py:35
-msgid "You're not allowed access to this meeting."
-msgstr "Du har inte rätt att delta i mötet."
+#: ./views/meeting.py:42
+msgid "You're not logged in - before you can access meetings you need to do that."
+msgstr ""
 
-#: ./views/meeting.py:138
+#: ./views/meeting.py:122
 msgid "You've been granted access to the meeting. Welcome!"
 msgstr "Du har fått rätt att delta i mötet. Välkommen!"
 
@@ -861,7 +994,7 @@ msgstr "Du har röstat"
 msgid "Your vote"
 msgstr "Din röst"
 
-#: ./views/poll.py:183
+#: ./views/poll.py:177
 msgid "Your vote was updated."
 msgstr "Din röst har uppdaterats"
 
@@ -880,27 +1013,27 @@ msgstr "Epostadresser till användare vilka ges rollerna ovan."
 msgid "add_tickets_roles_description"
 msgstr "En användare kan ha mer än en roll. Notera att för att kunna diskutera, yrka och rösta krävs alla tre rollerna. För att lägga till en användare som bara kan se, markera 'läsa' och avmarkera övriga."
 
-#: ./models/schemas.py:18
+#: ./models/schemas.py:19
 #. Default: "Vote"
 msgid "add_vote_button"
 msgstr "Rösta"
 
-#: ./schemas/agenda_item.py:32
+#: ./schemas/agenda_item.py:21
 #. Default: "Place the the agenda item background information here. You can link to external documents and memos. It's also a good idea to add an image, it will make it easier for participants to quickly see which page they're on."
 msgid "agenda_item_description_description"
 msgstr "Lägg in bakgrundsfakta om dagordningspunkten här. Länka gärna till externa dokument och underlag. En bild här gör det lättare för deltagarna att komma ihåg vilken dagordningspunkt de är inne i."
 
-#: ./schemas/agenda_item.py:15
+#: ./schemas/agenda_item.py:41
 #. Default: "This setting only sets the order for the agenda item's in the Agenda. You will still have to change the state of the agenda item manually with the gear beside it's name."
 msgid "agenda_item_start_time_description"
 msgstr "Denna tidsinställning bestämmer endast ordningen på dagordningspunkterna i dagordningen. Du behöver oberoende av denna ändra tillstånd på dagordningspunkten manuellt med kugghjulet bredvid dess namn."
 
-#: ./schemas/agenda_item.py:40
+#: ./schemas/agenda_item.py:29
 #. Default: "This summary shows up to the right on the meetings first page. Write a short summary on what is going on or what has been decided. This should be updated as the meeting progresses."
 msgid "agenda_item_summary_description"
 msgstr "Denna sammanfattning visas till höger på förstasidan. Skriv kortfattat vad som är på gång eller vad som har beslutats. Denna bör uppdateras under mötets gång."
 
-#: ./schemas/agenda_item.py:13
+#: ./schemas/agenda_item.py:39
 #. Default: "Estimated start time of this Agenda Item."
 msgid "ai_start_time_title"
 msgstr "Planerad starttid för dagordningpunkten."
@@ -916,7 +1049,7 @@ msgstr "Användarnamnet är redan registrerat. Om det var du som registrerade de
 msgid "and"
 msgstr "och"
 
-#: ./models/poll.py:181
+#: ./models/poll.py:185
 #. Default: "Proposal '${name}' already in state ${state}"
 msgid "change_prop_state_already_that_state_error"
 msgstr "Yrkande '${name}' är redan i tillståndet ${state}"
@@ -936,7 +1069,7 @@ msgstr "Inbjudningskoden som du fick i dett ebrev"
 msgid "current"
 msgstr "aktuell"
 
-#: ./views/meeting.py:236
+#: ./views/meeting.py:220
 #. Default: "Deleting ${count_emails} invites"
 msgid "deleting_invites_notice"
 msgstr "Raderar ${count_emails} inbjudningar"
@@ -945,6 +1078,31 @@ msgstr "Raderar ${count_emails} inbjudningar"
 #. Default: "Another user has already registered with that email address. If you've lost your password, request a new one instead."
 msgid "email_not_unique_error"
 msgstr "En annan användare har redan registrerats med den epostadressen. Om du har glömt ditt lösenord bör du begära ett nytt istället."
+
+#: ./models/agenda_item.py:106
+#. Default: "You can't set an agenda item to ongoing if the meeting is not ongoing."
+msgid "error_ai_cannot_be_ongoing_in_not_ongoing_meeting"
+msgstr ""
+
+#: ./models/meeting.py:99
+#. Default: "This meeting still has ongoing Agenda items in it. You can't close it until they're closed."
+msgid "error_cant_close_meeting_with_ongoing_ais"
+msgstr ""
+
+#: ./models/poll.py:278
+#. Default: "A poll with no proposal can not be set to ongoing. Click link to edit: ${tag}"
+msgid "error_no_proposals_in_poll"
+msgstr ""
+
+#: ./models/poll.py:272
+#. Default: "You can't set a poll to ongoing if the agenda item is not ongoing."
+msgid "error_poll_cant_be_ongoing_unless_ai_is"
+msgstr ""
+
+#: ./models/agenda_item.py:94
+#. Default: "You can't close an agenda item that has ongoing polls in it. Close the polls first!"
+msgid "error_polls_not_closed_cant_close_ai"
+msgstr ""
 
 #: ./validators.py:217
 #. Default: "UserID not found"
@@ -956,27 +1114,42 @@ msgstr "Användarnamn hittades inte"
 msgid "invitation_default_text"
 msgstr "Du har fått en inbjudan till ett VoteIT-möte."
 
-#: ./views/agenda_item.py:109
+#: ./views/components/request_access.py:55
+#. Default: "This meeting is invite only. That means that a mail will be sent with an access ticket. Contact meeting moderators for more information."
+msgid "invite_only_meeting_access_request_description"
+msgstr ""
+
+#: ./views/components/discussions.py:42
 msgid "like this"
 msgstr "gillar detta"
 
-#: ./views/meeting.py:111
+#: ./views/meeting.py:95
 #. should have been mailed to you. If you've aldready registered, please login.
 #. Default: "Welcome to VoteIT. To open the meeting you have been invited to please register in the form below. If you are already registered, please login."
 msgid "login_to_access_meeting_notice"
 msgstr "Välkommen till VoteIT. För att öppna det möte du är inbjuden till måste du nu registrera dig i formuläret nedan. Om du redan är registrerad, vänligen logga in."
 
-#: ./views/templates/meeting_actions.pt:30
+#: ./views/templates/snippets/polls_menu.pt:28
 #. Default: "means you've not voted in that poll."
 msgid "means you've not voted in that poll."
 msgstr "betyder att du inte röstat i omröstningen"
 
-#: ./schemas/meeting.py:20
+#: ./views/components/request_access.py:49
+#. Default: "Access will only be granted through invites (Default)"
+msgid "meeting_access_invite_only_label"
+msgstr ""
+
+#: ./views/components/request_access.py:16
+#. Default: "All authenticated members will be given view permission INSTANTLY if they request it."
+msgid "meeting_access_public_label"
+msgstr ""
+
+#: ./schemas/meeting.py:31
 #. Default: "The description is visible on the first page of the meeting. You can include things like information about the meeting, how to contact the moderator and your logo."
 msgid "meeting_description_description"
 msgstr "Beskrivningen möter deltagarna varje gång de öppnar mötet. Lägg gärna in information om mötet, hur man kontaktar mötesordföranden och föreningens logga här."
 
-#: ./schemas/meeting.py:14
+#: ./schemas/meeting.py:25
 #. Default: "Set a title for the meeting that separates it from previous meetings"
 msgid "meeting_title_description"
 msgstr "Ange en titel för mötet som särskiljer det från föreningens andra möten"
@@ -986,7 +1159,7 @@ msgstr "Ange en titel för mötet som särskiljer det från föreningens andra m
 msgid "mentioned_notification"
 msgstr "Du har nämnts i mötet ${meeting} under punkten ${agenda_item}. Klicka på följande länk för att gå dit: ${link}."
 
-#: ./views/templates/snippets/user_tag.pt:25
+#: ./views/templates/snippets/user_tag.pt:28
 #. Default: "more"
 msgid "more_in_likes"
 msgstr "till"
@@ -996,38 +1169,48 @@ msgstr "till"
 msgid "ongoing_poll_email_text"
 msgstr "En omröstning har precis öppnat i mötet ${meeting_title}. För att komma dit, följ länken:"
 
-#: ./views/templates/snippets/user_tag.pt:24
+#: ./views/templates/snippets/user_tag.pt:26
 #. Default: "people"
 msgid "people"
 msgstr "personer"
 
-#: ./models/poll.py:198
+#: ./views/agenda_item.py:34
+#. Default: "Can't find any poll plugin with name '${name}'. Perhaps that package has been uninstalled?"
+msgid "plugin_missing_error"
+msgstr ""
+
+#: ./models/poll.py:202
 #. denied depending on outcome of the poll.
 #. Default: "Poll closed. Proposals might have been adjusted as approved or denied depending on outcome of the poll."
 msgid "poll_closed_info"
 msgstr "Omröstningen stängd. Yrkanden kan ha justerats som bifallna eller avslagna beroende på utgången av omröstningen."
 
-#: ./models/poll.py:256
+#: ./models/poll.py:260
 #. Default: "${count} selected proposals were set in the 'locked for vote' state. They can no longer be edited or retracted by normal users."
 msgid "poll_closed_proposals_locked_notice"
 msgstr "De ${count} yrkanden som ingår i omröstningen har satts i tillståndet 'låst för omröstning'. De kan inte längre ändras eller dras tillbaka av icke moderatorer."
 
-#: ./schemas/poll.py:82
+#: ./schemas/poll.py:65
 #. Default: "Explain your choice of poll method and your plan for the different polls in the agenda item."
 msgid "poll_description_description"
 msgstr "Förklara ditt val av omröstningsmetod och hur du planerat de olika omröstningarna i dagordninspunkten."
 
-#: ./schemas/poll.py:88
+#: ./schemas/poll.py:92
+#. Default: "You need to close it yourself. A good default value is one day later."
+msgid "poll_end_time_description"
+msgstr ""
+
+#: ./schemas/poll.py:71
 #. Default: "Read in the help wiki about pros and cons of different polling methods."
 msgid "poll_poll_plugin_description"
 msgstr "Läs mer i hjälpen om olika metoder och dess för- och nackdelar."
 
-#: ./schemas/poll.py:95
+#: ./schemas/poll.py:78
 #. Default: "Only proposals in the state 'published' can be selected"
 msgid "poll_proposals_description"
 msgstr "Endast yrkanden i tillståndet 'publicerad' kan väljas."
 
-#: ./models/poll.py:251
+#: ./models/poll.py:255
 #. Default: "Setting poll in upcoming state. It's now visible for meeting participants."
 msgid "poll_upcoming_state_notice"
 msgstr "Omröstning är nu i tillståndet 'kommande'. Den är nu synlig för mötesdeltagare."
@@ -1037,13 +1220,13 @@ msgstr "Omröstning är nu i tillståndet 'kommande'. Den är nu synlig för mö
 msgid "profile_gravatar_explanation"
 msgstr "Bilden ovan kommer från <a href=\"http://www.gravatar.com\" target=\"_blank\">Gravatar</a>. Den är hämtad från din epostadress. Om du vill ändra bild, gå till Gravatar och ändra bild för den epostadress du använder i VoteIT."
 
-#: ./models/poll.py:193
+#: ./models/poll.py:197
 #. do this manually.
 #. Default: "Proposal with id '${name}' couldn't be set as ${state}. You should do this manually."
 msgid "prop_state_change_error"
 msgstr "Yrkande med id '${name}' kunde inte sättas som ${state}. Du bör göra detta manuellt."
 
-#: ./models/poll.py:188
+#: ./models/poll.py:192
 #. Default: "Proposal '${name}' set as ${state}"
 msgid "prop_state_changed_notice"
 msgstr "Yrkande '${name}' satt som ${state}"
@@ -1053,22 +1236,32 @@ msgstr "Yrkande '${name}' satt som ${state}"
 msgid "propose"
 msgstr "yrkar"
 
+#: ./views/components/request_access.py:42
+#. Default: "This meeting allows anyone to request access to it. You only need to click below to be allowed to view the meeting."
+msgid "public_meeting_access_request_description"
+msgstr ""
+
+#: ./views/meeting.py:282
+#. Default: "Can't find an action associated with access policy ${policy}."
+msgid "request_access_view_action_not_found"
+msgstr ""
+
 #: ./models/user.py:99
 #. Default: "password link: ${pw_link}"
 msgid "request_new_password_text"
 msgstr "Lösenordslänk: ${pw_link}"
 
-#: ./views/meeting.py:226
+#: ./views/meeting.py:210
 #. Default: "Resending ${count_emails} invites"
 msgid "resent_invites_notice"
 msgstr "Skickar om ${count_emails} inbjudningar"
 
-#: ./views/meeting.py:189
+#: ./views/meeting.py:173
 #. Default: "Successfully added and sent ${mail_count} invites"
 msgid "sent_tickets_text"
 msgstr "La till och skickade ${mail_count} inbjudningar"
 
-#: ./views/templates/navigation.pt:15
+#: ./views/templates/navigation.pt:16
 #. Default: "Add meeting"
 msgid "title"
 msgstr "titel"
