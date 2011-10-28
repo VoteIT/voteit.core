@@ -80,7 +80,12 @@
                 </tal:iterate>
             </tbody>
         </table>
-        
+        <br/>
+        <a class="buttonize large"
+           tal:attributes="href api.resource_url(context, request)">
+            <span i18n:translate="">Back</span>
+        </a><br/>
+
     </div> <!-- content -->
 </body>
 </html>
