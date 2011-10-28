@@ -87,7 +87,7 @@ class BaseEdit(object):
             #Polls might have a special redirect action if the poll plugin has a settings schema:
             if content_type == 'Poll' and obj.get_poll_plugin().get_settings_schema() is not None:
                 msg = _(u"review_poll_settings_info",
-                        default = u"Please review poll settings, note that any default value in a field might be a suggestion and not what's actually stored.")
+                        default = u"Please review poll specific settings. Any default value in a field is a suggestion from the plugin.")
                 self.api.flash_messages.add(msg)
                 url += '@@poll_config'
             return HTTPFound(location=url)
