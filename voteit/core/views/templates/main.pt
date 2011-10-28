@@ -10,42 +10,12 @@
            <title>VoteIT</title>
         </metal:page_title>
     <meta name="keywords" content="python web application" />
-    <meta name="description" content="pyramid web application" />
-	
-	<!-- FIXME: This needs to be cleaned up. Perhaps using fanstatic, or tweens? -->
-    
-    <link href="${request.application_url}/static/reset.css" rel="stylesheet" type="text/css" />
-    <link href="${request.application_url}/static/main.css" rel="stylesheet" type="text/css" />
-    <link href="${request.application_url}/static/jquery.qtip.css" rel="stylesheet" type="text/css" />
-    <link href="${request.application_url}/static/smoothness/jquery-ui-1.8.16.custom.css" rel="stylesheet" type="text/css" />
-	<!-- FIXME: Many of the deform includes are redundant -->
-    <link href="${request.application_url}/deform/css/form.css" rel="stylesheet" type="text/css" />
+    <meta name="description" content="pyramid web application" />    
     <script type="text/javascript" tal:content="structure api.get_js_config_template()">js config code</script>
-    <script type="text/javascript" src="${request.application_url}/deform/scripts/jquery-1.4.2.min.js"></script>
-    <script type="text/javascript" src="${request.application_url}/static/jquery-ui-1.8.15.custom.min.js"></script>
-    <script type="text/javascript" src="${request.application_url}/static/jquery.rating.js"></script>
-    <script type="text/javascript" src="${request.application_url}/static/ajax.js"></script>
-    <script type="text/javascript" src="${request.application_url}/static/jquery.qtip.js"></script>
-    <script type="text/javascript" src="${request.application_url}/static/jquery.easy-confirm-dialog.js"></script>
-    <script type="text/javascript" src="${request.application_url}/static/jquery.cookie.js"></script>
-
-    <tal:deform tal:condition="api.form_resources">
-	    <tal:css repeat="css_file api.form_resources['css']|()">
-		    <link rel="stylesheet"
-		          tal:attributes="href string:/deform/${css_file}" type="text/css" />
-	    </tal:css>
-	    <script type="text/javascript" src="${request.application_url}/deform/scripts/deform.js"></script>
-	    <script type="text/javascript" src="${request.application_url}/deform/scripts/jquery-ui-timepicker-addon.js"></script>
-	    <script type="text/javascript" src="${request.application_url}/deform/scripts/jquery.form.js"></script>
-	    <script type="text/javascript" src="${request.application_url}/deform/scripts/jquery.maskedinput-1.2.2.min.js"></script>
-	    <script type="text/javascript" src="${request.application_url}/deform/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
-	    <script type="text/javascript">
-	        deform.load()
-	    </script>
-    </tal:deform>
-
+    <script type="text/javascript" tal:condition="api.init_deform">
+    	deform.load()
+	</script>
     <metal:head define-slot="head"></metal:head>
-    
 </head>
 <body>
     <div id="page_wrapper">

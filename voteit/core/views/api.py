@@ -25,6 +25,7 @@ from voteit.core.views.flash_messages import FlashMessages
 from voteit.core.views.user_tags import UserTagsView
 from voteit.core.models.catalog import metadata_for_query
 from voteit.core.models.catalog import resolve_catalog_docid
+from voteit.core.fanstaticlib import DEFORM_RESOURCES
 
 
 class APIView(object):
@@ -46,17 +47,11 @@ class APIView(object):
         #Authentication / Authorization utils. 
         self.authn_policy = request.registry.getUtility(IAuthenticationPolicy)
         self.authz_policy = request.registry.getUtility(IAuthorizationPolicy)
-
+        
         self.dt_util = request.registry.getUtility(IDateTimeUtil)
-
-        #macros
         self.flash_messages = FlashMessages(request)
-        
         self.nl2br = nl2br
-        
-        #Used by deform to keep track for form resources
-        self.form_resources = {}
-        #self.navigation_html = self._get_navigation()
+        self.init_deform = False
 
         #Main macro
         self.main_template = get_renderer('templates/main.pt').implementation()
@@ -80,10 +75,12 @@ class APIView(object):
 
     def register_form_resources(self, form):
         """ Append form resources if they don't already exist in self.form_resources """
-        for (k, v) in form.get_widget_resources().items():
-            if k not in self.form_resources:
-                self.form_resources[k] = set()
-            self.form_resources[k].update(v)
+        self.init_deform = True
+        for (key, version) in form.get_widget_requirements():
+            resource = DEFORM_RESOURCES.get(key, None)
+            if resource:
+                resource.need()
+            #FIXME: Otherwise log error
 
     def tstring(self, *args, **kwargs):
         """ Hook into the translation string machinery.

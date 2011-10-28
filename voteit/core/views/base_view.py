@@ -3,6 +3,7 @@ from pyramid.view import view_config
 from voteit.core.views.api import APIView
 from voteit.core.security import VIEW
 from voteit.core.models.interfaces import IBaseContent
+from voteit.core import fanstaticlib
 
 
 class BaseView(object):
@@ -13,6 +14,12 @@ class BaseView(object):
         self.request = request
         self.response = {}
         self.response['api'] = self.api = APIView(context, request)
+        fanstaticlib.qtip.need()
+        if self.api.show_moderator_actions or context.content_type == 'AgendaItem':
+            #Easy confirm is used by retract proposal and wf menu actions
+            fanstaticlib.jquery_easy_confirm_dialog.need()
+        fanstaticlib.voteit_main_css.need()
+        fanstaticlib.voteit_ajax.need()
 
 
 class DefaultView(BaseView):

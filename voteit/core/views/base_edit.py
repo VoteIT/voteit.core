@@ -1,4 +1,4 @@
-from datetime import timedelta
+#from datetime import timedelta
 
 from pyramid.view import view_config
 from pyramid.url import resource_url
@@ -12,7 +12,7 @@ from slugify import slugify
 from betahaus.pyracont.factories import createContent
 from betahaus.pyracont.factories import createSchema
 
-from voteit.core.views.api import APIView
+#from voteit.core.views.api import APIView
 from voteit.core import VoteITMF as _
 from voteit.core.security import EDIT
 from voteit.core.security import DELETE
@@ -23,6 +23,8 @@ from voteit.core.models.schemas import button_update
 from voteit.core.models.schemas import button_delete
 from voteit.core.models.interfaces import IBaseContent
 from voteit.core.models.interfaces import IWorkflowAware
+from voteit.core import fanstaticlib
+from voteit.core.views.api import APIView
 
 
 DEFAULT_TEMPLATE = "templates/base_edit.pt"
@@ -30,13 +32,15 @@ DEFAULT_TEMPLATE = "templates/base_edit.pt"
 
 class BaseEdit(object):
     """ View class for adding, editing or deleting dynamic content. """
-        
+
     def __init__(self, context, request):
         self.context = context
         self.request = request
-
         self.response = {}
         self.response['api'] = self.api = APIView(context, request)
+        fanstaticlib.deform.need()
+        fanstaticlib.voteit_main_css.need()
+        fanstaticlib.voteit_ajax.need()
 
     @view_config(context=IBaseContent, name="add", renderer=DEFAULT_TEMPLATE)
     def add_form(self):

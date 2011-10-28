@@ -29,6 +29,7 @@ requires = (
     'betahaus.pyracont',
     'betahaus.viewcomponent',
     'pyramid_debugtoolbar', #Won't be active unless included
+    'fanstatic',
     )
 
 
@@ -57,6 +58,10 @@ setup(name='voteit.core',
       main = voteit.core:main
       [console_scripts]
       update_catalog = voteit.core.scripts.catalog:update_catalog
+      [fanstatic.libraries]
+      voteit_core_css = voteit.core.fanstaticlib:voteit_core_css
+      voteit_core_js = voteit.core.fanstaticlib:voteit_core_js
+      deform_static = voteit.core.fanstaticlib:deform_static
       """,
       paster_plugins=['pyramid'],
       message_extractors = { '.': [

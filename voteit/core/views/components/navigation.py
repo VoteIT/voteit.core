@@ -32,6 +32,7 @@ def login_box(context, request, va, **kwargs):
     login_schema = createSchema('LoginSchema').bind(context = context, request = request)
     action_url = resource_url(api.root, request) + 'login'
     login_form = Form(login_schema, buttons=(button_login,), action=action_url)
+    api.register_form_resources(login_form)
     return login_form.render()
 
     

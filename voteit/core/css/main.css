@@ -41,7 +41,7 @@ p {
 	padding: 10px;
 }
 #page_wrapper {
-    background: url(images/bubble_big.png) no-repeat -160px 60px;
+    background: url(/static/images/bubble_big.png) no-repeat -160px 60px;
 	width: 100%;
 	display: block;
 	min-height: 100%;
@@ -58,7 +58,7 @@ p {
     width: 100%;
 }
 #leftcol-wrapper {
-    background: url(images/navigation_bg_opacity10.png) repeat;
+    background: url(/static/images/navigation_bg_opacity10.png) repeat;
 	right: 80%;
 }
 #rightcol-wrapper {
@@ -68,7 +68,7 @@ p {
     position: relative;
 	min-height: 100%;
 	padding-bottom: 100px;
-    background: url(images/bubble_small.png) no-repeat 98% 40px;
+    background: url(/static/images/bubble_small.png) no-repeat 98% 40px;
 }
 #navigation {
 	position: relative;
@@ -92,7 +92,7 @@ p {
 }
 #footer {
     position: relative;
-    background: url(images/navigation_bg_opacity10.png) repeat;
+    background: url(/static/images/navigation_bg_opacity10.png) repeat;
 	height: 90px;
 	padding: 10px;
 	margin-top: -100px;
@@ -106,7 +106,7 @@ p {
 	bottom: 10px;
 	left: 0px;
 	right: 0px;
-	background: url(images/logos_footer.png) no-repeat 50% 100%;
+	background: url(/static/images/logos_footer.png) no-repeat 50% 100%;
 }
 
 /* Generic classes for positioning columns */
@@ -222,7 +222,7 @@ p {
     left: 0px;
     right: 0px;
     height: 50px;
-    background: url(images/meetingmenu_bg_opacity30.png) repeat;
+    background: url(/static/images/meetingmenu_bg_opacity30.png) repeat;
 }
 
 /* Icons */
@@ -230,33 +230,33 @@ p {
     padding-left: 20px;
 }
 .iconpadding.closed > span {
-    background: url(icons/icon_past.png) no-repeat;
+    background: url(/static/icons/icon_past.png) no-repeat;
 }
 .iconpadding.ongoing > span {
-    background: url(icons/icon_ongoing.png) no-repeat;
+    background: url(/static/icons/icon_ongoing.png) no-repeat;
 }
 .iconpadding.upcoming > span {
-    background: url(icons/icon_upcoming.png) no-repeat;
+    background: url(/static/icons/icon_upcoming.png) no-repeat;
 }
 .iconpadding.private > span {
-    background: url(icons/icon_upcoming_red.png) no-repeat;
+    background: url(/static/icons/icon_upcoming_red.png) no-repeat;
 }
 .iconpadding.proposal {
-    background: url(icons/icon_proposal_lb.png) no-repeat left 25%;
+    background: url(/static/icons/icon_proposal_lb.png) no-repeat left 25%;
 }
 .iconpadding.discussion,
 .iconpadding.discussionpost {
-    background: url(icons/icon_disc_lb.png) no-repeat left 25%;
+    background: url(/static/icons/icon_disc_lb.png) no-repeat left 25%;
 }
 .iconpadding.poll {
-    background: url(icons/icon_poll_lb.png) no-repeat left 25%;
+    background: url(/static/icons/icon_poll_lb.png) no-repeat left 25%;
 }
 .iconpadding.poll-dark {
-    background: url(icons/icon_poll.png) no-repeat;
+    background: url(/static/icons/icon_poll.png) no-repeat;
 }
 
 .iconpadding > .cog-dark {
-    background: url(icons/icon_settings.png) no-repeat top left;
+    background: url(/static/icons/icon_settings.png) no-repeat top left;
 }
 
 /* End icons */
@@ -278,13 +278,13 @@ p {
 	margin-left: 20px;
 }
 #global-actions-menu .meeting_time {
-    background: url(icons/icon_clock_white.png) no-repeat 0 0;
+    background: url(/static/icons/icon_clock_white.png) no-repeat 0 0;
 }
 #global-actions-menu .user {
-	background: url(icons/icon_user.png) no-repeat 0 0;
+	background: url(/static/icons/icon_user.png) no-repeat 0 0;
 }
 #global-actions-menu .logout {
-    background: url(icons/icon_close_white.png) no-repeat 0 0;
+    background: url(/static/icons/icon_close_white.png) no-repeat 0 0;
 }
 
 #meeting-actions-menu {
@@ -308,7 +308,7 @@ p {
 }
 #meeting-actions-menu .dropdown_menu .menu_body {
 	top: 40px;
-    background: #fff url(images/meetingmenu_bg_opacity30.png) repeat;
+    background: #fff url(/static/images/meetingmenu_bg_opacity30.png) repeat;
 }
 
 /* Left side navigation (Agenda) */
@@ -328,7 +328,7 @@ p {
 #navigation .selected {
 	margin-right: -20px;
 	padding-right: 20px;
-    background: url(images/task_active.png) no-repeat right bottom;
+    background: url(/static/images/task_active.png) no-repeat right bottom;
 }
 #navigation ul {
     margin: 0px;
@@ -399,12 +399,12 @@ p {
 #polls .wf-state {
 	padding-left: 20px;
 }
-.wf-state-published .wf-state { background: url(icons/icon_doc.png) left center no-repeat; }
-.wf-state-retracted .wf-state { background: url(icons/icon_doc_retracted.png) left center no-repeat; }
-.wf-state-unhandled .wf-state { background: url(icons/icon_doc.png) left center no-repeat; } /*FIXME: Icon */
-.wf-state-voting .wf-state { background: url(icons/icon_lock.png) left center no-repeat; }
-.wf-state-approved .wf-state { background: url(icons/icon_approved.png) left center no-repeat; }
-.wf-state-denied .wf-state { background: url(icons/icon_denied.png) left center no-repeat; }
+.wf-state-published .wf-state { background: url(/static/icons/icon_doc.png) left center no-repeat; }
+.wf-state-retracted .wf-state { background: url(/static/icons/icon_doc_retracted.png) left center no-repeat; }
+.wf-state-unhandled .wf-state { background: url(/static/icons/icon_doc.png) left center no-repeat; } /*FIXME: Icon */
+.wf-state-voting .wf-state { background: url(/static/icons/icon_lock.png) left center no-repeat; }
+.wf-state-approved .wf-state { background: url(/static/icons/icon_approved.png) left center no-repeat; }
+.wf-state-denied .wf-state { background: url(/static/icons/icon_denied.png) left center no-repeat; }
 
 /* Flash messages */
 #flash_messages,
@@ -423,7 +423,7 @@ p {
     -webkit-box-shadow: 0 0 0.5em #888;
 	/* Info is default */
     border: 1px solid #CCC;
-    background: #FFF8E0 url(icons/icon_info.png) no-repeat 5px 6px;
+    background: #FFF8E0 url(/static/icons/icon_info.png) no-repeat 5px 6px;
 	float: left;
 	clear: both;
     font-style: italic;
@@ -431,7 +431,7 @@ p {
 	color: #054265;
 }
 #notify-meetingstate .message {
-    background-image: url(icons/icon_lock.png);
+    background-image: url(/static/icons/icon_lock.png);
 }
 #flash_messages .info {
 }
@@ -466,16 +466,16 @@ li.notification_message {
     border-bottom: 1px solid #86A3B4;
 }
 .toggle_opened .toggle_minimize {
-    background: url(icons/icon_arrow_up_lb.png) no-repeat top right;
+    background: url(/static/icons/icon_arrow_up_lb.png) no-repeat top right;
 }
 .toggle_opened .toggle_minimize:hover {
-    background-image: url(icons/icon_arrow_up.png);
+    background-image: url(/static/icons/icon_arrow_up.png);
 }
 .toggle_closed .toggle_minimize {
-    background: url(icons/icon_arrow_down_lb.png) no-repeat top right;
+    background: url(/static/icons/icon_arrow_down_lb.png) no-repeat top right;
 }
 .toggle_closed .toggle_minimize:hover {
-    background-image: url(icons/icon_arrow_down.png);
+    background-image: url(/static/icons/icon_arrow_down.png);
 }
 .toggle_area.toggle_closed .minimizable_area {
 	display: none !important;
@@ -617,10 +617,10 @@ ui-dialog {
 	padding-right: 15px;
 	height: 1px;
 	padding-bottom: 15px;
-	background: url(icons/icon_settings_lb.png) no-repeat;
+	background: url(/static/icons/icon_settings_lb.png) no-repeat;
 }
 .cogwheel .menu_header:hover {
-	background-image: url(icons/icon_settings.png);
+	background-image: url(/static/icons/icon_settings.png);
 }
 .cogwheel .menusection {
 	display: block;
@@ -697,7 +697,7 @@ table.listing > tbody > tr.even > td {
 	padding-left: 20px;
 	height: 16px;
 	display: block;
-	background: url(icons/icon_approved.png) no-repeat;
+	background: url(/static/icons/icon_approved.png) no-repeat;
 }
 
 /* listing items */
@@ -763,11 +763,11 @@ table.listing > tbody > tr.even > td {
  * This is our custom version of that code
  */
 div.rating-cancel,div.star-rating{float:left;width:32px;height:31px;text-indent:-999em;cursor:pointer;display:block;background:transparent;overflow:hidden}
-div.rating-cancel,div.rating-cancel a{background:url(images/star_remove.png) no-repeat}
-div.star-rating,div.star-rating a{background:url(images/star_lb_bord.png) no-repeat}
+div.rating-cancel,div.rating-cancel a{background:url(/static/images/star_remove.png) no-repeat}
+div.star-rating,div.star-rating a{background:url(/static/images/star_lb_bord.png) no-repeat}
 div.rating-cancel a,div.star-rating a{display:block;height:100%;background-position:0 0px;border:0}
-div.star-rating-on a{background-image:url(images/star.png)}
-div.star-rating-hover a{background-image:url(images/star.png)}
+div.star-rating-on a{background-image:url(/static/images/star.png)}
+div.star-rating-hover a{background-image:url(/static/images/star.png)}
 /* Read Only CSS */
 div.star-rating-readonly a{cursor:default !important}
 /* Partial Star CSS */

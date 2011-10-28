@@ -66,7 +66,7 @@ def required_components(config):
     config.include(adjust_default_view_component_order)
     config.include(adjust_view_component_order)
     from voteit.core.security import VIEW
-    config.set_default_permission(VIEW)
+    config.set_default_permission(VIEW)    
 
 
 def register_poll_plugins(config):

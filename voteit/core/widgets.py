@@ -7,16 +7,20 @@ from deform.widget import CheckedInputWidget
 from deform.widget import RadioChoiceWidget
 from pyramid.threadlocal import get_current_request
 
+from voteit.core.fanstaticlib import jquery_rating
+
 
 class StarWidget(RadioChoiceWidget):
     """ Star widget for raiting alternatives.
         Use keyword creator_info to pass along creator information.
         See voteit.schulze.models for example code.
     """
-    #FIXME: the resources for this widget is now hardcoded into main.pt, they should be added through deform resource manager
-    #requirements = ( ('jquery.rating', None), )
     template = 'star_choice'
     readonly_template = 'readonly/star_choice'
+
+    def __init__(self, **kw):
+        super(StarWidget, self).__init__(**kw)
+        jquery_rating.need()
 
 
 class RecaptchaWidget(CheckedInputWidget):
