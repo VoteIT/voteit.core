@@ -54,19 +54,21 @@ def navigation_section(context, request, va, **kwargs):
         response['closed_section'] = True
         return render('../templates/snippets/navigation_section.pt', response, request = request)
 
-    #Meeting or root context?
-    if ISiteRoot.providedBy(context):
-        content_type = 'Meeting'
-    else:
-        content_type = 'AgendaItem'
-
     context_path = resource_path(context)
     query = dict(
-        allowed_to_view = {'operator': 'or', 'query': api.context_effective_principals(context)},
         workflow_state = state,
-        content_type = content_type,
         path = context_path,
     )
+    #Meeting or root context?
+    if ISiteRoot.providedBy(context):
+        query['content_type'] = 'Meeting'
+        #Note that None is not a valid query. This view shouldn't be called for unauthenticated.
+        query['view_meeting_userids'] = api.userid
+    else:
+        query['content_type'] = 'AgendaItem'
+        #Principals within the meeting that has to do with view will be the same for all agenda items
+        query['allowed_to_view'] = {'operator': 'or', 'query': api.context_effective_principals(context)},
+
     
     def _count_query(path, content_type, unread = False):
         """ Returns number of an item, possbly unread only. """
