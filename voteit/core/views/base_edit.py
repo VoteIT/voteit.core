@@ -40,7 +40,8 @@ class BaseEdit(object):
         self.response['api'] = self.api = APIView(context, request)
         fanstaticlib.deform.need()
         fanstaticlib.voteit_main_css.need()
-        fanstaticlib.voteit_ajax.need()
+        fanstaticlib.voteit_common_js.need()
+        fanstaticlib.voteit_deform_js.need()
 
     @view_config(context=IBaseContent, name="add", renderer=DEFAULT_TEMPLATE)
     def add_form(self):

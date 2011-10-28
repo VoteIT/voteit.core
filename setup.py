@@ -59,9 +59,9 @@ setup(name='voteit.core',
       [console_scripts]
       update_catalog = voteit.core.scripts.catalog:update_catalog
       [fanstatic.libraries]
-      voteit_core_css = voteit.core.fanstaticlib:voteit_core_css
-      voteit_core_js = voteit.core.fanstaticlib:voteit_core_js
-      deform_static = voteit.core.fanstaticlib:deform_static
+      voteit_core_csslib = voteit.core.fanstaticlib:voteit_core_csslib
+      voteit_core_jslib = voteit.core.fanstaticlib:voteit_core_jslib
+      deformlib = voteit.core.fanstaticlib:deformlib
       """,
       paster_plugins=['pyramid'],
       message_extractors = { '.': [

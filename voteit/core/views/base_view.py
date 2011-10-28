@@ -17,9 +17,12 @@ class BaseView(object):
         fanstaticlib.qtip.need()
         if self.api.show_moderator_actions or context.content_type == 'AgendaItem':
             #Easy confirm is used by retract proposal and wf menu actions
-            fanstaticlib.jquery_easy_confirm_dialog.need()
+            fanstaticlib.voteit_workflow_js.need()
         fanstaticlib.voteit_main_css.need()
-        fanstaticlib.voteit_ajax.need()
+        fanstaticlib.voteit_common_js.need()
+        if context.content_type == 'AgendaItem':
+            #This is the only place we use inline info in now. That might change
+            fanstaticlib.voteit_user_inline_info_js.need()
 
 
 class DefaultView(BaseView):
