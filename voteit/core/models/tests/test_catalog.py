@@ -45,12 +45,9 @@ class CatalogTestCase(unittest.TestCase):
         testing.tearDown()
 
     def _add_mock_meeting(self):
-        obj = createContent('Meeting')
-        obj.title = 'Testing catalog'
-        obj.description = 'To check that everything works as expected.'
-        obj.uid = 'simple_uid'
-        obj.creators = ['demo_userid']
-        obj.add_groups('demo_userid', (security.ROLE_OWNER,))
+        obj = createContent('Meeting', title = 'Testing catalog',
+                            description = 'To check that everything works as expected.',
+                            uid = 'simple_uid', creators = ['demo_userid'])
         obj.add_groups('admin', (security.ROLE_ADMIN, security.ROLE_MODERATOR,))
         self.root['meeting'] = obj
         return obj
@@ -200,6 +197,13 @@ class CatalogIndexTests(CatalogTestCase):
         self.assertEqual(self.query("allowed_to_view in any('role:Viewer',) and path == '/meeting'")[0], 1)
         self.assertEqual(self.query("allowed_to_view in any('role:Admin',) and path == '/meeting'")[0], 1)
         self.assertEqual(self.query("allowed_to_view in any('role:Moderator',) and path == '/meeting'")[0], 1)
+
+    def test_view_meeting_userids(self):
+        self._register_security_policies()
+        #Must add a user to users folder too, otherwise the find_authorized_userids won't accept them as valid
+        self.root['users']['demo_userid'] = createContent('User')
+        obj = self._add_mock_meeting()
+        self.assertEqual(self.search(view_meeting_userids = 'demo_userid')[0], 1)
 
     def test_searchable_text(self):
         obj = self._add_mock_meeting()

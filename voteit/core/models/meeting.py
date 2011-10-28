@@ -52,6 +52,16 @@ class Meeting(BaseContent, WorkflowAware):
     #Ie captcha
     schemas = {'add': 'MeetingSchema', 'edit': 'MeetingSchema'}
 
+
+    def __init__(self, data=None, **kwargs):
+        """ When meetings are added, whoever added them should become moderator and voter.
+            BaseContent will have added userid to creators attribute.
+        """
+        super(Meeting, self).__init__(data=data, **kwargs)
+        if len(self.creators) and self.creators[0]:
+            userid = self.creators[0]
+            self.add_groups(userid, (security.ROLE_MODERATOR, security.ROLE_VOTER, ))
+
     @property
     def __acl__(self):
         return ACL.get(self.get_workflow_state(), ACL['default'])
