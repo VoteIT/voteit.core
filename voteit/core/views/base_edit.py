@@ -82,7 +82,14 @@ class BaseEdit(object):
             if content_type not in ('DiscussionPost', 'Proposal',):
                 self.api.flash_messages.add(_(u"Successfully added"))
 
+            #Success, redirect
             url = resource_url(obj, self.request)
+            #Polls might have a special redirect action if the poll plugin has a settings schema:
+            if content_type == 'Poll' and obj.get_poll_plugin().get_settings_schema() is not None:
+                msg = _(u"review_poll_settings_info",
+                        default = u"Please review poll settings, note that any default value in a field might be a suggestion and not what's actually stored.")
+                self.api.flash_messages.add(msg)
+                url += '@@poll_config'
             return HTTPFound(location=url)
 
         if 'cancel' in post:
