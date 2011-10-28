@@ -46,6 +46,10 @@ _deform_css = Resource(deformlib, 'css/form.css', supersedes=(voteit_main_css,),
 deform = Group((_deform_js, _deform_css))
 
 #VoteIT core
+
+_star_rating_css = Resource(voteit_core_csslib, 'star_rating.css', depends=(voteit_main_css,))
+star_rating = Group((_star_rating_css, jquery_rating))
+
 voteit_common_js = Resource(voteit_core_jslib, 'voteit_common.js', depends=(jquery_142, jquery_cookie))
 voteit_user_inline_info_js = Resource(voteit_core_jslib, 'voteit_user_inline_info.js', depends=(jquery_142, qtip, voteit_common_js))
 voteit_deform_js = Resource(voteit_core_jslib, 'voteit_deform.js', depends=(_deform_js,))

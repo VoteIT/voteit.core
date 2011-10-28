@@ -7,7 +7,7 @@ from deform.widget import CheckedInputWidget
 from deform.widget import RadioChoiceWidget
 from pyramid.threadlocal import get_current_request
 
-from voteit.core.fanstaticlib import jquery_rating
+from voteit.core.fanstaticlib import star_rating
 
 
 class StarWidget(RadioChoiceWidget):
@@ -20,7 +20,7 @@ class StarWidget(RadioChoiceWidget):
 
     def __init__(self, **kw):
         super(StarWidget, self).__init__(**kw)
-        jquery_rating.need()
+        star_rating.need()
 
 
 class RecaptchaWidget(CheckedInputWidget):

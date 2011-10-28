@@ -746,33 +746,6 @@ table.listing > tbody > tr.even > td {
     float: right;
 	margin: 0px 0px 1em 1em;
 }
-/* widget code, perhaps this should be separate */
-.star-rating-control {
-    float: right;
-}
-.starwidget {
-	display: block;
-    padding: 0 0 0.5em 0;
-	border-bottom: 1px solid #ccc;
-}
-.starwidget .meta {
-    float: left;
-}
-
-/* jQuery.Rating Plugin CSS - http://www.fyneworks.com/jquery/star-rating/
- * This is our custom version of that code
- */
-div.rating-cancel,div.star-rating{float:left;width:32px;height:31px;text-indent:-999em;cursor:pointer;display:block;background:transparent;overflow:hidden}
-div.rating-cancel,div.rating-cancel a{background:url(/static/images/star_remove.png) no-repeat}
-div.star-rating,div.star-rating a{background:url(/static/images/star_lb_bord.png) no-repeat}
-div.rating-cancel a,div.star-rating a{display:block;height:100%;background-position:0 0px;border:0}
-div.star-rating-on a{background-image:url(/static/images/star.png)}
-div.star-rating-hover a{background-image:url(/static/images/star.png)}
-/* Read Only CSS */
-div.star-rating-readonly a{cursor:default !important}
-/* Partial Star CSS */
-div.star-rating{background:transparent!important;overflow:hidden!important}
-/* END jQuery.Rating Plugin CSS */
 
 /* list of tagging users */
 .tagging_users img {
