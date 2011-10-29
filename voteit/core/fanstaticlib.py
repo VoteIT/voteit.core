@@ -31,8 +31,10 @@ jquery_rating = Resource(voteit_core_jslib, 'jquery.rating.js', depends=(jquery_
 tinymce = Resource(deformlib, 'tinymce/jscripts/tiny_mce/tiny_mce.js')
 
 #qTip
-_qtip_css = Resource(voteit_core_csslib, 'jquery.qtip.css', supersedes=(voteit_main_css,), depends = (reset,))
-_qtip_js = Resource(voteit_core_jslib, 'jquery.qtip.js', depends = (jquery_ui,))
+_qtip_css = Resource(voteit_core_csslib, 'jquery.qtip.css', minified = 'min/jquery.qtip.min.css',
+                     supersedes=(voteit_main_css,), depends = (reset,))
+_qtip_js = Resource(voteit_core_jslib, 'jquery.qtip.js', minified = 'min/jquery.qtip.min.js',
+                    depends = (jquery_ui,))
 qtip = Group((_qtip_css, _qtip_js))
 
 #Timepicker
