@@ -77,8 +77,7 @@ class APIView(object):
         """ Append form resources if they don't already exist in self.form_resources """
         self.init_deform = True
         for (key, version) in form.get_widget_requirements():
-            resource = DEFORM_RESOURCES.get(key, None)
-            if resource:
+            for resource in DEFORM_RESOURCES.get(key, ()):
                 resource.need()
             #FIXME: Otherwise log error
 
