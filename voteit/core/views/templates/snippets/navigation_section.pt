@@ -1,8 +1,8 @@
 <tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core">
 <div tal:attributes="id '%s-%s' % (api.root.uid, state);
                      class closed_section and 'toggle_area toggle_closed block' or 'toggle_area toggle_opened block';">
-    <h6 class="toggle_minimize iconpadding ${state}">
-        <span><a href="${request.url}">${section_title}</a></span>
+    <h6 class="toggle_minimize">
+        <a href="${request.url}" class="iconpadding icon ${state}">${section_title}</a>
     </h6>
 	
     <tal:open_section condition="not closed_section">
@@ -19,21 +19,17 @@
 	                    <a tal:attributes="href brain['path']">
 	                        <div tal:content="brain['title']">Title</div>
 	                        <div tal:condition="brain['content_type'] == 'AgendaItem'" class="info">
-	                            <span class="iconpadding proposal cinfo"
+	                            <span class="cinfo iconpadding icon proposal"
 	                                  tal:define="unread_count not current_context and count_query(brain['path'], 'Proposal', unread = 1) or 0">
-	                                <span>
-	                                    <span class="total"
-	                                          tal:content="count_query(brain['path'], 'Proposal')">0</span>
-	                                    <span class="unread" tal:condition="unread_count">(${unread_count})</span>
-	                                </span>
+                                    <span class="total"
+                                          tal:content="count_query(brain['path'], 'Proposal')">0</span>
+                                    <span class="unread" tal:condition="unread_count">(${unread_count})</span>
 	                            </span>
-	                            <span class="iconpadding discussion cinfo"
+	                            <span class="cinfo iconpadding icon discussion"
 	                                  tal:define="unread_count not current_context and count_query(brain['path'], 'DiscussionPost', unread = 1) or 0">
-	                                <span>
-	                                    <span class="total"
-	                                          tal:content="count_query(brain['path'], 'DiscussionPost')">0</span>
-	                                    <span class="unread" tal:condition="unread_count">(${unread_count})</span>
-	                                </span>
+                                    <span class="total"
+                                          tal:content="count_query(brain['path'], 'DiscussionPost')">0</span>
+                                    <span class="unread" tal:condition="unread_count">(${unread_count})</span>
 	                            </span>
 	                        </div>
 	                        <div class="clear"><!-- --></div>

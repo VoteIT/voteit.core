@@ -23,17 +23,6 @@ class AgendaItemSchema(colander.MappingSchema):
         missing = u"",
         widget=deform.widget.RichTextWidget(),
     )
-    summary = colander.SchemaNode(
-        colander.String(),
-        title = _(u"Summary of this item."),
-        description = _(u"agenda_item_summary_description",
-                        default=u"This summary shows up to the right on the meetings first page. Write a short summary on what is going on or what has been decided. This should be updated as the meeting progresses."),
-        #description = _('ai_summary_description',
-        #                default=u"This could be what was decided. It will show up in the log on the meeting page."),
-        widget=deform.widget.TextAreaWidget(rows=10, cols=60),
-        missing = u"",
-        validator=html_string_validator,
-    )
     start_time = colander.SchemaNode(
         TZDateTime(),
         title = _('ai_start_time_title',
