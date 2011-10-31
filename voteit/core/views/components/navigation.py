@@ -19,7 +19,7 @@ def navigation(context, request, va, **kwargs):
     )
     return render('../templates/navigation.pt', response, request = request)
 
-@view_action('navigation', 'login', hello = 'bla')
+@view_action('navigation', 'login')
 def login_box(context, request, va, **kwargs):
     api = kwargs['api']
 
