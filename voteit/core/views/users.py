@@ -5,6 +5,7 @@ from deform import Form
 from deform.exception import ValidationFailure
 from pyramid.httpexceptions import HTTPFound
 from pyramid.url import resource_url
+from pyramid.security import NO_PERMISSION_REQUIRED
 from pyramid.security import remember
 from pyramid.security import forget
 from pyramid.renderers import render
@@ -245,7 +246,7 @@ class UsersFormView(BaseEdit):
 
 
     @view_config(context=ISiteRoot, name='request_password',
-                 renderer=DEFAULT_TEMPLATE)
+                 renderer=DEFAULT_TEMPLATE, permission=NO_PERMISSION_REQUIRED)
     def request_password(self):        
         schema = createSchema('RequestNewPasswordSchema').schema(context=self.context, request=self.request)
         form = Form(schema, buttons=(button_request, button_cancel))
