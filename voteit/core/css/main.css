@@ -8,24 +8,12 @@ h1, h2, h3, h4, h5, h6 {
 	font-weight: bold;
 	margin: 0.5em 0;
 }
-h1 {
-	font-size: 200%;
-}
-h2 {
-    font-size: 175%;
-}
-h3 {
-    font-size: 150%;
-}
-h4 {
-    font-size: 125%;
-}
-h5 {
-    font-size: 100%;
-}
-h6 {
-    font-size: 85%;
-}
+h1 { font-size: 200%;}
+h2 { font-size: 175%;}
+h3 { font-size: 150%;}
+h4 { font-size: 125%;}
+h5 { font-size: 100%;}
+h6 { font-size: 85%;}
 a {
     color: #054265;
 	text-decoration: none;
@@ -226,38 +214,23 @@ p {
 }
 
 /* Icons */
-.iconpadding > span {
-    padding-left: 20px;
-}
-.iconpadding.closed > span {
-    background: url(/static/icons/icon_past.png) no-repeat;
-}
-.iconpadding.ongoing > span {
-    background: url(/static/icons/icon_ongoing.png) no-repeat;
-}
-.iconpadding.upcoming > span {
-    background: url(/static/icons/icon_upcoming.png) no-repeat;
-}
-.iconpadding.private > span {
-    background: url(/static/icons/icon_upcoming_red.png) no-repeat;
-}
-.iconpadding.proposal {
-    background: url(/static/icons/icon_proposal_lb.png) no-repeat left 25%;
-}
-.iconpadding.discussion,
-.iconpadding.discussionpost {
-    background: url(/static/icons/icon_disc_lb.png) no-repeat left 25%;
-}
-.iconpadding.poll {
-    background: url(/static/icons/icon_poll_lb.png) no-repeat left 25%;
-}
-.iconpadding.poll-dark {
-    background: url(/static/icons/icon_poll.png) no-repeat;
-}
-
-.iconpadding > .cog-dark {
-    background: url(/static/icons/icon_settings.png) no-repeat top left;
-}
+.iconpadding { padding-left: 20px; }
+.icon.closed { background: url(/static/icons/icon_past.png) no-repeat; }
+.icon.ongoing { background: url(/static/icons/icon_ongoing.png) no-repeat; }
+.icon.upcoming { background: url(/static/icons/icon_upcoming.png) no-repeat; }
+.icon.private { background: url(/static/icons/icon_upcoming_red.png) no-repeat; }
+.icon.proposal { background: url(/static/icons/icon_proposal_lb.png) no-repeat left 25%; }
+.icon.discussion,
+.icon.discussionpost { background: url(/static/icons/icon_disc_lb.png) no-repeat left 25%; }
+.icon.poll { background: url(/static/icons/icon_poll_lb.png) no-repeat left 25%; }
+.icon.poll-dark { background: url(/static/icons/icon_poll.png) no-repeat; }
+.cog-dark { background: url(/static/icons/icon_settings.png) no-repeat top left; }
+.icon.published { background: url(/static/icons/icon_doc.png) left center no-repeat; }
+.icon.retracted { background: url(/static/icons/icon_doc_retracted.png) left center no-repeat; }
+.icon.unhandled { background: url(/static/icons/icon_doc.png) left center no-repeat; }
+.icon.voting { background: url(/static/icons/icon_lock.png) left center no-repeat; }
+.icon.approved { background: url(/static/icons/icon_approved.png) left center no-repeat; }
+.icon.denied { background: url(/static/icons/icon_denied.png) left center no-repeat; }
 
 /* End icons */
 
@@ -380,31 +353,6 @@ p {
     margin-top: 1em;
 	clear: both;
 }
-
-/* Workflow states */
-.wf-state-ongoing {}
-.wf-state-approved {}
-.wf-state-canceled {}
-.wf-state-closed {}
-.wf-state-denied {}
-.wf-state-upcoming {}
-.wf-state-private {}
-.wf-state-published {}
-.wf-state-retracted {}
-.wf-state-unhandled {}
-.wf-state-voting {}
-.wf-state-ongoing {}
-
-#proposals .wf-state,
-#polls .wf-state {
-	padding-left: 20px;
-}
-.wf-state-published .wf-state { background: url(/static/icons/icon_doc.png) left center no-repeat; }
-.wf-state-retracted .wf-state { background: url(/static/icons/icon_doc_retracted.png) left center no-repeat; }
-.wf-state-unhandled .wf-state { background: url(/static/icons/icon_doc.png) left center no-repeat; } /*FIXME: Icon */
-.wf-state-voting .wf-state { background: url(/static/icons/icon_lock.png) left center no-repeat; }
-.wf-state-approved .wf-state { background: url(/static/icons/icon_approved.png) left center no-repeat; }
-.wf-state-denied .wf-state { background: url(/static/icons/icon_denied.png) left center no-repeat; }
 
 /* Flash messages */
 #flash_messages,
@@ -644,9 +592,7 @@ ui-dialog {
 	font-size: 12px;
 }
 
-.meta .wf-state {
-    padding-top: 2px;
-}
+.meta .icon { padding-top: 3px; }
 
 /* minimize */
 .toggle_minimize {

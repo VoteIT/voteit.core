@@ -14,20 +14,17 @@
         <h3 tal:content="poll.title">Title</h3>
 
         <div class="col-50-50">
-            
             <div class="column column-1">
                 <div tal:replace="structure api.get_poll_state_info(poll)">Poll state info</div>
                 <div class="description"
                      tal:content="structure poll.description">Description</div>
             </div>
-
             <div class="column column-2">
                 <div class="poll_type">
                     <strong i18n:translate="">Poll method</strong>: <span tal:content="poll_plugin.title|string:Broken plugin">Title</span>
                     <div tal:content="structure poll_plugin.description|string:">Description</div>
                 </div>
             </div>
-            
         </div>
         
         <div class="clear"><!-- --></div>

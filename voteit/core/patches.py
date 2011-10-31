@@ -18,11 +18,18 @@ def translator(term):
 
 
 CURRENT_PATH = resource_filename('voteit.core', '')
-WIDGET_PATH = join(CURRENT_PATH, 'views', 'templates', 'widgets')
-search_path = (WIDGET_PATH,
-               resource_filename('deform', 'templates'))
+WIDGETS_PATH = join(CURRENT_PATH, 'views', 'templates', 'widgets')
+DEFAULT_SEARCH_PATHS = [WIDGETS_PATH,
+                       resource_filename('deform', 'templates')]
 
-Form.set_zpt_renderer(search_path, translator=translator)
+Form.set_zpt_renderer(DEFAULT_SEARCH_PATHS, translator=translator)
 
-#Patch radio choice widget to use a sane readonly template
-RadioChoiceWidget.readonly_template = join(WIDGET_PATH, 'readonly', 'radio_choice')
+#Patches for widget templates, so they actually display sane readonly templates
+RadioChoiceWidget.readonly_template = join(WIDGETS_PATH, 'readonly', 'radio_choice')
+
+
+def append_search_path(path):
+    current = list(Form.default_renderer.loader.search_path)
+    current.append(path)
+    Form.default_renderer.loader.search_path = tuple(current)
+
