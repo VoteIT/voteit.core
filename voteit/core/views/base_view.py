@@ -14,7 +14,6 @@ class BaseView(object):
         self.request = request
         self.response = {}
         self.response['api'] = self.api = APIView(context, request)
-        fanstaticlib.qtip.need()
         if self.api.show_moderator_actions or context.content_type == 'AgendaItem':
             #Easy confirm is used by retract proposal and wf menu actions
             fanstaticlib.voteit_workflow_js.need()
