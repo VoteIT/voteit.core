@@ -1,5 +1,4 @@
 <tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core">
-
 <tal:iterate condition="proposals" repeat="proposal proposals" >
     <div tal:define="unread api.is_unread(proposal, True);
 	                 state_id proposal.get_workflow_state();
@@ -15,26 +14,19 @@
         <span class="body" tal:content="structure proposal.title">Title</span>
 
         <div class="meta">
-            <span class="wf-state"
-                    tal:content="api.tstring(proposal.current_state_title(request))">private</span>
-
+            <span class="${state_id} icon iconpadding"
+                  tal:content="api.tstring(proposal.current_state_title(request))">private</span>
             <span class="hyphen">&#45;</span>
-
 	        <span class="time" tal:content="api.get_time_created(proposal)"></span>
-
 	        <span class="hyphen">&#45;</span>
-
 	        <span tal:condition="show_retract(proposal)">
 	        	<a class="retract confirm-retract"
 		           tal:attributes="href api.resource_url(proposal, request) + '@@state?state=retracted'"
 		           i18n:translate="">Retract</a>
-
     			<span class="hyphen">&#45;</span>
 	        </span>
-
 	        <span class="user_tags" tal:content="structure api.user_tags_view.get_user_tag(proposal, 'like', like, like_this)"></span>
 		</div>
-		
         <div class="clear"><!-- --></div>
     </div>
     
