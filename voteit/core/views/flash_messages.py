@@ -1,14 +1,9 @@
-"""
-Macros here are stand-alone code parts that could be executed as a view or
-imported and run from another view class, like APIView.
-The reason for this is to allow them to be included in templates and to
-be reloaded by Ajax requests.
-"""
 from pyramid.view import view_config
 from pyramid.renderers import render
 
 
-FLASH_TEMPLATE = 'templates/macros/flash_messages.pt'
+FLASH_TEMPLATE = 'templates/snippets/flash_messages.pt'
+
 
 class FlashMessages(object):
     
@@ -32,5 +27,4 @@ class FlashMessages(object):
 
     @view_config(name="_flash_messages", renderer=FLASH_TEMPLATE)
     def inline(self):
-        response = dict(messages = self._get_messages(),)
-        return response
+        return dict(messages = self._get_messages(),)
