@@ -11,7 +11,6 @@ from pyramid.interfaces import IAuthenticationPolicy
 from pyramid.interfaces import IAuthorizationPolicy
 from pyramid.decorator import reify
 from pyramid.i18n import get_localizer
-from webhelpers.html.converters import nl2br
 from betahaus.pyracont.interfaces import IContentFactory
 from betahaus.viewcomponent import render_view_group
 from betahaus.viewcomponent.interfaces import IViewGroup
@@ -50,7 +49,6 @@ class APIView(object):
         
         self.dt_util = request.registry.getUtility(IDateTimeUtil)
         self.flash_messages = FlashMessages(request)
-        self.nl2br = nl2br
         self.init_deform = False
 
         #Main macro

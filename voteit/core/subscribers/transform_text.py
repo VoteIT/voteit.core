@@ -18,6 +18,8 @@ from voteit.core.models.interfaces import IDiscussionPost
 from voteit.core.interfaces import IObjectUpdatedEvent
 from voteit.core.models.user import USERID_REGEXP
 
+#FIXME: This could be custom accessors on Proposal / DiscussionPost
+
 def urls_to_links(text):
     return auto_link(text, link='urls')
 
