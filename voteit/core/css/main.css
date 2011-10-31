@@ -226,36 +226,36 @@ p {
 }
 
 /* Icons */
-.iconpadding > span {
+.iconpadding {
     padding-left: 20px;
 }
-.iconpadding.closed > span {
+.icon.closed {
     background: url(/static/icons/icon_past.png) no-repeat;
 }
-.iconpadding.ongoing > span {
+.icon.ongoing {
     background: url(/static/icons/icon_ongoing.png) no-repeat;
 }
-.iconpadding.upcoming > span {
+.icon.upcoming {
     background: url(/static/icons/icon_upcoming.png) no-repeat;
 }
-.iconpadding.private > span {
+.icon.private {
     background: url(/static/icons/icon_upcoming_red.png) no-repeat;
 }
-.iconpadding.proposal {
+.icon.proposal {
     background: url(/static/icons/icon_proposal_lb.png) no-repeat left 25%;
 }
-.iconpadding.discussion,
-.iconpadding.discussionpost {
+.icon.discussion,
+.icon.discussionpost {
     background: url(/static/icons/icon_disc_lb.png) no-repeat left 25%;
 }
-.iconpadding.poll {
+.icon.poll {
     background: url(/static/icons/icon_poll_lb.png) no-repeat left 25%;
 }
-.iconpadding.poll-dark {
+.icon.poll-dark {
     background: url(/static/icons/icon_poll.png) no-repeat;
 }
 
-.iconpadding > .cog-dark {
+.cog-dark {
     background: url(/static/icons/icon_settings.png) no-repeat top left;
 }
 

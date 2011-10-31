@@ -17,7 +17,7 @@
             	<span i18n:translate="">Add poll</span>
 			</a>
         </div>
-        <h2 tal:condition="polls" class="iconpadding poll"><span i18n:translate="">Poll</span></h2>
+        <h2 tal:condition="polls"><span class="iconpadding icon poll" i18n:translate="">Poll</span></h2>
 
         <span tal:replace="structure get_polls(polls, poll_forms)">Render poll listing</span>
 

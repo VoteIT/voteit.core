@@ -1,11 +1,9 @@
 <tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core">
 <li class="tab dropdown_menu">
     <a href="#" class="menu_header">
-        <span class="iconpadding poll-dark">
-            <span>
-                <tal:unread condition="unread_polls_count">(${unread_polls_count})</tal:unread>
-                ${menu_title} &raquo;
-            </span>
+        <span class="iconpadding icon poll-dark">
+            <tal:unread condition="unread_polls_count">(${unread_polls_count})</tal:unread>
+            ${menu_title} &raquo;
         </span>
     </a>
     <ul class="menu_body">
@@ -13,7 +11,7 @@
             <tal:section repeat="section sections">
                 <tal:defs define="metadatas polls_metadata[section]">
                 <tal:exists condition="metadatas">
-                    <li class="readonly iconpadding ${section}"><span>${api.tstring(section.title())}</span></li>
+                    <li class="readonly"><span class="iconpadding icon ${section}">${api.tstring(section.title())}</span></li>
                     <li tal:repeat="poll_metadata metadatas">
                         <a href="${poll_metadata['path']}"
                            tal:attributes="class api.userid in poll_metadata.get('unread',()) and 'unread' or ''">
