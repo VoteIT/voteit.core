@@ -33,8 +33,7 @@ def login_box(context, request, va, **kwargs):
     action_url = resource_url(api.root, request) + 'login'
     login_form = Form(login_schema, buttons=(button_login,), action=action_url)
     api.register_form_resources(login_form)
-    return login_form.render()
-
+    return """%s<div><a href="/@@request_password">%s</a></div>""" % (login_form.render(), api.translate(_(u"Forgot password?")))
     
 @view_action('navigation_sections', 'closed', title = _(u"Closed"), state = 'closed')
 @view_action('navigation_sections', 'ongoing', title = _(u"Ongoing"), state = 'ongoing')
