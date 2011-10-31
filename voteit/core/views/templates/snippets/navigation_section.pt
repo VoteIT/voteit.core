@@ -9,7 +9,7 @@
 	    <ul class="section">
 	        <tal:iterate condition="brains" repeat="brain brains">
 	            <tal:defs define="current_context request.path.startswith(brain['path'])">
-	            <li tal:attributes="class current_context and 'selected' or 'plain'">
+	            <li tal:attributes="class current_context and 'selected minimizable_area' or 'plain minimizable_area'">
 	                <tal:moderator_menu condition="api.show_moderator_actions">
 	                    <span tal:replace="structure api.get_moderator_actions(brain, request)">
 	                         Cogwheel menu
