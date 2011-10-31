@@ -116,7 +116,7 @@ class UsersFormView(BaseEdit):
         self.response['form'] = form.render()
         return self.response
 
-    @view_config(context=IUser, name="token_pw", renderer=DEFAULT_TEMPLATE)
+    @view_config(context=IUser, name="token_pw", renderer=DEFAULT_TEMPLATE, permission=NO_PERMISSION_REQUIRED)
     def token_password_change(self):
         schema = createSchema('TokenPasswordChangeSchema').bind(context=self.context, request=self.request)
 
@@ -248,7 +248,7 @@ class UsersFormView(BaseEdit):
     @view_config(context=ISiteRoot, name='request_password',
                  renderer=DEFAULT_TEMPLATE, permission=NO_PERMISSION_REQUIRED)
     def request_password(self):        
-        schema = createSchema('RequestNewPasswordSchema').schema(context=self.context, request=self.request)
+        schema = createSchema('RequestNewPasswordSchema').bind(context=self.context, request=self.request)
         form = Form(schema, buttons=(button_request, button_cancel))
         self.api.register_form_resources(form)
     
