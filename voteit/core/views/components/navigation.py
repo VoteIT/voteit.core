@@ -67,8 +67,7 @@ def navigation_section(context, request, va, **kwargs):
     else:
         query['content_type'] = 'AgendaItem'
         #Principals taken from this context will be okay for a query within the meetings
-        query['allowed_to_view'] = {'operator': 'or', 'query': api.context_effective_principals(context)},
-
+        query['allowed_to_view'] = {'operator': 'or', 'query': api.context_effective_principals(context)}
     
     def _count_query(path, content_type, unread = False):
         """ Returns number of an item, possbly unread only. """
