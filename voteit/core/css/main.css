@@ -131,6 +131,7 @@ p {
 
 /* dropdown menu */
 .dropdown_menu {
+    z-index: 15001 !important;
 	position: relative;
 }
 .dropdown_menu .menu_header {}
@@ -279,8 +280,11 @@ p {
 	height: 20px;
 	padding: 10px;
 }
-#meeting-actions-menu .dropdown_menu .menu_body {
+#meeting-actions-menu .dropdown_menu .menu_body, {
 	top: 40px;
+}
+#meeting-actions-menu .dropdown_menu .menu_body,
+.qtip_menu .ui-tooltip-content {
     background: #fff url(/static/images/meetingmenu_bg_opacity30.png) repeat;
 }
 
@@ -714,4 +718,8 @@ table.listing > tbody > tr.even > td {
 .moretag-popup.ui-tooltip, 
 .inlineinfo-popup.ui-tooltip {
 	min-width: 500px;
+}
+
+.qtip_menu .ui-tooltip-content {
+    border: none;
 }

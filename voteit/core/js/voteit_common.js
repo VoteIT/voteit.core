@@ -29,10 +29,10 @@ $(document).ready(function () {
  * </div>
  */
 $(document).ready(function () {
-    $('.dropdown_menu .menu_header').live('click', function(event) {
+    $('#meeting-actions .dropdown_menu .menu_header').live('click', function(event) {
         return false;
     });
-    $('.dropdown_menu').hover(
+    $('#meeting-actions .dropdown_menu').hover(
         function () {
             //show its submenu
             $(this).find('.menu_body').slideDown(100);
@@ -45,6 +45,45 @@ $(document).ready(function () {
         }
     );
 });
+
+$('#navigation .dropdown_menu').live('hover', display_qtip_menu);
+$('#main_window .dropdown_menu').live('hover', display_qtip_menu);
+
+function display_qtip_menu(event) {
+    /* stop form from submitting normally 
+    IE might throw an error calling preventDefault(), so use a try/catch block. */
+    try { event.preventDefault(); } catch(e) {}
+    event.preventDefault(); 
+    
+    $(this).qtip({
+        overwrite: false, // Make sure the tooltip won't be overridden once created
+        content: { 
+            text: $(this).find('.menu_body'), // The text to use whilst the AJAX request is loading
+        },
+        show: {
+            event: event.type, // Use the same show event as the one that triggered the event handler
+            ready: true, // Show the tooltip as soon as it's bound, vital so it shows up the first time you hover!
+            effect: false,
+        },
+        hide: {
+            event: "mouseleave",
+            fixed: true,
+            effect: false,
+        },
+        position: {
+            viewport: $(window),
+            at: "right center",
+            my: "left top",
+            adjust: {
+                method: 'flip',
+            }
+        },
+        style: { 
+            classes: "qtip_menu"
+        },
+    }, event);
+}
+
 /*  User tag methods */
 $(document).ready(function() {
     $(".user_tag_form").live('submit', function(event) {

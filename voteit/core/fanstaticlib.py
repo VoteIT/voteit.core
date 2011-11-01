@@ -53,7 +53,7 @@ jquery_timepicker = Group((_jquery_timepicker_css, _jquery_timepicker_js))
 _star_rating_css = Resource(voteit_core_csslib, 'star_rating.css', depends=(voteit_main_css,))
 star_rating = Group((_star_rating_css, jquery_rating))
 
-voteit_common_js = Resource(voteit_core_jslib, 'voteit_common.js', depends=(jquery_142, jquery_cookie), bottom=True)
+voteit_common_js = Resource(voteit_core_jslib, 'voteit_common.js', depends=(jquery_142, jquery_cookie, qtip), bottom=True)
 voteit_user_inline_info_js = Resource(voteit_core_jslib, 'voteit_user_inline_info.js', depends=(qtip, voteit_common_js), bottom=True)
 voteit_deform_js = Resource(voteit_core_jslib, 'voteit_deform.js', depends=(_deform_js,), bottom=True)
 voteit_workflow_js = Resource(voteit_core_jslib, 'voteit_workflow.js', depends=(jquery_easy_confirm_dialog, voteit_common_js), bottom=True)
