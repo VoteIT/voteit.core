@@ -79,7 +79,7 @@ function display_qtip_menu(event) {
             }
         },
         style: { 
-            classes: "qtip_menu"
+            classes: "qtip_menu cogwheel",
         },
     }, event);
 }

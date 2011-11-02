@@ -538,7 +538,8 @@ ui-dialog {
 }
 
 /* action menu */
-.action_menu.dropdown_menu {
+.action_menu.dropdown_menu,
+.cogwheel {
 	color: #fff !important;
 }
 .action_menu.dropdown_menu .menu_body {
