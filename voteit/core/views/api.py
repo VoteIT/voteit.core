@@ -6,7 +6,6 @@ from pyramid.url import resource_url
 from pyramid.traversal import find_interface
 from pyramid.traversal import find_root
 from pyramid.traversal import resource_path
-from pyramid.traversal import find_resource
 from pyramid.interfaces import IAuthenticationPolicy
 from pyramid.interfaces import IAuthorizationPolicy
 from pyramid.decorator import reify
@@ -17,7 +16,6 @@ from betahaus.viewcomponent.interfaces import IViewGroup
 
 from voteit.core import VoteITMF as _
 from voteit.core import security
-from voteit.core.models.interfaces import IBaseContent
 from voteit.core.models.interfaces import IDateTimeUtil
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.views.flash_messages import FlashMessages

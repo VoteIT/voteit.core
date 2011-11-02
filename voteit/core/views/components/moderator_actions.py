@@ -3,8 +3,11 @@ from pyramid.renderers import render
 from pyramid.traversal import find_resource
 
 from voteit.core import VoteITMF as _
-from voteit.core.security import MODERATE_MEETING, EDIT, DELETE
-from voteit.core.models.interfaces import IBaseContent, IPoll
+from voteit.core.security import DELETE
+from voteit.core.security import EDIT
+from voteit.core.security import MODERATE_MEETING
+from voteit.core.models.interfaces import IBaseContent
+from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IWorkflowAware
 
 
