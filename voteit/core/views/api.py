@@ -140,18 +140,7 @@ class APIView(object):
 
     def get_moderator_actions(self, context, request):
         """ A.k.a. the cogwheel-menu. """
-        #If context is a brain, get the object
-        if not IBaseContent.providedBy(context):
-            #Assume brain
-            context = find_resource(self.root, context['path'])
-        response = {}
-        response['api'] = self
-        response['context'] = context
-        if getattr(context, 'workflow', None):
-            response['states'] = context.get_available_workflow_states(request)
-        response['context_has_permission'] = self.context_has_permission
-        response['is_moderator'] = self.context_has_permission(security.MODERATE_MEETING, context)
-        return render('templates/moderator_actions.pt', response, request=request)
+        return self.render_single_view_component(context, request, 'main', 'moderator_actions')
         
     def get_time_created(self, context):
         """ Render start and end time of something, if those exist. """
