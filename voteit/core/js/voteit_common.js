@@ -46,10 +46,9 @@ $(document).ready(function () {
     );
 });
 
-$('#navigation .dropdown_menu').live('hover', display_qtip_menu);
-$('#main_window .dropdown_menu').live('hover', display_qtip_menu);
+$('.cogwheel').live('hover', display_cogwheel_menu);
 
-function display_qtip_menu(event) {
+function display_cogwheel_menu(event) {
     /* stop form from submitting normally 
     IE might throw an error calling preventDefault(), so use a try/catch block. */
     try { event.preventDefault(); } catch(e) {}
