@@ -130,25 +130,15 @@ p {
 /* end col classes */
 
 /* dropdown menu */
-.dropdown_menu {
-    z-index: 15001 !important;
-	position: relative;
-}
-.dropdown_menu .menu_header {}
-.dropdown_menu .menu_body {
-    position: absolute;
+.menu_body {
     display: none;
-    top: 1.25em;
-	right: 0px;
-    padding: 1em;
-    background: #fff;
-	z-index: 99;
 }
-.dropdown_menu .menu_body li {
+.meeting-menu-body .menu_body li {
 	white-space: nowrap;
+	color: black;
 }
-.dropdown_menu .menu_body a,
-.dropdown_menu .menu_body .readonly,
+.meeting-menu-body .menu_body a,
+.meeting-menu-body .menu_body .readonly,
 .cogwheel-body .menu_body a,
 .cogwheel-body .menu_body .readonly {
 	display: block;
@@ -156,6 +146,7 @@ p {
     margin-right: -1em;
 	padding: 0.25em 1em;
 }
+.meeting-menu-body .menu_body a:hover,
 .dropdown_menu .menu_body a:hover {
 	color: #fff;
 	background: #054265;
@@ -262,16 +253,18 @@ p {
 #global-actions-menu .logout {
     background: url(/static/icons/icon_close_white.png) no-repeat 0 0;
 }
-
 #meeting-actions-menu {
-	float: right;
+    float: right;
+}
+#meeting-actions-menu,
+.meeting-menu-body {
     font-size: 14px;
     font-weight: bold;
     text-transform: uppercase;
     padding: 10px;
 }
-#meeting-actions-menu .unread {
-    border-left: solid 3px #054265;   
+.meeting-menu-body .unread {
+    border-left: solid 3px #054265;
 }
 #meeting-actions-menu li.tab { 
     float: left;
@@ -281,9 +274,6 @@ p {
 	display: block;
 	height: 20px;
 	padding: 10px;
-}
-#meeting-actions-menu .dropdown_menu .menu_body, {
-	top: 40px;
 }
 #meeting-actions-menu .dropdown_menu .menu_body,
 .qtip_menu .ui-tooltip-content {
@@ -544,11 +534,13 @@ ui-dialog {
 .cogwheel-body {
 	color: #fff !important;
 }
+/*
 .action_menu.dropdown_menu .menu_body {
     top: -1em;
     right: -12em;
     padding: 0 1em;
 }
+*/
 .action_menu li {
     margin-top: 0;
     border-bottom: none !important;
@@ -718,16 +710,16 @@ table.listing > tbody > tr.even > td {
 	border-bottom-left-radius: 5px;
 	text-align: justify;
 }
-
 .moretag-popup.ui-tooltip, 
 .inlineinfo-popup.ui-tooltip {
 	min-width: 500px;
 }
-
+.meeting-menu-body.ui-tooltip {
+    max-width: 500px;
+}
 .qtip_menu .ui-tooltip-content {
     border: none;
 }
-
 
 /* Cogwheel qtip styling. 
  * FIXME: We need to clean this a bit. */

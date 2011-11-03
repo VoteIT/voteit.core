@@ -21,33 +21,7 @@ $(document).ready(function () {
     });
 });
 
-/* Menus
- * example layout:
- * <div class="dropdown_menu">
- *   <a class="menu_header">x</a>
- *   <div class="menu_body">Dropdown menu here</a>
- * </div>
- */
-$(document).ready(function () {
-    $('#meeting-actions .dropdown_menu .menu_header').live('click', function(event) {
-        return false;
-    });
-    $('#meeting-actions .dropdown_menu').hover(
-        function () {
-            //show its submenu
-            $(this).find('.menu_body').slideDown(100);
-            $(this).find('.menu_header').addClass('hover');
-        },
-        function () {
-            //hide its submenu
-            $(this).find('.menu_body').slideUp(100);
-            $(this).find('.menu_header').removeClass('hover');
-        }
-    );
-});
-
 $('.cogwheel').live('hover', display_cogwheel_menu);
-
 function display_cogwheel_menu(event) {
     /* stop form from submitting normally 
     IE might throw an error calling preventDefault(), so use a try/catch block. */
@@ -79,6 +53,42 @@ function display_cogwheel_menu(event) {
         },
         style: {
             classes: "qtip_menu cogwheel-body",
+        },
+    }, event);
+}
+
+$('#meeting-actions-menu .dropdown_menu').live('hover', display_meeting_menu);
+function display_meeting_menu(event) {
+    /* stop form from submitting normally 
+    IE might throw an error calling preventDefault(), so use a try/catch block. */
+    try { event.preventDefault(); } catch(e) {}
+    event.preventDefault(); 
+    
+    $(this).qtip({
+        overwrite: false, // Make sure the tooltip won't be overridden once created
+        content: { 
+            text: $(this).find('.menu_body'), // The text to use whilst the AJAX request is loading
+        },
+        show: {
+            event: event.type, // Use the same show event as the one that triggered the event handler
+            ready: true, // Show the tooltip as soon as it's bound, vital so it shows up the first time you hover!
+            effect: false,
+        },
+        hide: {
+            event: "mouseleave",
+            fixed: true,
+            effect: false,
+        },
+        position: {
+            viewport: $(window),
+            at: "right bottom",
+            my: "right top",
+            adjust: {
+                method: 'flip',
+            }
+        },
+        style: {
+            classes: "qtip_menu meeting-menu-body",
         },
     }, event);
 }
