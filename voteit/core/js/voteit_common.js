@@ -78,8 +78,8 @@ function display_qtip_menu(event) {
                 method: 'flip',
             }
         },
-        style: { 
-            classes: "qtip_menu cogwheel",
+        style: {
+            classes: "qtip_menu cogwheel-body",
         },
     }, event);
 }
