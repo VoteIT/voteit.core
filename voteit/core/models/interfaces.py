@@ -258,12 +258,22 @@ class ISecurityAware(Interface):
             The special group "role:Owner" is never inherited.
         """
 
-    def add_groups(principal, groups):
-        """ Add a groups for a principal in this context.
+    def check_groups(groups):
+        """ Check dependencies and group names. """
+
+    def add_groups(principal, groups, event = False):
+        """ Add groups for a principal in this context.
+            If event is True, an IObjectUpdatedEvent will be sent.
         """
-    
-    def set_groups(principal, groups):
+
+    def del_groups(principal, groups, event = False):
+        """ Delete groups for a principal in this context.
+            If event is True, an IObjectUpdatedEvent will be sent.
+        """
+
+    def set_groups(principal, groups, event = False):
         """ Set groups for a principal in this context. (This clears any previous setting)
+            If event is True, an IObjectUpdatedEvent will be sent.
         """
 
     def get_security():
@@ -274,6 +284,7 @@ class ISecurityAware(Interface):
         """ Set current security settings according to value, that is a list of dicts with keys
             userid and groups.
             Warning! This method will also clear any settings for users not present in value!
+            This method will send an IObjectUpdatedEvent.
         """
 
     def list_all_groups():

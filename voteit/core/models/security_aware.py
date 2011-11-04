@@ -20,9 +20,7 @@ NAMESPACES = (ROLES_NAMESPACE, GROUPS_NAMESPACE, )
 
 
 class SecurityAware(object):
-    """ Mixin for all content that should handle groups.
-        Principal in this terminology is a userid or a group id.
-    """
+    __doc__ = ISecurityAware.__doc__
     implements(ISecurityAware)
 
     @property
@@ -34,9 +32,7 @@ class SecurityAware(object):
             return self.__groups__
     
     def get_groups(self, principal):
-        """ Return groups for a principal in this context.
-            The special group "role:Owner" is never inherited.
-        """
+        """ See ISecurityAware """
         groups = set()
         for location in lineage(self):
             location_groups = location._groups
@@ -51,7 +47,7 @@ class SecurityAware(object):
         return tuple(groups)
 
     def check_groups(self, groups):
-        """ Check dependencies and group names. """
+        """ See ISecurityAware """
         self._check_groups(groups)
         adjusted_groups = set()
         for group in groups:
@@ -64,42 +60,44 @@ class SecurityAware(object):
         return adjusted_groups
 
     def add_groups(self, principal, groups, event = False):
-        """ Add a groups for a principal in this context.
-        """
+        """ See ISecurityAware """
         groups = set(groups)
         groups.update(self.get_groups(principal))
         #Delegate check and set to set_groups
         self.set_groups(principal, groups, event = event)
-    
+
+    def del_groups(self, principal, groups, event = False):
+        """ See ISecurityAware """
+        groups = set(groups)
+        current = set(self.get_groups(principal))
+        new_groups = current - groups
+        #Delegate check and set to set_groups
+        self.set_groups(principal, new_groups, event = event)
+
     def set_groups(self, principal, groups, event = False):
-        """ Set groups for a principal in this context. (This clears any previous setting)
-            Will also take care of role dependencies.
-        """
+        """ See ISecurityAware """
+        changed = False
         if not groups:
             if principal in self._groups:
                 del self._groups[principal]
-                if event:
-                    self._notify()
-            return
-        adjusted_groups = self.check_groups(groups)
-        if adjusted_groups != set(self.get_groups(principal)):
-            self._groups[principal] = tuple(adjusted_groups)
-            if event:
-                self._notify()
+                changed = True
+        else:
+            adjusted_groups = self.check_groups(groups)
+            if adjusted_groups != set(self.get_groups(principal)):
+                self._groups[principal] = tuple(adjusted_groups)
+                changed = True
+        if changed and event:
+            self._notify()
 
     def get_security(self):
-        """ Return the current security settings.
-        """
+        """ See ISecurityAware """
         userids_and_groups = []
         for userid in self._groups:
             userids_and_groups.append({'userid':userid, 'groups':self.get_groups(userid)})
         return tuple(userids_and_groups)
 
     def set_security(self, value, event = True):
-        """ Set current security settings according to value, that is a list of dicts with keys
-            userid and groups. Will also clear any settings for users not present in value.
-            Will also send an event to update catalog.
-        """
+        """ See ISecurityAware """
         submitted_userids = [x['userid'] for x in value]
         current_userids = self._groups.keys()
         for userid in current_userids:
@@ -121,7 +119,7 @@ class SecurityAware(object):
         objectEventNotify(ObjectUpdatedEvent(self, metadata=True))
 
     def list_all_groups(self):
-        """ Returns a set of all groups in this context. """
+        """ See ISecurityAware """
         groups = set()
         [groups.update(x) for x in self._groups.values()]
         return groups
