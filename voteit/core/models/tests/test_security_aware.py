@@ -2,6 +2,8 @@ import unittest
 
 from pyramid import testing
 
+from voteit.core.models.interfaces import ISecurityAware
+
 
 class SecurityAwareTests(unittest.TestCase):
     def setUp(self):
@@ -16,7 +18,6 @@ class SecurityAwareTests(unittest.TestCase):
 
     def test_verify_object(self):
         from zope.interface.verify import verifyObject
-        from voteit.core.models.interfaces import ISecurityAware
         obj = self._make_obj()
         self.assertTrue(verifyObject(ISecurityAware, obj))
 
@@ -84,6 +85,18 @@ class SecurityAwareTests(unittest.TestCase):
         self.assertEqual(obj.get_groups('tester'), ('group:Hipsters',))
         obj.set_groups('tester', ('role:Admin',))
         self.assertEqual(obj.get_groups('tester'), ('role:Admin',))
+
+    def test_set_groups_notifies(self):
+        from voteit.core.interfaces import IObjectUpdatedEvent
+        L = []
+        def subscriber(obj, event):
+            L.append(event)
+        self.config.add_subscriber(subscriber, iface=[ISecurityAware, IObjectUpdatedEvent])
+        self.config.commit()
+        obj = self._make_obj()
+        obj.set_groups('dummy', ['role:Speaker'], event = True)
+        self.assertEqual(len(L), 1)
+        self.failUnless(IObjectUpdatedEvent.providedBy(L[0]))
 
     def test_set_groups_with_dependent_group(self):
         from voteit.core import security
