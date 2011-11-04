@@ -78,9 +78,6 @@ pluggable, compared to regular persistent models.
   .. autointerface:: ILogHandler
      :members:
 
-  .. autointerface:: IExportImport
-     :members:
-
 
 Utilities
 ---------

@@ -19,7 +19,9 @@ RESTRICTED_KEYS = ('csrf_token', )
 
 
 class BaseContent(BaseFolder, SecurityAware):
-    __doc__ = IBaseContent.__doc__
+    """ See :mod:`voteit.core.models.interfaces.IBaseContent`.
+        All methods are documented in the interface of this class.
+    """
     implements(IBaseContent)
     add_permission = None
     content_type = None
@@ -27,12 +29,6 @@ class BaseContent(BaseFolder, SecurityAware):
     schemas = {}
 
     def __init__(self, data=None, **kwargs):
-        """ Initialize class. note that the superclass will create field storage etc
-            on init, so it's important to run super.
-            creators is required in kwargs, this class will try to extract it from
-            current request if it isn't present.
-            Also, owner role will be set for the first in the creators-tuple.
-        """
         if 'creators' not in kwargs:
             request = get_current_request()
             if request is None:
@@ -57,15 +53,11 @@ class BaseContent(BaseFolder, SecurityAware):
         super(BaseContent, self).__init__(data=data, **kwargs)
 
     def set_field_value(self, key, value):
-        """ Override BaseFolders set_field_value.
-            This method aborts if key is in RESTRICTED_KEYS
-        """
         if key in RESTRICTED_KEYS:
             return
         super(BaseContent, self).set_field_value(key, value)
 
     def set_field_appstruct(self, values, notify=True, mark_modified=True):
-        """ Notify with voteit.core.events.ObjectUpdatedEvent too. """
         #Remove restricted keys, in case they're present
         #This might be changed to raise an error instead in time
         for restricted_key in RESTRICTED_KEYS:
@@ -118,7 +110,6 @@ class BaseContent(BaseFolder, SecurityAware):
     uid = property(_get_uid, _set_uid)
 
     def get_content(self, content_type=None, iface=None, states=None, sort_on=None, sort_reverse=False, limit=None):
-        """ See IBaseContent """
         results = []
         for candidate in self.values():
 

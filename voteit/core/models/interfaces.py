@@ -10,12 +10,118 @@ class IBaseContent(IBaseFolder):
         collisions between regular attributes and fields.
         It expects validation to be done on the form level.
     """
+
+    title = Attribute("""
+        Gets the title from the title field. Just a shorthand for doing the normal get_field_value.""")
     
+    creators = Attribute("""
+        The userids of the creators of this content.
+        Normally just one.""")
+    
+    add_permission = Attribute("""
+        Permission required to add this content""")
+    
+    content_type = Attribute("""
+        Content type, internal name. It's not displayed anywhere.""")
+    
+    allowed_contexts = Attribute("""
+        List of which contexts this content is allowed in. Should correspond to content_type.""")
+
+    created = Attribute(
+        """A TZ-aware datetime.datetime of when this was created in UTC time.""")
+
+    modified = Attribute(
+        "A TZ-aware datetime.datetime of when this was updated last in UTC time.")
+
+    uid = Attribute("""
+        Unique ID. Will be set on init. This must be unique throughout the whole site,
+        so when writing functions to export or import content, you might want to
+        check that this is really set to something else.""")
+
+    schemas = Attribute(
+        """ Dict that contains a mapping for action -> schema factory name.
+            Example:{'edit':'site_root_edit_schema'}.""")
+
+    custom_accessors = Attribute(
+        """ Dict of custom accessors to use. The key is which field to override,
+            value should be a string which represent a callable on this class, or a callable method.
+            The accessor method must accept default and key as kwarg.
+            Example:
+            
+            .. code-block:: python
+            
+               class Person(BaseContent):
+                   custom_accessors = {'title': 'get_title'}
+                   
+                   def get_title(key=None, default=''):
+                       return "Something else!"
+            
+            When get_field_value('title') is run, "Something else!" will be returned instead.
+                """)
+
+    custom_mutators = Attribute(
+        """ Same as custon accessor, but the callable must accept a value.
+            Method must also accept key as kwarg.
+            
+            Example:
+            
+            .. code-block:: python
+            
+               class Person(BaseContent):
+                   custom_mutator = {'title': 'set_title'}
+                   
+                   def set_title(value, key=None):
+                       assert isinstance(value, basestring)
+                       #<etc...>
+            """)
+
+    custom_fields = Attribute(
+        """ A dict of fields consisting of key (field name) and field factory name.
+            A field type must be registered with that factory name.
+            Example: {'wiki_text':'VersioningField'} if your register a field factory
+            with the name 'VersioningField'.
+            
+            See documentation in betahaus.pyracont for more info.""")
+
+    field_storage = Attribute(
+        """ An OOBTree storage for field values. The point of exposing this
+            is to enable bypass of custom mutators or accessors.""")
+
+    def __init__(data=None, **kwargs):
+        """ Initialize class. note that the superclass will create field storage etc
+            on init, so it's important to run super.
+            creators is required in kwargs, this class will try to extract it from
+            current request if it isn't present.
+            Also, owner role will be set for the first entry in the creators-tuple.
+        """
+
+    def suggest_name(parent):
+        """ Suggest a name if this content would be added to parent.
+            By default it looks in the title field, and transforms
+            the first 20 chars to something usable as title.
+        """
+
+    def mark_modified():
+        """ Set this content as modified. Will bypass custom mutators to avoid loops.
+            The only way to customize this is to override it.
+            Only set_field_appstruct will trigger this method.
+            If you set a field any other way, you'll have to trigger it manually.
+        """
+
     def get_field_value(key, default=None):
-        """ Get value. Return default if it doesn't exist. """
+        """ Return field value, or default.
+            The lookup order is as follows:
+            - Check if there's a custom accessor.
+            - Check if the field is a custom field.
+            - Retrieve data from normal storage and return.
+        """
 
     def set_field_value(key, value):
-        """ Store value in 'key' in storage. """
+        """ Set field value.
+            Will not send events, so use this if you silently want to change a single field.
+            You can override field behaviour by either setting custom mutators
+            or make a field a custom field.
+        """
         
     def get_field_appstruct(schema):
         """ Return an appstruct based on schema. Suitable for use with deform.
@@ -25,31 +131,36 @@ class IBaseContent(IBaseFolder):
             Fields that don't have a value won't be returned.
         """
 
-    def set_field_appstruct(appstruct):
+    def set_field_appstruct(appstruct, notify=True, mark_modified=True):
         """ Set a field value from an appstruct. (A dict)
             Usually passed along by Deform.
             This equals running set_field_value for each key/value pair in a dict.
         """
 
-    uid = Attribute('UID')
-    title = Attribute('Gets the title from the title field. '
-                      'Exists so it can be overridden.')
-    creators = Attribute('The userids of the creators of this content. '
-                         'Normally just one. ')
-    created = Attribute('When the object was created. (datetime.datetime)')
-    add_permission = Attribute('Permission required to add this content')
-    content_type = Attribute('Content type, internal name')
-    allowed_contexts = Attribute('Which contexts is this type allowed in?')
+    def get_custom_field(key):
+        """ Return custom field. Create it if it doesn't exist.
+            Will only work if key:field_type is specified in custom_fields attribute.
+        """
 
     def get_content(content_type=None, iface=None, states=None, sort_on=None, sort_reverse=False):
         """ Returns contained items within this folder. Keywords are usually conditions.
-            They're treated as 'AND'.
-            keywords:
-            content_type: Only return types of this content type.
-            iface: content must implement this interface
-            states: Only get content with this workflow state. Can be a list or a string.
-            sort_on: Key to sort on
-            sort_reverse: Reverse sort order
+            They're treated as 'AND'. Note that this is an expensive method to run, if you
+            can use the catalog instead for something, it's a much better option.
+
+            content_type
+                Only return types of this content type.
+                
+            iface
+                content must implement this interface
+                
+            states
+                Only get content with this workflow state. Can be a list or a string.
+            
+            sort_on
+                Key to sort on
+            
+            sort_reverse
+                Reverse sort order
         """
 
 

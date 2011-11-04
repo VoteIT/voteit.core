@@ -20,7 +20,9 @@ NAMESPACES = (ROLES_NAMESPACE, GROUPS_NAMESPACE, )
 
 
 class SecurityAware(object):
-    __doc__ = ISecurityAware.__doc__
+    """ See :mod:`voteit.core.models.interfaces.ISecurityAware`.
+        All methods are documented in the interface of this class.
+    """
     implements(ISecurityAware)
 
     @property
@@ -32,7 +34,6 @@ class SecurityAware(object):
             return self.__groups__
     
     def get_groups(self, principal):
-        """ See ISecurityAware """
         groups = set()
         for location in lineage(self):
             location_groups = location._groups
@@ -47,7 +48,6 @@ class SecurityAware(object):
         return tuple(groups)
 
     def check_groups(self, groups):
-        """ See ISecurityAware """
         self._check_groups(groups)
         adjusted_groups = set()
         for group in groups:
@@ -60,14 +60,12 @@ class SecurityAware(object):
         return adjusted_groups
 
     def add_groups(self, principal, groups, event = False):
-        """ See ISecurityAware """
         groups = set(groups)
         groups.update(self.get_groups(principal))
         #Delegate check and set to set_groups
         self.set_groups(principal, groups, event = event)
 
     def del_groups(self, principal, groups, event = False):
-        """ See ISecurityAware """
         groups = set(groups)
         current = set(self.get_groups(principal))
         new_groups = current - groups
@@ -75,7 +73,6 @@ class SecurityAware(object):
         self.set_groups(principal, new_groups, event = event)
 
     def set_groups(self, principal, groups, event = False):
-        """ See ISecurityAware """
         changed = False
         if not groups:
             if principal in self._groups:
@@ -90,14 +87,12 @@ class SecurityAware(object):
             self._notify()
 
     def get_security(self):
-        """ See ISecurityAware """
         userids_and_groups = []
         for userid in self._groups:
             userids_and_groups.append({'userid':userid, 'groups':self.get_groups(userid)})
         return tuple(userids_and_groups)
 
     def set_security(self, value, event = True):
-        """ See ISecurityAware """
         submitted_userids = [x['userid'] for x in value]
         current_userids = self._groups.keys()
         for userid in current_userids:
@@ -109,6 +104,11 @@ class SecurityAware(object):
         if event:
             self._notify()
 
+    def list_all_groups(self):
+        groups = set()
+        [groups.update(x) for x in self._groups.values()]
+        return groups
+
     def _check_groups(self, groups):
         for group in groups:
             if not group.startswith(NAMESPACES):
@@ -117,10 +117,4 @@ class SecurityAware(object):
     def _notify(self):
         #Only update specific index?
         objectEventNotify(ObjectUpdatedEvent(self, metadata=True))
-
-    def list_all_groups(self):
-        """ See ISecurityAware """
-        groups = set()
-        [groups.update(x) for x in self._groups.values()]
-        return groups
 
