@@ -5,7 +5,8 @@ VoteIT project documentation
    :maxdepth: 2
    
    installing
-
+   configuring
+   deploying
 
 Indices and tables
 ==================
