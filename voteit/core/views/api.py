@@ -83,18 +83,14 @@ class APIView(object):
         """ 
         return _(*args, **kwargs)
 
-    def _get_user_cache(self):
-        cache = getattr(self.request, '_user_lookup_cache', None)
-        if cache is None:
-            cache = self.request._user_lookup_cache = {}
-        return cache
-
     def get_user(self, userid):
         """ Returns the user object. Will also cache each lookup. """
-        cache = self._get_user_cache()
+        try:
+            cache = self.request._user_lookup_cache
+        except AttributeError:
+            self.request._user_lookup_cache = cache = {}
         if userid in cache:
             return cache[userid]
-        
         user = self.root.users.get(userid)
         cache[userid] = user
         return user
