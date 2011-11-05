@@ -95,24 +95,6 @@ class APIView(object):
         cache[userid] = user
         return user
 
-    def get_addable_types(self, context, request):
-        context_type = getattr(context, 'content_type', '')
-        if not context_type:
-            return ()
-        
-        addable_names = set()
-        for (name, factory) in request.registry.getUtilitiesFor(IContentFactory):
-            if context_type not in getattr(factory._callable, 'allowed_contexts', ()):
-                continue
-            add_perm = getattr(factory._callable, 'add_permission', None)
-            if add_perm is None:
-                continue
-            if not self.context_has_permission(add_perm, context):
-                continue
-            #Type is addable
-            addable_names.add(name)
-        return tuple(addable_names)
-
     @reify
     def meeting(self):
         """ Is the current context inside a meeting, or a meeting itself? """
