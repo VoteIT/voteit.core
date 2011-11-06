@@ -475,52 +475,33 @@ li.notification_message {
 }
 /* proposals and discussions */
 #proposals .creators img,
-#discussions .creators img {
+#discussions .creators img,
+.inline_add_form img {
     float: left;
 }
-
 #proposals .wf-state-retracted .body {
 	text-decoration: line-through;
 }
-
-#proposals .proposal_form,
-#discussions .discussion_form {
+.inline_add_form {
     background-color: #DBE0E5;
     margin-top: 1em;
     padding: 10px;
 }
-
-#proposals .proposal_form .creators span,
-#discussions .discussion_form .creators span {
-    display: none;
+.inline_add_form .deform label {
+    display: none !important;
 }
-
-#proposals .proposal_form label,
-#discussions .discussion_form label {
-    display: none;
+.inline_add_form .deform li {
+    margin: 0 !important;
+    padding: 0 !important;
 }
-
-#proposals .proposal_form img,
-#discussions .discussion_form img {
-}
-
-#proposals .proposal_form li,
-#discussions .discussion_form li {
-    margin: 0;
-    padding: 0;
-}
-
-#proposals .proposal_form textarea,
-#discussions .discussion_form textarea {
+.inline_add_form textarea {
     margin-left: 5px;
     padding: 2px !important;
     height: 36px;
     width: 97%;
     border: none;
 }
-
-#proposals .proposal_form button,
-#discussions .discussion_form button {
+.inline_add_form button {
     float: right;
 }
 

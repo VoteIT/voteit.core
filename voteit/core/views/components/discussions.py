@@ -54,4 +54,4 @@ def discussions_add_form(context, request, va, **kw):
     response = {}
     response['form'] = form.render()
     response['api'] = api
-    return render('../templates/snippets/discussion_form.pt', response, request = request)
+    return render('../templates/snippets/inline_add_form.pt', response, request = request)
