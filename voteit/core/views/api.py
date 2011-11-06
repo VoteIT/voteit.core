@@ -132,17 +132,8 @@ class APIView(object):
         """ Return template for a set of creators.
             The content of creators should be userids
         """
-        #FIXME: Use view component and catalog query with metadata instead
-        users = set()
-        for userid in creators:
-            user = self.get_user(userid)
-            if user:
-                users.add(user)
-        response = {}
-        response['users'] = users
-        response['portrait'] = portrait
-        response['get_userinfo_url'] = self.get_userinfo_url
-        return render('templates/creators_info.pt', response, request=request)
+        return self.render_single_view_component(self.context, request, 'main', 'creators_info',
+                                                 creators = creators, portrait = portrait)
 
     def get_poll_state_info(self, poll):
         response = {}
