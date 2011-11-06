@@ -6,6 +6,7 @@ from pyramid.url import resource_url
 from pyramid.traversal import find_interface
 from pyramid.traversal import find_root
 from pyramid.traversal import resource_path
+from pyramid.traversal import find_resource
 from pyramid.interfaces import IAuthenticationPolicy
 from pyramid.interfaces import IAuthorizationPolicy
 from pyramid.decorator import reify
@@ -169,13 +170,26 @@ class APIView(object):
         return effective_principals
         
     def is_unread(self, context, mark=False):
-        """ Check if something is unread. """
+        """ Check if a context is unread. Mark it as read if mark is True.
+            This method expects full objects. It should be used as little
+            as possible - use is_brain_unread instead.
+        """
         if self.userid in context.get_unread_userids():
-            if mark:
+            if mark == True:
                 context.mark_as_read(self.userid)
             return True
-        return False
-        
+
+    def is_brain_unread(self, brain, mark=False):
+        """ Same as is_unread, but expects catalog metadata instead.
+            If it is unread, and mark is set to True it will resolve
+            the real object and mark it as read.
+        """
+        if self.userid in brain['unread']:
+            if mark == True:
+                obj = find_resource(self.root, brain['path'])
+                obj.mark_as_read(self.userid)
+            return True
+                
     def get_restricted_content(self, context, content_type=None, iface=None, states=None, sort_on=None, sort_reverse=False):
         """ Use this method carefully. It might be pretty expensive to run. """
         candidates = context.get_content(content_type=content_type, iface=iface, states=states, sort_on=sort_on, sort_reverse=sort_reverse)

@@ -57,6 +57,7 @@ class UserTagsView(object):
             return Response(self.get_user_tag(request.context, tag, display_name, expl_display_name))
             
     def get_user_tag(self, context, tag, display_name, expl_display_name):
+        #FIXME: This should be refactored so it's only used for ajax responses
         from voteit.core.views.api import APIView
         api = APIView(context, self.request)
         user_tags = self.request.registry.getAdapter(context, IUserTags)
