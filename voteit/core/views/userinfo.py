@@ -1,6 +1,6 @@
 from pyramid.traversal import find_root
 from pyramid.traversal import resource_path
-from pyramid.renderers import render_to_response
+from pyramid.renderers import render_to_response, render
 from pyramid.view import view_config
 from webhelpers.html.converters import nl2br
 from webhelpers.html.render import sanitize
@@ -65,5 +65,6 @@ def user_info_view(context, request, info_userid=None):
     response['last_entries'] = _last_entries()
     response['truncate'] = _strip_and_truncate
     response['relative_time_format'] = dt_util.relative_time_format
-
-    return render_to_response(USERINFO_TPL, response, request=request)
+    if request.is_xhr:
+        return render_to_response(USERINFO_TPL, response, request=request)
+    return render(USERINFO_TPL, response, request = request)
