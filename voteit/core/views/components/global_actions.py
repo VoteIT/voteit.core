@@ -16,14 +16,16 @@ def global_actions(context, request, va, **kw):
 
 @view_action('global_actions_anon', 'login')
 def action_login(context, request, va, **kw):
+    api = kw['api']
     link = request.application_url + '/@@login'
-    return """<li><a href="%s">%s</a></li>""" % (link, _(u"Login"))
+    return """<li><a href="%s">%s</a></li>""" % (link, api.translate(_(u"Login")))
 
 
 @view_action('global_actions_anon', 'register')
 def action_register(context, request, va, **kw):
+    api = kw['api']
     link = request.application_url + '/@@register'
-    return """<li><a href="%s">%s</a></li>""" % (link, _(u"Register"))
+    return """<li><a href="%s">%s</a></li>""" % (link, api.translate(_(u"Register")))
 
 
 @view_action('global_actions_authenticated', 'user_profile')
@@ -34,6 +36,6 @@ def user_profile_action(context, request, va, **kw):
 
 @view_action('global_actions_authenticated', 'logout')
 def logout_action(context, request, va, **kw):
+    api = kw['api']
     link = request.application_url + '/@@logout'
-    logout = _(u"Logout")
-    return u"""<li><a href="%s" class="logout icon"><span>%s</span></a></li>""" % (link, logout)
+    return u"""<li><a href="%s" class="logout icon"><span>%s</span></a></li>""" % (link, api.translate(_(u"Logout")))
