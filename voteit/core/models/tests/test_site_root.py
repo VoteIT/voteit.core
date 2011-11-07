@@ -1,8 +1,16 @@
 import unittest
 
 from pyramid import testing
+from pyramid.authorization import ACLAuthorizationPolicy
+from pyramid.security import Authenticated
+from pyramid.security import Everyone
 from zope.interface.verify import verifyObject
+from voteit.core import security
 
+
+admin = set([security.ROLE_ADMIN])
+authenticated = set([Authenticated])
+everyone = set([Everyone])
 
 class SiteRootTests(unittest.TestCase):
     def setUp(self):
@@ -19,3 +27,32 @@ class SiteRootTests(unittest.TestCase):
         from voteit.core.models.interfaces import IBaseContent
         obj = self._make_obj()
         self.assertTrue(verifyObject(IBaseContent, obj))
+
+
+class SiteRootPermissionTests(unittest.TestCase):
+    """ Check permissions. """
+
+    def setUp(self):
+        self.config = testing.setUp()
+        policy = ACLAuthorizationPolicy()
+        self.pap = policy.principals_allowed_by_permission
+
+    def tearDown(self):
+        testing.tearDown()
+
+    @property
+    def _cut(self):
+        from voteit.core.models.site import SiteRoot
+        return SiteRoot
+
+    def test_add_meeting_perm(self):
+        obj = self._cut()
+        self.assertEqual(self.pap(obj, security.ADD_MEETING), admin)
+
+    def test_add_meeting_perm_allow_authenticated(self):
+        obj = self._cut(allow_add_meeting = True)
+        self.assertEqual(self.pap(obj, security.ADD_MEETING), admin | authenticated)
+
+    def test_view(self):
+        obj = self._cut()
+        self.assertEqual(self.pap(obj, security.VIEW), admin | everyone)

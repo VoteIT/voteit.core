@@ -15,6 +15,11 @@ from voteit.core.models.base_content import BaseContent
 from voteit.core.models.catalog import update_indexes
 
 
+_DEFAULT_ACL = ((Allow, security.ROLE_ADMIN, ALL_PERMISSIONS),
+                (Allow, Everyone, security.VIEW),
+                DENY_ALL)
+
+
 @content_factory('SiteRoot', title=_(u"Site root"))
 class SiteRoot(BaseContent):
     """ The root of the site. Contains all other objects. """
@@ -24,10 +29,13 @@ class SiteRoot(BaseContent):
     allowed_contexts = ()
     schemas = {'edit':'SiteRootSchema'}
 
-    __acl__ = [(Allow, security.ROLE_ADMIN, ALL_PERMISSIONS),
-               (Allow, Authenticated, (security.ADD_MEETING, )),
-               (Allow, Everyone, (security.VIEW, )),
-               DENY_ALL]
+    @property
+    def __acl__(self):
+        acl = []
+        if self.get_field_value('allow_add_meeting', False):
+            acl.append((Allow, Authenticated, (security.ADD_MEETING, )))
+        acl.extend(_DEFAULT_ACL)
+        return acl
 
     def __init__(self, data=None, **kwargs):
         self.catalog = Catalog()

@@ -15,3 +15,6 @@ class SiteRootSchema(colander.MappingSchema):
                                       title = _(u"Description"),
                                       missing = u"",
                                       widget=deform.widget.RichTextWidget())
+    allow_add_meeting = colander.SchemaNode(colander.Boolean(),
+                                            title = _(u"Allow authenticated users to add meetings"),
+                                            default = False,)
