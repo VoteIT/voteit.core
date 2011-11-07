@@ -118,42 +118,23 @@ $(document).ready(function() {
 /* Minimize
  * Structure to make minimize work. elem can be most html tags
  * <elem id="something_unique" class="toggle_area toggle_closed"> <!--or toggle_opened -->
- *   <elem class="toggle_minimize">Something clickable</elem>
+ *   <elem class="toggle_minimize">Something clickable</elem> <!-- if this allso has the class reload the page is reloaded after maximizing
  *   <elem class="minimizable_area">Stuff that will be hidden</elem>
  *   <elem class="minimizable_inverted">Stuff that will only be visible when it's minimized</elem>
  * </elem>
  */
 $(document).ready(function() {
-    $('#navigation .toggle_minimize').live('click', function(event) {
+    $('.toggle_minimize').live('click', function(event) {
         min_parent = $(this).parents('.toggle_area');
         // set cookie for opened or closed
         var cookie_id = min_parent.attr('id');
-        if (min_parent.hasClass('toggle_opened')) {
-            $.cookie(cookie_id, 1);
-        } else {
-            $.cookie(cookie_id, null);
-            location.reload();
-        }
-        // Set parent class as opened or closed
-        min_parent.toggleClass('toggle_opened').toggleClass('toggle_closed');
-    })
-});
-
-
-//FIXME: Refactor minimize. It's sensless to have two methods that does alsmost
-//the same thing and are hardcoded to a specific id.
-
-
-/* Poll result */
-$(document).ready(function() {
-    $('#polls .toggle_minimize').live('click', function(event) {
-        min_parent = $(this).parents('.toggle_area');
-        // set cookie for opened or closed
-        var cookie_id = min_parent.attr('id');
-        if (min_parent.hasClass('toggle_opened')) {
-            $.cookie(cookie_id, 1);
-        } else {
-            $.cookie(cookie_id, null);
+        if($(this).hasClass('reload')) {
+            if (min_parent.hasClass('toggle_opened')) {
+                $.cookie(cookie_id, 1);
+            } else {
+                $.cookie(cookie_id, null);
+                    location.reload();
+            }
         }
         // Set parent class as opened or closed
         min_parent.toggleClass('toggle_opened').toggleClass('toggle_closed');
