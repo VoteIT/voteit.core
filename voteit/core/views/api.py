@@ -1,4 +1,5 @@
-from pyramid.renderers import get_renderer, render
+from pyramid.renderers import get_renderer
+from pyramid.renderers import render
 from pyramid.security import authenticated_userid
 from pyramid.security import Authenticated
 from pyramid.security import Everyone
@@ -20,7 +21,6 @@ from voteit.core import security
 from voteit.core.models.interfaces import IDateTimeUtil
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.views.flash_messages import FlashMessages
-from voteit.core.views.user_tags import UserTagsView
 from voteit.core.models.catalog import metadata_for_query
 from voteit.core.models.catalog import resolve_catalog_docid
 from voteit.core.fanstaticlib import DEFORM_RESOURCES
@@ -61,10 +61,6 @@ class APIView(object):
         if self.meeting is None:
             return self.context_has_permission(security.MANAGE_SERVER, self.root)
         return self.context_has_permission(security.MODERATE_MEETING, self.meeting)
-
-    @reify
-    def user_tags_view(self):
-        return UserTagsView(self.request)
 
     @reify
     def translate(self):

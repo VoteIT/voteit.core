@@ -9,9 +9,6 @@ def user_tag_like(brain, request, va, **kw):
     """ Special view action for user tag 'like'.
         It requires catalog metadata + expects a brain
         as context, rather than a full object.
-        NOTE: This depends on the same template as
-        the user_tags view, make sure not to change one and not
-        update the other!
     """
     api = kw['api']
     userids = brain['like_userids']
@@ -35,7 +32,8 @@ def user_tag_like(brain, request, va, **kw):
                                      mapping={'display_name': display_name})
         response['selected'] = True
         response['do'] = "0"
-        userids = set(userids).remove(api.userid)
+        userids = list(userids)
+        userids.remove(api.userid)
     else:
         #Current user hasn't selected the current context
         response['button_label'] = display_name
