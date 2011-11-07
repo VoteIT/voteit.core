@@ -1,11 +1,13 @@
 from betahaus.viewcomponent import view_action
 from pyramid.traversal import resource_path
+from pyramid.traversal import find_resource
 from betahaus.pyracont.factories import createSchema
 from pyramid.renderers import render
 
 from deform import Form
 from voteit.core import VoteITMF as _
 from voteit.core.security import ADD_DISCUSSION_POST
+from voteit.core.security import DELETE
 from voteit.core.models.schemas import button_add
 
 
@@ -13,6 +15,14 @@ from voteit.core.models.schemas import button_add
 def discussions_listing(context, request, va, **kw):
     """ Get discussions for a specific context """
     api = kw['api']
+
+    def _show_delete(brain):
+        #Do more expensive checks last!
+        if not api.userid in brain['creators']:
+            return
+        obj = find_resource(api.root, brain['path'])
+        return api.context_has_permission(DELETE, obj)
+
     if request.GET.get('discussions', '') == 'all':
         limit = 0
     else:
@@ -24,25 +34,24 @@ def discussions_listing(context, request, va, **kw):
             limit = unread_count
     
     path = resource_path(context)
-    #Returns tuple of (item_count, list of docids)
-    count, docids = api.search_catalog(path=path, content_type='DiscussionPost', sort_index='created')
-    docids = tuple(docids) #Convert, since it's a generator
-    
-    #Only fetch metadata that is within limit
-    discussions = [api.resolve_catalog_docid(x) for x in docids[-limit:]]
+    query = dict(path = path,
+                 content_type='DiscussionPost',
+                 sort_index='created')
+    #Returns tuple of (item count, iterator with docids)
+    count, docids = api.search_catalog(**query)
 
     response = {}
-    response['discussions'] = tuple(discussions)
+    if limit:
+        query['limit'] = limit
+    response['discussions'] = api.get_metadata_for_query(**query)
     if limit and limit < count:
         response['over_limit'] = count - limit
     else:
         response['over_limit'] = 0
     response['limit'] = limit
-    response['like'] = _(u"Like")
-    response['like_this'] = _(u"like this")
     response['api'] = api
+    response['show_delete'] = _show_delete
     return render('../templates/discussions.pt', response, request = request)
-
 
 @view_action('discussions', 'add_form', permission = ADD_DISCUSSION_POST)
 def discussions_add_form(context, request, va, **kw):
