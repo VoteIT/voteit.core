@@ -13,7 +13,7 @@
         <span tal:content="user.get_field_value('email')"></span>
         
         <h6><span i18n:translate="">About me</span>:</h6>
-        <div tal:content="structure user.get_field_value('about_me')"></div>
+        <div tal:content="structure about_me"></div>
         
         <div tal:condition="last_entries">
             <h6><span i18n:translate="">Last added</span>:</h6>
