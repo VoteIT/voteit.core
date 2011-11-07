@@ -46,7 +46,7 @@ function display_cogwheel_menu(event) {
         position: {
             viewport: $(window),
             at: "right center",
-            my: "left top",
+            my: "left center",
             adjust: {
                 method: 'flip',
             }
