@@ -19,7 +19,7 @@ reset = Resource(voteit_core_csslib, 'reset.css') #Must be loaded before all oth
 voteit_main_css = Resource(voteit_core_csslib, 'main.css', depends=(reset,))
 
 #jQuery UI
-_jquery_ui_css = Resource(voteit_core_csslib, 'smoothness/jquery-ui-1.8.16.custom.css', supersedes=(voteit_main_css,), depends=(reset,))
+_jquery_ui_css = Resource(voteit_core_csslib, 'jquery-ui-1.8.16.custom.css', supersedes=(voteit_main_css,), depends=(reset,))
 _jquery_ui_js = Resource(voteit_core_jslib, 'jquery-ui-1.8.15.custom.min.js', depends=(jquery_142,))
 jquery_ui = Group((_jquery_ui_css, _jquery_ui_js))
 
