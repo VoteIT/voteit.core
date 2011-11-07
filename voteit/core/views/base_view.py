@@ -19,9 +19,7 @@ class BaseView(object):
             fanstaticlib.voteit_workflow_js.need()
         fanstaticlib.voteit_main_css.need()
         fanstaticlib.voteit_common_js.need()
-        if context.content_type == 'AgendaItem':
-            #This is the only place we use inline info in now. That might change
-            fanstaticlib.voteit_user_inline_info_js.need()
+        fanstaticlib.voteit_user_inline_info_js.need()
 
 
 class DefaultView(BaseView):

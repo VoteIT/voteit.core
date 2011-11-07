@@ -1,11 +1,9 @@
-from pyramid.security import authenticated_userid
-from pyramid.exceptions import Forbidden
 from pyramid.traversal import find_root
 from pyramid.traversal import resource_path
-from pyramid.renderers import render
+from pyramid.renderers import render_to_response
 from pyramid.view import view_config
-from pyramid.response import Response
 from webhelpers.html.converters import nl2br
+from webhelpers.html.render import sanitize
 
 from voteit.core import VoteITMF as _
 from voteit.core.models.interfaces import IMeeting
@@ -13,7 +11,6 @@ from voteit.core.models.interfaces import IDateTimeUtil
 from voteit.core.security import find_authorized_userids
 from voteit.core.security import VIEW
 from voteit.core.models.catalog import metadata_for_query
-from webhelpers.html.render import sanitize
 
 
 USERINFO_TPL = 'templates/snippets/userinfo.pt'
@@ -69,8 +66,4 @@ def user_info_view(context, request, info_userid=None):
     response['truncate'] = _strip_and_truncate
     response['relative_time_format'] = dt_util.relative_time_format
 
-    result = render(USERINFO_TPL, response, request=request)
-    if request.is_xhr:
-        #If this is called through a javascript, wrap in a response object
-        return Response(result)
-    return result
+    return render_to_response(USERINFO_TPL, response, request=request)
