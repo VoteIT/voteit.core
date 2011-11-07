@@ -130,10 +130,11 @@ $(document).ready(function() {
         var cookie_id = min_parent.attr('id');
         if($(this).hasClass('reload')) {
             if (min_parent.hasClass('toggle_opened')) {
-                $.cookie(cookie_id, 1);
+                $.cookie(cookie_id, 1, { expires: 7, path: '/'});
             } else {
-                $.cookie(cookie_id, null);
-                    location.reload();
+                console.log('Else')
+                $.cookie(cookie_id, null, { expires: 7, path: '/'});
+                location.reload();
             }
         }
         // Set parent class as opened or closed

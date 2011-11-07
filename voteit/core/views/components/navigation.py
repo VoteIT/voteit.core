@@ -48,8 +48,9 @@ def navigation_section(context, request, va, **kwargs):
     response['api'] = api
     response['state'] = state
     response['section_title'] = va.title
+    response['toggle_id'] = '%s-%s' % (context.uid, state)
 
-    if request.cookies.get("%s-%s" % (context.uid, state)):
+    if request.cookies.get(response['toggle_id']):
         response['closed_section'] = True
         return render('../templates/snippets/navigation_section.pt', response, request = request)
 
