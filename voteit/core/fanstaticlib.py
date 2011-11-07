@@ -19,7 +19,7 @@ reset = Resource(voteit_core_csslib, 'reset.css') #Must be loaded before all oth
 voteit_main_css = Resource(voteit_core_csslib, 'main.css', depends=(reset,))
 
 #jQuery UI
-_jquery_ui_css = Resource(voteit_core_csslib, 'jquery-ui-1.8.16.custom.css', supersedes=(voteit_main_css,), depends=(reset,))
+_jquery_ui_css = Resource(voteit_core_csslib, 'jquery-ui-1.8.16.custom.css', depends=(reset,))
 _jquery_ui_js = Resource(voteit_core_jslib, 'jquery-ui-1.8.15.custom.min.js', depends=(jquery_142,))
 jquery_ui = Group((_jquery_ui_css, _jquery_ui_js))
 
@@ -37,16 +37,14 @@ qtip = Group((_qtip_css, _qtip_js))
 
 #Deform
 _deform_js = Resource(deformlib, 'scripts/deform.js')
-_deform_css = Resource(deformlib, 'css/form.css', supersedes=(voteit_main_css,), depends = (reset,))
-deform = Group((_deform_js, _deform_css))
+_voteit_deform_css = Resource(voteit_core_csslib, 'deform.css', depends = (reset,))
 
-
-jquery_form = Resource(deformlib, 'scripts/jquery.form.js', depends = (jquery_142,), supersedes=(_deform_js,))
-jquery_maskedinput = Resource(deformlib, 'scripts/jquery.maskedinput-1.2.2.min.js', depends = (jquery_142,), supersedes=(_deform_js,))
+jquery_form = Resource(deformlib, 'scripts/jquery.form.js', depends = (jquery_142,))
+jquery_maskedinput = Resource(deformlib, 'scripts/jquery.maskedinput-1.2.2.min.js', depends = (jquery_142,))
 
 #Timepicker
-_jquery_timepicker_js = Resource(voteit_core_jslib, 'jquery-ui-timepicker-addon.js', depends=(jquery_ui,), supersedes=(_deform_js,))
-_jquery_timepicker_css = Resource(deformlib, 'css/jquery-ui-timepicker-addon.css', supersedes=(voteit_main_css,), depends = (reset,))
+_jquery_timepicker_js = Resource(voteit_core_jslib, 'jquery-ui-timepicker-addon.js', depends=(jquery_ui,))
+_jquery_timepicker_css = Resource(deformlib, 'css/jquery-ui-timepicker-addon.css', depends = (reset,))
 jquery_timepicker = Group((_jquery_timepicker_css, _jquery_timepicker_js))
 
 #VoteIT core
@@ -55,10 +53,11 @@ star_rating = Group((_star_rating_css, jquery_rating))
 
 voteit_common_js = Resource(voteit_core_jslib, 'voteit_common.js', depends=(jquery_142, jquery_cookie, qtip), bottom=True)
 voteit_user_inline_info_js = Resource(voteit_core_jslib, 'voteit_user_inline_info.js', depends=(qtip, voteit_common_js), bottom=True)
-voteit_deform_js = Resource(voteit_core_jslib, 'voteit_deform.js', depends=(_deform_js,), bottom=True)
+_voteit_deform_js = Resource(voteit_core_jslib, 'voteit_deform.js', depends=(_deform_js,), bottom=True)
 voteit_workflow_js = Resource(voteit_core_jslib, 'voteit_workflow.js', depends=(jquery_easy_confirm_dialog, voteit_common_js), bottom=True)
 
-voteit_deform = Group((voteit_deform_js, deform))
+voteit_deform = Group((_voteit_deform_js, _voteit_deform_css))
+
 
 DEFORM_RESOURCES = {
     'jquery': (jquery_142,),
