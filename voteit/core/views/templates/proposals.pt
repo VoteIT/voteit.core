@@ -9,7 +9,7 @@
              Cogwheel menu
         </span>	
         
-        <tal:creators tal:replace="structure api.get_creators_info(proposal.creators, request)">Creators</tal:creators>
+        <tal:creators tal:replace="structure api.get_creators_info(proposal['creators'], request)">Creators</tal:creators>
         <span i18n:translate="">propose</span>:
         <span class="body" tal:content="structure proposal['title']">Title</span>
 

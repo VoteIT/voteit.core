@@ -20,7 +20,7 @@ def proposal_listing(context, request, va, **kw):
         #Do more expensive checks last!
         if brain['workflow_state'] != 'published':
             return
-        if not api.userid in brain['creators'] and not api.show_moderator_actions:
+        if not api.userid in brain['creators']:
             return
         #Now for the 'expensive' stuff
         obj = find_resource(api.root, brain['path'])
