@@ -255,13 +255,13 @@ p {
 }
 #meeting-actions-menu {
     float: right;
+    padding: 10px;
 }
 #meeting-actions-menu,
 .meeting-menu-body {
     font-size: 14px;
     font-weight: bold;
     text-transform: uppercase;
-    padding: 10px;
 }
 .meeting-menu-body .unread {
     border-left: solid 3px #054265;
@@ -713,4 +713,9 @@ table.listing > tbody > tr.even > td {
 .cogwheel-body .ui-tooltip-titlebar,
 .cogwheel-body .ui-tooltip-content{
 	color: #fff;
+}
+
+.ui-tooltip, .qtip{
+    font-size: inherit;
+    line-height: inherit;
 }
