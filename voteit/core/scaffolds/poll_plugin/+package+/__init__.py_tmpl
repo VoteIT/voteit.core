@@ -1,0 +1,20 @@
+from pyramid.i18n import TranslationStringFactory
+
+
+{{package}}_MF = TranslationStringFactory('{{package}}')
+
+
+def includeme(config):
+    """ This method is called when package is included by voteit.core.
+        Normally you add a statement like:
+        
+        `plugins = {{package}}`
+        
+        to enable a this poll method
+    """
+    from voteit.core.models.interfaces import IPoll
+    from voteit.core.models.interfaces import IPollPlugin
+
+    from {{package}}.models import MyPollPlugin
+    
+    config.registry.registerAdapter(MyPollPlugin, (IPoll,), IPollPlugin, MyPollPlugin.name)
