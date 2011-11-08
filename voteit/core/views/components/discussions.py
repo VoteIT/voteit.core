@@ -19,26 +19,34 @@ def discussions_listing(context, request, va, **kw):
         obj = find_resource(api.root, brain['path'])
         return api.context_has_permission(DELETE, obj)
 
+    path = resource_path(context)
+
     if request.GET.get('discussions', '') == 'all':
         limit = 0
     else:
-        unread_count, content = api.search_catalog(context,
-                                                   content_type = 'DiscussionPost',
-                                                   unread = api.userid)
+        unread_count = api.search_catalog(path = path, content_type = 'DiscussionPost', unread = api.userid)[0]
         limit = 5
         if unread_count > limit:
             limit = unread_count
-    
-    path = resource_path(context)
-    query = dict(path = path,
-                 content_type='DiscussionPost',)
-    #Returns tuple of (item count, iterator with docids)
-    count, docids = api.search_catalog(**query)
 
-    response = {}
+    query = dict(path = path,
+                 content_type='DiscussionPost')
+    #Returns tuple of (item count, iterator with docids)
+    count = api.search_catalog(**query)[0]
+
+    #New query with only limited number of results
+    query['sort_index'] = 'created'
+    query['reverse'] = True
     if limit:
         query['limit'] = limit
-    response['discussions'] = api.get_metadata_for_query(**query)
+    docids = api.search_catalog(**query)[1]
+    get_metadata = api.root.catalog.document_map.get_metadata
+    results = []
+    for docid in docids:
+        #Insert the resolved docid first, since we need to reverse order again.
+        results.insert(0, get_metadata(docid))
+    response = {}
+    response['discussions'] = tuple(results)
     if limit and limit < count:
         response['over_limit'] = count - limit
     else:
