@@ -488,6 +488,11 @@ li.notification_message {
     background-color: #DBE0E5;
     margin-top: 1em;
     padding: 10px;
+    position: relative;
+}
+.inline_form_placeholder {
+    padding-left: 50px;
+	padding-right: 10px;
 }
 .inline_add_form .deform label {
     display: none !important;
@@ -498,25 +503,24 @@ li.notification_message {
 }
 .inline_add_form .dummy-textarea,
 .inline_add_form textarea {
-    margin-left: 5px;
+    display: block;
+    border: 1px solid #666;
     padding: 2px !important;
-    height: 36px;
-    width: 97%;
-    border: none;
-}
-.inline_add_form button {
-    float: right;
+    width: 100%;
 }
 .inline_add_form .dummy-textarea {
-    margin-left: 45px;
-    width: 90%;
-}
-.inline_add_form .dummy-textarea div {
+    height: 34px;
     background-color: #fff;
-    height: 36px;
-    padding: 1px;
 }
-.inline_add_form .dummy-textarea div.dummy-error {
+.inline_add_form textarea {
+    margin-top: 0px !important;
+	height: 60px;
+}
+#content .inline_add_form button {
+    margin-top: 10px;
+    float: right;
+}
+.inline_add_form .dummy-error {
     background-color: #FFDFDF;
     color: #DF0000;
 }
@@ -531,13 +535,6 @@ ui-dialog {
 .cogwheel-body {
 	color: #fff !important;
 }
-/*
-.action_menu.dropdown_menu .menu_body {
-    top: -1em;
-    right: -12em;
-    padding: 0 1em;
-}
-*/
 .action_menu li {
     margin-top: 0;
     border-bottom: none !important;
@@ -642,11 +639,14 @@ table.listing > tbody > tr.even > td {
 	display: block;
 	background: url(/static/icons/icon_approved.png) no-repeat;
 }
+.discreet {
+    color: #666;
+}
 
 /* listing items */
 .list .listitem {
     display: block;
-	border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
     padding-top: 0.25em;
     padding-bottom: 0.25em;
 }

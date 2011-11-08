@@ -1,14 +1,10 @@
 from betahaus.viewcomponent import view_action
 from pyramid.traversal import resource_path
 from pyramid.traversal import find_resource
-from betahaus.pyracont.factories import createSchema
 from pyramid.renderers import render
 
-from deform import Form
 from voteit.core import VoteITMF as _
-from voteit.core.security import ADD_DISCUSSION_POST
 from voteit.core.security import DELETE
-from voteit.core.models.schemas import button_add
 
 
 @view_action('discussions', 'listing')
@@ -35,8 +31,7 @@ def discussions_listing(context, request, va, **kw):
     
     path = resource_path(context)
     query = dict(path = path,
-                 content_type='DiscussionPost',
-                 sort_index='created')
+                 content_type='DiscussionPost',)
     #Returns tuple of (item count, iterator with docids)
     count, docids = api.search_catalog(**query)
 
@@ -52,11 +47,3 @@ def discussions_listing(context, request, va, **kw):
     response['api'] = api
     response['show_delete'] = _show_delete
     return render('../templates/discussions.pt', response, request = request)
-
-@view_action('discussions', 'add_form', permission = ADD_DISCUSSION_POST)
-def discussions_dummy_form(context, request, va, **kw):
-    api = kw['api']
-    response = {}
-    response['api'] = api
-    response['url'] = api.resource_url(context, request)+"@@inline_form?content_type=DiscussionPost"
-    return render('../templates/snippets/inline_dummy_form.pt', response, request = request)
