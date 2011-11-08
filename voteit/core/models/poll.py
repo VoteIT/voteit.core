@@ -206,8 +206,13 @@ class Poll(BaseContent, WorkflowAware, UnreadAware):
     def render_poll_result(self, request):
         """ Render poll result. Calls plugin to calculate result.
         """
-        poll_plugin = self.get_poll_plugin()
-        return poll_plugin.render_result(request)
+        try:
+            poll_plugin = self.get_poll_plugin()
+            return poll_plugin.render_result(request)
+        except Exception, exc:
+            if request.registry.settings.get('pyramid.debug_templates', False):
+                raise exc
+            return _(u"Broken poll plugin. Can't display result. Turn on debug_templates to see the error.")
 
     def get_proposal_by_uid(self, uid):
         for prop in self.get_proposal_objects():
