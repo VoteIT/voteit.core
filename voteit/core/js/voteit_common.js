@@ -132,7 +132,6 @@ $(document).ready(function() {
             if (min_parent.hasClass('toggle_opened')) {
                 $.cookie(cookie_id, 1, { expires: 7, path: '/'});
             } else {
-                console.log('Else')
                 $.cookie(cookie_id, null, { expires: 7, path: '/'});
                 location.reload();
             }
