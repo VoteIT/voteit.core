@@ -149,6 +149,7 @@ $(document).ready(function() {
             if (status == "error") {
                 var msg = "Sorry but there was an error: ";
                 $(this).find("div.dummy-textarea > div").html(msg + xhr.status + " " + xhr.statusText);
+                $(this).find("div.dummy-textarea > div").addClass('dummy-error')
             } else {
                 $(this).find("textarea").focus();
             }

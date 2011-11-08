@@ -514,6 +514,10 @@ li.notification_message {
     height: 36px;
     padding: 1px;
 }
+.inline_add_form .dummy-textarea div.dummy-error {
+    background-color: #FFDFDF;
+    color: #DF0000;
+}
 
 /* confirm dialog */
 ui-dialog {
