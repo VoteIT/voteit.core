@@ -26,7 +26,7 @@ from voteit.core.models.date_time_util import utcnow
 from voteit.core.exceptions import TokenValidationError
 
 
-USERID_REGEXP = r"[a-zA-Z]{1}[\w-]{2,14}"
+USERID_REGEXP = r"[a-zA-Z1-9]{1}[\w-]{2,14}"
 
 
 @content_factory('User', title=_(u"User"))
