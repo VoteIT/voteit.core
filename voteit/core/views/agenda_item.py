@@ -17,6 +17,7 @@ from voteit.core.security import VIEW
 from voteit.core.security import ADD_VOTE
 from voteit.core.models.schemas import button_vote
 from voteit.core.models.schemas import button_add
+from voteit.core.fanstaticlib import voteit_deform
 
 
 class AgendaItemView(BaseView):
@@ -76,6 +77,10 @@ class AgendaItemView(BaseView):
         self.response['ai_columns'] = self.api.render_single_view_component(self.context, self.request,
                                                                             'main', 'columns',
                                                                             **colkwargs)
+                                                                            
+        # is needed because we load the forms with ajax
+        voteit_deform.need()
+        
         return self.response
 
     def get_polls(self, polls, poll_forms):
