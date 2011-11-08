@@ -263,8 +263,10 @@ p {
     font-weight: bold;
     text-transform: uppercase;
 }
-.meeting-menu-body .unread {
+.meeting-menu-body .unread span {
     border-left: solid 3px #054265;
+    margin-left: -6px;
+    padding-left: 3px;
 }
 #meeting-actions-menu li.tab { 
     float: left;
