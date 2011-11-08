@@ -54,13 +54,9 @@ def discussions_listing(context, request, va, **kw):
     return render('../templates/discussions.pt', response, request = request)
 
 @view_action('discussions', 'add_form', permission = ADD_DISCUSSION_POST)
-def discussions_add_form(context, request, va, **kw):
+def discussions_dummy_form(context, request, va, **kw):
     api = kw['api']
-    url = api.resource_url(context, request)
-    schema = createSchema('DiscussionPostSchema').bind(context = context, request = request)
-    form = Form(schema, action=url+"@@add?content_type=DiscussionPost", buttons=(button_add,))
-    api.register_form_resources(form)
     response = {}
-    response['form'] = form.render()
     response['api'] = api
-    return render('../templates/snippets/inline_add_form.pt', response, request = request)
+    response['url'] = api.resource_url(context, request)+"@@inline_form?content_type=DiscussionPost"
+    return render('../templates/snippets/inline_dummy_form.pt', response, request = request)

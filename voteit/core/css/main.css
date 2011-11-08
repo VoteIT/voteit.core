@@ -494,6 +494,7 @@ li.notification_message {
     margin: 0 !important;
     padding: 0 !important;
 }
+.inline_add_form .dummy-textarea,
 .inline_add_form textarea {
     margin-left: 5px;
     padding: 2px !important;
@@ -503,6 +504,15 @@ li.notification_message {
 }
 .inline_add_form button {
     float: right;
+}
+.inline_add_form .dummy-textarea {
+    margin-left: 45px;
+    width: 90%;
+}
+.inline_add_form .dummy-textarea div {
+    background-color: #fff;
+    height: 36px;
+    padding: 1px;
 }
 
 /* confirm dialog */

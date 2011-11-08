@@ -1,12 +1,11 @@
 from betahaus.viewcomponent import view_action
-from betahaus.pyracont.factories import createSchema
 from pyramid.renderers import render
 from pyramid.traversal import resource_path, find_resource
 
 from deform import Form
 from voteit.core import VoteITMF as _
+from voteit.core.views.api import APIView
 from voteit.core.security import ADD_PROPOSAL
-from voteit.core.models.schemas import button_add
 from voteit.core.models.interfaces import IProposal
 from voteit.core.security import RETRACT
 
@@ -34,15 +33,10 @@ def proposal_listing(context, request, va, **kw):
     response['show_retract'] = _show_retract
     return render('../templates/proposals.pt', response, request = request)
 
-
 @view_action('proposals', 'add_form', permission = ADD_PROPOSAL)
-def proposals_add_form(context, request, va, **kw):
+def proposals_dummy_form(context, request, va, **kw):
     api = kw['api']
-    url = api.resource_url(context, request)
-    schema = createSchema('ProposalSchema').bind(context = context, request = request)
-    form = Form(schema, action=url+"@@add?content_type=Proposal", buttons=(button_add,))
-    api.register_form_resources(form)
     response = {}
-    response['form'] = form.render()
     response['api'] = api
-    return render('../templates/snippets/inline_add_form.pt', response, request = request)
+    response['url'] = api.resource_url(context, request)+"@@inline_form?content_type=Proposal"
+    return render('../templates/snippets/inline_dummy_form.pt', response, request = request)

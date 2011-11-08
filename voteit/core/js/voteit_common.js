@@ -141,3 +141,18 @@ $(document).ready(function() {
         min_parent.toggleClass('toggle_opened').toggleClass('toggle_closed');
     })
 });
+
+/* loading proposal and discussion forms with ajax */
+$(document).ready(function() {
+    $("div.dummy-textarea").live('click', function(event) {
+        var url = $(this).attr('url');
+        $(this).parent().load(url, function(response, status, xhr) {
+            if (status == "error") {
+                var msg = "Sorry but there was an error: ";
+                $(this).find("div.dummy-textarea > div").html(msg + xhr.status + " " + xhr.statusText);
+            } else {
+                $(this).find("textarea").focus();
+            }
+        });
+    });
+});
