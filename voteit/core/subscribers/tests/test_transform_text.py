@@ -123,3 +123,15 @@ class TransformTextTests(TestCase):
 
         from ..transform_text import at_userid_link
         self.assertEqual(prop.get_field_value('title'), unicode(at_userid_link('@admin', prop)))
+        
+    def test_at_userid_link_with_numbers(self):
+        request = testing.DummyRequest()
+        self.config = testing.setUp(request=request)
+        self.config.scan('voteit.core.subscribers.transform_text')
+    
+        prop = self._make_prop()
+        prop.set_field_value('title', '@1')
+        objectEventNotify(ObjectAddedEvent(prop, None, 'dummy'))
+
+        from ..transform_text import at_userid_link
+        self.assertEqual(prop.get_field_value('title'), unicode(at_userid_link('@1', prop)))

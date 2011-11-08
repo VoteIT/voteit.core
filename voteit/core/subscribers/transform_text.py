@@ -16,9 +16,9 @@ from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import IProposal
 from voteit.core.models.interfaces import IDiscussionPost
 from voteit.core.interfaces import IObjectUpdatedEvent
-from voteit.core.models.user import USERID_REGEXP
 
 #FIXME: This could be custom accessors on Proposal / DiscussionPost
+USERID_REGEXP = r"[a-zA-Z1-9]{1}[\w-]{1,14}"
 
 def urls_to_links(text):
     return auto_link(text, link='urls')
