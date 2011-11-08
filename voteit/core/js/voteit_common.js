@@ -152,6 +152,7 @@ $(document).ready(function() {
                 $(this).find("div.dummy-textarea > div").html(msg + xhr.status + " " + xhr.statusText);
             } else {
                 $(this).find("textarea").focus();
+                $(this).find("textarea").TextAreaExpander(36, 150);
             }
         });
     });

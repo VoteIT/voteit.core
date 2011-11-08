@@ -35,6 +35,9 @@ _qtip_js = Resource(voteit_core_jslib, 'jquery.qtip.js', minified = 'jquery.qtip
                     depends = (jquery_ui,))
 qtip = Group((_qtip_css, _qtip_js))
 
+#textarea expander
+jquery_textarea_expander = Resource(voteit_core_jslib, 'jquery.textarea-expander.js', depends = (jquery_142,))
+
 #Deform
 _deform_js = Resource(deformlib, 'scripts/deform.js')
 _voteit_deform_css = Resource(voteit_core_csslib, 'deform.css', depends = (reset,))
