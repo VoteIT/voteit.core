@@ -12,10 +12,10 @@
         <div class="description" tal:condition="context.description" tal:content="structure context.description">Description</div>
 
         <div class="moderator-help-buttons"
-		     tal:condition="api.show_moderator_actions and api.context_has_permission('Add Poll', context)">
+             tal:condition="api.show_moderator_actions and api.context_has_permission('Add Poll', context)">
             <a class="buttonize large" tal:attributes="href api.resource_url(context, request) + '@@add?content_type=Poll'">
-            	<span i18n:translate="">Add poll</span>
-			</a>
+                <span i18n:translate="">Add poll</span>
+            </a>
         </div>
         <h2 tal:condition="polls"><span class="iconpadding icon poll" i18n:translate="">Poll</span></h2>
 

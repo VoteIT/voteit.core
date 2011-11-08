@@ -66,7 +66,10 @@ def moderator_context_action(context, request, va, **kw):
 @view_action('context_actions', 'poll_config', title = _(u"Poll settings"), interface = IPoll)
 def poll_settings_context_action(context, request, va, **kw):
     api = kw['api']
-    schema = context.get_poll_plugin().get_settings_schema()
+    try:
+        schema = context.get_poll_plugin().get_settings_schema()
+    except Exception: # pragma: no cover (When plugin has been removed)
+        return ''
     if api.context_has_permission(EDIT, context) and schema:
         url = "%s@@poll_config" % api.resource_url(context, request)
         return """<li><a href="%s">%s</a></li>""" % (url, api.translate(_(u"Poll settings")))
