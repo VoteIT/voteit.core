@@ -1,6 +1,0 @@
-<tal:main
-    xmlns:i18n="http://xml.zope.org/namespaces/i18n"
-    i18n:domain="voteit.core">
-	<img tal:replace="structure api.user_profile.get_image_tag()" />
-    <span tal:replace="structure form">Form</span>
-</tal:main>

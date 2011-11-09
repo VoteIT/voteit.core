@@ -2,7 +2,10 @@
     xmlns:i18n="http://xml.zope.org/namespaces/i18n"
     i18n:domain="voteit.core">
 <div class="inline_add_form">
-	<img tal:replace="structure api.user_profile.get_image_tag()" />
-    <div class="dummy-textarea" url="${url}"><div>...</div></div>
+    <img tal:replace="structure user_image_tag" />
+    <div class="inline_form_placeholder">
+        <div class="dummy-textarea discreet" url="${url}" i18n:translate="">Add</div>
+    </div>
+    <div class="clear"><!-- --></div>
 </div>
 </tal:main>
