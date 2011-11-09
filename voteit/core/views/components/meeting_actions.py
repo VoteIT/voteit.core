@@ -1,8 +1,12 @@
 from betahaus.viewcomponent import view_action
 from pyramid.renderers import render
 from pyramid.traversal import resource_path
+from pyramid.view import view_config
 from voteit.core.security import MANAGE_SERVER, MODERATE_MEETING
+from voteit.core.security import VIEW
 from voteit.core import VoteITMF as _
+from voteit.core.views.api import APIView
+from voteit.core.models.interfaces import IMeeting
 
 
 MODERATOR_SECTIONS = ('closed', 'ongoing', 'upcoming', 'private',)
@@ -43,38 +47,20 @@ def polls_menu(context, request, va, **kw):
     if api.meeting is None:
         return ''
 
-    if api.show_moderator_actions:
-        sections = MODERATOR_SECTIONS
-    else:
-        sections = REGULAR_SECTIONS
-
-    metadata = {}
-    meeting_path = resource_path(api.meeting)
-    show_polls = False
-    for section in sections:
-        #Note, as long as we don't query for private wf state, we don't have to check perms
-        metadata[section] = api.get_metadata_for_query(content_type = 'Poll',
-                                                        path = meeting_path,
-                                                        workflow_state = section)
-        if metadata[section]:
-            show_polls = True
-
     response = {}
     response['api'] = api
-    response['sections'] = sections
-    response['show_polls'] = show_polls
-    response['polls_metadata'] = metadata
     response['menu_title'] = va.title
     #Unread
     query = dict(
         content_type = 'Poll',
-        path = meeting_path,
+        path = resource_path(api.meeting),
         unread = api.userid,
         #Not checking allowed to view is okay here, since polls don't get added to unread when they're private
         #If that would change, the line below will fix it, so it's kept around so we don't forget :)
         #allowed_to_view = {'operator': 'or', 'query': api.context_effective_principals(api.meeting)},
     )
     response['unread_polls_count'] = api.search_catalog(**query)[0]
+    response['url'] = '%s@@meeting_poll_menu' % api.resource_url(api.meeting, request)
     return render('../templates/snippets/polls_menu.pt', response, request = request)
 
 
@@ -119,3 +105,35 @@ def generic_moderator_menu_link(context, request, va, **kw):
     api = kw['api']
     url = api.resource_url(api.meeting, request) + va.kwargs['link']
     return """<li><a href="%s">%s</a></li>""" % (url, api.translate(va.title))
+
+
+@view_config(name="meeting_poll_menu", context=IMeeting, renderer="../templates/snippets/polls_menu_body.pt", permission=VIEW)
+def meeting_poll_menu(context, request):
+    api = APIView(context, request)
+
+    if api.meeting is None:
+        return ''
+
+    if api.show_moderator_actions:
+        sections = MODERATOR_SECTIONS
+    else:
+        sections = REGULAR_SECTIONS
+
+    metadata = {}
+    meeting_path = resource_path(api.meeting)
+    show_polls = False
+    for section in sections:
+        #Note, as long as we don't query for private wf state, we don't have to check perms
+        metadata[section] = api.get_metadata_for_query(content_type = 'Poll',
+                                                        path = meeting_path,
+                                                        workflow_state = section)
+        if metadata[section]:
+            show_polls = True
+
+    response = {}
+    response['api'] = api
+    response['sections'] = sections
+    response['show_polls'] = show_polls
+    response['polls_metadata'] = metadata
+
+    return response
