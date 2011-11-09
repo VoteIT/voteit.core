@@ -1,0 +1,24 @@
+<tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core">
+        <tal:polls condition="show_polls">
+            <tal:section repeat="section sections">
+                <tal:defs define="metadatas polls_metadata[section]">
+                <tal:exists condition="metadatas">
+                    <li class="readonly"><span class="iconpadding icon ${section}">${api.tstring(section.title())}</span></li>
+                    <li tal:repeat="poll_metadata metadatas">
+                        <a href="${poll_metadata['path']}"
+                           tal:attributes="class api.userid in poll_metadata.get('unread',()) and 'unread' or ''">
+                           <span>
+                            <tal:not_voted condition="api.userid not in poll_metadata['voted_userids']">*</tal:not_voted>
+                            ${poll_metadata['title']}</span>
+                        </a>
+                    </li>
+                </tal:exists>
+                </tal:defs>
+            </tal:section>
+            <li class="meta"><br/>
+                * <span i18n:translate="">means you've not voted in that poll.</span>
+            </li>
+        </tal:polls>
+        <li tal:condition="not show_polls" i18n:translate="">(No polls yet)</li>
+
+</tal:main>
