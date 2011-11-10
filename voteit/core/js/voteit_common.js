@@ -4,13 +4,13 @@ voteit.translation = {};
 
 /* Translations loader. This must be loaded before all other voteit js! */
 $(document).ready(function () {
-	$('.voteit_js_translation').each(function () {
-		$(this).children().each(function() {
-			item = $(this);
-			tkey = item.attr('class').replace('js_trans_', '');
-			voteit.translation[tkey] = item.text();
-		});
-	});
+    $('.voteit_js_translation').each(function () {
+        $(this).children().each(function() {
+            var item = $(this);
+            var tkey = item.attr('class').replace('js_trans_', '');
+            voteit.translation[tkey] = item.text();
+        });
+    });
 });
 
 /* Flash messages */
