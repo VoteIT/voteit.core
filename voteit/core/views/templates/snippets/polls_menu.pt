@@ -6,8 +6,6 @@
             ${menu_title} &raquo;
         </span>
     </a>
-    <ul class="menu_body">
-    </ul>
 </li>
 
 </tal:main>
