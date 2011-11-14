@@ -223,10 +223,12 @@ class Poll(BaseContent, WorkflowAware, UnreadAware):
 
 class Ballots(object):
     """ Simple object to help counting votes. It's not addable anywhere.
-        Should be treatable as an internal object for polls.
+        Should be treated as an internal object for polls.
     """
 
     def __init__(self):
+        """ Ballots attr is an OIBTree, since they can have any object as key.
+        """
         self.ballots = OIBTree()
 
     def result(self):
@@ -270,7 +272,7 @@ def upcoming_poll_callback(content, info):
 
 def ongoing_poll_callback(context, info):
     """ Workflow callback when a poll is set in the ongoing state.
-        This method will raise an exeption if the parent agenda item is not ongoing or if there is no propsoals in the poll.
+        This method will raise an exeption if the parent agenda item is not ongoing or if there is no proposals in the poll.
     """
     ai = find_interface(context, IAgendaItem)
     if ai.get_workflow_state() != 'ongoing':
