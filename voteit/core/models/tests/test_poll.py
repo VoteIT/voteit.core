@@ -235,10 +235,9 @@ class PollTests(unittest.TestCase):
         prop2 = agenda_item['prop2']
         agenda_item['poll'] = poll = self._cut()
         poll.proposal_uids = (prop1.uid, prop2.uid,)
-        adjust_states = {prop1.uid: 'denied',
-                         prop2.uid: 'approved',}
+        adjust_states = {prop1.uid: 'john',
+                         prop2.uid: 'doe',}
         poll.adjust_proposal_states(adjust_states)
-        #Can't go to denied or approved from published, so they shoiuldn't have changed states
         self.assertEqual(prop1.get_workflow_state(), 'published')
         self.assertEqual(prop2.get_workflow_state(), 'published')
 
