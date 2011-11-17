@@ -7,25 +7,27 @@ from repoze.catalog.indexes.text import CatalogTextIndex
 from zope.interface import implements
 from zope.component import adapts
 from zope.component import getAdapter
+from zope.component import queryAdapter
+from zope.component.interfaces import ComponentLookupError
 from pyramid.traversal import find_resource
 from pyramid.traversal import find_root
 from pyramid.traversal import resource_path
 from pyramid.security import principals_allowed_by_permission
 
-from voteit.core.models.interfaces import IAgendaItem, IMeeting
+from voteit.core.models.interfaces import IAgendaItem
+from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import IUserTags
 from voteit.core.models.interfaces import ICatalogMetadataEnabled
 from voteit.core.models.interfaces import ISecurityAware
 from voteit.core.models.interfaces import IWorkflowAware
 from voteit.core.models.interfaces import ICatalogMetadata
-from voteit.core.models.interfaces import IUnreadAware
+from voteit.core.models.interfaces import IUnread
 from voteit.core.models.interfaces import IDiscussionPost
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IProposal
 from voteit.core.security import NEVER_EVER_PRINCIPAL
 from voteit.core.security import VIEW
 from voteit.core.security import find_authorized_userids
-from zope.component.interfaces import ComponentLookupError
 
 
 SEARCHABLE_TEXT_INDEXES = ('title',
@@ -299,9 +301,10 @@ def get_end_time(object, default):
     return default
 
 def get_unread(object, default):
-    if not IUnreadAware.providedBy(object):
+    unread = queryAdapter(object, IUnread)
+    if not unread:
         return default
-    userids = object.get_unread_userids()
+    userids = unread.get_unread_userids()
     if userids:
         return userids
     return default

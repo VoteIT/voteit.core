@@ -171,26 +171,18 @@ class APIView(object):
         
         return effective_principals
         
-    def is_unread(self, context, mark=False):
-        """ Check if a context is unread. Mark it as read if mark is True.
+    def is_unread(self, context):
+        """ Check if a context is unread.
             This method expects full objects. It should be used as little
             as possible - use is_brain_unread instead.
         """
         if self.userid in context.get_unread_userids():
-            if mark == True:
-                context.mark_as_read(self.userid)
             return True
 
-    def is_brain_unread(self, brain, mark=False):
+    def is_brain_unread(self, brain):
         """ Same as is_unread, but expects catalog metadata instead.
-            If it is unread, and mark is set to True it will resolve
-            the real object and mark it as read.
         """
-        if brain['docid'] in self.context_unread:
-            if mark == True:
-                obj = find_resource(self.root, brain['path'])
-                obj.mark_as_read(self.userid)
-            return True
+        return brain['docid'] in self.context_unread
                 
     def get_restricted_content(self, context, content_type=None, iface=None, states=None, sort_on=None, sort_reverse=False):
         """ Use this method carefully. It might be pretty expensive to run. """

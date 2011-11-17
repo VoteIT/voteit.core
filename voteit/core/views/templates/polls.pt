@@ -3,7 +3,7 @@
     <tal:iterate condition="polls" repeat="poll polls">
     <div tal:define="poll_plugin poll.get_poll_plugin()|None;
                      wf_state poll.get_workflow_state();
-                     unread api.is_unread(poll, True);
+                     unread api.is_unread(poll);
                      has_voted api.userid in poll;"
          tal:attributes="class unread and 'unread listing_block' or 'listing_block'">
 

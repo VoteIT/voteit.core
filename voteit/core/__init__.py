@@ -45,6 +45,7 @@ def required_components(config):
     config.include('voteit.core.models.logs')
     config.include('voteit.core.models.date_time_util')
     config.include('voteit.core.models.catalog')
+    config.include('voteit.core.models.unread')
     #For password storage
     config.scan('betahaus.pyracont.fields.password')
 

@@ -19,7 +19,6 @@ from voteit.core import security
 from voteit.core import VoteITMF as _
 from voteit.core.models.base_content import BaseContent
 from voteit.core.models.workflow_aware import WorkflowAware
-from voteit.core.models.unread_aware import UnreadAware
 from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import ICatalogMetadataEnabled
 from voteit.core.models.interfaces import IMeeting
@@ -59,7 +58,7 @@ ACL['closed'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, )),
 
 
 @content_factory('Poll', title=_(u"Poll"))
-class Poll(BaseContent, WorkflowAware, UnreadAware):
+class Poll(BaseContent, WorkflowAware):
     """ Poll content. """
     implements(IPoll, ICatalogMetadataEnabled)
     content_type = 'Poll'

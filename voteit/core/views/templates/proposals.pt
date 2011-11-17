@@ -1,6 +1,6 @@
 <tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core">
 <tal:iterate condition="proposals" repeat="proposal proposals" >
-    <div tal:define="unread api.is_brain_unread(proposal, True);
+    <div tal:define="unread api.is_brain_unread(proposal);
                      state_id proposal['workflow_state'];
                      css_class 'listing_block wf-state-%s' % state_id;"
          tal:attributes="class unread and 'unread %s' % css_class or css_class">

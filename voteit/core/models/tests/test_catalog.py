@@ -17,6 +17,7 @@ from voteit.core.events import ObjectUpdatedEvent
 from voteit.core import security
 from voteit.core.security import groupfinder
 from voteit.core.models.date_time_util import utcnow
+from voteit.core.models.interfaces import IUnread
 
 
 class CatalogTestCase(unittest.TestCase):
@@ -250,18 +251,20 @@ class CatalogIndexTests(CatalogTestCase):
     def test_unread(self):
         meeting = self._add_mock_meeting()
         self._register_security_policies()
+        self.config.include('voteit.core.models.unread')
         #Discussion posts are unread aware
         from voteit.core.models.discussion_post import DiscussionPost
         obj = DiscussionPost()
         obj.title = 'Hello'
         meeting['post'] = obj
-        obj.mark_all_unread()
+        
         from voteit.core.models.catalog import reindex_indexes
         reindex_indexes(self.root.catalog)
         
         self.assertEqual(self.search(unread='admin')[0], 1)
         
-        obj.mark_as_read('admin')
+        unread = self.config.registry.queryAdapter(obj, IUnread)
+        unread.mark_as_read('admin')
         
         self.assertEqual(self.search(unread='admin')[0], 0)
 

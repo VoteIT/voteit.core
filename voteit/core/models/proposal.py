@@ -7,7 +7,6 @@ from betahaus.pyracont.decorators import content_factory
 from voteit.core import VoteITMF as _
 from voteit.core import security
 from voteit.core.models.base_content import BaseContent
-from voteit.core.models.unread_aware import UnreadAware
 from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IProposal
 from voteit.core.models.interfaces import ICatalogMetadataEnabled
@@ -53,7 +52,7 @@ ACL['closed'] = [(Allow, security.ROLE_ADMIN, security.VIEW),
 
 
 @content_factory('Proposal', title=_(u"Proposal"))
-class Proposal(BaseContent, WorkflowAware, UnreadAware):
+class Proposal(BaseContent, WorkflowAware):
     """ Proposal content.
         about states:
         'published' is used in ongoing meetings. This proposal is a candidate for a future poll.

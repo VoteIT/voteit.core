@@ -402,27 +402,6 @@ class ISecurityAware(Interface):
         """ Returns a set of all groups in this context. """
 
 
-class IUnreadAware(Interface):
-    """ Mixin class that provides unread functionality to an object.
-        This means that all users that have access to an object of this kind
-        will have it marked as unread when it is added, or any other action that
-        seems appropriate. (This is normally done with subscribers)
-    """
-    unread_storage = Attribute("Acts as a storage. Contains all userids of users who haven't read this context.")
-    
-    def mark_all_unread():
-        """ Set as unread for all users with view permission.
-        """
-    
-    def mark_as_read(userid):
-        """ Remove a userid from unread_userids if it exist in there.
-            Just a convenience method in case the storage of userids change.
-        """
-
-    def get_unread_userids():
-        """ Returns a frozenset of all userids who haven't read this context. """
-
-
 #Adapters
 class IUserTags(Interface):
     """ Adapter for things that can have usertags.
@@ -507,6 +486,23 @@ class ICatalogMetadata(Interface):
     
     def get_agenda_item_specific(results):
         """ Update results with agenda item specific metadata. """
+
+
+class IUnread(Interface):
+    """ Adapter that provides unread functionality to an object.
+        This means that all users who have access to the adapted object
+        will have it marked as unread when it is added, or any other action that
+        seems appropriate. (This is normally done with subscribers)
+    """
+    unread_storage = Attribute("Acts as a storage. Contains all userids of users who haven't read this context.")
+    
+    def mark_as_read(userid):
+        """ Remove a userid from unread_userids if it exist in there.
+            Just a convenience method in case the storage of userids change.
+        """
+
+    def get_unread_userids():
+        """ Returns a frozenset of all userids who haven't read this context. """
 
 
 #Utilities

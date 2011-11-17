@@ -7,7 +7,7 @@
                     <li class="readonly"><span class="iconpadding icon ${section}">${api.tstring(section.title())}</span></li>
                     <li tal:repeat="poll_metadata metadatas">
                         <a href="${poll_metadata['path']}"
-                           tal:attributes="class api.is_brain_unread(poll_metadata, True) and 'unread' or ''">
+                           tal:attributes="class api.is_brain_unread(poll_metadata) and 'unread' or ''">
                            <span>
                             <tal:not_voted condition="api.userid not in poll_metadata['voted_userids']">*</tal:not_voted>
                             ${poll_metadata['title']}</span>
