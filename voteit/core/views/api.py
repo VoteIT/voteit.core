@@ -66,6 +66,12 @@ class APIView(object):
     def translate(self):
         return get_localizer(self.request).translate
 
+    @reify
+    def context_unread(self):
+        if not self.userid:
+            return ()
+        return self.search_catalog(context = self.context, unread = self.userid)[1]
+
     def register_form_resources(self, form):
         """ Append form resources if they don't already exist in self.form_resources """
         self.init_deform = True
@@ -180,7 +186,7 @@ class APIView(object):
             If it is unread, and mark is set to True it will resolve
             the real object and mark it as read.
         """
-        if self.userid in brain['unread']:
+        if brain['docid'] in self.context_unread:
             if mark == True:
                 obj = find_resource(self.root, brain['path'])
                 obj.mark_as_read(self.userid)

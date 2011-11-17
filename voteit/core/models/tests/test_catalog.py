@@ -381,25 +381,6 @@ class CatalogMetadataTests(CatalogTestCase):
         user_tags.remove('like', 'admin')
         self.assertEqual(_get_metadata()['like_userids'], ())
 
-    def test_unread(self):
-        meeting = self._add_mock_meeting()
-        self._register_security_policies()
-        #Discussion posts are unread aware
-        from voteit.core.models.discussion_post import DiscussionPost
-        obj = DiscussionPost()
-        obj.title = 'Hello'
-        meeting['post'] = obj
-        obj.mark_all_unread()
-        from voteit.core.models.catalog import reindex_indexes
-        reindex_indexes(self.root.catalog)
-
-        def _get_metadata():
-            result = self.search(content_type = 'DiscussionPost')
-            doc_id = result[1][0]
-            return self.get_metadata(doc_id)
-        
-        self.assertEqual(_get_metadata()['unread'], frozenset(['admin']) )
-
     def test_voted_userids(self):
         meeting = self._add_mock_meeting()
         self._register_security_policies()
@@ -416,3 +397,21 @@ class CatalogMetadataTests(CatalogTestCase):
         result = self.search(content_type = 'Poll')
         doc_id = result[1][0]
         self.assertEqual(self.get_metadata(doc_id)['voted_userids'], frozenset(['me', 'other']) )
+
+
+    def test_docid(self):
+        """ docid should be part of metadata too. """
+        from voteit.core.models.agenda_item import AgendaItem
+        from voteit.core.models.discussion_post import DiscussionPost
+        
+        meeting = self._add_mock_meeting()
+        self._register_security_policies()
+        
+        meeting['ai'] = AgendaItem()
+        meeting['ai']['disc'] = DiscussionPost()
+        
+        result = self.search(content_type = 'DiscussionPost')
+        doc_id = result[1][0]
+        brain = self.get_metadata(doc_id)
+        self.failUnless('docid' in brain)
+        self.assertEqual(brain['docid'], doc_id)
