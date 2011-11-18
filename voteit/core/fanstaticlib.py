@@ -47,7 +47,11 @@ _jquery_timepicker_js = Resource(voteit_core_jslib, 'jquery-ui-timepicker-addon.
 _jquery_timepicker_css = Resource(deformlib, 'css/jquery-ui-timepicker-addon.css', depends = (reset,))
 jquery_timepicker = Group((_jquery_timepicker_css, _jquery_timepicker_js))
 
-#VoteIT core
+#Autoresize textarea
+autoresizable_textarea_js = Resource(voteit_core_jslib, 'jquery.autoResizable.js', minified='jquery.autoResizable.min.js',
+                                  depends = (jquery_142,))
+
+#VoteIT hcore
 _star_rating_css = Resource(voteit_core_csslib, 'star_rating.css', depends=(voteit_main_css,))
 star_rating = Group((_star_rating_css, jquery_rating))
 

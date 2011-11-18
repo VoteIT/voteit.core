@@ -19,6 +19,7 @@ from voteit.core.security import ADD_VOTE
 from voteit.core.models.schemas import button_vote
 from voteit.core.models.schemas import button_add
 from voteit.core.fanstaticlib import voteit_deform
+from voteit.core.fanstaticlib import autoresizable_textarea_js
 
 
 class AgendaItemView(BaseView):
@@ -81,6 +82,9 @@ class AgendaItemView(BaseView):
                                                                             
         # is needed because we load the forms with ajax
         voteit_deform.need()
+        
+        # for autoexpanding textareas
+        autoresizable_textarea_js.need()
         
         return self.response
 

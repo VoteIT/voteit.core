@@ -191,7 +191,9 @@ $(document).ready(function() {
                 $(this).find("div.dummy-textarea").html(msg + xhr.status + " " + xhr.statusText);
                 $(this).find("div.dummy-textarea").addClass('dummy-error')
             } else {
-                $(this).find("textarea").focus();
+                var txtar = $(this).find("textarea");
+                txtar.focus();
+                txtar.autoResizable();
             }
         });
     });
