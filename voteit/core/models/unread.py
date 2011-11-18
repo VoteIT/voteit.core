@@ -30,9 +30,7 @@ class Unread(object):
         storage = self.unread_storage
         if userid in storage:
             storage.remove(userid)
-            #Unreads are stored as metadata too, so this is needed.
-            #We might need to optimize this later.
-            objectEventNotify(ObjectUpdatedEvent(self.context, indexes=('unread',), metadata=True))
+            objectEventNotify(ObjectUpdatedEvent(self.context, indexes=('unread',), metadata=False))
 
     def get_unread_userids(self):
         return frozenset(self.unread_storage.keys())

@@ -7,7 +7,6 @@ from pyramid.url import resource_url
 from pyramid.traversal import find_interface
 from pyramid.traversal import find_root
 from pyramid.traversal import resource_path
-from pyramid.traversal import find_resource
 from pyramid.interfaces import IAuthenticationPolicy
 from pyramid.interfaces import IAuthorizationPolicy
 from pyramid.decorator import reify
@@ -19,6 +18,7 @@ from betahaus.viewcomponent.interfaces import IViewGroup
 from voteit.core import VoteITMF as _
 from voteit.core import security
 from voteit.core.models.interfaces import IDateTimeUtil
+from voteit.core.models.interfaces import IUnread
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.views.flash_messages import FlashMessages
 from voteit.core.models.catalog import metadata_for_query
@@ -175,9 +175,10 @@ class APIView(object):
         """ Check if a context is unread.
             This method expects full objects. It should be used as little
             as possible - use is_brain_unread instead.
+            This method will be removed
         """
-        if self.userid in context.get_unread_userids():
-            return True
+        unread = self.request.registry.queryAdapter(context, IUnread)
+        return unread and self.userid in unread.get_unread_userids() or None
 
     def is_brain_unread(self, brain):
         """ Same as is_unread, but expects catalog metadata instead.

@@ -53,6 +53,7 @@ class CatalogMetadata(object):
     def __call__(self):
         """ Return a dict of metadata values for an object. """
         results = {
+            'name': self.context.__name__,
             'title': get_title(self.context, None),
             'created': self.context.created, #Exception, since the get_created method returns unixtime
             'creators': get_creators(self.context, ()),

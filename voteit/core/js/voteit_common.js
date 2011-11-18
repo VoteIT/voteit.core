@@ -196,3 +196,31 @@ $(document).ready(function() {
         });
     });
 });
+
+/* Action to mark content as read */
+$(document).ready(function() {
+    var url_config = $("#js_config a[name=current_url]");
+    if (url_config.length > 0) {
+        var url = url_config.attr('href') + '/_mark_read';
+        var unread_names = [];
+        $(".unread").each( function() {
+            unread_names.push( $(this).attr('name') );
+        });
+        if (unread_names.length > 0) {
+            $.getJSON(url, {'unread': unread_names}, function(data) {
+                $.each(data, function(key, val) {
+                    // Key should be either error or marked_read
+                    if (key == 'error') {
+                        //Do things with error
+                        //FIXME: Exception view for js might be a good idea?
+                        console.log(val);
+                    };
+                    if ((key == 'marked_read') && (val != unread_names.length)) {
+                        console.log('Wrong number of marked read count returned.');
+                        console.log('Requested: ' + unread_names.length + ' Returned: ' + val);
+                    }
+                })
+            })
+        }
+    };
+});

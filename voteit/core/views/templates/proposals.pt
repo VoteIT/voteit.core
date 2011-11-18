@@ -3,12 +3,13 @@
     <div tal:define="unread api.is_brain_unread(proposal);
                      state_id proposal['workflow_state'];
                      css_class 'listing_block wf-state-%s' % state_id;"
-         tal:attributes="class unread and 'unread %s' % css_class or css_class">
+         tal:attributes="class unread and 'unread %s' % css_class or css_class;
+                         name proposal['name'];">
 
         <span tal:condition="api.show_moderator_actions" tal:replace="structure api.get_moderator_actions(proposal, request)">
              Cogwheel menu
         </span>	
-        
+
         <tal:creators tal:replace="structure api.get_creators_info(proposal['creators'], request)">Creators</tal:creators>
         <span i18n:translate="">propose</span>:
         <span class="body" tal:content="structure proposal['title']">Title</span>
@@ -29,6 +30,5 @@
         </div>
         <div class="clear"><!-- --></div>
     </div>
-    
 </tal:iterate>
 </tal:main>

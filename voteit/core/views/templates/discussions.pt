@@ -19,7 +19,8 @@
 
 <tal:iterate condition="discussions" repeat="post discussions">
     <div tal:define="unread api.is_brain_unread(post)"
-         tal:attributes="class unread and 'unread listing_block' or 'listing_block'">
+         tal:attributes="class unread and 'unread listing_block' or 'listing_block';
+		                 name post['name'];">
 
         <span tal:condition="api.show_moderator_actions" tal:replace="structure api.get_moderator_actions(post, request)">
              Cogwheel menu
