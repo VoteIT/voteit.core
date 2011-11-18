@@ -36,6 +36,9 @@ class CatalogMetadata(object):
     """ An adapter to fetch metadata for the catalog.
         See ICatalogMetadata
     """
+    #FIXME: Each metadata should be its own adapter instead
+    #otherwise we can't make this pluggable
+    #Refactor!
     implements(ICatalogMetadata)
     adapts(ICatalogMetadataEnabled)
     special_indexes = {IAgendaItem:'get_agenda_item_specific',
@@ -56,7 +59,6 @@ class CatalogMetadata(object):
             'workflow_state': get_workflow_state(self.context, None),
             'uid': get_uid(self.context, None),
             'like_userids': get_like_userids(self.context, ()),
-            'unread': get_unread(self.context, ()),
         }
 
         #Use special metadata?
@@ -146,8 +148,9 @@ def index_object(catalog, obj):
     
     #Add metadata
     if ICatalogMetadataEnabled.providedBy(obj):
-        metadata = getAdapter(obj, ICatalogMetadata)
-        catalog.document_map.add_metadata(obj_id, metadata())
+        metadata = getAdapter(obj, ICatalogMetadata)()
+        metadata['docid'] = obj_id
+        catalog.document_map.add_metadata(obj_id, metadata)
 
 
 def reindex_object(catalog, obj, indexes = (), metadata = True):
@@ -169,8 +172,9 @@ def reindex_object(catalog, obj, indexes = (), metadata = True):
 
     #Add metadata
     if metadata and ICatalogMetadataEnabled.providedBy(obj):
-        metadata = getAdapter(obj, ICatalogMetadata)
-        catalog.document_map.add_metadata(obj_id, metadata())
+        metadata = getAdapter(obj, ICatalogMetadata)()
+        metadata['docid'] = obj_id
+        catalog.document_map.add_metadata(obj_id, metadata)
 
 
 def unindex_object(catalog, obj):
