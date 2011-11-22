@@ -10,7 +10,6 @@
         <div tal:replace="structure user_info"></div>
 
     </div>
-    
     <div metal:fill-slot="right">
         <div class="moderator-help-buttons">
             <a tal:attributes="href api.user_profile_url + '@@edit'"
@@ -29,8 +28,6 @@
             It's taken from your current email address. If you want to change the picture, simply go to
             the Gravatar site and change your picture for the email you use in VoteIT.
         </div>
-
     </div>
-
 </body>
 </html>
