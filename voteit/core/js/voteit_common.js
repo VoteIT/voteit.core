@@ -26,7 +26,6 @@ function display_cogwheel_menu(event) {
     /* stop form from submitting normally 
     IE might throw an error calling preventDefault(), so use a try/catch block. */
     try { event.preventDefault(); } catch(e) {}
-    event.preventDefault(); 
     
     $(this).qtip({
         overwrite: false, // Make sure the tooltip won't be overridden once created
@@ -62,7 +61,6 @@ function display_meeting_menu(event) {
     /* stop form from submitting normally 
     IE might throw an error calling preventDefault(), so use a try/catch block. */
     try { event.preventDefault(); } catch(e) {}
-    event.preventDefault(); 
     
     $(this).qtip({
         overwrite: false, // Make sure the tooltip won't be overridden once created
@@ -98,7 +96,6 @@ function display_meeting_menu_poll(event) {
     /* stop form from submitting normally 
     IE might throw an error calling preventDefault(), so use a try/catch block. */
     try { event.preventDefault(); } catch(e) {}
-    event.preventDefault();
     
     var url = $(this).attr('url');
     $(this).qtip({
@@ -139,6 +136,7 @@ $(document).ready(function() {
         /* stop form from submitting normally 
         IE might throw an error calling preventDefault(), so use a try/catch block. */
         try { event.preventDefault(); } catch(e) {}
+
         /* get some values from elements on the page: */
         var $form = $( this ),
             tag = $form.find('input[name="tag"]').val(),

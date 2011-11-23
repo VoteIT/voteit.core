@@ -69,4 +69,7 @@ def user_info_view(context, request, info_userid=None):
     response['relative_time_format'] = dt_util.relative_time_format
     if request.is_xhr:
         return render_to_response(USERINFO_TPL, response, request = request)
+    # since this view should not be called on meeting without ajax we send a 404 if so
+    if IMeeting.providedBy(context):
+        return HTTPNotFound()
     return render(USERINFO_TPL, response, request = request)
