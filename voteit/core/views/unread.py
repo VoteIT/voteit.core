@@ -35,7 +35,6 @@ def mark_content_as_read(context, request):
         unread = request.registry.queryAdapter(obj, IUnread)
         if not unread:
             continue
-        print "marking %s as read" % name
         unread.mark_as_read(userid)
 
     return {'marked_read': i}
