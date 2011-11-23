@@ -5,6 +5,8 @@ from pyramid.security import Allow
 from pyramid.security import DENY_ALL
 from pyramid.traversal import find_interface
 from betahaus.pyracont.decorators import content_factory
+from webhelpers.html.tools import auto_link
+from webhelpers.html.converters import nl2br
 
 from voteit.core import VoteITMF as _
 from voteit.core import security
@@ -38,6 +40,9 @@ class DiscussionPost(BaseContent):
     allowed_contexts = ('AgendaItem',)
     add_permission = security.ADD_DISCUSSION_POST
     schemas = {'add': 'DiscussionPostSchema'}
+    custom_mutators = {'text': '_set_text',
+                       'title': '_set_title'}
+    custom_accessors = {'title': '_get_title'}
 
     @property
     def __acl__(self):
@@ -47,10 +52,20 @@ class DiscussionPost(BaseContent):
         return ACL['open']
 
     #Override title, it will be used to generate a name for this content. (Like an id)
-    def _get_title(self):
-        return self.get_field_value('text')
+    def _get_title(self, key = None, default = u""):
+        return self.get_field_value('text', default = default)
 
-    def _set_title(self, value):
-        pass #Not used
+    def _set_title(self, value, key = None):
+        """ Override set tilte for this content type."""
+        #This has to do with b/c
+        self._set_text(value, key = key)
 
     title = property(_get_title, _set_title)
+
+    def _set_text(self, value, key = None):
+        """ Custom mutator, will transform urls to links and linebreaks to <br/> """
+        value = auto_link(value)
+        value = nl2br(value)
+        #nl2br will also ad a \n to the end, we need to remove it so it doesn't run several times
+        value = value.replace('\n', ' ')
+        self.field_storage['text'] = value

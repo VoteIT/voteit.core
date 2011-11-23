@@ -2,7 +2,10 @@ import unittest
 
 from pyramid import testing
 from pyramid.url import resource_url
+from zope.interface.verify import verifyClass
 from zope.interface.verify import verifyObject
+
+from voteit.core.models.interfaces import IDiscussionPost
 
 
 class DiscussionTests(unittest.TestCase):
@@ -12,55 +15,38 @@ class DiscussionTests(unittest.TestCase):
     def tearDown(self):
         testing.tearDown()
 
-    def _make_obj(self):
+    @property
+    def _cut(self):
         from voteit.core.models.discussion_post import DiscussionPost
-        return DiscussionPost()
+        return DiscussionPost
 
-    def test_verify_obj_implementation(self):
-        from voteit.core.models.interfaces import IDiscussionPost
-        obj = self._make_obj()
-        self.assertTrue(verifyObject(IDiscussionPost, obj))
-        
-    def test_transform_text_subscriber(self):
-        request = testing.DummyRequest()
-        self.config = testing.setUp(request=request)
+    def test_verify_class(self):
+        self.assertTrue(verifyClass(IDiscussionPost, self._cut))
 
-        self.config.scan('voteit.core.models.site')
-        self.config.scan('voteit.core.models.user')
-        self.config.scan('voteit.core.models.users')
-        self.config.scan('voteit.core.subscribers.transform_text')
-        self.config.include('voteit.core.models.catalog')        
-        self.config.include('voteit.core.models.user_tags')
-        self.config.scan('betahaus.pyracont.fields.password')
+    def test_verify_obj(self):
+        self.assertTrue(verifyObject(IDiscussionPost, self._cut()))
 
-        from voteit.core.bootstrap import bootstrap_voteit
-        self.root = bootstrap_voteit(echo=False)
-        
-        from voteit.core.models.meeting import Meeting
-        meeting = Meeting()
-        self.root['m1'] = meeting
-        
-        obj = self._make_obj()
+    def test_newline_to_br_enabled(self):
+        obj = self._cut()
         obj.set_field_value('text', 'test\ntest')
-        meeting['p1'] = obj
-        self.assertEqual(obj.get_field_value('text'), 'test<br />\ntest')
+        self.assertEqual(unicode(obj.get_field_value('text')), unicode('test<br /> test'))
 
-        obj = self._make_obj()
-        obj.set_field_value('text', 'http://www.voteit.se')
-        meeting['p2'] = obj
-        self.assertEqual(obj.get_field_value('text'), '<a href="http://www.voteit.se">http://www.voteit.se</a>')
-        
-        obj = self._make_obj()
-        obj.set_field_value('text', '@admin')
-        meeting['p3'] = obj
+    def test_autolinking_enabled(self):
+        obj = self._cut()
+        obj.set_field_value('text', 'www.betahaus.net')
+        self.assertEqual(unicode(obj.get_field_value('text')), unicode('<a href="http://www.betahaus.net">www.betahaus.net</a>'))
 
-        from webhelpers.html import HTML
-        a_options = dict()
-        a_options['href'] = "%s_userinfo?userid=%s" % (resource_url(meeting, request), 'admin')
-        a_options['title'] = self.root.users['admin'].title
-        a_options['class'] = "inlineinfo"
-        text = HTML.a('@admin', **a_options)
+    def test_title_and_text_linked(self):
+        obj = self._cut()
+        obj.set_field_value('title', "Hello")
+        self.assertEqual(obj.get_field_value('text'), "Hello")
 
-        self.assertEqual(obj.get_field_value('text'), text)
+    def test_nl2br_several_runs_should_not_add_more_brs(self):
+        obj = self._cut()
+        obj.title = "Hello\nthere"
+        res = obj.get_field_value('title')
+        obj.title = res
+        result = obj.get_field_value('title')
+        self.assertEqual(result.count('<br />'), 1)
 
     #FIXME: We need proper permission tests here

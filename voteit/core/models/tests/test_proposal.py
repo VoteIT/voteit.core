@@ -4,18 +4,11 @@ from pyramid import testing
 from pyramid.authorization import ACLAuthorizationPolicy
 from pyramid.security import Authenticated
 from pyramid.url import resource_url
+from zope.interface.verify import verifyClass
 from zope.interface.verify import verifyObject
 
 from voteit.core import security
-
-admin = set([security.ROLE_ADMIN])
-moderator = set([security.ROLE_MODERATOR])
-authenticated = set([Authenticated])
-discuss = set([security.ROLE_DISCUSS])
-propose = set([security.ROLE_PROPOSE])
-viewer = set([security.ROLE_VIEWER])
-voter = set([security.ROLE_VOTER])
-owner = set([security.ROLE_OWNER])
+from voteit.core.models.interfaces import IProposal
 
 
 class ProposalTests(unittest.TestCase):
@@ -25,56 +18,38 @@ class ProposalTests(unittest.TestCase):
     def tearDown(self):
         testing.tearDown()
 
-    def _make_obj(self):
+    @property
+    def _cut(self):
         from voteit.core.models.proposal import Proposal
-        return Proposal()
-    
-    def test_verify_implementation(self):
-        from voteit.core.models.interfaces import IProposal
-        obj = self._make_obj()
-        self.assertTrue(verifyObject(IProposal, obj))
-        
-    def test_transform_title_subscriber(self):
-        request = testing.DummyRequest()
-        self.config = testing.setUp(request=request)
+        return Proposal
 
-        self.config.scan('voteit.core.models.site')
-        self.config.scan('voteit.core.models.user')
-        self.config.scan('voteit.core.models.users')        
-        self.config.scan('voteit.core.subscribers.transform_text')
-        self.config.include('voteit.core.models.user_tags')
-        self.config.include('voteit.core.models.catalog')
-        self.config.scan('betahaus.pyracont.fields.password')
+    def test_verify_class(self):
+        self.failUnless(verifyClass(IProposal, self._cut))
 
-        from voteit.core.bootstrap import bootstrap_voteit
-        self.root = bootstrap_voteit(echo=False)
-        
-        from voteit.core.models.meeting import Meeting
-        meeting = Meeting()
-        self.root['m1'] = meeting
-        
-        obj = self._make_obj()
+    def test_verify_obj(self):
+        self.failUnless(verifyObject(IProposal, self._cut()))
+
+    def test_newline_to_br_enabled(self):
+        obj = self._cut()
         obj.set_field_value('title', 'test\ntest')
-        meeting['p1'] = obj
-        self.assertEqual(obj.get_field_value('title'), 'test<br />\ntest')
+        self.assertEqual(unicode(obj.get_field_value('title')), unicode('test<br />\ntest'))
 
-        obj = self._make_obj()
-        obj.set_field_value('title', 'http://www.voteit.se')
-        meeting['p2'] = obj
-        self.assertEqual(obj.get_field_value('title'), '<a href="http://www.voteit.se">http://www.voteit.se</a>')
-        
-        obj = self._make_obj()
-        obj.set_field_value('title', '@admin')
-        meeting['p3'] = obj
+    def test_autolinking_enabled(self):
+        obj = self._cut()
+        obj.set_field_value('title', 'www.betahaus.net')
+        self.assertEqual(unicode(obj.get_field_value('title')), unicode('<a href="http://www.betahaus.net">www.betahaus.net</a>'))
 
-        from webhelpers.html import HTML
-        a_options = dict()
-        a_options['href'] = "%s_userinfo?userid=%s" % (resource_url(meeting, request), 'admin')
-        a_options['title'] = self.root.users['admin'].title
-        a_options['class'] = "inlineinfo"
-        title = HTML.a('@admin', **a_options)
 
-        self.assertEqual(obj.get_field_value('title'), title)
+
+
+admin = set([security.ROLE_ADMIN])
+moderator = set([security.ROLE_MODERATOR])
+authenticated = set([Authenticated])
+discuss = set([security.ROLE_DISCUSS])
+propose = set([security.ROLE_PROPOSE])
+viewer = set([security.ROLE_VIEWER])
+voter = set([security.ROLE_VOTER])
+owner = set([security.ROLE_OWNER])
 
 
 class ProposalPermissionTests(unittest.TestCase):

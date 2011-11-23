@@ -122,7 +122,7 @@ class UserTests(unittest.TestCase):
         self.config.scan('voteit.core.models.site')
         self.config.scan('voteit.core.models.user')
         self.config.scan('voteit.core.models.users')
-        self.config.scan('voteit.core.subscribers.transform_text')
+        self.config.scan('voteit.core.subscribers.mention')
         self.config.include('voteit.core.models.user_tags')
         self.config.include('voteit.core.models.catalog')
         self.config.scan('betahaus.pyracont.fields.password')
