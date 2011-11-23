@@ -334,6 +334,7 @@ p {
 }
 #navigation .item {
 	padding: 5px 0px;
+	padding-right: 15px;
 	border-bottom: 1px solid #ccc;
 }
 
@@ -553,17 +554,22 @@ ui-dialog {
 }
 .cogwheel {
     float: right;
-}
-.cogwheel .menu_header {
-	width: 1px;
-	padding-right: 15px;
-	height: 1px;
-	padding-bottom: 15px;
 	background: url(/static/icons/icon_settings_lb.png) no-repeat;
+	width: 15px;
+	height: 15px;
 }
-.cogwheel .menu_header:hover {
+.cogwheel:hover {
 	background-image: url(/static/icons/icon_settings.png);
 }
+
+.cogwheel .menu_header {
+	width: 15px;
+	height: 15px;
+	margin: 0;
+	padding: 0;
+    display: block;
+}
+
 .cogwheel-body .menusection {
 	display: block;
     font-weight: bold;
