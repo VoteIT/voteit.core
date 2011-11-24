@@ -450,13 +450,14 @@ li.notification_message {
 
 /* polls */
 #polls h3 {
-    color: #666;
-    font-weight: normal;
+    color: #black;
+    font-weight: strong;
 }
 #polls .poll_type {
     border: 1px solid #86A3B4;
     background-color: #fff;
     padding: 5px 10px;
+	margin-left:5px;
 }
 #polls .listing_block {
 	border-bottom: 2px solid #86A3B4;
