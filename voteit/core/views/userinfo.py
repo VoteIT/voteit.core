@@ -3,7 +3,7 @@ from pyramid.traversal import resource_path
 from pyramid.renderers import render_to_response
 from pyramid.renderers import render
 from pyramid.view import view_config
-from pyramid.httpexceptions import HTTPNotFound
+from pyramid.httpexceptions import HTTPForbidden
 from webhelpers.html.converters import nl2br
 from webhelpers.html.render import sanitize
 
@@ -69,7 +69,8 @@ def user_info_view(context, request, info_userid=None):
     response['relative_time_format'] = dt_util.relative_time_format
     if request.is_xhr:
         return render_to_response(USERINFO_TPL, response, request = request)
-    # since this view should not be called on meeting without ajax we send a 404 if so
+    #Since this view should not be called directly in a meeting context,
+    #we raise a forbidden if that is the case.
     if IMeeting.providedBy(context):
-        return HTTPNotFound()
+        raise HTTPForbidden(_(u"Direct access to this is not allowed"))
     return render(USERINFO_TPL, response, request = request)
