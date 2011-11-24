@@ -21,7 +21,7 @@ $(document).ready(function () {
     });
 });
 
-$('.cogwheel').live('hover', display_cogwheel_menu);
+$('.cogwheel .menu_header').live('hover', display_cogwheel_menu);
 function display_cogwheel_menu(event) {
     /* stop form from submitting normally 
     IE might throw an error calling preventDefault(), so use a try/catch block. */
@@ -30,7 +30,7 @@ function display_cogwheel_menu(event) {
     $(this).qtip({
         overwrite: false, // Make sure the tooltip won't be overridden once created
         content: { 
-            text: $(this).find('.menu_body'), // The text to use whilst the AJAX request is loading
+            text: $(this).parent().find('.menu_body'), // The text to use whilst the AJAX request is loading
         },
         show: {
             event: event.type, // Use the same show event as the one that triggered the event handler
