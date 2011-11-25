@@ -450,7 +450,7 @@ li.notification_message {
 
 /* polls */
 #polls h3 {
-    color: #black;
+    color: #000;
     font-weight: strong;
 }
 #polls .poll_type {
@@ -474,8 +474,12 @@ li.notification_message {
 #polls .deform label.desc {
     font-weight: normal;
 }
+/*FIXME: This should be the other way around and schulze should be in its package*/
 #polls .buttons {
     text-align: right;
+}
+#polls .majority_poll .buttons {
+    text-align: left;
 }
 /* proposals and discussions */
 #proposals .creators img,
