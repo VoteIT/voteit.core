@@ -216,7 +216,7 @@ p {
 .icon.proposal { background: url(/static/icons/icon_proposal_lb.png) no-repeat left 25%; }
 .icon.discussion,
 .icon.discussionpost { background: url(/static/icons/icon_disc_lb.png) no-repeat left 25%; }
-.icon.poll { background: url(/static/icons/icon_poll_lb.png) no-repeat left 40%; }
+.icon.poll { background: url(/static/icons/icon_poll_lb.png) no-repeat left 25%; }
 .icon.poll-dark { background: url(/static/icons/icon_poll.png) no-repeat; }
 .cog-dark { background: url(/static/icons/icon_settings.png) no-repeat top left; }
 .icon.published { background: url(/static/icons/icon_doc.png) left center no-repeat; }
@@ -450,7 +450,7 @@ li.notification_message {
 
 /* polls */
 #polls h3 {
-    color: #black;
+    color: #000;
     font-weight: strong;
 }
 #polls .poll_type {
@@ -474,8 +474,12 @@ li.notification_message {
 #polls .deform label.desc {
     font-weight: normal;
 }
+/*FIXME: This should be the other way around and schulze should be in its package*/
 #polls .buttons {
     text-align: right;
+}
+#polls .majority_poll .buttons {
+    text-align: left;
 }
 /* proposals and discussions */
 #proposals .creators img,

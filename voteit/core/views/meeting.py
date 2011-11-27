@@ -81,7 +81,7 @@ class MeetingView(BaseView):
         self.response['context_effective_principals'] = security.context_effective_principals
         return self.response
 
-    @view_config(name="ticket", context=IMeeting, renderer="templates/base_edit.pt")
+    @view_config(name="ticket", context=IMeeting, renderer="templates/base_edit.pt", permission = NO_PERMISSION_REQUIRED)
     def claim_ticket(self):
         """ Handle claim of a ticket. It acts in two ways:
             - The normal way is that a user is authenticated and clicks the link in
