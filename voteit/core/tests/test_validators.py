@@ -2,38 +2,33 @@ import colander
 import deform
 from unittest import TestCase
 
-from betahaus.pyracont.factories import createContent
 from pyramid import testing
 from pyramid.authentication import AuthTktAuthenticationPolicy
 from pyramid.authorization import ACLAuthorizationPolicy
 
+from voteit.core.testing_helpers import bootstrap_and_fixture
+from voteit.core.testing_helpers import register_security_policies
+from voteit.core.testing_helpers import register_workflows
+from voteit.core import security
+
 
 def _fixture(config):
-    from voteit.core import security
-    from voteit.core.bootstrap import bootstrap_voteit
-    config.scan('voteit.core.models.site')
-    config.scan('voteit.core.models.user')
-    config.scan('voteit.core.models.users')
-    config.scan('voteit.core.models.meeting')
-    config.scan('betahaus.pyracont.fields.password')
-
-    root = bootstrap_voteit(echo=False)
+    from voteit.core.models.user import User
+    from voteit.core.models.meeting import Meeting
     
-    tester = createContent('User',
-                         password = 'tester',
-                         creators = ['tester'],
-                         first_name = u'Tester',
-                         email = "tester@voteit.se",)
+    root = bootstrap_and_fixture(config)
+    tester = User(password = 'tester',
+                  creators = ['tester'],
+                  first_name = u'Tester',
+                  email = "tester@voteit.se",)
     root.users['tester'] = tester
-
-    moderator = createContent('User',
-                              password = 'moderator',
-                              creators = ['moderator'],
-                              first_name = u'Moderator',
-                              email = "moderator@voteit.se",)
+    moderator = User(password = 'moderator',
+                     creators = ['moderator'],
+                     first_name = u'Moderator',
+                     email = "moderator@voteit.se",)
     root.users['moderator'] = moderator
 
-    meeting = createContent('Meeting')
+    meeting = Meeting()
     meeting.add_groups('tester', [security.ROLE_DISCUSS, security.ROLE_PROPOSE, security.ROLE_VOTER])
     meeting.add_groups('moderator', [security.ROLE_MODERATOR])
     root['meeting'] = meeting
@@ -77,8 +72,8 @@ class AtEnabledTextAreaTests(TestCase):
         self.assertRaises(colander.Invalid, obj, node, "<html> is not allowed")
 
     def test_with_at_links(self):
-        _register_security_policies(self.config)
-        _register_workflows(self.config)
+        register_security_policies(self.config)
+        register_workflows(self.config)
         root = _fixture(self.config)
         context = root['meeting']
         obj = self._cut(context)
@@ -86,8 +81,8 @@ class AtEnabledTextAreaTests(TestCase):
         self.assertEqual(obj(node, "@admin says to @tester that this shouldn't be valid."), None)
 
     def test_with_nonexistent_user(self):
-        _register_security_policies(self.config)
-        _register_workflows(self.config)
+        register_security_policies(self.config)
+        register_workflows(self.config)
         root = _fixture(self.config)
         context = root['meeting']
         obj = self._cut(context)
@@ -95,12 +90,14 @@ class AtEnabledTextAreaTests(TestCase):
         self.assertRaises(colander.Invalid, obj, node, "@admin says that naming @nonexistent should raise Invalid")
 
     def test_with_user_outside_of_meeting_context(self):
-        _register_security_policies(self.config)
-        _register_workflows(self.config)
+        from voteit.core.models.user import User
+
+        register_security_policies(self.config)
+        register_workflows(self.config)
         root = _fixture(self.config)
         context = root['meeting']
         #New user
-        root.users['new'] = createContent('User')
+        root.users['new'] = User()
         obj = self._cut(context)
         node = None
         self.assertRaises(colander.Invalid, obj, node, "@new doesn't exist in this meeting so this shouldn't work")
@@ -131,14 +128,14 @@ class NewUniqueUserIDTests(TestCase):
         self.assertRaises(colander.Invalid, obj, node, "_invalid_start")
 
     def test_working_userid(self):
-        _register_security_policies(self.config)
+        register_security_policies(self.config)
         root = _fixture(self.config)
         obj = self._cut(root)
         node = None
         self.assertEqual(obj(node, "john_doe"), None)
 
     def test_existing_userid(self):
-        _register_security_policies(self.config)
+        register_security_policies(self.config)
         root = _fixture(self.config)
         obj = self._cut(root)
         node = None
@@ -186,7 +183,7 @@ class UniqueEmailIDTests(TestCase):
 #FIXME: Full integration test with schema
 
 class CheckPasswordTokenTests(TestCase):
-    
+
     def setUp(self):
         self.config = testing.setUp()
 
@@ -236,7 +233,7 @@ class CheckPasswordTokenTests(TestCase):
 
 
 class TokenFormValidatorTests(TestCase):
-    
+
     def setUp(self):
         self.config = testing.setUp()
 
@@ -308,3 +305,28 @@ class GlobalExistingUserIdTests(TestCase):
         obj = self._cut(context)
         node = None
         self.assertEqual(obj(node, 'admin'), None)
+
+
+class PasswordValidationTests(TestCase):
+
+    def setUp(self):
+        self.config = testing.setUp()
+
+    def tearDown(self):
+        testing.tearDown()
+
+    @property
+    def _fut(self):
+        from voteit.core.validators import password_validation
+        return password_validation
+
+    def test_pw_length_too_short(self):
+        self.assertRaises(colander.Invalid, self._fut, None, '123')
+    
+    def test_pw_length_too_long(self):
+        pw = "123456789".join(['0' for x in range(11)])
+        self.assertRaises(colander.Invalid, self._fut, None, pw)
+    
+    def test_pw_length(self):
+        self.assertEqual(self._fut(None, 'good password'), None)
+    
