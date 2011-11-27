@@ -355,3 +355,50 @@ class MultipleEmailValidatorTests(TestCase):
 
     def test_multiple_one_bad(self):
         self.assertRaises(colander.Invalid, self._fut, None, "one@two.com\nthree@four.net\nfive@six.com\none@two.com hello! \n")
+
+
+class DeferredValidatorsTests(TestCase):
+    def setUp(self):
+        self.config = testing.setUp()
+
+    def tearDown(self):
+        testing.tearDown()
+
+    def test_deferred_at_enabled_text(self):
+        from voteit.core.validators import deferred_at_enabled_text
+        from voteit.core.validators import AtEnabledTextArea
+        res = deferred_at_enabled_text(None, {'context': None})
+        self.failUnless(isinstance(res, AtEnabledTextArea))
+
+    def test_deferred_new_userid_validator(self):
+        from voteit.core.validators import deferred_new_userid_validator
+        from voteit.core.validators import NewUniqueUserID
+        res = deferred_new_userid_validator(None, {'context': None})
+        self.failUnless(isinstance(res, NewUniqueUserID))
+
+    def test_deferred_unique_email_validator(self):
+        from voteit.core.validators import deferred_unique_email_validator
+        from voteit.core.validators import UniqueEmail
+        res = deferred_unique_email_validator(None, {'context': None})
+        self.failUnless(isinstance(res, UniqueEmail))
+
+    def test_deferred_password_token_validator(self):
+        from voteit.core.validators import deferred_password_token_validator
+        from voteit.core.validators import CheckPasswordToken
+        from voteit.core.models.user import User
+        res = deferred_password_token_validator(None, {'context': User()})
+        self.failUnless(isinstance(res, CheckPasswordToken))
+
+    def test_deferred_token_form_validator(self):
+        from voteit.core.validators import deferred_token_form_validator
+        from voteit.core.validators import TokenFormValidator
+        from voteit.core.models.meeting import Meeting
+        res = deferred_token_form_validator(None, {'context': Meeting()})
+        self.failUnless(isinstance(res, TokenFormValidator))
+
+    def test_deferred_existing_userid_validator(self):
+        from voteit.core.validators import deferred_existing_userid_validator
+        from voteit.core.validators import GlobalExistingUserId
+        res = deferred_existing_userid_validator(None, {'context': None})
+        self.failUnless(isinstance(res, GlobalExistingUserId))
+
