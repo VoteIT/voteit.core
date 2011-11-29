@@ -474,11 +474,7 @@ li.notification_message {
 #polls .deform label.desc {
     font-weight: normal;
 }
-/*FIXME: This should be the other way around and schulze should be in its package*/
 #polls .buttons {
-    text-align: right;
-}
-#polls .majority_poll .buttons {
     text-align: left;
 }
 /* proposals and discussions */
