@@ -32,6 +32,6 @@ def at_userid_link(text, obj):
         tag['href'] = "%s_userinfo?userid=%s" % (resource_url(meeting, request), userid)
         tag['title'] = user.title
         tag['class'] = "inlineinfo"
-        return HTML.a('@%s' % userid, **tag)
+        return space + HTML.a('@%s' % userid, **tag)
 
     return re.sub(AT_PATTERN, handle_match, text)
