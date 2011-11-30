@@ -32,7 +32,7 @@ class ProposalTests(unittest.TestCase):
     def test_newline_to_br_enabled(self):
         obj = self._cut()
         obj.set_field_value('title', 'test\ntest')
-        self.assertEqual(unicode(obj.get_field_value('title')), unicode('test<br />\ntest'))
+        self.assertEqual(unicode(obj.get_field_value('title')), unicode('test<br /> test'))
 
     def test_autolinking_enabled(self):
         obj = self._cut()
