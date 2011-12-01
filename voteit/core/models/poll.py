@@ -26,6 +26,7 @@ from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IPollPlugin
 from voteit.core.models.interfaces import IVote
 from voteit.core.views.flash_messages import FlashMessages
+from voteit.core.helpers import generate_slug
 
 
 _UPCOMING_PERMS = (security.VIEW,
@@ -218,6 +219,26 @@ class Poll(BaseContent, WorkflowAware):
             if prop.uid == uid:
                 return prop
         raise KeyError("No proposal found with UID '%s'" % uid)
+        
+    def create_rejection_proposal(self):
+        proposal_rejection = self.get_field_value('proposal_rejection', None)
+        rejection_proposal_uid = self.get_field_value('rejection_proposal_uid', None)
+        # if we should add rejection proposal and there is no rejection proposal already
+        if proposal_rejection and rejection_proposal_uid is None:
+            # create rejection proposal
+            from voteit.core.models.proposal import Proposal
+            proposal = Proposal()
+            proposal_title = self.get_field_value('proposal_rejection_title', _(u'Rejection'))
+            proposal.set_field_value('title', proposal_title)
+            self.set_field_value('rejection_proposal_uid', proposal._get_uid())
+            
+            # add rejection proposal to agenda item
+            agenda_item = find_interface(self, IAgendaItem)
+            name = generate_slug(agenda_item, proposal.title)
+            agenda_item[name] = proposal
+            
+            # add proposal to polls proposal uids
+            self.proposal_uids = self.proposal_uids.union(set([proposal._get_uid()]))
 
 
 class Ballots(object):

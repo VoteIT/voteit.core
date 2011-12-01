@@ -79,6 +79,20 @@ class PollSchema(colander.MappingSchema):
                                                     default=u"Only proposals in the state 'published' can be selected"),
                                     missing=set(),
                                     widget=proposal_choices_widget,)
+                                    
+    proposal_rejection = colander.SchemaNode(colander.Boolean(),
+                                          name="proposal_rejection",
+                                          title = _(u"Rejection proposal"),
+                                          description = _(u"Should a rejection proposal be added to the poll"),
+                                          missing=False,
+                                          widget=None)
+                                          
+    proposal_rejection_title = colander.SchemaNode(colander.String(),
+                                                name="proposal_rejection_title",
+                                                title = _(u"Rejection proposal title"),
+                                                description = _(u"The title of the rejection proposal"),
+                                                default=_("Rejection"),
+                                                widget=None)
     start_time = colander.SchemaNode(
          TZDateTime(),
          title = _(u"Start time of this poll."),
@@ -94,3 +108,11 @@ class PollSchema(colander.MappingSchema):
          widget=deform.widget.DateTimeInputWidget(options={'timeFormat': 'hh:mm'}),
          default = deferred_default_end_time,
     )
+    
+def poll_schema_after_bind(node, kw):
+    """ if a rejection proposal is already attatched to the poll
+        those options should not be available """
+    context = kw['context']
+    if context.get_field_value('rejection_proposal_uid', None):
+        del node['proposal_rejection']
+        del node['proposal_rejection_title']

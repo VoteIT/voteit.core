@@ -21,6 +21,7 @@ from voteit.core.models.schemas import button_cancel
 from voteit.core.models.schemas import button_update
 from voteit.core.models.schemas import button_save
 from voteit.core.views.base_edit import BaseEdit
+from voteit.core.schemas.poll import poll_schema_after_bind
 
 
 class PollView(BaseEdit):
@@ -30,7 +31,7 @@ class PollView(BaseEdit):
     def edit_form(self):
         content_type = self.context.content_type
         schema_name = self.api.get_schema_name(content_type, 'edit')
-        schema = createSchema(schema_name).bind(context=self.context, request=self.request)
+        schema = createSchema(schema_name, after_bind=poll_schema_after_bind).bind(context=self.context, request=self.request)
         add_csrf_token(self.context, self.request, schema)
 
         form = Form(schema, buttons=(button_update, button_cancel))

@@ -1,5 +1,6 @@
 from pyramid.events import subscriber
 from pyramid.threadlocal import get_current_request
+from repoze.folder.interfaces import IObjectAddedEvent
 
 from voteit.core.models.interfaces import IPoll
 from voteit.core.interfaces import IObjectUpdatedEvent
@@ -22,3 +23,10 @@ def email_voters_about_ongoing_poll_subscriber(obj, event):
     if event.new_state != 'ongoing':
         return
     email_voters_about_ongoing_poll(obj)
+
+@subscriber([IPoll, IObjectAddedEvent])
+@subscriber([IPoll, IObjectUpdatedEvent])
+def create_rejection_proposal(obj, event):
+    """ Adding a rejection proposal to poll. This is a subscriber because
+        poll needs to be in the agenda_item for this to work """
+    obj.create_rejection_proposal()

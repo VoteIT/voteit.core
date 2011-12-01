@@ -5,6 +5,7 @@ from pyramid.traversal import find_root
 from pyramid.traversal import find_interface
 from pyramid.url import resource_url
 from webhelpers.html import HTML
+from slugify import slugify
 
 from voteit.core.models.interfaces import IMeeting
 
@@ -35,3 +36,25 @@ def at_userid_link(text, obj):
         return space + HTML.a('@%s' % userid, **tag)
 
     return re.sub(AT_PATTERN, handle_match, text)
+    
+
+def generate_slug(context, text, limit=40):
+    """ Suggest a name for content that will be added.
+        text is a title or similar to be used.
+    """
+    suggestion = slugify(text[:limit])
+    
+    #Is the suggested ID already unique?
+    if suggestion not in context:
+        return suggestion
+    
+    #ID isn't unique, let's try to generate a unique one.
+    RETRY = 100
+    i = 1
+    while i <= RETRY:
+        new_s = "%s-%s" % (suggestion, str(i))
+        if new_s not in context:
+            return new_s
+        i += 1
+    #If no id was found, don't just continue
+    raise KeyError("No unique id could be found")

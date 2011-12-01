@@ -8,7 +8,6 @@ import colander
 from deform import Form
 from deform.exception import ValidationFailure
 from pyramid.httpexceptions import HTTPFound
-from slugify import slugify
 from betahaus.pyracont.factories import createContent
 from betahaus.pyracont.factories import createSchema
 
@@ -25,6 +24,7 @@ from voteit.core.models.interfaces import IBaseContent
 from voteit.core.models.interfaces import IWorkflowAware
 from voteit.core import fanstaticlib
 from voteit.core.views.api import APIView
+from voteit.core.helpers import generate_slug
 
 
 DEFAULT_TEMPLATE = "templates/base_edit.pt"
@@ -181,22 +181,7 @@ class BaseEdit(object):
         """ Suggest a name for content that will be added.
             text is a title or similar to be used.
         """
-        suggestion = slugify(text[:limit])
-        
-        #Is the suggested ID already unique?
-        if suggestion not in self.context:
-            return suggestion
-        
-        #ID isn't unique, let's try to generate a unique one.
-        RETRY = 100
-        i = 1
-        while i <= RETRY:
-            new_s = "%s-%s" % (suggestion, str(i))
-            if new_s not in self.context:
-                return new_s
-            i += 1
-        #If no id was found, don't just continue
-        raise KeyError("No unique id could be found")
+        return generate_slug(self.context, text, limit)
         
     @view_config(context=IWorkflowAware, name="state")
     def state_change(self):
