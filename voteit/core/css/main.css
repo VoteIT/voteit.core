@@ -50,7 +50,6 @@ p {
 	right: 80%;
 }
 #rightcol-wrapper {
-    overflow:hidden;
 }
 #main-content-wrapper {
     position: relative;
@@ -69,7 +68,6 @@ p {
     float: left;
     left: 80%;
 	width: 80%;
-    overflow:hidden;
 }
 #content {
     padding-bottom: 20px;
