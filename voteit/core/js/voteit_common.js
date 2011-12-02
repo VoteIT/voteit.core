@@ -207,20 +207,25 @@ $(document).ready(function() {
             unread_names.push( $(this).attr('name') );
         });
         if (unread_names.length > 0) {
-            $.getJSON(url, {'unread': unread_names}, function(data) {
-                $.each(data, function(key, val) {
-                    // Key should be either error or marked_read
-                    if (key == 'error') {
-                        //Do things with error
-                        //FIXME: Exception view for js might be a good idea?
-                        console.log(val);
-                    };
-                    if ((key == 'marked_read') && (val != unread_names.length)) {
-                        console.log('Wrong number of marked read count returned.');
-                        console.log('Requested: ' + unread_names.length + ' Returned: ' + val);
-                    }
-                })
-            })
+            $.ajax({url: url,
+                    dataType: 'json',
+                    data: {'unread': unread_names},
+                    type: 'POST',
+                    success: function(data) {
+                        $.each(data, function(key, val) {
+                            // Key should be either error or marked_read
+                            if (key == 'error') {
+                                //Do things with error
+                                //FIXME: Exception view for js might be a good idea?
+                                console.log(val);
+                            };
+                            if ((key == 'marked_read') && (val != unread_names.length)) {
+                                console.log('Wrong number of marked read count returned.');
+                                console.log('Requested: ' + unread_names.length + ' Returned: ' + val);
+                            };
+                        });
+                     }
+            });
         }
     };
 });
