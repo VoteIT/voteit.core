@@ -12,11 +12,11 @@
     </div>
     <div metal:fill-slot="right">
         <div class="moderator-help-buttons">
-            <a tal:attributes="href api.user_profile_url + '@@edit'"
+            <a tal:attributes="href '%s@@edit' % api.resource_url(context, request)"
                tal:condition="api.context_has_permission('Edit', context)"
                class="buttonize large"
                i18n:translate="">Change settings</a>
-            <a tal:attributes="href api.user_profile_url + '@@change_password'"
+            <a tal:attributes="href '%s@@change_password' % api.resource_url(context, request)"
                tal:condition="api.context_has_permission('Change Password', context)"
                class="buttonize large"
                i18n:translate="">Change password</a>

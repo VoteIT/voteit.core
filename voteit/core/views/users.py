@@ -83,8 +83,6 @@ class UsersFormView(BaseEdit):
         self.response['form'] = form.render()
         return self.response
 
-
-
     @view_config(context=IUser, name="change_password", renderer=DEFAULT_TEMPLATE, permission=CHANGE_PASSWORD)
     def password_form(self):
         schema = createSchema('ChangePasswordSchema').bind(context=self.context, request=self.request)
