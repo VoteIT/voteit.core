@@ -66,7 +66,10 @@ class SecurityAware(object):
         self.set_groups(principal, groups, event = event)
 
     def del_groups(self, principal, groups, event = False):
-        groups = set(groups)
+        if isinstance(groups, basestring):
+            groups = set([groups])
+        else:
+            groups = set(groups)
         current = set(self.get_groups(principal))
         new_groups = current - groups
         #Delegate check and set to set_groups

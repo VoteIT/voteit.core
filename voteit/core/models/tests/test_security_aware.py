@@ -112,14 +112,20 @@ class SecurityAwareTests(unittest.TestCase):
         obj.set_groups('tester', [])
         self.failIf('tester' in obj._groups)
 
-    def test_add_bad_group(self):
+    def test_add_bad_groups(self):
         obj = self._make_obj()
         self.assertRaises(ValueError, obj.add_groups, 'tester', ['Hipsters'])
 
-    def test_del_group(self):
+    def test_del_groups(self):
         obj = self._make_obj()
         obj.set_groups('tester', ['role:HelloWorld', 'role:Other'])
         obj.del_groups('tester', ['role:HelloWorld'])
+        self.failIf('role:HelloWorld' in obj.get_groups('tester'))
+
+    def test_del_groups_with_string(self):
+        obj = self._make_obj()
+        obj.set_groups('tester', ['role:HelloWorld', 'role:Other'])
+        obj.del_groups('tester', 'role:HelloWorld')
         self.failIf('role:HelloWorld' in obj.get_groups('tester'))
 
     def test_list_all_groups(self):
