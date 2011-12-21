@@ -15,7 +15,7 @@
     </h2>
 
     <div metal:fill-slot="content" class="content_wrapper">
-        <form action="" method="POST">
+        <form action="" method="POST" id="deform" class="deform">
         <table class="listing">
             <thead>
                 <tr>
@@ -57,13 +57,36 @@
                         <input type="hidden" name="__end__" value="${user.userid}" />
                 </tr>
                 </tal:iterate>
+                <tr>
+                        <td>
+                            <input type="hidden" name="__start__" value="new" />
+                            <input type="text" name="userid" value="" id="new_userid" />
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <tal:roles repeat="role roles">
+                        <td>
+                            <input type="checkbox" name="group" value="${role[0]}" />
+                        </td>
+                        </tal:roles>
+                        <input type="hidden" name="__end__" value="new" />
+                </tr>
             </tbody>
         </table>
+        <div class="buttons">
         <button id="deformupdate" name="save" type="submit" class="btnText submit" value="save">
             <span>Uppdatera</span>
         </button>
+        </div>
         </form>
-
+        <script type="text/javascript">
+	      $(document).ready(function (oid) {
+	            $("#new_userid").autocomplete({source: [${autocomplete_userids}]});
+	            $("#new_userid").autocomplete("option", {"delay": 10, "minLength": 1});
+	        }
+	      );
+    	</script>
     </div> <!-- content -->
 </body>
 </html>
