@@ -91,8 +91,14 @@ class SecurityAware(object):
 
     def get_security(self):
         userids_and_groups = []
+        root = find_root(self)
+        users = root.users 
         for userid in self._groups:
-            userids_and_groups.append({'userid':userid, 'groups':self.get_groups(userid)})
+            user = users[userid]
+            userids_and_groups.append({'userid': userid, 
+                                       'name': "%s %s" % (user.get_field_value('first_name'), user.get_field_value('last_name')), 
+                                       'email': user.get_field_value('email'), 
+                                       'groups': self.get_groups(userid)})
         return tuple(userids_and_groups)
 
     def set_security(self, value, event = True):

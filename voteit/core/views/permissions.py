@@ -16,7 +16,8 @@ from voteit.core.fanstaticlib import voteit_deform
 class PermissionsView(BaseView):
     """ View for setting permissions """
 
-    @view_config(context=ISiteRoot, name="permissions", renderer="templates/base_edit.pt", permission=security.MANAGE_GROUPS)
+    @view_config(context=ISiteRoot, name="permissions", renderer="templates/permissions.pt", permission=security.MANAGE_GROUPS)
+    @view_config(context=IMeeting, name="permissions", renderer="templates/permissions.pt", permission=security.MANAGE_GROUPS)
     def root_group_form(self):
         post = self.request.POST
         if 'cancel' in post:
@@ -37,7 +38,6 @@ class PermissionsView(BaseView):
                 self.response['form'] = e.render()
                 return self.response
             
-            import pdb; pdb.set_trace()
             #Set permissions
             self.context.set_security(appstruct['userids_and_groups'])
             url = resource_url(self.context, self.request)
@@ -51,7 +51,6 @@ class PermissionsView(BaseView):
         self.response['form'] = form.render(appstruct=appstruct)
         return self.response
 
-    @view_config(context=IMeeting, name="permissions", renderer="templates/meeting_permissions.pt", permission=security.MANAGE_GROUPS)
     def meeting_group_form(self):
         voteit_deform.need()
         
