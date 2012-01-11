@@ -69,8 +69,6 @@ class LogHandlerTests(unittest.TestCase):
         self.assertEqual(len(adapter.log_storage), 1)
         self.assertEqual(adapter.log_storage[0].tags, ('added',))
 
-#FIXME: Test removed, updated and workflow state changed!
-
 
 class LogEntryTests(unittest.TestCase):
 
