@@ -17,7 +17,7 @@ def deferred_autocompleting_userid_widget(node, kw):
     root = find_root(context)
     choices = tuple(root.users.keys())
     return deform.widget.AutocompleteInputWidget(
-        size=30,
+        size=15,
         values = choices,
         min_length=1)
 
@@ -42,6 +42,12 @@ class UserIDAndGroupsSchema(colander.Schema):
         title = _(u"UserID"),
         validator=deferred_existing_userid_validator,
         widget = deferred_autocompleting_userid_widget,
+    )
+    name = colander.SchemaNode(
+        colander.String(),
+        title = _(u"First name"),
+        widget = deform.widget.TextInputWidget(template='readonly/textinput'),
+        missing = u"",
     )
     #It's called groups here, but we restrict choices to roles only
     groups = colander.SchemaNode(

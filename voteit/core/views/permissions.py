@@ -10,12 +10,14 @@ from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import ISiteRoot
 from voteit.core.models.schemas import add_csrf_token
 from voteit.core import security
+from voteit.core.fanstaticlib import voteit_deform
 
 
 class PermissionsView(BaseView):
     """ View for setting permissions """
 
-    @view_config(context=ISiteRoot, name="permissions", renderer="templates/base_edit.pt", permission=security.MANAGE_GROUPS)
+    @view_config(context=ISiteRoot, name="permissions", renderer="templates/permissions.pt", permission=security.MANAGE_GROUPS)
+    @view_config(context=IMeeting, name="permissions", renderer="templates/permissions.pt", permission=security.MANAGE_GROUPS)
     def root_group_form(self):
         post = self.request.POST
         if 'cancel' in post:
@@ -36,7 +38,6 @@ class PermissionsView(BaseView):
                 self.response['form'] = e.render()
                 return self.response
             
-            import pdb; pdb.set_trace()
             #Set permissions
             self.context.set_security(appstruct['userids_and_groups'])
             url = resource_url(self.context, self.request)
@@ -50,8 +51,9 @@ class PermissionsView(BaseView):
         self.response['form'] = form.render(appstruct=appstruct)
         return self.response
 
-    @view_config(context=IMeeting, name="permissions", renderer="templates/meeting_permissions.pt", permission=security.MANAGE_GROUPS)
     def meeting_group_form(self):
+        voteit_deform.need()
+        
         post = self.request.POST
         if 'cancel' in post:
             url = resource_url(self.context, self.request)
@@ -64,6 +66,8 @@ class PermissionsView(BaseView):
                 if '__start__' in control[0]:
                     userid = control[1]
                     groups = []
+                if userid == 'new' and 'userid' in control[0]:
+                    userid = control[1]
                 if 'group' in control[0]:
                     groups.append(control[1])
                 if '__end__' in control[0]:
@@ -91,4 +95,5 @@ class PermissionsView(BaseView):
         self.response['roles'] = security.MEETING_ROLES
         self.response['participants'] = tuple(sorted(results, key = _sorter))
         self.response['context_effective_principals'] = security.context_effective_principals
+        self.response['autocomplete_userids'] = '"' + '","'.join(self.api.root.users.keys()) + '"'
         return self.response
