@@ -1,10 +1,7 @@
 from BTrees.OOBTree import OOBTree
 from pyramid.location import lineage
-from pyramid.traversal import find_root
 from zope.interface import implements
 from zope.component.event import objectEventNotify
-import colander
-import deform
 
 from voteit.core.events import ObjectUpdatedEvent
 from voteit.core.models.interfaces import ISecurityAware
@@ -91,13 +88,8 @@ class SecurityAware(object):
 
     def get_security(self):
         userids_and_groups = []
-        root = find_root(self)
-        users = root.users 
         for userid in self._groups:
-            user = users[userid]
-            userids_and_groups.append({'userid': userid, 
-                                       'name': "%s %s" % (user.get_field_value('first_name'), user.get_field_value('last_name')), 
-                                       'email': user.get_field_value('email'), 
+            userids_and_groups.append({'userid': userid,
                                        'groups': self.get_groups(userid)})
         return tuple(userids_and_groups)
 
