@@ -7,6 +7,7 @@ from zope.component.event import objectEventNotify
 from voteit.core.events import ObjectUpdatedEvent
 from voteit.core.models.interfaces import ILogHandler
 from voteit.core.testing_helpers import register_workflows
+from voteit.core.testing_helpers import bootstrap_and_fixture
 
 
 class LogsTests(TestCase):
@@ -17,72 +18,47 @@ class LogsTests(TestCase):
 
     def tearDown(self):
         testing.tearDown()
-        
+
     def _fixture(self):
-        return bootstrap_and_fixture(self.config)
-
-    @property
-    def _make_obj(self):
         from voteit.core.models.meeting import Meeting
-        return Meeting
-
-    def test_content_added(self):
+        root = bootstrap_and_fixture(self.config)
+        root['m'] = Meeting()
         #Add subscribers
         self.config.scan('voteit.core.subscribers.logs')
         #Add log handler
         self.config.include('voteit.core.models.logs')
         #Add LogEntry content type
         self.config.scan('voteit.core.models.logs')
+        return root
 
-        from voteit.core.models.site import SiteRoot
-        root = SiteRoot()
-        
-        from voteit.core.models.meeting import Meeting
-        meeting = Meeting()
-        root['meeting'] = meeting
+    @property
+    def _base_content(self):
+        from voteit.core.models.base_content import BaseContent
+        return BaseContent
+
+    def test_content_added(self):
+        root = self._fixture()
+        meeting = root['m']
+        meeting['hello'] = self._base_content()
 
         adapter = self.config.registry.queryAdapter(meeting, ILogHandler)
         self.assertEqual(len(adapter.log_storage), 1)
         self.assertEqual(adapter.log_storage[0].tags, ('added',))
         
-        
     def test_content_removed(self):
-        from voteit.core.models.site import SiteRoot
-        root = SiteRoot()
+        root = self._fixture()
+        meeting = root['m']
+        meeting['hello'] = self._base_content()
+        del meeting['hello']
         
-        from voteit.core.models.meeting import Meeting
-        meeting = Meeting()
-        root['meeting'] = meeting
-
-        #Add subscribers
-        self.config.scan('voteit.core.subscribers.logs')
-        #Add log handler
-        self.config.include('voteit.core.models.logs')
-        #Add LogEntry content type
-        self.config.scan('voteit.core.models.logs')
-        
-        del root['meeting']
-
         adapter = self.config.registry.queryAdapter(meeting, ILogHandler)
-        self.assertEqual(len(adapter.log_storage), 1)
-        self.assertEqual(adapter.log_storage[0].tags, ('removed',))
+        self.assertEqual(len(adapter.log_storage), 2)
+        self.assertEqual(adapter.log_storage[1].tags, ('removed',))
         
     def test_wf_state_change(self):
         register_workflows(self.config)
-    
-        from voteit.core.models.site import SiteRoot
-        root = SiteRoot()
-        
-        from voteit.core.models.meeting import Meeting
-        meeting = Meeting()
-        root['meeting'] = meeting
-
-        #Add subscribers
-        self.config.scan('voteit.core.subscribers.logs')
-        #Add log handler
-        self.config.include('voteit.core.models.logs')
-        #Add LogEntry content type
-        self.config.scan('voteit.core.models.logs')
+        root = self._fixture()
+        meeting = root['m']
         
         meeting.set_workflow_state(self.request, 'upcoming')
 
@@ -91,22 +67,20 @@ class LogsTests(TestCase):
         self.assertEqual(adapter.log_storage[0].tags, ('workflow',))
         
     def test_content_updated(self):
-        from voteit.core.models.site import SiteRoot
-        root = SiteRoot()
-        
-        from voteit.core.models.meeting import Meeting
-        meeting = Meeting()
-        root['meeting'] = meeting
+        root = self._fixture()
+        meeting = root['m']
 
-        #Add subscribers
-        self.config.scan('voteit.core.subscribers.logs')
-        #Add log handler
-        self.config.include('voteit.core.models.logs')
-        #Add LogEntry content type
-        self.config.scan('voteit.core.models.logs')
-
-        objectEventNotify(ObjectUpdatedEvent(meeting, None, 'dummy'))
+        objectEventNotify(ObjectUpdatedEvent(meeting))
 
         adapter = self.config.registry.queryAdapter(meeting, ILogHandler)
         self.assertEqual(len(adapter.log_storage), 1)
         self.assertEqual(adapter.log_storage[0].tags, ('updated',))
+
+    def test_content_not_updated_when_only_read(self):
+        root = self._fixture()
+        meeting = root['m']
+
+        objectEventNotify(ObjectUpdatedEvent(meeting, indexes=('unread',)))
+
+        adapter = self.config.registry.queryAdapter(meeting, ILogHandler)
+        self.assertEqual(len(adapter.log_storage), 0)

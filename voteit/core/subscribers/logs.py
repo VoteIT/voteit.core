@@ -69,6 +69,9 @@ def log_wf_state_change(obj, event):
 @subscriber([IBaseContent, IObjectUpdatedEvent])
 @subscriber([IVote, IObjectUpdatedEvent])
 def log_content_updated(obj, event):
+    #Abort logging if unread is the only thing changed
+    if len(event.indexes) == 1 and 'unread' in event.indexes:
+        return
     #Context is either meeting or site root
     context = _get_logger_context(obj)
     request = get_current_request()
@@ -78,4 +81,3 @@ def log_content_updated(obj, event):
     msg = _(u"${ctype} in ${path} updated",
             mapping={'ctype': obj.content_type, 'path':resource_path(obj)})
     log_handler.add(obj.uid, msg, tags=('updated',), userid=userid)
-

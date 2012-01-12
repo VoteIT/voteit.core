@@ -45,7 +45,7 @@ class UserIDAndGroupsSchema(colander.Schema):
     )
     name = colander.SchemaNode(
         colander.String(),
-        title = _(u"First name"),
+        title = _(u"Name"),
         widget = deform.widget.TextInputWidget(template='readonly/textinput'),
         missing = u"",
     )
