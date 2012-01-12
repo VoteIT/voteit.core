@@ -26,3 +26,8 @@ class Users(BaseContent):
         for user in self.get_content(iface=IUser):
             if user.get_field_value('email') == email:
                 return user
+                
+    def get_user_by_oauth_token(self, token):
+        for user in self.get_content(iface=IUser):
+            if user.get_field_value('oauthAccessToken') == token:
+                return user

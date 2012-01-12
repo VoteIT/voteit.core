@@ -11,6 +11,10 @@
         <div tal:condition="login_form|False" tal:replace="structure login_form">Login form</div>
         <div><a href="@@request_password" i18n:translate="">Forgot password?</a></div>
         
+        <form action="/velruse/facebook/login" method="post">
+            <input type="hidden" name="end_point" value="http://127.0.0.1:6543/fb_back" />
+            <input type="submit" value="Login with Facebook" />
+        </form>
     </div>
 
     <div metal:fill-slot="right">
