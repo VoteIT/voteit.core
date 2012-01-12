@@ -259,33 +259,47 @@ class UsersFormView(BaseEdit):
             response = json.loads(stream.read())
             oauth_token = response['credentials']['oauthAccessToken']
             
-            user = self.context.users.get_user_by_oauth_token(oauth_token)
-            
-            if user:
-                if IUser.providedBy(user):
-                    headers = remember(self.request, user.__name__)
-                    url = resource_url(self.context, self.request)
-                    return HTTPFound(location = url,
-                                     headers = headers)
-            else: # User does not have an account
-                #FIXME: this ONLY works with Facebook right now and expects 
-                # that the username is not already in use.
-                # In the future the user should be presented with a form 
-                # prefilled with data from the provider. 
-                # The username should already be checked for duplicates and
-                # an alternatvie proposed.
-                name = response['profile']['preferredUsername']
-                first_name = response['profile']['name']['givenName']
-                last_name = response['profile']['name']['familyName']
-                appstruct = {'oauthAccessToken': oauth_token, 
-                             'first_name': first_name,
-                             'last_name': last_name,}
-                obj = createContent('User', creators=[name], **appstruct)
-                self.context.users[name] = obj
-                headers = remember(self.request, name)  # login user
-                url = "%slogin" % resource_url(self.context, self.request)
+            # Logged in user, connect auth token to user
+            if self.api.userid:
+                user = self.context.users[self.api.userid]
+                #FIXME: check that no other user has this token already
+                user.set_field_value('oauthAccessToken', oauth_token)
+                url = resource_url(user, self.request)
+                return HTTPFound(location=url)
+            else:
+                # Find user with auth token
+                user = self.context.users.get_user_by_oauth_token(oauth_token)
+                
+                # a user was found, log it in
+                if user:
+                    if IUser.providedBy(user):
+                        headers = remember(self.request, user.__name__)
+                        url = resource_url(self.context, self.request)
+                        return HTTPFound(location = url,
+                                         headers = headers)
+                else: # No user with that auth token was found
+                    #FIXME: this ONLY works with Facebook right now and expects 
+                    # that the username is not already in use.
+                    #
+                    # Check that no other user has the token already
+                    #
+                    # In the future the user should be presented with a form 
+                    # prefilled with data from the provider. 
+                    # The username should already be checked for duplicates and
+                    # an alternatvie proposed.
+                    #
+                    name = response['profile']['preferredUsername']
+                    first_name = response['profile']['name']['givenName']
+                    last_name = response['profile']['name']['familyName']
+                    appstruct = {'oauthAccessToken': oauth_token, 
+                                 'first_name': first_name,
+                                 'last_name': last_name,}
+                    obj = createContent('User', creators=[name], **appstruct)
+                    self.context.users[name] = obj
+                    headers = remember(self.request, name)  # login user
+                    url = "%slogin" % resource_url(self.context, self.request)
 
-                return HTTPFound(location=url, headers=headers)
+                    return HTTPFound(location=url, headers=headers)
                 
             
         raise Forbidden(_("Unable to Authenticate you using OpenID"))

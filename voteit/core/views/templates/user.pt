@@ -20,6 +20,9 @@
                tal:condition="api.context_has_permission('Change Password', context)"
                class="buttonize large"
                i18n:translate="">Change password</a>
+           <a tal:attributes="href '/velruse/facebook/login'"
+               class="buttonize large"
+               i18n:translate="">Facebook</a>
         </div>
         <div class="clear"><!-- --></div>
         <br/><br/>
