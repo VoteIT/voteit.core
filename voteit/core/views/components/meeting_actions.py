@@ -100,6 +100,7 @@ def generic_root_menu_link(context, request, va, **kw):
 @view_action('moderator_menu', 'manage_layout', title = _(u"Layout and widgets"), link = "@@manage_layout")
 @view_action('moderator_menu', 'add_tickets', title = _(u"Invite participants"), link = "@@add_tickets")
 @view_action('moderator_menu', 'manage_tickets', title = _(u"Manage invites"), link = "@@manage_tickets")
+@view_action('moderator_menu', 'participants_emails', title = _(u"Participants email addresses"), link = "@@participants_emails")
 def generic_moderator_menu_link(context, request, va, **kw):
     """ This is for simple menu items for the meeting root """
     api = kw['api']

@@ -80,6 +80,23 @@ class MeetingView(BaseView):
         self.response['participants'] = tuple(sorted(results, key = _sorter))
         self.response['context_effective_principals'] = security.context_effective_principals
         return self.response
+        
+    @view_config(name="participants_emails", context=IMeeting, renderer="templates/participants_emails.pt", permission=security.MANAGE_GROUPS)
+    def participants_view(self):
+        """ List all participants emails in this meeting. """
+        users = self.api.root.users
+        
+        results = []
+        for userid in security.find_authorized_userids(self.context, (security.VIEW,)):
+            user = users.get(userid, None)
+            if user:
+                results.append(user)
+        
+        def _sorter(obj):
+            return obj.get_field_value('email')
+
+        self.response['participants'] = tuple(sorted(results, key = _sorter))
+        return self.response
 
     @view_config(name="ticket", context=IMeeting, renderer="templates/base_edit.pt", permission = NO_PERMISSION_REQUIRED)
     def claim_ticket(self):
