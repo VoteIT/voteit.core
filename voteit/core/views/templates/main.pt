@@ -17,6 +17,26 @@
     <metal:head define-slot="head"></metal:head>
 </head>
 <body>
+
+    <div id="help-tab" tal:condition="api.meeting">
+        <h4 i18n:translate="">Contact & Feedback</h4>
+        <div id="help-tabs">
+            <ul>
+                <li><a href="http://wiki.voteit.se" target="_blank" i18n:translate="">VoteIT wiki</a></li>
+                <li><a href="#contact" class="tab" tal:condition="api.meeting" i18n:translate="">Contact</a></li>
+                <li><a href="#support" class="tab" tal:condition="api.root" i18n:translate="">Support</a></li>
+            </ul>
+            <div class="tab">
+                <p>Donec pellentesque condimentum laoreet. Proin vitae libero augue. Maecenas venenatis, ipsum nec vestibulum suscipit, urna mi dignissim nibh, eu commodo.</p>
+            </div>
+            <div id="contact" class="tab" tal:condition="api.meeting">
+                
+            </div>
+            <div id="support" class="tab" tal:condition="api.root">
+                Support
+            </div>
+        </div>
+    </div>
     <div id="page_wrapper">
         <div id="main-content-wrapper">
         <div id="header">
@@ -123,6 +143,8 @@
 	</div>
 	<div id="js_config" style="display: none !important;">
 		<a name="current_url" href="${api.resource_url(context, request)}"></a>
+		<a tal:condition="api.root" name="root_url" href="${api.resource_url(api.root, request)}"></a>
+		<a tal:condition="api.meeting" name="meeting_url" href="${api.resource_url(api.meeting, request)}"></a>
 	</div>
 
 </body>

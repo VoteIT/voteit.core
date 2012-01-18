@@ -229,3 +229,80 @@ $(document).ready(function() {
         }
     };
 });
+
+
+// Contact & Support tab
+$(document).ready(function() {
+    $('#help-tab > h4').qtip({
+        content: { 
+            title: {
+                text: 'Contact & feedback',
+                button: true,
+            },
+            text: $("#help-tabs"),
+        },
+        show: {
+            event: "click",
+            modal: true,
+        },
+        hide: {
+            event: false,
+        },
+        position: {
+            my: 'center',
+            at: 'center',
+            target: $(document.body),
+        },
+        style: {
+            classes: "help-modal",
+        },
+    });
+});
+
+$(document).ready(function() {
+    $("#help-tabs > ul a.tab").click(function(event) {
+        /* IE might throw an error calling preventDefault(), so use a try/catch block. */
+        try { event.preventDefault(); } catch(e) {}
+        
+        $(this).parents("#help-tabs").find("a.tab").removeClass("active");
+        $(this).addClass("active");
+        $(this).parents("#help-tabs").find("div.tab").hide();
+        $(this).parents("#help-tabs").find($(this).attr("href")).show();
+    });
+
+    var url_config = $("#js_config a[name=meeting_url]");
+    if(url_config) {
+        var contact_url = url_config.attr('href') + "contact";
+        $("#contact").load(contact_url);
+
+        $("#contact form").live("submit", function() {
+            $.post(contact_url,
+                { send: 'send', subject: $(this).find("input[name='subject']").val(), message: $(this).find("textarea").val() },
+                function(data) {
+                    $("#contact").empty();
+                    $("#contact").append(data);
+                }
+            )
+    
+            return false;
+        });
+    }
+    
+    var url_config = $("#js_config a[name=root_url]");
+    if(url_config) {
+        var support_url = url_config.attr('href') + "support";
+        $("#support").load(support_url);
+
+        $("#support form").live("submit", function() {
+            $.post(support_url,
+                { send: 'send', subject: $(this).find("input[name='subject']").val(), message: $(this).find("textarea").val() },
+                function(data) {
+                    $("#support").empty();
+                    $("#support").append(data);
+                }
+            )
+    
+            return false;
+        });
+    }
+});

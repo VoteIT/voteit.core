@@ -740,3 +740,33 @@ table.listing > tbody > tr.even > td {
     font-size: inherit;
     line-height: inherit;
 }
+
+#help-tab {
+    cursor: pointer;
+}
+
+#help-tab #help-tabs {
+    display: none;
+}
+
+.help-modal {
+    width: 800px;
+    height: 400px;
+}
+
+#help-tabs > ul li {
+    list-style-type: none;
+}
+
+#help-tabs > ul li {
+    display: inline;
+}
+
+#help-tabs a.tab.active {
+    font-weight: bold;
+}
+
+#help-tabs #contact,
+#help-tabs #support {
+    display: none;
+}
