@@ -42,30 +42,3 @@ class HelpView(BaseView):
         #No action - Render form
         self.response['form'] = form.render()
         return self.response
-        
-    @view_config(name = 'support', context=ISiteRoot, renderer="templates/ajax_edit.pt", permission=NO_PERMISSION_REQUIRED)
-    def contact(self):
-        """ Support form
-        """
-        schema = createSchema('SupportSchema').bind(context=self.context, request=self.request)
-        add_csrf_token(self.context, self.request, schema)
-            
-        form = Form(schema, buttons=(button_send,))
-        self.api.register_form_resources(form)
-
-        post = self.request.POST
-
-        if 'send' in post:
-            controls = post.items()
-            try:
-                appstruct = form.validate(controls)
-            except ValidationFailure, e:
-                self.response['form'] = e.render()
-                return self.response
-            
-            #FIXME: send message to moderators
-            self.api.flash_messages.add(_(u"Message sent to VoteIT"))
-
-        #No action - Render form
-        self.response['form'] = form.render()
-        return self.response

@@ -15,14 +15,3 @@ class ContactSchema(colander.MappingSchema):
                                   title = _(u'Message'),
                                   widget = deform.widget.TextAreaWidget(rows=5, cols=40),
                                   validator = html_string_validator,)
-
-
-@schema_factory('SupportSchema')
-class SupportSchema(colander.MappingSchema):
-    subject = colander.SchemaNode(colander.String(),
-                                  title = _(u"Subject"),
-                                  validator = html_string_validator,)
-    message = colander.SchemaNode(colander.String(),
-                                  title = _(u'Message'),
-                                  widget = deform.widget.TextAreaWidget(rows=5, cols=40),
-                                  validator = html_string_validator,)

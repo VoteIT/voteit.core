@@ -28,13 +28,3 @@ def action_contact(context, request, va, **kw):
         return """<li><a id="contact" class="tab" href="%s">%s</a></li>""" % (link, api.translate(_(u"Contcat")))
         
     return ""
-
-
-@view_action('help_action', 'support')
-def action_support(context, request, va, **kw):
-    api = kw['api']
-    if api.root:
-        link = resource_url(api.root, request) + "support"
-        return """<li><a id="support" class="tab" href="%s">%s</a></li>""" % (link, api.translate(_(u"Support")))
-        
-    return ""
