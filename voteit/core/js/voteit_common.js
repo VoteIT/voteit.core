@@ -233,7 +233,7 @@ $(document).ready(function() {
 
 // Contact & Support tab
 $(document).ready(function() {
-    $('#help-tab > h4').qtip({
+    $('#help-tab > h5').qtip({
         content: { 
             title: {
                 text: 'Contact & feedback',

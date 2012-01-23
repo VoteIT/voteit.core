@@ -743,7 +743,7 @@ table.listing > tbody > tr.even > td {
 
 #help-tab {
     position: fixed;
-    right: -80px;
+    right: -45px;
     top: 50%;
     z-index: 9999;
     -webkit-transform: rotate(-90deg); 
@@ -757,7 +757,7 @@ table.listing > tbody > tr.even > td {
     cursor: pointer;
 }
 
-#help-tab h4 {
+#help-tab h5 {
     margin: 0;
     padding: 0;
 }

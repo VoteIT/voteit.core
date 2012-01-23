@@ -19,7 +19,7 @@
 <body>
 
     <div id="help-tab">
-        <h4 i18n:translate="">Contact & Feedback</h4>
+        <h5 i18n:translate="">Help & Contact</h5>
         <div id="help-tabs" 
              tal:content="structure api.render_single_view_component(context, request, 'main', 'help_actions')">
         </div>
