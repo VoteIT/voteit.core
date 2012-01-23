@@ -1,0 +1,11 @@
+<tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core">
+
+<ul id="help-actions" 
+	tal:content="structure api.render_view_group(context, request, 'help_action')">
+</ul>
+<div class="tabs">
+	<div class="tab">
+	    <p>Donec pellentesque condimentum laoreet. Proin vitae libero augue. Maecenas venenatis, ipsum nec vestibulum suscipit, urna mi dignissim nibh, eu commodo.</p>
+	</div>
+</div>
+</tal:main>

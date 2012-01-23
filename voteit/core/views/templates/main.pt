@@ -18,23 +18,10 @@
 </head>
 <body>
 
-    <div id="help-tab" tal:condition="api.meeting">
+    <div id="help-tab">
         <h4 i18n:translate="">Contact & Feedback</h4>
-        <div id="help-tabs">
-            <ul>
-                <li><a href="http://wiki.voteit.se" target="_blank" i18n:translate="">VoteIT wiki</a></li>
-                <li><a href="#contact" class="tab" tal:condition="api.meeting" i18n:translate="">Contact</a></li>
-                <li><a href="#support" class="tab" tal:condition="api.root" i18n:translate="">Support</a></li>
-            </ul>
-            <div class="tab">
-                <p>Donec pellentesque condimentum laoreet. Proin vitae libero augue. Maecenas venenatis, ipsum nec vestibulum suscipit, urna mi dignissim nibh, eu commodo.</p>
-            </div>
-            <div id="contact" class="tab" tal:condition="api.meeting">
-                
-            </div>
-            <div id="support" class="tab" tal:condition="api.root">
-                Support
-            </div>
+        <div id="help-tabs" 
+             tal:content="structure api.render_single_view_component(context, request, 'main', 'help_actions')">
         </div>
     </div>
     <div id="page_wrapper">

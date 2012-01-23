@@ -742,7 +742,24 @@ table.listing > tbody > tr.even > td {
 }
 
 #help-tab {
+    position: fixed;
+    right: -80px;
+    top: 50%;
+    z-index: 9999;
+    -webkit-transform: rotate(-90deg); 
+    -moz-transform:rotate(-90deg);
+    -o-transform:rotate(-90deg);
+    filter:progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+    -ms-filter:progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+    padding: 5px;
+    color: white;
+    background: #054265;
     cursor: pointer;
+}
+
+#help-tab h4 {
+    margin: 0;
+    padding: 0;
 }
 
 #help-tab #help-tabs {
@@ -750,8 +767,8 @@ table.listing > tbody > tr.even > td {
 }
 
 .help-modal {
-    width: 800px;
-    height: 400px;
+    max-width: 400px;
+    max-height: 400px;
 }
 
 #help-tabs > ul li {
@@ -764,9 +781,4 @@ table.listing > tbody > tr.even > td {
 
 #help-tabs a.tab.active {
     font-weight: bold;
-}
-
-#help-tabs #contact,
-#help-tabs #support {
-    display: none;
 }

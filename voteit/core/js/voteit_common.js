@@ -255,6 +255,8 @@ $(document).ready(function() {
         },
         style: {
             classes: "help-modal",
+            width: "400px",
+            height: "400px",
         },
     });
 });
@@ -266,43 +268,20 @@ $(document).ready(function() {
         
         $(this).parents("#help-tabs").find("a.tab").removeClass("active");
         $(this).addClass("active");
-        $(this).parents("#help-tabs").find("div.tab").hide();
-        $(this).parents("#help-tabs").find($(this).attr("href")).show();
+        
+        url = $(this).attr("href");
+        
+        $("#help-tabs .tabs").load(url, function(data) {
+            $("#help-tabs .tabs form").attr('href') = url;
+        });
     });
 
-    var url_config = $("#js_config a[name=meeting_url]");
-    if(url_config) {
-        var contact_url = url_config.attr('href') + "contact";
-        $("#contact").load(contact_url);
-
-        $("#contact form").live("submit", function() {
-            $.post(contact_url,
-                { send: 'send', subject: $(this).find("input[name='subject']").val(), message: $(this).find("textarea").val() },
-                function(data) {
-                    $("#contact").empty();
-                    $("#contact").append(data);
-                }
-            )
-    
-            return false;
-        });
-    }
-    
-    var url_config = $("#js_config a[name=root_url]");
-    if(url_config) {
-        var support_url = url_config.attr('href') + "support";
-        $("#support").load(support_url);
-
-        $("#support form").live("submit", function() {
-            $.post(support_url,
-                { send: 'send', subject: $(this).find("input[name='subject']").val(), message: $(this).find("textarea").val() },
-                function(data) {
-                    $("#support").empty();
-                    $("#support").append(data);
-                }
-            )
-    
-            return false;
-        });
-    }
+    $("#help-tabs form").live("submit", function() {
+        $.post($(this).attr('action')),
+            { send: 'send', subject: $(this).find("input[name='subject']").val(), message: $(this).find("textarea").val() },
+            function(data) {
+                $("#help-tabs .tabs").empty();
+                $("#help-tabs .tabs").append(data);
+            }
+      });
 });
