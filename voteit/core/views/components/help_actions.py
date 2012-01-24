@@ -17,7 +17,7 @@ def help_actions(context, request, va, **kw):
 @view_action('help_action', 'wiki')
 def action_wiki(context, request, va, **kw):
     api = kw['api']
-    return """<li><a href="http://wiki.voteit.se" target="_blank">%s</a></li>""" % (api.translate(_(u"VoteIT Wiki")))
+    return """<li><a href="http://wiki.voteit.se" class="buttonize" target="_blank">%s</a></li>""" % (api.translate(_(u"VoteIT Wiki")))
 
 
 @view_action('help_action', 'contact')
@@ -25,6 +25,6 @@ def action_contact(context, request, va, **kw):
     api = kw['api']
     if api.meeting:
         link = resource_url(api.meeting, request) + "contact"
-        return """<li><a id="contact" class="tab" href="%s">%s</a></li>""" % (link, api.translate(_(u"Contcat")))
+        return """<li><a id="contact" class="tab buttonize" href="%s">%s</a></li>""" % (link, api.translate(_(u"Contcat")))
         
     return ""

@@ -767,18 +767,26 @@ table.listing > tbody > tr.even > td {
 }
 
 .help-modal {
-    max-width: 400px;
-    max-height: 400px;
+    min-width: 500px !important;
+    width: 500px !important;
+    border: none;
 }
 
-#help-tabs > ul li {
-    list-style-type: none;
+.help-modal .ui-tooltip-titlebar,
+.help-modal .ui-tooltip-content {
+	background: #86A3B4;
 }
 
 #help-tabs > ul li {
     display: inline;
+	margin-left: 0.5em;
+    list-style-type: none;
 }
 
 #help-tabs a.tab.active {
     font-weight: bold;
+}
+
+#help-tabs .tabs {
+	margin: 0.6em;
 }

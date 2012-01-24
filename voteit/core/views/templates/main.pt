@@ -127,6 +127,7 @@
        <pre class="js_trans_user_info" i18n:translate="">About...</pre>
        <pre class="js_trans_more_tag_list" i18n:translate="">More...</pre>
        <pre class="js_trans_loading" i18n:translate="">Loading...</pre>
+       <pre class="js_trans_help_contact" i18n:translate="">Help & Contact</pre>
 	</div>
 	<div id="js_config" style="display: none !important;">
 		<a name="current_url" href="${api.resource_url(context, request)}"></a>

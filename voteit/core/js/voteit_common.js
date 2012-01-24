@@ -236,7 +236,7 @@ $(document).ready(function() {
     $('#help-tab > h5').qtip({
         content: { 
             title: {
-                text: 'Contact & feedback',
+                text: voteit.translation['help_contact'],
                 button: true,
             },
             text: $("#help-tabs"),
