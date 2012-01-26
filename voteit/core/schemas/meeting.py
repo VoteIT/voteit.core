@@ -18,33 +18,51 @@ def deferred_access_policy_widget(node, kw):
         raise ValueError("Can't find anything in the request_meeting_access view group. There's no way to select any policy on how to gain access to the meeting.")
     return deform.widget.RadioChoiceWidget(values = choices)
 
-@schema_factory('MeetingSchema')
-class MeetingSchema(colander.MappingSchema):
-    title = colander.SchemaNode(colander.String(),
+def title_node():
+    return colander.SchemaNode(colander.String(),
                                 title = _(u"Title"),
                                 description = _(u"meeting_title_description",
                                                 default=u"Set a title for the meeting that separates it from previous meetings"),
                                 validator=html_string_validator,)
-    description = colander.SchemaNode(
+def description_node():
+     return colander.SchemaNode(
         colander.String(),
         title = _(u"Description"),
         description = _(u"meeting_description_description",
                         default=u"The description is visible on the first page of the meeting. You can include things like information about the meeting, how to contact the moderator and your logo."),
         missing = u"",
         widget=deform.widget.RichTextWidget())
-    meeting_mail_name = colander.SchemaNode(colander.String(),
-                                            title = _(u"Name visible on system mail sent from this meeting"),
-                                            default = _(u"VoteIT"),)
-    meeting_mail_address = colander.SchemaNode(colander.String(),
-                                            title = _(u"Email address to send from"),
-                                            default = u"noreply@somehost.voteit",
-                                            validator = colander.All(colander.Email(msg = _(u"Invalid email address.")), html_string_validator,),)
-    access_policy = colander.SchemaNode(colander.String(),
-                                        title = _(u"Meeting access policy"),
-                                        widget = deferred_access_policy_widget,
-                                        default = "invite_only",)
 
+def meeting_mail_name_node():
+    return colander.SchemaNode(colander.String(),
+                               title = _(u"Name visible on system mail sent from this meeting"),
+                               default = _(u"VoteIT"),)
 
+def meeting_mail_address_node():
+    return colander.SchemaNode(colander.String(),
+                               title = _(u"Email address to send from"),
+                               default = u"noreply@somehost.voteit",
+                               validator = colander.All(colander.Email(msg = _(u"Invalid email address.")), html_string_validator,),)
+
+def access_policy_node():
+    return colander.SchemaNode(colander.String(),
+                               title = _(u"Meeting access policy"),
+                               widget = deferred_access_policy_widget,
+                               default = "invite_only",)
+
+@schema_factory('AddMeetingSchema')
+class AddMeetingSchema(colander.MappingSchema):
+    title = title_node();
+    description = description_node();
+    meeting_mail_name = meeting_mail_name_node();
+    meeting_mail_address = meeting_mail_address_node();    
+    access_policy = access_policy_node();
+
+@schema_factory('EditMeetingSchema')
+class EditMeetingSchema(colander.MappingSchema):
+    title = title_node();
+    description = description_node();
+    
 #FIXME: Captcha add schema
 #class CaptchaAddMeetingSchema(MeetingSchema):
 #
