@@ -82,7 +82,7 @@ class MeetingView(BaseView):
         return self.response
         
     @view_config(name="participants_emails", context=IMeeting, renderer="templates/participants_emails.pt", permission=security.MANAGE_GROUPS)
-    def participants_view(self):
+    def participants_emails(self):
         """ List all participants emails in this meeting. """
         users = self.api.root.users
         
