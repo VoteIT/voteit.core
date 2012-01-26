@@ -36,6 +36,7 @@ def deferred_roles_widget(node, kw):
                                               missing=colander.null,)
 
 
+@schema_factory('PermissionSchema')
 class UserIDAndGroupsSchema(colander.Schema):
     userid = colander.SchemaNode(
         colander.String(),

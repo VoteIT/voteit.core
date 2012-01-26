@@ -5,6 +5,7 @@ from pyramid.url import resource_url
 from pyramid.view import view_config
 from pyramid.httpexceptions import HTTPFound
 
+from voteit.core import VoteITMF as _
 from voteit.core.views.base_view import BaseView
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import ISiteRoot
@@ -55,4 +56,36 @@ class PermissionsView(BaseView):
         appstruct = dict( userids_and_groups = userids_and_groups )
 
         self.response['form'] = form.render(appstruct=appstruct)
+        return self.response
+    
+    @view_config(context=ISiteRoot, name="add_permission", renderer="templates/base_edit.pt", permission=security.MANAGE_GROUPS)
+    @view_config(context=IMeeting, name="add_permission", renderer="templates/base_edit.pt", permission=security.MANAGE_GROUPS)
+    def add_permission(self):
+        post = self.request.POST
+        if 'cancel' in post:
+            url = resource_url(self.context, self.request)
+            return HTTPFound(location=url)
+
+        schema = createSchema('PermissionSchema').bind(context=self.context, request=self.request)
+        add_csrf_token(self.context, self.request, schema)
+
+        form = Form(schema, buttons=('save', 'cancel'))
+        self.api.register_form_resources(form)
+
+        if 'save' in post:
+            controls = post.items()
+            try:
+                appstruct = form.validate(controls)
+            except ValidationFailure, e:
+                self.response['form'] = e.render()
+                return self.response
+            
+            #Set permissions
+            self.context.set_groups(appstruct['userid'], appstruct['groups'])
+            msg = _(u"Added permssion for user ${userid}", mapping={'userid':appstruct['userid']} )
+            self.api.flash_messages.add(msg)
+            url = resource_url(self.context, self.request)
+            return HTTPFound(location=url)
+
+        self.response['form'] = form.render()
         return self.response
