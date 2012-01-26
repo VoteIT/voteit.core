@@ -64,17 +64,18 @@ def polls_menu(context, request, va, **kw):
     return render('../templates/snippets/polls_menu.pt', response, request = request)
 
 
-@view_action('meeting_actions', 'participants', title = _(u"Participants"))
-def participants_tab(context, request, va, **kw):
-    api = kw['api']
-    if not api.userid or not api.meeting:
-        return ''
-    link = '%s@@participants' % api.resource_url(api.meeting, request)
-    return """ <li class="tab"><a href="%s">%s</a></li>"""  % (link, api.translate(va.title))
+#@view_action('meeting_actions', 'participants', title = _(u"Participants"))
+#def participants_tab(context, request, va, **kw):
+#    api = kw['api']
+#    if not api.userid or not api.meeting:
+#        return ''
+#    link = '%s@@participants' % api.resource_url(api.meeting, request)
+#    return """ <li class="tab"><a href="%s">%s</a></li>"""  % (link, api.translate(va.title))
 
 
 @view_action('meeting_actions', 'admin_menu', title = _(u"Admin menu"), permission = MANAGE_SERVER)
-@view_action('meeting_actions', 'moderator_menu', title = _(u"Moderator"), permission = MODERATE_MEETING, meeting_only = True)
+@view_action('meeting_actions', 'settings_menu', title = _(u"Settings"), permission = MODERATE_MEETING, meeting_only = True)
+@view_action('meeting_actions', 'participants_menu', title = _(u"Participants"), meeting_only = True)
 def generic_menu(context, request, va, **kw):
     api = kw['api']
     if va.kwargs.get('meeting_only', False) == True and api.meeting is None:
@@ -95,13 +96,15 @@ def generic_root_menu_link(context, request, va, **kw):
     return """<li><a href="%s">%s</a></li>""" % (url, api.translate(va.title))
 
 
-@view_action('moderator_menu', 'permissions', title = _(u"Edit permissions"), link = "@@permissions")
-@view_action('moderator_menu', 'logs', title = _(u"Meeting actions log"), link = "@@logs")
-@view_action('moderator_menu', 'manage_layout', title = _(u"Layout and widgets"), link = "@@manage_layout")
-@view_action('moderator_menu', 'add_tickets', title = _(u"Invite participants"), link = "@@add_tickets")
-@view_action('moderator_menu', 'manage_tickets', title = _(u"Manage invites"), link = "@@manage_tickets")
-@view_action('moderator_menu', 'participants_emails', title = _(u"Participants email addresses"), link = "@@participants_emails")
-def generic_moderator_menu_link(context, request, va, **kw):
+@view_action('settings_menu', 'logs', title = _(u"Meeting actions log"), link = "@@logs")
+@view_action('settings_menu', 'manage_layout', title = _(u"Layout and widgets"), link = "@@manage_layout")
+@view_action('participants_menu', 'participants_emails', title = _(u"Participants email addresses"), link = "@@participants_emails", permission = MODERATE_MEETING, )
+@view_action('participants_menu', 'permissions', title = _(u"Edit permissions"), link = "@@permissions", permission = MODERATE_MEETING, )
+@view_action('participants_menu', 'manage_tickets', title = _(u"Manage invites"), link = "@@manage_tickets", permission = MODERATE_MEETING, )
+@view_action('participants_menu', 'add_tickets', title = _(u"Invite participants"), link = "@@add_tickets", permission = MODERATE_MEETING, )
+@view_action('participants_menu', 'add_participant', title = _(u"Add participant"), link = "@@add_permission", permission = MODERATE_MEETING, )
+@view_action('participants_menu', 'participant_list', title = _(u"Participant list"), link = "@@participants")
+def generic_menu_link(context, request, va, **kw):
     """ This is for simple menu items for the meeting root """
     api = kw['api']
     url = api.resource_url(api.meeting, request) + va.kwargs['link']
