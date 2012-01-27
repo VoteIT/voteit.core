@@ -1,4 +1,5 @@
 import urllib
+import json
 
 from deform import Form
 from deform.exception import ValidationFailure
@@ -16,6 +17,7 @@ from voteit.core import VoteITMF as _
 from voteit.core.views.base_view import BaseView
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IMeeting
+from voteit.core.models.interfaces import ISiteRoot
 from voteit.core.models.schemas import add_csrf_token
 from voteit.core.models.schemas import button_save
 from voteit.core.models.schemas import button_add
@@ -24,6 +26,7 @@ from voteit.core.models.schemas import button_resend
 from voteit.core.models.schemas import button_delete
 from voteit.core.validators import deferred_token_form_validator
 from betahaus.viewcomponent.interfaces import IViewGroup
+from voteit.core.helpers import generate_slug
 
 
 class MeetingView(BaseView):
@@ -306,4 +309,166 @@ class MeetingView(BaseView):
         if isinstance(result, HTTPRedirection):
             return result
         self.response['form'] = result
+        return self.response
+
+    @view_config(context=IMeeting, name="presentation", renderer="templates/base_edit.pt", permission=security.MODERATE_MEETING)
+    @view_config(context=ISiteRoot, name="meeting_wizard_step1", renderer="templates/base_edit.pt", permission=security.MODERATE_MEETING)
+    def presentation(self):
+
+        schema = createSchema("PresentationMeetingSchema").bind(context=self.context, request=self.request)
+        add_csrf_token(self.context, self.request, schema)
+            
+        form = Form(schema, buttons=(button_save, button_cancel))
+        self.api.register_form_resources(form)
+
+        post = self.request.POST
+        if 'save' in post:
+            controls = post.items()
+            try:
+                appstruct = form.validate(controls)
+            except ValidationFailure, e:
+                self.response['form'] = e.render()
+                return self.response
+            
+            # In wizard mode data should not be saved to the meeting but to a session variable
+            if ISiteRoot.providedBy(self.context):
+                del appstruct['csrf_token']
+                self.request.session['wizard'] = appstruct
+                url = resource_url(self.context, self.request) + "@@meeting_wizard_step2"
+            else:
+                self.context.set_field_appstruct(appstruct)
+                url = resource_url(self.context, self.request)
+            return HTTPFound(location=url)
+
+        if 'cancel' in post:
+            # If in wizard mode delete the session if canceling
+            if wizard:
+                del self.request.session['wizard']
+            
+            self.api.flash_messages.add(_(u"Canceled"))
+
+            url = resource_url(self.context, self.request)
+            return HTTPFound(location=url)
+
+        #No action - Render form
+        if IMeeting.providedBy(self.context):
+            appstruct = self.context.get_field_appstruct(schema)
+        else:
+            appstruct = {}
+        msg = _(u"Mail settings")
+        self.api.flash_messages.add(msg, close_button=False)
+        self.response['form'] = form.render(appstruct)
+        return self.response
+
+    
+    @view_config(context=IMeeting, name="mail_settings", renderer="templates/base_edit.pt", permission=security.MODERATE_MEETING)
+    @view_config(context=ISiteRoot, name="meeting_wizard_step2", renderer="templates/base_edit.pt", permission=security.MODERATE_MEETING)
+    def mail_settings(self):
+        
+        schema = createSchema("MailSettingsMeetingSchema").bind(context=self.context, request=self.request)
+        add_csrf_token(self.context, self.request, schema)
+            
+        form = Form(schema, buttons=(button_save, button_cancel))
+        self.api.register_form_resources(form)
+
+        post = self.request.POST
+        if 'save' in post:
+            controls = post.items()
+            try:
+                appstruct = form.validate(controls)
+            except ValidationFailure, e:
+                self.response['form'] = e.render()
+                return self.response
+            
+            # In wizard mode data should not be saved to the meeting but to a session variable
+            if ISiteRoot.providedBy(self.context):
+                del appstruct['csrf_token']
+                wizard = self.request.session.get('wizard', None)
+                wizard = (appstruct.items() + dict(wizard).items())
+                self.request.session['wizard'] = wizard
+                url = resource_url(self.context, self.request) + "@@meeting_wizard_step3"
+            else:
+                self.context.set_field_appstruct(appstruct)
+                url = resource_url(self.context, self.request)
+            return HTTPFound(location=url)
+
+        if 'cancel' in post:
+            # If in wizard mode delete the session if canceling
+            if wizard:
+                del self.request.session['wizard']
+            
+            self.api.flash_messages.add(_(u"Canceled"))
+
+            url = resource_url(self.context, self.request)
+            return HTTPFound(location=url)
+
+        #No action - Render form
+        if IMeeting.providedBy(self.context):
+            appstruct = self.context.get_field_appstruct(schema)
+        else:
+            appstruct = {}
+        msg = _(u"Mail settings")
+        self.api.flash_messages.add(msg, close_button=False)
+        self.response['form'] = form.render(appstruct)
+        return self.response
+    
+    @view_config(context=IMeeting, name="access_policy", renderer="templates/base_edit.pt", permission=security.MODERATE_MEETING)
+    @view_config(context=ISiteRoot, name="meeting_wizard_step3", renderer="templates/base_edit.pt", permission=security.MODERATE_MEETING)
+    def access_policy(self):
+        
+        schema = createSchema("AccessPolicyMeetingSchema").bind(context=self.context, request=self.request)
+        add_csrf_token(self.context, self.request, schema)
+            
+        form = Form(schema, buttons=(button_save, button_cancel))
+        self.api.register_form_resources(form)
+
+        post = self.request.POST
+        if 'save' in post:
+            controls = post.items()
+            try:
+                appstruct = form.validate(controls)
+            except ValidationFailure, e:
+                self.response['form'] = e.render()
+                return self.response
+            
+            # In wizard mode a new meeting should be created
+            if ISiteRoot.providedBy(self.context):
+                del appstruct['csrf_token']
+                wizard = self.request.session.get('wizard', None)
+                appstruct = (appstruct.items() + dict(wizard).items())
+                
+                kwargs = {}
+                kwargs.update(appstruct)
+                if self.api.userid:
+                    kwargs['creators'] = [self.api.userid]
+    
+                obj = createContent('Meeting', **kwargs)
+                name = generate_slug(self.context, obj.title, 50)
+                self.context[name] = obj
+                
+                del self.request.session['wizard']
+            else:
+                self.context.set_field_appstruct(appstruct)
+            
+            url = resource_url(self.context, self.request)
+            return HTTPFound(location=url)
+
+        if 'cancel' in post:
+            # If in wizard mode delete the session if canceling
+            if wizard:
+                del self.request.session['wizard']
+                
+            self.api.flash_messages.add(_(u"Canceled"))
+
+            url = resource_url(self.context, self.request)
+            return HTTPFound(location=url)
+
+        #No action - Render form
+        if IMeeting.providedBy(self.context):
+            appstruct = self.context.get_field_appstruct(schema)
+        else:
+            appstruct = {}
+        msg = _(u"Access policy")
+        self.api.flash_messages.add(msg, close_button=False)
+        self.response['form'] = form.render(appstruct)
         return self.response

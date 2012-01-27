@@ -88,6 +88,7 @@ class BaseEdit(object):
                         default = u"Please review poll specific settings. Any default value in a field is a suggestion from the plugin.")
                 self.api.flash_messages.add(msg)
                 url += '@@poll_config'
+                
             return HTTPFound(location=url)
 
         if 'cancel' in post:

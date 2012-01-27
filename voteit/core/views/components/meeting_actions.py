@@ -98,6 +98,9 @@ def generic_root_menu_link(context, request, va, **kw):
 
 @view_action('settings_menu', 'logs', title = _(u"Meeting actions log"), link = "@@logs")
 @view_action('settings_menu', 'manage_layout', title = _(u"Layout and widgets"), link = "@@manage_layout")
+@view_action('settings_menu', 'access_policye', title = _(u"Access policy"), link = "@@access_policy")
+@view_action('settings_menu', 'mail_settings', title = _(u"Mail settings"), link = "@@mail_settings")
+@view_action('settings_menu', 'presentation', title = _(u"Presentation"), link = "@@presentation")
 @view_action('participants_menu', 'participants_emails', title = _(u"Participants email addresses"), link = "@@participants_emails", permission = MODERATE_MEETING, )
 @view_action('participants_menu', 'permissions', title = _(u"Edit permissions"), link = "@@permissions", permission = MODERATE_MEETING, )
 @view_action('participants_menu', 'manage_tickets', title = _(u"Manage invites"), link = "@@manage_tickets", permission = MODERATE_MEETING, )

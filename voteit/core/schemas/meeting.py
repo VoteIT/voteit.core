@@ -50,18 +50,28 @@ def access_policy_node():
                                widget = deferred_access_policy_widget,
                                default = "invite_only",)
 
-@schema_factory('AddMeetingSchema')
-class AddMeetingSchema(colander.MappingSchema):
+@schema_factory('MeetingSchema')
+class MeetingSchema(colander.MappingSchema):
     title = title_node();
     description = description_node();
     meeting_mail_name = meeting_mail_name_node();
     meeting_mail_address = meeting_mail_address_node();    
     access_policy = access_policy_node();
 
-@schema_factory('EditMeetingSchema')
-class EditMeetingSchema(colander.MappingSchema):
+@schema_factory('PresentationMeetingSchema')
+class PresentationMeetingSchema(colander.MappingSchema):
     title = title_node();
     description = description_node();
+    
+@schema_factory('MailSettingsMeetingSchema')
+class MailSettingsMeetingSchema(colander.MappingSchema):
+    meeting_mail_name = meeting_mail_name_node();
+    meeting_mail_address = meeting_mail_address_node();
+    
+@schema_factory('AccessPolicyMeetingSchema')
+class AccessPolicyeMeetingSchema(colander.MappingSchema):
+    access_policy = access_policy_node();
+
     
 #FIXME: Captcha add schema
 #class CaptchaAddMeetingSchema(MeetingSchema):
