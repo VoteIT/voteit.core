@@ -355,7 +355,7 @@ class MeetingView(BaseView):
             appstruct = self.context.get_field_appstruct(schema)
         else:
             appstruct = {}
-        msg = _(u"Mail settings")
+        msg = _(u"Presentation")
         self.api.flash_messages.add(msg, close_button=False)
         self.response['form'] = form.render(appstruct)
         return self.response
