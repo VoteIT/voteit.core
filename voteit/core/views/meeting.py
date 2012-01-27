@@ -384,6 +384,8 @@ class MeetingView(BaseView):
             if ISiteRoot.providedBy(self.context):
                 del appstruct['csrf_token']
                 wizard = self.request.session.get('wizard', None)
+                if not wizard:
+                    raise ValueError(_(u"Missing data from previous steps"))
                 wizard = (appstruct.items() + dict(wizard).items())
                 self.request.session['wizard'] = wizard
                 url = resource_url(self.context, self.request) + "@@meeting_wizard_step3"
@@ -435,6 +437,8 @@ class MeetingView(BaseView):
             if ISiteRoot.providedBy(self.context):
                 del appstruct['csrf_token']
                 wizard = self.request.session.get('wizard', None)
+                if not wizard:
+                    raise ValueError(_(u"Missing data from previous steps"))
                 appstruct = (appstruct.items() + dict(wizard).items())
                 
                 kwargs = {}
