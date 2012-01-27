@@ -87,6 +87,9 @@ class BaseEdit(object):
                 msg = _(u"review_poll_settings_info",
                         default = u"Please review poll specific settings. Any default value in a field is a suggestion from the plugin.")
                 self.api.flash_messages.add(msg)
+                msg = _(u"private_poll_info",
+                        default = u"The poll is created in private state, to show it the participants you have to change the state to upcoming.")
+                self.api.flash_messages.add(msg)
                 url += '@@poll_config'
                 
             return HTTPFound(location=url)

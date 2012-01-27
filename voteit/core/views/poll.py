@@ -2,6 +2,7 @@ from deform import Form
 from deform.exception import ValidationFailure
 from pyramid.view import view_config
 from pyramid.url import resource_url
+from pyramid.security import has_permission
 from pyramid.exceptions import Forbidden
 from pyramid.httpexceptions import HTTPFound
 from pyramid.traversal import find_interface
@@ -85,6 +86,10 @@ class PollView(BaseEdit):
         form = Form(schema, buttons=(button_save, button_cancel))
         self.api.register_form_resources(form)
 
+        #FIXME: Better default text
+        config_back_msg = _(u"review_poll_settings_info_getback",
+                default = u"To get back to the poll settings you click the cogwheel menu and select configure poll.")
+
         post = self.request.POST
         if 'save' in post:
             controls = post.items()
@@ -98,11 +103,12 @@ class PollView(BaseEdit):
             del appstruct['csrf_token'] #Otherwise it will be stored too
             self.context.poll_settings = appstruct
             
+            self.api.flash_messages.add(config_back_msg)
             url = resource_url(self.context, self.request)
-            
             return HTTPFound(location=url)
 
         if 'cancel' in post:
+            self.api.flash_messages.add(config_back_msg)
             url = resource_url(self.context, self.request)
             return HTTPFound(location=url)
 
@@ -115,7 +121,7 @@ class PollView(BaseEdit):
         """
         url = resource_url(self.context.__parent__, self.request)
         return HTTPFound(location=url)
-    
+   
     @view_config(context=IPoll, name="poll_raw_data", permission=VIEW)
     def poll_raw_data(self):
         """ View for all ballots. See intefaces.IPollPlugin.render_raw_data

@@ -97,7 +97,8 @@ p {
 
 /* Generic classes for positioning columns */
 .col-20-80,
-.col-50-50 {
+.col-50-50,
+.col-65-35 {
     float: left;
     width: 100%;
     display: block;
@@ -124,6 +125,14 @@ p {
 .col-50-50 .column-2 {
     margin-left: -50%;
     width: 50%;
+}
+.col-65-35 .column-1 {
+    margin-left: -100%;
+    width: 65%;
+}
+.col-65-35 .column-2 {
+    margin-left: -35%;
+    width: 35%;
 }
 /* end col classes */
 
@@ -475,6 +484,11 @@ li.notification_message {
 #polls .buttons {
     text-align: left;
 }
+#polls .poll_state_info .time {
+    background: url(/static/icons/icon_clock.png) no-repeat 0 0;
+}
+
+
 /* proposals and discussions */
 #proposals .creators img,
 #discussions .creators img,
