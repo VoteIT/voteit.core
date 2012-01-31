@@ -75,14 +75,14 @@ def polls_menu(context, request, va, **kw):
 
 @view_action('meeting_actions', 'admin_menu', title = _(u"Admin menu"), permission = MANAGE_SERVER)
 @view_action('meeting_actions', 'settings_menu', title = _(u"Settings"), permission = MODERATE_MEETING, meeting_only = True)
-@view_action('meeting_actions', 'participants_menu', title = _(u"Participants"), meeting_only = True)
+@view_action('meeting_actions', 'participants_menu', title = _(u"Participants"), meeting_only = True, menu_css_cls = 'user-dark')
 def generic_menu(context, request, va, **kw):
     api = kw['api']
     if va.kwargs.get('meeting_only', False) == True and api.meeting is None:
         return ''
     response = {}
     response['menu_title'] = va.title
-    response['menu_css_cls'] = 'cog-dark'
+    response['menu_css_cls'] = va.kwargs.get('menu_css_cls', False) or 'cog-dark'
     response['rendered_menu'] = api.render_view_group(api.root, request, va.name)
     return render('../templates/snippets/generic_meeting_menu.pt', response, request = request)
 
