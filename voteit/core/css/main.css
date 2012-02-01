@@ -232,8 +232,7 @@ p {
 .icon.voting { background: url(/static/icons/icon_lock.png) left center no-repeat; }
 .icon.approved { background: url(/static/icons/icon_approved.png) left center no-repeat; }
 .icon.denied { background: url(/static/icons/icon_denied.png) left center no-repeat; }
-/* FIXME: this should be a dark version of the icon */
-.user-dark { background: url(/static/icons/icon_user.png) no-repeat top left; }
+.user-dark { background: url(/static/icons/icon_user_db.png) no-repeat top left; }
 
 /* End icons */
 
