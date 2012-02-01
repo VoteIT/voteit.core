@@ -181,8 +181,11 @@ $(document).ready(function() {
 
 /* loading proposal and discussion forms with ajax */
 $(document).ready(function() {
-    $("div.dummy-textarea").live('click', function(event) {
-        var url = $(this).attr('url');
+    $("a.dummy-textarea").live('click', function(event) {
+        /* IE might throw an error calling preventDefault(), so use a try/catch block. */
+        try { event.preventDefault(); } catch(e) {}
+        
+        var url = $(this).attr('href');
         $(this).parent('.inline_form_placeholder').load(url, function(response, status, xhr) {
             if (status == "error") {
                 var msg = "Sorry but there was an error: ";
