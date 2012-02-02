@@ -459,13 +459,7 @@ li.notification_message {
 /* polls */
 #polls h3 {
     color: #000;
-    font-weight: strong;
-}
-#polls .poll_type {
-    border: 1px solid #86A3B4;
-    background-color: #fff;
-    padding: 5px 10px;
-	margin-left:5px;
+    font-weight: bold;
 }
 #polls .listing_block {
 	border-bottom: 2px solid #86A3B4;
@@ -485,10 +479,63 @@ li.notification_message {
 #polls .buttons {
     text-align: left;
 }
-#polls .poll_state_info .time {
+#polls .poll_state_info .time,
+.poll-booth .poll_state_info .time {
     background: url(/static/icons/icon_clock.png) no-repeat 0 0;
 }
 
+#polls .result .details {
+	display: none;
+}
+
+#polls .booth {
+	display: none;
+}
+.poll-booth .listing {
+	display: none;
+}
+
+.poll-booth {
+    min-width: 800px !important;
+    width: 800px !important;
+    border: none;
+}
+
+.poll-booth .ui-tooltip-titlebar,
+.poll-booth .ui-tooltip-content {
+	background: white;
+	border-color: white;	
+}
+
+.poll-booth .ui-tooltip-titlebar {
+	border-bottom: 2px solid #86A3B4;
+	padding-bottom: 0.5em;
+}
+
+.poll-booth .ui-tooltip-title {
+	font-size: 175%;
+	font-weight: bold;
+	background: url(/static/icons/icon_poll_lb.png) no-repeat left 25%;
+	padding-left: 20px;
+}
+
+.poll-booth .poll_state_info div {
+	float: left;
+	margin-right: 0.5em;
+}
+.poll-booth .poll_state_info div.time.start {
+	display: none;
+}
+.poll-booth .description {
+	clear: both;
+}
+
+.poll-booth .poll_type {
+    border: 1px solid #86A3B4;
+    background-color: #fff;
+    padding: 5px 10px;
+	margin-left:5px;
+}
 
 /* proposals and discussions */
 #proposals .creators img,

@@ -1,5 +1,6 @@
 <tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core">
-<h1 i18n:translate="">Poll result</h1>
+
+<h4 class="" i18n:translate="">Poll result</h4>
 <div tal:condition="result">
     <tal:iterate repeat="item result">
     	<div>

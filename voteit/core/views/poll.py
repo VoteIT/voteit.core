@@ -5,8 +5,10 @@ from pyramid.url import resource_url
 from pyramid.security import has_permission
 from pyramid.exceptions import Forbidden
 from pyramid.httpexceptions import HTTPFound
+from pyramid.httpexceptions import HTTPForbidden
 from pyramid.traversal import find_interface
 from betahaus.pyracont.factories import createSchema
+from pyramid.response import Response
 
 from voteit.core.views.api import APIView
 from voteit.core import VoteITMF as _
@@ -115,13 +117,55 @@ class PollView(BaseEdit):
         self.response['form'] = form.render(appstruct=self.context.poll_settings)
         return self.response
         
-    @view_config(context=IPoll)
+    @view_config(context=IPoll, renderer="templates/polls.pt")
     def poll_view(self):
-        """ Poll view should only redirect to parent agenda item!
+        """ Poll view should redirect to parent agenda item it the request is not a xhr request
         """
-        url = resource_url(self.context.__parent__, self.request)
-        return HTTPFound(location=url)
-   
+        if not self.request.is_xhr:
+            url = resource_url(self.context.__parent__, self.request)
+            return HTTPFound(location=url)
+        
+        self.response['polls'] = (self.context, )
+        poll_forms = {}
+        for poll in self.response['polls']:
+            #Check if the users vote exists already
+            userid = self.api.userid
+            try:
+                plugin = poll.get_poll_plugin()
+            except ComponentLookupError:
+                err_msg = _(u"plugin_missing_error",
+                            default = u"Can't find any poll plugin with name '${name}'. Perhaps that package has been uninstalled?",
+                            mapping = {'name': poll.get_field_value('poll_plugin')})
+                self.api.flash_messages.add(err_msg, type="error")
+                poll_forms[poll.uid] = ''
+                continue
+            poll_schema = plugin.get_vote_schema()
+            appstruct = {}
+            can_vote = has_permission(ADD_VOTE, poll, self.request)
+
+            if can_vote:
+                poll_url = resource_url(poll, self.request)
+                form = Form(poll_schema, action=poll_url+"@@vote", buttons=(button_vote,), formid=poll.__name__, use_ajax=True)
+            else:
+                form = Form(poll_schema, formid=poll.__name__, use_ajax=True)
+            self.api.register_form_resources(form)
+
+            if userid in poll:
+                #If editing a vote is allowed, redirect. Editing is only allowed in open polls
+                vote = poll.get(userid)
+                assert IVote.providedBy(vote)
+                #show the users vote and edit button
+                appstruct = vote.get_vote_data()
+                #Poll might still be open, in that case the poll should be changable
+                readonly = not can_vote
+                poll_forms[poll.uid] = form.render(appstruct=appstruct, readonly=readonly)
+            #User has not voted
+            elif can_vote:
+                poll_forms[poll.uid] = form.render()
+        self.response['poll_forms'] = poll_forms
+        
+        return self.response
+    
     @view_config(context=IPoll, name="poll_raw_data", permission=VIEW)
     def poll_raw_data(self):
         """ View for all ballots. See intefaces.IPollPlugin.render_raw_data
@@ -138,20 +182,38 @@ class PollView(BaseEdit):
         plugin = self.context.get_poll_plugin()
         return plugin.render_raw_data()
 
-    @view_config(context=IPoll, name="vote", permission=ADD_VOTE, renderer='templates/base_edit.pt')
+    @view_config(context=IPoll, name="vote", permission=ADD_VOTE, renderer='templates/ajax_edit.pt')
     def vote_action(self):
         """ Adds or updates a users vote. """
         ai = find_interface(self.context, IAgendaItem)
         ai_url = resource_url(ai, self.request)
+        url = resource_url(self.context, self.request)
         
         post = self.request.POST
         if 'vote' not in post:
-            return HTTPFound(location=ai_url)
+            return HTTPForbidden()
+        
+        options = """
+        {success:
+          function (rText, sText, xhr, form) {
+            var url = xhr.getResponseHeader('X-Relocate');
+            if (url) {
+              document.location = url;
+            };
+           }
+        }
+        """
 
         poll_plugin = self.context.get_poll_plugin()
         schema = poll_plugin.get_vote_schema()
         add_csrf_token(self.context, self.request, schema)
-        form = Form(schema, buttons=(button_vote,))
+        form = Form(schema, 
+                    action=url+"@@vote", 
+                    buttons=(button_vote,), 
+                    formid=self.context.__name__, 
+                    use_ajax=True,
+                    ajax_options=options)
+        self.api.register_form_resources(form)
 
         userid = self.api.userid
         controls = post.items()
@@ -160,7 +222,6 @@ class PollView(BaseEdit):
             appstruct = form.validate(controls)
         except ValidationFailure, e:
             #FIXME: How do we validate this properly, and display the result?
-            self.api.register_form_resources(form)
             self.response['form'] = e.render()
             return self.response
             
@@ -184,5 +245,5 @@ class PollView(BaseEdit):
             self.context[userid] = vote
             msg = _(u"Thank you for voting!")
         self.api.flash_messages.add(msg)
-
-        return HTTPFound(location=ai_url)
+        
+        return Response(headers = [('X-Relocate', ai_url)])

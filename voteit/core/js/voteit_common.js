@@ -288,3 +288,41 @@ $(document).ready(function() {
             }
       });
 });
+
+
+$(document).ready(function() {
+	$('#polls a.poll_booth').live('click', function() {
+	    /* stops normal events function 
+	    IE might throw an error calling preventDefault(), so use a try/catch block. */
+	    try { event.preventDefault(); } catch(e) {}
+
+		var booth = $(this).parents(".poll").find(".booth");
+	    $(this).qtip({
+	        content: {
+	        	overwrite: false,
+                title: {
+	                text: voteit.translation['poll'],
+	                button: true,
+	            },
+	            text: booth,
+	        },
+	        show: {
+	     		event: event.type,
+    			ready: true,
+	            modal: true,
+	        },
+	        hide: {
+	            event: false,
+	        },
+	        position: {
+	            my: 'center',
+	            at: 'center',
+	            target: $(window),
+	            viewport: $(window),
+	        },
+	        style: {
+	        	classes: "poll-booth"
+	        }
+	    });
+	});
+});

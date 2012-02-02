@@ -20,7 +20,7 @@ from voteit.core.models.schemas import button_vote
 from voteit.core.models.schemas import button_add
 from voteit.core.fanstaticlib import voteit_deform
 from voteit.core.fanstaticlib import autoresizable_textarea_js
-
+from voteit.core.fanstaticlib import jquery_form
 
 class AgendaItemView(BaseView):
     """ View for agenda items. """
@@ -46,12 +46,28 @@ class AgendaItemView(BaseView):
             poll_schema = plugin.get_vote_schema()
             appstruct = {}
             can_vote = has_permission(ADD_VOTE, poll, self.request)
+            
+            options = """
+            {success:
+              function (rText, sText, xhr, form) {
+                var url = xhr.getResponseHeader('X-Relocate');
+                if (url) {
+                  document.location = url;
+                };
+               }
+            }
+            """
 
             if can_vote:
                 poll_url = resource_url(poll, self.request)
-                form = Form(poll_schema, action=poll_url+"@@vote", buttons=(button_vote,), formid=poll.__name__)
+                form = Form(poll_schema, 
+                            action=poll_url+"@@vote", 
+                            buttons=(button_vote,), 
+                            formid=poll.__name__, 
+                            use_ajax=True,
+                            ajax_options=options)
             else:
-                form = Form(poll_schema, formid=poll.__name__)
+                form = Form(poll_schema, formid=poll.__name__, use_ajax=True)
             self.api.register_form_resources(form)
 
             if userid in poll:
@@ -67,6 +83,7 @@ class AgendaItemView(BaseView):
             elif can_vote:
                 poll_forms[poll.uid] = form.render()
         self.response['poll_forms'] = poll_forms
+
         _marker = object()
         rwidget = self.api.meeting.get_field_value('ai_right_widget', _marker)
         if rwidget is _marker:
@@ -82,6 +99,7 @@ class AgendaItemView(BaseView):
                                                                             
         # is needed because we load the forms with ajax
         voteit_deform.need()
+        jquery_form.need()
         
         # for autoexpanding textareas
         autoresizable_textarea_js.need()

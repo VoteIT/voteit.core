@@ -15,11 +15,9 @@
     <input type="hidden" name="__end__"/>
     <div class="clear"><!-- --></div>
 </div>
-<script type="text/javascript">
-    if(deform) {
-        deform.addCallback('${field.oid}', function(oid) {
-            $('#'+oid).find('input.star').rating();
-        });
-    }
+<script language="javascript" type="text/javascript">
+    deform.addCallback('${field.oid}', function(oid) {
+        $('#'+oid).find('input.star').rating();
+    });
 </script>
 </tal:main>

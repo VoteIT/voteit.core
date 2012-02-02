@@ -5,5 +5,4 @@
 	  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
 	  i18n:domain="voteit.core">
 </html>
-<tal:messages replace="structure api.flash_messages()">Messages</tal:messages>
-<div metal:define-slot="form" tal:condition="form|False" class="content_wrapper" tal:content="structure form">Form</div>
+<div metal:define-slot="form" tal:condition="form|False" tal:replace="structure form">Form</div>
