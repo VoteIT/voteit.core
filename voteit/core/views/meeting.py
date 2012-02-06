@@ -1,6 +1,7 @@
 import urllib
 import json
 
+import colander
 from deform import Form
 from deform.exception import ValidationFailure
 from pyramid.security import has_permission
@@ -9,6 +10,7 @@ from pyramid.view import view_config
 from pyramid.httpexceptions import HTTPFound
 from pyramid.httpexceptions import HTTPRedirection
 from pyramid.url import resource_url
+from pyramid.traversal import resource_path
 from betahaus.pyracont.factories import createContent
 from betahaus.pyracont.factories import createSchema
 
@@ -59,7 +61,7 @@ class MeetingView(BaseView):
         return self.response
 
     def _get_polls(self, agenda_item):
-        return agenda_item.get_content(iface=IPoll, states=('upcoming', 'ongoing', 'closed'), sort_on='start_time')
+        return agenda_item.get_content(iface=IPoll, states=('upcoming', 'ongoing', 'closed'), sort_on='sort_index')
 
     @view_config(name="participants", context=IMeeting, renderer="templates/participants.pt", permission=security.VIEW)
     def participants_view(self):
@@ -475,4 +477,36 @@ class MeetingView(BaseView):
         msg = _(u"Access policy")
         self.api.flash_messages.add(msg, close_button=False)
         self.response['form'] = form.render(appstruct)
+        return self.response
+    
+    
+    @view_config(context=IMeeting, name="order_agenda_items", renderer="templates/order_agenda_items.pt", permission=security.EDIT)
+    def order_agenda_items(self):
+        post = self.request.POST
+        if 'cancel' in self.request.POST:
+            url = resource_url(self.context, self.request)
+            return HTTPFound(location = url)
+
+        if 'save' in post:
+            controls = self.request.POST.items()
+            ais = []
+            order = 0
+            for (k, v) in controls:
+                if k == 'agenda_items':
+                    ai = self.context[v]
+                    ai.set_field_appstruct({'order': order})
+                    order += 1
+            self.api.flash_messages.add(_('Order updated'))
+            
+        context_path = resource_path(self.context)
+        query = dict(
+            path = context_path,
+            content_type = 'AgendaItem',
+            sort_index = 'order',
+        )
+        self.response['brains'] = self.api.get_metadata_for_query(**query)
+
+        form = Form(colander.Schema())
+        self.response['form_resources'] = form.get_widget_resources()
+        self.response['dummy_form'] = form.render()
         return self.response

@@ -58,6 +58,7 @@ setup(name='voteit.core',
       main = voteit.core:main
       [console_scripts]
       update_catalog = voteit.core.scripts.catalog:update_catalog
+      update_ai_order = voteit.core.scripts.ai_order:update_order
       [fanstatic.libraries]
       voteit_core_csslib = voteit.core.fanstaticlib:voteit_core_csslib
       voteit_core_jslib = voteit.core.fanstaticlib:voteit_core_jslib

@@ -23,14 +23,22 @@ class AgendaItemSchema(colander.MappingSchema):
         missing = u"",
         widget=deform.widget.RichTextWidget(),
     )
-    start_time = colander.SchemaNode(
-        TZDateTime(),
-        title = _('ai_start_time_title',
-                  default=u"Estimated start time of this Agenda Item."),
-        description = _(u"agenda_item_start_time_description",
-                        default=u"This setting only sets the order for the agenda item's in the Agenda. You will still have to change the state of the agenda item manually with the gear beside it's name."),
-        widget=deform.widget.DateTimeInputWidget(options={'timeFormat': 'hh:mm'}),
-        missing = None,
-        default = deferred_default_start_time,
-    )
+    order = colander.SchemaNode(
+        colander.Integer(),
+        title = _("Order"),
+        description = _(u"agenda_item_order_description",
+                        default=u"The order of the agenda item in the meeting"),
+         missing = 0,
+         default = 0,                
+        )
+#    start_time = colander.SchemaNode(
+#        TZDateTime(),
+#        title = _('ai_start_time_title',
+#                  default=u"Estimated start time of this Agenda Item."),
+#        description = _(u"agenda_item_start_time_description",
+#                        default=u"This setting only sets the order for the agenda item's in the Agenda. You will still have to change the state of the agenda item manually with the gear beside it's name."),
+#        widget=deform.widget.DateTimeInputWidget(options={'timeFormat': 'hh:mm'}),
+#        missing = None,
+#        default = deferred_default_start_time,
+#    )
     #End-time is handled by a subscriber when it is closed

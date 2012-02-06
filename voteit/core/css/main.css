@@ -852,3 +852,17 @@ table.listing > tbody > tr.even > td {
 #help-tabs .tabs {
 	margin: 0.6em;
 }
+
+/* reorder */
+.agenda-item-sort li.buttons {
+	margin: 6px 0px;
+	padding: 3px;
+}
+
+ul.ui-sortable li {
+    cursor: pointer;
+    padding: 5px 0px;
+	padding-right: 15px;
+	border-bottom: 1px solid #CCC;
+	color: #054265;
+}

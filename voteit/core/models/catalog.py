@@ -76,6 +76,7 @@ class CatalogMetadata(object):
         results['discussion_count'] = len(self.context.get_content(content_type='Discussion'))
         results['poll_count'] = len(self.context.get_content(content_type='Poll'))
         results['proposal_count'] = len(self.context.get_content(content_type='Proposal'))
+        results['order'] = get_order(self.context, 0)
 
     def get_workflow_specific(self, results):
         results['workflow_state'] = get_workflow_state(self.context, None)
@@ -108,6 +109,7 @@ def update_indexes(catalog, reindex=True):
         'unread': CatalogKeywordIndex(get_unread),
         'like_userids': CatalogKeywordIndex(get_like_userids),
         'voted_userids': CatalogKeywordIndex(get_voted_userids),
+        'order': CatalogFieldIndex(get_order),
     }
     
     changed_indexes = set()
@@ -335,6 +337,9 @@ def get_voted_userids(object, default):
         return default
     voted_userids = object.get_voted_userids()
     return voted_userids and voted_userids or default
+
+def get_order(object, default):
+    return object.get_field_value('order', default)
 
 
 def includeme(config):
