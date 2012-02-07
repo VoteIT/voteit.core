@@ -66,3 +66,18 @@ class UserIDsAndGroupsSequenceSchema(colander.SequenceSchema):
 class PermissionsSchema(colander.Schema):
     userids_and_groups = UserIDsAndGroupsSequenceSchema(title=_(u'Role settings for users'))
 
+
+@schema_factory('SingelPermissionSchema')
+class SingelPermissionSchema(colander.Schema):
+    userid = colander.SchemaNode(
+        colander.String(),
+        title = _(u"UserID"),
+        validator=deferred_existing_userid_validator,
+        widget = deferred_autocompleting_userid_widget,
+    )
+    #It's called groups here, but we restrict choices to roles only
+    groups = colander.SchemaNode(
+        deform.Set(allow_empty=True),
+        title = _(u"Groups"),
+        widget=deferred_roles_widget,
+    )
