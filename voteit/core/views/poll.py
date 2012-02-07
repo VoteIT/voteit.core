@@ -79,6 +79,8 @@ class PollView(BaseEdit):
             before the actual poll has been set in the ongoing state. After that,
             no settings may be changed.
         """
+        self.response['title'] = _(u"Poll config")
+
         poll_plugin = self.context.get_poll_plugin()
         schema = poll_plugin.get_settings_schema()
         if schema is None:

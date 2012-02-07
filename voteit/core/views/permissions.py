@@ -19,6 +19,11 @@ class PermissionsView(BaseView):
     @view_config(context=ISiteRoot, name="permissions", renderer="templates/permissions.pt", permission=security.MANAGE_GROUPS)
     @view_config(context=IMeeting, name="permissions", renderer="templates/permissions.pt", permission=security.MANAGE_GROUPS)
     def group_form(self):
+        if IMeeting.providedBy(self.context):
+            self.response['title'] = _(u"Edit permissions")
+        else:
+            self.response['title'] = _(u"Root permissions")
+
         post = self.request.POST
         if 'cancel' in post:
             url = resource_url(self.context, self.request)
@@ -61,6 +66,11 @@ class PermissionsView(BaseView):
     @view_config(context=ISiteRoot, name="add_permission", renderer="templates/base_edit.pt", permission=security.MANAGE_GROUPS)
     @view_config(context=IMeeting, name="add_permission", renderer="templates/base_edit.pt", permission=security.MANAGE_GROUPS)
     def add_permission(self):
+        if IMeeting.providedBy(self.context):
+            self.response['title'] = _(u"Add participant")
+        else:
+            self.response['title'] = _(u"Add permission")
+
         post = self.request.POST
         if 'cancel' in post:
             url = resource_url(self.context, self.request)

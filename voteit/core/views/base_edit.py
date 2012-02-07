@@ -49,6 +49,10 @@ class BaseEdit(object):
         add_permission = self.api.content_types_add_perm(content_type)
         if not has_permission(add_permission, self.context, self.request):
             raise Forbidden("You're not allowed to add '%s' in this context." % content_type)
+
+        factory = self.api.get_content_factory(content_type)
+        self.response['title'] = _(u"Add ${content_type}", 
+                                   mapping={'content_type': factory.title.lower()})
         
         schema_name = self.api.get_schema_name(content_type, 'add')
         schema = createSchema(schema_name).bind(context=self.context, request=self.request)
@@ -101,13 +105,13 @@ class BaseEdit(object):
             return HTTPFound(location=url)
 
         #No action - Render add form
-        msg = _(u"Add")
-        self.api.flash_messages.add(msg, close_button=False)
         self.response['form'] = form.render()
         return self.response
 
     @view_config(context=IBaseContent, name="edit", renderer=DEFAULT_TEMPLATE, permission=EDIT)
     def edit_form(self):
+        self.response['title'] = _(u"Edit %s" % self.context.display_name.lower())
+
         content_type = self.context.content_type
         schema_name = self.api.get_schema_name(content_type, 'edit')
         schema = createSchema(schema_name).bind(context=self.context, request=self.request)
@@ -142,8 +146,6 @@ class BaseEdit(object):
             return HTTPFound(location=url)
 
         #No action - Render edit form
-        msg = _(u"Edit")
-        self.api.flash_messages.add(msg, close_button=False)
         appstruct = self.context.get_field_appstruct(schema)
         self.response['form'] = form.render(appstruct=appstruct)
         return self.response

@@ -8,13 +8,14 @@
 <body>
     
     
-    <h2 id="page_heading" metal:fill-slot="page_heading" i18n:translate="">
-        Showing
-        <span tal:replace="len(participants)" i18n:name="count">5</span>
-        participants
-    </h2>
 
     <div metal:fill-slot="content" class="content_wrapper">
+
+	    <h3 i18n:translate="">
+	        Showing
+	        <span tal:replace="len(participants)" i18n:name="count">5</span>
+	        participants
+	    </h3>
 
         <table class="listing">
             <thead>

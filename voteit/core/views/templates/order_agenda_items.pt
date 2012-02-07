@@ -14,10 +14,6 @@
 	        });
 	    </script>
 	</metal:head>
-	
-	<h2 id="page_heading" metal:fill-slot="page_heading" i18n:translate="">
-        Order agenda items
-    </h2>
 
 	<div metal:fill-slot="content" class="content_wrapper">
 

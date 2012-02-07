@@ -122,6 +122,8 @@ class MeetingView(BaseView):
             url = "%s@@login?came_from=%s" % (resource_url(self.api.root, self.request), came_from)
             return HTTPFound(location=url)
 
+        self.response['title'] = _(u"Meeting Access")
+
         schema = createSchema('ClaimTicketSchema', validator = deferred_token_form_validator).bind(context=self.context, request=self.request)
         add_csrf_token(self.context, self.request, schema)
 
@@ -152,7 +154,6 @@ class MeetingView(BaseView):
             return HTTPFound(location=url)
 
         #No action - Render add form
-        msg = _(u"Meeting Access")
         self.api.flash_messages.add(msg, close_button=False)
         self.response['form'] = form.render()
         return self.response
@@ -165,6 +166,8 @@ class MeetingView(BaseView):
             should have once they register. When the form is submitted, it will also email
             users.
         """
+        self.response['title'] = _(u"Send meeting invitations")
+
         post = self.request.POST
         if 'cancel' in post:
             self.api.flash_messages.add(_(u"Canceled"))
@@ -199,8 +202,6 @@ class MeetingView(BaseView):
             return HTTPFound(location=url)
 
         #No action - Render add form
-        msg = _(u"Send meeting invitations")
-        self.api.flash_messages.add(msg, close_button=False)
         self.response['form'] = form.render()
         return self.response
 
@@ -208,6 +209,8 @@ class MeetingView(BaseView):
     def manage_tickets(self):
         """ A form for handling and reviewing already sent tickets.
         """
+        self.response['title'] = _(u"Current invitations")
+
         schema = createSchema('ManageTicketsSchema').bind(context=self.context, request=self.request)
         add_csrf_token(self.context, self.request, schema)
             
@@ -253,8 +256,6 @@ class MeetingView(BaseView):
             return HTTPFound(location=url)
 
         #No action - Render add form
-        msg = _(u"Current invitations")
-        self.api.flash_messages.add(msg, close_button=False)
         self.response['form'] = form.render()
         return self.response
 
@@ -262,6 +263,8 @@ class MeetingView(BaseView):
     def manage_layout(self):
         """ Manage layout
         """
+        self.response['title'] = _(u"Layout")
+
         schema = createSchema('LayoutSchema').bind(context=self.context, request=self.request)
         add_csrf_token(self.context, self.request, schema)
             
@@ -289,8 +292,6 @@ class MeetingView(BaseView):
 
         #No action - Render form
         appstruct = self.context.get_field_appstruct(schema)
-        msg = _(u"Layout")
-        self.api.flash_messages.add(msg, close_button=False)
         self.response['form'] = form.render(appstruct)
         return self.response
 
@@ -316,6 +317,7 @@ class MeetingView(BaseView):
     @view_config(context=IMeeting, name="presentation", renderer="templates/base_edit.pt", permission=security.MODERATE_MEETING)
     @view_config(context=ISiteRoot, name="meeting_wizard_step1", renderer="templates/base_edit.pt", permission=security.MODERATE_MEETING)
     def presentation(self):
+        self.response['title'] = _(u"Presentation")
 
         schema = createSchema("PresentationMeetingSchema").bind(context=self.context, request=self.request)
         add_csrf_token(self.context, self.request, schema)
@@ -357,8 +359,6 @@ class MeetingView(BaseView):
             appstruct = self.context.get_field_appstruct(schema)
         else:
             appstruct = {}
-        msg = _(u"Presentation")
-        self.api.flash_messages.add(msg, close_button=False)
         self.response['form'] = form.render(appstruct)
         return self.response
 
@@ -366,6 +366,7 @@ class MeetingView(BaseView):
     @view_config(context=IMeeting, name="mail_settings", renderer="templates/base_edit.pt", permission=security.MODERATE_MEETING)
     @view_config(context=ISiteRoot, name="meeting_wizard_step2", renderer="templates/base_edit.pt", permission=security.MODERATE_MEETING)
     def mail_settings(self):
+        self.response['title'] = _(u"Mail settings")
         
         schema = createSchema("MailSettingsMeetingSchema").bind(context=self.context, request=self.request)
         add_csrf_token(self.context, self.request, schema)
@@ -411,14 +412,13 @@ class MeetingView(BaseView):
             appstruct = self.context.get_field_appstruct(schema)
         else:
             appstruct = {}
-        msg = _(u"Mail settings")
-        self.api.flash_messages.add(msg, close_button=False)
         self.response['form'] = form.render(appstruct)
         return self.response
     
     @view_config(context=IMeeting, name="access_policy", renderer="templates/base_edit.pt", permission=security.MODERATE_MEETING)
     @view_config(context=ISiteRoot, name="meeting_wizard_step3", renderer="templates/base_edit.pt", permission=security.MODERATE_MEETING)
     def access_policy(self):
+        self.response['title'] = _(u"Access policy")
         
         schema = createSchema("AccessPolicyMeetingSchema").bind(context=self.context, request=self.request)
         add_csrf_token(self.context, self.request, schema)
@@ -474,14 +474,14 @@ class MeetingView(BaseView):
             appstruct = self.context.get_field_appstruct(schema)
         else:
             appstruct = {}
-        msg = _(u"Access policy")
-        self.api.flash_messages.add(msg, close_button=False)
         self.response['form'] = form.render(appstruct)
         return self.response
     
     
     @view_config(context=IMeeting, name="order_agenda_items", renderer="templates/order_agenda_items.pt", permission=security.EDIT)
     def order_agenda_items(self):
+        self.response['title'] = _("Order agenda items")
+
         post = self.request.POST
         if 'cancel' in self.request.POST:
             url = resource_url(self.context, self.request)
