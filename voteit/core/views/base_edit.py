@@ -52,7 +52,7 @@ class BaseEdit(object):
 
         factory = self.api.get_content_factory(content_type)
         self.response['title'] = _(u"Add ${content_type}", 
-                                   mapping={'content_type': factory.title.lower()})
+                                   mapping={'content_type': self.api.translate(factory.title)})
         
         schema_name = self.api.get_schema_name(content_type, 'add')
         schema = createSchema(schema_name).bind(context=self.context, request=self.request)
@@ -110,7 +110,7 @@ class BaseEdit(object):
 
     @view_config(context=IBaseContent, name="edit", renderer=DEFAULT_TEMPLATE, permission=EDIT)
     def edit_form(self):
-        self.response['title'] = _(u"Edit %s" % self.context.display_name.lower())
+        self.response['title'] = _(u"Edit %s" % self.api.translate(self.context.display_name))
 
         content_type = self.context.content_type
         schema_name = self.api.get_schema_name(content_type, 'edit')
