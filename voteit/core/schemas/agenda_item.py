@@ -23,14 +23,6 @@ class AgendaItemSchema(colander.MappingSchema):
         missing = u"",
         widget=deform.widget.RichTextWidget(),
     )
-    order = colander.SchemaNode(
-        colander.Integer(),
-        title = _("Order"),
-        description = _(u"agenda_item_order_description",
-                        default=u"The order of the agenda item in the meeting"),
-         missing = 0,
-         default = 0,                
-        )
 #    start_time = colander.SchemaNode(
 #        TZDateTime(),
 #        title = _('ai_start_time_title',
