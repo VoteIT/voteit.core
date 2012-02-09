@@ -242,7 +242,7 @@ $(document).ready(function() {
                 text: voteit.translation['help_contact'],
                 button: true,
             },
-            text: $("#help-tabs"),
+            text: $("#help-modal"),
         },
         show: {
             event: "click",
@@ -265,28 +265,21 @@ $(document).ready(function() {
 });
 
 $(document).ready(function() {
-    $("#help-tabs > ul a.tab").click(function(event) {
+	$("#help-tabs form").each(function() {
+		oid = $(this).attr('id').replace('#');
+		deform_ajaxify(null, null, null, null, oid);
+	});
+    $("#help-modal > ul a.tab").click(function(event) {
         /* IE might throw an error calling preventDefault(), so use a try/catch block. */
         try { event.preventDefault(); } catch(e) {}
         
-        $(this).parents("#help-tabs").find("a.tab").removeClass("active");
+        
+        $("#help-actions a.tab").removeClass("active");
         $(this).addClass("active");
         
-        url = $(this).attr("href");
-        
-        $("#help-tabs .tabs").load(url, function(data) {
-            $("#help-tabs .tabs form").attr('href') = url;
-        });
+        $("#help-tabs div.tab").removeClass("active");
+        $("#help-tabs").find($(this).attr("href")).addClass("active");
     });
-
-    $("#help-tabs form").live("submit", function() {
-        $.post($(this).attr('action')),
-            { send: 'send', subject: $(this).find("input[name='subject']").val(), message: $(this).find("textarea").val() },
-            function(data) {
-                $("#help-tabs .tabs").empty();
-                $("#help-tabs .tabs").append(data);
-            }
-      });
 });
 
 

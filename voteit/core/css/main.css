@@ -824,6 +824,7 @@ table.listing > tbody > tr.even > td {
     padding: 0;
 }
 
+#help-tab #help-actions,
 #help-tab #help-tabs {
     display: none;
 }
@@ -839,18 +840,26 @@ table.listing > tbody > tr.even > td {
 	background: #86A3B4;
 }
 
-#help-tabs > ul li {
+#help-modal > ul li {
     display: inline;
 	margin-left: 0.5em;
     list-style-type: none;
 }
 
-#help-tabs a.tab.active {
+#help-modal a.tab.active {
     font-weight: bold;
 }
 
-#help-tabs .tabs {
-	margin: 0.6em;
+#help-modal #help-tabs {
+	margin: 0.8em 0.6em 0.6em;
+}
+
+#help-modal div.tab {
+	display: none;
+}
+
+#help-modal div.tab.active {
+	display: block;
 }
 
 /* reorder */

@@ -20,9 +20,10 @@
 
     <div id="help-tab">
         <h5 i18n:translate="">Help & Contact</h5>
-        <div id="help-tabs" 
-             tal:content="structure api.render_single_view_component(context, request, 'main', 'help_actions')">
-        </div>
+    	<div id="help-modal">	
+    	    <div tal:replace="structure api.render_single_view_component(context, request, 'main', 'help_actions')"></div>
+	        <div tal:replace="structure api.render_single_view_component(context, request, 'main', 'help_tabs')"></div>
+    	</div>
     </div>
     <div id="page_wrapper">
         <div id="main-content-wrapper">

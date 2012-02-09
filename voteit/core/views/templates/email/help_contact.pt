@@ -1,0 +1,30 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="voteit.core">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+
+<h3 tal:content="subject">Subject</h3>
+<div tal:replace="message">
+	Message
+</div>
+<tal:user condition="user">
+	<span tal:replace="user.title">usertitle</span>
+</tal:user>
+
+<tal:meeting condition="meeting">
+<h5 i18n:translate="">Click the link to get to the VoteIT meeting:</h5>
+<a tal:attributes="href api.resource_url(meeting, api.request)"
+   tal:content="api.resource_url(meeting, api.request)">link</a>
+</tal:meeting>
+
+<div i18n:translate="">
+Warm regards, The VoteIT team
+</div>
+
+</body>
+</html>
