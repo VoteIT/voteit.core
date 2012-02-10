@@ -259,7 +259,7 @@ class MeetingView(BaseView):
         self.response['form'] = form.render()
         return self.response
 
-    @view_config(name="manage_layout", context=IMeeting, renderer="templates/base_edit.pt", permission=security.MODERATE_MEETING)
+    @view_config(name="manage_layout", context=IMeeting, renderer="templates/base_edit.pt", permission=security.EDIT)
     def manage_layout(self):
         """ Manage layout
         """
@@ -314,7 +314,7 @@ class MeetingView(BaseView):
         self.response['form'] = result
         return self.response
 
-    @view_config(context=IMeeting, name="presentation", renderer="templates/base_edit.pt", permission=security.MODERATE_MEETING)
+    @view_config(context=IMeeting, name="presentation", renderer="templates/base_edit.pt", permission=security.EDIT)
     @view_config(context=ISiteRoot, name="meeting_wizard_step1", renderer="templates/base_edit.pt", permission=security.MODERATE_MEETING)
     def presentation(self):
         self.response['title'] = _(u"Presentation")
@@ -363,7 +363,7 @@ class MeetingView(BaseView):
         return self.response
 
     
-    @view_config(context=IMeeting, name="mail_settings", renderer="templates/base_edit.pt", permission=security.MODERATE_MEETING)
+    @view_config(context=IMeeting, name="mail_settings", renderer="templates/base_edit.pt", permission=security.EDIT)
     @view_config(context=ISiteRoot, name="meeting_wizard_step2", renderer="templates/base_edit.pt", permission=security.MODERATE_MEETING)
     def mail_settings(self):
         self.response['title'] = _(u"Mail settings")
@@ -415,7 +415,7 @@ class MeetingView(BaseView):
         self.response['form'] = form.render(appstruct)
         return self.response
     
-    @view_config(context=IMeeting, name="access_policy", renderer="templates/base_edit.pt", permission=security.MODERATE_MEETING)
+    @view_config(context=IMeeting, name="access_policy", renderer="templates/base_edit.pt", permission=security.EDIT)
     @view_config(context=ISiteRoot, name="meeting_wizard_step3", renderer="templates/base_edit.pt", permission=security.MODERATE_MEETING)
     def access_policy(self):
         self.response['title'] = _(u"Access policy")
