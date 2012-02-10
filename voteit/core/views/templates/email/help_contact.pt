@@ -8,13 +8,14 @@
 </head>
 <body>
 
+<tal:user condition="name or email">
+	<span i18n:translate="">From</span>: <span tal:condition="name" tal:replace="name">Name</span> <span tal:condition="email">&#60;<span tal:replace="email">Email</span>&#62;</span>
+</tal:user>
+
 <h3 tal:content="subject">Subject</h3>
 <div tal:replace="message">
 	Message
 </div>
-<tal:user condition="user">
-	<span tal:replace="user.title">usertitle</span>
-</tal:user>
 
 <tal:meeting condition="meeting">
 <h5 i18n:translate="">Click the link to get to the VoteIT meeting:</h5>
