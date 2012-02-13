@@ -193,7 +193,7 @@ class MeetingPermissionTests(unittest.TestCase):
         self.assertEqual(self.pap(obj, security.DELETE), admin)
 
         #Manage groups
-        self.assertEqual(self.pap(obj, security.MANAGE_GROUPS), admin | moderator)
+        self.assertEqual(self.pap(obj, security.MANAGE_GROUPS), admin )
 
         #Add proposal
         self.assertEqual(self.pap(obj, security.ADD_PROPOSAL), set() )
