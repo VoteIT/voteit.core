@@ -50,7 +50,7 @@ class Meeting(BaseContent, WorkflowAware):
     add_permission = security.ADD_MEETING
     #FIXME: Property schema should return different add schema when user is not an admin.
     #Ie captcha
-    schemas = {'add': 'MeetingSchema', 'edit': 'MeetingSchema'}
+    schemas = {'add': 'AddMeetingSchema', 'edit': 'EditMeetingSchema'}
 
 
     def __init__(self, data=None, **kwargs):

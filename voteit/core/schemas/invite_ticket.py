@@ -19,7 +19,7 @@ class ClaimTicketSchema(colander.Schema):
                                           default = u"The access token your received in your email."),)
 
             
-@schema_factory('AddTicketsSchema')
+@schema_factory('AddTicketsSchema', title = _(u"Invite participants"), description = _(u"Invite participants to the meeting"))
 class AddTicketsSchema(colander.Schema):
     roles = colander.SchemaNode(
         deform.Set(),
@@ -58,7 +58,7 @@ def checkbox_of_invited_emails_widget(node, kw):
     return deform.widget.CheckboxChoiceWidget(values=email_choices)
 
 
-@schema_factory('ManageTicketsSchema')
+@schema_factory('ManageTicketsSchema', title = _(u"Manage invitations"), description = _(u"Manage invitations to the meeting"))
 class ManageTicketsSchema(colander.Schema):
     emails = colander.SchemaNode(
         deform.Set(),

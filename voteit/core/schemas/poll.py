@@ -54,7 +54,8 @@ def proposal_choices_widget(node, kw):
     return deform.widget.CheckboxChoiceWidget(values=proposal_choices)
 
 
-@schema_factory('PollSchema')
+@schema_factory('AddPollSchema', title = _(u"Add poll"), description = _(u"Use this form to add a poll"))
+@schema_factory('EditPollSchema', title = _(u"Edit poll"), description = _(u"Use this form to edit a poll"))
 class PollSchema(colander.MappingSchema):
     title = colander.SchemaNode(colander.String(),
                                 title = _(u"Title"),

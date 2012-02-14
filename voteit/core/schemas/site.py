@@ -6,7 +6,7 @@ from voteit.core import VoteITMF as _
 from voteit.core.validators import html_string_validator
 
 
-@schema_factory('SiteRootSchema')
+@schema_factory('SiteRootSchema', title = _(u"Edit site root"), description = _(u"Use this form to edit the site root"))
 class SiteRootSchema(colander.MappingSchema):
     title = colander.SchemaNode(colander.String(),
                                 title = _(u"Title"),

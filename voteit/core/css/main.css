@@ -719,6 +719,20 @@ table.listing > tbody > tr.even > td {
 }
 
 /* Form stuff */
+.deform li {
+	padding: 0;
+}
+
+.deform > fieldset > legend {
+	display: none;
+}
+
+form.deform .section.first h3 {
+	border-bottom: 2px solid #86A3B4;
+    padding-bottom: 0.5em;
+    font-size: 175%;
+}
+
 .buttonize,
 .buttons button {
     border: 1px solid #ccc;

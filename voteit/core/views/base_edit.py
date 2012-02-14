@@ -51,13 +51,10 @@ class BaseEdit(object):
             raise Forbidden("You're not allowed to add '%s' in this context." % content_type)
 
         factory = self.api.get_content_factory(content_type)
-        self.response['title'] = _(u"Add ${content_type}", 
-                                   mapping={'content_type': self.api.translate(factory.title)})
-        
         schema_name = self.api.get_schema_name(content_type, 'add')
         schema = createSchema(schema_name).bind(context=self.context, request=self.request)
         add_csrf_token(self.context, self.request, schema)
-            
+        
         form = Form(schema, buttons=(button_add, button_cancel))
         self.api.register_form_resources(form)
 

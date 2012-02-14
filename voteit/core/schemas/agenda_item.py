@@ -8,7 +8,8 @@ from voteit.core.schemas.tzdatetime import TZDateTime
 from voteit.core.schemas.common import deferred_default_start_time
 
 
-@schema_factory('AgendaItemSchema')
+@schema_factory('AddAgendaItemSchema', title = _(u"Add agenda item"), description = _(u"Use this form to add an agenda item"))
+@schema_factory('EditAgendaItemSchema', title = _(u"Edit agenda item"), description = _(u"Use this form to edit an agenda item"))
 class AgendaItemSchema(colander.MappingSchema):
     title = colander.SchemaNode(colander.String(),
         title = _(u"Title"),

@@ -73,7 +73,8 @@
                     <tal:messages replace="structure api.flash_messages()">Messages</tal:messages>
 
                     <div metal:define-slot="page_heading"
-                         id="page_heading">
+                         id="page_heading"
+                         tal:condition="not form|True">
 
                         <span metal:define-slot="action_menu"
                              tal:condition="not form|api.context_has_permission('Moderate Meeting', context)"

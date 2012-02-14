@@ -57,7 +57,7 @@ class AgendaItem(BaseContent, WorkflowAware):
     display_name = _(u"Agenda item")
     allowed_contexts = ('Meeting',)
     add_permission = security.ADD_AGENDA_ITEM
-    schemas = {'edit': 'AgendaItemSchema', 'add': 'AgendaItemSchema'}
+    schemas = {'edit': 'EditAgendaItemSchema', 'add': 'AddAgendaItemSchema'}
 
     @property
     def __acl__(self):

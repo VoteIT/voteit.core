@@ -50,7 +50,8 @@ def access_policy_node():
                                widget = deferred_access_policy_widget,
                                default = "invite_only",)
 
-@schema_factory('MeetingSchema')
+@schema_factory('AddMeetingSchema', title = _(u"Add meeting"), description = _(u"Use this form to add a meeting"))
+@schema_factory('EditMeetingSchema', title = _(u"Edit meeting"), description = _(u"Use this form to edit a meeting"))
 class MeetingSchema(colander.MappingSchema):
     title = title_node();
     description = description_node();
@@ -58,17 +59,17 @@ class MeetingSchema(colander.MappingSchema):
     meeting_mail_address = meeting_mail_address_node();    
     access_policy = access_policy_node();
 
-@schema_factory('PresentationMeetingSchema')
+@schema_factory('PresentationMeetingSchema', title = _(u"Presentation"), description = _(u"Presentation of meeting"))
 class PresentationMeetingSchema(colander.MappingSchema):
     title = title_node();
     description = description_node();
     
-@schema_factory('MailSettingsMeetingSchema')
+@schema_factory('MailSettingsMeetingSchema', title = _(u"Mail settings"), description = _(u"Mail settings for meeting"))
 class MailSettingsMeetingSchema(colander.MappingSchema):
     meeting_mail_name = meeting_mail_name_node();
     meeting_mail_address = meeting_mail_address_node();
     
-@schema_factory('AccessPolicyMeetingSchema')
+@schema_factory('AccessPolicyMeetingSchema', title = _(u"Access policy"), description = _(u"Access policy of the meeting"))
 class AccessPolicyeMeetingSchema(colander.MappingSchema):
     access_policy = access_policy_node();
 

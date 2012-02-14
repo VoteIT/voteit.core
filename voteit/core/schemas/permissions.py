@@ -36,7 +36,7 @@ def deferred_roles_widget(node, kw):
                                               missing=colander.null,)
 
 
-@schema_factory('PermissionSchema')
+@schema_factory('PermissionSchema', title = _(u"Permission"), description = _(u"Permissions for user"))
 class UserIDAndGroupsSchema(colander.Schema):
     userid = colander.SchemaNode(
         colander.String(),
@@ -62,12 +62,12 @@ class UserIDsAndGroupsSequenceSchema(colander.SequenceSchema):
     userid_and_groups = UserIDAndGroupsSchema(title=_(u'Roles for user'),)
 
 
-@schema_factory('PermissionsSchema')
+@schema_factory('PermissionsSchema', title = _(u"Permissions"), description = _(u"Permissions for all users"))
 class PermissionsSchema(colander.Schema):
     userids_and_groups = UserIDsAndGroupsSequenceSchema(title=_(u'Role settings for users'))
 
 
-@schema_factory('SingelPermissionSchema')
+@schema_factory('SingelPermissionSchema', title = _(u"Permission"), description = _(u"Permissions for user"))
 class SingelPermissionSchema(colander.Schema):
     userid = colander.SchemaNode(
         colander.String(),

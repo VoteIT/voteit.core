@@ -66,7 +66,7 @@ class Poll(BaseContent, WorkflowAware):
     display_name = _(u"Poll")
     allowed_contexts = ('AgendaItem',)
     add_permission = security.ADD_POLL
-    schemas = {'add': 'PollSchema', 'edit': 'PollSchema'}
+    schemas = {'add': 'AddPollSchema', 'edit': 'EditPollSchema'}
 
     @property
     def __acl__(self):

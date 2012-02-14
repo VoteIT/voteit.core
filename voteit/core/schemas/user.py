@@ -46,7 +46,7 @@ def came_from_node():
                                default=deferred_referer,)
 
 
-@schema_factory('AddUserSchema')
+@schema_factory('AddUserSchema', title = _(u"Add user"), description = _(u"Use this form to add a user"))
 class AddUserSchema(colander.Schema):
     """ Used for registration and regular add command. """
     userid = colander.SchemaNode(colander.String(),
@@ -61,7 +61,7 @@ class AddUserSchema(colander.Schema):
     came_from = came_from_node()
 
 
-@schema_factory('EditUserSchema')
+@schema_factory('EditUserSchema', title = _(u"Edit user"), description = _(u"Use this form to edit a user"))
 class EditUserSchema(colander.Schema):
     """ Regular edit. """
     email = email_node()
@@ -76,7 +76,7 @@ class EditUserSchema(colander.Schema):
         validator=html_string_validator,)
 
 
-@schema_factory('LoginSchema')
+@schema_factory('LoginSchema', title = _(u"Login"), description = _(u"Login to VoteIT"))
 class LoginSchema(colander.Schema):
     userid = colander.SchemaNode(colander.String(),
                                  title=_(u"UserID or email address."))
@@ -86,12 +86,12 @@ class LoginSchema(colander.Schema):
     came_from = came_from_node()
 
 
-@schema_factory('ChangePasswordSchema')
+@schema_factory('ChangePasswordSchema', title = _(u"Change password"), description = _(u"Use this form to change password"))
 class ChangePasswordSchema(colander.Schema):
     password = password_node()
 
 
-@schema_factory('RequestNewPasswordSchema')
+@schema_factory('RequestNewPasswordSchema', title = _(u"Request new password"), description = _(u"Use this form to request a new password"))
 class RequestNewPasswordSchema(colander.Schema):
     userid_or_email = colander.SchemaNode(colander.String(),
                                           title = _(u"UserID or email address."))

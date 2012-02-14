@@ -26,7 +26,7 @@ requires = (
     'repoze.catalog',
     'lingua',
     'httplib2',
-    'betahaus.pyracont',
+    'betahaus.pyracont>=0.1a3',
     'betahaus.viewcomponent',
     'pyramid_debugtoolbar', #Won't be active unless included
     'fanstatic',
