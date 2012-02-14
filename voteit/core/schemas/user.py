@@ -47,6 +47,7 @@ def came_from_node():
 
 
 @schema_factory('AddUserSchema', title = _(u"Add user"), description = _(u"Use this form to add a user"))
+@schema_factory('RegisterUserSchema', title = _(u"Registration"))
 class AddUserSchema(colander.Schema):
     """ Used for registration and regular add command. """
     userid = colander.SchemaNode(colander.String(),
@@ -76,7 +77,7 @@ class EditUserSchema(colander.Schema):
         validator=html_string_validator,)
 
 
-@schema_factory('LoginSchema', title = _(u"Login"), description = _(u"Login to VoteIT"))
+@schema_factory('LoginSchema', title = _(u"Login"))
 class LoginSchema(colander.Schema):
     userid = colander.SchemaNode(colander.String(),
                                  title=_(u"UserID or email address."))
