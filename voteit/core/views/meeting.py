@@ -316,7 +316,6 @@ class MeetingView(BaseView):
         return self.response
 
     @view_config(context=IMeeting, name="presentation", renderer="templates/base_edit.pt", permission=security.EDIT)
-    @view_config(context=ISiteRoot, name="meeting_wizard_step1", renderer="templates/base_edit.pt", permission=security.MODERATE_MEETING)
     def presentation(self):
         self.response['title'] = _(u"Presentation")
 
@@ -335,37 +334,23 @@ class MeetingView(BaseView):
                 self.response['form'] = e.render()
                 return self.response
             
-            # In wizard mode data should not be saved to the meeting but to a session variable
-            if ISiteRoot.providedBy(self.context):
-                del appstruct['csrf_token']
-                self.request.session['wizard'] = appstruct
-                url = resource_url(self.context, self.request) + "@@meeting_wizard_step2"
-            else:
-                self.context.set_field_appstruct(appstruct)
-                url = resource_url(self.context, self.request)
+            self.context.set_field_appstruct(appstruct)
+            url = resource_url(self.context, self.request)
             return HTTPFound(location=url)
 
         if 'cancel' in post:
-            # If in wizard mode delete the session if canceling
-            if wizard:
-                del self.request.session['wizard']
-            
             self.api.flash_messages.add(_(u"Canceled"))
 
             url = resource_url(self.context, self.request)
             return HTTPFound(location=url)
 
         #No action - Render form
-        if IMeeting.providedBy(self.context):
-            appstruct = self.context.get_field_appstruct(schema)
-        else:
-            appstruct = {}
+        appstruct = self.context.get_field_appstruct(schema)
         self.response['form'] = form.render(appstruct)
         return self.response
 
     
     @view_config(context=IMeeting, name="mail_settings", renderer="templates/base_edit.pt", permission=security.EDIT)
-    @view_config(context=ISiteRoot, name="meeting_wizard_step2", renderer="templates/base_edit.pt", permission=security.MODERATE_MEETING)
     def mail_settings(self):
         self.response['title'] = _(u"Mail settings")
         
@@ -384,40 +369,21 @@ class MeetingView(BaseView):
                 self.response['form'] = e.render()
                 return self.response
             
-            # In wizard mode data should not be saved to the meeting but to a session variable
-            if ISiteRoot.providedBy(self.context):
-                del appstruct['csrf_token']
-                wizard = self.request.session.get('wizard', None)
-                if not wizard:
-                    raise ValueError(_(u"Missing data from previous steps"))
-                wizard = (appstruct.items() + dict(wizard).items())
-                self.request.session['wizard'] = wizard
-                url = resource_url(self.context, self.request) + "@@meeting_wizard_step3"
-            else:
-                self.context.set_field_appstruct(appstruct)
-                url = resource_url(self.context, self.request)
+            self.context.set_field_appstruct(appstruct)
+            url = resource_url(self.context, self.request)
             return HTTPFound(location=url)
 
         if 'cancel' in post:
-            # If in wizard mode delete the session if canceling
-            if wizard:
-                del self.request.session['wizard']
-            
             self.api.flash_messages.add(_(u"Canceled"))
-
             url = resource_url(self.context, self.request)
             return HTTPFound(location=url)
 
         #No action - Render form
-        if IMeeting.providedBy(self.context):
-            appstruct = self.context.get_field_appstruct(schema)
-        else:
-            appstruct = {}
+        appstruct = self.context.get_field_appstruct(schema)
         self.response['form'] = form.render(appstruct)
         return self.response
     
     @view_config(context=IMeeting, name="access_policy", renderer="templates/base_edit.pt", permission=security.EDIT)
-    @view_config(context=ISiteRoot, name="meeting_wizard_step3", renderer="templates/base_edit.pt", permission=security.MODERATE_MEETING)
     def access_policy(self):
         self.response['title'] = _(u"Access policy")
         
@@ -435,46 +401,19 @@ class MeetingView(BaseView):
             except ValidationFailure, e:
                 self.response['form'] = e.render()
                 return self.response
-            
-            # In wizard mode a new meeting should be created
-            if ISiteRoot.providedBy(self.context):
-                del appstruct['csrf_token']
-                wizard = self.request.session.get('wizard', None)
-                if not wizard:
-                    raise ValueError(_(u"Missing data from previous steps"))
-                appstruct = (appstruct.items() + dict(wizard).items())
-                
-                kwargs = {}
-                kwargs.update(appstruct)
-                if self.api.userid:
-                    kwargs['creators'] = [self.api.userid]
-    
-                obj = createContent('Meeting', **kwargs)
-                name = generate_slug(self.context, obj.title, 50)
-                self.context[name] = obj
-                
-                del self.request.session['wizard']
-            else:
-                self.context.set_field_appstruct(appstruct)
+
+            self.context.set_field_appstruct(appstruct)
             
             url = resource_url(self.context, self.request)
             return HTTPFound(location=url)
 
         if 'cancel' in post:
-            # If in wizard mode delete the session if canceling
-            if wizard:
-                del self.request.session['wizard']
-                
             self.api.flash_messages.add(_(u"Canceled"))
-
             url = resource_url(self.context, self.request)
             return HTTPFound(location=url)
 
         #No action - Render form
-        if IMeeting.providedBy(self.context):
-            appstruct = self.context.get_field_appstruct(schema)
-        else:
-            appstruct = {}
+        appstruct = self.context.get_field_appstruct(schema)
         self.response['form'] = form.render(appstruct)
         return self.response
     
