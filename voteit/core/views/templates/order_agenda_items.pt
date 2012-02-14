@@ -34,7 +34,6 @@
 	            </ul>
 	        </fieldset>
 	    </form>
-	    <div tal:content="structure dummy_form" style="display: none">Form html code</div>
 	</div>
 </body>
 </html>

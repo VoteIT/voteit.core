@@ -29,6 +29,7 @@ from voteit.core.models.schemas import button_delete
 from voteit.core.validators import deferred_token_form_validator
 from betahaus.viewcomponent.interfaces import IViewGroup
 from voteit.core.helpers import generate_slug
+from voteit.core import fanstaticlib
 
 
 class MeetingView(BaseView):
@@ -505,8 +506,7 @@ class MeetingView(BaseView):
             sort_index = 'order',
         )
         self.response['brains'] = self.api.get_metadata_for_query(**query)
+        
+        fanstaticlib.jquery_142.need()
 
-        form = Form(colander.Schema())
-        self.response['form_resources'] = form.get_widget_resources()
-        self.response['dummy_form'] = form.render()
         return self.response
