@@ -105,11 +105,11 @@ msgstr "Åtkomst beviljad"
 #: ./views/components/meeting_actions.py:103
 #: ./views/meeting.py:388
 msgid "Access policy"
-msgstr ""
+msgstr "Inbjudningspolicy"
 
 #: ./schemas/meeting.py:72
 msgid "Access policy of the meeting"
-msgstr ""
+msgstr "Mötets inbjudningspolicy"
 
 #. Default: "Actions here"
 #: ./views/components/moderator_actions.py:45
@@ -124,11 +124,11 @@ msgstr "Lägg till"
 
 #: ./schemas/agenda_item.py:11
 msgid "Add agenda item"
-msgstr ""
+msgstr "Lägg till dagordningspunkt"
 
 #: ./schemas/meeting.py:53
 msgid "Add meeting"
-msgstr ""
+msgstr "Lägg till möte"
 
 #: ./views/users.py:81
 msgid "Add new user"
@@ -137,11 +137,11 @@ msgstr "Lägg till ny användare"
 #: ./views/components/meeting_actions.py:110
 #: ./views/permissions.py:70
 msgid "Add participant"
-msgstr ""
+msgstr "Lägg till användare"
 
 #: ./views/permissions.py:72
 msgid "Add permission"
-msgstr ""
+msgstr "Lägg till rättighet"
 
 #. Default: "Add poll"
 #: ./schemas/poll.py:57
@@ -151,11 +151,11 @@ msgstr "Lägg till omröstning"
 
 #: ./schemas/user.py:49
 msgid "Add user"
-msgstr ""
+msgstr "Lägg till användare"
 
 #: ./views/permissions.py:95
 msgid "Added permssion for user ${userid}"
-msgstr ""
+msgstr "Rättigheter för användare ${userid} tillagd"
 
 #. Default: "Admin menu"
 #: ./views/components/meeting_actions.py:78
@@ -239,7 +239,7 @@ msgstr "Ändra"
 
 #: ./schemas/layout.py:45
 msgid "Change layout of meeting"
-msgstr ""
+msgstr "Ändra möteslayout"
 
 #. Default: "Change password"
 #: ./schemas/user.py:90
@@ -268,7 +268,7 @@ msgstr "Klicka på länken för att få tillträde till VoteIT-mötet:"
 
 #: ./views/templates/email/help_contact.pt:21
 msgid "Click the link to get to the VoteIT meeting:"
-msgstr ""
+msgstr "Klicka länken för att komma till VoteIT-mötet"
 
 #. Default: "Click to go to meeting overview"
 #: ./views/templates/navigation.pt:53
@@ -289,7 +289,7 @@ msgstr "Stängd"
 
 #: ./views/components/help_actions.py:30
 msgid "Contact"
-msgstr ""
+msgstr "Kontakt"
 
 #: ./validators.py:188
 msgid "Couldn't find any invitation for this email address."
@@ -342,7 +342,7 @@ msgstr "Beskrivningsfält med textformatering (standard är vänsterkolumn)"
 
 #: ./views/userinfo.py:75
 msgid "Direct access to this is not allowed"
-msgstr ""
+msgstr "Direkttillgång till detta är inte tillåtet"
 
 #. Default: "Discuss"
 #: ./views/templates/participants.pt:28
@@ -383,15 +383,15 @@ msgstr "Redigera"
 
 #: ./views/base_edit.py:110
 msgid "Edit %s"
-msgstr ""
+msgstr "Redigera %s"
 
 #: ./schemas/agenda_item.py:12
 msgid "Edit agenda item"
-msgstr ""
+msgstr "Redigera dagordningspunkt"
 
 #: ./schemas/meeting.py:54
 msgid "Edit meeting"
-msgstr ""
+msgstr "Redigera möte"
 
 #. Default: "Edit permissions"
 #: ./views/components/meeting_actions.py:107
@@ -401,15 +401,15 @@ msgstr "Redigera rättigheter"
 
 #: ./schemas/poll.py:58
 msgid "Edit poll"
-msgstr ""
+msgstr "Redigera omröstning"
 
 #: ./schemas/site.py:9
 msgid "Edit site root"
-msgstr ""
+msgstr "Redigera sajt root"
 
 #: ./schemas/user.py:65
 msgid "Edit user"
-msgstr ""
+msgstr "Redigera användarprofil"
 
 #. Default: "Email"
 #: ./schemas/help.py:16
@@ -428,7 +428,7 @@ msgstr "Epostadressen din inbjudan skickades till."
 
 #: ./views/templates/participants_emails.pt:11
 msgid "Email addresses of participants"
-msgstr ""
+msgstr "Deltagarepostadresser"
 
 #: ./validators.py:192
 msgid "Email matches, but token doesn't"
@@ -440,7 +440,7 @@ msgstr "Epost skickad."
 
 #: ./schemas/help.py:13
 msgid "Empty this field if you want to be anonymous"
-msgstr ""
+msgstr "Töm detta fält om du vill vara anonym"
 
 #: ./schemas/poll.py:106
 msgid "End time of this poll."
@@ -460,7 +460,7 @@ msgstr "Glömt lösenord?"
 
 #: ./views/templates/email/help_contact.pt:12
 msgid "From"
-msgstr ""
+msgstr "Från"
 
 #: ./schemas/permissions.py:56
 msgid "Groups"
@@ -477,7 +477,7 @@ msgstr "Har du ett konto redan?"
 
 #: ./views/templates/main.pt:133
 msgid "Help & Contact"
-msgstr ""
+msgstr "Hjälp och Feedback"
 
 #: ./schemas/proposal.py:12
 msgid "I propose:"
@@ -510,7 +510,7 @@ msgstr "Bjud in deltagare"
 
 #: ./schemas/invite_ticket.py:22
 msgid "Invite participants to the meeting"
-msgstr ""
+msgstr "Bjud in deltagare till mötet"
 
 #: ./models/invite_ticket.py:35
 msgid "Invite ticket"
@@ -587,11 +587,11 @@ msgstr "Logga ut"
 #: ./views/components/meeting_actions.py:104
 #: ./views/meeting.py:355
 msgid "Mail settings"
-msgstr ""
+msgstr "Epostinställningar"
 
 #: ./schemas/meeting.py:67
 msgid "Mail settings for meeting"
-msgstr ""
+msgstr "Epostinställningar för mötet"
 
 #: ./plugins/majority_poll.py:17
 msgid "Majority Poll"
@@ -599,11 +599,11 @@ msgstr "Majoritetsomröstning"
 
 #: ./schemas/invite_ticket.py:61
 msgid "Manage invitations"
-msgstr ""
+msgstr "Påminn inbjudna"
 
 #: ./schemas/invite_ticket.py:61
 msgid "Manage invitations to the meeting"
-msgstr ""
+msgstr "Påminn deltagare som ännu inte anlänt till mötet"
 
 #. Default: "Manage invites"
 #: ./views/components/meeting_actions.py:108
@@ -649,7 +649,7 @@ msgstr "Meddelande"
 
 #: ./views/help.py:77
 msgid "Message sent to the moderators"
-msgstr ""
+msgstr "Meddelandet har skickats till moderator"
 
 #. Default: "Moderate"
 #: ./views/templates/participants.pt:31
@@ -677,7 +677,7 @@ msgstr "Mer..."
 #: ./schemas/help.py:12
 #: ./schemas/permissions.py:49
 msgid "Name"
-msgstr ""
+msgstr "Namn"
 
 #: ./schemas/meeting.py:38
 msgid "Name visible on system mail sent from this meeting"
@@ -716,15 +716,15 @@ msgstr "Öppen"
 
 #: ./views/meeting.py:423
 msgid "Order agenda items"
-msgstr ""
+msgstr "Ordna dagordningspunkt"
 
 #: ./views/meeting.py:439
 msgid "Order updated"
-msgstr ""
+msgstr "Ordningen är uppdaterad"
 
 #: ./views/components/meeting_actions.py:111
 msgid "Participant list"
-msgstr ""
+msgstr "Deltagarlista"
 
 #. Default: "Participants"
 #: ./views/components/meeting_actions.py:80
@@ -733,7 +733,7 @@ msgstr "Deltagare"
 
 #: ./views/components/meeting_actions.py:106
 msgid "Participants email addresses"
-msgstr ""
+msgstr "Deltagarnas epostadresser"
 
 #: ./schemas/user.py:25
 msgid "Password"
@@ -749,19 +749,19 @@ msgstr "Lösenord satt. Du kan logga in nu."
 
 #: ./schemas/permissions.py:39
 msgid "Permission"
-msgstr ""
+msgstr "Rättigheter"
 
 #: ./schemas/permissions.py:65
 msgid "Permissions"
-msgstr ""
+msgstr "Rättigheter"
 
 #: ./schemas/permissions.py:65
 msgid "Permissions for all users"
-msgstr ""
+msgstr "Alla användares rättigheter"
 
 #: ./schemas/permissions.py:39
 msgid "Permissions for user"
-msgstr ""
+msgstr "Rättigheter för användare"
 
 #. Default: "Please confirm"
 #: ./views/templates/main.pt:127
@@ -777,7 +777,7 @@ msgstr "Omröstning"
 
 #: ./views/poll.py:82
 msgid "Poll config"
-msgstr ""
+msgstr "Omröstningsinställning"
 
 #. Default: "Poll method"
 #: ./views/templates/polls.pt:27
@@ -807,11 +807,11 @@ msgstr "Omröstningar"
 #: ./views/components/meeting_actions.py:105
 #: ./views/meeting.py:320
 msgid "Presentation"
-msgstr ""
+msgstr "Mötespresentation"
 
 #: ./schemas/meeting.py:62
 msgid "Presentation of meeting"
-msgstr ""
+msgstr "Presentation av mötet"
 
 #. Default: "Private"
 #: ./views/components/navigation.py:41
@@ -891,7 +891,7 @@ msgstr "Begär"
 
 #: ./schemas/user.py:95
 msgid "Request new password"
-msgstr ""
+msgstr "Begär nytt lösenord"
 
 #: ./models/schemas.py:20
 msgid "Resend"
@@ -946,7 +946,7 @@ msgstr "Välj ett möte nedan"
 
 #: ./models/schemas.py:22
 msgid "Send"
-msgstr ""
+msgstr "Skicka"
 
 #: ./views/meeting.py:170
 msgid "Send meeting invitations"
@@ -959,7 +959,7 @@ msgstr "Serverloggar"
 
 #: ./views/components/meeting_actions.py:79
 msgid "Settings"
-msgstr ""
+msgstr "Inställningar"
 
 #: ./schemas/poll.py:87
 msgid "Should a rejection proposal be added to the poll"
@@ -995,7 +995,7 @@ msgstr "Starttid för omröstningen."
 
 #: ./schemas/help.py:20
 msgid "Subject"
-msgstr ""
+msgstr "Ämne"
 
 #: ./views/base_edit.py:82
 #: ./views/users.py:75
@@ -1026,11 +1026,11 @@ msgstr "Förljande adress(er) är ogiltiga: ${emails}"
 
 #: ./views/templates/poll_state_info.pt:15
 msgid "The poll ends ${end_time}"
-msgstr ""
+msgstr "Omröstningen avslutas ${end_time}"
 
 #: ./views/templates/poll_state_info.pt:12
 msgid "The poll starts ${start_time}"
-msgstr ""
+msgstr "Omröstningen startar ${start_time}"
 
 #. Default: "The time that the server think it is. If this is wrong, you need to change the server time."
 #: ./views/templates/snippets/global_actions.pt:5
@@ -1089,47 +1089,47 @@ msgstr "Använd länken ovan och registrera dig. Du kommer att få tillträde di
 
 #: ./schemas/meeting.py:53
 msgid "Use this form to add a meeting"
-msgstr ""
+msgstr "Använd detta forumlär för att skapa ett möte"
 
 #: ./schemas/poll.py:57
 msgid "Use this form to add a poll"
-msgstr ""
+msgstr "Använd detta formulär för att skapa en omröstning"
 
 #: ./schemas/user.py:49
 msgid "Use this form to add a user"
-msgstr ""
+msgstr "Använd detta formulär för att lägga till en användare"
 
 #: ./schemas/agenda_item.py:11
 msgid "Use this form to add an agenda item"
-msgstr ""
+msgstr "Använd detta formulär för att lägga till en dagordnignspunkt"
 
 #: ./schemas/user.py:90
 msgid "Use this form to change password"
-msgstr ""
+msgstr "Använd detta formulär för att ändra lösenord"
 
 #: ./schemas/meeting.py:54
 msgid "Use this form to edit a meeting"
-msgstr ""
+msgstr "Använd detta formulär för att redigera din mötespresentation"
 
 #: ./schemas/poll.py:58
 msgid "Use this form to edit a poll"
-msgstr ""
+msgstr "Använd detta formulär för att redigera en omröstning"
 
 #: ./schemas/user.py:65
 msgid "Use this form to edit a user"
-msgstr ""
+msgstr "Använd detta formulär för att redigera din användarprofil"
 
 #: ./schemas/agenda_item.py:12
 msgid "Use this form to edit an agenda item"
-msgstr ""
+msgstr "Använd detta formulär för att redigera en dagordningspunkt"
 
 #: ./schemas/site.py:9
 msgid "Use this form to edit the site root"
-msgstr ""
+msgstr "Använd detta formulär för att redigera site root"
 
 #: ./schemas/user.py:95
 msgid "Use this form to request a new password"
-msgstr ""
+msgstr "Använd detta formulär för att begära ett nytt lösenord"
 
 #: ./models/user.py:32
 msgid "User"
@@ -1177,11 +1177,11 @@ msgstr "VoteIT"
 
 #: ./views/help.py:69
 msgid "VoteIT - ${meeting}"
-msgstr ""
+msgstr "VoteIT - ${meeting}"
 
 #: ./views/components/help_actions.py:23
 msgid "VoteIT Wiki"
-msgstr ""
+msgstr "VoteIT Wiki"
 
 #. Default: "VoteIT logs"
 #: ./views/templates/server_logs.pt:9
@@ -1487,7 +1487,7 @@ msgstr "Omröstning är nu i tillståndet 'kommande'. Den är nu synlig för mö
 #. Default: "The poll is created in private state, to show it the participants you have to change the state to upcoming."
 #: ./views/base_edit.py:91
 msgid "private_poll_info"
-msgstr ""
+msgstr "Denna omröstning är skapad i status privat, för att visa den för dina deltagare måste du ändra dess status till kommande."
 
 #. Default: "The profile image comes from the <a href=\"http://www.gravatar.com\" target=\"_blank\">Gravatar network</a>. It's taken from your current email address. If you want to change the picture, simply go to the Gravatar site and change your picture for the email you use in VoteIT."
 #: ./views/templates/user.pt:26
@@ -1538,7 +1538,7 @@ msgstr "Vänligen granska de omröstningsmetodspecifika inställningarna. Standa
 #. Default: "To get back to the poll settings you click the cogwheel menu and select configure poll."
 #: ./views/poll.py:94
 msgid "review_poll_settings_info_getback"
-msgstr ""
+msgstr "För att komma tillbak till omröstningsinställningarna klicka på omröstningens kugghjul och välj Omröstningsinställning."
 
 #. Default: "Successfully added and sent ${mail_count} invites"
 #: ./views/meeting.py:199
