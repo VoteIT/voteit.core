@@ -233,56 +233,6 @@ $(document).ready(function() {
     };
 });
 
-
-// Contact & Support tab
-$(document).ready(function() {
-    $('#help-tab > h5').qtip({
-        content: { 
-            title: {
-                text: voteit.translation['help_contact'],
-                button: true,
-            },
-            text: $("#help-modal"),
-        },
-        show: {
-            event: "click",
-            modal: true,
-        },
-        hide: {
-            event: false,
-        },
-        position: {
-            my: 'center',
-            at: 'center',
-            target: $(document.body),
-        },
-        style: {
-            classes: "help-modal",
-            width: "400px",
-            height: "400px",
-        },
-    });
-});
-
-$(document).ready(function() {
-	$("#help-tabs form").each(function() {
-		oid = $(this).attr('id').replace('#');
-		deform_ajaxify(null, null, null, null, oid);
-	});
-    $("#help-modal > ul a.tab").click(function(event) {
-        /* IE might throw an error calling preventDefault(), so use a try/catch block. */
-        try { event.preventDefault(); } catch(e) {}
-        
-        
-        $("#help-actions a.tab").removeClass("active");
-        $(this).addClass("active");
-        
-        $("#help-tabs div.tab").removeClass("active");
-        $("#help-tabs").find($(this).attr("href")).addClass("active");
-    });
-});
-
-
 $(document).ready(function() {
 	$('#polls a.poll_booth').live('click', function() {
 	    /* stops normal events function 

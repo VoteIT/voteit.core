@@ -817,65 +817,6 @@ form.deform .section.first h3 {
     line-height: inherit;
 }
 
-#help-tab {
-    position: fixed;
-    right: -45px;
-    top: 50%;
-    z-index: 9999;
-    -webkit-transform: rotate(-90deg); 
-    -moz-transform:rotate(-90deg);
-    -o-transform:rotate(-90deg);
-    filter:progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
-    -ms-filter:progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
-    padding: 5px;
-    color: white;
-    background: #054265;
-    cursor: pointer;
-}
-
-#help-tab h5 {
-    margin: 0;
-    padding: 0;
-}
-
-#help-tab #help-actions,
-#help-tab #help-tabs {
-    display: none;
-}
-
-.help-modal {
-    min-width: 500px !important;
-    width: 500px !important;
-    border: none;
-}
-
-.help-modal .ui-tooltip-titlebar,
-.help-modal .ui-tooltip-content {
-	background: #86A3B4;
-}
-
-#help-modal > ul li {
-    display: inline;
-	margin-left: 0.5em;
-    list-style-type: none;
-}
-
-#help-modal a.tab.active {
-    font-weight: bold;
-}
-
-#help-modal #help-tabs {
-	margin: 0.8em 0.6em 0.6em;
-}
-
-#help-modal div.tab {
-	display: none;
-}
-
-#help-modal div.tab.active {
-	display: block;
-}
-
 /* reorder */
 .agenda-item-sort li.buttons {
 	margin: 6px 0px;
