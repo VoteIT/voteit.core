@@ -12,7 +12,7 @@
     <tal:root condition="api.userid and not api.meeting">
         <div class="block">
             <div id="add_menu" tal:condition="api.context_has_permission('Add Meeting', api.root)">
-                <a class="add_button" tal:attributes="href api.resource_url(api.root, request) + '@@meeting_wizard_step1'">
+                <a class="add_button" tal:attributes="href api.resource_url(api.root, request) + '@@add?content_type=Meeting'">
                     <img src="${request.application_url}/static/icons/icon_add.png"
                          width="16" height="16"
                          alt="Add meeting" title="Add meeting"
