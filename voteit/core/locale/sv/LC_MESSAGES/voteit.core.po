@@ -239,7 +239,7 @@ msgstr "Ändra"
 
 #: ./schemas/layout.py:45
 msgid "Change layout of meeting"
-msgstr "Ändra möteslayout"
+msgstr "Ändra hur olika funktioner i mötet ordnas (avancerad funktion)."
 
 #. Default: "Change password"
 #: ./schemas/user.py:90
@@ -285,7 +285,7 @@ msgstr "Stäng"
 #: ./workflows/agenda_item.xml
 #: ./workflows/invite_ticket.xml
 msgid "Closed"
-msgstr "Stängd"
+msgstr "Avslutad"
 
 #: ./views/components/help_actions.py:30
 msgid "Contact"
@@ -428,7 +428,7 @@ msgstr "Epostadressen din inbjudan skickades till."
 
 #: ./views/templates/participants_emails.pt:11
 msgid "Email addresses of participants"
-msgstr "Deltagarepostadresser"
+msgstr "Epostadresser till alla registrerade deltagare"
 
 #: ./validators.py:192
 msgid "Email matches, but token doesn't"
@@ -510,7 +510,7 @@ msgstr "Bjud in deltagare"
 
 #: ./schemas/invite_ticket.py:22
 msgid "Invite participants to the meeting"
-msgstr "Bjud in deltagare till mötet"
+msgstr "Skicka inbjudningar till deltagarna per epost. Om olika deltagare ska ha olika rättighter skickar du inbjudingarna en rättighetsnivå i taget. Normalt ska deltagare ha diskutera, yrka och rösta."
 
 #: ./models/invite_ticket.py:35
 msgid "Invite ticket"
@@ -716,7 +716,8 @@ msgstr "Öppen"
 
 #: ./views/meeting.py:423
 msgid "Order agenda items"
-msgstr "Ordna dagordningspunkt"
+msgstr "Ordna dagordningspunkter med dra och släpp
+"
 
 #: ./views/meeting.py:439
 msgid "Order updated"
@@ -761,7 +762,7 @@ msgstr "Alla användares rättigheter"
 
 #: ./schemas/permissions.py:39
 msgid "Permissions for user"
-msgstr "Rättigheter för användare"
+msgstr "Registrerade användares användarnamn kan här användas för att ändra deras rättigheter i mötet. Läs mer om rättigheter i manualen."
 
 #. Default: "Please confirm"
 #: ./views/templates/main.pt:127
@@ -811,7 +812,7 @@ msgstr "Mötespresentation"
 
 #: ./schemas/meeting.py:62
 msgid "Presentation of meeting"
-msgstr "Presentation av mötet"
+msgstr "Ändra förstasidan för mötet till en informativ och trevlig sida för dina användare. Det går bra att lägga er egen logga här. Tidsplanen kan placeras i en tabell och löpande uppdateras. Lägg också gärna in länkar till användarmanual och eventuella möteshandlingar."
 
 #. Default: "Private"
 #: ./views/components/navigation.py:41
@@ -917,7 +918,7 @@ msgstr "Roller"
 
 #: ./schemas/permissions.py:62
 msgid "Roles for user"
-msgstr "Roller för användare"
+msgstr "rättigheter för en specifik användare"
 
 #: ./views/components/meeting_actions.py:92
 #: ./views/permissions.py:25
@@ -1350,7 +1351,7 @@ msgstr "Du kan inte sätta en dagordningspunkt i pågående om mötet inte är p
 #. Default: "This meeting still has ongoing Agenda items in it. You can't close it until they're closed."
 #: ./models/meeting.py:109
 msgid "error_cant_close_meeting_with_ongoing_ais"
-msgstr "Detta möte har ännu pågående dagordningspunkter. Du kan inte stänga mötet förrän dagordningspunkterna är stängda."
+msgstr "Detta möte har ännu pågående dagordningspunkter. Du kan inte stänga mötet förrän dagordningspunkterna är avslutade."
 
 #. Default: "A poll with no proposal can not be set to ongoing. Click link to edit: ${tag}"
 #: ./models/poll.py:305
