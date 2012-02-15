@@ -1,6 +1,6 @@
 import datetime
-import iso8601
 
+import iso8601
 from zope.component import getUtility
 from colander import SchemaType
 from colander import Invalid
