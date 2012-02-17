@@ -670,10 +670,7 @@ table.listing > tbody > tr.even > td {
 }
 
 .deform > fieldset > legend {
-	display: none;
-}
-
-form.deform .section.first h3 {
+	width: 100%;
 	border-bottom: 2px solid #86A3B4;
     padding-bottom: 0.5em;
     font-size: 175%;
