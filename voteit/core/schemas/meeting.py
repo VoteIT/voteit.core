@@ -59,7 +59,7 @@ class MeetingSchema(colander.MappingSchema):
     meeting_mail_address = meeting_mail_address_node();    
     access_policy = access_policy_node();
 
-@schema_factory('PresentationMeetingSchema', title = _(u"Presentation"), description = _(u"Presentation of meeting"))
+@schema_factory('PresentationMeetingSchema', title = _(u"Presentation"), description = _(u"PresentationForm", default = u"Edit the first page of the meeting into an informative and pleasant page for your users. You can for instance placee your logo here. The time table can be presented in a table and updated as you go along. Add links to the manual and to meeting documents."))
 class PresentationMeetingSchema(colander.MappingSchema):
     title = title_node();
     description = description_node();
