@@ -13,6 +13,8 @@ from pyramid.url import resource_url
 from pyramid.traversal import resource_path
 from betahaus.pyracont.factories import createContent
 from betahaus.pyracont.factories import createSchema
+from pyramid.renderers import render
+from pyramid.response import Response
 
 from voteit.core import security
 from voteit.core import VoteITMF as _
@@ -29,6 +31,7 @@ from voteit.core.models.schemas import button_delete
 from voteit.core.validators import deferred_token_form_validator
 from betahaus.viewcomponent.interfaces import IViewGroup
 from voteit.core.helpers import generate_slug
+from voteit.core.helpers import ajax_options
 from voteit.core import fanstaticlib
 
 
@@ -317,98 +320,49 @@ class MeetingView(BaseView):
 
     @view_config(context=IMeeting, name="presentation", renderer="templates/base_edit.pt", permission=security.EDIT)
     def presentation(self):
-        self.response['title'] = _(u"Presentation")
-
         schema = createSchema("PresentationMeetingSchema").bind(context=self.context, request=self.request)
-        add_csrf_token(self.context, self.request, schema)
-            
-        form = Form(schema, buttons=(button_save, button_cancel))
-        self.api.register_form_resources(form)
-
-        post = self.request.POST
-        if 'save' in post:
-            controls = post.items()
-            try:
-                appstruct = form.validate(controls)
-            except ValidationFailure, e:
-                self.response['form'] = e.render()
-                return self.response
-            
-            self.context.set_field_appstruct(appstruct)
-            url = resource_url(self.context, self.request)
-            return HTTPFound(location=url)
-
-        if 'cancel' in post:
-            self.api.flash_messages.add(_(u"Canceled"))
-
-            url = resource_url(self.context, self.request)
-            return HTTPFound(location=url)
-
-        #No action - Render form
-        appstruct = self.context.get_field_appstruct(schema)
-        self.response['form'] = form.render(appstruct)
-        return self.response
-
+        return self.form(schema)
     
     @view_config(context=IMeeting, name="mail_settings", renderer="templates/base_edit.pt", permission=security.EDIT)
     def mail_settings(self):
-        self.response['title'] = _(u"Mail settings")
+        schema = createSchema("AccessPolicyMeetingSchema").bind(context=self.context, request=self.request)
+        return self.form(schema)
         
-        schema = createSchema("MailSettingsMeetingSchema").bind(context=self.context, request=self.request)
-        add_csrf_token(self.context, self.request, schema)
-            
-        form = Form(schema, buttons=(button_save, button_cancel))
-        self.api.register_form_resources(form)
-
-        post = self.request.POST
-        if 'save' in post:
-            controls = post.items()
-            try:
-                appstruct = form.validate(controls)
-            except ValidationFailure, e:
-                self.response['form'] = e.render()
-                return self.response
-            
-            self.context.set_field_appstruct(appstruct)
-            url = resource_url(self.context, self.request)
-            return HTTPFound(location=url)
-
-        if 'cancel' in post:
-            self.api.flash_messages.add(_(u"Canceled"))
-            url = resource_url(self.context, self.request)
-            return HTTPFound(location=url)
-
-        #No action - Render form
-        appstruct = self.context.get_field_appstruct(schema)
-        self.response['form'] = form.render(appstruct)
-        return self.response
-    
     @view_config(context=IMeeting, name="access_policy", renderer="templates/base_edit.pt", permission=security.EDIT)
     def access_policy(self):
-        self.response['title'] = _(u"Access policy")
-        
         schema = createSchema("AccessPolicyMeetingSchema").bind(context=self.context, request=self.request)
+        return self.form(schema)
+        
+    def form(self, schema):
         add_csrf_token(self.context, self.request, schema)
             
-        form = Form(schema, buttons=(button_save, button_cancel))
+        form = Form(schema, buttons=(button_save, button_cancel), use_ajax=True, ajax_options=ajax_options)
         self.api.register_form_resources(form)
+        fanstaticlib.jquery_form.need()
 
         post = self.request.POST
-        if 'save' in post:
+        if 'save' in post or self.request.method == 'POST' and self.request.is_xhr:
             controls = post.items()
             try:
                 appstruct = form.validate(controls)
             except ValidationFailure, e:
                 self.response['form'] = e.render()
+                if self.request.is_xhr:
+                    return Response(render("templates/ajax_edit.pt", self.response, request = self.request))
+                
                 return self.response
-
+            
             self.context.set_field_appstruct(appstruct)
             
             url = resource_url(self.context, self.request)
+            if self.request.is_xhr:
+                return Response(headers = [('X-Relocate', url)])
             return HTTPFound(location=url)
 
+        #FIXME: with ajax post this does not work no, we'll need to fix this
         if 'cancel' in post:
             self.api.flash_messages.add(_(u"Canceled"))
+
             url = resource_url(self.context, self.request)
             return HTTPFound(location=url)
 
@@ -416,7 +370,6 @@ class MeetingView(BaseView):
         appstruct = self.context.get_field_appstruct(schema)
         self.response['form'] = form.render(appstruct)
         return self.response
-    
     
     @view_config(context=IMeeting, name="order_agenda_items", renderer="templates/order_agenda_items.pt", permission=security.EDIT)
     def order_agenda_items(self):

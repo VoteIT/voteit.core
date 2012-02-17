@@ -10,6 +10,17 @@ from slugify import slugify
 from voteit.core.models.interfaces import IMeeting
 
 
+ajax_options = """
+{success:
+  function (rText, sText, xhr, form) {
+    var url = xhr.getResponseHeader('X-Relocate');
+    if (url) {
+      document.location = url;
+    };
+   }
+}
+"""
+
 AT_PATTERN = re.compile(r'(\A|\s)@([a-zA-Z1-9]{1}[\w-]{1,14})')
 
 def at_userid_link(text, obj):
