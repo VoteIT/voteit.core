@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2012-02-14 14:50+0000\n"
+"POT-Creation-Date: 2012-02-17 13:04+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -83,7 +83,7 @@ msgstr ""
 msgid "About me"
 msgstr ""
 
-#: ./views/templates/main.pt:130
+#: ./views/templates/main.pt:127
 msgid "About..."
 msgstr ""
 
@@ -177,7 +177,7 @@ msgstr ""
 msgid "Approved"
 msgstr ""
 
-#: ./views/templates/main.pt:128
+#: ./views/templates/main.pt:125
 msgid "Are you sure you want to change the state?"
 msgstr ""
 
@@ -185,7 +185,7 @@ msgstr ""
 msgid "Are you sure you want to delete this item?"
 msgstr ""
 
-#: ./views/templates/main.pt:129
+#: ./views/templates/main.pt:126
 msgid "Are you sure you want to retract this proposal?"
 msgstr ""
 
@@ -217,10 +217,6 @@ msgstr ""
 msgid "Change"
 msgstr ""
 
-#: ./schemas/layout.py:45
-msgid "Change layout of meeting"
-msgstr ""
-
 #: ./schemas/user.py:90
 #: ./views/templates/user.pt:19
 msgid "Change password"
@@ -250,7 +246,7 @@ msgstr ""
 msgid "Click to go to meeting overview"
 msgstr ""
 
-#: ./views/templates/main.pt:126
+#: ./views/templates/main.pt:123
 msgid "Close"
 msgstr ""
 
@@ -375,6 +371,11 @@ msgstr ""
 msgid "Edit user"
 msgstr ""
 
+#. Default: "Use this form to change a registered users permissions by entering username and the permissions you want. Read more about permissions in the manual."
+#: ./schemas/permissions.py:39
+msgid "EditPermissions"
+msgstr ""
+
 #: ./schemas/help.py:16
 #: ./schemas/user.py:29
 #: ./views/templates/participants.pt:26
@@ -435,7 +436,7 @@ msgstr ""
 msgid "Have an account already?"
 msgstr ""
 
-#: ./views/templates/main.pt:133
+#: ./views/templates/main.pt:130
 msgid "Help & Contact"
 msgstr ""
 
@@ -466,12 +467,13 @@ msgstr ""
 msgid "Invite participants"
 msgstr ""
 
-#: ./schemas/invite_ticket.py:22
-msgid "Invite participants to the meeting"
-msgstr ""
-
 #: ./models/invite_ticket.py:35
 msgid "Invite ticket"
+msgstr ""
+
+#. Default: "Send invites to participants with email. If different participants should have different rights you should send invites to one level of rights at a time. Normally users have discuss, propose and vote."
+#: ./schemas/invite_ticket.py:22
+msgid "InviteToMeeting"
 msgstr ""
 
 #: ./models/date_time_util.py:121
@@ -504,7 +506,7 @@ msgstr ""
 msgid "Like"
 msgstr ""
 
-#: ./views/templates/main.pt:132
+#: ./views/templates/main.pt:129
 msgid "Loading..."
 msgstr ""
 
@@ -614,7 +616,7 @@ msgstr ""
 msgid "Moderator menu"
 msgstr ""
 
-#: ./views/templates/main.pt:131
+#: ./views/templates/main.pt:128
 msgid "More..."
 msgstr ""
 
@@ -631,7 +633,7 @@ msgstr ""
 msgid "Need to register?"
 msgstr ""
 
-#: ./views/templates/main.pt:125
+#: ./views/templates/main.pt:122
 msgid "No"
 msgstr ""
 
@@ -655,7 +657,7 @@ msgid "Open"
 msgstr ""
 
 #: ./views/meeting.py:423
-msgid "Order agenda items"
+msgid "Order agenda items by pulling up and down"
 msgstr ""
 
 #: ./views/meeting.py:439
@@ -698,17 +700,17 @@ msgstr ""
 msgid "Permissions for all users"
 msgstr ""
 
-#: ./schemas/permissions.py:39
+#: ./schemas/permissions.py:70
 msgid "Permissions for user"
 msgstr ""
 
-#: ./views/templates/main.pt:127
+#: ./views/templates/main.pt:124
 msgid "Please confirm"
 msgstr ""
 
 #: ./models/poll.py:61
 #: ./views/templates/agenda_item.pt:20
-#: ./views/templates/main.pt:134
+#: ./views/templates/main.pt:131
 msgid "Poll"
 msgstr ""
 
@@ -742,8 +744,9 @@ msgstr ""
 msgid "Presentation"
 msgstr ""
 
+#. Default: "Edit the first page of the meeting into an informative and pleasant page for your users. You can for instance placee your logo here. The time table can be presented in a table and updated as you go along. Add links to the manual and to meeting documents."
 #: ./schemas/meeting.py:62
-msgid "Presentation of meeting"
+msgid "PresentationForm"
 msgstr ""
 
 #: ./views/components/navigation.py:41
@@ -955,11 +958,11 @@ msgstr ""
 msgid "The title of the rejection proposal"
 msgstr ""
 
-#: ./views/templates/main.pt:69
+#: ./views/templates/main.pt:66
 msgid "This meeting has closed."
 msgstr ""
 
-#: ./views/templates/main.pt:66
+#: ./views/templates/main.pt:63
 msgid "This meeting hasn't started yet."
 msgstr ""
 
@@ -1117,7 +1120,7 @@ msgstr ""
 msgid "Welcome text of the email that will be sent"
 msgstr ""
 
-#: ./views/templates/main.pt:124
+#: ./views/templates/main.pt:121
 #: ./views/templates/participants.pt:56
 msgid "Yes"
 msgstr ""
@@ -1204,6 +1207,11 @@ msgstr ""
 
 #: ./views/templates/snippets/user_tag.pt:17
 msgid "and"
+msgstr ""
+
+#. Default: "Change layout of the different parts in the meeting (advanced feature)"
+#: ./schemas/layout.py:45
+msgid "change_layout"
 msgstr ""
 
 #. Default: "Proposal '${name}' already in state ${state}"
