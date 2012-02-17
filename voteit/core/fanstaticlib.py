@@ -36,7 +36,7 @@ _qtip_js = Resource(voteit_core_jslib, 'jquery.qtip.js', minified = 'jquery.qtip
 qtip = Group((_qtip_css, _qtip_js))
 
 #Deform
-_deform_js = Resource(deformlib, 'scripts/deform.js')
+_deform_js = Resource(deformlib, 'scripts/deform.js', depends = (jquery_142,))
 _voteit_deform_css = Resource(voteit_core_csslib, 'deform.css', depends = (reset,))
 
 jquery_form = Resource(deformlib, 'scripts/jquery.form.js', depends = (jquery_142,))
@@ -69,6 +69,6 @@ DEFORM_RESOURCES = {
     'jquery.form': (jquery_142, jquery_form,),
     'jquery.maskedinput': (jquery_142, jquery_maskedinput,),
     'datetimepicker': (jquery_142, jquery_timepicker,),
-    'deform': (voteit_deform,),
+    'deform': (jquery_142, voteit_deform,),
     'tinymce': (tinymce,),
 }

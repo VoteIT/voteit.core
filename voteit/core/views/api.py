@@ -48,7 +48,6 @@ class APIView(object):
         
         self.dt_util = request.registry.getUtility(IDateTimeUtil)
         self.flash_messages = FlashMessages(request)
-        self.init_deform = False
 
         #Main macro
         self.main_template = get_renderer('templates/main.pt').implementation()
@@ -74,7 +73,6 @@ class APIView(object):
 
     def register_form_resources(self, form):
         """ Append form resources if they don't already exist in self.form_resources """
-        self.init_deform = True
         for (key, version) in form.get_widget_requirements():
             for resource in DEFORM_RESOURCES.get(key, ()):
                 resource.need()

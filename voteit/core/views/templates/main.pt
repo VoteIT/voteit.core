@@ -10,10 +10,7 @@
            <title>VoteIT</title>
         </metal:page_title>
     <meta name="keywords" content="python web application" />
-    <meta name="description" content="pyramid web application" />    
-    <script type="text/javascript" tal:condition="api.init_deform">
-    	deform.load()
-	</script>
+    <meta name="description" content="pyramid web application" />
     <metal:head define-slot="head"></metal:head>
 </head>
 <body>
