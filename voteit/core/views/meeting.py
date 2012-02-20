@@ -405,3 +405,8 @@ class MeetingView(BaseView):
         fanstaticlib.jquery_142.need()
 
         return self.response
+
+    @view_config(context = IMeeting, name = "minutes", renderer = "templates/minutes.pt", permission = security.VIEW)
+    def minutes(self):
+        """ Show an overview of the meeting activities. Should work as a template for minutes. """
+        return self.response

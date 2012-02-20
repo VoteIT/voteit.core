@@ -1,0 +1,20 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      metal:use-macro="api.main_template.macros['master']"
+	  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+	  i18n:domain="voteit.core">
+<body>
+<h1 metal:fill-slot="page_heading">${context.title}</h1>
+<div metal:fill-slot="content" class="content_wrapper">
+    
+    <div tal:condition="api.meeting.get_workflow_state() != 'closed'" i18n:translate="">
+        This meeting hasn't closed yet so these minutes won't be complete
+    </div>
+    
+    <div><span i18n:translate="">Meeting opened</span>: ${api.dt_util.dt_format(context.start_time)|string:-}</div>
+
+</div>
+</body>
+</html>
