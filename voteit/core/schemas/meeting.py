@@ -62,7 +62,7 @@ class MeetingSchema(colander.MappingSchema):
 @schema_factory('PresentationMeetingSchema',
                 title = _(u"Presentation"),
                 description = _(u"presentation_meeting_schema_main_description",
-                                default = u"Edit the first page of the meeting into an informative and pleasant page for your users. You can for instance placee your logo here. The time table can be presented in a table and updated as you go along. Add links to the manual and to meeting documents."))
+                                default = u"Edit the first page of the meeting into an informative and pleasant page for your users. You can for instance place your logo here. The time table can be presented in a table and updated as you go along. It's also advised to add links to the manual and to meeting documents."))
 class PresentationMeetingSchema(colander.MappingSchema):
     title = title_node();
     description = description_node();

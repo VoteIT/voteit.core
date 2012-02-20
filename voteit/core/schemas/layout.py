@@ -42,7 +42,7 @@ def deferred_ai_layout_right_widget(node, kw):
     choices.append(('', _(u"<Disable>")))
     return deform.widget.RadioChoiceWidget(values=choices)
 
-@schema_factory('LayoutSchema', title=_(u"Layout"), description=_(u"layut_schema_main_description", default = u"Change layout of the different parts in the meeting (advanced feature)"))
+@schema_factory('LayoutSchema', title=_(u"Layout"), description=_(u"layuot_schema_main_description", default = u"Change layout of the different parts in the meeting (advanced feature)"))
 class LayoutSchema(colander.Schema):
     meeting_left_widget = colander.SchemaNode(colander.String(),
                                               title = _(u"Meeting left column widget"),

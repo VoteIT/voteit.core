@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2012-02-17 13:04+0000\n"
+"POT-Creation-Date: 2012-02-20 12:45+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -91,14 +91,9 @@ msgstr ""
 msgid "Access granted!"
 msgstr ""
 
-#: ./schemas/meeting.py:72
+#: ./schemas/meeting.py:75
 #: ./views/components/meeting_actions.py:103
-#: ./views/meeting.py:388
 msgid "Access policy"
-msgstr ""
-
-#: ./schemas/meeting.py:72
-msgid "Access policy of the meeting"
 msgstr ""
 
 #: ./views/components/moderator_actions.py:45
@@ -208,7 +203,7 @@ msgid "Cancel"
 msgstr ""
 
 #: ./views/base_edit.py:99
-#: ./views/meeting.py:153
+#: ./views/meeting.py:156
 #: ./views/poll.py:63
 msgid "Canceled"
 msgstr ""
@@ -268,8 +263,8 @@ msgstr ""
 msgid "Couldn't find any user with userid ${userid}"
 msgstr ""
 
-#: ./schemas/invite_ticket.py:66
-#: ./views/meeting.py:213
+#: ./schemas/invite_ticket.py:69
+#: ./views/meeting.py:216
 msgid "Current invitations"
 msgstr ""
 
@@ -371,11 +366,6 @@ msgstr ""
 msgid "Edit user"
 msgstr ""
 
-#. Default: "Use this form to change a registered users permissions by entering username and the permissions you want. Read more about permissions in the manual."
-#: ./schemas/permissions.py:39
-msgid "EditPermissions"
-msgstr ""
-
 #: ./schemas/help.py:16
 #: ./schemas/user.py:29
 #: ./views/templates/participants.pt:26
@@ -424,7 +414,7 @@ msgstr ""
 msgid "From"
 msgstr ""
 
-#: ./schemas/permissions.py:56
+#: ./schemas/permissions.py:59
 msgid "Groups"
 msgstr ""
 
@@ -462,18 +452,13 @@ msgstr ""
 msgid "Invalid security token. Did you click the link in your email?"
 msgstr ""
 
-#: ./schemas/invite_ticket.py:22
+#: ./schemas/invite_ticket.py:23
 #: ./views/components/meeting_actions.py:109
 msgid "Invite participants"
 msgstr ""
 
 #: ./models/invite_ticket.py:35
 msgid "Invite ticket"
-msgstr ""
-
-#. Default: "Send invites to participants with email. If different participants should have different rights you should send invites to one level of rights at a time. Normally users have discuss, propose and vote."
-#: ./schemas/invite_ticket.py:22
-msgid "InviteToMeeting"
 msgstr ""
 
 #: ./models/date_time_util.py:121
@@ -490,7 +475,7 @@ msgid "Last name"
 msgstr ""
 
 #: ./schemas/layout.py:45
-#: ./views/meeting.py:267
+#: ./views/meeting.py:270
 msgid "Layout"
 msgstr ""
 
@@ -536,25 +521,20 @@ msgstr ""
 msgid "Logout"
 msgstr ""
 
-#: ./schemas/meeting.py:67
+#: ./schemas/meeting.py:70
 #: ./views/components/meeting_actions.py:104
-#: ./views/meeting.py:355
 msgid "Mail settings"
-msgstr ""
-
-#: ./schemas/meeting.py:67
-msgid "Mail settings for meeting"
 msgstr ""
 
 #: ./plugins/majority_poll.py:17
 msgid "Majority Poll"
 msgstr ""
 
-#: ./schemas/invite_ticket.py:61
+#: ./schemas/invite_ticket.py:64
 msgid "Manage invitations"
 msgstr ""
 
-#: ./schemas/invite_ticket.py:61
+#: ./schemas/invite_ticket.py:64
 msgid "Manage invitations to the meeting"
 msgstr ""
 
@@ -566,7 +546,7 @@ msgstr ""
 msgid "Meeting"
 msgstr ""
 
-#: ./views/meeting.py:126
+#: ./views/meeting.py:129
 msgid "Meeting Access"
 msgstr ""
 
@@ -621,7 +601,7 @@ msgid "More..."
 msgstr ""
 
 #: ./schemas/help.py:12
-#: ./schemas/permissions.py:49
+#: ./schemas/permissions.py:52
 msgid "Name"
 msgstr ""
 
@@ -637,7 +617,7 @@ msgstr ""
 msgid "No"
 msgstr ""
 
-#: ./schemas/invite_ticket.py:46
+#: ./schemas/invite_ticket.py:49
 msgid "No HTML tags allowed."
 msgstr ""
 
@@ -656,11 +636,7 @@ msgstr ""
 msgid "Open"
 msgstr ""
 
-#: ./views/meeting.py:423
-msgid "Order agenda items by pulling up and down"
-msgstr ""
-
-#: ./views/meeting.py:439
+#: ./views/meeting.py:395
 msgid "Order updated"
 msgstr ""
 
@@ -688,20 +664,16 @@ msgstr ""
 msgid "Password set. You may login now."
 msgstr ""
 
-#: ./schemas/permissions.py:39
+#: ./schemas/permissions.py:40
 msgid "Permission"
 msgstr ""
 
-#: ./schemas/permissions.py:65
+#: ./schemas/permissions.py:69
 msgid "Permissions"
 msgstr ""
 
-#: ./schemas/permissions.py:65
-msgid "Permissions for all users"
-msgstr ""
-
 #: ./schemas/permissions.py:70
-msgid "Permissions for user"
+msgid "Permissions for all users"
 msgstr ""
 
 #: ./views/templates/main.pt:124
@@ -738,15 +710,9 @@ msgstr ""
 msgid "Polls"
 msgstr ""
 
-#: ./schemas/meeting.py:62
+#: ./schemas/meeting.py:63
 #: ./views/components/meeting_actions.py:105
-#: ./views/meeting.py:320
 msgid "Presentation"
-msgstr ""
-
-#. Default: "Edit the first page of the meeting into an informative and pleasant page for your users. You can for instance placee your logo here. The time table can be presented in a table and updated as you go along. Add links to the manual and to meeting documents."
-#: ./schemas/meeting.py:62
-msgid "PresentationForm"
 msgstr ""
 
 #: ./views/components/navigation.py:41
@@ -834,15 +800,15 @@ msgstr ""
 msgid "Retracted"
 msgstr ""
 
-#: ./schemas/permissions.py:67
+#: ./schemas/permissions.py:72
 msgid "Role settings for users"
 msgstr ""
 
-#: ./schemas/invite_ticket.py:26
+#: ./schemas/invite_ticket.py:29
 msgid "Roles"
 msgstr ""
 
-#: ./schemas/permissions.py:62
+#: ./schemas/permissions.py:65
 msgid "Roles for user"
 msgstr ""
 
@@ -872,7 +838,7 @@ msgstr ""
 msgid "Send"
 msgstr ""
 
-#: ./views/meeting.py:170
+#: ./views/meeting.py:173
 msgid "Send meeting invitations"
 msgstr ""
 
@@ -998,10 +964,6 @@ msgstr ""
 msgid "Use the above link and simply register. You'll be granted access instantly."
 msgstr ""
 
-#: ./schemas/meeting.py:53
-msgid "Use this form to add a meeting"
-msgstr ""
-
 #: ./schemas/poll.py:57
 msgid "Use this form to add a poll"
 msgstr ""
@@ -1016,10 +978,6 @@ msgstr ""
 
 #: ./schemas/user.py:90
 msgid "Use this form to change password"
-msgstr ""
-
-#: ./schemas/meeting.py:54
-msgid "Use this form to edit a meeting"
 msgstr ""
 
 #: ./schemas/poll.py:58
@@ -1046,7 +1004,7 @@ msgstr ""
 msgid "User"
 msgstr ""
 
-#: ./schemas/permissions.py:43
+#: ./schemas/permissions.py:46
 #: ./schemas/user.py:54
 #: ./views/templates/logs.pt:20
 msgid "UserID"
@@ -1116,7 +1074,7 @@ msgstr ""
 msgid "Warm regards, The VoteIT team"
 msgstr ""
 
-#: ./schemas/invite_ticket.py:45
+#: ./schemas/invite_ticket.py:48
 msgid "Welcome text of the email that will be sent"
 msgstr ""
 
@@ -1149,11 +1107,11 @@ msgstr ""
 msgid "You voted in this poll. Click above to show your vote."
 msgstr ""
 
-#: ./views/meeting.py:48
+#: ./views/meeting.py:51
 msgid "You're not logged in - before you can access meetings you need to do that."
 msgstr ""
 
-#: ./views/meeting.py:147
+#: ./views/meeting.py:150
 msgid "You've been granted access to the meeting. Welcome!"
 msgstr ""
 
@@ -1171,18 +1129,23 @@ msgid "Your vote was updated."
 msgstr ""
 
 #. Default: "Separate email addresses with a single line break."
-#: ./schemas/invite_ticket.py:39
+#: ./schemas/invite_ticket.py:42
 msgid "add_tickets_emails_description"
 msgstr ""
 
 #. Default: "Email addresses to give the roles above."
-#: ./schemas/invite_ticket.py:37
+#: ./schemas/invite_ticket.py:40
 msgid "add_tickets_emails_titles"
 msgstr ""
 
 #. Default: "One user can have more than one role. Note that to be able to propose,\n                        discuss and vote you need respective role. This is selected by default. If you want\n                        to add a user that can only view, select View and uncheck everything else."
-#: ./schemas/invite_ticket.py:28
+#: ./schemas/invite_ticket.py:31
 msgid "add_tickets_roles_description"
+msgstr ""
+
+#. Default: "Send invites to participants with email. If different participants should have different rights you should send invites to one level of rights at a time. Normally users have discuss, propose and vote."
+#: ./schemas/invite_ticket.py:24
+msgid "add_tickets_schema_main_description"
 msgstr ""
 
 #. Default: "Vote"
@@ -1209,11 +1172,6 @@ msgstr ""
 msgid "and"
 msgstr ""
 
-#. Default: "Change layout of the different parts in the meeting (advanced feature)"
-#: ./schemas/layout.py:45
-msgid "change_layout"
-msgstr ""
-
 #. Default: "Proposal '${name}' already in state ${state}"
 #: ./models/poll.py:185
 msgid "change_prop_state_already_that_state_error"
@@ -1234,7 +1192,7 @@ msgid "current"
 msgstr ""
 
 #. Default: "Deleting ${count_emails} invites"
-#: ./views/meeting.py:246
+#: ./views/meeting.py:249
 msgid "deleting_invites_notice"
 msgstr ""
 
@@ -1274,7 +1232,7 @@ msgid "globally_existing_userid_validation_error"
 msgstr ""
 
 #. Default: "You've received a meeting invitation for a VoteIT meeting."
-#: ./schemas/invite_ticket.py:48
+#: ./schemas/invite_ticket.py:51
 msgid "invitation_default_text"
 msgstr ""
 
@@ -1283,12 +1241,17 @@ msgstr ""
 msgid "invite_only_meeting_access_request_description"
 msgstr ""
 
+#. Default: "Change layout of the different parts in the meeting (advanced feature)"
+#: ./schemas/layout.py:45
+msgid "layuot_schema_main_description"
+msgstr ""
+
 #: ./views/components/user_tags.py:17
 msgid "like this"
 msgstr ""
 
 #. Default: "Welcome to VoteIT. To open the meeting you have been invited to please register in the form below. If you are already registered, please login."
-#: ./views/meeting.py:118
+#: ./views/meeting.py:121
 msgid "login_to_access_meeting_notice"
 msgstr ""
 
@@ -1336,8 +1299,18 @@ msgstr ""
 msgid "ongoing_poll_email_text"
 msgstr ""
 
+#. Default: "Drag and drop agenda items to reorder"
+#: ./views/meeting.py:378
+msgid "order_agenda_items_view_title"
+msgstr ""
+
 #: ./views/templates/snippets/user_tag.pt:26
 msgid "people"
+msgstr ""
+
+#. Default: "Set users permissions by entering a UserID and the permissions you want. Read more about permissions in the manual."
+#: ./schemas/permissions.py:41
+msgid "permissions_schema_main_description"
 msgstr ""
 
 #. Default: "Can't find any poll plugin with name '${name}'. Perhaps that package has been uninstalled?"
@@ -1381,6 +1354,11 @@ msgstr ""
 msgid "poll_upcoming_state_notice"
 msgstr ""
 
+#. Default: "Edit the first page of the meeting into an informative and pleasant page for your users. You can for instance place your logo here. The time table can be presented in a table and updated as you go along. It's also advised to add links to the manual and to meeting documents."
+#: ./schemas/meeting.py:64
+msgid "presentation_meeting_schema_main_description"
+msgstr ""
+
 #. Default: "The poll is created in private state, to show it the participants you have to change the state to upcoming."
 #: ./views/base_edit.py:91
 msgid "private_poll_info"
@@ -1411,7 +1389,7 @@ msgid "public_meeting_access_request_description"
 msgstr ""
 
 #. Default: "Can't find an action associated with access policy ${policy}."
-#: ./views/meeting.py:306
+#: ./views/meeting.py:309
 msgid "request_access_view_action_not_found"
 msgstr ""
 
@@ -1421,7 +1399,7 @@ msgid "request_new_password_text"
 msgstr ""
 
 #. Default: "Resending ${count_emails} invites"
-#: ./views/meeting.py:236
+#: ./views/meeting.py:239
 msgid "resent_invites_notice"
 msgstr ""
 
@@ -1436,8 +1414,18 @@ msgid "review_poll_settings_info_getback"
 msgstr ""
 
 #. Default: "Successfully added and sent ${mail_count} invites"
-#: ./views/meeting.py:199
+#: ./views/meeting.py:202
 msgid "sent_tickets_text"
+msgstr ""
+
+#. Default: "Permissions for user"
+#: ./schemas/permissions.py:77
+msgid "single_permission_schema_main_description"
+msgstr ""
+
+#. Default: "Start typing the first letters of the UserID you want to add. You should see a popup below if that UserID exists."
+#: ./schemas/permissions.py:83
+msgid "single_permission_schema_userid_description"
 msgstr ""
 
 #. Default: "Add meeting"

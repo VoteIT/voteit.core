@@ -39,7 +39,7 @@ def deferred_roles_widget(node, kw):
 @schema_factory('PermissionSchema',
                 title = _(u"Permission"),
                 description = _(u"permissions_schema_main_description",
-                                default = u"Use this form to change a registered users permissions by entering username and the permissions you want. Read more about permissions in the manual."))
+                                default = u"Set users permissions by entering a UserID and the permissions you want. Read more about permissions in the manual."))
 class UserIDAndGroupsSchema(colander.Schema):
     userid = colander.SchemaNode(
         colander.String(),

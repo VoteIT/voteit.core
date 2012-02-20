@@ -376,7 +376,7 @@ class MeetingView(BaseView):
     @view_config(context=IMeeting, name="order_agenda_items", renderer="templates/order_agenda_items.pt", permission=security.EDIT)
     def order_agenda_items(self):
         self.response['title'] = _(u"order_agenda_items_view_title",
-                                   default = u"Order agenda items by pulling up and down")
+                                   default = u"Drag and drop agenda items to reorder")
 
         post = self.request.POST
         if 'cancel' in self.request.POST:
