@@ -409,4 +409,15 @@ class MeetingView(BaseView):
     @view_config(context = IMeeting, name = "minutes", renderer = "templates/minutes.pt", permission = security.VIEW)
     def minutes(self):
         """ Show an overview of the meeting activities. Should work as a template for minutes. """
+        #Add agenda item objects to response
+        agenda_items = []
+        query = dict(
+            context = self.context,
+            content_type = "AgendaItem",
+           # sort_index = "end_time",
+        )
+        for docid in self.api.search_catalog(**query)[1]:
+            agenda_items.append(self.api.resolve_catalog_docid(docid))
+
+        self.response['agenda_items'] = agenda_items
         return self.response

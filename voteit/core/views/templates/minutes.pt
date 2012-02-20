@@ -12,8 +12,29 @@
     <div tal:condition="api.meeting.get_workflow_state() != 'closed'" i18n:translate="">
         This meeting hasn't closed yet so these minutes won't be complete
     </div>
-    
+
+    <h2 i18n:translate="">Opened</h2>
     <div><span i18n:translate="">Meeting opened</span>: ${api.dt_util.dt_format(context.start_time)|string:-}</div>
+
+    <h2 i18n:translate="">Participants</h2>
+    <div>participants here</div>
+
+    <h2 i18n:translate="">Agenda items</h2>
+    <tal:iterate repeat="ai agenda_items">
+        <h4>${ai.title}</h4>
+        <div><span i18n:translate="">Opened</span>: ${api.dt_util.dt_format(ai.start_time)|string:-}</div>
+        <tal:iterate repeat="prop ai.get_content(content_type = 'Proposal', states = 'approved')">
+            <ul>
+                <li>${prop.title}</li>
+            </ul>
+        </tal:iterate>
+        <div><span i18n:translate="">Closed</span>: ${api.dt_util.dt_format(ai.end_time)|string:-}</div>
+    </tal:iterate>
+
+    <h2 i18n:translate="">Closed</h2>
+    <div><span i18n:translate="">Meeting closed</span>: ${api.dt_util.dt_format(context.end_time)|string:-}</div>
+
+
 
 </div>
 </body>
