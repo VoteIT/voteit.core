@@ -735,7 +735,7 @@ msgstr "Rättigheter"
 
 #: ./schemas/permissions.py:70
 msgid "Permissions for all users"
-msgstr "Alla användares rättigheter"
+msgstr "Registrerade användares användarnamn kan här användas för att ändra deras rättigheter i mötet. Läs mer om rättigheter i manualen."
 
 #. Default: "Please confirm"
 #: ./views/templates/main.pt:124
@@ -1249,7 +1249,6 @@ msgstr "En användare kan ha mer än en roll. Notera att för att kunna diskuter
 
 #. Default: "Send invites to participants with email. If different participants should have different rights you should send invites to one level of rights at a time. Normally users have discuss, propose and vote."
 #: ./schemas/invite_ticket.py:24
-#, fuzzy
 msgid "add_tickets_schema_main_description"
 msgstr "Skicka inbjudningar till deltagare via epost. Om olika deltagare ska ha olika rättigheter så ska inbjudningarna skickas till varje grupp separat. Normalt har användare diskutera, yrka och rösta."
 
@@ -1411,7 +1410,6 @@ msgstr "En omröstning har precis öppnat i mötet ${meeting_title}. För att ko
 
 #. Default: "Drag and drop agenda items to reorder"
 #: ./views/meeting.py:378
-#, fuzzy
 msgid "order_agenda_items_view_title"
 msgstr "Dra och släpp dagordningspunkter för att ändra ordningen"
 
@@ -1423,7 +1421,7 @@ msgstr "personer"
 #. Default: "Set users permissions by entering a UserID and the permissions you want. Read more about permissions in the manual."
 #: ./schemas/permissions.py:41
 msgid "permissions_schema_main_description"
-msgstr "Sätt användares rättigheter genom att skriva användarID och rättigheterna du vill ha. Läs mer om rättigheter i manualen."
+msgstr "Sätt användares rättigheter genom att skriva användar-ID och rättigheterna du vill ha. Läs mer om rättigheter i manualen."
 
 #. Default: "Can't find any poll plugin with name '${name}'. Perhaps that package has been uninstalled?"
 #: ./views/agenda_item.py:40
