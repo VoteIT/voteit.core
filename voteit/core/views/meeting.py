@@ -341,7 +341,7 @@ class MeetingView(BaseView):
         fanstaticlib.jquery_form.need()
 
         post = self.request.POST
-        if 'save' in post or self.request.method == 'POST' and self.request.is_xhr:
+        if 'save' in post:
             controls = post.items()
             try:
                 appstruct = form.validate(controls)
@@ -364,6 +364,8 @@ class MeetingView(BaseView):
             self.api.flash_messages.add(_(u"Canceled"))
 
             url = resource_url(self.context, self.request)
+            if self.request.is_xhr:
+                return Response(headers = [('X-Relocate', url)])
             return HTTPFound(location=url)
 
         #No action - Render form

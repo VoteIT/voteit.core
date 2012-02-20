@@ -39,3 +39,14 @@ $(document).delegate('input[name="start_time"]', 'change', function() {
 	$('input[name="end_time"]').val(end_time);
 	$('input[name="end_time"]').datepicker("setDate", de);
 });
+
+/* deform ajax success callback */
+function voteit_deform_success(rText, sText, xhr, form) {
+	var url = xhr.getResponseHeader('X-Relocate');
+	if (url) {
+		document.location = url;
+	} else {
+		deform.processCallbacks();
+		deform.focusFirstInput();
+	}
+}
