@@ -36,7 +36,10 @@ def deferred_roles_widget(node, kw):
                                               missing=colander.null,)
 
 
-@schema_factory('PermissionSchema', title = _(u"Permission"), description = _(u"EditPermissions", default = u"Use this form to change a registered users permissions by entering username and the permissions you want. Read more about permissions in the manual."))
+@schema_factory('PermissionSchema',
+                title = _(u"Permission"),
+                description = _(u"permissions_schema_main_description",
+                                default = u"Use this form to change a registered users permissions by entering username and the permissions you want. Read more about permissions in the manual."))
 class UserIDAndGroupsSchema(colander.Schema):
     userid = colander.SchemaNode(
         colander.String(),
@@ -62,7 +65,9 @@ class UserIDsAndGroupsSequenceSchema(colander.SequenceSchema):
     userid_and_groups = UserIDAndGroupsSchema(title=_(u'Roles for user'),)
 
 
-@schema_factory('PermissionsSchema', title = _(u"Permissions"), description = _(u"Permissions for all users"))
+@schema_factory('PermissionsSchema',
+                title = _(u"Permissions"),
+                description = _(u"Permissions for all users"))
 class PermissionsSchema(colander.Schema):
     userids_and_groups = UserIDsAndGroupsSequenceSchema(title=_(u'Role settings for users'))
 

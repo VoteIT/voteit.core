@@ -19,7 +19,10 @@ class ClaimTicketSchema(colander.Schema):
                                           default = u"The access token your received in your email."),)
 
             
-@schema_factory('AddTicketsSchema', title = _(u"Invite participants"), description = _(u"InviteToMeeting", default = u"Send invites to participants with email. If different participants should have different rights you should send invites to one level of rights at a time. Normally users have discuss, propose and vote.")))
+@schema_factory('AddTicketsSchema',
+                title = _(u"Invite participants"),
+                description = _(u"add_tickets_schema_main_description",
+                                default = u"Send invites to participants with email. If different participants should have different rights you should send invites to one level of rights at a time. Normally users have discuss, propose and vote."))
 class AddTicketsSchema(colander.Schema):
     roles = colander.SchemaNode(
         deform.Set(),
