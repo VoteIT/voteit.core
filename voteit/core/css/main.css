@@ -760,7 +760,7 @@ table.listing > tbody > tr.even > td {
     line-height: inherit;
 }
 
-/* reorder */
+/* Order agenda items view */
 .agenda-item-sort li.buttons {
 	margin: 6px 0px;
 	padding: 3px;
@@ -768,8 +768,13 @@ table.listing > tbody > tr.even > td {
 
 ul.ui-sortable li {
     cursor: pointer;
-    padding: 5px 0px;
+    margin: 5px 0px;
+    padding: 5px;
 	padding-right: 15px;
-	border-bottom: 1px solid #CCC;
+	background: #EFF0F2;
+	border: 1px solid #CCC;
 	color: #054265;
+}
+ul.ui-sortable li:hover {
+	border-color: #054265;
 }
