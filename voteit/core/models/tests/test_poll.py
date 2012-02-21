@@ -315,7 +315,7 @@ class PollTests(unittest.TestCase):
         _marker = object()
 
         class _MockPollPlugin(PollPlugin):
-            def render_result(self, request):
+            def render_result(self, request, complete=True):
                 return _marker
 
         self.config.registry.registerAdapter(_MockPollPlugin, (IPoll,), IPollPlugin, 'mock_poll_plugin')
