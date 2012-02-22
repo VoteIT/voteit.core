@@ -39,7 +39,7 @@ def deferred_roles_widget(node, kw):
 @schema_factory('PermissionSchema',
                 title = _(u"Permission"),
                 description = _(u"permissions_schema_main_description",
-                                default = u"Use this form to change a registered users permissions by entering username and the permissions you want. Read more about permissions in the manual."))
+                                default = u"Set users permissions by entering a UserID and the permissions you want. Read more about permissions in the manual."))
 class UserIDAndGroupsSchema(colander.Schema):
     userid = colander.SchemaNode(
         colander.String(),
@@ -72,11 +72,16 @@ class PermissionsSchema(colander.Schema):
     userids_and_groups = UserIDsAndGroupsSequenceSchema(title=_(u'Role settings for users'))
 
 
-@schema_factory('SingelPermissionSchema', title = _(u"Permission"), description = _(u"Permissions for user"))
+@schema_factory('SingelPermissionSchema',
+                title = _(u"Permission"),
+                description = _(u"single_permission_schema_main_description",
+                                default = u"Permissions for user"))
 class SingelPermissionSchema(colander.Schema):
     userid = colander.SchemaNode(
         colander.String(),
         title = _(u"UserID"),
+        description = _(u"single_permission_schema_userid_description",
+                        default = u"Start typing the first letters of the UserID you want to add. You should see a popup below if that UserID exists."),
         validator=deferred_existing_userid_validator,
         widget = deferred_autocompleting_userid_widget,
     )
