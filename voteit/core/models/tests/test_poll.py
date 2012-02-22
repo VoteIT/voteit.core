@@ -423,7 +423,7 @@ class PollPermissionTests(unittest.TestCase):
         
         self.assertEqual(self.pap(poll, security.VIEW), admin | moderator | viewer )
         self.assertEqual(self.pap(poll, security.EDIT), set())
-        self.assertEqual(self.pap(poll, security.DELETE), set())
+        self.assertEqual(self.pap(poll, security.DELETE), admin | moderator)
         self.assertEqual(self.pap(poll, security.ADD_VOTE), voter)
         self.assertEqual(self.pap(poll, security.CHANGE_WORKFLOW_STATE), admin | moderator)
         

@@ -35,6 +35,11 @@ _UPCOMING_PERMS = (security.VIEW,
                    security.CHANGE_WORKFLOW_STATE,
                    security.MODERATE_MEETING, )
 
+_ONGOING_PERMS = (security.VIEW,
+                  security.DELETE,
+                  security.CHANGE_WORKFLOW_STATE,
+                  security.MODERATE_MEETING, )
+
 ACL = {}
 ACL['private'] = [(Allow, security.ROLE_ADMIN, _UPCOMING_PERMS),
                   (Allow, security.ROLE_MODERATOR, _UPCOMING_PERMS),
@@ -45,8 +50,8 @@ ACL['upcoming'] = [(Allow, security.ROLE_ADMIN, _UPCOMING_PERMS),
                   (Allow, security.ROLE_VIEWER, security.VIEW),
                   DENY_ALL,
                    ]
-ACL['ongoing'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, security.CHANGE_WORKFLOW_STATE, security.MODERATE_MEETING, )),
-                  (Allow, security.ROLE_MODERATOR, (security.VIEW, security.CHANGE_WORKFLOW_STATE, security.MODERATE_MEETING, )),
+ACL['ongoing'] = [(Allow, security.ROLE_ADMIN, _ONGOING_PERMS, ),
+                  (Allow, security.ROLE_MODERATOR, _ONGOING_PERMS, ),
                   (Allow, security.ROLE_VOTER, (security.ADD_VOTE, )),
                   (Allow, security.ROLE_VIEWER, security.VIEW),
                   DENY_ALL,
