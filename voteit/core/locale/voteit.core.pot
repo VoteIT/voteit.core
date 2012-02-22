@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2012-02-20 12:45+0000\n"
+"POT-Creation-Date: 2012-02-22 11:09+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -117,7 +117,7 @@ msgstr ""
 msgid "Add new user"
 msgstr ""
 
-#: ./views/components/meeting_actions.py:110
+#: ./views/components/meeting_actions.py:111
 #: ./views/permissions.py:70
 msgid "Add participant"
 msgstr ""
@@ -164,6 +164,10 @@ msgstr ""
 msgid "Agenda item right column widget"
 msgstr ""
 
+#: ./views/templates/minutes.pt:18
+msgid "Agenda items"
+msgstr ""
+
 #: ./schemas/site.py:19
 msgid "Allow authenticated users to add meetings"
 msgstr ""
@@ -188,6 +192,7 @@ msgstr ""
 msgid "Avoid a title with more than 20 characters"
 msgstr ""
 
+#: ./views/templates/minutes.pt:36
 #: ./views/templates/participants.pt:87
 #: ./views/templates/participants_emails.pt:27
 msgid "Back"
@@ -246,8 +251,8 @@ msgid "Close"
 msgstr ""
 
 #: ./views/components/navigation.py:38
+#: ./views/templates/minutes.pt:27
 #: ./workflows/agenda_item.xml
-#: ./workflows/invite_ticket.xml
 msgid "Closed"
 msgstr ""
 
@@ -349,7 +354,7 @@ msgstr ""
 msgid "Edit meeting"
 msgstr ""
 
-#: ./views/components/meeting_actions.py:107
+#: ./views/components/meeting_actions.py:108
 #: ./views/permissions.py:23
 msgid "Edit permissions"
 msgstr ""
@@ -414,7 +419,7 @@ msgstr ""
 msgid "From"
 msgstr ""
 
-#: ./schemas/permissions.py:59
+#: ./schemas/permissions.py:55
 msgid "Groups"
 msgstr ""
 
@@ -453,7 +458,7 @@ msgid "Invalid security token. Did you click the link in your email?"
 msgstr ""
 
 #: ./schemas/invite_ticket.py:23
-#: ./views/components/meeting_actions.py:109
+#: ./views/components/meeting_actions.py:110
 msgid "Invite participants"
 msgstr ""
 
@@ -538,7 +543,7 @@ msgstr ""
 msgid "Manage invitations to the meeting"
 msgstr ""
 
-#: ./views/components/meeting_actions.py:108
+#: ./views/components/meeting_actions.py:109
 msgid "Manage invites"
 msgstr ""
 
@@ -558,8 +563,16 @@ msgstr ""
 msgid "Meeting actions log"
 msgstr ""
 
+#: ./views/templates/minutes.pt:31
+msgid "Meeting closed"
+msgstr ""
+
 #: ./schemas/layout.py:48
 msgid "Meeting left column widget"
+msgstr ""
+
+#: ./views/templates/minutes.pt:13
+msgid "Meeting opened"
 msgstr ""
 
 #: ./schemas/layout.py:54
@@ -578,6 +591,10 @@ msgstr ""
 
 #: ./views/help.py:77
 msgid "Message sent to the moderators"
+msgstr ""
+
+#: ./views/components/meeting_actions.py:106
+msgid "Minutes"
 msgstr ""
 
 #: ./views/templates/participants.pt:31
@@ -601,7 +618,7 @@ msgid "More..."
 msgstr ""
 
 #: ./schemas/help.py:12
-#: ./schemas/permissions.py:52
+#: ./schemas/permissions.py:48
 msgid "Name"
 msgstr ""
 
@@ -636,19 +653,24 @@ msgstr ""
 msgid "Open"
 msgstr ""
 
+#: ./views/templates/minutes.pt:12
+msgid "Opened"
+msgstr ""
+
 #: ./views/meeting.py:395
 msgid "Order updated"
 msgstr ""
 
-#: ./views/components/meeting_actions.py:111
+#: ./views/components/meeting_actions.py:112
 msgid "Participant list"
 msgstr ""
 
 #: ./views/components/meeting_actions.py:80
+#: ./views/templates/minutes.pt:15
 msgid "Participants"
 msgstr ""
 
-#: ./views/components/meeting_actions.py:106
+#: ./views/components/meeting_actions.py:107
 msgid "Participants email addresses"
 msgstr ""
 
@@ -664,16 +686,12 @@ msgstr ""
 msgid "Password set. You may login now."
 msgstr ""
 
-#: ./schemas/permissions.py:40
+#: ./schemas/permissions.py:73
 msgid "Permission"
 msgstr ""
 
-#: ./schemas/permissions.py:69
+#: ./schemas/permissions.py:65
 msgid "Permissions"
-msgstr ""
-
-#: ./schemas/permissions.py:70
-msgid "Permissions for all users"
 msgstr ""
 
 #: ./views/templates/main.pt:124
@@ -800,7 +818,7 @@ msgstr ""
 msgid "Retracted"
 msgstr ""
 
-#: ./schemas/permissions.py:72
+#: ./schemas/permissions.py:69
 msgid "Role settings for users"
 msgstr ""
 
@@ -808,7 +826,7 @@ msgstr ""
 msgid "Roles"
 msgstr ""
 
-#: ./schemas/permissions.py:65
+#: ./schemas/permissions.py:61
 msgid "Roles for user"
 msgstr ""
 
@@ -1004,7 +1022,7 @@ msgstr ""
 msgid "User"
 msgstr ""
 
-#: ./schemas/permissions.py:46
+#: ./schemas/permissions.py:42
 #: ./schemas/user.py:54
 #: ./views/templates/logs.pt:20
 msgid "UserID"
@@ -1026,6 +1044,10 @@ msgstr ""
 #: ./security.py:68
 #: ./views/templates/participants.pt:27
 msgid "View"
+msgstr ""
+
+#: ./views/templates/minutes.pt:16
+msgid "View participants list"
 msgstr ""
 
 #: ./models/vote.py:26
@@ -1207,7 +1229,7 @@ msgid "error_ai_cannot_be_ongoing_in_not_ongoing_meeting"
 msgstr ""
 
 #. Default: "This meeting still has ongoing Agenda items in it. You can't close it until they're closed."
-#: ./models/meeting.py:109
+#: ./models/meeting.py:102
 msgid "error_cant_close_meeting_with_ongoing_ais"
 msgstr ""
 
@@ -1279,6 +1301,11 @@ msgstr ""
 msgid "meeting_description_description"
 msgstr ""
 
+#. Default: "This meeting hasn't closed yet so these minutes won't be complete"
+#: ./views/meeting.py:414
+msgid "meeting_not_closed_minutes_incomplete_notice"
+msgstr ""
+
 #. Default: "Set a title for the meeting that separates it from previous meetings"
 #: ./schemas/meeting.py:24
 msgid "meeting_title_description"
@@ -1308,8 +1335,8 @@ msgstr ""
 msgid "people"
 msgstr ""
 
-#. Default: "Set users permissions by entering a UserID and the permissions you want. Read more about permissions in the manual."
-#: ./schemas/permissions.py:41
+#. Default: "Set permission for each UserID that should have rights in this meeting. If you remove a UserID, their permissions will be cleared. View permission will be added automatically if needed for a higher permission - like Vote. Permissions also depend on the state of the meeting."
+#: ./schemas/permissions.py:66
 msgid "permissions_schema_main_description"
 msgstr ""
 
@@ -1419,12 +1446,12 @@ msgid "sent_tickets_text"
 msgstr ""
 
 #. Default: "Permissions for user"
-#: ./schemas/permissions.py:77
+#: ./schemas/permissions.py:74
 msgid "single_permission_schema_main_description"
 msgstr ""
 
 #. Default: "Start typing the first letters of the UserID you want to add. You should see a popup below if that UserID exists."
-#: ./schemas/permissions.py:83
+#: ./schemas/permissions.py:80
 msgid "single_permission_schema_userid_description"
 msgstr ""
 

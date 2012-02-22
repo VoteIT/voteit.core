@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
-"POT-Creation-Date: 2012-02-20 12:45+0000\n"
+"POT-Creation-Date: 2012-02-22 11:09+0000\n"
 "PO-Revision-Date: 2011-12-01 09:54+0100\n"
 "Last-Translator: Fredrik Nilson <fredrik@betahaus.net>\n"
 "Language-Team: sv <LL@li.org>\n"
@@ -129,7 +129,7 @@ msgstr "Lägg till möte"
 msgid "Add new user"
 msgstr "Lägg till ny användare"
 
-#: ./views/components/meeting_actions.py:110
+#: ./views/components/meeting_actions.py:111
 #: ./views/permissions.py:70
 msgid "Add participant"
 msgstr "Lägg till användare"
@@ -180,6 +180,10 @@ msgstr "Vänsterkolumn i dagordningspunktsvy"
 msgid "Agenda item right column widget"
 msgstr "Högerkolumn i dagordningspunktsvy"
 
+#: ./views/templates/minutes.pt:18
+msgid "Agenda items"
+msgstr "Dagordningspunkter"
+
 #: ./schemas/site.py:19
 msgid "Allow authenticated users to add meetings"
 msgstr "Tillåt inloggade användare att lägga till möten"
@@ -208,6 +212,7 @@ msgid "Avoid a title with more than 20 characters"
 msgstr "Undvik att skriva fler än 20 tecken"
 
 #. Default: "Back"
+#: ./views/templates/minutes.pt:36
 #: ./views/templates/participants.pt:87
 #: ./views/templates/participants_emails.pt:27
 msgid "Back"
@@ -273,8 +278,8 @@ msgstr "Stäng"
 
 #. Default: "Closed"
 #: ./views/components/navigation.py:38
+#: ./views/templates/minutes.pt:27
 #: ./workflows/agenda_item.xml
-#: ./workflows/invite_ticket.xml
 msgid "Closed"
 msgstr "Avslutad"
 
@@ -385,7 +390,7 @@ msgid "Edit meeting"
 msgstr "Redigera möte"
 
 #. Default: "Edit permissions"
-#: ./views/components/meeting_actions.py:107
+#: ./views/components/meeting_actions.py:108
 #: ./views/permissions.py:23
 msgid "Edit permissions"
 msgstr "Redigera rättigheter"
@@ -453,7 +458,7 @@ msgstr "Glömt lösenord?"
 msgid "From"
 msgstr "Från"
 
-#: ./schemas/permissions.py:59
+#: ./schemas/permissions.py:55
 msgid "Groups"
 msgstr "Grupper"
 
@@ -495,7 +500,7 @@ msgstr "Ogiltigt engångslösenord. Klickade du på länken du fick med epost?"
 
 #. Default: "Invite participants"
 #: ./schemas/invite_ticket.py:23
-#: ./views/components/meeting_actions.py:109
+#: ./views/components/meeting_actions.py:110
 msgid "Invite participants"
 msgstr "Bjud in deltagare"
 
@@ -588,7 +593,7 @@ msgid "Manage invitations to the meeting"
 msgstr "Påminn deltagare som ännu inte anlänt till mötet"
 
 #. Default: "Manage invites"
-#: ./views/components/meeting_actions.py:108
+#: ./views/components/meeting_actions.py:109
 msgid "Manage invites"
 msgstr "Hantera inbjudningar"
 
@@ -609,9 +614,17 @@ msgstr "Mötestillgångspolicy"
 msgid "Meeting actions log"
 msgstr "Möteslogg"
 
+#: ./views/templates/minutes.pt:31
+msgid "Meeting closed"
+msgstr "Mötet stängt"
+
 #: ./schemas/layout.py:48
 msgid "Meeting left column widget"
 msgstr "Mötessidans vänsterkolumnwidget"
+
+#: ./views/templates/minutes.pt:13
+msgid "Meeting opened"
+msgstr "Mötet öppnat"
 
 #: ./schemas/layout.py:54
 msgid "Meeting right column widget"
@@ -632,6 +645,10 @@ msgstr "Meddelande"
 #: ./views/help.py:77
 msgid "Message sent to the moderators"
 msgstr "Meddelandet har skickats till moderator"
+
+#: ./views/components/meeting_actions.py:106
+msgid "Minutes"
+msgstr "Protokoll"
 
 #. Default: "Moderate"
 #: ./views/templates/participants.pt:31
@@ -657,7 +674,7 @@ msgid "More..."
 msgstr "Mer..."
 
 #: ./schemas/help.py:12
-#: ./schemas/permissions.py:52
+#: ./schemas/permissions.py:48
 msgid "Name"
 msgstr "Namn"
 
@@ -696,20 +713,25 @@ msgstr "Pågående"
 msgid "Open"
 msgstr "Öppen"
 
+#: ./views/templates/minutes.pt:12
+msgid "Opened"
+msgstr "Öppnat"
+
 #: ./views/meeting.py:395
 msgid "Order updated"
 msgstr "Ordningen är uppdaterad"
 
-#: ./views/components/meeting_actions.py:111
+#: ./views/components/meeting_actions.py:112
 msgid "Participant list"
 msgstr "Deltagarlista"
 
 #. Default: "Participants"
 #: ./views/components/meeting_actions.py:80
+#: ./views/templates/minutes.pt:15
 msgid "Participants"
 msgstr "Deltagare"
 
-#: ./views/components/meeting_actions.py:106
+#: ./views/components/meeting_actions.py:107
 msgid "Participants email addresses"
 msgstr "Deltagarnas epostadresser"
 
@@ -725,17 +747,13 @@ msgstr "Begäran om nytt lösenord från VoteIT"
 msgid "Password set. You may login now."
 msgstr "Lösenord satt. Du kan logga in nu."
 
-#: ./schemas/permissions.py:40
+#: ./schemas/permissions.py:73
 msgid "Permission"
 msgstr "Rättigheter"
 
-#: ./schemas/permissions.py:69
+#: ./schemas/permissions.py:65
 msgid "Permissions"
 msgstr "Rättigheter"
-
-#: ./schemas/permissions.py:70
-msgid "Permissions for all users"
-msgstr "Registrerade användares användarnamn kan här användas för att ändra deras rättigheter i mötet. Läs mer om rättigheter i manualen."
 
 #. Default: "Please confirm"
 #: ./views/templates/main.pt:124
@@ -876,7 +894,7 @@ msgstr "Dra tillbaka"
 msgid "Retracted"
 msgstr "Tillbakadragen"
 
-#: ./schemas/permissions.py:72
+#: ./schemas/permissions.py:69
 msgid "Role settings for users"
 msgstr "Rollinställningar för användare"
 
@@ -884,7 +902,7 @@ msgstr "Rollinställningar för användare"
 msgid "Roles"
 msgstr "Roller"
 
-#: ./schemas/permissions.py:65
+#: ./schemas/permissions.py:61
 msgid "Roles for user"
 msgstr "rättigheter för en specifik användare"
 
@@ -1097,7 +1115,7 @@ msgid "User"
 msgstr "Användare"
 
 #. Default: "UserID"
-#: ./schemas/permissions.py:46
+#: ./schemas/permissions.py:42
 #: ./schemas/user.py:54
 #: ./views/templates/logs.pt:20
 msgid "UserID"
@@ -1122,6 +1140,10 @@ msgstr "Användare"
 #: ./views/templates/participants.pt:27
 msgid "View"
 msgstr "Läsa"
+
+#: ./views/templates/minutes.pt:16
+msgid "View participants list"
+msgstr "Visa deltagarlista"
 
 #: ./models/vote.py:26
 msgid "Vote"
@@ -1314,7 +1336,7 @@ msgid "error_ai_cannot_be_ongoing_in_not_ongoing_meeting"
 msgstr "Du kan inte sätta en dagordningspunkt i pågående om mötet inte är pågående."
 
 #. Default: "This meeting still has ongoing Agenda items in it. You can't close it until they're closed."
-#: ./models/meeting.py:109
+#: ./models/meeting.py:102
 msgid "error_cant_close_meeting_with_ongoing_ais"
 msgstr "Detta möte har ännu pågående dagordningspunkter. Du kan inte stänga mötet förrän dagordningspunkterna är avslutade."
 
@@ -1388,6 +1410,11 @@ msgstr "Alla användare ges läsrättigheter OMEDELBART om de begär det."
 msgid "meeting_description_description"
 msgstr "Beskrivningen möter deltagarna varje gång de öppnar mötet. Lägg gärna in information om mötet, hur man kontaktar mötesordföranden och föreningens logga här."
 
+#. Default: "This meeting hasn't closed yet so these minutes won't be complete"
+#: ./views/meeting.py:414
+msgid "meeting_not_closed_minutes_incomplete_notice"
+msgstr "Mötet har inte avslutats så protokollet är inte komplett"
+
 #. Default: "Set a title for the meeting that separates it from previous meetings"
 #: ./schemas/meeting.py:24
 msgid "meeting_title_description"
@@ -1418,10 +1445,10 @@ msgstr "Dra och släpp dagordningspunkter för att ändra ordningen"
 msgid "people"
 msgstr "personer"
 
-#. Default: "Set users permissions by entering a UserID and the permissions you want. Read more about permissions in the manual."
-#: ./schemas/permissions.py:41
+#. Default: "Set permission for each UserID that should have rights in this meeting. If you remove a UserID, their permissions will be cleared. View permission will be added automatically if needed for a higher permission - like Vote. Permissions also depend on the state of the meeting."
+#: ./schemas/permissions.py:66
 msgid "permissions_schema_main_description"
-msgstr "Sätt användares rättigheter genom att skriva användar-ID och rättigheterna du vill ha. Läs mer om rättigheter i manualen."
+msgstr "Sätt rättigheter för varje användarnamn som ska ha tillgång till mötet. Om du tar bort ett användarnamn så kommer deras rättigheter att rensas. Rättigheten 'Visa' kommer läggas till automatiskt om den krävs för en högre rättighet - t.ex. 'Rösta'. Rättigheter beror också på mötets status."
 
 #. Default: "Can't find any poll plugin with name '${name}'. Perhaps that package has been uninstalled?"
 #: ./views/agenda_item.py:40
@@ -1532,12 +1559,12 @@ msgid "sent_tickets_text"
 msgstr "La till och skickade ${mail_count} inbjudningar"
 
 #. Default: "Permissions for user"
-#: ./schemas/permissions.py:77
+#: ./schemas/permissions.py:74
 msgid "single_permission_schema_main_description"
 msgstr "Rättigheter för användare"
 
 #. Default: "Start typing the first letters of the UserID you want to add. You should see a popup below if that UserID exists."
-#: ./schemas/permissions.py:83
+#: ./schemas/permissions.py:80
 msgid "single_permission_schema_userid_description"
 msgstr "Börja skriva första bokstäverna i det användarID du vill lägga till. Du borde se en lista nedan med alternativ om användarIDt existerar."
 
