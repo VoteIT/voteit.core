@@ -35,7 +35,8 @@ p {
 	min-height: 100%;
 }
 #main_window,
-.qtip-wrapper {
+.qtip-wrapper,
+#dialog {
 	line-height: 1.5em;
 }
 
@@ -352,7 +353,8 @@ p {
 
 /* Main window */
 #main_window h1,
-#main_window h2 {
+#main_window h2,
+#dialog > h2 {
     border-bottom: 2px solid #86A3B4;
     padding-bottom: 0.5em;
 }
@@ -456,8 +458,17 @@ li.notification_message {
 	text-decoration: none;
 }
 
-/* polls */
-#polls h3 {
+/* polls and booth */
+#polls .content_wrapper,
+#booth .content_wrapper {
+	padding: 0;
+}
+#polls .column-1 .content_wrapper,
+#booth .column-1 .content_wrapper {
+	padding-right: 10px;
+}
+#polls h3,
+#booth h3 {
     color: #000;
     font-weight: bold;
 }
@@ -465,22 +476,36 @@ li.notification_message {
 	border-bottom: 2px solid #86A3B4;
 	padding-bottom: 10px;
 }
-#polls .proposal {
+#polls .proposal,
+#booth .proposal {
 	clear: both;
 }
 #polls .proposal,
-#polls .deform > li {
+#booth .proposal,
+#polls .deform > li
+#booth .deform > li {
 	margin: 5px 0px;
 	border-top: 1px solid #ccc;
 }
-#polls .deform label.desc {
+#polls .deform label.desc,
+#booth .deform label.desc {
     font-weight: normal;
 }
-#polls .buttons {
+#polls .buttons,
+#booth .buttons {
     text-align: left;
 }
-#polls .poll_state_info .time {
+#polls .poll_state_info .time,
+#booth .poll_state_info .time {
     background: url(/static/icons/icon_clock.png) no-repeat 0 0;
+}
+#polls .result .proposal,
+#booth .result .proposal {
+	border: none;
+}
+#booth .poll_type {
+	border: 1px solid #86A3B4;
+	padding: 2px;
 }
 
 /* proposals and discussions */
@@ -777,4 +802,30 @@ ul.ui-sortable li {
 }
 ul.ui-sortable li:hover {
 	border-color: #054265;
+}
+
+/* dialog */
+#dialog {
+	display: none;
+	width: 60%;
+	height: 60%;
+	padding: 5px;
+	overflow:auto;
+	background-color: white;
+	
+}
+
+#dialog .close {
+	position: absolute;
+	top: 2px;
+	right: 2px;
+}
+
+#dialog > h2 {
+	margin: 0;
+}
+
+#dialog .contet {
+	height: 100%;
+	
 }

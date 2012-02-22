@@ -8,9 +8,6 @@
 <body>
 
     <div id="polls" metal:fill-slot="top_content">
-    	<div id="booth">
-    		
-    	</div>
 
         <div class="description" tal:condition="context.description" tal:content="structure context.description">Description</div>
 

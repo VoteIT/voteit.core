@@ -17,6 +17,7 @@
 
         <div class="col-65-35">
             <div class="column column-1">
+            	<div class="content_wrapper">
                 <div class="description"
                 	 tal:condition="wf_state != 'closed'"
                      tal:content="structure poll.description">
@@ -25,9 +26,12 @@
 					tal:condition="wf_state == 'closed'"
 		            tal:content="structure poll.render_poll_result(request, complete=False)">
 		        	    Poll result</div>
+        	    </div>
             </div>
             <div class="column column-2">
+            	<div class="content_wrapper">
             	<div tal:content="structure api.get_poll_state_info(poll)">Poll state info</div>
+            	</div>
             </div>
         </div>
 

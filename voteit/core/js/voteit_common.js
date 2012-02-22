@@ -238,9 +238,15 @@ $(document).ready(function() {
 	    /* stops normal events function 
 	    IE might throw an error calling preventDefault(), so use a try/catch block. */
 	    try { event.preventDefault(); } catch(e) {}
+    	
+		var title = $(document.createElement('span')).addClass("iconpadding icon poll").text(voteit.translation['poll']);
+    	$("#dialog > h2").empty().append(title);
+    	
+    	$("#dialog .content").text(voteit.translation['loading'])
+    	open_modal_window("#dialog");
 
 		var url = $(this).attr('href');
-	    $("#booth").load(url, function(response, status, xhr) {
+	    $("#dialog .content").load(url, function(response, status, xhr) {
 	    	deform.processCallbacks();
 	    });
 	});
