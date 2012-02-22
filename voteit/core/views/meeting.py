@@ -409,6 +409,12 @@ class MeetingView(BaseView):
     @view_config(context = IMeeting, name = "minutes", renderer = "templates/minutes.pt", permission = security.VIEW)
     def minutes(self):
         """ Show an overview of the meeting activities. Should work as a template for minutes. """
+
+        if self.api.meeting.get_workflow_state() != 'closed':
+            msg = _(u"meeting_not_closed_minutes_incomplete_notice",
+                    default = u"This meeting hasn't closed yet so these minutes won't be complete")
+            self.api.flash_messages.add(msg)
+
         #Add agenda item objects to response
         agenda_items = []
         query = dict(
