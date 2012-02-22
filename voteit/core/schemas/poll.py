@@ -54,6 +54,12 @@ def proposal_choices_widget(node, kw):
     return deform.widget.CheckboxChoiceWidget(values=proposal_choices)
 
 
+@colander.deferred
+def deferred_default_poll_method(node, kw):
+    request = kw['request']
+    return request.registry.settings.get('default_poll_method', '')
+
+
 @schema_factory('AddPollSchema', title = _(u"Add poll"), description = _(u"Use this form to add a poll"))
 @schema_factory('EditPollSchema', title = _(u"Edit poll"), description = _(u"Use this form to edit a poll"))
 class PollSchema(colander.MappingSchema):
@@ -71,7 +77,8 @@ class PollSchema(colander.MappingSchema):
                                       title = _(u"Poll method to use"),
                                       description = _(u"poll_poll_plugin_description",
                                                       default=u"Read in the help wiki about pros and cons of different polling methods."),
-                                      widget=poll_plugin_choices_widget,)
+                                      widget = poll_plugin_choices_widget,
+                                      default = deferred_default_poll_method,)
                                       
     proposals = colander.SchemaNode(deform.Set(allow_empty=True), 
                                     name="proposals",
