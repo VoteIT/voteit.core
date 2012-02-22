@@ -91,7 +91,7 @@ class PermissionsView(BaseView):
                 return self.response
             
             #Set permissions
-            self.context.set_groups(appstruct['userid'], appstruct['groups'])
+            self.context.set_groups(appstruct['userid'], appstruct['groups'], event = True)
             msg = _(u"Added permssion for user ${userid}", mapping={'userid':appstruct['userid']} )
             self.api.flash_messages.add(msg)
             url = resource_url(self.context, self.request)
