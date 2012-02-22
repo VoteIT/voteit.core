@@ -26,23 +26,6 @@ def meeting_actions(context, request, va, **kw):
     return """<ul id="meeting-actions-menu">%s</ul>""" % api.render_view_group(context, request, 'meeting_actions')
 
 
-@view_action('meeting_actions', 'meetings', title = _(u"Meetings"))
-def meetings_menu(context, request, va, **kw):
-    api = kw['api']
-    if not api.userid:
-        return ''
-    principals = api.context_effective_principals(api.root)
-    query = dict(
-        content_type = 'Meeting',
-        view_meeting_userids = api.userid,
-    )
-    response = {}
-    response['api'] = api
-    response['menu_title'] = api.translate(va.title)
-    response['meetings'] = api.get_metadata_for_query(**query)
-    return render('../templates/snippets/meetings_menu.pt', response, request = request)
-
-
 @view_action('meeting_actions', 'polls', title = _(u"Polls"))
 def polls_menu(context, request, va, **kw):
     api = kw['api']
