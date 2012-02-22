@@ -36,10 +36,6 @@ def deferred_roles_widget(node, kw):
                                               missing=colander.null,)
 
 
-@schema_factory('PermissionSchema',
-                title = _(u"Permission"),
-                description = _(u"permissions_schema_main_description",
-                                default = u"Set users permissions by entering a UserID and the permissions you want. Read more about permissions in the manual."))
 class UserIDAndGroupsSchema(colander.Schema):
     userid = colander.SchemaNode(
         colander.String(),
@@ -67,7 +63,8 @@ class UserIDsAndGroupsSequenceSchema(colander.SequenceSchema):
 
 @schema_factory('PermissionsSchema',
                 title = _(u"Permissions"),
-                description = _(u"Permissions for all users"))
+                description = _(u"permissions_schema_main_description",
+                                default = u"Set permission for each UserID that should have rights in this meeting. If you remove a UserID, their permissions will be cleared. View permission will be added automatically if needed for a higher permission - like Vote. Permissions also depend on the state of the meeting."))
 class PermissionsSchema(colander.Schema):
     userids_and_groups = UserIDsAndGroupsSequenceSchema(title=_(u'Role settings for users'))
 

@@ -48,7 +48,7 @@ class BaseContent(BaseFolder, SecurityAware):
         if 'creators' in kwargs:
             userid = kwargs['creators'][0]
             #Don't send updated event on add
-            self.add_groups(userid, (ROLE_OWNER,))
+            self.add_groups(userid, (ROLE_OWNER,), event = False)
 
         super(BaseContent, self).__init__(data=data, **kwargs)
 

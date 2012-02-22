@@ -234,7 +234,7 @@ p {
 .icon.approved { background: url(/static/icons/icon_approved.png) left center no-repeat; }
 .icon.denied { background: url(/static/icons/icon_denied.png) left center no-repeat; }
 .user-dark { background: url(/static/icons/icon_user_db.png) no-repeat top left; }
-
+.icon.time { background: url(/static/icons/icon_clock.png) no-repeat 0 0; }
 /* End icons */
 
 /* Action areas in #header */
@@ -494,10 +494,6 @@ li.notification_message {
 #polls .buttons,
 #booth .buttons {
     text-align: left;
-}
-#polls .poll_state_info .time,
-#booth .poll_state_info .time {
-    background: url(/static/icons/icon_clock.png) no-repeat 0 0;
 }
 #polls .result .proposal,
 #booth .result .proposal {

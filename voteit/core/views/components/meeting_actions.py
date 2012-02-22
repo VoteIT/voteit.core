@@ -66,15 +66,6 @@ def polls_menu(context, request, va, **kw):
     return render('../templates/snippets/polls_menu.pt', response, request = request)
 
 
-#@view_action('meeting_actions', 'participants', title = _(u"Participants"))
-#def participants_tab(context, request, va, **kw):
-#    api = kw['api']
-#    if not api.userid or not api.meeting:
-#        return ''
-#    link = '%s@@participants' % api.resource_url(api.meeting, request)
-#    return """ <li class="tab"><a href="%s">%s</a></li>"""  % (link, api.translate(va.title))
-
-
 @view_action('meeting_actions', 'admin_menu', title = _(u"Admin menu"), permission = MANAGE_SERVER)
 @view_action('meeting_actions', 'settings_menu', title = _(u"Settings"), permission = MODERATE_MEETING, meeting_only = True)
 @view_action('meeting_actions', 'participants_menu', title = _(u"Participants"), meeting_only = True, menu_css_cls = 'user-dark')
@@ -85,7 +76,7 @@ def generic_menu(context, request, va, **kw):
     response = {}
     response['menu_title'] = va.title
     response['menu_css_cls'] = va.kwargs.get('menu_css_cls', False) or 'cog-dark'
-    response['rendered_menu'] = api.render_view_group(api.meeting, request, va.name)
+    response['rendered_menu'] = api.render_view_group(context, request, va.name)
     return render('../templates/snippets/generic_meeting_menu.pt', response, request = request)
 
 
@@ -103,6 +94,7 @@ def generic_root_menu_link(context, request, va, **kw):
 @view_action('settings_menu', 'access_policye', title = _(u"Access policy"), link = "@@access_policy", permission = EDIT, )
 @view_action('settings_menu', 'mail_settings', title = _(u"Mail settings"), link = "@@mail_settings", permission = EDIT, )
 @view_action('settings_menu', 'presentation', title = _(u"Presentation"), link = "@@presentation", permission = EDIT, )
+@view_action('settings_menu', 'minutes', title = _(u"Minutes"), link = "@@minutes", permission = MODERATE_MEETING, )
 @view_action('participants_menu', 'participants_emails', title = _(u"Participants email addresses"), link = "@@participants_emails", permission = MODERATE_MEETING, )
 @view_action('participants_menu', 'permissions', title = _(u"Edit permissions"), link = "@@permissions", permission = MANAGE_GROUPS, )
 @view_action('participants_menu', 'manage_tickets', title = _(u"Manage invites"), link = "@@manage_tickets", permission = MANAGE_GROUPS, )

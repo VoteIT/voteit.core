@@ -49,7 +49,7 @@ class CatalogTestCase(unittest.TestCase):
         obj = createContent('Meeting', title = 'Testing catalog',
                             description = 'To check that everything works as expected.',
                             uid = 'simple_uid', creators = ['demo_userid'])
-        obj.add_groups('admin', (security.ROLE_ADMIN, security.ROLE_MODERATOR,))
+        obj.add_groups('admin', (security.ROLE_ADMIN, security.ROLE_MODERATOR,), event = False)
         self.root['meeting'] = obj
         return obj
 
