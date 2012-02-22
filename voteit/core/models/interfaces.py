@@ -372,17 +372,17 @@ class ISecurityAware(Interface):
     def check_groups(groups):
         """ Check dependencies and group names. """
 
-    def add_groups(principal, groups, event = False):
+    def add_groups(principal, groups, event = True):
         """ Add groups for a principal in this context.
             If event is True, an IObjectUpdatedEvent will be sent.
         """
 
-    def del_groups(principal, groups, event = False):
+    def del_groups(principal, groups, event = True):
         """ Delete groups for a principal in this context.
             If event is True, an IObjectUpdatedEvent will be sent.
         """
 
-    def set_groups(principal, groups, event = False):
+    def set_groups(principal, groups, event = True):
         """ Set groups for a principal in this context. (This clears any previous setting)
             If event is True, an IObjectUpdatedEvent will be sent.
         """

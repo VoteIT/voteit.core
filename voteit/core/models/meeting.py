@@ -60,7 +60,9 @@ class Meeting(BaseContent, WorkflowAware):
         super(Meeting, self).__init__(data=data, **kwargs)
         if len(self.creators) and self.creators[0]:
             userid = self.creators[0]
-            self.add_groups(userid, (security.ROLE_MODERATOR, security.ROLE_VOTER, ))
+            #We can't send the event here since the object isn't attached to the resource tree yet
+            #When it is attached, an event will be sent.
+            self.add_groups(userid, (security.ROLE_MODERATOR, security.ROLE_VOTER, ), event = False)
 
     @property
     def __acl__(self):
