@@ -13,9 +13,12 @@ function open_modal_window(obj) {
     var winH = $(window).height();
     var winW = $(window).width();
     
+    var scrollT = $(window).scrollTop();
+    var scrollL = $(window).scrollLeft();
+    
     //Set the popup window to center
-    $(obj).css('top',  Math.round(winH/2-$(obj).height()/2));
-    $(obj).css('left', Math.round(winW/2-$(obj).width()/2));
+    $(obj).css('top',  Math.round(winH/2-$(obj).outerHeight()/2+scrollT));
+    $(obj).css('left', Math.round(winW/2-$(obj).outerWidth()/2+scrollL));
  
     //transition effect
     $(obj).fadeIn(2000);
@@ -37,24 +40,29 @@ $(document).ready(function() {
 });
 
 $(document).ready(function () {
-	$(window).resize(function () {
- 
-        //Get the screen height and width
-        var maskHeight = $(document).height();
-        var maskWidth = $(window).width();
-      
-        //Set height and width to mask to fill up the whole screen
-        $('#modal-mask').css({'width':maskWidth,'height':maskHeight});
-               
-        //Get the window height and width
-        var winH = $(window).height();
-        var winW = $(window).width();
-                
-        //Set the popup window to center
-        $(".modal-window").css('top',  Math.round(winH/2-$(".modal-window").height()/2));
-        $(".modal-window").css('left', Math.round(winW/2-$(".modal-window").width()/2));
-	});
+	$(window).resize(recalc_modal_placement);
+	$(window).scroll(recalc_modal_placement);
 });
+
+function recalc_modal_placement() { 
+    //Get the screen height and width
+    var maskHeight = $(document).height();
+    var maskWidth = $(window).width();
+  
+    //Set height and width to mask to fill up the whole screen
+    $('#modal-mask').css({'width':maskWidth,'height':maskHeight});
+           
+    //Get the window height and width
+    var winH = $(window).height();
+    var winW = $(window).width();
+    
+    var scrollT = $(window).scrollTop();
+    var scrollL = $(window).scrollLeft();
+            
+    //Set the popup window to center
+    $(".modal-window").css('top',  Math.round(winH/2-$(".modal-window").outerHeight()/2+scrollT));
+    $(".modal-window").css('left', Math.round(winW/2-$(".modal-window").outerWidth()/2+scrollL));
+}
 
 $(document).keyup(function(e) {
 	if(e.keyCode == 27) {
