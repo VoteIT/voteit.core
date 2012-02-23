@@ -88,19 +88,19 @@ class PollSchema(colander.MappingSchema):
                                     missing=set(),
                                     widget=proposal_choices_widget,)
                                     
-    proposal_rejection = colander.SchemaNode(colander.Boolean(),
-                                          name="proposal_rejection",
-                                          title = _(u"Rejection proposal"),
-                                          description = _(u"Should a rejection proposal be added to the poll"),
+    add_reject_proposal = colander.SchemaNode(colander.Boolean(),
+                                          title = _(u"Reject proposal"),
+                                          description = _(u"add_reject_proposal_description",
+                                                          default = u"Should a 'Reject all proposals' proposal be added to the poll?"),
                                           missing=False,
                                           widget=None)
                                           
-    proposal_rejection_title = colander.SchemaNode(colander.String(),
-                                                name="proposal_rejection_title",
-                                                title = _(u"Rejection proposal title"),
-                                                description = _(u"The title of the rejection proposal"),
-                                                default=_("Rejection"),
-                                                widget=None)
+    reject_proposal_title = colander.SchemaNode(colander.String(),
+                                                title = _(u"Proposal text for 'reject all proposals'"),
+                                                description = _(u"You can customise the proposal text if you want."),
+                                                default = _(u"reject_proposal_title_default",
+                                                            default = u"Reject all proposals"),
+                                                widget = None)
     start_time = colander.SchemaNode(
          TZDateTime(),
          title = _(u"Start time of this poll."),

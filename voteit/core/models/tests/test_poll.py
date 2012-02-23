@@ -32,10 +32,6 @@ voter = set([security.ROLE_VOTER])
 owner = set([security.ROLE_OWNER])
 
 
-
-#FIXME: Perhaps we should split wf callback tests?
-
-
 class PollTests(unittest.TestCase):
     def setUp(self):
         self.config = testing.setUp()
@@ -90,7 +86,7 @@ class PollTests(unittest.TestCase):
         """
         obj = self._make_obj()
         obj.proposal_uids = ['hello']
-        self.assertEqual(obj.get_field_value('proposals'), ['hello'])
+        self.assertEqual(obj.get_field_value('proposals'), ('hello',))
         obj.set_field_value('proposals', ('new', 'uids',))
         self.assertEqual(obj.proposal_uids, ('new', 'uids',))
 
@@ -335,6 +331,19 @@ class PollTests(unittest.TestCase):
         uid = agenda_item['prop1'].uid
         agenda_item['poll'] = poll = self._cut()
         self.assertRaises(KeyError, poll.get_proposal_by_uid, uid)
+
+    def test_create_reject_proposal(self):
+        self.config.scan('voteit.core.models.proposal')
+        agenda_item = self._agenda_item_with_proposals_fixture()
+        obj = self._cut()
+        obj.set_field_value('reject_proposal_title', 'Hello world, reject all')
+        obj.set_field_value('add_reject_proposal', True)
+        obj.set_field_value('proposal_title', u"Testing reject all")
+        agenda_item['p'] = obj
+        obj.create_reject_proposal()
+
+        self.failUnless(u'hello-world-reject-all' in agenda_item)
+        self.assertEqual(agenda_item['hello-world-reject-all'].title, u'Hello world, reject all')
 
 
 class PollMethodsTests(unittest.TestCase):
