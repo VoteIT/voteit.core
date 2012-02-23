@@ -9,26 +9,35 @@
 <h1 metal:fill-slot="page_heading">${context.title}</h1>
 <div metal:fill-slot="content" class="content_wrapper">
     
-    <h2 i18n:translate="">Opened</h2>
     <div class="iconpadding icon time start"><span i18n:translate="">Meeting opened</span>: ${api.dt_util.dt_format(context.start_time)|string:-}</div>
 
-    <h2 i18n:translate="">Participants</h2>
+    <div class="iconpadding icon time end"><span i18n:translate="">Meeting closed</span>: ${api.dt_util.dt_format(context.end_time)|string:-}</div>
+
+    <h3 i18n:translate="">Participants</h3>
     <div><a href="${'%s@@participants' % api.meeting_url}" i18n:translate="">View participants list</a></div>
 
     <h2 i18n:translate="">Agenda items</h2>
     <tal:iterate repeat="ai agenda_items">
         <h3><a href="${api.resource_url(ai, request)}">${ai.title}</a></h3>
-        <div class="iconpadding icon time start"><span i18n:translate="">Opened</span>: ${api.dt_util.dt_format(ai.start_time)|string:-}</div>
+        <div class="iconpadding icon time start"><span i18n:translate="">Agenda item was opened at</span>: ${api.dt_util.dt_format(ai.start_time)|string:-}</div>
+
+        <div class="iconpadding icon time end"><span i18n:translate="">Agenda item was closed at</span>: ${api.dt_util.dt_format(ai.end_time)|string:-}</div>
+
+    <h4 i18n:translate="">The meeting approved the following proposals: </h4>
         <tal:iterate repeat="prop ai.get_content(content_type = 'Proposal', states = 'approved')">
             <ul>
-                <li><h5 class="iconpadding icon approved">${prop.title}</h5></li>
+                <li><div class="iconpadding icon approved">${prop.title}</div></li>
             </ul>
         </tal:iterate>
-        <div class="iconpadding icon time end"><span i18n:translate="">Closed</span>: ${api.dt_util.dt_format(ai.end_time)|string:-}</div>
-    </tal:iterate>
 
-    <h2 i18n:translate="">Closed</h2>
-    <div class="iconpadding icon time end"><span i18n:translate="">Meeting closed</span>: ${api.dt_util.dt_format(context.end_time)|string:-}</div>
+    <h4 i18n:translate="">The meeting denied the following proposals: </h4>
+        <tal:iterate repeat="prop ai.get_content(content_type = 'Proposal', states = 'denied')">
+            <ul>
+                <li><div class="iconpadding icon denied">${prop.title}</div></li>
+            </ul>
+        </tal:iterate>
+        <hr />
+    </tal:iterate>
 
     <br/>
     <a class="buttonize large"

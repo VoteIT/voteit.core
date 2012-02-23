@@ -26,23 +26,6 @@ def meeting_actions(context, request, va, **kw):
     return """<ul id="meeting-actions-menu">%s</ul>""" % api.render_view_group(context, request, 'meeting_actions')
 
 
-@view_action('meeting_actions', 'meetings', title = _(u"Meetings"))
-def meetings_menu(context, request, va, **kw):
-    api = kw['api']
-    if not api.userid:
-        return ''
-    principals = api.context_effective_principals(api.root)
-    query = dict(
-        content_type = 'Meeting',
-        view_meeting_userids = api.userid,
-    )
-    response = {}
-    response['api'] = api
-    response['menu_title'] = api.translate(va.title)
-    response['meetings'] = api.get_metadata_for_query(**query)
-    return render('../templates/snippets/meetings_menu.pt', response, request = request)
-
-
 @view_action('meeting_actions', 'polls', title = _(u"Polls"))
 def polls_menu(context, request, va, **kw):
     api = kw['api']
@@ -68,6 +51,7 @@ def polls_menu(context, request, va, **kw):
 
 @view_action('meeting_actions', 'admin_menu', title = _(u"Admin menu"), permission = MANAGE_SERVER)
 @view_action('meeting_actions', 'settings_menu', title = _(u"Settings"), permission = MODERATE_MEETING, meeting_only = True)
+@view_action('meeting_actions', 'meeting', title = _(u"Meeting"), meeting_only = True)
 @view_action('meeting_actions', 'participants_menu', title = _(u"Participants"), meeting_only = True, menu_css_cls = 'user-dark')
 def generic_menu(context, request, va, **kw):
     api = kw['api']
@@ -89,12 +73,12 @@ def generic_root_menu_link(context, request, va, **kw):
     return """<li><a href="%s">%s</a></li>""" % (url, api.translate(va.title))
 
 
-@view_action('settings_menu', 'logs', title = _(u"Meeting actions log"), link = "@@logs", permission = MODERATE_MEETING, )
 @view_action('settings_menu', 'manage_layout', title = _(u"Layout and widgets"), link = "@@manage_layout", permission = EDIT, )
 @view_action('settings_menu', 'access_policye', title = _(u"Access policy"), link = "@@access_policy", permission = EDIT, )
 @view_action('settings_menu', 'mail_settings', title = _(u"Mail settings"), link = "@@mail_settings", permission = EDIT, )
 @view_action('settings_menu', 'presentation', title = _(u"Presentation"), link = "@@presentation", permission = EDIT, )
-@view_action('settings_menu', 'minutes', title = _(u"Minutes"), link = "@@minutes", permission = MODERATE_MEETING, )
+@view_action('meeting', 'logs', title = _(u"Meeting actions log"), link = "@@logs", permission = MODERATE_MEETING, )
+@view_action('meeting', 'minutes', title = _(u"Minutes"), link = "@@minutes", )
 @view_action('participants_menu', 'participants_emails', title = _(u"Participants email addresses"), link = "@@participants_emails", permission = MODERATE_MEETING, )
 @view_action('participants_menu', 'permissions', title = _(u"Edit permissions"), link = "@@permissions", permission = MANAGE_GROUPS, )
 @view_action('participants_menu', 'manage_tickets', title = _(u"Manage invites"), link = "@@manage_tickets", permission = MANAGE_GROUPS, )
