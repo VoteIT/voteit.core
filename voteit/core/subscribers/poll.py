@@ -26,7 +26,7 @@ def email_voters_about_ongoing_poll_subscriber(obj, event):
 
 @subscriber([IPoll, IObjectAddedEvent])
 @subscriber([IPoll, IObjectUpdatedEvent])
-def create_rejection_proposal(obj, event):
-    """ Adding a rejection proposal to poll. This is a subscriber because
-        poll needs to be in the agenda_item for this to work """
-    obj.create_rejection_proposal()
+def create_reject_proposal(obj, event):
+    """ Adding a reject proposal to poll. This is a subscriber because
+        poll needs to be added to the agenda_item for this to work """
+    obj.create_reject_proposal()

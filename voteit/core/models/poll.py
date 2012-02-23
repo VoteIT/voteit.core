@@ -13,6 +13,7 @@ from pyramid.renderers import render
 from pyramid.i18n import get_localizer
 from repoze.workflow.workflow import WorkflowError
 from betahaus.pyracont.decorators import content_factory
+from betahaus.pyracont.factories import createContent
 from pyramid.httpexceptions import HTTPForbidden
 
 from voteit.core import security
@@ -91,6 +92,8 @@ class Poll(BaseContent, WorkflowAware):
         return self.get_field_value('proposals', ())
 
     def _set_proposal_uids(self, value):
+        if not isinstance(value, tuple):
+            value = tuple(value)
         self.set_field_value('proposals', value)
 
     proposal_uids = property(_get_proposal_uids, _set_proposal_uids)
@@ -225,17 +228,14 @@ class Poll(BaseContent, WorkflowAware):
                 return prop
         raise KeyError("No proposal found with UID '%s'" % uid)
         
-    def create_rejection_proposal(self):
-        proposal_rejection = self.get_field_value('proposal_rejection', None)
-        rejection_proposal_uid = self.get_field_value('rejection_proposal_uid', None)
-        # if we should add rejection proposal and there is no rejection proposal already
-        if proposal_rejection and rejection_proposal_uid is None:
-            # create rejection proposal
-            from voteit.core.models.proposal import Proposal
-            proposal = Proposal()
-            proposal_title = self.get_field_value('proposal_rejection_title', _(u'Rejection'))
-            proposal.set_field_value('title', proposal_title)
-            self.set_field_value('rejection_proposal_uid', proposal._get_uid())
+    def create_reject_proposal(self):
+        add_reject_proposal = self.get_field_value('add_reject_proposal', None)
+        reject_proposal_uid = self.get_field_value('reject_proposal_uid', None)
+        #Only add if it doesn't exist.
+        if add_reject_proposal and reject_proposal_uid is None:
+            proposal_title = self.get_field_value('reject_proposal_title')
+            proposal = createContent('Proposal', title = proposal_title)
+            self.set_field_value('reject_proposal_uid', proposal.uid)
             
             # add rejection proposal to agenda item
             agenda_item = find_interface(self, IAgendaItem)
@@ -243,7 +243,9 @@ class Poll(BaseContent, WorkflowAware):
             agenda_item[name] = proposal
             
             # add proposal to polls proposal uids
-            self.proposal_uids = self.proposal_uids.union(set([proposal._get_uid()]))
+            proposal_uids = set(self.proposal_uids)
+            proposal_uids.add(proposal.uid)
+            self.proposal_uids = proposal_uids
 
 
 class Ballots(object):

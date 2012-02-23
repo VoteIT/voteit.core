@@ -120,6 +120,7 @@ function display_meeting_menu_poll(event) {
             viewport: $(window),
             at: "right bottom",
             my: "right top",
+            effect: false,
             adjust: {
                 method: 'flip',
             }

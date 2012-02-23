@@ -48,7 +48,7 @@ class AddTicketsSchema(colander.Schema):
                                   title = _(u'Welcome text of the email that will be sent'),
                                   description = _(u'No HTML tags allowed.'),
                                   widget = deform.widget.TextAreaWidget(rows=5, cols=40),
-                                  default = _('invitation_default_text',
+                                  default = _(u'invitation_default_text',
                                               default=u"You've received a meeting invitation for a VoteIT meeting."),
                                   validator = html_string_validator,
     )
