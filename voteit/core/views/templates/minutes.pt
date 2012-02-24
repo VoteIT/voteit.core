@@ -23,14 +23,14 @@
 
         <div class="iconpadding icon time end"><span i18n:translate="">Agenda item was closed at</span>: ${api.dt_util.dt_format(ai.end_time)|string:-}</div>
 
-    <h4 i18n:translate="">The meeting approved the following proposals: </h4>
+    <h4 i18n:translate="">Approved proposals:</h4>
         <tal:iterate repeat="prop ai.get_content(content_type = 'Proposal', states = 'approved')">
             <ul>
                 <li><div class="iconpadding icon approved">${prop.title}</div></li>
             </ul>
         </tal:iterate>
 
-    <h4 i18n:translate="">The meeting denied the following proposals: </h4>
+    <h4 i18n:translate="">Denied proposals:</h4>
         <tal:iterate repeat="prop ai.get_content(content_type = 'Proposal', states = 'denied')">
             <ul>
                 <li><div class="iconpadding icon denied">${prop.title}</div></li>
