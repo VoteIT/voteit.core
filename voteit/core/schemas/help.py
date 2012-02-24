@@ -6,7 +6,7 @@ from voteit.core.validators import html_string_validator
 from voteit.core import VoteITMF as _
 
 
-@schema_factory('ContactSchema')
+@schema_factory('ContactSchema', title=_("Contact"))
 class ContactSchema(colander.MappingSchema):
     name = colander.SchemaNode(colander.String(),
                                title = _(u"Name"),

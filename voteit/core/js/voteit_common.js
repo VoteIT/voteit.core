@@ -268,6 +268,9 @@ $(document).ready(function() {
 	    /* stops normal events function 
 	    IE might throw an error calling preventDefault(), so use a try/catch block. */
 	    try { event.preventDefault(); } catch(e) {}
+	    
+	   $('#help-actions a.tab').removeClass('active');
+	   $(this).addClass('active'); 
 
 		var url = $(this).attr('href');
 	    $("#help-dialog .content").load(url, function(response, status, xhr) {
