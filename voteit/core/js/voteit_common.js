@@ -36,11 +36,13 @@ function display_cogwheel_menu(event) {
             event: event.type, // Use the same show event as the one that triggered the event handler
             ready: true, // Show the tooltip as soon as it's bound, vital so it shows up the first time you hover!
             effect: false,
+            solo: true,
         },
         hide: {
             event: "mouseleave",
             fixed: true,
             effect: false,
+            delay: 100,
         },
         position: {
             viewport: $(window),
