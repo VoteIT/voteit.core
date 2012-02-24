@@ -36,7 +36,7 @@ p {
 }
 #main_window,
 .qtip-wrapper,
-#dialog {
+.modal-window {
 	line-height: 1.5em;
 }
 
@@ -354,7 +354,7 @@ p {
 /* Main window */
 #main_window h1,
 #main_window h2,
-#dialog > h2 {
+.modal-window > h2 {
     border-bottom: 2px solid #86A3B4;
     padding-bottom: 0.5em;
 }
@@ -800,8 +800,8 @@ ul.ui-sortable li:hover {
 	border-color: #054265;
 }
 
-/* dialog */
-#dialog {
+/* modal */
+.modal-window {
 	display: none;
 	width: 60%;
 	height: 60%;
@@ -810,17 +810,47 @@ ul.ui-sortable li:hover {
 	background-color: white;
 }
 
-#dialog .close {
+.modal-window .close {
 	position: absolute;
 	top: 2px;
 	right: 2px;
 }
 
-#dialog > h2 {
+.modal-window > h2 {
 	margin: 0;
 }
 
-#dialog .contet {
+.modal-window .contet {
 	height: 100%;
 	
+}
+
+/* help tab */
+#help-tab {
+    position: fixed;
+    right: 0px;
+    top: 50%;
+    z-index: 8000;
+    background-color: #054265;
+}
+
+#help-tab a {
+    margin: 0;
+    padding: 0;
+    color: white;
+    font-weight: bold;
+}
+
+#help-dialog > ul {
+	margin: 0.5em 0;
+}
+
+#help-dialog > ul li {
+    display: inline;
+	margin-right: 0.5em;
+    list-style-type: none;
+}
+
+#help-dialog a.tab.active {
+    font-weight: bold;
 }

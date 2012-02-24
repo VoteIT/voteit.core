@@ -252,3 +252,27 @@ $(document).ready(function() {
 	    });
 	});
 });
+
+$(document).ready(function() {
+	$('#help-tab > a').live('click', function(event) {
+	    /* stops normal events function 
+	    IE might throw an error calling preventDefault(), so use a try/catch block. */
+	    try { event.preventDefault(); } catch(e) {}
+    	
+    	open_modal_window("#help-dialog");
+	});
+	
+	$('#help-actions a.tab').live('click', function(event) {
+	    /* stops normal events function 
+	    IE might throw an error calling preventDefault(), so use a try/catch block. */
+	    try { event.preventDefault(); } catch(e) {}
+
+		var url = $(this).attr('href');
+	    $("#help-dialog .content").load(url, function(response, status, xhr) {
+	    	deform.processCallbacks();
+	    });
+	});
+});
+
+
+

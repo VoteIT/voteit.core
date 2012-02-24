@@ -14,15 +14,6 @@
     <metal:head define-slot="head"></metal:head>
 </head>
 <body>
-    <!--
-    <div id="help-tab">
-        <h5 i18n:translate="">Help & Contact</h5>
-    	<div id="help-modal">	
-    	    <div tal:replace="structure api.render_single_view_component(context, request, 'main', 'help_actions')"></div>
-	        <div tal:replace="structure api.render_single_view_component(context, request, 'main', 'help_tabs')"></div>
-    	</div>
-    </div>
-    -->
     <div id="page_wrapper">
         <div id="main-content-wrapper">
         <div id="header">
@@ -137,14 +128,28 @@
 	</div>
 	<div id="modal-mask"></div>
 	<div id="dialog" class="modal-window">
-			<h2></h2>
-    		<a href="#" class="close">
-    			<img src="${request.application_url}/static/icons/icon_close_lb.png"
-                         width="16" height="16"
-                         alt="Close" title="Close"
-                         i18n:attributes="alt title" />
-    		</a>
-    		<div class="content"></div>
+		<h2></h2>
+		<a href="#" class="close">
+			<img src="${request.application_url}/static/icons/icon_close_lb.png"
+                     width="16" height="16"
+                     alt="Close" title="Close"
+                     i18n:attributes="alt title" />
+		</a>
+		<div class="content"></div>
+	</div>
+    <div id="help-tab">
+        <a href="#" i18n:translate="">Help</a>
+    </div>
+    <div id="help-dialog" class="modal-window">
+		<h2><span>Help</span></h2>
+		<a href="#" class="close">
+			<img src="${request.application_url}/static/icons/icon_close_lb.png"
+                     width="16" height="16"
+                     alt="Close" title="Close"
+                     i18n:attributes="alt title" />
+		</a>
+        <div tal:replace="structure api.render_single_view_component(context, request, 'main', 'help_actions')"></div>
+		<div class="content" i18n:translate="">Bla bla bla</div>
 	</div>
 </body>
 </html>

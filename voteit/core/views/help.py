@@ -23,7 +23,7 @@ from voteit.core.security import find_authorized_userids
 from voteit.core.security import MODERATE_MEETING
 
 class HelpView(BaseView):
-    @view_config(name = 'contact', context=IMeeting, permission=security.VIEW)
+    @view_config(name = 'contact', context=IMeeting, renderer="templates/ajax_edit.pt", permission=security.VIEW)
     def contact(self):
         """ Contact moderators of the meeting
         """
@@ -43,7 +43,7 @@ class HelpView(BaseView):
                 appstruct = form.validate(controls)
             except ValidationFailure, e:
                 self.response['form'] = e.render()
-                return Response(render("templates/ajax_edit.pt", self.response, request = self.request))
+                return self.response
             
             meeting = self.context
             
@@ -84,4 +84,4 @@ class HelpView(BaseView):
             appstruct['name'] = user.title
             appstruct['email'] = user.get_field_value('email')
         self.response['form'] = form.render(appstruct=appstruct)
-        return render("templates/ajax_edit.pt", self.response, request = self.request)
+        return self.response
