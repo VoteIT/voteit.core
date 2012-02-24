@@ -96,6 +96,18 @@ p {
 	background: url(/static/images/logos_footer.png) no-repeat 50% 100%;
 }
 
+.description ul {
+	list-style: disc;
+}
+.description ol {
+	list-style: decimal;
+}
+.description ul,
+.description ol {
+    margin-left: 0;
+    padding: 0 0 0 40px;
+}
+
 /* Generic classes for positioning columns */
 .col-20-80,
 .col-50-50,
