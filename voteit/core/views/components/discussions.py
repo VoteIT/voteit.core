@@ -1,3 +1,5 @@
+# -*- coding:utf-8 -*-
+
 from betahaus.viewcomponent import view_action
 from pyramid.traversal import resource_path
 from pyramid.traversal import find_resource
@@ -6,6 +8,12 @@ from pyramid.renderers import render
 from voteit.core import VoteITMF as _
 from voteit.core.security import DELETE
 
+from voteit.core.htmltruncate import htmltruncate
+
+def truncate(text, length=200):
+    trunc_text = htmltruncate.truncate(text, length, u'…')
+    
+    return (trunc_text, text != trunc_text)
 
 @view_action('discussions', 'listing')
 def discussions_listing(context, request, va, **kw):
@@ -54,4 +62,5 @@ def discussions_listing(context, request, va, **kw):
     response['limit'] = limit
     response['api'] = api
     response['show_delete'] = _show_delete
+    response['truncate'] = truncate 
     return render('../templates/discussions.pt', response, request = request)

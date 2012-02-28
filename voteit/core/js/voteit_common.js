@@ -235,3 +235,19 @@ $(document).ready(function() {
         }
     };
 });
+
+/* Read more discussion post */
+$(document).ready(function() {
+	$("#discussions span.more a").live('click', function(event) {
+		/* IE might throw an error calling preventDefault(), so use a try/catch block. */
+        try { event.preventDefault(); } catch(e) {}
+        
+        var url = $(this).attr('href');
+        var body = $(this).parents('div.listing_block').find('span.body');
+        var link = $(this)
+        $.getJSON(url, function(data) {
+			body.empty().append(data['body']);
+			link.hide();
+		});
+	});
+});

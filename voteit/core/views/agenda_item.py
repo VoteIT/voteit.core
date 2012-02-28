@@ -133,3 +133,7 @@ class AgendaItemView(BaseView):
         #Note! Registration of form resources has to be in the view that has the javascript
         #that will include this!
         return Response(form.render())
+
+    @view_config(context=IDiscussionPost, name="more", permission=VIEW, renderer='json')
+    def discussion_more(self):
+        return {'body': self.context.get_field_value('title')}
