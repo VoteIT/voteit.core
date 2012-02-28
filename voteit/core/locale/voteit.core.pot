@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2012-02-28 10:52+0000\n"
+"POT-Creation-Date: 2012-02-28 12:13+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -43,6 +43,10 @@ msgstr ""
 
 #: ./models/date_time_util.py:123
 msgid "${diff} seconds ago"
+msgstr ""
+
+#: ./views/components/inline_add_form.py:23
+msgid "${username} propose"
 msgstr ""
 
 #: ./schemas/tzdatetime.py:31
@@ -101,7 +105,7 @@ msgid "Actions here"
 msgstr ""
 
 #: ./models/schemas.py:10
-#: ./views/templates/snippets/inline_dummy_form.pt:7
+#: ./views/components/inline_add_form.py:25
 msgid "Add"
 msgstr ""
 

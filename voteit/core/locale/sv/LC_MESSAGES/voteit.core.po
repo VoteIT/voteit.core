@@ -3,12 +3,12 @@
 # This file is distributed under the same license as the voteit.core
 # project.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
-"POT-Creation-Date: 2012-02-28 10:52+0000\n"
-"PO-Revision-Date: 2011-12-01 09:54+0100\n"
+"POT-Creation-Date: 2012-02-28 12:13+0000\n"
+"PO-Revision-Date: 2012-02-28 13:14+0100\n"
 "Last-Translator: Fredrik Nilson <fredrik@betahaus.net>\n"
 "Language-Team: sv <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -49,6 +49,10 @@ msgstr "${diff} minuter sedan"
 #: ./models/date_time_util.py:123
 msgid "${diff} seconds ago"
 msgstr "${diff} sekunder sedan"
+
+#: ./views/components/inline_add_form.py:23
+msgid "${username} propose"
+msgstr "${username} yrkar att"
 
 #: ./schemas/tzdatetime.py:31
 msgid "'${val}' is not valid as date and time"
@@ -113,7 +117,7 @@ msgstr "Funktioner här"
 
 #. Default: "Add"
 #: ./models/schemas.py:10
-#: ./views/templates/snippets/inline_dummy_form.pt:7
+#: ./views/components/inline_add_form.py:25
 msgid "Add"
 msgstr "Lägg till"
 

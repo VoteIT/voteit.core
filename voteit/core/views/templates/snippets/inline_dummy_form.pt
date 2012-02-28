@@ -4,7 +4,7 @@
 <div class="inline_add_form">
     <img tal:replace="structure user_image_tag" />
     <div class="inline_form_placeholder">
-        <a class="dummy-textarea discreet" href="${url}" i18n:translate="">Add</a>
+        <a class="dummy-textarea discreet" href="${url}">${text}</a>
     </div>
     <div class="clear"><!-- --></div>
 </div>
