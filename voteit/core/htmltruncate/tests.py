@@ -31,7 +31,7 @@ class TruncateTest(unittest.TestCase):
             self.assertEqual( htmltruncate.truncate(input, count), output )
 
     def testUnbalanced(self):
-        self.assertEqual( htmltruncate.truncate( 'I am a <b>bad</strong> little string with unbalanced tags', 20 ), htmltruncate.ERR_UNBALANCED )
+        self.assertRaises(htmltruncate.UnbalancedError, htmltruncate.truncate, 'I am a <b>bad</strong> little string with unbalanced tags', 20)
 
     def testEntity(self):
         self.assertEqual( htmltruncate.truncate( "I&apos;m one", 3 ), "I&apos;m" )
