@@ -120,6 +120,8 @@ class UserTests(unittest.TestCase):
         self.config = testing.setUp(request=request)
         self.config.include('pyramid_mailer.testing')
         self.config.scan('voteit.core.models.site')
+        self.config.scan('voteit.core.models.agenda_template')
+        self.config.scan('voteit.core.models.agenda_templates')
         self.config.scan('voteit.core.models.user')
         self.config.scan('voteit.core.models.users')
         self.config.scan('voteit.core.subscribers.mention')
