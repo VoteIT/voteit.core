@@ -566,3 +566,24 @@ class ICatalogMetadataEnabled(Interface):
         The interface itself doesn't do anything, but the ICatalogMetadata
         adapter is registered for it.
     """
+    
+    
+class IFeedHandler(Interface):
+    """ An adapter for meetings that handle feeds. """
+
+    def __init__(context):
+        """ Object needs a meeting to adapt. """
+
+
+class IFeedEntry(Interface):
+    """ A persistent feed entry. """
+
+    created = Attribute("When it was created, in UTC time.")
+    context_uid = Attribute("UID of the context that triggered this feed entry.")
+    message = Attribute("Message")
+    tags = Attribute("Tags, works pretty much like categories for feed entries.")
+    url = Attribute("An url to the context where the entry happened.")
+    guid = Attribute("Url of the context that triggered the feed entry")
+
+    def __init__(context_uid, message, tags=(), url=None, guid=None):
+        """ Create a feed entry. """

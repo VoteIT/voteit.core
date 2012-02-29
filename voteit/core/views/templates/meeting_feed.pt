@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<rss version="2.0" i18n:domain="voteit.core">
+	<channel>
+	<title>${api.context.title}</title>
+	<link>${api.resource_url(api.context, api.request)}</link>
+	<description><!--FIXME--></description>
+	<tal:iterate repeat="entry entries">
+    <item>
+		<title>${entry.message}</title>
+		<link>${entry.url}</link>
+		<pubDate>${dt_format(entry.created, format='full')}</pubDate>
+		<guid>${entry.guid}</guid>
+	</item>	
+	</tal:iterate>
+	</channel>
+</rss>

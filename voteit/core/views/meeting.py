@@ -22,6 +22,7 @@ from voteit.core.views.base_view import BaseView
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import ISiteRoot
+from voteit.core.models.interfaces import IFeedHandler
 from voteit.core.models.schemas import add_csrf_token
 from voteit.core.models.schemas import button_save
 from voteit.core.models.schemas import button_add
@@ -427,3 +428,12 @@ class MeetingView(BaseView):
 
         self.response['agenda_items'] = agenda_items
         return self.response
+    
+    @view_config(context = IMeeting, name='feed', renderer ="templates/meeting_feed.pt")
+    def feed(self):
+        """ Renders a rss feed for the meeting """
+        feed_handler = self.request.registry.getAdapter(self.context, IFeedHandler)
+        self.response['entries'] = feed_handler.feed_storage.values()
+        self.response['dt_format'] = self.api.dt_util.dt_format
+        
+        return self.response 
