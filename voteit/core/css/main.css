@@ -837,6 +837,10 @@ ul.ui-sortable li:hover {
 .modal-window #modal-header {
     margin-top: 0px;
 }
+.modal-window .tab.active {
+	background-color: #054265;
+	color: #fff;
+}
 
 /* help tab */
 #help-tab {
@@ -855,7 +859,7 @@ ul.ui-sortable li:hover {
 }
 
 #help-dialog > ul {
-    margin: 0.5em 0;
+    margin: 5px 0 25px 0;
 }
 
 #help-dialog > ul li {
@@ -864,6 +868,4 @@ ul.ui-sortable li:hover {
     list-style-type: none;
 }
 
-#help-dialog a.tab.active {
-    font-weight: bold;
-}
+
