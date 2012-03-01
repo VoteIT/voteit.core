@@ -22,6 +22,7 @@ from voteit.core import fanstaticlib
 from voteit.core.security import find_authorized_userids
 from voteit.core.security import MODERATE_MEETING
 
+
 class HelpView(BaseView):
     @view_config(name = 'contact', context=IMeeting, renderer="templates/ajax_edit.pt", permission=security.VIEW)
     def contact(self):
@@ -29,7 +30,7 @@ class HelpView(BaseView):
         """
         fanstaticlib.jquery_form.need()
         
-        schema = createSchema('ContactSchema').bind(context=self.context, request=self.request)
+        schema = createSchema('ContactSchema').bind(context = self.context, request = self.request, api = self.api)
         add_csrf_token(self.context, self.request, schema)
             
         form = Form(schema, action=resource_url(self.context, self.request)+"@@contact", buttons=(button_send,), formid="help-tab-contact-form", use_ajax=True)
@@ -78,10 +79,5 @@ class HelpView(BaseView):
             return Response(render("templates/ajax_success.pt", self.response, request = self.request))
             
         #No action - Render form
-        appstruct = {}
-        user = self.api.get_user(self.api.userid)
-        if user:
-            appstruct['name'] = user.title
-            appstruct['email'] = user.get_field_value('email')
-        self.response['form'] = form.render(appstruct=appstruct)
+        self.response['form'] = form.render()
         return self.response
