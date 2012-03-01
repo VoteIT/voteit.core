@@ -10,11 +10,11 @@ from voteit.core import VoteITMF as _
 class ContactSchema(colander.MappingSchema):
     name = colander.SchemaNode(colander.String(),
                                title = _(u"Name"),
-                               description = _(u"Empty this field if you want to be anonymous"),
+                               description = _(u"Leave this field empty you want to be anonymous"),
                                missing=u"")
     email = colander.SchemaNode(colander.String(),
                                title = _(u"Email"),
-                               description = _(u"Empty this field if you want to be anonymous"),
+                               description = _(u"Leave this field empty you want to be anonymous"),
                                missing=u"") 
     subject = colander.SchemaNode(colander.String(),
                                   title = _(u"Subject"),

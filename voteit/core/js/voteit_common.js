@@ -275,6 +275,7 @@ $(document).ready(function() {
 		var url = $(this).attr('href');
 	    $("#help-dialog .content").load(url, function(response, status, xhr) {
 	    	deform.processCallbacks();
+            display_deform_labels();
 	    });
 	});
 });
