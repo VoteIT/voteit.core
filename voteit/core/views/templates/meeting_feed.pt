@@ -3,12 +3,11 @@
 	<channel>
 	<title>${api.context.title}</title>
 	<link>${api.resource_url(api.context, api.request)}</link>
-	<description><!--FIXME--></description>
-	<tal:iterate repeat="entry entries">
+	<tal:iterate condition="not closed" repeat="entry entries">
     <item>
 		<title>${entry.message}</title>
 		<link>${entry.url}</link>
-		<pubDate>${dt_format(entry.created, format='full')}</pubDate>
+		<pubDate>${dt_format(entry.created, format="E, dd MMM y HH:mm:ss zzz")}</pubDate>
 		<guid>${entry.guid}</guid>
 	</item>	
 	</tal:iterate>

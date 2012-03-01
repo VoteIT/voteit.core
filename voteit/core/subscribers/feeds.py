@@ -20,12 +20,14 @@ from voteit.core import VoteITMF as _
 
 @subscriber([IDiscussionPost, IObjectAddedEvent])
 def feed_discussion_post_added(obj, event):
-    """ Will add a feed entry when a discussion post is added.
+    """ Will add a feed entry when a discussion post is added if agenda item is not private.
     """
     request = get_current_request()
     userid = authenticated_userid(request)
 
     agenda_item = find_interface(obj, IAgendaItem)
+    if agenda_item.get_workflow_state() == 'private':
+        return
 
     msg = _(u"${userid} has written a post in ${agenda_item}.",
             mapping={'userid': userid, 'agenda_item':agenda_item.title})
@@ -40,12 +42,14 @@ def feed_discussion_post_added(obj, event):
     
 @subscriber([IProposal, IObjectAddedEvent])
 def feed_proposal_added(obj, event):
-    """ Will add a feed entry when a proposal is added.
+    """ Will add a feed entry when a proposal is added if agenda item is not private
     """
     request = get_current_request()
     userid = authenticated_userid(request)
 
     agenda_item = find_interface(obj, IAgendaItem)
+    if agenda_item.get_workflow_state() == 'private':
+        return
 
     msg = _(u"${userid} has made a proposal in ${agenda_item}.",
             mapping={'userid': userid, 'agenda_item':agenda_item.title})
@@ -60,7 +64,7 @@ def feed_proposal_added(obj, event):
 
 @subscriber([IPoll, IWorkflowStateChange])
 def feed_poll_state_change(obj, event):
-    """ Will add a feed entry when a poll is opened
+    """ Will add a feed entry when a poll is opened and closes
     """
     if event.new_state in ('ongoing', 'closed'):
     
@@ -84,20 +88,29 @@ def feed_poll_state_change(obj, event):
     
         feed_handler.add(obj.uid, msg, tags=('poll', event.new_state,), url=url, guid=guid)
 
-@subscriber([IAgendaItem, IObjectAddedEvent])
-def feed_agenda_item_added(obj, event):
-    """ Will add a feed entry when a proposal is added.
+@subscriber([IAgendaItem, IWorkflowStateChange])
+def feed_agenda_item_state_change(obj, event):
+    """ Will add a feed entry when the state change on agenda items.
     """
     request = get_current_request()
     userid = authenticated_userid(request)
 
-    msg = _(u"${agenda_item} has been added to the agenda.",
+    msg = None
+    if event.old_state == 'private' and event.new_state == 'upcoming':
+        msg = _(u"${agenda_item} has been added to the agenda.",
             mapping={'agenda_item':obj.title})
+    elif event.new_state == 'ongoing':
+        msg = _(u"${agenda_item} has been set to ongoing.",
+            mapping={'agenda_item':obj.title})
+    elif event.new_state == 'closed':
+        msg = _(u"${agenda_item} has been closed.",
+            mapping={'agenda_item':obj.title})
+
+    if msg:    
+        url = resource_url(obj, request)
+        guid = url
     
-    url = resource_url(obj, request)
-    guid = url
+        meeting = find_interface(obj, IMeeting)    
+        feed_handler = request.registry.getAdapter(meeting, IFeedHandler)
 
-    meeting = find_interface(obj, IMeeting)    
-    feed_handler = request.registry.getAdapter(meeting, IFeedHandler)
-
-    feed_handler.add(obj.uid, msg, tags=('agenda_item', 'added',), url=url, guid=guid)
+        feed_handler.add(obj.uid, msg, tags=('agenda_item', event.new_state,), url=url, guid=guid)

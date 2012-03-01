@@ -436,4 +436,7 @@ class MeetingView(BaseView):
         self.response['entries'] = feed_handler.feed_storage.values()
         self.response['dt_format'] = self.api.dt_util.dt_format
         
+        # only show entries when meeting is ongoing
+        self.response['closed'] = self.context.get_workflow_state() == 'closed' 
+        
         return self.response 
