@@ -128,7 +128,7 @@
 	</div>
 	<div id="modal-mask"></div>
 	<div id="dialog" class="modal-window">
-		<h2></h2>
+		<h2 id="modal-header"></h2>
 		<a href="#" class="close">
 			<img src="${request.application_url}/static/icons/icon_close_lb.png"
                      width="16" height="16"
