@@ -57,10 +57,10 @@ def required_components(config):
                                 '%s:locale/' % PROJECTNAME,)
     config.scan(PROJECTNAME)
     config.include(adjust_default_view_component_order)
-    config.include(adjust_view_component_order)
     from voteit.core.security import VIEW
     config.set_default_permission(VIEW)    
     config.include(register_plugins)
+    config.include(adjust_view_component_order)
 
 
 def register_plugins(config):
