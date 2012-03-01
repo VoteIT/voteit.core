@@ -82,12 +82,22 @@ def root_factory(request):
 
 
 def appmaker(zodb_root):
-    if not 'app_root' in zodb_root:
+    try:
+        return zodb_root['app_root']
+    except KeyError:
         from voteit.core.bootstrap import bootstrap_voteit
         zodb_root['app_root'] = bootstrap_voteit() #Returns a site root
         import transaction
         transaction.commit()
-    return zodb_root['app_root']
+
+        #Set intitial version of database
+        from repoze.evolution import ZODBEvolutionManager
+        from voteit.core.evolve import VERSION
+        manager = ZODBEvolutionManager(zodb_root['app_root'], evolve_packagename='voteit.core.evolve', sw_version=VERSION)
+        manager.set_db_version(VERSION)
+        manager.transaction.commit()
+        
+        return zodb_root['app_root']
 
 
 def adjust_view_component_order(config):
