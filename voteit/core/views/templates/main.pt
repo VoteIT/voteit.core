@@ -93,10 +93,9 @@
             <div metal:define-slot="form" tal:condition="form|False" class="content_wrapper" tal:content="structure form">Form</div>
             
         </div> <!-- main_window -->
-        
+
         </div></div><!-- wrappers -->
-        
-        
+
         <div class="clear"></div>
 		</div><!-- main-content-wrapper -->
 		<div id="footer">
@@ -137,9 +136,11 @@
 		</a>
 		<div class="content"></div>
 	</div>
+	<!--
     <div id="help-tab">
-        <a href="#" i18n:translate="">Help</a>
+        <a href="#" i18n:translate="">Help &amp; contact</a>
     </div>
+    -->
     <div id="help-dialog" class="modal-window">
 		<a href="#" class="close">
 			<img src="${request.application_url}/static/icons/icon_close_lb.png"
