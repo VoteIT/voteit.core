@@ -9,4 +9,5 @@ DEFAULT_VC_ORDER = (
     ('meeting_actions', ('admin_menu', 'polls', 'settings_menu', 'meeting', 'participants_menu',)),
     ('moderator_actions_section', ('context_actions', 'workflow',)),
     ('context_actions', ('edit', 'delete', 'poll_config')),
+    ('help_action', ('contact', 'wiki')),
 )
