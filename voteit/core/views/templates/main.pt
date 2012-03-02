@@ -14,15 +14,6 @@
     <metal:head define-slot="head"></metal:head>
 </head>
 <body>
-    <!--
-    <div id="help-tab">
-        <h5 i18n:translate="">Help & Contact</h5>
-    	<div id="help-modal">	
-    	    <div tal:replace="structure api.render_single_view_component(context, request, 'main', 'help_actions')"></div>
-	        <div tal:replace="structure api.render_single_view_component(context, request, 'main', 'help_tabs')"></div>
-    	</div>
-    </div>
-    -->
     <div id="page_wrapper">
         <div id="main-content-wrapper">
         <div id="header">
@@ -102,10 +93,9 @@
             <div metal:define-slot="form" tal:condition="form|False" class="content_wrapper" tal:content="structure form">Form</div>
             
         </div> <!-- main_window -->
-        
+
         </div></div><!-- wrappers -->
-        
-        
+
         <div class="clear"></div>
 		</div><!-- main-content-wrapper -->
 		<div id="footer">
@@ -135,6 +125,31 @@
 		<a tal:condition="api.root" name="root_url" href="${api.resource_url(api.root, request)}"></a>
 		<a tal:condition="api.meeting" name="meeting_url" href="${api.resource_url(api.meeting, request)}"></a>
 	</div>
-
+	<div id="modal-mask"></div>
+	<div id="dialog" class="modal-window">
+		<h2 id="modal-header"></h2>
+		<a href="#" class="close">
+			<img src="${request.application_url}/static/icons/icon_close_lb.png"
+                     width="16" height="16"
+                     alt="Close" title="Close"
+                     i18n:attributes="alt title" />
+		</a>
+		<div class="content"></div>
+	</div>
+	<!--
+    <div id="help-tab">
+        <a href="#" i18n:translate="">Help &amp; contact</a>
+    </div>
+    -->
+    <div id="help-dialog" class="modal-window">
+		<a href="#" class="close">
+			<img src="${request.application_url}/static/icons/icon_close_lb.png"
+                     width="16" height="16"
+                     alt="Close" title="Close"
+                     i18n:attributes="alt title" />
+		</a>
+        <div tal:replace="structure api.render_single_view_component(context, request, 'main', 'help_actions')"></div>
+		<div class="content" i18n:translate="">Click a button above to select category</div>
+	</div>
 </body>
 </html>
