@@ -52,7 +52,7 @@ msgstr "${diff} sekunder sedan"
 
 #: ./views/components/inline_add_form.py:23
 msgid "${username} propose"
-msgstr "${username} yrkar att"
+msgstr "${username} föreslår att"
 
 #: ./schemas/tzdatetime.py:31
 msgid "'${val}' is not valid as date and time"
@@ -186,11 +186,11 @@ msgstr "Högerkolumn i dagordningspunktsvy"
 
 #: ./views/templates/minutes.pt:24
 msgid "Agenda item was closed at"
-msgstr ""
+msgstr "Dagordningspunkten stängdes"
 
 #: ./views/templates/minutes.pt:22
 msgid "Agenda item was opened at"
-msgstr ""
+msgstr "Dagordningspunkten öppnades"
 
 #: ./views/templates/minutes.pt:19
 msgid "Agenda items"
@@ -207,7 +207,7 @@ msgstr "Bifallen"
 
 #: ./views/templates/minutes.pt:26
 msgid "Approved proposals:"
-msgstr ""
+msgstr "Bifallna förslag"
 
 #. Default: "Are you sure you want to change the state?"
 #: ./views/templates/main.pt:125
@@ -221,7 +221,7 @@ msgstr "Är du säker på att du vill radera detta objekt?"
 #. Default: "Are you sure you want to retract this proposal?"
 #: ./views/templates/main.pt:126
 msgid "Are you sure you want to retract this proposal?"
-msgstr "Är du säker på att du vill dra tillbaka detta yrkande?"
+msgstr "Är du säker på att du vill dra tillbaka detta förslag?"
 
 #: ./schemas/agenda_item.py:16
 msgid "Avoid a title with more than 20 characters"
@@ -340,7 +340,7 @@ msgstr "Avslaget"
 
 #: ./views/templates/minutes.pt:33
 msgid "Denied proposals:"
-msgstr ""
+msgstr "Avslagna förslag"
 
 #: ./schemas/agenda_item.py:21
 #: ./schemas/meeting.py:30
@@ -350,7 +350,7 @@ msgstr "Beskrivning"
 
 #: ./plugins/majority_poll.py:19
 msgid "Description of majority poll"
-msgstr "Rösta på ett av flera alternativ. När omröstningen avslutas utses det yrkande som fått egen majoritet av de avgivna rösterna som vinnande"
+msgstr "Rösta på ett av flera alternativ. När omröstningen avslutas utses det förslag som fått egen majoritet av de avgivna rösterna som vinnande"
 
 #: ./views/components/meeting.py:9
 msgid "Description richtext field (default left column)"
@@ -493,11 +493,11 @@ msgstr "Har du ett konto redan?"
 
 #: ./views/templates/main.pt:130
 msgid "Help & Contact"
-msgstr "Hjälp och Feedback"
+msgstr "Hjälp & Kontakt"
 
 #: ./schemas/proposal.py:12
 msgid "I propose:"
-msgstr "Jag yrkar:"
+msgstr "Jag föreslår:"
 
 #: ./schemas/layout.py:49
 msgid "If no right column widget is selected, this will take up the whole page space."
@@ -827,28 +827,28 @@ msgstr "Privat"
 #: ./models/proposal.py:56
 #: ./views/templates/snippets/ai_proposals.pt:3
 msgid "Proposal"
-msgstr "Yrkande"
+msgstr "Förslag"
 
 #: ./schemas/poll.py:99
 msgid "Proposal text for 'reject all proposals'"
-msgstr ""
+msgstr "Förslagstext för 'avslå alla förslag'"
 
 #: ./schemas/poll.py:85
 msgid "Proposals"
-msgstr "Yrkanden"
+msgstr "Förslag"
 
 #: ./views/components/agenda_item.py:6
 msgid "Proposals (default left column)"
-msgstr "Yrkanden (standard är vänsterkolumn)"
+msgstr "Förslag (standard är vänsterkolumn)"
 
 #. Default: "Propose"
 #: ./views/templates/participants.pt:29
 msgid "Propose"
-msgstr "Yrka"
+msgstr "Föreslå"
 
 #: ./security.py:70
 msgid "Propose (and view)"
-msgstr "Yrka (och läsa)"
+msgstr "Föreslå (och läsa)"
 
 #. Default: "Published"
 #: ./workflows/proposal.xml
@@ -872,7 +872,7 @@ msgstr "Registrering"
 
 #: ./schemas/poll.py:92
 msgid "Reject proposal"
-msgstr ""
+msgstr "Avslå förslag"
 
 #. Default: "Remember that you need to click this link to gain access to the meeting you're invited to."
 #: ./views/templates/invite_ticket_email.pt:24
@@ -1214,7 +1214,7 @@ msgstr "Du"
 
 #: ./schemas/poll.py:100
 msgid "You can customise the proposal text if you want."
-msgstr ""
+msgstr "Du kan anpassa förslagstexten om du vill"
 
 #. Default: "You can now vote"
 #: ./views/templates/email/ongoing_poll_notification.pt:11
@@ -1264,7 +1264,7 @@ msgstr "Din röst har uppdaterats"
 #. Default: "Should a 'Reject all proposals' proposal be added to the poll?"
 #: ./schemas/poll.py:93
 msgid "add_reject_proposal_description"
-msgstr ""
+msgstr "Önskar du lägga till ett 'avslå alla förslag' förslag till omröstningen?"
 
 #. Default: "Separate email addresses with a single line break."
 #: ./schemas/invite_ticket.py:42
@@ -1279,12 +1279,12 @@ msgstr "Epostadresser till användare vilka ges rollerna ovan."
 #. Default: "One user can have more than one role. Note that to be able to propose,\n                        discuss and vote you need respective role. This is selected by default. If you want\n                        to add a user that can only view, select View and uncheck everything else."
 #: ./schemas/invite_ticket.py:31
 msgid "add_tickets_roles_description"
-msgstr "En användare kan ha mer än en roll. Notera att för att kunna diskutera, yrka och rösta krävs alla tre rollerna. För att lägga till en användare som bara kan se, markera 'läsa' och avmarkera övriga."
+msgstr "En användare kan ha mer än en roll. Notera att för att kunna diskutera, lägga förslag och rösta krävs alla tre rollerna. För att lägga till en användare som bara kan se, markera 'läsa' och avmarkera övriga."
 
 #. Default: "Send invites to participants with email. If different participants should have different rights you should send invites to one level of rights at a time. Normally users have discuss, propose and vote."
 #: ./schemas/invite_ticket.py:24
 msgid "add_tickets_schema_main_description"
-msgstr "Skicka inbjudningar till deltagare via epost. Om olika deltagare ska ha olika rättigheter så ska inbjudningarna skickas till varje grupp separat. Normalt har användare diskutera, yrka och rösta."
+msgstr "Skicka inbjudningar till deltagare via epost. Om olika deltagare ska ha olika rättigheter så ska inbjudningarna skickas till varje grupp separat. Normalt har användare diskutera, föreslå och rösta."
 
 #. Default: "Vote"
 #: ./models/schemas.py:19
@@ -1315,7 +1315,7 @@ msgstr "och"
 #. Default: "Proposal '${name}' already in state ${state}"
 #: ./models/poll.py:193
 msgid "change_prop_state_already_that_state_error"
-msgstr "Yrkande '${name}' är redan i tillståndet ${state}"
+msgstr "Förslag '${name}' är redan i tillståndet ${state}"
 
 #. Default: "Password token doesn't match. Won't allow password change."
 #: ./validators.py:161
@@ -1355,7 +1355,7 @@ msgstr "Detta möte har ännu pågående dagordningspunkter. Du kan inte stänga
 #. Default: "A poll with no proposal can not be set to ongoing. Click link to edit: ${tag}"
 #: ./models/poll.py:312
 msgid "error_no_proposals_in_poll"
-msgstr "En omröstning utan yrkanden kan inte göras till pågående. Klicka på länken för att ändra: ${tag}"
+msgstr "En omröstning utan förslagn kan inte göras till pågående. Klicka på länken för att ändra: ${tag}"
 
 #. Default: "You can't set a poll to ongoing if the agenda item is not ongoing."
 #: ./models/poll.py:306
@@ -1405,7 +1405,7 @@ msgstr "betyder att du inte röstat i omröstningen"
 #. Default: "All users will be given view, propose, discuss and vote permissions INSTANTLY if they request it."
 #: ./views/components/request_access.py:57
 msgid "meeting_access_all_participant_permissions_label"
-msgstr "Alla deltagare får se, yrka, diskutera och rösta-rättigheter OMEDELBART om de begär det."
+msgstr "Alla deltagare får se, lägga förslag, diskutera och rösta-rättigheter OMEDELBART om de begär det."
 
 #. Default: "Access will only be granted through invites (Default)"
 #: ./views/components/request_access.py:90
@@ -1472,12 +1472,12 @@ msgstr "Kan inte hitta någon omröstningsmetod med namnet '${name}'. Kanske har
 #. Default: "Poll closed. Proposals might have been adjusted as approved or denied depending on outcome of the poll."
 #: ./models/poll.py:210
 msgid "poll_closed_info"
-msgstr "Omröstningen stängd. Yrkanden kan ha justerats som bifallna eller avslagna beroende på utgången av omröstningen."
+msgstr "Omröstningen stängd. Förslag kan ha justerats som bifallna eller avslagna beroende på utgången av omröstningen."
 
 #. Default: "${count} selected proposals were set in the 'locked for vote' state. They can no longer be edited or retracted by normal users."
 #: ./models/poll.py:294
 msgid "poll_closed_proposals_locked_notice"
-msgstr "De ${count} yrkanden som ingår i omröstningen har satts i tillståndet 'låst för omröstning'. De kan inte längre ändras eller dras tillbaka av icke moderatorer."
+msgstr "De ${count} förslag som ingår i omröstningen har satts i tillståndet 'låst för omröstning'. De kan inte längre ändras eller dras tillbaka av icke moderatorer."
 
 #. Default: "Explain your choice of poll method and your plan for the different polls in the agenda item."
 #: ./schemas/poll.py:72
@@ -1497,7 +1497,7 @@ msgstr "Läs mer i hjälpen om olika metoder och dess för- och nackdelar."
 #. Default: "Only proposals in the state 'published' can be selected"
 #: ./schemas/poll.py:86
 msgid "poll_proposals_description"
-msgstr "Endast yrkanden i tillståndet 'publicerad' kan väljas."
+msgstr "Endast förslag i tillståndet 'publicerad' kan väljas."
 
 #. Default: "Setting poll in upcoming state. It's now visible for meeting participants."
 #: ./models/poll.py:289
@@ -1523,17 +1523,17 @@ msgstr "Bilden ovan kommer från <a href=\"http://www.gravatar.com\" target=\"_b
 #. Default: "Proposal with id '${name}' couldn't be set as ${state}. You should do this manually."
 #: ./models/poll.py:205
 msgid "prop_state_change_error"
-msgstr "Yrkande med id '${name}' kunde inte sättas som ${state}. Du bör göra detta manuellt."
+msgstr "Förslag med id '${name}' kunde inte sättas som ${state}. Du bör göra detta manuellt."
 
 #. Default: "Proposal '${name}' set as ${state}"
 #: ./models/poll.py:200
 msgid "prop_state_changed_notice"
-msgstr "Yrkande '${name}' satt som ${state}"
+msgstr "Förslag '${name}' satt som ${state}"
 
 #. Default: "propose"
 #: ./views/templates/proposals.pt:14
 msgid "propose"
-msgstr "yrkar"
+msgstr "föreslår"
 
 #. Default: "This meeting allows anyone to request access to it. You only need to click below to be allowed to view the meeting."
 #: ./views/components/request_access.py:48
@@ -1543,7 +1543,7 @@ msgstr "Detta möte tillåter vem som helst att be om tillgång till det. Du beh
 #. Default: "Reject all proposals"
 #: ./schemas/poll.py:101
 msgid "reject_proposal_title_default"
-msgstr ""
+msgstr "Avslå alla förslag"
 
 #. Default: "Can't find an action associated with access policy ${policy}."
 #: ./views/meeting.py:309

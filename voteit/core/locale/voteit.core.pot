@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2012-02-28 12:13+0000\n"
+"POT-Creation-Date: 2012-03-02 15:36+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -87,7 +87,7 @@ msgstr ""
 msgid "About me"
 msgstr ""
 
-#: ./views/templates/main.pt:127
+#: ./views/templates/main.pt:117
 msgid "About..."
 msgstr ""
 
@@ -96,7 +96,7 @@ msgid "Access granted!"
 msgstr ""
 
 #: ./schemas/meeting.py:75
-#: ./views/components/meeting_actions.py:77
+#: ./views/components/meeting_actions.py:81
 msgid "Access policy"
 msgstr ""
 
@@ -121,7 +121,7 @@ msgstr ""
 msgid "Add new user"
 msgstr ""
 
-#: ./views/components/meeting_actions.py:86
+#: ./views/components/meeting_actions.py:90
 #: ./views/permissions.py:70
 msgid "Add participant"
 msgstr ""
@@ -143,7 +143,7 @@ msgstr ""
 msgid "Added permssion for user ${userid}"
 msgstr ""
 
-#: ./views/components/meeting_actions.py:52
+#: ./views/components/meeting_actions.py:56
 msgid "Admin menu"
 msgstr ""
 
@@ -192,7 +192,7 @@ msgstr ""
 msgid "Approved proposals:"
 msgstr ""
 
-#: ./views/templates/main.pt:125
+#: ./views/templates/main.pt:115
 msgid "Are you sure you want to change the state?"
 msgstr ""
 
@@ -200,7 +200,7 @@ msgstr ""
 msgid "Are you sure you want to delete this item?"
 msgstr ""
 
-#: ./views/templates/main.pt:126
+#: ./views/templates/main.pt:116
 msgid "Are you sure you want to retract this proposal?"
 msgstr ""
 
@@ -225,7 +225,7 @@ msgstr ""
 
 #: ./views/base_edit.py:99
 #: ./views/meeting.py:156
-#: ./views/poll.py:63
+#: ./views/poll.py:65
 msgid "Canceled"
 msgstr ""
 
@@ -250,6 +250,10 @@ msgstr ""
 msgid "Check this field - token doesn't match"
 msgstr ""
 
+#: ./views/templates/main.pt:152
+msgid "Click a button above to select category"
+msgstr ""
+
 #: ./views/templates/invite_ticket_email.pt:13
 msgid "Click the link to access this VoteIT meeting:"
 msgstr ""
@@ -262,7 +266,7 @@ msgstr ""
 msgid "Click to go to meeting overview"
 msgstr ""
 
-#: ./views/templates/main.pt:123
+#: ./views/templates/main.pt:113
 msgid "Close"
 msgstr ""
 
@@ -274,6 +278,10 @@ msgstr ""
 
 #: ./views/components/help_actions.py:30
 msgid "Contact"
+msgstr ""
+
+#: ./schemas/help.py:11
+msgid "Contact moderator"
 msgstr ""
 
 #: ./validators.py:188
@@ -358,7 +366,7 @@ msgid "Download"
 msgstr ""
 
 #: ./views/components/moderator_actions.py:56
-#: ./views/poll.py:68
+#: ./views/poll.py:70
 msgid "Edit"
 msgstr ""
 
@@ -374,7 +382,7 @@ msgstr ""
 msgid "Edit meeting"
 msgstr ""
 
-#: ./views/components/meeting_actions.py:83
+#: ./views/components/meeting_actions.py:87
 #: ./views/permissions.py:23
 msgid "Edit permissions"
 msgstr ""
@@ -391,7 +399,7 @@ msgstr ""
 msgid "Edit user"
 msgstr ""
 
-#: ./schemas/help.py:16
+#: ./schemas/help.py:23
 #: ./schemas/user.py:29
 #: ./views/templates/participants.pt:26
 msgid "Email"
@@ -415,10 +423,6 @@ msgstr ""
 
 #: ./views/users.py:275
 msgid "Email sent."
-msgstr ""
-
-#: ./schemas/help.py:13
-msgid "Empty this field if you want to be anonymous"
 msgstr ""
 
 #: ./schemas/poll.py:113
@@ -451,8 +455,12 @@ msgstr ""
 msgid "Have an account already?"
 msgstr ""
 
-#: ./views/templates/main.pt:130
+#: ./views/templates/main.pt:120
 msgid "Help & Contact"
+msgstr ""
+
+#: ./views/components/meeting_actions.py:51
+msgid "Help & contact"
 msgstr ""
 
 #: ./schemas/proposal.py:12
@@ -461,10 +469,6 @@ msgstr ""
 
 #: ./schemas/layout.py:49
 msgid "If no right column widget is selected, this will take up the whole page space."
-msgstr ""
-
-#: ./views/templates/polls.pt:49
-msgid "If you submit the form again, you'll change your vote. You may do that as long as the poll is open."
 msgstr ""
 
 #: ./schemas/invite_ticket.py:15
@@ -478,7 +482,7 @@ msgid "Invalid security token. Did you click the link in your email?"
 msgstr ""
 
 #: ./schemas/invite_ticket.py:23
-#: ./views/components/meeting_actions.py:85
+#: ./views/components/meeting_actions.py:89
 msgid "Invite participants"
 msgstr ""
 
@@ -504,7 +508,7 @@ msgstr ""
 msgid "Layout"
 msgstr ""
 
-#: ./views/components/meeting_actions.py:76
+#: ./views/components/meeting_actions.py:80
 msgid "Layout and widgets"
 msgstr ""
 
@@ -516,7 +520,7 @@ msgstr ""
 msgid "Like"
 msgstr ""
 
-#: ./views/templates/main.pt:129
+#: ./views/templates/main.pt:119
 msgid "Loading..."
 msgstr ""
 
@@ -547,7 +551,7 @@ msgid "Logout"
 msgstr ""
 
 #: ./schemas/meeting.py:70
-#: ./views/components/meeting_actions.py:78
+#: ./views/components/meeting_actions.py:82
 msgid "Mail settings"
 msgstr ""
 
@@ -563,12 +567,12 @@ msgstr ""
 msgid "Manage invitations to the meeting"
 msgstr ""
 
-#: ./views/components/meeting_actions.py:84
+#: ./views/components/meeting_actions.py:88
 msgid "Manage invites"
 msgstr ""
 
 #: ./models/meeting.py:43
-#: ./views/components/meeting_actions.py:54
+#: ./views/components/meeting_actions.py:58
 msgid "Meeting"
 msgstr ""
 
@@ -580,7 +584,7 @@ msgstr ""
 msgid "Meeting access policy"
 msgstr ""
 
-#: ./views/components/meeting_actions.py:80
+#: ./views/components/meeting_actions.py:84
 msgid "Meeting actions log"
 msgstr ""
 
@@ -604,16 +608,16 @@ msgstr ""
 msgid "Meetings"
 msgstr ""
 
-#: ./schemas/help.py:23
+#: ./schemas/help.py:33
 #: ./views/templates/logs.pt:16
 msgid "Message"
 msgstr ""
 
-#: ./views/help.py:77
+#: ./views/help.py:78
 msgid "Message sent to the moderators"
 msgstr ""
 
-#: ./views/components/meeting_actions.py:81
+#: ./views/components/meeting_actions.py:85
 msgid "Minutes"
 msgstr ""
 
@@ -633,11 +637,11 @@ msgstr ""
 msgid "Moderator menu"
 msgstr ""
 
-#: ./views/templates/main.pt:128
+#: ./views/templates/main.pt:118
 msgid "More..."
 msgstr ""
 
-#: ./schemas/help.py:12
+#: ./schemas/help.py:16
 #: ./schemas/permissions.py:48
 msgid "Name"
 msgstr ""
@@ -650,7 +654,7 @@ msgstr ""
 msgid "Need to register?"
 msgstr ""
 
-#: ./views/templates/main.pt:122
+#: ./views/templates/main.pt:112
 msgid "No"
 msgstr ""
 
@@ -659,7 +663,7 @@ msgid "No HTML tags allowed."
 msgstr ""
 
 #: ./views/base_edit.py:135
-#: ./views/poll.py:57
+#: ./views/poll.py:59
 msgid "Nothing updated"
 msgstr ""
 
@@ -677,16 +681,16 @@ msgstr ""
 msgid "Order updated"
 msgstr ""
 
-#: ./views/components/meeting_actions.py:87
+#: ./views/components/meeting_actions.py:91
 msgid "Participant list"
 msgstr ""
 
-#: ./views/components/meeting_actions.py:55
+#: ./views/components/meeting_actions.py:59
 #: ./views/templates/minutes.pt:16
 msgid "Participants"
 msgstr ""
 
-#: ./views/components/meeting_actions.py:82
+#: ./views/components/meeting_actions.py:86
 msgid "Participants email addresses"
 msgstr ""
 
@@ -710,21 +714,21 @@ msgstr ""
 msgid "Permissions"
 msgstr ""
 
-#: ./views/templates/main.pt:124
+#: ./views/templates/main.pt:114
 msgid "Please confirm"
 msgstr ""
 
 #: ./models/poll.py:67
 #: ./views/templates/agenda_item.pt:20
-#: ./views/templates/main.pt:131
+#: ./views/templates/main.pt:121
 msgid "Poll"
 msgstr ""
 
-#: ./views/poll.py:82
+#: ./views/poll.py:84
 msgid "Poll config"
 msgstr ""
 
-#: ./views/templates/polls.pt:27
+#: ./views/templates/poll.pt:25
 msgid "Poll method"
 msgstr ""
 
@@ -745,7 +749,7 @@ msgid "Polls"
 msgstr ""
 
 #: ./schemas/meeting.py:63
-#: ./views/components/meeting_actions.py:79
+#: ./views/components/meeting_actions.py:83
 msgid "Presentation"
 msgstr ""
 
@@ -841,7 +845,7 @@ msgstr ""
 msgid "Roles for user"
 msgstr ""
 
-#: ./views/components/meeting_actions.py:67
+#: ./views/components/meeting_actions.py:71
 #: ./views/permissions.py:25
 msgid "Root permissions"
 msgstr ""
@@ -871,11 +875,11 @@ msgstr ""
 msgid "Send meeting invitations"
 msgstr ""
 
-#: ./views/components/meeting_actions.py:68
+#: ./views/components/meeting_actions.py:72
 msgid "Server logs"
 msgstr ""
 
-#: ./views/components/meeting_actions.py:53
+#: ./views/components/meeting_actions.py:57
 msgid "Settings"
 msgstr ""
 
@@ -903,7 +907,7 @@ msgstr ""
 msgid "Start time of this poll."
 msgstr ""
 
-#: ./schemas/help.py:20
+#: ./schemas/help.py:30
 msgid "Subject"
 msgstr ""
 
@@ -913,7 +917,7 @@ msgid "Successfully added"
 msgstr ""
 
 #: ./views/base_edit.py:133
-#: ./views/poll.py:55
+#: ./views/poll.py:57
 msgid "Successfully updated"
 msgstr ""
 
@@ -925,7 +929,7 @@ msgstr ""
 msgid "Text"
 msgstr ""
 
-#: ./views/poll.py:248
+#: ./views/poll.py:180
 msgid "Thank you for voting!"
 msgstr ""
 
@@ -945,11 +949,11 @@ msgstr ""
 msgid "The time that the server think it is. If this is wrong, you need to change the server time."
 msgstr ""
 
-#: ./views/templates/main.pt:66
+#: ./views/templates/main.pt:57
 msgid "This meeting has closed."
 msgstr ""
 
-#: ./views/templates/main.pt:63
+#: ./views/templates/main.pt:54
 msgid "This meeting hasn't started yet."
 msgstr ""
 
@@ -1049,6 +1053,10 @@ msgstr ""
 msgid "View"
 msgstr ""
 
+#: ./views/templates/polls.pt:53
+msgid "View details and your vote"
+msgstr ""
+
 #: ./views/templates/minutes.pt:17
 msgid "View participants list"
 msgstr ""
@@ -1066,7 +1074,7 @@ msgstr ""
 msgid "VoteIT"
 msgstr ""
 
-#: ./views/help.py:69
+#: ./views/help.py:70
 msgid "VoteIT - ${meeting}"
 msgstr ""
 
@@ -1103,7 +1111,7 @@ msgstr ""
 msgid "Welcome text of the email that will be sent"
 msgstr ""
 
-#: ./views/templates/main.pt:121
+#: ./views/templates/main.pt:111
 #: ./views/templates/participants.pt:56
 msgid "Yes"
 msgstr ""
@@ -1124,6 +1132,18 @@ msgstr ""
 msgid "You can't change your vote now."
 msgstr ""
 
+#: ./views/poll.py:185
+msgid "You do not have the permission to vote in this meeting."
+msgstr ""
+
+#: ./views/templates/polls.pt:44
+msgid "You do not have the permission to vote in this poll, please contact the moderator if you should be able to vote."
+msgstr ""
+
+#: ./views/templates/polls.pt:49
+msgid "You have already voted. You can change your vote"
+msgstr ""
+
 #: ./models/user.py:143
 msgid "You have been mentioned in VoteIT"
 msgstr ""
@@ -1132,7 +1152,7 @@ msgstr ""
 msgid "You need to open it yourself."
 msgstr ""
 
-#: ./views/templates/polls.pt:54
+#: ./views/templates/poll.pt:49
 msgid "You voted in this poll. Click above to show your vote."
 msgstr ""
 
@@ -1144,16 +1164,16 @@ msgstr ""
 msgid "You've been granted access to the meeting. Welcome!"
 msgstr ""
 
-#: ./views/templates/polls.pt:48
+#: ./views/templates/poll.pt:46
 msgid "You've voted"
 msgstr ""
 
 #: ./models/vote.py:37
-#: ./views/templates/polls.pt:45
+#: ./views/templates/poll.pt:43
 msgid "Your vote"
 msgstr ""
 
-#: ./views/poll.py:241
+#: ./views/poll.py:173
 msgid "Your vote was updated."
 msgstr ""
 
@@ -1182,8 +1202,8 @@ msgstr ""
 msgid "add_tickets_schema_main_description"
 msgstr ""
 
-#. Default: "Vote"
 #: ./models/schemas.py:19
+#: ./views/templates/polls.pt:42
 msgid "add_vote_button"
 msgstr ""
 
@@ -1219,6 +1239,21 @@ msgstr ""
 #. Default: "The access token your received in your email."
 #: ./schemas/invite_ticket.py:18
 msgid "claim_ticket_token_title"
+msgstr ""
+
+#. Default: "Leave this field empty if you want to be anonymous. Remember that you won't be able to receive a reply if it's empty!"
+#: ./schemas/help.py:24
+msgid "contact_schema_email_description"
+msgstr ""
+
+#. Default: "Send a message to the meeting moderators"
+#: ./schemas/help.py:12
+msgid "contact_schema_main_description"
+msgstr ""
+
+#. Default: "Leave this field empty if you want to be anonymous"
+#: ./schemas/help.py:17
+msgid "contact_schema_name_description"
 msgstr ""
 
 #: ./views/templates/snippets/moderator_actions_wf_section.pt:7
@@ -1263,6 +1298,10 @@ msgstr ""
 #. Default: "UserID not found"
 #: ./validators.py:217
 msgid "globally_existing_userid_validation_error"
+msgstr ""
+
+#: ./views/templates/polls.pt:49
+msgid "here"
 msgstr ""
 
 #. Default: "You've received a meeting invitation for a VoteIT meeting."
@@ -1353,8 +1392,7 @@ msgid "permissions_schema_main_description"
 msgstr ""
 
 #. Default: "Can't find any poll plugin with name '${name}'. Perhaps that package has been uninstalled?"
-#: ./views/agenda_item.py:40
-#: ./views/poll.py:138
+#: ./views/agenda_item.py:38
 msgid "plugin_missing_error"
 msgstr ""
 
@@ -1453,7 +1491,7 @@ msgid "review_poll_settings_info"
 msgstr ""
 
 #. Default: "To get back to the poll settings you click the cogwheel menu and select configure poll."
-#: ./views/poll.py:94
+#: ./views/poll.py:96
 msgid "review_poll_settings_info_getback"
 msgstr ""
 
@@ -1472,7 +1510,8 @@ msgstr ""
 msgid "single_permission_schema_userid_description"
 msgstr ""
 
-#. Default: "Add meeting"
+#. Default: "Close"
+#: ./views/templates/main.pt:132
 #: ./views/templates/navigation.pt:16
 msgid "title"
 msgstr ""

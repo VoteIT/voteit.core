@@ -46,7 +46,7 @@
 			please contact the moderator if you should be able to vote.
         </div>
         <div tal:condition="can_vote and has_voted">
-        	<span i18n:translate="">You have already votet. You can change your vote</span> <a href="${api.resource_url(poll, api.request)}" class="poll_booth" i18n:translate="">here</a>
+        	<span i18n:translate="">You have already voted. You can change your vote</span> <a href="${api.resource_url(poll, api.request)}" class="poll_booth" i18n:translate="">here</a>
         </div>
 		</tal:poll_open>
 		<tal:poll_closed condition="wf_state == 'closed'">
