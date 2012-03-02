@@ -13,7 +13,7 @@
            class="buttonize large"
            i18n:translate="">Edit</a>
     </div>
-    <div class="clear"><!-- --></div>
+    
     <div class="description" tal:condition="context.description" tal:content="structure context.description">
 		Description
 	</div>

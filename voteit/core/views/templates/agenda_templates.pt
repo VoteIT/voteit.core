@@ -6,12 +6,19 @@
 	  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
 	  i18n:domain="voteit.core">
 <body>
+<div metal:fill-slot="page_heading"
+     id="page_heading">
+	 <h2 i18n:translate="">Agenda templates</h2>
+</div>
 <div metal:fill-slot="content" class="content_wrapper">
 	<div class="moderator-help-buttons">
         <a tal:attributes="href '%s@@add?content_type=AgendaTemplate' % api.resource_url(agenda_templates, request)"
            tal:condition="api.context_has_permission('Add Meeting', agenda_templates)"
            class="buttonize large"
            i18n:translate="">Add</a>
+    </div>
+    <div tal:condition="api.meeting" i18n:translate="agenda_templates_list_description">
+    	Choose one of the listed templates and press apply to copy the agenda items to yout meeting.
     </div>
 	<ul tal:condition="agenda_templates.values()" class="agenda-templates">
 		<li tal:repeat="template agenda_templates.values()">
@@ -41,6 +48,7 @@
                i18n:translate="">Edit</a>
 		</li>
 	</ul>
+	<h3 tal:condition="not agenda_templates.values()" i18n:translate="">There is no agenda templates available</h3>
 </div>
 </body>
 </html>
