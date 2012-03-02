@@ -16,7 +16,16 @@ class AgendaItemSequenceSchema(colander.SequenceSchema):
                 description = _(u"add_agenda_template_description",
                                 default = u""))
 class AgendaTemplatesSchema(colander.Schema):
-    title = colander.SchemaNode(colander.String(),
-                               title=_(u"Template name"),
-                               validator=html_string_validator,)
+    title = colander.SchemaNode(
+        colander.String(),
+        title=_(u"Template name"),
+        validator=html_string_validator,)
+    description = colander.SchemaNode(
+        colander.String(),
+        title = _(u"Description"),
+        description = _(u"agenda_template_description_description",
+                        default=u"Describe the purpose of this agenda"),
+        widget=deform.widget.RichTextWidget(),
+    )
+    
     agenda_items = AgendaItemSequenceSchema(title=_(u'Agenda items'))
