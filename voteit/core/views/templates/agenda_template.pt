@@ -14,11 +14,14 @@
            i18n:translate="">Edit</a>
     </div>
     <div class="clear"><!-- --></div>
+    <div class="description" tal:condition="context.description" tal:content="structure context.description">
+		Description
+	</div>
 	<ul tal:condition="context.get_field_value('agenda_items')">
 		<li tal:repeat="agenda_item context.get_field_value('agenda_items')">
 			<h3 tal:content="agenda_item.title">Title</h3>
-			<div class="description" tal:content="agenda_item.description">
-				description
+			<div class="description" tal:condition="agenda_item.description" tal:content="structure agenda_item.description">
+				Description
 			</div>
 		</li>
 	</ul>

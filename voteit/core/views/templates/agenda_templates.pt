@@ -8,14 +8,37 @@
 <body>
 <div metal:fill-slot="content" class="content_wrapper">
 	<div class="moderator-help-buttons">
-        <a tal:attributes="href '%s@@add?content_type=AgendaTemplate' % api.resource_url(context, request)"
-           tal:condition="api.context_has_permission('Add Meeting', context)"
+        <a tal:attributes="href '%s@@add?content_type=AgendaTemplate' % api.resource_url(agenda_templates, request)"
+           tal:condition="api.context_has_permission('Add Meeting', agenda_templates)"
            class="buttonize large"
            i18n:translate="">Add</a>
     </div>
-	<ul tal:condition="context.values()">
-		<li tal:repeat="template context.values()">
-			<a href="${api.resource_url(template, api.request)}" tal:content="template.title">Template</a>
+	<ul tal:condition="agenda_templates.values()" class="agenda-templates">
+		<li tal:repeat="template agenda_templates.values()">
+			<h3 tal:content="template.title">Template</h3>
+			<div class="description" tal:condition="template.description" tal:content="structure template.description"></div>
+			<div id="template-details-${template.__name__}" class="toggle_area toggle_closed">
+			<a class="toggle_minimize read_more" i18n:translate="">Details</a>
+	            <div class="minimizable_area">
+	         		<ul tal:condition="template.get_field_value('agenda_items')">
+	         			<li tal:repeat="item template.get_field_value('agenda_items')">
+	         				<h4>${item.title}</h4>
+	         				<div class="description" tal:condition="item.description" tal:content="structure item.description"></div>
+	         			</li>
+	         		</ul>
+	            </div>
+	            <div class="minimizable_inverted meta" i18n:translate="">
+	            	Click above to see the agenda items for this template
+	        	</div>
+	        </div>
+			<a class="buttonize apply" 
+				href="${api.resource_url(api.context, api.request)}@@agenda_templates?apply=${template.__name__}"
+				tal:condition="api.meeting" 
+				i18n:translate="">Apply</a>
+			<a tal:attributes="href '%s@@edit' % api.resource_url(template, request)"
+           	   tal:condition="api.context_has_permission('Edit', template)"
+               class="buttonize"
+               i18n:translate="">Edit</a>
 		</li>
 	</ul>
 </div>
