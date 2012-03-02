@@ -34,9 +34,6 @@ class AgendaTemplate(BaseContent):
     
     def populate_meeting(self, meeting):
         for item in self.get_field_value('agenda_items', ()):
-            obj = AgendaItem()
-            obj.set_field_value('title', item.get_field_value('title'))
-            obj.set_field_value('description', item.get_field_value('description'))
-            
+            obj = AgendaItem(**item)
             slug = generate_slug(meeting, obj.title)
             meeting[slug] = obj

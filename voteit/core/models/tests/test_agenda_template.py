@@ -16,21 +16,9 @@ class AgendaTemplateTests(unittest.TestCase):
         return AgendaTemplate()
     
     def _fill_obj(self, obj):
-        from voteit.core.models.agenda_item import AgendaItem
-
-        a1 = AgendaItem()
-        a1.set_field_value('title', u'A1')
-        a1.set_field_value('description', u'Agenda item 1')
-        
-        a2 = AgendaItem()
-        a2.set_field_value('title', u'A2')
-        a2.set_field_value('description', u'Agenda item 2')
-        
-        a3 = AgendaItem()
-        a3.set_field_value('title', u'A3')
-        a3.set_field_value('description', u'Agenda item 3')
-        
-        obj.set_field_value('agenda_items', (a1, a2, a3))
+        obj.set_field_value('agenda_items', [{'description': u'Agenda Item 1', 'title': u'A1'},
+                                             {'description': u'Agenda Item 2', 'title': u'A2'},
+                                             {'description': u'Agenda Item 3', 'title': u'A3'},])
 
     def test_verify_implementation(self):
         from voteit.core.models.interfaces import IAgendaTemplate
