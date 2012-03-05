@@ -62,8 +62,19 @@ class APIView(object):
         return self.context_has_permission(security.MODERATE_MEETING, self.meeting)
 
     @reify
+    def localizer(self):
+        return get_localizer(self.request)
+
+    @property
     def translate(self):
-        return get_localizer(self.request).translate
+        return self.localizer.translate
+
+    @property
+    def pluralize(self):
+        """ pluralize(singular, plural, n, domain=None, mapping=None)
+            Where n is amount of something.
+        """
+        return self.localizer.pluralize
 
     @reify
     def context_unread(self):
