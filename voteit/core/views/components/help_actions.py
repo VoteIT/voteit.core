@@ -27,22 +27,5 @@ def action_wiki(context, request, va, **kw):
 def action_contact(context, request, va, **kw):
     api = kw['api']
     if api.meeting:
-        return """<li><a class="tab buttonize" href="#help-tab-contact">%s</a></li>""" % (api.translate(_(u"Contact")),)
-    return ""
-
-
-@view_action('main', 'help_tabs')
-def help_tabs(context, request, va, **kw):
-    api = kw['api']
-    response = {}
-    response['api'] = api
-    return render('../templates/snippets/help_tabs.pt', response, request = request)
-
-
-@view_action('help_tab', 'contact')
-def tab_contact(context, request, va, **kw):
-    api = kw['api']
-    if api.meeting:
-        hw = HelpView(api.meeting, request)
-        return """<div id="help-tab-contact" class="tab">%s</div>""" % (hw.contact(),)
+        return """<li><a class="tab buttonize" href="%s">%s</a></li>""" % (resource_url(api.meeting, request)+"@@contact", api.translate(_(u"Contact")),)
     return ""

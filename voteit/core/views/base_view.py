@@ -20,6 +20,7 @@ class BaseView(object):
         fanstaticlib.voteit_main_css.need()
         fanstaticlib.voteit_common_js.need()
         fanstaticlib.voteit_user_inline_info_js.need()
+        fanstaticlib.voteit_deform.need() #FIXME: For help menus. This should be loaded dynamically instead!
 
 
 class DefaultView(BaseView):

@@ -211,12 +211,12 @@ class Poll(BaseContent, WorkflowAware):
                 default=u"Poll closed. Proposals might have been adjusted as approved or denied depending on outcome of the poll.")
         fm.add(msg)
 
-    def render_poll_result(self, request):
+    def render_poll_result(self, request, complete=True):
         """ Render poll result. Calls plugin to calculate result.
         """
         try:
             poll_plugin = self.get_poll_plugin()
-            return poll_plugin.render_result(request)
+            return poll_plugin.render_result(request, complete)
         except Exception, exc:
             if request.registry.settings.get('pyramid.debug_templates', False):
                 raise exc

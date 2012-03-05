@@ -1,12 +1,12 @@
 <tal:main
     xmlns:i18n="http://xml.zope.org/namespaces/i18n"
     i18n:domain="voteit.core">
-<div class="deformSet starwidget"> 
+<div id="${field.oid}" class="deformSet starwidget"> 
     <input type="hidden" name="__start__" value="${field.name}:rename"/>
     <div class="meta" tal:content="field.widget.creator_info|''">Creator info</div>
     <tal:loop tal:repeat="choice field.widget.values">
         <input tal:attributes="checked choice[0] == cstruct;
-                             class string:${field.widget.css_class} star"
+                             class string:${field.widget.css_class}"
              type="radio"
              name="${field.oid}"
              value="${choice[0]}"
@@ -17,7 +17,7 @@
 </div>
 <script language="javascript" type="text/javascript">
     deform.addCallback('${field.oid}', function(oid) {
-        $('#'+oid).find('input.star').rating();
+        $('#'+oid).find('input[type="radio"]').rating();
     });
 </script>
 </tal:main>
