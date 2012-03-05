@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2012-03-02 15:36+0000\n"
+"POT-Creation-Date: 2012-03-05 09:16+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1053,7 +1053,7 @@ msgstr ""
 msgid "View"
 msgstr ""
 
-#: ./views/templates/polls.pt:53
+#: ./views/templates/polls.pt:49
 msgid "View details and your vote"
 msgstr ""
 
@@ -1132,18 +1132,6 @@ msgstr ""
 msgid "You can't change your vote now."
 msgstr ""
 
-#: ./views/poll.py:185
-msgid "You do not have the permission to vote in this meeting."
-msgstr ""
-
-#: ./views/templates/polls.pt:44
-msgid "You do not have the permission to vote in this poll, please contact the moderator if you should be able to vote."
-msgstr ""
-
-#: ./views/templates/polls.pt:49
-msgid "You have already voted. You can change your vote"
-msgstr ""
-
 #: ./models/user.py:143
 msgid "You have been mentioned in VoteIT"
 msgstr ""
@@ -1202,6 +1190,7 @@ msgstr ""
 msgid "add_tickets_schema_main_description"
 msgstr ""
 
+#. Default: "Vote"
 #: ./models/schemas.py:19
 #: ./views/templates/polls.pt:42
 msgid "add_vote_button"
@@ -1224,6 +1213,11 @@ msgstr ""
 
 #: ./views/templates/snippets/user_tag.pt:17
 msgid "and"
+msgstr ""
+
+#. Default: "You have already voted, but you may change your vote as long as the poll is open. Click the button below if you wish to do so."
+#: ./views/templates/polls.pt:48
+msgid "can_change_vote_notice"
 msgstr ""
 
 #. Default: "Proposal '${name}' already in state ${state}"
@@ -1300,10 +1294,6 @@ msgstr ""
 msgid "globally_existing_userid_validation_error"
 msgstr ""
 
-#: ./views/templates/polls.pt:49
-msgid "here"
-msgstr ""
-
 #. Default: "You've received a meeting invitation for a VoteIT meeting."
 #: ./schemas/invite_ticket.py:51
 msgid "invitation_default_text"
@@ -1370,6 +1360,12 @@ msgstr ""
 #. Default: "more"
 #: ./views/templates/snippets/user_tag.pt:28
 msgid "more_in_likes"
+msgstr ""
+
+#. Default: "You do not have the permission to vote in this poll, please contact the moderator if you should be able to vote."
+#: ./views/poll.py:185
+#: ./views/templates/polls.pt:44
+msgid "no_permission_to_vote_notice"
 msgstr ""
 
 #. Default: "A poll has just opened in the meeting ${meeting_title}. To get there, follow this link:"

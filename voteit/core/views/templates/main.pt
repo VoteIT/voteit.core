@@ -136,11 +136,6 @@
 		</a>
 		<div class="content"></div>
 	</div>
-	<!--
-    <div id="help-tab">
-        <a href="#" i18n:translate="">Help &amp; contact</a>
-    </div>
-    -->
     <div id="help-dialog" class="modal-window">
 		<a href="#" class="close">
 			<img src="${request.application_url}/static/icons/icon_close_lb.png"
