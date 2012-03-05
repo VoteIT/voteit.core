@@ -1,11 +1,19 @@
 /* VoteIT deform fixes */
-/* Show description */
-$(document).ready(function() {
+
+/* Show description
+ * This is kind of a hack - what we really want is for deform to start
+ * displaying description texts. They're open to that idea if we submit
+ * a patch to them. /Robin */
+function display_deform_labels() {
     $('label.desc').each(function() {
         var desc = $(this).attr('title');
         if(desc != '')
             $(this).after('<p>'+desc+'</p>');
+            $(this).attr('title', '');
     });
+}
+$(document).ready(function() {
+    display_deform_labels();
 });
 
 /* changin end time for polls when start time changes */

@@ -251,3 +251,47 @@ $(document).ready(function() {
 		});
 	});
 });
+
+$(document).ready(function() {
+	$('#polls a.poll_booth').live('click', function(event) {
+	    /* stops normal events function 
+	    IE might throw an error calling preventDefault(), so use a try/catch block. */
+	    try { event.preventDefault(); } catch(e) {}
+    	
+		var title = $(document.createElement('span')).addClass("iconpadding icon poll").text(voteit.translation['poll']);
+    	$("#dialog > h2").empty().append(title);
+    	
+    	$("#dialog .content").text(voteit.translation['loading'])
+    	open_modal_window("#dialog");
+
+		var url = $(this).attr('href');
+	    $("#dialog .content").load(url, function(response, status, xhr) {
+	    	deform.processCallbacks();
+	    });
+	});
+});
+
+$(document).ready(function() {
+	$('#help-tab > a').live('click', function(event) {
+	    /* stops normal events function 
+	    IE might throw an error calling preventDefault(), so use a try/catch block. */
+	    try { event.preventDefault(); } catch(e) {}
+    	
+    	open_modal_window("#help-dialog");
+	});
+	
+	$('#help-actions a.tab').live('click', function(event) {
+	    /* stops normal events function 
+	    IE might throw an error calling preventDefault(), so use a try/catch block. */
+	    try { event.preventDefault(); } catch(e) {}
+	    
+	   $('#help-actions a.tab').removeClass('active');
+	   $(this).addClass('active'); 
+
+		var url = $(this).attr('href');
+	    $("#help-dialog .content").load(url, function(response, status, xhr) {
+	    	deform.processCallbacks();
+            display_deform_labels();
+	    });
+	});
+});

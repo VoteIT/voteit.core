@@ -48,6 +48,10 @@ def polls_menu(context, request, va, **kw):
     response['url'] = '%s@@meeting_poll_menu' % api.resource_url(api.meeting, request)
     return render('../templates/snippets/polls_menu.pt', response, request = request)
 
+@view_action('meeting_actions', 'help_contact', title = _(u"Help & contact"))
+def help_contact_menu(context, request, va, **kw):
+    api = kw['api']
+    return """<li id="help-tab" class="tab"><a href="#">%s</a></li>""" % api.translate(_(u"Help & contact"))
 
 @view_action('meeting_actions', 'admin_menu', title = _(u"Admin menu"), permission = MANAGE_SERVER)
 @view_action('meeting_actions', 'settings_menu', title = _(u"Settings"), permission = MODERATE_MEETING, meeting_only = True)

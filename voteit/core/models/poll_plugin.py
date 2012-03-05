@@ -44,7 +44,7 @@ class PollPlugin(object):
         """
         raise NotImplementedError("Must be provided by subclass") # pragma : no cover
 
-    def render_result(self, request):
+    def render_result(self, request, complete=True):
         """ Return rendered html with result display. Called by the poll view
             when the poll has finished.
         """
