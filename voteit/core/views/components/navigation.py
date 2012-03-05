@@ -35,9 +35,9 @@ def login_box(context, request, va, **kwargs):
     api.register_form_resources(login_form)
     return """%s<div><a href="/@@request_password">%s</a></div>""" % (login_form.render(), api.translate(_(u"Forgot password?")))
     
-@view_action('navigation_sections', 'closed', title = _(u"Closed"), state = 'closed')
 @view_action('navigation_sections', 'ongoing', title = _(u"Ongoing"), state = 'ongoing')
 @view_action('navigation_sections', 'upcoming', title = _(u"Upcoming"), state = 'upcoming')
+@view_action('navigation_sections', 'closed', title = _(u"Closed"), state = 'closed')
 @view_action('navigation_sections', 'private', title = _(u"Private"), state = 'private',
              permission = MODERATE_MEETING, interface = IMeeting)
 def navigation_section(context, request, va, **kwargs):
