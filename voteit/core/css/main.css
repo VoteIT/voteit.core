@@ -787,3 +787,26 @@ ul.ui-sortable li {
 ul.ui-sortable li:hover {
 	border-color: #054265;
 }
+
+/* frame feed */
+body.framefeed {
+	font-size: 50%;
+}
+
+body.framefeed div#logo-wrapper {
+	background: #054265;
+}
+
+body.framefeed h1 {
+	font-size: 2.0em;
+}
+
+body.framefeed h2 {
+	margin: 0;
+	font-size: 1.7em;
+	font-weight: normal;
+}
+
+body.framefeed p.meta {
+	font-size: 1.5em;
+}

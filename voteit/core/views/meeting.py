@@ -428,15 +428,3 @@ class MeetingView(BaseView):
 
         self.response['agenda_items'] = agenda_items
         return self.response
-    
-    @view_config(context = IMeeting, name='feed', renderer ="templates/meeting_feed.pt")
-    def feed(self):
-        """ Renders a rss feed for the meeting """
-        feed_handler = self.request.registry.getAdapter(self.context, IFeedHandler)
-        self.response['entries'] = feed_handler.feed_storage.values()
-        self.response['dt_format'] = self.api.dt_util.dt_format
-        
-        # only show entries when meeting is ongoing
-        self.response['closed'] = self.context.get_workflow_state() == 'closed' 
-        
-        return self.response 
