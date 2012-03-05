@@ -264,7 +264,7 @@ class IPoll(IBaseFolder):
         """ Returns userids of all who've voted in this poll.
         """
 
-    def render_poll_result(request):
+    def render_poll_result(request, complete):
         """ Render poll result. Delegates this to plugin.
         """
 
@@ -438,7 +438,7 @@ class IPollPlugin(Interface):
         """ Handle closing of the poll.
         """
 
-    def render_result(request):
+    def render_result(request, complete=True):
         """ Return rendered html with result display. Called by the poll view
             when the poll has finished.
         """
