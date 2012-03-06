@@ -65,3 +65,10 @@ class LayoutSchema(colander.Schema):
                                           default = 'discussions',
                                           widget = deferred_ai_layout_right_widget,
                                           missing = colander.null,)
+    truncate_discussion_length = colander.SchemaNode(colander.Integer(),
+                                          title = _(u"Truncate discussion length"),
+                                          description = _(u"Number of visible characters before truncating, enter 0 for no truncating."),
+                                          default = 200,
+                                          widget = deform.widget.TextInputWidget(),
+                                          missing = 200,
+                                          validator=colander.Range(0),)
