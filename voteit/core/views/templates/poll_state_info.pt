@@ -8,11 +8,15 @@
         ${api.tstring(wf_state.title())}
         </span>
 	</div>
-    <div tal:condition="wf_state not in ('ongoing', )" class="iconpadding icon time start" i18n:translate="">The poll starts
-        <span tal:replace="api.dt_util.dt_format(poll.start_time)" i18n:name="start_time" />
+    <div tal:condition="wf_state not in ('ongoing', )" class="iconpadding icon time start">
+    	<span tal:condition="wf_state in ('private', 'upcoming', )" i18n:translate="">The poll starts</span>
+    	<span tal:condition="wf_state in ('ongoing', 'closed', )" i18n:translate="">The poll started</span>
+        <span tal:replace="api.dt_util.dt_format(poll.start_time)" />
     </div>
-    <div class="iconpadding icon time end" i18n:translate="">The poll ends
-        <span tal:replace="api.dt_util.dt_format(poll.end_time)" i18n:name="end_time" />
+    <div class="iconpadding icon time end">
+    	<span tal:condition="wf_state in ('private', 'upcoming', 'ongoing', )" i18n:translate="">The poll closes</span>
+    	<span tal:condition="wf_state in ('closed', )" i18n:translate="">The poll closed</span>
+        <span tal:replace="api.dt_util.dt_format(poll.end_time)" />
     </div>
     <div class="clear"><!-- --></div>
 </div>
