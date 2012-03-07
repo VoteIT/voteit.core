@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
-"POT-Creation-Date: 2012-03-05 09:16+0000\n"
+"POT-Creation-Date: 2012-03-07 14:14+0000\n"
 "PO-Revision-Date: 2012-02-28 13:14+0100\n"
 "Last-Translator: Fredrik Nilson <fredrik@betahaus.net>\n"
 "Language-Team: sv <LL@li.org>\n"
@@ -111,7 +111,7 @@ msgid "Access policy"
 msgstr "Inbjudningspolicy"
 
 #. Default: "Actions here"
-#: ./views/components/moderator_actions.py:45
+#: ./views/components/moderator_actions.py:46
 msgid "Actions here"
 msgstr "Funktioner här"
 
@@ -273,7 +273,7 @@ msgstr "Ändra tillstånd"
 msgid "Check this field - token doesn't match"
 msgstr "Kontrollera fältet - engångslösenordet stämmer inte"
 
-#: ./views/templates/main.pt:152
+#: ./views/templates/main.pt:147
 msgid "Click a button above to select category"
 msgstr "Klicka på en av knapparna ovan för att välja kategori"
 
@@ -297,7 +297,7 @@ msgid "Close"
 msgstr "Stäng"
 
 #. Default: "Closed"
-#: ./views/components/navigation.py:38
+#: ./views/components/navigation.py:40
 #: ./workflows/agenda_item.xml
 #: ./workflows/invite_ticket.xml
 msgid "Closed"
@@ -332,7 +332,7 @@ msgstr "Nuvarande logg"
 
 #. Default: "Delete"
 #: ./models/schemas.py:13
-#: ./views/components/moderator_actions.py:57
+#: ./views/components/moderator_actions.py:58
 #: ./views/templates/discussions.pt:35
 msgid "Delete"
 msgstr "Radera"
@@ -400,7 +400,7 @@ msgid "Download"
 msgstr "Ladda ned"
 
 #. Default: "Edit"
-#: ./views/components/moderator_actions.py:56
+#: ./views/components/moderator_actions.py:57
 #: ./views/poll.py:70
 msgid "Edit"
 msgstr "Redigera"
@@ -725,7 +725,7 @@ msgid "Nothing updated"
 msgstr "Inget uppdaterat"
 
 #. Default: "Ongoing"
-#: ./views/components/navigation.py:39
+#: ./views/components/navigation.py:38
 #: ./workflows/agenda_item.xml
 #: ./workflows/meeting.xml
 msgid "Ongoing"
@@ -805,7 +805,7 @@ msgid "Poll result"
 msgstr "Omröstningsresultat"
 
 #. Default: "Poll settings"
-#: ./views/components/moderator_actions.py:66
+#: ./views/components/moderator_actions.py:67
 msgid "Poll settings"
 msgstr "Inställningar för omröstning"
 
@@ -1021,11 +1021,19 @@ msgstr "Tack för din röst!"
 msgid "The following adresses is invalid: ${emails}"
 msgstr "Förljande adress(er) är ogiltiga: ${emails}"
 
-#: ./views/templates/poll_state_info.pt:15
-msgid "The poll ends ${end_time}"
-msgstr "Omröstningen avslutas ${end_time}"
+#: ./views/templates/poll_state_info.pt:30
+msgid "The poll closed ${end_time}"
+msgstr ""
 
-#: ./views/templates/poll_state_info.pt:12
+#: ./views/templates/poll_state_info.pt:26
+msgid "The poll closes ${end_time}"
+msgstr ""
+
+#: ./views/templates/poll_state_info.pt:19
+msgid "The poll started ${start_time}"
+msgstr ""
+
+#: ./views/templates/poll_state_info.pt:15
 msgid "The poll starts ${start_time}"
 msgstr "Omröstningen startar ${start_time}"
 
@@ -1065,7 +1073,7 @@ msgid "Unhandled"
 msgstr "Ohanterad"
 
 #. Default: "Upcoming"
-#: ./views/components/navigation.py:40
+#: ./views/components/navigation.py:39
 #: ./workflows/agenda_item.xml
 #: ./workflows/meeting.xml
 msgid "Upcoming"
@@ -1619,6 +1627,7 @@ msgid "single_permission_schema_userid_description"
 msgstr "Börja skriva första bokstäverna i det användarID du vill lägga till. Du borde se en lista nedan med alternativ om användarIDt existerar."
 
 #. Default: "Close"
+#: ./views/components/proposals.py:32
 #: ./views/templates/main.pt:132
 #: ./views/templates/navigation.pt:16
 #, fuzzy

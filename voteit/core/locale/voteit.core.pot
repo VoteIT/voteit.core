@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2012-03-05 09:16+0000\n"
+"POT-Creation-Date: 2012-03-07 14:14+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -100,7 +100,7 @@ msgstr ""
 msgid "Access policy"
 msgstr ""
 
-#: ./views/components/moderator_actions.py:45
+#: ./views/components/moderator_actions.py:46
 msgid "Actions here"
 msgstr ""
 
@@ -250,7 +250,7 @@ msgstr ""
 msgid "Check this field - token doesn't match"
 msgstr ""
 
-#: ./views/templates/main.pt:152
+#: ./views/templates/main.pt:147
 msgid "Click a button above to select category"
 msgstr ""
 
@@ -270,7 +270,7 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
-#: ./views/components/navigation.py:38
+#: ./views/components/navigation.py:40
 #: ./workflows/agenda_item.xml
 #: ./workflows/invite_ticket.xml
 msgid "Closed"
@@ -302,7 +302,7 @@ msgid "Current log"
 msgstr ""
 
 #: ./models/schemas.py:13
-#: ./views/components/moderator_actions.py:57
+#: ./views/components/moderator_actions.py:58
 #: ./views/templates/discussions.pt:35
 msgid "Delete"
 msgstr ""
@@ -365,7 +365,7 @@ msgstr ""
 msgid "Download"
 msgstr ""
 
-#: ./views/components/moderator_actions.py:56
+#: ./views/components/moderator_actions.py:57
 #: ./views/poll.py:70
 msgid "Edit"
 msgstr ""
@@ -667,7 +667,7 @@ msgstr ""
 msgid "Nothing updated"
 msgstr ""
 
-#: ./views/components/navigation.py:39
+#: ./views/components/navigation.py:38
 #: ./workflows/agenda_item.xml
 #: ./workflows/meeting.xml
 msgid "Ongoing"
@@ -740,7 +740,7 @@ msgstr ""
 msgid "Poll result"
 msgstr ""
 
-#: ./views/components/moderator_actions.py:66
+#: ./views/components/moderator_actions.py:67
 msgid "Poll settings"
 msgstr ""
 
@@ -937,11 +937,19 @@ msgstr ""
 msgid "The following adresses is invalid: ${emails}"
 msgstr ""
 
-#: ./views/templates/poll_state_info.pt:15
-msgid "The poll ends ${end_time}"
+#: ./views/templates/poll_state_info.pt:30
+msgid "The poll closed ${end_time}"
 msgstr ""
 
-#: ./views/templates/poll_state_info.pt:12
+#: ./views/templates/poll_state_info.pt:26
+msgid "The poll closes ${end_time}"
+msgstr ""
+
+#: ./views/templates/poll_state_info.pt:19
+msgid "The poll started ${start_time}"
+msgstr ""
+
+#: ./views/templates/poll_state_info.pt:15
 msgid "The poll starts ${start_time}"
 msgstr ""
 
@@ -975,7 +983,7 @@ msgstr ""
 msgid "Unhandled"
 msgstr ""
 
-#: ./views/components/navigation.py:40
+#: ./views/components/navigation.py:39
 #: ./workflows/agenda_item.xml
 #: ./workflows/meeting.xml
 msgid "Upcoming"
@@ -1507,6 +1515,7 @@ msgid "single_permission_schema_userid_description"
 msgstr ""
 
 #. Default: "Close"
+#: ./views/components/proposals.py:32
 #: ./views/templates/main.pt:132
 #: ./views/templates/navigation.pt:16
 msgid "title"
