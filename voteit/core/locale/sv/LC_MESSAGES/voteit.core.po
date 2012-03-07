@@ -1023,15 +1023,15 @@ msgstr "Förljande adress(er) är ogiltiga: ${emails}"
 
 #: ./views/templates/poll_state_info.pt:30
 msgid "The poll closed ${end_time}"
-msgstr ""
+msgstr "Omröstningen stängde ${end_time}"
 
 #: ./views/templates/poll_state_info.pt:26
 msgid "The poll closes ${end_time}"
-msgstr ""
+msgstr "Omröstningen stängs ${end_time}"
 
 #: ./views/templates/poll_state_info.pt:19
 msgid "The poll started ${start_time}"
-msgstr ""
+msgstr "Omröstningen startade ${start_time}"
 
 #: ./views/templates/poll_state_info.pt:15
 msgid "The poll starts ${start_time}"
