@@ -67,7 +67,7 @@ class HelpView(BaseView):
                         }
             body_html = render('templates/email/help_contact.pt', response, request=self.request)
             
-            msg = Message(subject=_(u"VoteIT - ${meeting}", mapping={"meeting": meeting.get_field_value('title')}),
+            msg = Message(subject=self.api.translate(_(u"VoteIT - ${meeting}", mapping={"meeting": meeting.get_field_value('title')})),
                           sender = sender and sender or None,
                           recipients=recipients,
                           html=body_html)
