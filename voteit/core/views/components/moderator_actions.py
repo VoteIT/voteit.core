@@ -36,6 +36,7 @@ def moderator_actions_wf_section(context, request, va, **kw):
         section_title = va.title,
         api = api,
         state_id  = context.get_workflow_state(),
+        state_title = context.current_state_title(api.request),
         states = context.get_available_workflow_states(request),
         state_change_url = "%s@@state?state=" % api.resource_url(context, request),
     )
