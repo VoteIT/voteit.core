@@ -3,13 +3,19 @@
 	<channel>
 	<title>${api.context.title}</title>
 	<link>${api.resource_url(api.context, api.request)}</link>
-	<tal:iterate condition="not closed" repeat="entry entries">
+	<tal:iterate condition="not closed and active" repeat="entry entries">
     <item>
 		<title>${entry.message}</title>
 		<link>${entry.url}</link>
 		<pubDate>${dt_format(entry.created, format="E, dd MMM y HH:mm:ss zzz")}</pubDate>
 		<guid>${entry.guid}</guid>
-	</item>	
+	</item>
 	</tal:iterate>
+	<item tal:condition="not (not closed and active)">
+		<title i18n:translate="">Feed is not active</title>
+		<link>${api.resource_url(api.context, api.request)}</link>
+		<pubDate>${dt_format(api.dt_util.utcnow(), format="E, dd MMM y HH:mm:ss zzz")}</pubDate>
+		<guid>${api.resource_url(api.context, api.request)}</guid>
+	</item>
 	</channel>
 </rss>
