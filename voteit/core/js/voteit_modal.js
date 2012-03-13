@@ -1,4 +1,7 @@
 function open_modal_window(obj) {
+	//Prevent the page from scrolling
+    $("body").css("overflow", "hidden");
+	
 	//Get the screen height and width
     var maskHeight = $(document).height();
     var maskWidth = $(document).width();
@@ -30,12 +33,14 @@ $(document).ready(function() {
         //Cancel the link behavior
         e.preventDefault();
         $('#modal-mask, .modal-window').hide();
+        $("body").css("overflow", "auto");
     });     
      
     //if mask is clicked
     $('#modal-mask').click(function () {
         $(this).hide();
         $('.modal-window').hide();
+        $("body").css("overflow", "auto");
     });
 });
 
@@ -68,5 +73,6 @@ $(document).keyup(function(e) {
 	if(e.keyCode == 27) {
 		$('#modal-mask').hide();
 		$('.modal-window').hide();
+		$("body").css("overflow", "auto");
 	}
 });
