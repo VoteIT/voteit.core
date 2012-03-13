@@ -36,7 +36,8 @@ def description_node():
 def meeting_mail_name_node():
     return colander.SchemaNode(colander.String(),
                                title = _(u"Name visible on system mail sent from this meeting"),
-                               default = _(u"VoteIT"),)
+                               default = _(u"VoteIT"),
+                               validator = colander.Regex(regex='^\w+$', msg=_(u"Only alphanumeric characters allowed")),)
 
 def meeting_mail_address_node():
     return colander.SchemaNode(colander.String(),
