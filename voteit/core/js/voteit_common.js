@@ -209,7 +209,7 @@ $(document).ready(function() {
     if (url_config.length > 0) {
         var url = url_config.attr('href') + '/_mark_read';
         var unread_names = [];
-        $(".unread").each( function() {
+        $("#main_window .unread").each( function() {
             unread_names.push( $(this).attr('name') );
         });
         if (unread_names.length > 0) {
@@ -230,7 +230,7 @@ $(document).ready(function() {
                                 console.log('Requested: ' + unread_names.length + ' Returned: ' + val);
                             };
                         });
-                     }
+                    },
             });
         }
     };

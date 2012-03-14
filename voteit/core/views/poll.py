@@ -182,8 +182,9 @@ class PollView(BaseEdit):
                 
                 #FIXME: maybe we should show show a thank you message
             else:
-                msg = _(u"You do not have the permission to vote in this meeting.")
-                self.api.flash_messages.add(msg)
+                msg = _(u"no_permission_to_vote_notice",
+                        default = "You do not have the permission to vote in this poll, please contact the moderator if you should be able to vote.")
+                self.api.flash_messages.add(msg, type = u'error')
             
             url = resource_url(self.context.__parent__, self.request)
             if self.request.is_xhr:

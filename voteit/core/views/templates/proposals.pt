@@ -16,7 +16,7 @@
 
         <div class="meta">
             <span class="${state_id} icon iconpadding"
-                  tal:content="api.tstring(state_id.title())">private</span>
+                  tal:content="translated_state_title(state_id)">private</span>
             <span class="hyphen">&#45;</span>
             <span class="time" tal:content="api.dt_util.relative_time_format(proposal['created'])"></span>
             <span class="hyphen">&#45;</span>
