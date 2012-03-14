@@ -14,9 +14,12 @@ from voteit.core.htmltruncate import htmltruncate
 
 #FIXME: needs a way to set default value on this on creation of meeting
 def truncate(text, length=200):
-    if length and length > 0:
-        trunc_text = htmltruncate.truncate(text, length, u'…')
-    else:
+    try:
+        if length and length > 0:
+            trunc_text = htmltruncate.truncate(text, length, u'…')
+        else:
+            trunc_text = text
+    except htmltruncate.UnbalancedError: #If the html tags doesn't match up return the complete text 
         trunc_text = text
     
     return (trunc_text, text != trunc_text)
