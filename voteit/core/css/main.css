@@ -322,6 +322,9 @@ p {
     padding-right: 20px;
     background: url(/static/images/task_active.png) no-repeat right bottom;
 }
+#navigation .selected div.item a div:first-child {
+	font-weight: bold;
+}
 #navigation ul {
     margin: 0px;
 }
