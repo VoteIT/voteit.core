@@ -503,6 +503,9 @@ class IUnread(Interface):
 
     def get_unread_userids():
         """ Returns a frozenset of all userids who haven't read this context. """
+        
+    def reset_unread():
+        """ Sets unread as newly created """
 
 
 #Utilities

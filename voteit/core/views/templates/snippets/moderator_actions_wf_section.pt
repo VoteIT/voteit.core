@@ -3,7 +3,7 @@
 <li>
     <span class="readonly">
         <span class="iconpadding icon ${state_id}">
-        ${api.tstring(state_id.title())}
+        ${api.tstring(state_title)}
         - (<span i18n:translate="">current</span>)
         </span>
     </span>

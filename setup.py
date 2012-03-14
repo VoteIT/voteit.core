@@ -16,7 +16,7 @@ requires = (
     'repoze.workflow',
     'ZODB3',
     'WebError',
-    'colander>=0.9.4',
+    'colander==0.9.5',
     'deform>=0.9.4',
     'Babel',
     'slugify',
