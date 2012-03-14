@@ -325,7 +325,7 @@ class MeetingView(BaseView):
     
     @view_config(context=IMeeting, name="mail_settings", renderer="templates/base_edit.pt", permission=security.EDIT)
     def mail_settings(self):
-        schema = createSchema("AccessPolicyMeetingSchema").bind(context=self.context, request=self.request)
+        schema = createSchema("MailSettingsMeetingSchema").bind(context=self.context, request=self.request)
         return self.form(schema)
         
     @view_config(context=IMeeting, name="access_policy", renderer="templates/base_edit.pt", permission=security.EDIT)
