@@ -80,3 +80,15 @@ class UnreadTests(unittest.TestCase):
         prop.add_groups('anders', [security.ROLE_VIEWER])
         obj = self._fut(prop)
         self.assertEqual(obj.get_unread_userids(), frozenset(('admin', 'hanna', 'anders')))
+
+    def test_reset_unread(self):
+        register_security_policies(self.config)
+        root = self._fixture_and_setup()
+        prop = self._make_proposal()
+        root['new'] = prop
+        prop.add_groups('hanna', [security.ROLE_VIEWER])
+        prop.add_groups('anders', [security.ROLE_VIEWER])
+        obj = self._fut(prop)
+        obj.mark_as_read('hanna')
+        obj.reset_unread()
+        self.assertEqual(obj.get_unread_userids(), frozenset(('admin', 'hanna', 'anders')))

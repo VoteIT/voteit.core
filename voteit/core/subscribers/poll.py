@@ -3,6 +3,7 @@ from pyramid.threadlocal import get_current_request
 from repoze.folder.interfaces import IObjectAddedEvent
 
 from voteit.core.models.interfaces import IPoll
+from voteit.core.models.interfaces import IUnread
 from voteit.core.interfaces import IObjectUpdatedEvent
 from voteit.core.interfaces import IWorkflowStateChange
 from voteit.core.models.poll import email_voters_about_ongoing_poll
@@ -30,3 +31,17 @@ def create_reject_proposal(obj, event):
     """ Adding a reject proposal to poll. This is a subscriber because
         poll needs to be added to the agenda_item for this to work """
     obj.create_reject_proposal()
+
+@subscriber([IPoll, IWorkflowStateChange])
+def reset_unread_ongoing_poll_subscriber(obj, event):
+    """ When the poll is created it is in private state where only the 
+        moderator has premissions to view it, there for unread is not set 
+        properly on polls. This is fixed by reseting it when it becomes 
+        ongoing. """
+    if event.new_state != 'upcoming':
+        return
+    request = get_current_request()
+    unread = request.registry.queryAdapter(obj, IUnread)
+    if not unread:
+        return
+    unread.reset_unread()
