@@ -129,7 +129,6 @@ class PollView(BaseEdit):
             url = resource_url(self.context.__parent__, self.request)
             return HTTPFound(location=url)
 
-
         poll_plugin = self.context.get_poll_plugin()
         schema = poll_plugin.get_vote_schema()
         add_csrf_token(self.context, self.request, schema)
@@ -202,7 +201,8 @@ class PollView(BaseEdit):
             self.response['form'] = form.render(appstruct=appstruct, readonly=readonly)
         #User has not voted
         else:
-            self.response['form'] = form.render()
+            readonly = not can_vote
+            self.response['form'] = form.render(readonly=readonly)
 
         return self.response
     
