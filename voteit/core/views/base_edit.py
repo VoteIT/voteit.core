@@ -158,7 +158,7 @@ class BaseEdit(object):
 
         post = self.request.POST
         if 'delete' in post:
-            if self.context.content_type == 'SiteRoot' or self.context.content_type == 'Users' or self.context.content_type == 'User':
+            if self.context.content_type in ('SiteRoot', 'Users', 'User'):
                 raise Exception("Can't delete this content type")
 
             parent = self.context.__parent__
@@ -175,8 +175,15 @@ class BaseEdit(object):
             return HTTPFound(location=url)
 
         #No action - Render edit form
-        msg = _(u"Are you sure you want to delete this item?")
-        self.api.flash_messages.add(msg, close_button=False)
+        msg = _(u"delete_form_notice",
+                default = u"Are you sure you want to delete '${display_name}' with title: ${title}?",
+                mapping = {'display_name': self.api.translate(self.context.display_name),
+                           'title': self.context.title})
+        self.api.flash_messages.add(msg, close_button = False)
+        if self.context.content_type == 'Proposal' and self.context.get_workflow_state() == 'voting':
+            msg = _(u"delete_form_locked_proposal_notice",
+                    default = u"This proposal is locked for voting. If you delete it, you will NEVER be able to close the poll it's participating in. Are you really sure that you want to do this?")
+            self.api.flash_messages.add(msg, type = 'error', close_button = False)
         self.response['form'] = form.render()
         return self.response
 
