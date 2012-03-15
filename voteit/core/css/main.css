@@ -322,6 +322,9 @@ p {
     padding-right: 20px;
     background: url(/static/images/task_active.png) no-repeat right bottom;
 }
+#navigation .selected div.item a div:first-child {
+	font-weight: bold;
+}
 #navigation ul {
     margin: 0px;
 }
@@ -514,6 +517,21 @@ li.notification_message {
 #booth .poll_type {
     border: 1px solid #86A3B4;
     padding: 2px;
+}
+#booth ul.proposals li {
+	clear: left;
+	display: block;
+	margin: 6px 0px;
+	
+}
+#booth ul.proposals li div.title {
+	display: block;
+}
+#booth ul.proposals li div.meta {
+	float: left;
+}
+#booth h4.proposal {
+	border-top: none;
 }
 
 /* proposals and discussions */
