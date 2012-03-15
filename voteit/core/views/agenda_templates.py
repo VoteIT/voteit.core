@@ -1,4 +1,5 @@
 from betahaus.pyracont.factories import createSchema
+from betahaus.pyracont.factories import createContent
 from deform import Form
 from deform.exception import ValidationFailure
 from pyramid.url import resource_url
@@ -29,7 +30,12 @@ class AgendaTempalteView(BaseView):
     
     @view_config(context=IMeeting, name="agenda_templates", renderer="templates/agenda_templates.pt", permission=security.EDIT)
     def agenda_template_select(self):
-        agenda_templates = self.api.root['agenda_templates']
+        #FIXME: Should this be a migrate script?
+        try:
+            agenda_templates = self.api.root['agenda_templates']
+        except KeyError:
+            obj = createContent('AgendaTemplates', title = _(u"Agenda templates"), creators = ['admin'])
+            agenda_templates = self.api.root['agenda_templates'] = obj
         
         get = self.request.GET
         if 'apply' in get:
