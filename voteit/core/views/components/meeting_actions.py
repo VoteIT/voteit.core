@@ -51,7 +51,15 @@ def polls_menu(context, request, va, **kw):
 @view_action('meeting_actions', 'help_contact', title = _(u"Help & contact"))
 def help_contact_menu(context, request, va, **kw):
     api = kw['api']
-    return """<li id="help-tab" class="tab"><a href="#">%s</a></li>""" % api.translate(_(u"Help & contact"))
+    return """<li id="help-tab" class="tab"><a href="#">%s</a></li>""" % api.translate(va.title)
+
+@view_action('meeting_actions', 'search', title = _(u"Search"))
+def search_menu(context, request, va, **kw):
+    api = kw['api']
+    if api.meeting:
+        return u"""<li class="tab"><a href="%s@@search">%s</a></li>""" % (api.meeting_url, api.translate(va.title))
+    return u""
+
 
 @view_action('meeting_actions', 'admin_menu', title = _(u"Admin menu"), permission = MANAGE_SERVER)
 @view_action('meeting_actions', 'settings_menu', title = _(u"Settings"), permission = MODERATE_MEETING, meeting_only = True)
