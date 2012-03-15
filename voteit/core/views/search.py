@@ -3,25 +3,41 @@ from deform.exception import ValidationFailure
 from pyramid.view import view_config
 from pyramid.traversal import find_resource
 from pyramid.traversal import resource_path
+from pyramid.security import Everyone
+from pyramid.security import effective_principals
 from repoze.catalog.query import Eq
+from repoze.catalog.query import Any
 from repoze.catalog.query import Contains
 from repoze.catalog.query import Name
 from betahaus.pyracont.factories import createSchema
+from webhelpers.html.converters import nl2br
+from webhelpers.html.render import sanitize
 
 from voteit.core.views.base_view import BaseView
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.schemas import button_search
 from voteit.core.models.schemas import add_csrf_token
+from voteit.core.security import VIEW
 from voteit.core import VoteITMF as _
 
 
-SEARCH_VIEW_QUERY = Eq('path', Name('path')) & Contains('searchable_text', Name('searchable_text'))
+SEARCH_VIEW_QUERY = Eq('path', Name('path')) \
+    & Contains('searchable_text', Name('searchable_text')) \
+    & Any('content_type', ('DiscussionPost', 'Proposal', )) \
+    & Any('allowed_to_view', Name('allowed_to_view'))
+
+
+def _strip_and_truncate(text, limit=200):
+    text = sanitize(text)
+    if len(text) > limit:
+        text = u"%s<...>" % nl2br(text[:limit])
+    return nl2br(text)
 
 
 class SearchView(BaseView):
     """ Handle incoming search query and display result. """
-    
-    @view_config(context=IMeeting, name="search", renderer="templates/search.pt")
+
+    @view_config(context=IMeeting, name="search", renderer="templates/search.pt", permission = VIEW)
     def search(self):
         schema = createSchema('SearchSchema').bind(context = self.context, request = self.request)
         add_csrf_token(self.context, self.request, schema)        
@@ -45,62 +61,25 @@ class SearchView(BaseView):
                 self.response['search_form'] = e.render()
                 return self.response
 
-            #Preform the actual search            
-            #cat_query = self.api.root.catalog.query
-
+            #Preform the actual search
             query = {}
             if appstruct['query']:
                 query['searchable_text'] = appstruct['query']
             query['path'] = resource_path(self.api.meeting)
-    
-            #FIXME: PERMISSION
-            #num, results = cat_query(SEARCH_VIEW_QUERY, names = query_params)
+            if self.api.userid:
+                query['allowed_to_view'] = effective_principals(self.request)
+            else:
+                query['allowed_to_view'] = [Everyone]
 
-            self.response['results'] = self.api.get_metadata_for_query(**query)
+            cat_query = self.api.root.catalog.query
+            get_metadata = self.api.root.catalog.document_map.get_metadata
+            num, results = cat_query(SEARCH_VIEW_QUERY, names = query)
+            self.response['results'] = [get_metadata(x) for x in results]
 
         self.response['search_form'] = form.render(appstruct = appstruct)
         self.response['query_data'] = appstruct
         self.response['results_ts'] = _results_ts
         self.response['results_count'] = len(self.response['results'])
+        self.response['strip_truncate'] = _strip_and_truncate
         return self.response
 
-
-
-
-
-
-
-
-
-#        search_string = self.request.params.get('query')
-#        self.response['search_string'] = search_string #Could be None
-#        self.response['search_results'] = ()
-#
-#        if not search_string:
-#            return self.response
-#        
-#        meeting = self.api.meeting
-#        cat_query = self.api.root.catalog.query
-#        docid_to_address = self.api.root.catalog.document_map.docid_to_address
-#        
-#        query_params = {}
-#        query_params['searchable_text'] = search_string
-#        query_params['path'] = resource_path(meeting)
-#
-#        #FIXME: PERMISSION
-#        num, results = cat_query(SEARCH_VIEW_QUERY, names = query_params)
-#
-#        if not num:
-#            return self.response
-#        
-#        objects = []
-#
-#        for id in results:
-#            path = docid_to_address.get(id)
-#            obj = find_resource(meeting, path)
-#            if obj is not None:
-#                objects.append(obj)
-#        
-#        self.response['search_results'] = tuple(objects)
-#        
-#        return self.response
