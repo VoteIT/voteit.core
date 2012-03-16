@@ -46,6 +46,11 @@ def meeting_mail_address_node():
                                title = _(u"Email address to send from"),
                                default = u"noreply@somehost.voteit",
                                validator = colander.All(colander.Email(msg = _(u"Invalid email address.")), html_string_validator,),)
+    
+def rss_feed_node():
+    return colander.SchemaNode(colander.Boolean(),
+                               title = _(u"RSS feed available"),
+                               default = False,)
 
 def access_policy_node():
     return colander.SchemaNode(colander.String(),
@@ -59,7 +64,8 @@ class MeetingSchema(colander.MappingSchema):
     title = title_node();
     description = description_node();
     meeting_mail_name = meeting_mail_name_node();
-    meeting_mail_address = meeting_mail_address_node();    
+    meeting_mail_address = meeting_mail_address_node();
+    rss_feed = rss_feed_node();
     access_policy = access_policy_node();
 
 @schema_factory('PresentationMeetingSchema',
@@ -74,6 +80,7 @@ class PresentationMeetingSchema(colander.MappingSchema):
 class MailSettingsMeetingSchema(colander.MappingSchema):
     meeting_mail_name = meeting_mail_name_node();
     meeting_mail_address = meeting_mail_address_node();
+    rss_feed = rss_feed_node();
     
 @schema_factory('AccessPolicyMeetingSchema', title = _(u"Access policy"))
 class AccessPolicyeMeetingSchema(colander.MappingSchema):

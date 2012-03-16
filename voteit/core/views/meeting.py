@@ -22,6 +22,7 @@ from voteit.core.views.base_view import BaseView
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import ISiteRoot
+from voteit.core.models.interfaces import IFeedHandler
 from voteit.core.models.schemas import add_csrf_token
 from voteit.core.models.schemas import button_save
 from voteit.core.models.schemas import button_add

@@ -1,0 +1,28 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+	  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+	  i18n:domain="voteit.core">
+<head>
+	<title>${api.context.title}</title>
+</head>
+<body class="framefeed">
+	<div id="logo-wrapper">
+		<a tal:attributes="href api.resource_url(api.root, request)" target="_blank">
+		    <img tal:replace="structure api.render_single_view_component(context, request, 'main', 'logo_tag')" />
+		</a>
+	</div>
+	<h1><a href="${api.resource_url(api.context, api.request)}" target="_blank">${api.context.title}</a></h1>
+    <ul tal:condition="not closed and entries">
+	<tal:iterate condition="not closed and active" repeat="entry entries">
+		<h2><a href="${entry.url}" target="_blank">${entry.message}</a></h2>
+		<p class="meta">${dt_format(entry.created, format="E d MMMM y HH:mm:ss")}</p>
+	</tal:iterate>
+	</ul>
+	<tal:inactive condition="not (not closed and active)">
+		<h2><a href="${api.resource_url(api.context, api.request)}" target="_blank" i18n:translate="">Feed not active</a></h2>
+		<p class="meta">${dt_format(api.dt_util.utcnow(), format="E d MMMM y HH:mm:ss")}</p>
+	</tal:inactive>
+</body>
+</html>

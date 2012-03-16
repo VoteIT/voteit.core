@@ -327,6 +327,31 @@ class IInviteTicket(Interface):
         """
 
 
+class IAgendaTemplates(Interface):
+    """ Contains all Agenda templates. """
+
+
+class IAgendaTemplate(Interface):
+    """ Agenda template content """
+    
+    def populate_meeting(meeting):
+        """ Populate meeting with agenda items
+        """
+
+
+class IFeedEntry(Interface):
+    """ A persistent feed entry. """
+    created = Attribute("When it was created, in UTC time.")
+    context_uid = Attribute("UID of the context that triggered this feed entry.")
+    message = Attribute("Message")
+    tags = Attribute("Tags, works pretty much like categories for feed entries.")
+    url = Attribute("An url to the context where the entry happened.")
+    guid = Attribute("Url of the context that triggered the feed entry")
+
+    def __init__(context_uid, message, tags=(), url=None, guid=None):
+        """ Create a feed entry. """
+
+
 #Mixin class interfaces
 class IWorkflowAware(Interface):
     """ Mixin class for content that needs workflow. """
@@ -471,6 +496,13 @@ class ILogHandler(Interface):
         """ Object needs a meeting to adapt. """
 
 
+class IFeedHandler(Interface):
+    """ An adapter for meetings that handle feeds. """
+
+    def __init__(context):
+        """ Object needs a meeting to adapt. """
+
+
 class ICatalogMetadata(Interface):
     """ An adapter to fetch metadata for the catalog.
         it adapts voteit.core.models.interfaces.ICatalogMetadataEnabled
@@ -562,7 +594,6 @@ class IDateTimeUtil(Interface):
         datetime object, whereas this one includes the UTC tz info.
         """
 
-
 #Marker interfaces
 class ICatalogMetadataEnabled(Interface):
     """ Marker interface for IBaseContent that should have metadata.
@@ -570,14 +601,3 @@ class ICatalogMetadataEnabled(Interface):
         adapter is registered for it.
     """
 
-
-class IAgendaTemplates(Interface):
-    """ Contains all Agenda templates. """
-
-
-class IAgendaTemplate(Interface):
-    """ Agenda template content """
-    
-    def populate_meeting(meeting):
-        """ Populate meeting with agenda items
-        """
