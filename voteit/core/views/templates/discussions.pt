@@ -18,16 +18,19 @@
 </div>
 
 <tal:iterate condition="discussions" repeat="post discussions">
-    <div tal:define="unread api.is_brain_unread(post)"
+    <div tal:define="unread api.is_brain_unread(post);
+    				 (text, truncated) truncate(post['title'], truncate_length)"
          tal:attributes="class unread and 'unread listing_block' or 'listing_block';
-		                 name post['name'];">
+		                 name post['name'];
+		                 id post['name'];">
 
         <span tal:condition="api.show_moderator_actions" tal:replace="structure api.get_moderator_actions(post, request)">
              Cogwheel menu
         </span>
 
         <tal:creators tal:replace="structure api.get_creators_info(post['creators'], request)">Creators</tal:creators>
-        <span class="body" tal:content="structure post['title']">text</span>
+        <span class="body" tal:content="structure text">text</span>
+        <span class="more" tal:condition="truncated"><a tal:attributes="href '%s%s/@@more' % (request.application_url, post['path'])" i18n:translate="">Read more</a></span>
         <div class="meta">	
             <span class="time" tal:content="api.dt_util.relative_time_format(post['created'])"></span>
             <span class="hyphen">&#45;</span>

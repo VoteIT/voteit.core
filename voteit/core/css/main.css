@@ -826,7 +826,12 @@ ul.ui-sortable li {
     color: #054265;
 }
 ul.ui-sortable li:hover {
-    border-color: #054265;
+	border-color: #054265;
+}
+
+/* Read more discussion post */
+#discussions span.more {
+	display: block;
 }
 
 /* modal */
@@ -886,5 +891,3 @@ ul.ui-sortable li:hover {
     margin-right: 0.5em;
     list-style-type: none;
 }
-
-
