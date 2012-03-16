@@ -24,7 +24,7 @@ from voteit.core import VoteITMF as _
 
 SEARCH_VIEW_QUERY = Eq('path', Name('path')) \
     & Contains('searchable_text', Name('searchable_text')) \
-    & Any('content_type', ('DiscussionPost', 'Proposal', )) \
+    & Any('content_type', ('DiscussionPost', 'Proposal', 'AgendaItem' )) \
     & Any('allowed_to_view', Name('allowed_to_view'))
 
 
