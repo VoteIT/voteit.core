@@ -24,6 +24,8 @@ class SecurityTests(unittest.TestCase):
         self.config.setup_registry(authentication_policy=authn_policy,
                                    authorization_policy=authz_policy)
         self.config.scan('voteit.core.models.site')
+        self.config.scan('voteit.core.models.agenda_template')
+        self.config.scan('voteit.core.models.agenda_templates')
         self.config.scan('voteit.core.models.user')
         self.config.scan('voteit.core.models.users')
         self.root = self._fixture()

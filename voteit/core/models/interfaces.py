@@ -569,3 +569,15 @@ class ICatalogMetadataEnabled(Interface):
         The interface itself doesn't do anything, but the ICatalogMetadata
         adapter is registered for it.
     """
+
+
+class IAgendaTemplates(Interface):
+    """ Contains all Agenda templates. """
+
+
+class IAgendaTemplate(Interface):
+    """ Agenda template content """
+    
+    def populate_meeting(meeting):
+        """ Populate meeting with agenda items
+        """

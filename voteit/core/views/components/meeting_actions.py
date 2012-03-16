@@ -85,6 +85,7 @@ def generic_root_menu_link(context, request, va, **kw):
     return """<li><a href="%s">%s</a></li>""" % (url, api.translate(va.title))
 
 
+@view_action('settings_menu', 'agenda_templates', title = _(u"Agenda Templates"), link = "@@agenda_templates", permission = EDIT, )
 @view_action('settings_menu', 'manage_layout', title = _(u"Layout and widgets"), link = "@@manage_layout", permission = EDIT, )
 @view_action('settings_menu', 'access_policye', title = _(u"Access policy"), link = "@@access_policy", permission = EDIT, )
 @view_action('settings_menu', 'mail_settings', title = _(u"Mail settings"), link = "@@mail_settings", permission = EDIT, )

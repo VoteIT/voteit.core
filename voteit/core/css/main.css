@@ -833,6 +833,12 @@ ul.ui-sortable li:hover {
 #discussions span.more {
 	display: block;
 }
+/* Agenda templates */
+ul.agenda-templates > li {
+	border-bottom: 2px solid #86A3B4;
+	padding-bottom: 10px;
+
+}
 
 /* modal */
 .modal-window {

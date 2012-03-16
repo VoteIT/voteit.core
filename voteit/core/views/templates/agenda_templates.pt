@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      metal:use-macro="api.main_template.macros['master']"
+	  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+	  i18n:domain="voteit.core">
+<body>
+<div metal:fill-slot="page_heading"
+     id="page_heading">
+	 <h2 i18n:translate="">Agenda templates</h2>
+</div>
+<div metal:fill-slot="content" class="content_wrapper">
+	<div class="moderator-help-buttons">
+        <a tal:attributes="href '%s@@add?content_type=AgendaTemplate' % api.resource_url(agenda_templates, request)"
+           tal:condition="api.context_has_permission('Add Meeting', agenda_templates)"
+           class="buttonize large"
+           i18n:translate="">Add</a>
+    </div>
+    <div tal:condition="api.meeting" i18n:translate="agenda_templates_list_description">
+    	Choose one of the listed templates and press apply to copy the agenda items to yout meeting.
+    </div>
+	<ul tal:condition="agenda_templates.values()" class="agenda-templates">
+		<li tal:repeat="template agenda_templates.values()">
+			<h3 tal:content="template.title">Template</h3>
+			<div class="description" tal:condition="template.description" tal:content="structure template.description"></div>
+			<div id="template-details-${template.__name__}" class="toggle_area toggle_closed">
+			<a class="toggle_minimize read_more" i18n:translate="">Details</a>
+	            <div class="minimizable_area">
+	         		<ul tal:condition="template.get_field_value('agenda_items')">
+	         			<li tal:repeat="item template.get_field_value('agenda_items')">
+	         				<h4>${item.title}</h4>
+	         				<div class="description" tal:condition="item.description" tal:content="structure item.description"></div>
+	         			</li>
+	         		</ul>
+	            </div>
+	            <div class="minimizable_inverted meta" i18n:translate="">
+	            	Click above to see the agenda items for this template
+	        	</div>
+	        </div>
+			<a class="buttonize apply" 
+				href="${api.resource_url(api.context, api.request)}@@agenda_templates?apply=${template.__name__}"
+				tal:condition="api.meeting" 
+				i18n:translate="">Apply</a>
+			<a tal:attributes="href '%s@@edit' % api.resource_url(template, request)"
+           	   tal:condition="api.context_has_permission('Edit', template)"
+               class="buttonize"
+               i18n:translate="">Edit</a>
+		</li>
+	</ul>
+	<h3 tal:condition="not agenda_templates.values()" i18n:translate="">There is no agenda templates available</h3>
+</div>
+</body>
+</html>
