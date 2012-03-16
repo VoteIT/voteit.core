@@ -9,15 +9,17 @@
 
 <metal:blank_heading fill-slot="page_heading"></metal:blank_heading>
 
-<div metal:fill-slot="content" class="content_wrapper">
+<div metal:fill-slot="content" class="content_wrapper" id="search">
     <div tal:replace="structure search_form"></div>
 
     <tal:results condition="results">
-        <span tal:content="results_count">1</span>
-        <span tal:content="results_ts(results_count)">item</span>
+        <div class="listing_block">
+            <span tal:content="results_count">1</span>
+            <span tal:content="results_ts(results_count)">item</span>
+        </div>
     
         <tal:iterate repeat="brain results">
-            <div tal:define="state_id brain['workflow_state']">
+            <div class="listing_block" tal:define="state_id brain['workflow_state']">
                 <h5><a href="${brain.path}" class="${brain['content_type'].lower()} icon iconpadding">
                     ${strip_truncate(brain.title)}
                 </a></h5>
