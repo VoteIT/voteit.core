@@ -584,6 +584,15 @@ li.notification_message {
     color: #DF0000;
 }
 
+/* search */
+#search .listing_block {
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 10px;
+}
+#search ul li {
+	display: inline;
+}
+
 /* confirm dialog */
 ui-dialog {
     background-color: #000;

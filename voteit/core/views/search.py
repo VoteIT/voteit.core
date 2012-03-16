@@ -12,6 +12,7 @@ from repoze.catalog.query import Name
 from betahaus.pyracont.factories import createSchema
 from webhelpers.html.converters import nl2br
 from webhelpers.html.render import sanitize
+from zope.index.text.parsetree import ParseError
 
 from voteit.core.views.base_view import BaseView
 from voteit.core.models.interfaces import IMeeting
@@ -23,7 +24,7 @@ from voteit.core import VoteITMF as _
 
 SEARCH_VIEW_QUERY = Eq('path', Name('path')) \
     & Contains('searchable_text', Name('searchable_text')) \
-    & Any('content_type', ('DiscussionPost', 'Proposal', )) \
+    & Any('content_type', ('DiscussionPost', 'Proposal', 'AgendaItem' )) \
     & Any('allowed_to_view', Name('allowed_to_view'))
 
 
@@ -73,8 +74,13 @@ class SearchView(BaseView):
 
             cat_query = self.api.root.catalog.query
             get_metadata = self.api.root.catalog.document_map.get_metadata
-            num, results = cat_query(SEARCH_VIEW_QUERY, names = query)
-            self.response['results'] = [get_metadata(x) for x in results]
+            try:
+                num, results = cat_query(SEARCH_VIEW_QUERY, names = query, sort_index = 'created', reverse = True)
+                self.response['results'] = [get_metadata(x) for x in results]
+            except ParseError, e:
+                msg = _(u"search_exception_notice",
+                        default = u"Search resulted in an error - it's not possible to search for common operator words like 'if' or 'the'.")
+                self.api.flash_messages.add(msg, type = 'error')
 
         self.response['search_form'] = form.render(appstruct = appstruct)
         self.response['query_data'] = appstruct
