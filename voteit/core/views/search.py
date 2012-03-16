@@ -75,7 +75,7 @@ class SearchView(BaseView):
             cat_query = self.api.root.catalog.query
             get_metadata = self.api.root.catalog.document_map.get_metadata
             try:
-                num, results = cat_query(SEARCH_VIEW_QUERY, names = query)
+                num, results = cat_query(SEARCH_VIEW_QUERY, names = query, sort_index = 'created', reverse = True)
                 self.response['results'] = [get_metadata(x) for x in results]
             except ParseError, e:
                 msg = _(u"search_exception_notice",
