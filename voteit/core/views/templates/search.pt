@@ -36,7 +36,7 @@
         
     </tal:results>
 
-    <tal:no_results condition="not results and query_data">
+    <tal:no_results condition="not results and query_data|False">
         <div i18n:translate="">No search results</div>
     </tal:no_results>
 
