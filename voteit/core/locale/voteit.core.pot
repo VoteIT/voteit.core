@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2012-03-07 14:14+0000\n"
+"POT-Creation-Date: 2012-03-17 10:20+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,6 +16,18 @@ msgstr ""
 "Language-Name: English\n"
 "Preferred-Encodings: utf-8 latin1\n"
 "Domain: voteit.core\n"
+
+#: ./subscribers/feeds.py:100
+msgid "${agenda_item} has been added to the agenda."
+msgstr ""
+
+#: ./subscribers/feeds.py:106
+msgid "${agenda_item} has been closed."
+msgstr ""
+
+#: ./subscribers/feeds.py:103
+msgid "${agenda_item} has been set to ongoing."
+msgstr ""
 
 #: ./subscribers/logs.py:81
 msgid "${ctype} in ${path} updated"
@@ -43,6 +55,14 @@ msgstr ""
 
 #: ./models/date_time_util.py:123
 msgid "${diff} seconds ago"
+msgstr ""
+
+#: ./subscribers/feeds.py:54
+msgid "${userid} has made a proposal in ${agenda_item}."
+msgstr ""
+
+#: ./subscribers/feeds.py:32
+msgid "${userid} has written a post in ${agenda_item}."
 msgstr ""
 
 #: ./views/components/inline_add_form.py:23
@@ -82,6 +102,10 @@ msgstr ""
 msgid "<Disable>"
 msgstr ""
 
+#: ./subscribers/feeds.py:77
+msgid "A poll has started in ${agenda_item}, vote now!"
+msgstr ""
+
 #: ./schemas/user.py:72
 #: ./views/templates/snippets/userinfo.pt:15
 msgid "About me"
@@ -95,8 +119,8 @@ msgstr ""
 msgid "Access granted!"
 msgstr ""
 
-#: ./schemas/meeting.py:75
-#: ./views/components/meeting_actions.py:81
+#: ./schemas/meeting.py:85
+#: ./views/components/meeting_actions.py:90
 msgid "Access policy"
 msgstr ""
 
@@ -106,6 +130,7 @@ msgstr ""
 
 #: ./models/schemas.py:10
 #: ./views/components/inline_add_form.py:25
+#: ./views/templates/agenda_templates.pt:15
 msgid "Add"
 msgstr ""
 
@@ -113,7 +138,7 @@ msgstr ""
 msgid "Add agenda item"
 msgstr ""
 
-#: ./schemas/meeting.py:53
+#: ./schemas/meeting.py:61
 msgid "Add meeting"
 msgstr ""
 
@@ -121,7 +146,7 @@ msgstr ""
 msgid "Add new user"
 msgstr ""
 
-#: ./views/components/meeting_actions.py:90
+#: ./views/components/meeting_actions.py:99
 #: ./views/permissions.py:70
 msgid "Add participant"
 msgstr ""
@@ -143,11 +168,11 @@ msgstr ""
 msgid "Added permssion for user ${userid}"
 msgstr ""
 
-#: ./views/components/meeting_actions.py:56
+#: ./views/components/meeting_actions.py:64
 msgid "Admin menu"
 msgstr ""
 
-#: ./bootstrap.py:30
+#: ./bootstrap.py:34
 #: ./security.py:66
 msgid "Administrator"
 msgstr ""
@@ -156,7 +181,12 @@ msgstr ""
 msgid "Agenda"
 msgstr ""
 
+#: ./views/components/meeting_actions.py:88
+msgid "Agenda Templates"
+msgstr ""
+
 #: ./models/agenda_item.py:52
+#: ./schemas/agenda_template.py:11
 msgid "Agenda item"
 msgstr ""
 
@@ -176,12 +206,28 @@ msgstr ""
 msgid "Agenda item was opened at"
 msgstr ""
 
+#: ./schemas/agenda_template.py:31
 #: ./views/templates/minutes.pt:19
 msgid "Agenda items"
 msgstr ""
 
+#: ./models/agenda_template.py:17
+#: ./schemas/agenda_template.py:15
+msgid "Agenda template"
+msgstr ""
+
+#: ./bootstrap.py:23
+#: ./models/agenda_templates.py:13
+#: ./views/agenda_templates.py:37
+msgid "Agenda templates"
+msgstr ""
+
 #: ./schemas/site.py:19
 msgid "Allow authenticated users to add meetings"
+msgstr ""
+
+#: ./views/templates/agenda_templates.pt:41
+msgid "Apply"
 msgstr ""
 
 #: ./workflows/proposal.xml
@@ -194,10 +240,6 @@ msgstr ""
 
 #: ./views/templates/main.pt:115
 msgid "Are you sure you want to change the state?"
-msgstr ""
-
-#: ./views/base_edit.py:178
-msgid "Are you sure you want to delete this item?"
 msgstr ""
 
 #: ./views/templates/main.pt:116
@@ -224,7 +266,7 @@ msgid "Cancel"
 msgstr ""
 
 #: ./views/base_edit.py:99
-#: ./views/meeting.py:156
+#: ./views/meeting.py:157
 #: ./views/poll.py:65
 msgid "Canceled"
 msgstr ""
@@ -252,6 +294,10 @@ msgstr ""
 
 #: ./views/templates/main.pt:147
 msgid "Click a button above to select category"
+msgstr ""
+
+#: ./views/templates/agenda_templates.pt:37
+msgid "Click above to see the agenda items for this template"
 msgstr ""
 
 #: ./views/templates/invite_ticket_email.pt:13
@@ -293,7 +339,7 @@ msgid "Couldn't find any user with userid ${userid}"
 msgstr ""
 
 #: ./schemas/invite_ticket.py:69
-#: ./views/meeting.py:216
+#: ./views/meeting.py:217
 msgid "Current invitations"
 msgstr ""
 
@@ -303,7 +349,6 @@ msgstr ""
 
 #: ./models/schemas.py:13
 #: ./views/components/moderator_actions.py:58
-#: ./views/templates/discussions.pt:35
 msgid "Delete"
 msgstr ""
 
@@ -320,8 +365,8 @@ msgid "Denied proposals:"
 msgstr ""
 
 #: ./schemas/agenda_item.py:21
-#: ./schemas/meeting.py:30
-#: ./schemas/poll.py:70
+#: ./schemas/agenda_template.py:25
+#: ./schemas/meeting.py:32
 msgid "Description"
 msgstr ""
 
@@ -331,6 +376,10 @@ msgstr ""
 
 #: ./views/components/meeting.py:9
 msgid "Description richtext field (default left column)"
+msgstr ""
+
+#: ./views/templates/agenda_templates.pt:28
+msgid "Details"
 msgstr ""
 
 #: ./views/userinfo.py:75
@@ -367,6 +416,7 @@ msgstr ""
 
 #: ./views/components/moderator_actions.py:57
 #: ./views/poll.py:70
+#: ./views/templates/agenda_template.pt:11
 msgid "Edit"
 msgstr ""
 
@@ -378,11 +428,11 @@ msgstr ""
 msgid "Edit agenda item"
 msgstr ""
 
-#: ./schemas/meeting.py:54
+#: ./schemas/meeting.py:62
 msgid "Edit meeting"
 msgstr ""
 
-#: ./views/components/meeting_actions.py:87
+#: ./views/components/meeting_actions.py:96
 #: ./views/permissions.py:23
 msgid "Edit permissions"
 msgstr ""
@@ -405,7 +455,7 @@ msgstr ""
 msgid "Email"
 msgstr ""
 
-#: ./schemas/meeting.py:43
+#: ./schemas/meeting.py:46
 msgid "Email address to send from"
 msgstr ""
 
@@ -427,6 +477,14 @@ msgstr ""
 
 #: ./schemas/poll.py:113
 msgid "End time of this poll."
+msgstr ""
+
+#: ./models/feeds.py:53
+msgid "Feed entry"
+msgstr ""
+
+#: ./views/templates/meeting_framefeed.pt:24
+msgid "Feed not active"
 msgstr ""
 
 #: ./schemas/user.py:34
@@ -472,7 +530,7 @@ msgid "If no right column widget is selected, this will take up the whole page s
 msgstr ""
 
 #: ./schemas/invite_ticket.py:15
-#: ./schemas/meeting.py:45
+#: ./schemas/meeting.py:48
 #: ./validators.py:134
 msgid "Invalid email address."
 msgstr ""
@@ -482,7 +540,7 @@ msgid "Invalid security token. Did you click the link in your email?"
 msgstr ""
 
 #: ./schemas/invite_ticket.py:23
-#: ./views/components/meeting_actions.py:89
+#: ./views/components/meeting_actions.py:98
 msgid "Invite participants"
 msgstr ""
 
@@ -504,11 +562,11 @@ msgid "Last name"
 msgstr ""
 
 #: ./schemas/layout.py:45
-#: ./views/meeting.py:270
+#: ./views/meeting.py:271
 msgid "Layout"
 msgstr ""
 
-#: ./views/components/meeting_actions.py:80
+#: ./views/components/meeting_actions.py:89
 msgid "Layout and widgets"
 msgstr ""
 
@@ -550,8 +608,8 @@ msgstr ""
 msgid "Logout"
 msgstr ""
 
-#: ./schemas/meeting.py:70
-#: ./views/components/meeting_actions.py:82
+#: ./schemas/meeting.py:79
+#: ./views/components/meeting_actions.py:91
 msgid "Mail settings"
 msgstr ""
 
@@ -567,24 +625,24 @@ msgstr ""
 msgid "Manage invitations to the meeting"
 msgstr ""
 
-#: ./views/components/meeting_actions.py:88
+#: ./views/components/meeting_actions.py:97
 msgid "Manage invites"
 msgstr ""
 
 #: ./models/meeting.py:43
-#: ./views/components/meeting_actions.py:58
+#: ./views/components/meeting_actions.py:66
 msgid "Meeting"
 msgstr ""
 
-#: ./views/meeting.py:129
+#: ./views/meeting.py:130
 msgid "Meeting Access"
 msgstr ""
 
-#: ./schemas/meeting.py:49
+#: ./schemas/meeting.py:57
 msgid "Meeting access policy"
 msgstr ""
 
-#: ./views/components/meeting_actions.py:84
+#: ./views/components/meeting_actions.py:93
 msgid "Meeting actions log"
 msgstr ""
 
@@ -617,7 +675,7 @@ msgstr ""
 msgid "Message sent to the moderators"
 msgstr ""
 
-#: ./views/components/meeting_actions.py:85
+#: ./views/components/meeting_actions.py:94
 msgid "Minutes"
 msgstr ""
 
@@ -646,12 +704,16 @@ msgstr ""
 msgid "Name"
 msgstr ""
 
-#: ./schemas/meeting.py:38
+#: ./schemas/meeting.py:40
 msgid "Name visible on system mail sent from this meeting"
 msgstr ""
 
 #: ./views/templates/invite_ticket_email.pt:20
 msgid "Need to register?"
+msgstr ""
+
+#: ./views/templates/search.pt:20
+msgid "Newest item will be listed first"
 msgstr ""
 
 #: ./views/templates/main.pt:112
@@ -662,9 +724,17 @@ msgstr ""
 msgid "No HTML tags allowed."
 msgstr ""
 
+#: ./views/templates/search.pt:44
+msgid "No search results"
+msgstr ""
+
 #: ./views/base_edit.py:135
 #: ./views/poll.py:59
 msgid "Nothing updated"
+msgstr ""
+
+#: ./schemas/layout.py:70
+msgid "Number of visible characters before truncating, enter 0 for no truncating."
 msgstr ""
 
 #: ./views/components/navigation.py:38
@@ -673,24 +743,28 @@ msgstr ""
 msgid "Ongoing"
 msgstr ""
 
+#: ./schemas/meeting.py:42
+msgid "Only alphanumeric characters allowed"
+msgstr ""
+
 #: ./workflows/invite_ticket.xml
 msgid "Open"
 msgstr ""
 
-#: ./views/meeting.py:395
+#: ./views/meeting.py:396
 msgid "Order updated"
 msgstr ""
 
-#: ./views/components/meeting_actions.py:91
+#: ./views/components/meeting_actions.py:100
 msgid "Participant list"
 msgstr ""
 
-#: ./views/components/meeting_actions.py:59
+#: ./views/components/meeting_actions.py:67
 #: ./views/templates/minutes.pt:16
 msgid "Participants"
 msgstr ""
 
-#: ./views/components/meeting_actions.py:86
+#: ./views/components/meeting_actions.py:95
 msgid "Participants email addresses"
 msgstr ""
 
@@ -748,8 +822,8 @@ msgstr ""
 msgid "Polls"
 msgstr ""
 
-#: ./schemas/meeting.py:63
-#: ./views/components/meeting_actions.py:83
+#: ./schemas/meeting.py:72
+#: ./views/components/meeting_actions.py:92
 msgid "Presentation"
 msgstr ""
 
@@ -769,6 +843,7 @@ msgid "Proposal text for 'reject all proposals'"
 msgstr ""
 
 #: ./schemas/poll.py:85
+#: ./views/templates/poll.pt:35
 msgid "Proposals"
 msgstr ""
 
@@ -788,12 +863,16 @@ msgstr ""
 msgid "Published"
 msgstr ""
 
+#: ./schemas/meeting.py:52
+msgid "RSS feed available"
+msgstr ""
+
 #: ./models/schemas.py:15
 #: ./views/components/global_actions.py:28
 msgid "Register"
 msgstr ""
 
-#: ./bootstrap.py:22
+#: ./bootstrap.py:26
 msgid "Registered users"
 msgstr ""
 
@@ -845,7 +924,7 @@ msgstr ""
 msgid "Roles for user"
 msgstr ""
 
-#: ./views/components/meeting_actions.py:71
+#: ./views/components/meeting_actions.py:79
 #: ./views/permissions.py:25
 msgid "Root permissions"
 msgstr ""
@@ -857,6 +936,12 @@ msgstr ""
 
 #: ./views/templates/logs.pt:21
 msgid "Scripted"
+msgstr ""
+
+#: ./models/schemas.py:23
+#: ./schemas/search.py:7
+#: ./views/components/meeting_actions.py:56
+msgid "Search"
 msgstr ""
 
 #: ./views/templates/server_logs.pt:21
@@ -871,24 +956,16 @@ msgstr ""
 msgid "Send"
 msgstr ""
 
-#: ./views/meeting.py:173
+#: ./views/meeting.py:174
 msgid "Send meeting invitations"
 msgstr ""
 
-#: ./views/components/meeting_actions.py:72
+#: ./views/components/meeting_actions.py:80
 msgid "Server logs"
 msgstr ""
 
-#: ./views/components/meeting_actions.py:57
+#: ./views/components/meeting_actions.py:65
 msgid "Settings"
-msgstr ""
-
-#: ./views/templates/discussions.pt:8
-msgid "Show ${count} previous posts"
-msgstr ""
-
-#: ./views/templates/discussions.pt:14
-msgid "Show the last 5 posts"
 msgstr ""
 
 #: ./views/templates/participants.pt:16
@@ -925,11 +1002,15 @@ msgstr ""
 msgid "Tags"
 msgstr ""
 
+#: ./schemas/agenda_template.py:21
+msgid "Template name"
+msgstr ""
+
 #: ./schemas/discussion_post.py:12
 msgid "Text"
 msgstr ""
 
-#: ./views/poll.py:180
+#: ./views/poll.py:179
 msgid "Thank you for voting!"
 msgstr ""
 
@@ -953,8 +1034,16 @@ msgstr ""
 msgid "The poll starts ${start_time}"
 msgstr ""
 
+#: ./subscribers/feeds.py:80
+msgid "The result of a poll in ${agenda_item} is set."
+msgstr ""
+
 #: ./views/templates/snippets/global_actions.pt:5
 msgid "The time that the server think it is. If this is wrong, you need to change the server time."
+msgstr ""
+
+#: ./views/templates/agenda_templates.pt:51
+msgid "There is no agenda templates available"
 msgstr ""
 
 #: ./views/templates/main.pt:57
@@ -970,13 +1059,17 @@ msgid "Time"
 msgstr ""
 
 #: ./schemas/agenda_item.py:15
-#: ./schemas/meeting.py:23
+#: ./schemas/meeting.py:25
 #: ./schemas/poll.py:67
 msgid "Title"
 msgstr ""
 
 #: ./validators.py:25
 msgid "Too short. At least 6 chars required."
+msgstr ""
+
+#: ./schemas/layout.py:69
+msgid "Truncate discussion length"
 msgstr ""
 
 #: ./workflows/proposal.xml
@@ -1061,7 +1154,11 @@ msgstr ""
 msgid "View"
 msgstr ""
 
-#: ./views/templates/polls.pt:49
+#: ./views/templates/polls.pt:41
+msgid "View details"
+msgstr ""
+
+#: ./views/templates/polls.pt:55
 msgid "View details and your vote"
 msgstr ""
 
@@ -1077,8 +1174,8 @@ msgstr ""
 msgid "Vote for one"
 msgstr ""
 
-#: ./bootstrap.py:19
-#: ./schemas/meeting.py:39
+#: ./bootstrap.py:20
+#: ./schemas/meeting.py:41
 msgid "VoteIT"
 msgstr ""
 
@@ -1148,29 +1245,33 @@ msgstr ""
 msgid "You need to open it yourself."
 msgstr ""
 
-#: ./views/templates/poll.pt:49
+#: ./views/templates/poll.pt:60
 msgid "You voted in this poll. Click above to show your vote."
 msgstr ""
 
-#: ./views/meeting.py:51
+#: ./views/meeting.py:52
 msgid "You're not logged in - before you can access meetings you need to do that."
 msgstr ""
 
-#: ./views/meeting.py:150
+#: ./views/meeting.py:151
 msgid "You've been granted access to the meeting. Welcome!"
 msgstr ""
 
-#: ./views/templates/poll.pt:46
+#: ./views/templates/poll.pt:57
 msgid "You've voted"
 msgstr ""
 
 #: ./models/vote.py:37
-#: ./views/templates/poll.pt:43
+#: ./views/templates/poll.pt:54
 msgid "Your vote"
 msgstr ""
 
-#: ./views/poll.py:173
+#: ./views/poll.py:172
 msgid "Your vote was updated."
+msgstr ""
+
+#: ./schemas/agenda_template.py:16
+msgid "add_agenda_template_description"
 msgstr ""
 
 #. Default: "Should a 'Reject all proposals' proposal be added to the poll?"
@@ -1200,13 +1301,33 @@ msgstr ""
 
 #. Default: "Vote"
 #: ./models/schemas.py:19
-#: ./views/templates/polls.pt:42
+#: ./views/templates/polls.pt:50
 msgid "add_vote_button"
 msgstr ""
 
 #. Default: "Place the the agenda item background information here. You can link to external documents and memos. It's also a good idea to add an image, it will make it easier for participants to quickly see which page they're on."
 #: ./schemas/agenda_item.py:22
 msgid "agenda_item_description_description"
+msgstr ""
+
+#. Default: "No template named ${template} could be found."
+#: ./views/agenda_templates.py:53
+msgid "agenda_template_apply_invalid_template"
+msgstr ""
+
+#. Default: "Selected template applied to meeting."
+#: ./views/agenda_templates.py:47
+msgid "agenda_template_apply_template_success"
+msgstr ""
+
+#. Default: "Describe the purpose of this agenda"
+#: ./schemas/agenda_template.py:26
+msgid "agenda_template_description_description"
+msgstr ""
+
+#. Default: "Choose one of the listed templates and press apply to copy the agenda items to yout meeting."
+#: ./views/templates/agenda_templates.pt:20
+msgid "agenda_templates_list_description"
 msgstr ""
 
 #. Default: "This meeting allows anyone to request access to it. You only need to click below to get all participant permissions instantly."
@@ -1224,7 +1345,7 @@ msgid "and"
 msgstr ""
 
 #. Default: "You have already voted, but you may change your vote as long as the poll is open. Click the button below if you wish to do so."
-#: ./views/templates/polls.pt:48
+#: ./views/templates/polls.pt:54
 msgid "can_change_vote_notice"
 msgstr ""
 
@@ -1262,8 +1383,18 @@ msgstr ""
 msgid "current"
 msgstr ""
 
+#. Default: "This proposal is locked for voting. If you delete it, you will NEVER be able to close the poll it's participating in. Are you really sure that you want to do this?"
+#: ./views/base_edit.py:184
+msgid "delete_form_locked_proposal_notice"
+msgstr ""
+
+#. Default: "Are you sure you want to delete '${display_name}' with title: ${title}?"
+#: ./views/base_edit.py:178
+msgid "delete_form_notice"
+msgstr ""
+
 #. Default: "Deleting ${count_emails} invites"
-#: ./views/meeting.py:249
+#: ./views/meeting.py:250
 msgid "deleting_invites_notice"
 msgstr ""
 
@@ -1312,6 +1443,14 @@ msgstr ""
 msgid "invite_only_meeting_access_request_description"
 msgstr ""
 
+#: ./views/search.py:51
+msgid "item"
+msgstr ""
+
+#: ./views/search.py:52
+msgid "items"
+msgstr ""
+
 #. Default: "Change layout of the different parts in the meeting (advanced feature)"
 #: ./schemas/layout.py:45
 msgid "layuot_schema_main_description"
@@ -1322,7 +1461,7 @@ msgid "like this"
 msgstr ""
 
 #. Default: "Welcome to VoteIT. To open the meeting you have been invited to please register in the form below. If you are already registered, please login."
-#: ./views/meeting.py:121
+#: ./views/meeting.py:122
 msgid "login_to_access_meeting_notice"
 msgstr ""
 
@@ -1346,17 +1485,17 @@ msgid "meeting_access_public_label"
 msgstr ""
 
 #. Default: "The description is visible on the first page of the meeting. You can include things like information about the meeting, how to contact the moderator and your logo."
-#: ./schemas/meeting.py:31
+#: ./schemas/meeting.py:33
 msgid "meeting_description_description"
 msgstr ""
 
 #. Default: "This meeting hasn't closed yet so these minutes won't be complete"
-#: ./views/meeting.py:414
+#: ./views/meeting.py:415
 msgid "meeting_not_closed_minutes_incomplete_notice"
 msgstr ""
 
 #. Default: "Set a title for the meeting that separates it from previous meetings"
-#: ./schemas/meeting.py:24
+#: ./schemas/meeting.py:26
 msgid "meeting_title_description"
 msgstr ""
 
@@ -1371,8 +1510,8 @@ msgid "more_in_likes"
 msgstr ""
 
 #. Default: "You do not have the permission to vote in this poll, please contact the moderator if you should be able to vote."
-#: ./views/poll.py:185
-#: ./views/templates/polls.pt:44
+#: ./views/poll.py:184
+#: ./views/templates/polls.pt:59
 msgid "no_permission_to_vote_notice"
 msgstr ""
 
@@ -1382,7 +1521,7 @@ msgid "ongoing_poll_email_text"
 msgstr ""
 
 #. Default: "Drag and drop agenda items to reorder"
-#: ./views/meeting.py:378
+#: ./views/meeting.py:379
 msgid "order_agenda_items_view_title"
 msgstr ""
 
@@ -1436,7 +1575,7 @@ msgid "poll_upcoming_state_notice"
 msgstr ""
 
 #. Default: "Edit the first page of the meeting into an informative and pleasant page for your users. You can for instance place your logo here. The time table can be presented in a table and updated as you go along. It's also advised to add links to the manual and to meeting documents."
-#: ./schemas/meeting.py:64
+#: ./schemas/meeting.py:73
 msgid "presentation_meeting_schema_main_description"
 msgstr ""
 
@@ -1475,7 +1614,7 @@ msgid "reject_proposal_title_default"
 msgstr ""
 
 #. Default: "Can't find an action associated with access policy ${policy}."
-#: ./views/meeting.py:309
+#: ./views/meeting.py:310
 msgid "request_access_view_action_not_found"
 msgstr ""
 
@@ -1485,7 +1624,7 @@ msgid "request_new_password_text"
 msgstr ""
 
 #. Default: "Resending ${count_emails} invites"
-#: ./views/meeting.py:239
+#: ./views/meeting.py:240
 msgid "resent_invites_notice"
 msgstr ""
 
@@ -1499,8 +1638,18 @@ msgstr ""
 msgid "review_poll_settings_info_getback"
 msgstr ""
 
+#. Default: "Search resulted in an error - it's not possible to search for common operator words like 'if' or 'the'."
+#: ./views/search.py:81
+msgid "search_exception_notice"
+msgstr ""
+
+#. Default: "You can use '*' as wildcard or '?' as a single unknown charracter."
+#: ./schemas/search.py:10
+msgid "search_schema_query_description"
+msgstr ""
+
 #. Default: "Successfully added and sent ${mail_count} invites"
-#: ./views/meeting.py:202
+#: ./views/meeting.py:203
 msgid "sent_tickets_text"
 msgstr ""
 
