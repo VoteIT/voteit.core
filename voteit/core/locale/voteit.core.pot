@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2012-03-17 10:20+0000\n"
+"POT-Creation-Date: 2012-03-17 11:36+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -119,7 +119,7 @@ msgstr ""
 msgid "Access granted!"
 msgstr ""
 
-#: ./schemas/meeting.py:85
+#: ./schemas/meeting.py:89
 #: ./views/components/meeting_actions.py:90
 msgid "Access policy"
 msgstr ""
@@ -128,9 +128,13 @@ msgstr ""
 msgid "Actions here"
 msgstr ""
 
+#: ./schemas/meeting.py:52
+msgid "Activate RSS feed"
+msgstr ""
+
 #: ./models/schemas.py:10
 #: ./views/components/inline_add_form.py:25
-#: ./views/templates/agenda_templates.pt:15
+#: ./views/templates/agenda_templates.pt:41
 msgid "Add"
 msgstr ""
 
@@ -138,7 +142,7 @@ msgstr ""
 msgid "Add agenda item"
 msgstr ""
 
-#: ./schemas/meeting.py:61
+#: ./schemas/meeting.py:65
 msgid "Add meeting"
 msgstr ""
 
@@ -224,10 +228,6 @@ msgstr ""
 
 #: ./schemas/site.py:19
 msgid "Allow authenticated users to add meetings"
-msgstr ""
-
-#: ./views/templates/agenda_templates.pt:41
-msgid "Apply"
 msgstr ""
 
 #: ./workflows/proposal.xml
@@ -338,6 +338,10 @@ msgstr ""
 msgid "Couldn't find any user with userid ${userid}"
 msgstr ""
 
+#: ./views/templates/agenda_templates.pt:15
+msgid "Create new template"
+msgstr ""
+
 #: ./schemas/invite_ticket.py:69
 #: ./views/meeting.py:217
 msgid "Current invitations"
@@ -376,10 +380,6 @@ msgstr ""
 
 #: ./views/components/meeting.py:9
 msgid "Description richtext field (default left column)"
-msgstr ""
-
-#: ./views/templates/agenda_templates.pt:28
-msgid "Details"
 msgstr ""
 
 #: ./views/userinfo.py:75
@@ -428,7 +428,7 @@ msgstr ""
 msgid "Edit agenda item"
 msgstr ""
 
-#: ./schemas/meeting.py:62
+#: ./schemas/meeting.py:66
 msgid "Edit meeting"
 msgstr ""
 
@@ -608,7 +608,7 @@ msgstr ""
 msgid "Logout"
 msgstr ""
 
-#: ./schemas/meeting.py:79
+#: ./schemas/meeting.py:83
 #: ./views/components/meeting_actions.py:91
 msgid "Mail settings"
 msgstr ""
@@ -638,7 +638,7 @@ msgstr ""
 msgid "Meeting Access"
 msgstr ""
 
-#: ./schemas/meeting.py:57
+#: ./schemas/meeting.py:61
 msgid "Meeting access policy"
 msgstr ""
 
@@ -733,10 +733,6 @@ msgstr ""
 msgid "Nothing updated"
 msgstr ""
 
-#: ./schemas/layout.py:70
-msgid "Number of visible characters before truncating, enter 0 for no truncating."
-msgstr ""
-
 #: ./views/components/navigation.py:38
 #: ./workflows/agenda_item.xml
 #: ./workflows/meeting.xml
@@ -822,7 +818,7 @@ msgstr ""
 msgid "Polls"
 msgstr ""
 
-#: ./schemas/meeting.py:72
+#: ./schemas/meeting.py:76
 #: ./views/components/meeting_actions.py:92
 msgid "Presentation"
 msgstr ""
@@ -861,10 +857,6 @@ msgstr ""
 
 #: ./workflows/proposal.xml
 msgid "Published"
-msgstr ""
-
-#: ./schemas/meeting.py:52
-msgid "RSS feed available"
 msgstr ""
 
 #: ./models/schemas.py:15
@@ -964,8 +956,16 @@ msgstr ""
 msgid "Server logs"
 msgstr ""
 
+#: ./schemas/layout.py:70
+msgid "Set the number of always visible characters in discussion posts. Enter 0 for no truncating."
+msgstr ""
+
 #: ./views/components/meeting_actions.py:65
 msgid "Settings"
+msgstr ""
+
+#: ./views/templates/agenda_templates.pt:28
+msgid "Show template"
 msgstr ""
 
 #: ./views/templates/participants.pt:16
@@ -1043,7 +1043,7 @@ msgid "The time that the server think it is. If this is wrong, you need to chang
 msgstr ""
 
 #: ./views/templates/agenda_templates.pt:51
-msgid "There is no agenda templates available"
+msgid "There are no agenda templates available"
 msgstr ""
 
 #: ./views/templates/main.pt:57
@@ -1325,7 +1325,7 @@ msgstr ""
 msgid "agenda_template_description_description"
 msgstr ""
 
-#. Default: "Choose one of the listed templates and press apply to copy the agenda items to yout meeting."
+#. Default: "Choose one of the listed templates and press 'add' to add the agenda items to your meeting. You can add more than one template to the same meeting and you can add additional agenda items in the usual way after you have added a template."
 #: ./views/templates/agenda_templates.pt:20
 msgid "agenda_templates_list_description"
 msgstr ""
@@ -1575,7 +1575,7 @@ msgid "poll_upcoming_state_notice"
 msgstr ""
 
 #. Default: "Edit the first page of the meeting into an informative and pleasant page for your users. You can for instance place your logo here. The time table can be presented in a table and updated as you go along. It's also advised to add links to the manual and to meeting documents."
-#: ./schemas/meeting.py:73
+#: ./schemas/meeting.py:77
 msgid "presentation_meeting_schema_main_description"
 msgstr ""
 
@@ -1636,6 +1636,11 @@ msgstr ""
 #. Default: "To get back to the poll settings you click the cogwheel menu and select configure poll."
 #: ./views/poll.py:96
 msgid "review_poll_settings_info_getback"
+msgstr ""
+
+#. Default: "When the checkbox below is checked your meeting will be able to show a public RSS feed that can be followed with a RSS reader. This feed will contain info about when changes are made in the meeting and who did the changes. You can access the feed on: 'The meeting URL' + '/feed'. This should be something like 'www.yourdomain.com/yourmeetingname/feed'. If you want the feed to show up in an iframe you can use '/framefeed' instead. This is an advanced feature and read more about it in the manual on wiki.voteit.se. Please note a word of warning: the feed is public for all who can figure it out."
+#: ./schemas/meeting.py:53
+msgid "rss_feed_checkbox_description"
 msgstr ""
 
 #. Default: "Search resulted in an error - it's not possible to search for common operator words like 'if' or 'the'."
