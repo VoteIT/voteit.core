@@ -67,8 +67,8 @@ class LayoutSchema(colander.Schema):
                                           missing = colander.null,)
     truncate_discussion_length = colander.SchemaNode(colander.Integer(),
                                           title = _(u"Truncate discussion length"),
-                                          description = _(u"Number of visible characters before truncating, enter 0 for no truncating."),
-                                          default = 200,
+                                          description = _(u"Set the number of always visible characters in discussion posts. Enter 0 for no truncating."),
+                                          default = 240,
                                           widget = deform.widget.TextInputWidget(),
-                                          missing = 200,
+                                          missing = 240,
                                           validator=colander.Range(0),)

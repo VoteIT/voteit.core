@@ -1189,7 +1189,7 @@ msgstr "Använd detta formulär för att lägga till en användare"
 
 #: ./schemas/agenda_item.py:11
 msgid "Use this form to add an agenda item"
-msgstr "Använd detta formulär för att lägga till en dagordnignspunkt"
+msgstr "Använd detta formulär för att lägga till en dagordningspunkt"
 
 #: ./schemas/user.py:90
 msgid "Use this form to change password"
