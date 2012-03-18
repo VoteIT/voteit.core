@@ -24,15 +24,15 @@ msgstr ""
 
 #: ./subscribers/feeds.py:100
 msgid "${agenda_item} has been added to the agenda."
-msgstr ""
+msgstr "${agenda_item} har lagts till i dagordningen."
 
 #: ./subscribers/feeds.py:106
 msgid "${agenda_item} has been closed."
-msgstr ""
+msgstr "${agenda_item} har avslutats."
 
 #: ./subscribers/feeds.py:103
 msgid "${agenda_item} has been set to ongoing."
-msgstr ""
+msgstr "${agenda_item} är nu pågående."
 
 #: ./subscribers/logs.py:81
 msgid "${ctype} in ${path} updated"
@@ -64,11 +64,11 @@ msgstr "${diff} sekunder sedan"
 
 #: ./subscribers/feeds.py:54
 msgid "${userid} has made a proposal in ${agenda_item}."
-msgstr ""
+msgstr "${userid} har lagt ett förslag i ${agenda_item}"
 
 #: ./subscribers/feeds.py:32
 msgid "${userid} has written a post in ${agenda_item}."
-msgstr ""
+msgstr "${userid} har skrivit ett inlägg i ${agenda_item}"
 
 #: ./views/components/inline_add_form.py:23
 msgid "${username} propose"
@@ -112,7 +112,7 @@ msgstr "<Inaktivera>"
 
 #: ./subscribers/feeds.py:77
 msgid "A poll has started in ${agenda_item}, vote now!"
-msgstr ""
+msgstr "En omröstning har startat i ${agenda_item}, rösta nu!"
 
 #. Default: "About me"
 #: ./schemas/user.py:72
@@ -141,7 +141,7 @@ msgstr "Funktioner här"
 
 #: ./schemas/meeting.py:52
 msgid "Activate RSS feed"
-msgstr ""
+msgstr "Aktivera RSS-feed"
 
 #. Default: "Add"
 #: ./models/schemas.py:10
@@ -202,7 +202,7 @@ msgstr "Dagordning"
 
 #: ./views/components/meeting_actions.py:88
 msgid "Agenda Templates"
-msgstr ""
+msgstr "Standarddagordningar"
 
 #. Default: "Agenda item"
 #: ./models/agenda_item.py:52
@@ -234,13 +234,13 @@ msgstr "Dagordningspunkter"
 #: ./models/agenda_template.py:17
 #: ./schemas/agenda_template.py:15
 msgid "Agenda template"
-msgstr ""
+msgstr "Standarddagordning"
 
 #: ./bootstrap.py:23
 #: ./models/agenda_templates.py:13
 #: ./views/agenda_templates.py:37
 msgid "Agenda templates"
-msgstr ""
+msgstr "Standarddagordningar"
 
 #: ./schemas/site.py:19
 msgid "Allow authenticated users to add meetings"
@@ -321,7 +321,7 @@ msgstr "Klicka på en av knapparna ovan för att välja kategori"
 
 #: ./views/templates/agenda_templates.pt:37
 msgid "Click above to see the agenda items for this template"
-msgstr ""
+msgstr "Klicka ovan för att se dagordningspunkterna i denna standarddagordning"
 
 #. Default: "Click the link to access this VoteIT meeting:"
 #: ./views/templates/invite_ticket_email.pt:13
@@ -368,7 +368,7 @@ msgstr "Kunde inte hitta någon användare med användarnamnet ${userid}"
 
 #: ./views/templates/agenda_templates.pt:15
 msgid "Create new template"
-msgstr ""
+msgstr "Skapa ny standarddagordning"
 
 #: ./schemas/invite_ticket.py:69
 #: ./views/meeting.py:217
@@ -522,7 +522,7 @@ msgstr ""
 
 #: ./views/templates/meeting_framefeed.pt:24
 msgid "Feed not active"
-msgstr ""
+msgstr "Feeden är inte aktiv"
 
 #. Default: "First name"
 #: ./schemas/user.py:34
@@ -770,7 +770,7 @@ msgstr "Behöver du registrera dig?"
 
 #: ./views/templates/search.pt:20
 msgid "Newest item will be listed first"
-msgstr ""
+msgstr "Senaste objekt visas först"
 
 #. Default: "No"
 #: ./views/templates/main.pt:112
@@ -783,7 +783,7 @@ msgstr "Inga HTML-taggar tillåtna."
 
 #: ./views/templates/search.pt:44
 msgid "No search results"
-msgstr ""
+msgstr "Inga reslutat matchade sökningen"
 
 #: ./views/base_edit.py:135
 #: ./views/poll.py:59
@@ -799,7 +799,7 @@ msgstr "Pågående"
 
 #: ./schemas/meeting.py:42
 msgid "Only alphanumeric characters allowed"
-msgstr ""
+msgstr "Endast alfanumeriska tecken är tillåtna"
 
 #. Default: "Open"
 #: ./workflows/invite_ticket.xml
@@ -1010,7 +1010,7 @@ msgstr "Skriptad"
 #: ./schemas/search.py:7
 #: ./views/components/meeting_actions.py:56
 msgid "Search"
-msgstr ""
+msgstr "Sök"
 
 #. Default: "Select a log above"
 #: ./views/templates/server_logs.pt:21
@@ -1037,7 +1037,7 @@ msgstr "Serverloggar"
 
 #: ./schemas/layout.py:70
 msgid "Set the number of always visible characters in discussion posts. Enter 0 for no truncating."
-msgstr ""
+msgstr "Ställ in antalet direkt synliga tecken i diskussionsposter. Skriv 0 för att stänga av trunkering."
 
 #: ./views/components/meeting_actions.py:65
 msgid "Settings"
@@ -1045,7 +1045,7 @@ msgstr "Inställningar"
 
 #: ./views/templates/agenda_templates.pt:28
 msgid "Show template"
-msgstr ""
+msgstr "Visa standarddagordning"
 
 #. Default: "Showing ${count} participants"
 #: ./views/templates/participants.pt:16
@@ -1086,7 +1086,7 @@ msgstr "Taggar"
 
 #: ./schemas/agenda_template.py:21
 msgid "Template name"
-msgstr ""
+msgstr "Standarddagordningens namn"
 
 #: ./schemas/discussion_post.py:12
 msgid "Text"
@@ -1118,7 +1118,7 @@ msgstr "Omröstningen startar ${start_time}"
 
 #: ./subscribers/feeds.py:80
 msgid "The result of a poll in ${agenda_item} is set."
-msgstr ""
+msgstr "Resultatet av en omröstning i ${agenda_item} är klart."
 
 #. Default: "The time that the server think it is. If this is wrong, you need to change the server time."
 #: ./views/templates/snippets/global_actions.pt:5
@@ -1127,7 +1127,7 @@ msgstr "Tiden som servern tycker att det är just nu. Om detta är fel. behöver
 
 #: ./views/templates/agenda_templates.pt:51
 msgid "There are no agenda templates available"
-msgstr ""
+msgstr "Det finns inga standarddagordningar tillgängliga"
 
 #. Default: "This meeting has closed."
 #: ./views/templates/main.pt:57
@@ -1156,7 +1156,7 @@ msgstr "För kort. Minst 6 tecken krävs."
 
 #: ./schemas/layout.py:69
 msgid "Truncate discussion length"
-msgstr ""
+msgstr "Trunkera diskussionslängd"
 
 #. Default: "Unhandled"
 #: ./workflows/proposal.xml
@@ -1248,7 +1248,7 @@ msgstr "Läsa"
 
 #: ./views/templates/polls.pt:41
 msgid "View details"
-msgstr ""
+msgstr "Visa detaljer"
 
 #: ./views/templates/polls.pt:55
 msgid "View details and your vote"
@@ -1414,22 +1414,22 @@ msgstr "Lägg in bakgrundsfakta om dagordningspunkten här. Länka gärna till e
 #. Default: "No template named ${template} could be found."
 #: ./views/agenda_templates.py:53
 msgid "agenda_template_apply_invalid_template"
-msgstr ""
+msgstr "Ingen standarddagordning kallad ${template} kunde hittas."
 
 #. Default: "Selected template applied to meeting."
 #: ./views/agenda_templates.py:47
 msgid "agenda_template_apply_template_success"
-msgstr ""
+msgstr "Standarddagordningen tillagd i mötet."
 
 #. Default: "Describe the purpose of this agenda"
 #: ./schemas/agenda_template.py:26
 msgid "agenda_template_description_description"
-msgstr ""
+msgstr "Beskriv denna standarddagordning."
 
 #. Default: "Choose one of the listed templates and press 'add' to add the agenda items to your meeting. You can add more than one template to the same meeting and you can add additional agenda items in the usual way after you have added a template."
 #: ./views/templates/agenda_templates.pt:20
 msgid "agenda_templates_list_description"
-msgstr ""
+msgstr "Välj en av standarddagordningarna och klicka 'lägg till' för att lägga till dagordningspunkterna till ditt möte. Du kan lägga till mer än en standarddagordning till samma möte och du kan lägga till ytterligare dagordningspunkter på det vanliga sättet efter att du lagt till en standarddagordning."
 
 #. Default: "This meeting allows anyone to request access to it. You only need to click below to get all participant permissions instantly."
 #: ./views/components/request_access.py:82
@@ -1490,12 +1490,12 @@ msgstr "aktuell"
 #. Default: "This proposal is locked for voting. If you delete it, you will NEVER be able to close the poll it's participating in. Are you really sure that you want to do this?"
 #: ./views/base_edit.py:184
 msgid "delete_form_locked_proposal_notice"
-msgstr ""
+msgstr "Detta förslag är låst för omröstning. Om du raderar det kommer du ALDRIG kunna stänga omröstningen som det ingår i. Är du helt säker på att du vill göra detta?"
 
 #. Default: "Are you sure you want to delete '${display_name}' with title: ${title}?"
 #: ./views/base_edit.py:178
 msgid "delete_form_notice"
-msgstr ""
+msgstr "Är du säker på att du vill radera '${display_name}' med titeln: ${title}"
 
 #. Default: "Deleting ${count_emails} invites"
 #: ./views/meeting.py:250
@@ -1549,11 +1549,11 @@ msgstr "Detta möte är enbart för inbjudna. Det betyder att ett ebrev skickas 
 
 #: ./views/search.py:51
 msgid "item"
-msgstr ""
+msgstr "objekt"
 
 #: ./views/search.py:52
 msgid "items"
-msgstr ""
+msgstr "objekt"
 
 #. Default: "Change layout of the different parts in the meeting (advanced feature)"
 #: ./schemas/layout.py:45
@@ -1751,17 +1751,17 @@ msgstr "För att komma tillbak till omröstningsinställningarna klicka på omr�
 #. Default: "When the checkbox below is checked your meeting will be able to show a public RSS feed that can be followed with a RSS reader. This feed will contain info about when changes are made in the meeting and who did the changes. You can access the feed on: 'The meeting URL' + '/feed'. This should be something like 'www.yourdomain.com/yourmeetingname/feed'. If you want the feed to show up in an iframe you can use '/framefeed' instead. This is an advanced feature and read more about it in the manual on wiki.voteit.se. Please note a word of warning: the feed is public for all who can figure it out."
 #: ./schemas/meeting.py:53
 msgid "rss_feed_checkbox_description"
-msgstr ""
+msgstr "När kryssrutan nedan markeras kan ditt möte följas med i en offentlig RSS feed som kan följas med en RSS-läsare. Feeden kommer innehålla information om förändringar i mötet och vem som gjorde dem. Du når feeden på: 'Mötets URL' + '/feed'. Detta borde bli något i stil med 'www.dindomänförvoteit.se/dittmötesnamn/feed'. Om du vill att feeden ska kunna visas i en iframe kan du använda '/framefeed' istället. Detta är en avancerad funktion, läs mer om den i manualen på wiki.voteit.se. Vänligen notera ett varningens ord: RSS-feeden är offentlig för alla som kan klura ut den så använd funktionen med försiktighet."
 
 #. Default: "Search resulted in an error - it's not possible to search for common operator words like 'if' or 'the'."
 #: ./views/search.py:81
 msgid "search_exception_notice"
-msgstr ""
+msgstr "Sökningen fungerade inte. Det är inte möjligt att söka på vissa 'funktionsord' som 'if' eller 'the'."
 
 #. Default: "You can use '*' as wildcard or '?' as a single unknown charracter."
 #: ./schemas/search.py:10
 msgid "search_schema_query_description"
-msgstr ""
+msgstr "Du kan använda '*' som jokertecken eller '?' som ett enskilt okänt tecken."
 
 #. Default: "Successfully added and sent ${mail_count} invites"
 #: ./views/meeting.py:203
