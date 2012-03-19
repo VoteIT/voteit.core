@@ -85,23 +85,23 @@ def generic_root_menu_link(context, request, va, **kw):
     return """<li><a href="%s">%s</a></li>""" % (url, api.translate(va.title))
 
 
-@view_action('settings_menu', 'agenda_templates', title = _(u"Agenda Templates"), link = "@@agenda_templates", permission = EDIT, )
-@view_action('settings_menu', 'manage_layout', title = _(u"Layout and widgets"), link = "@@manage_layout", permission = EDIT, )
-@view_action('settings_menu', 'access_policye', title = _(u"Access policy"), link = "@@access_policy", permission = EDIT, )
-@view_action('settings_menu', 'mail_settings', title = _(u"Mail settings"), link = "@@mail_settings", permission = EDIT, )
-@view_action('settings_menu', 'presentation', title = _(u"Presentation"), link = "@@presentation", permission = EDIT, )
-@view_action('meeting', 'logs', title = _(u"Meeting actions log"), link = "@@logs", permission = MODERATE_MEETING, )
-@view_action('meeting', 'minutes', title = _(u"Minutes"), link = "@@minutes", )
-@view_action('participants_menu', 'participants_emails', title = _(u"Participants email addresses"), link = "@@participants_emails", permission = MODERATE_MEETING, )
-@view_action('participants_menu', 'permissions', title = _(u"Edit permissions"), link = "@@permissions", permission = MANAGE_GROUPS, )
-@view_action('participants_menu', 'manage_tickets', title = _(u"Manage invites"), link = "@@manage_tickets", permission = MANAGE_GROUPS, )
-@view_action('participants_menu', 'add_tickets', title = _(u"Invite participants"), link = "@@add_tickets", permission = MANAGE_GROUPS, )
-@view_action('participants_menu', 'add_participant', title = _(u"Add participant"), link = "@@add_permission", permission = MANAGE_GROUPS, )
+@view_action('settings_menu', 'agenda_templates', title = _(u"Agenda Templates"), link = "@@agenda_templates", permission = MODERATE_MEETING)
+@view_action('settings_menu', 'manage_layout', title = _(u"Layout and widgets"), link = "@@manage_layout", permission = MODERATE_MEETING)
+@view_action('settings_menu', 'access_policy', title = _(u"Access policy"), link = "@@access_policy", permission = MODERATE_MEETING)
+@view_action('settings_menu', 'mail_settings', title = _(u"Mail settings"), link = "@@mail_settings", permission = MODERATE_MEETING)
+@view_action('settings_menu', 'presentation', title = _(u"Presentation"), link = "@@presentation", permission = MODERATE_MEETING)
+@view_action('meeting', 'logs', title = _(u"Meeting actions log"), link = "@@logs", permission = MODERATE_MEETING)
+@view_action('meeting', 'minutes', title = _(u"Minutes"), link = "@@minutes")
+@view_action('participants_menu', 'participants_emails', title = _(u"Participants email addresses"), link = "@@participants_emails", permission = MODERATE_MEETING)
+@view_action('participants_menu', 'permissions', title = _(u"Edit permissions"), link = "@@permissions", permission = MANAGE_GROUPS)
+@view_action('participants_menu', 'manage_tickets', title = _(u"Manage invites"), link = "@@manage_tickets", permission = MANAGE_GROUPS)
+@view_action('participants_menu', 'add_tickets', title = _(u"Invite participants"), link = "@@add_tickets", permission = MANAGE_GROUPS)
+@view_action('participants_menu', 'add_participant', title = _(u"Add participant"), link = "@@add_permission", permission = MANAGE_GROUPS)
 @view_action('participants_menu', 'participant_list', title = _(u"Participant list"), link = "@@participants")
 def generic_menu_link(context, request, va, **kw):
     """ This is for simple menu items for the meeting root """
     api = kw['api']
-    url = api.resource_url(api.meeting, request) + va.kwargs['link']
+    url = "%s%s" % (api.meeting_url, va.kwargs['link'])
     return """<li><a href="%s">%s</a></li>""" % (url, api.translate(va.title))
 
 @view_action('meeting', 'feed', title = _(u"RSS feed"), link = "feed", )
