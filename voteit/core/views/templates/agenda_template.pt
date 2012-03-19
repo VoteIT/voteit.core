@@ -12,6 +12,10 @@
            tal:condition="api.context_has_permission('Edit', context)"
            class="buttonize large"
            i18n:translate="">Edit</a>
+        <a tal:attributes="href '%s@@delete' % api.resource_url(context, request)"
+           tal:condition="api.context_has_permission('Delete', context)"
+           class="buttonize large"
+           i18n:translate="">Delete</a>
     </div>
     
     <div class="description" tal:condition="context.description" tal:content="structure context.description">
@@ -25,6 +29,11 @@
 			</div>
 		</li>
 	</ul>
+
+    <a tal:attributes="href api.resource_url(context.__parent__, request)"
+       class="buttonize"
+       i18n:translate="">Back</a>
+
 </div>
 </body>
 </html>
