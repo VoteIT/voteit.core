@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2012-03-17 11:36+0000\n"
+"POT-Creation-Date: 2012-03-19 12:10+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -111,7 +111,7 @@ msgstr ""
 msgid "About me"
 msgstr ""
 
-#: ./views/templates/main.pt:117
+#: ./views/templates/main.pt:118
 msgid "About..."
 msgstr ""
 
@@ -139,10 +139,12 @@ msgid "Add"
 msgstr ""
 
 #: ./schemas/agenda_item.py:11
+#: ./views/templates/navigation.pt:45
 msgid "Add agenda item"
 msgstr ""
 
 #: ./schemas/meeting.py:65
+#: ./views/templates/navigation.pt:16
 msgid "Add meeting"
 msgstr ""
 
@@ -210,7 +212,7 @@ msgstr ""
 msgid "Agenda item was opened at"
 msgstr ""
 
-#: ./schemas/agenda_template.py:31
+#: ./schemas/agenda_template.py:29
 #: ./views/templates/minutes.pt:19
 msgid "Agenda items"
 msgstr ""
@@ -238,11 +240,11 @@ msgstr ""
 msgid "Approved proposals:"
 msgstr ""
 
-#: ./views/templates/main.pt:115
+#: ./views/templates/main.pt:116
 msgid "Are you sure you want to change the state?"
 msgstr ""
 
-#: ./views/templates/main.pt:116
+#: ./views/templates/main.pt:117
 msgid "Are you sure you want to retract this proposal?"
 msgstr ""
 
@@ -292,7 +294,7 @@ msgstr ""
 msgid "Check this field - token doesn't match"
 msgstr ""
 
-#: ./views/templates/main.pt:147
+#: ./views/templates/main.pt:148
 msgid "Click a button above to select category"
 msgstr ""
 
@@ -312,7 +314,7 @@ msgstr ""
 msgid "Click to go to meeting overview"
 msgstr ""
 
-#: ./views/templates/main.pt:113
+#: ./views/templates/main.pt:114
 msgid "Close"
 msgstr ""
 
@@ -353,6 +355,7 @@ msgstr ""
 
 #: ./models/schemas.py:13
 #: ./views/components/moderator_actions.py:58
+#: ./views/templates/discussions.pt:38
 msgid "Delete"
 msgstr ""
 
@@ -369,7 +372,7 @@ msgid "Denied proposals:"
 msgstr ""
 
 #: ./schemas/agenda_item.py:21
-#: ./schemas/agenda_template.py:25
+#: ./schemas/agenda_template.py:23
 #: ./schemas/meeting.py:32
 msgid "Description"
 msgstr ""
@@ -513,7 +516,7 @@ msgstr ""
 msgid "Have an account already?"
 msgstr ""
 
-#: ./views/templates/main.pt:120
+#: ./views/templates/main.pt:121
 msgid "Help & Contact"
 msgstr ""
 
@@ -578,7 +581,7 @@ msgstr ""
 msgid "Like"
 msgstr ""
 
-#: ./views/templates/main.pt:119
+#: ./views/templates/main.pt:120
 msgid "Loading..."
 msgstr ""
 
@@ -695,7 +698,7 @@ msgstr ""
 msgid "Moderator menu"
 msgstr ""
 
-#: ./views/templates/main.pt:118
+#: ./views/templates/main.pt:119
 msgid "More..."
 msgstr ""
 
@@ -716,7 +719,7 @@ msgstr ""
 msgid "Newest item will be listed first"
 msgstr ""
 
-#: ./views/templates/main.pt:112
+#: ./views/templates/main.pt:113
 msgid "No"
 msgstr ""
 
@@ -745,6 +748,10 @@ msgstr ""
 
 #: ./workflows/invite_ticket.xml
 msgid "Open"
+msgstr ""
+
+#: ./views/templates/navigation.pt:38
+msgid "Order agenda items"
 msgstr ""
 
 #: ./views/meeting.py:396
@@ -784,13 +791,13 @@ msgstr ""
 msgid "Permissions"
 msgstr ""
 
-#: ./views/templates/main.pt:114
+#: ./views/templates/main.pt:115
 msgid "Please confirm"
 msgstr ""
 
 #: ./models/poll.py:67
 #: ./views/templates/agenda_item.pt:20
-#: ./views/templates/main.pt:121
+#: ./views/templates/main.pt:122
 msgid "Poll"
 msgstr ""
 
@@ -857,6 +864,14 @@ msgstr ""
 
 #: ./workflows/proposal.xml
 msgid "Published"
+msgstr ""
+
+#: ./views/components/meeting_actions.py:107
+msgid "RSS feed"
+msgstr ""
+
+#: ./views/templates/discussions.pt:33
+msgid "Read more"
 msgstr ""
 
 #: ./models/schemas.py:15
@@ -964,8 +979,16 @@ msgstr ""
 msgid "Settings"
 msgstr ""
 
+#: ./views/templates/discussions.pt:8
+msgid "Show ${count} previous posts"
+msgstr ""
+
 #: ./views/templates/agenda_templates.pt:28
 msgid "Show template"
+msgstr ""
+
+#: ./views/templates/discussions.pt:14
+msgid "Show the last 5 posts"
 msgstr ""
 
 #: ./views/templates/participants.pt:16
@@ -1002,7 +1025,7 @@ msgstr ""
 msgid "Tags"
 msgstr ""
 
-#: ./schemas/agenda_template.py:21
+#: ./schemas/agenda_template.py:19
 msgid "Template name"
 msgstr ""
 
@@ -1046,11 +1069,15 @@ msgstr ""
 msgid "There are no agenda templates available"
 msgstr ""
 
-#: ./views/templates/main.pt:57
+#: ./views/feed.py:26
+msgid "This RSS-feed isn't enabled."
+msgstr ""
+
+#: ./views/templates/main.pt:58
 msgid "This meeting has closed."
 msgstr ""
 
-#: ./views/templates/main.pt:54
+#: ./views/templates/main.pt:55
 msgid "This meeting hasn't started yet."
 msgstr ""
 
@@ -1216,7 +1243,7 @@ msgstr ""
 msgid "Welcome text of the email that will be sent"
 msgstr ""
 
-#: ./views/templates/main.pt:111
+#: ./views/templates/main.pt:112
 #: ./views/templates/participants.pt:56
 msgid "Yes"
 msgstr ""
@@ -1270,10 +1297,6 @@ msgstr ""
 msgid "Your vote was updated."
 msgstr ""
 
-#: ./schemas/agenda_template.py:16
-msgid "add_agenda_template_description"
-msgstr ""
-
 #. Default: "Should a 'Reject all proposals' proposal be added to the poll?"
 #: ./schemas/poll.py:93
 msgid "add_reject_proposal_description"
@@ -1321,7 +1344,7 @@ msgid "agenda_template_apply_template_success"
 msgstr ""
 
 #. Default: "Describe the purpose of this agenda"
-#: ./schemas/agenda_template.py:26
+#: ./schemas/agenda_template.py:24
 msgid "agenda_template_description_description"
 msgstr ""
 
@@ -1443,11 +1466,11 @@ msgstr ""
 msgid "invite_only_meeting_access_request_description"
 msgstr ""
 
-#: ./views/search.py:51
+#: ./views/search.py:54
 msgid "item"
 msgstr ""
 
-#: ./views/search.py:52
+#: ./views/search.py:55
 msgid "items"
 msgstr ""
 
@@ -1644,7 +1667,7 @@ msgid "rss_feed_checkbox_description"
 msgstr ""
 
 #. Default: "Search resulted in an error - it's not possible to search for common operator words like 'if' or 'the'."
-#: ./views/search.py:81
+#: ./views/search.py:84
 msgid "search_exception_notice"
 msgstr ""
 
@@ -1666,13 +1689,6 @@ msgstr ""
 #. Default: "Start typing the first letters of the UserID you want to add. You should see a popup below if that UserID exists."
 #: ./schemas/permissions.py:80
 msgid "single_permission_schema_userid_description"
-msgstr ""
-
-#. Default: "Close"
-#: ./views/components/proposals.py:32
-#: ./views/templates/main.pt:132
-#: ./views/templates/navigation.pt:16
-msgid "title"
 msgstr ""
 
 #. Default: "Please note that anything you type here will be visible to all users in the same meeting as you."
