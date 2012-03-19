@@ -1,8 +1,6 @@
 <?xml version="1.0"?>
 <rss version="2.0"
-     xmlns:tal="http://xml.zope.org/namespaces/tal"
-     xmlns:i18n="http://xml.zope.org/namespaces/i18n"
-     i18n:domain="voteit.core">
+     xmlns:tal="http://xml.zope.org/namespaces/tal">
 	<channel>
 	<title>${api.context.title}</title>
 	<link>${api.resource_url(api.context, api.request)}</link>
@@ -15,7 +13,7 @@
 	</item>
 	</tal:iterate>
 	<item tal:condition="not (not closed and active)">
-		<title i18n:translate="">Feed is not active</title>
+		<title>${feed_not_active_notice}</title>
 		<link>${api.resource_url(api.context, api.request)}</link>
 		<pubDate>${dt_format(api.dt_util.utcnow(), format="E, dd MMM y HH:mm:ss zzz")}</pubDate>
 		<guid>${api.resource_url(api.context, api.request)}</guid>
