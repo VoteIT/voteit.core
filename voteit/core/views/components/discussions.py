@@ -65,7 +65,8 @@ def discussions_listing(context, request, va, **kw):
         
     #Get truncate length from meeting
     meeting = find_interface(context, IMeeting)
-    truncate_length = meeting.get_field_value('truncate_discussion_length')
+    #FIXME: needs a way to set default value on this on creation of meeting
+    truncate_length = meeting.get_field_value('truncate_discussion_length', 200)
         
     response = {}
     response['discussions'] = tuple(results)
