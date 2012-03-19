@@ -1,5 +1,8 @@
 <?xml version="1.0"?>
-<rss version="2.0" i18n:domain="voteit.core">
+<rss version="2.0"
+     xmlns:tal="http://xml.zope.org/namespaces/tal"
+     xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+     i18n:domain="voteit.core">
 	<channel>
 	<title>${api.context.title}</title>
 	<link>${api.resource_url(api.context, api.request)}</link>
