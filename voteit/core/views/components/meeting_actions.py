@@ -95,6 +95,16 @@ def generic_menu_link(context, request, va, **kw):
     url = api.resource_url(api.meeting, request) + va.kwargs['link']
     return """<li><a href="%s">%s</a></li>""" % (url, api.translate(va.title))
 
+@view_action('meeting', 'feed', title = _(u"RSS feed"), link = "feed", )
+def feed_menu_link(context, request, va, **kw):
+    """ This is for simple menu items for the meeting root """
+    api = kw['api']
+    url = api.resource_url(api.meeting, request) + va.kwargs['link']
+    if api.meeting.get_field_value('rss_feed', False):
+        return """<li><a href="%s">%s</a></li>""" % (url, api.translate(va.title))
+    
+    return ''
+
 
 @view_config(name="meeting_poll_menu", context=IMeeting, renderer="../templates/snippets/polls_menu_body.pt", permission=VIEW)
 def meeting_poll_menu(context, request):
