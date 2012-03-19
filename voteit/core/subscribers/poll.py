@@ -33,13 +33,11 @@ def create_reject_proposal(obj, event):
     obj.create_reject_proposal()
 
 @subscriber([IPoll, IWorkflowStateChange])
-def reset_unread_ongoing_poll_subscriber(obj, event):
+def reset_unread_on_wf_change(obj, event):
     """ When the poll is created it is in private state where only the 
         moderator has premissions to view it, there for unread is not set 
         properly on polls. This is fixed by reseting it when it becomes 
         ongoing. """
-    if event.new_state != 'upcoming':
-        return
     request = get_current_request()
     unread = request.registry.queryAdapter(obj, IUnread)
     if not unread:

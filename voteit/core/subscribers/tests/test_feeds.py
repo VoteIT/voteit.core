@@ -137,3 +137,47 @@ class FeedsTests(TestCase):
 
         self.assertEqual(len(adapter.feed_storage), 3)
         self.assertEqual(adapter.feed_storage[len(adapter.feed_storage)-1].tags, ('agenda_item', 'closed',))
+
+    def test_do_not_include_private_ais_when_discussion_added(self):
+        root = self._fixture()
+        meeting = root['m']
+        ai = meeting['ai']
+        self._subscribers()
+        from voteit.core.models.discussion_post import DiscussionPost
+        ai['post'] = DiscussionPost()
+
+        adapter = self.config.registry.queryAdapter(meeting, IFeedHandler)
+        self.assertEqual(len(adapter.feed_storage), 0)
+
+    def test_do_not_include_private_ais_when_proposal_added(self):
+        root = self._fixture()
+        meeting = root['m']
+        ai = meeting['ai']
+        self._subscribers()
+        from voteit.core.models.proposal import Proposal
+        ai['post'] = Proposal()
+
+        adapter = self.config.registry.queryAdapter(meeting, IFeedHandler)
+        self.assertEqual(len(adapter.feed_storage), 0)
+
+    def test_discussion_posts_appear_when_ai_visible(self):
+        root = self._fixture()
+        meeting = root['m']
+        ai = meeting['ai']
+        self._subscribers()
+        from voteit.core.models.discussion_post import DiscussionPost
+        ai['post'] = DiscussionPost()
+        ai.set_workflow_state(self.request, 'upcoming')
+        adapter = self.config.registry.queryAdapter(meeting, IFeedHandler)
+        self.assertEqual(len(adapter.feed_storage), 1)
+
+    def test_proposals_appear_when_ai_visible(self):
+        root = self._fixture()
+        meeting = root['m']
+        ai = meeting['ai']
+        self._subscribers()
+        from voteit.core.models.proposal import Proposal
+        ai['post'] = Proposal()
+        ai.set_workflow_state(self.request, 'upcoming')
+        adapter = self.config.registry.queryAdapter(meeting, IFeedHandler)
+        self.assertEqual(len(adapter.feed_storage), 1)
