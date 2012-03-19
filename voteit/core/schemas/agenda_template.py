@@ -12,9 +12,7 @@ class AgendaItemSequenceSchema(colander.SequenceSchema):
 
 
 @schema_factory('AgendaTemplateSchema',
-                title = _(u"Agenda template"),
-                description = _(u"add_agenda_template_description",
-                                default = u""))
+                title = _(u"Agenda template"))
 class AgendaTemplatesSchema(colander.Schema):
     title = colander.SchemaNode(
         colander.String(),

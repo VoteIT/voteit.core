@@ -23,7 +23,7 @@ class FeedView(BaseView):
         self.response['entries'] = feed_handler.feed_storage.values()
         self.response['dt_format'] = self.api.dt_util.dt_format
         self.response['active'] = self.context.get_field_value('rss_feed', False);
-        self.response['feed_not_active_notice'] = self.api.translate(_(u"Feed is not active"))
+        self.response['feed_not_active_notice'] = self.api.translate(_(u"This RSS-feed isn't enabled."))
         # only show entries when meeting is ongoing
         self.response['closed'] = self.context.get_workflow_state() == 'closed' 
         return self.response 
