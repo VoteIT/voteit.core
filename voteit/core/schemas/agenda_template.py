@@ -12,9 +12,7 @@ class AgendaItemSequenceSchema(colander.SequenceSchema):
 
 
 @schema_factory('AgendaTemplateSchema',
-                title = _(u"Agenda template"),
-                description = _(u"add_agenda_template_description",
-                                default = u""))
+                title = _(u"Agenda template"))
 class AgendaTemplatesSchema(colander.Schema):
     title = colander.SchemaNode(
         colander.String(),
@@ -25,7 +23,7 @@ class AgendaTemplatesSchema(colander.Schema):
         title = _(u"Description"),
         description = _(u"agenda_template_description_description",
                         default=u"Describe the purpose of this agenda"),
-        widget=deform.widget.RichTextWidget(),
+        widget=deform.widget.TextAreaWidget(rows=5, cols=40),
     )
     
     agenda_items = AgendaItemSequenceSchema(title=_(u'Agenda items'))

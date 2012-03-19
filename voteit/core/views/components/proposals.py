@@ -29,7 +29,7 @@ def proposal_listing(context, request, va, **kw):
     def _translated_state_title(state):
         for info in state_info:
             if info['name'] == state:
-                return _(info['title']) 
+                return api.tstring(info['title'])
         
         return state
 

@@ -16,7 +16,7 @@
                     <img src="${request.application_url}/static/icons/icon_add.png"
                          width="16" height="16"
                          alt="Add meeting" title="Add meeting"
-                         i18n:attributes="alt title" />
+                         i18n:attributes="alt; title;" />
                 </a>
             </div>
             <h5 class="header">
@@ -39,14 +39,14 @@
                          width="16" height="16"
                          alt="Order agenda items"
                          title="Order agenda items"
-                         i18n:attributes="alt title" />
+                         i18n:attributes="alt; title;" />
                 </a>
                 <a tal:attributes="href api.resource_url(api.meeting, request) + '@@add?content_type=AgendaItem'">
                     <img src="${request.application_url}/static/icons/icon_add.png"
                          width="16" height="16"
                          alt="Add agenda item"
                          title="Add agenda item"
-                         i18n:attributes="alt title" />
+                         i18n:attributes="alt; title;" />
                 </a>
             </div>
             <h5 class="header">

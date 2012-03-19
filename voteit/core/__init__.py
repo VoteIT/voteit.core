@@ -58,6 +58,8 @@ def required_components(config):
                                 '%s:locale/' % PROJECTNAME,)
     config.scan(PROJECTNAME)
     config.include(adjust_default_view_component_order)
+    from pyramid.chameleon_zpt import renderer_factory as zpt_rf
+    config.add_renderer('.xml', zpt_rf)
     from voteit.core.security import VIEW
     config.set_default_permission(VIEW)    
     config.include(register_plugins)

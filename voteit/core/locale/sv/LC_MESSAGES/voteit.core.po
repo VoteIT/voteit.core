@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
-"POT-Creation-Date: 2012-03-17 11:36+0000\n"
+"POT-Creation-Date: 2012-03-19 13:08+0000\n"
 "PO-Revision-Date: 2012-02-28 13:14+0100\n"
 "Last-Translator: Fredrik Nilson <fredrik@betahaus.net>\n"
 "Language-Team: sv <LL@li.org>\n"
@@ -121,7 +121,7 @@ msgid "About me"
 msgstr "Information om mig"
 
 #. Default: "About..."
-#: ./views/templates/main.pt:117
+#: ./views/templates/main.pt:118
 msgid "About..."
 msgstr "Om..."
 
@@ -146,15 +146,17 @@ msgstr "Aktivera RSS-feed"
 #. Default: "Add"
 #: ./models/schemas.py:10
 #: ./views/components/inline_add_form.py:25
-#: ./views/templates/agenda_templates.pt:41
+#: ./views/templates/agenda_templates.pt:45
 msgid "Add"
 msgstr "Lägg till"
 
 #: ./schemas/agenda_item.py:11
+#: ./views/templates/navigation.pt:45
 msgid "Add agenda item"
 msgstr "Lägg till dagordningspunkt"
 
 #: ./schemas/meeting.py:65
+#: ./views/templates/navigation.pt:16
 msgid "Add meeting"
 msgstr "Lägg till möte"
 
@@ -226,7 +228,7 @@ msgstr "Dagordningspunkten stängdes"
 msgid "Agenda item was opened at"
 msgstr "Dagordningspunkten öppnades"
 
-#: ./schemas/agenda_template.py:31
+#: ./schemas/agenda_template.py:29
 #: ./views/templates/minutes.pt:19
 msgid "Agenda items"
 msgstr "Dagordningspunkter"
@@ -256,12 +258,12 @@ msgid "Approved proposals:"
 msgstr "Bifallna förslag"
 
 #. Default: "Are you sure you want to change the state?"
-#: ./views/templates/main.pt:115
+#: ./views/templates/main.pt:116
 msgid "Are you sure you want to change the state?"
 msgstr "Är du säker på att du vill ändra tillstånd?"
 
 #. Default: "Are you sure you want to retract this proposal?"
-#: ./views/templates/main.pt:116
+#: ./views/templates/main.pt:117
 msgid "Are you sure you want to retract this proposal?"
 msgstr "Är du säker på att du vill dra tillbaka detta förslag?"
 
@@ -270,9 +272,9 @@ msgid "Avoid a title with more than 20 characters"
 msgstr "Undvik att skriva fler än 20 tecken"
 
 #. Default: "Back"
+#: ./views/templates/agenda_template.pt:33
 #: ./views/templates/minutes.pt:45
 #: ./views/templates/participants.pt:87
-#: ./views/templates/participants_emails.pt:27
 msgid "Back"
 msgstr "Tillbaka"
 
@@ -315,11 +317,11 @@ msgstr "Ändra tillstånd"
 msgid "Check this field - token doesn't match"
 msgstr "Kontrollera fältet - engångslösenordet stämmer inte"
 
-#: ./views/templates/main.pt:147
+#: ./views/templates/main.pt:148
 msgid "Click a button above to select category"
 msgstr "Klicka på en av knapparna ovan för att välja kategori"
 
-#: ./views/templates/agenda_templates.pt:37
+#: ./views/templates/agenda_templates.pt:41
 msgid "Click above to see the agenda items for this template"
 msgstr "Klicka ovan för att se dagordningspunkterna i denna standarddagordning"
 
@@ -338,7 +340,7 @@ msgid "Click to go to meeting overview"
 msgstr "Klicka för att gå till mötesöversikt"
 
 #. Default: "Close"
-#: ./views/templates/main.pt:113
+#: ./views/templates/main.pt:114
 msgid "Close"
 msgstr "Stäng"
 
@@ -383,6 +385,7 @@ msgstr "Nuvarande logg"
 #. Default: "Delete"
 #: ./models/schemas.py:13
 #: ./views/components/moderator_actions.py:58
+#: ./views/templates/agenda_template.pt:15
 msgid "Delete"
 msgstr "Radera"
 
@@ -400,7 +403,7 @@ msgid "Denied proposals:"
 msgstr "Avslagna förslag"
 
 #: ./schemas/agenda_item.py:21
-#: ./schemas/agenda_template.py:25
+#: ./schemas/agenda_template.py:23
 #: ./schemas/meeting.py:32
 msgid "Description"
 msgstr "Beskrivning"
@@ -518,7 +521,7 @@ msgstr "Sluttid för omröstningen."
 
 #: ./models/feeds.py:53
 msgid "Feed entry"
-msgstr ""
+msgstr "Flödespost"
 
 #: ./views/templates/meeting_framefeed.pt:24
 msgid "Feed not active"
@@ -553,7 +556,7 @@ msgstr "HTML är inte tillåtet."
 msgid "Have an account already?"
 msgstr "Har du ett konto redan?"
 
-#: ./views/templates/main.pt:120
+#: ./views/templates/main.pt:121
 msgid "Help & Contact"
 msgstr "Hjälp & Kontakt"
 
@@ -622,7 +625,7 @@ msgid "Like"
 msgstr "Gilla"
 
 #. Default: "Loading..."
-#: ./views/templates/main.pt:119
+#: ./views/templates/main.pt:120
 msgid "Loading..."
 msgstr "Laddar..."
 
@@ -750,7 +753,7 @@ msgid "Moderator menu"
 msgstr "Moderatorsmeny"
 
 #. Default: "More..."
-#: ./views/templates/main.pt:118
+#: ./views/templates/main.pt:119
 msgid "More..."
 msgstr "Mer..."
 
@@ -773,7 +776,7 @@ msgid "Newest item will be listed first"
 msgstr "Senaste objekt visas först"
 
 #. Default: "No"
-#: ./views/templates/main.pt:112
+#: ./views/templates/main.pt:113
 msgid "No"
 msgstr "Nej"
 
@@ -805,6 +808,10 @@ msgstr "Endast alfanumeriska tecken är tillåtna"
 #: ./workflows/invite_ticket.xml
 msgid "Open"
 msgstr "Öppen"
+
+#: ./views/templates/navigation.pt:38
+msgid "Order agenda items"
+msgstr "Ordning på dagordningspunkter"
 
 #: ./views/meeting.py:396
 msgid "Order updated"
@@ -845,14 +852,14 @@ msgid "Permissions"
 msgstr "Rättigheter"
 
 #. Default: "Please confirm"
-#: ./views/templates/main.pt:114
+#: ./views/templates/main.pt:115
 msgid "Please confirm"
 msgstr "Vänligen bekräfta"
 
 #. Default: "Poll"
 #: ./models/poll.py:67
 #: ./views/templates/agenda_item.pt:20
-#: ./views/templates/main.pt:121
+#: ./views/templates/main.pt:122
 msgid "Poll"
 msgstr "Omröstning"
 
@@ -928,6 +935,14 @@ msgstr "Föreslå (och läsa)"
 #: ./workflows/proposal.xml
 msgid "Published"
 msgstr "Publicerad"
+
+#: ./views/components/meeting_actions.py:107
+msgid "RSS feed"
+msgstr "RSS-flöde"
+
+#: ./views/templates/discussions.pt:33
+msgid "Read more"
+msgstr "Läs mer"
 
 #. Default: "Register"
 #: ./models/schemas.py:15
@@ -1043,9 +1058,17 @@ msgstr "Ställ in antalet direkt synliga tecken i diskussionsposter. Skriv 0 fö
 msgid "Settings"
 msgstr "Inställningar"
 
-#: ./views/templates/agenda_templates.pt:28
+#: ./views/templates/discussions.pt:8
+msgid "Show ${count} previous posts"
+msgstr "Visa ${count} föregående poster"
+
+#: ./views/templates/agenda_templates.pt:32
 msgid "Show template"
 msgstr "Visa standarddagordning"
+
+#: ./views/templates/discussions.pt:14
+msgid "Show the last 5 posts"
+msgstr "Visa 5 senaste posterna"
 
 #. Default: "Showing ${count} participants"
 #: ./views/templates/participants.pt:16
@@ -1084,7 +1107,7 @@ msgstr "Uppdaterad"
 msgid "Tags"
 msgstr "Taggar"
 
-#: ./schemas/agenda_template.py:21
+#: ./schemas/agenda_template.py:19
 msgid "Template name"
 msgstr "Standarddagordningens namn"
 
@@ -1125,17 +1148,21 @@ msgstr "Resultatet av en omröstning i ${agenda_item} är klart."
 msgid "The time that the server think it is. If this is wrong, you need to change the server time."
 msgstr "Tiden som servern tycker att det är just nu. Om detta är fel. behöver ni ändra tiden på servern."
 
-#: ./views/templates/agenda_templates.pt:51
+#: ./views/templates/agenda_templates.pt:59
 msgid "There are no agenda templates available"
 msgstr "Det finns inga standarddagordningar tillgängliga"
 
+#: ./views/feed.py:26
+msgid "This RSS-feed isn't enabled."
+msgstr "Detta RSS-flöde är inte påslaget."
+
 #. Default: "This meeting has closed."
-#: ./views/templates/main.pt:57
+#: ./views/templates/main.pt:58
 msgid "This meeting has closed."
 msgstr "Detta möte är stängt och kan inte ändras."
 
 #. Default: "This meeting hasn't started yet."
-#: ./views/templates/main.pt:54
+#: ./views/templates/main.pt:55
 msgid "This meeting hasn't started yet."
 msgstr "Detta möte har inte startats ännu."
 
@@ -1312,7 +1339,7 @@ msgid "Welcome text of the email that will be sent"
 msgstr "Välkomsttext i brevet som kommer skickas"
 
 #. Default: "Yes"
-#: ./views/templates/main.pt:111
+#: ./views/templates/main.pt:112
 #: ./views/templates/participants.pt:56
 msgid "Yes"
 msgstr "Ja"
@@ -1371,10 +1398,6 @@ msgstr "Din röst"
 msgid "Your vote was updated."
 msgstr "Din röst har uppdaterats"
 
-#: ./schemas/agenda_template.py:16
-msgid "add_agenda_template_description"
-msgstr ""
-
 #. Default: "Should a 'Reject all proposals' proposal be added to the poll?"
 #: ./schemas/poll.py:93
 msgid "add_reject_proposal_description"
@@ -1422,14 +1445,19 @@ msgid "agenda_template_apply_template_success"
 msgstr "Standarddagordningen tillagd i mötet."
 
 #. Default: "Describe the purpose of this agenda"
-#: ./schemas/agenda_template.py:26
+#: ./schemas/agenda_template.py:24
 msgid "agenda_template_description_description"
 msgstr "Beskriv denna standarddagordning."
 
 #. Default: "Choose one of the listed templates and press 'add' to add the agenda items to your meeting. You can add more than one template to the same meeting and you can add additional agenda items in the usual way after you have added a template."
-#: ./views/templates/agenda_templates.pt:20
+#: ./views/templates/agenda_templates.pt:24
 msgid "agenda_templates_list_description"
 msgstr "Välj en av standarddagordningarna och klicka 'lägg till' för att lägga till dagordningspunkterna till ditt möte. Du kan lägga till mer än en standarddagordning till samma möte och du kan lägga till ytterligare dagordningspunkter på det vanliga sättet efter att du lagt till en standarddagordning."
+
+#. Default: "If you wish to apply a template to a meeting, go to that meeting and select 'Agenda templates' from the 'Settings' menu."
+#: ./views/templates/agenda_templates.pt:20
+msgid "agenda_templates_outside_meeting_help"
+msgstr "Om du vill använda en standarddagordning i ett möte, gå till det mötet och välj 'Standarddagordningar' från menyn 'Inställningar'."
 
 #. Default: "This meeting allows anyone to request access to it. You only need to click below to get all participant permissions instantly."
 #: ./views/components/request_access.py:82
@@ -1547,11 +1575,11 @@ msgstr "Du har fått en inbjudan till ett VoteIT-möte."
 msgid "invite_only_meeting_access_request_description"
 msgstr "Detta möte är enbart för inbjudna. Det betyder att ett ebrev skickas med en inbjudningsbiljett. Kontakta mötets moderator för mer information."
 
-#: ./views/search.py:51
+#: ./views/search.py:54
 msgid "item"
 msgstr "objekt"
 
-#: ./views/search.py:52
+#: ./views/search.py:55
 msgid "items"
 msgstr "objekt"
 
@@ -1754,7 +1782,7 @@ msgid "rss_feed_checkbox_description"
 msgstr "När kryssrutan nedan markeras kan ditt möte följas med i en offentlig RSS feed som kan följas med en RSS-läsare. Feeden kommer innehålla information om förändringar i mötet och vem som gjorde dem. Du når feeden på: 'Mötets URL' + '/feed'. Detta borde bli något i stil med 'www.dindomänförvoteit.se/dittmötesnamn/feed'. Om du vill att feeden ska kunna visas i en iframe kan du använda '/framefeed' istället. Detta är en avancerad funktion, läs mer om den i manualen på wiki.voteit.se. Vänligen notera ett varningens ord: RSS-feeden är offentlig för alla som kan klura ut den så använd funktionen med försiktighet."
 
 #. Default: "Search resulted in an error - it's not possible to search for common operator words like 'if' or 'the'."
-#: ./views/search.py:81
+#: ./views/search.py:84
 msgid "search_exception_notice"
 msgstr "Sökningen fungerade inte. Det är inte möjligt att söka på vissa 'funktionsord' som 'if' eller 'the'."
 
@@ -1777,14 +1805,6 @@ msgstr "Rättigheter för användare"
 #: ./schemas/permissions.py:80
 msgid "single_permission_schema_userid_description"
 msgstr "Börja skriva första bokstäverna i det användarID du vill lägga till. Du borde se en lista nedan med alternativ om användarIDt existerar."
-
-#. Default: "Close"
-#: ./views/components/proposals.py:32
-#: ./views/templates/main.pt:132
-#: ./views/templates/navigation.pt:16
-#, fuzzy
-msgid "title"
-msgstr "titel"
 
 #. Default: "Please note that anything you type here will be visible to all users in the same meeting as you."
 #: ./schemas/user.py:73

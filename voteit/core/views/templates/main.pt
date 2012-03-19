@@ -133,7 +133,7 @@
 			<img src="${request.application_url}/static/icons/icon_close_lb.png"
                      width="16" height="16"
                      alt="Close" title="Close"
-                     i18n:attributes="alt title" />
+                     i18n:attributes="alt; title;" />
 		</a>
 		<div class="content"></div>
 	</div>
@@ -142,7 +142,7 @@
 			<img src="${request.application_url}/static/icons/icon_close_lb.png"
                      width="16" height="16"
                      alt="Close" title="Close"
-                     i18n:attributes="alt title" />
+                     i18n:attributes="alt; title;" />
 		</a>
         <div tal:replace="structure api.render_single_view_component(context, request, 'main', 'help_actions')"></div>
 		<div class="content" i18n:translate="">Click a button above to select category</div>

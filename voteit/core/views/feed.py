@@ -15,18 +15,7 @@ from voteit.core import fanstaticlib
 
 class FeedView(BaseView):
         
-    @view_config(context=IMeeting, name='feed', renderer="templates/meeting_feed.pt", permission=NO_PERMISSION_REQUIRED)
-    def feed(self):
-        """ Renders a rss feed for the meeting """
-        feed_handler = self.request.registry.getAdapter(self.context, IFeedHandler)
-        self.response['entries'] = feed_handler.feed_storage.values()
-        self.response['dt_format'] = self.api.dt_util.dt_format
-        self.response['active'] = self.context.get_field_value('rss_feed', False);
-        # only show entries when meeting is ongoing
-        self.response['closed'] = self.context.get_workflow_state() == 'closed' 
-        
-        return self.response 
-    
+    @view_config(context=IMeeting, name='feed', renderer="templates/meeting_feed.xml", permission=NO_PERMISSION_REQUIRED)
     @view_config(context=IMeeting, name='framefeed', renderer="templates/meeting_framefeed.pt", permission=NO_PERMISSION_REQUIRED)
     def feed(self):
         """ Renders a rss feed for the meeting """
@@ -34,7 +23,7 @@ class FeedView(BaseView):
         self.response['entries'] = feed_handler.feed_storage.values()
         self.response['dt_format'] = self.api.dt_util.dt_format
         self.response['active'] = self.context.get_field_value('rss_feed', False);
+        self.response['feed_not_active_notice'] = self.api.translate(_(u"This RSS-feed isn't enabled."))
         # only show entries when meeting is ongoing
         self.response['closed'] = self.context.get_workflow_state() == 'closed' 
-        
         return self.response 
