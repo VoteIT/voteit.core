@@ -30,11 +30,10 @@
 			<div class="description" tal:condition="template.description" tal:content="structure template.description"></div>
 			<div id="template-details-${template.__name__}" class="toggle_area toggle_closed">
 			<a class="toggle_minimize read_more" i18n:translate="">Show template</a>
-	            <div class="minimizable_area">
+	            <div class="minimizable_area description">
 	         		<ul tal:condition="template.get_field_value('agenda_items')">
 	         			<li tal:repeat="item template.get_field_value('agenda_items')">
-	         				<h4>${item.title}</h4>
-	         				<div class="description" tal:condition="item.description" tal:content="structure item.description"></div>
+                            <h6>${item.title}</h6>
 	         			</li>
 	         		</ul>
 	            </div>
