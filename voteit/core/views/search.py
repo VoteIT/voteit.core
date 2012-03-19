@@ -48,9 +48,12 @@ class SearchView(BaseView):
         self.response['results'] = []
 
         def _results_ts(count):
-            return self.api.pluralize(_(u"item"),
+            """ Note about the odd syntax: pluralize returns unicode, so it won't be translated.
+                Hence it needs to be converted back to a translation string.
+            """
+            return _(self.api.pluralize(_(u"item"),
                                       _(u"items"),
-                                      count)
+                                      count))
 
         post = self.request.POST
         if 'search' in post:

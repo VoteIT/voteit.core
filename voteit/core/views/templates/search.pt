@@ -15,7 +15,7 @@
     <tal:results condition="results">
         <div class="listing_block">
             <span tal:content="results_count">1</span>
-            <span tal:content="results_ts(results_count)">item</span>
+            <span tal:content="results_ts(results_count)">item(s)</span>
             <span class="hyphen">&#45;</span>
             <span i18n:translate="">Newest item will be listed first</span>
         </div>
