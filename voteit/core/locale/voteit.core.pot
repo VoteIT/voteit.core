@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2012-03-19 12:10+0000\n"
+"POT-Creation-Date: 2012-03-19 13:08+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -134,7 +134,7 @@ msgstr ""
 
 #: ./models/schemas.py:10
 #: ./views/components/inline_add_form.py:25
-#: ./views/templates/agenda_templates.pt:41
+#: ./views/templates/agenda_templates.pt:45
 msgid "Add"
 msgstr ""
 
@@ -252,9 +252,9 @@ msgstr ""
 msgid "Avoid a title with more than 20 characters"
 msgstr ""
 
+#: ./views/templates/agenda_template.pt:33
 #: ./views/templates/minutes.pt:45
 #: ./views/templates/participants.pt:87
-#: ./views/templates/participants_emails.pt:27
 msgid "Back"
 msgstr ""
 
@@ -298,7 +298,7 @@ msgstr ""
 msgid "Click a button above to select category"
 msgstr ""
 
-#: ./views/templates/agenda_templates.pt:37
+#: ./views/templates/agenda_templates.pt:41
 msgid "Click above to see the agenda items for this template"
 msgstr ""
 
@@ -355,7 +355,7 @@ msgstr ""
 
 #: ./models/schemas.py:13
 #: ./views/components/moderator_actions.py:58
-#: ./views/templates/discussions.pt:38
+#: ./views/templates/agenda_template.pt:15
 msgid "Delete"
 msgstr ""
 
@@ -983,7 +983,7 @@ msgstr ""
 msgid "Show ${count} previous posts"
 msgstr ""
 
-#: ./views/templates/agenda_templates.pt:28
+#: ./views/templates/agenda_templates.pt:32
 msgid "Show template"
 msgstr ""
 
@@ -1065,7 +1065,7 @@ msgstr ""
 msgid "The time that the server think it is. If this is wrong, you need to change the server time."
 msgstr ""
 
-#: ./views/templates/agenda_templates.pt:51
+#: ./views/templates/agenda_templates.pt:59
 msgid "There are no agenda templates available"
 msgstr ""
 
@@ -1349,8 +1349,13 @@ msgid "agenda_template_description_description"
 msgstr ""
 
 #. Default: "Choose one of the listed templates and press 'add' to add the agenda items to your meeting. You can add more than one template to the same meeting and you can add additional agenda items in the usual way after you have added a template."
-#: ./views/templates/agenda_templates.pt:20
+#: ./views/templates/agenda_templates.pt:24
 msgid "agenda_templates_list_description"
+msgstr ""
+
+#. Default: "If you wish to apply a template to a meeting, go to that meeting and select 'Agenda templates' from the 'Settings' menu."
+#: ./views/templates/agenda_templates.pt:20
+msgid "agenda_templates_outside_meeting_help"
 msgstr ""
 
 #. Default: "This meeting allows anyone to request access to it. You only need to click below to get all participant permissions instantly."

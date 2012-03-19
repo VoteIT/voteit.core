@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
-"POT-Creation-Date: 2012-03-19 12:10+0000\n"
+"POT-Creation-Date: 2012-03-19 13:08+0000\n"
 "PO-Revision-Date: 2012-02-28 13:14+0100\n"
 "Last-Translator: Fredrik Nilson <fredrik@betahaus.net>\n"
 "Language-Team: sv <LL@li.org>\n"
@@ -146,7 +146,7 @@ msgstr "Aktivera RSS-feed"
 #. Default: "Add"
 #: ./models/schemas.py:10
 #: ./views/components/inline_add_form.py:25
-#: ./views/templates/agenda_templates.pt:41
+#: ./views/templates/agenda_templates.pt:45
 msgid "Add"
 msgstr "Lägg till"
 
@@ -272,9 +272,9 @@ msgid "Avoid a title with more than 20 characters"
 msgstr "Undvik att skriva fler än 20 tecken"
 
 #. Default: "Back"
+#: ./views/templates/agenda_template.pt:33
 #: ./views/templates/minutes.pt:45
 #: ./views/templates/participants.pt:87
-#: ./views/templates/participants_emails.pt:27
 msgid "Back"
 msgstr "Tillbaka"
 
@@ -321,7 +321,7 @@ msgstr "Kontrollera fältet - engångslösenordet stämmer inte"
 msgid "Click a button above to select category"
 msgstr "Klicka på en av knapparna ovan för att välja kategori"
 
-#: ./views/templates/agenda_templates.pt:37
+#: ./views/templates/agenda_templates.pt:41
 msgid "Click above to see the agenda items for this template"
 msgstr "Klicka ovan för att se dagordningspunkterna i denna standarddagordning"
 
@@ -385,7 +385,7 @@ msgstr "Nuvarande logg"
 #. Default: "Delete"
 #: ./models/schemas.py:13
 #: ./views/components/moderator_actions.py:58
-#: ./views/templates/discussions.pt:38
+#: ./views/templates/agenda_template.pt:15
 msgid "Delete"
 msgstr "Radera"
 
@@ -1062,7 +1062,7 @@ msgstr "Inställningar"
 msgid "Show ${count} previous posts"
 msgstr "Visa ${count} föregående poster"
 
-#: ./views/templates/agenda_templates.pt:28
+#: ./views/templates/agenda_templates.pt:32
 msgid "Show template"
 msgstr "Visa standarddagordning"
 
@@ -1148,7 +1148,7 @@ msgstr "Resultatet av en omröstning i ${agenda_item} är klart."
 msgid "The time that the server think it is. If this is wrong, you need to change the server time."
 msgstr "Tiden som servern tycker att det är just nu. Om detta är fel. behöver ni ändra tiden på servern."
 
-#: ./views/templates/agenda_templates.pt:51
+#: ./views/templates/agenda_templates.pt:59
 msgid "There are no agenda templates available"
 msgstr "Det finns inga standarddagordningar tillgängliga"
 
@@ -1450,9 +1450,14 @@ msgid "agenda_template_description_description"
 msgstr "Beskriv denna standarddagordning."
 
 #. Default: "Choose one of the listed templates and press 'add' to add the agenda items to your meeting. You can add more than one template to the same meeting and you can add additional agenda items in the usual way after you have added a template."
-#: ./views/templates/agenda_templates.pt:20
+#: ./views/templates/agenda_templates.pt:24
 msgid "agenda_templates_list_description"
 msgstr "Välj en av standarddagordningarna och klicka 'lägg till' för att lägga till dagordningspunkterna till ditt möte. Du kan lägga till mer än en standarddagordning till samma möte och du kan lägga till ytterligare dagordningspunkter på det vanliga sättet efter att du lagt till en standarddagordning."
+
+#. Default: "If you wish to apply a template to a meeting, go to that meeting and select 'Agenda templates' from the 'Settings' menu."
+#: ./views/templates/agenda_templates.pt:20
+msgid "agenda_templates_outside_meeting_help"
+msgstr "Om du vill använda en standarddagordning i ett möte, gå till det mötet och välj 'Standarddagordningar' från menyn 'Inställningar'."
 
 #. Default: "This meeting allows anyone to request access to it. You only need to click below to get all participant permissions instantly."
 #: ./views/components/request_access.py:82
