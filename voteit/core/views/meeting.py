@@ -421,7 +421,8 @@ class MeetingView(BaseView):
         query = dict(
             context = self.context,
             content_type = "AgendaItem",
-           # sort_index = "end_time",
+            workflow_state = ('upcoming', 'ongoing', 'closed'),
+            sort_index = "order",
         )
         for docid in self.api.search_catalog(**query)[1]:
             agenda_items.append(self.api.resolve_catalog_docid(docid))
