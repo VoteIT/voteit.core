@@ -13,7 +13,7 @@ from voteit.core.security import DELETE
 from voteit.core.htmltruncate import htmltruncate
 
 #FIXME: needs a way to set default value on this on creation of meeting
-def truncate(text, length=200):
+def truncate(text, length=240):
     try:
         if length and length > 0:
             trunc_text = htmltruncate.truncate(text, length, u'…')
@@ -66,7 +66,7 @@ def discussions_listing(context, request, va, **kw):
     #Get truncate length from meeting
     meeting = find_interface(context, IMeeting)
     #FIXME: needs a way to set default value on this on creation of meeting
-    truncate_length = meeting.get_field_value('truncate_discussion_length', 200)
+    truncate_length = meeting.get_field_value('truncate_discussion_length', 240)
         
     response = {}
     response['discussions'] = tuple(results)
