@@ -84,10 +84,11 @@ def groupfinder(name, request):
         In some cases, like automated scripts when nobody is logged in,
         request won't have a context. In that case, no groups should exist.
     """
-    context = getattr(request, 'context', None)
-    if context:
+    try:
+        context = request.context
         return context.get_groups(name)
-    return ()
+    except AttributeError:
+        return ()
 
 
 def find_authorized_userids(context, permissions):

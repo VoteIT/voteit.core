@@ -50,29 +50,6 @@ class FeedHandlerTests(unittest.TestCase):
         adapter = self.config.registry.queryAdapter(meeting, IFeedHandler)
         self.failUnless(IFeedHandler.providedBy(adapter))
 
-    def test_meeting_added_subscriber_adds_to_feed(self):
-        #Add subscribers
-        self.config.scan('voteit.core.subscribers.feeds')
-        #Add feed handler
-        self.config.include('voteit.core.models.feeds')
-        #Add FeedEntry content type
-        self.config.scan('voteit.core.models.feeds')
-
-        from voteit.core.models.site import SiteRoot
-        root = SiteRoot()
-        
-        from voteit.core.models.meeting import Meeting
-        meeting = Meeting()
-        root['meeting'] = meeting
-        
-        from voteit.core.models.agenda_item import AgendaItem
-        agenda_item = AgendaItem()
-        meeting['agenda_item'] = agenda_item
-
-        adapter = self.config.registry.queryAdapter(meeting, IFeedHandler)
-        self.assertEqual(len(adapter.feed_storage), 1)
-        self.assertEqual(adapter.feed_storage[0].tags, ('agenda_item', 'added'))
-
 
 class FeedEntryTests(unittest.TestCase):
 

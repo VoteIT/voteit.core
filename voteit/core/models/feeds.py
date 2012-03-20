@@ -47,7 +47,7 @@ class FeedHandler(object):
             if self.feed_storage.insert(k, obj):
                 return
         
-        raise KeyError("Couln't find a free key for feed handler after 10 retries.")
+        raise KeyError("Couln't find a free key for feed handler after 10 retries.") # pragma : no cover
 
 
 @content_factory('FeedEntry', title=_(u"Feed entry"))
