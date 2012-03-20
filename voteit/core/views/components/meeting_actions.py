@@ -2,13 +2,18 @@ from betahaus.viewcomponent import view_action
 from pyramid.renderers import render
 from pyramid.traversal import resource_path
 from pyramid.view import view_config
+from repoze.catalog.query import Eq
+from repoze.catalog.query import NotAny
+
 from voteit.core.security import MANAGE_SERVER, MODERATE_MEETING
 from voteit.core.security import VIEW
 from voteit.core.security import EDIT
 from voteit.core.security import MANAGE_GROUPS
+from voteit.core.security import ADD_VOTE
 from voteit.core import VoteITMF as _
 from voteit.core.views.api import APIView
 from voteit.core.models.interfaces import IMeeting
+from voteit.core.models.catalog import resolve_catalog_docid
 
 
 MODERATOR_SECTIONS = ('closed', 'ongoing', 'upcoming', 'private',)
@@ -35,16 +40,22 @@ def polls_menu(context, request, va, **kw):
     response = {}
     response['api'] = api
     response['menu_title'] = va.title
-    #Unread
-    query = dict(
-        content_type = 'Poll',
-        path = resource_path(api.meeting),
-        unread = api.userid,
-        #Not checking allowed to view is okay here, since polls don't get added to unread when they're private
-        #If that would change, the line below will fix it, so it's kept around so we don't forget :)
-        #allowed_to_view = {'operator': 'or', 'query': api.context_effective_principals(api.meeting)},
-    )
-    response['unread_polls_count'] = api.search_catalog(**query)[0]
+    
+    # get all polls that is ongoing an the user hasn't voted in yet
+    query = Eq('content_type', 'Poll' ) & \
+            Eq('path', resource_path(api.meeting)) & \
+            Eq('workflow_state', 'ongoing') & \
+            NotAny('voted_userids', api.userid)
+    num, results = api.root.catalog.query(query)
+    
+    # count the polls the user has the right to vote in
+    num = 0
+    for docid in results:
+        poll = resolve_catalog_docid(api.root.catalog, api.root, docid)
+        if api.context_has_permission(ADD_VOTE, poll):
+            num = num + 1
+            
+    response['unread_polls_count'] = num
     response['url'] = '%s@@meeting_poll_menu' % api.resource_url(api.meeting, request)
     return render('../templates/snippets/polls_menu.pt', response, request = request)
 
