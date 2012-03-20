@@ -213,7 +213,6 @@ class CatalogIndexTests(CatalogTestCase):
         
         self.assertEqual(self.query("'Testing' in searchable_text")[0], 1)
         self.assertEqual(self.query("'everything works as expected' in searchable_text")[0], 1)
-        #FIXME: Not possible to search on "Not", wtf?
         self.assertEqual(self.query("'We are 404' in searchable_text")[0], 0)
 
     def test_start_time(self):
