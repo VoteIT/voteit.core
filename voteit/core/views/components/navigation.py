@@ -81,8 +81,6 @@ def navigation_section(context, request, va, **kwargs):
         context_path = context_path.split('/')
         if len(path) > len(context_path):
             path = path[0:len(context_path)]
-        else:
-            context_path = context_path[0:len(path)]
             
         return path == context_path
 
