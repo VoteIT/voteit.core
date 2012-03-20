@@ -2,7 +2,7 @@
 <li class="tab dropdown_menu_poll" url="${url}">
     <a href="#" class="menu_header">
         <span class="iconpadding icon poll-dark">
-            <tal:unread condition="unread_polls_count">(${unread_polls_count})</tal:unread>
+            <tal:unvoted condition="unvoted_polls_count">(${unvoted_polls_count})</tal:unvoted>
             ${menu_title} &raquo;
         </span>
     </a>

@@ -147,6 +147,34 @@ class CatalogTests(CatalogTestCase):
         self.assertEqual(self.query("allowed_to_view in any('role:Admin',) and path == '/meeting'")[0], 1)
         self.assertEqual(self.query("allowed_to_view in any('role:Viewer',) and path == '/meeting'")[0], 1)        
 
+    def test_index_object_preforms_reindex_if_object_already_indexed(self):
+        from voteit.core.models.catalog import index_object
+        catalog = self.root.catalog
+
+        meeting = createContent('Meeting')
+        meeting.title = 'hello world'
+        self.root['meeting'] = meeting
+        meeting.title = 'something new'
+        #This should now preform reindex instead
+        index_object(catalog, meeting)
+        self.assertEqual(catalog.query("title == 'something new'")[0], 1)
+
+    def test_resolve_catalog_docid(self):
+        from voteit.core.models.catalog import resolve_catalog_docid
+        catalog = self.root.catalog
+        meeting = createContent('Meeting')
+        self.root['m'] = meeting
+        docid = catalog.query("content_type == 'Meeting'")[1][0]
+        self.assertEqual(meeting, resolve_catalog_docid(catalog, self.root, docid))
+
+    def test_metadata_for_query(self):
+        from voteit.core.models.catalog import metadata_for_query
+        catalog = self.root.catalog
+        meeting = createContent('Meeting', title = 'Hello world!')
+        self.root['m'] = meeting
+        metadata = metadata_for_query(catalog, content_type = 'Meeting')[0]
+        self.assertEqual(metadata['title'], "Hello world!")
+
 
 class CatalogIndexTests(CatalogTestCase):
     """ Make sure indexes work as expected. """
@@ -213,7 +241,6 @@ class CatalogIndexTests(CatalogTestCase):
         
         self.assertEqual(self.query("'Testing' in searchable_text")[0], 1)
         self.assertEqual(self.query("'everything works as expected' in searchable_text")[0], 1)
-        #FIXME: Not possible to search on "Not", wtf?
         self.assertEqual(self.query("'We are 404' in searchable_text")[0], 0)
 
     def test_start_time(self):

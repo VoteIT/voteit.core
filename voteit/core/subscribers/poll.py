@@ -1,7 +1,10 @@
 from pyramid.events import subscriber
 from pyramid.threadlocal import get_current_request
 from repoze.folder.interfaces import IObjectAddedEvent
+from repoze.workflow.workflow import WorkflowError
+from pyramid.exceptions import HTTPForbidden
 
+from voteit.core import VoteITMF as _
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IUnread
 from voteit.core.interfaces import IObjectUpdatedEvent
@@ -9,7 +12,7 @@ from voteit.core.interfaces import IWorkflowStateChange
 from voteit.core.models.poll import email_voters_about_ongoing_poll
 
 
-@subscriber([IPoll, IObjectUpdatedEvent])
+@subscriber([IPoll, IWorkflowStateChange])
 def change_states_proposals(obj, event):
     """ Change state on proposals when adding them to upcoming poll. """
     request = get_current_request()
@@ -17,7 +20,12 @@ def change_states_proposals(obj, event):
     if obj.get_workflow_state() == 'upcoming':
         for proposal in obj.get_proposal_objects():
             if proposal.get_workflow_state() != 'voting':
-                proposal.set_workflow_state(request, 'voting')
+                try:
+                    proposal.set_workflow_state(request, 'voting')
+                except WorkflowError:
+                    raise HTTPForbidden(_(u"workflow_error_when_setting_proposal_as_voting",
+                                          default = u"Can't set Proposal '${title}' as 'Locked for voting'. It's probably not in the state published, or has already been handled in another way. All changes aborted, please check the proposals and try again.",
+                                          mapping = {'title': obj.title}))
 
 @subscriber([IPoll, IWorkflowStateChange])
 def email_voters_about_ongoing_poll_subscriber(obj, event):
@@ -31,15 +39,3 @@ def create_reject_proposal(obj, event):
     """ Adding a reject proposal to poll. This is a subscriber because
         poll needs to be added to the agenda_item for this to work """
     obj.create_reject_proposal()
-
-@subscriber([IPoll, IWorkflowStateChange])
-def reset_unread_on_wf_change(obj, event):
-    """ When the poll is created it is in private state where only the 
-        moderator has premissions to view it, there for unread is not set 
-        properly on polls. This is fixed by reseting it when it becomes 
-        ongoing. """
-    request = get_current_request()
-    unread = request.registry.queryAdapter(obj, IUnread)
-    if not unread:
-        return
-    unread.reset_unread()

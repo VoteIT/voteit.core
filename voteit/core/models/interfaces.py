@@ -221,6 +221,8 @@ class IUser(IBaseFolder):
 
 class IAgendaItem(IBaseFolder):
     """ Agenda item content """
+    start_time = Attribute(""" Return start time, if set.""")
+    end_time = Attribute(""" Return end time, if set.""")
 
 
 class IMeeting(IBaseFolder):

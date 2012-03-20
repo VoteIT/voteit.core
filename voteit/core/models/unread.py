@@ -46,11 +46,8 @@ class Unread(object):
 def includeme(config):
     """ Register unread adapter. """
     from voteit.core.models.interfaces import IDiscussionPost
-    from voteit.core.models.interfaces import IPoll
     from voteit.core.models.interfaces import IProposal
     config.registry.registerAdapter(Unread, (IDiscussionPost,), IUnread)
-    config.registry.registerAdapter(Unread, (IPoll,), IUnread)
     config.registry.registerAdapter(Unread, (IProposal,), IUnread)
-
 
 #FIXME: method to disable unread adapter?
