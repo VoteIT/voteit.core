@@ -147,6 +147,18 @@ class CatalogTests(CatalogTestCase):
         self.assertEqual(self.query("allowed_to_view in any('role:Admin',) and path == '/meeting'")[0], 1)
         self.assertEqual(self.query("allowed_to_view in any('role:Viewer',) and path == '/meeting'")[0], 1)        
 
+    def test_index_object_preforms_reindex_if_object_already_indexed(self):
+        from voteit.core.models.catalog import index_object
+        catalog = self.root.catalog
+
+        meeting = createContent('Meeting')
+        meeting.title = 'hello world'
+        self.root['meeting'] = meeting
+        meeting.title = 'something new'
+        #This should now preform reindex instead
+        index_object(catalog, meeting)
+        self.assertEqual(catalog.query("title == 'something new'")[0], 1)
+
 
 class CatalogIndexTests(CatalogTestCase):
     """ Make sure indexes work as expected. """
