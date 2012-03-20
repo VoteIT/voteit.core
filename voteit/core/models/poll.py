@@ -57,8 +57,8 @@ ACL['ongoing'] = [(Allow, security.ROLE_ADMIN, _ONGOING_PERMS, ),
                   (Allow, security.ROLE_VIEWER, security.VIEW),
                   DENY_ALL,
                    ]
-ACL['closed'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, )),
-                 (Allow, security.ROLE_MODERATOR, (security.VIEW, )),
+ACL['closed'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, security.DELETE, )),
+                 (Allow, security.ROLE_MODERATOR, (security.VIEW, security.DELETE, )),
                  (Allow, security.ROLE_VIEWER, security.VIEW),
                  DENY_ALL,
                 ]
