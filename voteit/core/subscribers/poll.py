@@ -39,15 +39,3 @@ def create_reject_proposal(obj, event):
     """ Adding a reject proposal to poll. This is a subscriber because
         poll needs to be added to the agenda_item for this to work """
     obj.create_reject_proposal()
-
-@subscriber([IPoll, IWorkflowStateChange])
-def reset_unread_on_wf_change(obj, event):
-    """ When the poll is created it is in private state where only the 
-        moderator has premissions to view it, there for unread is not set 
-        properly on polls. This is fixed by reseting it when it becomes 
-        ongoing. """
-    request = get_current_request()
-    unread = request.registry.queryAdapter(obj, IUnread)
-    if not unread:
-        return
-    unread.reset_unread()

@@ -55,7 +55,7 @@ def polls_menu(context, request, va, **kw):
         if api.context_has_permission(ADD_VOTE, poll):
             num = num + 1
             
-    response['unread_polls_count'] = num
+    response['unvoted_polls_count'] = num
     response['url'] = '%s@@meeting_poll_menu' % api.resource_url(api.meeting, request)
     return render('../templates/snippets/polls_menu.pt', response, request = request)
 

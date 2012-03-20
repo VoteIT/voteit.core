@@ -3,10 +3,9 @@
     <tal:iterate condition="polls" repeat="poll polls">
     <div tal:define="poll_plugin poll.get_poll_plugin()|None;
                      wf_state poll.get_workflow_state();
-                     unread api.is_unread(poll);
                      can_vote api.context_has_permission('Add Vote', poll);
                      has_voted api.userid in poll;"
-         tal:attributes="class unread and 'unread listing_block poll ' + poll.poll_plugin_name or 'listing_block poll ' + poll.poll_plugin_name;
+         tal:attributes="class 'listing_block poll ' + poll.poll_plugin_name;
                          name poll.__name__;">
 
         <span tal:condition="api.show_moderator_actions" tal:replace="structure api.get_moderator_actions(poll, request)">
