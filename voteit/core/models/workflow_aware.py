@@ -23,10 +23,6 @@ class WorkflowAware(object):
             if wf is not None:
                 return wf
         raise WorkflowError("Workflow not found for %s" % self)
-
-    def initialize_workflow(self):
-        #FIXME: the type should be som generic instead of the class name, but since the wrong workflow is returned this is is a workaround
-        self.workflow.initialize(self)
         
     def get_workflow_state(self):
         return self.workflow.state_of(self)

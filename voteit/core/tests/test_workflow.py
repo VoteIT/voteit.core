@@ -55,21 +55,21 @@ class WorkflowTests(unittest.TestCase):
         obj.make_workflow_transition(request, 'upcoming_to_ongoing')
         self.assertEqual(obj.get_workflow_state(), u'ongoing')
 
-        obj.initialize_workflow()
+        obj.workflow.initialize(obj)
         obj.make_workflow_transition(request, 'upcoming_to_closed')
         self.assertEqual(obj.get_workflow_state(), u'closed')
 
-        obj.initialize_workflow()
+        obj.workflow.initialize(obj)
         obj.make_workflow_transition(request, 'upcoming_to_ongoing')
         obj.make_workflow_transition(request, 'ongoing_to_upcoming')
         self.assertEqual(obj.get_workflow_state(), u'upcoming')
 
-        obj.initialize_workflow()
+        obj.workflow.initialize(obj)
         obj.make_workflow_transition(request, 'upcoming_to_ongoing')
         obj.make_workflow_transition(request, 'ongoing_to_closed')
         self.assertEqual(obj.get_workflow_state(), u'closed')
         
-        obj.initialize_workflow()
+        obj.workflow.initialize(obj)
         obj.make_workflow_transition(request, 'upcoming_to_closed')
         obj.make_workflow_transition(request, 'closed_to_ongoing')
         self.assertEqual(obj.get_workflow_state(), u'ongoing')
@@ -80,7 +80,7 @@ class WorkflowTests(unittest.TestCase):
         request = testing.DummyRequest()
 
         workflow = get_workflow(AgendaItem, AgendaItem.__name__, obj)
-        obj.initialize_workflow()
+        obj.workflow.initialize(obj)
         self.assertEqual(obj.get_workflow_state(), u'private')
 
         obj.make_workflow_transition(request, 'private_to_upcoming')
@@ -89,24 +89,24 @@ class WorkflowTests(unittest.TestCase):
         obj.make_workflow_transition(request, 'upcoming_to_ongoing')
         self.assertEqual(obj.get_workflow_state(), u'ongoing')
 
-        obj.initialize_workflow()
+        obj.workflow.initialize(obj)
         obj.make_workflow_transition(request, 'private_to_upcoming')
         obj.make_workflow_transition(request, 'upcoming_to_closed')
         self.assertEqual(obj.get_workflow_state(), u'closed')
 
-        obj.initialize_workflow()
+        obj.workflow.initialize(obj)
         obj.make_workflow_transition(request, 'private_to_upcoming')
         obj.make_workflow_transition(request, 'upcoming_to_ongoing')
         obj.make_workflow_transition(request, 'ongoing_to_upcoming')
         self.assertEqual(obj.get_workflow_state(), u'upcoming')
 
-        obj.initialize_workflow()
+        obj.workflow.initialize(obj)
         obj.make_workflow_transition(request, 'private_to_upcoming')
         obj.make_workflow_transition(request, 'upcoming_to_ongoing')
         obj.make_workflow_transition(request, 'ongoing_to_closed')
         self.assertEqual(obj.get_workflow_state(), u'closed')
         
-        obj.initialize_workflow()
+        obj.workflow.initialize(obj)
         obj.make_workflow_transition(request, 'private_to_upcoming')
         obj.make_workflow_transition(request, 'upcoming_to_closed')
         obj.make_workflow_transition(request, 'closed_to_ongoing')
@@ -122,18 +122,18 @@ class WorkflowTests(unittest.TestCase):
         obj.make_workflow_transition(request, 'published_to_retracted')
         self.assertEqual(obj.get_workflow_state(), u'retracted')
 
-        obj.initialize_workflow()
+        obj.workflow.initialize(obj)
         obj.make_workflow_transition(request, 'published_to_voting')
         self.assertEqual(obj.get_workflow_state(), u'voting')
 
         obj.make_workflow_transition(request, 'voting_to_approved')
         self.assertEqual(obj.get_workflow_state(), u'approved')
 
-        obj.initialize_workflow()
+        obj.workflow.initialize(obj)
         obj.make_workflow_transition(request, 'published_to_unhandled')
         self.assertEqual(obj.get_workflow_state(), u'unhandled')
 
-        obj.initialize_workflow()
+        obj.workflow.initialize(obj)
         obj.make_workflow_transition(request, 'published_to_voting')
         obj.make_workflow_transition(request, 'voting_to_denied')
         self.assertEqual(obj.get_workflow_state(), u'denied')

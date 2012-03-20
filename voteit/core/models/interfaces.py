@@ -359,11 +359,6 @@ class IWorkflowAware(Interface):
     """ Mixin class for content that needs workflow. """
     
     workflow = Attribute('Get the workflow for this content.')
-
-    def initialize_workflow():
-        """ Initialize workflow. The initial state will be set.
-            If called twice, it will reset to the initial state.
-        """
     
     def get_workflow_state():
         """ Get current workflow state. """

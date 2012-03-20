@@ -69,12 +69,6 @@ class AgendaItemView(BaseView):
         response['api'] = self.api
         response['polls'] = polls
         return render('templates/polls.pt', response, request=self.request)
-
-    @view_config(context=IAgendaItem, name="discussions", permission=VIEW, renderer='templates/discussions.pt')
-    def meeting_messages(self):
-        #FIXME: Used?
-        self.response['discussions'] = self.context.get_content(iface=IDiscussionPost, sort_on='created')
-        return self.response
         
     @view_config(context=IAgendaItem, name='_inline_form', permission=VIEW)
     def inline_add_form(self):
