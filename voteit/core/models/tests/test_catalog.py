@@ -159,6 +159,22 @@ class CatalogTests(CatalogTestCase):
         index_object(catalog, meeting)
         self.assertEqual(catalog.query("title == 'something new'")[0], 1)
 
+    def test_resolve_catalog_docid(self):
+        from voteit.core.models.catalog import resolve_catalog_docid
+        catalog = self.root.catalog
+        meeting = createContent('Meeting')
+        self.root['m'] = meeting
+        docid = catalog.query("content_type == 'Meeting'")[1][0]
+        self.assertEqual(meeting, resolve_catalog_docid(catalog, self.root, docid))
+
+    def test_metadata_for_query(self):
+        from voteit.core.models.catalog import metadata_for_query
+        catalog = self.root.catalog
+        meeting = createContent('Meeting', title = 'Hello world!')
+        self.root['m'] = meeting
+        metadata = metadata_for_query(catalog, content_type = 'Meeting')[0]
+        self.assertEqual(metadata['title'], "Hello world!")
+
 
 class CatalogIndexTests(CatalogTestCase):
     """ Make sure indexes work as expected. """

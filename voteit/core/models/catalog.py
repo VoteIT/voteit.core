@@ -210,7 +210,7 @@ def resolve_catalog_docid(catalog, root, docid):
     """
     path = catalog.document_map.address_for_docid(docid)
     if path is None:
-        return ValueError("Nothing found in catalog with docid '%s'" % docid)
+        return ValueError("Nothing found in catalog with docid '%s'" % docid) # pragma : no cover
     return find_resource(root, path)
 
 def metadata_for_query(catalog, **kwargs):
