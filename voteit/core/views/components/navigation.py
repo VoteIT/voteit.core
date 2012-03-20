@@ -75,9 +75,20 @@ def navigation_section(context, request, va, **kwargs):
         if unread:
             return api.search_catalog(path = path, content_type = content_type, unread = api.userid)[0]
         return api.search_catalog(path = path, content_type = content_type)[0]
+    
+    def _in_current_context(path, context_path):
+        path = path.split('/')
+        context_path = context_path.split('/')
+        if len(path) > len(context_path):
+            path = path[0:len(context_path)]
+        else:
+            context_path = context_path[0:len(path)]
+            
+        return path == context_path
 
     response['brains'] = api.get_metadata_for_query(**query)
     response['context_path'] = context_path
     response['count_query'] = _count_query
     response['closed_section'] = False
+    response['in_current_context'] = _in_current_context
     return render('../templates/snippets/navigation_section.pt', response, request = request)
