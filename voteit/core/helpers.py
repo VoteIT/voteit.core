@@ -29,7 +29,9 @@ def at_userid_link(text, obj):
     request = get_current_request()
 
     def handle_match(matchobj):
-        #FIXME: Space? :)
+        # The pattern contains a space so we only find usernames that 
+        # has a whitespace in front, we save the spaced so we can but 
+        # it back after the transformation
         space, userid = matchobj.group(1, 2)
         user = users[userid]
         user.send_mention_notification(obj, request)
