@@ -2,6 +2,7 @@ import unittest
 
 from pyramid import testing
 from zope.component.event import objectEventNotify
+from pyramid.exceptions import HTTPForbidden
 
 from voteit.core.events import ObjectUpdatedEvent
 from voteit.core.security import unrestricted_wf_transition_to
@@ -32,28 +33,37 @@ class PollTests(unittest.TestCase):
         from voteit.core.models.poll import Poll
         ai['poll'] = Poll()
         ai['poll'].proposal_uids = (ai['prop1'].uid, ai['prop2'].uid)
-        
         ai['poll'].set_workflow_state(request, 'upcoming')
-        
-        # reset state of proposals to published so that we actually test the subscriber
-        ai['prop1'].set_workflow_state(request, 'published')
-        ai['prop2'].set_workflow_state(request, 'published')
-        
-        objectEventNotify(ObjectUpdatedEvent(ai['poll'], None, 'dummy'))
-        
+
         self.assertEqual(ai['prop1'].get_workflow_state(), 'voting')
         self.assertEqual(ai['prop2'].get_workflow_state(), 'voting')
+
+    def test_proposal_in_wrong_state(self):
+        register_workflows(self.config)
+        request = testing.DummyRequest()
+        self.config = testing.setUp(registry = self.config.registry, request = request)
+
+        from voteit.core.models.agenda_item import AgendaItem
+        from voteit.core.models.proposal import Proposal
+        from voteit.core.models.poll import Poll
+        ai = AgendaItem()
+        ai['prop'] = Proposal()
+        ai['poll'] = Poll()
+        ai['poll'].proposal_uids = (ai['prop'].uid, )
+        
+        #Set state to something that doesn't have a transition to 'voting'
+        ai['prop'].set_workflow_state(request, 'approved')
+
+        self.assertRaises(HTTPForbidden, ai['poll'].set_workflow_state, request, 'upcoming')
 
     def test_reset_unread_on_state_change(self):
         root = bootstrap_and_fixture(self.config)
         register_workflows(self.config)
         request = testing.DummyRequest()
         self.config = testing.setUp(registry = self.config.registry, request = request)
-        
-        
-        
+
         register_security_policies(self.config)
-        
+
         self.config.testing_securitypolicy(userid='admin',
                                            permissive=True)
         
@@ -91,7 +101,5 @@ class PollTests(unittest.TestCase):
         obj.mark_as_read('admin')
         
         self.assertEqual(obj.get_unread_userids(), frozenset(()))
-        
         poll.set_workflow_state(request, 'upcoming')
-        
         self.assertEqual(obj.get_unread_userids(), frozenset(('admin',)))
