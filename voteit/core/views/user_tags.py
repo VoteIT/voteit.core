@@ -54,7 +54,6 @@ class UserTagsView(object):
 
     @view_config(name="_tagging_users", context=IBaseContent, renderer='templates/snippets/tagging_users.pt', permission=VIEW)
     def tagging_users(self):
-        # FIXME: the template needs to be styled some more
         # FIXME: Each tag type should have it's own view component. That way we can build "private" tags as well.
         context = self.request.context
         api = self.api
