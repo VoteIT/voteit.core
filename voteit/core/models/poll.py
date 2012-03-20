@@ -290,7 +290,6 @@ def upcoming_poll_callback(content, info):
             default=u"Setting poll in upcoming state. It's now visible for meeting participants.")
     fm.add(msg)
     if count:
-        #FIXME: Translation mappings
         msg = _(u'poll_closed_proposals_locked_notice',
                 default=u"${count} selected proposals were set in the 'locked for vote' state. They can no longer be edited or retracted by normal users.",
                 mapping={'count':count})
