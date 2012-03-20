@@ -87,7 +87,7 @@ def groupfinder(name, request):
     try:
         context = request.context
         return context.get_groups(name)
-    except AttributeError:
+    except AttributeError: # pragma : no cover
         return ()
 
 

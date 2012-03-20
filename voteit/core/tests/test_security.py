@@ -60,7 +60,11 @@ class SecurityTests(unittest.TestCase):
     def test_context_effective_principals_normal_user(self):
         res = security.context_effective_principals(self.root, 'hanna')
         self.assertEqual(res, ['system.Everyone', 'system.Authenticated', 'hanna'])
-    
+
+    def test_context_effective_principals_unauthenticated(self):
+        res = security.context_effective_principals(self.root, None)
+        self.assertEqual(res, ['system.Everyone'])
+
     def test_groups_added_to_principals(self):
         self.root.add_groups('fredrik', ('group:developer', 'group:Betahaus',))
         res = security.context_effective_principals(self.root, 'fredrik')
@@ -87,3 +91,11 @@ class SecurityTests(unittest.TestCase):
         #But unrestricted does
         security.unrestricted_wf_transition_to(obj, 'ongoing')
         self.assertEqual(obj.get_workflow_state(), 'ongoing')
+
+    def test_groupfinder(self):
+        class DummyContext(object):
+            def get_groups(self, name):
+                return name
+        request = testing.DummyRequest()
+        request.context = DummyContext()
+        self.assertEqual(security.groupfinder('hello_world', request), 'hello_world')
