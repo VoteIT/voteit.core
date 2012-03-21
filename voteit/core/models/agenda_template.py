@@ -13,7 +13,6 @@ from voteit.core.models.interfaces import IAgendaTemplate
 from voteit.core.models.agenda_item import AgendaItem
 
 
-
 @content_factory('AgendaTemplate', title=_(u"Agenda template"))
 class AgendaTemplate(BaseContent):
     """ Agenda Template content """
@@ -21,14 +20,11 @@ class AgendaTemplate(BaseContent):
     content_type = 'AgendaTemplate'
     display_name = _(u"Agenda template")
     allowed_contexts = ('AgendaTemplates')
-    #FIXME: maybe this should have its own add permission 
-    add_permission = security.ADD_MEETING
+    add_permission = security.ADD_AGENDA_TEMPLATE
     schemas = {'add': 'AgendaTemplateSchema', 'edit': 'AgendaTemplateSchema'}
 
-    #FIXME: maybe this should have its own use permission
     __acl__ = [(Allow, security.ROLE_ADMIN, (security.EDIT, security.VIEW, security.DELETE, security.MANAGE_SERVER, )),
                (Allow, security.ROLE_OWNER, (security.EDIT, security.VIEW, security.DELETE,)),
-               (Allow, security.ROLE_VIEWER, (security.VIEW,)),
                DENY_ALL,
               ]
     
