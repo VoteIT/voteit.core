@@ -62,7 +62,7 @@ class MeetingTests(unittest.TestCase):
         self.assertFalse(isinstance(obj.end_time, datetime))
         obj.set_workflow_state(request, 'closed')
         self.assertTrue(isinstance(obj.end_time, datetime))
-
+        
         
 class MeetingPermissionTests(unittest.TestCase):
     """ Check permissions in different meeting states. """
