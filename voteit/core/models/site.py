@@ -47,7 +47,3 @@ class SiteRoot(BaseContent):
     @property
     def users(self):
         return self['users']
-    
-    @property
-    def agenda_templates(self):
-        return self['agenda_templates']

@@ -41,7 +41,7 @@ class User(BaseContent):
     custom_fields = {'password':'PasswordField'}
     schemas = {'add': 'AddUserSchema', 'edit': 'EditUserSchema'}
 
-    __acl__ = [(Allow, security.ROLE_ADMIN, (security.EDIT, security.VIEW, security.CHANGE_PASSWORD,)),
+    __acl__ = [(Allow, security.ROLE_ADMIN, (security.EDIT, security.VIEW, security.CHANGE_PASSWORD, security.MANAGE_SERVER, )),
                (Allow, security.ROLE_OWNER, (security.EDIT, security.VIEW, security.CHANGE_PASSWORD,)),
                DENY_ALL]
     

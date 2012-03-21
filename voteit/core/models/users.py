@@ -19,7 +19,7 @@ class Users(BaseContent):
     allowed_contexts = ()
     add_permission = None
 
-    __acl__ = [(Allow, security.ROLE_ADMIN, (security.EDIT, security.VIEW, security.ADD_USER)),
+    __acl__ = [(Allow, security.ROLE_ADMIN, (security.EDIT, security.VIEW, security.ADD_USER, security.MANAGE_SERVER)),
                DENY_ALL]
 
     def get_user_by_email(self, email):

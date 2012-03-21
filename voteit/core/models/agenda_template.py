@@ -26,7 +26,7 @@ class AgendaTemplate(BaseContent):
     schemas = {'add': 'AgendaTemplateSchema', 'edit': 'AgendaTemplateSchema'}
 
     #FIXME: maybe this should have its own use permission
-    __acl__ = [(Allow, security.ROLE_ADMIN, (security.EDIT, security.VIEW, security.DELETE,)),
+    __acl__ = [(Allow, security.ROLE_ADMIN, (security.EDIT, security.VIEW, security.DELETE, security.MANAGE_SERVER, )),
                (Allow, security.ROLE_OWNER, (security.EDIT, security.VIEW, security.DELETE,)),
                (Allow, security.ROLE_VIEWER, (security.VIEW,)),
                DENY_ALL,
