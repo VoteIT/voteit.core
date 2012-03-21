@@ -21,6 +21,7 @@ from voteit.core.models.interfaces import IUsers
 from voteit.core.views.api import APIView
 from voteit.core.security import CHANGE_PASSWORD
 from voteit.core.security import VIEW
+from voteit.core.security import MANAGE_SERVER
 from voteit.core.models.schemas import add_csrf_token
 from voteit.core.models.schemas import button_add
 from voteit.core.models.schemas import button_cancel
@@ -87,7 +88,12 @@ class UsersFormView(BaseEdit):
 
     @view_config(context=IUser, name="change_password", renderer=DEFAULT_TEMPLATE, permission=CHANGE_PASSWORD)
     def password_form(self):
-        schema = createSchema('ChangePasswordSchema').bind(context=self.context, request=self.request)
+        # if admin is changing password for another user no verification of old password is needed
+        if self.context != self.api.user_profile and self.api.context_has_permission(MANAGE_SERVER, self.api.root):
+            schema = createSchema('ChangePasswordAdminSchema').bind(context=self.context, request=self.request)
+        else:
+            schema = createSchema('ChangePasswordSchema').bind(context=self.context, request=self.request)
+        
         add_csrf_token(self.context, self.request, schema)
 
         form = Form(schema, buttons=(button_update, button_cancel))

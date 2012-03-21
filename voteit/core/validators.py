@@ -1,7 +1,7 @@
 import re
 import colander
 from webhelpers.html.tools import strip_tags
-from pyramid.httpexceptions import HTTPForbidden
+from pyramid.httpexceptions import HTTPNotFound
 from pyramid.traversal import find_interface
 from pyramid.traversal import find_root
 from pyramid.security import authenticated_userid
@@ -236,13 +236,10 @@ class OldPpasswordValidator(object):
         self.request = request
     
     def __call__(self, node, value):
-        userid = authenticated_userid(self.request)
-        if not userid:
-            raise HTTPForbidden()
-    
-        root = find_root(self.context)
-        user = root.users[userid]
-                
-        pw_field = user.get_custom_field('password')
+        
+        if not IUser.providedBy(self.context):
+            raise HTTPNotFound()
+
+        pw_field = self.context.get_custom_field('password')
         if not pw_field.check_input(value):
             raise colander.Invalid(node, _(u"Old password didn't match"))
