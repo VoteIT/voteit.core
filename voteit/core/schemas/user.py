@@ -95,6 +95,10 @@ class ChangePasswordSchema(colander.Schema):
                                    widget=deform.widget.PasswordWidget(size=20),
                                    validator=deferred_old_password_validator)
     password = password_node()
+    
+@schema_factory('ChangePasswordAdminSchema', title = _(u"Change password"), description = _(u"Use this form to change password"))
+class ChangePasswordAdminSchema(colander.Schema):
+    password = password_node()
 
 
 @schema_factory('RequestNewPasswordSchema', title = _(u"Request new password"), description = _(u"Use this form to request a new password"))
