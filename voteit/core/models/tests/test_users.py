@@ -1,34 +1,45 @@
 import unittest
 
 from pyramid import testing
+from zope.interface.verify import verifyClass
 from zope.interface.verify import verifyObject
 from pyramid.security import principals_allowed_by_permission
 
 from voteit.core import security
 from voteit.core.testing_helpers import register_security_policies
+from voteit.core.models.interfaces import IUsers
 
 
 admin = set([security.ROLE_ADMIN])
 
 
-class AgendaTemplatesTests(unittest.TestCase):
+class UsersTests(unittest.TestCase):
     def setUp(self):
         self.config = testing.setUp()
 
     def tearDown(self):
         testing.tearDown()
 
-    def _make_obj(self):
-        from voteit.core.models.agenda_templates import AgendaTemplates
-        return AgendaTemplates()
+    @property
+    def _cut(self):
+        from voteit.core.models.users import Users
+        return Users
 
-    def test_verify_implementation(self):
-        from voteit.core.models.interfaces import IAgendaTemplates
-        obj = self._make_obj()
-        self.assertTrue(verifyObject(IAgendaTemplates, obj))
+    def test_verify_class(self):
+        self.assertTrue(verifyClass(IUsers, self._cut))
+        
+    def test_verify_obj(self):
+        self.assertTrue(verifyObject(IUsers, self._cut()))
 
+    def test_get_user_by_email(self):
+        obj = self._cut()
+        from voteit.core.models.user import User
+        obj['u'] = User(email = 'hello@world.org', first_name = 'Anders')
+        res = obj.get_user_by_email('hello@world.org')
+        self.assertEqual(res.get_field_value('first_name'), 'Anders')
+        
 
-class AgendaTemplatesPermissionTests(unittest.TestCase):
+class UsersPermissionTests(unittest.TestCase):
     def setUp(self):
         self.config = testing.setUp()
         register_security_policies(self.config)
@@ -38,8 +49,8 @@ class AgendaTemplatesPermissionTests(unittest.TestCase):
 
     @property
     def _cut(self):
-        from voteit.core.models.agenda_templates import AgendaTemplates
-        return AgendaTemplates
+        from voteit.core.models.users import Users
+        return Users
 
     def test_view(self):
         obj = self._cut()
@@ -57,6 +68,6 @@ class AgendaTemplatesPermissionTests(unittest.TestCase):
         obj = self._cut()
         self.assertEqual(principals_allowed_by_permission(obj, security.MANAGE_SERVER), admin)
 
-    def test_add_agenda_template(self):
+    def test_add_user(self):
         obj = self._cut()
-        self.assertEqual(principals_allowed_by_permission(obj, security.ADD_AGENDA_TEMPLATE), admin)
+        self.assertEqual(principals_allowed_by_permission(obj, security.ADD_USER), admin)

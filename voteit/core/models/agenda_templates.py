@@ -19,6 +19,6 @@ class AgendaTemplates(BaseContent):
     allowed_contexts = ()
     add_permission = None
 
-    __acl__ = [(Allow, security.ROLE_ADMIN, (security.EDIT, security.VIEW, security.MANAGE_SERVER)),
-               (Allow, security.ROLE_VIEWER, (security.EDIT, security.VIEW, security.ADD_MEETING)),
+    __acl__ = [(Allow, security.ROLE_ADMIN, (security.EDIT, security.VIEW,
+                                             security.MANAGE_SERVER, security.ADD_AGENDA_TEMPLATE, )),
                DENY_ALL]
