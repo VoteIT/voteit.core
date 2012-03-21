@@ -319,6 +319,7 @@ class UsersView(BaseView):
 
     @view_config(context=IUsers, renderer='templates/list_users.pt', permission=VIEW)
     def list_users(self):
+        self.response['users'] = self.context.get_content(content_type = 'User', sort_on = 'userid')
         return self.response
 
     @view_config(context=IUser, renderer='templates/user.pt', permission=VIEW)
