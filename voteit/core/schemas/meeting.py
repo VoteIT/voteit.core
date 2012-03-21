@@ -4,10 +4,12 @@ import colander
 import deform
 from betahaus.pyracont.decorators import schema_factory
 from betahaus.viewcomponent.interfaces import IViewGroup
+from pyramid.security import authenticated_userid
 
 from voteit.core.validators import html_string_validator
 from voteit.core.widgets import RecaptchaWidget
 from voteit.core import VoteITMF as _
+from voteit.core import security 
 
 @colander.deferred
 def deferred_access_policy_widget(node, kw):
@@ -19,6 +21,24 @@ def deferred_access_policy_widget(node, kw):
     if not choices:
         raise ValueError("Can't find anything in the request_meeting_access view group. There's no way to select any policy on how to gain access to the meeting.")
     return deform.widget.RadioChoiceWidget(values = choices)
+
+@colander.deferred
+def deferred_recaptcha_widget(node, kw):
+    """ No recaptcha if captcha settings is now present or if the current user is an admin 
+    """
+    context = kw['context']
+    request = kw['request']
+    api = kw['api']
+    
+    settings = request.registry.settings
+    
+    # Get principals for current user
+    principals = api.context_effective_principals(context)
+    
+    if settings.get('captcha_public_key', None) and settings.get('captcha_private_key', None) and security.ROLE_ADMIN not in principals:
+        return RecaptchaWidget()
+
+    return deform.widget.HiddenWidget()        
 
 def title_node():
     return colander.SchemaNode(colander.String(),
@@ -61,10 +81,30 @@ def access_policy_node():
                                title = _(u"Meeting access policy"),
                                widget = deferred_access_policy_widget,
                                default = "invite_only",)
+    
+    
+def recaptcha_node():
+    return colander.SchemaNode(colander.String(),
+                               #FIXME: write a good title and description here
+                               title=_(u"Verify you are human"),
+                               description = _(u"meeting_captcha_description",
+                                               default=u"This is to prevent spambots from creating meetings"),
+                               missing=u"",
+                               widget=deferred_recaptcha_widget,)
+
 
 @schema_factory('AddMeetingSchema', title = _(u"Add meeting"))
+class AddMeetingSchema(colander.MappingSchema):
+    title = title_node();
+    description = description_node();
+    meeting_mail_name = meeting_mail_name_node();
+    meeting_mail_address = meeting_mail_address_node();
+    rss_feed = rss_feed_node();
+    access_policy = access_policy_node();
+    captcha=recaptcha_node();
+
 @schema_factory('EditMeetingSchema', title = _(u"Edit meeting"))
-class MeetingSchema(colander.MappingSchema):
+class EditMeetingSchema(colander.MappingSchema):
     title = title_node();
     description = description_node();
     meeting_mail_name = meeting_mail_name_node();
@@ -89,18 +129,3 @@ class MailSettingsMeetingSchema(colander.MappingSchema):
 @schema_factory('AccessPolicyMeetingSchema', title = _(u"Access policy"))
 class AccessPolicyeMeetingSchema(colander.MappingSchema):
     access_policy = access_policy_node();
-
-    
-#FIXME: Captcha add schema
-#class CaptchaAddMeetingSchema(MeetingSchema):
-#
-#        settings = request.registry.settings
-#        if settings.get('captcha_public_key', None) and settings.get('captcha_private_key', None):
-#            captcha = colander.SchemaNode(colander.String(),
-#                                          #FIXME: write a good title and description here
-#                                          title=_(u"Verify you are human"),
-#                                          description = _(u"meeting_captcha_description",
-#                                                          default=u"This is to prevent spambots from creating meetings"),
-#                                          missing=u"",
-#                                          widget=RecaptchaWidget(),)
-

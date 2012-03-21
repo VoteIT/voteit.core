@@ -52,7 +52,7 @@ class BaseEdit(object):
 
         factory = self.api.get_content_factory(content_type)
         schema_name = self.api.get_schema_name(content_type, 'add')
-        schema = createSchema(schema_name).bind(context=self.context, request=self.request)
+        schema = createSchema(schema_name).bind(context=self.context, request=self.request, api=self.api)
         add_csrf_token(self.context, self.request, schema)
         
         form = Form(schema, buttons=(button_add, button_cancel))
