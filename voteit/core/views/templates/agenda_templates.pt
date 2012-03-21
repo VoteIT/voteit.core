@@ -44,7 +44,7 @@
 			<a class="buttonize apply" 
 				href="${api.resource_url(api.context, api.request)}@@agenda_templates?apply=${template.__name__}"
 				tal:condition="api.meeting" 
-				i18n:translate="">Add</a>
+				i18n:translate="">Apply to meeting</a>
 			<a tal:attributes="href '%s@@edit' % api.resource_url(template, request)"
            	   tal:condition="api.context_has_permission('Edit', template)"
                class="buttonize"
