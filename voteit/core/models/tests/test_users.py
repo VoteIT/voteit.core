@@ -31,6 +31,13 @@ class UsersTests(unittest.TestCase):
     def test_verify_obj(self):
         self.assertTrue(verifyObject(IUsers, self._cut()))
 
+    def test_get_user_by_email(self):
+        obj = self._cut()
+        from voteit.core.models.user import User
+        obj['u'] = User(email = 'hello@world.org', first_name = 'Anders')
+        res = obj.get_user_by_email('hello@world.org')
+        self.assertEqual(res.get_field_value('first_name'), 'Anders')
+        
 
 class UsersPermissionTests(unittest.TestCase):
     def setUp(self):
