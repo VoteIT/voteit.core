@@ -10,6 +10,7 @@ from voteit.core.validators import deferred_unique_email_validator
 from voteit.core.validators import password_validation
 from voteit.core.validators import deferred_new_userid_validator
 from voteit.core.validators import deferred_password_token_validator
+from voteit.core.validators import deferred_old_password_validator
 
 
 @colander.deferred
@@ -89,6 +90,10 @@ class LoginSchema(colander.Schema):
 
 @schema_factory('ChangePasswordSchema', title = _(u"Change password"), description = _(u"Use this form to change password"))
 class ChangePasswordSchema(colander.Schema):
+    old_password = colander.SchemaNode(colander.String(),
+                                   title=_('Old password'),
+                                   widget=deform.widget.PasswordWidget(size=20),
+                                   validator=deferred_old_password_validator)
     password = password_node()
 
 

@@ -1,8 +1,10 @@
 import re
 import colander
 from webhelpers.html.tools import strip_tags
+from pyramid.httpexceptions import HTTPForbidden
 from pyramid.traversal import find_interface
 from pyramid.traversal import find_root
+from pyramid.security import authenticated_userid
 
 from voteit.core import VoteITMF as _
 from voteit.core.models.interfaces import IMeeting
@@ -218,3 +220,29 @@ class GlobalExistingUserId(object):
                     default=u"UserID not found")
             raise colander.Invalid(node, 
                                    msg)
+
+@colander.deferred
+def deferred_old_password_validator(node, kw):
+    context = kw['context']
+    request = kw['request']
+    
+    return OldPpasswordValidator(context, request)
+
+
+class OldPpasswordValidator(object):
+    
+    def __init__(self, context, request):
+        self.context = context
+        self.request = request
+    
+    def __call__(self, node, value):
+        userid = authenticated_userid(self.request)
+        if not userid:
+            raise HTTPForbidden()
+    
+        root = find_root(self.context)
+        user = root.users[userid]
+                
+        pw_field = user.get_custom_field('password')
+        if not pw_field.check_input(value):
+            raise colander.Invalid(node, _(u"Old password didn't match"))

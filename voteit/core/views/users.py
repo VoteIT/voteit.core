@@ -104,8 +104,11 @@ class UsersFormView(BaseEdit):
                 return self.response
             
             self.context.set_password(appstruct['password'])
-            url = resource_url(self.context, self.request)
             
+            msg = _(u"Password changed")
+            self.api.flash_messages.add(msg)
+            
+            url = resource_url(self.context, self.request)
             return HTTPFound(location=url)
 
         if 'cancel' in post:
