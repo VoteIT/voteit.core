@@ -168,17 +168,7 @@ class APIView(object):
         """ Special version of pyramid.security.effective_principals that
             adds groups based on context instead of request.context
         """
-        effective_principals = [Everyone]
-        if self.userid is None:
-            return effective_principals
-        
-        groups = context.get_groups(self.userid)
-        
-        effective_principals.append(Authenticated)
-        effective_principals.append(self.userid)
-        effective_principals.extend(groups)
-        
-        return effective_principals
+        return security.context_effective_principals(context, self.userid)
         
     def is_unread(self, context):
         """ Check if a context is unread.
