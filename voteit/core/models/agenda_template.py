@@ -10,7 +10,6 @@ from voteit.core import VoteITMF as _
 from voteit.core.helpers import generate_slug
 from voteit.core.models.base_content import BaseContent
 from voteit.core.models.interfaces import IAgendaTemplate
-from voteit.core.models.agenda_item import AgendaItem
 
 
 @content_factory('AgendaTemplate', title=_(u"Agenda template"))
@@ -30,6 +29,6 @@ class AgendaTemplate(BaseContent):
     
     def populate_meeting(self, meeting):
         for item in self.get_field_value('agenda_items', ()):
-            obj = AgendaItem(**item)
+            obj = createContent('AgendaItem', **item)
             slug = generate_slug(meeting, obj.title)
             meeting[slug] = obj
