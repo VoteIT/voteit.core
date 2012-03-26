@@ -1,4 +1,4 @@
-.. _poll_agenda_item:
+.. _agenda_item_module:
 
 :mod:`voteit.core.models.agenda_item`
 -------------------------------------

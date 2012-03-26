@@ -1,4 +1,4 @@
-.. _agenda_item_module:
+.. _interfaces_module:
 
 :mod:`voteit.core.models.interfaces`
 ------------------------------------
