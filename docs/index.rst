@@ -22,5 +22,7 @@ Indices and tables
    :glob:
    :hidden:
  
-   models/*   
+   models/*
+   schemas/*
+   subscribers/*
    glossary
