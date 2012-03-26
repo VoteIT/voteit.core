@@ -221,8 +221,16 @@ class IUser(IBaseFolder):
 
 class IAgendaItem(IBaseFolder):
     """ Agenda item content """
-    start_time = Attribute(""" Return start time, if set.""")
-    end_time = Attribute(""" Return end time, if set.""")
+    start_time = Attribute("""
+        Return start time, if set. The value will be set by a subscriber when
+        the Agenda Item enters the state 'ongoing'.
+        The subscriber is located at: :func:`voteit.core.subscribers.timestamps.add_start_timestamp` 
+    """)
+    end_time = Attribute("""
+        Return end time, if set. The value will be set by a subscriber when
+        the Agenda Item enters the state 'closed'.
+        The subscriber is located at: :func:`voteit.core.subscribers.timestamps.add_close_timestamp` 
+    """)
 
 
 class IMeeting(IBaseFolder):

@@ -4,8 +4,6 @@ import deform
 
 from voteit.core import VoteITMF as _
 from voteit.core.validators import html_string_validator
-from voteit.core.schemas.tzdatetime import TZDateTime
-from voteit.core.schemas.common import deferred_default_start_time
 
 
 @schema_factory('AddAgendaItemSchema', title = _(u"Add agenda item"), description = _(u"Use this form to add an agenda item"))
@@ -24,14 +22,3 @@ class AgendaItemSchema(colander.MappingSchema):
         missing = u"",
         widget=deform.widget.RichTextWidget(),
     )
-#    start_time = colander.SchemaNode(
-#        TZDateTime(),
-#        title = _('ai_start_time_title',
-#                  default=u"Estimated start time of this Agenda Item."),
-#        description = _(u"agenda_item_start_time_description",
-#                        default=u"This setting only sets the order for the agenda item's in the Agenda. You will still have to change the state of the agenda item manually with the gear beside it's name."),
-#        widget=deform.widget.DateTimeInputWidget(options={'timeFormat': 'hh:mm'}),
-#        missing = None,
-#        default = deferred_default_start_time,
-#    )
-    #End-time is handled by a subscriber when it is closed
