@@ -66,7 +66,12 @@ ACL['closed'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, security.DELETE, )
 
 @content_factory('Poll', title=_(u"Poll"))
 class Poll(BaseContent, WorkflowAware):
-    """ Poll content. """
+    """ Poll content type.
+        See :mod:`voteit.core.models.interfaces.IPoll`.
+        All methods are documented in the interface of this class.
+        Note that the actual poll method isn't decided by the poll
+        content type. It calls a poll plugin to get that.
+    """
     implements(IPoll, ICatalogMetadataEnabled)
     content_type = 'Poll'
     display_name = _(u"Poll")
@@ -259,6 +264,7 @@ class Ballots(object):
         self.ballots = OIBTree()
 
     def result(self):
+        """ Return a tuple with sorted ballot items. """
         return tuple( sorted( self.ballots.iteritems() ) )
 
     def add(self, value):

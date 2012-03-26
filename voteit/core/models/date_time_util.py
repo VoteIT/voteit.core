@@ -12,18 +12,20 @@ from voteit.core import VoteITMF as _
 
 class DateTimeUtil(object):
     """ Handle conversion and printing of date and time.
-        See IDateTimeUtil
+        See :mod:`voteit.core.models.interfaces.IDateTimeUtil`.
     """
     implements(IDateTimeUtil)
     locale = None
     timezone_name = None
 
     def __init__(self, locale='en', timezone_name='Europe/Stockholm'):
+        """ Initialize util. """
         #FIXME: get default timezone instead of Europe/Stockholm
         self.set_locale(locale)
         self.timezone = pytz.timezone(timezone_name)
 
     def set_locale(self, value):
+        """ Set the locale. """
         self.locale = value
 
     def d_format(self, value, format='short'):
@@ -34,6 +36,9 @@ class DateTimeUtil(object):
         return format_date(localtime, format=format, locale=self.locale)
 
     def t_format(self, value, format='short'):
+        """ Format time in the givet format.
+            Will also convert to current timezone from utc.
+        """
         localtime = self.utc_to_tz(value)
         return format_time(localtime, format=format, locale=self.locale)
     
@@ -92,6 +97,7 @@ class DateTimeUtil(object):
         return self.localize(naive_now, tz)
 
     def utcnow(self):
+        """ Same as :func:`utcnow` """
         return utcnow()
 
     def relative_time_format(self, time):
@@ -146,6 +152,10 @@ def utcnow():
 
 
 def includeme(config):
+    """ Register utility. This method is used when you include this
+        module with a Pyramid configurator. This specific module
+        will be included as default by VoteIT.
+    """
     locale = config.registry.settings['default_locale_name']
     timezone_name = config.registry.settings['default_timezone_name']
     util = DateTimeUtil(locale, timezone_name)

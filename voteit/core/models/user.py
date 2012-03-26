@@ -31,7 +31,10 @@ USERID_REGEXP = r"[a-zA-Z]{1}[\w-]{2,14}"
 
 @content_factory('User', title=_(u"User"))
 class User(BaseContent):
-    """ Content type for a user. Usable as a profile page. """
+    """ User content type.
+        See :mod:`voteit.core.models.interfaces.IUser`.
+        All methods are documented in the interface of this class.
+    """
     implements(IUser, ICatalogMetadataEnabled)
     content_type = 'User'
     display_name = _(u"User")
@@ -150,6 +153,7 @@ class User(BaseContent):
 
 @content_factory('RequestPasswordToken')
 class RequestPasswordToken(object):
+    """ Object that keeps track of password request tokens. """
     
     def __init__(self):
         self.token = ''.join([choice(string.letters + string.digits) for x in range(30)])

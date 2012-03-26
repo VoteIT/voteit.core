@@ -32,7 +32,9 @@ ACL['closed'] = [(Allow, security.ROLE_ADMIN, security.VIEW),
 
 @content_factory('DiscussionPost', title=_(u"Discussion Post"))
 class DiscussionPost(BaseContent):
-    """ Discussion post content
+    """ Discussion Post content type.
+        See :mod:`voteit.core.models.interfaces.IDiscussionPost`.
+        All methods are documented in the interface of this class.
     """
     implements(IDiscussionPost, ICatalogMetadataEnabled)
     content_type = 'DiscussionPost'

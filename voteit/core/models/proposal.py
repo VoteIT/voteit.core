@@ -55,20 +55,11 @@ ACL['closed'] = [(Allow, security.ROLE_ADMIN, security.VIEW),
 
 @content_factory('Proposal', title=_(u"Proposal"))
 class Proposal(BaseContent, WorkflowAware):
-    """ Proposal content.
-        about states:
-        'published' is used in ongoing meetings. This proposal is a candidate for a future poll.
-        'retracted' means that the person who wrote the proposal ('Owner' role)
-        doesn't stand behind it any longer and it won't be a candidate for a poll.
-        'voting' is a locked state - this proposal is part of an ongoing poll.
-        'denied' and 'approved' are locked states for proposals that have been part of a poll.
-        They're either denied or approved.
-        'unhandled' is a locked state. The agenda item closed before anything was done with this proposal.
-        
-        Administrators and moderators have extra privileges on proposals if the agenda item hasn't closed.
-        (This is simply to help editing things to avoid mistakes.) After that, the proposals will be locked
-        without any option to alter them. In that case, the ACL table 'closed' is used.
-        """
+    """ Proposal content type.
+        See :mod:`voteit.core.models.interfaces.IProposal`.
+        All methods are documented in the interface of this class.
+    """
+
     implements(IProposal, ICatalogMetadataEnabled)
     content_type = 'Proposal'
     display_name = _(u"Proposal")

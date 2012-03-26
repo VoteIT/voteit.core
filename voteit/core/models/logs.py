@@ -13,8 +13,9 @@ from voteit.core import VoteITMF as _
 
 
 class LogHandler(object):
-    """ An adapter for IBaseContent that handle logging.
-        It's currently used to adapt site root and meeting.
+    """ An adapter for :mod:`voteit.core.models.interfaces.IBaseContent`
+        that handle logging. It's currently used to adapt site root and meeting.
+        See :mod:`voteit.core.models.interfaces.ILogHandler`.
     """
     implements(ILogHandler)
     
@@ -23,9 +24,12 @@ class LogHandler(object):
     
     @property
     def log_storage(self):
-        if not hasattr(self.context, '__log_storage__'):
+        try:
+            return self.context.__log_storage__
+        except AttributeError:
+            #For speed
             self.context.__log_storage__ = LOBTree()
-        return self.context.__log_storage__
+            return self.context.__log_storage__
     
     def _next_free_key(self):
         if len(self.log_storage) == 0:
@@ -33,13 +37,6 @@ class LogHandler(object):
         return self.log_storage.maxKey()+1
     
     def add(self, context_uid, message, tags=(), userid=None, scripted=None):
-        """ Add a log entry.
-            context_uid: the uid of the object that triggered logging.
-            message: the message to store.
-            tags: list of tags, works as a log category
-            userid: if a user triggered the event, which user did so.
-            scripted: if a script triggered the event, store script name here
-        """
         obj = createContent('LogEntry', context_uid, message, tags=tags,
                             userid=userid, scripted=scripted)
         
@@ -53,6 +50,7 @@ class LogHandler(object):
 
 @content_factory('LogEntry', title=_(u"Log entry"))
 class LogEntry(Persistent):
+    """ See :mod:`voteit.core.models.interfaces.ILogEntry`. """
     implements(ILogEntry)
 
     def __init__(self, context_uid, message, tags=(), userid=None, scripted=None):

@@ -10,7 +10,7 @@ from voteit.core.models.vote import Vote
 class PollPlugin(object):
     """ Base class for poll plugins. Subclass this to make your own.
         It's not usable by itself, since it doesn't implement the required interfaces.
-        See IPollPlugin for documentation.
+        See :mod:`voteit.core.models.interfaces.IPollPlugin` for documentation.
     """
     implements(IPollPlugin)
     adapts(IPoll)

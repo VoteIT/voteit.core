@@ -34,6 +34,15 @@ The exception is IVote, which should behave different.
   .. autointerface:: IInviteTicket
      :members:
 
+  .. autointerface:: IAgendaTemplates
+     :members:
+
+  .. autointerface:: IAgendaTemplate
+     :members:
+
+  .. autointerface:: IFeedEntry
+     :members:
+
   .. autointerface:: IProposal
      :members:
 
@@ -47,6 +56,8 @@ The exception is IVote, which should behave different.
      :members:
 
   .. autointerface:: IDiscussionPost
+     :members:
+
 
 Mixin classes
 -------------
@@ -59,8 +70,6 @@ They're not usable at all by themselves.
   .. autointerface:: ISecurityAware
       :members:
  
-  .. autointerface:: IUnreadAware
-     :members:
 
 
 Adapters
@@ -78,13 +87,21 @@ pluggable, compared to regular persistent models.
   .. autointerface:: ILogHandler
      :members:
 
+  .. autointerface:: IUnread
+     :members:
+
+  .. autointerface:: IFeedHandler
+     :members:
+
+  .. autointerface:: ICatalogMetadata
+     :members:
+
 
 Utilities
 ---------
 
 Utilities are also pluggable models, but they don't require a specific context to operate on.
 Most aren't persistent at all.
-
 
   .. autointerface:: IDateTimeUtil
      :members:
@@ -99,4 +116,3 @@ with a specific object.
 
   .. autointerface:: ICatalogMetadataEnabled
      :members:
-

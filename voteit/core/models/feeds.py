@@ -14,6 +14,8 @@ from voteit.core import VoteITMF as _
 
 class FeedHandler(object):
     """ An adapter for IMeeting that handle feed entries.
+        See :mod:`voteit.core.models.interfaces.IFeedHandler`.
+        All methods are documented in the interface of this class.
     """
     implements(IFeedHandler)
     
@@ -22,9 +24,12 @@ class FeedHandler(object):
     
     @property
     def feed_storage(self):
-        if not hasattr(self.context, '__feed_storage__'):
+        #Note: Syntax here is optimised for speed.
+        try:
+            return self.context.__feed_storage__
+        except AttributeError:
             self.context.__feed_storage__ = LOBTree()
-        return self.context.__feed_storage__
+            return self.context.__feed_storage__
     
     def _next_free_key(self):
         if len(self.feed_storage) == 0:
@@ -32,13 +37,6 @@ class FeedHandler(object):
         return self.feed_storage.maxKey()+1
     
     def add(self, context_uid, message, tags=(), url=None, guid=None):
-        """ Add a feed entry.
-            context_uid: the uid of the object that triggered the entry.
-            message: the message to store.
-            tags: list of tags, works as a feed category
-            userid: if a user triggered the event, which user did so.
-            scripted: if a script triggered the event, store script name here
-        """
         obj = createContent('FeedEntry', context_uid, message, tags=tags,
                             url=url, guid=guid)
         
@@ -52,6 +50,10 @@ class FeedHandler(object):
 
 @content_factory('FeedEntry', title=_(u"Feed entry"))
 class FeedEntry(Persistent):
+    """ FeedEntry lightweight content type.
+        See :mod:`voteit.core.models.interfaces.IFeedEntry`.
+        All methods are documented in the interface of this class.
+    """
     implements(IFeedEntry)
 
     def __init__(self, context_uid, message, tags=(), url=None, guid=None):
@@ -64,10 +66,10 @@ class FeedEntry(Persistent):
 
 
 def includeme(config):
-    """ Include to activate feed components.
-        like: config.include('voteit.core.models.feedss')
+    """ Include to register FeedHandler adapter.
+        like: config.include('voteit.core.models.feeds')
+        FeedEntry will be picked up by the regular scan()-method.
     """
-    #Register FeedHandler adapter
     config.registry.registerAdapter(FeedHandler, (IMeeting,), IFeedHandler)
 
         

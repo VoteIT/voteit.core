@@ -35,7 +35,8 @@ SELECTABLE_ROLES = (security.ROLE_MODERATOR,
 @content_factory('InviteTicket', title=_(u"Invite ticket"))
 class InviteTicket(Folder, WorkflowAware):
     """ Invite ticket. Send these to give access to new users.
-        See IInviteTicket for more info.
+        See :mod:`voteit.core.models.interfaces.IInviteTicket`.
+        All methods are documented in the interface of this class.
     """
     implements(IInviteTicket)
     content_type = 'InviteTicket'
@@ -59,7 +60,6 @@ class InviteTicket(Folder, WorkflowAware):
         super(InviteTicket, self).__init__()
 
     def send(self, request):
-        """ Send message about invite ticket. """
         response = {}
 
         meeting = find_interface(self, IMeeting)
@@ -83,7 +83,6 @@ class InviteTicket(Folder, WorkflowAware):
         self.sent_dates.append(utcnow())
 
     def claim(self, request):
-        """ Handle claim of this ticket. Set permissions for meeting and set the ticket as closed. """
         #Is the ticket open?
         if self.get_workflow_state() != 'open':
             raise Forbidden("Access already granted with this ticket")

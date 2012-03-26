@@ -12,7 +12,10 @@ from betahaus.pyracont.decorators import content_factory
 
 @content_factory('AgendaTemplates', title=_(u"Agenda templates"))
 class AgendaTemplates(BaseContent):
-    """ Container for all Agenda template objects """
+    """ Agenda templates content type.
+        See :mod:`voteit.core.models.interfaces.IAgendaTemplates`.
+        All methods are documented in the interface of this class.
+    """
     implements(IAgendaTemplates)
     content_type = 'AgendaTemplates'
     display_name = _(u"Agenda templates")

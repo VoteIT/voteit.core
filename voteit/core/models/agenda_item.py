@@ -51,7 +51,10 @@ ACL['closed_meeting'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, )),
 
 @content_factory('AgendaItem', title=_(u"Agenda item"))
 class AgendaItem(BaseContent, WorkflowAware):
-    """ Agenda Item content. """
+    """ Agenda Item content type.
+        See :mod:`voteit.core.models.interfaces.IAgendaItem`.
+        All methods are documented in the interface of this class.
+    """
     implements(IAgendaItem, ICatalogMetadataEnabled)
     content_type = 'AgendaItem'
     display_name = _(u"Agenda item")

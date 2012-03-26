@@ -14,7 +14,10 @@ from voteit.core.models.interfaces import IAgendaTemplate
 
 @content_factory('AgendaTemplate', title=_(u"Agenda template"))
 class AgendaTemplate(BaseContent):
-    """ Agenda Template content """
+    """ Agenda template content type.
+        See :mod:`voteit.core.models.interfaces.IAgendaTemplate`.
+        All methods are documented in the interface of this class.
+    """
     implements(IAgendaTemplate)
     content_type = 'AgendaTemplate'
     display_name = _(u"Agenda template")

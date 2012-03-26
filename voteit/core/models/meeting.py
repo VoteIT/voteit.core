@@ -42,7 +42,10 @@ ACL['closed'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, security.MODERATE_
 
 @content_factory('Meeting', title=_(u"Meeting"))
 class Meeting(BaseContent, WorkflowAware):
-    """ Meeting content. """
+    """ Meeting content type.
+        See :mod:`voteit.core.models.interfaces.IMeeting`.
+        All methods are documented in the interface of this class.
+    """
     implements(IMeeting, ICatalogMetadataEnabled)
     content_type = 'Meeting'
     display_name = _(u"Meeting")
@@ -78,7 +81,6 @@ class Meeting(BaseContent, WorkflowAware):
 
     @property
     def invite_tickets(self):
-        """ Storage for InviteTickets. Works pretty much like a folder. """
         storage = getattr(self, '__invite_tickets__', None)
         if storage is None:
             storage = self.__invite_tickets__ =  OOBTree()

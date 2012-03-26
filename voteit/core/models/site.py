@@ -22,7 +22,10 @@ _DEFAULT_ACL = ((Allow, security.ROLE_ADMIN, ALL_PERMISSIONS),
 
 @content_factory('SiteRoot', title=_(u"Site root"))
 class SiteRoot(BaseContent):
-    """ The root of the site. Contains all other objects. """
+    """ Site root content type - there's only one of these.
+        See :mod:`voteit.core.models.interfaces.ISiteRoot`.
+        All methods are documented in the interface of this class.
+    """
     implements(ISiteRoot)
     content_type = 'SiteRoot'
     display_name = _(u"Site root")

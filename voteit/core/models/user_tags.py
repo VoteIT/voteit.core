@@ -14,20 +14,25 @@ TAG_PATTERN = re.compile(r'^[a-zA-Z\_\-]{3,15}$')
 
 
 class UserTags(object):
-    __doc__ = IUserTags.__doc__
+    """ User tags adapter.
+        See :mod:`voteit.core.models.interfaces.IUserTags`.
+        All methods are documented in the interface of this class.
+    """
     implements(IUserTags)
     
     def __init__(self, context):
         """ Context to adapt """
         self.context = context
-        if not hasattr(self.context, '__tags_storage__'):
-            self.context.__tags_storage__ = OOBTree()
     
     @property
     def tags_storage(self):
         """ Acts as a storage.
         """
-        return self.context.__tags_storage__
+        try:
+            return self.context.__tags_storage__
+        except AttributeError:
+            self.context.__tags_storage__ = OOBTree()
+            return self.context.__tags_storage__
     
     def add(self, tag, userid):
         if not isinstance(tag, basestring):

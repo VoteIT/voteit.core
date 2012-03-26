@@ -165,8 +165,11 @@ class IBaseContent(IBaseFolder):
 
 
 class ISiteRoot(IBaseFolder):
-    """ Singleton that is used as the site root. """
-
+    """ Singleton that is used as the site root.
+        When added, it will also create a caching catalog with the
+        attribute catalog."""
+    users = Attribute("Access to the users folder. Same as self['users']")
+    
 
 class IUsers(IBaseFolder):
     """ Contains all users. """
@@ -178,7 +181,7 @@ class IUsers(IBaseFolder):
 
 
 class IUser(IBaseFolder):
-    """ A user object. """
+    """ Content type for a user. Usable as a profile page. """
     
     userid = Attribute("The userid is always the same as __name__, meaning "
                        "that the name of the stored object must be the userid. "
@@ -235,6 +238,10 @@ class IAgendaItem(IBaseFolder):
 
 class IMeeting(IBaseFolder):
     """ Meeting content type """
+    start_time = Attribute("Start time for meeting")
+    end_time = Attribute("End time for meeting")
+    invite_tickets = Attribute("""
+        Storage for InviteTickets. Works pretty much like a folder.""")
 
     def add_invite_ticket(ticket, request):
         """ Add an invite ticket to the storage invite_tickets.
@@ -250,11 +257,47 @@ class IDiscussionPost(IBaseFolder):
 
 
 class IProposal(IBaseFolder):
-    """ Proposal content type. """
+    """ Proposal content type
+    
+        Workflow states for proposals
+        
+        published
+            Used in ongoing meetings. This proposal is a candidate for a future poll.
+            
+        retracted
+            The person who wrote the proposal ('Owner' role) doesn't stand by it
+            any longer and it won't be a candidate for a poll.
+    
+        voting
+            is a locked state - this proposal is part of an ongoing poll. Other polls
+            can't include this proposal while it's in this state, and owners can't retract
+            it. If you delete a proposal that is in this state, it might crash the poll
+            it's a part of.
+
+        denied
+            Proposal has been denied. It can't be included in polls or retracted.
+
+        approved
+            Proposal has been approved. It can't be retracted. If you want to include
+            it in a poll again, you need to set it as published again.
+            
+        unhandled
+            Set by moderators if they never handled the proposal for some reason.
+                    
+        Administrators and moderators have extra privileges on proposals if the agenda item hasn't closed.
+        (This is simply to help editing things to avoid mistakes.) After that, the proposals will be locked
+        without any option to alter them. In that case, the ACL table 'closed' is used.
+    """
 
 
 class IPoll(IBaseFolder):
-    """ Poll content type. """
+    """ Poll content type.
+        Note that the actual poll method isn't decided by the poll
+        content type. It calls a poll plugin to get that.
+        See :mod:`voteit.core.models.interfaces.IPollPlugin` for more info on those.
+    """
+    start_time = Attribute("Polls start time")
+    end_time = Attribute("Polls end time")
     proposal_uids = Attribute("Contains a set of UIDs for all proposals this poll is about.")
     poll_plugin_name = Attribute("Returns the name of the selected voting utility.")
     ballots = Attribute("All ballots, set here after the poll has closed.")
@@ -270,6 +313,10 @@ class IPoll(IBaseFolder):
         """ Return all proposal objects resigered in this poll.
         """
 
+    def get_all_votes():
+        """ Return a frozenset of all votes in this poll.
+        """
+
     def get_voted_userids():
         """ Returns userids of all who've voted in this poll.
         """
@@ -282,15 +329,45 @@ class IPoll(IBaseFolder):
         """ Close the poll, calculate and store the result.
         """
 
+    def adjust_proposal_states(uid_states, request = None):
+        """ Adjust the states of proposals to something.
+            This method is normally called from a poll plugin to set
+            approved or denied proposals. (If any)
+            This method will catch any errors and notify the moderator
+            rather than abort the transaction. Ie if a state can't be set
+            for a specific proposal, it will simply inform the moderator
+            of that and set the correct states for the other proposals that might
+            have been specified.
+            
+            uid_states
+                A dict of proposal uids and which state id they should change to.
+            
+            request
+                A request object that can be passed along. Otherwise this method
+                will try to fetch the current request.
+
+        """
+
     def get_proposal_by_uid(uid):
         """ Return a proposal by its uid. Raises KeyError if it isn't found, since
             it shouldn't be used with uids that don't exist.
         """
 
+    def create_reject_proposal():
+        """ Create a reject proposal if it was specified in the edit form.
+            This method might go away in the future.
+        """
+
 
 class IVote(Interface):
-    """ Vote content type.
+    """ Vote content type. This behaves different than other
+        content types and it doesn't inherit other interfaces
+        which means that you need to specify that something applies
+        for an IVote context specifically.
+        Votes can't be checked or inspected by admins or moderators either.
+        Only the owner of the Vote has any kind of permissions here.
     """
+
     def set_vote_data(value, notify = True):
         """ Set vote data. The data itself could be anything passed
             along by the poll plugin.
@@ -332,8 +409,11 @@ class IInviteTicket(Interface):
         """
 
     def claim(request):
-        """ Use the ticket to gain access. Called by ticket form - see:
-            views/meeting.py
+        """ Handle claim of this ticket. Set permissions for meeting and
+            set the ticket as closed.
+
+            Called by ticket form - see:
+            :func:`voteit.core.views.meeting.MeetingView.claim_ticket`
         """
 
 
@@ -493,19 +573,38 @@ class IPollPlugin(Interface):
         """
 
 
-
 class ILogHandler(Interface):
-    """ An adapter for meetings that handle logging. """
+    """ An adapter that handle logging. """
+    log_storage = Attribute("Storage for logs.")
 
     def __init__(context):
-        """ Object needs a meeting to adapt. """
+        """ Context to adapt. """
+    
+    def add(context_uid, message, tags=(), userid=None, scripted=None):
+        """ Add a log entry.
+            context_uid: the uid of the object that triggered logging.
+            message: the message to store.
+            tags: list of tags, works as a log category
+            userid: if a user triggered the event, which user did so.
+            scripted: if a script triggered the event, store script name here
+        """
 
 
 class IFeedHandler(Interface):
     """ An adapter for meetings that handle feeds. """
+    feed_storage = Attribute("""Storage for feed content.""")
 
     def __init__(context):
         """ Object needs a meeting to adapt. """
+    
+    def add(context_uid, message, tags=(), url=None, guid=None):
+        """ Add a feed entry.
+            context_uid: the uid of the object that triggered the entry.
+            message: the message to store.
+            tags: list of tags, works as a feed category.
+            url: url for this event.
+            guid: unique id for this entry.
+        """
 
 
 class ICatalogMetadata(Interface):
