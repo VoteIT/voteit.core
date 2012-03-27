@@ -5,11 +5,11 @@
 	<title>${api.context.title}</title>
 	<link>${api.resource_url(api.context, api.request)}</link>
 	<tal:iterate condition="not closed and active" repeat="entry entries">
-    <item>
+    <item tal:define="url get_url(entry)">
 		<title>${entry.message}</title>
-		<link>${entry.url}</link>
+		<link>${url}</link>
 		<pubDate>${dt_format(entry.created, format="E, dd MMM y HH:mm:ss zzz")}</pubDate>
-		<guid>${entry.guid}</guid>
+		<guid>${url}</guid>
 	</item>
 	</tal:iterate>
 	<item tal:condition="not (not closed and active)">

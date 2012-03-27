@@ -70,13 +70,11 @@ class FeedEntryTests(unittest.TestCase):
         self.assertTrue(verifyObject(IFeedEntry, obj))
 
     def test_construction(self):
-        obj = self._cut('uid', 'message', tags=['hello', 'world'], url='http://link', guid='http://url_to_obj')
+        obj = self._cut('uid', 'message', tags=['hello', 'world'])
         self.assertTrue(isinstance(obj.created, datetime))
         self.assertEqual(obj.context_uid, 'uid')
         self.assertEqual(obj.message, u'message')
         self.assertEqual(obj.tags, ('hello', 'world'))
-        self.assertEqual(obj.url, 'http://link')
-        self.assertEqual(obj.guid, 'http://url_to_obj')
 
     def test_factory_registered_on_scan(self):
         self.config.scan('voteit.core.models.feeds')
@@ -87,4 +85,3 @@ class FeedEntryTests(unittest.TestCase):
         self.failUnless(obj)
         obj = createObject('FeedEntry', 'uid', 'message')
         self.failUnless(obj)
-        

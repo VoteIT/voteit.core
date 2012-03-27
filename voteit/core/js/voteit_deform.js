@@ -20,8 +20,8 @@ $(document).ready(function() {
 var start_end_time_diff = 0;
 $(document).delegate('input[name="start_time"]', 'focus', function() {
 	// get the dates
-	var start_time = $('input[name="start_time"]').val();
-	var end_time = $('input[name="end_time"]').val();
+	var start_time = $('input[name="start_time"]').datepicker("getDate")
+	var end_time = $('input[name="end_time"]').datepicker("getDate")
 	
 	// calculate the differens
 	var new_start_end_time_diff = new Date(end_time).getTime() - new Date(start_time).getTime();
@@ -31,7 +31,7 @@ $(document).delegate('input[name="start_time"]', 'focus', function() {
 
 $(document).delegate('input[name="start_time"]', 'change', function() {
 	// get the dates
-	var start_time = $('input[name="start_time"]').val();
+	var start_time = $('input[name="start_time"]').datepicker("getDate")
 	var ds = new Date(start_time);
 	
 	// set new end time
