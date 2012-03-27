@@ -31,14 +31,11 @@ def feed_discussion_post_added(obj, event):
 
     msg = _(u"${userid} has written a post in ${agenda_item}.",
             mapping={'userid': userid, 'agenda_item':agenda_item.title})
-    
-    url = resource_url(agenda_item, request)
-    guid = resource_url(obj, request)
 
     meeting = find_interface(obj, IMeeting)    
     feed_handler = request.registry.getAdapter(meeting, IFeedHandler)
 
-    feed_handler.add(obj.uid, msg, tags=('discussion_post', 'added',), url=url, guid=guid)
+    feed_handler.add(obj.uid, msg, tags=('discussion_post', 'added',))
     
 @subscriber([IProposal, IObjectAddedEvent])
 def feed_proposal_added(obj, event):
@@ -53,14 +50,11 @@ def feed_proposal_added(obj, event):
 
     msg = _(u"${userid} has made a proposal in ${agenda_item}.",
             mapping={'userid': userid, 'agenda_item':agenda_item.title})
-    
-    url = resource_url(agenda_item, request)
-    guid = resource_url(obj, request)
 
     meeting = find_interface(obj, IMeeting)    
     feed_handler = request.registry.getAdapter(meeting, IFeedHandler)
 
-    feed_handler.add(obj.uid, msg, tags=('proposal', 'added',), url=url, guid=guid)
+    feed_handler.add(obj.uid, msg, tags=('proposal', 'added',))
 
 @subscriber([IPoll, IWorkflowStateChange])
 def feed_poll_state_change(obj, event):
@@ -80,13 +74,10 @@ def feed_poll_state_change(obj, event):
             msg = _(u"The result of a poll in ${agenda_item} is set.",
                     mapping={'agenda_item':agenda_item.title})
     
-        url = resource_url(agenda_item, request)
-        guid = resource_url(obj, request)
-    
         meeting = find_interface(obj, IMeeting)    
         feed_handler = request.registry.getAdapter(meeting, IFeedHandler)
     
-        feed_handler.add(obj.uid, msg, tags=('poll', event.new_state,), url=url, guid=guid)
+        feed_handler.add(obj.uid, msg, tags=('poll', event.new_state,))
 
 @subscriber([IAgendaItem, IWorkflowStateChange])
 def feed_agenda_item_state_change(obj, event):
@@ -106,11 +97,8 @@ def feed_agenda_item_state_change(obj, event):
         msg = _(u"${agenda_item} has been closed.",
             mapping={'agenda_item':obj.title})
 
-    if msg:    
-        url = resource_url(obj, request)
-        guid = url
-    
+    if msg:
         meeting = find_interface(obj, IMeeting)    
         feed_handler = request.registry.getAdapter(meeting, IFeedHandler)
 
-        feed_handler.add(obj.uid, msg, tags=('agenda_item', event.new_state,), url=url, guid=guid)
+        feed_handler.add(obj.uid, msg, tags=('agenda_item', event.new_state,))

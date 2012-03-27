@@ -36,9 +36,8 @@ class FeedHandler(object):
             return 0
         return self.feed_storage.maxKey()+1
     
-    def add(self, context_uid, message, tags=(), url=None, guid=None):
-        obj = createContent('FeedEntry', context_uid, message, tags=tags,
-                            url=url, guid=guid)
+    def add(self, context_uid, message, tags=(), context=None):
+        obj = createContent('FeedEntry', context_uid, message, tags=tags)
         
         for i in range(10):
             k = self._next_free_key()
@@ -56,13 +55,11 @@ class FeedEntry(Persistent):
     """
     implements(IFeedEntry)
 
-    def __init__(self, context_uid, message, tags=(), url=None, guid=None):
+    def __init__(self, context_uid, message, tags=()):
         self.created = utcnow()
         self.context_uid = context_uid
         self.message = message
         self.tags = tuple(tags)
-        self.url = url
-        self.guid = guid
 
 
 def includeme(config):
