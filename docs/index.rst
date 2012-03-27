@@ -25,4 +25,6 @@ Indices and tables
    models/*
    schemas/*
    subscribers/*
+   views/*
+   views/components/*
    glossary
