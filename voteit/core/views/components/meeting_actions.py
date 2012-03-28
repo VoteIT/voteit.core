@@ -100,6 +100,7 @@ def generic_root_menu_link(context, request, va, **kw):
 
 @view_action('settings_menu', 'agenda_templates', title = _(u"Agenda Templates"), link = "@@agenda_templates", permission = MODERATE_MEETING)
 @view_action('settings_menu', 'manage_layout', title = _(u"Layout and widgets"), link = "@@manage_layout", permission = MODERATE_MEETING)
+@view_action('settings_menu', 'rss_settings', title = _(u"RSS settings"), link = "@@rss_settings", permission = MODERATE_MEETING)
 @view_action('settings_menu', 'access_policy', title = _(u"Access policy"), link = "@@access_policy", permission = MODERATE_MEETING)
 @view_action('settings_menu', 'mail_settings', title = _(u"Mail settings"), link = "@@mail_settings", permission = MODERATE_MEETING)
 @view_action('settings_menu', 'presentation', title = _(u"Presentation"), link = "@@presentation", permission = MODERATE_MEETING)

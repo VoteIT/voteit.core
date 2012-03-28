@@ -109,8 +109,11 @@ class EditMeetingSchema(colander.MappingSchema):
     description = description_node();
     meeting_mail_name = meeting_mail_name_node();
     meeting_mail_address = meeting_mail_address_node();
-    rss_feed = rss_feed_node();
     access_policy = access_policy_node();
+    
+@schema_factory('RssSettingsMeetingSchema', title = _(u"RSS settings"))
+class RssSettingsMeetingSchema(colander.MappingSchema):
+    rss_feed = rss_feed_node();
 
 @schema_factory('PresentationMeetingSchema',
                 title = _(u"Presentation"),
@@ -124,7 +127,6 @@ class PresentationMeetingSchema(colander.MappingSchema):
 class MailSettingsMeetingSchema(colander.MappingSchema):
     meeting_mail_name = meeting_mail_name_node();
     meeting_mail_address = meeting_mail_address_node();
-    rss_feed = rss_feed_node();
     
 @schema_factory('AccessPolicyMeetingSchema', title = _(u"Access policy"))
 class AccessPolicyeMeetingSchema(colander.MappingSchema):
