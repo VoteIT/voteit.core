@@ -36,21 +36,37 @@ class APIView(object):
         self.resource_url = resource_url
         self.root = find_root(context)
 
-        #Authentication- / User-related
+        #User related
         self.userid = authenticated_userid(request)
         if self.userid:
             self.user_profile = self.get_user(self.userid)
             self.user_profile_url = resource_url(self.user_profile, request)
-        
-        #Authentication / Authorization utils. 
-        self.authn_policy = request.registry.getUtility(IAuthenticationPolicy)
-        self.authz_policy = request.registry.getUtility(IAuthorizationPolicy)
-        
-        self.dt_util = request.registry.getUtility(IDateTimeUtil)
-        self.flash_messages = FlashMessages(request)
 
         #Main macro
         self.main_template = get_renderer('templates/main.pt').implementation()
+
+    @reify
+    def authn_policy(self):
+        """ Registered authentication policy. """
+        return self.request.registry.getUtility(IAuthenticationPolicy)
+
+    @reify
+    def authz_policy(self):
+        """ Registered authorization policy. """
+        return self.request.registry.getUtility(IAuthorizationPolicy)
+
+    @reify
+    def dt_util(self):
+        """ The datetime conversion utility.
+            See :mod:`voteit.core.interfaces.IDateTimeUtil` for docs.
+        """
+        return self.request.registry.getUtility(IDateTimeUtil)
+
+    @reify
+    def flash_messages(self):
+        """ Flash messages handler """
+        #FIXME: Shouldn't this be registered as an adapter, since it is one?
+        return FlashMessages(self.request)
 
     @reify
     def show_moderator_actions(self):
