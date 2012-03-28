@@ -7,9 +7,10 @@ from betahaus.viewcomponent.interfaces import IViewGroup
 from pyramid.security import authenticated_userid
 
 from voteit.core.validators import html_string_validator
-from voteit.core.widgets import RecaptchaWidget
+
 from voteit.core import VoteITMF as _
 from voteit.core import security 
+from voteit.core.widgets import RecaptchaWidget
 
 @colander.deferred
 def deferred_access_policy_widget(node, kw):
@@ -30,15 +31,14 @@ def deferred_recaptcha_widget(node, kw):
     request = kw['request']
     api = kw['api']
     
-    settings = request.registry.settings
-    
     # Get principals for current user
     principals = api.context_effective_principals(context)
     
-    if settings.get('captcha_public_key', None) and settings.get('captcha_private_key', None) and security.ROLE_ADMIN not in principals:
-        return RecaptchaWidget()
+    if api.root.get_field_value('captcha_meeting', False) and security.ROLE_ADMIN not in principals:
+        return RecaptchaWidget(api.root.get_field_value('captcha_public_key', ''), 
+                               api.root.get_field_value('captcha_private_key', ''))
 
-    return deform.widget.HiddenWidget()        
+    return deform.widget.HiddenWidget()
 
 def title_node():
     return colander.SchemaNode(colander.String(),
@@ -99,7 +99,6 @@ class AddMeetingSchema(colander.MappingSchema):
     description = description_node();
     meeting_mail_name = meeting_mail_name_node();
     meeting_mail_address = meeting_mail_address_node();
-    rss_feed = rss_feed_node();
     access_policy = access_policy_node();
     captcha=recaptcha_node();
 
@@ -109,8 +108,11 @@ class EditMeetingSchema(colander.MappingSchema):
     description = description_node();
     meeting_mail_name = meeting_mail_name_node();
     meeting_mail_address = meeting_mail_address_node();
-    rss_feed = rss_feed_node();
     access_policy = access_policy_node();
+    
+@schema_factory('RssSettingsMeetingSchema', title = _(u"RSS settings"))
+class RssSettingsMeetingSchema(colander.MappingSchema):
+    rss_feed = rss_feed_node();
 
 @schema_factory('PresentationMeetingSchema',
                 title = _(u"Presentation"),
@@ -124,7 +126,6 @@ class PresentationMeetingSchema(colander.MappingSchema):
 class MailSettingsMeetingSchema(colander.MappingSchema):
     meeting_mail_name = meeting_mail_name_node();
     meeting_mail_address = meeting_mail_address_node();
-    rss_feed = rss_feed_node();
     
 @schema_factory('AccessPolicyMeetingSchema', title = _(u"Access policy"))
 class AccessPolicyeMeetingSchema(colander.MappingSchema):
