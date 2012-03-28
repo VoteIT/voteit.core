@@ -99,7 +99,6 @@ class AddMeetingSchema(colander.MappingSchema):
     description = description_node();
     meeting_mail_name = meeting_mail_name_node();
     meeting_mail_address = meeting_mail_address_node();
-    rss_feed = rss_feed_node();
     access_policy = access_policy_node();
     captcha=recaptcha_node();
 
