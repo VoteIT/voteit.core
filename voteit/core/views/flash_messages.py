@@ -1,4 +1,3 @@
-from pyramid.view import view_config
 from pyramid.renderers import render
 
 
@@ -24,7 +23,3 @@ class FlashMessages(object):
             #FIXME: Import proper logger
             return
         self.request.session.flash(flash)
-
-    @view_config(name="_flash_messages", renderer=FLASH_TEMPLATE)
-    def inline(self):
-        return dict(messages = self._get_messages(),)
