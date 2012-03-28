@@ -819,14 +819,9 @@ table.listing > tbody > tr.even > td {
     line-height: inherit;
 }
 
-/* Order agenda items view */
-.agenda-item-sort li.buttons {
-    margin: 6px 0px;
-    padding: 3px;
-}
-
-ul.ui-sortable li {
-    cursor: pointer;
+/* Generel jquery sorting */
+ul.ui-sortable > li {
+	cursor: move;
     margin: 5px 0px;
     padding: 5px;
     padding-right: 15px;
@@ -834,8 +829,14 @@ ul.ui-sortable li {
     border: 1px solid #CCC;
     color: #054265;
 }
-ul.ui-sortable li:hover {
+ul.ui-sortable > li:hover {
 	border-color: #054265;
+}
+
+/* Order agenda items view */
+.agenda-item-sort li.buttons {
+    margin: 6px 0px;
+    padding: 3px;
 }
 
 /* Read more discussion post */

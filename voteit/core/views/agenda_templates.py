@@ -3,6 +3,7 @@ from betahaus.pyracont.factories import createContent
 from deform import Form
 from deform.exception import ValidationFailure
 from pyramid.url import resource_url
+from pyramid.traversal import resource_path
 from pyramid.view import view_config
 from pyramid.httpexceptions import HTTPFound
 from pyramid.traversal import find_root
@@ -13,6 +14,7 @@ from voteit.core.models.interfaces import IAgendaTemplates
 from voteit.core.models.interfaces import IAgendaTemplate
 from voteit.core.models.interfaces import IMeeting
 from voteit.core import security
+from voteit.core import fanstaticlib
 
 
 class AgendaTempalteView(BaseView):
@@ -57,4 +59,35 @@ class AgendaTempalteView(BaseView):
         
         self.response['agenda_templates'] = agenda_templates
         
+        return self.response
+    
+    @view_config(context=IAgendaTemplate, name="sort", renderer="templates/order_agenda_template.pt", permission=security.EDIT)
+    def sort(self):
+        self.response['title'] = _(u"order_agenda_template_view_title",
+                                   default = u"Drag and drop agenda items to reorder")
+
+        post = self.request.POST
+        if 'cancel' in self.request.POST:
+            url = resource_url(self.context, self.request)
+            return HTTPFound(location = url)
+
+        if 'save' in post:
+            controls = self.request.POST.items()
+            ais = self.context.get_field_value('agenda_items')
+            order = 0
+            agenda_items = []
+            for (k, v) in controls:
+                if k == 'agenda_items':
+                    ai = ais[int(v)]
+                    ai['order'] = order
+                    order += 1
+                    agenda_items.append(ai)
+            self.context.set_field_value('agenda_items', agenda_items)
+            self.api.flash_messages.add(_('Order updated'))
+            
+            url = resource_url(self.context, self.request)
+            return HTTPFound(location = url)
+        
+        fanstaticlib.jquery_142.need()
+
         return self.response
