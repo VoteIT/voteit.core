@@ -29,16 +29,19 @@ class RecaptchaWidget(CheckedInputWidget):
     requirements = ()
     url = "http://www.google.com/recaptcha/api/verify"
     headers = {'Content-type': 'application/x-www-form-urlencoded'}
+    
+    def __init__(self, captcha_public_key, captcha_private_key):
+        super(RecaptchaWidget, self).__init__()
+        self.captcha_public_key = captcha_public_key
+        self.captcha_private_key = captcha_private_key
 
     def serialize(self, field, cstruct, readonly=False):
         if cstruct in (null, None):
             cstruct = ''
         confirm = getattr(field, 'confirm', '')
         template = readonly and self.readonly_template or self.template
-        request = get_current_request()
-        captcha_public_key = request.registry.settings['captcha_public_key']
         return field.renderer(template, field=field, cstruct=cstruct,
-                              public_key=captcha_public_key,
+                              public_key=self.captcha_public_key,
                               )
 
     def deserialize(self, field, pstruct):
@@ -51,9 +54,8 @@ class RecaptchaWidget(CheckedInputWidget):
         if not challenge:
             raise Invalid(field.schema, 'Missing challenge')
         request = get_current_request()
-        captcha_private_key = request.registry.settings['captcha_private_key']
         remoteip = request.remote_addr
-        data = urlencode(dict(privatekey=captcha_private_key,
+        data = urlencode(dict(privatekey=self.captcha_private_key,
                               remoteip=remoteip,
                               challenge=challenge,
                               response=response))

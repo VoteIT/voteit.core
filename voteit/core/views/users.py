@@ -185,8 +185,8 @@ class UsersFormView(BaseEdit):
         
         users = self.api.root.users
         
-        login_schema = createSchema('LoginSchema').bind(context=self.context, request=self.request)        
-        register_schema = createSchema('RegisterUserSchema').bind(context=self.context, request=self.request)
+        login_schema = createSchema('LoginSchema').bind(context=self.context, request=self.request, api=self.api)        
+        register_schema = createSchema('RegisterUserSchema').bind(context=self.context, request=self.request, api=self.api)
 
         login_form = Form(login_schema, buttons=(button_login,))
         reg_form = Form(register_schema, buttons=(button_register,))
