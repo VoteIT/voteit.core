@@ -35,12 +35,7 @@ class APIView(object):
         
         self.resource_url = resource_url
         self.root = find_root(context)
-
-        #User related
         self.userid = authenticated_userid(request)
-        if self.userid:
-            self.user_profile = self.get_user(self.userid)
-            self.user_profile_url = resource_url(self.user_profile, request)
 
         #Main macro
         self.main_template = get_renderer('templates/main.pt').implementation()
@@ -61,6 +56,18 @@ class APIView(object):
             See :mod:`voteit.core.interfaces.IDateTimeUtil` for docs.
         """
         return self.request.registry.getUtility(IDateTimeUtil)
+
+    @property
+    def user_profile(self):
+        """ Get currently authenticated users profile, or None.
+            get_user caches lookup so this is a regular property.
+        """
+        return self.get_user(self.userid)
+
+    @reify
+    def user_profile_url(self):
+        """ Return url of current users profile. """
+        return resource_url(self.user_profile, self.request)
 
     @reify
     def flash_messages(self):
@@ -85,21 +92,26 @@ class APIView(object):
 
     @reify
     def localizer(self):
+        """ Get the current localizer. See the Pyramid docs for more on localizers.
+        """
         return get_localizer(self.request)
 
     @property
     def translate(self):
+        """ Translate a translation string immediately. """
         return self.localizer.translate
 
     @property
     def pluralize(self):
         """ pluralize(singular, plural, n, domain=None, mapping=None)
             Where n is amount of something.
+            See pluralize in the Pyramid docs.
         """
         return self.localizer.pluralize
 
     @reify
     def context_unread(self):
+        """ All docids of things that are unread contained in this context. """
         if not self.userid:
             return ()
         return self.search_catalog(context = self.context, unread = self.userid)[1]
@@ -114,20 +126,25 @@ class APIView(object):
     def tstring(self, *args, **kwargs):
         """ Hook into the translation string machinery.
             See the i18n section of the Pyramid Docs.
+            This is usefull when you don't want any i18n tool to pick it up in the code,
+            for instance when you're converting the contents of a variable.
         """ 
         return _(*args, **kwargs)
 
     def get_user(self, userid):
-        """ Returns the user object. Will also cache each lookup. """
+        """ Returns the user object. Will also cache each lookup.
+            Reason for the try/except code is execution speed.
+        """
         try:
             cache = self.request._user_lookup_cache
         except AttributeError:
             self.request._user_lookup_cache = cache = {}
-        if userid in cache:
+        try:
             return cache[userid]
-        user = self.root.users.get(userid)
-        cache[userid] = user
-        return user
+        except KeyError:
+            user = self.root.users.get(userid)
+            cache[userid] = user
+            return user
 
     @reify
     def meeting(self):
