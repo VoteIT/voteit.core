@@ -18,9 +18,9 @@ from betahaus.viewcomponent.interfaces import IViewGroup
 from voteit.core import VoteITMF as _
 from voteit.core import security
 from voteit.core.models.interfaces import IDateTimeUtil
-from voteit.core.models.interfaces import IUnread
+from voteit.core.models.interfaces import IFlashMessages
 from voteit.core.models.interfaces import IMeeting
-from voteit.core.views.flash_messages import FlashMessages
+from voteit.core.models.interfaces import IUnread
 from voteit.core.models.catalog import metadata_for_query
 from voteit.core.models.catalog import resolve_catalog_docid
 from voteit.core.fanstaticlib import DEFORM_RESOURCES
@@ -64,9 +64,15 @@ class APIView(object):
 
     @reify
     def flash_messages(self):
-        """ Flash messages handler """
-        #FIXME: Shouldn't this be registered as an adapter, since it is one?
-        return FlashMessages(self.request)
+        """ Flash messages adapter - stores and retrieves messages.
+            See :mod:`voteit.core.models.interfaces.IFlashMessages`
+        """
+        return self.request.registry.getAdapter(self.request, IFlashMessages)
+
+    def render_flash_messages(self):
+        """ Render flash messages. """
+        response = dict(messages = self.flash_messages.get_messages(),)
+        return render('templates/snippets/flash_messages.pt', response, request = self.request)
 
     @reify
     def show_moderator_actions(self):

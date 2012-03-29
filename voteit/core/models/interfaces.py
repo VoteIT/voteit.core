@@ -511,6 +511,39 @@ class ISecurityAware(Interface):
 
 
 #Adapters
+class IFlashMessages(Interface):
+    """ Adapts a request object to add flash messages to the current session.
+        Flash messages are short text strings stored in a session.
+        
+        The message itself is usually things like "Object updated" or other
+        short system messages.
+    """
+
+    def add(msg, type='info', close_button=True):
+        """ Add a flash message. Note that the current sessions we use
+            can't store a lot of text - so keep it short and simple!
+
+            msg
+                Regular text, usually a translation string unless
+                you don't want it to be translated for some reason.
+
+            type
+                Will be set as a css-class but has no other function.
+                Currently 'info' and 'error' are common values.
+
+            close_button
+                Show a close button to enable the user to remove the message.
+                Mostly a question of aesthetics.
+        """
+
+    def get_messages():
+        """ Return a generator of all flash messages, if any exist.
+            Note that generators are True even if they're empty.
+            If you need to do checks against contents, convert them
+            to a tuple or something similar first.
+        """
+
+
 class IUserTags(Interface):
     """ Adapter for things that can have usertags.
         The difference to normal tags is that users choose to stand behind them.

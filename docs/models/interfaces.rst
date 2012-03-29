@@ -78,6 +78,9 @@ Adapters
 Adapters can extend functionality of other models. They're also easier to make
 pluggable, compared to regular persistent models. 
 
+  .. autointerface:: IFlashMessages
+     :members:
+
   .. autointerface:: IUserTags
      :members:
 
