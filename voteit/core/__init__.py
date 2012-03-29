@@ -17,7 +17,6 @@ def main(global_config, **settings):
         If you don't want to start the VoteIT app from this method,
         be sure to include the same things at least.
     """
-    import voteit.core.patches
     config = default_configurator(settings)
     config.include(required_components)
     config.hook_zca()
@@ -47,6 +46,7 @@ def required_components(config):
     config.include('voteit.core.models.catalog')
     config.include('voteit.core.models.unread')
     config.include('voteit.core.models.feeds')
+    config.include('voteit.core.deform_bindings')
     #For password storage
     config.scan('betahaus.pyracont.fields.password')
 

@@ -26,7 +26,6 @@ def bootstrap_and_fixture(config):
     config.include('pyramid_zcml')
     config.load_zcml('voteit.core:configure.zcml')
     config.scan('voteit.core.models.site')
-    config.scan('voteit.core.models.agenda_template')
     config.scan('voteit.core.models.agenda_templates')
     config.scan('voteit.core.models.user')
     config.scan('voteit.core.models.users')

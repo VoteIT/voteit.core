@@ -61,7 +61,7 @@ class SearchView(BaseView):
             try:
                 #appstruct is deforms convention. It will be the submitted data in a dict.
                 appstruct = form.validate(controls)
-            except ValidationFailure, e:
+            except ValidationFailure, e: #pragma : no cover
                 self.response['search_form'] = e.render()
                 return self.response
 
