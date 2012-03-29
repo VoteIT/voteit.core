@@ -3,9 +3,38 @@ from pyramid_zodbconn import db_from_uri
 from pyramid.authentication import AuthTktAuthenticationPolicy
 from pyramid.authorization import ACLAuthorizationPolicy
 from pyramid import testing
+from pyramid_mailer.interfaces import IMailer
 
 from voteit.core.bootstrap import bootstrap_voteit
 from voteit.core.security import ROLE_VOTER
+
+
+class PrintingMailer(object):
+    """
+    Dummy mailing instance. Simply prints all messages directly instead of handling them.
+    Good for avoiding mailing users when you want to test things locally.
+    """
+
+    def send(self, message):    
+        """
+        Send, but really print content of message
+        """
+        
+        print "From: %s " % message.sender
+        print "Subject: %s" % message.subject
+        print "To: %s" % ", ".join(message.recipients)
+        print "======================================"
+        print message.html
+        print message.body
+
+    send_to_queue = send_immediately = send
+
+
+def printing_mailer(config):
+    """ Include this to use the printing mailer."""
+    print "\nWARNING! Using printing mailer - no mail will be sent!\n"
+    mailer = PrintingMailer()
+    config.registry.registerUtility(mailer, IMailer)
 
 
 def dummy_zodb_root(config):
