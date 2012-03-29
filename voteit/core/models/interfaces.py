@@ -550,6 +550,21 @@ class IUserTags(Interface):
         Typical example would be 'like', but it might also be used for other functionality,
         like a dynamic rss feed.
     """
+    tags_storage = Attribute("Storage for user tags")
+
+    def add(tag, userid):
+        """ Add a tag for a userid. Note that the tag shouldn't use non-ascii chars.
+            Think of it as an id rather than a readable name.
+        """
+
+    def userids_for_tag(tag):
+        """ Return a tuple of all userids that have added a specific tag.
+        """
+
+    def remove(tag, userid):
+        """ Remove a tag for a specific userid. It won't raise an exception if
+            the tag doesn't exist.
+        """
 
 
 class IPollPlugin(Interface):

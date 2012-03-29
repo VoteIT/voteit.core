@@ -45,7 +45,7 @@ class UserTags(object):
         if userid not in self.tags_storage[tag]:
             self.tags_storage[tag].add(userid)
             if tag == 'like':
-                self._notify()
+                _notify(self.context)
 
     def userids_for_tag(self, tag):
         return tuple(self.tags_storage.get(tag, ()))
@@ -54,10 +54,13 @@ class UserTags(object):
         if userid in self.tags_storage.get(tag, ()):
             self.tags_storage[tag].remove(userid)
             if tag == 'like':
-                self._notify()
-    
-    def _notify(self):
-        objectEventNotify(ObjectUpdatedEvent(self.context, indexes=('like_userids',), metadata=True))
+                _notify(self.context)
+
+def _notify(context):
+    """ Send notification for Like tag. This might change later since
+        the index is for a specific tag rather than a general solution.
+    """
+    objectEventNotify(ObjectUpdatedEvent(context, indexes=('like_userids',), metadata=True))
 
 
 def includeme(config):
