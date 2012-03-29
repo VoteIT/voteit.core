@@ -49,6 +49,10 @@
            	   tal:condition="api.context_has_permission('Edit', template)"
                class="buttonize"
                i18n:translate="">Edit</a>
+            <a tal:attributes="href '%s@@sort' % api.resource_url(template, request)"
+           	   tal:condition="api.context_has_permission('Edit', context)"
+           	   class="buttonize"
+               i18n:translate="">Sort</a>
             <a tal:attributes="href '%s@@delete' % api.resource_url(template, request)"
                tal:condition="api.context_has_permission('Delete', template)"
                class="buttonize"
