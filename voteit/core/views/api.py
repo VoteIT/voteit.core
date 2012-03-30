@@ -65,11 +65,6 @@ class APIView(object):
         return self.get_user(self.userid)
 
     @reify
-    def user_profile_url(self):
-        """ Return url of current users profile. """
-        return resource_url(self.user_profile, self.request)
-
-    @reify
     def flash_messages(self):
         """ Flash messages adapter - stores and retrieves messages.
             See :mod:`voteit.core.models.interfaces.IFlashMessages`
