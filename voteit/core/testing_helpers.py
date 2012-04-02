@@ -75,6 +75,14 @@ def register_workflows(config):
     config.load_zcml('voteit.core:configure.zcml')
 
 
+def register_catalog(config):
+    """ Register minimal components needed to enable the catalog in testing. """
+    config.include('voteit.core.models.catalog')
+    config.include('voteit.core.models.unread')
+    config.include('voteit.core.models.user_tags')
+    config.scan('voteit.core.subscribers.catalog')
+
+
 def active_poll_fixture(config):
     """ This method sets up a site the way it will be when a poll is ready to start
         with admin as voter.

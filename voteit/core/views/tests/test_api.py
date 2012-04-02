@@ -4,6 +4,7 @@ from pyramid import testing
 
 from voteit.core.testing_helpers import bootstrap_and_fixture
 from voteit.core.testing_helpers import register_security_policies
+from voteit.core.testing_helpers import register_catalog
 
 
 class SearchViewTests(unittest.TestCase):
@@ -96,14 +97,90 @@ class SearchViewTests(unittest.TestCase):
         self.assertEqual(obj.pluralize('Singular', 'Plural', 1), 'Singular')
         self.assertEqual(obj.pluralize('Singular', 'Plural', 2), 'Plural')
 
+    def test_context_unread(self):
+        register_catalog(self.config)
+        self.config.testing_securitypolicy('admin', permissive = True)
+        root = bootstrap_and_fixture(self.config)
+        from voteit.core.models.meeting import Meeting
+        from voteit.core.models.agenda_item import AgendaItem
+        from voteit.core.models.discussion_post import DiscussionPost
+        root['m'] = Meeting()
+        ai = root['m']['ai'] = AgendaItem()
+        ai['d1'] = DiscussionPost()
+        ai['d2'] = DiscussionPost()
+        request = testing.DummyRequest()
+        obj = self._cut(ai, request)
+        self.assertEqual(len(obj.context_unread), 2)
 
-#    def context_unread
-#    def register_form_resources
-#    def tstring
-#    def get_user
-#    def meeting
-#    def meeting_state
-#    def meeting_url
+    def test_register_form_resources(self):
+        import colander
+        import deform
+        class DummySchema(colander.Schema):
+            dummy = colander.SchemaNode(colander.String())
+        dummy_form = deform.Form(DummySchema())
+
+        from fanstatic import get_needed
+        from fanstatic import init_needed
+        from fanstatic import NeededResources
+        init_needed() #Otherwise fanstatic won't get a proper needed resrouces object.
+        context = testing.DummyResource()
+        request = testing.DummyRequest()
+        obj = self._cut(context, request)
+        obj.register_form_resources(dummy_form)
+        needed_resources = get_needed()
+        self.assertIsInstance(needed_resources, NeededResources)
+        filenames = [x.filename for x in needed_resources.resources()]
+        #Note: Can be any filename registered by VoteIT. Just change it if this test fails :)
+        self.assertIn('deform.css', filenames)
+
+    def test_tstring(self):
+        from pyramid.i18n import TranslationString
+        context = testing.DummyResource()
+        request = testing.DummyRequest()
+        obj = self._cut(context, request)
+        self.assertIsInstance(obj.tstring('Hello'), TranslationString)
+
+    def test_get_user(self):
+        root = bootstrap_and_fixture(self.config)
+        request = testing.DummyRequest()
+        obj = self._cut(root, request)
+        self.failIf(hasattr(request, '_user_lookup_cache'))
+        user = obj.get_user('admin')
+        from voteit.core.models.interfaces import IUser
+        self.failUnless(IUser.providedBy(user))
+        self.assertEqual(user, request._user_lookup_cache['admin'])
+
+    def test_get_meeting_outside_meeting(self):
+        context = testing.DummyResource()
+        request = testing.DummyRequest()
+        obj = self._cut(context, request)
+        self.assertEqual(obj.meeting, None)
+
+    def test_get_meeting_inside_meeting(self):
+        from voteit.core.models.meeting import Meeting
+        root = bootstrap_and_fixture(self.config)
+        meeting = root['m'] = Meeting()
+        request = testing.DummyRequest()
+        obj = self._cut(meeting, request)
+        self.assertEqual(obj.meeting, meeting)
+
+    def test_meeting_state(self):
+        from voteit.core.models.meeting import Meeting
+        root = bootstrap_and_fixture(self.config)
+        meeting = root['m'] = Meeting()
+        request = testing.DummyRequest()
+        obj = self._cut(meeting, request)
+        self.assertEqual(obj.meeting_state, u'upcoming')
+
+    def test_meeting_url(self):
+        from voteit.core.models.meeting import Meeting
+        root = bootstrap_and_fixture(self.config)
+        meeting = root['m'] = Meeting()
+        request = testing.DummyRequest()
+        obj = self._cut(meeting, request)
+        #example.com is from Pyramids testing env
+        self.assertEqual(obj.meeting_url, 'http://example.com/m/')
+
 #    def get_moderator_actions
 #    def get_time_created
 #    def get_userinfo_url
@@ -111,7 +188,6 @@ class SearchViewTests(unittest.TestCase):
 #    def get_poll_state_info
 #    def context_has_permission
 #    def context_effective_principals
-#    def is_unread
 #    def is_brain_unread
 #    def get_restricted_content
 #
