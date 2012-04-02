@@ -126,7 +126,7 @@ class PollView(BaseEdit):
         """ Poll view should redirect to parent agenda item it the request is not a xhr request
         """
         if not self.request.is_xhr:
-            url = resource_url(self.context.__parent__, self.request)
+            url = resource_url(self.context.__parent__, self.request, anchor=self.context.uid)
             return HTTPFound(location=url)
 
         poll_plugin = self.context.get_poll_plugin()

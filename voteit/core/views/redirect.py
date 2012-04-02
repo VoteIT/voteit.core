@@ -1,4 +1,6 @@
 from pyramid.traversal import find_interface
+from pyramid.traversal import find_root
+from pyramid.traversal import resource_path
 from pyramid.view import view_config
 from pyramid.url import resource_url
 from pyramid.httpexceptions import HTTPFound
@@ -10,11 +12,44 @@ from voteit.core.models.interfaces import IProposal
 
 
 @view_config(context=IDiscussionPost)
-@view_config(context=IProposal)
-def redirect_to_agenda_item(context, request):
+def discussion_redirect_to_agenda_item(context, request):
+    root = find_root(context)
     ai = find_interface(context, IAgendaItem)
     if ai:
-        url = resource_url(ai, request)
+        path = resource_path(ai)
+        
+        query = dict(path = path,
+                     content_type='DiscussionPost',
+                     sort_index='created',
+                     reverse=True,
+                     limit=5, #FIXME: this should be globaly configurable?
+                     )
+        docids = root.catalog.search(**query)[1]
+        
+        # set to True if requested post is after the display limit
+        after_limit = False
+        
+        get_metadata = root.catalog.document_map.get_metadata
+        for docid in docids:
+            brain = get_metadata(docid)
+            if brain['uid'] == context.uid:
+                after_limit = True
+                break
+            
+        # post was not found among the displayed posts
+        if not after_limit:
+            url = resource_url(ai, request, query={'discussions':'all'}, anchor=context.uid)
+        else:
+            url = resource_url(ai, request, anchor=context.uid)
+        return HTTPFound(location=url)
+    
+    raise NotFound("Couldn't locate Agenda Item from this context.")
+
+@view_config(context=IProposal)
+def proposal_redirect_to_agenda_item(context, request):
+    ai = find_interface(context, IAgendaItem)
+    if ai:
+        url = resource_url(ai, request, anchor=context.uid)
         return HTTPFound(location=url)
     raise NotFound("Couldn't locate Agenda Item from this context.")
 

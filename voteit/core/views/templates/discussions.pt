@@ -22,7 +22,7 @@
     				 truncated truncate(post['title'], truncate_length)"
          tal:attributes="class unread and 'unread listing_block' or 'listing_block';
 		                 name post['name'];
-		                 id post['name'];">
+		                 id post['uid'];">
 
         <span tal:condition="api.show_moderator_actions" tal:replace="structure api.get_moderator_actions(post, request)">
              Cogwheel menu
