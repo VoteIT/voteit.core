@@ -9,7 +9,7 @@
                          name poll.__name__;
                          id poll.uid;">
 
-        <span tal:condition="api.show_moderator_actions" tal:replace="structure api.get_moderator_actions(poll, request)">
+        <span tal:condition="api.show_moderator_actions" tal:replace="structure api.get_moderator_actions(poll)">
              Cogwheel menu
         </span>	
 

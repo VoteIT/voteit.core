@@ -181,7 +181,19 @@ class SearchViewTests(unittest.TestCase):
         #example.com is from Pyramids testing env
         self.assertEqual(obj.meeting_url, 'http://example.com/m/')
 
-#    def get_moderator_actions
+    def test_get_moderator_actions(self):
+        #Actual test of the view rendering should be part of that views test.
+        self.config.testing_securitypolicy('admin', permissive = True)
+        self.config.scan('voteit.core.views.components.moderator_actions')
+        from voteit.core.models.meeting import Meeting
+        root = bootstrap_and_fixture(self.config)
+        meeting = root['m'] = Meeting()
+        request = testing.DummyRequest()
+        obj = self._cut(meeting, request)
+        self.assertIn('cogwheel', obj.get_moderator_actions(meeting))
+
+
+
 #    def get_time_created
 #    def get_userinfo_url
 #    def get_creators_info

@@ -7,7 +7,7 @@
                          name proposal['name'];
                          id proposal['uid'];">
 
-        <span tal:condition="api.show_moderator_actions" tal:replace="structure api.get_moderator_actions(proposal, request)">
+        <span tal:condition="api.show_moderator_actions" tal:replace="structure api.get_moderator_actions(proposal)">
              Cogwheel menu
         </span>	
 

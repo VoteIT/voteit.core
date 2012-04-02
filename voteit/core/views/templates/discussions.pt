@@ -24,7 +24,7 @@
 		                 name post['name'];
 		                 id post['uid'];">
 
-        <span tal:condition="api.show_moderator_actions" tal:replace="structure api.get_moderator_actions(post, request)">
+        <span tal:condition="api.show_moderator_actions" tal:replace="structure api.get_moderator_actions(post)">
              Cogwheel menu
         </span>
 

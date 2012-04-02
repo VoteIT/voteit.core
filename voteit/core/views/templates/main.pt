@@ -67,7 +67,7 @@
 
                         <span metal:define-slot="action_menu"
                              tal:condition="api.context_has_permission('Moderate Meeting', context)"
-                             tal:content="structure api.get_moderator_actions(context, request)">Cogwheel menu</span>
+                             tal:content="structure api.get_moderator_actions(context)">Cogwheel menu</span>
 
                         <h2 tal:condition="not title|True" tal:content="context.title">Title</h2>
                         <h2 tal:condition="title|False" tal:content="title">Title</h2>

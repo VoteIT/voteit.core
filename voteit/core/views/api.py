@@ -160,9 +160,9 @@ class APIView(object):
             return
         return resource_url(self.meeting, self.request)
 
-    def get_moderator_actions(self, context, request):
+    def get_moderator_actions(self, context):
         """ A.k.a. the cogwheel-menu. """
-        return self.render_single_view_component(context, request, 'main', 'moderator_actions')
+        return self.render_single_view_component(context, self.request, 'main', 'moderator_actions')
         
     def get_time_created(self, context):
         """ Render start and end time of something, if those exist. """
