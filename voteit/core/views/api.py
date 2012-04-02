@@ -18,9 +18,9 @@ from betahaus.viewcomponent.interfaces import IViewGroup
 from voteit.core import VoteITMF as _
 from voteit.core import security
 from voteit.core.models.interfaces import IDateTimeUtil
-from voteit.core.models.interfaces import IUnread
+from voteit.core.models.interfaces import IFlashMessages
 from voteit.core.models.interfaces import IMeeting
-from voteit.core.views.flash_messages import FlashMessages
+from voteit.core.models.interfaces import IUnread
 from voteit.core.models.catalog import metadata_for_query
 from voteit.core.models.catalog import resolve_catalog_docid
 from voteit.core.fanstaticlib import DEFORM_RESOURCES
@@ -35,12 +35,7 @@ class APIView(object):
         
         self.resource_url = resource_url
         self.root = find_root(context)
-
-        #User related
         self.userid = authenticated_userid(request)
-        if self.userid:
-            self.user_profile = self.get_user(self.userid)
-            self.user_profile_url = resource_url(self.user_profile, request)
 
         #Main macro
         self.main_template = get_renderer('templates/main.pt').implementation()
@@ -62,11 +57,24 @@ class APIView(object):
         """
         return self.request.registry.getUtility(IDateTimeUtil)
 
+    @property
+    def user_profile(self):
+        """ Get currently authenticated users profile, or None.
+            get_user caches lookup so this is a regular property.
+        """
+        return self.get_user(self.userid)
+
     @reify
     def flash_messages(self):
-        """ Flash messages handler """
-        #FIXME: Shouldn't this be registered as an adapter, since it is one?
-        return FlashMessages(self.request)
+        """ Flash messages adapter - stores and retrieves messages.
+            See :mod:`voteit.core.models.interfaces.IFlashMessages`
+        """
+        return self.request.registry.getAdapter(self.request, IFlashMessages)
+
+    def render_flash_messages(self):
+        """ Render flash messages. """
+        response = dict(messages = self.flash_messages.get_messages(),)
+        return render('templates/snippets/flash_messages.pt', response, request = self.request)
 
     @reify
     def show_moderator_actions(self):
@@ -79,21 +87,26 @@ class APIView(object):
 
     @reify
     def localizer(self):
+        """ Get the current localizer. See the Pyramid docs for more on localizers.
+        """
         return get_localizer(self.request)
 
     @property
     def translate(self):
+        """ Translate a translation string immediately. """
         return self.localizer.translate
 
     @property
     def pluralize(self):
         """ pluralize(singular, plural, n, domain=None, mapping=None)
             Where n is amount of something.
+            See pluralize in the Pyramid docs.
         """
         return self.localizer.pluralize
 
     @reify
     def context_unread(self):
+        """ All docids of things that are unread contained in this context. """
         if not self.userid:
             return ()
         return self.search_catalog(context = self.context, unread = self.userid)[1]
@@ -108,20 +121,25 @@ class APIView(object):
     def tstring(self, *args, **kwargs):
         """ Hook into the translation string machinery.
             See the i18n section of the Pyramid Docs.
+            This is usefull when you don't want any i18n tool to pick it up in the code,
+            for instance when you're converting the contents of a variable.
         """ 
         return _(*args, **kwargs)
 
     def get_user(self, userid):
-        """ Returns the user object. Will also cache each lookup. """
+        """ Returns the user object. Will also cache each lookup.
+            Reason for the try/except code is execution speed.
+        """
         try:
             cache = self.request._user_lookup_cache
         except AttributeError:
             self.request._user_lookup_cache = cache = {}
-        if userid in cache:
+        try:
             return cache[userid]
-        user = self.root.users.get(userid)
-        cache[userid] = user
-        return user
+        except KeyError:
+            user = self.root.users.get(userid)
+            cache[userid] = user
+            return user
 
     @reify
     def meeting(self):
