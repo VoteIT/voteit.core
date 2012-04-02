@@ -4,7 +4,8 @@
                      state_id proposal['workflow_state'];
                      css_class 'listing_block wf-state-%s' % state_id;"
          tal:attributes="class unread and 'unread %s' % css_class or css_class;
-                         name proposal['name'];">
+                         name proposal['name'];
+                         id proposal['uid'];">
 
         <span tal:condition="api.show_moderator_actions" tal:replace="structure api.get_moderator_actions(proposal, request)">
              Cogwheel menu

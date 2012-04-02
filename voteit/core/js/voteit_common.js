@@ -252,24 +252,28 @@ $(document).ready(function() {
 	});
 });
 
+/* Open poll booth when poll buttons is pressed*/
 $(document).ready(function() {
 	$('#polls a.poll_booth').live('click', function(event) {
 	    /* stops normal events function 
 	    IE might throw an error calling preventDefault(), so use a try/catch block. */
 	    try { event.preventDefault(); } catch(e) {}
-    	
-		var title = $(document.createElement('span')).addClass("iconpadding icon poll").text(voteit.translation['poll']);
-    	$("#dialog > h2").empty().append(title);
-    	
-    	$("#dialog .content").text(voteit.translation['loading'])
-    	open_modal_window("#dialog");
-
-		var url = $(this).attr('href');
-	    $("#dialog .content").load(url, function(response, status, xhr) {
-	    	deform.processCallbacks();
-	    });
+    
+    	var url = $(this).attr('href');	
+		open_poll_booth(url)
 	});
 });
+function open_poll_booth(url) {
+	var title = $(document.createElement('span')).addClass("iconpadding icon poll").text(voteit.translation['poll']);
+	$("#dialog > h2").empty().append(title);
+	
+	$("#dialog .content").text(voteit.translation['loading'])
+	open_modal_window("#dialog");
+
+    $("#dialog .content").load(url, function(response, status, xhr) {
+    	deform.processCallbacks();
+    });
+}
 
 $(document).ready(function() {
 	$('#help-tab > a').live('click', function(event) {
@@ -294,4 +298,19 @@ $(document).ready(function() {
             display_deform_labels();
 	    });
 	});
+});
+
+/* open poll window on load */
+$(document).ready(function() {
+	// if there is a hash in the url, try to find a poll with that id
+	if(window.location.hash) {
+		var poll = $(window.location.hash+'.poll');
+		if(poll.length > 0) {
+			// open the modal window
+			var name = poll.attr('name');
+			var url_config = $("#js_config a[name=current_url]");
+			var url = url_config.attr('href')+'/'+name;
+			open_poll_booth(url);
+		}
+	}
 });
