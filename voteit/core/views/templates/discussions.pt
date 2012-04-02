@@ -28,7 +28,7 @@
              Cogwheel menu
         </span>
 
-        <tal:creators tal:replace="structure api.get_creators_info(post['creators'], request)">Creators</tal:creators>
+        <tal:creators tal:replace="structure api.get_creators_info(post['creators'])">Creators</tal:creators>
         <span class="body" tal:content="structure truncated[0]">text</span>
         <span class="more" tal:condition="truncated[1]"><a tal:attributes="href '%s%s/@@more' % (request.application_url, post['path'])" i18n:translate="">Read more</a></span>
         <div class="meta">	

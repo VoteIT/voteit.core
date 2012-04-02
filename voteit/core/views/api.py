@@ -174,11 +174,11 @@ class APIView(object):
         assert isinstance(userid, basestring)
         return "%s_userinfo?userid=%s" % (self.meeting_url, userid)
 
-    def get_creators_info(self, creators, request, portrait=True):
+    def get_creators_info(self, creators, portrait = True):
         """ Return template for a set of creators.
-            The content of creators should be userids
+            The content of creators should be userids.
         """
-        return self.render_single_view_component(self.context, request, 'main', 'creators_info',
+        return self.render_single_view_component(self.context, self.request, 'main', 'creators_info',
                                                  creators = creators, portrait = portrait)
 
     def get_poll_state_info(self, poll):
@@ -209,9 +209,11 @@ class APIView(object):
         """
         return brain['docid'] in self.context_unread
                 
-    def get_restricted_content(self, context, content_type=None, iface=None, states=None, sort_on=None, sort_reverse=False):
+    def get_restricted_content(self, context, content_type=None, iface=None,
+                               states=None, sort_on=None, sort_reverse=False):
         """ Use this method carefully. It might be pretty expensive to run. """
-        candidates = context.get_content(content_type=content_type, iface=iface, states=states, sort_on=sort_on, sort_reverse=sort_reverse)
+        candidates = context.get_content(content_type=content_type, iface=iface, states=states,
+                                         sort_on=sort_on, sort_reverse=sort_reverse)
         results = []
         for candidate in candidates:
             if self.context_has_permission(security.VIEW, candidate):
@@ -238,15 +240,52 @@ class APIView(object):
         return metadata_for_query(self.root.catalog, **kwargs)
 
     def get_content_factory(self, content_type):
+        """ Content factory of a content type. This is a utility that is
+            responsible for the construction of new content. Something like this:
+
+            .. code-block:: python
+
+               factory = get_content_factory('AgendaItem')
+               new_agenda_item = factory(title = 'New title for Agenda item')
+        """
         return self.request.registry.getUtility(IContentFactory, name=content_type)
 
     def content_types_add_perm(self, content_type):
+        """ Add permission for a specific content type. It's the value specified as
+            'add_permission' on the contents class. Anything normally addable by someone
+            will have this attribute. See content in models.
+        """
         factory = self.get_content_factory(content_type)
         return getattr(factory._callable, 'add_permission', None)
 
     def get_schema_name(self, content_type, action):
-        """ Will raise ComponentLookupError if content_type doesn't exist
-            Will raise KeyError if action doesn't exist.
+        """ Each content type normally has schemas registered for actions like edit and add.
+            This is a convenience method for quick lookup of those schemas. It will the return
+            the factory name of the schema registered for a specific action.
+
+            Example:
+
+            .. code-block:: python
+
+               import colander
+               from betahaus.pyracont.decorators import content_factory
+               from betahaus.pyracont.decorators import schema_factory
+
+
+               @content_factory('DummyContent', title=u"Dummy things")
+               class DummyContent(object):
+                   schemas = {'edit': 'EditSchema', 'add': 'AddSchema'}
+
+               @schema_factory('EditSchema', title=u"Edit me")
+               class EditSchema(colander.Schema)
+                   dummy = colander.SchemaNode(colander.String())
+
+            If you would run get_schema_name('DummyContent', 'edit') it would return the string 'EditSchema'
+            which can be used to construct a schema with createSchema.
+
+            If things go wrong:
+            * ComponentLookupError if content_type doesn't exist
+            * KeyError if action doesn't exist.
         """
         factory = self.get_content_factory(content_type)
         return factory._callable.schemas[action]

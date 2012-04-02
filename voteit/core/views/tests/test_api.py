@@ -5,6 +5,7 @@ from pyramid import testing
 from voteit.core.testing_helpers import bootstrap_and_fixture
 from voteit.core.testing_helpers import register_security_policies
 from voteit.core.testing_helpers import register_catalog
+from voteit.core.testing_helpers import active_poll_fixture
 
 
 class SearchViewTests(unittest.TestCase):
@@ -192,32 +193,174 @@ class SearchViewTests(unittest.TestCase):
         obj = self._cut(meeting, request)
         self.assertIn('cogwheel', obj.get_moderator_actions(meeting))
 
+    def test_get_time_created(self):
+        self.config.registry.settings['default_timezone_name'] = "Europe/Stockholm"
+        self.config.include('voteit.core.models.date_time_util')
+        from voteit.core.models.date_time_util import utcnow
+        context = testing.DummyResource()
+        context.created = utcnow()
+        request = testing.DummyRequest()
+        obj = self._cut(context, request)
+        self.assertEqual(obj.get_time_created(context), 'Just now')
 
+    def test_get_userinfo_url(self):
+        from voteit.core.models.meeting import Meeting
+        root = bootstrap_and_fixture(self.config)
+        meeting = root['m'] = Meeting()
+        request = testing.DummyRequest()
+        obj = self._cut(meeting, request)
+        #example.com is from Pyramids testing suite
+        self.assertEqual(obj.get_userinfo_url('somebody'), 'http://example.com/m/_userinfo?userid=somebody')
 
-#    def get_time_created
-#    def get_userinfo_url
-#    def get_creators_info
-#    def get_poll_state_info
-#    def context_has_permission
-#    def context_effective_principals
-#    def is_brain_unread
-#    def get_restricted_content
-#
-#    def search_catalog
-#
-#    def resolve_catalog_docid
-#
-#    def get_metadata_for_query
-#    def get_content_factory
-#
-#    def content_types_add_perm
-#
-#    def get_schema_name
-#
-#    def render_view_group
-#
-#    def render_single_view_component
+    def test_get_creators_info(self):
+        #Functional test for view component should be in its own test
+        self.config.scan('voteit.core.views.components.creators_info')
+        from voteit.core.models.meeting import Meeting
+        root = bootstrap_and_fixture(self.config)
+        meeting = root['m'] = Meeting()
+        request = testing.DummyRequest()
+        obj = self._cut(meeting, request)
+        res = obj.get_creators_info(['admin'])
+        self.assertIn('http://example.com/m/_userinfo?userid=admin', res)
 
+    def test_get_poll_state_info(self):
+        self.config.registry.settings['default_timezone_name'] = "Europe/Stockholm"
+        self.config.include('voteit.core.models.date_time_util')
+        root = active_poll_fixture(self.config)
+        poll = root['meeting']['ai']['poll']
+        from voteit.core.models.date_time_util import utcnow
+        poll.set_field_value('start_time', utcnow())
+        poll.set_field_value('end_time', utcnow())
+        request = testing.DummyRequest()
+        obj = self._cut(poll, request)
+        self.assertIn('The poll starts', obj.get_poll_state_info(poll))
 
+    def test_context_has_permission(self):
+        #Delegating function, we don't need to test it properly.
+        self.config.testing_securitypolicy('admin', permissive = True)
+        def _get_groups(dummy):
+            return []
+        context = testing.DummyResource()
+        context.get_groups = _get_groups
+        request = testing.DummyRequest()
+        obj = self._cut(context, request)
+        self.assertTrue(obj.context_has_permission('Dummy', context))
 
-#FIXME: Write more tests :)
+    def test_context_effective_principals(self):
+        #Also a delegating function - actual test is in voteit.core.security
+        self.config.testing_securitypolicy('admin', permissive = True)
+        def _get_groups(dummy):
+            return ['Hello']
+        context = testing.DummyResource()
+        context.get_groups = _get_groups
+        request = testing.DummyRequest()
+        obj = self._cut(context, request)
+        res = obj.context_effective_principals(context)
+        self.assertEqual(res, ['system.Everyone', 'system.Authenticated', 'admin', 'Hello'])
+
+    def test_is_brain_unread(self):
+        register_catalog(self.config)
+        self.config.testing_securitypolicy('admin', permissive = True)
+        root = bootstrap_and_fixture(self.config)
+        from voteit.core.models.meeting import Meeting
+        from voteit.core.models.agenda_item import AgendaItem
+        from voteit.core.models.discussion_post import DiscussionPost
+        root['m'] = Meeting()
+        ai = root['m']['ai'] = AgendaItem()
+        ai['d1'] = DiscussionPost(title = 'Hello world')
+        ai['d2'] = DiscussionPost()
+        request = testing.DummyRequest()
+        obj = self._cut(ai, request)
+        from voteit.core.models.catalog import metadata_for_query
+        d1_brain = metadata_for_query(root.catalog, title = 'Hello world')[0]
+        self.assertTrue(obj.is_brain_unread(d1_brain))
+
+    def test_get_restricted_content(self):
+        #The get_content function doesn't need testing here
+        #Fixture
+        from voteit.core.models.base_content import BaseContent
+        root = BaseContent()
+        root['1'] = BaseContent()
+        self.config.testing_securitypolicy('admin', permissive = True)
+        request = testing.DummyRequest()
+        obj = self._cut(root, request)
+        self.assertEqual(obj.get_restricted_content(root)[0], root['1'])
+        self.config.testing_securitypolicy('admin', permissive = False)
+        request = testing.DummyRequest()
+        obj = self._cut(root, request) #Reregister to use new request
+        self.assertEqual(obj.get_restricted_content(root), [])
+
+    def test_search_catalog(self):
+        register_catalog(self.config)
+        self.config.testing_securitypolicy('admin', permissive = True)
+        root = bootstrap_and_fixture(self.config)
+        from voteit.core.models.meeting import Meeting
+        root['m'] = Meeting(title = 'Hello world')
+        root['m2'] = Meeting(title = 'Goodbye')
+        request = testing.DummyRequest()
+        obj = self._cut(root, request)
+        self.assertEqual(obj.search_catalog(title = 'Hello world')[0], 1)
+        #Context search should remove the result if the context is another tree
+        self.assertEqual(obj.search_catalog(context = root['m2'], title = 'Hello world')[0], 0)
+
+    def test_resolve_catalog_docid(self):
+        register_catalog(self.config)
+        self.config.testing_securitypolicy('admin', permissive = True)
+        root = bootstrap_and_fixture(self.config)
+        from voteit.core.models.meeting import Meeting
+        root['m'] = Meeting(title = 'Hello world')
+        request = testing.DummyRequest()
+        obj = self._cut(root, request)
+        docid = root.catalog.search(title = 'Hello world')[1][0]
+        self.assertEqual(obj.resolve_catalog_docid(docid), root['m'])
+
+    def test_get_metadata_for_query(self):
+        register_catalog(self.config)
+        self.config.testing_securitypolicy('admin', permissive = True)
+        root = bootstrap_and_fixture(self.config)
+        from voteit.core.models.meeting import Meeting
+        root['m'] = Meeting(title = 'Hello world')
+        request = testing.DummyRequest()
+        obj = self._cut(root, request)
+        brain = obj.get_metadata_for_query(title = 'Hello world')[0]
+        self.assertEqual(brain['title'], 'Hello world')
+
+    def test_get_content_factory(self):
+        self.config.scan('voteit.core.models.agenda_item')
+        context = testing.DummyResource()
+        request = testing.DummyRequest()
+        obj = self._cut(context, request)
+        res = obj.get_content_factory('AgendaItem')
+        from zope.component.factory import Factory
+        self.assertIsInstance(res, Factory)
+
+    def test_content_types_add_perm(self):
+        self.config.scan('voteit.core.models.agenda_item')
+        context = testing.DummyResource()
+        request = testing.DummyRequest()
+        obj = self._cut(context, request)
+        from voteit.core.security import ADD_AGENDA_ITEM
+        self.assertEqual(obj.content_types_add_perm('AgendaItem'), ADD_AGENDA_ITEM)
+
+    def test_get_schema_name(self):
+        self.config.scan('voteit.core.models.agenda_item')
+        context = testing.DummyResource()
+        request = testing.DummyRequest()
+        obj = self._cut(context, request)
+        self.assertEqual(obj.get_schema_name('AgendaItem', 'edit'), 'EditAgendaItemSchema')
+
+    def test_render_view_group(self):
+        self.config.scan('voteit.core.views.components.meeting')
+        context = testing.DummyResource()
+        context.description = 'Hello' #Just to make 'meeting_widgets' view group work
+        request = testing.DummyRequest()
+        obj = self._cut(context, request)
+        self.assertIn('description', obj.render_view_group(context, request, 'meeting_widgets'))
+
+    def test_render_single_view_component(self):
+        self.config.scan('voteit.core.views.components.meeting')
+        context = testing.DummyResource()
+        context.description = 'Hello' #Just to make 'meeting_widgets' view group work
+        request = testing.DummyRequest()
+        obj = self._cut(context, request)
+        self.assertIn('description', obj.render_single_view_component(context, request, 'meeting_widgets', 'description_richtext'))
