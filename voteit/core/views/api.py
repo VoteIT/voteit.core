@@ -203,18 +203,9 @@ class APIView(object):
             adds groups based on context instead of request.context
         """
         return security.context_effective_principals(context, self.userid)
-        
-    def is_unread(self, context):
-        """ Check if a context is unread.
-            This method expects full objects. It should be used as little
-            as possible - use is_brain_unread instead.
-            This method will be removed
-        """
-        unread = self.request.registry.queryAdapter(context, IUnread)
-        return unread and self.userid in unread.get_unread_userids() or None
 
     def is_brain_unread(self, brain):
-        """ Same as is_unread, but expects catalog metadata instead.
+        """ Check if a catalog metadata ("brain" object) is unread by the currently logged in user.
         """
         return brain['docid'] in self.context_unread
                 
