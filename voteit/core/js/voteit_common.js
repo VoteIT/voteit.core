@@ -314,3 +314,16 @@ $(document).ready(function() {
 		}
 	}
 });
+
+/* ajaxifing show previous posts */
+$(document).ready(function() {
+	$('#discussions div.load_more a').live('click', function(event) {
+		/* stops normal events function 
+	    IE might throw an error calling preventDefault(), so use a try/catch block. */
+	    try { event.preventDefault(); } catch(e) {}
+		
+		var url = $(this).attr('href');
+		$("#discussions div.posts").load(url, function(response, status, xhr) {
+	    });
+	});
+});

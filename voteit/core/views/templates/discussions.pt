@@ -2,7 +2,7 @@
 
 <div tal:condition="over_limit"
      class="load_more">
-    <a tal:attributes="href api.resource_url(context, request) + '?discussions=all#discussions'"
+    <a tal:attributes="href api.resource_url(context, request) + '@@discussions?discussions=all'"
        i18n:translate="">
         Show
         <span tal:content="over_limit" i18n:name="count">5</span>
@@ -11,7 +11,7 @@
 </div>
 <div tal:condition="not limit"
      class="load_more">
-    <a tal:attributes="href api.resource_url(context, request) + '#discussions'"
+    <a tal:attributes="href api.resource_url(context, request) + '@@discussions'"
        i18n:translate="">
         Show the last 5 posts
     </a>

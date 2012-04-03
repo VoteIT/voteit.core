@@ -6,6 +6,7 @@ from pyramid.url import resource_url
 from pyramid.security import has_permission
 from zope.component.interfaces import ComponentLookupError
 from pyramid.httpexceptions import HTTPForbidden
+from pyramid.httpexceptions import HTTPFound
 from betahaus.pyracont.factories import createSchema
 
 from voteit.core import VoteITMF as _
@@ -22,6 +23,7 @@ from voteit.core.fanstaticlib import voteit_deform
 from voteit.core.fanstaticlib import autoresizable_textarea_js
 from voteit.core.fanstaticlib import jquery_form
 from voteit.core.fanstaticlib import star_rating
+from voteit.core.views.components.discussions import discussions_listing
 
 class AgendaItemView(BaseView):
     """ View for agenda items. """
@@ -88,3 +90,15 @@ class AgendaItemView(BaseView):
     @view_config(context=IDiscussionPost, name="more", permission=VIEW, renderer='json')
     def discussion_more(self):
         return {'body': self.context.get_field_value('title')}
+    
+    @view_config(context=IAgendaItem, name="discussions", permission=VIEW)
+    def discussions(self):
+        if self.request.is_xhr:
+            return Response(discussions_listing(self.context, self.request, None, api=self.api))
+        
+        if self.request.GET.get('discussions', None):
+            url = resource_url(self.context, self.request, query={'discussions':'all'}, anchor="discussions")
+        else:
+            url = resource_url(self.context, self.request, anchor="discussions")
+        return HTTPFound(location=url)
+        
