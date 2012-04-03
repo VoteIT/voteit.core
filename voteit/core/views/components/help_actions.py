@@ -7,6 +7,7 @@ from voteit.core import VoteITMF as _
 from voteit.core.models.schemas import add_csrf_token
 from voteit.core.models.schemas import button_send
 from voteit.core.views.help import HelpView
+from voteit.core.fanstaticlib import jquery_form 
 
 
 @view_action('main', 'help_actions')
@@ -14,6 +15,10 @@ def help_actions(context, request, va, **kw):
     api = kw['api']
     response = {}
     response['api'] = api
+    
+    # this is needed for the forms to work
+    jquery_form.need()
+    
     return render('../templates/snippets/help_actions.pt', response, request = request)
 
 
