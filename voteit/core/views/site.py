@@ -16,6 +16,7 @@ from voteit.core.models.schemas import add_csrf_token
 from voteit.core.models.schemas import button_save
 from voteit.core.models.schemas import button_cancel
 from voteit.core.views.base_view import BaseView
+from voteit.core import VoteITMF as _
 
 
 class SiteView(BaseView):
