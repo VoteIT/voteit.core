@@ -43,14 +43,8 @@ def create_reject_proposal(obj, event):
 
 @subscriber([IPoll, IObjectWillBeRemovedEvent])
 def poll_is_deleted(obj, event):
-    """ Change state on proposals that is looked for voting when deleting the poll. """
+    """ Set proposals as published when a poll is deleted. Only do this if they're locked for vote."""
     request = get_current_request()
-    
     for proposal in obj.get_proposal_objects():
         if proposal.get_workflow_state() == 'voting':
-            try:
-                proposal.set_workflow_state(request, 'published')
-            except WorkflowError:
-                raise HTTPForbidden(_(u"workflow_error_when_proposal_state_is_change_on_poll_delete",
-                                      default = u"Can't set Proposal '${title}' as 'Published'. It's probably not in the state voting, or has already been handled in another way. All changes aborted, please check the proposals and try again.",
-                                      mapping = {'title': obj.title}))
+            proposal.set_workflow_state(request, 'published')
