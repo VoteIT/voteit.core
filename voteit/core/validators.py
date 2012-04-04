@@ -1,7 +1,6 @@
 import re
 import colander
 from webhelpers.html.tools import strip_tags
-from pyramid.httpexceptions import HTTPNotFound
 from pyramid.traversal import find_interface
 from pyramid.traversal import find_root
 from pyramid.security import authenticated_userid
@@ -221,25 +220,23 @@ class GlobalExistingUserId(object):
             raise colander.Invalid(node, 
                                    msg)
 
+
 @colander.deferred
-def deferred_old_password_validator(node, kw):
+def deferred_current_password_validator(node, kw):
     context = kw['context']
-    request = kw['request']
-    
-    return OldPpasswordValidator(context, request)
+    return CurrentPasswordValidator(context)
 
 
-class OldPpasswordValidator(object):
+class CurrentPasswordValidator(object):
+    """ Check that current password matches. Used for sensitive operations
+        when logged in to make sure that no one else changes the password for instance.
+    """
     
-    def __init__(self, context, request):
+    def __init__(self, context):
+        assert IUser.providedBy(context) # pragma : no cover
         self.context = context
-        self.request = request
     
     def __call__(self, node, value):
-        
-        if not IUser.providedBy(self.context):
-            raise HTTPNotFound()
-
         pw_field = self.context.get_custom_field('password')
         if not pw_field.check_input(value):
-            raise colander.Invalid(node, _(u"Old password didn't match"))
+            raise colander.Invalid(node, _(u"Current password didn't match"))

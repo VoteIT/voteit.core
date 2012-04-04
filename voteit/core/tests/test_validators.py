@@ -34,17 +34,6 @@ def _fixture(config):
     root['meeting'] = meeting
     return root
 
-def _register_security_policies(config):
-    from voteit.core.security import groupfinder
-    authn_policy = AuthTktAuthenticationPolicy(secret='secret',
-                                               callback=groupfinder)
-    authz_policy = ACLAuthorizationPolicy()
-    config.setup_registry(authorization_policy=authz_policy, authentication_policy=authn_policy)
-
-def _register_workflows(config):
-    config.include('pyramid_zcml')
-    config.load_zcml('voteit.core:configure.zcml')
-
 
 class AtEnabledTextAreaTests(TestCase):
     
@@ -357,6 +346,31 @@ class MultipleEmailValidatorTests(TestCase):
         self.assertRaises(colander.Invalid, self._fut, None, "one@two.com\nthree@four.net\nfive@six.com\none@two.com hello! \n")
 
 
+
+class CurrentPasswordValidatorTests(TestCase):
+
+    def setUp(self):
+        self.config = testing.setUp()
+
+    def tearDown(self):
+        testing.tearDown()
+
+    def _cut(self):
+        from voteit.core.validators import CurrentPasswordValidator
+        from voteit.core.models.user import User
+        self.config.scan('betahaus.pyracont.fields.password')
+        user = User(password = 'Hello')
+        return CurrentPasswordValidator(user)
+
+    def test_good_pw(self):
+        obj = self._cut()
+        self.assertEqual(obj(None, 'Hello'), None)
+
+    def test_bad_pw(self):
+        obj = self._cut()
+        self.assertRaises(colander.Invalid, obj, None, "Incorrect pw")
+
+
 class DeferredValidatorsTests(TestCase):
     def setUp(self):
         self.config = testing.setUp()
@@ -401,4 +415,12 @@ class DeferredValidatorsTests(TestCase):
         from voteit.core.validators import GlobalExistingUserId
         res = deferred_existing_userid_validator(None, {'context': None})
         self.failUnless(isinstance(res, GlobalExistingUserId))
+
+    def test_deferred_current_password_validator(self):
+        from voteit.core.validators import deferred_current_password_validator
+        from voteit.core.validators import CurrentPasswordValidator
+        from voteit.core.models.user import User
+        context = User()
+        res = deferred_current_password_validator(None, {'context': context})
+        self.assertIsInstance(res, CurrentPasswordValidator)
 

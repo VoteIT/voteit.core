@@ -88,7 +88,7 @@ class UsersFormView(BaseEdit):
 
     @view_config(context=IUser, name="change_password", renderer=DEFAULT_TEMPLATE, permission=CHANGE_PASSWORD)
     def password_form(self):
-        # if admin is changing password for another user no verification of old password is needed
+        # if admin is changing password for another user no verification of current password is needed
         if self.context != self.api.user_profile and self.api.context_has_permission(MANAGE_SERVER, self.api.root):
             schema = createSchema('ChangePasswordAdminSchema').bind(context=self.context, request=self.request)
         else:

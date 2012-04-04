@@ -10,7 +10,7 @@ from voteit.core.validators import deferred_unique_email_validator
 from voteit.core.validators import password_validation
 from voteit.core.validators import deferred_new_userid_validator
 from voteit.core.validators import deferred_password_token_validator
-from voteit.core.validators import deferred_old_password_validator
+from voteit.core.validators import deferred_current_password_validator
 from voteit.core import security 
 from voteit.core.widgets import RecaptchaWidget
 
@@ -53,18 +53,19 @@ def first_name_node():
     return colander.SchemaNode(colander.String(),
                                title=_(u"First name"),
                                validator=html_string_validator,)
-    
+
 def last_name_node():
     return colander.SchemaNode(colander.String(),
                                title=_(u"Last name"),
                                missing=u"",
                                validator=html_string_validator,)
 
+
 def came_from_node():
     return colander.SchemaNode(colander.String(),
                                widget = deform.widget.HiddenWidget(),
                                default=deferred_referer,)
-    
+
 def recaptcha_node():
     return colander.SchemaNode(colander.String(),
                                #FIXME: write a good title and description here
@@ -88,7 +89,8 @@ class AddUserSchema(colander.Schema):
     first_name = first_name_node()
     last_name = last_name_node()
     came_from = came_from_node()
-    
+
+
 @schema_factory('RegisterUserSchema', title = _(u"Registration"))
 class RegisterUserSchema(colander.Schema):
     """ Used for registration. """
@@ -103,6 +105,7 @@ class RegisterUserSchema(colander.Schema):
     last_name = last_name_node()
     came_from = came_from_node()
     captcha = recaptcha_node();
+
 
 @schema_factory('EditUserSchema', title = _(u"Edit user"), description = _(u"Use this form to edit a user"))
 class EditUserSchema(colander.Schema):
@@ -129,14 +132,15 @@ class LoginSchema(colander.Schema):
     came_from = came_from_node()
 
 
-@schema_factory('ChangePasswordSchema', title = _(u"Change password"), description = _(u"Use this form to change password"))
+@schema_factory('ChangePasswordSchema', title = _(u"Change password"))
 class ChangePasswordSchema(colander.Schema):
-    old_password = colander.SchemaNode(colander.String(),
-                                   title=_('Old password'),
+    current_password = colander.SchemaNode(colander.String(),
+                                   title=_('Current password'),
                                    widget=deform.widget.PasswordWidget(size=20),
-                                   validator=deferred_old_password_validator)
+                                   validator=deferred_current_password_validator)
     password = password_node()
-    
+
+
 @schema_factory('ChangePasswordAdminSchema', title = _(u"Change password"), description = _(u"Use this form to change password"))
 class ChangePasswordAdminSchema(colander.Schema):
     password = password_node()
