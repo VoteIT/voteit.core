@@ -3,6 +3,7 @@
 import colander
 import deform
 from betahaus.pyracont.decorators import schema_factory
+from betahaus.pyracont.factories import createContent
 from betahaus.viewcomponent.interfaces import IViewGroup
 from pyramid.security import authenticated_userid
 
@@ -10,7 +11,25 @@ from voteit.core.validators import html_string_validator
 
 from voteit.core import VoteITMF as _
 from voteit.core import security 
+from voteit.core.models.interfaces import IPoll
+from voteit.core.models.interfaces import IPollPlugin
 from voteit.core.widgets import RecaptchaWidget
+
+@colander.deferred
+def poll_plugins_choices_widget(node, kw):
+    request = kw['request']
+    
+    #Add all selectable plugins to schema. This chooses the poll method to use
+    plugin_choices = set()
+
+    #FIXME: The new object should probably be sent to construct schema
+    #for now, we can fake this
+    fake_poll = createContent('Poll')
+
+    for (name, plugin) in request.registry.getAdapters([fake_poll], IPollPlugin):
+        plugin_choices.add((name, plugin.title))
+
+    return deform.widget.CheckboxChoiceWidget(values=plugin_choices)
 
 @colander.deferred
 def deferred_access_policy_widget(node, kw):
@@ -130,3 +149,12 @@ class MailSettingsMeetingSchema(colander.MappingSchema):
 @schema_factory('AccessPolicyMeetingSchema', title = _(u"Access policy"))
 class AccessPolicyeMeetingSchema(colander.MappingSchema):
     access_policy = access_policy_node();
+    
+@schema_factory('AdvancedSettingsMeetingSchema', title = _(u"Advanced settings"))
+class AdvancedSettingsMeetingSchema(colander.MappingSchema):
+    poll_plugins = colander.SchemaNode(deform.Set(allow_empty=True),
+                                      title = _(u"Available poll method in this meeting"),
+                                      description = _(u"meeting_available_poll_plugins_description",
+                                                      default=u""),
+                                      missing=set(),
+                                      widget = poll_plugins_choices_widget,)
