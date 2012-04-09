@@ -338,6 +338,11 @@ class MeetingView(BaseView):
     def rss_settings(self):
         schema = createSchema("RssSettingsMeetingSchema").bind(context=self.context, request=self.request)
         return self.form(schema)
+    
+    @view_config(context=IMeeting, name="advanced_settings", renderer="templates/base_edit.pt", permission=security.EDIT)
+    def advanced_settings(self):
+        schema = createSchema("AdvancedSettingsMeetingSchema").bind(context=self.context, request=self.request)
+        return self.form(schema)
         
     def form(self, schema):
         add_csrf_token(self.context, self.request, schema)

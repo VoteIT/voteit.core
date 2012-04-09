@@ -4,6 +4,7 @@ from pkg_resources import resource_filename
 from deform import Form
 from deform import ZPTRendererFactory
 from deform.widget import RadioChoiceWidget
+from deform.widget import RichTextWidget
 from pyramid.i18n import get_localizer
 from pyramid.threadlocal import get_current_request
 
@@ -46,3 +47,6 @@ def includeme(config):
 
     #Patches for widget templates, so they actually display sane readonly templates
     RadioChoiceWidget.readonly_template = join(WIDGETS_PATH, 'readonly', 'radio_choice')
+
+    #Patches for RichTextWidget templates to display a better editor 
+    RichTextWidget.template = join(WIDGETS_PATH, 'richtext')
