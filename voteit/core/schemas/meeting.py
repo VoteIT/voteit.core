@@ -54,8 +54,10 @@ def deferred_recaptcha_widget(node, kw):
     principals = api.context_effective_principals(context)
     
     if api.root.get_field_value('captcha_meeting', False) and security.ROLE_ADMIN not in principals:
-        return RecaptchaWidget(api.root.get_field_value('captcha_public_key', ''), 
-                               api.root.get_field_value('captcha_private_key', ''))
+        pub_key = api.root.get_field_value('captcha_public_key', '')
+        priv_key = api.root.get_field_value('captcha_private_key', '')
+        return RecaptchaWidget(captcha_public_key = pub_key,
+                               captcha_private_key = priv_key)
 
     return deform.widget.HiddenWidget()
 
