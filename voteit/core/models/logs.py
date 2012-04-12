@@ -45,7 +45,7 @@ class LogHandler(object):
             if self.log_storage.insert(k, obj):
                 return
         
-        raise KeyError("Couln't find a free key for logging handler after 10 retries.")
+        raise KeyError("Couln't find a free key for logging handler after 10 retries.") #pragma : no cover
 
 
 @content_factory('LogEntry', title=_(u"Log entry"))

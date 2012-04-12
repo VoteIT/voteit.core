@@ -42,7 +42,7 @@ class BaseContent(BaseFolder, SecurityAware):
                 #FIXME: We'd like some sort of logging here,
                 #but if we log in voteit.core, any poll plugin test will die very strangely
                 #It has something with cleanup of logging in multithreading in setuptools
-                pass
+                pass #pragma : no cover
 
         #Set owner - if it is in kwargs now
         if 'creators' in kwargs:
