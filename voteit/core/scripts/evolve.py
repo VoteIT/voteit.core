@@ -11,7 +11,10 @@ def main(argv=sys.argv):
     root = worker.root
     
     print 'Evolve site'
+    print "\n"
     manager = ZODBEvolutionManager(root, evolve_packagename='voteit.core.evolve', sw_version=VERSION, initial_db_version=0)
+    #FIXME: remove this
+    manager.set_db_version(0)
     ver = manager.get_db_version()
     if ver < VERSION:
         evolve_to_latest(manager)
