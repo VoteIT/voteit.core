@@ -33,6 +33,8 @@ def at_userid_link(text, obj):
         # has a whitespace in front, we save the spaced so we can but 
         # it back after the transformation
         space, userid = matchobj.group(1, 2)
+        #Force lowercase userid
+        userid = userid.lower()
         user = users[userid]
         user.send_mention_notification(obj, request)
 

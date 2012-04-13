@@ -41,5 +41,11 @@ class TransformAtLinksTests(TestCase):
         result = self._fut('@dummy @admin', context)
         self.failUnless('John Doe' in result)
         self.failUnless('Administrator' in result)
+        
+    def test_transform_mention_uppercase(self):
+        root = self._fixture()
+        root['m']['c'] = context = testing.DummyModel()
+        expected = '<a class="inlineinfo" href="http://example.com/m/_userinfo?userid=dummy" title="John Doe">@dummy</a>'
+        self.assertEqual(self._fut('@Dummy', context), expected)
 
     #FIXME: We need more tests

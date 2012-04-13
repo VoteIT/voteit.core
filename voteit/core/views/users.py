@@ -209,7 +209,8 @@ class UsersFormView(BaseEdit):
                 self.response['login_form'] = e.render()
                 return self.response
             
-            userid = appstruct['userid']
+            # Forece lowercase userid
+            userid = appstruct['userid'].lower()
             password = appstruct['password']
             came_from = urllib.unquote(appstruct['came_from'])
     
