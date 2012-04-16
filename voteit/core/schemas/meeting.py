@@ -8,6 +8,7 @@ from betahaus.viewcomponent.interfaces import IViewGroup
 from pyramid.security import authenticated_userid
 
 from voteit.core.validators import html_string_validator
+from voteit.core.validators import richtext_validator
 
 from voteit.core import VoteITMF as _
 from voteit.core import security 
@@ -74,7 +75,8 @@ def description_node():
         description = _(u"meeting_description_description",
                         default=u"The description is visible on the first page of the meeting. You can include things like information about the meeting, how to contact the moderator and your logo."),
         missing = u"",
-        widget=deform.widget.RichTextWidget())
+        widget=deform.widget.RichTextWidget(),
+        validator=richtext_validator,)
 
 def meeting_mail_name_node():
     return colander.SchemaNode(colander.String(),
