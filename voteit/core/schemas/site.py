@@ -4,6 +4,7 @@ from betahaus.pyracont.decorators import schema_factory
 
 from voteit.core import VoteITMF as _
 from voteit.core.validators import html_string_validator
+from voteit.core.validators import richtext_validator
 
 
 @schema_factory('SiteRootSchema', title = _(u"Edit site root"), description = _(u"Use this form to edit the site root"))
@@ -14,7 +15,8 @@ class SiteRootSchema(colander.MappingSchema):
     description = colander.SchemaNode(colander.String(),
                                       title = _(u"Description"),
                                       missing = u"",
-                                      widget=deform.widget.RichTextWidget())
+                                      widget=deform.widget.RichTextWidget(),
+                                      validator=richtext_validator,)
     allow_add_meeting = colander.SchemaNode(colander.Boolean(),
                                             title = _(u"Allow authenticated users to add meetings"),
                                             default = False,)

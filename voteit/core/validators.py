@@ -1,5 +1,6 @@
 import re
 import colander
+from BeautifulSoup import BeautifulSoup
 from webhelpers.html.tools import strip_tags
 from pyramid.traversal import find_interface
 from pyramid.traversal import find_root
@@ -240,3 +241,20 @@ class CurrentPasswordValidator(object):
         pw_field = self.context.get_custom_field('password')
         if not pw_field.check_input(value):
             raise colander.Invalid(node, _(u"Current password didn't match"))
+
+
+def richtext_validator(node, value):
+    """
+        checks that input doesn't contain forbidden html tags
+    """
+    INVALID_TAGS = ['textarea', 'select', 'option', 'input', 'button', 'script']
+
+    soup = BeautifulSoup(value)
+
+    invalid = False
+    for tag in soup.findAll(True):
+        if tag.name in INVALID_TAGS:
+            invalid = True
+
+    if invalid:
+        raise colander.Invalid(node, _(u"Contains forbidden HTML tags."))

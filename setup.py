@@ -32,6 +32,7 @@ requires = (
     'fanstatic',
     'repoze.evolution',
     'httpagentparser',
+    'BeautifulSoup',
     )
 
 
