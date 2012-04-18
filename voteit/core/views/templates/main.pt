@@ -108,19 +108,7 @@
 			<div id="footer-logos"></div>
         </div>
     </div> <!-- page_wrapper -->
-	<div class="voteit_js_translation" style="display: none !important;">
-       <pre class="js_trans_yes" i18n:translate="">Yes</pre>
-       <pre class="js_trans_no" i18n:translate="">No</pre>
-       <pre class="js_trans_close" i18n:translate="">Close</pre>
-       <pre class="js_trans_confirm_title" i18n:translate="">Please confirm</pre>
-       <pre class="js_trans_confirm_state" i18n:translate="">Are you sure you want to change the state?</pre>
-       <pre class="js_trans_confirm_retract" i18n:translate="">Are you sure you want to retract this proposal?</pre>
-       <pre class="js_trans_user_info" i18n:translate="">About...</pre>
-       <pre class="js_trans_more_tag_list" i18n:translate="">More...</pre>
-       <pre class="js_trans_loading" i18n:translate="">Loading...</pre>
-       <pre class="js_trans_help_contact" i18n:translate="">Help & Contact</pre>
-       <pre class="js_trans_poll" i18n:translate="">Poll</pre>
-	</div>
+    <script type="text/javascript" src="${request.application_url}/translations.js"></script>
 	<div id="js_config" style="display: none !important;">
 		<a name="current_url" href="${api.resource_url(context, request)}"></a>
 		<a tal:condition="api.root" name="root_url" href="${api.resource_url(api.root, request)}"></a>
