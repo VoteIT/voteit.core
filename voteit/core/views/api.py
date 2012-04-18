@@ -39,6 +39,12 @@ class APIView(object):
 
         #Main macro
         self.main_template = get_renderer('templates/main.pt').implementation()
+        
+    def get_head(self):
+        return get_renderer('templates/head.pt').implementation()
+    
+    def get_body(self):
+        return get_renderer('templates/body.pt').implementation()
 
     @reify
     def authn_policy(self):
