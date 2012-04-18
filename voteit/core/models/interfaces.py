@@ -746,9 +746,13 @@ class IDateTimeUtil(Interface):
 class IJSUtil(Interface):
     """ """
 
-    def add_translations(*tstrings):
-        """ Add translationstrings to be included. Many can be added at once.
-            All instances must be translation strings.
+    def add_translations(**tstrings):
+        """ Add translationstrings to be included as:
+            javascript_key = TranslationString
+            Example: yes = _(u"Yes")
+            The javascript key will be in the namespace translations in voteit.
+            The above example can be found at:
+            voteit.translations['yes']
         """
 
     def get_translations():

@@ -30,7 +30,7 @@ class JSUtilTests(unittest.TestCase):
         ts1 = TranslationString('first', domain = 'hello')
         ts2 = TranslationString('second', domain = 'world')
         obj = self._cut()
-        obj.add_translations(ts1, ts2)
+        obj.add_translations(first = ts1, second = ts2)
         self.assertIn('first', obj.translations)
         self.assertIn('second', obj.translations)
 
@@ -38,21 +38,22 @@ class JSUtilTests(unittest.TestCase):
         obj = self._cut()
         self.assertRaises(TypeError, obj.add_translations, "hello")
 
-    def test_add_translations_bad_msgid(self):
-        ts = TranslationString('bad&msgid! !"', domain = 'hello')
+    def test_add_translations_bad_js_id(self):
+        ts = TranslationString('hello"', domain = 'hello')
         obj = self._cut()
-        self.assertRaises(ValueError, obj.add_translations, ts)
+        kws = {'$very!bad': ts}
+        self.assertRaises(ValueError, obj.add_translations, **kws)
 
     def test_add_translations_no_domain(self):
         ts = TranslationString('no_domain_added')
         obj = self._cut()
-        self.assertRaises(ValueError, obj.add_translations, ts)
+        self.assertRaises(ValueError, obj.add_translations, bad = ts)
 
     def test_get_translations(self):
         ts1 = TranslationString('first', domain = 'hello')
         ts2 = TranslationString('second', domain = 'world')
         obj = self._cut()
-        obj.add_translations(ts1, ts2)
+        obj.add_translations(first = ts1, second = ts2)
         res = obj.get_translations()
         self.assertIn('first', res)
         self.assertIn('second', res)

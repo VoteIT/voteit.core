@@ -18,16 +18,15 @@ class JSUtil(object):
     def __init__(self):
         self.translations = {}
 
-    def add_translations(self, *tstrings):
-        for ts in tstrings:
+    def add_translations(self, **tstrings):
+        for jskey, ts in tstrings.items():
             if not isinstance(ts, TranslationString):
                 raise TypeError("Must be a pyramid.i18n.TranslationString")
             if ts.domain is None:
                 raise ValueError("The translation string '%s' lacks a translation domain" % ts)
-            if not MSGID_PATTERN.match(ts):
-                raise ValueError("'%s' is an unsuitable msgid to be included in javascript." % ts)
-            #This will make the key the message id, not the whole object
-            self.translations[unicode(ts)] = ts
+            if not MSGID_PATTERN.match(jskey):
+                raise ValueError("'%s' is an unsuitable array key to be included in javascript." % ts)
+            self.translations[jskey] = ts
 
     def get_translations(self):
         return self.translations.copy()
