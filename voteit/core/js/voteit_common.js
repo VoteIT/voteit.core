@@ -290,20 +290,6 @@ $(document).ready(function() {
 	});
 });
 
-/* open poll window on load */
-$(document).ready(function() {
-	// if there is a hash in the url, try to find a poll with that id
-	if(window.location.hash) {
-		var poll = $(window.location.hash+'.poll');
-		if(poll.length > 0) {
-			// open the modal window
-			var name = poll.attr('name');
-			var url_config = $("#js_config a[name=current_url]");
-			var url = url_config.attr('href')+'/'+name;
-			open_poll_booth(url);
-		}
-	}
-});
 
 /* ajaxifing show previous posts */
 $(document).ready(function() {

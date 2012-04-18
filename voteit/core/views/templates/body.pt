@@ -1,19 +1,10 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
       xmlns:tal="http://xml.zope.org/namespaces/tal"
-      metal:define-macro="master"
-      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
-      i18n:domain="voteit.core">
-<head>
-    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-        <metal:page_title define-slot="page_title">
-           <title>VoteIT</title>
-        </metal:page_title>
-    <meta name="keywords" content="python web application" />
-    <meta name="description" content="pyramid web application" />
-    <link tal:condition="api.meeting and api.meeting.get_field_value('rss_feed', False)" rel="alternate" type="application/rss+xml" title="${api.meeting.title}" href="${api.resource_url(api.meeting, api.request)}feed" />
-    <metal:head define-slot="head"></metal:head>
-</head>
+	  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+	  metal:define-macro="body"
+	  i18n:domain="voteit.core">
 <body>
     <div id="page_wrapper">
         <div id="main-content-wrapper">
@@ -108,7 +99,19 @@
 			<div id="footer-logos"></div>
         </div>
     </div> <!-- page_wrapper -->
-    <script type="text/javascript" src="${request.application_url}/translations.js"></script>
+	<div class="voteit_js_translation" style="display: none !important;">
+       <pre class="js_trans_yes" i18n:translate="">Yes</pre>
+       <pre class="js_trans_no" i18n:translate="">No</pre>
+       <pre class="js_trans_close" i18n:translate="">Close</pre>
+       <pre class="js_trans_confirm_title" i18n:translate="">Please confirm</pre>
+       <pre class="js_trans_confirm_state" i18n:translate="">Are you sure you want to change the state?</pre>
+       <pre class="js_trans_confirm_retract" i18n:translate="">Are you sure you want to retract this proposal?</pre>
+       <pre class="js_trans_user_info" i18n:translate="">About...</pre>
+       <pre class="js_trans_more_tag_list" i18n:translate="">More...</pre>
+       <pre class="js_trans_loading" i18n:translate="">Loading...</pre>
+       <pre class="js_trans_help_contact" i18n:translate="">Help &amp; Contact</pre>
+       <pre class="js_trans_poll" i18n:translate="">Poll</pre>
+	</div>
 	<div id="js_config" style="display: none !important;">
 		<a name="current_url" href="${api.resource_url(context, request)}"></a>
 		<a tal:condition="api.root" name="root_url" href="${api.resource_url(api.root, request)}"></a>
