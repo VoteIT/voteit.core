@@ -16,6 +16,28 @@ from voteit.core.scripts.catalog import find_all_base_content
 
 
 def evolve(root):
+    absolut_profile_links(root)
+
+    lowercase_userids(root)
+    
+def absolut_profile_links(root):
+    print "Removing absolut url in profile links"
+    catalog = root.catalog
+    
+    host = None
+    while not host:
+        host = raw_input("Enter a host to replace (ex http://127.0.0.1:6543): ") 
+    
+    count, result = catalog.query(Eq('path', resource_path(root)) & \
+                                  Contains('searchable_text', 'class="inlineinfo"') & \
+                                  Any('content_type', ('DiscussionPost', 'Proposal', )))
+
+    for docid in result:
+        # get object
+        obj = resolve_catalog_docid(catalog, root, docid)
+        obj.title = obj.title.replace(host, '')
+    
+def lowercase_userids(root):
     # loop through profiles
     print "changing user profiles to lowercase"
     # list of possible duplicate errors

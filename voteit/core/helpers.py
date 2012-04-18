@@ -39,7 +39,7 @@ def at_userid_link(text, obj):
         user.send_mention_notification(obj, request)
 
         tag = {}
-        tag['href'] = "%s_userinfo?userid=%s" % (resource_url(meeting, request), userid)
+        tag['href'] = resource_url(meeting, request, '_userinfo', query={'userid': userid}).replace(request.application_url, '')
         tag['title'] = user.title
         tag['class'] = "inlineinfo"
         return space + HTML.a('@%s' % userid, **tag)
