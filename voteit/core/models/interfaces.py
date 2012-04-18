@@ -742,6 +742,22 @@ class IDateTimeUtil(Interface):
         datetime object, whereas this one includes the UTC tz info.
         """
 
+
+class IJSUtil(Interface):
+    """ """
+
+    def add_translations(*tstrings):
+        """ Add translationstrings to be included. Many can be added at once.
+            All instances must be translation strings.
+        """
+
+    def get_translations():
+        """ Get a dict of all translations. This method may change to include
+            conditions later. The dict is a copy of the original, so it's okay
+            to modify it.
+        """
+
+
 #Marker interfaces
 class ICatalogMetadataEnabled(Interface):
     """ Marker interface for IBaseContent that should have metadata.
