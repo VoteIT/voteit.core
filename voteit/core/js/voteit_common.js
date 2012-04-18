@@ -1,17 +1,7 @@
 /* JS that should be present on every page, regardless of its function.*/
-var voteit = {};
-voteit.translation = {};
-
-/* Translations loader. This must be loaded before all other voteit js! */
-$(document).ready(function () {
-    $('.voteit_js_translation').each(function () {
-        $(this).children().each(function() {
-            var item = $(this);
-            var tkey = item.attr('class').replace('js_trans_', '');
-            voteit.translation[tkey] = item.text();
-        });
-    });
-});
+if(typeof(voteit) == "undefined"){
+    var voteit = {};
+}
 
 /* Flash messages */
 $(document).ready(function () {
