@@ -424,3 +424,45 @@ class DeferredValidatorsTests(TestCase):
         res = deferred_current_password_validator(None, {'context': context})
         self.assertIsInstance(res, CurrentPasswordValidator)
 
+
+class html_string_validatorTests(TestCase):
+    
+    def setUp(self):
+        self.config = testing.setUp()
+
+    def tearDown(self):
+        testing.tearDown()
+    
+    @property
+    def _cut(self):
+        from voteit.core.validators import html_string_validator
+        return html_string_validator
+
+    def test_normal_text(self):
+        node = None
+        self.assertEqual(self._cut(node, "Here's some normal text that should pass\nShouldn't it?"), None)
+
+    def test_text_with_html(self):
+        node = None
+        self.assertRaises(colander.Invalid, self._cut, node, "<html> is not allowed")
+        
+class richtext_validator(TestCase):
+    
+    def setUp(self):
+        self.config = testing.setUp()
+
+    def tearDown(self):
+        testing.tearDown()
+    
+    @property
+    def _cut(self):
+        from voteit.core.validators import richtext_validator
+        return richtext_validator
+
+    def test_normal_text(self):
+        node = None
+        self.assertEqual(self._cut(node, "Here's some <strong>normal</strong> html that should pass."), None)
+
+    def test_text_with_html(self):
+        node = None
+        self.assertRaises(colander.Invalid, self._cut, node, "Here's some html with forbidden tags <script>alert('test');</script>that should <strong>not</strong> pass.")
