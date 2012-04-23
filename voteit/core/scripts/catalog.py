@@ -3,6 +3,7 @@ import transaction
 from voteit.core.scripts.worker import ScriptWorker
 from voteit.core.models.catalog import update_indexes, index_object
 from voteit.core.models.interfaces import IBaseContent
+from voteit.core.models.interfaces import IVote
 
 
 def find_all_base_content(context):
@@ -11,7 +12,7 @@ def find_all_base_content(context):
     """
     def _recurse(base, results):
         for obj in base.values():
-            if IBaseContent.providedBy(obj):
+            if IBaseContent.providedBy(obj) or IVote.providedBy(obj):
                 results.add(obj)
             _recurse(obj, results)
     
