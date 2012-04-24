@@ -90,7 +90,7 @@ class MeetingView(BaseView):
         self.response['context_effective_principals'] = security.context_effective_principals
         return self.response
         
-    @view_config(name="participants_emails", context=IMeeting, renderer="templates/participants_emails.pt", permission=security.MANAGE_GROUPS)
+    @view_config(name="participants_emails", context=IMeeting, renderer="templates/participants_emails.pt", permission=security.MODERATE_MEETING)
     def participants_emails(self):
         """ List all participants emails in this meeting. """
         users = self.api.root.users
