@@ -429,17 +429,6 @@ class IAgendaTemplate(Interface):
         """
 
 
-class IFeedEntry(Interface):
-    """ A persistent feed entry. """
-    created = Attribute("When it was created, in UTC time.")
-    context_uid = Attribute("UID of the context that triggered this feed entry.")
-    message = Attribute("Message")
-    tags = Attribute("Tags, works pretty much like categories for feed entries.")
-
-    def __init__(context_uid, message, tags=()):
-        """ Create a feed entry. """
-
-
 #Mixin class interfaces
 class IWorkflowAware(Interface):
     """ Mixin class for content that needs workflow. """
@@ -636,21 +625,6 @@ class ILogHandler(Interface):
         """
 
 
-class IFeedHandler(Interface):
-    """ An adapter for meetings that handle feeds. """
-    feed_storage = Attribute("""Storage for feed content.""")
-
-    def __init__(context):
-        """ Object needs a meeting to adapt. """
-    
-    def add(context_uid, message, tags=()):
-        """ Add a feed entry.
-            context_uid: the uid of the object that triggered the entry.
-            message: the message to store.
-            tags: list of tags, works as a feed category.
-        """
-
-
 class ICatalogMetadata(Interface):
     """ An adapter to fetch metadata for the catalog.
         it adapts voteit.core.models.interfaces.ICatalogMetadataEnabled
@@ -741,6 +715,26 @@ class IDateTimeUtil(Interface):
         that datetime.utcnow() returns the current UTC time but as a naive
         datetime object, whereas this one includes the UTC tz info.
         """
+
+
+class IJSUtil(Interface):
+    """ """
+
+    def add_translations(**tstrings):
+        """ Add translationstrings to be included as:
+            javascript_key = TranslationString
+            Example: yes = _(u"Yes")
+            The javascript key will be in the namespace translations in voteit.
+            The above example can be found at:
+            voteit.translations['yes']
+        """
+
+    def get_translations():
+        """ Get a dict of all translations. This method may change to include
+            conditions later. The dict is a copy of the original, so it's okay
+            to modify it.
+        """
+
 
 #Marker interfaces
 class ICatalogMetadataEnabled(Interface):

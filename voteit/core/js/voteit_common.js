@@ -1,17 +1,7 @@
 /* JS that should be present on every page, regardless of its function.*/
-var voteit = {};
-voteit.translation = {};
-
-/* Translations loader. This must be loaded before all other voteit js! */
-$(document).ready(function () {
-    $('.voteit_js_translation').each(function () {
-        $(this).children().each(function() {
-            var item = $(this);
-            var tkey = item.attr('class').replace('js_trans_', '');
-            voteit.translation[tkey] = item.text();
-        });
-    });
-});
+if(typeof(voteit) == "undefined"){
+    var voteit = {};
+}
 
 /* Flash messages */
 $(document).ready(function () {
@@ -300,20 +290,6 @@ $(document).ready(function() {
 	});
 });
 
-/* open poll window on load */
-$(document).ready(function() {
-	// if there is a hash in the url, try to find a poll with that id
-	if(window.location.hash) {
-		var poll = $(window.location.hash+'.poll');
-		if(poll.length > 0) {
-			// open the modal window
-			var name = poll.attr('name');
-			var url_config = $("#js_config a[name=current_url]");
-			var url = url_config.attr('href')+'/'+name;
-			open_poll_booth(url);
-		}
-	}
-});
 
 /* ajaxifing show previous posts */
 $(document).ready(function() {

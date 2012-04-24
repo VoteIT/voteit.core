@@ -6,6 +6,7 @@ from repoze.folder.interfaces import IObjectWillBeRemovedEvent
 from voteit.core.interfaces import IWorkflowStateChange
 from voteit.core.interfaces import IObjectUpdatedEvent
 from voteit.core.models.interfaces import IBaseContent
+from voteit.core.models.interfaces import IVote
 from voteit.core.models.interfaces import ISiteRoot
 from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.catalog import index_object
@@ -23,6 +24,7 @@ def _update_if_ai_parent(catalog, obj):
         reindex_object(catalog, parent)
 
 @subscriber([IBaseContent, IObjectAddedEvent])
+@subscriber([IVote, IObjectAddedEvent])
 def object_added(obj, event):
     """ Index a base content object. """
     root = find_interface(obj, ISiteRoot)
@@ -31,6 +33,8 @@ def object_added(obj, event):
 
 @subscriber([IBaseContent, IObjectUpdatedEvent])
 @subscriber([IBaseContent, IWorkflowStateChange])
+@subscriber([IVote, IObjectUpdatedEvent])
+@subscriber([IVote, IWorkflowStateChange]) #Votes don't have wf, but they might have in the future
 def object_updated(obj, event):
     """ Reindex a base content object.
         IObjectUpdatedEvent has attributes indexes and metadata to avoid updating catalog if it's not needed.
@@ -44,6 +48,7 @@ def object_updated(obj, event):
     reindex_object(root.catalog, obj, indexes = indexes, metadata = metadata)
 
 @subscriber([IBaseContent, IObjectWillBeRemovedEvent])
+@subscriber([IVote, IObjectWillBeRemovedEvent])
 def object_removed(obj, event):
     """ Remove an index for a base content object. Also, remove all contained."""
     root = find_interface(obj, ISiteRoot)

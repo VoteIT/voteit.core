@@ -8,6 +8,7 @@ from betahaus.viewcomponent.interfaces import IViewGroup
 from pyramid.security import authenticated_userid
 
 from voteit.core.validators import html_string_validator
+from voteit.core.validators import richtext_validator
 
 from voteit.core import VoteITMF as _
 from voteit.core import security 
@@ -54,8 +55,10 @@ def deferred_recaptcha_widget(node, kw):
     principals = api.context_effective_principals(context)
     
     if api.root.get_field_value('captcha_meeting', False) and security.ROLE_ADMIN not in principals:
-        return RecaptchaWidget(api.root.get_field_value('captcha_public_key', ''), 
-                               api.root.get_field_value('captcha_private_key', ''))
+        pub_key = api.root.get_field_value('captcha_public_key', '')
+        priv_key = api.root.get_field_value('captcha_private_key', '')
+        return RecaptchaWidget(captcha_public_key = pub_key,
+                               captcha_private_key = priv_key)
 
     return deform.widget.HiddenWidget()
 
@@ -72,7 +75,8 @@ def description_node():
         description = _(u"meeting_description_description",
                         default=u"The description is visible on the first page of the meeting. You can include things like information about the meeting, how to contact the moderator and your logo."),
         missing = u"",
-        widget=deform.widget.RichTextWidget())
+        widget=deform.widget.RichTextWidget(),
+        validator=richtext_validator,)
 
 def meeting_mail_name_node():
     return colander.SchemaNode(colander.String(),
@@ -86,14 +90,6 @@ def meeting_mail_address_node():
                                default = u"noreply@somehost.voteit",
                                validator = colander.All(colander.Email(msg = _(u"Invalid email address.")), html_string_validator,),)
     
-def rss_feed_node():
-    return colander.SchemaNode(colander.Boolean(),
-                               title = _(u"Activate RSS feed"),
-								description = _(u"rss_feed_checkbox_description",
-								default=u"When the checkbox below is checked your meeting will be able to show a public RSS feed that can be followed with a RSS reader. This feed will contain info about when changes are made in the meeting and who did the changes. You can access the feed on: 'The meeting URL' + '/feed'. This should be something like 'www.yourdomain.com/yourmeetingname/feed'. If you want the feed to show up in an iframe you can use '/framefeed' instead. This is an advanced feature and read more about it in the manual on wiki.voteit.se. Please note a word of warning: the feed is public for all who can figure it out."),
-
-
-                               default = False,)
 
 def access_policy_node():
     return colander.SchemaNode(colander.String(),
@@ -128,10 +124,6 @@ class EditMeetingSchema(colander.MappingSchema):
     meeting_mail_name = meeting_mail_name_node();
     meeting_mail_address = meeting_mail_address_node();
     access_policy = access_policy_node();
-    
-@schema_factory('RssSettingsMeetingSchema', title = _(u"RSS settings"))
-class RssSettingsMeetingSchema(colander.MappingSchema):
-    rss_feed = rss_feed_node();
 
 @schema_factory('PresentationMeetingSchema',
                 title = _(u"Presentation"),

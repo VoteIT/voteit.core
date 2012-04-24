@@ -7,6 +7,8 @@ from pyramid.traversal import find_interface
 from zope.interface.interfaces import ComponentLookupError
 
 from voteit.core.validators import html_string_validator
+from voteit.core.validators import richtext_validator
+
 from voteit.core import VoteITMF as _
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import IAgendaItem
@@ -89,7 +91,8 @@ class PollSchema(colander.MappingSchema):
                                       missing=u"",
                                       description = _(u"poll_description_description",
                                                       default=u"Explain your choice of poll method and your plan for the different polls in the agenda item."),
-                                      widget=deform.widget.RichTextWidget(),)
+                                      widget=deform.widget.RichTextWidget(), 
+                                      validator=richtext_validator,)
 
     poll_plugin = colander.SchemaNode(colander.String(),
                                       title = _(u"Poll method to use"),

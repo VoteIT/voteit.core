@@ -169,15 +169,14 @@ class UsersFormView(BaseEdit):
     @view_config(context=ISiteRoot, name='login', renderer=LOGIN_REGISTER_TPL)
     def login_or_register(self):
         #Browser check
-        user_agent = httpagentparser.detect(self.request.user_agent)
-        browser_name = user_agent['browser']['name']
+        browser_name = u''
+        browser_version = 0
         try:
+            user_agent = httpagentparser.detect(self.request.user_agent)
+            browser_name = user_agent['browser']['name']
             browser_version = Decimal(user_agent['browser']['version'][0:user_agent['browser']['version'].find('.')])
-        except TypeError:
-            browser_version = 0
-        except ValueError:
-            browser_version = 0
-        
+        except (TypeError, ValueError):
+            pass
         #FIXME: maybe this definition should be somewhere else
         if browser_name == u'Microsoft Internet Explorer' and browser_version < Decimal(8):
             url = resource_url(self.api.root, self.request)+"unsupported_browser"

@@ -22,7 +22,6 @@ from voteit.core.views.base_view import BaseView
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import ISiteRoot
-from voteit.core.models.interfaces import IFeedHandler
 from voteit.core.models.schemas import add_csrf_token
 from voteit.core.models.schemas import button_save
 from voteit.core.models.schemas import button_add
@@ -332,11 +331,6 @@ class MeetingView(BaseView):
     @view_config(context=IMeeting, name="access_policy", renderer="templates/base_edit.pt", permission=security.EDIT)
     def access_policy(self):
         schema = createSchema("AccessPolicyMeetingSchema").bind(context=self.context, request=self.request)
-        return self.form(schema)
-    
-    @view_config(context=IMeeting, name="rss_settings", renderer="templates/base_edit.pt", permission=security.EDIT)
-    def rss_settings(self):
-        schema = createSchema("RssSettingsMeetingSchema").bind(context=self.context, request=self.request)
         return self.form(schema)
     
     @view_config(context=IMeeting, name="advanced_settings", renderer="templates/base_edit.pt", permission=security.EDIT)

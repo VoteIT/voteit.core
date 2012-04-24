@@ -23,7 +23,7 @@ from voteit.core.fanstaticlib import voteit_deform
 from voteit.core.fanstaticlib import autoresizable_textarea_js
 from voteit.core.fanstaticlib import jquery_form
 from voteit.core.fanstaticlib import star_rating
-from voteit.core.views.components.discussions import discussions_listing
+
 
 class AgendaItemView(BaseView):
     """ View for agenda items. """
@@ -94,7 +94,7 @@ class AgendaItemView(BaseView):
     @view_config(context=IAgendaItem, name="discussions", permission=VIEW)
     def discussions(self):
         if self.request.is_xhr:
-            return Response(discussions_listing(self.context, self.request, None, api=self.api))
+            return Response(self.api.render_single_view_component(context, request, 'discussions', 'listing', api = self.api))
         
         if self.request.GET.get('discussions', None):
             url = resource_url(self.context, self.request, query={'discussions':'all'}, anchor="discussions")

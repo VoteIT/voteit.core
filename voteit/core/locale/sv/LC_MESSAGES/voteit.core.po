@@ -76,7 +76,7 @@ msgstr "${username} föreslår"
 
 #: ./schemas/tzdatetime.py:31
 msgid "'${val}' is not valid as date and time"
-msgstr "'{val}' är inte giltigt som datum och tid"
+msgstr "'${val}' är inte giltigt som datum och tid"
 
 #. Default: "(No polls yet)"
 #: ./views/templates/snippets/polls_menu_body.pt:22

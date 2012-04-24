@@ -110,6 +110,10 @@ Most aren't persistent at all.
      :members:
 
 
+  .. autointerface:: IJSUtil
+     :members:
+
+
 Markers
 -------
 

@@ -149,16 +149,14 @@ class APIView(object):
     @reify
     def meeting_state(self):
         """ Current wf state of meeting if you're inside a meeting. """
-        if not self.meeting:
-            return
-        return self.meeting.get_workflow_state()
+        if self.meeting:
+            return self.meeting.get_workflow_state()
 
     @reify
     def meeting_url(self):
         """ Cache lookup of meeting url since it will be used a lot. """
-        if not self.meeting:
-            return
-        return resource_url(self.meeting, self.request)
+        if self.meeting:
+            return resource_url(self.meeting, self.request)
 
     def get_moderator_actions(self, context):
         """ A.k.a. the cogwheel-menu. """

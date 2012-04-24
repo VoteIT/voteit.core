@@ -30,9 +30,9 @@ requires = (
     'betahaus.viewcomponent',
     'pyramid_debugtoolbar', #Won't be active unless included
     'fanstatic',
-    'iso8601', #I thought this was part of the standard lib?
     'repoze.evolution',
     'httpagentparser',
+    'BeautifulSoup',
     )
 
 

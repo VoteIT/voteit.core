@@ -43,9 +43,10 @@ def required_components(config):
     config.include('voteit.core.models.user_tags')
     config.include('voteit.core.models.logs')
     config.include('voteit.core.models.date_time_util')
+    config.include('voteit.core.models.js_util')
+    config.include('voteit.core.js_translations')
     config.include('voteit.core.models.catalog')
     config.include('voteit.core.models.unread')
-    config.include('voteit.core.models.feeds')
     config.include('voteit.core.models.flash_messages')
     config.include('voteit.core.deform_bindings')
     #For password storage

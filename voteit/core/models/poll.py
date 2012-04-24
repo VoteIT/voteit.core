@@ -222,7 +222,7 @@ class Poll(BaseContent, WorkflowAware):
         try:
             poll_plugin = self.get_poll_plugin()
             return poll_plugin.render_result(request, complete)
-        except Exception, exc:
+        except Exception, exc: # pragma : no cover
             if request.registry.settings.get('pyramid.debug_templates', False):
                 raise exc
             return _(u"Broken poll plugin. Can't display result. Turn on debug_templates to see the error.")

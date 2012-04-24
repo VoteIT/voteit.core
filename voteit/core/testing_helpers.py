@@ -30,6 +30,45 @@ class PrintingMailer(object):
     send_to_queue = send_immediately = send
 
 
+def create_full_app_config():
+    """ This is a full config including everything.
+        Only use it for high level tests since it will take time to load it.
+    """
+    from voteit.core import default_configurator
+    from voteit.core import required_components
+    settings = full_app_settings()
+    config = default_configurator(settings)
+    config.include(required_components)
+    config.hook_zca()
+    return config
+
+
+def full_app_settings():
+    """ Settings suitable for testing. It will use a database with memory storage
+        so no changes will ever be permanent.
+    """
+    return {
+        #Pyramid defaults
+        "pyramid.debug_templates": "true",
+        "pyramid.includes": """
+            pyramid_zodbconn
+            pyramid_tm
+            pyramid_mailer.testing
+        """.strip(),
+        #Transaction manager config for package: pyramid_tm
+        "tm.attempts": "1",
+        "tm.commit_veto": "pyramid_tm.default_commit_veto",
+        #ZODB config for package: pyramid_zodbconn
+        "zodbconn.uri": "memory://testingstorage",
+        #VoteIT settings
+        "default_locale_name": "en",
+        "available_languages": "en sv",
+        "default_timezone_name": "Europe/Stockholm",
+        "tkt_secret": "testing",
+        "cache_ttl_seconds": "3600"
+    }
+
+
 def printing_mailer(config):
     """ Include this to use the printing mailer."""
     print "\nWARNING! Using printing mailer - no mail will be sent!\n"

@@ -3,6 +3,12 @@ from pyramid.renderers import render
 from betahaus.viewcomponent.interfaces import IViewGroup
 
 
+@view_action('main', 'head')
+def head(context, request, *args, **kwargs):
+    api = kwargs['api']
+    return api.render_view_group(context, request, 'head')
+
+
 @view_action('main', 'logo_tag')
 def logo_image_tag(context, request, *args, **kwargs):
     url = "%s/static/images/logo.png" % request.application_url
