@@ -102,7 +102,6 @@ def generic_root_menu_link(context, request, va, **kw):
 @view_action('settings_menu', 'advanced_settings', title = _(u"Advanced settings"), link = "@@advanced_settings", permission = MODERATE_MEETING)
 @view_action('settings_menu', 'agenda_templates', title = _(u"Agenda Templates"), link = "@@agenda_templates", permission = MODERATE_MEETING)
 @view_action('settings_menu', 'manage_layout', title = _(u"Layout and widgets"), link = "@@manage_layout", permission = MODERATE_MEETING)
-@view_action('settings_menu', 'rss_settings', title = _(u"RSS settings"), link = "@@rss_settings", permission = MODERATE_MEETING)
 @view_action('settings_menu', 'access_policy', title = _(u"Access policy"), link = "@@access_policy", permission = MODERATE_MEETING)
 @view_action('settings_menu', 'mail_settings', title = _(u"Mail settings"), link = "@@mail_settings", permission = MODERATE_MEETING)
 @view_action('settings_menu', 'presentation', title = _(u"Presentation"), link = "@@presentation", permission = MODERATE_MEETING)
@@ -119,16 +118,6 @@ def generic_menu_link(context, request, va, **kw):
     api = kw['api']
     url = "%s%s" % (api.meeting_url, va.kwargs['link'])
     return """<li><a href="%s">%s</a></li>""" % (url, api.translate(va.title))
-
-@view_action('meeting', 'feed', title = _(u"RSS feed"), link = "feed", )
-def feed_menu_link(context, request, va, **kw):
-    """ This is for simple menu items for the meeting root """
-    api = kw['api']
-    url = api.resource_url(api.meeting, request) + va.kwargs['link']
-    if api.meeting.get_field_value('rss_feed', False):
-        return """<li><a href="%s">%s</a></li>""" % (url, api.translate(va.title))
-    
-    return ''
 
 
 @view_config(name="meeting_poll_menu", context=IMeeting, renderer="../templates/snippets/polls_menu_body.pt", permission=VIEW)
