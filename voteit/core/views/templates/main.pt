@@ -11,6 +11,7 @@
         </metal:page_title>
     <meta name="keywords" content="python web application" />
     <meta name="description" content="pyramid web application" />
+    <tal:head tal:content="structure api.render_single_view_component(context, request, 'main', 'head')"></tal:head>
     <metal:head define-slot="head"></metal:head>
 </head>
 <body>
