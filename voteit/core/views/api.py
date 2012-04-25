@@ -1,3 +1,5 @@
+from pkg_resources import resource_filename
+
 from pyramid.renderers import get_renderer
 from pyramid.renderers import render
 from pyramid.security import authenticated_userid
@@ -26,6 +28,8 @@ from voteit.core.models.catalog import resolve_catalog_docid
 from voteit.core.fanstaticlib import DEFORM_RESOURCES
 
 
+TEMPLATE_DIR = resource_filename('voteit.core.views', 'templates/')
+
 class APIView(object):
     """ Convenience methods for templates """
         
@@ -36,9 +40,8 @@ class APIView(object):
         self.resource_url = resource_url
         self.root = find_root(context)
         self.userid = authenticated_userid(request)
-
-        #Main macro
-        self.main_template = get_renderer('templates/main.pt').implementation()
+        
+        self.template_dir = TEMPLATE_DIR
 
     @reify
     def authn_policy(self):
