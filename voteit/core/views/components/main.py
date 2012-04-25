@@ -41,3 +41,11 @@ def columns(context, request, *args, **kwargs):
     else:
         response['column_two'] = "Error: Can't find view action '%s' in group '%s'." % (col_two_name, group_name)
     return render('../templates/snippets/two_columns.pt', response, request = request)
+
+
+@view_action('main', 'flash_messages')
+def render_flash_messages(context, request, *args, **kwargs):
+    """ Render flash messages. """
+    api = kwargs['api']
+    response = dict(messages = api.flash_messages.get_messages(),)
+    return render('../templates/snippets/flash_messages.pt', response, request = request)

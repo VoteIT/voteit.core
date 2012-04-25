@@ -57,15 +57,6 @@ class SearchViewTests(unittest.TestCase):
         obj = self._cut(context, request)
         self.assertTrue(obj.flash_messages)
 
-    def test_render_flash_messages(self):
-        self.config.include('voteit.core.models.flash_messages')
-        context = testing.DummyResource()
-        request = testing.DummyRequest()
-        obj = self._cut(context, request)
-        obj.flash_messages.add('Hello world')
-        res = obj.render_flash_messages()
-        self.failUnless('Hello world' in res)
-
     def test_show_moderator_actions(self):
         #FIXME: We still need a functional test for this
         root = bootstrap_and_fixture(self.config)
