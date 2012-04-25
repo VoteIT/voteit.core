@@ -84,15 +84,11 @@ class UserTests(unittest.TestCase):
         obj = self._make_obj()
         request = testing.DummyRequest()
         self.config.include('pyramid_mailer.testing')
-        
         obj.new_request_password_token(request)
-
         mailer = get_mailer(request)
         self.assertEqual(len(mailer.outbox), 1)
-        
         msg = mailer.outbox[0]
-        
-        self.failUnless(obj.__token__() in msg.body)
+        self.failUnless(obj.__token__() in msg.html)
     
     def test_blank_email_hash_generation(self):
         obj = self._make_obj()

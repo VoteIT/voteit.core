@@ -97,11 +97,11 @@ class User(BaseContent):
         locale = get_localizer(request)
         self.__token__ = createContent('RequestPasswordToken')
         pw_link = "%stoken_pw?token=%s" % (resource_url(self, request), self.__token__())
-        body = render_view_action(self, request, 'email', 'request_password',
+        html = render_view_action(self, request, 'email', 'request_password',
                                   pw_link = pw_link)
         msg = Message(subject=_(u"Password reset request from VoteIT"),
                        recipients=[self.get_field_value('email')],
-                       body=body)
+                       html = html)
         mailer = get_mailer(request)
         mailer.send(msg)
         
