@@ -71,6 +71,7 @@ class UserTests(unittest.TestCase):
 
     def test_new_request_password_token(self):
         self.config.scan('voteit.core.models.user')
+        self.config.scan('voteit.core.views.components.email')
         obj = self._make_obj()
         request = testing.DummyRequest()
         self.config.include('pyramid_mailer.testing')
@@ -79,6 +80,7 @@ class UserTests(unittest.TestCase):
     
     def test_new_request_password_token_mailed(self):
         self.config.scan('voteit.core.models.user')
+        self.config.scan('voteit.core.views.components.email')
         obj = self._make_obj()
         request = testing.DummyRequest()
         self.config.include('pyramid_mailer.testing')

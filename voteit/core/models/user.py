@@ -14,6 +14,7 @@ from pyramid_mailer.message import Message
 from pyramid.i18n import get_localizer
 from betahaus.pyracont.decorators import content_factory
 from betahaus.pyracont.factories import createContent
+from betahaus.viewcomponent import render_view_action
 
 from voteit.core.models.base_content import BaseContent
 from voteit.core.models.interfaces import IUser
@@ -94,19 +95,13 @@ class User(BaseContent):
     def new_request_password_token(self, request):
         """ Set a new request password token and email user. """
         locale = get_localizer(request)
-        
         self.__token__ = createContent('RequestPasswordToken')
-        
-        #FIXME: Email should use a proper template
         pw_link = "%stoken_pw?token=%s" % (resource_url(self, request), self.__token__())
-        body = locale.translate(_('request_new_password_text',
-                 default=u"password link: ${pw_link}",
-                 mapping={'pw_link':pw_link},))
-        
+        body = render_view_action(self, request, 'email', 'request_password',
+                                  pw_link = pw_link)
         msg = Message(subject=_(u"Password reset request from VoteIT"),
                        recipients=[self.get_field_value('email')],
                        body=body)
-
         mailer = get_mailer(request)
         mailer.send(msg)
         
