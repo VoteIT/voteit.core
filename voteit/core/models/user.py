@@ -100,8 +100,8 @@ class User(BaseContent):
         html = render_view_action(self, request, 'email', 'request_password',
                                   pw_link = pw_link)
         msg = Message(subject=_(u"Password reset request from VoteIT"),
-                       recipients=[self.get_field_value('email')],
-                       html = html)
+                      recipients=[self.get_field_value('email')],
+                      html = html)
         mailer = get_mailer(request)
         mailer.send(msg)
         
