@@ -214,18 +214,6 @@ class SearchViewTests(unittest.TestCase):
         res = obj.get_creators_info(['admin'])
         self.assertIn('http://example.com/m/_userinfo?userid=admin', res)
 
-    def test_get_poll_state_info(self):
-        self.config.registry.settings['default_timezone_name'] = "Europe/Stockholm"
-        self.config.include('voteit.core.models.date_time_util')
-        root = active_poll_fixture(self.config)
-        poll = root['meeting']['ai']['poll']
-        from voteit.core.models.date_time_util import utcnow
-        poll.set_field_value('start_time', utcnow())
-        poll.set_field_value('end_time', utcnow())
-        request = testing.DummyRequest()
-        obj = self._cut(poll, request)
-        self.assertIn('The poll starts', obj.get_poll_state_info(poll))
-
     def test_context_has_permission(self):
         #Delegating function, we don't need to test it properly.
         self.config.testing_securitypolicy('admin', permissive = True)

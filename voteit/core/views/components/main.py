@@ -49,3 +49,13 @@ def render_flash_messages(context, request, *args, **kwargs):
     api = kwargs['api']
     response = dict(messages = api.flash_messages.get_messages(),)
     return render('../templates/snippets/flash_messages.pt', response, request = request)
+
+
+@view_action('main', 'poll_state_info')
+def render_poll_state_info(context, request, *args, **kwargs):
+        response = dict(
+            api = kwargs['api'],
+            wf_state = context.get_workflow_state(),
+            poll = context,
+        )
+        return render('../templates/snippets/poll_state_info.pt', response, request = request)

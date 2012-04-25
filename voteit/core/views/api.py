@@ -174,13 +174,6 @@ class APIView(object):
         return self.render_single_view_component(self.context, self.request, 'main', 'creators_info',
                                                  creators = creators, portrait = portrait)
 
-    def get_poll_state_info(self, poll):
-        response = {}
-        response['api'] = self
-        response['wf_state'] = poll.get_workflow_state()
-        response['poll'] = poll
-        return render('templates/poll_state_info.pt', response, request=self.request)
-
     def context_has_permission(self, permission, context):
         """ Special permission check that is agnostic of the request.context attribute.
             (As opposed to pyramid.security.has_permission)
