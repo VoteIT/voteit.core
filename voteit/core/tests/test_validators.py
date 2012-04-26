@@ -175,6 +175,7 @@ class CheckPasswordTokenTests(TestCase):
 
     def setUp(self):
         self.config = testing.setUp()
+        self.config.scan('voteit.core.views.components.email')
 
     def tearDown(self):
         testing.tearDown()

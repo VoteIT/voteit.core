@@ -71,11 +71,6 @@ class APIView(object):
         """
         return self.request.registry.getAdapter(self.request, IFlashMessages)
 
-    def render_flash_messages(self):
-        """ Render flash messages. """
-        response = dict(messages = self.flash_messages.get_messages(),)
-        return render('templates/snippets/flash_messages.pt', response, request = self.request)
-
     @reify
     def show_moderator_actions(self):
         """ Show moderator actions? Falls back to MANAGE_SERVER if outside of
@@ -178,13 +173,6 @@ class APIView(object):
         """
         return self.render_single_view_component(self.context, self.request, 'main', 'creators_info',
                                                  creators = creators, portrait = portrait)
-
-    def get_poll_state_info(self, poll):
-        response = {}
-        response['api'] = self
-        response['wf_state'] = poll.get_workflow_state()
-        response['poll'] = poll
-        return render('templates/poll_state_info.pt', response, request=self.request)
 
     def context_has_permission(self, permission, context):
         """ Special permission check that is agnostic of the request.context attribute.

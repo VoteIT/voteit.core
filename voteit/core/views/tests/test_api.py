@@ -57,15 +57,6 @@ class SearchViewTests(unittest.TestCase):
         obj = self._cut(context, request)
         self.assertTrue(obj.flash_messages)
 
-    def test_render_flash_messages(self):
-        self.config.include('voteit.core.models.flash_messages')
-        context = testing.DummyResource()
-        request = testing.DummyRequest()
-        obj = self._cut(context, request)
-        obj.flash_messages.add('Hello world')
-        res = obj.render_flash_messages()
-        self.failUnless('Hello world' in res)
-
     def test_show_moderator_actions(self):
         #FIXME: We still need a functional test for this
         root = bootstrap_and_fixture(self.config)
@@ -222,18 +213,6 @@ class SearchViewTests(unittest.TestCase):
         obj = self._cut(meeting, request)
         res = obj.get_creators_info(['admin'])
         self.assertIn('http://example.com/m/_userinfo?userid=admin', res)
-
-    def test_get_poll_state_info(self):
-        self.config.registry.settings['default_timezone_name'] = "Europe/Stockholm"
-        self.config.include('voteit.core.models.date_time_util')
-        root = active_poll_fixture(self.config)
-        poll = root['meeting']['ai']['poll']
-        from voteit.core.models.date_time_util import utcnow
-        poll.set_field_value('start_time', utcnow())
-        poll.set_field_value('end_time', utcnow())
-        request = testing.DummyRequest()
-        obj = self._cut(poll, request)
-        self.assertIn('The poll starts', obj.get_poll_state_info(poll))
 
     def test_context_has_permission(self):
         #Delegating function, we don't need to test it properly.
