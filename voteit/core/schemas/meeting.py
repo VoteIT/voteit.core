@@ -142,11 +142,15 @@ class MailSettingsMeetingSchema(colander.MappingSchema):
 class AccessPolicyeMeetingSchema(colander.MappingSchema):
     access_policy = access_policy_node();
     
-@schema_factory('AdvancedSettingsMeetingSchema', title = _(u"Advanced settings"))
-class AdvancedSettingsMeetingSchema(colander.MappingSchema):
+@schema_factory('GlobalPollSettingsSchema', title = _(u"Poll settings"),
+                description = _(u"global_poll_settings_main_description",
+                                default = u"Global settings for the whole meeting."))
+class GlobalPollSettingsSchema(colander.MappingSchema):
     poll_plugins = colander.SchemaNode(deform.Set(allow_empty=True),
-                                      title = _(u"Available poll method in this meeting"),
-                                      description = _(u"meeting_available_poll_plugins_description",
-                                                      default=u""),
-                                      missing=set(),
-                                      widget = poll_plugins_choices_widget,)
+                                       title = _(u"gps_poll_plugins_title",
+                                                 default = u"Available poll methods within this meeting"),
+                                       description = _(u"gps_poll_plugins_title",
+                                                       default=u"Only poll methods selected here will be available withing the meeting. "
+                                                               u"If nothing is selected, only the servers default poll method will be available."),
+                                       missing=set(),
+                                       widget = poll_plugins_choices_widget,)

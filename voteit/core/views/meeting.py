@@ -318,24 +318,24 @@ class MeetingView(BaseView):
         self.response['form'] = result
         return self.response
 
-    @view_config(context=IMeeting, name="presentation", renderer="templates/base_edit.pt", permission=security.EDIT)
+    @view_config(context=IMeeting, name="presentation", renderer="templates/base_edit.pt", permission=security.MODERATE_MEETING)
     def presentation(self):
         schema = createSchema("PresentationMeetingSchema").bind(context=self.context, request=self.request)
         return self.form(schema)
     
-    @view_config(context=IMeeting, name="mail_settings", renderer="templates/base_edit.pt", permission=security.EDIT)
+    @view_config(context=IMeeting, name="mail_settings", renderer="templates/base_edit.pt", permission=security.MODERATE_MEETING)
     def mail_settings(self):
         schema = createSchema("MailSettingsMeetingSchema").bind(context=self.context, request=self.request)
         return self.form(schema)
         
-    @view_config(context=IMeeting, name="access_policy", renderer="templates/base_edit.pt", permission=security.EDIT)
+    @view_config(context=IMeeting, name="access_policy", renderer="templates/base_edit.pt", permission=security.MODERATE_MEETING)
     def access_policy(self):
         schema = createSchema("AccessPolicyMeetingSchema").bind(context=self.context, request=self.request)
         return self.form(schema)
     
-    @view_config(context=IMeeting, name="advanced_settings", renderer="templates/base_edit.pt", permission=security.EDIT)
-    def advanced_settings(self):
-        schema = createSchema("AdvancedSettingsMeetingSchema").bind(context=self.context, request=self.request)
+    @view_config(context=IMeeting, name="global_poll_settings", renderer="templates/base_edit.pt", permission=security.MODERATE_MEETING)
+    def global_poll_settings(self):
+        schema = createSchema("GlobalPollSettingsSchema").bind(context=self.context, request=self.request)
         return self.form(schema)
         
     def form(self, schema):
