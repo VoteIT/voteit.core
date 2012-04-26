@@ -1,9 +1,6 @@
 from deform import Form
 from deform.exception import ValidationFailure
-from pyramid.security import NO_PERMISSION_REQUIRED
 from pyramid.view import view_config
-from pyramid.httpexceptions import HTTPFound
-from pyramid.httpexceptions import HTTPRedirection
 from pyramid.url import resource_url
 from pyramid.renderers import render
 from pyramid.response import Response
@@ -14,7 +11,6 @@ from betahaus.pyracont.factories import createSchema
 from voteit.core import security
 from voteit.core import VoteITMF as _
 from voteit.core.views.base_view import BaseView
-from voteit.core.models.interfaces import ISiteRoot
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.schemas import add_csrf_token
 from voteit.core.models.schemas import button_send
