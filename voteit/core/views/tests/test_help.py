@@ -1,5 +1,6 @@
 import unittest
 
+from deform.exception import ValidationFailure
 from pyramid import testing
 from pyramid.httpexceptions import HTTPForbidden
 from pyramid_mailer import get_mailer
@@ -79,15 +80,19 @@ class HelpViewTests(unittest.TestCase):
 
     def test_contact_validation_error(self):
         root = self._fixture()
-        # Since the session with csrf tokens isn't initiatet, it will be '' as default
-        # - hence causing a validation failiure here
-        postdata = {'save': 'save', 'csrf_token': 'bad_token', '__formid__': 'deform'}
+        postdata = {'save': 'save', 
+                    '__formid__': 'deform',
+                    'name': 'Dummy Dumbson',
+                    'email': 'dummy@test.com',
+                    'message': 'Lorem ipsum',}
         request = testing.DummyRequest(post = postdata,
                                        is_xhr = False)
         obj = self._cut(root['m'], request)
-        self.assertRaises(HTTPForbidden, obj.contact)
+        res = obj.contact()
+        self.assertIn('form', res)
         # and with ajax
         request = testing.DummyRequest(post = postdata,
                                        is_xhr = True)
         obj = self._cut(root['m'], request)
-        self.assertRaises(HTTPForbidden, obj.contact)
+        res = obj.contact()
+        self.assertIn('form', res)
