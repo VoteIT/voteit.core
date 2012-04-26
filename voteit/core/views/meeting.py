@@ -332,12 +332,12 @@ class MeetingView(BaseView):
     def access_policy(self):
         schema = createSchema("AccessPolicyMeetingSchema").bind(context=self.context, request=self.request)
         return self.form(schema)
-    
-    @view_config(context=IMeeting, name="global_poll_settings", renderer="templates/base_edit.pt", permission=security.MODERATE_MEETING)
+
+    @view_config(context=IMeeting, name="meeting_poll_settings", renderer="templates/base_edit.pt", permission=security.MODERATE_MEETING)
     def global_poll_settings(self):
-        schema = createSchema("GlobalPollSettingsSchema").bind(context=self.context, request=self.request)
+        schema = createSchema("MeetingPollSettingsSchema").bind(context=self.context, request=self.request)
         return self.form(schema)
-        
+
     def form(self, schema):
         add_csrf_token(self.context, self.request, schema)
             
