@@ -142,8 +142,8 @@ class MailSettingsMeetingSchema(colander.MappingSchema):
 class AccessPolicyeMeetingSchema(colander.MappingSchema):
     access_policy = access_policy_node();
     
-@schema_factory('AdvancedSettingsMeetingSchema', title = _(u"Advanced settings"))
-class AdvancedSettingsMeetingSchema(colander.MappingSchema):
+@schema_factory('PollSettingsMeetingSchema', title = _(u"Poll settings"))
+class PollSettingsMeetingSchema(colander.MappingSchema):
     poll_plugins = colander.SchemaNode(deform.Set(allow_empty=True),
                                       title = _(u"Available poll method in this meeting"),
                                       description = _(u"meeting_available_poll_plugins_description",

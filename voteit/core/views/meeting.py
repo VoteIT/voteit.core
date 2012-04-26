@@ -333,9 +333,9 @@ class MeetingView(BaseView):
         schema = createSchema("AccessPolicyMeetingSchema").bind(context=self.context, request=self.request)
         return self.form(schema)
     
-    @view_config(context=IMeeting, name="advanced_settings", renderer="templates/base_edit.pt", permission=security.EDIT)
+    @view_config(context=IMeeting, name="poll_settings", renderer="templates/base_edit.pt", permission=security.EDIT)
     def advanced_settings(self):
-        schema = createSchema("AdvancedSettingsMeetingSchema").bind(context=self.context, request=self.request)
+        schema = createSchema("PollSettingsMeetingSchema").bind(context=self.context, request=self.request)
         return self.form(schema)
         
     def form(self, schema):
