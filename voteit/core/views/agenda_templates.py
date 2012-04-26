@@ -35,7 +35,7 @@ class AgendaTempalteView(BaseView):
         #FIXME: Should this be a migrate script?
         try:
             agenda_templates = self.api.root['agenda_templates']
-        except KeyError:
+        except KeyError:  # pragma: no coverage
             obj = createContent('AgendaTemplates', title = _(u"Agenda templates"), creators = ['admin'])
             agenda_templates = self.api.root['agenda_templates'] = obj
         
