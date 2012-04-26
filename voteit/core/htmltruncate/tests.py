@@ -1,7 +1,8 @@
 #!/usr/bin/python
+import unittest
 
 import htmltruncate
-import unittest
+
 
 class TruncateTest(unittest.TestCase):
     cases = ( ('this <b>word</b> is bolded', 4, "this"),
@@ -41,6 +42,7 @@ class TruncateTest(unittest.TestCase):
 
     def testEllipsis(self):
         self.assertEqual( htmltruncate.truncate('this <b>word</b> is bolded', 10, '...' ), "this <b>word</b> ...")
+
 
 if __name__ == "__main__":
     unittest.main()

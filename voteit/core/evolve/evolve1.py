@@ -1,14 +1,13 @@
-import transaction
-
 from voteit.core.models.interfaces import IMeeting
 
+
 def evolve(root):
-    # Remove old feed entries
-    # Check if voteit.core.models.feed is importable
-    try:
-        import voteit.core.models.feed
-    except ImportError:
-        for obj in root.values():
-            if IMeeting.providedBy(obj):
-                if getattr(obj, '__feed_storage__', None):
-                    del obj.__feed_storage__ 
+    """ We have to remove the old feed entries so that they'll be
+        recreated by the new voteit.feed package.
+        VoteIT wasn't released on PyPI when this was written so
+        it's okay to simply delete things here.
+    """
+    for obj in root.values():
+        if IMeeting.providedBy(obj):
+            if hasattr(obj, '__feed_storage__'):
+                del obj.__feed_storage__
