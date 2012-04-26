@@ -13,7 +13,7 @@
         <div class="col-65-35">
             <div class="column column-1">
             	<div class="content_wrapper">
-                <div tal:content="structure api.api.render_single_view_component(poll, request, 'main', 'poll_state_info')">Poll state info</div>
+                <div tal:content="structure api.render_single_view_component(poll, request, 'main', 'poll_state_info')">Poll state info</div>
                 <div class="description"
                      tal:content="structure poll.description">Description</div>
                 </div>
