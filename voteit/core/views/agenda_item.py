@@ -74,6 +74,9 @@ class AgendaItemView(BaseView):
         
     @view_config(context=IAgendaItem, name='_inline_form', permission=VIEW)
     def inline_add_form(self):
+        """ Inline add form. Note the somewhat odd permissions on the view configuration.
+            The actual permission check for each content type is preformed later.
+        """
         content_type = self.request.GET['content_type']
         add_permission = self.api.content_types_add_perm(content_type)
         if not has_permission(add_permission, self.context, self.request):
@@ -94,7 +97,7 @@ class AgendaItemView(BaseView):
     @view_config(context=IAgendaItem, name="discussions", permission=VIEW)
     def discussions(self):
         if self.request.is_xhr:
-            return Response(self.api.render_single_view_component(context, request, 'discussions', 'listing', api = self.api))
+            return Response(self.api.render_single_view_component(self.context, self.request, 'discussions', 'listing', api = self.api))
         
         if self.request.GET.get('discussions', None):
             url = resource_url(self.context, self.request, query={'discussions':'all'}, anchor="discussions")
