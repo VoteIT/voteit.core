@@ -43,3 +43,17 @@ class DiscussionsComponentTests(unittest.TestCase):
         from voteit.core.views.components.discussions import truncate
         
         self.assertEqual(truncate(text, 240), (truncated_text, False))
+        
+    def test_truncate_no_length(self):
+        
+        text = u"Lorem ipsum dolor sit amet, consectetur adipiscing elit. " \
+               u"Nam luctus porta justo a pulvinar. Lorem ipsum dolor sit amet, " \
+               u"consectetur adipiscing elit. In hac habitasse platea dictumst."
+                
+        truncated_text = u"Lorem ipsum dolor sit amet, consectetur adipiscing elit. " \
+                         u"Nam luctus porta justo a pulvinar. Lorem ipsum dolor sit amet, " \
+                         u"consectetur adipiscing elit. In hac habitasse platea dictumst."
+
+        from voteit.core.views.components.discussions import truncate
+        
+        self.assertEqual(truncate(text, None), (truncated_text, False))
