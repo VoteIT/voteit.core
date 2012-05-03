@@ -158,7 +158,6 @@ class MeetingView(BaseView):
             return HTTPFound(location=url)
 
         #No action - Render add form
-        self.api.flash_messages.add(msg, close_button=False)
         self.response['form'] = form.render()
         return self.response
 
@@ -232,6 +231,7 @@ class MeetingView(BaseView):
             except ValidationFailure, e:
                 self.response['form'] = e.render()
                 return self.response
+
         if emails and 'resend' in post:
             for email in emails:
                 self.context.invite_tickets[email].send(self.request)
@@ -364,7 +364,6 @@ class MeetingView(BaseView):
                 return Response(headers = [('X-Relocate', url)])
             return HTTPFound(location=url)
 
-        #FIXME: with ajax post this does not work no, we'll need to fix this
         if 'cancel' in post:
             self.api.flash_messages.add(_(u"Canceled"))
 
