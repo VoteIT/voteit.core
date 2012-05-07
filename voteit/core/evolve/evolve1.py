@@ -6,8 +6,19 @@ def evolve(root):
         recreated by the new voteit.feed package.
         VoteIT wasn't released on PyPI when this was written so
         it's okay to simply delete things here.
+        We'll keep the old feed storage since voteit.feed might have
+        been installed already.
     """
-    for obj in root.values():
-        if IMeeting.providedBy(obj):
-            if hasattr(obj, '__feed_storage__'):
-                del obj.__feed_storage__
+    _marker = object()
+    broken_removed = 0
+    for obj in root.get_content(iface = IMeeting):
+        fs = getattr(obj, '__feed_storage__', _marker)
+        if fs is _marker:
+            continue
+        for (k, v) in fs.items():
+            #Delete old broken objects?
+            if v.__module__ == 'voteit.core.models.feeds':
+                del fs[k]
+                broken_removed += 1
+
+    print "Removed %s broken feed entry objects." % broken_removed
