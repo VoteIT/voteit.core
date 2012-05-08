@@ -3,8 +3,6 @@ import unittest
 from pyramid import testing
 from pyramid.httpexceptions import HTTPForbidden
 
-from voteit.feed.interfaces import IFeedHandler
-
 
 class UnsupportedBrowserTests(unittest.TestCase):
 
