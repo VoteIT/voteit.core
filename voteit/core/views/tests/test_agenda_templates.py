@@ -4,8 +4,6 @@ from pyramid import testing
 from pyramid.httpexceptions import HTTPForbidden
 from pyramid_mailer import get_mailer
 
-from voteit.feed.interfaces import IFeedHandler
-
 
 class AgendaTempalteViewTests(unittest.TestCase):
 
