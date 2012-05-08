@@ -18,6 +18,7 @@ from betahaus.viewcomponent.interfaces import IViewGroup
 from voteit.core import VoteITMF as _
 from voteit.core import security
 from voteit.core.models.interfaces import IDateTimeUtil
+from voteit.core.models.interfaces import IFanstaticResources
 from voteit.core.models.interfaces import IFlashMessages
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import IUnread
@@ -112,6 +113,14 @@ class APIView(object):
             for resource in DEFORM_RESOURCES.get(key, ()):
                 resource.need()
             #FIXME: Otherwise log error
+
+    def include_needed(self, context, request, view):
+        """ Include needed :term:`Fanstatic` resources.
+            See :mod:`voteit.core.models.interfaces.IFanstaticResources` for more
+            info on dealing with the resource utility.
+        """
+        util = request.registry.getUtility(IFanstaticResources)
+        util.include_needed(context, request, view)
 
     def tstring(self, *args, **kwargs):
         """ Hook into the translation string machinery.

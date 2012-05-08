@@ -116,6 +116,7 @@ class AgendaItemViewTests(unittest.TestCase):
     def test_discussion_more(self):
         self.config.testing_securitypolicy(userid='dummy',
                                            permissive=True)
+        self.config.include('voteit.core.models.fanstatic_resources')
         from voteit.core.models.discussion_post import DiscussionPost
         context = DiscussionPost() 
         context.title = "Testing read more view"

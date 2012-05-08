@@ -40,9 +40,6 @@ The exception is IVote, which should behave different.
   .. autointerface:: IAgendaTemplate
      :members:
 
-  .. autointerface:: IFeedEntry
-     :members:
-
   .. autointerface:: IProposal
      :members:
 
@@ -93,9 +90,6 @@ pluggable, compared to regular persistent models.
   .. autointerface:: IUnread
      :members:
 
-  .. autointerface:: IFeedHandler
-     :members:
-
   .. autointerface:: ICatalogMetadata
      :members:
 
@@ -109,9 +103,12 @@ Most aren't persistent at all.
   .. autointerface:: IDateTimeUtil
      :members:
 
-
   .. autointerface:: IJSUtil
      :members:
+
+  .. autointerface:: IFanstaticResources
+     :members:
+
 
 
 Markers

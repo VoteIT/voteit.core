@@ -97,6 +97,7 @@ def bootstrap_and_fixture(config):
     config.scan('voteit.core.models.agenda_templates')
     config.scan('voteit.core.models.user')
     config.scan('voteit.core.models.users')
+    config.include('voteit.core.models.fanstatic_resources')
     config.scan('betahaus.pyracont.fields.password')
     return bootstrap_voteit(echo=False)
 
