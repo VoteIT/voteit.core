@@ -7,9 +7,9 @@ in a sleek and simple interface. The participants choose their own facilitator
 or moderator for the meeting who keeps everything in order and sets up new
 agenda items or polls when the meeting needs them.
 
-VoteIT is a free and open source project and is free to download from GitHub
-to run on your own server. The project began in 2009 when the Swedish gaming
-federation (Sverok) was granted the first of two €100 000 grants from the
+VoteIT is a free and open source project and is free to download from `GitHub <http://github.com/VoteIT/>`_
+to run on your own server. The project began in 2009 when `the Swedish gaming
+federation (Sverok) <http://www.sverok.se>`_ was granted the first of two €100 000 grants from the
 Swedish Inheritance Fund. This first part of the project was completed in the
 fall of 2011 with the mote.voteit.se website going live. On the site we can
 now host organisation’s meetings for free.
