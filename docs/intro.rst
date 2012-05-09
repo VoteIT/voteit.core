@@ -33,7 +33,7 @@ VoteIT’s founding members are - in alphabetical order:
 * Sveriges föreningar
 * Sverok
 * Studiefrämjandet
-* Ung Webbradio.
+* Ung Webbradio
 
 These organisations, and many more, are committed to spread,
 develop and use VoteIT as a tool for improved democracy and easier participation.
@@ -41,15 +41,12 @@ develop and use VoteIT as a tool for improved democracy and easier participation
 Try VoteIT
 ----------
 
-At the moment we do not have a server running with the English version of VoteIT.
-You can either download VoteIT from GitHub and install it on your own server
-or try it in Swedish in our test meeting (in Swedish).
-
-The test server is at: `<http://voteit-dev.betahaus.net>`_
+For information about trying VoteIT please go to the project homepage: `<http://www.voteit.se>`_
 
 Contact and support
 -------------------
 
+* Main website: `<http://www.voteit.se>`_
 * Please send questions about VoteIT over e-mail to info@voteit.se
 * You can also find us on IRC: irc.quakenet.org #voteit
 * Our twitter account is of course `@voteit <https://twitter.com/voteit>`_

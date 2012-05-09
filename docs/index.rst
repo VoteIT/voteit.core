@@ -8,6 +8,9 @@ VoteIT project documentation
    installing
    configuring
    deploying
+   technical_overview
+   tutorials
+
 
 Indices and tables
 ==================
@@ -29,3 +32,4 @@ Indices and tables
    views/*
    views/components/*
    glossary
+
