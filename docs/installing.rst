@@ -1,5 +1,5 @@
-Installing VoteIT
-=================
+Installing
+==========
 
 
 Requirements

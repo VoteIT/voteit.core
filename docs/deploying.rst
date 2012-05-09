@@ -1,7 +1,7 @@
 .. _deploying:
 
-Deploying VoteIT
-================
+Deploying
+=========
 
 Example deployments configurations can be found at `<https://github.com/VoteIT>`_.
 Running a production paster is currently not covered by the VoteIT documentation, please
