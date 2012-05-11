@@ -45,9 +45,6 @@ Add the following to the root of your :term:`Buildout` directory. (Comments with
     available_languages = en sv
     #Which timezone use - it's important to set this correctly!
     default_timezone_name = Europe/Stockholm
-    #Captcha key for reCaptcha - optional
-    captcha_public_key = replace_with_real_public_key
-    captcha_private_key = replace_with_real_private_key
     #Salt for hashed login sessions. Set this to anything, just not the line below!
     tkt_secret = change me to whatever!
     #Caching
@@ -124,3 +121,4 @@ Save the file as `development.ini` and run the HTTP server this way:
 This should start a server on `localhost port 6543 <http://127.0.0.1:6543>`_.
 
 To stop the server, press ctrl + c.
+
