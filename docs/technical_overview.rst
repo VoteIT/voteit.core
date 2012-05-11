@@ -29,7 +29,7 @@ advanced modifications of VoteIT. A more complete guide is available at: TODO: Z
 While it will make some code more hard to read and understand, it will make most parts
 completely pluggable and changable, without latering any source code from other packages.
 
-We'll go through some of the basic concepts that are used most within VoteIT.
+We'll go through some of the basic concepts commonly used within VoteIT. 
 
 
 Registry
@@ -210,11 +210,94 @@ If you would execute the code straight away as it is, it would be something like
     adapter.extract()
     >>> {'author': 'Robin', 'text': 'hello world'}
 
+
+
 Events
 ^^^^^^
+
+Events are picked up by a subscriber. They're objects sent by the system to notify other parts of the
+application that something has happened. An exelent plug point.
+
+An event is created like this:
+
+  .. code-block:: py
+
+    class HelloWorldEvent(object):
+
+        def __init__(self, message):
+            self.message = message
+
+    event = HelloWorldEvent('Hello world!')
+
+To notify the system of your event, simply use the ``notify`` function.
+
+  .. code-block:: py
+
+    from zope.event import notify
+
+    notify(event)
+
+All events in VoteIT implement an interface too, which is the thing that subscribers subscribe to.
+That means that you can change the base class and simply implement the interface in your new class
+if you want to change it.
+
+You can attach other criteria to an event as well. The most common of these are object events.
+They're for a specific context. For instance, a meeting that changes workflow state will send an event.
+Object events always have object as the first argument. This is an example:
+
+  .. code-block:: py
+
+    from zope.component.event import objectEventNotify
+
+    class ObjectHighlightEvent(object):
+        """ Event that fires when an object has been updated. """
+
+        def __init__(self, object, msg, importance = 'low'):
+            self.object = object
+            self.msg = msg
+            self.importance = importance
+
+    #Let's send a notification for a made up context
+    dummy_context = object()
+    event = ObjectHighlightEvent(dummy_context, 'Stuff happend here!')
+    objectEventNotify(event)
 
 
 Subscribers
 ^^^^^^^^^^^
 
+To pick up an event from the system, create a subscriber. They're functions that will be executed
+whenever a specific event takes place. Note that there's not special order in which they get picked up,
+if you need that you must create subsequent events / subscribers.
+
+To make creation of subscribers easy, Pyramid provides a decorator you can use. Here's an example
+that will subscribe to every new ``request`` object created:
+
+  .. code-block:: py
+
+    from pyramid.events import subscriber
+    from pyramid.interfaces import INewRequest
+
+@subscriber(INewRequest)
+def do stuff(event):
+    print "I am the new request object: %s" % event.request
+
+To use subscribers with object events, you need to provide an interface for object type and for the event.
+This subscriber would fire whenever something that implements ``IDiscussionPost`` is added:
+
+  .. code-block:: py
+
+    from pyramid.events import subscriber
+    from repoze.folder.interfaces import IObjectAddedEvent
+
+    from voteit.core.models.interfaces import IDiscussionPost
+
+
+    @subscriber([IDiscussionPost, IObjectAddedEvent])
+    def do_stuff(obj, event):
+        pass
+
+Note the syntax difference - two positional arguments when there's two things to subscribe to.
+
+See :mod:`voteit.core.subscribers` for more examples.
 
