@@ -56,7 +56,7 @@ def user_info_view(context, request, info_userid=None):
         #User is allowed here, so do lookup
         user = root.users.get(info_userid)
     else:
-        user = None
+        raise ValueError("No user with that userid found in context")
 
     dt_util = request.registry.getUtility(IDateTimeUtil)
 
