@@ -64,7 +64,7 @@ This will take a while, go and make some coffee...
 Starting the server
 -------------------
 
-When buildout finishes, you should be able to start the regular develoment server.
+When buildout finishes, you should be able to start the regular development server.
 
 .. code-block :: bash
 

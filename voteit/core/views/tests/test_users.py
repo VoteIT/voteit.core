@@ -1,8 +1,8 @@
 import unittest
 
-from collections import OrderedDict
 from pyramid import testing
 from pyramid_mailer import get_mailer
+from webob.multidict import MultiDict
 
 from voteit.core.testing_helpers import bootstrap_and_fixture
 
@@ -104,7 +104,7 @@ class UsersFormViewTests(unittest.TestCase):
         self.config.testing_securitypolicy(userid='dummy',
                                            permissive=True)
         context = self._fixture()
-        request = testing.DummyRequest(post = OrderedDict([('userid', 'dummy4'), 
+        request = testing.DummyRequest(post = MultiDict([('userid', 'dummy4'), 
                                                            ('__start__', 'password:mapping'), 
                                                            ('password', 'dummy1234'), 
                                                            ('password-confirm', 'dummy1234'), 
@@ -129,7 +129,7 @@ class UsersFormViewTests(unittest.TestCase):
                                            permissive=True)
         context = self._fixture()
         # the values needs to be in order for password field to work
-        request = testing.DummyRequest(post = OrderedDict([('userid', 'dummy3'), 
+        request = testing.DummyRequest(post = MultiDict([('userid', 'dummy3'), 
                                                            ('__start__', 'password:mapping'), 
                                                            ('password', 'dummy1234'), 
                                                            ('password-confirm', 'dummy1234'), 
@@ -184,7 +184,7 @@ class UsersFormViewTests(unittest.TestCase):
         users = self._fixture()
         context = users['dummy3']
         # the values needs to be in order for password field to work
-        request = testing.DummyRequest(post = OrderedDict([('__start__', 'password:mapping'), 
+        request = testing.DummyRequest(post = MultiDict([('__start__', 'password:mapping'), 
                                                            ('password', 'dummy1234'), 
                                                            ('password-confirm', 'dummy1234'), 
                                                            ('__end__', 'password:mapping'), 
@@ -204,7 +204,7 @@ class UsersFormViewTests(unittest.TestCase):
         users = self._fixture()
         context = users['dummy3']
         # the values needs to be in order for password field to work
-        request = testing.DummyRequest(post = OrderedDict([('__start__', 'password:mapping'), 
+        request = testing.DummyRequest(post = MultiDict([('__start__', 'password:mapping'), 
                                                            ('password', 'dummy1234'), 
                                                            ('password-confirm', 'dummy1234_'), 
                                                            ('__end__', 'password:mapping'), 
@@ -261,7 +261,7 @@ class UsersFormViewTests(unittest.TestCase):
         from voteit.core.models.user import RequestPasswordToken
         context.__token__ = RequestPasswordToken()
         # the values needs to be in order for password field to work
-        request = testing.DummyRequest(post = OrderedDict([('token', context.__token__()),
+        request = testing.DummyRequest(post = MultiDict([('token', context.__token__()),
                                                            ('__start__', 'password:mapping'), 
                                                            ('password', 'dummy1234'), 
                                                            ('password-confirm', 'dummy1234'), 
@@ -284,7 +284,7 @@ class UsersFormViewTests(unittest.TestCase):
         from voteit.core.models.user import RequestPasswordToken
         context.__token__ = RequestPasswordToken()
         # the values needs to be in order for password field to work
-        request = testing.DummyRequest(post = OrderedDict([('token', context.__token__()),
+        request = testing.DummyRequest(post = MultiDict([('token', context.__token__()),
                                                            ('__start__', 'password:mapping'), 
                                                            ('password', 'dummy1234'), 
                                                            ('password-confirm', 'dummy1234_'), 
@@ -323,7 +323,7 @@ class UsersFormViewTests(unittest.TestCase):
                                            permissive=True)
         users = self._fixture()
         context = users.__parent__
-        request = testing.DummyRequest(post = OrderedDict([('userid', 'dummy3'),
+        request = testing.DummyRequest(post = MultiDict([('userid', 'dummy3'),
                                                            ('password', 'dummy1234'), 
                                                            ('login', 'login')]),
                                        user_agent='Dummy agent')
@@ -337,7 +337,7 @@ class UsersFormViewTests(unittest.TestCase):
                                            permissive=True)
         users = self._fixture()
         context = users.__parent__
-        request = testing.DummyRequest(post = OrderedDict([('userid', 'dummy3@test.com'),
+        request = testing.DummyRequest(post = MultiDict([('userid', 'dummy3@test.com'),
                                                            ('password', 'dummy1234'), 
                                                            ('login', 'login')]),
                                        user_agent='Dummy agent')
@@ -351,7 +351,7 @@ class UsersFormViewTests(unittest.TestCase):
                                            permissive=True)
         users = self._fixture()
         context = users.__parent__
-        request = testing.DummyRequest(post = OrderedDict([('userid', 'dummy3@test.com'),
+        request = testing.DummyRequest(post = MultiDict([('userid', 'dummy3@test.com'),
                                                            ('password', 'dummy1234'),
                                                            ('came_from', 'dummy_url'),
                                                            ('login', 'login')]),
@@ -366,7 +366,7 @@ class UsersFormViewTests(unittest.TestCase):
                                            permissive=True)
         users = self._fixture()
         context = users.__parent__
-        request = testing.DummyRequest(post = OrderedDict([('userid', 'dummy3@test.com'),
+        request = testing.DummyRequest(post = MultiDict([('userid', 'dummy3@test.com'),
                                                            ('password', ''),
                                                            ('came_from', 'dummy_url'),
                                                            ('login', 'login')]),
@@ -382,7 +382,7 @@ class UsersFormViewTests(unittest.TestCase):
                                            permissive=True)
         users = self._fixture()
         context = users.__parent__
-        request = testing.DummyRequest(post = OrderedDict([('userid', 'dummy3@test.com'),
+        request = testing.DummyRequest(post = MultiDict([('userid', 'dummy3@test.com'),
                                                            ('password', 'dummy1234_'),
                                                            ('came_from', 'dummy_url'),
                                                            ('login', 'login')]),
@@ -402,7 +402,7 @@ class UsersFormViewTests(unittest.TestCase):
                                            permissive=True)
         users = self._fixture()
         context = users.__parent__
-        request = testing.DummyRequest(post = OrderedDict([('userid', 'dummy4'), 
+        request = testing.DummyRequest(post = MultiDict([('userid', 'dummy4'), 
                                                            ('__start__', 'password:mapping'), 
                                                            ('password', 'dummy1234'), 
                                                            ('password-confirm', 'dummy1234'), 
@@ -422,7 +422,7 @@ class UsersFormViewTests(unittest.TestCase):
                                            permissive=True)
         users = self._fixture()
         context = users.__parent__
-        request = testing.DummyRequest(post = OrderedDict([('userid', 'dummy4'), 
+        request = testing.DummyRequest(post = MultiDict([('userid', 'dummy4'), 
                                                            ('__start__', 'password:mapping'), 
                                                            ('password', 'dummy1234'), 
                                                            ('password-confirm', 'dummy1234'), 
@@ -443,7 +443,7 @@ class UsersFormViewTests(unittest.TestCase):
                                            permissive=True)
         users = self._fixture()
         context = users.__parent__
-        request = testing.DummyRequest(post = OrderedDict([('userid', 'dummy4'), 
+        request = testing.DummyRequest(post = MultiDict([('userid', 'dummy4'), 
                                                            ('__start__', 'password:mapping'), 
                                                            ('password', 'dummy1234'), 
                                                            ('password-confirm', 'dummy1234_'), 
