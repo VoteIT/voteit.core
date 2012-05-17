@@ -17,6 +17,41 @@ For the purpose of this tutorial, your package will be called ``demo_plugin``.
 Within the demo_plugin folder, there's package information + a folder with the plugin code.
 It will also be named ``demo_plugin`` and should only contain a ``__init__.py`` file.
 
+To make the plugin available in Python, you need to add it as a development package.
+In ``buildout.cfg`` find the section ``[buildout]`` and add ``demo_plugin`` to the list of ``eggs``
++ add ``src/demo_plugin`` to the item ``develop``. Those two should look something like this:
+
+  .. code-block :: text
+
+    eggs =
+        voteit.core
+        coverage
+        nose
+        <etc...>
+        demo_plugin
+
+  .. code-block :: text
+
+    develop =
+        src/demo_plugin
+
+To enable it, you need to rerun buildout:
+
+  .. code-block :: bash
+
+    ./bin/buildout
+
+It should now be possible to import the new package from the interpeter ``py``. It's located in the ``bin``-folder.
+
+  .. code-block :: bash
+
+    ./bin/py
+
+  .. code-block :: py
+
+    >>> import demo_plugin
+    >>>
+
 :term:`Pyramid` (and VoteIT) uses a function called `ìncludeme`` as plug point.
 It looks like this:
 
@@ -44,7 +79,7 @@ VoteIT core development, you'll find the following sections:
         voteit.core.testing_helpers.printing_mailer
         betahaus.viewcomponent.debug_panel
 
-    #<other stuff...>
+  .. code-block :: text
 
     plugins = 
         voteit.core.plugins.majority_poll
