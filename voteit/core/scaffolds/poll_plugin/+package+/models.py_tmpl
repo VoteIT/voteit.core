@@ -61,7 +61,7 @@ class MyPollPlugin(PollPlugin):
         from operator import itemgetter
         self.context.poll_result = sorted(results, key=itemgetter('count'), reverse=True)
 
-    def render_result(self, request):
+    def render_result(self, request, complete=True):
         """ Return rendered html with result display. Called by the poll view
             when the poll has finished.
             context in this template will be the poll.
