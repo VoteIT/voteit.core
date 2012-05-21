@@ -45,6 +45,11 @@ same name as the userid of the one who added it.
 Creating the package
 --------------------
 
+  .. note::
+
+    If you'd like to download the example from this tutorial, it's available here:
+    :download:`demo.poll.tgz <../files/demo_poll.tgz>`.
+
 From within the buildout directory, go to the ``src`` folder and create a new package using paster.
 VoteIT provides a skeleton for creating poll plugins called ``voteit_poll_plugin``.
 
