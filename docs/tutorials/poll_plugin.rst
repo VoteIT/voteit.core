@@ -356,3 +356,22 @@ Finally, we need to make sure the template renders as expected by writing a test
 The test is almost equal to the previous one, but instead we check the generated output.
 Testing urls always start with ``http://example.com``.
 
+
+Enabling the new plugin
+-----------------------
+
+Live testing is of course the most important part.
+You've already added ``demo_poll`` to ``buildout.cfg``. You also need to add it
+to the paster ini file, located at ``etc/development.ini`` if you've used VoteITs
+dev environment, if you haven't done so already.
+
+Start the server:
+
+  .. code-block :: py
+
+    ./bin/paster serve etc/development.ini
+
+Create a meeting, and enable our poll plugin in ``meeting poll settings`` in
+the ``settings`` menu. (Make sure ``random poll method`` is checked)
+
+Now you should be able to use the poll method within an agenda item.
