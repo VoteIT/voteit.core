@@ -51,6 +51,10 @@ ACL['closed'] = [(Allow, security.ROLE_ADMIN, security.VIEW),
                  (Allow, security.ROLE_VIEWER, security.VIEW),
                  DENY_ALL,
                 ]
+ACL['private'] = [(Allow, security.ROLE_ADMIN, _PUBLISHED_MODERATOR_PERMS),
+                  (Allow, security.ROLE_MODERATOR, _PUBLISHED_MODERATOR_PERMS),
+                  DENY_ALL,
+                  ]
 
 
 @content_factory('Proposal', title=_(u"Proposal"))
@@ -71,15 +75,17 @@ class Proposal(BaseContent, WorkflowAware):
 
     @property
     def __acl__(self):
+        ai = find_interface(self, IAgendaItem)
+        ai_state = ai.get_workflow_state()
+        #If ai is private, use private
+        if ai_state == 'private':
+            return ACL['private']
         state = self.get_workflow_state()
         if state == 'published':
             return ACL['published']
-        
         #Check if AI is open.
-        ai = find_interface(self, IAgendaItem)
-        if ai.get_workflow_state() == 'closed':
+        if ai_state == 'closed':
             return ACL['closed']
-        
         return ACL['locked']
 
     def _get_title(self):
