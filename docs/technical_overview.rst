@@ -1,3 +1,5 @@
+.. _technical_overview:
+
 Technical overview
 ==================
 
@@ -19,6 +21,8 @@ Web server               :term:`Paste` - but any WSGI-compatible can be used.
 ======================== ==================
 
 
+.. _zca:
+
 The Zope Component Architechture
 --------------------------------
 
@@ -31,6 +35,8 @@ completely pluggable and changable, without latering any source code from other 
 
 We'll go through some of the basic concepts commonly used within VoteIT. 
 
+
+.. _registry:
 
 Registry
 ^^^^^^^^
@@ -49,6 +55,8 @@ or a content type with ``content_factory`` they'll all really be turned into com
 within the local registry. That way, most app developers don't need to understand how
 the component infrastructure works to use it.
 
+
+.. _interfaces:
 
 Interfaces
 ^^^^^^^^^^
@@ -102,6 +110,8 @@ The good thing about interfaces is that you can swap base clases and don't need 
 As long as you implement the interface correctly, everything should be fine.
 
 
+.. _utilities:
+
 Utilities
 ^^^^^^^^^
 
@@ -147,6 +157,8 @@ The point of using utils is to make sure that objects implement an interface. If
 the standard utils and insert something else there that implements the same interface,i
 everything will still work as expected.
 
+
+.. _adapters:
 
 Adapters
 ^^^^^^^^
@@ -211,6 +223,7 @@ If you would execute the code straight away as it is, it would be something like
     >>> {'author': 'Robin', 'text': 'hello world'}
 
 
+.. _events:
 
 Events
 ^^^^^^
@@ -263,6 +276,8 @@ Object events always have object as the first argument. This is an example:
     objectEventNotify(event)
 
 
+.. _subscribers:
+
 Subscribers
 ^^^^^^^^^^^
 
@@ -278,9 +293,9 @@ that will subscribe to every new ``request`` object created:
     from pyramid.events import subscriber
     from pyramid.interfaces import INewRequest
 
-@subscriber(INewRequest)
-def do stuff(event):
-    print "I am the new request object: %s" % event.request
+    @subscriber(INewRequest)
+    def do stuff(event):
+        print "I am the new request object: %s" % event.request
 
 To use subscribers with object events, you need to provide an interface for object type and for the event.
 This subscriber would fire whenever something that implements ``IDiscussionPost`` is added:
