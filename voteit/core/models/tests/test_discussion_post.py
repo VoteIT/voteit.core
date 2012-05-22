@@ -70,58 +70,58 @@ class DiscussionPostPermissionTests(unittest.TestCase):
     def tearDown(self):
         testing.tearDown()
 
-
     def _fixture(self):
-        """ DiscussionPosts check the meetings state and change their ACL depending
-            on what state the meeting is in
+        """ DiscussionPosts check parents state and change their ACL depending
+            on what state the meeting or agenda item is in.
         """
         from voteit.core.models.meeting import Meeting
+        from voteit.core.models.agenda_item import AgendaItem
         from voteit.core.models.discussion_post import DiscussionPost
         m = Meeting()
-        m['d'] = DiscussionPost()
+        m['ai'] = AgendaItem()
+        m['ai']['d'] = DiscussionPost()
         return m
 
-    def test_view_upcoming_meeting(self):
+    def test_upcoming_meeting_private_ai(self):
         m = self._fixture()
-        self.assertEqual(principals_allowed_by_permission(m['d'], security.VIEW), admin | viewer | moderator)
+        self.assertEqual(principals_allowed_by_permission(m['ai']['d'], security.VIEW), admin | moderator)
+        self.assertEqual(principals_allowed_by_permission(m['ai']['d'], security.DELETE), admin | moderator)
+        
+    def test_upcoming_meeting_upcoming_ai(self):
+        security.unrestricted_wf_transition_to(m['ai'], 'upcoming')
+        self.assertEqual(principals_allowed_by_permission(m['ai']['d'], security.VIEW), admin | viewer | moderator)
+        self.assertEqual(principals_allowed_by_permission(m['ai']['d'], security.DELETE), admin | moderator)
 
-    def test_view_ongoing_meeting(self):
-        m = self._fixture()
-        security.unrestricted_wf_transition_to(m, 'ongoing')
-        self.assertEqual(principals_allowed_by_permission(m['d'], security.VIEW), admin | viewer | moderator)
-
-    def test_view_closed_meeting(self):
-        m = self._fixture()
-        security.unrestricted_wf_transition_to(m, 'ongoing')
-        security.unrestricted_wf_transition_to(m, 'closed')
-        self.assertEqual(principals_allowed_by_permission(m['d'], security.VIEW), admin | viewer | moderator)
-
-    def test_edit_upcoming_meeting(self):
-        m = self._fixture()
-        self.assertEqual(principals_allowed_by_permission(m['d'], security.EDIT), set())
-
-    def test_edit_ongoing_meeting(self):
+    def test_ongoing_meeting_upcoming_ai(self):
         m = self._fixture()
         security.unrestricted_wf_transition_to(m, 'ongoing')
-        self.assertEqual(principals_allowed_by_permission(m['d'], security.EDIT), set())
+        security.unrestricted_wf_transition_to(m['ai'], 'upcoming')
+        self.assertEqual(principals_allowed_by_permission(m['ai']['d'], security.VIEW), admin | viewer | moderator)
+        self.assertEqual(principals_allowed_by_permission(m['ai']['d'], security.DELETE), admin | moderator)
 
-    def test_edit_closed_meeting(self):
+    def test_ongoing_meeting_ongoing_ai(self):
         m = self._fixture()
         security.unrestricted_wf_transition_to(m, 'ongoing')
-        security.unrestricted_wf_transition_to(m, 'closed')
-        self.assertEqual(principals_allowed_by_permission(m['d'], security.EDIT), set())
+        security.unrestricted_wf_transition_to(m['ai'], 'upcoming')
+        security.unrestricted_wf_transition_to(m['ai'], 'ongoing')
+        self.assertEqual(principals_allowed_by_permission(m['ai']['d'], security.VIEW), admin | viewer | moderator)
+        self.assertEqual(principals_allowed_by_permission(m['ai']['d'], security.DELETE), admin | moderator)
 
-    def test_delete_upcoming_meeting(self):
-        m = self._fixture()
-        self.assertEqual(principals_allowed_by_permission(m['d'], security.DELETE), admin | moderator | owner)
-
-    def test_delete_ongoing_meeting(self):
+    def test_ongoing_meeting_closed_ai(self):
         m = self._fixture()
         security.unrestricted_wf_transition_to(m, 'ongoing')
-        self.assertEqual(principals_allowed_by_permission(m['d'], security.DELETE), admin | moderator | owner)
+        security.unrestricted_wf_transition_to(m['ai'], 'upcoming')
+        security.unrestricted_wf_transition_to(m['ai'], 'ongoing')
+        security.unrestricted_wf_transition_to(m['ai'], 'closed')
+        self.assertEqual(principals_allowed_by_permission(m['ai']['d'], security.VIEW), admin | viewer | moderator)
+        self.assertEqual(principals_allowed_by_permission(m['ai']['d'], security.DELETE), admin | moderator)
 
-    def test_delete_closed_meeting(self):
+    def test_closed_meeting_closed_ai(self):
         m = self._fixture()
         security.unrestricted_wf_transition_to(m, 'ongoing')
         security.unrestricted_wf_transition_to(m, 'closed')
-        self.assertEqual(principals_allowed_by_permission(m['d'], security.DELETE), set())
+        security.unrestricted_wf_transition_to(m['ai'], 'upcoming')
+        security.unrestricted_wf_transition_to(m['ai'], 'ongoing')
+        security.unrestricted_wf_transition_to(m['ai'], 'closed')
+        self.assertEqual(principals_allowed_by_permission(m['ai']['d'], security.VIEW), admin | viewer | moderator)
+        self.assertEqual(principals_allowed_by_permission(m['ai']['d'], security.DELETE), set())
