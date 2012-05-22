@@ -3,6 +3,7 @@ from unittest import TestCase
 from pyramid import testing
 
 from voteit.core.testing_helpers import bootstrap_and_fixture
+from voteit.core import security
 
 
 class CatalogSubscriberTests(TestCase):
@@ -91,3 +92,22 @@ class CatalogSubscriberTests(TestCase):
         self.failUnless(self._metadata_for_query(root, uid = ai.uid))
         del root['new_obj']
         self.failIf(self._metadata_for_query(root, uid = ai.uid))
+
+    def test_update_contained_in_ai(self):
+        self.config.include('voteit.core.testing_helpers.register_security_policies')
+        from voteit.core.models.discussion_post import DiscussionPost
+        from voteit.core.models.meeting import Meeting
+        from voteit.core.models.user import User
+        root = self._fixture()
+        root['users']['john'] = User()
+        root['m'] = Meeting()
+        root['m'].add_groups('john', [security.ROLE_VIEWER])
+        root['m']['ai'] = ai = self._ai(title = 'New object')
+        ai['dp'] = dp = DiscussionPost()
+        #To make sure dp got catalogued
+        self.assertEqual(root.catalog.search(uid = dp.uid)[0], 1)
+        #The discussion post shouldn't be visible now, since the ai is private
+        self.assertEqual(root.catalog.search(uid = dp.uid, allowed_to_view = [security.ROLE_VIEWER])[0], 0)
+        #When the ai is made upcoming, it should be visible
+        security.unrestricted_wf_transition_to(ai, 'upcoming')
+        self.assertEqual(root.catalog.search(uid = dp.uid, allowed_to_view = [security.ROLE_VIEWER])[0], 1)
