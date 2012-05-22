@@ -10,6 +10,7 @@ from webhelpers.html.converters import nl2br
 
 from voteit.core import VoteITMF as _
 from voteit.core import security
+from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import ICatalogMetadataEnabled
 from voteit.core.models.interfaces import IDiscussionPost
 from voteit.core.models.interfaces import IMeeting
