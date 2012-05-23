@@ -11,10 +11,11 @@ from pyramid.httpexceptions import HTTPFound
 from pyramid.httpexceptions import HTTPRedirection
 from pyramid.url import resource_url
 from pyramid.traversal import resource_path
-from betahaus.pyracont.factories import createContent
-from betahaus.pyracont.factories import createSchema
 from pyramid.renderers import render
 from pyramid.response import Response
+from betahaus.pyracont.factories import createContent
+from betahaus.pyracont.factories import createSchema
+from betahaus.viewcomponent.interfaces import IViewGroup
 
 from voteit.core import security
 from voteit.core import VoteITMF as _
@@ -29,7 +30,6 @@ from voteit.core.models.schemas import button_cancel
 from voteit.core.models.schemas import button_resend
 from voteit.core.models.schemas import button_delete
 from voteit.core.validators import deferred_token_form_validator
-from betahaus.viewcomponent.interfaces import IViewGroup
 from voteit.core.helpers import generate_slug
 from voteit.core.helpers import ajax_options
 from voteit.core import fanstaticlib
@@ -223,11 +223,15 @@ class MeetingView(BaseView):
         post = self.request.POST
 
         emails = ()
+
         if 'resend' in post or 'delete' in post:
             controls = post.items()
             try:
                 appstruct = form.validate(controls)
-                emails = appstruct['emails']
+                if appstruct['apply_to_all'] == True:
+                    emails = [x.email for x in self.context.invite_tickets.values() if x.get_workflow_state() != u'closed']
+                else:
+                    emails = appstruct['emails']
             except ValidationFailure, e:
                 self.response['form'] = e.render()
                 return self.response

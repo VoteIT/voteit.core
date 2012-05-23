@@ -63,8 +63,16 @@ def checkbox_of_invited_emails_widget(node, kw):
 
 @schema_factory('ManageTicketsSchema', title = _(u"Manage invitations"), description = _(u"Manage invitations to the meeting"))
 class ManageTicketsSchema(colander.Schema):
+    apply_to_all = colander.SchemaNode(
+        colander.Bool(),
+        title = _(u"apply_to_all_title",
+                  default = u"Apply to all of the below, regardless of selection"),
+        default = False,
+        missing = False,
+    )
     emails = colander.SchemaNode(
-        deform.Set(),
+        deform.Set(allow_empty = True),
         widget = checkbox_of_invited_emails_widget,
         title = _(u"Current invitations"),
+        missing = colander.null,
     )
