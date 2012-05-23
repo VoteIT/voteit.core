@@ -30,7 +30,7 @@ class AtUseridLinkTests(unittest.TestCase):
     def test_function(self):
         from voteit.core.interfaces import IWorkflowStateChange
         value = self._fut('@admin', self._fixture())
-        self.assertIn('http://example.com/m/_userinfo?userid=admin', value)
+        self.assertIn('/m/_userinfo?userid=admin', value)
 
 class GenerateSlugTests(unittest.TestCase):
     
