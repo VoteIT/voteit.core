@@ -56,7 +56,7 @@
                 </tal:closed>
             </div>
 
-            <tal:messages replace="structure api.render_flash_messages()">Messages</tal:messages>
+            <tal:messages replace="structure api.render_single_view_component(context, request, 'main', 'flash_messages')">Messages</tal:messages>
 
         	<div metal:define-slot="main_window">
         	</div>
