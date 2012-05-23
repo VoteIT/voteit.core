@@ -410,12 +410,22 @@ class PollPermissionTests(unittest.TestCase):
         self.assertEqual(self.pap(poll, security.ADD_VOTE), set())
         self.assertEqual(self.pap(poll, security.CHANGE_WORKFLOW_STATE), admin | moderator)
 
-    def test_upcoming(self):
+    def test_upcoming_w_ongoing_ai(self):
+        poll = self._make_obj()
+        request = testing.DummyRequest()
+        poll.__parent__.set_workflow_state(request, 'upcoming')
+        poll.set_workflow_state(request, 'upcoming')
+        self.assertEqual(self.pap(poll, security.VIEW), admin | moderator | viewer )
+        self.assertEqual(self.pap(poll, security.EDIT), admin | moderator)
+        self.assertEqual(self.pap(poll, security.DELETE), admin | moderator)
+        self.assertEqual(self.pap(poll, security.ADD_VOTE), set())
+        self.assertEqual(self.pap(poll, security.CHANGE_WORKFLOW_STATE), admin | moderator)
+
+    def test_upcoming_w_private_ai(self):
         poll = self._make_obj()
         request = testing.DummyRequest()
         poll.set_workflow_state(request, 'upcoming')
-        
-        self.assertEqual(self.pap(poll, security.VIEW), admin | moderator | viewer )
+        self.assertEqual(self.pap(poll, security.VIEW), admin | moderator )
         self.assertEqual(self.pap(poll, security.EDIT), admin | moderator)
         self.assertEqual(self.pap(poll, security.DELETE), admin | moderator)
         self.assertEqual(self.pap(poll, security.ADD_VOTE), set())

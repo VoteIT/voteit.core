@@ -31,15 +31,18 @@ DEFAULT_TEMPLATE = "templates/base_edit.pt"
 
 
 class BaseEdit(object):
-    """ View class for adding, editing or deleting dynamic content. """
+    """ Default edit class. Subclass this to create edit views. """
 
     def __init__(self, context, request):
         self.context = context
         self.request = request
         self.response = {}
         self.response['api'] = self.api = APIView(context, request)
-        fanstaticlib.voteit_main_css.need()
-        fanstaticlib.voteit_common_js.need()
+        self.api.include_needed(context, request, self)
+
+
+class DefaultEdit(BaseEdit):
+    """ Default view class for adding, editing or deleting dynamic content. """
 
     @view_config(context=IBaseContent, name="add", renderer=DEFAULT_TEMPLATE)
     def add_form(self):

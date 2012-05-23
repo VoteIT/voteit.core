@@ -299,7 +299,7 @@ $(document).ready(function() {
 	    try { event.preventDefault(); } catch(e) {}
 		
 		var url = $(this).attr('href');
-		$("#discussions div.posts").load(url, function(response, status, xhr) {
+		$("#discussions .posts .listing").load(url, function(response, status, xhr) {
 	    });
 	});
 });

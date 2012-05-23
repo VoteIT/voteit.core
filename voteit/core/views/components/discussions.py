@@ -19,7 +19,8 @@ def truncate(text, length=240):
             trunc_text = htmltruncate.truncate(text, length, u'…')
         else:
             trunc_text = text
-    except htmltruncate.UnbalancedError: #If the html tags doesn't match up return the complete text 
+    # If the html tags doesn't match up return the complete text
+    except htmltruncate.UnbalancedError: # pragma : no cover
         trunc_text = text
     
     return (trunc_text, text != trunc_text)

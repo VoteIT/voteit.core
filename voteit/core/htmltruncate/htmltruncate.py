@@ -131,7 +131,7 @@ def truncate(str, target_len, ellipsis = ''):
     else:
         return ''.join(retval)        
 
-if __name__ == "__main__":
+if __name__ == "__main__": #pragma : no cover
     try:
         while True:
             print truncate(raw_input("> "), int(sys.argv[1]))

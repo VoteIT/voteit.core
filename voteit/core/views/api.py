@@ -18,6 +18,7 @@ from betahaus.viewcomponent.interfaces import IViewGroup
 from voteit.core import VoteITMF as _
 from voteit.core import security
 from voteit.core.models.interfaces import IDateTimeUtil
+from voteit.core.models.interfaces import IFanstaticResources
 from voteit.core.models.interfaces import IFlashMessages
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import IUnread
@@ -71,11 +72,6 @@ class APIView(object):
         """
         return self.request.registry.getAdapter(self.request, IFlashMessages)
 
-    def render_flash_messages(self):
-        """ Render flash messages. """
-        response = dict(messages = self.flash_messages.get_messages(),)
-        return render('templates/snippets/flash_messages.pt', response, request = self.request)
-
     @reify
     def show_moderator_actions(self):
         """ Show moderator actions? Falls back to MANAGE_SERVER if outside of
@@ -117,6 +113,14 @@ class APIView(object):
             for resource in DEFORM_RESOURCES.get(key, ()):
                 resource.need()
             #FIXME: Otherwise log error
+
+    def include_needed(self, context, request, view):
+        """ Include needed :term:`Fanstatic` resources.
+            See :mod:`voteit.core.models.interfaces.IFanstaticResources` for more
+            info on dealing with the resource utility.
+        """
+        util = request.registry.getUtility(IFanstaticResources)
+        util.include_needed(context, request, view)
 
     def tstring(self, *args, **kwargs):
         """ Hook into the translation string machinery.
@@ -178,13 +182,6 @@ class APIView(object):
         """
         return self.render_single_view_component(self.context, self.request, 'main', 'creators_info',
                                                  creators = creators, portrait = portrait)
-
-    def get_poll_state_info(self, poll):
-        response = {}
-        response['api'] = self
-        response['wf_state'] = poll.get_workflow_state()
-        response['poll'] = poll
-        return render('templates/poll_state_info.pt', response, request=self.request)
 
     def context_has_permission(self, permission, context):
         """ Special permission check that is agnostic of the request.context attribute.

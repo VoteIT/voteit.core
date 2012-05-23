@@ -48,6 +48,7 @@ def required_components(config):
     config.include('voteit.core.models.catalog')
     config.include('voteit.core.models.unread')
     config.include('voteit.core.models.flash_messages')
+    config.include('voteit.core.models.fanstatic_resources')
     config.include('voteit.core.deform_bindings')
     #For password storage
     config.scan('betahaus.pyracont.fields.password')
@@ -60,11 +61,10 @@ def required_components(config):
                                 '%s:locale/' % PROJECTNAME,)
     config.scan(PROJECTNAME)
     config.include(adjust_default_view_component_order)
-    from pyramid.chameleon_zpt import renderer_factory as zpt_rf
-    config.add_renderer('.xml', zpt_rf)
     from voteit.core.security import VIEW
     config.set_default_permission(VIEW)    
     config.include(register_plugins)
+    config.include(register_dynamic_fanstatic_resources)
     config.include(adjust_view_component_order)
 
 
@@ -115,12 +115,21 @@ def adjust_view_component_order(config):
             util = config.registry.getUtility(IViewGroup, name = name)
             util.order = v.strip().splitlines()
 
+
 def adjust_default_view_component_order(config):
     from betahaus.viewcomponent.interfaces import IViewGroup
     from voteit.core.view_component_order import DEFAULT_VC_ORDER
     for (name, items) in DEFAULT_VC_ORDER:
         util = config.registry.getUtility(IViewGroup, name = name)
         util.order = items
+
+
+def register_dynamic_fanstatic_resources(config):
+    from voteit.core.models.interfaces import IFanstaticResources
+    from voteit.core.fanstaticlib import DEFAULT_FANSTATIC_RESOURCES
+    util = config.registry.getUtility(IFanstaticResources)
+    for res in DEFAULT_FANSTATIC_RESOURCES:
+        util.add(*res)
 
 
 def includeme(config):

@@ -211,7 +211,7 @@ class UsersFormView(BaseEdit):
             # Forece lowercase userid
             userid = appstruct['userid'].lower()
             password = appstruct['password']
-            came_from = urllib.unquote(appstruct['came_from'])
+            came_from = appstruct['came_from']
     
             #userid here can be either an email address or a login name
             if '@' in userid:
@@ -226,7 +226,7 @@ class UsersFormView(BaseEdit):
                     headers = remember(self.request, user.__name__)
                     url = resource_url(self.context, self.request)
                     if came_from:
-                        url = came_from
+                        url = urllib.unquote(came_from)
                     return HTTPFound(location = url,
                                      headers = headers)
             self.response['api'].flash_messages.add(_('Login failed.'), type='error')

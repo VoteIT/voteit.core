@@ -63,8 +63,9 @@ def last_name_node():
 
 def came_from_node():
     return colander.SchemaNode(colander.String(),
+                               missing=u"",
                                widget = deform.widget.HiddenWidget(),
-                               default=deferred_referer,)
+                               default=deferred_referer)
 
 def recaptcha_node():
     return colander.SchemaNode(colander.String(),

@@ -736,6 +736,43 @@ class IJSUtil(Interface):
         """
 
 
+class IFanstaticResources(Interface):
+    """ Util for keeping track of when to render fanstatic resources.
+        All resources doesn't have to be registered here, just use it
+        when suitable. For instance, some widgets will include resources
+        themselves. This is also a plug-point for custom skinning and similar.
+    """
+    order = Attribute("""
+        A list of keys for resource order. You can change the order of rendered
+        resources here. Later in the list means later rendering.""")
+
+    def add(key, resource, discriminator = None):
+        """ Add a resource.
+
+            key
+                Unique key for this resource. Just a string. If you
+                specify the same key as something that exists, it will
+                be overwritten by this registration.
+
+            resource
+                :term:`Fanstatic` resource to be included. Must be a
+                Resource or Group object.
+
+            discriminator
+                A callable to be run with context, request and view as argument.
+                If it returns something that is True, the resource will be
+                included. Otherwise it won't. If this isn't set, the resource
+                will always be included.
+        """
+
+    def include_needed(context, request, view):
+        """ Runt need() on resources that are required in this context.
+            Will go through all discriminators to check which resources that
+            should be included in the order set in the order attribute.
+            Returns keys of included resources.
+        """
+
+
 #Marker interfaces
 class ICatalogMetadataEnabled(Interface):
     """ Marker interface for IBaseContent that should have metadata.

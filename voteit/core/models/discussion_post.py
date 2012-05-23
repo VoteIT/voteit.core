@@ -10,6 +10,7 @@ from webhelpers.html.converters import nl2br
 
 from voteit.core import VoteITMF as _
 from voteit.core import security
+from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import ICatalogMetadataEnabled
 from voteit.core.models.interfaces import IDiscussionPost
 from voteit.core.models.interfaces import IMeeting
@@ -28,7 +29,10 @@ ACL['closed'] = [(Allow, security.ROLE_ADMIN, security.VIEW),
                  (Allow, security.ROLE_VIEWER, (security.VIEW,)),
                  DENY_ALL,
                 ]
-
+ACL['private'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, security.DELETE, )),
+                  (Allow, security.ROLE_MODERATOR, (security.VIEW, security.DELETE, )),
+                  DENY_ALL,
+                  ]
 
 @content_factory('DiscussionPost', title=_(u"Discussion Post"))
 class DiscussionPost(BaseContent):
@@ -51,6 +55,11 @@ class DiscussionPost(BaseContent):
         meeting = find_interface(self, IMeeting)
         if meeting.get_workflow_state() == 'closed':
             return ACL['closed']
+        ai = find_interface(self, IAgendaItem)
+        ai_state = ai.get_workflow_state()
+        #If ai is private, use private
+        if ai_state == 'private':
+            return ACL['private']
         return ACL['open']
 
     #Override title, it will be used to generate a name for this content. (Like an id)

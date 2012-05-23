@@ -11,7 +11,7 @@
         </metal:page_title>
     <meta name="keywords" content="python web application" />
     <meta name="description" content="pyramid web application" />
-    <tal:head tal:content="structure api.render_single_view_component(context, request, 'main', 'head')"></tal:head>
+    <tal:head tal:content="structure api.render_view_group(context, request, 'head')"></tal:head>
     <metal:head define-slot="head"></metal:head>
 </head>
 <body>
@@ -59,7 +59,7 @@
                         </tal:closed>
                     </div>
 
-                    <tal:messages replace="structure api.render_flash_messages()">Messages</tal:messages>
+                    <tal:messages replace="structure api.render_single_view_component(context, request, 'main', 'flash_messages')">Messages</tal:messages>
 
                     <div metal:define-slot="page_heading"
                          id="page_heading"
