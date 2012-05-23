@@ -81,6 +81,11 @@ class Poll(BaseContent, WorkflowAware):
 
     @property
     def __acl__(self):
+        #If ai is private, use private
+        ai = find_interface(self, IAgendaItem)
+        ai_state = ai.get_workflow_state()
+        if ai_state == 'private':
+            return ACL['private']
         state = self.get_workflow_state()
         #As default - don't traverse to parent
         return ACL.get(state, 'closed')

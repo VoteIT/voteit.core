@@ -76,19 +76,24 @@ class ProposalPermissionTests(unittest.TestCase):
         from voteit.core.models.agenda_item import AgendaItem
         return AgendaItem()
 
-    def test_published(self):
-        obj = self._make_obj()
-
-        #View
-        self.assertEqual(self.pap(obj, security.VIEW), admin | moderator | viewer | voter | propose | discuss )
-
-        #Edit
+    def test_published_in_private_ai(self):
+        request = testing.DummyRequest()
+        ai = self._make_ai()
+        ai['p'] = obj = self._make_obj()
+        self.assertEqual(self.pap(obj, security.VIEW), admin | moderator)
         self.assertEqual(self.pap(obj, security.EDIT), admin | moderator)
-        
-        #Delete
         self.assertEqual(self.pap(obj, security.DELETE), admin | moderator)
+        self.assertEqual(self.pap(obj, security.RETRACT), admin | moderator)
 
-        #Retract
+    def test_published_in_ongoing_ai(self):
+        request = testing.DummyRequest()
+        ai = self._make_ai()
+        ai.set_workflow_state(request, 'upcoming')
+        ai.set_workflow_state(request, 'ongoing')
+        ai['p'] = obj = self._make_obj()
+        self.assertEqual(self.pap(obj, security.VIEW), admin | moderator | viewer | voter | propose | discuss )
+        self.assertEqual(self.pap(obj, security.EDIT), admin | moderator)
+        self.assertEqual(self.pap(obj, security.DELETE), admin | moderator)
         self.assertEqual(self.pap(obj, security.RETRACT), admin | moderator | owner )
 
     def test_retracted_in_ongoing_ai(self):

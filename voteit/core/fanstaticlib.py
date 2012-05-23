@@ -78,3 +78,24 @@ DEFORM_RESOURCES = {
     'deform': (jquery_142, voteit_deform,),
     'tinymce': (tinymce,),
 }
+
+
+def is_base_view(context, request, view):
+    """ View discriminators to check if a specific view does something.
+        They're used by IFanstaticResources utility to determine which
+        static resources to include, but it's possible to use them for
+        other things as well.
+    """
+    from voteit.core.views.base_view import BaseView
+    return isinstance(view, BaseView)
+
+
+#Positional arguments
+#key, resource, discriminator (if any)
+DEFAULT_FANSTATIC_RESOURCES = (
+    ('voteit_main_css', voteit_main_css),
+    ('voteit_common_js', voteit_common_js),
+    ('voteit_workflow_js', voteit_workflow_js),
+    ('voteit_deform', voteit_deform),
+    ('voteit_user_inline_info_js', voteit_user_inline_info_js, is_base_view),
+)

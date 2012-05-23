@@ -11,10 +11,11 @@ from pyramid.httpexceptions import HTTPFound
 from pyramid.httpexceptions import HTTPRedirection
 from pyramid.url import resource_url
 from pyramid.traversal import resource_path
-from betahaus.pyracont.factories import createContent
-from betahaus.pyracont.factories import createSchema
 from pyramid.renderers import render
 from pyramid.response import Response
+from betahaus.pyracont.factories import createContent
+from betahaus.pyracont.factories import createSchema
+from betahaus.viewcomponent.interfaces import IViewGroup
 
 from voteit.core import security
 from voteit.core import VoteITMF as _
@@ -29,7 +30,6 @@ from voteit.core.models.schemas import button_cancel
 from voteit.core.models.schemas import button_resend
 from voteit.core.models.schemas import button_delete
 from voteit.core.validators import deferred_token_form_validator
-from betahaus.viewcomponent.interfaces import IViewGroup
 from voteit.core.helpers import generate_slug
 from voteit.core.helpers import ajax_options
 from voteit.core import fanstaticlib
@@ -158,7 +158,6 @@ class MeetingView(BaseView):
             return HTTPFound(location=url)
 
         #No action - Render add form
-        self.api.flash_messages.add(msg, close_button=False)
         self.response['form'] = form.render()
         return self.response
 
@@ -224,14 +223,19 @@ class MeetingView(BaseView):
         post = self.request.POST
 
         emails = ()
+
         if 'resend' in post or 'delete' in post:
             controls = post.items()
             try:
                 appstruct = form.validate(controls)
-                emails = appstruct['emails']
+                if appstruct['apply_to_all'] == True:
+                    emails = [x.email for x in self.context.invite_tickets.values() if x.get_workflow_state() != u'closed']
+                else:
+                    emails = appstruct['emails']
             except ValidationFailure, e:
                 self.response['form'] = e.render()
                 return self.response
+
         if emails and 'resend' in post:
             for email in emails:
                 self.context.invite_tickets[email].send(self.request)
@@ -318,26 +322,26 @@ class MeetingView(BaseView):
         self.response['form'] = result
         return self.response
 
-    @view_config(context=IMeeting, name="presentation", renderer="templates/base_edit.pt", permission=security.EDIT)
+    @view_config(context=IMeeting, name="presentation", renderer="templates/base_edit.pt", permission=security.MODERATE_MEETING)
     def presentation(self):
         schema = createSchema("PresentationMeetingSchema").bind(context=self.context, request=self.request)
         return self.form(schema)
     
-    @view_config(context=IMeeting, name="mail_settings", renderer="templates/base_edit.pt", permission=security.EDIT)
+    @view_config(context=IMeeting, name="mail_settings", renderer="templates/base_edit.pt", permission=security.MODERATE_MEETING)
     def mail_settings(self):
         schema = createSchema("MailSettingsMeetingSchema").bind(context=self.context, request=self.request)
         return self.form(schema)
         
-    @view_config(context=IMeeting, name="access_policy", renderer="templates/base_edit.pt", permission=security.EDIT)
+    @view_config(context=IMeeting, name="access_policy", renderer="templates/base_edit.pt", permission=security.MODERATE_MEETING)
     def access_policy(self):
         schema = createSchema("AccessPolicyMeetingSchema").bind(context=self.context, request=self.request)
         return self.form(schema)
-    
-    @view_config(context=IMeeting, name="advanced_settings", renderer="templates/base_edit.pt", permission=security.EDIT)
-    def advanced_settings(self):
-        schema = createSchema("AdvancedSettingsMeetingSchema").bind(context=self.context, request=self.request)
+
+    @view_config(context=IMeeting, name="meeting_poll_settings", renderer="templates/base_edit.pt", permission=security.MODERATE_MEETING)
+    def global_poll_settings(self):
+        schema = createSchema("MeetingPollSettingsSchema").bind(context=self.context, request=self.request)
         return self.form(schema)
-        
+
     def form(self, schema):
         add_csrf_token(self.context, self.request, schema)
             
@@ -364,7 +368,6 @@ class MeetingView(BaseView):
                 return Response(headers = [('X-Relocate', url)])
             return HTTPFound(location=url)
 
-        #FIXME: with ajax post this does not work no, we'll need to fix this
         if 'cancel' in post:
             self.api.flash_messages.add(_(u"Canceled"))
 

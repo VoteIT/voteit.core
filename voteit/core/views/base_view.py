@@ -14,13 +14,7 @@ class BaseView(object):
         self.request = request
         self.response = {}
         self.response['api'] = self.api = APIView(context, request)
-        if self.api.show_moderator_actions or context.content_type == 'AgendaItem':
-            #Easy confirm is used by retract proposal and wf menu actions
-            fanstaticlib.voteit_workflow_js.need()
-        fanstaticlib.voteit_main_css.need()
-        fanstaticlib.voteit_common_js.need()
-        fanstaticlib.voteit_user_inline_info_js.need()
-        fanstaticlib.voteit_deform.need() #FIXME: For help menus. This should be loaded dynamically instead!
+        self.api.include_needed(context, request, self)
 
 
 class DefaultView(BaseView):

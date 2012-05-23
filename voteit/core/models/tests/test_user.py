@@ -71,6 +71,7 @@ class UserTests(unittest.TestCase):
 
     def test_new_request_password_token(self):
         self.config.scan('voteit.core.models.user')
+        self.config.scan('voteit.core.views.components.email')
         obj = self._make_obj()
         request = testing.DummyRequest()
         self.config.include('pyramid_mailer.testing')
@@ -79,18 +80,15 @@ class UserTests(unittest.TestCase):
     
     def test_new_request_password_token_mailed(self):
         self.config.scan('voteit.core.models.user')
+        self.config.scan('voteit.core.views.components.email')
         obj = self._make_obj()
         request = testing.DummyRequest()
         self.config.include('pyramid_mailer.testing')
-        
         obj.new_request_password_token(request)
-
         mailer = get_mailer(request)
         self.assertEqual(len(mailer.outbox), 1)
-        
         msg = mailer.outbox[0]
-        
-        self.failUnless(obj.__token__() in msg.body)
+        self.failUnless(obj.__token__() in msg.html)
     
     def test_blank_email_hash_generation(self):
         obj = self._make_obj()

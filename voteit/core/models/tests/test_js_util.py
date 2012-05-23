@@ -36,7 +36,7 @@ class JSUtilTests(unittest.TestCase):
 
     def test_add_translations_wrong_type(self):
         obj = self._cut()
-        self.assertRaises(TypeError, obj.add_translations, "hello")
+        self.assertRaises(TypeError, obj.add_translations, hello = 'world')
 
     def test_add_translations_bad_js_id(self):
         ts = TranslationString('hello"', domain = 'hello')
