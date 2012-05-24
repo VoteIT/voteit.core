@@ -196,6 +196,7 @@ class MeetingViewTests(unittest.TestCase):
         
     def test_add_tickets(self):
         self.config.scan('voteit.core.schemas.invite_ticket')
+        self.config.scan('voteit.core.views.components.email')
         self.config.testing_securitypolicy(userid='dummy',
                                            permissive=True)
         self._load_vcs()
@@ -224,6 +225,7 @@ class MeetingViewTests(unittest.TestCase):
     def test_add_tickets_post(self):
         self.config.scan('voteit.core.models.invite_ticket')
         self.config.scan('voteit.core.schemas.invite_ticket')
+        self.config.scan('voteit.core.views.components.email')
         self.config.include('pyramid_mailer.testing')
         self.config.include('voteit.core.models.flash_messages')
         self.config.testing_securitypolicy(userid='dummy',
@@ -245,6 +247,7 @@ class MeetingViewTests(unittest.TestCase):
         
     def test_add_tickets_post_validation_error(self):
         self.config.scan('voteit.core.schemas.invite_ticket')
+        self.config.scan('voteit.core.views.components.email')
         self.config.include('pyramid_mailer.testing')
         self.config.include('voteit.core.models.flash_messages')
         self.config.testing_securitypolicy(userid='dummy',
@@ -305,6 +308,7 @@ class MeetingViewTests(unittest.TestCase):
         
     def test_manage_tickets_resend(self):
         self.config.scan('voteit.core.schemas.invite_ticket')
+        self.config.scan('voteit.core.views.components.email')
         self.config.include('pyramid_mailer.testing')
         self.config.include('voteit.core.models.flash_messages')
         self.config.testing_securitypolicy(userid='dummy',

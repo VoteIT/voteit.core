@@ -39,6 +39,7 @@ class InviteTicketTests(unittest.TestCase):
         self.assertTrue(verifyObject(IInviteTicket, self._make_obj()))
 
     def test_send_message_sent(self):
+        self.config.scan('voteit.core.views.components.email')
         meeting = self._make_meeting()
         obj = self._make_obj()
         request = testing.DummyRequest()
@@ -56,6 +57,7 @@ class InviteTicketTests(unittest.TestCase):
         self.assertEqual(len(obj.sent_dates), 2)
         
     def test_claim_ticket(self):
+        self.config.scan('voteit.core.views.components.email')
         meeting = self._make_meeting()
         obj = self._make_obj()
         self.config.testing_securitypolicy(userid='some_user',
@@ -73,6 +75,7 @@ class InviteTicketTests(unittest.TestCase):
         self.assertEqual(meeting.get_groups('some_user'), ('role:Moderator',))
 
     def test_claim_closed(self):
+        self.config.scan('voteit.core.views.components.email')
         meeting = self._make_meeting()
         obj = self._make_obj()
         self.config.testing_securitypolicy(userid='some_user',
@@ -87,6 +90,7 @@ class InviteTicketTests(unittest.TestCase):
         self.assertRaises(Forbidden, ticket.claim, request)
 
     def test_claim_unathenticated(self):
+        self.config.scan('voteit.core.views.components.email')
         meeting = self._make_meeting()
         obj = self._make_obj()
         
