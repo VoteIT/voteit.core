@@ -337,7 +337,7 @@ Let's change the template as well.
     <tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="demo_poll">
         <h1 i18n:translate="">Poll result</h1>
         <strong i18n:translate="">Winner</strong>
-        <div><a href="${request.resource_url(winner, request)}">${winner.title}</a></div>
+        <div><a href="${request.resource_url(winner)}">${winner.title}</a></div>
         <strong i18n:translate="">Number of votes</strong>
         <div>${total_votes}</div>
     </tal:main>
