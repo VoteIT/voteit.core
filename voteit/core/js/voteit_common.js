@@ -11,6 +11,28 @@ $(document).ready(function () {
     });
 });
 
+$(document).ready(function() {
+    var div = $('#flash_messages');
+    var start = $(div).offset().top;
+ 
+    $.event.add(window, "scroll", function() {
+        var p = $(window).scrollTop();
+        $(div).css('position',((p)>start) ? 'fixed' : 'static');
+        $(div).css('top',((p)>start) ? '0px' : '');
+    });
+});
+
+$(document).ready(function() {
+    var div = $('#notify-meetingstate');
+    var start = $(div).offset().top;
+ 
+    $.event.add(window, "scroll", function() {
+        var p = $(window).scrollTop();
+        $(div).css('position',((p)>start) ? 'fixed' : 'static');
+        $(div).css('top',((p)>start) ? '0px' : '');
+    });
+});
+
 $('.cogwheel .menu_header').live('hover', display_cogwheel_menu);
 function display_cogwheel_menu(event) {
     /* stop form from submitting normally 

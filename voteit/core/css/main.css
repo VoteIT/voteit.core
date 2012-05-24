@@ -382,6 +382,7 @@ p {
 #flash_messages,
 #notify-meetingstate {
     clear: both;
+    z-index: 5000;
 }
 
 #flash_messages .message,
