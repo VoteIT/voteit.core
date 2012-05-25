@@ -55,10 +55,6 @@ class DefaultEditTests(unittest.TestCase):
         obj = self._cut(context, request)
         response = obj.add_form()
         self.assertEqual(response.location, 'http://example.com/m/')
-        flash = [x for x in request.session.pop_flash()]
-        self.assertEqual(flash, [{'msg': 'Canceled',
-                                  'close_button': True,
-                                  'type': 'info'}])
     
     def test_add_form_validation_error(self):
         self.config.scan('voteit.core.models.agenda_item')
@@ -118,10 +114,6 @@ class DefaultEditTests(unittest.TestCase):
         obj = self._cut(context, request)
         response = obj.add_form()
         self.assertEqual(response.location, 'http://example.com/m/ai/dummy-poll/')
-        flash = [x for x in request.session.pop_flash()]
-        self.assertEqual(flash, [{'msg': 'Successfully added',
-                                  'close_button': True,
-                                  'type': 'info'}])
 
     def test_edit_form(self):
         self.config.scan('voteit.core.models.agenda_item')
@@ -145,10 +137,6 @@ class DefaultEditTests(unittest.TestCase):
         obj = self._cut(context, request)
         response = obj.edit_form()
         self.assertEqual(response.location, 'http://example.com/m/ai/')
-        flash = [x for x in request.session.pop_flash()]
-        self.assertEqual(flash, [{'msg': 'Canceled',
-                                  'close_button': True,
-                                  'type': 'info'}])
     
     def test_edit_form_validation_error(self):
         self.config.scan('voteit.core.models.agenda_item')
@@ -172,10 +160,6 @@ class DefaultEditTests(unittest.TestCase):
         obj = self._cut(context, request)
         response = obj.edit_form()
         self.assertEqual(response.location, 'http://example.com/m/ai/')
-        flash = [x for x in request.session.pop_flash()]
-        self.assertEqual(flash, [{'msg': 'Successfully updated',
-                                  'close_button': True,
-                                  'type': 'info'}])
         
     def test_edit_form_same(self):
         self.config.scan('voteit.core.models.agenda_item')
@@ -188,10 +172,6 @@ class DefaultEditTests(unittest.TestCase):
         obj = self._cut(context, request)
         response = obj.edit_form()
         self.assertEqual(response.location, 'http://example.com/m/ai/')
-        flash = [x for x in request.session.pop_flash()]
-        self.assertEqual(flash, [{'msg': 'Nothing updated',
-                                  'close_button': True,
-                                  'type': 'info'}])
 
     def test_delete_form(self):
         self.config.include('voteit.core.models.flash_messages')
@@ -202,10 +182,6 @@ class DefaultEditTests(unittest.TestCase):
         obj = self._cut(context, request)
         response = obj.delete_form()
         self.assertIn('form', response)
-        flash = [x for x in request.session.pop_flash()]
-        self.assertEqual(flash, [{'msg': 'delete_form_notice',
-                                  'close_button': False,
-                                  'type': 'info'}])
         
     def test_delete_form_proposal(self):
         self.config.include('voteit.core.models.flash_messages')
@@ -219,13 +195,6 @@ class DefaultEditTests(unittest.TestCase):
         obj = self._cut(context, request)
         response = obj.delete_form()
         self.assertIn('form', response)
-        flash = [x for x in request.session.pop_flash()]
-        self.assertEqual(flash, [{'msg': 'delete_form_notice',
-                                  'close_button': False,
-                                  'type': 'info'},
-                                 {'msg': 'delete_form_locked_proposal_notice',
-                                  'close_button': False,
-                                  'type': 'error'}])
         
     def test_delete_form_cancel(self):
        self.config.include('voteit.core.models.flash_messages')
@@ -236,10 +205,6 @@ class DefaultEditTests(unittest.TestCase):
        obj = self._cut(context, request)
        response = obj.delete_form()
        self.assertEqual(response.location, 'http://example.com/m/ai/')
-       flash = [x for x in request.session.pop_flash()]
-       self.assertEqual(flash, [{'msg': 'Canceled',
-                                 'close_button': True,
-                                 'type': 'info'}])
  
     def test_delete_form_delete(self):
        self.config.include('voteit.core.models.flash_messages')
@@ -251,10 +216,6 @@ class DefaultEditTests(unittest.TestCase):
        response = obj.delete_form()
        self.assertNotIn('ai', meeting)
        self.assertEqual(response.location, 'http://example.com/m/')
-       flash = [x for x in request.session.pop_flash()]
-       self.assertEqual(flash, [{'msg': 'Deleted',
-                                 'close_button': True,
-                                 'type': 'info'}])
 
     def test_delete_form_delete_forbidden(self):
        self.config.include('voteit.core.models.flash_messages')

@@ -52,10 +52,6 @@ class RequestAccessComponentTests(unittest.TestCase):
         from voteit.core.views.components.request_access import public_request_meeting_access
         response = public_request_meeting_access(context, request, va, api=api)
         self.assertIn('<form', response)
-        flash = [x for x in request.session.pop_flash()]
-        self.assertEqual(flash, [{'msg': 'public_meeting_access_request_description',
-                                  'close_button': True,
-                                  'type': 'info'}])
         
     def test_public_request_meeting_access_request(self):
         self.config.include('voteit.core.models.flash_messages')
@@ -69,10 +65,6 @@ class RequestAccessComponentTests(unittest.TestCase):
         from voteit.core.views.components.request_access import public_request_meeting_access
         response = public_request_meeting_access(context, request, va, api=api)
         self.assertEqual(response.location, 'http://example.com/m/')
-        flash = [x for x in request.session.pop_flash()]
-        self.assertEqual(flash, [{'msg': 'Access granted!',
-                                  'close_button': True,
-                                  'type': 'info'}])
         
     def test_public_request_meeting_access_no_user(self):
         self.config.include('voteit.core.models.flash_messages')
@@ -104,10 +96,6 @@ class RequestAccessComponentTests(unittest.TestCase):
         from voteit.core.views.components.request_access import all_participant_permissions_meeting_access
         response = all_participant_permissions_meeting_access(context, request, va, api=api)
         self.assertIn('<form', response)
-        flash = [x for x in request.session.pop_flash()]
-        self.assertEqual(flash, [{'msg': 'all_participant_permissions_meeting_access_request_description',
-                                  'close_button': True,
-                                  'type': 'info'}])
         
     def test_all_participant_permissions_meeting_access_request(self):
         self.config.include('voteit.core.models.flash_messages')
@@ -121,10 +109,6 @@ class RequestAccessComponentTests(unittest.TestCase):
         from voteit.core.views.components.request_access import all_participant_permissions_meeting_access
         response = all_participant_permissions_meeting_access(context, request, va, api=api)
         self.assertEqual(response.location, 'http://example.com/m/')
-        flash = [x for x in request.session.pop_flash()]
-        self.assertEqual(flash, [{'msg': 'Access granted!',
-                                  'close_button': True,
-                                  'type': 'info'}])
         
     def test_all_participant_permissions_meeting_access_no_user(self):
         self.config.include('voteit.core.models.flash_messages')
@@ -145,7 +129,3 @@ class RequestAccessComponentTests(unittest.TestCase):
         from voteit.core.views.components.request_access import invite_only_request_meeting_access
         response = invite_only_request_meeting_access(context, request, va, api=api)
         self.assertEqual(response.location, 'http://example.com/')
-        flash = [x for x in request.session.pop_flash()]
-        self.assertEqual(flash, [{'msg': 'invite_only_meeting_access_request_description',
-                                  'close_button': True,
-                                  'type': 'info'}])

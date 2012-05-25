@@ -55,7 +55,6 @@ class MeetingViewTests(unittest.TestCase):
         self.assertEqual(response.location, 'http://example.com/m/@@request_access')
         
     def test_meeting_view_no_permission_not_loggedin(self):
-        ''' View should redirect to root of site '''
         self.config.include('voteit.core.models.flash_messages')
         self.config.testing_securitypolicy(permissive=False)
         self._load_vcs()
@@ -64,10 +63,6 @@ class MeetingViewTests(unittest.TestCase):
         obj = self._cut(context, request)
         response = obj.meeting_view()
         self.assertEqual(response.location, 'http://example.com/')
-        flash = [x for x in request.session.pop_flash()]
-        self.assertEqual(flash, [{'msg': u"You're not logged in - before you can access meetings you need to do that.",
-                                  'close_button': True,
-                                  'type': 'error'}])
         
     def test_participants_view(self):
         self.config.testing_securitypolicy(userid='dummy',
@@ -110,10 +105,6 @@ class MeetingViewTests(unittest.TestCase):
         obj = self._cut(context, request)
         response = obj.claim_ticket()
         self.assertEqual(response.location, 'http://example.com/@@login?came_from=http%3A//example.com')
-        flash = [x for x in request.session.pop_flash()]
-        self.assertEqual(flash, [{'msg': 'login_to_access_meeting_notice',
-                                  'close_button': True,
-                                  'type': 'info'}])
         
     def test_claim_ticket_post(self):
         self.config.scan('voteit.core.schemas.invite_ticket')
@@ -123,23 +114,15 @@ class MeetingViewTests(unittest.TestCase):
                                            permissive=True)
         self._load_vcs()
         context = self._fixture()
-
         from voteit.core.models.invite_ticket import InviteTicket
         ticket = InviteTicket('dummy@test.com', ['role:Moderator'], 'Welcome to the meeting!')
         ticket.__parent__ = context
         context.invite_tickets['dummy@test.com'] = ticket
-
         params = {'add': 'add', 'email': ticket.email, 'token': ticket.token}
         request = testing.DummyRequest(params=params, post=params)
-        
         obj = self._cut(context, request)
         response = obj.claim_ticket()
-        
         self.assertEqual(response.location, 'http://example.com/m/')
-        flash = [x for x in request.session.pop_flash()]
-        self.assertEqual(flash, [{'msg': "You've been granted access to the meeting. Welcome!",
-                                  'close_button': True,
-                                  'type': 'info'}])
         
     def test_claim_ticket_validation_error(self):
         self.config.scan('voteit.core.schemas.invite_ticket')
@@ -160,23 +143,16 @@ class MeetingViewTests(unittest.TestCase):
                                            permissive=True)
         self._load_vcs()
         context = self._fixture()
-        
         from voteit.core.models.invite_ticket import InviteTicket
         ticket = InviteTicket('dummy@test.com', ['role:Moderator'], 'Welcome to the meeting!')
         ticket.__parent__ = context
         ticket.token = 'dummy_token'
         context.invite_tickets['dummy@test.com'] = ticket
-
         params = {'add': 'add', 'email': ticket.email, 'token': ticket.token}
         request = testing.DummyRequest(params=params)
         obj = self._cut(context, request)
         response = obj.claim_ticket()
-        
         self.assertEqual(response.location, 'http://example.com/m/')
-        flash = [x for x in request.session.pop_flash()]
-        self.assertEqual(flash, [{'msg': "You've been granted access to the meeting. Welcome!",
-                                  'close_button': True,
-                                  'type': 'info'}])
         
     def test_claim_ticket_cancel(self):
         self.config.scan('voteit.core.schemas.invite_ticket')
@@ -189,10 +165,6 @@ class MeetingViewTests(unittest.TestCase):
         obj = self._cut(context, request)
         response = obj.claim_ticket()
         self.assertEqual(response.location, 'http://example.com/')
-        flash = [x for x in request.session.pop_flash()]
-        self.assertEqual(flash, [{'msg': 'Canceled',
-                                  'close_button': True,
-                                  'type': 'info'}])
         
     def test_add_tickets(self):
         self.config.scan('voteit.core.schemas.invite_ticket')
@@ -217,10 +189,6 @@ class MeetingViewTests(unittest.TestCase):
         obj = self._cut(context, request)
         response = obj.add_tickets()
         self.assertEqual(response.location, 'http://example.com/m/')
-        flash = [x for x in request.session.pop_flash()]
-        self.assertEqual(flash, [{'msg': 'Canceled',
-                                  'close_button': True,
-                                  'type': 'info'}])
         
     def test_add_tickets_post(self):
         self.config.scan('voteit.core.models.invite_ticket')
@@ -232,7 +200,6 @@ class MeetingViewTests(unittest.TestCase):
                                            permissive=True)
         self._load_vcs()
         context = self._fixture()
-
         request = testing.DummyRequest(post = {'add': 'add', 
                                                'emails': 'dummy1@test.com\ndummy1@test.com', 
                                                'message': 'Welcome to the meeting!', 
@@ -240,10 +207,6 @@ class MeetingViewTests(unittest.TestCase):
         obj = self._cut(context, request)
         response = obj.add_tickets()
         self.assertEqual(response.location, 'http://example.com/m/')
-        flash = [x for x in request.session.pop_flash()]
-        self.assertEqual(flash, [{'msg': 'sent_tickets_text',
-                                  'close_button': True,
-                                  'type': 'info'}])
         
     def test_add_tickets_post_validation_error(self):
         self.config.scan('voteit.core.schemas.invite_ticket')
@@ -286,10 +249,6 @@ class MeetingViewTests(unittest.TestCase):
         obj = self._cut(context, request)
         response = obj.manage_tickets()
         self.assertEqual(response.location, 'http://example.com/m/')
-        flash = [x for x in request.session.pop_flash()]
-        self.assertEqual(flash, [{'msg': 'Canceled',
-                                  'close_button': True,
-                                  'type': 'info'}])
         
     def test_manage_tickets_validation_error(self):
         self.config.scan('voteit.core.schemas.invite_ticket')
@@ -315,23 +274,15 @@ class MeetingViewTests(unittest.TestCase):
                                            permissive=True)
         self._load_vcs()
         context = self._fixture()
-
         request = testing.DummyRequest(post = {'resend': 'resend', 
                                                'emails': ['dummy@test.com'],})
-
         from voteit.core.models.invite_ticket import InviteTicket
         ticket = InviteTicket('dummy@test.com', ['role:Moderator'], 'Welcome to the meeting!')
         ticket.__parent__ = context
         context.invite_tickets['dummy@test.com'] = ticket
-        
         obj = self._cut(context, request)
         response = obj.manage_tickets()
-
         self.assertEqual(response.location, 'http://example.com/m/')
-        flash = [x for x in request.session.pop_flash()]
-        self.assertEqual(flash, [{'msg': 'resent_invites_notice',
-                                  'close_button': True,
-                                  'type': 'info'}])
         mailer = get_mailer(request)
         self.assertEqual(len(mailer.outbox), 1)
         
@@ -350,15 +301,9 @@ class MeetingViewTests(unittest.TestCase):
         ticket = InviteTicket('dummy@test.com', ['role:Moderator'], 'Welcome to the meeting!')
         ticket.__parent__ = context
         context.invite_tickets['dummy@test.com'] = ticket
-        
         obj = self._cut(context, request)
         response = obj.manage_tickets()
-
         self.assertEqual(response.location, 'http://example.com/m/')
-        flash = [x for x in request.session.pop_flash()]
-        self.assertEqual(flash, [{'msg': 'deleting_invites_notice',
-                                  'close_button': True,
-                                  'type': 'info'}])
         self.assertNotIn('dummy@test.com', context.invite_tickets)
         
     def test_manage_layout(self):
@@ -383,10 +328,6 @@ class MeetingViewTests(unittest.TestCase):
         obj = self._cut(context, request)
         response = obj.manage_layout()
         self.assertEqual(response.location, 'http://example.com/m/')
-        flash = [x for x in request.session.pop_flash()]
-        self.assertEqual(flash, [{'msg': 'Canceled',
-                                  'close_button': True,
-                                  'type': 'info'}])
         
     def test_manage_layout_save(self):
         self.config.scan('voteit.core.schemas.layout')
@@ -435,10 +376,6 @@ class MeetingViewTests(unittest.TestCase):
         obj = self._cut(context, request)
         response = obj.request_meeting_access()
         self.assertEqual(response.location, 'http://example.com/')
-        flash = [x for x in request.session.pop_flash()]
-        self.assertEqual(flash, [{'msg': 'invite_only_meeting_access_request_description',
-                                  'close_button': True,
-                                  'type': 'info'}])
         
     def test_request_meeting_access_public(self):
         self.config.scan('voteit.core.views.components.request_access')
@@ -478,10 +415,6 @@ class MeetingViewTests(unittest.TestCase):
         obj = self._cut(context, request)
         response = obj.request_meeting_access()
         self.assertEqual(response.location, 'http://example.com/')
-        flash = [x for x in request.session.pop_flash()]
-        self.assertEqual(flash, [{'msg': 'request_access_view_action_not_found',
-                                  'close_button': True,
-                                  'type': 'error'}])
         
     def test_presentation(self):
         self.config.scan('voteit.core.schemas.meeting')
@@ -554,10 +487,6 @@ class MeetingViewTests(unittest.TestCase):
         schema = createSchema("PresentationMeetingSchema").bind(context=context, request=request)
         response = obj.form(schema)
         self.assertEqual(response.location, 'http://example.com/m/')
-        flash = [x for x in request.session.pop_flash()]
-        self.assertEqual(flash, [{'msg': 'Canceled',
-                                  'close_button': True,
-                                  'type': 'info'}])
         
     def test_form_cancel_with_ajax(self):
         self.config.scan('voteit.core.schemas.meeting')
@@ -573,10 +502,6 @@ class MeetingViewTests(unittest.TestCase):
         schema = createSchema("PresentationMeetingSchema").bind(context=context, request=request)
         response = obj.form(schema)
         self.assertIn(response.headers['X-Relocate'], 'http://example.com/m/')
-        flash = [x for x in request.session.pop_flash()]
-        self.assertEqual(flash, [{'msg': 'Canceled',
-                                  'close_button': True,
-                                  'type': 'info'}])
         
     def test_form_save(self):
         self.config.scan('voteit.core.schemas.meeting')
@@ -665,10 +590,6 @@ class MeetingViewTests(unittest.TestCase):
         obj = self._cut(context, request)
         response = obj.order_agenda_items()
         self.assertIn('title', response)
-        flash = [x for x in request.session.pop_flash()]
-        self.assertEqual(flash, [{'msg': 'Order updated',
-                                  'close_button': True,
-                                  'type': 'info'}])
         
     def test_order_agenda_items_cancel(self):
         self.config.testing_securitypolicy(userid='dummy',
@@ -700,7 +621,3 @@ class MeetingViewTests(unittest.TestCase):
         obj = self._cut(context, request)
         response = obj.minutes()
         self.assertIn('agenda_items', response)
-        flash = [x for x in request.session.pop_flash()]
-        self.assertEqual(flash, [{'close_button': True,
-                                  'msg': u'meeting_not_closed_minutes_incomplete_notice',
-                                  'type': 'info'}])
