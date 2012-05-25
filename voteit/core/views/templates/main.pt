@@ -47,52 +47,19 @@
         </div>
 
         <div id="main_window">
-            <div id="top">
-                <div class="content_wrapper">
+            <div id="notify-meetingstate" class="content_wrapper" tal:condition="api.meeting_state">
+                <tal:upcoming condition="api.meeting_state == 'upcoming'">
+                    <span class="message" i18n:translate="">This meeting hasn't started yet.</span>
+                </tal:upcoming>
+                <tal:closed condition="api.meeting_state == 'closed'">
+                    <span class="message" i18n:translate="">This meeting has closed.</span>
+                </tal:closed>
+            </div>
 
-                    <div id="notify-meetingstate" class="content_wrapper" tal:condition="api.meeting_state">
-                        <tal:upcoming condition="api.meeting_state == 'upcoming'">
-                            <span class="message" i18n:translate="">This meeting hasn't started yet.</span>
-                        </tal:upcoming>
-                        <tal:closed condition="api.meeting_state == 'closed'">
-                            <span class="message" i18n:translate="">This meeting has closed.</span>
-                        </tal:closed>
-                    </div>
+            <tal:messages replace="structure api.render_single_view_component(context, request, 'main', 'flash_messages')">Messages</tal:messages>
 
-                    <tal:messages replace="structure api.render_single_view_component(context, request, 'main', 'flash_messages')">Messages</tal:messages>
-
-                    <div metal:define-slot="page_heading"
-                         id="page_heading"
-                         tal:condition="not form|True">
-
-                        <span metal:define-slot="action_menu"
-                             tal:condition="api.context_has_permission('Moderate Meeting', context)"
-                             tal:content="structure api.get_moderator_actions(context)">Cogwheel menu</span>
-
-                        <h2 tal:condition="not title|True" tal:content="context.title">Title</h2>
-                        <h2 tal:condition="title|False" tal:content="title">Title</h2>
-
-                    </div> <!-- page_heading -->
-                    <div id="top_content" metal:define-slot="top_content" tal:condition="not form|True"></div>
-                </div> <!-- content_wrapper -->
-            </div> <!-- top -->
-
-            <div id="content" class="col-50-50" metal:define-slot="content" tal:condition="not form|True">
-                <div id="left" class="column column-1">
-                    <div class="content_wrapper">
-                       <metal:left define-slot="left"></metal:left>
-                    </div>
-                </div> <!-- left column-->
-                
-                <div id="right" class="column column-2">
-                    <div class="content_wrapper">
-                       <metal:right define-slot="right"></metal:right>
-                    </div>
-                </div> <!-- right column-->
-            </div> <!-- content -->
-
-            <div metal:define-slot="form" tal:condition="form|False" class="content_wrapper" tal:content="structure form">Form</div>
-            
+        	<div metal:define-slot="main_window">
+        	</div>
         </div> <!-- main_window -->
 
         </div></div><!-- wrappers -->
