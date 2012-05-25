@@ -403,7 +403,7 @@ p {
     font-size: 14px;
     color: #054265;
 }
-#notify-meetingstate .message {
+#flash_messages .lock {
     background-image: url(/static/icons/icon_lock.png);
 }
 #flash_messages .info {
