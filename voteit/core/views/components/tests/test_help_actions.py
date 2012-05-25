@@ -5,7 +5,7 @@ from pyramid import testing
 from voteit.core.testing_helpers import bootstrap_and_fixture
 
 
-class GlobalActionsComponentTests(unittest.TestCase):
+class HelpActionsComponentTests(unittest.TestCase):
         
     def setUp(self):
         self.config = testing.setUp()
