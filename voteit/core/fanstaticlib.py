@@ -55,13 +55,7 @@ autoresizable_textarea_js = Resource(voteit_core_jslib, 'jquery.autoResizable.js
 _star_rating_css = Resource(voteit_core_csslib, 'star_rating.css', depends=(voteit_main_css,))
 star_rating = Group((_star_rating_css, jquery_rating))
 
-_modal_css = Resource(voteit_core_csslib, 'voteit_modal.css', 
-                     supersedes=(voteit_main_css,))
-_modal_js = Resource(voteit_core_jslib, 'voteit_modal.js', 
-                    depends = (jquery_142,))
-modal = Group((_modal_css, _modal_js))
-
-voteit_common_js = Resource(voteit_core_jslib, 'voteit_common.js', depends=(jquery_142, jquery_cookie, qtip, modal), bottom=True)
+voteit_common_js = Resource(voteit_core_jslib, 'voteit_common.js', depends=(jquery_142, jquery_cookie, qtip), bottom=True)
 voteit_user_inline_info_js = Resource(voteit_core_jslib, 'voteit_user_inline_info.js', depends=(qtip, voteit_common_js), bottom=True)
 _voteit_deform_js = Resource(voteit_core_jslib, 'voteit_deform.js', depends=(_deform_js,), bottom=True)
 voteit_workflow_js = Resource(voteit_core_jslib, 'voteit_workflow.js', depends=(jquery_easy_confirm_dialog, voteit_common_js), bottom=True)
