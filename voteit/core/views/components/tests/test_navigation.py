@@ -83,3 +83,12 @@ class NavigationComponentTests(unittest.TestCase):
         from voteit.core.views.components.navigation import navigation_section
         response = navigation_section(context, request, va, api=api)
         self.assertIn('Upcoming', response)
+
+    def test_navigation_section_cookie(self):
+        context = self._fixture()
+        request = testing.DummyRequest(cookies={'%s-%s' % (context.uid, 'upcoming'): 'closed'})
+        va = self._va(title='Upcoming', kwargs={'state': 'upcoming'})
+        api = self._api(context, request)
+        from voteit.core.views.components.navigation import navigation_section
+        response = navigation_section(context, request, va, api=api)
+        self.assertIn('Upcoming', response)
