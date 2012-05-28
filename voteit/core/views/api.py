@@ -37,11 +37,9 @@ class APIView(object):
     def __init__(self, context, request):
         self.context = context
         self.request = request
-        
         self.resource_url = resource_url
         self.root = find_root(context)
         self.userid = authenticated_userid(request)
-        
         self.template_dir = TEMPLATE_DIR
 
     @reify

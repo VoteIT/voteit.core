@@ -38,7 +38,6 @@
                     <a tal:attributes="href api.resource_url(api.meeting, request)" tal:content="api.meeting.title">Meeting</a>
                 </h1>
             </div>
-
         </div>
 
         <div id="rightcol-wrapper"><div id="leftcol-wrapper">
@@ -47,19 +46,8 @@
         </div>
 
         <div id="main_window">
-            <div id="notify-meetingstate" class="content_wrapper" tal:condition="api.meeting_state">
-                <tal:upcoming condition="api.meeting_state == 'upcoming'">
-                    <span class="message" i18n:translate="">This meeting hasn't started yet.</span>
-                </tal:upcoming>
-                <tal:closed condition="api.meeting_state == 'closed'">
-                    <span class="message" i18n:translate="">This meeting has closed.</span>
-                </tal:closed>
-            </div>
-
             <tal:messages replace="structure api.render_single_view_component(context, request, 'main', 'flash_messages')">Messages</tal:messages>
-
-        	<div metal:define-slot="main_window">
-        	</div>
+            <div metal:define-slot="main_window"></div>
         </div> <!-- main_window -->
 
         </div></div><!-- wrappers -->
