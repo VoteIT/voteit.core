@@ -85,6 +85,7 @@ class MeetingTests(unittest.TestCase):
     def test_add_invite_ticket_traversal(self):
         from voteit.core.models.invite_ticket import InviteTicket
         self.config.include('pyramid_mailer.testing')
+        self.config.scan('voteit.core.views.components.email')
         request = testing.DummyRequest()
         obj = self._cut()
         ticket = InviteTicket('blabla@hello.se', ['role:Moderator'], 'Hello!')

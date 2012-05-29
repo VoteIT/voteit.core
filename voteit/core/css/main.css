@@ -382,6 +382,7 @@ p {
 #flash_messages,
 #notify-meetingstate {
     clear: both;
+    z-index: 5000;
 }
 
 #flash_messages .message,
@@ -402,7 +403,7 @@ p {
     font-size: 14px;
     color: #054265;
 }
-#notify-meetingstate .message {
+#flash_messages .lock {
     background-image: url(/static/icons/icon_lock.png);
 }
 #flash_messages .info {
@@ -850,6 +851,21 @@ ul.agenda-templates > li {
 }
 
 /* modal */
+/* Z-index of #modal-mask must lower than .modal-window */
+#modal-mask {
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 9000;
+	background-color: #000;
+	display: none;
+}
+   
+.modal-window {
+	position: absolute;
+	z-index: 9999;
+	display: none;
+}
 .modal-window {
     display: none;
     width: 60%;
@@ -869,9 +885,6 @@ ul.agenda-templates > li {
     top: 15px;
     right: 15px;
 }
-.modal-window .contet {
-    height: 100%;
-}
 .modal-window #modal-header {
     margin-top: 0px;
 }
@@ -881,22 +894,6 @@ ul.agenda-templates > li {
 }
 
 /* help tab */
-/*
-#help-tab {
-    position: fixed;
-    right: 0px;
-    top: 50%;
-    z-index: 8000;
-    background-color: #054265;
-}
-
-#help-tab a {
-    margin: 0;
-    padding: 0;
-    color: white;
-    font-weight: bold;
-}
-*/
 #help-dialog > ul {
     margin: 5px 0 25px 0;
 }
