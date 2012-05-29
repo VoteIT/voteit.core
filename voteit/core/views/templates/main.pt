@@ -6,9 +6,6 @@
       i18n:domain="voteit.core">
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-        <metal:page_title define-slot="page_title">
-           <title>VoteIT</title>
-        </metal:page_title>
     <meta name="keywords" content="python web application" />
     <meta name="description" content="pyramid web application" />
     <tal:head tal:content="structure api.render_view_group(context, request, 'head')"></tal:head>
