@@ -13,6 +13,7 @@ from pyramid.exceptions import Forbidden
 from pyramid.security import authenticated_userid
 from pyramid.renderers import render
 from betahaus.pyracont.decorators import content_factory
+from betahaus.viewcomponent import render_view_action
 
 from voteit.core import VoteITMF as _
 from voteit.core import security
@@ -60,26 +61,16 @@ class InviteTicket(Folder, WorkflowAware):
         super(InviteTicket, self).__init__()
 
     def send(self, request):
-        response = {}
-
         meeting = find_interface(self, IMeeting)
-        assert meeting
-        
-        form_url = "%sticket" % resource_url(meeting, request)
-        response['access_link'] = form_url + '?email=%s&token=%s' % (self.email, self.token)
-        response['message'] = self.message
-        
-        sender = "%s <%s>" % (meeting.get_field_value('meeting_mail_name'), meeting.get_field_value('meeting_mail_address'))
-        body_html = render('../views/templates/invite_ticket_email.pt', response, request=request)
-
+        sender = "%s <%s>" % (meeting.get_field_value('meeting_mail_name'),
+                              meeting.get_field_value('meeting_mail_address'))
+        body_html = render_view_action(self, request, 'email', 'invite_ticket')
         msg = Message(subject=_(u"VoteIT meeting invitation"),
                       sender = sender and sender or None,
                       recipients=[self.email],
                       html=body_html)
-
         mailer = get_mailer(request)
         mailer.send(msg)
-
         self.sent_dates.append(utcnow())
 
     def claim(self, request):

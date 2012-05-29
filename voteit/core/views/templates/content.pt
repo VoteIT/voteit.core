@@ -1,0 +1,40 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      metal:use-macro="load: ${api.template_dir}main.pt"
+	  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+	  i18n:domain="voteit.core">
+<body>
+    <div metal:fill-slot="main_window">
+        <div id="top">
+            <div class="content_wrapper">
+                <div metal:define-slot="page_heading"
+                     id="page_heading">
+
+                    <span metal:define-slot="action_menu"
+                         tal:condition="api.context_has_permission('Moderate Meeting', context)"
+                         tal:content="structure api.get_moderator_actions(context)">Cogwheel menu</span>
+
+                    <h2 tal:condition="not title|True" tal:content="context.title">Title</h2>
+                    <h2 tal:condition="title|False" tal:content="title">Title</h2>
+
+                </div> <!-- page_heading -->
+                <div id="top_content" metal:define-slot="top_content"></div>
+            </div> <!-- content_wrapper -->
+        </div> <!-- top -->
+
+        <div id="content" class="col-50-50" metal:define-slot="content">
+            <div id="left" class="column column-1">
+                <div class="content_wrapper">
+                   <metal:left define-slot="left"></metal:left>
+                </div>
+            </div> <!-- left column-->
+            
+            <div id="right" class="column column-2">
+                <div class="content_wrapper">
+                   <metal:right define-slot="right"></metal:right>
+                </div>
+            </div> <!-- right column-->
+        </div> <!-- content -->
+    </div>
+</body>
+</html>

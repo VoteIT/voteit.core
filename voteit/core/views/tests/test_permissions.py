@@ -125,16 +125,6 @@ class PermissionsViewTests(unittest.TestCase):
         response = obj.group_form()
         self.assertIn('form', response)
         
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
     def test_add_permission_root(self):
         context = self._fixture()
         request = testing.DummyRequest()
@@ -178,10 +168,6 @@ class PermissionsViewTests(unittest.TestCase):
         obj = self._cut(context, request)
         response = obj.add_permission()
         self.assertEqual(response.location, 'http://example.com/')
-        flash = [x for x in request.session.pop_flash()]
-        self.assertEqual(flash, [{'msg': u"Added permssion for user ${userid}",
-                                  'close_button': True,
-                                  'type': 'info'}])
         
     def test_add_permission_meeting_save(self):
         self.config.include('voteit.core.models.flash_messages')
@@ -197,10 +183,6 @@ class PermissionsViewTests(unittest.TestCase):
         obj = self._cut(context, request)
         response = obj.add_permission()
         self.assertEqual(response.location, 'http://example.com/m/')
-        flash = [x for x in request.session.pop_flash()]
-        self.assertEqual(flash, [{'msg': u"Added permssion for user ${userid}",
-                                  'close_button': True,
-                                  'type': 'info'}])
         
     def test_add_permission_root_validation_error(self):
         context = self._fixture()
