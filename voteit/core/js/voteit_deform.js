@@ -52,16 +52,32 @@ $(document).delegate('input[name="start_time"]', 'change', function() {
 function voteit_deform_success(rText, sText, xhr, form) {
 	deform.processCallbacks();
 	deform.focusFirstInput();
-	$('#booth.poll .success.message').fadeIn(3000);
+	var button = $('#booth.poll form.deform button[type=submit]');
+	var message = $('#booth.poll .success.message');
+	message.insertAfter(button);
+	message.fadeIn(3000);
 }
 
 function voteit_poll_error(xhr, status, error) {
-	$('#booth.poll form.deform button[type=submit]').removeAttr('disabled');
-	$('#booth.poll .error.message').empty();
-	$('#booth.poll .error.message').append(voteit.translation['voting_error_msg']);
-	$('#booth.poll .error.message').fadeIn(3000);
+	var button = $('#booth.poll form.deform button[type=submit]');
+	var message = $('#booth.poll .error.message'); 
+	button.removeAttr('disabled');
+	message.empty();
+	if(status=='timeout')
+		message.append(voteit.translation['voting_timeout_msg']);
+	else 
+		message.append(voteit.translation['voting_error_msg']);
+	message.insertAfter(button);
+	message.fadeIn(3000);
+	button.find('img').remove();
 }
 
 function voteit_poll_beforeSubmit(arr, form, options) {
-	form.find('button[type=submit]').attr("disabled", "disabled");
+	var button = form.find('button[type=submit]');
+	button.attr("disabled", "disabled");
+	var spinner = $(document.createElement('img'));
+	spinner.attr('class', 'spinner');
+	spinner.attr('src', '/static/images/spinner.gif');
+	spinner.attr('alt', voteit.translation['waiting']);
+	spinner.insertAfter(button.find('span'));
 } 

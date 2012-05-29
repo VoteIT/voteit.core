@@ -21,4 +21,6 @@ def includeme(config):
         help_contact = _(u"Help &amp; Contact"),
         poll = _(u"Poll"),
         voting_error_msg = _(u"An error occurred while voting, please try again."),
+        voting_timeout_msg = _(u"Server didn't respond, many participants may be voteing right now, please try again."),
+        waiting = _(u"Waiting..."),
     )

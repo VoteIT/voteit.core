@@ -388,6 +388,7 @@ p {
 
 #booth.poll .message {
 	display: none;
+	float: right !important;
 }
 
 #flash_messages .message,
@@ -909,4 +910,10 @@ ul.agenda-templates > li {
     display: inline;
     margin-right: 0.5em;
     list-style-type: none;
+}
+
+button .spinner {
+	margin-left: 5px;
+	width: 12px;
+	height: 12px;
 }

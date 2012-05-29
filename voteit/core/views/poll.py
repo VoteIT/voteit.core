@@ -144,6 +144,7 @@ class PollView(BaseEdit):
                         error: voteit_poll_error,
                         beforeSubmit: voteit_poll_beforeSubmit,
                         target: '#booth.poll',
+                        timeout: 10000
                         }
                         """)
         self.api.register_form_resources(form)
