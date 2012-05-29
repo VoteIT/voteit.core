@@ -17,6 +17,11 @@ viewer = set([security.ROLE_VIEWER])
 moderator = set([security.ROLE_MODERATOR])
 
 
+_DUMMY_MESSAGE = u"""Website: www.betahaus.net,
+could be written as http://www.betahaus.net
+Robins email is robin@betahaus.net"""
+_DUMMY_EXPECTED_RESULT = u"""Website: <a href="http://www.betahaus.net">www.betahaus.net</a>,<br /> could be written as <a href="http://www.betahaus.net">http://www.betahaus.net</a><br /> Robins email is <a href="mailto:robin@betahaus.net">robin@betahaus.net</a>"""
+
 class DiscussionTests(unittest.TestCase):
     def setUp(self):
         self.config = testing.setUp()
@@ -42,8 +47,17 @@ class DiscussionTests(unittest.TestCase):
 
     def test_autolinking_enabled(self):
         obj = self._cut()
-        obj.set_field_value('text', 'www.betahaus.net')
-        self.assertEqual(unicode(obj.get_field_value('text')), unicode('<a href="http://www.betahaus.net">www.betahaus.net</a>'))
+        obj.set_field_value('text', _DUMMY_MESSAGE)
+        self.maxDiff = None
+        self.assertEqual(unicode(obj.get_field_value('text')), _DUMMY_EXPECTED_RESULT)
+
+    def test_autolinking_several_runs(self):
+        obj = self._cut()
+        obj.set_field_value('text', _DUMMY_MESSAGE)
+        first_run = obj.get_field_value('text')
+        obj.set_field_value('text', first_run)
+        self.maxDiff = None
+        self.assertEqual(unicode(obj.get_field_value('text')), _DUMMY_EXPECTED_RESULT)
 
     def test_title_and_text_linked(self):
         obj = self._cut()

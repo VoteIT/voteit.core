@@ -22,7 +22,9 @@ def truncate(text, length=240):
     # If the html tags doesn't match up return the complete text
     except htmltruncate.UnbalancedError: # pragma : no cover
         trunc_text = text
-    
+    except Exception, e:
+        #FIXME: Log unrecoverable exception here
+        trunc_text = text
     return (trunc_text, text != trunc_text)
 
 @view_action('discussions', 'listing')
