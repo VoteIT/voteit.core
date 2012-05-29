@@ -138,11 +138,19 @@ class PollView(BaseEdit):
                     buttons=(button_vote,), 
                     formid=self.context.__name__, 
                     use_ajax=True,
-                    ajax_options=ajax_options)
+                    ajax_options=
+                        """
+                        {success: voteit_deform_success,
+                        error: voteit_poll_error,
+                        beforeSubmit: voteit_poll_beforeSubmit,
+                        target: '#booth.poll',
+                        }
+                        """)
         self.api.register_form_resources(form)
         
         can_vote = has_permission(ADD_VOTE, self.context, self.request)
         userid = self.api.userid
+        success_msg = None
         
         post = self.request.POST
         if 'vote' in post:
@@ -155,7 +163,7 @@ class PollView(BaseEdit):
                     #FIXME: How do we validate this properly, and display the result?
                     self.response['form'] = e.render()
                     if self.request.is_xhr:
-                        return Response(render("templates/ajax_edit.pt", self.response, request = self.request))
+                        return Response(render("templates/poll.pt", self.response, request = self.request))
                     return self.response
                     
                 Vote = poll_plugin.get_vote_class()
@@ -164,20 +172,22 @@ class PollView(BaseEdit):
         
                 #Remove crsf_token from appstruct after validation
                 del appstruct['csrf_token']
-        
+
                 if userid in self.context:
                     vote = self.context[userid]
                     assert IVote.providedBy(vote)
                     vote.set_vote_data(appstruct)
-                    msg = _(u"Your vote was updated.")
+                    success_msg = _(u"Your vote was updated.")
                 else:
                     vote = Vote(creators = [userid])
                     #We don't need to send events here, since object added will take care of that
                     vote.set_vote_data(appstruct, notify = False)
                     #To fire events after set_vote_data is done
                     self.context[userid] = vote
-                    msg = _(u"Thank you for voting!")
-                self.api.flash_messages.add(msg)
+                    success_msg = _(u"Thank you for voting!")
+                
+                if not self.request.is_xhr:
+                    self.api.flash_messages.add(success_msg)
                 
                 #FIXME: maybe we should show show a thank you message
             else:
@@ -185,10 +195,9 @@ class PollView(BaseEdit):
                         default = "You do not have the permission to vote in this poll, please contact the moderator if you should be able to vote.")
                 self.api.flash_messages.add(msg, type = u'error')
             
-            url = resource_url(self.context.__parent__, self.request)
-            if self.request.is_xhr:
-                return Response(headers = [('X-Relocate', url)])
-            return HTTPFound(location=url)
+            if not self.request.is_xhr:
+                url = resource_url(self.context.__parent__, self.request)
+                return HTTPFound(location=url)
             
         if userid in self.context:
             #If editing a vote is allowed, redirect. Editing is only allowed in open polls
@@ -203,6 +212,9 @@ class PollView(BaseEdit):
         else:
             readonly = not can_vote
             self.response['form'] = form.render(readonly=readonly)
+            
+        if success_msg:
+            self.response['success_msg'] = success_msg
 
         return self.response
     

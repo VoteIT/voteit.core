@@ -50,11 +50,18 @@ $(document).delegate('input[name="start_time"]', 'change', function() {
 
 /* deform ajax success callback */
 function voteit_deform_success(rText, sText, xhr, form) {
-	var url = xhr.getResponseHeader('X-Relocate');
-	if (url) {
-		document.location = url;
-	} else {
-		deform.processCallbacks();
-		deform.focusFirstInput();
-	}
+	deform.processCallbacks();
+	deform.focusFirstInput();
+	$('#booth.poll .success.message').fadeIn(3000);
 }
+
+function voteit_poll_error(xhr, status, error) {
+	$('#booth.poll form.deform button[type=submit]').removeAttr('disabled');
+	$('#booth.poll .error.message').empty();
+	$('#booth.poll .error.message').append(voteit.translation['voting_error_msg']);
+	$('#booth.poll .error.message').fadeIn(3000);
+}
+
+function voteit_poll_beforeSubmit(arr, form, options) {
+	form.find('button[type=submit]').attr("disabled", "disabled");
+} 

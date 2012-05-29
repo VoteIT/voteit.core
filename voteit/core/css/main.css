@@ -380,13 +380,19 @@ p {
 
 /* Flash messages */
 #flash_messages,
-#notify-meetingstate {
+#notify-meetingstate,
+#booth.poll .message {
     clear: both;
     z-index: 5000;
 }
 
+#booth.poll .message {
+	display: none;
+}
+
 #flash_messages .message,
-#notify-meetingstate .message {
+#notify-meetingstate .message,
+#booth.poll .message {
     padding: 5px 15px 5px 30px;
     border-radius: 5px;
     -webkit-border-radius: 5px;
@@ -408,7 +414,8 @@ p {
 }
 #flash_messages .info {
 }
-#flash_messages .error {
+#flash_messages .error,
+#booth.poll .error.message {
     border-color: red;
     background-color: #fdc;
 }

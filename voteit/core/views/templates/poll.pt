@@ -43,6 +43,8 @@
 		<tal:poll_ongoing condition="wf_state == 'ongoing' and can_vote and form" content="structure form">
 			Form
 		</tal:poll_ongoing>
+		<div tal:condition="success_msg|False" class="success message">${success_msg}</div>
+		<div class="error message"></div>
 		
 		<tal:poll_closed condition="wf_state == 'closed'">
 			<div class="result" 

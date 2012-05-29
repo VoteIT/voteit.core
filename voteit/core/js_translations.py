@@ -20,4 +20,5 @@ def includeme(config):
         loading = _(u"Loading..."),
         help_contact = _(u"Help &amp; Contact"),
         poll = _(u"Poll"),
+        voting_error_msg = _(u"An error occurred while voting, please try again."),
     )
