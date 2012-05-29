@@ -1,5 +1,4 @@
 import re
-import transaction
 
 from pyramid.traversal import resource_path
 from repoze.catalog.query import Any
@@ -7,7 +6,8 @@ from repoze.catalog.query import Contains
 from repoze.catalog.query import Eq
 
 from voteit.core.models.catalog import resolve_catalog_docid
-from voteit.core.models.catalog import update_indexes, index_object
+from voteit.core.models.catalog import index_object
+from voteit.core.models.catalog import update_indexes
 from voteit.core.models.unread import Unread
 from voteit.core.models.user_tags import UserTags
 from voteit.core.security import ROLE_OWNER
@@ -16,35 +16,16 @@ from voteit.core.scripts.catalog import find_all_base_content
 
 
 def evolve(root):
-    absolut_profile_links(root)
-
-    lowercase_userids(root)
-    
-def absolut_profile_links(root):
-    print "Removing absolut url in profile links"
-    catalog = root.catalog
-    
-    host = None
-    while not host:
-        host = raw_input("Enter a host to replace (ex http://127.0.0.1:6543): ") 
-    
-    count, result = catalog.query(Eq('path', resource_path(root)) & \
-                                  Contains('searchable_text', 'class="inlineinfo"') & \
-                                  Any('content_type', ('DiscussionPost', 'Proposal', )))
-
-    for docid in result:
-        # get object
-        obj = resolve_catalog_docid(catalog, root, docid)
-        obj.title = obj.title.replace(host, '')
-    
-def lowercase_userids(root):
-    # loop through profiles
     print "changing user profiles to lowercase"
+    # loop through profiles
     # list of possible duplicate errors
     errors = []
+    lowercased = []
     # loop all users and build a list of old and new userids
     users = root.users
     userids = []
+    existing_userids = set()
+
     for userid in users:
         # get profile
         profile = users[userid]
@@ -54,36 +35,32 @@ def lowercase_userids(root):
             # new userid
             userid_lower = userid.lower()
             # check so there is no profile with the same lowercase userid if so throw exception
-            if userid_lower in users:
-                print "already a userid named %s in users" % userid_lower
+            altered = False
+            while userid_lower in users or userid_lower in existing_userids:
+                print "already a userid named %s in users or was picked already" % userid_lower
                 userid_lower = raw_input("Enter a new userid: ")
+                altered = True
+            if altered:
                 # add to errror list
                 errors.append([userid, userid_lower, profile.get_field_value('email', '')])
-                
+            else:
+                lowercased.append([userid, userid_lower, profile.get_field_value('email', '')])
             userids.append((userid, userid_lower))
+        existing_userids.add(userid.lower())
             
     # loop userids that is going to change
     for (userid, userid_lower) in userids:
-        
         change_votes(root, userid, userid_lower)
-        
         change_unread(root, userid, userid_lower)
-        
         change_usertags(root, userid, userid_lower)
-        
         change_mentions(root, userid, userid_lower)
-
         # change groups on root
         change_groups(root, userid, userid_lower)
-        
         # change groups on meetings
         for meeting in root.get_content(content_type='Meeting'):
            change_groups(meeting, userid, userid_lower)
-
         change_creator_and_owner(root, userid, userid_lower)
-
         # will not change rss, logs
-        
         # get profile
         profile = users[userid]
         # remove profile from storage
@@ -93,9 +70,7 @@ def lowercase_userids(root):
     
     # reindex catalog
     root.catalog.clear()
-    
     updated_indexes = update_indexes(root.catalog, reindex=False)
-    
     contents = find_all_base_content(root)
     content_count = len(contents)
         
@@ -117,7 +92,11 @@ def lowercase_userids(root):
     # check that timestamps doesn't change
     # print list of duplicate errors with olduserid new userid and email
     print "\n"
-    print "The following profiles has changed userid"
+    print "The following userids were lowercased, displayed as 'from;to;email':"
+    for info in lowercased:
+        print "%s;%s;%s" % tuple(info)
+    print "\n-------------------\n"
+    print "The following have changed userid:"
     for error in errors:
         print "%s;%s;%s" % tuple(error)
     print "\n"
@@ -126,7 +105,7 @@ def lowercase_userids(root):
 def change_creator_and_owner(root, userid, userid_lower):
     catalog = root.catalog
     
-    count, result = catalog.search(path=resource_path(root), creators=(userid,))
+    result = catalog.search(path=resource_path(root), creators=(userid,))[1]
     
     for docid in result:
         # get object
@@ -153,50 +132,37 @@ def change_groups(obj, userid, userid_lower):
 
 def change_votes(root, userid, userid_lower):
     catalog = root.catalog
-    
-    count, result = catalog.search(path=resource_path(root), content_type='Vote', creators=(userid,))
-    
+    result = catalog.search(path=resource_path(root), content_type='Vote', creators=(userid,))[1]
     for docid in result:
         # get vote
         obj = resolve_catalog_docid(catalog, root, docid)
         # get parent of vote 
         parent = obj.__parent__
-        
         # if userid is in parent container and the object in the parent is the object from the catalog
         if userid in parent and parent[userid] == obj:
             del parent[userid] # remove with old userid
-            users[userid_lower] = obj # add with new userid
-            
+            parent[userid_lower] = obj # add with new userid
 
 def change_unread(root, userid, userid_lower):
     catalog = root.catalog
-    
-    count, result = catalog.search(path=resource_path(root), unread=(userid,))
-    
+    result = catalog.search(path=resource_path(root), unread=(userid,))[1]
     for docid in result:
         # get object
         obj = resolve_catalog_docid(catalog, root, docid)
-        
         # get unread adapter
         unread = Unread(obj)
         
         if userid in unread.unread_storage:
             unread.unread_storage.remove(userid) # remove old userid
             unread.unread_storage.add(userid_lower) # add new userid
-            
-            
+
 def change_usertags(root, userid, userid_lower):
     catalog = root.catalog
-    
-    count, result = catalog.search(path=resource_path(root), like_userids=(userid,))
-    
+    result = catalog.search(path=resource_path(root), like_userids=(userid,))[1]
     for docid in result:        
-        # get object
         obj = resolve_catalog_docid(catalog, root, docid)
-        
         # get unread adapter
         usertags = UserTags(obj)
-        
         for tag in usertags.tags_storage:
             if userid in usertags.tags_storage[tag]:
                 usertags.tags_storage[tag].remove(userid) # remove old userid
@@ -204,15 +170,12 @@ def change_usertags(root, userid, userid_lower):
             
 def change_mentions(root, userid, userid_lower):
     catalog = root.catalog
-    
-    count, result = catalog.query(Eq('path', resource_path(root)) & \
-                                  Contains('searchable_text', userid) & \
-                                  Any('content_type', ('DiscussionPost', 'Proposal', )))
-    
+    result = catalog.query(Eq('path', resource_path(root)) & \
+                           Contains('searchable_text', userid) & \
+                           Any('content_type', ('DiscussionPost', 'Proposal', )))[1]
     for docid in result:
         # get object
         obj = resolve_catalog_docid(catalog, root, docid)
-
         title = obj.title
         for match in re.finditer('<a class="inlineinfo" href="http:\/\/[\da-z.-:]*/[\w-]*/_userinfo\?userid=('+userid+')" title="[\w\s-]*">@('+userid+')</a>', title, re.UNICODE):
             title = title[0:match.start(1)] + userid_lower + title[match.end(1):len(title)] # replace in url
