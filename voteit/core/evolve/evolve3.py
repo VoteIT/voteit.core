@@ -7,15 +7,19 @@ from repoze.catalog.query import Eq
 
 from voteit.core.models.catalog import resolve_catalog_docid
 from voteit.core.models.catalog import index_object
+from voteit.core.models.catalog import unindex_object
 from voteit.core.models.catalog import update_indexes
 from voteit.core.models.unread import Unread
 from voteit.core.models.user_tags import UserTags
 from voteit.core.security import ROLE_OWNER
-
 from voteit.core.scripts.catalog import find_all_base_content
 
 
 def evolve(root):
+
+    print "initial reindex of catalog to make sure everything is up to date"
+    clear_and_reindex(root)
+
     print "changing user profiles to lowercase"
     # loop through profiles
     # list of possible duplicate errors
@@ -65,29 +69,11 @@ def evolve(root):
         profile = users[userid]
         # remove profile from storage
         del users[userid]
+        # Reindex and remove index not a problem as long as we clear the index afterwards
         # add profile with new userid
         users[userid_lower] = profile
     
-    # reindex catalog
-    root.catalog.clear()
-    updated_indexes = update_indexes(root.catalog, reindex=False)
-    contents = find_all_base_content(root)
-    content_count = len(contents)
-        
-    #Note: There might be catalog aware models outside of this scope.
-    #In that case, we need some way of finding them
-    
-    print "Found %s objects to update" % content_count
-    
-    i = 1
-    p = 1
-    for obj in contents:
-        index_object(root.catalog, obj)
-        if p == 20:
-            print "%s of %s done" % (i, content_count)
-            p = 0
-        i+=1
-        p+=1
+    clear_and_reindex(root)
 
     # check that timestamps doesn't change
     # print list of duplicate errors with olduserid new userid and email
@@ -100,8 +86,28 @@ def evolve(root):
     for error in errors:
         print "%s;%s;%s" % tuple(error)
     print "\n"
-    
-    
+
+def clear_and_reindex(root):
+    # reindex catalog
+    root.catalog.clear()
+    updated_indexes = update_indexes(root.catalog, reindex=False)
+    contents = find_all_base_content(root)
+    content_count = len(contents)
+
+    #Note: There might be catalog aware models outside of this scope.
+    #In that case, we need some way of finding them
+    print "Found %s objects to update" % content_count
+    i = 1
+    p = 1
+    for obj in contents:
+        index_object(root.catalog, obj)
+        if p == 100:
+            print "%s of %s done" % (i, content_count)
+            p = 0
+        i+=1
+        p+=1
+
+
 def change_creator_and_owner(root, userid, userid_lower):
     catalog = root.catalog
     
@@ -129,10 +135,9 @@ def change_groups(obj, userid, userid_lower):
         obj.del_groups(userid, (group, ), event=False) # remove old userid
         obj.add_groups(userid_lower, (group, ), event=False) # add new userid
 
-
 def change_votes(root, userid, userid_lower):
     catalog = root.catalog
-    result = catalog.search(path=resource_path(root), content_type='Vote', creators=(userid,))[1]
+    result = catalog.search(content_type='Vote', creators=(userid,))[1]
     for docid in result:
         # get vote
         obj = resolve_catalog_docid(catalog, root, docid)
@@ -140,8 +145,11 @@ def change_votes(root, userid, userid_lower):
         parent = obj.__parent__
         # if userid is in parent container and the object in the parent is the object from the catalog
         if userid in parent and parent[userid] == obj:
+            #Remember that this part won't reindex the catalog as it normally does.
+            unindex_object(catalog, parent[userid])
             del parent[userid] # remove with old userid
             parent[userid_lower] = obj # add with new userid
+            index_object(catalog, obj)
 
 def change_unread(root, userid, userid_lower):
     catalog = root.catalog
