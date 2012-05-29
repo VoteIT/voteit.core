@@ -35,7 +35,7 @@ def evolve(root):
         profile = users[userid]
         # if they are uppercase convert
         if userid != userid.lower():
-            print "%s %s %s" % (userid, profile.title, profile.get_field_value('email', ''))
+            print "%s %s" % (userid, profile.get_field_value('email', ''))
             # new userid
             userid_lower = userid.lower()
             # check so there is no profile with the same lowercase userid if so throw exception
