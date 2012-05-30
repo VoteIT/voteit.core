@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2012-05-30 11:17+0200\n"
+"POT-Creation-Date: 2012-05-30 11:54+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -88,6 +88,10 @@ msgstr ""
 msgid "Poll"
 msgstr ""
 
+#: voteit/core/js_translations.py:23
+msgid "There was an error loding data from server"
+msgstr ""
+
 #: voteit/core/security.py:69
 msgid "Moderator"
 msgstr ""
@@ -130,7 +134,7 @@ msgstr ""
 msgid "userid_validator_error"
 msgstr ""
 
-#. Default: UserID must be 3-15 chars, start with lowercase a-z and only
+#. Default: UserID must be 3-30 chars, start with lowercase a-z and only
 #. contain lowercase a-z, numbers, minus and underscore.
 #: voteit/core/validators.py:110
 msgid "userid_char_error"
@@ -341,7 +345,7 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
-#: voteit/core/models/schemas.py:14 voteit/core/schemas/user.py:126
+#: voteit/core/models/schemas.py:14 voteit/core/schemas/user.py:131
 #: voteit/core/views/components/global_actions.py:21
 msgid "Login"
 msgstr ""
@@ -524,7 +528,7 @@ msgstr ""
 msgid "contact_schema_name_description"
 msgstr ""
 
-#: voteit/core/schemas/help.py:23 voteit/core/schemas/user.py:49
+#: voteit/core/schemas/help.py:23 voteit/core/schemas/user.py:51
 #: voteit/core/views/templates/list_users.pt:24
 #: voteit/core/views/templates/participants.pt:23
 msgid "Email"
@@ -692,7 +696,7 @@ msgstr ""
 msgid "Meeting access policy"
 msgstr ""
 
-#: voteit/core/schemas/meeting.py:104 voteit/core/schemas/user.py:73
+#: voteit/core/schemas/meeting.py:104 voteit/core/schemas/user.py:75
 msgid "Verify you are human"
 msgstr ""
 
@@ -757,7 +761,7 @@ msgid "mps_poll_plugins_description"
 msgstr ""
 
 #: voteit/core/schemas/permissions.py:42 voteit/core/schemas/permissions.py:79
-#: voteit/core/schemas/user.py:84 voteit/core/schemas/user.py:99
+#: voteit/core/schemas/user.py:86 voteit/core/schemas/user.py:103
 #: voteit/core/views/templates/list_users.pt:21
 #: voteit/core/views/templates/logs.pt:20
 #: voteit/core/views/templates/participants.pt:20
@@ -940,83 +944,85 @@ msgstr ""
 msgid "'${val}' is not valid as date and time"
 msgstr ""
 
-#: voteit/core/schemas/user.py:45 voteit/core/schemas/user.py:131
+#: voteit/core/schemas/user.py:47 voteit/core/schemas/user.py:136
 msgid "Password"
 msgstr ""
 
-#: voteit/core/schemas/user.py:54 voteit/core/views/templates/list_users.pt:22
+#: voteit/core/schemas/user.py:56 voteit/core/views/templates/list_users.pt:22
 #: voteit/core/views/templates/participants.pt:21
 msgid "First name"
 msgstr ""
 
-#: voteit/core/schemas/user.py:59 voteit/core/views/templates/list_users.pt:23
+#: voteit/core/schemas/user.py:61 voteit/core/views/templates/list_users.pt:23
 #: voteit/core/views/templates/participants.pt:22
 msgid "Last name"
 msgstr ""
 
 #. Default: This is to prevent spambots from register
-#: voteit/core/schemas/user.py:74
+#: voteit/core/schemas/user.py:76
 msgid "registration_captcha_description"
 msgstr ""
 
-#: voteit/core/schemas/user.py:80
+#: voteit/core/schemas/user.py:82
 msgid "Add user"
 msgstr ""
 
-#: voteit/core/schemas/user.py:80
+#: voteit/core/schemas/user.py:82
 msgid "Use this form to add a user"
 msgstr ""
 
 #. Default:  Used as a nickname, in @-links and as a unique id. You can't
 #. change this later. OK characters are: a-z, '.', '-', '_'.
-#: voteit/core/schemas/user.py:85 voteit/core/schemas/user.py:100
+#. Default:  Used as a nickname, in @-links and as a unique id. You can't
+#. change this later. OK characters are: a-z, 0-9, '.', '-', '_'.
+#: voteit/core/schemas/user.py:87 voteit/core/schemas/user.py:104
 msgid "userid_description"
 msgstr ""
 
-#: voteit/core/schemas/user.py:95
+#: voteit/core/schemas/user.py:99
 msgid "Registration"
 msgstr ""
 
-#: voteit/core/schemas/user.py:111
+#: voteit/core/schemas/user.py:116
 msgid "Edit user"
 msgstr ""
 
-#: voteit/core/schemas/user.py:111
+#: voteit/core/schemas/user.py:116
 msgid "Use this form to edit a user"
 msgstr ""
 
-#: voteit/core/schemas/user.py:118
+#: voteit/core/schemas/user.py:123
 msgid "About me"
 msgstr ""
 
 #. Default: Please note that anything you type here will be visible to all
 #. users in the same meeting as you.
-#: voteit/core/schemas/user.py:119
+#: voteit/core/schemas/user.py:124
 msgid "user_about_me_description"
 msgstr ""
 
-#: voteit/core/schemas/user.py:129 voteit/core/schemas/user.py:153
+#: voteit/core/schemas/user.py:134 voteit/core/schemas/user.py:158
 msgid "UserID or email address."
 msgstr ""
 
-#: voteit/core/schemas/user.py:136 voteit/core/schemas/user.py:145
+#: voteit/core/schemas/user.py:141 voteit/core/schemas/user.py:150
 #: voteit/core/views/templates/user.pt:19
 msgid "Change password"
 msgstr ""
 
-#: voteit/core/schemas/user.py:139
+#: voteit/core/schemas/user.py:144
 msgid "Current password"
 msgstr ""
 
-#: voteit/core/schemas/user.py:145
+#: voteit/core/schemas/user.py:150
 msgid "Use this form to change password"
 msgstr ""
 
-#: voteit/core/schemas/user.py:150
+#: voteit/core/schemas/user.py:155
 msgid "Request new password"
 msgstr ""
 
-#: voteit/core/schemas/user.py:150
+#: voteit/core/schemas/user.py:155
 msgid "Use this form to request a new password"
 msgstr ""
 

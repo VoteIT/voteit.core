@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2012-05-30 11:17+0200\n"
-"PO-Revision-Date: 2012-05-30 11:44+0100\n"
+"POT-Creation-Date: 2012-05-30 11:54+0200\n"
+"PO-Revision-Date: 2012-05-30 11:56+0100\n"
 "Last-Translator: Robin Harms Oredsson <robin@betahaus.net>\n"
 "Language-Team: sv <LL@li.org>\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
@@ -86,7 +86,6 @@ msgid "Loading..."
 msgstr "Laddar..."
 
 #: voteit/core/js_translations.py:21
-#| msgid "Help & contact"
 msgid "Help &amp; Contact"
 msgstr "Hjälp &amp; kontakt"
 
@@ -96,6 +95,10 @@ msgstr "Hjälp &amp; kontakt"
 #: voteit/core/views/templates/agenda_item.pt:18
 msgid "Poll"
 msgstr "Omröstning"
+
+#: voteit/core/js_translations.py:23
+msgid "There was an error loding data from server"
+msgstr "Fel vid laddning av data från servern"
 
 #: voteit/core/security.py:69
 msgid "Moderator"
@@ -140,11 +143,11 @@ msgstr "Förljande adress(er) är ogiltiga: ${emails}"
 msgid "userid_validator_error"
 msgstr "Följande användarnamn är ogiltiga: ${userids}. Kom ihåg att användarnamn är skiftlägeskänsliga."
 
-#. Default: UserID must be 3-15 chars, start with lowercase a-z and only
+#. Default: UserID must be 3-30 chars, start with lowercase a-z and only
 #. contain lowercase a-z, numbers, minus and underscore.
 #: voteit/core/validators.py:110
 msgid "userid_char_error"
-msgstr "Användarnamn måste vara 3-15 tecken, starta med a-zA-Z och bara innehålla vanliga latinska tecken, nummer, minus eller understreck."
+msgstr "Användarnamn måste vara 3-30 tecken, starta med a-z och bara innehålla a-z, nummer, minus eller understreck."
 
 #. Default: UserID already registered. If it was registered by you, try to
 #. retrieve your password.
@@ -296,7 +299,6 @@ msgstr "Omröstningen stängd. Förslag kan ha justerats som bifallna eller avsl
 #. Default: Broken poll plugin. Can't display result. Turn on debug_templates
 #. to see the error.
 #: voteit/core/models/poll.py:233
-#| msgid "plugin_missing_error"
 msgid "broken_plugin_error"
 msgstr "Omröstningspluginen är trasig. Kan inte visa resultat.För att se felet, slå på debug_templates på servern."
 
@@ -357,7 +359,7 @@ msgid "Delete"
 msgstr "Radera"
 
 #: voteit/core/models/schemas.py:14
-#: voteit/core/schemas/user.py:126
+#: voteit/core/schemas/user.py:131
 #: voteit/core/views/components/global_actions.py:21
 msgid "Login"
 msgstr "Logga in"
@@ -553,7 +555,7 @@ msgid "contact_schema_name_description"
 msgstr "Lämna fältet tomt om du vill vara anonym"
 
 #: voteit/core/schemas/help.py:23
-#: voteit/core/schemas/user.py:49
+#: voteit/core/schemas/user.py:51
 #: voteit/core/views/templates/list_users.pt:24
 #: voteit/core/views/templates/participants.pt:23
 msgid "Email"
@@ -671,7 +673,6 @@ msgstr "Mötessidans vänsterkolumnwidget"
 #. Default: If no right column widget is selected, this will take up the whole
 #. page space.
 #: voteit/core/schemas/layout.py:51
-#| msgid "meeting_title_description"
 msgid "meeting_left_widget_description"
 msgstr "Om ingen widget för högerkolumnen är vald, kommer denna ta up hela sidans utrymme."
 
@@ -694,7 +695,6 @@ msgstr "Trunkera diskussionslängd"
 #. Default: Set the number of always visible characters in discussion posts.
 #. Enter 0 for no truncating.
 #: voteit/core/schemas/layout.py:72
-#| msgid "Truncate discussion length"
 msgid "truncate_discussion_length_description"
 msgstr "Sätt längden på hur många tecken som ska visas innan trunkering. 0 betyder ingen tunkering."
 
@@ -728,7 +728,7 @@ msgid "Meeting access policy"
 msgstr "Mötestillgångspolicy"
 
 #: voteit/core/schemas/meeting.py:104
-#: voteit/core/schemas/user.py:73
+#: voteit/core/schemas/user.py:75
 msgid "Verify you are human"
 msgstr "Verifiera att du är människa"
 
@@ -777,13 +777,11 @@ msgstr "Inställningar för omröstning"
 
 #. Default: Settings for the whole meeting.
 #: voteit/core/schemas/meeting.py:147
-#| msgid "meeting_title_description"
 msgid "meeting_poll_settings_main_description"
 msgstr "Inställningar för hela mötet"
 
 #. Default: Available poll methods within this meeting
 #: voteit/core/schemas/meeting.py:151
-#| msgid "poll_poll_plugin_description"
 msgid "mps_poll_plugins_title"
 msgstr "Tillgängliga omröstningsmetoder inom mötet"
 
@@ -791,14 +789,13 @@ msgstr "Tillgängliga omröstningsmetoder inom mötet"
 #. meeting. If nothing is selected, only the servers default poll method will
 #. be available.
 #: voteit/core/schemas/meeting.py:153
-#| msgid "poll_poll_plugin_description"
 msgid "mps_poll_plugins_description"
 msgstr "Bara omröstningsmetoder valda här kommer att vara tillgängliga i mötet. Om inget är valt så kommer baraserverns standardmetod finnas tillgänglig."
 
 #: voteit/core/schemas/permissions.py:42
 #: voteit/core/schemas/permissions.py:79
-#: voteit/core/schemas/user.py:84
-#: voteit/core/schemas/user.py:99
+#: voteit/core/schemas/user.py:86
+#: voteit/core/schemas/user.py:103
 #: voteit/core/views/templates/list_users.pt:21
 #: voteit/core/views/templates/logs.pt:20
 #: voteit/core/views/templates/participants.pt:20
@@ -985,89 +982,90 @@ msgstr "Privat ReCaptcha-nyckel"
 msgid "'${val}' is not valid as date and time"
 msgstr "'${val}' är inte giltigt som datum och tid"
 
-#: voteit/core/schemas/user.py:45
-#: voteit/core/schemas/user.py:131
+#: voteit/core/schemas/user.py:47
+#: voteit/core/schemas/user.py:136
 msgid "Password"
 msgstr "Lösenord"
 
-#: voteit/core/schemas/user.py:54
+#: voteit/core/schemas/user.py:56
 #: voteit/core/views/templates/list_users.pt:22
 #: voteit/core/views/templates/participants.pt:21
 msgid "First name"
 msgstr "Förnamn"
 
-#: voteit/core/schemas/user.py:59
+#: voteit/core/schemas/user.py:61
 #: voteit/core/views/templates/list_users.pt:23
 #: voteit/core/views/templates/participants.pt:22
 msgid "Last name"
 msgstr "Efternamn"
 
 #. Default: This is to prevent spambots from register
-#: voteit/core/schemas/user.py:74
+#: voteit/core/schemas/user.py:76
 msgid "registration_captcha_description"
 msgstr "Detta är för att hindra spamrobotar från att registrera sig"
 
-#: voteit/core/schemas/user.py:80
+#: voteit/core/schemas/user.py:82
 msgid "Add user"
 msgstr "Lägg till användare"
 
-#: voteit/core/schemas/user.py:80
+#: voteit/core/schemas/user.py:82
 msgid "Use this form to add a user"
 msgstr "Använd detta formulär för att lägga till en användare"
 
 #. Default:  Used as a nickname, in @-links and as a unique id. You can't
 #. change this later. OK characters are: a-z, '.', '-', '_'.
-#: voteit/core/schemas/user.py:85
-#: voteit/core/schemas/user.py:100
+#. change this later. OK characters are: a-z, 0-9, '.', '-', '_'.
+#: voteit/core/schemas/user.py:87
+#: voteit/core/schemas/user.py:104
 msgid "userid_description"
 msgstr "Används som kortnamn (nick), vid @-länkar och som unikt ID. Du kan inte ändra detta senare. OK tecken är: a-z, '.', '-', '_'."
 
-#: voteit/core/schemas/user.py:95
+#: voteit/core/schemas/user.py:99
 msgid "Registration"
 msgstr "Registrering"
 
-#: voteit/core/schemas/user.py:111
+#: voteit/core/schemas/user.py:116
 msgid "Edit user"
 msgstr "Redigera användarprofil"
 
-#: voteit/core/schemas/user.py:111
+#: voteit/core/schemas/user.py:116
 msgid "Use this form to edit a user"
 msgstr "Använd detta formulär för att redigera din användarprofil"
 
-#: voteit/core/schemas/user.py:118
+#: voteit/core/schemas/user.py:123
 msgid "About me"
 msgstr "Information om mig"
 
 #. Default: Please note that anything you type here will be visible to all
 #. users in the same meeting as you.
-#: voteit/core/schemas/user.py:119
+#: voteit/core/schemas/user.py:124
 msgid "user_about_me_description"
 msgstr "Vänligen notera att det du skriver här blir synligt för alla användare som är deltagare i samma möte som du."
 
-#: voteit/core/schemas/user.py:129
-#: voteit/core/schemas/user.py:153
+#: voteit/core/schemas/user.py:134
+#: voteit/core/schemas/user.py:158
 msgid "UserID or email address."
 msgstr "Användarnamn eller epostadress"
 
-#: voteit/core/schemas/user.py:136
-#: voteit/core/schemas/user.py:145
+#: voteit/core/schemas/user.py:141
+#: voteit/core/schemas/user.py:150
 #: voteit/core/views/templates/user.pt:19
 msgid "Change password"
 msgstr "Ändra lösenord"
 
-#: voteit/core/schemas/user.py:139
+#: voteit/core/schemas/user.py:144
 msgid "Current password"
 msgstr "Nuvarande lösenord"
 
-#: voteit/core/schemas/user.py:145
+#: voteit/core/schemas/user.py:150
 msgid "Use this form to change password"
 msgstr "Använd detta formulär för att ändra lösenord"
 
-#: voteit/core/schemas/user.py:150
+#: voteit/core/schemas/user.py:155
 msgid "Request new password"
 msgstr "Begär nytt lösenord"
 
-#: voteit/core/schemas/user.py:150
+#: voteit/core/schemas/user.py:155
 msgid "Use this form to request a new password"
 msgstr "Använd detta formulär för att begära ett nytt lösenord"
 
@@ -1082,7 +1080,6 @@ msgstr "${ctype} borttagen från ${path}"
 #. Default: ${ctype} in path ${path} changed state from '${old_state}' to
 #. '${new_state}'
 #: voteit/core/subscribers/logs.py:61
-#| msgid "prop_state_change_error"
 msgid "log_ctype_state_change"
 msgstr "${ctype} i sökvägen ${path} ändrade tillstånd från '${old_state}' till '${new_state}'"
 
@@ -1414,7 +1411,6 @@ msgid "Server logs"
 msgstr "Serverloggar"
 
 #: voteit/core/views/components/meeting_actions.py:102
-#| msgid "Poll settings"
 msgid "Meeting poll settings"
 msgstr "Mötets omröstningsinställningar"
 
@@ -1848,7 +1844,6 @@ msgid "password_request_body"
 msgstr "Vi har fått en förfrågan om att nollställa ditt lösenord från VoteIT.Vänligen följ länken nedan och välj ett nytt lösenord inom 3 dagar.Om du inte skickade förfrågan själv, behöver du inte göra något.Ditt gamla lösenord fortsätter i så fall att fungera."
 
 #: voteit/core/views/templates/email/request_password.pt:20
-#| msgid "Current password"
 msgid "Reset password link"
 msgstr "Länk för att återställa lösenord"
 
@@ -1922,133 +1917,3 @@ msgstr "personer"
 msgid "more_in_likes"
 msgstr "till"
 
-#~ msgid "${agenda_item} has been added to the agenda."
-#~ msgstr "${agenda_item} har lagts till i dagordningen."
-
-#~ msgid "${agenda_item} has been closed."
-#~ msgstr "${agenda_item} har avslutats."
-
-#~ msgid "${agenda_item} has been set to ongoing."
-#~ msgstr "${agenda_item} är nu pågående."
-
-#~ msgid ""
-#~ "${ctype} in path ${path} changed state"
-#~ " from '${old_state}' to '${new_state}'"
-#~ msgstr ""
-#~ "${ctype} i sökväg ${path} ändrade "
-#~ "tillstånd från '${old_state}' till "
-#~ "'${new_state}'"
-
-#~ msgid "${userid} has made a proposal in ${agenda_item}."
-#~ msgstr "${userid} har lagt ett förslag i ${agenda_item}"
-
-#~ msgid "${userid} has written a post in ${agenda_item}."
-#~ msgstr "${userid} har skrivit ett inlägg i ${agenda_item}"
-
-#~ msgid "A poll has started in ${agenda_item}, vote now!"
-#~ msgstr "En omröstning har startat i ${agenda_item}, rösta nu!"
-
-#~ msgid "Activate RSS feed"
-#~ msgstr "Aktivera RSS-feed"
-
-#~ msgid "Approved"
-#~ msgstr "Bifallen"
-
-#~ msgid ""
-#~ "Broken poll plugin. Can't display "
-#~ "result. Turn on debug_templates to see"
-#~ " the error."
-#~ msgstr ""
-#~ "Omröstningspluginen är trasig. kan inte "
-#~ "visa resultat. Slå på debug_templates "
-#~ "för att se felen."
-
-#~ msgid "Couldn't find any user with userid ${userid}"
-#~ msgstr "Kunde inte hitta någon användare med användarnamnet ${userid}"
-
-#~ msgid "Denied"
-#~ msgstr "Avslaget"
-
-#~ msgid "Edit %s"
-#~ msgstr "Redigera %s"
-
-#~ msgid "Feed entry"
-#~ msgstr "Flödespost"
-
-#~ msgid "Feed not active"
-#~ msgstr "Feeden är inte aktiv"
-
-#~ msgid "Help & Contact"
-#~ msgstr "Hjälp & Kontakt"
-
-#~ msgid ""
-#~ "If no right column widget is "
-#~ "selected, this will take up the "
-#~ "whole page space."
-#~ msgstr "Om ingen högerkolumnwidget valts tar detta upp hela sidans bredd."
-
-#~ msgid "Last added"
-#~ msgstr "Senast tillagd"
-
-#~ msgid "Locked for voting"
-#~ msgstr "Låst för omröstning"
-
-#~ msgid "Open"
-#~ msgstr "Öppen"
-
-#~ msgid "Published"
-#~ msgstr "Publicerad"
-
-#~ msgid "RSS feed"
-#~ msgstr "RSS-flöde"
-
-#~ msgid "RSS settings"
-#~ msgstr "RSS-inställningar"
-
-#~ msgid "Retracted"
-#~ msgstr "Tillbakadragen"
-
-#~ msgid ""
-#~ "Set the number of always visible "
-#~ "characters in discussion posts. Enter 0"
-#~ " for no truncating."
-#~ msgstr ""
-#~ "Ställ in antalet direkt synliga tecken"
-#~ " i diskussionsposter. Skriv 0 för att"
-#~ " stänga av trunkering."
-
-#~ msgid "The result of a poll in ${agenda_item} is set."
-#~ msgstr "Resultatet av en omröstning i ${agenda_item} är klart."
-
-#~ msgid "This RSS-feed isn't enabled."
-#~ msgstr "Detta RSS-flöde är inte påslaget."
-
-#~ msgid "Unhandled"
-#~ msgstr "Ohanterad"
-
-#~ msgid "item"
-#~ msgstr "objekt"
-
-#~ msgid "request_new_password_text"
-#~ msgstr "Lösenordslänk: ${pw_link}"
-
-#~ msgid "rss_feed_checkbox_description"
-#~ msgstr ""
-#~ "När kryssrutan nedan markeras kan ditt"
-#~ " möte följas med i en offentlig "
-#~ "RSS feed som kan följas med en "
-#~ "RSS-läsare. Feeden kommer innehålla "
-#~ "information om förändringar i mötet och"
-#~ " vem som gjorde dem. Du når "
-#~ "feeden på: 'Mötets URL' + '/feed'. "
-#~ "Detta borde bli något i stil med"
-#~ " 'www.dindomänförvoteit.se/dittmötesnamn/feed'. Om du"
-#~ " vill att feeden ska kunna visas "
-#~ "i en iframe kan du använda "
-#~ "'/framefeed' istället. Detta är en "
-#~ "avancerad funktion, läs mer om den "
-#~ "i manualen på wiki.voteit.se. Vänligen "
-#~ "notera ett varningens ord: RSS-feeden"
-#~ " är offentlig för alla som kan "
-#~ "klura ut den så använd funktionen "
-#~ "med försiktighet."
