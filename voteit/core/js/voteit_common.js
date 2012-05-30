@@ -384,9 +384,16 @@ $(document).ready(function() {
 		/* stops normal events function 
 	    IE might throw an error calling preventDefault(), so use a try/catch block. */
 	    try { event.preventDefault(); } catch(e) {}
+	    
+	    $("#discussions .posts .listing").empty();
+	    $("#discussions .posts .listing").append(voteit.translation['loading']);
 		
 		var url = $(this).attr('href');
 		$("#discussions .posts .listing").load(url, function(response, status, xhr) {
+			if (status == "error") {
+				$("#discussions .posts .listing").empty();
+				$("#discussions .posts .listing").append(voteit.translation['error_loading']);
+			}
 	    });
 	});
 });

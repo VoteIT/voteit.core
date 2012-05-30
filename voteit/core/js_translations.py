@@ -20,4 +20,5 @@ def includeme(config):
         loading = _(u"Loading..."),
         help_contact = _(u"Help &amp; Contact"),
         poll = _(u"Poll"),
+        error_loading = _(u"There was an error loding data from server"),
     )
