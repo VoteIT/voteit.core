@@ -42,11 +42,14 @@ def deferred_ai_layout_right_widget(node, kw):
     choices.append(('', _(u"<Disable>")))
     return deform.widget.RadioChoiceWidget(values=choices)
 
-@schema_factory('LayoutSchema', title=_(u"Layout"), description=_(u"layuot_schema_main_description", default = u"Change layout of the different parts in the meeting (advanced feature)"))
+@schema_factory('LayoutSchema', title=_(u"Layout"),
+                description=_(u"layuot_schema_main_description",
+                              default = u"Change layout of the different parts in the meeting (advanced feature)"))
 class LayoutSchema(colander.Schema):
     meeting_left_widget = colander.SchemaNode(colander.String(),
                                               title = _(u"Meeting left column widget"),
-                                              description = _(u"If no right column widget is selected, this will take up the whole page space."),
+                                              description = _(u"meeting_left_widget_description",
+                                                              default = u"If no right column widget is selected, this will take up the whole page space."),
                                               widget = deferred_meeting_layout_left_widget,
                                               default = 'description_richtext',
                                               missing = colander.null,)
@@ -56,7 +59,6 @@ class LayoutSchema(colander.Schema):
                                                missing = colander.null,)
     ai_left_widget = colander.SchemaNode(colander.String(),
                                          title = _(u"Agenda item left column widget"),
-                                         description = _(u"If no right column widget is selected, this will take up the whole page space."),
                                          widget = deferred_ai_layout_left_widget,
                                          default = 'proposals',
                                          missing = colander.null,)
@@ -67,7 +69,8 @@ class LayoutSchema(colander.Schema):
                                           missing = colander.null,)
     truncate_discussion_length = colander.SchemaNode(colander.Integer(),
                                           title = _(u"Truncate discussion length"),
-                                          description = _(u"Set the number of always visible characters in discussion posts. Enter 0 for no truncating."),
+                                          description = _(u"truncate_discussion_length_description",
+                                                          default = u"Set the number of always visible characters in discussion posts. Enter 0 for no truncating."),
                                           default = 240,
                                           widget = deform.widget.TextInputWidget(),
                                           missing = 240,

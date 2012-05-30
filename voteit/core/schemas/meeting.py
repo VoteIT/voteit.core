@@ -150,7 +150,7 @@ class MeetingPollSettingsSchema(colander.MappingSchema):
     poll_plugins = colander.SchemaNode(deform.Set(allow_empty=True),
                                        title = _(u"mps_poll_plugins_title",
                                                  default = u"Available poll methods within this meeting"),
-                                       description = _(u"mps_poll_plugins_title",
+                                       description = _(u"mps_poll_plugins_description",
                                                        default=u"Only poll methods selected here will be available withing the meeting. "
                                                                u"If nothing is selected, only the servers default poll method will be available."),
                                        missing=set(),
