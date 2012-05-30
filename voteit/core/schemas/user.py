@@ -37,6 +37,8 @@ def deferred_referer(node, kw):
     request = kw['request']
     return quote(request.GET.get('came_from', '/'))
 
+def userid_preparer(value):
+    return value.lower()
 
 def password_node():
     return colander.SchemaNode(colander.String(),
@@ -84,7 +86,8 @@ class AddUserSchema(colander.Schema):
                                  title = _(u"UserID"),
                                  description = _('userid_description',
                                                  default=u"Used as a nickname, in @-links and as a unique id. You can't change this later. Note that it's case sensitive!"),
-                                 validator=deferred_new_userid_validator,)
+                                 validator=deferred_new_userid_validator,
+                                 preparer=userid_preparer,)
     password = password_node()
     email = email_node()
     first_name = first_name_node()
@@ -99,7 +102,8 @@ class RegisterUserSchema(colander.Schema):
                                  title = _(u"UserID"),
                                  description = _('userid_description',
                                                  default=u"Used as a nickname, in @-links and as a unique id. You can't change this later. Note that it's case sensitive!"),
-                                 validator=deferred_new_userid_validator,)
+                                 validator=deferred_new_userid_validator,
+                                 preparer=userid_preparer,)
     password = password_node()
     email = email_node()
     first_name = first_name_node()
