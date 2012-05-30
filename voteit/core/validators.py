@@ -108,7 +108,7 @@ class NewUniqueUserID(object):
     def __call__(self, node, value):
         if not NEW_USERID_PATTERN.match(value):
             msg = _('userid_char_error',
-                    default=u"UserID must be 3-15 chars, start with a-zA-Z and only contain regular latin chars, numbers, minus and underscore.")
+                    default=u"UserID must be 3-15 chars, start with lowercase a-z and only contain lowercase a-z, numbers, minus and underscore.")
             raise colander.Invalid(node, msg)
         
         root = find_root(self.context)

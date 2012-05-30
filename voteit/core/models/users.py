@@ -9,6 +9,8 @@ from voteit.core.models.interfaces import IUsers
 from voteit.core import security
 from betahaus.pyracont.decorators import content_factory
 
+from voteit.core.validators import NEW_USERID_PATTERN
+
 
 @content_factory('Users', title=_(u"Users"))
 class Users(BaseContent):
@@ -21,6 +23,12 @@ class Users(BaseContent):
 
     __acl__ = [(Allow, security.ROLE_ADMIN, (security.EDIT, security.VIEW, security.ADD_USER, security.MANAGE_SERVER)),
                DENY_ALL]
+    
+    def add(self, name, *args, **kvargs):
+        if not NEW_USERID_PATTERN.match(name):
+            raise ValueError('name must start with lowercase a-z and only contain lowercase a-z, numbers, minus and underscore')
+
+        super(Users, self).add(name, *args, **kvargs)
 
     def get_user_by_email(self, email):
         for user in self.get_content(iface=IUser):
