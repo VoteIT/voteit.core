@@ -83,7 +83,7 @@ class AddUserSchema(colander.Schema):
     userid = colander.SchemaNode(colander.String(),
                                  title = _(u"UserID"),
                                  description = _('userid_description',
-                                                 default=u"Used as a nickname, in @-links and as a unique id. You can't change this later. Note that it's case sensitive!"),
+                                                 default=u" Used as a nickname, in @-links and as a unique id. You can't change this later. OK characters are: a-z, '.', '-', '_'."),
                                  validator=deferred_new_userid_validator,)
     password = password_node()
     email = email_node()
@@ -98,7 +98,7 @@ class RegisterUserSchema(colander.Schema):
     userid = colander.SchemaNode(colander.String(),
                                  title = _(u"UserID"),
                                  description = _('userid_description',
-                                                 default=u"Used as a nickname, in @-links and as a unique id. You can't change this later. Note that it's case sensitive!"),
+                                                 default=u" Used as a nickname, in @-links and as a unique id. You can't change this later. OK characters are: a-z, '.', '-', '_'."),
                                  validator=deferred_new_userid_validator,)
     password = password_node()
     email = email_node()
