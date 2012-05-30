@@ -15,6 +15,7 @@ from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IDiscussionPost
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IVote
+from voteit.core.models.schemas import add_csrf_token
 from voteit.core.security import VIEW
 from voteit.core.security import ADD_VOTE
 from voteit.core.models.schemas import button_vote
@@ -84,6 +85,7 @@ class AgendaItemView(BaseView):
         
         schema_name = self.api.get_schema_name(content_type, 'add')
         schema = createSchema(schema_name).bind(context = self.context, request = self.request)
+        add_csrf_token(self.context, self.request, schema)
         url = self.api.resource_url(self.context, self.request)
         form = Form(schema, action=url+"@@add?content_type="+content_type, buttons=(button_add,))
         #Note! Registration of form resources has to be in the view that has the javascript
