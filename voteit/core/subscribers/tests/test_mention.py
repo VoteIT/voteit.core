@@ -34,11 +34,11 @@ class MentionSubscriberTests(TestCase):
         from voteit.core.models.proposal import Proposal 
         ai['o'] = obj = Proposal(title="@admin")
         self._fut(obj, None)
-        self.assertIn('http://example.com/m/_userinfo?userid=admin', obj.title)
+        self.assertIn('/m/_userinfo?userid=admin', obj.title)
         
     def test_discussion_post(self):
         ai = self._fixture()
         from voteit.core.models.discussion_post import DiscussionPost 
         ai['o'] = obj = DiscussionPost(text="@admin")
         self._fut(obj, None)
-        self.assertIn('http://example.com/m/_userinfo?userid=admin', obj.title)
+        self.assertIn('/m/_userinfo?userid=admin', obj.title)

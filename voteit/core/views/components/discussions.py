@@ -12,6 +12,9 @@ from voteit.core.security import DELETE
 
 from voteit.core.htmltruncate import htmltruncate
 
+import logging
+log = logging.getLogger(__name__)
+
 #FIXME: needs a way to set default value on this on creation of meeting
 def truncate(text, length=240):
     try:
@@ -22,7 +25,10 @@ def truncate(text, length=240):
     # If the html tags doesn't match up return the complete text
     except htmltruncate.UnbalancedError: # pragma : no cover
         trunc_text = text
-    
+    except Exception, e:
+        trunc_text = text
+        log.error("Could not truncate text: %s", text)
+
     return (trunc_text, text != trunc_text)
 
 @view_action('discussions', 'listing')

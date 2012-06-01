@@ -29,7 +29,11 @@ SEARCH_VIEW_QUERY = Eq('path', Name('path')) \
 
 
 def _strip_and_truncate(text, limit=200):
-    text = sanitize(text)
+    try:
+        text = sanitize(text)
+    except Exception, e:
+        #FIXME: Logg unrecoverable error
+        return _(u"Unrecoverable error: could not truncate text")
     if len(text) > limit:
         text = u"%s<...>" % nl2br(text[:limit])
     return nl2br(text)

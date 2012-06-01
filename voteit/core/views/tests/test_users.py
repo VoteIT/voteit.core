@@ -23,9 +23,9 @@ class UsersViewTests(unittest.TestCase):
     def _fixture(self):
         from voteit.core.models.user import User
         root = bootstrap_and_fixture(self.config)
-        root.users['u1'] = User(title='Dummy 1')
-        root.users['u2'] = User(title='Dummy 2')
-        root.users['u3'] = User(title='Dummy 3')
+        root.users['dummy1'] = User(title='Dummy 1')
+        root.users['dummy2'] = User(title='Dummy 2')
+        root.users['dummy3'] = User(title='Dummy 3')
         return root.users
         
     def test_list_users(self):
@@ -44,7 +44,7 @@ class UsersViewTests(unittest.TestCase):
         self.config.testing_securitypolicy(userid='dummy',
                                            permissive=True)
         users = self._fixture()
-        context = users['u1'] 
+        context = users['dummy1'] 
         request = testing.DummyRequest(is_xhr=True)
         obj = self._cut(context, request)
         response = obj.view_user()
