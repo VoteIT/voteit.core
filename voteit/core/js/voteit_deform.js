@@ -52,22 +52,24 @@ $(document).delegate('input[name="start_time"]', 'change', function() {
 function voteit_deform_success(rText, sText, xhr, form) {
 	deform.processCallbacks();
 	deform.focusFirstInput();
-	var button = $('#booth.poll form.deform button[type=submit]');
+	var button = $('#booth.poll form.deform li.buttons');
 	var message = $('#booth.poll .success.message');
-	message.insertAfter(button);
+	message.insertBefore(button);
+    message.wrap('<li/>');
 	message.fadeIn(3000);
 }
 
 function voteit_poll_error(xhr, status, error) {
-	var button = $('#booth.poll form.deform button[type=submit]');
-	var message = $('#booth.poll .error.message'); 
+	var button = $('#booth.poll form.deform li.buttons');
+	var message = $('#booth.poll .error.message');
 	button.removeAttr('disabled');
 	message.empty();
 	if(status=='timeout')
 		message.append(voteit.translation['voting_timeout_msg']);
 	else 
 		message.append(voteit.translation['voting_error_msg']);
-	message.insertAfter(button);
+	message.insertBefore(button);
+	message.wrap('<li/>');
 	message.fadeIn(3000);
 	button.find('img').remove();
 }

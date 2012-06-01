@@ -385,12 +385,6 @@ p {
     clear: both;
     z-index: 5000;
 }
-
-#booth.poll .message {
-	display: none;
-	float: right !important;
-}
-
 #flash_messages .message,
 #notify-meetingstate .message,
 #booth.poll .message {
@@ -409,6 +403,10 @@ p {
     font-style: italic;
     font-size: 14px;
     color: #054265;
+}
+#booth.poll .message {
+	display: none;
+	margin: 5px 0px 10px 0px;
 }
 #flash_messages .lock {
     background-image: url(/static/icons/icon_lock.png);
