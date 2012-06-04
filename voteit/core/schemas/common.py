@@ -40,4 +40,6 @@ def deferred_default_user_email(node, kw):
     return u''
 
 def strip_whitespace(value):
+    if not isinstance(value, basestring):
+        return value
     return "\n".join([x.strip() for x in value.splitlines()])
