@@ -34,7 +34,7 @@ ACL['default'] = [(Allow, security.ROLE_ADMIN, security.REGULAR_ADD_PERMISSIONS)
                    ]
 
 ACL['closed'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, security.MODERATE_MEETING, security.MANAGE_GROUPS, security.DELETE, )),
-                 (Allow, security.ROLE_MODERATOR, (security.VIEW, security.MODERATE_MEETING, )),
+                 (Allow, security.ROLE_MODERATOR, (security.VIEW, security.MODERATE_MEETING, security.MANAGE_GROUPS, )),
                  (Allow, security.ROLE_VIEWER, (security.VIEW, )),
                  DENY_ALL,
                 ]
