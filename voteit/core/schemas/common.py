@@ -38,3 +38,6 @@ def deferred_default_user_email(node, kw):
     if user:
         return user.get_field_value('email')
     return u''
+
+def strip_whitespace(value):
+    return "\n".join([x.strip() for x in value.splitlines()])
