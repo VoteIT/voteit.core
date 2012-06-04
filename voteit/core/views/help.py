@@ -44,7 +44,12 @@ class HelpView(BaseView):
             
             meeting = self.context
             
-            sender = "%s <%s>" % (meeting.get_field_value('meeting_mail_name'), meeting.get_field_value('meeting_mail_address'))
+            if appstruct.get('email', None):
+                sender = appstruct['email']
+                if self.api.user_profile:
+                    sender += " <%s>" % self.api.user_profile.title
+            else:
+                sender = "%s <%s>" % (meeting.get_field_value('meeting_mail_name'), meeting.get_field_value('meeting_mail_address'))
 
             recipients = []
             for userid in find_authorized_userids(meeting, (MODERATE_MEETING,)):
