@@ -68,14 +68,16 @@
 	</div>
 	<div id="modal-mask"></div>
 	<div id="dialog" class="modal-window">
-		<h2 id="modal-header"></h2>
 		<a href="#" class="close">
 			<img src="${request.application_url}/static/icons/icon_close_lb.png"
                      width="16" height="16"
                      alt="Close" title="Close"
                      i18n:attributes="alt; title;" />
 		</a>
-		<div class="content"></div>
+		<div class="modal-inner">
+			<h2 id="modal-header"></h2>
+			<div class="content"></div>
+		</div>
 	</div>
     <div id="help-dialog" class="modal-window">
 		<a href="#" class="close">

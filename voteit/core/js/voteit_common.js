@@ -282,7 +282,7 @@ function open_modal_window(obj) {
  
     //transition effect
     $(obj).fadeIn(2000);
-}     
+}
 
 $(document).ready(function() {     
     //if close button is clicked
@@ -343,7 +343,7 @@ $(document).ready(function() {
 });
 function open_poll_booth(url) {
 	var title = $(document.createElement('span')).addClass("iconpadding icon poll").text(voteit.translation['poll']);
-	$("#dialog > h2").empty().append(title);
+	$("#dialog #modal-header").empty().append(title);
 	
 	$("#dialog .content").text(voteit.translation['loading'])
 	open_modal_window("#dialog");

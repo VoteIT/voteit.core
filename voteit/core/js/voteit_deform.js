@@ -57,8 +57,8 @@ function voteit_deform_success(rText, sText, xhr, form) {
 	message.insertBefore(button);
     message.wrap('<li/>');
 	message.fadeIn(3000);
-	var height = $('#dialog')[0].scrollHeight;
-	$('#dialog').scrollTop(height);
+	var height = $('#dialog .modal-inner')[0].scrollHeight;
+	$('#dialog .modal-inner').scrollTop(height);
 }
 
 function voteit_poll_error(xhr, status, error) {
@@ -74,8 +74,8 @@ function voteit_poll_error(xhr, status, error) {
 	message.wrap('<li/>');
 	message.fadeIn(3000);
 	button.find('img').remove();
-	var height = $('#dialog')[0].scrollHeight;
-	$('#dialog').scrollTop(height);
+	var height = $('#dialog .modal-inner')[0].scrollHeight;
+	$('#dialog .modal-inner').scrollTop(height);
 }
 
 function voteit_poll_beforeSubmit(arr, form, options) {

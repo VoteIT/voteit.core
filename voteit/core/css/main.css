@@ -369,7 +369,7 @@ p {
 /* Main window */
 #main_window h1,
 #main_window h2,
-.modal-window > h2 {
+.modal-window #modal-header {
     border-bottom: 2px solid #86A3B4;
     padding-bottom: 0.5em;
 }
@@ -876,9 +876,10 @@ ul.agenda-templates > li {
     display: none;
     width: 60%;
     height: 60%;
-    overflow:auto;
+    overflow:hidden;
     background-color: white;
     padding: 15px;
+    padding-right: 0px; 
     border-radius: 15px;
     -webkit-border-radius: 15px;
     -moz-border-radius: 15px;
@@ -888,6 +889,8 @@ ul.agenda-templates > li {
 }
 .modal-window .close {
     position: absolute;
+    float: right;
+	z-index: 10000;
     top: 15px;
     right: 15px;
 }
@@ -897,6 +900,12 @@ ul.agenda-templates > li {
 .modal-window .tab.active {
 	background-color: #054265;
 	color: #fff;
+}
+
+.modal-inner {
+	overflow:auto;
+	height: 100%;
+	padding-right: 15px;
 }
 
 /* help tab */
