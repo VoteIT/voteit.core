@@ -25,8 +25,10 @@ class MeetingViewTests(unittest.TestCase):
     def _fixture(self):
         """ Normal context for this view is an agenda item. """
         from voteit.core.models.meeting import Meeting
+        from voteit.core.models.user import User
         root = bootstrap_and_fixture(self.config)
         root['m'] = meeting = Meeting()
+        root.users['dummy'] = User()
         return meeting
 
     def _load_vcs(self):
@@ -62,7 +64,7 @@ class MeetingViewTests(unittest.TestCase):
         request = testing.DummyRequest()
         obj = self._cut(context, request)
         response = obj.meeting_view()
-        self.assertEqual(response.location, 'http://example.com/')
+        self.assertEqual(response.location, 'http://example.com/m/@@request_access')
         
     def test_participants_view(self):
         self.config.testing_securitypolicy(userid='dummy',
@@ -369,7 +371,7 @@ class MeetingViewTests(unittest.TestCase):
         self.config.scan('voteit.core.views.components.request_access')
         self.config.include('voteit.core.models.flash_messages')
         self.config.testing_securitypolicy(userid='dummy',
-                                           permissive=True)
+                                           permissive=False)
         self._load_vcs()
         context = self._fixture()
         request = testing.DummyRequest()
@@ -381,7 +383,7 @@ class MeetingViewTests(unittest.TestCase):
         self.config.scan('voteit.core.views.components.request_access')
         self.config.include('voteit.core.models.flash_messages')
         self.config.testing_securitypolicy(userid='dummy',
-                                           permissive=True)
+                                           permissive=False)
         self._load_vcs()
         context = self._fixture()
         context.set_field_value('access_policy', 'public')
@@ -394,7 +396,7 @@ class MeetingViewTests(unittest.TestCase):
         self.config.scan('voteit.core.views.components.request_access')
         self.config.include('voteit.core.models.flash_messages')
         self.config.testing_securitypolicy(userid='dummy',
-                                           permissive=True)
+                                           permissive=False)
         self._load_vcs()
         context = self._fixture()
         context.set_field_value('access_policy', 'all_participant_permissions')
@@ -407,7 +409,7 @@ class MeetingViewTests(unittest.TestCase):
         self.config.scan('voteit.core.views.components.request_access')
         self.config.include('voteit.core.models.flash_messages')
         self.config.testing_securitypolicy(userid='dummy',
-                                           permissive=True)
+                                           permissive=False)
         self._load_vcs()
         context = self._fixture()
         context.set_field_value('access_policy', 'fake_policy')
@@ -415,6 +417,18 @@ class MeetingViewTests(unittest.TestCase):
         obj = self._cut(context, request)
         response = obj.request_meeting_access()
         self.assertEqual(response.location, 'http://example.com/')
+        
+    def test_request_meeting_access_not_logged_in(self):
+        self.config.scan('voteit.core.views.components.request_access')
+        self.config.include('voteit.core.models.flash_messages')
+        self.config.testing_securitypolicy(permissive=False)
+        self._load_vcs()
+        context = self._fixture()
+        context.set_field_value('access_policy', 'all_participant_permissions')
+        request = testing.DummyRequest()
+        obj = self._cut(context, request)
+        response = obj.request_meeting_access()
+        self.assertEqual(response.location, 'http://example.com/@@login?came_from=http%3A%2F%2Fexample.com%2Fm%2F%40%40request_access')
         
     def test_presentation(self):
         self.config.scan('voteit.core.schemas.meeting')
