@@ -61,6 +61,7 @@ class CatalogMetadata(object):
             'content_type': get_content_type(self.context, None),
             'workflow_state': get_workflow_state(self.context, None),
             'uid': get_uid(self.context, None),
+            'aid': get_aid(self.context, None),
             'like_userids': get_like_userids(self.context, ()),
         }
 
@@ -99,6 +100,7 @@ def update_indexes(catalog, reindex=True):
         'sortable_title': CatalogFieldIndex(get_sortable_title),
         'description': CatalogFieldIndex(get_description),
         'uid': CatalogFieldIndex(get_uid),
+        'aid': CatalogFieldIndex(get_aid),
         'content_type': CatalogFieldIndex(get_content_type),
         'workflow_state': CatalogFieldIndex(get_workflow_state),
         'path': CatalogPathIndex(get_path),
@@ -244,6 +246,13 @@ def get_description(object, default):
 def get_uid(object, default):
     """ Objects unique id. """
     return object.uid
+
+def get_aid(object, default):
+    """ Objects automatic id. """
+    aid = object.get_field_value('aid')
+    if aid:
+        return aid
+    return default
 
 def get_content_type(object, default):
     """ Objects content_type name. """

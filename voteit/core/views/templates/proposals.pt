@@ -28,6 +28,8 @@
                 <span class="hyphen">&#45;</span>
             </span>
             <span class="user_tags" tal:content="structure api.render_view_group(proposal, request, 'user_tags')"></span>
+            <span class="hyphen">&#45;</span>
+            <span class="aid" tal:content="proposal['aid']"></span>
         </div>
         <div class="clear"><!-- --></div>
     </div>
