@@ -28,6 +28,7 @@ def meeting_actions(context, request, va, **kw):
         In turn, some of those will call other groups.
     """
     api = kw['api']
+    context = api.meeting and api.meeting or api.root
     return """<ul id="meeting-actions-menu">%s</ul>""" % api.render_view_group(context, request, 'meeting_actions')
 
 
