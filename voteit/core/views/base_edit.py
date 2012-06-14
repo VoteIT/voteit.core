@@ -31,15 +31,18 @@ DEFAULT_TEMPLATE = "templates/base_edit.pt"
 
 
 class BaseEdit(object):
-    """ View class for adding, editing or deleting dynamic content. """
+    """ Default edit class. Subclass this to create edit views. """
 
     def __init__(self, context, request):
         self.context = context
         self.request = request
         self.response = {}
         self.response['api'] = self.api = APIView(context, request)
-        fanstaticlib.voteit_main_css.need()
-        fanstaticlib.voteit_common_js.need()
+        self.api.include_needed(context, request, self)
+
+
+class DefaultEdit(BaseEdit):
+    """ Default view class for adding, editing or deleting dynamic content. """
 
     @view_config(context=IBaseContent, name="add", renderer=DEFAULT_TEMPLATE)
     def add_form(self):
@@ -49,11 +52,12 @@ class BaseEdit(object):
         add_permission = self.api.content_types_add_perm(content_type)
         if not has_permission(add_permission, self.context, self.request):
             raise Forbidden("You're not allowed to add '%s' in this context." % content_type)
-        
+
+        factory = self.api.get_content_factory(content_type)
         schema_name = self.api.get_schema_name(content_type, 'add')
-        schema = createSchema(schema_name).bind(context=self.context, request=self.request)
+        schema = createSchema(schema_name).bind(context=self.context, request=self.request, api=self.api)
         add_csrf_token(self.context, self.request, schema)
-            
+        
         form = Form(schema, buttons=(button_add, button_cancel))
         self.api.register_form_resources(form)
 
@@ -87,7 +91,11 @@ class BaseEdit(object):
                 msg = _(u"review_poll_settings_info",
                         default = u"Please review poll specific settings. Any default value in a field is a suggestion from the plugin.")
                 self.api.flash_messages.add(msg)
+                msg = _(u"private_poll_info",
+                        default = u"The poll is created in private state, to show it the participants you have to change the state to upcoming.")
+                self.api.flash_messages.add(msg)
                 url += '@@poll_config'
+                
             return HTTPFound(location=url)
 
         if 'cancel' in post:
@@ -97,13 +105,13 @@ class BaseEdit(object):
             return HTTPFound(location=url)
 
         #No action - Render add form
-        msg = _(u"Add")
-        self.api.flash_messages.add(msg, close_button=False)
         self.response['form'] = form.render()
         return self.response
 
     @view_config(context=IBaseContent, name="edit", renderer=DEFAULT_TEMPLATE, permission=EDIT)
     def edit_form(self):
+        self.response['title'] = _(u"Edit %s" % self.api.translate(self.context.display_name))
+
         content_type = self.context.content_type
         schema_name = self.api.get_schema_name(content_type, 'edit')
         schema = createSchema(schema_name).bind(context=self.context, request=self.request)
@@ -138,8 +146,6 @@ class BaseEdit(object):
             return HTTPFound(location=url)
 
         #No action - Render edit form
-        msg = _(u"Edit")
-        self.api.flash_messages.add(msg, close_button=False)
         appstruct = self.context.get_field_appstruct(schema)
         self.response['form'] = form.render(appstruct=appstruct)
         return self.response
@@ -155,7 +161,7 @@ class BaseEdit(object):
 
         post = self.request.POST
         if 'delete' in post:
-            if self.context.content_type == 'SiteRoot' or self.context.content_type == 'Users' or self.context.content_type == 'User':
+            if self.context.content_type in ('SiteRoot', 'Users', 'User'):
                 raise Exception("Can't delete this content type")
 
             parent = self.context.__parent__
@@ -172,8 +178,15 @@ class BaseEdit(object):
             return HTTPFound(location=url)
 
         #No action - Render edit form
-        msg = _(u"Are you sure you want to delete this item?")
-        self.api.flash_messages.add(msg, close_button=False)
+        msg = _(u"delete_form_notice",
+                default = u"Are you sure you want to delete '${display_name}' with title: ${title}?",
+                mapping = {'display_name': self.api.translate(self.context.display_name),
+                           'title': self.context.title})
+        self.api.flash_messages.add(msg, close_button = False)
+        if self.context.content_type == 'Proposal' and self.context.get_workflow_state() == 'voting':
+            msg = _(u"delete_form_locked_proposal_notice",
+                    default = u"This proposal is locked for voting. If you delete it, you will NEVER be able to close the poll it's participating in. Are you really sure that you want to do this?")
+            self.api.flash_messages.add(msg, type = 'error', close_button = False)
         self.response['form'] = form.render()
         return self.response
 

@@ -1,8 +1,6 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
       xmlns:tal="http://xml.zope.org/namespaces/tal"
-      metal:use-macro="api.main_template.macros['master']"
+      metal:use-macro="load: ${api.template_dir}content.pt"
 	  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
 	  i18n:domain="voteit.core">
 <body>
@@ -19,7 +17,7 @@
         </div>
         <h2 tal:condition="polls"><span class="iconpadding icon poll" i18n:translate="">Poll</span></h2>
 
-        <span tal:replace="structure get_polls(polls, poll_forms)">Render poll listing</span>
+        <span tal:replace="structure get_polls(polls)">Render poll listing</span>
 
     </div> <!-- top_content -->
 

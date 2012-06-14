@@ -25,8 +25,9 @@ ACL['closed'] = [(Allow, security.ROLE_OWNER,  security.VIEW,),
 
 @content_factory('Vote', title=_(u"Vote"))
 class Vote(BaseContent):
-    """ Vote content. This is not addable through regular content factories.
-        It's used as a storage for a users vote by a vote plugin.
+    """ Vote content type.
+        See :mod:`voteit.core.models.interfaces.IVote`.
+        All methods are documented in the interface of this class.
     """
     implementsOnly(IVote) #This blanks out other interfaces!
     content_type = 'Vote'

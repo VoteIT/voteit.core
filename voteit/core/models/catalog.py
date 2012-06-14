@@ -36,7 +36,7 @@ SEARCHABLE_TEXT_INDEXES = ('title',
 
 class CatalogMetadata(object):
     """ An adapter to fetch metadata for the catalog.
-        See ICatalogMetadata
+        See :mod:`voteit.core.models.interfaces.ICatalogMetadata`.
     """
     #FIXME: Each metadata should be its own adapter instead
     #otherwise we can't make this pluggable
@@ -73,14 +73,18 @@ class CatalogMetadata(object):
         return results
 
     def get_agenda_item_specific(self, results):
+        """ Specific for Agenda items. """
         results['discussion_count'] = len(self.context.get_content(content_type='Discussion'))
         results['poll_count'] = len(self.context.get_content(content_type='Poll'))
         results['proposal_count'] = len(self.context.get_content(content_type='Proposal'))
+        results['order'] = get_order(self.context, 0)
 
     def get_workflow_specific(self, results):
+        """ Specific for workflow aware items. """
         results['workflow_state'] = get_workflow_state(self.context, None)
 
     def get_poll_specific(self, results):
+        """ Specific for polls. """
         results['voted_userids'] = get_voted_userids(self.context, ())
 
 
@@ -108,6 +112,7 @@ def update_indexes(catalog, reindex=True):
         'unread': CatalogKeywordIndex(get_unread),
         'like_userids': CatalogKeywordIndex(get_like_userids),
         'voted_userids': CatalogKeywordIndex(get_voted_userids),
+        'order': CatalogFieldIndex(get_order),
     }
     
     changed_indexes = set()
@@ -208,10 +213,13 @@ def resolve_catalog_docid(catalog, root, docid):
     """
     path = catalog.document_map.address_for_docid(docid)
     if path is None:
-        return ValueError("Nothing found in catalog with docid '%s'" % docid)
+        return ValueError("Nothing found in catalog with docid '%s'" % docid) # pragma : no cover
     return find_resource(root, path)
 
 def metadata_for_query(catalog, **kwargs):
+    """ Get metadata objects and return them. Shorthand for looking up
+        metadata from a query result.
+    """
     num, docids = catalog.search(**kwargs)
     metadata = [catalog.document_map.get_metadata(x) for x in docids]
     return tuple(metadata)
@@ -219,32 +227,40 @@ def metadata_for_query(catalog, **kwargs):
 
 #Indexes
 def get_title(object, default):
+    """ Return objects title. """
     return object.title
 
 def get_sortable_title(object, default):
+    """ Sortable title is a lowercased version of the title. """
     title = object.title
     if not title:
         return default
     return object.title.lower()
 
 def get_description(object, default):
+    """ Objects description. """
     return object.description
 
 def get_uid(object, default):
+    """ Objects unique id. """
     return object.uid
 
 def get_content_type(object, default):
+    """ Objects content_type name. """
     return object.content_type
 
 def get_workflow_state(object, default):
+    """ Return workflow state, if this object has workflow enabled. """
     if not IWorkflowAware.providedBy(object):
         return default
     return object.get_workflow_state()
 
 def get_path(object, default):
+    """ Physical path of object. """
     return resource_path(object)
 
 def get_creators(object, default):
+    """ Return a tuple of all the objects creators. """
     if object.creators:
         return tuple(object.creators)
     return default
@@ -258,6 +274,7 @@ def get_created(object, default):
     return timegm(object.created.timetuple())
 
 def get_allowed_to_view(object, default):
+    """ Return a list of all roles allowed to view this object. """
     principals = principals_allowed_by_permission(object, VIEW)
     if not principals:
         # An empty value tells the catalog to match anything, whereas when
@@ -290,18 +307,21 @@ def get_searchable_text(object, default):
     return text and text or default
 
 def get_start_time(object, default):
+    """ UNIX timestamp from start_time. """
     value = object.get_field_value('start_time', default)
     if value and value != default:
         return timegm(value.timetuple())
     return default
 
 def get_end_time(object, default):
+    """ UNIX timestamp from end_time. """
     value = object.get_field_value('end_time', default)
     if value and value != default:
         return timegm(value.timetuple())
     return default
 
 def get_unread(object, default):
+    """ All userids who have this object as unread. """
     unread = queryAdapter(object, IUnread)
     if not unread:
         return default
@@ -335,6 +355,10 @@ def get_voted_userids(object, default):
         return default
     voted_userids = object.get_voted_userids()
     return voted_userids and voted_userids or default
+
+def get_order(object, default):
+    """ Return order, if object has that field. """
+    return object.get_field_value('order', default)
 
 
 def includeme(config):

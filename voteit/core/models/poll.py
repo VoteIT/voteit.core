@@ -13,6 +13,7 @@ from pyramid.renderers import render
 from pyramid.i18n import get_localizer
 from repoze.workflow.workflow import WorkflowError
 from betahaus.pyracont.decorators import content_factory
+from betahaus.pyracont.factories import createContent
 from pyramid.httpexceptions import HTTPForbidden
 
 from voteit.core import security
@@ -35,6 +36,11 @@ _UPCOMING_PERMS = (security.VIEW,
                    security.CHANGE_WORKFLOW_STATE,
                    security.MODERATE_MEETING, )
 
+_ONGOING_PERMS = (security.VIEW,
+                  security.DELETE,
+                  security.CHANGE_WORKFLOW_STATE,
+                  security.MODERATE_MEETING, )
+
 ACL = {}
 ACL['private'] = [(Allow, security.ROLE_ADMIN, _UPCOMING_PERMS),
                   (Allow, security.ROLE_MODERATOR, _UPCOMING_PERMS),
@@ -45,14 +51,14 @@ ACL['upcoming'] = [(Allow, security.ROLE_ADMIN, _UPCOMING_PERMS),
                   (Allow, security.ROLE_VIEWER, security.VIEW),
                   DENY_ALL,
                    ]
-ACL['ongoing'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, security.CHANGE_WORKFLOW_STATE, security.MODERATE_MEETING, )),
-                  (Allow, security.ROLE_MODERATOR, (security.VIEW, security.CHANGE_WORKFLOW_STATE, security.MODERATE_MEETING, )),
+ACL['ongoing'] = [(Allow, security.ROLE_ADMIN, _ONGOING_PERMS, ),
+                  (Allow, security.ROLE_MODERATOR, _ONGOING_PERMS, ),
                   (Allow, security.ROLE_VOTER, (security.ADD_VOTE, )),
                   (Allow, security.ROLE_VIEWER, security.VIEW),
                   DENY_ALL,
                    ]
-ACL['closed'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, )),
-                 (Allow, security.ROLE_MODERATOR, (security.VIEW, )),
+ACL['closed'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, security.DELETE, )),
+                 (Allow, security.ROLE_MODERATOR, (security.VIEW, security.DELETE, )),
                  (Allow, security.ROLE_VIEWER, security.VIEW),
                  DENY_ALL,
                 ]
@@ -60,16 +66,26 @@ ACL['closed'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, )),
 
 @content_factory('Poll', title=_(u"Poll"))
 class Poll(BaseContent, WorkflowAware):
-    """ Poll content. """
+    """ Poll content type.
+        See :mod:`voteit.core.models.interfaces.IPoll`.
+        All methods are documented in the interface of this class.
+        Note that the actual poll method isn't decided by the poll
+        content type. It calls a poll plugin to get that.
+    """
     implements(IPoll, ICatalogMetadataEnabled)
     content_type = 'Poll'
     display_name = _(u"Poll")
     allowed_contexts = ('AgendaItem',)
     add_permission = security.ADD_POLL
-    schemas = {'add': 'PollSchema', 'edit': 'PollSchema'}
+    schemas = {'add': 'AddPollSchema', 'edit': 'EditPollSchema'}
 
     @property
     def __acl__(self):
+        #If ai is private, use private
+        ai = find_interface(self, IAgendaItem)
+        ai_state = ai.get_workflow_state()
+        if ai_state == 'private':
+            return ACL['private']
         state = self.get_workflow_state()
         #As default - don't traverse to parent
         return ACL.get(state, 'closed')
@@ -86,6 +102,8 @@ class Poll(BaseContent, WorkflowAware):
         return self.get_field_value('proposals', ())
 
     def _set_proposal_uids(self, value):
+        if not isinstance(value, tuple):
+            value = tuple(value)
         self.set_field_value('proposals', value)
 
     proposal_uids = property(_get_proposal_uids, _set_proposal_uids)
@@ -203,16 +221,17 @@ class Poll(BaseContent, WorkflowAware):
                 default=u"Poll closed. Proposals might have been adjusted as approved or denied depending on outcome of the poll.")
         fm.add(msg)
 
-    def render_poll_result(self, request):
+    def render_poll_result(self, request, complete=True):
         """ Render poll result. Calls plugin to calculate result.
         """
         try:
             poll_plugin = self.get_poll_plugin()
-            return poll_plugin.render_result(request)
-        except Exception, exc:
+            return poll_plugin.render_result(request, complete)
+        except Exception, exc: # pragma : no cover
             if request.registry.settings.get('pyramid.debug_templates', False):
                 raise exc
-            return _(u"Broken poll plugin. Can't display result. Turn on debug_templates to see the error.")
+            return _(u"broken_plugin_error",
+                     default = u"Broken poll plugin. Can't display result. Turn on debug_templates to see the error.")
 
     def get_proposal_by_uid(self, uid):
         for prop in self.get_proposal_objects():
@@ -220,17 +239,14 @@ class Poll(BaseContent, WorkflowAware):
                 return prop
         raise KeyError("No proposal found with UID '%s'" % uid)
         
-    def create_rejection_proposal(self):
-        proposal_rejection = self.get_field_value('proposal_rejection', None)
-        rejection_proposal_uid = self.get_field_value('rejection_proposal_uid', None)
-        # if we should add rejection proposal and there is no rejection proposal already
-        if proposal_rejection and rejection_proposal_uid is None:
-            # create rejection proposal
-            from voteit.core.models.proposal import Proposal
-            proposal = Proposal()
-            proposal_title = self.get_field_value('proposal_rejection_title', _(u'Rejection'))
-            proposal.set_field_value('title', proposal_title)
-            self.set_field_value('rejection_proposal_uid', proposal._get_uid())
+    def create_reject_proposal(self):
+        add_reject_proposal = self.get_field_value('add_reject_proposal', None)
+        reject_proposal_uid = self.get_field_value('reject_proposal_uid', None)
+        #Only add if it doesn't exist.
+        if add_reject_proposal and reject_proposal_uid is None:
+            proposal_title = self.get_field_value('reject_proposal_title')
+            proposal = createContent('Proposal', title = proposal_title)
+            self.set_field_value('reject_proposal_uid', proposal.uid)
             
             # add rejection proposal to agenda item
             agenda_item = find_interface(self, IAgendaItem)
@@ -238,7 +254,9 @@ class Poll(BaseContent, WorkflowAware):
             agenda_item[name] = proposal
             
             # add proposal to polls proposal uids
-            self.proposal_uids = self.proposal_uids.union(set([proposal._get_uid()]))
+            proposal_uids = set(self.proposal_uids)
+            proposal_uids.add(proposal.uid)
+            self.proposal_uids = proposal_uids
 
 
 class Ballots(object):
@@ -252,6 +270,7 @@ class Ballots(object):
         self.ballots = OIBTree()
 
     def result(self):
+        """ Return a tuple with sorted ballot items. """
         return tuple( sorted( self.ballots.iteritems() ) )
 
     def add(self, value):
@@ -283,7 +302,6 @@ def upcoming_poll_callback(content, info):
             default=u"Setting poll in upcoming state. It's now visible for meeting participants.")
     fm.add(msg)
     if count:
-        #FIXME: Translation mappings
         msg = _(u'poll_closed_proposals_locked_notice',
                 default=u"${count} selected proposals were set in the 'locked for vote' state. They can no longer be edited or retracted by normal users.",
                 mapping={'count':count})
@@ -338,12 +356,18 @@ def email_voters_about_ongoing_poll(poll, request=None):
     response['poll_url'] = resource_url(poll, request)
 
     sender = "%s <%s>" % (meeting.get_field_value('meeting_mail_name'), meeting.get_field_value('meeting_mail_address'))
+    #FIXME: This should be detatched into a view component
     body_html = render('../views/templates/email/ongoing_poll_notification.pt', response, request=request)
+
+    #Since subject won't be part of a renderer, we need to translate it manually
+    #Keep the _ -syntax otherwise Babel/lingua won't pick up the string
+    localizer = get_localizer(request)
+    subject = localizer.translate(_(u"VoteIT: Open poll"))
 
     mailer = get_mailer(request)
     #We need to send individual messages anyway
     for email in email_addresses:
-        msg = Message(subject=_(u"VoteIT: Open poll"),
+        msg = Message(subject = subject,
                       sender = sender,
                       recipients=[email,],
                       html=body_html)

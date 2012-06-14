@@ -56,13 +56,13 @@ class SecurityAware(object):
 
         return adjusted_groups
 
-    def add_groups(self, principal, groups, event = False):
+    def add_groups(self, principal, groups, event = True):
         groups = set(groups)
         groups.update(self.get_groups(principal))
         #Delegate check and set to set_groups
         self.set_groups(principal, groups, event = event)
 
-    def del_groups(self, principal, groups, event = False):
+    def del_groups(self, principal, groups, event = True):
         if isinstance(groups, basestring):
             groups = set([groups])
         else:
@@ -72,7 +72,7 @@ class SecurityAware(object):
         #Delegate check and set to set_groups
         self.set_groups(principal, new_groups, event = event)
 
-    def set_groups(self, principal, groups, event = False):
+    def set_groups(self, principal, groups, event = True):
         changed = False
         if not groups:
             if principal in self._groups:

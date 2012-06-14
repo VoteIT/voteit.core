@@ -1,5 +1,7 @@
 import urllib
+import json
 
+import colander
 from deform import Form
 from deform.exception import ValidationFailure
 from pyramid.security import has_permission
@@ -8,14 +10,19 @@ from pyramid.view import view_config
 from pyramid.httpexceptions import HTTPFound
 from pyramid.httpexceptions import HTTPRedirection
 from pyramid.url import resource_url
+from pyramid.traversal import resource_path
+from pyramid.renderers import render
+from pyramid.response import Response
 from betahaus.pyracont.factories import createContent
 from betahaus.pyracont.factories import createSchema
+from betahaus.viewcomponent.interfaces import IViewGroup
 
 from voteit.core import security
 from voteit.core import VoteITMF as _
 from voteit.core.views.base_view import BaseView
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IMeeting
+from voteit.core.models.interfaces import ISiteRoot
 from voteit.core.models.schemas import add_csrf_token
 from voteit.core.models.schemas import button_save
 from voteit.core.models.schemas import button_add
@@ -23,7 +30,9 @@ from voteit.core.models.schemas import button_cancel
 from voteit.core.models.schemas import button_resend
 from voteit.core.models.schemas import button_delete
 from voteit.core.validators import deferred_token_form_validator
-from betahaus.viewcomponent.interfaces import IViewGroup
+from voteit.core.helpers import generate_slug
+from voteit.core.helpers import ajax_options
+from voteit.core import fanstaticlib
 
 
 class MeetingView(BaseView):
@@ -34,14 +43,8 @@ class MeetingView(BaseView):
             it should allow users to request access if unauthorized is raised.
         """
         if not has_permission(security.VIEW, self.context, self.request):
-            if self.api.userid:
-                #We delegate permission checks to the request_meeting_access part.
-                url = resource_url(self.context, self.request) + '@@request_access'
-                return HTTPFound(location = url)
-            else:
-                msg = _(u"You're not logged in - before you can access meetings you need to do that.")
-            self.api.flash_messages.add(msg, type='error')
-            url = self.api.resource_url(self.api.root, self.request)
+            #We delegate permission checks to the request_meeting_access part.
+            url = resource_url(self.context, self.request) + '@@request_access'
             return HTTPFound(location = url)
 
         self.response['get_polls'] = self._get_polls
@@ -56,7 +59,7 @@ class MeetingView(BaseView):
         return self.response
 
     def _get_polls(self, agenda_item):
-        return agenda_item.get_content(iface=IPoll, states=('upcoming', 'ongoing', 'closed'), sort_on='start_time')
+        return agenda_item.get_content(iface=IPoll, states=('upcoming', 'ongoing', 'closed'), sort_on='sort_index')
 
     @view_config(name="participants", context=IMeeting, renderer="templates/participants.pt", permission=security.VIEW)
     def participants_view(self):
@@ -80,6 +83,23 @@ class MeetingView(BaseView):
         self.response['participants'] = tuple(sorted(results, key = _sorter))
         self.response['context_effective_principals'] = security.context_effective_principals
         return self.response
+        
+    @view_config(name="participants_emails", context=IMeeting, renderer="templates/participants_emails.pt", permission=security.MODERATE_MEETING)
+    def participants_emails(self):
+        """ List all participants emails in this meeting. """
+        users = self.api.root.users
+        
+        results = []
+        for userid in security.find_authorized_userids(self.context, (security.VIEW,)):
+            user = users.get(userid, None)
+            if user:
+                results.append(user)
+        
+        def _sorter(obj):
+            return obj.get_field_value('email')
+
+        self.response['participants'] = tuple(sorted(results, key = _sorter))
+        return self.response
 
     @view_config(name="ticket", context=IMeeting, renderer="templates/base_edit.pt", permission = NO_PERMISSION_REQUIRED)
     def claim_ticket(self):
@@ -99,6 +119,8 @@ class MeetingView(BaseView):
             came_from = urllib.quote(self.request.url)
             url = "%s@@login?came_from=%s" % (resource_url(self.api.root, self.request), came_from)
             return HTTPFound(location=url)
+
+        self.response['title'] = _(u"Meeting Access")
 
         schema = createSchema('ClaimTicketSchema', validator = deferred_token_form_validator).bind(context=self.context, request=self.request)
         add_csrf_token(self.context, self.request, schema)
@@ -130,8 +152,6 @@ class MeetingView(BaseView):
             return HTTPFound(location=url)
 
         #No action - Render add form
-        msg = _(u"Meeting Access")
-        self.api.flash_messages.add(msg, close_button=False)
         self.response['form'] = form.render()
         return self.response
 
@@ -143,6 +163,8 @@ class MeetingView(BaseView):
             should have once they register. When the form is submitted, it will also email
             users.
         """
+        self.response['title'] = _(u"Send meeting invitations")
+
         post = self.request.POST
         if 'cancel' in post:
             self.api.flash_messages.add(_(u"Canceled"))
@@ -177,8 +199,6 @@ class MeetingView(BaseView):
             return HTTPFound(location=url)
 
         #No action - Render add form
-        msg = _(u"Send meeting invitations")
-        self.api.flash_messages.add(msg, close_button=False)
         self.response['form'] = form.render()
         return self.response
 
@@ -186,6 +206,8 @@ class MeetingView(BaseView):
     def manage_tickets(self):
         """ A form for handling and reviewing already sent tickets.
         """
+        self.response['title'] = _(u"Current invitations")
+
         schema = createSchema('ManageTicketsSchema').bind(context=self.context, request=self.request)
         add_csrf_token(self.context, self.request, schema)
             
@@ -195,14 +217,19 @@ class MeetingView(BaseView):
         post = self.request.POST
 
         emails = ()
+
         if 'resend' in post or 'delete' in post:
             controls = post.items()
             try:
                 appstruct = form.validate(controls)
-                emails = appstruct['emails']
+                if appstruct['apply_to_all'] == True:
+                    emails = [x.email for x in self.context.invite_tickets.values() if x.get_workflow_state() != u'closed']
+                else:
+                    emails = appstruct['emails']
             except ValidationFailure, e:
                 self.response['form'] = e.render()
                 return self.response
+
         if emails and 'resend' in post:
             for email in emails:
                 self.context.invite_tickets[email].send(self.request)
@@ -231,15 +258,15 @@ class MeetingView(BaseView):
             return HTTPFound(location=url)
 
         #No action - Render add form
-        msg = _(u"Current invitations")
-        self.api.flash_messages.add(msg, close_button=False)
         self.response['form'] = form.render()
         return self.response
 
-    @view_config(name="manage_layout", context=IMeeting, renderer="templates/base_edit.pt", permission=security.MODERATE_MEETING)
+    @view_config(name="manage_layout", context=IMeeting, renderer="templates/base_edit.pt", permission=security.EDIT)
     def manage_layout(self):
         """ Manage layout
         """
+        self.response['title'] = _(u"Layout")
+
         schema = createSchema('LayoutSchema').bind(context=self.context, request=self.request)
         add_csrf_token(self.context, self.request, schema)
             
@@ -267,16 +294,31 @@ class MeetingView(BaseView):
 
         #No action - Render form
         appstruct = self.context.get_field_appstruct(schema)
-        msg = _(u"Layout")
-        self.api.flash_messages.add(msg, close_button=False)
         self.response['form'] = form.render(appstruct)
         return self.response
 
     @view_config(name = 'request_access', context = IMeeting,
                  renderer = "templates/base_edit.pt", permission = NO_PERMISSION_REQUIRED)
     def request_meeting_access(self):
-        view_group = self.request.registry.getUtility(IViewGroup, name = 'request_meeting_access')
+        #If user already has permissions redirect to main meeting view
+        if has_permission(security.VIEW, self.context, self.request):
+            url = resource_url(self.context, self.request)
+            return HTTPFound(location = url)
+        
         access_policy = self.context.get_field_value('access_policy', 'invite_only')
+        
+        # show log in/register view if user is not logged in and access policy is no invite only
+        if not self.api.userid and not access_policy == 'invite_only':
+            msg = _('request_access_view_login_register',
+                    default=u"""This meeting requires the participants to be logged in. If you are 
+                    registered please log in or register an account here. You will be returned to the 
+                    meeting afterwards""")
+            self.api.flash_messages.add(msg, type='info')
+            came_from = resource_url(self.context, self.request, '@@request_access')
+            url = resource_url(self.api.root, self.request, '@@login', query={'came_from': came_from})
+            return HTTPFound(location=url)
+        
+        view_group = self.request.registry.getUtility(IViewGroup, name = 'request_meeting_access')        
         va = view_group.get(access_policy, None)
         if va is None:
             err_msg = _(u"request_access_view_action_not_found",
@@ -289,4 +331,119 @@ class MeetingView(BaseView):
         if isinstance(result, HTTPRedirection):
             return result
         self.response['form'] = result
+        return self.response
+
+    @view_config(context=IMeeting, name="presentation", renderer="templates/base_edit.pt", permission=security.MODERATE_MEETING)
+    def presentation(self):
+        schema = createSchema("PresentationMeetingSchema").bind(context=self.context, request=self.request)
+        return self.form(schema)
+    
+    @view_config(context=IMeeting, name="mail_settings", renderer="templates/base_edit.pt", permission=security.MODERATE_MEETING)
+    def mail_settings(self):
+        schema = createSchema("MailSettingsMeetingSchema").bind(context=self.context, request=self.request)
+        return self.form(schema)
+        
+    @view_config(context=IMeeting, name="access_policy", renderer="templates/base_edit.pt", permission=security.MODERATE_MEETING)
+    def access_policy(self):
+        schema = createSchema("AccessPolicyMeetingSchema").bind(context=self.context, request=self.request)
+        return self.form(schema)
+
+    @view_config(context=IMeeting, name="meeting_poll_settings", renderer="templates/base_edit.pt", permission=security.MODERATE_MEETING)
+    def global_poll_settings(self):
+        schema = createSchema("MeetingPollSettingsSchema").bind(context=self.context, request=self.request)
+        return self.form(schema)
+
+    def form(self, schema):
+        add_csrf_token(self.context, self.request, schema)
+            
+        form = Form(schema, buttons=(button_save, button_cancel), use_ajax=True, ajax_options=ajax_options)
+        self.api.register_form_resources(form)
+        fanstaticlib.jquery_form.need()
+
+        post = self.request.POST
+        if 'save' in post:
+            controls = post.items()
+            try:
+                appstruct = form.validate(controls)
+            except ValidationFailure, e:
+                self.response['form'] = e.render()
+                if self.request.is_xhr:
+                    return Response(render("templates/ajax_edit.pt", self.response, request = self.request))
+                
+                return self.response
+            
+            self.context.set_field_appstruct(appstruct)
+            
+            url = resource_url(self.context, self.request)
+            if self.request.is_xhr:
+                return Response(headers = [('X-Relocate', url)])
+            return HTTPFound(location=url)
+
+        if 'cancel' in post:
+            self.api.flash_messages.add(_(u"Canceled"))
+
+            url = resource_url(self.context, self.request)
+            if self.request.is_xhr:
+                return Response(headers = [('X-Relocate', url)])
+            return HTTPFound(location=url)
+
+        #No action - Render form
+        appstruct = self.context.get_field_appstruct(schema)
+        self.response['form'] = form.render(appstruct)
+        return self.response
+    
+    @view_config(context=IMeeting, name="order_agenda_items", renderer="templates/order_agenda_items.pt", permission=security.EDIT)
+    def order_agenda_items(self):
+        self.response['title'] = _(u"order_agenda_items_view_title",
+                                   default = u"Drag and drop agenda items to reorder")
+
+        post = self.request.POST
+        if 'cancel' in self.request.POST:
+            url = resource_url(self.context, self.request)
+            return HTTPFound(location = url)
+
+        if 'save' in post:
+            controls = self.request.POST.items()
+            ais = []
+            order = 0
+            for (k, v) in controls:
+                if k == 'agenda_items':
+                    ai = self.context[v]
+                    ai.set_field_appstruct({'order': order})
+                    order += 1
+            self.api.flash_messages.add(_('Order updated'))
+            
+        context_path = resource_path(self.context)
+        query = dict(
+            path = context_path,
+            content_type = 'AgendaItem',
+            sort_index = 'order',
+        )
+        self.response['brains'] = self.api.get_metadata_for_query(**query)
+        
+        fanstaticlib.jquery_142.need()
+
+        return self.response
+
+    @view_config(context = IMeeting, name = "minutes", renderer = "templates/minutes.pt", permission = security.VIEW)
+    def minutes(self):
+        """ Show an overview of the meeting activities. Should work as a template for minutes. """
+
+        if self.api.meeting.get_workflow_state() != 'closed':
+            msg = _(u"meeting_not_closed_minutes_incomplete_notice",
+                    default = u"This meeting hasn't closed yet so these minutes won't be complete")
+            self.api.flash_messages.add(msg)
+
+        #Add agenda item objects to response
+        agenda_items = []
+        query = dict(
+            context = self.context,
+            content_type = "AgendaItem",
+            workflow_state = ('upcoming', 'ongoing', 'closed'),
+            sort_index = "order",
+        )
+        for docid in self.api.search_catalog(**query)[1]:
+            agenda_items.append(self.api.resolve_catalog_docid(docid))
+
+        self.response['agenda_items'] = agenda_items
         return self.response

@@ -16,8 +16,8 @@ requires = (
     'repoze.workflow',
     'ZODB3',
     'WebError',
-    'colander>=0.9.4',
-    'deform>=0.9.1',
+    'colander==0.9.5',
+    'deform>=0.9.4',
     'Babel',
     'slugify',
     'webtest',
@@ -26,10 +26,13 @@ requires = (
     'repoze.catalog',
     'lingua',
     'httplib2',
-    'betahaus.pyracont',
+    'betahaus.pyracont>=0.1a3',
     'betahaus.viewcomponent',
     'pyramid_debugtoolbar', #Won't be active unless included
     'fanstatic',
+    'repoze.evolution',
+    'httpagentparser',
+    'BeautifulSoup',
     )
 
 
@@ -58,6 +61,7 @@ setup(name='voteit.core',
       main = voteit.core:main
       [console_scripts]
       update_catalog = voteit.core.scripts.catalog:update_catalog
+      evolve = voteit.core.scripts.evolve:main
       [fanstatic.libraries]
       voteit_core_csslib = voteit.core.fanstaticlib:voteit_core_csslib
       voteit_core_jslib = voteit.core.fanstaticlib:voteit_core_jslib

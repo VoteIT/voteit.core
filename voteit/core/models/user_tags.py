@@ -14,20 +14,25 @@ TAG_PATTERN = re.compile(r'^[a-zA-Z\_\-]{3,15}$')
 
 
 class UserTags(object):
-    __doc__ = IUserTags.__doc__
+    """ User tags adapter.
+        See :mod:`voteit.core.models.interfaces.IUserTags`.
+        All methods are documented in the interface of this class.
+    """
     implements(IUserTags)
     
     def __init__(self, context):
         """ Context to adapt """
         self.context = context
-        if not hasattr(self.context, '__tags_storage__'):
-            self.context.__tags_storage__ = OOBTree()
     
     @property
     def tags_storage(self):
         """ Acts as a storage.
         """
-        return self.context.__tags_storage__
+        try:
+            return self.context.__tags_storage__
+        except AttributeError:
+            self.context.__tags_storage__ = OOBTree()
+            return self.context.__tags_storage__
     
     def add(self, tag, userid):
         if not isinstance(tag, basestring):
@@ -40,7 +45,7 @@ class UserTags(object):
         if userid not in self.tags_storage[tag]:
             self.tags_storage[tag].add(userid)
             if tag == 'like':
-                self._notify()
+                _notify(self.context)
 
     def userids_for_tag(self, tag):
         return tuple(self.tags_storage.get(tag, ()))
@@ -49,10 +54,13 @@ class UserTags(object):
         if userid in self.tags_storage.get(tag, ()):
             self.tags_storage[tag].remove(userid)
             if tag == 'like':
-                self._notify()
-    
-    def _notify(self):
-        objectEventNotify(ObjectUpdatedEvent(self.context, indexes=('like_userids',), metadata=True))
+                _notify(self.context)
+
+def _notify(context):
+    """ Send notification for Like tag. This might change later since
+        the index is for a specific tag rather than a general solution.
+    """
+    objectEventNotify(ObjectUpdatedEvent(context, indexes=('like_userids',), metadata=True))
 
 
 def includeme(config):

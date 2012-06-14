@@ -1,17 +1,7 @@
 /* JS that should be present on every page, regardless of its function.*/
-var voteit = {};
-voteit.translation = {};
-
-/* Translations loader. This must be loaded before all other voteit js! */
-$(document).ready(function () {
-    $('.voteit_js_translation').each(function () {
-        $(this).children().each(function() {
-            var item = $(this);
-            var tkey = item.attr('class').replace('js_trans_', '');
-            voteit.translation[tkey] = item.text();
-        });
-    });
-});
+if(typeof(voteit) == "undefined"){
+    var voteit = {};
+}
 
 /* Flash messages */
 $(document).ready(function () {
@@ -21,12 +11,24 @@ $(document).ready(function () {
     });
 });
 
+$(document).ready(function() {
+    var div = $('#flash_messages');
+    if(div) {
+	    var start = $(div).offset().top;
+	 
+	    $.event.add(window, "scroll", function() {
+	        var p = $(window).scrollTop();
+	        $(div).css('position',((p)>start) ? 'fixed' : 'static');
+	        $(div).css('top',((p)>start) ? '0px' : '');
+	    });
+   }
+});
+
 $('.cogwheel .menu_header').live('hover', display_cogwheel_menu);
 function display_cogwheel_menu(event) {
     /* stop form from submitting normally 
     IE might throw an error calling preventDefault(), so use a try/catch block. */
     try { event.preventDefault(); } catch(e) {}
-    
     $(this).qtip({
         overwrite: false, // Make sure the tooltip won't be overridden once created
         content: { 
@@ -36,11 +38,13 @@ function display_cogwheel_menu(event) {
             event: event.type, // Use the same show event as the one that triggered the event handler
             ready: true, // Show the tooltip as soon as it's bound, vital so it shows up the first time you hover!
             effect: false,
+            solo: true,
         },
         hide: {
             event: "mouseleave",
             fixed: true,
             effect: false,
+            delay: 100,
         },
         position: {
             viewport: $(window),
@@ -120,6 +124,7 @@ function display_meeting_menu_poll(event) {
             viewport: $(window),
             at: "right bottom",
             my: "right top",
+            effect: false,
             adjust: {
                 method: 'flip',
             }
@@ -181,8 +186,11 @@ $(document).ready(function() {
 
 /* loading proposal and discussion forms with ajax */
 $(document).ready(function() {
-    $("div.dummy-textarea").live('click', function(event) {
-        var url = $(this).attr('url');
+    $("a.dummy-textarea").live('click', function(event) {
+        /* IE might throw an error calling preventDefault(), so use a try/catch block. */
+        try { event.preventDefault(); } catch(e) {}
+        
+        var url = $(this).attr('href');
         $(this).parent('.inline_form_placeholder').load(url, function(response, status, xhr) {
             if (status == "error") {
                 var msg = "Sorry but there was an error: ";
@@ -203,7 +211,7 @@ $(document).ready(function() {
     if (url_config.length > 0) {
         var url = url_config.attr('href') + '/_mark_read';
         var unread_names = [];
-        $(".unread").each( function() {
+        $("#main_window .unread").each( function() {
             unread_names.push( $(this).attr('name') );
         });
         if (unread_names.length > 0) {
@@ -224,8 +232,168 @@ $(document).ready(function() {
                                 console.log('Requested: ' + unread_names.length + ' Returned: ' + val);
                             };
                         });
-                     }
+                    },
             });
         }
     };
+});
+
+/* Read more discussion post */
+$(document).ready(function() {
+	$("#discussions span.more a").live('click', function(event) {
+		/* IE might throw an error calling preventDefault(), so use a try/catch block. */
+        try { event.preventDefault(); } catch(e) {}
+        
+        var url = $(this).attr('href');
+        var body = $(this).parents('div.listing_block').find('span.body');
+        var link = $(this)
+        $.getJSON(url, function(data) {
+			body.empty().append(data['body']);
+			link.hide();
+		});
+	});
+});
+
+/* Modal window funcs */
+function open_modal_window(obj) {
+    //Prevent the page from scrolling
+    $("body").css("overflow", "hidden");
+    
+    //Get the screen height and width
+    var maskHeight = $(document).height();
+    var maskWidth = $(document).width();
+ 
+    //Set height and width to mask to fill up the whole screen
+    $('#modal-mask').css({'width':maskWidth,'height':maskHeight});
+     
+    //transition effect  
+    $('#modal-mask').fadeTo("slow", 0.8);
+ 
+    //Get the window height and width
+    var winH = $(window).height();
+    var winW = $(window).width();
+    
+    var scrollT = $(window).scrollTop();
+    var scrollL = $(window).scrollLeft();
+    
+    //Set the popup window to center
+    $(obj).css('top',  Math.round(winH/2-$(obj).outerHeight()/2+scrollT));
+    $(obj).css('left', Math.round(winW/2-$(obj).outerWidth()/2+scrollL));
+ 
+    //transition effect
+    $(obj).fadeIn(2000);
+}     
+
+$(document).ready(function() {     
+    //if close button is clicked
+    $('.modal-window .close').click(function (e) {
+        //Cancel the link behavior
+        e.preventDefault();
+        $('#modal-mask, .modal-window').hide();
+        $("body").css("overflow", "auto");
+    });     
+     
+    //if mask is clicked
+    $('#modal-mask').click(function () {
+        $(this).hide();
+        $('.modal-window').hide();
+        $("body").css("overflow", "auto");
+    });
+});
+
+$(document).ready(function () {
+    $(window).resize(recalc_modal_placement);
+    $(window).scroll(recalc_modal_placement);
+});
+
+function recalc_modal_placement() {
+    //Get the screen height and width
+    var maskHeight = $(document).height();
+    var maskWidth = $(window).width();
+    //Set height and width to mask to fill up the whole screen
+    $('#modal-mask').css({'width':maskWidth,'height':maskHeight});
+    //Get the window height and width
+    var winH = $(window).height();
+    var winW = $(window).width();
+    var scrollT = $(window).scrollTop();
+    var scrollL = $(window).scrollLeft();
+    //Set the popup window to center
+    $(".modal-window").css('top',  Math.round(winH/2-$(".modal-window").outerHeight()/2+scrollT));
+    $(".modal-window").css('left', Math.round(winW/2-$(".modal-window").outerWidth()/2+scrollL));
+}
+
+$(document).keyup(function(e) {
+    if(e.keyCode == 27) {
+        $('#modal-mask').hide();
+        $('.modal-window').hide();
+        $("body").css("overflow", "auto");
+    }
+});
+
+/* Open poll booth when poll buttons is pressed*/
+$(document).ready(function() {
+	$('#polls a.poll_booth').live('click', function(event) {
+	    /* stops normal events function 
+	    IE might throw an error calling preventDefault(), so use a try/catch block. */
+	    try { event.preventDefault(); } catch(e) {}
+    
+    	var url = $(this).attr('href');	
+		open_poll_booth(url)
+	});
+});
+function open_poll_booth(url) {
+	var title = $(document.createElement('span')).addClass("iconpadding icon poll").text(voteit.translation['poll']);
+	$("#dialog > h2").empty().append(title);
+	
+	$("#dialog .content").text(voteit.translation['loading'])
+	open_modal_window("#dialog");
+
+    $("#dialog .content").load(url, function(response, status, xhr) {
+    	deform.processCallbacks();
+    });
+}
+
+$(document).ready(function() {
+	$('#help-tab > a').live('click', function(event) {
+	    /* stops normal events function 
+	    IE might throw an error calling preventDefault(), so use a try/catch block. */
+	    try { event.preventDefault(); } catch(e) {}
+    	
+    	open_modal_window("#help-dialog");
+	});
+	
+	$('#help-actions a.tab').live('click', function(event) {
+	    /* stops normal events function 
+	    IE might throw an error calling preventDefault(), so use a try/catch block. */
+	    try { event.preventDefault(); } catch(e) {}
+	    
+	   $('#help-actions a.tab').removeClass('active');
+	   $(this).addClass('active'); 
+
+		var url = $(this).attr('href');
+	    $("#help-dialog .content").load(url, function(response, status, xhr) {
+	    	deform.processCallbacks();
+            display_deform_labels();
+	    });
+	});
+});
+
+/* ajaxifing show previous posts */
+$(document).ready(function() {
+	$('#discussions div.load_more a').live('click', function(event) {
+		/* stops normal events function 
+	    IE might throw an error calling preventDefault(), so use a try/catch block. */
+	    try { event.preventDefault(); } catch(e) {}
+	    
+	    $("#discussions .posts .listing").empty();
+	    $("#discussions .posts .listing").append(voteit.translation['loading']);
+		
+		var url = $(this).attr('href');
+		$("#discussions .posts .listing").load(url, function(response, status, xhr) {
+			if (status == "error") {
+				$("#discussions .posts .listing").empty();
+				$("#discussions .posts .listing").append(voteit.translation['error_loading']);
+			}
+	    });
+	});
 });

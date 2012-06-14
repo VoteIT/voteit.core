@@ -6,6 +6,7 @@ from pyramid.url import resource_url
 from pyramid.security import has_permission
 from zope.component.interfaces import ComponentLookupError
 from pyramid.httpexceptions import HTTPForbidden
+from pyramid.httpexceptions import HTTPFound
 from betahaus.pyracont.factories import createSchema
 
 from voteit.core import VoteITMF as _
@@ -14,12 +15,15 @@ from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IDiscussionPost
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IVote
+from voteit.core.models.schemas import add_csrf_token
 from voteit.core.security import VIEW
 from voteit.core.security import ADD_VOTE
 from voteit.core.models.schemas import button_vote
 from voteit.core.models.schemas import button_add
 from voteit.core.fanstaticlib import voteit_deform
 from voteit.core.fanstaticlib import autoresizable_textarea_js
+from voteit.core.fanstaticlib import jquery_form
+from voteit.core.fanstaticlib import star_rating
 
 
 class AgendaItemView(BaseView):
@@ -29,11 +33,8 @@ class AgendaItemView(BaseView):
     def agenda_item_view(self):
         """ Main overview of Agenda item. """
         self.response['get_polls'] = self.get_polls
-        self.response['polls'] = self.api.get_restricted_content(self.context, iface=IPoll, sort_on='created')        
-        poll_forms = {}
+        self.response['polls'] = self.api.get_restricted_content(self.context, iface=IPoll, sort_on='created')
         for poll in self.response['polls']:
-            #Check if the users vote exists already
-            userid = self.api.userid
             try:
                 plugin = poll.get_poll_plugin()
             except ComponentLookupError:
@@ -41,32 +42,8 @@ class AgendaItemView(BaseView):
                             default = u"Can't find any poll plugin with name '${name}'. Perhaps that package has been uninstalled?",
                             mapping = {'name': poll.get_field_value('poll_plugin')})
                 self.api.flash_messages.add(err_msg, type="error")
-                poll_forms[poll.uid] = ''
                 continue
-            poll_schema = plugin.get_vote_schema()
-            appstruct = {}
-            can_vote = has_permission(ADD_VOTE, poll, self.request)
 
-            if can_vote:
-                poll_url = resource_url(poll, self.request)
-                form = Form(poll_schema, action=poll_url+"@@vote", buttons=(button_vote,), formid=poll.__name__)
-            else:
-                form = Form(poll_schema, formid=poll.__name__)
-            self.api.register_form_resources(form)
-
-            if userid in poll:
-                #If editing a vote is allowed, redirect. Editing is only allowed in open polls
-                vote = poll.get(userid)
-                assert IVote.providedBy(vote)
-                #show the users vote and edit button
-                appstruct = vote.get_vote_data()
-                #Poll might still be open, in that case the poll should be changable
-                readonly = not can_vote
-                poll_forms[poll.uid] = form.render(appstruct=appstruct, readonly=readonly)
-            #User has not voted
-            elif can_vote:
-                poll_forms[poll.uid] = form.render()
-        self.response['poll_forms'] = poll_forms
         _marker = object()
         rwidget = self.api.meeting.get_field_value('ai_right_widget', _marker)
         if rwidget is _marker:
@@ -82,27 +59,25 @@ class AgendaItemView(BaseView):
                                                                             
         # is needed because we load the forms with ajax
         voteit_deform.need()
+        jquery_form.need()
+        star_rating.need()
         
         # for autoexpanding textareas
         autoresizable_textarea_js.need()
         
         return self.response
 
-    def get_polls(self, polls, poll_forms):
+    def get_polls(self, polls):
         response = {}
         response['api'] = self.api
         response['polls'] = polls
-        response['poll_forms'] = poll_forms
         return render('templates/polls.pt', response, request=self.request)
-
-    @view_config(context=IAgendaItem, name="discussions", permission=VIEW, renderer='templates/discussions.pt')
-    def meeting_messages(self):
-        #FIXME: Used?
-        self.response['discussions'] = self.context.get_content(iface=IDiscussionPost, sort_on='created')
-        return self.response
         
     @view_config(context=IAgendaItem, name='_inline_form', permission=VIEW)
     def inline_add_form(self):
+        """ Inline add form. Note the somewhat odd permissions on the view configuration.
+            The actual permission check for each content type is preformed later.
+        """
         content_type = self.request.GET['content_type']
         add_permission = self.api.content_types_add_perm(content_type)
         if not has_permission(add_permission, self.context, self.request):
@@ -110,8 +85,25 @@ class AgendaItemView(BaseView):
         
         schema_name = self.api.get_schema_name(content_type, 'add')
         schema = createSchema(schema_name).bind(context = self.context, request = self.request)
+        add_csrf_token(self.context, self.request, schema)
         url = self.api.resource_url(self.context, self.request)
         form = Form(schema, action=url+"@@add?content_type="+content_type, buttons=(button_add,))
         #Note! Registration of form resources has to be in the view that has the javascript
         #that will include this!
         return Response(form.render())
+
+    @view_config(context=IDiscussionPost, name="more", permission=VIEW, renderer='json')
+    def discussion_more(self):
+        return {'body': self.context.get_field_value('title')}
+    
+    @view_config(context=IAgendaItem, name="discussions", permission=VIEW)
+    def discussions(self):
+        if self.request.is_xhr:
+            return Response(self.api.render_single_view_component(self.context, self.request, 'discussions', 'listing', api = self.api))
+        
+        if self.request.GET.get('discussions', None):
+            url = resource_url(self.context, self.request, query={'discussions':'all'}, anchor="discussions")
+        else:
+            url = resource_url(self.context, self.request, anchor="discussions")
+        return HTTPFound(location=url)
+        

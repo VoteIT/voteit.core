@@ -8,7 +8,9 @@ from voteit.core.events import WorkflowStateChange
 
 
 class WorkflowAware(object):
-    """ Mixin class to make content workflow-aware. See IWorkflowAware """
+    """ Mixin class to make content workflow-aware.
+        See :mod:`voteit.core.models.interfaces.IWorkflowAware`.
+    """
     implements(IWorkflowAware)
 
     @property
@@ -23,22 +25,16 @@ class WorkflowAware(object):
             if wf is not None:
                 return wf
         raise WorkflowError("Workflow not found for %s" % self)
-
-    def initialize_workflow(self):
-        #FIXME: the type should be som generic instead of the class name, but since the wrong workflow is returned this is is a workaround
-        self.workflow.initialize(self)
         
     def get_workflow_state(self):
         return self.workflow.state_of(self)
         
     def set_workflow_state(self, request, state):
-        """ Set a workflow state. """
         old_state = self.get_workflow_state()        
         self.workflow.transition_to_state(self, request, state)
         objectEventNotify(WorkflowStateChange(self, old_state, state))
 
     def make_workflow_transition(self, request, transition):
-        """ Do a specific workflow transition. """
         old_state = self.get_workflow_state()
         self.workflow.transition(self, request, transition)
         new_state = self.get_workflow_state()
@@ -53,7 +49,6 @@ class WorkflowAware(object):
         return astates
 
     def current_state_title(self, request):
-        """ Return (untranslated) state title for the current state. """
         for info in self.workflow.state_info(self, request):
             if info['current']:
                 return info['title']

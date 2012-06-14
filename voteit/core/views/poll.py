@@ -2,10 +2,14 @@ from deform import Form
 from deform.exception import ValidationFailure
 from pyramid.view import view_config
 from pyramid.url import resource_url
+from pyramid.security import has_permission
 from pyramid.exceptions import Forbidden
 from pyramid.httpexceptions import HTTPFound
+from pyramid.httpexceptions import HTTPForbidden
 from pyramid.traversal import find_interface
 from betahaus.pyracont.factories import createSchema
+from pyramid.renderers import render
+from pyramid.response import Response
 
 from voteit.core.views.api import APIView
 from voteit.core import VoteITMF as _
@@ -22,6 +26,7 @@ from voteit.core.models.schemas import button_update
 from voteit.core.models.schemas import button_save
 from voteit.core.views.base_edit import BaseEdit
 from voteit.core.schemas.poll import poll_schema_after_bind
+from voteit.core.helpers import ajax_options
 
 
 class PollView(BaseEdit):
@@ -76,6 +81,8 @@ class PollView(BaseEdit):
             before the actual poll has been set in the ongoing state. After that,
             no settings may be changed.
         """
+        self.response['title'] = _(u"Poll config")
+
         poll_plugin = self.context.get_poll_plugin()
         schema = poll_plugin.get_settings_schema()
         if schema is None:
@@ -84,6 +91,10 @@ class PollView(BaseEdit):
 
         form = Form(schema, buttons=(button_save, button_cancel))
         self.api.register_form_resources(form)
+
+        #FIXME: Better default text
+        config_back_msg = _(u"review_poll_settings_info_getback",
+                default = u"To get back to the poll settings you click the cogwheel menu and select configure poll.")
 
         post = self.request.POST
         if 'save' in post:
@@ -98,23 +109,102 @@ class PollView(BaseEdit):
             del appstruct['csrf_token'] #Otherwise it will be stored too
             self.context.poll_settings = appstruct
             
+            self.api.flash_messages.add(config_back_msg)
             url = resource_url(self.context, self.request)
-            
             return HTTPFound(location=url)
 
         if 'cancel' in post:
+            self.api.flash_messages.add(config_back_msg)
             url = resource_url(self.context, self.request)
             return HTTPFound(location=url)
 
         self.response['form'] = form.render(appstruct=self.context.poll_settings)
         return self.response
         
-    @view_config(context=IPoll)
+    @view_config(context=IPoll, renderer="templates/poll.pt", permission=VIEW)
     def poll_view(self):
-        """ Poll view should only redirect to parent agenda item!
+        """ Poll view should redirect to parent agenda item it the request is not a xhr request
         """
-        url = resource_url(self.context.__parent__, self.request)
-        return HTTPFound(location=url)
+        if not self.request.is_xhr:
+            url = resource_url(self.context.__parent__, self.request, anchor=self.context.uid)
+            return HTTPFound(location=url)
+
+        poll_plugin = self.context.get_poll_plugin()
+        schema = poll_plugin.get_vote_schema()
+        add_csrf_token(self.context, self.request, schema)
+        
+        form = Form(schema, 
+                    action=resource_url(self.context, self.request), 
+                    buttons=(button_vote,), 
+                    formid=self.context.__name__, 
+                    use_ajax=True,
+                    ajax_options=ajax_options)
+        self.api.register_form_resources(form)
+        
+        can_vote = has_permission(ADD_VOTE, self.context, self.request)
+        userid = self.api.userid
+        
+        post = self.request.POST
+        if 'vote' in post:
+            if can_vote: # don't save anything if the user is not allowed to vote
+                controls = post.items()
+                try:
+                    #appstruct is deforms convention. It will be the submitted data in a dict.
+                    appstruct = form.validate(controls)
+                except ValidationFailure, e:
+                    #FIXME: How do we validate this properly, and display the result?
+                    self.response['form'] = e.render()
+                    if self.request.is_xhr:
+                        return Response(render("templates/ajax_edit.pt", self.response, request = self.request))
+                    return self.response
+                    
+                Vote = poll_plugin.get_vote_class()
+                if not IVote.implementedBy(Vote):
+                    raise TypeError("Poll plugins method get_vote_class returned something that didn't implement IVote.")
+        
+                #Remove crsf_token from appstruct after validation
+                del appstruct['csrf_token']
+        
+                if userid in self.context:
+                    vote = self.context[userid]
+                    assert IVote.providedBy(vote)
+                    vote.set_vote_data(appstruct)
+                    msg = _(u"Your vote was updated.")
+                else:
+                    vote = Vote(creators = [userid])
+                    #We don't need to send events here, since object added will take care of that
+                    vote.set_vote_data(appstruct, notify = False)
+                    #To fire events after set_vote_data is done
+                    self.context[userid] = vote
+                    msg = _(u"Thank you for voting!")
+                self.api.flash_messages.add(msg)
+                
+                #FIXME: maybe we should show show a thank you message
+            else:
+                msg = _(u"no_permission_to_vote_notice",
+                        default = "You do not have the permission to vote in this poll, please contact the moderator if you should be able to vote.")
+                self.api.flash_messages.add(msg, type = u'error')
+            
+            url = resource_url(self.context.__parent__, self.request)
+            if self.request.is_xhr:
+                return Response(headers = [('X-Relocate', url)])
+            return HTTPFound(location=url)
+            
+        if userid in self.context:
+            #If editing a vote is allowed, redirect. Editing is only allowed in open polls
+            vote = self.context[userid]
+            assert IVote.providedBy(vote)
+            #show the users vote and edit button
+            appstruct = vote.get_vote_data()
+            #Poll might still be open, in that case the poll should be changable
+            readonly = not can_vote
+            self.response['form'] = form.render(appstruct=appstruct, readonly=readonly)
+        #User has not voted
+        else:
+            readonly = not can_vote
+            self.response['form'] = form.render(readonly=readonly)
+
+        return self.response
     
     @view_config(context=IPoll, name="poll_raw_data", permission=VIEW)
     def poll_raw_data(self):
@@ -131,52 +221,3 @@ class PollView(BaseEdit):
         #removed the plugin.
         plugin = self.context.get_poll_plugin()
         return plugin.render_raw_data()
-
-    @view_config(context=IPoll, name="vote", permission=ADD_VOTE, renderer='templates/base_edit.pt')
-    def vote_action(self):
-        """ Adds or updates a users vote. """
-        ai = find_interface(self.context, IAgendaItem)
-        ai_url = resource_url(ai, self.request)
-        
-        post = self.request.POST
-        if 'vote' not in post:
-            return HTTPFound(location=ai_url)
-
-        poll_plugin = self.context.get_poll_plugin()
-        schema = poll_plugin.get_vote_schema()
-        add_csrf_token(self.context, self.request, schema)
-        form = Form(schema, buttons=(button_vote,))
-
-        userid = self.api.userid
-        controls = post.items()
-        try:
-            #appstruct is deforms convention. It will be the submitted data in a dict.
-            appstruct = form.validate(controls)
-        except ValidationFailure, e:
-            #FIXME: How do we validate this properly, and display the result?
-            self.api.register_form_resources(form)
-            self.response['form'] = e.render()
-            return self.response
-            
-        Vote = poll_plugin.get_vote_class()
-        if not IVote.implementedBy(Vote):
-            raise TypeError("Poll plugins method get_vote_class returned something that didn't implement IVote.")
-
-        #Remove crsf_token from appstruct after validation
-        del appstruct['csrf_token']
-
-        if userid in self.context:
-            vote = self.context[userid]
-            assert IVote.providedBy(vote)
-            vote.set_vote_data(appstruct)
-            msg = _(u"Your vote was updated.")
-        else:
-            vote = Vote(creators = [userid])
-            #We don't need to send events here, since object added will take care of that
-            vote.set_vote_data(appstruct, notify = False)
-            #To fire events after set_vote_data is done
-            self.context[userid] = vote
-            msg = _(u"Thank you for voting!")
-        self.api.flash_messages.add(msg)
-
-        return HTTPFound(location=ai_url)

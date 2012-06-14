@@ -35,9 +35,9 @@ def login_box(context, request, va, **kwargs):
     api.register_form_resources(login_form)
     return """%s<div><a href="/@@request_password">%s</a></div>""" % (login_form.render(), api.translate(_(u"Forgot password?")))
     
-@view_action('navigation_sections', 'closed', title = _(u"Closed"), state = 'closed')
 @view_action('navigation_sections', 'ongoing', title = _(u"Ongoing"), state = 'ongoing')
 @view_action('navigation_sections', 'upcoming', title = _(u"Upcoming"), state = 'upcoming')
+@view_action('navigation_sections', 'closed', title = _(u"Closed"), state = 'closed')
 @view_action('navigation_sections', 'private', title = _(u"Private"), state = 'private',
              permission = MODERATE_MEETING, interface = IMeeting)
 def navigation_section(context, request, va, **kwargs):
@@ -68,16 +68,25 @@ def navigation_section(context, request, va, **kwargs):
         query['content_type'] = 'AgendaItem'
         #Principals taken from this context will be okay for a query within the meetings
         query['allowed_to_view'] = {'operator': 'or', 'query': api.context_effective_principals(context)}
-        query['sort_index'] = 'start_time'
+        query['sort_index'] = 'order'
     
     def _count_query(path, content_type, unread = False):
         """ Returns number of an item, possbly unread only. """
         if unread:
             return api.search_catalog(path = path, content_type = content_type, unread = api.userid)[0]
         return api.search_catalog(path = path, content_type = content_type)[0]
+    
+    def _in_current_context(path, context_path):
+        path = path.split('/')
+        context_path = context_path.split('/')
+        if len(path) > len(context_path):
+            path = path[0:len(context_path)]
+            
+        return path == context_path
 
     response['brains'] = api.get_metadata_for_query(**query)
     response['context_path'] = context_path
     response['count_query'] = _count_query
     response['closed_section'] = False
+    response['in_current_context'] = _in_current_context
     return render('../templates/snippets/navigation_section.pt', response, request = request)

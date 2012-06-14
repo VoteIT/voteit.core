@@ -31,7 +31,8 @@ def action_register(context, request, va, **kw):
 @view_action('global_actions_authenticated', 'user_profile')
 def user_profile_action(context, request, va, **kw):
     api = kw['api']
-    return u"""<li><a href="%s" class="user icon"><span>%s</span></a></li>""" % (api.user_profile_url, api.user_profile.title)
+    profile_url = api.resource_url(api.user_profile, request)
+    return u"""<li><a href="%s" class="user icon"><span>%s</span></a></li>""" % (profile_url, api.user_profile.title)
 
 
 @view_action('global_actions_authenticated', 'logout')

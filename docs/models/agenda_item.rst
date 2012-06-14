@@ -1,8 +1,8 @@
-.. _poll_module:
+.. _agenda_item_module:
 
-:mod:`voteit.core.models.poll`
-------------------------------
+:mod:`voteit.core.models.agenda_item`
+-------------------------------------
 
-.. automodule:: voteit.core.models.poll
+.. automodule:: voteit.core.models.agenda_item
    :members:
    :inherited-members:

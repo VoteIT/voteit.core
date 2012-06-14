@@ -1,8 +1,10 @@
 import re
 import colander
+from BeautifulSoup import BeautifulSoup
 from webhelpers.html.tools import strip_tags
 from pyramid.traversal import find_interface
 from pyramid.traversal import find_root
+from pyramid.security import authenticated_userid
 
 from voteit.core import VoteITMF as _
 from voteit.core.models.interfaces import IMeeting
@@ -106,7 +108,7 @@ class NewUniqueUserID(object):
     def __call__(self, node, value):
         if not NEW_USERID_PATTERN.match(value):
             msg = _('userid_char_error',
-                    default=u"UserID must be 3-15 chars, start with a-zA-Z and only contain regular latin chars, numbers, minus and underscore.")
+                    default=u"UserID must be 3-30 chars, start with lowercase a-z and only contain lowercase a-z, numbers, minus and underscore.")
             raise colander.Invalid(node, msg)
         
         root = find_root(self.context)
@@ -218,3 +220,41 @@ class GlobalExistingUserId(object):
                     default=u"UserID not found")
             raise colander.Invalid(node, 
                                    msg)
+
+
+@colander.deferred
+def deferred_current_password_validator(node, kw):
+    context = kw['context']
+    return CurrentPasswordValidator(context)
+
+
+class CurrentPasswordValidator(object):
+    """ Check that current password matches. Used for sensitive operations
+        when logged in to make sure that no one else changes the password for instance.
+    """
+    
+    def __init__(self, context):
+        assert IUser.providedBy(context) # pragma : no cover
+        self.context = context
+    
+    def __call__(self, node, value):
+        pw_field = self.context.get_custom_field('password')
+        if not pw_field.check_input(value):
+            raise colander.Invalid(node, _(u"Current password didn't match"))
+
+
+def richtext_validator(node, value):
+    """
+        checks that input doesn't contain forbidden html tags
+    """
+    INVALID_TAGS = ['textarea', 'select', 'option', 'input', 'button', 'script']
+
+    soup = BeautifulSoup(value)
+
+    invalid = False
+    for tag in soup.findAll(True):
+        if tag.name in INVALID_TAGS:
+            invalid = True
+
+    if invalid:
+        raise colander.Invalid(node, _(u"Contains forbidden HTML tags."))

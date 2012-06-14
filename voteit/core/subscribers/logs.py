@@ -58,8 +58,8 @@ def log_wf_state_change(obj, event):
     request = get_current_request()
     log_handler = request.registry.getAdapter(context, ILogHandler)
     userid = authenticated_userid(request)
-
-    msg = _(u"${ctype} in path ${path} changed state from '${old_state}' to '${new_state}'",
+    msg = _(u"log_ctype_state_change",
+            default = u"${ctype} in path ${path} changed state from '${old_state}' to '${new_state}'",
             mapping={'ctype': obj.content_type,
                      'path':resource_path(obj),
                      'old_state':event.old_state,

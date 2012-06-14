@@ -4,6 +4,7 @@ from voteit.core.views.api import APIView
 from voteit.core.security import VIEW
 from voteit.core.models.interfaces import IBaseContent
 from voteit.core import fanstaticlib
+from voteit.core import VoteITMF as _
 
 
 class BaseView(object):
@@ -14,12 +15,16 @@ class BaseView(object):
         self.request = request
         self.response = {}
         self.response['api'] = self.api = APIView(context, request)
-        if self.api.show_moderator_actions or context.content_type == 'AgendaItem':
-            #Easy confirm is used by retract proposal and wf menu actions
-            fanstaticlib.voteit_workflow_js.need()
-        fanstaticlib.voteit_main_css.need()
-        fanstaticlib.voteit_common_js.need()
-        fanstaticlib.voteit_user_inline_info_js.need()
+        self.api.include_needed(context, request, self)
+        try:
+            if self.api.meeting_state == 'upcoming':
+                msg = _(u"This meeting hasn't started yet.")
+                self.api.flash_messages.add(msg, type = 'lock')
+            if self.api.meeting_state == 'closed':
+                msg = _(u"This meeting has closed.")
+                self.api.flash_messages.add(msg, type = 'lock')
+        except:
+            pass
 
 
 class DefaultView(BaseView):

@@ -10,6 +10,11 @@ from slugify import slugify
 from voteit.core.models.interfaces import IMeeting
 
 
+ajax_options = """
+{success: voteit_deform_success,
+}
+"""
+
 AT_PATTERN = re.compile(r'(\A|\s)@([a-zA-Z1-9]{1}[\w-]{1,14})')
 
 def at_userid_link(text, obj):
@@ -24,13 +29,17 @@ def at_userid_link(text, obj):
     request = get_current_request()
 
     def handle_match(matchobj):
-        #FIXME: Space? :)
+        # The pattern contains a space so we only find usernames that 
+        # has a whitespace in front, we save the spaced so we can but 
+        # it back after the transformation
         space, userid = matchobj.group(1, 2)
+        #Force lowercase userid
+        userid = userid.lower()
         user = users[userid]
         user.send_mention_notification(obj, request)
 
         tag = {}
-        tag['href'] = "%s_userinfo?userid=%s" % (resource_url(meeting, request), userid)
+        tag['href'] = resource_url(meeting, request, '_userinfo', query={'userid': userid}).replace(request.application_url, '')
         tag['title'] = user.title
         tag['class'] = "inlineinfo"
         return space + HTML.a('@%s' % userid, **tag)

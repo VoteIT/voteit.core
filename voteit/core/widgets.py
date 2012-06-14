@@ -5,7 +5,9 @@ from colander import null
 from colander import Invalid
 from deform.widget import CheckedInputWidget
 from deform.widget import RadioChoiceWidget
+from deform.widget import TextAreaWidget
 from pyramid.threadlocal import get_current_request
+from webhelpers.html.tools import strip_links
 
 from voteit.core.fanstaticlib import star_rating
 
@@ -29,19 +31,23 @@ class RecaptchaWidget(CheckedInputWidget):
     requirements = ()
     url = "http://www.google.com/recaptcha/api/verify"
     headers = {'Content-type': 'application/x-www-form-urlencoded'}
+    
+    def __init__(self, captcha_public_key = u'', captcha_private_key = u''):
+        super(RecaptchaWidget, self).__init__()
+        self.captcha_public_key = captcha_public_key
+        self.captcha_private_key = captcha_private_key
 
     def serialize(self, field, cstruct, readonly=False):
         if cstruct in (null, None):
-            cstruct = ''
+            cstruct = '' #pragma : no cover
         confirm = getattr(field, 'confirm', '')
         template = readonly and self.readonly_template or self.template
-        request = get_current_request()
-        captcha_public_key = request.registry.settings['captcha_public_key']
         return field.renderer(template, field=field, cstruct=cstruct,
-                              public_key=captcha_public_key,
+                              public_key=self.captcha_public_key,
                               )
 
-    def deserialize(self, field, pstruct):
+    def deserialize(self, field, pstruct): #pragma : no cover
+        #We can't test this part properly since it requires Google API connection :(
         if pstruct is null:
             return null
         challenge = pstruct.get('recaptcha_challenge_field') or ''
@@ -51,9 +57,8 @@ class RecaptchaWidget(CheckedInputWidget):
         if not challenge:
             raise Invalid(field.schema, 'Missing challenge')
         request = get_current_request()
-        captcha_private_key = request.registry.settings['captcha_private_key']
         remoteip = request.remote_addr
-        data = urlencode(dict(privatekey=captcha_private_key,
+        data = urlencode(dict(privatekey=self.captcha_private_key,
                               remoteip=remoteip,
                               challenge=challenge,
                               response=response))
@@ -79,3 +84,11 @@ class RecaptchaWidget(CheckedInputWidget):
             if reason == 'incorrect-captcha-sol':
                 reason = "Incorrect solution"
             raise Invalid(field.schema, reason.replace('\\n', ' ').strip("'") )
+
+
+class TextAreaStripLinksWidget(TextAreaWidget):
+    ''' TextArea Widget that removes links '''
+    def serialize(self, field, cstruct, readonly=False):
+        if cstruct in (null, None):
+            cstruct = '' #pragma : no cover
+        return super(TextAreaWidget, self).serialize(field, strip_links(cstruct), readonly)

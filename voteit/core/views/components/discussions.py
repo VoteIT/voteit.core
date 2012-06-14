@@ -1,11 +1,35 @@
+# -*- coding:utf-8 -*-
+
 from betahaus.viewcomponent import view_action
 from pyramid.traversal import resource_path
 from pyramid.traversal import find_resource
+from pyramid.traversal import find_interface
 from pyramid.renderers import render
 
 from voteit.core import VoteITMF as _
+from voteit.core.models.interfaces import IMeeting
 from voteit.core.security import DELETE
 
+from voteit.core.htmltruncate import htmltruncate
+
+import logging
+log = logging.getLogger(__name__)
+
+#FIXME: needs a way to set default value on this on creation of meeting
+def truncate(text, length=240):
+    try:
+        if length and length > 0:
+            trunc_text = htmltruncate.truncate(text, length, u'…')
+        else:
+            trunc_text = text
+    # If the html tags doesn't match up return the complete text
+    except htmltruncate.UnbalancedError: # pragma : no cover
+        trunc_text = text
+    except Exception, e:
+        trunc_text = text
+        log.error("Could not truncate text: %s", text)
+
+    return (trunc_text, text != trunc_text)
 
 @view_action('discussions', 'listing')
 def discussions_listing(context, request, va, **kw):
@@ -45,6 +69,12 @@ def discussions_listing(context, request, va, **kw):
     for docid in docids:
         #Insert the resolved docid first, since we need to reverse order again.
         results.insert(0, get_metadata(docid))
+        
+    #Get truncate length from meeting
+    meeting = find_interface(context, IMeeting)
+    #FIXME: needs a way to set default value on this on creation of meeting
+    truncate_length = meeting.get_field_value('truncate_discussion_length', 240)
+        
     response = {}
     response['discussions'] = tuple(results)
     if limit and limit < count:
@@ -54,4 +84,6 @@ def discussions_listing(context, request, va, **kw):
     response['limit'] = limit
     response['api'] = api
     response['show_delete'] = _show_delete
+    response['truncate'] = truncate 
+    response['truncate_length'] = truncate_length
     return render('../templates/discussions.pt', response, request = request)

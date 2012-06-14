@@ -1,0 +1,50 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      metal:use-macro="load: ${api.template_dir}content.pt"
+	  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+	  i18n:domain="voteit.core">
+<body>
+<h1 metal:fill-slot="page_heading">${context.title}</h1>
+<div metal:fill-slot="content" class="content_wrapper">
+    
+    <div class="iconpadding icon time start"><span i18n:translate="">Meeting opened</span>: ${api.dt_util.dt_format(context.start_time)|string:-}</div>
+
+    <div class="iconpadding icon time end"><span i18n:translate="">Meeting closed</span>: ${api.dt_util.dt_format(context.end_time)|string:-}</div>
+
+    <h3 i18n:translate="">Participants</h3>
+    <div><a href="${'%s@@participants' % api.meeting_url}" i18n:translate="">View participants list</a></div>
+
+    <h2 i18n:translate="">Agenda items</h2>
+    <tal:iterate repeat="ai agenda_items">
+        <h3><a href="${api.resource_url(ai, request)}">${ai.title}</a></h3>
+        <div class="iconpadding icon time start"><span i18n:translate="">Agenda item was opened at</span>: ${api.dt_util.dt_format(ai.start_time)|string:-}</div>
+
+        <div class="iconpadding icon time end"><span i18n:translate="">Agenda item was closed at</span>: ${api.dt_util.dt_format(ai.end_time)|string:-}</div>
+
+    <h4 i18n:translate="">Approved proposals:</h4>
+        <tal:iterate repeat="prop ai.get_content(content_type = 'Proposal', states = 'approved')">
+            <ul>
+                <li><div class="iconpadding icon approved">${prop.title}</div></li>
+            </ul>
+        </tal:iterate>
+
+    <h4 i18n:translate="">Denied proposals:</h4>
+        <tal:iterate repeat="prop ai.get_content(content_type = 'Proposal', states = 'denied')">
+            <ul>
+                <li><div class="iconpadding icon denied">${prop.title}</div></li>
+            </ul>
+        </tal:iterate>
+        <hr />
+    </tal:iterate>
+
+    <br/>
+    <a class="buttonize large"
+       tal:attributes="href api.resource_url(context, request)">
+        <span i18n:translate="">Back</span>
+    </a><br/>
+
+</div>
+</body>
+</html>

@@ -1,6 +1,6 @@
 <tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core">
 <div id="discussions">
     <h2 class="iconpadding icon discussion" i18n:translate="">Discussion</h2>
-	<span tal:replace="structure discussion_widgets">Widget code</span>
+	<div class="posts" tal:content="structure discussion_widgets">Widget code</div>
 </div>
 </tal:main>

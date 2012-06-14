@@ -34,16 +34,20 @@ class Unread(object):
 
     def get_unread_userids(self):
         return frozenset(self.unread_storage.keys())
+    
+    def reset_unread(self):
+        try:
+            del self.context.__unread_storage__
+            objectEventNotify(ObjectUpdatedEvent(self.context, indexes=('unread',), metadata=False))
+        except AttributeError: #If there is no __unread_storage__ we shouldn't do something
+            pass
 
 
 def includeme(config):
     """ Register unread adapter. """
     from voteit.core.models.interfaces import IDiscussionPost
-    from voteit.core.models.interfaces import IPoll
     from voteit.core.models.interfaces import IProposal
     config.registry.registerAdapter(Unread, (IDiscussionPost,), IUnread)
-    config.registry.registerAdapter(Unread, (IPoll,), IUnread)
     config.registry.registerAdapter(Unread, (IProposal,), IUnread)
-
 
 #FIXME: method to disable unread adapter?

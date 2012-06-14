@@ -36,7 +36,7 @@ _qtip_js = Resource(voteit_core_jslib, 'jquery.qtip.js', minified = 'jquery.qtip
 qtip = Group((_qtip_css, _qtip_js))
 
 #Deform
-_deform_js = Resource(deformlib, 'scripts/deform.js')
+_deform_js = Resource(deformlib, 'scripts/deform.js', depends = (jquery_142,))
 _voteit_deform_css = Resource(voteit_core_csslib, 'deform.css', depends = (reset,))
 
 jquery_form = Resource(deformlib, 'scripts/jquery.form.js', depends = (jquery_142,))
@@ -69,6 +69,27 @@ DEFORM_RESOURCES = {
     'jquery.form': (jquery_142, jquery_form,),
     'jquery.maskedinput': (jquery_142, jquery_maskedinput,),
     'datetimepicker': (jquery_142, jquery_timepicker,),
-    'deform': (voteit_deform,),
+    'deform': (jquery_142, voteit_deform,),
     'tinymce': (tinymce,),
 }
+
+
+def is_base_view(context, request, view):
+    """ View discriminators to check if a specific view does something.
+        They're used by IFanstaticResources utility to determine which
+        static resources to include, but it's possible to use them for
+        other things as well.
+    """
+    from voteit.core.views.base_view import BaseView
+    return isinstance(view, BaseView)
+
+
+#Positional arguments
+#key, resource, discriminator (if any)
+DEFAULT_FANSTATIC_RESOURCES = (
+    ('voteit_main_css', voteit_main_css),
+    ('voteit_common_js', voteit_common_js),
+    ('voteit_workflow_js', voteit_workflow_js),
+    ('voteit_deform', voteit_deform),
+    ('voteit_user_inline_info_js', voteit_user_inline_info_js, is_base_view),
+)

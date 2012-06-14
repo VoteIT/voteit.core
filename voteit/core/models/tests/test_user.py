@@ -8,9 +8,16 @@ from zope.component.event import objectEventNotify
 from pyramid_mailer import get_mailer
 from repoze.folder.events import ObjectAddedEvent
 from pyramid.url import resource_url
+from pyramid.security import principals_allowed_by_permission
 
+from voteit.core import security
 from voteit.core.models.date_time_util import utcnow
 from voteit.core.exceptions import TokenValidationError
+from voteit.core.testing_helpers import register_security_policies
+
+
+admin = set([security.ROLE_ADMIN])
+owner = set([security.ROLE_OWNER])
 
 
 class UserTests(unittest.TestCase):
@@ -64,6 +71,7 @@ class UserTests(unittest.TestCase):
 
     def test_new_request_password_token(self):
         self.config.scan('voteit.core.models.user')
+        self.config.scan('voteit.core.views.components.email')
         obj = self._make_obj()
         request = testing.DummyRequest()
         self.config.include('pyramid_mailer.testing')
@@ -72,18 +80,15 @@ class UserTests(unittest.TestCase):
     
     def test_new_request_password_token_mailed(self):
         self.config.scan('voteit.core.models.user')
+        self.config.scan('voteit.core.views.components.email')
         obj = self._make_obj()
         request = testing.DummyRequest()
         self.config.include('pyramid_mailer.testing')
-        
         obj.new_request_password_token(request)
-
         mailer = get_mailer(request)
         self.assertEqual(len(mailer.outbox), 1)
-        
         msg = mailer.outbox[0]
-        
-        self.failUnless(obj.__token__() in msg.body)
+        self.failUnless(obj.__token__() in msg.html)
     
     def test_blank_email_hash_generation(self):
         obj = self._make_obj()
@@ -120,6 +125,8 @@ class UserTests(unittest.TestCase):
         self.config = testing.setUp(request=request)
         self.config.include('pyramid_mailer.testing')
         self.config.scan('voteit.core.models.site')
+        self.config.scan('voteit.core.models.agenda_template')
+        self.config.scan('voteit.core.models.agenda_templates')
         self.config.scan('voteit.core.models.user')
         self.config.scan('voteit.core.models.users')
         self.config.scan('voteit.core.subscribers.mention')
@@ -149,6 +156,42 @@ class UserTests(unittest.TestCase):
         
         msg = mailer.outbox[0]
         self.failUnless(resource_url(discussion_post, request) in msg.html)
+
+
+class UserPermissionTests(unittest.TestCase):
+    def setUp(self):
+        self.config = testing.setUp()
+        register_security_policies(self.config)
+        
+    def tearDown(self):
+        testing.tearDown()
+
+    @property
+    def _cut(self):
+        from voteit.core.models.user import User
+        return User
+
+    def test_view(self):
+        obj = self._cut()
+        self.assertEqual(principals_allowed_by_permission(obj, security.VIEW), admin | owner)
+
+    def test_edit(self):
+        obj = self._cut()
+        self.assertEqual(principals_allowed_by_permission(obj, security.EDIT), admin | owner)
+
+    def test_delete(self):
+        obj = self._cut()
+        #Currently, there's no way to delete a user.
+        #This has to do with ownership, we need a way to clean it up if we want to remove users.
+        self.assertEqual(principals_allowed_by_permission(obj, security.DELETE), set())
+
+    def test_manage_server(self):
+        obj = self._cut()
+        self.assertEqual(principals_allowed_by_permission(obj, security.MANAGE_SERVER), admin)
+
+    def test_change_password(self):
+        obj = self._cut()
+        self.assertEqual(principals_allowed_by_permission(obj, security.CHANGE_PASSWORD), admin | owner)
 
 
 class RequestPasswordTokenTests(unittest.TestCase):

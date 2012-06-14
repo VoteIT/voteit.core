@@ -2,19 +2,17 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
       xmlns:tal="http://xml.zope.org/namespaces/tal"
-      metal:use-macro="api.main_template.macros['master']"
+      metal:use-macro="load: ${api.template_dir}content.pt"
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
       i18n:domain="voteit.core">
 <body>
-    
-    
-    <h2 id="page_heading" metal:fill-slot="page_heading" i18n:translate="">
-        Showing
-        <span tal:replace="len(participants)" i18n:name="count">5</span>
-        participants
-    </h2>
-
     <div metal:fill-slot="content" class="content_wrapper">
+
+	    <h3 i18n:translate="">
+	        Showing
+	        <span tal:replace="len(participants)" i18n:name="count">5</span>
+	        participants
+	    </h3>
 
         <table class="listing">
             <thead>

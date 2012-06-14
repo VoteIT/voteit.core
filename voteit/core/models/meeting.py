@@ -33,8 +33,8 @@ ACL['default'] = [(Allow, security.ROLE_ADMIN, security.REGULAR_ADD_PERMISSIONS)
                   DENY_ALL,
                    ]
 
-ACL['closed'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, security.MANAGE_GROUPS, security.DELETE, )),
-                 (Allow, security.ROLE_MODERATOR, (security.VIEW, security.MANAGE_GROUPS, )),
+ACL['closed'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, security.MODERATE_MEETING, security.MANAGE_GROUPS, security.DELETE, )),
+                 (Allow, security.ROLE_MODERATOR, (security.VIEW, security.MODERATE_MEETING, security.MANAGE_GROUPS, )),
                  (Allow, security.ROLE_VIEWER, (security.VIEW, )),
                  DENY_ALL,
                 ]
@@ -42,7 +42,10 @@ ACL['closed'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, security.MANAGE_GR
 
 @content_factory('Meeting', title=_(u"Meeting"))
 class Meeting(BaseContent, WorkflowAware):
-    """ Meeting content. """
+    """ Meeting content type.
+        See :mod:`voteit.core.models.interfaces.IMeeting`.
+        All methods are documented in the interface of this class.
+    """
     implements(IMeeting, ICatalogMetadataEnabled)
     content_type = 'Meeting'
     display_name = _(u"Meeting")
@@ -50,7 +53,7 @@ class Meeting(BaseContent, WorkflowAware):
     add_permission = security.ADD_MEETING
     #FIXME: Property schema should return different add schema when user is not an admin.
     #Ie captcha
-    schemas = {'add': 'MeetingSchema', 'edit': 'MeetingSchema'}
+    schemas = {'add': 'AddMeetingSchema', 'edit': 'EditMeetingSchema'}
 
 
     def __init__(self, data=None, **kwargs):
@@ -60,7 +63,9 @@ class Meeting(BaseContent, WorkflowAware):
         super(Meeting, self).__init__(data=data, **kwargs)
         if len(self.creators) and self.creators[0]:
             userid = self.creators[0]
-            self.add_groups(userid, (security.ROLE_MODERATOR, security.ROLE_VOTER, ))
+            #We can't send the event here since the object isn't attached to the resource tree yet
+            #When it is attached, an event will be sent.
+            self.add_groups(userid, (security.ROLE_MODERATOR, security.ROLE_VOTER, ), event = False)
 
     @property
     def __acl__(self):
@@ -68,14 +73,7 @@ class Meeting(BaseContent, WorkflowAware):
 
     @property
     def start_time(self):
-        """ Returns start time of the earliest visible agenda item
-            that has a start time set. Could return None if no time exists.
-        """
-        for ai in self.get_content(iface=IAgendaItem, sort_on='start_time'):
-            if ai.get_workflow_state() == 'private':
-                continue
-            if ai.start_time is not None:
-                return ai.start_time
+        return self.get_field_value('start_time')
 
     @property
     def end_time(self):
@@ -83,7 +81,6 @@ class Meeting(BaseContent, WorkflowAware):
 
     @property
     def invite_tickets(self):
-        """ Storage for InviteTickets. Works pretty much like a folder. """
         storage = getattr(self, '__invite_tickets__', None)
         if storage is None:
             storage = self.__invite_tickets__ =  OOBTree()

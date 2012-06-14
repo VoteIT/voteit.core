@@ -2,21 +2,55 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
       xmlns:tal="http://xml.zope.org/namespaces/tal"
-      metal:use-macro="api.main_template.macros['master']"
+      metal:use-macro="load: ${api.template_dir}content.pt"
 	  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
 	  i18n:domain="voteit.core">
 <body>
-<h1 metal:fill-slot="page_heading" i18n:translate="">Users</h1>
-<div metal:fill-slot="content">
-    <tal:iterate repeat="user context.values()">
-    	<h3>
-    		<img tal:replace="structure user.get_image_tag()" />
-    		<span tal:content="user.userid">UserID</span>
-		</h3>
-        <span tal:content="user.get_field_value('first_name')">First name</span>
-        <span tal:content="user.get_field_value('last_name')">Last name</span>
-        <span tal:content="user.get_field_value('email')">Email</span>
-    </tal:iterate>
-</div>
+<h1 metal:fill-slot="page_heading">
+    <span i18n:translate="">
+        Showing
+        <span tal:replace="len(users)" i18n:name="count">5</span>
+        users
+    </span>
+</h1>
+<div metal:fill-slot="content" class="content_wrapper">
+    <table class="listing">
+        <thead>
+            <tr>
+                <th i18n:translate="" class="heading">Image</th>
+                <th i18n:translate="" class="heading">UserID</th>
+                <th i18n:translate="" class="heading">First name</th>
+                <th i18n:translate="" class="heading">Last name</th>
+                <th i18n:translate="" class="heading">Email</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tal:iterate repeat="user users">
+            <tr tal:attributes="class repeat.user.odd and 'odd' or 'even'">
+                <td><img tal:replace="structure user.get_image_tag()" /></td>
+                <td>
+                    <a tal:content="user.userid"
+                       href="${api.resource_url(user, request)}">
+                    Userid
+                    </a>
+                </td>
+                <td tal:content="user.get_field_value('first_name')">Hanna</td>
+                <td tal:content="user.get_field_value('last_name')">VoteIT</td>
+                <td>
+                    <a tal:content="user.get_field_value('email')"
+                       tal:attributes="href 'mailto:%s' % user.get_field_value('email')">
+                        voteit@betahaus.net
+                    </a>
+                </td>
+            </tr>
+            </tal:iterate>
+        </tbody>
+    </table>
+    <br/>
+    <a class="buttonize large"
+       tal:attributes="href api.resource_url(context.__parent__, request)">
+        <span i18n:translate="">Back</span>
+    </a><br/>
+</div> <!-- content -->
 </body>
 </html>

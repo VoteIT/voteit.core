@@ -4,6 +4,7 @@ from betahaus.pyracont.decorators import schema_factory
 
 from voteit.core.validators import html_string_validator
 from voteit.core.validators import multiple_email_validator
+from voteit.core.schemas.common import strip_whitespace
 from voteit.core import security
 from voteit.core import VoteITMF as _
 
@@ -19,7 +20,10 @@ class ClaimTicketSchema(colander.Schema):
                                           default = u"The access token your received in your email."),)
 
             
-@schema_factory('AddTicketsSchema')
+@schema_factory('AddTicketsSchema',
+                title = _(u"Invite participants"),
+                description = _(u"add_tickets_schema_main_description",
+                                default = u"Send invites to participants with email. If different participants should have different rights you should send invites to one level of rights at a time. Normally users have discuss, propose and vote."))
 class AddTicketsSchema(colander.Schema):
     roles = colander.SchemaNode(
         deform.Set(),
@@ -39,13 +43,14 @@ class AddTicketsSchema(colander.Schema):
                                  description = _(u"add_tickets_emails_description",
                                                  default=u'Separate email addresses with a single line break.'),
                                  widget = deform.widget.TextAreaWidget(rows=7, cols=40),
+                                 preparer = strip_whitespace,
                                  validator = colander.All(html_string_validator, multiple_email_validator),
     )
     message = colander.SchemaNode(colander.String(),
                                   title = _(u'Welcome text of the email that will be sent'),
                                   description = _(u'No HTML tags allowed.'),
                                   widget = deform.widget.TextAreaWidget(rows=5, cols=40),
-                                  default = _('invitation_default_text',
+                                  default = _(u'invitation_default_text',
                                               default=u"You've received a meeting invitation for a VoteIT meeting."),
                                   validator = html_string_validator,
     )
@@ -58,10 +63,19 @@ def checkbox_of_invited_emails_widget(node, kw):
     return deform.widget.CheckboxChoiceWidget(values=email_choices)
 
 
-@schema_factory('ManageTicketsSchema')
+@schema_factory('ManageTicketsSchema', title = _(u"Manage invitations"), description = _(u"Manage invitations to the meeting"))
 class ManageTicketsSchema(colander.Schema):
+    apply_to_all = colander.SchemaNode(
+        colander.Bool(),
+        title = _(u"apply_to_all_title",
+                  default = u"Apply to all of the below, regardless of selection"),
+        default = False,
+        missing = False,
+    )
     emails = colander.SchemaNode(
-        deform.Set(),
+        deform.Set(allow_empty = True),
         widget = checkbox_of_invited_emails_widget,
         title = _(u"Current invitations"),
+        missing = colander.null,
     )
+

@@ -1,0 +1,43 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      metal:use-macro="load: ${api.template_dir}content.pt"
+	  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+	  i18n:domain="voteit.core">
+<body>
+<div metal:fill-slot="content" class="content_wrapper">
+	<div class="moderator-help-buttons">
+        <a tal:attributes="href '%s@@edit' % api.resource_url(context, request)"
+           tal:condition="api.context_has_permission('Edit', context)"
+           class="buttonize large"
+           i18n:translate="">Edit</a>
+       <a tal:attributes="href '%s@@sort' % api.resource_url(context, request)"
+           tal:condition="api.context_has_permission('Edit', context)"
+           class="buttonize large"
+           i18n:translate="">Sort</a>
+        <a tal:attributes="href '%s@@delete' % api.resource_url(context, request)"
+           tal:condition="api.context_has_permission('Delete', context)"
+           class="buttonize large"
+           i18n:translate="">Delete</a>
+    </div>
+    
+    <div class="description" tal:condition="context.description" tal:content="structure context.description">
+		Description
+	</div>
+	<ul tal:condition="context.get_field_value('agenda_items')">
+		<li tal:repeat="agenda_item context.get_field_value('agenda_items')">
+			<h3 tal:content="agenda_item.title">Title</h3>
+			<div class="description" tal:condition="agenda_item.description" tal:content="structure agenda_item.description">
+				Description
+			</div>
+		</li>
+	</ul>
+
+    <a tal:attributes="href api.resource_url(context.__parent__, request)"
+       class="buttonize"
+       i18n:translate="">Back</a>
+
+</div>
+</body>
+</html>

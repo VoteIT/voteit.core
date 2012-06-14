@@ -17,7 +17,6 @@ def main(global_config, **settings):
         If you don't want to start the VoteIT app from this method,
         be sure to include the same things at least.
     """
-    import voteit.core.patches
     config = default_configurator(settings)
     config.include(required_components)
     config.hook_zca()
@@ -44,8 +43,13 @@ def required_components(config):
     config.include('voteit.core.models.user_tags')
     config.include('voteit.core.models.logs')
     config.include('voteit.core.models.date_time_util')
+    config.include('voteit.core.models.js_util')
+    config.include('voteit.core.js_translations')
     config.include('voteit.core.models.catalog')
     config.include('voteit.core.models.unread')
+    config.include('voteit.core.models.flash_messages')
+    config.include('voteit.core.models.fanstatic_resources')
+    config.include('voteit.core.deform_bindings')
     #For password storage
     config.scan('betahaus.pyracont.fields.password')
 
@@ -57,10 +61,11 @@ def required_components(config):
                                 '%s:locale/' % PROJECTNAME,)
     config.scan(PROJECTNAME)
     config.include(adjust_default_view_component_order)
-    config.include(adjust_view_component_order)
     from voteit.core.security import VIEW
     config.set_default_permission(VIEW)    
     config.include(register_plugins)
+    config.include(register_dynamic_fanstatic_resources)
+    config.include(adjust_view_component_order)
 
 
 def register_plugins(config):
@@ -82,12 +87,22 @@ def root_factory(request):
 
 
 def appmaker(zodb_root):
-    if not 'app_root' in zodb_root:
+    try:
+        return zodb_root['app_root']
+    except KeyError:
         from voteit.core.bootstrap import bootstrap_voteit
         zodb_root['app_root'] = bootstrap_voteit() #Returns a site root
         import transaction
         transaction.commit()
-    return zodb_root['app_root']
+
+        #Set intitial version of database
+        from repoze.evolution import ZODBEvolutionManager
+        from voteit.core.evolve import VERSION
+        manager = ZODBEvolutionManager(zodb_root['app_root'], evolve_packagename='voteit.core.evolve', sw_version=VERSION)
+        manager.set_db_version(VERSION)
+        manager.transaction.commit()
+        
+        return zodb_root['app_root']
 
 
 def adjust_view_component_order(config):
@@ -100,12 +115,21 @@ def adjust_view_component_order(config):
             util = config.registry.getUtility(IViewGroup, name = name)
             util.order = v.strip().splitlines()
 
+
 def adjust_default_view_component_order(config):
     from betahaus.viewcomponent.interfaces import IViewGroup
     from voteit.core.view_component_order import DEFAULT_VC_ORDER
     for (name, items) in DEFAULT_VC_ORDER:
         util = config.registry.getUtility(IViewGroup, name = name)
         util.order = items
+
+
+def register_dynamic_fanstatic_resources(config):
+    from voteit.core.models.interfaces import IFanstaticResources
+    from voteit.core.fanstaticlib import DEFAULT_FANSTATIC_RESOURCES
+    util = config.registry.getUtility(IFanstaticResources)
+    for res in DEFAULT_FANSTATIC_RESOURCES:
+        util.add(*res)
 
 
 def includeme(config):

@@ -1,4 +1,4 @@
-.. _agenda_item_module:
+.. _interfaces_module:
 
 :mod:`voteit.core.models.interfaces`
 ------------------------------------
@@ -34,6 +34,12 @@ The exception is IVote, which should behave different.
   .. autointerface:: IInviteTicket
      :members:
 
+  .. autointerface:: IAgendaTemplates
+     :members:
+
+  .. autointerface:: IAgendaTemplate
+     :members:
+
   .. autointerface:: IProposal
      :members:
 
@@ -47,6 +53,8 @@ The exception is IVote, which should behave different.
      :members:
 
   .. autointerface:: IDiscussionPost
+     :members:
+
 
 Mixin classes
 -------------
@@ -59,8 +67,6 @@ They're not usable at all by themselves.
   .. autointerface:: ISecurityAware
       :members:
  
-  .. autointerface:: IUnreadAware
-     :members:
 
 
 Adapters
@@ -68,6 +74,9 @@ Adapters
 
 Adapters can extend functionality of other models. They're also easier to make
 pluggable, compared to regular persistent models. 
+
+  .. autointerface:: IFlashMessages
+     :members:
 
   .. autointerface:: IUserTags
      :members:
@@ -78,6 +87,12 @@ pluggable, compared to regular persistent models.
   .. autointerface:: ILogHandler
      :members:
 
+  .. autointerface:: IUnread
+     :members:
+
+  .. autointerface:: ICatalogMetadata
+     :members:
+
 
 Utilities
 ---------
@@ -85,9 +100,15 @@ Utilities
 Utilities are also pluggable models, but they don't require a specific context to operate on.
 Most aren't persistent at all.
 
-
   .. autointerface:: IDateTimeUtil
      :members:
+
+  .. autointerface:: IJSUtil
+     :members:
+
+  .. autointerface:: IFanstaticResources
+     :members:
+
 
 
 Markers
@@ -99,4 +120,3 @@ with a specific object.
 
   .. autointerface:: ICatalogMetadataEnabled
      :members:
-

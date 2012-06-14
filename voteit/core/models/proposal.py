@@ -51,24 +51,19 @@ ACL['closed'] = [(Allow, security.ROLE_ADMIN, security.VIEW),
                  (Allow, security.ROLE_VIEWER, security.VIEW),
                  DENY_ALL,
                 ]
+ACL['private'] = [(Allow, security.ROLE_ADMIN, _PUBLISHED_MODERATOR_PERMS),
+                  (Allow, security.ROLE_MODERATOR, _PUBLISHED_MODERATOR_PERMS),
+                  DENY_ALL,
+                  ]
 
 
 @content_factory('Proposal', title=_(u"Proposal"))
 class Proposal(BaseContent, WorkflowAware):
-    """ Proposal content.
-        about states:
-        'published' is used in ongoing meetings. This proposal is a candidate for a future poll.
-        'retracted' means that the person who wrote the proposal ('Owner' role)
-        doesn't stand behind it any longer and it won't be a candidate for a poll.
-        'voting' is a locked state - this proposal is part of an ongoing poll.
-        'denied' and 'approved' are locked states for proposals that have been part of a poll.
-        They're either denied or approved.
-        'unhandled' is a locked state. The agenda item closed before anything was done with this proposal.
-        
-        Administrators and moderators have extra privileges on proposals if the agenda item hasn't closed.
-        (This is simply to help editing things to avoid mistakes.) After that, the proposals will be locked
-        without any option to alter them. In that case, the ACL table 'closed' is used.
-        """
+    """ Proposal content type.
+        See :mod:`voteit.core.models.interfaces.IProposal`.
+        All methods are documented in the interface of this class.
+    """
+
     implements(IProposal, ICatalogMetadataEnabled)
     content_type = 'Proposal'
     display_name = _(u"Proposal")
@@ -80,22 +75,24 @@ class Proposal(BaseContent, WorkflowAware):
 
     @property
     def __acl__(self):
+        ai = find_interface(self, IAgendaItem)
+        ai_state = ai.get_workflow_state()
+        #If ai is private, use private
+        if ai_state == 'private':
+            return ACL['private']
         state = self.get_workflow_state()
         if state == 'published':
             return ACL['published']
-        
         #Check if AI is open.
-        ai = find_interface(self, IAgendaItem)
-        if ai.get_workflow_state() == 'closed':
+        if ai_state == 'closed':
             return ACL['closed']
-        
         return ACL['locked']
 
     def _get_title(self):
         return self.get_field_value('title', u"")
     def _set_title(self, value, key=None):
         """ Custom mutator, will transform urls to links and linebreaks to <br/> """
-        value = auto_link(value)
+        value = auto_link(value, link='urls')
         value = nl2br(value)
         #nl2br will also ad a \n to the end, we need to remove it so it doesn't run several times
         value = value.replace('\n', ' ')

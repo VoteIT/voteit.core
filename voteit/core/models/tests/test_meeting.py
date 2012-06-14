@@ -3,11 +3,14 @@ from datetime import datetime
 
 from pyramid import testing
 from pyramid.authorization import ACLAuthorizationPolicy
-
-from voteit.core import security
 from pyramid.security import Authenticated
+from pyramid.httpexceptions import HTTPForbidden
+from zope.interface.verify import verifyClass
 from zope.interface.verify import verifyObject
 
+from voteit.core import security
+from voteit.core.models.interfaces import IMeeting
+from voteit.core.testing_helpers import register_workflows
 
 admin = set([security.ROLE_ADMIN])
 moderator = set([security.ROLE_MODERATOR])
@@ -22,77 +25,74 @@ owner = set([security.ROLE_OWNER])
 class MeetingTests(unittest.TestCase):
     def setUp(self):
         self.config = testing.setUp()
-        # load workflow
-        self.config.include('pyramid_zcml')
-        self.config.load_zcml('voteit.core:configure.zcml')
 
     def tearDown(self):
         testing.tearDown()
 
-    def _make_obj(self):
+    @property
+    def _cut(self):
         from voteit.core.models.meeting import Meeting
-        return Meeting()
-    
-    def _make_ai(self):
-        from voteit.core.models.agenda_item import AgendaItem
-        return AgendaItem()
+        return Meeting
 
-    def test_verify_implementation(self):
-        from voteit.core.models.interfaces import IMeeting
-        obj = self._make_obj()
-        self.assertTrue(verifyObject(IMeeting, obj))
+    @property
+    def _ai(self):
+        from voteit.core.models.agenda_item import AgendaItem
+        return AgendaItem
+
+    def test_verify_class(self):
+        self.assertTrue(verifyClass(IMeeting, self._cut))
+
+    def test_verify_obj(self):
+        self.assertTrue(verifyObject(IMeeting, self._cut()))
+
+    def test_meeting_with_one_creator_sets_creator_as_moderator(self):
+        obj = self._cut(creators = ['jane'])
+        self.assertIn('role:Moderator', obj.get_groups('jane'))
 
     def test_closing_meeting_with_ongoing_ais(self):
         """ Closing a meeting with ongoing agenda items should raise an exception. """
+        register_workflows(self.config)
         request = testing.DummyRequest()
-        ai = self._make_ai()
+        ai = self._ai()
         ai.set_workflow_state(request, 'upcoming')
         ai.set_workflow_state(request, 'ongoing')
-        obj = self._make_obj()
+        obj = self._cut()
         obj['ai'] = ai
         
         obj.set_workflow_state(request, 'ongoing')
         self.assertRaises(Exception, obj.set_workflow_state, 'closed')
 
     def test_timestamp_added_on_close(self):
+        register_workflows(self.config)
         self.config.scan('voteit.core.subscribers.timestamps') #To add subscriber
         request = testing.DummyRequest()
-        obj = self._make_obj()
+        obj = self._cut()
         obj.set_workflow_state(request, 'ongoing')
         self.assertFalse(isinstance(obj.end_time, datetime))
         obj.set_workflow_state(request, 'closed')
         self.assertTrue(isinstance(obj.end_time, datetime))
 
-    def test_meeting_start_time_from_ais(self):
+    def test_closing_meeting_callback(self):
+        register_workflows(self.config)
         request = testing.DummyRequest()
-        obj = self._make_obj()
-        self.assertEqual(obj.start_time, None)
-        
-        ai1 = self._make_ai()
-        ai1time = datetime.strptime('1999-12-13', "%Y-%m-%d")
-        ai1.set_field_value('start_time', ai1time)
-        obj['ai1'] = ai1
+        obj = self._cut()
+        obj['ai'] = self._ai()
+        obj.set_workflow_state(request, 'ongoing')
+        obj['ai'].set_workflow_state(request, 'upcoming')
+        obj['ai'].set_workflow_state(request, 'ongoing')
+        self.assertRaises(HTTPForbidden, obj.set_workflow_state, request, 'closed')
 
-        #It's still private
-        self.assertEqual(obj.start_time, None)
-        
-        #Publish ai1 to use its time
-        ai1.set_workflow_state(request, 'upcoming')
-        self.assertEqual(obj.start_time, ai1time)
+    def test_add_invite_ticket_traversal(self):
+        from voteit.core.models.invite_ticket import InviteTicket
+        self.config.include('pyramid_mailer.testing')
+        self.config.scan('voteit.core.views.components.email')
+        request = testing.DummyRequest()
+        obj = self._cut()
+        ticket = InviteTicket('blabla@hello.se', ['role:Moderator'], 'Hello!')
+        obj.add_invite_ticket(ticket, request)
+        self.assertEqual(obj, ticket.__parent__)
 
-        #Add anotherone
-        ai2 = self._make_ai()
-        ai2time = datetime.strptime('1970-01-01', "%Y-%m-%d")
-        ai2.set_field_value('start_time', ai2time)
-        obj['ai2'] = ai2
-        
-        #Since the new one is private, it shouldn't affect anything
-        self.assertEqual(obj.start_time, ai1time)
-        
-        #Publishing ai2 makes it take precedence
-        ai2.set_workflow_state(request, 'upcoming')
-        self.assertEqual(obj.start_time, ai2time)
-        
+
 class MeetingPermissionTests(unittest.TestCase):
     """ Check permissions in different meeting states. """
 
@@ -107,13 +107,14 @@ class MeetingPermissionTests(unittest.TestCase):
     def tearDown(self):
         testing.tearDown()
 
-    def _make_obj(self):
+    @property
+    def _cut(self):
         from voteit.core.models.meeting import Meeting
-        return Meeting()
+        return Meeting
 
     def test_upcoming(self):
         request = testing.DummyRequest()
-        obj = self._make_obj()
+        obj = self._cut()
         
         #View
         self.assertEqual(self.pap(obj, security.VIEW), admin | moderator | viewer )
@@ -144,7 +145,7 @@ class MeetingPermissionTests(unittest.TestCase):
 
     def test_ongoing(self):
         request = testing.DummyRequest()
-        obj = self._make_obj()
+        obj = self._cut()
         obj.set_workflow_state(request, 'ongoing')
         
         #View
@@ -176,7 +177,7 @@ class MeetingPermissionTests(unittest.TestCase):
 
     def test_closed(self):
         request = testing.DummyRequest()
-        obj = self._make_obj()
+        obj = self._cut()
         obj.set_workflow_state(request, 'ongoing')
         obj.set_workflow_state(request, 'closed')
         

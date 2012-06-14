@@ -3,6 +3,7 @@ from pyramid.traversal import resource_path
 from pyramid.renderers import render_to_response
 from pyramid.renderers import render
 from pyramid.view import view_config
+from pyramid.security import effective_principals
 from pyramid.httpexceptions import HTTPForbidden
 from webhelpers.html.converters import nl2br
 from webhelpers.html.render import sanitize
@@ -45,6 +46,7 @@ def user_info_view(context, request, info_userid=None):
             query['path'] = resource_path(context)
         else:
             query['path'] = resource_path(root)
+        query['allowed_to_view'] = {'operator':'or', 'query': effective_principals(request)}
         query['creators'] = info_userid
         query['content_type'] = {'query':('Proposal','DiscussionPost'), 'operator':'or'}
         query['sort_index'] = 'created'
@@ -56,7 +58,7 @@ def user_info_view(context, request, info_userid=None):
         #User is allowed here, so do lookup
         user = root.users.get(info_userid)
     else:
-        user = None
+        raise ValueError("No user with that userid found in context")
 
     dt_util = request.registry.getUtility(IDateTimeUtil)
 

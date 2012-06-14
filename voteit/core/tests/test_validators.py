@@ -34,17 +34,6 @@ def _fixture(config):
     root['meeting'] = meeting
     return root
 
-def _register_security_policies(config):
-    from voteit.core.security import groupfinder
-    authn_policy = AuthTktAuthenticationPolicy(secret='secret',
-                                               callback=groupfinder)
-    authz_policy = ACLAuthorizationPolicy()
-    config.setup_registry(authorization_policy=authz_policy, authentication_policy=authn_policy)
-
-def _register_workflows(config):
-    config.include('pyramid_zcml')
-    config.load_zcml('voteit.core:configure.zcml')
-
 
 class AtEnabledTextAreaTests(TestCase):
     
@@ -186,6 +175,7 @@ class CheckPasswordTokenTests(TestCase):
 
     def setUp(self):
         self.config = testing.setUp()
+        self.config.scan('voteit.core.views.components.email')
 
     def tearDown(self):
         testing.tearDown()
@@ -357,6 +347,31 @@ class MultipleEmailValidatorTests(TestCase):
         self.assertRaises(colander.Invalid, self._fut, None, "one@two.com\nthree@four.net\nfive@six.com\none@two.com hello! \n")
 
 
+
+class CurrentPasswordValidatorTests(TestCase):
+
+    def setUp(self):
+        self.config = testing.setUp()
+
+    def tearDown(self):
+        testing.tearDown()
+
+    def _cut(self):
+        from voteit.core.validators import CurrentPasswordValidator
+        from voteit.core.models.user import User
+        self.config.scan('betahaus.pyracont.fields.password')
+        user = User(password = 'Hello')
+        return CurrentPasswordValidator(user)
+
+    def test_good_pw(self):
+        obj = self._cut()
+        self.assertEqual(obj(None, 'Hello'), None)
+
+    def test_bad_pw(self):
+        obj = self._cut()
+        self.assertRaises(colander.Invalid, obj, None, "Incorrect pw")
+
+
 class DeferredValidatorsTests(TestCase):
     def setUp(self):
         self.config = testing.setUp()
@@ -402,3 +417,53 @@ class DeferredValidatorsTests(TestCase):
         res = deferred_existing_userid_validator(None, {'context': None})
         self.failUnless(isinstance(res, GlobalExistingUserId))
 
+    def test_deferred_current_password_validator(self):
+        from voteit.core.validators import deferred_current_password_validator
+        from voteit.core.validators import CurrentPasswordValidator
+        from voteit.core.models.user import User
+        context = User()
+        res = deferred_current_password_validator(None, {'context': context})
+        self.assertIsInstance(res, CurrentPasswordValidator)
+
+
+class html_string_validatorTests(TestCase):
+    
+    def setUp(self):
+        self.config = testing.setUp()
+
+    def tearDown(self):
+        testing.tearDown()
+    
+    @property
+    def _cut(self):
+        from voteit.core.validators import html_string_validator
+        return html_string_validator
+
+    def test_normal_text(self):
+        node = None
+        self.assertEqual(self._cut(node, "Here's some normal text that should pass\nShouldn't it?"), None)
+
+    def test_text_with_html(self):
+        node = None
+        self.assertRaises(colander.Invalid, self._cut, node, "<html> is not allowed")
+        
+class richtext_validator(TestCase):
+    
+    def setUp(self):
+        self.config = testing.setUp()
+
+    def tearDown(self):
+        testing.tearDown()
+    
+    @property
+    def _cut(self):
+        from voteit.core.validators import richtext_validator
+        return richtext_validator
+
+    def test_normal_text(self):
+        node = None
+        self.assertEqual(self._cut(node, "Here's some <strong>normal</strong> html that should pass."), None)
+
+    def test_text_with_html(self):
+        node = None
+        self.assertRaises(colander.Invalid, self._cut, node, "Here's some html with forbidden tags <script>alert('test');</script>that should <strong>not</strong> pass.")

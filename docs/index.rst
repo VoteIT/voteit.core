@@ -4,9 +4,13 @@ VoteIT project documentation
 .. toctree::
    :maxdepth: 2
    
+   intro
    installing
    configuring
    deploying
+   technical_overview
+   tutorials
+
 
 Indices and tables
 ==================
@@ -22,5 +26,10 @@ Indices and tables
    :glob:
    :hidden:
  
-   models/*   
+   models/*
+   schemas/*
+   subscribers/*
+   views/*
+   views/components/*
    glossary
+

@@ -13,6 +13,7 @@ from pyramid.exceptions import Forbidden
 from pyramid.security import authenticated_userid
 from pyramid.renderers import render
 from betahaus.pyracont.decorators import content_factory
+from betahaus.viewcomponent import render_view_action
 
 from voteit.core import VoteITMF as _
 from voteit.core import security
@@ -35,7 +36,8 @@ SELECTABLE_ROLES = (security.ROLE_MODERATOR,
 @content_factory('InviteTicket', title=_(u"Invite ticket"))
 class InviteTicket(Folder, WorkflowAware):
     """ Invite ticket. Send these to give access to new users.
-        See IInviteTicket for more info.
+        See :mod:`voteit.core.models.interfaces.IInviteTicket`.
+        All methods are documented in the interface of this class.
     """
     implements(IInviteTicket)
     content_type = 'InviteTicket'
@@ -59,31 +61,19 @@ class InviteTicket(Folder, WorkflowAware):
         super(InviteTicket, self).__init__()
 
     def send(self, request):
-        """ Send message about invite ticket. """
-        response = {}
-
         meeting = find_interface(self, IMeeting)
-        assert meeting
-        
-        form_url = "%sticket" % resource_url(meeting, request)
-        response['access_link'] = form_url + '?email=%s&token=%s' % (self.email, self.token)
-        response['message'] = self.message
-        
-        sender = "%s <%s>" % (meeting.get_field_value('meeting_mail_name'), meeting.get_field_value('meeting_mail_address'))
-        body_html = render('../views/templates/invite_ticket_email.pt', response, request=request)
-
+        sender = "%s <%s>" % (meeting.get_field_value('meeting_mail_name'),
+                              meeting.get_field_value('meeting_mail_address'))
+        body_html = render_view_action(self, request, 'email', 'invite_ticket')
         msg = Message(subject=_(u"VoteIT meeting invitation"),
                       sender = sender and sender or None,
                       recipients=[self.email],
                       html=body_html)
-
         mailer = get_mailer(request)
         mailer.send(msg)
-
         self.sent_dates.append(utcnow())
 
     def claim(self, request):
-        """ Handle claim of this ticket. Set permissions for meeting and set the ticket as closed. """
         #Is the ticket open?
         if self.get_workflow_state() != 'open':
             raise Forbidden("Access already granted with this ticket")

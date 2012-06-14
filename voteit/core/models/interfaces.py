@@ -165,8 +165,11 @@ class IBaseContent(IBaseFolder):
 
 
 class ISiteRoot(IBaseFolder):
-    """ Singleton that is used as the site root. """
-
+    """ Singleton that is used as the site root.
+        When added, it will also create a caching catalog with the
+        attribute catalog."""
+    users = Attribute("Access to the users folder. Same as self['users']")
+    
 
 class IUsers(IBaseFolder):
     """ Contains all users. """
@@ -178,7 +181,7 @@ class IUsers(IBaseFolder):
 
 
 class IUser(IBaseFolder):
-    """ A user object. """
+    """ Content type for a user. Usable as a profile page. """
     
     userid = Attribute("The userid is always the same as __name__, meaning "
                        "that the name of the stored object must be the userid. "
@@ -221,10 +224,24 @@ class IUser(IBaseFolder):
 
 class IAgendaItem(IBaseFolder):
     """ Agenda item content """
+    start_time = Attribute("""
+        Return start time, if set. The value will be set by a subscriber when
+        the Agenda Item enters the state 'ongoing'.
+        The subscriber is located at: :func:`voteit.core.subscribers.timestamps.add_start_timestamp` 
+    """)
+    end_time = Attribute("""
+        Return end time, if set. The value will be set by a subscriber when
+        the Agenda Item enters the state 'closed'.
+        The subscriber is located at: :func:`voteit.core.subscribers.timestamps.add_close_timestamp` 
+    """)
 
 
 class IMeeting(IBaseFolder):
     """ Meeting content type """
+    start_time = Attribute("Start time for meeting")
+    end_time = Attribute("End time for meeting")
+    invite_tickets = Attribute("""
+        Storage for InviteTickets. Works pretty much like a folder.""")
 
     def add_invite_ticket(ticket, request):
         """ Add an invite ticket to the storage invite_tickets.
@@ -240,11 +257,47 @@ class IDiscussionPost(IBaseFolder):
 
 
 class IProposal(IBaseFolder):
-    """ Proposal content type. """
+    """ Proposal content type
+    
+        Workflow states for proposals
+        
+        published
+            Used in ongoing meetings. This proposal is a candidate for a future poll.
+            
+        retracted
+            The person who wrote the proposal ('Owner' role) doesn't stand by it
+            any longer and it won't be a candidate for a poll.
+    
+        voting
+            is a locked state - this proposal is part of an ongoing poll. Other polls
+            can't include this proposal while it's in this state, and owners can't retract
+            it. If you delete a proposal that is in this state, it might crash the poll
+            it's a part of.
+
+        denied
+            Proposal has been denied. It can't be included in polls or retracted.
+
+        approved
+            Proposal has been approved. It can't be retracted. If you want to include
+            it in a poll again, you need to set it as published again.
+            
+        unhandled
+            Set by moderators if they never handled the proposal for some reason.
+                    
+        Administrators and moderators have extra privileges on proposals if the agenda item hasn't closed.
+        (This is simply to help editing things to avoid mistakes.) After that, the proposals will be locked
+        without any option to alter them. In that case, the ACL table 'closed' is used.
+    """
 
 
 class IPoll(IBaseFolder):
-    """ Poll content type. """
+    """ Poll content type.
+        Note that the actual poll method isn't decided by the poll
+        content type. It calls a poll plugin to get that.
+        See :mod:`voteit.core.models.interfaces.IPollPlugin` for more info on those.
+    """
+    start_time = Attribute("Polls start time")
+    end_time = Attribute("Polls end time")
     proposal_uids = Attribute("Contains a set of UIDs for all proposals this poll is about.")
     poll_plugin_name = Attribute("Returns the name of the selected voting utility.")
     ballots = Attribute("All ballots, set here after the poll has closed.")
@@ -260,11 +313,15 @@ class IPoll(IBaseFolder):
         """ Return all proposal objects resigered in this poll.
         """
 
+    def get_all_votes():
+        """ Return a frozenset of all votes in this poll.
+        """
+
     def get_voted_userids():
         """ Returns userids of all who've voted in this poll.
         """
 
-    def render_poll_result(request):
+    def render_poll_result(request, complete):
         """ Render poll result. Delegates this to plugin.
         """
 
@@ -272,15 +329,45 @@ class IPoll(IBaseFolder):
         """ Close the poll, calculate and store the result.
         """
 
+    def adjust_proposal_states(uid_states, request = None):
+        """ Adjust the states of proposals to something.
+            This method is normally called from a poll plugin to set
+            approved or denied proposals. (If any)
+            This method will catch any errors and notify the moderator
+            rather than abort the transaction. Ie if a state can't be set
+            for a specific proposal, it will simply inform the moderator
+            of that and set the correct states for the other proposals that might
+            have been specified.
+            
+            uid_states
+                A dict of proposal uids and which state id they should change to.
+            
+            request
+                A request object that can be passed along. Otherwise this method
+                will try to fetch the current request.
+
+        """
+
     def get_proposal_by_uid(uid):
         """ Return a proposal by its uid. Raises KeyError if it isn't found, since
             it shouldn't be used with uids that don't exist.
         """
 
+    def create_reject_proposal():
+        """ Create a reject proposal if it was specified in the edit form.
+            This method might go away in the future.
+        """
+
 
 class IVote(Interface):
-    """ Vote content type.
+    """ Vote content type. This behaves different than other
+        content types and it doesn't inherit other interfaces
+        which means that you need to specify that something applies
+        for an IVote context specifically.
+        Votes can't be checked or inspected by admins or moderators either.
+        Only the owner of the Vote has any kind of permissions here.
     """
+
     def set_vote_data(value, notify = True):
         """ Set vote data. The data itself could be anything passed
             along by the poll plugin.
@@ -322,8 +409,23 @@ class IInviteTicket(Interface):
         """
 
     def claim(request):
-        """ Use the ticket to gain access. Called by ticket form - see:
-            views/meeting.py
+        """ Handle claim of this ticket. Set permissions for meeting and
+            set the ticket as closed.
+
+            Called by ticket form - see:
+            :func:`voteit.core.views.meeting.MeetingView.claim_ticket`
+        """
+
+
+class IAgendaTemplates(Interface):
+    """ Contains all Agenda templates. """
+
+
+class IAgendaTemplate(Interface):
+    """ Agenda template content """
+    
+    def populate_meeting(meeting):
+        """ Populate meeting with agenda items
         """
 
 
@@ -332,11 +434,6 @@ class IWorkflowAware(Interface):
     """ Mixin class for content that needs workflow. """
     
     workflow = Attribute('Get the workflow for this content.')
-
-    def initialize_workflow():
-        """ Initialize workflow. The initial state will be set.
-            If called twice, it will reset to the initial state.
-        """
     
     def get_workflow_state():
         """ Get current workflow state. """
@@ -372,17 +469,17 @@ class ISecurityAware(Interface):
     def check_groups(groups):
         """ Check dependencies and group names. """
 
-    def add_groups(principal, groups, event = False):
+    def add_groups(principal, groups, event = True):
         """ Add groups for a principal in this context.
             If event is True, an IObjectUpdatedEvent will be sent.
         """
 
-    def del_groups(principal, groups, event = False):
+    def del_groups(principal, groups, event = True):
         """ Delete groups for a principal in this context.
             If event is True, an IObjectUpdatedEvent will be sent.
         """
 
-    def set_groups(principal, groups, event = False):
+    def set_groups(principal, groups, event = True):
         """ Set groups for a principal in this context. (This clears any previous setting)
             If event is True, an IObjectUpdatedEvent will be sent.
         """
@@ -403,12 +500,60 @@ class ISecurityAware(Interface):
 
 
 #Adapters
+class IFlashMessages(Interface):
+    """ Adapts a request object to add flash messages to the current session.
+        Flash messages are short text strings stored in a session.
+        
+        The message itself is usually things like "Object updated" or other
+        short system messages.
+    """
+
+    def add(msg, type='info', close_button=True):
+        """ Add a flash message. Note that the current sessions we use
+            can't store a lot of text - so keep it short and simple!
+
+            msg
+                Regular text, usually a translation string unless
+                you don't want it to be translated for some reason.
+
+            type
+                Will be set as a css-class but has no other function.
+                Currently 'info' and 'error' are common values.
+
+            close_button
+                Show a close button to enable the user to remove the message.
+                Mostly a question of aesthetics.
+        """
+
+    def get_messages():
+        """ Return a generator of all flash messages, if any exist.
+            Note that generators are True even if they're empty.
+            If you need to do checks against contents, convert them
+            to a tuple or something similar first.
+        """
+
+
 class IUserTags(Interface):
     """ Adapter for things that can have usertags.
         The difference to normal tags is that users choose to stand behind them.
         Typical example would be 'like', but it might also be used for other functionality,
         like a dynamic rss feed.
     """
+    tags_storage = Attribute("Storage for user tags")
+
+    def add(tag, userid):
+        """ Add a tag for a userid. Note that the tag shouldn't use non-ascii chars.
+            Think of it as an id rather than a readable name.
+        """
+
+    def userids_for_tag(tag):
+        """ Return a tuple of all userids that have added a specific tag.
+        """
+
+    def remove(tag, userid):
+        """ Remove a tag for a specific userid. It won't raise an exception if
+            the tag doesn't exist.
+        """
 
 
 class IPollPlugin(Interface):
@@ -438,7 +583,7 @@ class IPollPlugin(Interface):
         """ Handle closing of the poll.
         """
 
-    def render_result(request):
+    def render_result(request, complete=True):
         """ Return rendered html with result display. Called by the poll view
             when the poll has finished.
         """
@@ -463,12 +608,21 @@ class IPollPlugin(Interface):
         """
 
 
-
 class ILogHandler(Interface):
-    """ An adapter for meetings that handle logging. """
+    """ An adapter that handle logging. """
+    log_storage = Attribute("Storage for logs.")
 
     def __init__(context):
-        """ Object needs a meeting to adapt. """
+        """ Context to adapt. """
+    
+    def add(context_uid, message, tags=(), userid=None, scripted=None):
+        """ Add a log entry.
+            context_uid: the uid of the object that triggered logging.
+            message: the message to store.
+            tags: list of tags, works as a log category
+            userid: if a user triggered the event, which user did so.
+            scripted: if a script triggered the event, store script name here
+        """
 
 
 class ICatalogMetadata(Interface):
@@ -503,6 +657,9 @@ class IUnread(Interface):
 
     def get_unread_userids():
         """ Returns a frozenset of all userids who haven't read this context. """
+        
+    def reset_unread():
+        """ Sets unread as newly created """
 
 
 #Utilities
@@ -560,9 +717,66 @@ class IDateTimeUtil(Interface):
         """
 
 
+class IJSUtil(Interface):
+    """ """
+
+    def add_translations(**tstrings):
+        """ Add translationstrings to be included as:
+            javascript_key = TranslationString
+            Example: yes = _(u"Yes")
+            The javascript key will be in the namespace translations in voteit.
+            The above example can be found at:
+            voteit.translations['yes']
+        """
+
+    def get_translations():
+        """ Get a dict of all translations. This method may change to include
+            conditions later. The dict is a copy of the original, so it's okay
+            to modify it.
+        """
+
+
+class IFanstaticResources(Interface):
+    """ Util for keeping track of when to render fanstatic resources.
+        All resources doesn't have to be registered here, just use it
+        when suitable. For instance, some widgets will include resources
+        themselves. This is also a plug-point for custom skinning and similar.
+    """
+    order = Attribute("""
+        A list of keys for resource order. You can change the order of rendered
+        resources here. Later in the list means later rendering.""")
+
+    def add(key, resource, discriminator = None):
+        """ Add a resource.
+
+            key
+                Unique key for this resource. Just a string. If you
+                specify the same key as something that exists, it will
+                be overwritten by this registration.
+
+            resource
+                :term:`Fanstatic` resource to be included. Must be a
+                Resource or Group object.
+
+            discriminator
+                A callable to be run with context, request and view as argument.
+                If it returns something that is True, the resource will be
+                included. Otherwise it won't. If this isn't set, the resource
+                will always be included.
+        """
+
+    def include_needed(context, request, view):
+        """ Runt need() on resources that are required in this context.
+            Will go through all discriminators to check which resources that
+            should be included in the order set in the order attribute.
+            Returns keys of included resources.
+        """
+
+
 #Marker interfaces
 class ICatalogMetadataEnabled(Interface):
     """ Marker interface for IBaseContent that should have metadata.
         The interface itself doesn't do anything, but the ICatalogMetadata
         adapter is registered for it.
     """
+

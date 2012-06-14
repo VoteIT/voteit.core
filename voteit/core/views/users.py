@@ -1,5 +1,7 @@
 import urllib
+import httpagentparser
 
+from decimal import Decimal
 from pyramid.view import view_config
 from deform import Form
 from deform.exception import ValidationFailure
@@ -20,6 +22,7 @@ from voteit.core.models.interfaces import IUsers
 from voteit.core.views.api import APIView
 from voteit.core.security import CHANGE_PASSWORD
 from voteit.core.security import VIEW
+from voteit.core.security import MANAGE_SERVER
 from voteit.core.models.schemas import add_csrf_token
 from voteit.core.models.schemas import button_add
 from voteit.core.models.schemas import button_cancel
@@ -86,7 +89,12 @@ class UsersFormView(BaseEdit):
 
     @view_config(context=IUser, name="change_password", renderer=DEFAULT_TEMPLATE, permission=CHANGE_PASSWORD)
     def password_form(self):
-        schema = createSchema('ChangePasswordSchema').bind(context=self.context, request=self.request)
+        # if admin is changing password for another user no verification of current password is needed
+        if self.context != self.api.user_profile and self.api.context_has_permission(MANAGE_SERVER, self.api.root):
+            schema = createSchema('ChangePasswordAdminSchema').bind(context=self.context, request=self.request)
+        else:
+            schema = createSchema('ChangePasswordSchema').bind(context=self.context, request=self.request)
+        
         add_csrf_token(self.context, self.request, schema)
 
         form = Form(schema, buttons=(button_update, button_cancel))
@@ -103,8 +111,11 @@ class UsersFormView(BaseEdit):
                 return self.response
             
             self.context.set_password(appstruct['password'])
-            url = resource_url(self.context, self.request)
             
+            msg = _(u"Password changed")
+            self.api.flash_messages.add(msg)
+            
+            url = resource_url(self.context, self.request)
             return HTTPFound(location=url)
 
         if 'cancel' in post:
@@ -158,10 +169,24 @@ class UsersFormView(BaseEdit):
     @view_config(context=ISiteRoot, name="register", renderer=LOGIN_REGISTER_TPL)
     @view_config(context=ISiteRoot, name='login', renderer=LOGIN_REGISTER_TPL)
     def login_or_register(self):
+        #Browser check
+        browser_name = u''
+        browser_version = 0
+        try:
+            user_agent = httpagentparser.detect(self.request.user_agent)
+            browser_name = user_agent['browser']['name']
+            browser_version = Decimal(user_agent['browser']['version'][0:user_agent['browser']['version'].find('.')])
+        except (TypeError, ValueError):
+            pass
+        #FIXME: maybe this definition should be somewhere else
+        if browser_name == u'Microsoft Internet Explorer' and browser_version < Decimal(8):
+            url = resource_url(self.api.root, self.request)+"unsupported_browser"
+            return HTTPFound(location=url)
+        
         users = self.api.root.users
         
-        login_schema = createSchema('LoginSchema').bind(context=self.context, request=self.request)        
-        register_schema = createSchema('AddUserSchema').bind(context=self.context, request=self.request)
+        login_schema = createSchema('LoginSchema').bind(context=self.context, request=self.request, api=self.api)        
+        register_schema = createSchema('RegisterUserSchema').bind(context=self.context, request=self.request, api=self.api)
 
         login_form = Form(login_schema, buttons=(button_login,))
         reg_form = Form(register_schema, buttons=(button_register,))
@@ -184,9 +209,10 @@ class UsersFormView(BaseEdit):
                 self.response['login_form'] = e.render()
                 return self.response
             
-            userid = appstruct['userid']
+            # Forece lowercase userid
+            userid = appstruct['userid'].lower()
             password = appstruct['password']
-            came_from = urllib.unquote(appstruct['came_from'])
+            came_from = appstruct['came_from']
     
             #userid here can be either an email address or a login name
             if '@' in userid:
@@ -201,7 +227,7 @@ class UsersFormView(BaseEdit):
                     headers = remember(self.request, user.__name__)
                     url = resource_url(self.context, self.request)
                     if came_from:
-                        url = came_from
+                        url = urllib.unquote(came_from)
                     return HTTPFound(location = url,
                                      headers = headers)
             self.response['api'].flash_messages.add(_('Login failed.'), type='error')
@@ -361,6 +387,7 @@ class UsersView(BaseView):
 
     @view_config(context=IUsers, renderer='templates/list_users.pt', permission=VIEW)
     def list_users(self):
+        self.response['users'] = self.context.get_content(content_type = 'User', sort_on = 'userid')
         return self.response
 
     @view_config(context=IUser, renderer='templates/user.pt', permission=VIEW)

@@ -8,6 +8,7 @@ def bootstrap_voteit(echo=True):
     """ Bootstrap site root.
         Will add:
         - Site root
+        - Agenda template folder
         - Users folder
         - An administrative user with login: admin and pass: admin
     """
@@ -17,6 +18,9 @@ def bootstrap_voteit(echo=True):
     
     #Add root
     root = createContent('SiteRoot', title = _(u"VoteIT"), creators = ['admin'])
+
+    #Add users folder
+    root['agenda_templates'] = createContent('AgendaTemplates', title = _(u"Agenda templates"), creators = ['admin'])
 
     #Add users folder
     root['users'] = createContent('Users', title = _(u"Registered users"), creators = ['admin'])

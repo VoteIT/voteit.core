@@ -3,9 +3,77 @@ from pyramid_zodbconn import db_from_uri
 from pyramid.authentication import AuthTktAuthenticationPolicy
 from pyramid.authorization import ACLAuthorizationPolicy
 from pyramid import testing
+from pyramid_mailer.interfaces import IMailer
 
 from voteit.core.bootstrap import bootstrap_voteit
 from voteit.core.security import ROLE_VOTER
+
+
+class PrintingMailer(object):
+    """
+    Dummy mailing instance. Simply prints all messages directly instead of handling them.
+    Good for avoiding mailing users when you want to test things locally.
+    """
+
+    def send(self, message):    
+        """
+        Send, but really print content of message
+        """
+        
+        print "From: %s " % message.sender
+        print "Subject: %s" % message.subject
+        print "To: %s" % ", ".join(message.recipients)
+        print "======================================"
+        print message.html
+        print message.body
+
+    send_to_queue = send_immediately = send
+
+
+def create_full_app_config():
+    """ This is a full config including everything.
+        Only use it for high level tests since it will take time to load it.
+    """
+    from voteit.core import default_configurator
+    from voteit.core import required_components
+    settings = full_app_settings()
+    config = default_configurator(settings)
+    config.include(required_components)
+    config.hook_zca()
+    return config
+
+
+def full_app_settings():
+    """ Settings suitable for testing. It will use a database with memory storage
+        so no changes will ever be permanent.
+    """
+    return {
+        #Pyramid defaults
+        "pyramid.debug_templates": "true",
+        "pyramid.includes": """
+            pyramid_zodbconn
+            pyramid_tm
+            pyramid_mailer.testing
+        """.strip(),
+        #Transaction manager config for package: pyramid_tm
+        "tm.attempts": "1",
+        "tm.commit_veto": "pyramid_tm.default_commit_veto",
+        #ZODB config for package: pyramid_zodbconn
+        "zodbconn.uri": "memory://testingstorage",
+        #VoteIT settings
+        "default_locale_name": "en",
+        "available_languages": "en sv",
+        "default_timezone_name": "Europe/Stockholm",
+        "tkt_secret": "testing",
+        "cache_ttl_seconds": "3600"
+    }
+
+
+def printing_mailer(config):
+    """ Include this to use the printing mailer."""
+    print "\nWARNING! Using printing mailer - no mail will be sent!\n"
+    mailer = PrintingMailer()
+    config.registry.registerUtility(mailer, IMailer)
 
 
 def dummy_zodb_root(config):
@@ -26,8 +94,10 @@ def bootstrap_and_fixture(config):
     config.include('pyramid_zcml')
     config.load_zcml('voteit.core:configure.zcml')
     config.scan('voteit.core.models.site')
+    config.scan('voteit.core.models.agenda_templates')
     config.scan('voteit.core.models.user')
     config.scan('voteit.core.models.users')
+    config.include('voteit.core.models.fanstatic_resources')
     config.scan('betahaus.pyracont.fields.password')
     return bootstrap_voteit(echo=False)
 
@@ -43,6 +113,14 @@ def register_security_policies(config):
 def register_workflows(config):
     config.include('pyramid_zcml')
     config.load_zcml('voteit.core:configure.zcml')
+
+
+def register_catalog(config):
+    """ Register minimal components needed to enable the catalog in testing. """
+    config.include('voteit.core.models.catalog')
+    config.include('voteit.core.models.unread')
+    config.include('voteit.core.models.user_tags')
+    config.scan('voteit.core.subscribers.catalog')
 
 
 def active_poll_fixture(config):

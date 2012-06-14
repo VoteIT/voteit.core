@@ -10,7 +10,7 @@ from voteit.core.models.vote import Vote
 class PollPlugin(object):
     """ Base class for poll plugins. Subclass this to make your own.
         It's not usable by itself, since it doesn't implement the required interfaces.
-        See IPollPlugin for documentation.
+        See :mod:`voteit.core.models.interfaces.IPollPlugin` for documentation.
     """
     implements(IPollPlugin)
     adapts(IPoll)
@@ -44,7 +44,7 @@ class PollPlugin(object):
         """
         raise NotImplementedError("Must be provided by subclass") # pragma : no cover
 
-    def render_result(self, request):
+    def render_result(self, request, complete=True):
         """ Return rendered html with result display. Called by the poll view
             when the poll has finished.
         """

@@ -4,8 +4,13 @@ from betahaus.pyracont.decorators import schema_factory
 from betahaus.pyracont.factories import createContent
 from pyramid.traversal import find_interface
 
+from zope.interface.interfaces import ComponentLookupError
+
 from voteit.core.validators import html_string_validator
+from voteit.core.validators import richtext_validator
+
 from voteit.core import VoteITMF as _
+from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IProposal
 from voteit.core.models.interfaces import IPoll
@@ -17,7 +22,12 @@ from voteit.core.schemas.common import deferred_default_start_time
 
 @colander.deferred
 def poll_plugin_choices_widget(node, kw):
+    context = kw['context']
     request = kw['request']
+    
+    # get avaible plugins from the meeting
+    meeting = find_interface(context, IMeeting)
+    available_plugins = meeting.get_field_value('poll_plugins', ()) 
     
     #Add all selectable plugins to schema. This chooses the poll method to use
     plugin_choices = set()
@@ -26,8 +36,18 @@ def poll_plugin_choices_widget(node, kw):
     #for now, we can fake this
     fake_poll = createContent('Poll')
 
-    for (name, plugin) in request.registry.getAdapters([fake_poll], IPollPlugin):
+    # add avaible plugins the the choice set
+    for name in available_plugins:
+        #FIXME: we should probably catch if a plugin is no lnger avaible on the site 
+        plugin = request.registry.getAdapter(fake_poll, name = name, interface = IPollPlugin) 
         plugin_choices.add((name, plugin.title))
+        
+    # if no plugins was set in the meetings add the default plugin if any is set 
+    if not plugin_choices:
+        name = request.registry.settings.get('default_poll_method', None)
+        if name:
+            plugin = request.registry.getAdapter(fake_poll, name = name, interface = IPollPlugin) 
+            plugin_choices.add((name, plugin.title))
 
     return deform.widget.SelectWidget(values=plugin_choices)
 
@@ -54,7 +74,14 @@ def proposal_choices_widget(node, kw):
     return deform.widget.CheckboxChoiceWidget(values=proposal_choices)
 
 
-@schema_factory('PollSchema')
+@colander.deferred
+def deferred_default_poll_method(node, kw):
+    request = kw['request']
+    return request.registry.settings.get('default_poll_method', '')
+
+
+@schema_factory('AddPollSchema', title = _(u"Add poll"), description = _(u"Use this form to add a poll"))
+@schema_factory('EditPollSchema', title = _(u"Edit poll"), description = _(u"Use this form to edit a poll"))
 class PollSchema(colander.MappingSchema):
     title = colander.SchemaNode(colander.String(),
                                 title = _(u"Title"),
@@ -64,13 +91,15 @@ class PollSchema(colander.MappingSchema):
                                       missing=u"",
                                       description = _(u"poll_description_description",
                                                       default=u"Explain your choice of poll method and your plan for the different polls in the agenda item."),
-                                      widget=deform.widget.RichTextWidget(),)
+                                      widget=deform.widget.RichTextWidget(), 
+                                      validator=richtext_validator,)
 
     poll_plugin = colander.SchemaNode(colander.String(),
                                       title = _(u"Poll method to use"),
                                       description = _(u"poll_poll_plugin_description",
                                                       default=u"Read in the help wiki about pros and cons of different polling methods."),
-                                      widget=poll_plugin_choices_widget,)
+                                      widget = poll_plugin_choices_widget,
+                                      default = deferred_default_poll_method,)
                                       
     proposals = colander.SchemaNode(deform.Set(allow_empty=True), 
                                     name="proposals",
@@ -80,24 +109,25 @@ class PollSchema(colander.MappingSchema):
                                     missing=set(),
                                     widget=proposal_choices_widget,)
                                     
-    proposal_rejection = colander.SchemaNode(colander.Boolean(),
-                                          name="proposal_rejection",
-                                          title = _(u"Rejection proposal"),
-                                          description = _(u"Should a rejection proposal be added to the poll"),
+    add_reject_proposal = colander.SchemaNode(colander.Boolean(),
+                                          title = _(u"Reject proposal"),
+                                          description = _(u"add_reject_proposal_description",
+                                                          default = u"Should a 'Reject all proposals' proposal be added to the poll?"),
                                           missing=False,
                                           widget=None)
                                           
-    proposal_rejection_title = colander.SchemaNode(colander.String(),
-                                                name="proposal_rejection_title",
-                                                title = _(u"Rejection proposal title"),
-                                                description = _(u"The title of the rejection proposal"),
-                                                default=_("Rejection"),
-                                                widget=None)
+    reject_proposal_title = colander.SchemaNode(colander.String(),
+                                                title = _(u"Proposal text for 'reject all proposals'"),
+                                                description = _(u"You can customise the proposal text if you want."),
+                                                default = _(u"reject_proposal_title_default",
+                                                            default = u"Reject all proposals"),
+                                                widget = None)
     start_time = colander.SchemaNode(
          TZDateTime(),
          title = _(u"Start time of this poll."),
          description = _(u"You need to open it yourself."),
-         widget=deform.widget.DateTimeInputWidget(options={'timeFormat': 'hh:mm'}),
+         widget=deform.widget.DateTimeInputWidget(options={'timeFormat': 'hh:mm',
+                                                           'separator': ' '}),
          default = deferred_default_start_time,
     )
     end_time = colander.SchemaNode(
@@ -105,7 +135,8 @@ class PollSchema(colander.MappingSchema):
          title = _(u"End time of this poll."),
          description = _(u"poll_end_time_description",
                          default = u"You need to close it yourself. A good default value is one day later."),
-         widget=deform.widget.DateTimeInputWidget(options={'timeFormat': 'hh:mm'}),
+         widget=deform.widget.DateTimeInputWidget(options={'timeFormat': 'hh:mm',
+                                                           'separator': ' '}),
          default = deferred_default_end_time,
     )
     

@@ -155,43 +155,6 @@ class AgendaItemPermissionTests(unittest.TestCase):
         #Change workflow state
         self.assertEqual(self.pap(obj, security.CHANGE_WORKFLOW_STATE), admin | moderator)
 
-    def test_ongoing_with_closed_meeting(self):
-        #FIXME: This workflow state combination should never happen with the current configuration of the site
-        #We might want to remove this test, or change the raised exception so it happends on the workflow change instead.
-        request = testing.DummyRequest()
-        obj = self._make_obj()
-        
-        obj.set_workflow_state(request, 'upcoming')
-        obj.set_workflow_state(request, 'ongoing')
-        
-        meeting = self._make_meeting()
-        meeting.set_workflow_state(request, 'upcoming')
-        meeting.set_workflow_state(request, 'ongoing')
-        meeting.set_workflow_state(request, 'closed')
-        
-        meeting['ai'] = obj
-
-        #View
-        self.assertEqual(self.pap(obj, security.VIEW), admin | moderator | viewer)
-
-        #Edit
-        self.assertEqual(self.pap(obj, security.EDIT), set())
-        
-        #Delete
-        self.assertEqual(self.pap(obj, security.DELETE), admin)
-
-        #Add proposal
-        self.assertEqual(self.pap(obj, security.ADD_PROPOSAL), set())
-
-        #Add poll
-        self.assertEqual(self.pap(obj, security.ADD_POLL), set())
-
-        #Add discussion post
-        self.assertEqual(self.pap(obj, security.ADD_DISCUSSION_POST), set())
-
-        #Change workflow state
-        self.assertEqual(self.pap(obj, security.CHANGE_WORKFLOW_STATE), set())
-
     def test_ongoing_with_ongoing_meeting(self):
         request = testing.DummyRequest()
         obj = self._make_obj()

@@ -54,14 +54,16 @@ ADD_POLL = 'Add Poll'
 ADD_PROPOSAL = 'Add Proposal'
 ADD_USER = 'Add User'
 ADD_VOTE = 'Add Vote'
+ADD_AGENDA_TEMPLATE = 'Add Agenda Template'
 
-#All add permissions except vote!
+#All add permissions except vote - used within meetings so some permissions may not apply.
 REGULAR_ADD_PERMISSIONS = (ADD_AGENDA_ITEM,
                            ADD_DISCUSSION_POST,
                            ADD_MEETING,
                            ADD_POLL,
                            ADD_PROPOSAL,
-                           ADD_USER,)
+                           ADD_USER,
+                           ADD_AGENDA_TEMPLATE,)
 
 ROOT_ROLES = ((ROLE_ADMIN, _(u'Administrator')),)
 MEETING_ROLES = ((ROLE_MODERATOR, _(u'Moderator')),
@@ -84,10 +86,11 @@ def groupfinder(name, request):
         In some cases, like automated scripts when nobody is logged in,
         request won't have a context. In that case, no groups should exist.
     """
-    context = getattr(request, 'context', None)
-    if context:
+    try:
+        context = request.context
         return context.get_groups(name)
-    return ()
+    except AttributeError: # pragma : no cover
+        return ()
 
 
 def find_authorized_userids(context, permissions):

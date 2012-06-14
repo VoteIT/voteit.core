@@ -42,13 +42,13 @@ class BaseContent(BaseFolder, SecurityAware):
                 #FIXME: We'd like some sort of logging here,
                 #but if we log in voteit.core, any poll plugin test will die very strangely
                 #It has something with cleanup of logging in multithreading in setuptools
-                pass
+                pass #pragma : no cover
 
         #Set owner - if it is in kwargs now
         if 'creators' in kwargs:
             userid = kwargs['creators'][0]
             #Don't send updated event on add
-            self.add_groups(userid, (ROLE_OWNER,))
+            self.add_groups(userid, (ROLE_OWNER,), event = False)
 
         super(BaseContent, self).__init__(data=data, **kwargs)
 

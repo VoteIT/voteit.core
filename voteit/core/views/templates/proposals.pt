@@ -4,19 +4,20 @@
                      state_id proposal['workflow_state'];
                      css_class 'listing_block wf-state-%s' % state_id;"
          tal:attributes="class unread and 'unread %s' % css_class or css_class;
-                         name proposal['name'];">
+                         name proposal['name'];
+                         id proposal['uid'];">
 
-        <span tal:condition="api.show_moderator_actions" tal:replace="structure api.get_moderator_actions(proposal, request)">
+        <span tal:condition="api.show_moderator_actions" tal:replace="structure api.get_moderator_actions(proposal)">
              Cogwheel menu
         </span>	
 
-        <tal:creators tal:replace="structure api.get_creators_info(proposal['creators'], request)">Creators</tal:creators>
+        <tal:creators tal:replace="structure api.get_creators_info(proposal['creators'])">Creators</tal:creators>
         <span i18n:translate="">propose</span>:
         <span class="body" tal:content="structure proposal['title']">Title</span>
 
         <div class="meta">
             <span class="${state_id} icon iconpadding"
-                  tal:content="api.tstring(state_id.title())">private</span>
+                  tal:content="translated_state_title(state_id)">private</span>
             <span class="hyphen">&#45;</span>
             <span class="time" tal:content="api.dt_util.relative_time_format(proposal['created'])"></span>
             <span class="hyphen">&#45;</span>

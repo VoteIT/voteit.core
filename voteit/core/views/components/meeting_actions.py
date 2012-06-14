@@ -2,11 +2,18 @@ from betahaus.viewcomponent import view_action
 from pyramid.renderers import render
 from pyramid.traversal import resource_path
 from pyramid.view import view_config
+from repoze.catalog.query import Eq
+from repoze.catalog.query import NotAny
+
 from voteit.core.security import MANAGE_SERVER, MODERATE_MEETING
 from voteit.core.security import VIEW
+from voteit.core.security import EDIT
+from voteit.core.security import MANAGE_GROUPS
+from voteit.core.security import ADD_VOTE
 from voteit.core import VoteITMF as _
 from voteit.core.views.api import APIView
 from voteit.core.models.interfaces import IMeeting
+from voteit.core.models.catalog import resolve_catalog_docid
 
 
 MODERATOR_SECTIONS = ('closed', 'ongoing', 'upcoming', 'private',)
@@ -21,24 +28,8 @@ def meeting_actions(context, request, va, **kw):
         In turn, some of those will call other groups.
     """
     api = kw['api']
+    context = api.meeting and api.meeting or api.root
     return """<ul id="meeting-actions-menu">%s</ul>""" % api.render_view_group(context, request, 'meeting_actions')
-
-
-@view_action('meeting_actions', 'meetings', title = _(u"Meetings"))
-def meetings_menu(context, request, va, **kw):
-    api = kw['api']
-    if not api.userid:
-        return ''
-    principals = api.context_effective_principals(api.root)
-    query = dict(
-        content_type = 'Meeting',
-        view_meeting_userids = api.userid,
-    )
-    response = {}
-    response['api'] = api
-    response['menu_title'] = api.translate(va.title)
-    response['meetings'] = api.get_metadata_for_query(**query)
-    return render('../templates/snippets/meetings_menu.pt', response, request = request)
 
 
 @view_action('meeting_actions', 'polls', title = _(u"Polls"))
@@ -50,44 +41,58 @@ def polls_menu(context, request, va, **kw):
     response = {}
     response['api'] = api
     response['menu_title'] = va.title
-    #Unread
-    query = dict(
-        content_type = 'Poll',
-        path = resource_path(api.meeting),
-        unread = api.userid,
-        #Not checking allowed to view is okay here, since polls don't get added to unread when they're private
-        #If that would change, the line below will fix it, so it's kept around so we don't forget :)
-        #allowed_to_view = {'operator': 'or', 'query': api.context_effective_principals(api.meeting)},
-    )
-    response['unread_polls_count'] = api.search_catalog(**query)[0]
+    
+    # get all polls that is ongoing an the user hasn't voted in yet
+    query = Eq('content_type', 'Poll' ) & \
+            Eq('path', resource_path(api.meeting)) & \
+            Eq('workflow_state', 'ongoing') & \
+            NotAny('voted_userids', api.userid)
+    num, results = api.root.catalog.query(query)
+    
+    # count the polls the user has the right to vote in
+    num = 0
+    for docid in results:
+        poll = resolve_catalog_docid(api.root.catalog, api.root, docid)
+        if api.context_has_permission(ADD_VOTE, poll):
+            num = num + 1
+            
+    response['unvoted_polls_count'] = num
     response['url'] = '%s@@meeting_poll_menu' % api.resource_url(api.meeting, request)
     return render('../templates/snippets/polls_menu.pt', response, request = request)
 
-
-@view_action('meeting_actions', 'participants', title = _(u"Participants"))
-def participants_tab(context, request, va, **kw):
+@view_action('meeting_actions', 'help_contact', title = _(u"Help & contact"))
+def help_contact_menu(context, request, va, **kw):
     api = kw['api']
-    if not api.userid or not api.meeting:
-        return ''
-    link = '%s@@participants' % api.resource_url(api.meeting, request)
-    return """ <li class="tab"><a href="%s">%s</a></li>"""  % (link, api.translate(va.title))
+    return """<li id="help-tab" class="tab"><a href="#">%s</a></li>""" % api.translate(va.title)
+
+@view_action('meeting_actions', 'search', title = _(u"Search"))
+def search_menu(context, request, va, **kw):
+    api = kw['api']
+    if api.meeting:
+        return u"""<li class="tab"><a href="%s@@search">%s</a></li>""" % (api.meeting_url, api.translate(va.title))
+    return u""
 
 
 @view_action('meeting_actions', 'admin_menu', title = _(u"Admin menu"), permission = MANAGE_SERVER)
-@view_action('meeting_actions', 'moderator_menu', title = _(u"Moderator"), permission = MODERATE_MEETING, meeting_only = True)
+@view_action('meeting_actions', 'settings_menu', title = _(u"Settings"), permission = MODERATE_MEETING, meeting_only = True)
+@view_action('meeting_actions', 'meeting', title = _(u"Meeting"), meeting_only = True)
+@view_action('meeting_actions', 'participants_menu', title = _(u"Participants"), meeting_only = True, menu_css_cls = 'user-dark')
 def generic_menu(context, request, va, **kw):
     api = kw['api']
     if va.kwargs.get('meeting_only', False) == True and api.meeting is None:
         return ''
     response = {}
     response['menu_title'] = va.title
-    response['menu_css_cls'] = 'cog-dark'
-    response['rendered_menu'] = api.render_view_group(api.root, request, va.name)
+    response['menu_css_cls'] = va.kwargs.get('menu_css_cls', False) or 'cog-dark'
+    response['rendered_menu'] = api.render_view_group(context, request, va.name)
     return render('../templates/snippets/generic_meeting_menu.pt', response, request = request)
 
 
+@view_action('admin_menu', 'recaptcha', title = _(u"ReCaptcha"), link = "@@recaptcha")
 @view_action('admin_menu', 'edit_root_permissions', title = _(u"Root permissions"), link = "@@permissions")
 @view_action('admin_menu', 'server_log', title = _(u"Server logs"), link = "@@server_logs")
+@view_action('admin_menu', 'agenda_templates', title = _(u"Agenda templates"), link = "agenda_templates")
+@view_action('admin_menu', 'users', title = _(u"Users"), link = "users")
 def generic_root_menu_link(context, request, va, **kw):
     """ This is for simple menu items for the root """
     api = kw['api']
@@ -95,15 +100,24 @@ def generic_root_menu_link(context, request, va, **kw):
     return """<li><a href="%s">%s</a></li>""" % (url, api.translate(va.title))
 
 
-@view_action('moderator_menu', 'permissions', title = _(u"Edit permissions"), link = "@@permissions")
-@view_action('moderator_menu', 'logs', title = _(u"Meeting actions log"), link = "@@logs")
-@view_action('moderator_menu', 'manage_layout', title = _(u"Layout and widgets"), link = "@@manage_layout")
-@view_action('moderator_menu', 'add_tickets', title = _(u"Invite participants"), link = "@@add_tickets")
-@view_action('moderator_menu', 'manage_tickets', title = _(u"Manage invites"), link = "@@manage_tickets")
-def generic_moderator_menu_link(context, request, va, **kw):
+@view_action('settings_menu', 'meeting_poll_settings', title = _(u"Meeting poll settings"), link = "@@meeting_poll_settings", permission = MODERATE_MEETING)
+@view_action('settings_menu', 'agenda_templates', title = _(u"Agenda Templates"), link = "@@agenda_templates", permission = MODERATE_MEETING)
+@view_action('settings_menu', 'manage_layout', title = _(u"Layout and widgets"), link = "@@manage_layout", permission = MODERATE_MEETING)
+@view_action('settings_menu', 'access_policy', title = _(u"Access policy"), link = "@@access_policy", permission = MODERATE_MEETING)
+@view_action('settings_menu', 'mail_settings', title = _(u"Mail settings"), link = "@@mail_settings", permission = MODERATE_MEETING)
+@view_action('settings_menu', 'presentation', title = _(u"Presentation"), link = "@@presentation", permission = MODERATE_MEETING)
+@view_action('meeting', 'logs', title = _(u"Meeting actions log"), link = "@@logs", permission = MODERATE_MEETING)
+@view_action('meeting', 'minutes', title = _(u"Minutes"), link = "@@minutes")
+@view_action('participants_menu', 'participants_emails', title = _(u"Participants email addresses"), link = "@@participants_emails", permission = MODERATE_MEETING)
+@view_action('participants_menu', 'permissions', title = _(u"Edit permissions"), link = "@@permissions", permission = MANAGE_GROUPS)
+@view_action('participants_menu', 'manage_tickets', title = _(u"Manage invites"), link = "@@manage_tickets", permission = MANAGE_GROUPS)
+@view_action('participants_menu', 'add_tickets', title = _(u"Invite participants"), link = "@@add_tickets", permission = MANAGE_GROUPS)
+@view_action('participants_menu', 'add_participant', title = _(u"Add participant"), link = "@@add_permission", permission = MANAGE_GROUPS)
+@view_action('participants_menu', 'participant_list', title = _(u"Participant list"), link = "@@participants")
+def generic_menu_link(context, request, va, **kw):
     """ This is for simple menu items for the meeting root """
     api = kw['api']
-    url = api.resource_url(api.meeting, request) + va.kwargs['link']
+    url = "%s%s" % (api.meeting_url, va.kwargs['link'])
     return """<li><a href="%s">%s</a></li>""" % (url, api.translate(va.title))
 
 
