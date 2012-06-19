@@ -38,20 +38,30 @@ def default_configurator(settings):
                         session_factory = sessionfact,)
 
 def read_salt(settings):
+    from uuid import uuid4
+    from os.path import isfile
     filename = settings.get('salt_file', None)
     if filename is None:
         print "\nUsing random salt which means that all users must reauthenticate on restart."
         print "Please specify a salt file by adding the parameter:\n"
         print "salt_file = <path to file>\n"
         print "in paster ini config and add the salt as the sole contents of the file.\n"
-        from uuid import uuid4
         return str(uuid4())
-    f = open(filename, 'r')
-    salt = f.read()
-    if not salt:
-        raise ValueError("Salt file is empty - it needs to contain at least some text. File: %s" % filename)
-    f.close()
-    return salt
+    if not isfile(filename):
+        print "\nCan't find salt file specified in paster ini. Trying to create one..."
+        f = open(filename, 'w')
+        salt = str(uuid4())
+        f.write(salt)
+        f.close()
+        print "Wrote new salt in: %s" % filename
+        return salt
+    else:
+        f = open(filename, 'r')
+        salt = f.read()
+        if not salt:
+            raise ValueError("Salt file is empty - it needs to contain at least some text. File: %s" % filename)
+        f.close()
+        return salt
 
 def required_components(config):
     #Component includes
