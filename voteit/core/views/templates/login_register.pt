@@ -9,10 +9,7 @@
     <div metal:fill-slot="left">
         <div tal:condition="login_form|False" tal:replace="structure login_form">Login form</div>
         <div><a href="@@request_password" i18n:translate="">Forgot password?</a></div>
-        
-        <form action="/velruse/facebook/login" method="post">
-            <input type="submit" value="Login with Facebook" />
-        </form>
+		<div tal:replace="structure api.render_view_group(api.root, request, 'login_forms')|''">Login forms</div>
     </div>
 
     <div metal:fill-slot="right">
