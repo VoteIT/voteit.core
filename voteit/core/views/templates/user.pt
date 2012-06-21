@@ -22,6 +22,7 @@
                i18n:translate="">Change password</a>
         </div>
         <div class="clear"><!-- --></div>
+        <div tal:replace="structure api.render_view_group(api.root, request, 'connect_forms')|''">Connect forms</div>
         <br/><br/>
         <div tal:condition="api.context_has_permission('Edit', context)" class="meta" i18n:translate="profile_gravatar_explanation">
             The profile image comes from the <a href="http://www.gravatar.com" target="_blank">Gravatar network</a>.
