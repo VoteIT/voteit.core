@@ -12,6 +12,7 @@ from pyramid.traversal import find_interface
 from pyramid_mailer import get_mailer
 from pyramid_mailer.message import Message
 from pyramid.i18n import get_localizer
+from BTrees.OOBTree import OOBTree 
 from betahaus.pyracont.decorators import content_factory
 from betahaus.pyracont.factories import createContent
 from betahaus.viewcomponent import render_view_action
@@ -53,6 +54,14 @@ class User(BaseContent):
     def userid(self):
         """ Convention - name should always be same as userid """
         return self.__name__
+    
+    @property
+    def auth_domains(self):
+        try:
+            return self.__auth_domains__
+        except AttributeError:
+            self.__auth_domains__ = OOBTree()
+            return self.__auth_domains__
     
     def get_image_tag(self, size=40, **kwargs):
         """ Get image tag. Always square, so size is enough.
