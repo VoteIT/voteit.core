@@ -1,7 +1,5 @@
 import urllib
-import json
 
-import colander
 from deform import Form
 from deform.exception import ValidationFailure
 from pyramid.security import has_permission
@@ -9,10 +7,10 @@ from pyramid.security import NO_PERMISSION_REQUIRED
 from pyramid.view import view_config
 from pyramid.httpexceptions import HTTPFound
 from pyramid.httpexceptions import HTTPRedirection
-from pyramid.url import resource_url
 from pyramid.traversal import resource_path
 from pyramid.renderers import render
 from pyramid.response import Response
+from pyramid.url import resource_url
 from betahaus.pyracont.factories import createContent
 from betahaus.pyracont.factories import createSchema
 from betahaus.viewcomponent.interfaces import IViewGroup
@@ -22,7 +20,6 @@ from voteit.core import VoteITMF as _
 from voteit.core.views.base_view import BaseView
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IMeeting
-from voteit.core.models.interfaces import ISiteRoot
 from voteit.core.models.schemas import add_csrf_token
 from voteit.core.models.schemas import button_save
 from voteit.core.models.schemas import button_add
@@ -30,7 +27,6 @@ from voteit.core.models.schemas import button_cancel
 from voteit.core.models.schemas import button_resend
 from voteit.core.models.schemas import button_delete
 from voteit.core.validators import deferred_token_form_validator
-from voteit.core.helpers import generate_slug
 from voteit.core.helpers import ajax_options
 from voteit.core import fanstaticlib
 
@@ -60,29 +56,6 @@ class MeetingView(BaseView):
 
     def _get_polls(self, agenda_item):
         return agenda_item.get_content(iface=IPoll, states=('upcoming', 'ongoing', 'closed'), sort_on='sort_index')
-
-    @view_config(name="participants", context=IMeeting, renderer="templates/participants.pt", permission=security.VIEW)
-    def participants_view(self):
-        """ List all participants in this meeting, and their permissions. """
-        users = self.api.root.users
-        
-        results = []
-        for userid in security.find_authorized_userids(self.context, (security.VIEW,)):
-            user = users.get(userid, None)
-            if user:
-                results.append(user)
-        
-        def _sorter(obj):
-            return obj.get_field_value('first_name')
-
-        #Viewer role isn't needed, since only users who can view will be listed here.
-        self.response['role_moderator'] = security.ROLE_MODERATOR
-        self.response['role_discuss'] = security.ROLE_DISCUSS
-        self.response['role_propose'] = security.ROLE_PROPOSE
-        self.response['role_voter'] = security.ROLE_VOTER
-        self.response['participants'] = tuple(sorted(results, key = _sorter))
-        self.response['context_effective_principals'] = security.context_effective_principals
-        return self.response
         
     @view_config(name="participants_emails", context=IMeeting, renderer="templates/participants_emails.pt", permission=security.MODERATE_MEETING)
     def participants_emails(self):

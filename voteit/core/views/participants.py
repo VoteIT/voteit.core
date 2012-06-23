@@ -1,0 +1,67 @@
+from pyramid.view import view_config
+#from pyramid.httpexceptions import HTTPFound
+#from pyramid.response import Response
+
+from voteit.core import security
+from voteit.core import VoteITMF as _
+from voteit.core.views.base_view import BaseView
+from voteit.core.models.interfaces import IMeeting
+from voteit.core.models.schemas import add_csrf_token
+#from voteit.core.validators import deferred_token_form_validator
+from voteit.core.helpers import ajax_options
+from voteit.core.fanstaticlib import voteit_participants
+
+
+class ParticipantsView(BaseView):
+
+    @view_config(name="participants", context=IMeeting, renderer="templates/participants.pt", permission=security.VIEW)
+    def participants_view(self):
+        """ List all participants in this meeting, and their permissions. """
+        voteit_participants.need()
+
+        #Viewer role isn't needed, since only users who can view will be listed here.
+        self.response['role_viewer'] = security.ROLE_VIEWER
+        self.response['role_moderator'] = security.ROLE_MODERATOR
+        self.response['role_discuss'] = security.ROLE_DISCUSS
+        self.response['role_propose'] = security.ROLE_PROPOSE
+        self.response['role_voter'] = security.ROLE_VOTER
+        self.response['role_admin'] = security.ROLE_ADMIN
+        self.response['participants'] = []#tuple(sorted(results, key = _sorter))
+        self.response['yes_icon'] = '<span class="yes_icon">%s</span>' % self.api.translate(_(u"Yes"))
+        self.response['no_icon'] = '<span class="no_icon">%s</span>' % self.api.translate(_(u"No"))
+        return self.response
+
+    @view_config(name = "_participants_data.json", context = IMeeting,
+                 renderer = "json", permission=security.VIEW, xhr = True)
+    def participants_json_data(self):
+        """ Return a json object with participant data.
+            Will return json with this structure:
+            
+            .. code-block :: py
+            
+                {'userid':{'first_name': '<name>',
+                           'last_name': '<name>',
+                           'email': '<email>',
+                           'role_discuss': '<bool>', #<etc...>,
+                          }
+        """
+        users = self.api.root.users
+        results = {}
+        #Find the users
+        for userid in security.find_authorized_userids(self.context, (security.VIEW,)):
+            user = users.get(userid, None)
+            if user:
+                results[userid] = dict(
+                    first_name = user.get_field_value('first_name', u""),
+                    last_name = user.get_field_value('last_name', u""),
+                    email = user.get_field_value('email', u""),
+                    #Make sure context is meeting here!
+                    roles = self.context.get_groups(userid)
+                )
+        return results
+        
+#        def _sorter(obj):
+#            return obj.get_field_value('first_name')
+
+
+        

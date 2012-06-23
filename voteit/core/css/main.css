@@ -707,12 +707,17 @@ table.listing > tbody > tr.odd > td {
 table.listing > tbody > tr.even > td {
     background: #fff;
 }
-
 .yes_icon {
     padding-left: 20px;
     height: 16px;
     display: block;
     background: url(/static/icons/icon_approved.png) no-repeat;
+}
+.no_icon {
+    padding-left: 20px;
+    height: 16px;
+    display: block;
+    background: url(/static/icons/icon_denied.png) no-repeat;
 }
 .discreet {
     color: #666;

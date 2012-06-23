@@ -51,7 +51,7 @@ jquery_timepicker = Group((_jquery_timepicker_css, _jquery_timepicker_js))
 autoresizable_textarea_js = Resource(voteit_core_jslib, 'jquery.autoResizable.js', minified='jquery.autoResizable.min.js',
                                   depends = (jquery_142,))
 
-#VoteIT hcore
+#VoteIT core
 _star_rating_css = Resource(voteit_core_csslib, 'star_rating.css', depends=(voteit_main_css,))
 star_rating = Group((_star_rating_css, jquery_rating))
 
@@ -59,8 +59,8 @@ voteit_common_js = Resource(voteit_core_jslib, 'voteit_common.js', depends=(jque
 voteit_user_inline_info_js = Resource(voteit_core_jslib, 'voteit_user_inline_info.js', depends=(qtip, voteit_common_js), bottom=True)
 _voteit_deform_js = Resource(voteit_core_jslib, 'voteit_deform.js', depends=(_deform_js,), bottom=True)
 voteit_workflow_js = Resource(voteit_core_jslib, 'voteit_workflow.js', depends=(jquery_easy_confirm_dialog, voteit_common_js), bottom=True)
-
 voteit_deform = Group((_voteit_deform_js, _voteit_deform_css))
+voteit_participants = Resource(voteit_core_jslib, 'voteit_participants.js', bottom=True, depends=(voteit_user_inline_info_js,))
 
 
 DEFORM_RESOURCES = {
