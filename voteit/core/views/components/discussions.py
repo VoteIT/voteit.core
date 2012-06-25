@@ -9,13 +9,13 @@ from pyramid.renderers import render
 from voteit.core import VoteITMF as _
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.security import DELETE
-
 from voteit.core.htmltruncate import htmltruncate
 
 import logging
 log = logging.getLogger(__name__)
 
 #FIXME: needs a way to set default value on this on creation of meeting
+#FIXME: This should not be here - MOVE!
 def truncate(text, length=240):
     try:
         if length and length > 0:

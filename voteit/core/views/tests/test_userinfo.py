@@ -23,13 +23,7 @@ class UserinfoTests(unittest.TestCase):
         root = bootstrap_and_fixture(self.config)
         root['m'] = meeting = Meeting()
         return meeting
-    
-    def test__strip_and_truncate(self):
-        text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris at enim nec nunc facilisis semper. Sed vel magna sit amet augue aliquet rhoncus metus."
-        from voteit.core.views.userinfo import _strip_and_truncate
-        truncated = _strip_and_truncate(text)
-        self.assertEqual(truncated, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris at enim nec nunc facilisis semper. S&lt;...&gt;') 
-        
+
     def test_user_info_view(self):
         self.config.registry.settings['default_timezone_name'] = "Europe/Stockholm"
         self.config.registry.settings['default_locale_name'] = 'sv'
