@@ -394,7 +394,7 @@ class MeetingView(BaseView):
         )
         self.response['brains'] = self.api.get_metadata_for_query(**query)
         
-        fanstaticlib.jquery_142.need()
+        fanstaticlib.jquery_deform.need()
 
         return self.response
 

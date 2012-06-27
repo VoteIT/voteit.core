@@ -88,6 +88,6 @@ class AgendaTempalteView(BaseView):
             url = resource_url(self.context, self.request)
             return HTTPFound(location = url)
         
-        fanstaticlib.jquery_142.need()
+        fanstaticlib.jquery_deform.need()
 
         return self.response
