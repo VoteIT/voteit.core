@@ -9,6 +9,12 @@
     <div metal:fill-slot="content" class="content_wrapper">
 
 	    <h3 i18n:translate="">Participants</h3>
+	    
+	    <div tal:condition="api.show_moderator_actions" i18n:translate="participants_form_instructions">
+	        Click the icons to change permission. Any permission that's changed will be listed in bold.
+	        When you're done, click save at the bottom.
+	        If all permissions are removed from a user, that user is removed from the meeting.
+	    </div>
 
         <form id="permissions">
         <table class="listing">

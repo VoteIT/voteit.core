@@ -71,9 +71,8 @@ class PermissionsSchema(colander.Schema):
 
 
 @schema_factory('SinglePermissionSchema',
-                title = _(u"Permission"),
-                description = _(u"single_permission_schema_main_description",
-                                default = u"Permissions for user"))
+                title = _(u"add_existing_user_to_meeting",
+                          default = u"Add an existing user to this meeting"))
 class SinglePermissionSchema(colander.Schema):
     userid = colander.SchemaNode(
         colander.String(),
