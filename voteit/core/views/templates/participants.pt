@@ -10,6 +10,7 @@
 
 	    <h3 i18n:translate="">Participants</h3>
 
+        <form id="permissions">
         <table class="listing">
             <thead>
                 <tr>
@@ -24,41 +25,93 @@
                     <th i18n:translate="" class="heading">Moderate</th>
                     <th i18n:translate="" class="heading">Administrator</th>
                 </tr>
+                <tr tal:condition="api.show_moderator_actions">
+                    <th colspan="4"></th>
+                    <th name="${role_viewer.replace(':', '_')}"
+                        class="toggle_all">
+                        <a class="check_all" href="#" i18n:translate="">all</a> /
+                        <a class="uncheck_all" href="#" i18n:translate="">none</a>
+                    </th>
+                    <th name="${role_discuss.replace(':', '_')}"
+                        class="toggle_all">
+                        <a class="check_all" href="#" i18n:translate="">all</a> /
+                        <a class="uncheck_all" href="#" i18n:translate="">none</a>
+                    </th>
+                    <th name="${role_propose.replace(':', '_')}"
+                        class="toggle_all">
+                        <a class="check_all" href="#" i18n:translate="">all</a> /
+                        <a class="uncheck_all" href="#" i18n:translate="">none</a>
+                    </th>
+                    <th name="${role_voter.replace(':', '_')}"
+                        class="toggle_all">
+                        <a class="check_all" href="#" i18n:translate="">all</a> /
+                        <a class="uncheck_all" href="#" i18n:translate="">none</a>
+                    </th>
+                    <th name="${role_moderator.replace(':', '_')}"
+                        class="toggle_all">
+                        <a class="check_all" href="#" i18n:translate="">all</a> /
+                        <a class="uncheck_all" href="#" i18n:translate="">none</a>
+                    </th>
+                    <th>
+                    </th>
+                </tr>
             </thead>
+            <input type="hidden" name="__start__" value="userids_and_groups:sequence" />
             <tbody>
                 <tr style="display: None" id="participant_data_template">
+                    <input type="hidden" name="__start__" value="userid_and_groups:mapping" />
                     <td class="userid"></td>
                     <td class="first_name"></td>
                     <td class="last_name"></td>
                     <td class="email"></td>
+                    <input type="hidden" name="__start__" value="groups:sequence" />
                     <td name="${role_viewer}" class="role ${role_viewer.replace(':', '_')}"></td>
                     <td name="${role_discuss}" class="role ${role_discuss.replace(':', '_')}"></td>
                     <td name="${role_propose}" class="role ${role_propose.replace(':', '_')}"></td>
                     <td name="${role_voter}" class="role ${role_voter.replace(':', '_')}"></td>
                     <td name="${role_moderator}" class="role ${role_moderator.replace(':', '_')}"></td>
-                    <td name="${role_admin}" class="role ${role_admin.replace(':', '_')}"></td>
+                    <td name="${role_admin}" class="role read_only ${role_admin.replace(':', '_')}"></td>
+                    <input type="hidden" name="__end__" value="groups:sequence" />
+                    <input type="hidden" name="__end__" value="userid_and_groups:mapping" />
                 </tr>
             </tbody>
+            <input type="hidden" name="__end__" value="userids_and_groups:sequence" />
         </table>
+        <br/>
+        <a tal:condition="api.show_moderator_actions"
+           class="buttonize large submit_participants_form"
+           tal:attributes="href '%s_participants_set_groups' % request.resource_url(context)">
+            <span i18n:translate="">Save</span>
+        </a>
+        </form>
+        
         <br/>
         <a class="buttonize large"
            tal:attributes="href api.resource_url(context, request)">
             <span i18n:translate="">Back</span>
-        </a><br/>
+        </a>
+        <tal:moderator condition="api.show_moderator_actions">
+        <a class="buttonize large"
+           tal:attributes="href '%s@@add_tickets' % api.meeting_url">
+            <span i18n:translate="">Invite participants</span>
+        </a>
+        <a class="buttonize large"
+           tal:attributes="href '%s@@add_permission' % api.meeting_url">
+            <span i18n:translate="">Add participant</span>
+        </a>
+        </tal:moderator>
 
         <div style="display: None" id="listing_templates">
-            <span class="yes_icon">
-                <tal:yes i18n:translate="">Yes</tal:yes>
-                <input type="checkbox" checked="checked" 
-                       style="display: None" class="listing_checkbox" />
+            <span class="yes_icon graphic_checkbox" i18n:translate="">Yes</span>
+            <span class="no_icon graphic_checkbox" i18n:translate="">No</span>
+            <span class="userid">
+                <a class="inlineinfo" href="${api.meeting_url}_userinfo?userid="></a>
+                <input type="hidden" name="userid"></input>
             </span>
-            <span class="no_icon">
-                <tal:no i18n:translate="">No</tal:no>
-                <input type="checkbox" checked="checked" 
-                       style="display: None" class="listing_checkbox" />
-            </span>
+            <input type="checkbox" name="checkbox" class="listing_checkbox" style="display: None" />
         </div>
 
     </div> <!-- content - place nothing outside this ;) -->
 </body>
 </html>
+

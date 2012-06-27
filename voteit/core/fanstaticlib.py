@@ -61,6 +61,7 @@ _voteit_deform_js = Resource(voteit_core_jslib, 'voteit_deform.js', depends=(_de
 voteit_workflow_js = Resource(voteit_core_jslib, 'voteit_workflow.js', depends=(jquery_easy_confirm_dialog, voteit_common_js), bottom=True)
 voteit_deform = Group((_voteit_deform_js, _voteit_deform_css))
 voteit_participants = Resource(voteit_core_jslib, 'voteit_participants.js', bottom=True, depends=(voteit_user_inline_info_js, jquery_deform,))
+voteit_participants_edit = Resource(voteit_core_jslib, 'voteit_participants_edit.js', bottom=True, depends=(voteit_participants,))
 
 
 DEFORM_RESOURCES = {
@@ -83,6 +84,12 @@ def is_base_view(context, request, view):
     from voteit.core.views.base_view import BaseView
     return isinstance(view, BaseView)
 
+def is_participants_view(context, request, view):
+    from voteit.core.views.participants import ParticipantsView
+    return isinstance(view, ParticipantsView)
+
+def is_participants_view_moderator(context, request, view):
+    return view.api.show_moderator_actions and is_participants_view(context, request, view)
 
 #Positional arguments
 #key, resource, discriminator (if any)
@@ -92,4 +99,6 @@ DEFAULT_FANSTATIC_RESOURCES = (
     ('voteit_workflow_js', voteit_workflow_js),
     ('voteit_deform', voteit_deform),
     ('voteit_user_inline_info_js', voteit_user_inline_info_js, is_base_view),
+    ('voteit_participants', voteit_participants, is_participants_view),
+    ('voteit_participants_edit', voteit_participants_edit, is_participants_view_moderator),
 )

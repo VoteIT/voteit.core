@@ -1,6 +1,8 @@
+from deform import Form
 from pyramid.view import view_config
 #from pyramid.httpexceptions import HTTPFound
-#from pyramid.response import Response
+from pyramid.response import Response
+from betahaus.pyracont.factories import createSchema
 
 from voteit.core import security
 from voteit.core import VoteITMF as _
@@ -17,8 +19,6 @@ class ParticipantsView(BaseView):
     @view_config(name="participants", context=IMeeting, renderer="templates/participants.pt", permission=security.VIEW)
     def participants_view(self):
         """ List all participants in this meeting, and their permissions. """
-        voteit_participants.need()
-
         #Viewer role isn't needed, since only users who can view will be listed here.
         self.response['role_viewer'] = security.ROLE_VIEWER
         self.response['role_moderator'] = security.ROLE_MODERATOR
@@ -26,10 +26,17 @@ class ParticipantsView(BaseView):
         self.response['role_propose'] = security.ROLE_PROPOSE
         self.response['role_voter'] = security.ROLE_VOTER
         self.response['role_admin'] = security.ROLE_ADMIN
-        self.response['participants'] = []#tuple(sorted(results, key = _sorter))
-        self.response['yes_icon'] = '<span class="yes_icon">%s</span>' % self.api.translate(_(u"Yes"))
-        self.response['no_icon'] = '<span class="no_icon">%s</span>' % self.api.translate(_(u"No"))
         return self.response
+
+    @view_config(name="_participants_set_groups", context=IMeeting, xhr = True, permission = security.MANAGE_GROUPS)
+    def ajax_set_groups(self):
+        schema = createSchema('PermissionsSchema').bind(context=self.context, request=self.request)
+        form = Form(schema, buttons=('save', 'cancel'))
+        controls = self.request.POST.items()
+        appstruct = form.validate(controls)
+        #FIXME: Handle error some way, and return a proper response
+        self.context.set_security(appstruct['userids_and_groups'])
+        return Response() # i.e. 200 ok
 
     @view_config(name = "_participants_data.json", context = IMeeting,
                  renderer = "json", permission=security.VIEW, xhr = True)
@@ -59,9 +66,3 @@ class ParticipantsView(BaseView):
                     roles = self.context.get_groups(userid)
                 )
         return results
-        
-#        def _sorter(obj):
-#            return obj.get_field_value('first_name')
-
-
-        

@@ -909,3 +909,7 @@ ul.agenda-templates > li {
     margin-right: 0.5em;
     list-style-type: none;
 }
+
+.changed {
+	font-weight: bold;
+}
