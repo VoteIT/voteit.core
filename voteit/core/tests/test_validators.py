@@ -372,6 +372,71 @@ class CurrentPasswordValidatorTests(TestCase):
         self.assertRaises(colander.Invalid, obj, None, "Incorrect pw")
 
 
+class ContextRolesValidatorTests(TestCase):
+
+    def setUp(self):
+        self.config = testing.setUp()
+
+    def tearDown(self):
+        testing.tearDown()
+
+    @property
+    def _cut(self):
+        from voteit.core.validators import ContextRolesValidator
+        return ContextRolesValidator
+
+    def _reg_dummy_policy(self, context):
+        self.config.testing_securitypolicy(userid='dummy', permissive=True)
+        context.add_groups('dummy', ['role:Admin']) #This bypasses the validator :)
+
+    def test_root_good_group(self):
+        from voteit.core.models.site import SiteRoot
+        context = SiteRoot()
+        self._reg_dummy_policy(context)
+        request = testing.DummyRequest()
+        obj = self._cut(context, request)
+        self.assertIsNone(obj(None, ['role:Admin']))
+
+    def test_root_bad_group(self):
+        from voteit.core.models.site import SiteRoot
+        context = SiteRoot()
+        self._reg_dummy_policy(context)
+        request = testing.DummyRequest()
+        obj = self._cut(context, request)
+        self.assertRaises(colander.Invalid, obj, None, ['role:Moderator'])
+
+    def test_meeting_good_group(self):
+        from voteit.core.models.meeting import Meeting
+        context = Meeting()
+        self._reg_dummy_policy(context)
+        request = testing.DummyRequest()
+        obj = self._cut(context, request)
+        self.assertIsNone(obj(None, ['role:Moderator', 'role:Discussion']))
+
+    def test_meeting_bad_group(self):
+        from voteit.core.models.meeting import Meeting        
+        self.config.testing_securitypolicy(userid='dummy', permissive=True)
+        context = Meeting()
+        request = testing.DummyRequest()
+        obj = self._cut(context, request)
+        self.assertRaises(colander.Invalid, obj, None, ['role:Admin'])
+
+    def test_other_context(self):
+        from voteit.core.models.agenda_item import AgendaItem
+        context = AgendaItem()
+        self._reg_dummy_policy(context)
+        request = testing.DummyRequest()
+        obj = self._cut(context, request)
+        self.assertRaises(colander.Invalid, obj, None, ['role:Admin'])
+
+    def test_unauthorized_user(self):
+        self.config.include('voteit.core.testing_helpers.register_security_policies')
+        context = testing.DummyResource()
+        request = testing.DummyRequest()
+        obj = self._cut(context, request)
+        self.assertRaises(colander.Invalid, obj, None, ['role:Admin'])
+
+
 class DeferredValidatorsTests(TestCase):
     def setUp(self):
         self.config = testing.setUp()
@@ -425,6 +490,13 @@ class DeferredValidatorsTests(TestCase):
         res = deferred_current_password_validator(None, {'context': context})
         self.assertIsInstance(res, CurrentPasswordValidator)
 
+    def test_deferred_current_password_validator(self):
+        from voteit.core.validators import deferred_context_roles_validator
+        from voteit.core.validators import ContextRolesValidator
+        context = testing.DummyResource()
+        request = testing.DummyRequest()
+        res = deferred_context_roles_validator(None, {'context': context, 'request': request})
+        self.assertIsInstance(res, ContextRolesValidator)
 
 class html_string_validatorTests(TestCase):
     
