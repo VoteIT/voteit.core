@@ -259,3 +259,31 @@ class AgendaItemPermissionTests(unittest.TestCase):
 
         #Change workflow state
         self.assertEqual(self.pap(obj, security.CHANGE_WORKFLOW_STATE), admin | moderator)
+
+    def test_proposal_block(self):
+        request = testing.DummyRequest()
+        obj = self._make_obj()
+        obj.set_workflow_state(request, 'upcoming')
+        obj.set_workflow_state(request, 'ongoing')
+        meeting = self._make_meeting()
+        meeting.set_workflow_state(request, 'upcoming')
+        meeting.set_workflow_state(request, 'ongoing')
+        meeting['ai'] = obj
+        #Set block
+        obj.set_field_value('proposal_block', True)
+        #Add proposal
+        self.assertEqual(self.pap(obj, security.ADD_PROPOSAL), set())
+
+    def test_discussion_block(self):
+        request = testing.DummyRequest()
+        obj = self._make_obj()
+        obj.set_workflow_state(request, 'upcoming')
+        obj.set_workflow_state(request, 'ongoing')
+        meeting = self._make_meeting()
+        meeting.set_workflow_state(request, 'upcoming')
+        meeting.set_workflow_state(request, 'ongoing')
+        meeting['ai'] = obj
+        #Set block
+        obj.set_field_value('discussion_block', True)
+        #Add discussion post
+        self.assertEqual(self.pap(obj, security.ADD_DISCUSSION_POST), set())
