@@ -268,68 +268,6 @@ class UsersFormView(BaseEdit):
         self.response['login_form'] = login_form.render(appstruct)
         self.response['reg_form'] = reg_form.render(appstruct)
         return self.response
-        
-        
-    @view_config(context=ISiteRoot, name='cso', renderer=DEFAULT_TEMPLATE, 
-                 permission=NO_PERMISSION_REQUIRED)
-    def cloud_sign_on(self):
-        if 'token' in self.request.POST:
-            token = self.request.POST['token']
-            
-            import urllib2
-            import json
-
-            data = {'format': 'json', 'token': token}
-            url = self.request.application_url + "/velruse/auth_info?" + urllib.urlencode(data)
-            stream = urllib2.urlopen(url)
-            response = json.loads(stream.read())
-            oauth_token = response['credentials']['oauthAccessToken']
-            
-            # Logged in user, connect auth token to user
-            if self.api.userid:
-                user = self.context.users[self.api.userid]
-                #FIXME: check that no other user has this token already
-                user.set_field_value('oauthAccessToken', oauth_token)
-                url = resource_url(user, self.request)
-                return HTTPFound(location=url)
-            else:
-                # Find user with auth token
-                user = self.context.users.get_user_by_oauth_token(oauth_token)
-                
-                # a user was found, log it in
-                if user:
-                    if IUser.providedBy(user):
-                        headers = remember(self.request, user.__name__)
-                        url = resource_url(self.context, self.request)
-                        return HTTPFound(location = url,
-                                         headers = headers)
-                else: # No user with that auth token was found
-                    #FIXME: this ONLY works with Facebook right now and expects 
-                    # that the username is not already in use.
-                    #
-                    # Check that no other user has the token already
-                    #
-                    # In the future the user should be presented with a form 
-                    # prefilled with data from the provider. 
-                    # The username should already be checked for duplicates and
-                    # an alternatvie proposed.
-                    #
-                    name = response['profile']['preferredUsername']
-                    first_name = response['profile']['name']['givenName']
-                    last_name = response['profile']['name']['familyName']
-                    appstruct = {'oauthAccessToken': oauth_token, 
-                                 'first_name': first_name,
-                                 'last_name': last_name,}
-                    obj = createContent('User', creators=[name], **appstruct)
-                    self.context.users[name] = obj
-                    headers = remember(self.request, name)  # login user
-                    url = "%slogin" % resource_url(self.context, self.request)
-
-                    return HTTPFound(location=url, headers=headers)
-                
-            
-        raise Forbidden(_("Unable to Authenticate you using OpenID"))
-
 
     @view_config(context=ISiteRoot, name='request_password',
                  renderer=DEFAULT_TEMPLATE, permission=NO_PERMISSION_REQUIRED)
