@@ -212,11 +212,6 @@ class IUser(IBaseFolder):
     def get_token():
         """ Get password token, or None. """
 
-    def generate_email_hash():
-        """ Save an md5 hash of an email address.
-            Used to generate urls for gravatar profile images.
-        """
-
     def send_mention_notification(context, request):
         """ Sends an email when the user is mentioned in a proposal or a discussion post
         """
@@ -770,6 +765,23 @@ class IFanstaticResources(Interface):
             Will go through all discriminators to check which resources that
             should be included in the order set in the order attribute.
             Returns keys of included resources.
+        """
+
+        
+class IProfileImage(Interface):
+    """ Adapts a user object to serve profile image from different sources
+    """
+
+    def url(size):
+        """ Return a URL to the profile picture, if no url could be created
+            this function should return None
+        
+            size
+                Prefered size of image 
+        """
+        
+    def is_valid_for_user():
+        """ Checks if this adapter is usable with this user
         """
 
 

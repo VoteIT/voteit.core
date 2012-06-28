@@ -89,36 +89,19 @@ class UserTests(unittest.TestCase):
         self.assertEqual(len(mailer.outbox), 1)
         msg = mailer.outbox[0]
         self.failUnless(obj.__token__() in msg.html)
-    
-    def test_blank_email_hash_generation(self):
-        obj = self._make_obj()
-        self.assertEqual(obj.get_image_tag(), '<img src="http://www.gravatar.com/avatar/?d=mm&s=40" height="40" width="40" class="profile-pic" />')
-
-    def test_email_hash_generation_subscriber(self):
-        self.config.scan('voteit.core.subscribers.user')
-        
-        obj = self._make_obj()
-        obj.set_field_value('email', 'hello@world.com')
-        objectEventNotify(ObjectAddedEvent(obj, None, 'dummy'))
-        
-        self.assertEqual(obj.get_field_value('email_hash'),
-                         '4b3cdf9adfc6258a102ab90eb64565ea')
-
-    def test_email_hash_method(self):
-        obj = self._make_obj()
-        obj.set_field_value('email', 'hello@world.com')
-        obj.generate_email_hash()
-        
-        self.assertEqual(obj.get_field_value('email_hash'),
-                         '4b3cdf9adfc6258a102ab90eb64565ea')
 
     def test_get_image_tag(self):
+        self.config.include('voteit.core.plugins.gravatar_profile_image')
         obj = self._make_obj()
         obj.set_field_value('email', 'hello@world.com')
-        obj.generate_email_hash()
         
         self.assertEqual(obj.get_image_tag(size=45),
                          '<img src="http://www.gravatar.com/avatar/4b3cdf9adfc6258a102ab90eb64565ea?d=mm&s=45" height="45" width="45" class="profile-pic" />')
+        
+    def test_blank_email_hash_generation(self):
+        self.config.include('voteit.core.plugins.gravatar_profile_image')
+        obj = self._make_obj()
+        self.assertEqual(obj.get_image_tag(), '<img src="http://www.gravatar.com/avatar/?d=mm&s=40" height="40" width="40" class="profile-pic" />')
                          
     def test_mentioned_email(self):
         request = testing.DummyRequest()
