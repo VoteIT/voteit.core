@@ -8,6 +8,12 @@
 <body>
     <div metal:fill-slot="content" class="content_wrapper">
 
+    <tal:comment condition="False">
+        FIXME: Handle errors within js + any validation trouble
+        FIXME: When icons are clickable, they need to look clickable
+        FIXME: Display a load spinner
+    </tal:comment>
+
 	    <h3 i18n:translate="">Participants</h3>
 	    
 	    <div tal:condition="api.show_moderator_actions" i18n:translate="participants_form_instructions">
@@ -82,6 +88,8 @@
                 </tr>
             </tbody>
             <input type="hidden" name="__end__" value="userids_and_groups:sequence" />
+            <input type="hidden" name="csrf_token" value="${request.session.get_csrf_token()}" />
+
         </table>
         <br/>
         <a tal:condition="api.show_moderator_actions"

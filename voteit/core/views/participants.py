@@ -1,6 +1,5 @@
 from deform import Form
 from pyramid.view import view_config
-#from pyramid.httpexceptions import HTTPFound
 from pyramid.response import Response
 from betahaus.pyracont.factories import createSchema
 
@@ -9,8 +8,6 @@ from voteit.core import VoteITMF as _
 from voteit.core.views.base_view import BaseView
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.schemas import add_csrf_token
-#from voteit.core.validators import deferred_token_form_validator
-from voteit.core.helpers import ajax_options
 from voteit.core.fanstaticlib import voteit_participants
 
 
@@ -31,6 +28,7 @@ class ParticipantsView(BaseView):
     @view_config(name="_participants_set_groups", context=IMeeting, xhr = True, permission = security.MANAGE_GROUPS)
     def ajax_set_groups(self):
         schema = createSchema('PermissionsSchema').bind(context=self.context, request=self.request)
+        add_csrf_token(self.context, self.request, schema)
         form = Form(schema, buttons=('save', 'cancel'))
         controls = self.request.POST.items()
         appstruct = form.validate(controls)
