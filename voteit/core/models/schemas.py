@@ -2,6 +2,7 @@
 import colander
 import deform
 from pyramid.exceptions import Forbidden
+from pyramid.testing import DummyRequest
 
 from voteit.core import VoteITMF as _
 
@@ -24,7 +25,11 @@ button_search = deform.Button('search', _(u"Search"))
 
 
 def add_csrf_token(context, request, schema):
+    """ Add a csrf token to schema, if this is not a testrun."""
     token = request.session.get_csrf_token()
+    #Make sure this is not a blank testing request
+    if isinstance(request, DummyRequest) and token == 'csrft':
+        return
     def _validate_csrf(node, value):
         if not value or value != token:
             #Normally this raises colander.Invalid, but that error will be
@@ -32,7 +37,7 @@ def add_csrf_token(context, request, schema):
             #The error as such should only appear if someone is actually
             #beeing attacked, so treating it like an input error seems wrong.
             raise Forbidden("CSRF token didn't match. Did you submit this yourself?")
-    
+
     schema.add(colander.SchemaNode(
                    colander.String(),
                    name="csrf_token",
@@ -41,5 +46,4 @@ def add_csrf_token(context, request, schema):
                    validator = _validate_csrf,
                    )
                )
-
 
