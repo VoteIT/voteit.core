@@ -26,7 +26,7 @@ button_search = deform.Button('search', _(u"Search"))
 def add_csrf_token(context, request, schema):
     token = request.session.get_csrf_token()
     def _validate_csrf(node, value):
-        if value != token:
+        if not value or value != token:
             #Normally this raises colander.Invalid, but that error will be
             #hidden since the form element for csrf is hidden.
             #The error as such should only appear if someone is actually
@@ -37,7 +37,6 @@ def add_csrf_token(context, request, schema):
                    colander.String(),
                    name="csrf_token",
                    widget = deform.widget.HiddenWidget(),
-                   missing = u'',
                    default = token,
                    validator = _validate_csrf,
                    )
