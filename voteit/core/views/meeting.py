@@ -43,14 +43,8 @@ class MeetingView(BaseView):
             it should allow users to request access if unauthorized is raised.
         """
         if not has_permission(security.VIEW, self.context, self.request):
-            if self.api.userid:
-                #We delegate permission checks to the request_meeting_access part.
-                url = resource_url(self.context, self.request) + '@@request_access'
-                return HTTPFound(location = url)
-            else:
-                msg = _(u"You're not logged in - before you can access meetings you need to do that.")
-            self.api.flash_messages.add(msg, type='error')
-            url = self.api.resource_url(self.api.root, self.request)
+            #We delegate permission checks to the request_meeting_access part.
+            url = resource_url(self.context, self.request) + '@@request_access'
             return HTTPFound(location = url)
 
         self.response['get_polls'] = self._get_polls
@@ -306,8 +300,25 @@ class MeetingView(BaseView):
     @view_config(name = 'request_access', context = IMeeting,
                  renderer = "templates/base_edit.pt", permission = NO_PERMISSION_REQUIRED)
     def request_meeting_access(self):
-        view_group = self.request.registry.getUtility(IViewGroup, name = 'request_meeting_access')
+        #If user already has permissions redirect to main meeting view
+        if has_permission(security.VIEW, self.context, self.request):
+            url = resource_url(self.context, self.request)
+            return HTTPFound(location = url)
+        
         access_policy = self.context.get_field_value('access_policy', 'invite_only')
+        
+        # show log in/register view if user is not logged in and access policy is no invite only
+        if not self.api.userid and not access_policy == 'invite_only':
+            msg = _('request_access_view_login_register',
+                    default=u"""This meeting requires the participants to be logged in. If you are 
+                    registered please log in or register an account here. You will be returned to the 
+                    meeting afterwards""")
+            self.api.flash_messages.add(msg, type='info')
+            came_from = resource_url(self.context, self.request, '@@request_access')
+            url = resource_url(self.api.root, self.request, '@@login', query={'came_from': came_from})
+            return HTTPFound(location=url)
+        
+        view_group = self.request.registry.getUtility(IViewGroup, name = 'request_meeting_access')        
         va = view_group.get(access_policy, None)
         if va is None:
             err_msg = _(u"request_access_view_action_not_found",

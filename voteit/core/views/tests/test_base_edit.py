@@ -91,7 +91,7 @@ class DefaultEditTests(unittest.TestCase):
         response = obj.add_form()
         self.assertEqual(response.location, 'http://example.com/m/ai/dummy-post/')
         
-    def test_add_form_add_discussion_poll(self):
+    def test_add_form_add_poll(self):
         self.config.registry.settings['default_timezone_name'] = "Europe/Stockholm"
         self.config.registry.settings['default_locale_name'] = 'sv'
         self.config.include('voteit.core.models.date_time_util')

@@ -30,7 +30,7 @@
 
 		<div class="clear"><!-- --></div>
 		
-		<tal:poll_proposals condition="wf_state in ('private', 'upcoming') or wf_state == 'ongoing' and not can_vote">
+		<tal:poll_proposals condition="wf_state in ('private', 'upcoming', 'canceled') or wf_state == 'ongoing' and not can_vote">
 			<h4 class="iconpadding icon proposal" i18n:translate="">Proposals</h4>
 			<ul class="proposals" tal:define="proposals poll.get_proposal_objects()" tal:condition="proposals">
 				<li tal:repeat="proposal proposals">

@@ -62,6 +62,11 @@ ACL['closed'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, security.DELETE, )
                  (Allow, security.ROLE_VIEWER, security.VIEW),
                  DENY_ALL,
                 ]
+ACL['canceled'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, security.DELETE, security.CHANGE_WORKFLOW_STATE)),
+                   (Allow, security.ROLE_MODERATOR, (security.VIEW, security.DELETE, security.CHANGE_WORKFLOW_STATE)),
+                   (Allow, security.ROLE_VIEWER, security.VIEW),
+                   DENY_ALL,
+                  ]
 
 
 @content_factory('Poll', title=_(u"Poll"))
@@ -88,7 +93,7 @@ class Poll(BaseContent, WorkflowAware):
             return ACL['private']
         state = self.get_workflow_state()
         #As default - don't traverse to parent
-        return ACL.get(state, 'closed')
+        return ACL.get(state, ACL['closed'])
 
     @property
     def start_time(self):
@@ -356,12 +361,18 @@ def email_voters_about_ongoing_poll(poll, request=None):
     response['poll_url'] = resource_url(poll, request)
 
     sender = "%s <%s>" % (meeting.get_field_value('meeting_mail_name'), meeting.get_field_value('meeting_mail_address'))
+    #FIXME: This should be detatched into a view component
     body_html = render('../views/templates/email/ongoing_poll_notification.pt', response, request=request)
+
+    #Since subject won't be part of a renderer, we need to translate it manually
+    #Keep the _ -syntax otherwise Babel/lingua won't pick up the string
+    localizer = get_localizer(request)
+    subject = localizer.translate(_(u"VoteIT: Open poll"))
 
     mailer = get_mailer(request)
     #We need to send individual messages anyway
     for email in email_addresses:
-        msg = Message(subject=_(u"VoteIT: Open poll"),
+        msg = Message(subject = subject,
                       sender = sender,
                       recipients=[email,],
                       html=body_html)

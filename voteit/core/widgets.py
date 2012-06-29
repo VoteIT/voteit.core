@@ -5,7 +5,9 @@ from colander import null
 from colander import Invalid
 from deform.widget import CheckedInputWidget
 from deform.widget import RadioChoiceWidget
+from deform.widget import TextAreaWidget
 from pyramid.threadlocal import get_current_request
+from webhelpers.html.tools import strip_links
 
 from voteit.core.fanstaticlib import star_rating
 
@@ -82,3 +84,11 @@ class RecaptchaWidget(CheckedInputWidget):
             if reason == 'incorrect-captcha-sol':
                 reason = "Incorrect solution"
             raise Invalid(field.schema, reason.replace('\\n', ' ').strip("'") )
+
+
+class TextAreaStripLinksWidget(TextAreaWidget):
+    ''' TextArea Widget that removes links '''
+    def serialize(self, field, cstruct, readonly=False):
+        if cstruct in (null, None):
+            cstruct = '' #pragma : no cover
+        return super(TextAreaWidget, self).serialize(field, strip_links(cstruct), readonly)

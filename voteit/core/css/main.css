@@ -230,6 +230,7 @@ p {
 /* Icons */
 .iconpadding { padding-left: 20px; }
 .icon.closed { background: url(/static/icons/icon_past.png) no-repeat; }
+.icon.canceled { background: url(/static/icons/icon_past.png) no-repeat; }
 .icon.ongoing { background: url(/static/icons/icon_ongoing.png) no-repeat; }
 .icon.upcoming { background: url(/static/icons/icon_upcoming.png) no-repeat; }
 .icon.private { background: url(/static/icons/icon_upcoming_red.png) no-repeat; }
