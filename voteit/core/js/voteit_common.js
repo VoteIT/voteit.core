@@ -336,22 +336,15 @@ $(document).ready(function() {
 	    /* stops normal events function 
 	    IE might throw an error calling preventDefault(), so use a try/catch block. */
 	    try { event.preventDefault(); } catch(e) {}
-    
-    	var url = $(this).attr('href');	
-		open_poll_booth(url)
+	    
+	    var poll = $(this).parents("div.listing_block.poll");
+    	var url = $(this).attr('href');
+		$.get(url, function(data) {
+			$(poll).replaceWith(data);
+    		deform.processCallbacks();
+    	});
 	});
 });
-function open_poll_booth(url) {
-	var title = $(document.createElement('span')).addClass("iconpadding icon poll").text(voteit.translation['poll']);
-	$("#dialog #modal-header").empty().append(title);
-	
-	$("#dialog .content").text(voteit.translation['loading'])
-	open_modal_window("#dialog");
-
-    $("#dialog .content").load(url, function(response, status, xhr) {
-    	deform.processCallbacks();
-    });
-}
 
 $(document).ready(function() {
 	$('#help-tab > a').live('click', function(event) {

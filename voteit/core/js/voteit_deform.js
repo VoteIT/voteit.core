@@ -52,30 +52,28 @@ $(document).delegate('input[name="start_time"]', 'change', function() {
 function voteit_deform_success(rText, sText, xhr, form) {
 	deform.processCallbacks();
 	deform.focusFirstInput();
-	var button = $('#booth.poll form.deform li.buttons');
-	var message = $('#booth.poll .success.message');
-	message.insertBefore(button);
+	var button = $(form).find('li.buttons');
+	var message = $(form).parents('div.listing_block.poll').find('.success.message');
     message.wrap('<li/>');
+	message.insertBefore(button);
 	message.fadeIn(3000);
-	var height = $('#dialog .modal-inner')[0].scrollHeight;
-	$('#dialog .modal-inner').scrollTop(height);
 }
 
-function voteit_poll_error(xhr, status, error) {
-	var button = $('#booth.poll form.deform li.buttons');
-	var message = $('#booth.poll .error.message');
-	button.removeAttr('disabled');
+function voteit_poll_error(xhr, status, error, id) {
+	deform.processCallbacks();
+	deform.focusFirstInput();
+	var button = $(id).find('form.deform li.buttons');
+	var message = $(id).find('.error.message');
+	button.removeAttr("disabled");
 	message.empty();
 	if(status=='timeout')
 		message.append(voteit.translation['voting_timeout_msg']);
 	else 
 		message.append(voteit.translation['voting_error_msg']);
-	message.insertBefore(button);
 	message.wrap('<li/>');
+	message.insertBefore(button);
 	message.fadeIn(3000);
 	button.find('img').remove();
-	var height = $('#dialog .modal-inner')[0].scrollHeight;
-	$('#dialog .modal-inner').scrollTop(height);
 }
 
 function voteit_poll_beforeSubmit(arr, form, options) {

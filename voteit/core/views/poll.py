@@ -141,12 +141,12 @@ class PollView(BaseEdit):
                     ajax_options=
                         """
                         {success: voteit_deform_success,
-                        error: voteit_poll_error,
+                        error: function(xhr, status, error) { voteit_poll_error(xhr, status, error, '#%s'); },
                         beforeSubmit: voteit_poll_beforeSubmit,
-                        target: '#booth.poll',
+                        target: '#%s',
                         timeout: 10000
                         }
-                        """)
+                        """ % (self.context.uid, self.context.uid))
         self.api.register_form_resources(form)
         
         can_vote = has_permission(ADD_VOTE, self.context, self.request)

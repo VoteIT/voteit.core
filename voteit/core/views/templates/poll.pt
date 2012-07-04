@@ -1,34 +1,29 @@
 <tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core" define="poll api.context">
 
-    <div id="booth" 
-    	 tal:define="poll_plugin poll.get_poll_plugin()|None;
+    <div tal:define="poll_plugin poll.get_poll_plugin()|None;
                      wf_state poll.get_workflow_state();
                      can_vote api.context_has_permission('Add Vote', poll);
                      has_voted api.userid in poll;"
          tal:attributes="class 'listing_block poll ' + poll.poll_plugin_name;
-                         name poll.__name__;">
+                         name poll.__name__;
+                         id poll.uid;">
 
+		<span tal:condition="api.show_moderator_actions" tal:replace="structure api.get_moderator_actions(poll)">
+             Cogwheel menu
+        </span>	
+
+		<div class="wf_state">
+		    <span class="iconpadding icon ${wf_state}">
+		    ${api.tstring(poll.get_workflow_state().title())}
+		    </span>
+		</div>
 		<h3 tal:content="poll.title">Title</h3>
-
-        <div class="col-65-35">
-            <div class="column column-1">
-            	<div class="content_wrapper">
-                <div tal:content="structure api.render_single_view_component(poll, request, 'main', 'poll_state_info')">Poll state info</div>
-                <div class="description"
-                     tal:content="structure poll.description">Description</div>
-                </div>
-            </div>
-            <div class="column column-2">
-            	<div class="content_wrapper">
-            	<div class="poll_type">
-                    <strong i18n:translate="">Poll method</strong>: <span tal:content="poll_plugin.title|string:Broken plugin">Title</span>
-                    <p tal:content="structure poll_plugin.description|string:">Description</p>
-                </div>
-                </div>
-            </div>
-        </div>
-
-		<div class="clear"><!-- --></div>
+		<strong i18n:translate="">Poll method</strong>: <span tal:content="poll_plugin.title|string:Broken plugin">Title</span>
+		
+		<div class="result" 
+			tal:condition="wf_state == 'closed'"
+            tal:content="structure poll.render_poll_result(request, complete=False)">
+        	    Poll result</div>
 		
 		<tal:poll_proposals condition="wf_state in ('private', 'upcoming', 'canceled') or wf_state == 'ongoing' and not can_vote">
 			<h4 class="iconpadding icon proposal" i18n:translate="">Proposals</h4>
@@ -63,6 +58,34 @@
             </tal:user_voted>
 
 		</tal:poll_closed>
+		
+		<div class="iconpadding icon time start" 
+	         tal:define="start_time api.dt_util.dt_format(poll.start_time)">
+	        <span tal:condition="wf_state in ('private', 'upcoming', )"
+	            i18n:translate="">
+	            The poll starts <span tal:replace="start_time" i18n:name="start_time" />
+	        </span>
+	        <span tal:condition="wf_state in ('ongoing', 'closed', 'canceled')"
+	            i18n:translate="">
+	            The poll started <span tal:replace="start_time" i18n:name="start_time" />
+	        </span>
+	    </div>
+	    <div class="iconpadding icon time end"
+	         tal:define="end_time api.dt_util.dt_format(poll.end_time)">
+	        <span tal:condition="wf_state in ('private', 'upcoming', 'ongoing', )"
+	              i18n:translate="">
+	              The poll closes <span tal:replace="end_time" i18n:name="end_time" />
+	          </span>
+	        <span tal:condition="wf_state in ('closed', 'canceled')"
+	            i18n:translate="">
+	            The poll closed <span tal:replace="end_time" i18n:name="end_time" />
+	        </span>
+	    </div>
+		
+		<div class="description"
+             tal:content="structure poll.description">
+                 Description</div>
+     	<p tal:content="structure poll_plugin.description|string:">Description</p>
 
     </div>
     
