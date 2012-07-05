@@ -332,7 +332,7 @@ $(document).keyup(function(e) {
 
 /* Open poll booth when poll buttons is pressed*/
 $(document).ready(function() {
-	$('#polls a.poll_booth').live('click', function(event) {
+	$('#proposals a.poll_booth').live('click', function(event) {
 	    /* stops normal events function 
 	    IE might throw an error calling preventDefault(), so use a try/catch block. */
 	    try { event.preventDefault(); } catch(e) {}

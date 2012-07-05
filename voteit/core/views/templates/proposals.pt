@@ -1,4 +1,14 @@
 <tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core">
+<div class="moderator-help-buttons"
+     tal:condition="api.show_moderator_actions and api.context_has_permission('Add Poll', context)">
+    <a class="buttonize large" tal:attributes="href api.resource_url(context, request) + '@@add?content_type=Poll'">
+        <span i18n:translate="">Add poll</span>
+    </a>
+</div>
+<h2 tal:condition="polls"><span class="iconpadding icon poll" i18n:translate="">Poll</span></h2>
+
+<span tal:replace="structure get_polls(polls)">Render poll listing</span>
+        
 <tal:iterate condition="proposals" repeat="proposal proposals" >
     <div tal:define="unread api.is_brain_unread(proposal);
                      state_id proposal['workflow_state'];
