@@ -53,7 +53,11 @@ function voteit_deform_success(rText, sText, xhr, form) {
 	deform.processCallbacks();
 	deform.focusFirstInput();
 	var button = $(form).find('li.buttons');
-	var message = $(form).parents('div.listing_block.poll').find('.success.message');
+	console.log(button);
+	var parent = $(form).parents('.booth.poll');
+	console.log(parent);
+	var message = $(form).parents('.booth.poll').find('.success.message');
+	console.log(message);
     message.wrap('<li/>');
 	message.insertBefore(button);
 	message.fadeIn(3000);
@@ -62,8 +66,8 @@ function voteit_deform_success(rText, sText, xhr, form) {
 function voteit_poll_error(xhr, status, error, id) {
 	deform.processCallbacks();
 	deform.focusFirstInput();
-	var button = $(id).find('form.deform li.buttons');
-	var message = $(id).find('.error.message');
+	var button = $(id+" .booth.poll").find('form.deform li.buttons');
+	var message = $(id+" .booth.poll").find('.error.message');
 	button.removeAttr("disabled");
 	message.empty();
 	if(status=='timeout')

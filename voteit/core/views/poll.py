@@ -141,9 +141,9 @@ class PollView(BaseEdit):
                     ajax_options=
                         """
                         {success: voteit_deform_success,
-                        error: function(xhr, status, error) { voteit_poll_error(xhr, status, error, '#%s'); },
+                        error: function(xhr, status, error) { voteit_poll_error(xhr, status, error, '#booth_%s'); },
                         beforeSubmit: voteit_poll_beforeSubmit,
-                        target: '#%s',
+                        target: '#booth_%s .booth.poll',
                         timeout: 10000
                         }
                         """ % (self.context.uid, self.context.uid))

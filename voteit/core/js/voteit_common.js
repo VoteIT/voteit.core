@@ -330,22 +330,6 @@ $(document).keyup(function(e) {
     }
 });
 
-/* Open poll booth when poll buttons is pressed*/
-$(document).ready(function() {
-	$('#proposals a.poll_booth').live('click', function(event) {
-	    /* stops normal events function 
-	    IE might throw an error calling preventDefault(), so use a try/catch block. */
-	    try { event.preventDefault(); } catch(e) {}
-	    
-	    var poll = $(this).parents("div.listing_block.poll");
-    	var url = $(this).attr('href');
-		$.get(url, function(data) {
-			$(poll).replaceWith(data);
-    		deform.processCallbacks();
-    	});
-	});
-});
-
 $(document).ready(function() {
 	$('#help-tab > a').live('click', function(event) {
 	    /* stops normal events function 
@@ -366,6 +350,34 @@ $(document).ready(function() {
 		var url = $(this).attr('href');
 	    $("#help-dialog .content").load(url, function(response, status, xhr) {
 	    	deform.processCallbacks();
+            display_deform_labels();
+	    });
+	});
+});
+
+/* Open poll booth when poll buttons is pressed*/
+$(document).ready(function() {
+	$('#proposals a.poll_booth').live('click', function(event) {
+	    /* stops normal events function 
+	    IE might throw an error calling preventDefault(), so use a try/catch block. */
+	    try { event.preventDefault(); } catch(e) {}
+	    
+	    var poll = $(this).parents("div.listing_block.poll");
+	    var id = $(poll).attr('id');  
+    	var url = $(this).attr('href');
+    	
+		var booth = $('<div>');
+		$(booth).attr('id', 'booth_'+id);
+		$(booth).appendTo('#content');
+    	$(booth).position({
+			of: $(poll),
+			my: "left top",
+			at: "left top",
+			collision: "none none",
+		});
+		
+		$(booth).load(url, function(response, status, xhr) {
+            deform.processCallbacks();
             display_deform_labels();
 	    });
 	});

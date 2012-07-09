@@ -4,9 +4,9 @@
                      wf_state poll.get_workflow_state();
                      can_vote api.context_has_permission('Add Vote', poll);
                      has_voted api.userid in poll;"
-         tal:attributes="class 'listing_block poll ' + poll.poll_plugin_name;
+         tal:attributes="class 'booth poll ' + poll.poll_plugin_name;
                          name poll.__name__;
-                         id poll.uid;">
+                         style 'position: absolute';">
 
 		<span tal:condition="api.show_moderator_actions" tal:replace="structure api.get_moderator_actions(poll)">
              Cogwheel menu
