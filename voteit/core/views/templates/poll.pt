@@ -7,6 +7,14 @@
          tal:attributes="class 'booth poll ' + poll.poll_plugin_name;
                          name poll.__name__;
                          style 'position: absolute';">
+                         
+        <span class="close_wrapper">
+        	<a href="#" class="close" title="Close" i18n:attributes="title">
+        		<img src="${request.application_url}/static/icons/icon_close.png"
+                     width="16" height="16"
+                     alt="Close" i18n:attributes="alt" />
+             </a>
+        </span>
 
 		<span tal:condition="api.show_moderator_actions" tal:replace="structure api.get_moderator_actions(poll)">
              Cogwheel menu

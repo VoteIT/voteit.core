@@ -544,6 +544,14 @@ li.notification_message {
 	border-top: none;
 }
 
+.booth .close {
+    position: absolute;
+    float: right;
+	z-index: 10000;
+    top: 15px;
+    right: 15px;
+}
+
 /* proposals and discussions */
 #proposals .creators img,
 #discussions .creators img,

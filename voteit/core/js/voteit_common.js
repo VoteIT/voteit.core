@@ -366,7 +366,7 @@ $(document).ready(function() {
 	    var id = $(poll).attr('id');  
     	var url = $(this).attr('href');
     	
-		var booth = $('<div>');
+		var booth = $('<div class="booth_wrapper">');
 		$(booth).attr('id', 'booth_'+id);
 		$(booth).appendTo('#content');
     	$(booth).position({
@@ -380,6 +380,17 @@ $(document).ready(function() {
             deform.processCallbacks();
             display_deform_labels();
 	    });
+	});
+});
+
+$(document).ready(function() {
+	$('.booth.poll a.close').live('click', function(event) {
+		/* stops normal events function 
+	    IE might throw an error calling preventDefault(), so use a try/catch block. */
+	    try { event.preventDefault(); } catch(e) {}
+	    
+		var booth = $(this).parents(".booth_wrapper");
+		booth.remove();
 	});
 });
 
