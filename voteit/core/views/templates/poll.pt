@@ -42,16 +42,21 @@
 			
 			<tal:poll_closed condition="wf_state == 'closed'">
 				<div tal:condition="has_voted and poll_plugin" tal:content="structure form">Render your vote</div>
-			
-				<div class="result" 
-			            tal:content="structure poll.render_poll_result(request, api)">
-			        	    Poll result</div>
 			</tal:poll_closed>
+			<div class="clear"><!-- --></div>
 		</div>
 		
 		<div class="clear"><!-- --></div>
 		
 		<div class="poll_footer">
+			<tal:poll_closed condition="wf_state == 'closed'">
+			
+				<div class="result" 
+			            tal:content="structure poll.render_poll_result(request, api)">
+			        	    Poll result</div>
+			</tal:poll_closed>
+			
+			<div class="clear"><!-- --></div>
 		
 			<div class="iconpadding icon time start" 
 		         tal:define="start_time api.dt_util.dt_format(poll.start_time)">
