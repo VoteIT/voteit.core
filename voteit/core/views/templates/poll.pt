@@ -57,22 +57,22 @@
 		         tal:define="start_time api.dt_util.dt_format(poll.start_time)">
 		        <span tal:condition="wf_state in ('private', 'upcoming', )"
 		            i18n:translate="">
-		            The poll starts <span tal:replace="start_time" i18n:name="start_time" />
+		            Starts <span tal:replace="start_time" i18n:name="start_time" />
 		        </span>
 		        <span tal:condition="wf_state in ('ongoing', 'closed', 'canceled')"
 		            i18n:translate="">
-		            The poll started <span tal:replace="start_time" i18n:name="start_time" />
+		            Started <span tal:replace="start_time" i18n:name="start_time" />
 		        </span>
 		    </div>
 		    <div class="iconpadding icon time end"
 		         tal:define="end_time api.dt_util.dt_format(poll.end_time)">
 		        <span tal:condition="wf_state in ('private', 'upcoming', 'ongoing', )"
 		              i18n:translate="">
-		              The poll closes <span tal:replace="end_time" i18n:name="end_time" />
+		              Closes <span tal:replace="end_time" i18n:name="end_time" />
 		          </span>
 		        <span tal:condition="wf_state in ('closed', 'canceled')"
 		            i18n:translate="">
-		            The poll closed <span tal:replace="end_time" i18n:name="end_time" />
+		            Closed <span tal:replace="end_time" i18n:name="end_time" />
 		        </span>
 		    </div>
 			<strong i18n:translate="">Poll method</strong>: <span tal:content="poll_plugin.title|string:Broken plugin">Title</span>
