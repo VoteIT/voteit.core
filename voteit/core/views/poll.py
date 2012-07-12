@@ -10,6 +10,10 @@ from pyramid.traversal import find_interface
 from betahaus.pyracont.factories import createSchema
 from pyramid.renderers import render
 from pyramid.response import Response
+from repoze.catalog.query import Any
+from repoze.catalog.query import Eq
+from repoze.catalog.query import Name
+from pyramid.traversal import resource_path
 
 from voteit.core.views.api import APIView
 from voteit.core import VoteITMF as _
@@ -120,6 +124,20 @@ class PollView(BaseEdit):
 
         self.response['form'] = form.render(appstruct=self.context.poll_settings)
         return self.response
+    
+    def _get_proposal_brains(self, uids):
+        query = self.api.root.catalog.query
+        get_metadata = self.api.root.catalog.document_map.get_metadata
+        
+        names = {'path': resource_path(self.context),
+                 'uids': uids}
+
+        num, results = query(Eq('path', Name('path')) \
+                             & Eq('content_type', ('Proposal' )) \
+                             & Any('uid', Name('uids')), 
+                             names = names, sort_index = 'created', reverse = True)
+
+        return [get_metadata(x) for x in results]
         
     @view_config(context=IPoll, renderer="templates/poll.pt", permission=VIEW)
     def poll_view(self):
@@ -130,7 +148,7 @@ class PollView(BaseEdit):
             return HTTPFound(location=url)
 
         poll_plugin = self.context.get_poll_plugin()
-        schema = poll_plugin.get_vote_schema()
+        schema = poll_plugin.get_vote_schema(self.request, self.api)
         add_csrf_token(self.context, self.request, schema)
         
         form = Form(schema, 
@@ -216,6 +234,8 @@ class PollView(BaseEdit):
             
         if success_msg:
             self.response['success_msg'] = success_msg
+            
+        self.response['get_proposal_brains'] = self._get_proposal_brains
 
         return self.response
     

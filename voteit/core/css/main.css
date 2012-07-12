@@ -384,7 +384,7 @@ p {
 #notify-meetingstate,
 .booth.poll .message {
     clear: both;
-    z-index: 5000;
+    z-index: 10000;
 }
 #flash_messages .message,
 #notify-meetingstate .message,
@@ -482,67 +482,41 @@ li.notification_message {
 }
 
 /* polls and booth */
-.booth {
-	background-color: #fff;
+.booth_wrapper {
+	width: 75%;
 }
-#polls .content_wrapper,
-.booth .content_wrapper {
-    padding: 0;
+
+.listing_block.poll,
+.booth.poll {
+	background-color: #DBE0E5;
+	padding: 10px;
 }
-#polls .column-1 .content_wrapper {
-    padding-right: 10px;
-}
-#polls h3,
-.booth h3 {
-    color: #000;
-    font-weight: bold;
-}
-#polls .listing_block {
-    border-bottom: 2px solid #86A3B4;
-    padding-bottom: 10px;
-}
-#polls .proposal,
-.booth .proposal {
-    clear: both;
-}
-#polls .proposal,
-.booth .proposal,
-#polls .deform > li
-.booth .deform > li {
-    margin: 5px 0px;
-    border-top: 1px solid #ccc;
-}
-#polls .deform label.desc,
-.booth .deform label.desc {
-    font-weight: normal;
-}
-#polls .buttons,
-.booth .buttons {
-    text-align: left;
-}
-#polls .result .proposal,
-.booth .result .proposal {
-    border: none;
-}
-.booth .poll_type {
-    border: 1px solid #86A3B4;
-    padding: 2px;
-}
-.booth ul.proposals li {
-	clear: left;
-	display: block;
-	margin: 6px 0px;
-	
-}
-.booth ul.proposals li div.title {
-	display: block;
-}
-.booth ul.proposals li div.meta {
+.listing_block.poll > .cogwheel,
+.booth.poll > .cogwheel {
 	float: left;
 }
-.booth h4.proposal {
-	border-top: none;
+.listing_block.poll h3,
+.booth.poll h3 {
+	margin: 0 0 0 30px;
 }
+.listing_block.poll > .wf_state,
+.booth.poll > .wf_state {
+	float: right;
+}
+.booth.poll > .wf_state {
+	margin-right: 50%;
+}
+
+.poll_wrapper {
+	margin-left: 30px;
+	padding: 5px 10px;
+	background-color: #fff;
+}
+.poll_footer {
+	margin-left: 30px;
+	padding: 0 5px 10px 0;
+}
+
 
 .booth .close {
     position: absolute;

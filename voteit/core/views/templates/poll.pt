@@ -3,7 +3,8 @@
     <div tal:define="poll_plugin poll.get_poll_plugin()|None;
                      wf_state poll.get_workflow_state();
                      can_vote api.context_has_permission('Add Vote', poll);
-                     has_voted api.userid in poll;"
+                     has_voted api.userid in poll;
+                     proposals get_proposal_brains(poll.proposal_uids);"
          tal:attributes="class 'booth poll ' + poll.poll_plugin_name;
                          name poll.__name__;
                          style 'position: absolute';">
@@ -26,74 +27,57 @@
 		    </span>
 		</div>
 		<h3 tal:content="poll.title">Title</h3>
-		<strong i18n:translate="">Poll method</strong>: <span tal:content="poll_plugin.title|string:Broken plugin">Title</span>
 		
-		<div class="result" 
-			tal:condition="wf_state == 'closed'"
-            tal:content="structure poll.render_poll_result(request, complete=False)">
-        	    Poll result</div>
+		<div class="poll_wrapper">
+			
+			<div class="description"
+	             tal:content="structure poll.description">
+	                 Description</div>
+			
+			<tal:poll_ongoing condition="wf_state == 'ongoing' and can_vote and form" content="structure form">
+				Form
+			</tal:poll_ongoing>
+			<div tal:condition="success_msg|False" class="success message">${success_msg}</div>
+			<div class="error message"></div>
+			
+			<tal:poll_closed condition="wf_state == 'closed'">
+				<div tal:condition="has_voted and poll_plugin" tal:content="structure form">Render your vote</div>
+			
+				<div class="result" 
+			            tal:content="structure poll.render_poll_result(request, api)">
+			        	    Poll result</div>
+			</tal:poll_closed>
+		</div>
 		
-		<tal:poll_proposals condition="wf_state in ('private', 'upcoming', 'canceled') or wf_state == 'ongoing' and not can_vote">
-			<h4 class="iconpadding icon proposal" i18n:translate="">Proposals</h4>
-			<ul class="proposals" tal:define="proposals poll.get_proposal_objects()" tal:condition="proposals">
-				<li tal:repeat="proposal proposals">
-					<div class="title">${proposal.title}</div>
-					<div class="meta">${proposal.creators[0]}</div>
-				</li>
-			</ul>
-		</tal:poll_proposals>
+		<div class="clear"><!-- --></div>
 		
-		<tal:poll_ongoing condition="wf_state == 'ongoing' and can_vote and form" content="structure form">
-			Form
-		</tal:poll_ongoing>
-		<div tal:condition="success_msg|False" class="success message">${success_msg}</div>
-		<div class="error message"></div>
+		<div class="poll_footer">
 		
-		<tal:poll_closed condition="wf_state == 'closed'">
-			<div class="result" 
-		            tal:content="structure poll.render_poll_result(request)">
-		        	    Poll result</div>
-            <tal:user_voted condition="has_voted and poll_plugin">
-                <div id="users-vote-${poll.uid}" class="toggle_area toggle_closed">
-                    <a class="toggle_minimize read_more" i18n:translate="">Your vote</a>
-                    <div class="minimizable_area"	
-                         tal:condition="form|False">
-                        <h3 i18n:translate="">You've voted</h3>
-                        <div tal:content="structure form">Render your vote</div>
-                    </div>
-                    <div class="minimizable_inverted meta" i18n:translate="">You voted in this poll. Click above to show your vote.</div>
-                </div>
-            </tal:user_voted>
-
-		</tal:poll_closed>
-		
-		<div class="iconpadding icon time start" 
-	         tal:define="start_time api.dt_util.dt_format(poll.start_time)">
-	        <span tal:condition="wf_state in ('private', 'upcoming', )"
-	            i18n:translate="">
-	            The poll starts <span tal:replace="start_time" i18n:name="start_time" />
-	        </span>
-	        <span tal:condition="wf_state in ('ongoing', 'closed', 'canceled')"
-	            i18n:translate="">
-	            The poll started <span tal:replace="start_time" i18n:name="start_time" />
-	        </span>
-	    </div>
-	    <div class="iconpadding icon time end"
-	         tal:define="end_time api.dt_util.dt_format(poll.end_time)">
-	        <span tal:condition="wf_state in ('private', 'upcoming', 'ongoing', )"
-	              i18n:translate="">
-	              The poll closes <span tal:replace="end_time" i18n:name="end_time" />
-	          </span>
-	        <span tal:condition="wf_state in ('closed', 'canceled')"
-	            i18n:translate="">
-	            The poll closed <span tal:replace="end_time" i18n:name="end_time" />
-	        </span>
-	    </div>
-		
-		<div class="description"
-             tal:content="structure poll.description">
-                 Description</div>
-     	<p tal:content="structure poll_plugin.description|string:">Description</p>
+			<div class="iconpadding icon time start" 
+		         tal:define="start_time api.dt_util.dt_format(poll.start_time)">
+		        <span tal:condition="wf_state in ('private', 'upcoming', )"
+		            i18n:translate="">
+		            The poll starts <span tal:replace="start_time" i18n:name="start_time" />
+		        </span>
+		        <span tal:condition="wf_state in ('ongoing', 'closed', 'canceled')"
+		            i18n:translate="">
+		            The poll started <span tal:replace="start_time" i18n:name="start_time" />
+		        </span>
+		    </div>
+		    <div class="iconpadding icon time end"
+		         tal:define="end_time api.dt_util.dt_format(poll.end_time)">
+		        <span tal:condition="wf_state in ('private', 'upcoming', 'ongoing', )"
+		              i18n:translate="">
+		              The poll closes <span tal:replace="end_time" i18n:name="end_time" />
+		          </span>
+		        <span tal:condition="wf_state in ('closed', 'canceled')"
+		            i18n:translate="">
+		            The poll closed <span tal:replace="end_time" i18n:name="end_time" />
+		        </span>
+		    </div>
+			<strong i18n:translate="">Poll method</strong>: <span tal:content="poll_plugin.title|string:Broken plugin">Title</span>
+	     	<p tal:content="structure poll_plugin.description|string:">Description</p>
+		</div>
 
     </div>
     
