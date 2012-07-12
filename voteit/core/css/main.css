@@ -512,12 +512,15 @@ li.notification_message {
 	padding: 5px 10px;
 	background-color: #fff;
 }
+.poll_wrapper .result div.approved .listing_block .meta .icon {
+	background: url(/static/icons/icon_approved.png) left center no-repeat !important;
+}
+.poll_wrapper .result div.denied {
+	display: none;
+}
 .poll_footer {
-	margin-left: 30px;
 	padding: 0 5px 10px 0;
 }
-
-
 .booth .close {
     position: absolute;
     float: right;

@@ -65,6 +65,7 @@
 			<tal:poll_closed condition="wf_state == 'closed'">
 				<a tal:condition="has_voted" href="${api.resource_url(poll, api.request)}" class="poll_booth buttonize" i18n:translate="">View details and your vote</a>
 				<a tal:condition="not has_voted" href="${api.resource_url(poll, api.request)}" class="poll_booth buttonize" i18n:translate="">View details</a>
+				<a href="#" class="show_denied" i18n:translate="">Show denied proposals</a>
 			</tal:poll_closed>
 			
 			<div class="iconpadding icon time start" 

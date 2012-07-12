@@ -383,6 +383,7 @@ $(document).ready(function() {
 	});
 });
 
+/* close booth when close button is clicked */
 $(document).ready(function() {
 	$('.booth.poll a.close').live('click', function(event) {
 		/* stops normal events function 
@@ -391,6 +392,19 @@ $(document).ready(function() {
 	    
 		var booth = $(this).parents(".booth_wrapper");
 		booth.remove();
+	});
+});
+
+/* Show denied proposals on closed polls */
+$(document).ready(function() {
+	$('#proposals .show_denied').live('click', function(event) {
+	    /* stops normal events function 
+	    IE might throw an error calling preventDefault(), so use a try/catch block. */
+	    try { event.preventDefault(); } catch(e) {}
+	    
+	    var poll = $(this).parents("div.listing_block.poll");
+	   	poll.find('.result div.denied').toggle();
+	   	$(this).toggle();
 	});
 });
 
