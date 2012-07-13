@@ -321,7 +321,7 @@ class IPoll(IBaseFolder):
         """ Returns userids of all who've voted in this poll.
         """
 
-    def render_poll_result(request, complete):
+    def render_poll_result(request, api, complete):
         """ Render poll result. Delegates this to plugin.
         """
 
