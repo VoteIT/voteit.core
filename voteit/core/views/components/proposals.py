@@ -3,6 +3,7 @@ from pyramid.renderers import render
 from pyramid.traversal import resource_path
 from pyramid.traversal import find_resource
 from repoze.catalog.query import Any
+from zope.component.interfaces import ComponentLookupError
 
 from voteit.core import VoteITMF as _
 from voteit.core.security import RETRACT
