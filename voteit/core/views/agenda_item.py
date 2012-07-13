@@ -33,17 +33,6 @@ class AgendaItemView(BaseView):
     @view_config(context=IAgendaItem, renderer="templates/agenda_item.pt", permission=VIEW)
     def agenda_item_view(self):
         """ Main overview of Agenda item. """
-        self.response['get_polls'] = self.get_polls
-        self.response['polls'] = self.api.get_restricted_content(self.context, iface=IPoll, sort_on='created')
-        for poll in self.response['polls']:
-            try:
-                plugin = poll.get_poll_plugin()
-            except ComponentLookupError:
-                err_msg = _(u"plugin_missing_error",
-                            default = u"Can't find any poll plugin with name '${name}'. Perhaps that package has been uninstalled?",
-                            mapping = {'name': poll.get_field_value('poll_plugin')})
-                self.api.flash_messages.add(err_msg, type="error")
-                continue
 
         _marker = object()
         rwidget = self.api.meeting.get_field_value('ai_right_widget', _marker)
@@ -67,12 +56,6 @@ class AgendaItemView(BaseView):
         autoresizable_textarea_js.need()
         
         return self.response
-
-    def get_polls(self, polls):
-        response = {}
-        response['api'] = self.api
-        response['polls'] = polls
-        return render('templates/polls.pt', response, request=self.request)
         
     @view_config(context=IAgendaItem, name='_inline_form', permission=VIEW)
     def inline_add_form(self):
