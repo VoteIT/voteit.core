@@ -21,7 +21,7 @@ class MPUnitTests(unittest.TestCase):
         from voteit.core.models.agenda_item import AgendaItem
 
         ai = AgendaItem()
-        ai['poll'] = Poll()
+        ai['poll'] = self.poll = Poll()
         
         return MajorityPollPlugin( ai['poll'] )
 
@@ -37,9 +37,13 @@ class MPUnitTests(unittest.TestCase):
         
         obj = self._make_obj()
         
+        request = testing.DummyRequest()
+        from voteit.core.views.api import APIView
+        api = APIView(self.poll, request)
+        
         #Shouldn't type return a string? :)
         from colander import SchemaNode
-        self.assertEqual(type(obj.get_vote_schema()), SchemaNode)
+        self.assertEqual(type(obj.get_vote_schema(request, api)), SchemaNode)
     
     def test_render_raw_data(self):
         """ Test that render_raw_data returns a Response
@@ -145,5 +149,7 @@ class MPIntegrationTests(unittest.TestCase):
         self._close_poll()
         plugin = self.poll.get_poll_plugin()
         request = testing.DummyRequest()
-        self.assertTrue('p1' in plugin.render_result(request))
+        from voteit.core.views.api import APIView
+        api = APIView(self.poll, request)
+        self.assertTrue('p1' in plugin.render_result(request, api))
         

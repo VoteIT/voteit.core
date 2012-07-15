@@ -24,7 +24,7 @@ class MajorityPollPlugin(PollPlugin):
         """
         return None
     
-    def get_vote_schema(self):
+    def get_vote_schema(self, request=None, api=None):
         """ Get an instance of the schema that this poll uses.
         """
         proposals = self.context.get_proposal_objects()
@@ -79,7 +79,7 @@ class MajorityPollPlugin(PollPlugin):
     def _get_percentage(self, num):
         return u"%s%%" % (round(num*100, 1))
         
-    def render_result(self, request, complete=True):
+    def render_result(self, request, api, complete=True):
         response = {}
         response['result'] = self.context.poll_result
         response['get_proposal_by_uid'] = self.context.get_proposal_by_uid

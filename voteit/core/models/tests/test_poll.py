@@ -311,7 +311,7 @@ class PollTests(unittest.TestCase):
         _marker = object()
 
         from voteit.core.views.api import APIView
-        api =  APIView(poll, request)
+        api = APIView(poll, request)
 
         class _MockPollPlugin(PollPlugin):
             def render_result(self, request, api, complete=True):
