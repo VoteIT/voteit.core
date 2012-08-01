@@ -439,14 +439,13 @@ class PollPermissionTests(unittest.TestCase):
         ai.set_workflow_state(request, 'ongoing')
         poll.set_workflow_state(request, 'upcoming')
         poll.set_workflow_state(request, 'ongoing')
-        
         self.assertEqual(self.pap(poll, security.VIEW), admin | moderator | viewer )
         self.assertEqual(self.pap(poll, security.EDIT), set())
         self.assertEqual(self.pap(poll, security.DELETE), admin | moderator)
         self.assertEqual(self.pap(poll, security.ADD_VOTE), voter)
         self.assertEqual(self.pap(poll, security.CHANGE_WORKFLOW_STATE), admin | moderator)
         
-    def test_closed_or_canceled(self):
+    def test_closed(self):
         request = testing.DummyRequest()
         self.config = testing.setUp(registry = self.config.registry, request = request)
         poll = self._make_obj()
@@ -457,8 +456,25 @@ class PollPermissionTests(unittest.TestCase):
         poll.set_workflow_state(request, 'upcoming')
         poll.set_workflow_state(request, 'ongoing')
         poll.set_workflow_state(request, 'closed')
-        
         self.assertEqual(self.pap(poll, security.VIEW), admin | moderator | viewer )
         self.assertEqual(self.pap(poll, security.EDIT), set())
         self.assertEqual(self.pap(poll, security.DELETE), admin | moderator)
         self.assertEqual(self.pap(poll, security.ADD_VOTE), set())
+        self.assertEqual(self.pap(poll, security.CHANGE_WORKFLOW_STATE), set())
+
+    def test_canceled(self):
+        request = testing.DummyRequest()
+        self.config = testing.setUp(registry = self.config.registry, request = request)
+        poll = self._make_obj()
+        ai = find_interface(poll, IAgendaItem)
+        ai.set_workflow_state(request, 'upcoming')
+        ai.set_workflow_state(request, 'ongoing')
+        self._register_majority_poll(poll)
+        poll.set_workflow_state(request, 'upcoming')
+        poll.set_workflow_state(request, 'ongoing')
+        poll.set_workflow_state(request, 'canceled')
+        self.assertEqual(self.pap(poll, security.VIEW), admin | moderator | viewer )
+        self.assertEqual(self.pap(poll, security.EDIT), set())
+        self.assertEqual(self.pap(poll, security.DELETE), admin | moderator)
+        self.assertEqual(self.pap(poll, security.ADD_VOTE), set())
+        self.assertEqual(self.pap(poll, security.CHANGE_WORKFLOW_STATE), admin | moderator)

@@ -6,6 +6,7 @@ from voteit.core import VoteITMF as _
 from voteit.core.security import DELETE
 from voteit.core.security import EDIT
 from voteit.core.security import MODERATE_MEETING
+from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IBaseContent
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IWorkflowAware
@@ -75,3 +76,24 @@ def poll_settings_context_action(context, request, va, **kw):
         url = "%s@@poll_config" % api.resource_url(context, request)
         return """<li><a href="%s">%s</a></li>""" % (url, api.translate(_(u"Poll settings")))
     return ''
+
+@view_action('context_actions', 'enable_proposal_block', title = _(u"Block proposals"),
+             interface = IAgendaItem, setting = 'proposal_block', enable = True)
+@view_action('context_actions', 'disable_proposal_block', title = _(u"Enable proposals"),
+             interface = IAgendaItem, setting = 'proposal_block', enable = False)
+@view_action('context_actions', 'enable_discussion_block', title = _(u"Block discussion"),
+             interface = IAgendaItem, setting = 'discussion_block', enable = True)
+@view_action('context_actions', 'disable_discussion_block', title = _(u"Enable discussion"),
+             interface = IAgendaItem, setting = 'discussion_block', enable = False)
+def block_specific_perm_action(context, request, va, **kw):
+    api = kw['api']
+    setting = va.kwargs['setting']
+    enabled = context.get_field_value(setting, False)
+    if va.kwargs['enable'] == enabled:
+        return ''
+    url = "%s_toggle_block?%s=" % (request.resource_url(context), setting)
+    if enabled:
+        url = "%s0" % url
+    else:
+        url = "%s1" % url
+    return """<li><a href="%s">%s</a></li>""" % (url, api.translate(va.title))

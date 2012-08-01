@@ -62,6 +62,11 @@ ACL['closed'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, security.DELETE, )
                  (Allow, security.ROLE_VIEWER, security.VIEW),
                  DENY_ALL,
                 ]
+ACL['canceled'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, security.DELETE, security.CHANGE_WORKFLOW_STATE)),
+                   (Allow, security.ROLE_MODERATOR, (security.VIEW, security.DELETE, security.CHANGE_WORKFLOW_STATE)),
+                   (Allow, security.ROLE_VIEWER, security.VIEW),
+                   DENY_ALL,
+                  ]
 
 
 @content_factory('Poll', title=_(u"Poll"))
@@ -88,7 +93,7 @@ class Poll(BaseContent, WorkflowAware):
             return ACL['private']
         state = self.get_workflow_state()
         #As default - don't traverse to parent
-        return ACL.get(state, 'closed')
+        return ACL.get(state, ACL['closed'])
 
     @property
     def start_time(self):
