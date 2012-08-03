@@ -16,6 +16,9 @@ from pyramid.i18n import get_localizer
 from betahaus.pyracont.interfaces import IContentFactory
 from betahaus.viewcomponent import render_view_group
 from betahaus.viewcomponent.interfaces import IViewGroup
+from webhelpers.html.tools import auto_link
+from webhelpers.html.converters import nl2br
+from webhelpers.html.render import sanitize
 
 from voteit.core import VoteITMF as _
 from voteit.core import security
@@ -27,6 +30,7 @@ from voteit.core.models.interfaces import IUnread
 from voteit.core.models.catalog import metadata_for_query
 from voteit.core.models.catalog import resolve_catalog_docid
 from voteit.core.fanstaticlib import DEFORM_RESOURCES
+from voteit.core.helpers import at_userid_link
 
 
 TEMPLATE_DIR = resource_filename('voteit.core.views', 'templates/')
@@ -296,3 +300,10 @@ class APIView(object):
         if 'api' not in kw:
             kw['api'] = self
         return util[key](context, request, **kw)
+
+    def transform(self, text):
+        text = sanitize(text)
+        text = auto_link(text, link='urls')
+        text = nl2br(text)
+        text = at_userid_link(text, self.context, self.request)
+        return text

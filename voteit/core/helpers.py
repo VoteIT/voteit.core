@@ -17,16 +17,14 @@ ajax_options = """
 
 AT_PATTERN = re.compile(r'(\A|\s)@([a-zA-Z1-9]{1}[\w-]{1,14})')
 
-def at_userid_link(text, obj):
+def at_userid_link(text, obj, request=None):
     """ Transform @userid to a link.
-        Only use this method on write.
-        Will send notification if user profile can be found.
-        When this method is run, validation will already have taken place.
     """
     users = find_root(obj).users
     meeting = find_interface(obj, IMeeting)
     assert meeting
-    request = get_current_request()
+    if not request:
+        request = get_current_request()
 
     def handle_match(matchobj):
         # The pattern contains a space so we only find usernames that 
@@ -35,14 +33,16 @@ def at_userid_link(text, obj):
         space, userid = matchobj.group(1, 2)
         #Force lowercase userid
         userid = userid.lower()
-        user = users[userid]
-        user.send_mention_notification(obj, request)
-
-        tag = {}
-        tag['href'] = resource_url(meeting, request, '_userinfo', query={'userid': userid}).replace(request.application_url, '')
-        tag['title'] = user.title
-        tag['class'] = "inlineinfo"
-        return space + HTML.a('@%s' % userid, **tag)
+        if userid in users: 
+            user = users[userid]
+    
+            tag = {}
+            tag['href'] = request.resource_url(meeting, '_userinfo', query={'userid': userid}).replace(request.application_url, '')
+            tag['title'] = user.title
+            tag['class'] = "inlineinfo"
+            return space + HTML.a('@%s' % userid, **tag)
+        else:
+            return space + '@' + userid
 
     return re.sub(AT_PATTERN, handle_match, text)
     

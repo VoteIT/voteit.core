@@ -13,7 +13,7 @@
 
         <tal:creators tal:replace="structure api.get_creators_info(proposal['creators'])">Creators</tal:creators>
         <span i18n:translate="">propose</span>:
-        <span class="body" tal:content="structure proposal['title']">Title</span>
+        <span class="body" tal:content="structure api.transform(proposal['title'])">Title</span>
 
         <div class="meta">
             <span class="${state_id} icon iconpadding"

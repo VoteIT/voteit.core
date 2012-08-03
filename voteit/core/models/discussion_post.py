@@ -5,8 +5,6 @@ from pyramid.security import Allow
 from pyramid.security import DENY_ALL
 from pyramid.traversal import find_interface
 from betahaus.pyracont.decorators import content_factory
-from webhelpers.html.tools import auto_link
-from webhelpers.html.converters import nl2br
 
 from voteit.core import VoteITMF as _
 from voteit.core import security
@@ -74,9 +72,4 @@ class DiscussionPost(BaseContent):
     title = property(_get_title, _set_title)
 
     def _set_text(self, value, key = None):
-        """ Custom mutator, will transform urls to links and linebreaks to <br/> """
-        value = auto_link(value, link='urls')
-        value = nl2br(value)
-        #nl2br will also ad a \n to the end, we need to remove it so it doesn't run several times
-        value = value.replace('\n', ' ')
         self.field_storage['text'] = value

@@ -16,12 +16,6 @@ owner = set([security.ROLE_OWNER])
 viewer = set([security.ROLE_VIEWER])
 moderator = set([security.ROLE_MODERATOR])
 
-
-_DUMMY_MESSAGE = u"""Website: www.betahaus.net,
-could be written as http://www.betahaus.net
-Robins email is robin@betahaus.net"""
-_DUMMY_EXPECTED_RESULT = u"""Website: <a href="http://www.betahaus.net">www.betahaus.net</a>,<br /> could be written as <a href="http://www.betahaus.net">http://www.betahaus.net</a><br /> Robins email is <a href="mailto:robin@betahaus.net">robin@betahaus.net</a>"""
-
 class DiscussionTests(unittest.TestCase):
     def setUp(self):
         self.config = testing.setUp()
@@ -39,38 +33,6 @@ class DiscussionTests(unittest.TestCase):
 
     def test_verify_obj(self):
         self.assertTrue(verifyObject(IDiscussionPost, self._cut()))
-
-    def test_newline_to_br_enabled(self):
-        obj = self._cut()
-        obj.set_field_value('text', 'test\ntest')
-        self.assertEqual(unicode(obj.get_field_value('text')), unicode('test<br /> test'))
-
-    def test_autolinking_enabled(self):
-        obj = self._cut()
-        obj.set_field_value('text', _DUMMY_MESSAGE)
-        self.maxDiff = None
-        self.assertEqual(unicode(obj.get_field_value('text')), _DUMMY_EXPECTED_RESULT)
-
-    def test_autolinking_several_runs(self):
-        obj = self._cut()
-        obj.set_field_value('text', _DUMMY_MESSAGE)
-        first_run = obj.get_field_value('text')
-        obj.set_field_value('text', first_run)
-        self.maxDiff = None
-        self.assertEqual(unicode(obj.get_field_value('text')), _DUMMY_EXPECTED_RESULT)
-
-    def test_title_and_text_linked(self):
-        obj = self._cut()
-        obj.set_field_value('title', "Hello")
-        self.assertEqual(obj.get_field_value('text'), "Hello")
-
-    def test_nl2br_several_runs_should_not_add_more_brs(self):
-        obj = self._cut()
-        obj.title = "Hello\nthere"
-        res = obj.get_field_value('title')
-        obj.title = res
-        result = obj.get_field_value('title')
-        self.assertEqual(result.count('<br />'), 1)
 
 
 class DiscussionPostPermissionTests(unittest.TestCase):
