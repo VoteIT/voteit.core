@@ -1,6 +1,8 @@
 from zope.interface import implements
 from pyramid.traversal import find_interface
 from pyramid.security import Allow
+from pyramid.security import Deny
+from pyramid.security import Everyone
 from pyramid.security import DENY_ALL
 from pyramid.threadlocal import get_current_request
 from betahaus.pyracont.decorators import content_factory
@@ -60,6 +62,7 @@ class AgendaItem(BaseContent, WorkflowAware):
     display_name = _(u"Agenda item")
     allowed_contexts = ('Meeting',)
     add_permission = security.ADD_AGENDA_ITEM
+    custom_mutators = {'proposal_block': '_set_proposal_block', 'discussion_block': '_set_discussion_block'}
     schemas = {'edit': 'EditAgendaItemSchema', 'add': 'AddAgendaItemSchema'}
 
     @property
@@ -73,8 +76,23 @@ class AgendaItem(BaseContent, WorkflowAware):
             return ACL['closed_ai']
         if state == 'private':
             return ACL['private']
+        perms = []
+        #FIXME: This is a pretty ugly hack. Rather, the permission to allow discussions or proposals
+        #should be removed. This also has the effect that admins can't add them
+        if self.get_field_value('proposal_block', False) == True:
+            perms.append((Deny, Everyone, security.ADD_PROPOSAL))
+        if self.get_field_value('discussion_block', False) == True:
+            perms.append((Deny, Everyone, security.ADD_DISCUSSION_POST))
+        perms.extend(self.__parent__.__acl__)
+        return perms
 
-        raise AttributeError("Go fetch parents acl")
+    def _set_proposal_block(self, value, key=None):
+        isinstance(value, bool)
+        self.field_storage['proposal_block'] = value
+
+    def _set_discussion_block(self, value, key=None):
+        isinstance(value, bool)
+        self.field_storage['discussion_block'] = value
 
     @property
     def start_time(self):

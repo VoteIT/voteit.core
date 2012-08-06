@@ -18,6 +18,7 @@ from voteit.core.models.interfaces import IVote
 from voteit.core.models.schemas import add_csrf_token
 from voteit.core.security import VIEW
 from voteit.core.security import ADD_VOTE
+from voteit.core.security import MODERATE_MEETING
 from voteit.core.models.schemas import button_vote
 from voteit.core.models.schemas import button_add
 from voteit.core.fanstaticlib import voteit_deform
@@ -106,4 +107,18 @@ class AgendaItemView(BaseView):
         else:
             url = resource_url(self.context, self.request, anchor="discussions")
         return HTTPFound(location=url)
-        
+
+    @view_config(context = IAgendaItem, name = "_toggle_block", permission = MODERATE_MEETING)
+    def toggle_block(self):
+        """ Toggle wether discussion or proposals are allowed. """
+        discussion_block = self.request.GET.get('discussion_block', None)
+        proposal_block = self.request.GET.get('proposal_block', None)
+        if discussion_block is not None:
+            val = bool(int(discussion_block))
+            self.context.set_field_value('discussion_block', val)
+        if proposal_block is not None:
+            val = bool(int(proposal_block))
+            self.context.set_field_value('proposal_block', val)
+        self.api.flash_messages.add(_(u"Status changed - note that workflow state also matters."))
+        url = resource_url(self.context, self.request)
+        return HTTPFound(location=url)
