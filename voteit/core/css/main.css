@@ -519,7 +519,32 @@ li.notification_message {
 	display: none;
 }
 .poll_footer {
-	padding: 0 5px 10px 0;
+	padding: 10px;
+	width: 100%;
+}
+.poll_footer > .time,
+.poll_footer > .info {
+	width: 30%; 
+	float: left;
+}
+.booth .poll_footer > .time {
+	width: 40%; 
+	float: left;
+}
+.booth .poll_footer > .time.end {
+	width: auto; 
+	float: right;
+	padding-right: 10px;
+}
+.poll_footer .time {
+	font-size: 12px;
+}
+.poll_footer .info {
+	text-align: center;
+}
+.booth button.submit {
+	float: right;
+	margin-top: 5px; 
 }
 .booth .close {
     position: absolute;
@@ -527,6 +552,9 @@ li.notification_message {
 	z-index: 10000;
     top: 15px;
     right: 15px;
+}
+.show_denied {
+	text-align: center;
 }
 
 /* proposals and discussions */

@@ -397,7 +397,7 @@ $(document).ready(function() {
 
 /* Show denied proposals on closed polls */
 $(document).ready(function() {
-	$('#proposals .show_denied').live('click', function(event) {
+	$('#proposals .show_denied a').live('click', function(event) {
 	    /* stops normal events function 
 	    IE might throw an error calling preventDefault(), so use a try/catch block. */
 	    try { event.preventDefault(); } catch(e) {}

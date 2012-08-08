@@ -43,9 +43,11 @@
 		<div class="clear"><!-- --></div>
 		
 		<div class="poll_footer">
-			<tal:poll_closed condition="wf_state == 'closed'">
-				<a href="#" class="show_denied" i18n:translate="">Show denied proposals</a>
-			</tal:poll_closed>
+			<div class="show_denied" tal:condition="wf_state == 'closed'">
+				<a href="#" i18n:translate="">Show denied proposals</a>
+			</div>
+			
+			<div class="clear"><!-- --></div>
 			
 			<div class="iconpadding icon time start" 
 		         tal:define="start_time api.dt_util.dt_format(poll.start_time)">
@@ -66,21 +68,19 @@
 			        </div>
 			        
 			        <div tal:condition="can_vote and has_voted">
-			        	<div i18n:translate="can_change_vote_notice">You have already voted, but you may change your vote as long as the poll is open. Click the button below if you wish to do so.</div>
-			            <a href="${api.resource_url(poll, api.request)}" class="poll_booth buttonize" i18n:translate="">View details and your vote</a>
+			            <a href="${api.resource_url(poll, api.request)}" class="poll_booth buttonize" i18n:translate="">Your vote</a>
 			        </div>
 			              
 			        <div tal:condition="not can_vote">
-						<div i18n:translate="no_permission_to_vote_notice">
-							You do not have the permission to vote in this poll, please contact the moderator if you should be able to vote.
-						</div>
 						<a href="${api.resource_url(poll, api.request)}" class="poll_booth buttonize" i18n:translate="">View details</a>
 			        </div>
 				</tal:poll_ongoing>
 				
 				<tal:poll_closed condition="wf_state == 'closed'">
-					<a tal:condition="has_voted" href="${api.resource_url(poll, api.request)}" class="poll_booth buttonize" i18n:translate="">View details and your vote</a>
-					<a tal:condition="not has_voted" href="${api.resource_url(poll, api.request)}" class="poll_booth buttonize" i18n:translate="">View details</a>
+					<div>
+						<a tal:condition="has_voted" href="${api.resource_url(poll, api.request)}" class="poll_booth buttonize" i18n:translate="">Your vote</a>
+						<a tal:condition="not has_voted" href="${api.resource_url(poll, api.request)}" class="poll_booth buttonize" i18n:translate="">View details</a>
+					</div>
 				</tal:poll_closed>
 			</div>
 			
@@ -97,6 +97,13 @@
 		    </div>
 		    
 		    <div class="clear"><!-- --></div>
+		    
+			<div tal:condition="can_vote and has_voted" 
+				 i18n:translate="can_change_vote_notice">
+				 	You have already voted, but you may change your vote as long as the poll is open. Click the button below if you wish to do so.</div>
+			<div tal:condition="not can_vote"
+				 i18n:translate="no_permission_to_vote_notice">
+						You do not have the permission to vote in this poll, please contact the moderator if you should be able to vote.</div>
 		</div>
     </div>
     </tal:iterate>

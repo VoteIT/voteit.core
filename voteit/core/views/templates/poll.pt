@@ -39,6 +39,15 @@
 			</tal:poll_ongoing>
 			<div tal:condition="success_msg|False" class="success message">${success_msg}</div>
 			<div class="error message"></div>
+			<div class="col-65-35">
+				<div class="column column-1">
+			<tal:iterate condition="wf_state == 'ongoing' and not can_vote" repeat="proposal proposals">
+			    <tal:proposal replace="structure api.render_single_view_component(context, request, 'proposal', 'block', brain=proposal)">
+			    	Proposal
+			    </tal:proposal>
+			</tal:iterate>
+				</div>
+			</div>
 			
 			<tal:poll_closed condition="wf_state == 'closed'">
 				<div tal:condition="has_voted and poll_plugin" tal:content="structure form">Render your vote</div>
@@ -80,8 +89,13 @@
 		            Closed <span tal:replace="end_time" i18n:name="end_time" />
 		        </span>
 		    </div>
-			<strong i18n:translate="">Poll method</strong>: <span tal:content="poll_plugin.title|string:Broken plugin">Title</span>
-	     	<p tal:content="structure poll_plugin.description|string:">Description</p>
+		    
+		    <div class="clear"><!-- --></div>
+		    
+		    <div>
+				<strong i18n:translate="">Poll method</strong>: <span tal:content="poll_plugin.title|string:Broken plugin">Title</span>
+		     	<p tal:content="structure poll_plugin.description|string:">Description</p>
+	     	</div>
 		</div>
 
     </div>

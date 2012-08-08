@@ -129,7 +129,9 @@ class PollView(BaseEdit):
         query = self.api.root.catalog.query
         get_metadata = self.api.root.catalog.document_map.get_metadata
         
-        names = {'path': resource_path(self.context),
+        ai = find_interface(self.context, IAgendaItem)
+        
+        names = {'path': resource_path(ai),
                  'uids': uids}
 
         num, results = query(Eq('path', Name('path')) \
