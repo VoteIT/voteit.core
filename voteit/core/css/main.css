@@ -579,6 +579,10 @@ li.notification_message {
     color: #DF0000;
 }
 
+#proposals > .moderator-help-buttons .buttonize {
+	padding: 0.5em !important;
+}
+
 /* search */
 #search .listing_block {
     border-bottom: 1px solid #ccc;
