@@ -331,6 +331,20 @@ class CatalogIndexTests(CatalogTestCase):
 
         result = self.search(content_type = 'Poll', voted_userids = 'me')
         self.assertEqual(result[0], 1)
+        
+    def test_tags(self):
+        meeting = self._add_mock_meeting()
+        from voteit.core.models.discussion_post import DiscussionPost
+        obj = DiscussionPost()
+        meeting['post'] = obj
+        
+        obj.tags.add('test')
+        objectEventNotify(ObjectUpdatedEvent(obj, indexes=('tags',), metadata=True))
+        self.assertEqual(self.search(tags='test')[0], 1)
+        
+        obj.tags.remove('test')
+        objectEventNotify(ObjectUpdatedEvent(obj, indexes=('tags',), metadata=True))
+        self.assertEqual(self.search(tags='test')[0], 0)
 
 
 class CatalogMetadataTests(CatalogTestCase):
@@ -447,3 +461,24 @@ class CatalogMetadataTests(CatalogTestCase):
         brain = self.get_metadata(doc_id)
         self.failUnless('docid' in brain)
         self.assertEqual(brain['docid'], doc_id)
+        
+    def test_tags(self):
+        meeting = self._add_mock_meeting()
+        from voteit.core.models.discussion_post import DiscussionPost
+        obj = DiscussionPost()
+        meeting['post'] = obj
+        
+        def _get_metadata():
+            result = self.search(content_type = 'DiscussionPost')
+            doc_id = result[1][0]
+            return self.get_metadata(doc_id)
+        
+        self.assertEqual(_get_metadata()['tags'], ())
+
+        obj.tags.add('test')
+        objectEventNotify(ObjectUpdatedEvent(obj, indexes=('tags',), metadata=True))
+        self.assertEqual(_get_metadata()['tags'], ('test',))
+        
+        obj.tags.remove('test')
+        objectEventNotify(ObjectUpdatedEvent(obj, indexes=('tags',), metadata=True))
+        self.assertEqual(_get_metadata()['tags'], ())

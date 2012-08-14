@@ -63,6 +63,7 @@ class CatalogMetadata(object):
             'uid': get_uid(self.context, None),
             'aid': get_aid(self.context, None),
             'like_userids': get_like_userids(self.context, ()),
+            'tags': get_tags(self.context, ()),
         }
 
         #Use special metadata?
@@ -115,6 +116,7 @@ def update_indexes(catalog, reindex=True):
         'like_userids': CatalogKeywordIndex(get_like_userids),
         'voted_userids': CatalogKeywordIndex(get_voted_userids),
         'order': CatalogFieldIndex(get_order),
+        'tags': CatalogKeywordIndex(get_tags),
     }
     
     changed_indexes = set()
@@ -368,6 +370,16 @@ def get_voted_userids(object, default):
 def get_order(object, default):
     """ Return order, if object has that field. """
     return object.get_field_value('order', default)
+
+def get_tags(object, default):
+    """ We only use tags for Discussions and Proposals.
+        Warning! An empty list doesn't update the catalog.
+        If default is returned to an index, it will cause that index to remove index,
+        which is the correct behaviour for the catalog.
+    """
+    if IDiscussionPost.providedBy(object) or IProposal.providedBy(object):
+        return tuple(object.tags)
+    return default
 
 
 def includeme(config):
