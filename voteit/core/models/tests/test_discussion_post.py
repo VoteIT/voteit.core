@@ -37,14 +37,14 @@ class DiscussionTests(unittest.TestCase):
     def test_title_tags(self):
         obj = self._cut()
         obj.title = '#Quisque #aliquam,#ante in #tincidunt #aliquam. #Risus neque#eleifend #nunc'
-        self.assertIn('Quisque', obj.tags)
-        self.assertIn('aliquam', obj.tags)
-        self.assertIn('ante', obj.tags)
-        self.assertIn('tincidunt', obj.tags)
-        self.assertIn('aliquam', obj.tags)
-        self.assertIn('Risus', obj.tags)
-        self.assertIn('nunc', obj.tags)
-        self.assertNotIn('eleifend', obj.tags)
+        self.assertIn('Quisque', obj._tags)
+        self.assertIn('aliquam', obj._tags)
+        self.assertIn('ante', obj._tags)
+        self.assertIn('tincidunt', obj._tags)
+        self.assertIn('aliquam', obj._tags)
+        self.assertIn('Risus', obj._tags)
+        self.assertIn('nunc', obj._tags)
+        self.assertNotIn('eleifend', obj._tags)
 
 
 class DiscussionPostPermissionTests(unittest.TestCase):

@@ -338,11 +338,10 @@ class CatalogIndexTests(CatalogTestCase):
         obj = DiscussionPost()
         meeting['post'] = obj
         
-        obj.tags.add('test')
-        objectEventNotify(ObjectUpdatedEvent(obj, indexes=('tags',), metadata=True))
+        obj.add_tag('test')
         self.assertEqual(self.search(tags='test')[0], 1)
         
-        obj.tags.remove('test')
+        obj.remove_tag('test')
         objectEventNotify(ObjectUpdatedEvent(obj, indexes=('tags',), metadata=True))
         self.assertEqual(self.search(tags='test')[0], 0)
 
@@ -475,10 +474,8 @@ class CatalogMetadataTests(CatalogTestCase):
         
         self.assertEqual(_get_metadata()['tags'], ())
 
-        obj.tags.add('test')
-        objectEventNotify(ObjectUpdatedEvent(obj, indexes=('tags',), metadata=True))
+        obj.add_tag('test')
         self.assertEqual(_get_metadata()['tags'], ('test',))
         
-        obj.tags.remove('test')
-        objectEventNotify(ObjectUpdatedEvent(obj, indexes=('tags',), metadata=True))
+        obj.remove_tag('test')
         self.assertEqual(_get_metadata()['tags'], ())

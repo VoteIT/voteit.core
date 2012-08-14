@@ -785,8 +785,18 @@ class ICatalogMetadataEnabled(Interface):
 class ITags(Interface):
     """ Mixin class for content that needs workflow. """
     
-    tags = Attribute('The tags for this content.')
+    _tags = Attribute('The tags for this content.')
     
     def _find_tags(value):
         """ Find tags in value and stores them in tags 
+        """
+        
+    def add_tag(tag):
+        """ Stores tag in tags
+            Will send IObjectUpdatedEvent
+        """
+    
+    def remove_tag(tag):
+        """ Stores tag in tags
+            Will send IObjectUpdatedEvent
         """

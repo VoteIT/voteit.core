@@ -5,7 +5,6 @@ from zope.interface import implements
 from zope.component.event import objectEventNotify
 
 from voteit.core.models.interfaces import ITags
-from voteit.core.models.interfaces import IBaseContent
 from voteit.core.events import ObjectUpdatedEvent
 
 
@@ -18,7 +17,7 @@ class Tags(object):
     implements(ITags)
     
     @property
-    def tags(self):
+    def _tags(self):
         """ Acts as a storage.
         """
         try:
@@ -30,5 +29,12 @@ class Tags(object):
     def _find_tags(self, value):
         for matchobj in re.finditer(TAG_PATTERN, value):
             tag = matchobj.group('tag')
-            self.tags.add(tag)
-            objectEventNotify(ObjectUpdatedEvent(self, indexes=('tags',), metadata=True))
+            self._tags.add(tag)
+            
+    def add_tag(self, tag):
+        self._tags.add(tag)
+        objectEventNotify(ObjectUpdatedEvent(self, indexes=('tags',), metadata=True))
+        
+    def remove_tag(self, tag):
+        self._tags.remove(tag)
+        objectEventNotify(ObjectUpdatedEvent(self, indexes=('tags',), metadata=True))

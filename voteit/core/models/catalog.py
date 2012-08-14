@@ -378,7 +378,7 @@ def get_tags(object, default):
         which is the correct behaviour for the catalog.
     """
     if IDiscussionPost.providedBy(object) or IProposal.providedBy(object):
-        return tuple(object.tags)
+        return tuple(object._tags)
     return default
 
 

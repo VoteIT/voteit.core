@@ -23,11 +23,23 @@ class UserTagsTests(unittest.TestCase):
     def test__find_tags(self):
         obj = self._make_obj()
         obj._find_tags('#Quisque #aliquam,#ante in #tincidunt #aliquam. #Risus neque#eleifend #nunc')
-        self.assertIn('Quisque', obj.tags)
-        self.assertIn('aliquam', obj.tags)
-        self.assertIn('ante', obj.tags)
-        self.assertIn('tincidunt', obj.tags)
-        self.assertIn('aliquam', obj.tags)
-        self.assertIn('Risus', obj.tags)
-        self.assertIn('nunc', obj.tags)
-        self.assertNotIn('eleifend', obj.tags)
+        self.assertIn('Quisque', obj._tags)
+        self.assertIn('aliquam', obj._tags)
+        self.assertIn('ante', obj._tags)
+        self.assertIn('tincidunt', obj._tags)
+        self.assertIn('aliquam', obj._tags)
+        self.assertIn('Risus', obj._tags)
+        self.assertIn('nunc', obj._tags)
+        self.assertNotIn('eleifend', obj._tags)
+        
+    def test_add_tag(self):
+        obj = self._make_obj()
+        obj.add_tag('Quisque')
+        self.assertIn('Quisque', obj._tags)
+        
+    def test_remove_tag(self):
+        obj = self._make_obj()
+        obj.add_tag('Quisque')
+        self.assertIn('Quisque', obj._tags)
+        obj.remove_tag('Quisque')
+        self.assertNotIn('Quisque', obj._tags)

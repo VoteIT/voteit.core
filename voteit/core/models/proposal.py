@@ -101,4 +101,4 @@ class Proposal(BaseContent, WorkflowAware, Tags):
     def _set_aid(self, value, key=None):
         self.field_storage['aid'] = value
         # add aid to tags
-        self.tags.add(value)
+        self.add_tag(value)
