@@ -11,6 +11,7 @@ from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IProposal
 from voteit.core.models.interfaces import ICatalogMetadataEnabled
 from voteit.core.models.workflow_aware import WorkflowAware
+from voteit.core.models.tags import Tags
 
 
 _PUBLISHED_MODERATOR_PERMS = (security.VIEW,
@@ -56,7 +57,7 @@ ACL['private'] = [(Allow, security.ROLE_ADMIN, _PUBLISHED_MODERATOR_PERMS),
 
 
 @content_factory('Proposal', title=_(u"Proposal"))
-class Proposal(BaseContent, WorkflowAware):
+class Proposal(BaseContent, WorkflowAware, Tags):
     """ Proposal content type.
         See :mod:`voteit.core.models.interfaces.IProposal`.
         All methods are documented in the interface of this class.
@@ -69,7 +70,8 @@ class Proposal(BaseContent, WorkflowAware):
     add_permission = security.ADD_PROPOSAL
     schemas = {'add': 'ProposalSchema',
                'edit': 'ProposalSchema'}
-    custom_mutators = {'title': '_set_title'}
+    custom_mutators = {'title': '_set_title',
+                       'aid': '_set_aid'}
 
     @property
     def __acl__(self):
@@ -91,5 +93,12 @@ class Proposal(BaseContent, WorkflowAware):
     
     def _set_title(self, value, key=None):
         self.field_storage['title'] = value
+        # add tags in title to tags
+        self._find_tags(value)
     
     title = property(_get_title, _set_title)
+    
+    def _set_aid(self, value, key=None):
+        self.field_storage['aid'] = value
+        # add aid to tags
+        self.tags.add(value)

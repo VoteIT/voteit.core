@@ -33,6 +33,18 @@ class DiscussionTests(unittest.TestCase):
 
     def test_verify_obj(self):
         self.assertTrue(verifyObject(IDiscussionPost, self._cut()))
+        
+    def test_title_tags(self):
+        obj = self._cut()
+        obj.title = '#Quisque #aliquam,#ante in #tincidunt #aliquam. #Risus neque#eleifend #nunc'
+        self.assertIn('Quisque', obj.tags)
+        self.assertIn('aliquam', obj.tags)
+        self.assertIn('ante', obj.tags)
+        self.assertIn('tincidunt', obj.tags)
+        self.assertIn('aliquam', obj.tags)
+        self.assertIn('Risus', obj.tags)
+        self.assertIn('nunc', obj.tags)
+        self.assertNotIn('eleifend', obj.tags)
 
 
 class DiscussionPostPermissionTests(unittest.TestCase):

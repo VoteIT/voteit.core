@@ -13,6 +13,7 @@ from voteit.core.models.interfaces import ICatalogMetadataEnabled
 from voteit.core.models.interfaces import IDiscussionPost
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.base_content import BaseContent
+from voteit.core.models.tags import Tags
 
 
 ACL =  {}
@@ -33,7 +34,7 @@ ACL['private'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, security.DELETE, 
                   ]
 
 @content_factory('DiscussionPost', title=_(u"Discussion Post"))
-class DiscussionPost(BaseContent):
+class DiscussionPost(BaseContent, Tags):
     """ Discussion Post content type.
         See :mod:`voteit.core.models.interfaces.IDiscussionPost`.
         All methods are documented in the interface of this class.
@@ -73,3 +74,5 @@ class DiscussionPost(BaseContent):
 
     def _set_text(self, value, key = None):
         self.field_storage['text'] = value
+        # add tags in title to tags
+        self._find_tags(value)
