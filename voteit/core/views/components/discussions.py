@@ -44,23 +44,30 @@ def discussions_listing(context, request, va, **kw):
         return api.context_has_permission(DELETE, obj)
 
     path = resource_path(context)
+    
+    tag = request.GET.get('tag', None)
+    
+    query = dict(path = path,
+                 content_type='DiscussionPost')
+    
+    query['sort_index'] = 'created'
+    query['reverse'] = True
+    if tag:
+        query['tags'] = tag
 
     if request.GET.get('discussions', '') == 'all':
         limit = 0
     else:
-        unread_count = api.search_catalog(path = path, content_type = 'DiscussionPost', unread = api.userid)[0]
+        unread_count = api.search_catalog(**query)[0]
         limit = 5
         if unread_count > limit:
             limit = unread_count
 
-    query = dict(path = path,
-                 content_type='DiscussionPost')
+    
     #Returns tuple of (item count, iterator with docids)
     count = api.search_catalog(**query)[0]
 
     #New query with only limited number of results
-    query['sort_index'] = 'created'
-    query['reverse'] = True
     if limit:
         query['limit'] = limit
     docids = api.search_catalog(**query)[1]

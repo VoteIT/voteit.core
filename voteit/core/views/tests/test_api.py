@@ -357,6 +357,9 @@ _DUMMY_MENTION_MESSAGE = u"""@admin
 _DUMMY_MENTION_EXPECTED_RESULT = u"""<a class="inlineinfo" href="/m/_userinfo?userid=admin" title="VoteIT Administrator">@admin</a><br />
 @test"""
 
+_DUMMY_TAG_MESSAGE = u"""#test"""
+_DUMMY_TAG_EXPECTED_RESULT = u"""<a class="tag" href="/m/ai/?tag=test">#test</a>"""
+
 class TestTransform(unittest.TestCase):
     def setUp(self):
         self.config = testing.setUp()
@@ -434,20 +437,38 @@ class TestTransform(unittest.TestCase):
         self.maxDiff = None
         self.assertEqual(unicode(obj.transform(context.get_field_value('text'))), _DUMMY_MENTION_EXPECTED_RESULT)
         
-    def test_autolinking_mention(self):
+    def test_tags(self):
         context = self._context()
         request = testing.DummyRequest()
         obj = self._cut(context, request)
-        context.set_field_value('text', _DUMMY_URL_MESSAGE+"\n"+_DUMMY_MENTION_MESSAGE)
+        context.set_field_value('text', _DUMMY_TAG_MESSAGE)
         self.maxDiff = None
-        self.assertEqual(unicode(obj.transform(context.get_field_value('text'))), _DUMMY_URL_EXPECTED_RESULT+"<br />\n"+_DUMMY_MENTION_EXPECTED_RESULT)
-        
-    def test_autolinking_mention_several_runs(self):
+        self.assertEqual(unicode(obj.transform(context.get_field_value('text'))), _DUMMY_TAG_EXPECTED_RESULT)
+
+    def test_tags_several_runs(self):
         context = self._context()
         request = testing.DummyRequest()
         obj = self._cut(context, request)
-        context.set_field_value('text', _DUMMY_URL_MESSAGE+"\n"+_DUMMY_MENTION_MESSAGE)
+        context.set_field_value('text', _DUMMY_TAG_MESSAGE)
         first_run = obj.transform(context.get_field_value('text'))
         context.set_field_value('text', first_run)
         self.maxDiff = None
-        self.assertEqual(unicode(obj.transform(context.get_field_value('text'))), _DUMMY_URL_EXPECTED_RESULT+"<br />\n"+_DUMMY_MENTION_EXPECTED_RESULT)
+        self.assertEqual(unicode(obj.transform(context.get_field_value('text'))), _DUMMY_TAG_EXPECTED_RESULT)
+        
+    def test_all_together(self):
+        context = self._context()
+        request = testing.DummyRequest()
+        obj = self._cut(context, request)
+        context.set_field_value('text', _DUMMY_URL_MESSAGE+"\n"+_DUMMY_MENTION_MESSAGE+"\n"+_DUMMY_TAG_MESSAGE)
+        self.maxDiff = None
+        self.assertEqual(unicode(obj.transform(context.get_field_value('text'))), _DUMMY_URL_EXPECTED_RESULT+"<br />\n"+_DUMMY_MENTION_EXPECTED_RESULT+"<br />\n"+_DUMMY_TAG_EXPECTED_RESULT)
+        
+    def test_all_togetherseveral_runs(self):
+        context = self._context()
+        request = testing.DummyRequest()
+        obj = self._cut(context, request)
+        context.set_field_value('text', _DUMMY_URL_MESSAGE+"\n"+_DUMMY_MENTION_MESSAGE+"\n"+_DUMMY_TAG_MESSAGE)
+        first_run = obj.transform(context.get_field_value('text'))
+        context.set_field_value('text', first_run)
+        self.maxDiff = None
+        self.assertEqual(unicode(obj.transform(context.get_field_value('text'))), _DUMMY_URL_EXPECTED_RESULT+"<br />\n"+_DUMMY_MENTION_EXPECTED_RESULT+"<br />\n"+_DUMMY_TAG_EXPECTED_RESULT)

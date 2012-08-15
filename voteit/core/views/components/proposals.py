@@ -32,11 +32,17 @@ def proposal_listing(context, request, va, **kw):
                 return api.tstring(info['title'])
         
         return state
+    
+    query = dict(content_type = 'Proposal',
+                 sort_index = 'created',
+                 path = resource_path(context))
+    
+    tag = request.GET.get('tag', None)
+    if tag:
+        query['tags'] = tag
 
     response = {}
-    response['proposals'] = api.get_metadata_for_query(content_type = 'Proposal',
-                                                       sort_index = 'created',
-                                                       path = resource_path(context))
+    response['proposals'] = api.get_metadata_for_query(**query)
     response['api'] = api
     response['show_retract'] = _show_retract
     response['translated_state_title'] = _translated_state_title 

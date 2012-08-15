@@ -29,7 +29,10 @@
             </span>
             <span class="user_tags" tal:content="structure api.render_view_group(proposal, request, 'user_tags')"></span>
             <span class="hyphen">&#45;</span>
-            <span class="aid" tal:content="proposal['aid']"></span>
+            <span class="aid">
+            	<a class="tag" 
+            	   tal:attributes="href '?tag=%s' % proposal['aid']" 
+            	   tal:content="proposal['aid']">Autotag</a></span>
         </div>
         <div class="clear"><!-- --></div>
     </div>

@@ -31,6 +31,7 @@ from voteit.core.models.catalog import metadata_for_query
 from voteit.core.models.catalog import resolve_catalog_docid
 from voteit.core.fanstaticlib import DEFORM_RESOURCES
 from voteit.core.helpers import at_userid_link
+from voteit.core.helpers import tags2links
 
 
 TEMPLATE_DIR = resource_filename('voteit.core.views', 'templates/')
@@ -305,5 +306,6 @@ class APIView(object):
         text = sanitize(text)
         text = auto_link(text, link='urls')
         text = nl2br(text)
+        text = tags2links(text, self.context, self.request)
         text = at_userid_link(text, self.context, self.request)
         return text

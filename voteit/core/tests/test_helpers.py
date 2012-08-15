@@ -73,3 +73,30 @@ class GenerateSlugTests(unittest.TestCase):
         for i in range(1, 101):
             context[u'o1-%s' % i] = Proposal()
         self.assertRaises(KeyError, self._fut, context, u'o1')
+        
+
+class Tags2linksTests(unittest.TestCase):
+    
+    def setUp(self):
+        self.request = testing.DummyRequest()
+        self.config = testing.setUp(request = self.request)
+
+    def tearDown(self):
+        testing.tearDown()
+    
+    @property
+    def _fut(self):
+        from voteit.core.helpers import tags2links
+        return tags2links
+        
+    def _fixture(self):
+        from voteit.core.models.agenda_item import AgendaItem
+        from voteit.core.models.meeting import Meeting
+        root = bootstrap_and_fixture(self.config)
+        root['m'] = meeting = Meeting()
+        meeting['ai'] = ai = AgendaItem()
+        return ai
+
+    def test_function(self):
+        value = self._fut('#test', self._fixture(), self.request)
+        self.assertIn('/m/ai/?tag=test', value)

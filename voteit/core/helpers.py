@@ -8,6 +8,8 @@ from webhelpers.html import HTML
 from slugify import slugify
 
 from voteit.core.models.interfaces import IMeeting
+from voteit.core.models.interfaces import IAgendaItem
+from voteit.core.models.tags import TAG_PATTERN
 
 
 ajax_options = """
@@ -67,3 +69,19 @@ def generate_slug(context, text, limit=40):
         i += 1
     #If no id was found, don't just continue
     raise KeyError("No unique id could be found")
+
+
+def tags2links(text, context, request):
+    """ Transform #tag to a link.
+    """
+    ai = find_interface(context, IAgendaItem)
+    assert ai
+
+    def handle_match(matchobj):
+        pre, tag, post = matchobj.group(1, 2, 3)
+        link = {'href': request.resource_url(ai, '', query={'tag': tag}).replace(request.application_url, ''),
+                'class': "tag",}
+        
+        return pre + HTML.a('#%s' % tag, **link) + post
+
+    return re.sub(TAG_PATTERN, handle_match, text)
