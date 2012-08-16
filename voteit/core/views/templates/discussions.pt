@@ -41,8 +41,11 @@
 	                   i18n:translate="">Delete</a>
 	                <span class="hyphen">&#45;</span>
 	            </span>
-	
 	            <span class="user_tags" tal:content="structure api.render_view_group(post, request, 'user_tags')"></span>
+				<span class="hyphen">&#45;</span>
+	            <a class="answer" 
+	               tal:attributes="href '%s%s/@@answer' % (request.application_url, post['path'])"
+	               i18n:translate="">Answer</a>
 	        </div>
 	        <div class="clear"><!-- --></div>
 	    </div>

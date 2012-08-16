@@ -7,12 +7,16 @@ from pyramid.security import has_permission
 from zope.component.interfaces import ComponentLookupError
 from pyramid.httpexceptions import HTTPForbidden
 from pyramid.httpexceptions import HTTPFound
+from betahaus.pyracont.factories import createContent
 from betahaus.pyracont.factories import createSchema
+from pyramid.traversal import find_interface
+from deform.exception import ValidationFailure
 
 from voteit.core import VoteITMF as _
 from voteit.core.views.base_view import BaseView
 from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IDiscussionPost
+from voteit.core.models.interfaces import IProposal
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IVote
 from voteit.core.models.schemas import add_csrf_token
@@ -25,6 +29,7 @@ from voteit.core.fanstaticlib import voteit_deform
 from voteit.core.fanstaticlib import autoresizable_textarea_js
 from voteit.core.fanstaticlib import jquery_form
 from voteit.core.fanstaticlib import star_rating
+from voteit.core.helpers import generate_slug
 
 
 class AgendaItemView(BaseView):
@@ -122,3 +127,64 @@ class AgendaItemView(BaseView):
         self.api.flash_messages.add(_(u"Status changed - note that workflow state also matters."))
         url = resource_url(self.context, self.request)
         return HTTPFound(location=url)
+
+    @view_config(context=IDiscussionPost, name="answer", permission=VIEW, renderer='templates/base_edit.pt')
+    @view_config(context=IProposal, name="answer", permission=VIEW, renderer='templates/base_edit.pt')
+    def discussion_answer(self):
+        content_type = 'DiscussionPost'
+#        add_permission = self.api.content_types_add_perm(content_type)
+#        if not has_permission(add_permission, ai, self.request):
+#            raise HTTPForbidden("You're not allowed to add '%s' in this context." % content_type)
+        
+        schema_name = self.api.get_schema_name(content_type, 'add')
+        schema = createSchema(schema_name).bind(context = self.context, request = self.request)
+        add_csrf_token(self.context, self.request, schema)
+        
+        url = self.api.resource_url(self.context, self.request)
+        form = Form(schema, action=url+"@@answer", buttons=(button_add,))
+        self.api.register_form_resources(form)
+        
+        post = self.request.POST
+        if 'add' in post:
+            controls = post.items()
+            try:
+                #appstruct is deforms convention. It will be the submitted data in a dict.
+                appstruct = form.validate(controls)
+            except ValidationFailure, e:
+                self.response['form'] = e.render()
+                return self.response
+            
+            kwargs = {}
+            kwargs['text'] = appstruct['text']
+            if self.api.userid:
+                kwargs['creators'] = [self.api.userid]
+
+            ai = find_interface(self.context, IAgendaItem)
+            
+            obj = createContent(content_type, **kwargs)
+            name = generate_slug(ai, obj.title)
+            ai[name] = obj
+            # add the tags
+            obj.add_tags(appstruct['tags'])
+
+            #Success, redirect
+            url = self.request.resource_url(ai, anchor=obj.uid)
+            return HTTPFound(location=url)
+        
+        # get creator of answered object
+        creators = self.context.get_field_value('creators')
+        if creators:
+            creator = "@%s" % creators[0]
+        else:
+            creator = ''
+            
+        # get tags and make a string of them
+        tags = []
+        for tag in self.context._tags:
+            tags.append("#%s" % tag)
+        
+        appstruct = {'tags': " ".join(self.context._tags),
+                     'text': "%s:  %s" % (creator, " ".join(tags))}
+        
+        self.response['form'] = form.render(appstruct=appstruct)
+        return self.response
