@@ -8,7 +8,7 @@ from voteit.core.models.interfaces import ITags
 from voteit.core.events import ObjectUpdatedEvent
 
 
-TAG_PATTERN = re.compile(r'(\B)#(?P<tag>\w*[a-zA-Z]+)(\w*)')
+TAG_PATTERN = re.compile(r'(\B)#(?P<tag>\w*[a-zA-Z0-9-_]+)(\w*)')
 
 class Tags(object):
     """ Tags mixin.
@@ -33,6 +33,11 @@ class Tags(object):
             
     def add_tag(self, tag):
         self._tags.add(tag)
+        objectEventNotify(ObjectUpdatedEvent(self, indexes=('tags',), metadata=True))
+        
+    def add_tags(self, tags):
+        for tag in tags.split():
+            self._tags.add(tag)
         objectEventNotify(ObjectUpdatedEvent(self, indexes=('tags',), metadata=True))
         
     def remove_tag(self, tag):

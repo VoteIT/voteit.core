@@ -37,6 +37,21 @@ class UserTagsTests(unittest.TestCase):
         obj.add_tag('Quisque')
         self.assertIn('Quisque', obj._tags)
         
+    def test_add_tag_twice(self):
+        obj = self._make_obj()
+        obj.add_tag('Quisque')
+        self.assertIn('Quisque', obj._tags)
+        obj.add_tag('Quisque')
+        self.assertIn('Quisque', obj._tags)
+        self.assertEqual(len(obj._tags), 1)
+        
+    def test_add_tas(self):
+        obj = self._make_obj()
+        obj.add_tags('Quisque aliquam ante')
+        self.assertIn('Quisque', obj._tags)
+        self.assertIn('aliquam', obj._tags)
+        self.assertIn('ante', obj._tags)
+        
     def test_remove_tag(self):
         obj = self._make_obj()
         obj.add_tag('Quisque')
