@@ -26,6 +26,7 @@ jquery_ui = Group((_jquery_ui_css, _jquery_ui_js))
 jquery_cookie = Resource(voteit_core_jslib, 'jquery.cookie.js', depends = (jquery_142,))
 jquery_easy_confirm_dialog = Resource(voteit_core_jslib, 'jquery.easy-confirm-dialog.js', depends=(jquery_ui,))
 jquery_rating = Resource(voteit_core_jslib, 'jquery.rating.js', depends=(jquery_142,))
+jquery_caret = Resource(voteit_core_jslib, 'jquery.caret.js', depends=(jquery_142,))
 tinymce = Resource(deformlib, 'tinymce/jscripts/tiny_mce/tiny_mce.js')
 
 #qTip

@@ -29,7 +29,9 @@ from voteit.core.fanstaticlib import voteit_deform
 from voteit.core.fanstaticlib import autoresizable_textarea_js
 from voteit.core.fanstaticlib import jquery_form
 from voteit.core.fanstaticlib import star_rating
+from voteit.core.fanstaticlib import jquery_caret
 from voteit.core.helpers import generate_slug
+from voteit.core.helpers import ajax_options
 
 
 class AgendaItemView(BaseView):
@@ -67,6 +69,7 @@ class AgendaItemView(BaseView):
         voteit_deform.need()
         jquery_form.need()
         star_rating.need()
+        jquery_caret.need()
         
         # for autoexpanding textareas
         autoresizable_textarea_js.need()
@@ -141,7 +144,12 @@ class AgendaItemView(BaseView):
         add_csrf_token(self.context, self.request, schema)
         
         url = self.api.resource_url(self.context, self.request)
-        form = Form(schema, action=url+"@@answer", buttons=(button_add,))
+        form = Form(schema, 
+                    action=url+"@@answer", 
+                    buttons=(button_add,),
+                    formid="answer-form-%s" % self.context.uid, 
+                    use_ajax=True,
+                    ajax_options=ajax_options)
         self.api.register_form_resources(form)
         
         post = self.request.POST
@@ -152,6 +160,8 @@ class AgendaItemView(BaseView):
                 appstruct = form.validate(controls)
             except ValidationFailure, e:
                 self.response['form'] = e.render()
+                if self.request.is_xhr:
+                    return Response(render("templates/ajax_edit.pt", self.response, request = self.request))
                 return self.response
             
             kwargs = {}
@@ -169,6 +179,8 @@ class AgendaItemView(BaseView):
 
             #Success, redirect
             url = self.request.resource_url(ai, anchor=obj.uid)
+            if self.request.is_xhr:
+                return Response(headers = [('X-Relocate', url)])
             return HTTPFound(location=url)
         
         # get creator of answered object
@@ -187,4 +199,7 @@ class AgendaItemView(BaseView):
                      'text': "%s:  %s" % (creator, " ".join(tags))}
         
         self.response['form'] = form.render(appstruct=appstruct)
+        
+        if self.request.is_xhr:
+            return Response(render('templates/ajax_edit.pt', self.response, request=self.request))
         return self.response

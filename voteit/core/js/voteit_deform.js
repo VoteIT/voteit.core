@@ -53,6 +53,7 @@ function voteit_deform_success(rText, sText, xhr, form) {
 	var url = xhr.getResponseHeader('X-Relocate');
 	if (url) {
 		document.location = url;
+		window.location.reload(true)
 	} else {
 		deform.processCallbacks();
 		deform.focusFirstInput();
