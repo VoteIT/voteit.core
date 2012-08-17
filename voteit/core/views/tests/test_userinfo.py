@@ -34,6 +34,7 @@ class UserinfoTests(unittest.TestCase):
         self.config.registry.settings['default_timezone_name'] = "Europe/Stockholm"
         self.config.registry.settings['default_locale_name'] = 'sv'
         self.config.include('voteit.core.models.date_time_util')
+        self.config.include('voteit.core.plugins.gravatar_profile_image')
         self.config.testing_securitypolicy(userid='dummy',
                                            permissive=True)
         context = self._fixture()
@@ -76,6 +77,7 @@ class UserinfoTests(unittest.TestCase):
     def test_user_info_view_user_context(self):
         self.config.registry.settings['default_timezone_name'] = "Europe/Stockholm"
         self.config.registry.settings['default_locale_name'] = 'sv'
+        self.config.include('voteit.core.plugins.gravatar_profile_image')
         self.config.include('voteit.core.models.date_time_util')
         self.config.testing_securitypolicy(userid='dummy',
                                            permissive=True)

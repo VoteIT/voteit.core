@@ -39,6 +39,7 @@ class InlineAddFormComponentTests(unittest.TestCase):
     
     def test_inline_add_form_proposals(self):
         from voteit.core.views.components.inline_add_form import inline_add_form
+        self.config.include('voteit.core.plugins.gravatar_profile_image')
         ai = self._fixture()
         api = self._api(ai)
         va = self._va('Proposal')
@@ -47,6 +48,7 @@ class InlineAddFormComponentTests(unittest.TestCase):
         
     def test_inline_add_form_discussion_post(self):
         from voteit.core.views.components.inline_add_form import inline_add_form
+        self.config.include('voteit.core.plugins.gravatar_profile_image')
         ai = self._fixture()
         api = self._api(ai)
         va = self._va('DiscussionPost')
