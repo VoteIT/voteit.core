@@ -49,6 +49,7 @@ def proposal_listing(context, request, va, **kw):
     response['proposals'] = api.get_metadata_for_query(content_type = 'Proposal',
                                                        sort_index = 'created',
                                                        path = resource_path(context))
+    response['context'] = context
     response['api'] = api 
     return render('../templates/proposals.pt', response, request = request)
 

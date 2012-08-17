@@ -1,7 +1,7 @@
 <tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core">
 
 <span tal:replace="structure get_polls(polls)">Render poll listing</span>
-        
+
 <tal:iterate condition="proposals" repeat="proposal proposals">
     <tal:proposal 
     	condition="proposal['workflow_state'] in ('published', 'retracted', 'unhandled')" 

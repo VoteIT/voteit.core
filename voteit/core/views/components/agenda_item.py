@@ -10,6 +10,7 @@ def proposals(context, request, va, **kw):
     response = dict(
         proposal_widgets = api.render_view_group(context, request, 'proposals', **kw),
         api = api,
+        context = context,
     )
     return render('../templates/snippets/ai_proposals.pt', response, request = request)
 
@@ -20,5 +21,6 @@ def discussions(context, request, va, **kw):
     response = dict(
         discussion_widgets = api.render_view_group(context, request, 'discussions', **kw),
         api = api,
+        context = context,
     )
     return render('../templates/snippets/ai_discussions.pt', response, request = request)
