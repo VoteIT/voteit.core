@@ -114,8 +114,9 @@ class AgendaItemViewTests(unittest.TestCase):
         self.config.testing_securitypolicy(userid='dummy',
                                            permissive=True)
         self.config.include('voteit.core.models.fanstatic_resources')
+        ai = self._fixture()
         from voteit.core.models.discussion_post import DiscussionPost
-        context = DiscussionPost() 
+        ai['dp'] = context = DiscussionPost()
         context.title = "Testing read more view"
         request = testing.DummyRequest()
         aiv = self._cut(context, request)
