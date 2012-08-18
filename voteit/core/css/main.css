@@ -586,6 +586,26 @@ li.notification_message {
     color: #DF0000;
 }
 
+#proposals .tag-title,
+#discussions .tag-title {
+	color: #054265;
+	border-bottom: 1px solid #86A3B4;
+	margin-bottom: 10px;
+	padding: 0 5px 10px 5px;
+	text-transform: uppercase;
+	font-weight: bold;
+}
+
+#proposals .tag-title > span,
+#discussions .tag-title > span {
+	float: left;
+}
+
+#proposals .tag-title > a,
+#discussions .tag-title > a {
+	float: right;
+}
+
 /* search */
 #search .listing_block {
     border-bottom: 1px solid #ccc;

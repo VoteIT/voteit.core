@@ -1,4 +1,16 @@
 <tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core">
+<div tal:condition="'tag' in request.GET"
+     class="tag-title">
+    <span i18n:translate="">Limited to <span i18n:name="tag_name" tal:content="'#'+request.GET.get('tag', '')"></span></span>
+    <a tal:attributes="href clear_tag_url"
+       i18n:translate="">
+        Show
+        <span tal:content="hidden_count" i18n:name="count">5</span>
+        hidden posts
+    </a>
+    <div class="clear"><!-- --></div>
+</div>
+	
 <tal:iterate condition="proposals" repeat="proposal proposals" >
     <div tal:define="unread api.is_brain_unread(proposal);
                      state_id proposal['workflow_state'];

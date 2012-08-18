@@ -110,10 +110,7 @@ class AgendaItemView(BaseView):
         if self.request.is_xhr:
             return Response(self.api.render_single_view_component(self.context, self.request, 'discussions', 'listing', api = self.api))
         
-        if self.request.GET.get('discussions', None):
-            url = resource_url(self.context, self.request, query={'discussions':'all'}, anchor="discussions")
-        else:
-            url = resource_url(self.context, self.request, anchor="discussions")
+        url = resource_url(self.context, self.request, query=self.request.GET, anchor="discussions")
         return HTTPFound(location=url)
 
     @view_config(context = IAgendaItem, name = "_toggle_block", permission = MODERATE_MEETING)

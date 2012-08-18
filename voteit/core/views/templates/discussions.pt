@@ -1,9 +1,20 @@
 <tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core">
 <div class="listing">
+	<div tal:condition="'tag' in request.GET"
+	     class="tag-title">
+	    <span i18n:translate="">Limited to <span i18n:name="tag_name" tal:content="'#'+request.GET.get('tag', '')"></span></span>
+	    <a tal:attributes="href clear_tag_url"
+	       i18n:translate="">
+	        Show
+	        <span tal:content="hidden_count" i18n:name="count">5</span>
+	        hidden posts
+	    </a>
+	    <div class="clear"><!-- --></div>
+	</div>
 
 	<div tal:condition="over_limit"
 	     class="load_more">
-	    <a tal:attributes="href api.resource_url(context, request) + '@@discussions?discussions=all'"
+	    <a tal:attributes="href more_url_all"
 	       i18n:translate="">
 	        Show
 	        <span tal:content="over_limit" i18n:name="count">5</span>
@@ -12,7 +23,7 @@
 	</div>
 	<div tal:condition="not limit"
 	     class="load_more">
-	    <a tal:attributes="href api.resource_url(context, request) + '@@discussions'"
+	    <a tal:attributes="href more_url_normal"
 	       i18n:translate="">
 	        Show the last 5 posts
 	    </a>

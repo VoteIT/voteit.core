@@ -37,12 +37,28 @@ def proposal_listing(context, request, va, **kw):
                  sort_index = 'created',
                  path = resource_path(context))
     
+    total_count = api.search_catalog(**query)[0]
+    
     tag = request.GET.get('tag', None)
     if tag:
         query['tags'] = tag
+        
+    # build query string and remove tag=
+    clear_tag_query = request.GET.copy()
+    if 'tag' in clear_tag_query:
+        del clear_tag_query['tag']
+        
+    count, docids = api.search_catalog(**query)
+    get_metadata = api.root.catalog.document_map.get_metadata
+    results = []
+    for docid in docids:
+        #Insert the resolved docid first, since we need to reverse order again.
+        results.insert(0, get_metadata(docid))
 
     response = {}
-    response['proposals'] = api.get_metadata_for_query(**query)
+    response['clear_tag_url'] = api.request.resource_url(context, query=clear_tag_query)
+    response['proposals'] = tuple(results)
+    response['hidden_count'] = total_count - count
     response['api'] = api
     response['show_retract'] = _show_retract
     response['translated_state_title'] = _translated_state_title 

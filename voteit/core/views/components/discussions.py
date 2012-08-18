@@ -52,13 +52,16 @@ def discussions_listing(context, request, va, **kw):
     
     query['sort_index'] = 'created'
     query['reverse'] = True
+    
+    total_count = api.search_catalog(**query)[0]
+    
     if tag:
         query['tags'] = tag
 
     if request.GET.get('discussions', '') == 'all':
         limit = 0
     else:
-        unread_count = api.search_catalog(**query)[0]
+        unread_count = api.search_catalog(unread = api.userid, **query)[0]
         limit = 5
         if unread_count > limit:
             limit = unread_count
@@ -81,13 +84,27 @@ def discussions_listing(context, request, va, **kw):
     meeting = find_interface(context, IMeeting)
     #FIXME: needs a way to set default value on this on creation of meeting
     truncate_length = meeting.get_field_value('truncate_discussion_length', 240)
+    
+    # build query string and remove discussions=all
+    more_query = request.GET.copy()
+    if 'discussions' in more_query: 
+        del more_query['discussions']
+    
+    # build query string and remove tag=
+    clear_tag_query = request.GET.copy()
+    if 'tag' in clear_tag_query:
+        del clear_tag_query['tag'] 
         
     response = {}
+    response['clear_tag_url'] = api.request.resource_url(context, query=clear_tag_query)
+    response['more_url_all'] = api.request.resource_url(context, '@@discussions', query=dict(more_query.items()+{'discussions': 'all'}.items()))
+    response['more_url_normal'] = api.request.resource_url(context, '@@discussions', query=more_query)
     response['discussions'] = tuple(results)
     if limit and limit < count:
         response['over_limit'] = count - limit
     else:
         response['over_limit'] = 0
+    response['hidden_count'] = total_count - count
     response['limit'] = limit
     response['api'] = api
     response['show_delete'] = _show_delete
