@@ -802,7 +802,8 @@ table.listing > tbody > tr.even > td {
 
 /* qtip styling */
 .moretag-popup .ui-tooltip-content,
-.inlineinfo-popup .ui-tooltip-content {
+.inlineinfo-popup .ui-tooltip-content,
+.answer-popup .ui-tooltip-content {
     border-width: 2px;
     -webkit-border-bottom-right-radius: 5px;
     -moz-border-bottom-right-radius: 5px;
@@ -812,15 +813,29 @@ table.listing > tbody > tr.even > td {
     border-bottom-left-radius: 5px;
     text-align: justify;
 }
+.answer-popup .ui-tooltip-content {
+	-webkit-border-top-right-radius: 5px;
+    -moz-border-top-right-radius: 5px;
+    border-top-right-radius: 5px;
+	-webkit-border-top-left-radius: 5px;
+    -moz-border-top-left-radius: 5px;
+    border-top-left-radius: 5px;
+}
 .moretag-popup.ui-tooltip, 
 .inlineinfo-popup.ui-tooltip {
     min-width: 500px;
+}
+.answer-popup.ui-tooltip {
+	min-width: 400px;
 }
 .meeting-menu-body.ui-tooltip {
     max-width: 500px;
 }
 .qtip_menu .ui-tooltip-content {
     border: none;
+}
+.answer-popup .ui-tooltip-content {
+	border-width: 1px;
 }
 
 /* Cogwheel qtip styling. 
@@ -923,4 +938,24 @@ ul.agenda-templates > li {
     display: inline;
     margin-right: 0.5em;
     list-style-type: none;
+}
+
+/* answer popup */
+.answer-popup textarea {
+	width: 100%;
+}
+.answer-popup button {
+	margin-top: 10px;
+	float: right;
+}
+.answer-popup label {
+    display: none !important;
+}
+.answer-popup textarea {
+    display: block;
+    margin-top: 0px !important;
+    padding: 2px !important;
+    border: 1px solid #666;
+    width: 100%;
+    height: 60px;
 }

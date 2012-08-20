@@ -441,6 +441,7 @@ $(document).ready(function() {
 	        },
 	        style: {
             	classes: "answer-popup",
+            	widget: true,
         	},
 	    }, event);
 	});

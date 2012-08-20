@@ -14,5 +14,5 @@ class DiscussionPostSchema(colander.Schema):
                                widget=deform.widget.TextAreaWidget(rows=3, cols=40),)
     tags = colander.SchemaNode(colander.String(),
                                title = _(u"Tags"),
-                               widget=deform.widget.TextInputWidget(),
+                               widget=deform.widget.HiddenWidget(),
                                missing=u'')
