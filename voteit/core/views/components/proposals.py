@@ -35,6 +35,7 @@ def proposal_listing(context, request, va, **kw):
     
     query = dict(content_type = 'Proposal',
                  sort_index = 'created',
+                 reverse = True,
                  path = resource_path(context))
     
     total_count = api.search_catalog(**query)[0]
