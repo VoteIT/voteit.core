@@ -1,0 +1,10 @@
+<tal:main
+    xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+    i18n:domain="voteit.core">
+<div>
+	<div id="proposals"
+		tal:content="api.render_single_view_component(context, request, 'proposals', 'listing', api=api)"></div>
+	<div id="discussions" 
+		tal:content="api.render_single_view_component(context, request, 'discussions', 'listing', api=api)"></div>
+</div>
+</tal:main>

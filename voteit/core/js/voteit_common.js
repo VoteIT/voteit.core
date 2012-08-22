@@ -446,3 +446,34 @@ $(document).ready(function() {
 	    }, event);
 	});
 });
+
+/* ajaxifing tag filtering */
+$(document).ready(function() {
+	$('#proposals a.tag, #discussions a.tag').live('click', function(event) {
+		/* stops normal events function 
+	    IE might throw an error calling preventDefault(), so use a try/catch block. */
+	    try { event.preventDefault(); } catch(e) {}
+	    
+	    $("#proposals .listing").empty();
+	    $("#proposals .listing").append(voteit.translation['loading']);
+	    
+	    $("#discussions .listing").empty();
+	    $("#discussions .listing").append(voteit.translation['loading']);
+		
+		var url = $(this).attr('href');
+		$.ajax({
+   			url: url,
+			success: function(response) {
+				$('#proposals .listing').html($('#proposals .listing', response).html());
+				$('#discussions .listing').html($('#discussions .listing', response).html());
+			},
+			error: function(response) {
+				$("#proposals .listing").empty();
+				$("#proposals .listing").append(voteit.translation['error_loading']);
+				
+				$("#discussions .listing").empty();
+				$("#discussions .listing").append(voteit.translation['error_loading']);
+			}
+		});
+	});
+});

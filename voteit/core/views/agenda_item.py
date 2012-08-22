@@ -74,6 +74,8 @@ class AgendaItemView(BaseView):
         # for autoexpanding textareas
         autoresizable_textarea_js.need()
         
+        if self.request.is_xhr:
+            Response(render('templates/ajax_tag_filter.pt', self.response, request=self.request))
         return self.response
 
     def get_polls(self, polls):
