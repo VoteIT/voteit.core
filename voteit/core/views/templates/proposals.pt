@@ -49,7 +49,7 @@
             <span class="aid">
             	<a class="tag" 
             	   tal:attributes="href '?tag=%s' % proposal['aid']" 
-            	   tal:content="'#'+proposal['aid']">Autotag</a></span>
+            	   tal:content="'#%s' % proposal['aid']">Autotag</a></span>
     	   </tal:tags>
         </div>
         <div class="clear"><!-- --></div>

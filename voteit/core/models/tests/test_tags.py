@@ -22,7 +22,7 @@ class UserTagsTests(unittest.TestCase):
 
     def test__find_tags(self):
         obj = self._make_obj()
-        obj._find_tags('#Quisque #aliquam,#ante in #tincidunt #aliquam. #Risus neque#eleifend #nunc')
+        obj._find_tags('#Quisque #aliquam,#ante in #tincidunt #aliquam. #Risus neque#eleifend #nunc&#34;')
         self.assertIn('Quisque', obj._tags)
         self.assertIn('aliquam', obj._tags)
         self.assertIn('ante', obj._tags)
@@ -31,6 +31,7 @@ class UserTagsTests(unittest.TestCase):
         self.assertIn('Risus', obj._tags)
         self.assertIn('nunc', obj._tags)
         self.assertNotIn('eleifend', obj._tags)
+        self.assertNotIn('34', obj._tags)
         
     def test_add_tag(self):
         obj = self._make_obj()
