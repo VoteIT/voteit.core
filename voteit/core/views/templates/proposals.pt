@@ -40,15 +40,15 @@
                 <span class="hyphen">&#45;</span>
             </span>
             <span class="user_tags" tal:content="structure api.render_view_group(proposal, request, 'user_tags')"></span>
-            <span class="hyphen">&#45;</span>
-            <span class="aid">
-            	<a class="tag" 
-            	   tal:attributes="href '?tag=%s' % proposal['aid']" 
-            	   tal:content="proposal['aid']">Autotag</a></span>
     	   <span class="hyphen">&#45;</span>
 	            <a class="answer" 
 	               tal:attributes="href '%s%s/@@answer' % (request.application_url, proposal['path'])"
 	               i18n:translate="">Comment</a>
+            <span class="hyphen">&#45;</span>
+            <span class="aid">
+            	<a class="tag" 
+            	   tal:attributes="href '?tag=%s' % proposal['aid']" 
+            	   tal:content="'#'+proposal['aid']">Autotag</a></span>
         </div>
         <div class="clear"><!-- --></div>
     </div>
