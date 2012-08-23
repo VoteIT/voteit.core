@@ -11,23 +11,25 @@
 	    </a>
 	    <div class="clear"><!-- --></div>
 	</div>
-
-	<div tal:condition="over_limit"
-	     class="load_more">
-	    <a tal:attributes="href more_url_all"
-	       i18n:translate="">
-	        Show
-	        <span tal:content="over_limit" i18n:name="count">5</span>
-	        previous posts
-	    </a>
-	</div>
-	<div tal:condition="not limit"
-	     class="load_more">
-	    <a tal:attributes="href more_url_normal"
-	       i18n:translate="">
-	        Show the last 5 posts
-	    </a>
-	</div>
+	
+	<tal:limit condition="'tag' not in request.GET">
+		<div tal:condition="over_limit"
+		     class="load_more">
+		    <a tal:attributes="href more_url_all"
+		       i18n:translate="">
+		        Show
+		        <span tal:content="over_limit" i18n:name="count">5</span>
+		        previous posts
+		    </a>
+		</div>
+		<div tal:condition="not limit"
+		     class="load_more">
+		    <a tal:attributes="href more_url_normal"
+		       i18n:translate="">
+		        Show the last 5 posts
+		    </a>
+		</div>
+	</tal:limit>
 	
 	<tal:iterate condition="discussions" repeat="post discussions">
 	    <div tal:define="unread api.is_brain_unread(post);

@@ -58,7 +58,7 @@ def discussions_listing(context, request, va, **kw):
     if tag:
         query['tags'] = tag
 
-    if request.GET.get('discussions', '') == 'all':
+    if request.GET.get('discussions', '') == 'all' or tag:
         limit = 0
     else:
         unread_count = api.search_catalog(unread = api.userid, **query)[0]
