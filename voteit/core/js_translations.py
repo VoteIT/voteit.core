@@ -21,4 +21,6 @@ def includeme(config):
         help_contact = _(u"Help &amp; Contact"),
         poll = _(u"Poll"),
         error_loading = _(u"There was an error loding data from server"),
+        answer_popup_title_answer = _("Answer"),
+        answer_popup_title_comment = _("Comment"),
     )

@@ -404,11 +404,20 @@ $(document).ready(function() {
 		/* stop form from submitting normally 
 	    IE might throw an error calling preventDefault(), so use a try/catch block. */
 	    try { event.preventDefault(); } catch(e) {}
+	    console.log($(this).parents('#proposals'));
+	    if($(this).parents('#proposals').length > 0)
+	    	title_text = voteit.translation['answer_popup_title_comment'];
+    	else
+	    	title_text = voteit.translation['answer_popup_title_answer'];
 	    
 	    var url = $(this).attr('href');
 	    $(this).qtip({
 	        overwrite: false, // Make sure the tooltip won't be overridden once created
 	        content: { 
+	        	title: {
+	        		text: title_text,
+	        		button: voteit.translation['close'],
+	        	},
 	            text: voteit.translation['loading'], // The text to use whilst the AJAX request is loading
 	            ajax: {
 	                url: url,
@@ -427,10 +436,9 @@ $(document).ready(function() {
 	            solo: true,
 	        },
 	        hide: {
-	        	event: "mouseleave",
+	        	event: "false",
 	            fixed: true,
 	            effect: false,
-	            delay: 100,
 	        },
 	        position: {
 	            at: "bottom center",
