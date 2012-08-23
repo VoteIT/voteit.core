@@ -12,3 +12,7 @@ class ProposalSchema(colander.MappingSchema):
                                 title = _(u"I propose:"),
                                 validator=deferred_at_enabled_text,
                                 widget=deform.widget.TextAreaWidget(rows=3, cols=40),)
+    tags = colander.SchemaNode(colander.String(),
+                               title = _(u"Tags"),
+                               widget=deform.widget.HiddenWidget(),
+                               missing=u'')

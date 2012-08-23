@@ -199,6 +199,7 @@ $(document).ready(function() {
             } else {
                 var txtar = $(this).find("textarea");
                 txtar.focus();
+                txtar.caretToStart();
                 txtar.autoResizable();
             }
         });
@@ -464,16 +465,20 @@ $(document).ready(function() {
 	    
 	    $("#proposals .listing").empty();
 	    $("#proposals .listing").append(voteit.translation['loading']);
+	    $("#discussions .inline_add_form").empty();
 	    
 	    $("#discussions .listing").empty();
 	    $("#discussions .listing").append(voteit.translation['loading']);
+	    $("#discussions .inline_add_form").empty();
 		
 		var url = $(this).attr('href');
 		$.ajax({
    			url: url,
 			success: function(response) {
 				$('#proposals .listing').html($('#proposals .listing', response).html());
+				$('#proposals .inline_add_form').html($('#proposals .inline_add_form', response).html());
 				$('#discussions .listing').html($('#discussions .listing', response).html());
+				$('#discussions .inline_add_form').html($('#discussions .inline_add_form', response).html());
 			},
 			error: function(response) {
 				$("#proposals .listing").empty();

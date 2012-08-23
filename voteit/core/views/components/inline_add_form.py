@@ -27,7 +27,11 @@ def inline_add_form(context, request, va, **kw):
     voteit_deform.need()
     response = {}
     response['user_image_tag'] = api.user_profile.get_image_tag()
-    response['url'] = "%s@@_inline_form?content_type=%s" % (api.resource_url(context, request), va.kwargs['ctype'])
+    query = {'content_type': va.kwargs['ctype']}
+    tag = request.GET.get('tag', None)
+    if tag:
+        query['tag'] = tag
+    response['url'] = request.resource_url(context, '@@_inline_form', query=query)
     if ctype == 'Proposal':
         response['text'] = _(u'${username} propose', mapping={'username': api.userid})
     else:

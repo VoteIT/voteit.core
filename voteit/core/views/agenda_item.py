@@ -90,6 +90,7 @@ class AgendaItemView(BaseView):
             The actual permission check for each content type is preformed later.
         """
         content_type = self.request.GET['content_type']
+        tag = self.request.GET.get('tag', '')
         add_permission = self.api.content_types_add_perm(content_type)
         if not has_permission(add_permission, self.context, self.request):
             raise HTTPForbidden("You're not allowed to add '%s' in this context." % content_type)
@@ -101,7 +102,13 @@ class AgendaItemView(BaseView):
         form = Form(schema, action=url+"@@add?content_type="+content_type, buttons=(button_add,))
         #Note! Registration of form resources has to be in the view that has the javascript
         #that will include this!
-        return Response(form.render())
+        appstruct={'tags': tag}
+        if tag:
+            if content_type == 'Proposal':
+                appstruct['title'] = " #%s" % tag
+            else:
+                appstruct['text'] = " #%s" % tag                
+        return Response(form.render(appstruct=appstruct))
 
     @view_config(context=IDiscussionPost, name="more", permission=VIEW, renderer='json')
     def discussion_more(self):
