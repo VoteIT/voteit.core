@@ -338,10 +338,10 @@ class CatalogIndexTests(CatalogTestCase):
         obj = DiscussionPost()
         meeting['post'] = obj
         
-        obj.add_tag('test')
+        obj.add_tag('Test')
         self.assertEqual(self.search(tags='test')[0], 1)
         
-        obj.remove_tag('test')
+        obj.remove_tag('Test')
         objectEventNotify(ObjectUpdatedEvent(obj, indexes=('tags',), metadata=True))
         self.assertEqual(self.search(tags='test')[0], 0)
 

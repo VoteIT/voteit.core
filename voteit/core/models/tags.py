@@ -29,17 +29,17 @@ class Tags(object):
     def _find_tags(self, value):
         for matchobj in re.finditer(TAG_PATTERN, value):
             tag = matchobj.group('tag')
-            self._tags.add(tag)
+            self._tags.add(tag.lower())
             
     def add_tag(self, tag):
-        self._tags.add(tag)
+        self._tags.add(tag.lower())
         objectEventNotify(ObjectUpdatedEvent(self, indexes=('tags',), metadata=True))
         
     def add_tags(self, tags):
         for tag in tags.split():
-            self._tags.add(tag)
+            self._tags.add(tag.lower())
         objectEventNotify(ObjectUpdatedEvent(self, indexes=('tags',), metadata=True))
         
     def remove_tag(self, tag):
-        self._tags.remove(tag)
+        self._tags.remove(tag.lower())
         objectEventNotify(ObjectUpdatedEvent(self, indexes=('tags',), metadata=True))
