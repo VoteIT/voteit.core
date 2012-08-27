@@ -32,12 +32,12 @@ class ProposalTests(unittest.TestCase):
     def test_title_tags(self):
         obj = self._cut()
         obj.title = '#Quisque #aliquam,#ante in #tincidunt #aliquam. #Risus neque#eleifend #nunc'
-        self.assertIn('Quisque', obj._tags)
+        self.assertIn('quisque', obj._tags)
         self.assertIn('aliquam', obj._tags)
         self.assertIn('ante', obj._tags)
         self.assertIn('tincidunt', obj._tags)
         self.assertIn('aliquam', obj._tags)
-        self.assertIn('Risus', obj._tags)
+        self.assertIn('risus', obj._tags)
         self.assertIn('nunc', obj._tags)
         self.assertNotIn('eleifend', obj._tags)
         
