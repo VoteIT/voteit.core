@@ -8,7 +8,7 @@ from voteit.core.models.interfaces import ITags
 from voteit.core.events import ObjectUpdatedEvent
 
 
-TAG_PATTERN = re.compile(r'(\A|\s|[,.;:!?])#(?P<tag>\w*[a-zA-Z0-9-_]+)(\w*)')
+TAG_PATTERN = re.compile(r'(\A|\s|[,.;:!?])#(?P<tag>\w*[\w-]+)(\w*)', flags=re.UNICODE)
 
 class Tags(object):
     """ Tags mixin.

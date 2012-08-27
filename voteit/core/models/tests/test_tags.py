@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import unittest
 
 from pyramid import testing
@@ -22,12 +24,12 @@ class UserTagsTests(unittest.TestCase):
 
     def test__find_tags(self):
         obj = self._make_obj()
-        obj._find_tags('#Quisque #aliquam,#ante in #tincidunt #aliquam. #Risus neque#eleifend #nunc&#34;')
+        obj._find_tags(u"#Quisque #aliquam,#ante in #tincidunt #Äliqöåm. #Risus neque#eleifend #nunc&#34;")
         self.assertIn('quisque', obj._tags)
         self.assertIn('aliquam', obj._tags)
         self.assertIn('ante', obj._tags)
         self.assertIn('tincidunt', obj._tags)
-        self.assertIn('aliquam', obj._tags)
+        self.assertIn(u'äliqöåm', obj._tags)
         self.assertIn('risus', obj._tags)
         self.assertIn('nunc', obj._tags)
         self.assertNotIn('eleifend', obj._tags)

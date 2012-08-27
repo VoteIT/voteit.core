@@ -307,6 +307,6 @@ class APIView(object):
         text = auto_link(text, link='urls')
         text = nl2br(text)
         if self.meeting.get_field_value('tags_enabled', True):
-            text = tags2links(text, self.context, self.request)
+            text = tags2links(unicode(text), self.context, self.request)
         text = at_userid_link(text, self.context, self.request)
         return text

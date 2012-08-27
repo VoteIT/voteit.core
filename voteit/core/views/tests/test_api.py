@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import unittest
 
 from pyramid import testing
@@ -346,11 +348,9 @@ class SearchViewTests(unittest.TestCase):
 
 
 _DUMMY_URL_MESSAGE = u"""Website: www.betahaus.net,
-could be written as http://www.betahaus.net
-Robins email is robin@betahaus.net"""
+could be written as http://www.betahaus.net"""
 _DUMMY_URL_EXPECTED_RESULT = u"""Website: <a href="http://www.betahaus.net">www.betahaus.net</a>,<br />
-could be written as <a href="http://www.betahaus.net">http://www.betahaus.net</a><br />
-Robins email is <a href="mailto:robin@betahaus.net">robin@betahaus.net</a>"""
+could be written as <a href="http://www.betahaus.net">http://www.betahaus.net</a>"""
 
 _DUMMY_MENTION_MESSAGE = u"""@admin
 @test"""
@@ -472,3 +472,10 @@ class TestTransform(unittest.TestCase):
         context.set_field_value('text', first_run)
         self.maxDiff = None
         self.assertEqual(unicode(obj.transform(context.get_field_value('text'))), _DUMMY_URL_EXPECTED_RESULT+"<br />\n"+_DUMMY_MENTION_EXPECTED_RESULT+"<br />\n"+_DUMMY_TAG_EXPECTED_RESULT)
+        
+    def test_nonascii(self):
+        context = self._context()
+        request = testing.DummyRequest()
+        obj = self._cut(context, request)
+        context.set_field_value('text', u'ÅÄÖåäö')
+        self.assertEqual(obj.transform(context.get_field_value('text')), u'ÅÄÖåäö')

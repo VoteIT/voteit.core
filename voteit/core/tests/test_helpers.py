@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import unittest
 
 from pyramid import testing
@@ -98,5 +100,5 @@ class Tags2linksTests(unittest.TestCase):
         return ai
 
     def test_function(self):
-        value = self._fut('#test', self._fixture(), self.request)
-        self.assertIn('/m/ai/?tag=test', value)
+        value = self._fut(u'#åäöÅÄÖ', self._fixture(), self.request)
+        self.assertIn(u'/m/ai/?tag=%C3%A5%C3%A4%C3%B6%C3%85%C3%84%C3%96', value)
