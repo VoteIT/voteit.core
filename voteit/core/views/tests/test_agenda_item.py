@@ -45,7 +45,7 @@ class AgendaItemViewTests(unittest.TestCase):
                                            permissive=True)
         self._load_vcs()
         context = self._fixture()
-        request = testing.DummyRequest()
+        request = testing.DummyRequest(is_xhr=False)
         obj = self._cut(context, request)
         response = obj.agenda_item_view()
         self.assertIn('polls', response)
@@ -57,7 +57,7 @@ class AgendaItemViewTests(unittest.TestCase):
         self._load_vcs()
         context = self._fixture()
         context['poll'].set_field_value('poll_plugin', '')
-        request = testing.DummyRequest()
+        request = testing.DummyRequest(is_xhr=False)
         obj = self._cut(context, request)
         response = obj.agenda_item_view()
         self.assertIn('ai_columns', response) #Silly, but better than nothing

@@ -37,10 +37,12 @@ def discussion_redirect_to_agenda_item(context, request):
                 break
             
         # post was not found among the displayed posts
+        query = request.GET
         if not after_limit:
-            url = resource_url(ai, request, query={'discussions':'all'}, anchor=context.uid)
+            query['discussions'] = 'all'
+            url = request.resource_url(ai, query=query, anchor=context.uid)
         else:
-            url = resource_url(ai, request, anchor=context.uid)
+            url = request.resource_url(ai, query=query, anchor=context.uid)
         return HTTPFound(location=url)
     
     raise NotFound("Couldn't locate Agenda Item from this context.")
@@ -49,7 +51,8 @@ def discussion_redirect_to_agenda_item(context, request):
 def proposal_redirect_to_agenda_item(context, request):
     ai = find_interface(context, IAgendaItem)
     if ai:
-        url = resource_url(ai, request, anchor=context.uid)
+        query = request.GET
+        url = request.resource_url(ai, query=query, anchor=context.uid)
         return HTTPFound(location=url)
     raise NotFound("Couldn't locate Agenda Item from this context.")
 

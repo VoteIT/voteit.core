@@ -85,7 +85,9 @@ class DefaultEdit(BaseEdit):
                 self.api.flash_messages.add(_(u"Successfully added"))
 
             #Success, redirect
-            url = resource_url(obj, self.request)
+            url = self.request.resource_url(obj)
+            if (content_type == 'Proposal' or content_type == 'DiscussionPost') and self.request.GET.get('tag', None):
+                url = self.request.resource_url(obj, query={'tag': self.request.GET.get('tag', None)})
             #Polls might have a special redirect action if the poll plugin has a settings schema:
             if content_type == 'Poll' and obj.get_poll_plugin().get_settings_schema() is not None:
                 msg = _(u"review_poll_settings_info",

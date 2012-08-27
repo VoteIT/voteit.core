@@ -34,7 +34,7 @@ class UsersViewTests(unittest.TestCase):
         request = testing.DummyRequest()
         from voteit.core.views.redirect import proposal_redirect_to_agenda_item
         response = proposal_redirect_to_agenda_item(context, request)
-        self.assertEqual(response.location, 'http://example.com/m/ai/#%s' % context.uid)
+        self.assertEqual(response.location, 'http://example.com/m/ai/?#%s' % context.uid)
         
     def test_proposal_redirect_to_agenda_item_not_found(self):
         from voteit.core.models.proposal import Proposal
@@ -51,7 +51,7 @@ class UsersViewTests(unittest.TestCase):
         request = testing.DummyRequest()
         from voteit.core.views.redirect import discussion_redirect_to_agenda_item
         response = discussion_redirect_to_agenda_item(context, request)
-        self.assertEqual(response.location, 'http://example.com/m/ai/#%s' % context.uid)
+        self.assertEqual(response.location, 'http://example.com/m/ai/?#%s' % context.uid)
         
     def test_discussion_redirect_to_agenda_item_all(self):
         self._enable_catalog()
