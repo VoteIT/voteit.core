@@ -59,7 +59,7 @@
 				<span class="hyphen">&#45;</span>
 	            <a class="answer" 
 	               tal:attributes="href '%s%s/@@answer' % (request.application_url, post['path'])"
-	               i18n:translate="">Answer</a>
+	               i18n:translate="">Reply</a>
                </tal:tags>
 	        </div>
 	        <div class="clear"><!-- --></div>
