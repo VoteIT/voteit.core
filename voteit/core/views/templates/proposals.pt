@@ -7,7 +7,7 @@
 	       i18n:translate="">
 	        Show
 	        <span tal:content="hidden_count" i18n:name="count">5</span>
-	        hidden posts
+	        hidden proposals
 	    </a>
 	    <div class="clear"><!-- --></div>
 	</div>
