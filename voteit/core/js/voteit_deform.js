@@ -52,8 +52,7 @@ $(document).delegate('input[name="start_time"]', 'change', function() {
 function voteit_deform_success(rText, sText, xhr, form) {
 	var url = xhr.getResponseHeader('X-Relocate');
 	if (url) {
-		document.location = url;
-		window.location.reload(true)
+		window.location.assign(url)
 	} else {
 		deform.processCallbacks();
 		deform.focusFirstInput();

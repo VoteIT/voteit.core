@@ -405,7 +405,7 @@ $(document).ready(function() {
 		/* stop form from submitting normally 
 	    IE might throw an error calling preventDefault(), so use a try/catch block. */
 	    try { event.preventDefault(); } catch(e) {}
-	    console.log($(this).parents('#proposals'));
+
 	    if($(this).parents('#proposals').length > 0)
 	    	title_text = voteit.translation['answer_popup_title_comment'];
     	else
