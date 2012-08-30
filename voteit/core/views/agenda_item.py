@@ -143,9 +143,10 @@ class AgendaItemView(BaseView):
     @view_config(context=IProposal, name="answer", permission=VIEW, renderer='templates/base_edit.pt')
     def discussion_answer(self):
         content_type = 'DiscussionPost'
-#        add_permission = self.api.content_types_add_perm(content_type)
-#        if not has_permission(add_permission, ai, self.request):
-#            raise HTTPForbidden("You're not allowed to add '%s' in this context." % content_type)
+        ai = find_interface(self.context, IAgendaItem)
+        add_permission = self.api.content_types_add_perm(content_type)
+        if not has_permission(add_permission, ai, self.request):
+            raise HTTPForbidden("You're not allowed to add '%s' in this context." % content_type)
         
         schema_name = self.api.get_schema_name(content_type, 'add')
         schema = createSchema(schema_name).bind(context = self.context, request = self.request)
