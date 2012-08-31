@@ -310,13 +310,16 @@ class PollTests(unittest.TestCase):
         poll = self._cut()
         _marker = object()
 
+        from voteit.core.views.api import APIView
+        api = APIView(poll, request)
+
         class _MockPollPlugin(PollPlugin):
-            def render_result(self, request, complete=True):
+            def render_result(self, request, api, complete=True):
                 return _marker
 
         self.config.registry.registerAdapter(_MockPollPlugin, (IPoll,), IPollPlugin, 'mock_poll_plugin')
         poll.set_field_value('poll_plugin', 'mock_poll_plugin')
-        self.assertEqual(poll.render_poll_result(request), _marker)
+        self.assertEqual(poll.render_poll_result(request, api), _marker)
 
     def test_get_proposal_by_uid(self):
         agenda_item = self._agenda_item_with_proposals_fixture()

@@ -11,6 +11,8 @@
 	    </a>
 	    <div class="clear"><!-- --></div>
 	</div>
+	
+	<span tal:replace="structure get_polls(polls)">Render poll listing</span>
 		
 	<tal:iterate condition="proposals" repeat="proposal proposals" >
 	    <div tal:define="unread api.is_brain_unread(proposal);

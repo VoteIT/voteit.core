@@ -56,5 +56,38 @@ function voteit_deform_success(rText, sText, xhr, form) {
 	} else {
 		deform.processCallbacks();
 		deform.focusFirstInput();
+		var button = $(form).find('li.buttons');
+		var message = $(form).parents('.booth.poll').find('.success.message');
+	    message.wrap('<li/>');
+		message.insertBefore(button);
+		message.fadeIn(3000);
 	}
 }
+
+function voteit_poll_error(xhr, status, error, id) {
+	deform.processCallbacks();
+	deform.focusFirstInput();
+	var button = $(id+" .booth.poll").find('form.deform li.buttons');
+	var message = $(id+" .booth.poll").find('.error.message');
+	button.removeAttr("disabled");
+	message.empty();
+	if(status=='timeout')
+		message.append(voteit.translation['voting_timeout_msg']);
+	else 
+		message.append(voteit.translation['voting_error_msg']);
+	message.wrap('<li/>');
+	message.insertBefore(button);
+	message.fadeIn(3000);
+	button.find('img').remove();
+}
+
+function voteit_poll_beforeSubmit(arr, form, options) {
+	var button = form.find('button[type=submit]');
+	button.attr("disabled", "disabled");
+	var spinner = $(document.createElement('img'));
+	spinner.attr('class', 'spinner');
+	spinner.attr('src', '/static/images/spinner.gif');
+	spinner.attr('alt', voteit.translation['waiting']);
+	spinner.insertAfter(button.find('span'));
+} 
+>>>>>>> voting_rework

@@ -11,6 +11,7 @@ def user_tag_like(brain, request, va, **kw):
         as context, rather than a full object.
     """
     api = kw['api']
+    show_form = kw.get('show_form', True) 
     userids = brain['like_userids']
     #Note: It's not possible to have nested translation strings. So we do the translation here in advance.
     display_name =  api.translate(_(u"Like"))
@@ -43,5 +44,6 @@ def user_tag_like(brain, request, va, **kw):
     response['userids'] = userids
     response['has_entries'] = bool(response['selected'] or userids)
     response['tagging_users_url'] =" %s/_tagging_users?tag=%s&display_name=%s&expl_display_name=%s" % (brain_url, 'like', display_name, expl_display_name)
+    response['show_form'] = show_form
 
     return render('../templates/snippets/user_tag.pt', response, request = request)

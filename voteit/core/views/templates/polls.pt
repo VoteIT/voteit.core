@@ -1,10 +1,11 @@
 <tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core">
 
-    <tal:iterate condition="polls" repeat="poll polls">
+	<tal:iterate condition="polls" repeat="poll polls">
     <div tal:define="poll_plugin poll.get_poll_plugin()|None;
                      wf_state poll.get_workflow_state();
                      can_vote api.context_has_permission('Add Vote', poll);
-                     has_voted api.userid in poll;"
+                     has_voted api.userid in poll;
+                     proposals get_proposal_brains(poll.proposal_uids);"
          tal:attributes="class 'listing_block poll ' + poll.poll_plugin_name;
                          name poll.__name__;
                          id poll.uid;">
@@ -13,61 +14,97 @@
              Cogwheel menu
         </span>	
 
+		<div class="wf_state">
+		    <span class="iconpadding icon ${wf_state}">
+		    ${api.tstring(poll.get_workflow_state().title())}
+		    </span>
+		</div>
 		<h3 tal:content="poll.title">Title</h3>
-
-        <div class="col-65-35">
-            <div class="column column-1">
-            	<div class="content_wrapper">
-                <div class="description"
-                	 tal:condition="wf_state != 'closed'"
-                     tal:content="structure poll.description">
-	                     Description</div>
-				<div class="result" 
-					tal:condition="wf_state == 'closed'"
-		            tal:content="structure poll.render_poll_result(request, complete=False)">
-		        	    Poll result</div>
-        	    </div>
-            </div>
-            <div class="column column-2">
-            	<div class="content_wrapper">
-                <div tal:content="structure api.render_single_view_component(poll, request, 'main', 'poll_state_info')">Poll state info</div>
-            	</div>
-            </div>
-        </div>
-
+		
+		<div class="poll_wrapper">
+			
+	        <div class="description"
+	        	 tal:condition="wf_state != 'closed'"
+	             tal:content="structure poll.description">
+	                 Description</div>
+			
+			<tal:iterate condition="wf_state != 'closed' and proposals" repeat="proposal proposals">
+			    <tal:proposal replace="structure api.render_single_view_component(context, request, 'proposal', 'block', brain=proposal)">
+			    	Proposal
+			    </tal:proposal>
+			</tal:iterate>
+			
+			<div class="result" 
+				tal:condition="wf_state == 'closed'"
+	            tal:content="structure poll.render_poll_result(request, api, complete=False)">
+	        	    Poll result</div>
+		</div>
+		
 		<div class="clear"><!-- --></div>
 		
-		<tal:poll_private condition="wf_state == 'private'">
-			<a href="${api.resource_url(poll, api.request)}" class="poll_booth buttonize" i18n:translate="">View details</a>
-		</tal:poll_private>
-		
-		<tal:poll_upcoming condition="wf_state == 'upcoming'">
-			<a href="${api.resource_url(poll, api.request)}" class="poll_booth buttonize" i18n:translate="">View details</a>
-		</tal:poll_upcoming>
-		
-		<tal:poll_ongoing condition="wf_state == 'ongoing'">
-			<div tal:condition="can_vote and not has_voted">
-	            <a href="${api.resource_url(poll, api.request)}" class="poll_booth buttonize" i18n:translate="add_vote_button">Vote</a>
-	        </div>
-	        
-	        <div tal:condition="can_vote and has_voted">
-	        	<div i18n:translate="can_change_vote_notice">You have already voted, but you may change your vote as long as the poll is open. Click the button below if you wish to do so.</div>
-	            <a href="${api.resource_url(poll, api.request)}" class="poll_booth buttonize" i18n:translate="">View details and your vote</a>
-	        </div>
-	              
-	        <div tal:condition="not can_vote">
-				<div i18n:translate="no_permission_to_vote_notice">
-					You do not have the permission to vote in this poll, please contact the moderator if you should be able to vote.
-				</div>
-				<a href="${api.resource_url(poll, api.request)}" class="poll_booth buttonize" i18n:translate="">View details</a>
-	        </div>
-		</tal:poll_ongoing>
-		
-		<tal:poll_closed condition="wf_state == 'closed'">
-			<a tal:condition="has_voted" href="${api.resource_url(poll, api.request)}" class="poll_booth buttonize" i18n:translate="">View details and your vote</a>
-			<a tal:condition="not has_voted" href="${api.resource_url(poll, api.request)}" class="poll_booth buttonize" i18n:translate="">View details</a>
-		</tal:poll_closed>
-		
+		<div class="poll_footer">
+			<div class="show_denied" tal:condition="wf_state == 'closed'">
+				<a href="#" i18n:translate="">Show denied proposals</a>
+			</div>
+			
+			<div class="clear"><!-- --></div>
+			
+			<div class="iconpadding icon time start" 
+		         tal:define="start_time api.dt_util.dt_format(poll.start_time)">
+		        <span tal:condition="wf_state in ('private', 'upcoming', )"
+		            i18n:translate="">
+		            Starts <span tal:replace="start_time" i18n:name="start_time" />
+		        </span>
+		        <span tal:condition="wf_state in ('ongoing', 'closed', 'canceled')"
+		            i18n:translate="">
+		            Started <span tal:replace="start_time" i18n:name="start_time" />
+		        </span>
+		    </div>
+			
+			<div class="info">
+				<tal:poll_ongoing condition="wf_state == 'ongoing'">
+					<div tal:condition="can_vote and not has_voted">
+			            <a href="${api.resource_url(poll, api.request)}" class="poll_booth buttonize" i18n:translate="add_vote_button">Vote</a>
+			        </div>
+			        
+			        <div tal:condition="can_vote and has_voted">
+			            <a href="${api.resource_url(poll, api.request)}" class="poll_booth buttonize" i18n:translate="">Your vote</a>
+			        </div>
+			              
+			        <div tal:condition="not can_vote">
+						<a href="${api.resource_url(poll, api.request)}" class="poll_booth buttonize" i18n:translate="">View details</a>
+			        </div>
+				</tal:poll_ongoing>
+				
+				<tal:poll_closed condition="wf_state == 'closed'">
+					<div>
+						<a tal:condition="has_voted" href="${api.resource_url(poll, api.request)}" class="poll_booth buttonize" i18n:translate="">Your vote</a>
+						<a tal:condition="not has_voted" href="${api.resource_url(poll, api.request)}" class="poll_booth buttonize" i18n:translate="">View details</a>
+					</div>
+				</tal:poll_closed>
+			</div>
+			
+		    <div class="iconpadding icon time end"
+		         tal:define="end_time api.dt_util.dt_format(poll.end_time)">
+		        <span tal:condition="wf_state in ('private', 'upcoming', 'ongoing', )"
+		              i18n:translate="">
+		              Closes <span tal:replace="end_time" i18n:name="end_time" />
+		          </span>
+		        <span tal:condition="wf_state in ('closed', 'canceled')"
+		            i18n:translate="">
+		            Closed <span tal:replace="end_time" i18n:name="end_time" />
+		        </span>
+		    </div>
+		    
+		    <div class="clear"><!-- --></div>
+		    
+			<div tal:condition="can_vote and has_voted" 
+				 i18n:translate="can_change_vote_notice">
+				 	You have already voted, but you may change your vote as long as the poll is open. Click the button below if you wish to do so.</div>
+			<div tal:condition="not can_vote"
+				 i18n:translate="no_permission_to_vote_notice">
+						You do not have the permission to vote in this poll, please contact the moderator if you should be able to vote.</div>
+		</div>
     </div>
     </tal:iterate>
     

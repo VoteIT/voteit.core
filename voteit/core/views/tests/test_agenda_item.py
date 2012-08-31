@@ -6,6 +6,7 @@ from pyramid.httpexceptions import HTTPForbidden
 
 from voteit.core.testing_helpers import bootstrap_and_fixture
 from voteit.core.testing_helpers import register_security_policies
+from voteit.core.models.date_time_util import utcnow
 
 
 class AgendaItemViewTests(unittest.TestCase):
@@ -30,7 +31,7 @@ class AgendaItemViewTests(unittest.TestCase):
         root = bootstrap_and_fixture(self.config)
         root['m'] = meeting = Meeting()
         meeting['ai'] = ai = AgendaItem()
-        ai['poll'] = Poll()
+        ai['poll'] = Poll(start_time = utcnow(), end_time = utcnow())
         ai['poll'].set_field_value('poll_plugin', 'majority_poll')
         return ai
 
@@ -39,6 +40,10 @@ class AgendaItemViewTests(unittest.TestCase):
         self.config.scan('voteit.core.views.components.agenda_item')
         self.config.scan('voteit.core.views.components.proposals')
         self.config.scan('voteit.core.views.components.discussions')
+        self.config.scan('voteit.core.views.components.moderator_actions')
+        self.config.registry.settings['default_timezone_name'] = "Europe/Stockholm"
+        self.config.registry.settings['default_locale_name'] = 'sv'
+        self.config.include('voteit.core.models.date_time_util')
         
     def test_agenda_item_view(self):
         self.config.testing_securitypolicy(userid='dummy',
@@ -48,7 +53,7 @@ class AgendaItemViewTests(unittest.TestCase):
         request = testing.DummyRequest(is_xhr=False)
         obj = self._cut(context, request)
         response = obj.agenda_item_view()
-        self.assertIn('polls', response)
+        self.assertIn('ai_columns', response) #Silly, but better than nothing
 
     def test_agenda_item_view_wrong_plugin(self):
         self.config.testing_securitypolicy(userid='dummy',
@@ -61,23 +66,6 @@ class AgendaItemViewTests(unittest.TestCase):
         obj = self._cut(context, request)
         response = obj.agenda_item_view()
         self.assertIn('ai_columns', response) #Silly, but better than nothing
-
-    def test_get_polls(self):
-        from voteit.core.models.date_time_util import utcnow
-        self.config.testing_securitypolicy(userid='dummy',
-                                           permissive=True)
-        self.config.registry.settings['default_timezone_name'] = "Europe/Stockholm"
-        self.config.registry.settings['default_locale_name'] = 'sv'
-        self.config.scan('voteit.core.views.components.main')
-        self.config.scan('voteit.core.views.components.moderator_actions')
-        self.config.include('voteit.core.models.date_time_util')
-        context = self._fixture()
-        context['poll'].set_field_value('start_time', utcnow())
-        context['poll'].set_field_value('end_time', utcnow())
-        request = testing.DummyRequest()
-        obj = self._cut(context, request)
-        polls = [context['poll']]
-        res = obj.get_polls(polls)
 
     def test_inline_add_form_proposal(self):
         self.config.testing_securitypolicy(userid='dummy',

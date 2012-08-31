@@ -303,7 +303,7 @@ function open_modal_window(obj) {
  
     //transition effect
     $(obj).fadeIn(2000);
-}     
+}
 
 $(document).ready(function() {     
     //if close button is clicked
@@ -351,29 +351,6 @@ $(document).keyup(function(e) {
     }
 });
 
-/* Open poll booth when poll buttons is pressed*/
-$(document).ready(function() {
-	$('#polls a.poll_booth').live('click', function(event) {
-	    /* stops normal events function 
-	    IE might throw an error calling preventDefault(), so use a try/catch block. */
-	    try { event.preventDefault(); } catch(e) {}
-    
-    	var url = $(this).attr('href');	
-		open_poll_booth(url)
-	});
-});
-function open_poll_booth(url) {
-	var title = $(document.createElement('span')).addClass("iconpadding icon poll").text(voteit.translation['poll']);
-	$("#dialog > h2").empty().append(title);
-	
-	$("#dialog .content").text(voteit.translation['loading'])
-	open_modal_window("#dialog");
-
-    $("#dialog .content").load(url, function(response, status, xhr) {
-    	deform.processCallbacks();
-    });
-}
-
 $(document).ready(function() {
 	$('#help-tab > a').live('click', function(event) {
 	    /* stops normal events function 
@@ -396,6 +373,59 @@ $(document).ready(function() {
 	    	deform.processCallbacks();
             display_deform_labels();
 	    });
+	});
+});
+
+/* Open poll booth when poll buttons is pressed*/
+$(document).ready(function() {
+	$('#proposals a.poll_booth').live('click', function(event) {
+	    /* stops normal events function 
+	    IE might throw an error calling preventDefault(), so use a try/catch block. */
+	    try { event.preventDefault(); } catch(e) {}
+	    
+	    var poll = $(this).parents("div.listing_block.poll");
+	    var id = $(poll).attr('id');  
+    	var url = $(this).attr('href');
+    	
+		var booth = $('<div class="booth_wrapper">');
+		$(booth).attr('id', 'booth_'+id);
+		$(booth).appendTo('#content');
+    	$(booth).position({
+			of: $(poll),
+			my: "left top",
+			at: "left top",
+			collision: "none none",
+		});
+		
+		$(booth).load(url, function(response, status, xhr) {
+            deform.processCallbacks();
+            display_deform_labels();
+	    });
+	});
+});
+
+/* close booth when close button is clicked */
+$(document).ready(function() {
+	$('.booth.poll a.close').live('click', function(event) {
+		/* stops normal events function 
+	    IE might throw an error calling preventDefault(), so use a try/catch block. */
+	    try { event.preventDefault(); } catch(e) {}
+	    
+		var booth = $(this).parents(".booth_wrapper");
+		booth.remove();
+	});
+});
+
+/* Show denied proposals on closed polls */
+$(document).ready(function() {
+	$('#proposals .show_denied a').live('click', function(event) {
+	    /* stops normal events function 
+	    IE might throw an error calling preventDefault(), so use a try/catch block. */
+	    try { event.preventDefault(); } catch(e) {}
+	    
+	    var poll = $(this).parents("div.listing_block.poll");
+	   	poll.find('.result div.denied').toggle();
+	   	$(this).toggle();
 	});
 });
 

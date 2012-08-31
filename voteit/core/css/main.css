@@ -370,7 +370,7 @@ p {
 /* Main window */
 #main_window h1,
 #main_window h2,
-.modal-window > h2 {
+.modal-window #modal-header {
     border-bottom: 2px solid #86A3B4;
     padding-bottom: 0.5em;
 }
@@ -381,13 +381,14 @@ p {
 
 /* Flash messages */
 #flash_messages,
-#notify-meetingstate {
+#notify-meetingstate,
+.booth.poll .message {
     clear: both;
-    z-index: 5000;
+    z-index: 10000;
 }
-
 #flash_messages .message,
-#notify-meetingstate .message {
+#notify-meetingstate .message,
+.booth.poll .message {
     padding: 5px 15px 5px 30px;
     border-radius: 5px;
     -webkit-border-radius: 5px;
@@ -404,12 +405,17 @@ p {
     font-size: 14px;
     color: #054265;
 }
+.booth.poll .message {
+	display: none;
+	margin: 5px 0px 10px 0px;
+}
 #flash_messages .lock {
     background-image: url(/static/icons/icon_lock.png);
 }
 #flash_messages .info {
 }
-#flash_messages .error {
+#flash_messages .error,
+.booth.poll .error.message {
     border-color: red;
     background-color: #fdc;
 }
@@ -476,64 +482,79 @@ li.notification_message {
 }
 
 /* polls and booth */
-#polls .content_wrapper,
-#booth .content_wrapper {
-    padding: 0;
+.booth_wrapper {
+	width: 75%;
 }
-#polls .column-1 .content_wrapper,
-#booth .column-1 .content_wrapper {
-    padding-right: 10px;
+
+.listing_block.poll,
+.booth.poll {
+	background-color: #DBE0E5;
+	padding: 10px;
 }
-#polls h3,
-#booth h3 {
-    color: #000;
-    font-weight: bold;
-}
-#polls .listing_block {
-    border-bottom: 2px solid #86A3B4;
-    padding-bottom: 10px;
-}
-#polls .proposal,
-#booth .proposal {
-    clear: both;
-}
-#polls .proposal,
-#booth .proposal,
-#polls .deform > li
-#booth .deform > li {
-    margin: 5px 0px;
-    border-top: 1px solid #ccc;
-}
-#polls .deform label.desc,
-#booth .deform label.desc {
-    font-weight: normal;
-}
-#polls .buttons,
-#booth .buttons {
-    text-align: left;
-}
-#polls .result .proposal,
-#booth .result .proposal {
-    border: none;
-}
-#booth .poll_type {
-    border: 1px solid #86A3B4;
-    padding: 2px;
-}
-#booth ul.proposals li {
-	clear: left;
-	display: block;
-	margin: 6px 0px;
-	
-}
-#booth ul.proposals li div.title {
-	display: block;
-}
-#booth ul.proposals li div.meta {
+.listing_block.poll > .cogwheel,
+.booth.poll > .cogwheel {
 	float: left;
 }
-#booth h4.proposal {
-	border-top: none;
+.listing_block.poll h3,
+.booth.poll h3 {
+	margin: 0 0 0 30px;
+}
+.listing_block.poll > .wf_state,
+.booth.poll > .wf_state {
+	float: right;
+}
+.booth.poll > .wf_state {
+	margin-right: 50%;
+}
+
+.poll_wrapper {
+	margin-left: 30px;
+	padding: 5px 10px;
+	background-color: #fff;
+}
+.poll_wrapper .result div.approved .listing_block .meta .icon {
+	background: url(/static/icons/icon_approved.png) left center no-repeat !important;
+}
+.poll_wrapper .result div.denied {
+	display: none;
+}
+.poll_footer {
+	padding: 10px;
+	width: 100%;
+}
+.poll_footer > .time,
+.poll_footer > .info {
+	width: 30%; 
+	float: left;
+}
+.booth .poll_footer > .time {
+	width: 40%; 
+	float: left;
+}
+.booth .poll_footer > .time.end {
+	width: auto; 
+	float: right;
+	padding-right: 10px;
+}
+.poll_footer .time {
+	font-size: 12px;
+}
+.poll_footer .info {
+	text-align: center;
+}
+.booth button.submit {
+	float: right;
+	margin-top: 5px; 
+}
+.booth .close {
+    position: absolute;
+    float: right;
+	z-index: 10000;
+    top: 15px;
+    right: 15px;
+}
+.show_denied {
+	text-align: center;
 }
 
 /* proposals and discussions */
@@ -591,7 +612,6 @@ li.notification_message {
     background-color: #FFDFDF;
     color: #DF0000;
 }
-
 #proposals .tag-title,
 #discussions .tag-title {
 	color: #054265;
@@ -610,6 +630,9 @@ li.notification_message {
 #proposals .tag-title > a,
 #discussions .tag-title > a {
 	float: right;
+}
+#proposals > .moderator-help-buttons .buttonize {
+	padding: 0.5em !important;
 }
 
 /* search */
@@ -912,9 +935,10 @@ ul.agenda-templates > li {
     display: none;
     width: 60%;
     height: 60%;
-    overflow:auto;
+    overflow:hidden;
     background-color: white;
     padding: 15px;
+    padding-right: 0px; 
     border-radius: 15px;
     -webkit-border-radius: 15px;
     -moz-border-radius: 15px;
@@ -924,6 +948,8 @@ ul.agenda-templates > li {
 }
 .modal-window .close {
     position: absolute;
+    float: right;
+	z-index: 10000;
     top: 15px;
     right: 15px;
 }
@@ -933,6 +959,12 @@ ul.agenda-templates > li {
 .modal-window .tab.active {
 	background-color: #054265;
 	color: #fff;
+}
+
+.modal-inner {
+	overflow:auto;
+	height: 100%;
+	padding-right: 15px;
 }
 
 /* help tab */
@@ -964,4 +996,10 @@ ul.agenda-templates > li {
     border: 1px solid #666;
     width: 100%;
     height: 60px;
+}
+
+button .spinner {
+	margin-left: 5px;
+	width: 12px;
+	height: 12px;
 }
