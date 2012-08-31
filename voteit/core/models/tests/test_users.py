@@ -37,6 +37,14 @@ class UsersTests(unittest.TestCase):
         obj['user'] = User(email = 'hello@world.org', first_name = 'Anders')
         res = obj.get_user_by_email('hello@world.org')
         self.assertEqual(res.get_field_value('first_name'), 'Anders')
+        
+    def test_get_user_by_oauth_token(self):
+        obj = self._cut()
+        from voteit.core.models.user import User
+        obj['user'] = User(first_name = 'Anders')
+        obj['user'].auth_domains['dummy'] = {'oauth_access_token': 'dummy_token'}
+        res = obj.get_user_by_oauth_token('dummy', 'dummy_token')
+        self.assertEqual(res.get_field_value('first_name'), 'Anders')
 
     def test_add_lowercase(self):
         obj = self._cut()

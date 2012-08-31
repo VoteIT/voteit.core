@@ -208,6 +208,7 @@ class SearchViewTests(unittest.TestCase):
     def test_get_creators_info(self):
         #Functional test for view component should be in its own test
         self.config.scan('voteit.core.views.components.creators_info')
+        self.config.include('voteit.core.plugins.gravatar_profile_image')
         from voteit.core.models.meeting import Meeting
         root = bootstrap_and_fixture(self.config)
         meeting = root['m'] = Meeting()

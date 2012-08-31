@@ -3,8 +3,10 @@ from urllib import quote
 import colander
 import deform
 from betahaus.pyracont.decorators import schema_factory
+from betahaus.pyracont.factories import createContent
 
 from voteit.core import VoteITMF as _
+from voteit.core.models.interfaces import IProfileImage
 from voteit.core.validators import html_string_validator
 from voteit.core.validators import deferred_unique_email_validator
 from voteit.core.validators import password_validation
@@ -77,6 +79,25 @@ def recaptcha_node():
                                                default=u"This is to prevent spambots from register"),
                                missing=u"",
                                widget=deferred_recaptcha_widget,)
+    
+@colander.deferred
+def profile_image_plugin_choices_widget(node, kw):
+    context = kw['context']
+    request = kw['request']
+    api = kw['api']
+
+    user = api.user_profile
+    plugin_choices = set()
+    for (name, adapter) in request.registry.getAdapters((user,), IProfileImage):
+        if adapter.is_valid_for_user():
+            plugin_choices.add((name, adapter.title))
+
+    return deform.widget.RadioChoiceWidget(values=plugin_choices)
+
+@colander.deferred
+def deferred_default_profile_image_plugin(node, kw):
+    request = kw['request']
+    return 'gravatar_profile_image'
 
 
 @schema_factory('AddUserSchema', title = _(u"Add user"), description = _(u"Use this form to add a user"))
@@ -126,6 +147,12 @@ class EditUserSchema(colander.Schema):
         widget = deform.widget.TextAreaWidget(rows=10, cols=60),
         missing=u"",
         validator=html_string_validator,)
+    profile_image_plugin = colander.SchemaNode(colander.String(),
+                                               title = _(u"Profile image provider"),
+                                               description = _(u"profile_image_plugin_description",
+                                                               default=u""),
+                                               widget = profile_image_plugin_choices_widget,
+                                               default = deferred_default_profile_image_plugin,) 
 
 
 @schema_factory('LoginSchema', title = _(u"Login"))

@@ -6,6 +6,7 @@ from pyramid.view import view_config
 from deform import Form
 from deform.exception import ValidationFailure
 from pyramid.httpexceptions import HTTPFound
+from pyramid.exceptions import Forbidden
 from pyramid.url import resource_url
 from pyramid.security import NO_PERMISSION_REQUIRED
 from pyramid.security import remember
@@ -267,7 +268,6 @@ class UsersFormView(BaseEdit):
         self.response['login_form'] = login_form.render(appstruct)
         self.response['reg_form'] = reg_form.render(appstruct)
         return self.response
-
 
     @view_config(context=ISiteRoot, name='request_password',
                  renderer=DEFAULT_TEMPLATE, permission=NO_PERMISSION_REQUIRED)

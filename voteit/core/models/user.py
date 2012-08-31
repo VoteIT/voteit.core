@@ -1,9 +1,9 @@
 import string
 from random import choice
-from hashlib import md5
 from datetime import timedelta
 
 from zope.interface import implements
+from zope.component import getAdapter
 from repoze.folder import unicodify
 from pyramid.url import resource_url
 from pyramid.security import Allow
@@ -12,6 +12,7 @@ from pyramid.traversal import find_interface
 from pyramid_mailer import get_mailer
 from pyramid_mailer.message import Message
 from pyramid.i18n import get_localizer
+from BTrees.OOBTree import OOBTree 
 from betahaus.pyracont.decorators import content_factory
 from betahaus.pyracont.factories import createContent
 from betahaus.viewcomponent import render_view_action
@@ -21,6 +22,7 @@ from voteit.core.models.interfaces import IUser
 from voteit.core.models.interfaces import ICatalogMetadataEnabled
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import IAgendaItem
+from voteit.core.models.interfaces import IProfileImage
 from voteit.core import VoteITMF as _
 from voteit.core import security
 from voteit.core.models.date_time_util import utcnow
@@ -54,18 +56,35 @@ class User(BaseContent):
         """ Convention - name should always be same as userid """
         return self.__name__
     
+    @property
+    def auth_domains(self):
+        try:
+            return self.__auth_domains__
+        except AttributeError:
+            self.__auth_domains__ = OOBTree()
+            return self.__auth_domains__
+    
     def get_image_tag(self, size=40, **kwargs):
         """ Get image tag. Always square, so size is enough.
             Other keyword args will be converted to html properties.
             Appends class 'profile-pic' to tag if class isn't part of keywords.
         """
         
-        email_hash = self.get_field_value('email_hash', None)
-        tag = '<img src="http://www.gravatar.com/avatar/'
-        if email_hash:
-            tag += email_hash
-        tag += '?d=mm&s=%(size)s" height="%(size)s" width="%(size)s"' % {'size':size}
+        #get selected adapter, fallback to gravatar
+        plugin = getAdapter(self,
+                            name = self.get_field_value('profile_image_plugin', u'gravatar_profile_image'),
+                            interface = IProfileImage)
         
+        url = plugin.url(size)
+        
+        #if no url wa returned falback to gravater
+        if not url:
+            plugin = getAdapter(self,
+                            name = u'gravatar_profile_image',
+                            interface = IProfileImage)
+            url = plugin.url(size)
+        
+        tag = '<img src="%(url)s" height="%(size)s" width="%(size)s"' % {'url': url, 'size': size}
         for (k, v) in kwargs.items():
             tag += ' %s="%s"' % (k, v)
         if not 'class' in kwargs:
@@ -111,14 +130,6 @@ class User(BaseContent):
     def get_token(self):
         """ Get password token, or None. """
         return getattr(self, '__token__', None)
-
-    def generate_email_hash(self):
-        """ Save an md5 hash of an email address.
-            Used to generate urls for gravatar profile images.
-        """
-        email = self.get_field_value('email', '').strip().lower()
-        if email:
-            self.set_field_value('email_hash', md5(email).hexdigest())
             
     def send_mention_notification(self, context, request):
         """ Sends an email when the user is mentioned in a proposal or a discussion post

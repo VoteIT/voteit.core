@@ -7,6 +7,11 @@
 		     tal:content="structure api.render_single_view_component(context, request, 'navigation', 'login')">
         	Login form
         </div>
+        <div class="block"
+        	tal:condition="not (request.path_url.endswith('login') or request.path_url.endswith('register'))" 
+        	tal:content="structure api.render_view_group(api.root, request, 'login_forms')|''">
+        	Login forms
+    	</div>
     </tal:anon>
 
     <tal:root condition="api.userid and not api.meeting">

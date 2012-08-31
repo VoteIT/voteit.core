@@ -28,6 +28,7 @@
             It's taken from your current email address. If you want to change the picture, simply go to
             the Gravatar site and change your picture for the email you use in VoteIT.
         </div>
+        <div tal:replace="structure api.render_view_group(api.root, request, 'connect_forms')|''">Connect forms</div>
     </div>
 </body>
 </html>
