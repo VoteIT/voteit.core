@@ -24,11 +24,13 @@ class AgendaItemViewTests(unittest.TestCase):
     
     def _fixture(self):
         """ Normal context for this view is an agenda item. """
+        from voteit.core.models.user import User
         from voteit.core.models.agenda_item import AgendaItem
         from voteit.core.models.meeting import Meeting
         from voteit.core.models.poll import Poll
         self.config.include('voteit.core.plugins.majority_poll')
         root = bootstrap_and_fixture(self.config)
+        root.users['dummy'] = User()
         root['m'] = meeting = Meeting()
         meeting['ai'] = ai = AgendaItem()
         ai['poll'] = Poll(start_time = utcnow(), end_time = utcnow())
@@ -87,7 +89,20 @@ class AgendaItemViewTests(unittest.TestCase):
         obj = self._cut(context, request)
         self.assertRaises(HTTPForbidden, obj.inline_add_form)
 
+    def test_inline_add_form_proposal(self):
+        self.config.include('voteit.core.plugins.gravatar_profile_image')
+        self.config.testing_securitypolicy(userid='dummy',
+                                           permissive=True)
+        self.config.scan('voteit.core.models.proposal')
+        self.config.scan('voteit.core.schemas.proposal')
+        context = self._fixture()
+        request = testing.DummyRequest(params={'content_type': 'Proposal'})
+        aiv = self._cut(context, request)
+        response = aiv.inline_add_form()
+        self.assertIn(u"content_type=Proposal", response.ubody)
+        
     def test_inline_add_form_discussion_post(self):
+        self.config.include('voteit.core.plugins.gravatar_profile_image')
         self.config.testing_securitypolicy(userid='dummy',
                                            permissive=True)
         self.config.scan('voteit.core.models.discussion_post')
