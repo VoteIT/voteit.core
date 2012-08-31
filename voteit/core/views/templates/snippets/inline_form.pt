@@ -6,6 +6,7 @@
         <span tal:replace="structure form">Form</span>
     </div>
     <div class="clear"><!-- --></div>
+	<p class="discreet" tal:condition="content_type == 'Proposal'" i18n:translate="">Describe proposals here.</p>
     <p class="discreet">
     	<span i18n:translate="">Describe @ here.</span>
     	<span tal:condition="api.meeting.get_field_value('tags_enabled', True)" i18n:translate="">Describe # here.</span>
