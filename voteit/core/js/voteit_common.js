@@ -186,12 +186,32 @@ $(document).ready(function() {
 
 /* loading proposal and discussion forms with ajax */
 $(document).ready(function() {
+    $("a.proposal_button").live('click', function(event) {
+        /* IE might throw an error calling preventDefault(), so use a try/catch block. */
+        try { event.preventDefault(); } catch(e) {}
+        
+        var url = $(this).attr('href');
+        $(this).parent('.inline_add_form').load(url, function(response, status, xhr) {
+            if (status == "error") {
+                var msg = "Sorry but there was an error: ";
+                $(this).html(msg + xhr.status + " " + xhr.statusText);
+                $(this).addClass('dummy-error')
+            } else {
+                var txtar = $(this).find("textarea");
+                txtar.focus();
+                txtar.caretToEnd();
+                txtar.autoResizable();
+            }
+        });
+    });
+});
+$(document).ready(function() {
     $("a.dummy-textarea").live('click', function(event) {
         /* IE might throw an error calling preventDefault(), so use a try/catch block. */
         try { event.preventDefault(); } catch(e) {}
         
         var url = $(this).attr('href');
-        $(this).parent('.inline_form_placeholder').load(url, function(response, status, xhr) {
+        $(this).parents('.inline_add_form').load(url, function(response, status, xhr) {
             if (status == "error") {
                 var msg = "Sorry but there was an error: ";
                 $(this).find("div.dummy-textarea").html(msg + xhr.status + " " + xhr.statusText);

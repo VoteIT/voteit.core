@@ -1,0 +1,13 @@
+<tal:main
+    xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+    i18n:domain="voteit.core">
+    <img tal:replace="structure user_image_tag" />
+    <div class="inline_form_placeholder">
+        <span tal:replace="structure form">Form</span>
+    </div>
+    <div class="clear"><!-- --></div>
+    <p class="discreet">
+    	<span i18n:translate="">Describe @ here.</span>
+    	<span tal:condition="api.meeting.get_field_value('tags_enabled', True)" i18n:translate="">Describe # here.</span>
+    </p>
+</tal:main>

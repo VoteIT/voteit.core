@@ -36,4 +36,6 @@ def inline_add_form(context, request, va, **kw):
         response['text'] = _(u'${username} propose', mapping={'username': api.userid})
     else:
         response['text'] = _(u'Add')
+    if ctype == 'Proposal':
+        return render('../templates/snippets/inline_dummy_proposal_button.pt', response, request = request)
     return render('../templates/snippets/inline_dummy_form.pt', response, request = request)

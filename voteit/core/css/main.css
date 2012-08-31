@@ -551,6 +551,12 @@ li.notification_message {
     padding: 10px;
     position: relative;
 }
+#proposals .inline_add_form {
+	text-align: center;
+} 
+.inline_add_form p.discreet {
+	text-align: left;
+}
 .inline_form_placeholder {
     padding-left: 50px;
     padding-right: 10px;

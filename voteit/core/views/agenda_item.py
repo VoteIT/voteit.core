@@ -109,8 +109,13 @@ class AgendaItemView(BaseView):
             if content_type == 'Proposal':
                 appstruct['title'] = " #%s" % tag
             else:
-                appstruct['text'] = " #%s" % tag                
-        return Response(form.render(appstruct=appstruct))
+                appstruct['text'] = " #%s" % tag 
+        else:
+           if content_type == 'Proposal':
+                appstruct['title'] = "%s " % _('I propose')
+        self.response['form'] = form.render(appstruct=appstruct)
+        self.response['user_image_tag'] = self.api.user_profile.get_image_tag()
+        return Response(render('templates/snippets/inline_form.pt', self.response, request=self.request))
 
     @view_config(context=IDiscussionPost, name="more", permission=VIEW, renderer='json')
     def discussion_more(self):
