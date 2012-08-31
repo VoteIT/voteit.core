@@ -18,6 +18,9 @@ def proposal_listing(context, request, va, **kw):
 
     response = {}
     
+    # crearting dummy proposal to get state info dict
+    state_info = Proposal().workflow.state_info(None, request)
+    
     def _get_polls(polls):
         
         def _get_proposal_brains(uids):
@@ -32,6 +35,21 @@ def proposal_listing(context, request, va, **kw):
         response['polls'] = polls
         response['get_proposal_brains'] = _get_proposal_brains
         return render('../templates/polls.pt', response, request=request)
+    
+    def _show_retract(brain):
+        #Do more expensive checks last!
+        if brain['workflow_state'] != 'published':
+            return
+        if not api.userid in brain['creators']:
+            return
+        #Now for the 'expensive' stuff
+        obj = find_resource(api.root, brain['path'])
+        return api.context_has_permission(RETRACT, obj)
+    
+    def _translated_state_title(state):
+        for info in state_info:
+            if info['name'] == state:
+                return api.tstring(info['title'])
 
     
     response['get_polls'] = _get_polls
@@ -51,6 +69,8 @@ def proposal_listing(context, request, va, **kw):
                                                        path = resource_path(context))
     response['context'] = context
     response['api'] = api 
+    response['translated_state_title'] = _translated_state_title
+    response['show_retract'] = _show_retract
     return render('../templates/proposals.pt', response, request = request)
 
 
