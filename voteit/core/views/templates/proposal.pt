@@ -11,8 +11,7 @@
          Cogwheel menu
     </span>	
 
-    <tal:creators tal:replace="structure api.get_creators_info(brain['creators'])">Creators</tal:creators>
-    <span i18n:translate="">propose</span>:
+    <tal:creators tal:replace="structure api.get_creators_info(brain['creators'])">Creators</tal:creators>:
     <span class="body" tal:content="structure brain['title']">Title</span>
 
     <div class="meta">
@@ -30,6 +29,17 @@
         <span class="user_tags" 
         	tal:condition="show_user_tags" 
         	tal:content="structure api.render_view_group(brain, request, 'user_tags')"></span>
+    	<tal:tags condition="api.meeting.get_field_value('tags_enabled', True)">
+            <span class="hyphen">&#45;</span>
+	            <a class="answer" 
+	               tal:attributes="href '%s%s/@@answer' % (request.application_url, brain['path'])"
+	               i18n:translate="">Comment</a>
+            <span class="hyphen">&#45;</span>
+            <span class="aid">
+            	<a class="tag" 
+            	   tal:attributes="href '?tag=%s' % brain['aid']" 
+            	   tal:content="'#%s' % brain['aid']">Autotag</a></span>
+    	   </tal:tags>
     </div>
     <div class="clear"><!-- --></div>
 </div>

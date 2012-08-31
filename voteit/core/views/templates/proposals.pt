@@ -26,8 +26,7 @@
 	             Cogwheel menu
 	        </span>	
 	
-	        <tal:creators tal:replace="structure api.get_creators_info(proposal['creators'])">Creators</tal:creators>
-	        <span i18n:translate="">propose</span>:
+	        <tal:creators tal:replace="structure api.get_creators_info(proposal['creators'])">Creators</tal:creators>:
 	        <span class="body" tal:content="structure api.transform(proposal['title'])">Title</span>
 	
 	        <div class="meta">

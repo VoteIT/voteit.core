@@ -15,11 +15,6 @@ from voteit.core.models.proposal import Proposal
 def proposal_listing(context, request, va, **kw):
     """ Get proposals for a specific context """
     api = kw['api']
-
-    response = {}
-    
-    # crearting dummy proposal to get state info dict
-    state_info = Proposal().workflow.state_info(None, request)
     
     def _get_polls(polls):
         
@@ -35,7 +30,7 @@ def proposal_listing(context, request, va, **kw):
         response['polls'] = polls
         response['get_proposal_brains'] = _get_proposal_brains
         return render('../templates/polls.pt', response, request=request)
-    
+
     def _show_retract(brain):
         #Do more expensive checks last!
         if brain['workflow_state'] != 'published':
@@ -45,53 +40,9 @@ def proposal_listing(context, request, va, **kw):
         #Now for the 'expensive' stuff
         obj = find_resource(api.root, brain['path'])
         return api.context_has_permission(RETRACT, obj)
-    
-    def _translated_state_title(state):
-        for info in state_info:
-            if info['name'] == state:
-                return api.tstring(info['title'])
-
-    
-    response['get_polls'] = _get_polls
-    response['polls'] = api.get_restricted_content(context, iface=IPoll, sort_on='created')
-    for poll in response['polls']:
-        try:
-            plugin = poll.get_poll_plugin()
-        except ComponentLookupError:
-            err_msg = _(u"plugin_missing_error",
-                        default = u"Can't find any poll plugin with name '${name}'. Perhaps that package has been uninstalled?",
-                        mapping = {'name': poll.get_field_value('poll_plugin')})
-            api.flash_messages.add(err_msg, type="error")
-            continue
-    
-    response['proposals'] = api.get_metadata_for_query(content_type = 'Proposal',
-                                                       sort_index = 'created',
-                                                       path = resource_path(context))
-    response['context'] = context
-    response['api'] = api 
-    response['translated_state_title'] = _translated_state_title
-    response['show_retract'] = _show_retract
-    return render('../templates/proposals.pt', response, request = request)
-
-
-@view_action('proposal', 'block')
-def proposal_block(context, request, va, **kw):
-    api = kw['api']
-    brain = kw['brain']
-    show_user_tags = kw.get('show_user_tags', True)
     
     # crearting dummy proposal to get state info dict
     state_info = Proposal().workflow.state_info(None, request)
-    
-    def _show_retract(brain):
-        #Do more expensive checks last!
-        if brain['workflow_state'] != 'published':
-            return
-        if not api.userid in brain['creators']:
-            return
-        #Now for the 'expensive' stuff
-        obj = find_resource(api.root, brain['path'])
-        return api.context_has_permission(RETRACT, obj)
     
     def _translated_state_title(state):
         for info in state_info:
@@ -124,9 +75,52 @@ def proposal_block(context, request, va, **kw):
         results.insert(0, get_metadata(docid))
 
     response = {}
+    response['get_polls'] = _get_polls
+    response['polls'] = api.get_restricted_content(context, iface=IPoll, sort_on='created')
+    for poll in response['polls']:
+        try:
+            plugin = poll.get_poll_plugin()
+        except ComponentLookupError:
+            err_msg = _(u"plugin_missing_error",
+                        default = u"Can't find any poll plugin with name '${name}'. Perhaps that package has been uninstalled?",
+                        mapping = {'name': poll.get_field_value('poll_plugin')})
+            api.flash_messages.add(err_msg, type="error")
+            continue
     response['clear_tag_url'] = api.request.resource_url(context, query=clear_tag_query)
     response['proposals'] = tuple(results)
     response['hidden_count'] = total_count - count
+    response['api'] = api
+    response['show_retract'] = _show_retract
+    response['translated_state_title'] = _translated_state_title 
+    return render('../templates/proposals.pt', response, request = request)
+
+@view_action('proposal', 'block')
+def proposal_block(context, request, va, **kw):
+    api = kw['api']
+    brain = kw['brain']
+    show_user_tags = kw.get('show_user_tags', True)
+    
+    # crearting dummy proposal to get state info dict
+    state_info = Proposal().workflow.state_info(None, request)
+    
+    def _show_retract(brain):
+        #Do more expensive checks last!
+        if brain['workflow_state'] != 'published':
+            return
+        if not api.userid in brain['creators']:
+            return
+        #Now for the 'expensive' stuff
+        obj = find_resource(api.root, brain['path'])
+        return api.context_has_permission(RETRACT, obj)
+    
+    def _translated_state_title(state):
+        for info in state_info:
+            if info['name'] == state:
+                return api.tstring(info['title'])
+        
+        return state
+    
+    response = {}
     response['api'] = api
     response['brain'] = brain
     response['translated_state_title'] = _translated_state_title
