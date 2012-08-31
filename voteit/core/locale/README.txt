@@ -1,19 +1,15 @@
-Translation trouble!
+Handle translations this way.
 
-We've tried to extract messages with Babel, but that doesn't work in a lot of cases,
-like macro templates. So we're using a mix of Babel and i18ndude to extract and compile
-mo-files now.
+  1. Go to voteit.core (or any repo that needs translating)
+  2. Run: ../../bin/py setup.py extract_messages
+  3. Run: ../../bin/py setup.py update_catalog
+  4. Make your translations in .po-file
+  5. Run: ../../bin/py setup.py compile_catalog
+  6. Test
+  7. Submit your translation
 
-Extraction - from dir voteit/core:
-i18ndude rebuild-pot --pot locale/voteit.core.pot --create voteit.core .
-i18ndude sync --pot locale/voteit.core.pot locale/sv/LC_MESSAGES/voteit.core.po
+Read more about it here:
 
-(You need to install i18ndude before running the command. It's available on pypi.python.org)
+http://docs.pylonsproject.org/projects/pyramid/en/1.2-branch/narr/i18n.html
 
-Compiling with Babel
-From the eggs root dir, Ie src/voteit.core in our current dev enviroment:
-../../bin/py setup.py compile_catalog
-
-We'll try to resolve this problem ASAP, until then we'll have to rely on both tools.
-
-/Robin
+http://docs.pylonsproject.org/projects/pyramid/en/1.2-branch/narr/i18n.html#updating-a-catalog-file
