@@ -5,6 +5,8 @@ from pyramid.traversal import find_root
 from pyramid.traversal import find_interface
 from pyramid.url import resource_url
 from webhelpers.html import HTML
+from webhelpers.html.render import sanitize
+from webhelpers.html.converters import nl2br
 from slugify import slugify
 
 from voteit.core.models.interfaces import IMeeting
@@ -85,3 +87,14 @@ def tags2links(text, context, request):
         return pre + HTML.a('#%s' % tag, **link) + post
 
     return re.sub(TAG_PATTERN, handle_match, text)
+
+def strip_and_truncate(text, limit=200):
+    try:
+        text = sanitize(text)
+    except Exception, e:
+        #FIXME: Logg unrecoverable error
+        #This is a bad exception that should never happen, if we translate it it will be hard to search in the source code
+        return u"Unrecoverable error: could not truncate text"
+    if len(text) > limit:
+        text = u"%s<...>" % nl2br(text[:limit])
+    return nl2br(text)

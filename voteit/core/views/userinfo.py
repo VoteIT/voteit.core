@@ -6,7 +6,6 @@ from pyramid.view import view_config
 from pyramid.security import effective_principals
 from pyramid.httpexceptions import HTTPForbidden
 from webhelpers.html.converters import nl2br
-from webhelpers.html.render import sanitize
 
 from voteit.core import VoteITMF as _
 from voteit.core.models.interfaces import IMeeting
@@ -14,16 +13,10 @@ from voteit.core.models.interfaces import IDateTimeUtil
 from voteit.core.security import find_authorized_userids
 from voteit.core.security import VIEW
 from voteit.core.models.catalog import metadata_for_query
+from voteit.core.helpers import strip_and_truncate
 
 
 USERINFO_TPL = 'templates/snippets/userinfo.pt'
-
-
-def _strip_and_truncate(text, limit=100):
-    text = sanitize(text)
-    if len(text) > limit:
-        text = "%s<...>" % nl2br(text[:limit])
-    return nl2br(text)
 
 
 @view_config(context=IMeeting, name="_userinfo", permission=VIEW)
@@ -67,7 +60,7 @@ def user_info_view(context, request, info_userid=None):
     response['info_userid'] = info_userid
     response['about_me'] = nl2br(user.get_field_value('about_me'))
     response['last_entries'] = _last_entries()
-    response['truncate'] = _strip_and_truncate
+    response['truncate'] = strip_and_truncate
     response['relative_time_format'] = dt_util.relative_time_format
     if request.is_xhr:
         return render_to_response(USERINFO_TPL, response, request = request)

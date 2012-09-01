@@ -34,6 +34,7 @@ class AtUseridLinkTests(unittest.TestCase):
         value = self._fut('@admin', self._fixture())
         self.assertIn('/m/_userinfo?userid=admin', value)
 
+
 class GenerateSlugTests(unittest.TestCase):
     
     def setUp(self):
@@ -102,3 +103,22 @@ class Tags2linksTests(unittest.TestCase):
     def test_function(self):
         value = self._fut(u'#åäöÅÄÖ', self._fixture(), self.request)
         self.assertIn(u'/m/ai/?tag=%C3%A5%C3%A4%C3%B6%C3%85%C3%84%C3%96', value)
+
+class StripAndTruncateTests(unittest.TestCase):
+    
+    def setUp(self):
+        self.config = testing.setUp()
+
+    def tearDown(self):
+        testing.tearDown()
+    
+    @property
+    def _fut(self):
+        from voteit.core.helpers import strip_and_truncate
+        return strip_and_truncate
+
+    def test_strip_and_truncate(self):
+        text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris at enim nec nunc facilisis semper. Sed vel magna sit amet augue aliquet rhoncus metus."
+        truncated = self._fut(text, 100)
+        self.assertEqual(truncated, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris at enim nec nunc facilisis semper. S&lt;...&gt;') 
+
