@@ -3,7 +3,7 @@ from random import choice
 from datetime import timedelta
 
 from zope.interface import implements
-from zope.component import getAdapter
+from zope.component import queryAdapter
 from repoze.folder import unicodify
 from pyramid.url import resource_url
 from pyramid.security import Allow
@@ -63,34 +63,26 @@ class User(BaseContent):
         except AttributeError:
             self.__auth_domains__ = OOBTree()
             return self.__auth_domains__
-    
-    def get_image_tag(self, size=40, **kwargs):
-        """ Get image tag. Always square, so size is enough.
-            Other keyword args will be converted to html properties.
-            Appends class 'profile-pic' to tag if class isn't part of keywords.
-        """
-        
-        #get selected adapter, fallback to gravatar
-        plugin = getAdapter(self,
+
+    def get_image_plugin(self):
+        #get selected adapter, fallback to gravatar. Will return None on ComponentLookupError.
+        return queryAdapter(self,
                             name = self.get_field_value('profile_image_plugin', u'gravatar_profile_image'),
                             interface = IProfileImage)
-        
-        url = plugin.url(size)
-        
-        #if no url wa returned falback to gravater
-        if not url:
-            plugin = getAdapter(self,
-                            name = u'gravatar_profile_image',
-                            interface = IProfileImage)
+
+    def get_image_tag(self, size=40, **kwargs):
+        plugin = self.get_image_plugin()
+        try:
             url = plugin.url(size)
-        
+        except Exception:
+            #FIXME: Log exception
+            url = "" #FIXME: Broken-symbol for image?
         tag = '<img src="%(url)s" height="%(size)s" width="%(size)s"' % {'url': url, 'size': size}
         for (k, v) in kwargs.items():
             tag += ' %s="%s"' % (k, v)
         if not 'class' in kwargs:
             tag += ' class="profile-pic"'
         tag += ' />'
-        
         return tag
 
     def get_password(self):

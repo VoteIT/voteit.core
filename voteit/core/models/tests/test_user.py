@@ -14,6 +14,8 @@ from voteit.core import security
 from voteit.core.models.date_time_util import utcnow
 from voteit.core.exceptions import TokenValidationError
 from voteit.core.testing_helpers import register_security_policies
+from voteit.core.models.interfaces import IProfileImage
+from voteit.core.models.interfaces import IUser
 
 
 admin = set([security.ROLE_ADMIN])
@@ -31,8 +33,10 @@ class UserTests(unittest.TestCase):
         from voteit.core.models.user import User
         return User()
 
+    def _register_mock_image_plugin(self):
+        self.config.registry.registerAdapter(_MockImagePlugin, (IUser,), IProfileImage, _MockImagePlugin.name)
+
     def test_verify_interface(self):
-        from voteit.core.models.interfaces import IUser
         obj = self._make_obj()
         self.assertTrue(verifyObject(IUser, obj))
     
@@ -89,6 +93,17 @@ class UserTests(unittest.TestCase):
         self.assertEqual(len(mailer.outbox), 1)
         msg = mailer.outbox[0]
         self.failUnless(obj.__token__() in msg.html)
+
+    def test_get_image_plugin(self):
+        self._register_mock_image_plugin()
+        obj = self._make_obj()
+        obj.set_field_value('profile_image_plugin', 'mock_image_plugin')
+        self.assertIsInstance(obj.get_image_plugin(), _MockImagePlugin)
+
+    def test_get_image_plugin_broken_plugin(self):
+        obj = self._make_obj()
+        obj.set_field_value('profile_image_plugin', 'i_dont_exist')
+        self.assertEqual(obj.get_image_plugin(), None)
 
     def test_get_image_tag(self):
         self.config.include('voteit.core.plugins.gravatar_profile_image')
@@ -212,3 +227,18 @@ class RequestPasswordTokenTests(unittest.TestCase):
         obj = self._make_obj()
         obj.token = 'dummy'
         self.assertRaises(TokenValidationError, obj.validate, 'wrong')
+
+
+class _MockImagePlugin(object):
+    name = "mock_image_plugin"
+    title = "Mock"
+    description = "for testing"
+
+    def __init__(self, context):
+        self.context = context
+
+    def url(self, size):
+        "http://www.voteit.se?size=%s" % size
+
+    def is_valid_for_user(self):
+        return True

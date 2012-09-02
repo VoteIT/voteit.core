@@ -187,7 +187,23 @@ class IUser(IBaseFolder):
                        "that the name of the stored object must be the userid. "
                        "This enables you to do get(<userid>) on a Users folder, "
                        "and it makes it easy to check that each username is only used once.")
-    
+
+    auth_domains = Attribute("Contains domain information on different authentication systems.")
+
+    def get_image_plugin():
+        """ Get the currently selected plugin (adapter) that this user has selected for
+            profile picture.
+            If the selected system is broken it will return None and not default to anything.
+        """
+
+    def get_image_tag(size=40, **kwargs):
+        """ Get image tag. Always square, so size is enough.
+            Other keyword args will be converted to html properties.
+            Appends class 'profile-pic' to tag if class isn't part of keywords.
+            Will currently return gravatar url if nothing is selected, and not render an image if
+            something goes wrong. (Like a broken plugin)
+        """
+
     def get_password():
         """ Get password hash.
         """
@@ -771,6 +787,9 @@ class IFanstaticResources(Interface):
 class IProfileImage(Interface):
     """ Adapts a user object to serve profile image from different sources
     """
+    name = Attribute("Adapters name, used like an id")
+    title = Attribute("Human readable title")
+    description = Attribute("Description of this profile image type and where it's from. Ment as information to help regular users.")
 
     def url(size):
         """ Return a URL to the profile picture, if no url could be created

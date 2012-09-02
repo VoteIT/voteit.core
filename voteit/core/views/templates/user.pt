@@ -23,11 +23,8 @@
         </div>
         <div class="clear"><!-- --></div>
         <br/><br/>
-        <div tal:condition="api.context_has_permission('Edit', context)" class="meta" i18n:translate="profile_gravatar_explanation">
-            The profile image comes from the <a href="http://www.gravatar.com" target="_blank">Gravatar network</a>.
-            It's taken from your current email address. If you want to change the picture, simply go to
-            the Gravatar site and change your picture for the email you use in VoteIT.
-        </div>
+        <div tal:condition="api.context_has_permission('Edit', context)"
+             class="meta" tal:content="structure context.get_image_plugin().description|'Broken image plugin'"></div>
         <div tal:replace="structure api.render_view_group(api.root, request, 'connect_forms')|''">Connect forms</div>
     </div>
 </body>
