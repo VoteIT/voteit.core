@@ -95,7 +95,7 @@ class AgendaItemView(BaseView):
                 appstruct['text'] = " #%s" % tag 
         else:
            if content_type == 'Proposal':
-                appstruct['title'] = "%s " % _('I propose')
+                appstruct['title'] = "%s " % self.api.translate(_('I propose'))
         self.response['form'] = form.render(appstruct=appstruct)
         self.response['user_image_tag'] = self.api.user_profile.get_image_tag()
         self.response['content_type'] = content_type
