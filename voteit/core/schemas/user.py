@@ -42,6 +42,13 @@ def deferred_referer(node, kw):
 def userid_preparer(value):
     return value.lower()
 
+def userid_node():
+    return colander.SchemaNode(colander.String(),
+                               title = _(u"UserID"),
+                               description = _('userid_description',
+                                               default=u"Used as a nickname, in @-links and as a unique id. You can't change this later. OK characters are: a-z, 0-9, '.', '-', '_'."),
+                               validator=deferred_new_userid_validator,)
+
 def password_node():
     return colander.SchemaNode(colander.String(),
                                validator=colander.All(password_validation, html_string_validator,),
