@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2012-09-03 10:12+0200\n"
+"POT-Creation-Date: 2012-09-03 12:03+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1831,7 +1831,15 @@ msgid "The VoteIT team"
 msgstr ""
 
 #: voteit/core/views/templates/user.pt:15
-msgid "Change settings"
+msgid "Change profile"
+msgstr ""
+
+#. Default: If you'd like to change where your profile image is taken from,
+#. click 'change profile'. Only valid sources will show up there, so you might
+#. need to connect your profile to other sources to get those options. (Like
+#. Facebook or Twitter) Any valid connection options should be listed below.
+#: voteit/core/views/templates/user.pt:28
+msgid "edit_profile_image_help"
 msgstr ""
 
 #: voteit/core/views/templates/email/help_contact.pt:12

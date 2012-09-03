@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2012-09-03 10:12+0200\n"
-"PO-Revision-Date: 2012-09-03 10:14+0100\n"
-"Last-Translator: Fredrik Nilson <sassur@gmail.com>\n"
+"POT-Creation-Date: 2012-09-03 12:03+0200\n"
+"PO-Revision-Date: 2012-09-03 12:07+0100\n"
+"Last-Translator: Robin Harms Oredsson <robin@betahaus.net>\n"
 "Language-Team: sv <LL@li.org>\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 "MIME-Version: 1.0\n"
@@ -513,7 +513,7 @@ msgstr "Gravatar"
 #: voteit/core/plugins/gravatar_profile_image.py:17
 msgid "profile_gravatar_explanation"
 msgstr ""
-"Bilden ovan kommer från <a href=\"http://www.gravatar.com\" target=\"_blank"
+"Profilbilden kommer från <a href=\"http://www.gravatar.com\" target=\"_blank"
 "\">Gravatar</a>. Den är hämtad från din epostadress. Om du vill ändra bild, "
 "gå till Gravatar och ändra bild för den epostadress du använder i VoteIT."
 
@@ -1968,8 +1968,20 @@ msgid "The VoteIT team"
 msgstr "VoteIT-teamet"
 
 #: voteit/core/views/templates/user.pt:15
-msgid "Change settings"
+msgid "Change profile"
 msgstr "Ändra profil"
+
+#. Default: If you'd like to change where your profile image is taken from,
+#. click 'change profile'. Only valid sources will show up there, so you might
+#. need to connect your profile to other sources to get those options. (Like
+#. Facebook or Twitter) Any valid connection options should be listed below.
+#: voteit/core/views/templates/user.pt:28
+msgid "edit_profile_image_help"
+msgstr ""
+"Om du vill ändra var din profilbild hämtas ifrån, klicka \"ändra profil\". "
+"Bara giltiga källor dyker upp här, så du kan behöva ansluta din profil till "
+"andra källor för att få fler val. (Som Facebook eller Twitter) Alla giltiga "
+"källor som finns för anslutning bör listas nedan."
 
 #: voteit/core/views/templates/email/help_contact.pt:12
 msgid "From"

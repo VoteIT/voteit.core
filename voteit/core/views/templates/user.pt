@@ -15,7 +15,7 @@
             <a tal:attributes="href '%s@@edit' % api.resource_url(context, request)"
                tal:condition="api.context_has_permission('Edit', context)"
                class="buttonize large"
-               i18n:translate="">Change settings</a>
+               i18n:translate="">Change profile</a>
             <a tal:attributes="href '%s@@change_password' % api.resource_url(context, request)"
                tal:condition="api.context_has_permission('Change Password', context)"
                class="buttonize large"
@@ -23,8 +23,15 @@
         </div>
         <div class="clear"><!-- --></div>
         <br/><br/>
-        <div tal:condition="api.context_has_permission('Edit', context)"
-             class="meta" tal:content="structure context.get_image_plugin().description|'Broken image plugin'"></div>
+        <div tal:condition="api.context_has_permission('Edit', context)" class="meta">
+            <div tal:content="structure context.get_image_plugin().description|'Broken image plugin'" /><br/>
+            <div i18n:translate="edit_profile_image_help">
+                If you'd like to change where your profile image is taken from, click 'change profile'.
+                Only valid sources will show up there, so you might need to connect your profile to
+                other sources to get those options. (Like Facebook or Twitter) Any valid connection options
+                should be listed below.
+            </div>
+        </div>
         <div tal:replace="structure api.render_view_group(api.root, request, 'connect_forms')|''">Connect forms</div>
     </div>
 </body>
