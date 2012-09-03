@@ -90,4 +90,3 @@ function voteit_poll_beforeSubmit(arr, form, options) {
 	spinner.attr('alt', voteit.translation['waiting']);
 	spinner.insertAfter(button.find('span'));
 } 
->>>>>>> voting_rework
