@@ -33,6 +33,7 @@ requires = (
     'repoze.evolution',
     'httpagentparser',
     'BeautifulSoup',
+    'nose',
     )
 
 
