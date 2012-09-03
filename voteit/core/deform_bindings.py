@@ -1,5 +1,6 @@
 from os.path import join
 from pkg_resources import resource_filename
+from copy import deepcopy
 
 from deform import Form
 from deform import ZPTRendererFactory
@@ -24,15 +25,28 @@ def append_search_path(path):
     """ Add a search path to deform. This is the way to register
         custom widget templates.
     """
-        
     current = list(Form.default_renderer.loader.search_path)
     current.append(path)
     Form.default_renderer.loader.search_path = tuple(current)
+
+#Important for tests so we can restore deform to its original state
+_OLD_RENDERER = deepcopy(Form.default_renderer)
+
+def reset_deform(config=None):
+    """ Reset deform to its original state. Run this in the tearDown part of tests, otherwise
+        deform will still be patched. (This doesn't apply for tests run with nose, but with setuptools.)
+        
+        This will also clear search paths from deform.
+    """
+    Form.set_default_renderer(_OLD_RENDERER)
 
 def includeme(config):
     """ Patch deform to use zpt_renderer as default with Pyramids
         translation mechanism activated.
         Also a good pluggable point for patching templates or other things.
+        
+        WARNING! This method patches global variables, which means that
+        it will affect ALL tests after this method is included.
     """
     settings = config.registry.settings
     auto_reload = settings['pyramid.reload_templates']

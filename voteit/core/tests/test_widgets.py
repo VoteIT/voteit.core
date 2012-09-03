@@ -37,6 +37,7 @@ class RecaptchaWidgetTests(unittest.TestCase):
         self.config.include('voteit.core.deform_bindings')
 
     def tearDown(self):
+        self.config.include('voteit.core.deform_bindings.reset_deform')
         testing.tearDown()
     
     @property
