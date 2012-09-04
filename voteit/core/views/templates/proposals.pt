@@ -16,7 +16,6 @@
 		
 	<tal:iterate condition="proposals" repeat="proposal proposals">
 	    <tal:proposal 
-	    	condition="proposal['workflow_state'] in ('published', 'retracted', 'unhandled')" 
 	    	replace="structure api.render_single_view_component(context, request, 'proposal', 'block', brain=proposal)">
 	    	Proposal
 	    </tal:proposal>	
