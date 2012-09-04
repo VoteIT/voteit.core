@@ -14,48 +14,12 @@
 	
 	<span tal:replace="structure get_polls(polls)">Render poll listing</span>
 		
-	<tal:iterate condition="proposals" repeat="proposal proposals" >
-	    <div tal:define="unread api.is_brain_unread(proposal);
-	                     state_id proposal['workflow_state'];
-	                     css_class 'listing_block wf-state-%s' % state_id;"
-	         tal:attributes="class unread and 'unread %s' % css_class or css_class;
-	                         name proposal['name'];
-	                         id proposal['uid'];">
-	
-	        <span tal:condition="api.show_moderator_actions" tal:replace="structure api.get_moderator_actions(proposal)">
-	             Cogwheel menu
-	        </span>	
-	
-	        <tal:creators tal:replace="structure api.get_creators_info(proposal['creators'])">Creators</tal:creators>:
-	        <span class="body" tal:content="structure api.transform(proposal['title'])">Title</span>
-	
-	        <div class="meta">
-	            <span class="${state_id} icon iconpadding"
-	                  tal:content="translated_state_title(state_id)">private</span>
-	            <span class="hyphen">&#45;</span>
-	            <span class="time" tal:content="api.dt_util.relative_time_format(proposal['created'])"></span>
-	            <span class="hyphen">&#45;</span>
-	            <span tal:condition="show_retract(proposal)">
-	                <a class="retract confirm-retract"
-	                   tal:attributes="href '%s%s/@@state?state=retracted' % (request.application_url, proposal['path'])"
-	                   i18n:translate="">Retract</a>
-	                <span class="hyphen">&#45;</span>
-	            </span>
-	            <span class="user_tags" tal:content="structure api.render_view_group(proposal, request, 'user_tags')"></span>
-	            <tal:tags condition="api.meeting.get_field_value('tags_enabled', True)">
-	            <span class="hyphen">&#45;</span>
-		            <a class="answer" 
-		               tal:attributes="href '%s%s/@@answer' % (request.application_url, proposal['path'])"
-		               i18n:translate="">Comment</a>
-	            <span class="hyphen">&#45;</span>
-	            <span class="aid">
-	            	<a class="tag" 
-	            	   tal:attributes="href '?tag=%s' % proposal['aid']" 
-	            	   tal:content="'#%s' % proposal['aid']">Autotag</a></span>
-	    	   </tal:tags>
-	        </div>
-	        <div class="clear"><!-- --></div>
-	    </div>
+	<tal:iterate condition="proposals" repeat="proposal proposals">
+	    <tal:proposal 
+	    	condition="proposal['workflow_state'] in ('published', 'retracted', 'unhandled')" 
+	    	replace="structure api.render_single_view_component(context, request, 'proposal', 'block', brain=proposal)">
+	    	Proposal
+	    </tal:proposal>	
 	</tal:iterate>
 </div>
 </tal:main>
