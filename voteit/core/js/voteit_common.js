@@ -451,7 +451,7 @@ $(document).ready(function() {
 
 /* answer popup */
 $(document).ready(function() {
-	$('#proposals a.answer, #discussions a.answer').live('click', function(event) {
+	$('a.answer').live('click', function(event) {
 		/* stop form from submitting normally 
 	    IE might throw an error calling preventDefault(), so use a try/catch block. */
 	    try { event.preventDefault(); } catch(e) {}
