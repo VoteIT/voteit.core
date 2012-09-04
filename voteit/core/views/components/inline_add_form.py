@@ -16,12 +16,23 @@ def inline_add_form(context, request, va, **kw):
     ctype = va.kwargs['ctype']
     api = kw['api']
     if ctype == 'Proposal' and not api.context_has_permission(ADD_PROPOSAL, context):
-        msg = api.translate(_(u"no_propose_perm_notice",
-                              default = u"You don't have the required permission to add a proposal here"))
+        if context.get_workflow_state() == 'closed':
+            msg = api.translate(_(u"no_propose_ai_closed",
+                                  default = u"The agenda item is closed, you can't add a proposal here"))
+        elif api.meeting.get_workflow_state() == 'closed':
+            msg = api.translate(_(u"no_propose_meeting_closed",
+                                  default = u"The meeting is closed, you can't add a proposal here"))
+        else:
+            msg = api.translate(_(u"no_propose_perm_notice",
+                                  default = u"You don't have the required permission to add a proposal here"))
         return "<hr/>%s" % msg
     if ctype == 'DiscussionPost' and not api.context_has_permission(ADD_DISCUSSION_POST, context):
-        msg = api.translate(_(u"no_discuss_perm_notice",
-                              default = u"You don't have the required permission to add a discussion post here"))
+        if api.meeting.get_workflow_state() == 'closed':
+            msg = api.translate(_(u"no_discuss_meeting_closed",
+                                  default = u"The meeting is closed, you can't add a discussion post here"))
+        else:
+            msg = api.translate(_(u"no_discuss_perm_notice",
+                                  default = u"You don't have the required permission to add a discussion post here"))
         return "<hr/>%s" % msg
     #Important! This widget must register all the needed resources for the form that will be included later!
     voteit_deform.need()
