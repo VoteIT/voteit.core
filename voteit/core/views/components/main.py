@@ -2,6 +2,8 @@ from betahaus.viewcomponent import view_action
 from pyramid.renderers import render
 from betahaus.viewcomponent.interfaces import IViewGroup
 
+from voteit.core import VoteITMF as _
+
 
 @view_action('main', 'logo_tag')
 def logo_image_tag(context, request, *args, **kwargs):
@@ -41,6 +43,15 @@ def columns(context, request, *args, **kwargs):
 def render_flash_messages(context, request, *args, **kwargs):
     """ Render flash messages. """
     api = kwargs['api']
+    try:
+        if api.meeting_state == u'upcoming':
+            msg = _(u"This meeting hasn't started yet.")
+            api.flash_messages.add(msg, type = 'lock')
+        if api.meeting_state == u'closed':
+            msg = _(u"This meeting has closed.")
+            api.flash_messages.add(msg, type = 'lock')
+    except:
+        pass
     response = dict(messages = api.flash_messages.get_messages(),)
     return render('../templates/snippets/flash_messages.pt', response, request = request)
 
