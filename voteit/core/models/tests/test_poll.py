@@ -339,7 +339,7 @@ class PollTests(unittest.TestCase):
         self.config.scan('voteit.core.models.proposal')
         agenda_item = self._agenda_item_with_proposals_fixture()
         obj = self._cut()
-        obj.set_field_value('reject_proposal_title', 'Hello world, reject all')
+        obj.set_field_value('reject_proposal_title', u"Hello world, reject all")
         obj.set_field_value('add_reject_proposal', True)
         obj.set_field_value('proposal_title', u"Testing reject all")
         agenda_item['p'] = obj
