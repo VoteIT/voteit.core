@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2012-09-03 12:03+0200\n"
-"PO-Revision-Date: 2012-09-03 12:07+0100\n"
-"Last-Translator: Robin Harms Oredsson <robin@betahaus.net>\n"
+"POT-Creation-Date: 2012-09-04 12:35+0200\n"
+"PO-Revision-Date: 2012-09-04 12:43+0100\n"
+"Last-Translator: Fredrik Nilson <sassur@gmail.com>\n"
 "Language-Team: sv <LL@li.org>\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 "MIME-Version: 1.0\n"
@@ -101,7 +101,6 @@ msgstr "Svara"
 
 #: voteit/core/js_translations.py:26
 #: voteit/core/views/templates/proposal.pt:34
-#: voteit/core/views/templates/proposals.pt:47
 msgid "Comment"
 msgstr "Kommentera"
 
@@ -388,7 +387,7 @@ msgid "Proposal"
 msgstr "Förslag"
 
 #: voteit/core/models/schemas.py:11
-#: voteit/core/views/components/inline_add_form.py:38
+#: voteit/core/views/components/inline_add_form.py:49
 msgid "Add"
 msgstr "Lägg till"
 
@@ -410,7 +409,7 @@ msgstr "Ändra"
 msgid "Delete"
 msgstr "Radera"
 
-#: voteit/core/models/schemas.py:15 voteit/core/schemas/user.py:158
+#: voteit/core/models/schemas.py:15 voteit/core/schemas/user.py:165
 #: voteit/core/views/components/global_actions.py:21
 msgid "Login"
 msgstr "Logga in"
@@ -622,7 +621,7 @@ msgstr "Namn"
 msgid "contact_schema_name_description"
 msgstr "Lämna fältet tomt om du vill vara anonym"
 
-#: voteit/core/schemas/help.py:23 voteit/core/schemas/user.py:53
+#: voteit/core/schemas/help.py:23 voteit/core/schemas/user.py:60
 #: voteit/core/views/templates/list_users.pt:24
 #: voteit/core/views/templates/participants.pt:23
 msgid "Email"
@@ -815,7 +814,7 @@ msgstr "Epostadress att skicka från"
 msgid "Meeting access policy"
 msgstr "Mötestillgångspolicy"
 
-#: voteit/core/schemas/meeting.py:104 voteit/core/schemas/user.py:77
+#: voteit/core/schemas/meeting.py:104 voteit/core/schemas/user.py:84
 msgid "Verify you are human"
 msgstr "Verifiera att du är människa"
 
@@ -886,7 +885,8 @@ msgstr ""
 "inget är valt så kommer baraserverns standardmetod finnas tillgänglig."
 
 #: voteit/core/schemas/permissions.py:42 voteit/core/schemas/permissions.py:79
-#: voteit/core/schemas/user.py:107 voteit/core/schemas/user.py:124
+#: voteit/core/schemas/user.py:47 voteit/core/schemas/user.py:114
+#: voteit/core/schemas/user.py:131
 #: voteit/core/views/templates/list_users.pt:21
 #: voteit/core/views/templates/logs.pt:20
 #: voteit/core/views/templates/participants.pt:20
@@ -1084,97 +1084,100 @@ msgstr "Privat ReCaptcha-nyckel"
 msgid "'${val}' is not valid as date and time"
 msgstr "'${val}' är inte giltigt som datum och tid"
 
-#: voteit/core/schemas/user.py:49 voteit/core/schemas/user.py:163
-msgid "Password"
-msgstr "Lösenord"
-
-#: voteit/core/schemas/user.py:58 voteit/core/views/templates/list_users.pt:22
-#: voteit/core/views/templates/participants.pt:21
-msgid "First name"
-msgstr "Förnamn"
-
-#: voteit/core/schemas/user.py:63 voteit/core/views/templates/list_users.pt:23
-#: voteit/core/views/templates/participants.pt:22
-msgid "Last name"
-msgstr "Efternamn"
-
-#. Default: This is to prevent spambots from register
-#: voteit/core/schemas/user.py:78
-msgid "registration_captcha_description"
-msgstr "Detta är för att hindra spamrobotar från att registrera sig"
-
-#: voteit/core/schemas/user.py:103
-msgid "Add user"
-msgstr "Lägg till användare"
-
-#: voteit/core/schemas/user.py:103
-msgid "Use this form to add a user"
-msgstr "Använd detta formulär för att lägga till en användare"
-
+#. Default: Used as a nickname, in @-links and as a unique id. You can't change
+#. this later. OK characters are: a-z, 0-9, '.', '-', '_'.
 #. Default:  Used as a nickname, in @-links and as a unique id. You can't
 #. change this later. OK characters are: a-z, '.', '-', '_'.
 #. change this later. OK characters are: a-z, 0-9, '.', '-', '_'.
-#: voteit/core/schemas/user.py:108 voteit/core/schemas/user.py:125
+#: voteit/core/schemas/user.py:48 voteit/core/schemas/user.py:115
+#: voteit/core/schemas/user.py:132
 msgid "userid_description"
 msgstr ""
 "Används som kortnamn (nick), vid @-länkar och som unikt ID. Du kan inte "
 "ändra detta senare. OK tecken är: a-z, '.', '-', '_'."
 
-#: voteit/core/schemas/user.py:120
+#: voteit/core/schemas/user.py:56 voteit/core/schemas/user.py:170
+msgid "Password"
+msgstr "Lösenord"
+
+#: voteit/core/schemas/user.py:65 voteit/core/views/templates/list_users.pt:22
+#: voteit/core/views/templates/participants.pt:21
+msgid "First name"
+msgstr "Förnamn"
+
+#: voteit/core/schemas/user.py:70 voteit/core/views/templates/list_users.pt:23
+#: voteit/core/views/templates/participants.pt:22
+msgid "Last name"
+msgstr "Efternamn"
+
+#. Default: This is to prevent spambots from register
+#: voteit/core/schemas/user.py:85
+msgid "registration_captcha_description"
+msgstr "Detta är för att hindra spamrobotar från att registrera sig"
+
+#: voteit/core/schemas/user.py:110
+msgid "Add user"
+msgstr "Lägg till användare"
+
+#: voteit/core/schemas/user.py:110
+msgid "Use this form to add a user"
+msgstr "Använd detta formulär för att lägga till en användare"
+
+#: voteit/core/schemas/user.py:127
 msgid "Registration"
 msgstr "Registrering"
 
-#: voteit/core/schemas/user.py:137
+#: voteit/core/schemas/user.py:144
 msgid "Edit user"
 msgstr "Redigera användarprofil"
 
-#: voteit/core/schemas/user.py:137
+#: voteit/core/schemas/user.py:144
 msgid "Use this form to edit a user"
 msgstr "Använd detta formulär för att redigera din användarprofil"
 
-#: voteit/core/schemas/user.py:144
+#: voteit/core/schemas/user.py:151
 msgid "About me"
 msgstr "Information om mig"
 
 #. Default: Please note that anything you type here will be visible to all
 #. users in the same meeting as you.
-#: voteit/core/schemas/user.py:145
+#: voteit/core/schemas/user.py:152
 msgid "user_about_me_description"
 msgstr ""
 "Vänligen notera att det du skriver här blir synligt för alla användare som "
 "är deltagare i samma möte som du."
 
-#: voteit/core/schemas/user.py:151
+#: voteit/core/schemas/user.py:158
 msgid "Profile image provider"
 msgstr "Profilbilden kommer ifrån"
 
 #. Default:
-#: voteit/core/schemas/user.py:152
+#: voteit/core/schemas/user.py:159
 msgid "profile_image_plugin_description"
 msgstr "Läs mer i hjälpen om olika metoder och dess för- och nackdelar."
 
-#: voteit/core/schemas/user.py:161 voteit/core/schemas/user.py:185
+#: voteit/core/schemas/user.py:168 voteit/core/schemas/user.py:192
 msgid "UserID or email address."
 msgstr "Användarnamn eller epostadress"
 
-#: voteit/core/schemas/user.py:168 voteit/core/schemas/user.py:177
+#: voteit/core/schemas/user.py:175 voteit/core/schemas/user.py:184
 #: voteit/core/views/templates/user.pt:19
 msgid "Change password"
 msgstr "Ändra lösenord"
 
-#: voteit/core/schemas/user.py:171
+#: voteit/core/schemas/user.py:178
 msgid "Current password"
 msgstr "Nuvarande lösenord"
 
-#: voteit/core/schemas/user.py:177
+#: voteit/core/schemas/user.py:184
 msgid "Use this form to change password"
 msgstr "Använd detta formulär för att ändra lösenord"
 
-#: voteit/core/schemas/user.py:182
+#: voteit/core/schemas/user.py:189
 msgid "Request new password"
 msgstr "Begär nytt lösenord"
 
-#: voteit/core/schemas/user.py:182
+#: voteit/core/schemas/user.py:189
 msgid "Use this form to request a new password"
 msgstr "Använd detta formulär för att begära ett nytt lösenord"
 
@@ -1500,20 +1503,37 @@ msgstr "VoteIT Wiki"
 msgid "Contact"
 msgstr "Kontakt"
 
+#. Default: The agenda item is closed, you can't add a proposal here
+#: voteit/core/views/components/inline_add_form.py:20
+msgid "no_propose_ai_closed"
+msgstr "Dagordningspunkten är stängd, det går inte att lägga ett förslag här."
+
+#. Default: The meeting is closed, you can't add a proposal here
+#: voteit/core/views/components/inline_add_form.py:23
+#| msgid "no_propose_perm_notice"
+msgid "no_propose_meeting_closed"
+msgstr "Mötet är stängt, du kan inte lägga till ett förslag här."
+
 #. Default: You don't have the required permission to add a proposal here
-#: voteit/core/views/components/inline_add_form.py:19
+#: voteit/core/views/components/inline_add_form.py:26
 msgid "no_propose_perm_notice"
 msgstr ""
 "Du har inte tillräckliga rättigheter för att lägga till ett förslag här"
 
+#. Default: The meeting is closed, you can't add a discussion post here
+#: voteit/core/views/components/inline_add_form.py:31
+#| msgid "no_discuss_perm_notice"
+msgid "no_discuss_meeting_closed"
+msgstr "Mötet är stängt, du kan inte lägga till ett diskussionsinlägg här."
+
 #. Default: You don't have the required permission to add a discussion post
 #. here
-#: voteit/core/views/components/inline_add_form.py:23
+#: voteit/core/views/components/inline_add_form.py:34
 msgid "no_discuss_perm_notice"
 msgstr ""
 "Du har inte tillräckliga rättigher för att lägga in diskussionsinlägg här."
 
-#: voteit/core/views/components/inline_add_form.py:36
+#: voteit/core/views/components/inline_add_form.py:47
 msgid "${username} propose"
 msgstr "${username} föreslår"
 
@@ -1633,7 +1653,7 @@ msgstr "Privat"
 
 #. Default: Can't find any poll plugin with name '${name}'. Perhaps that
 #. package has been uninstalled?
-#: voteit/core/views/components/proposals.py:84
+#: voteit/core/views/components/proposals.py:40
 msgid "plugin_missing_error"
 msgstr ""
 "Kan inte hitta någon omröstningsmetod med namnet '${name}'. Kanske har det "
@@ -1912,7 +1932,6 @@ msgstr ""
 "öppen. Klicka på knappen nedan om du vill göra det."
 
 #: voteit/core/views/templates/proposal.pt:24
-#: voteit/core/views/templates/proposals.pt:39
 msgid "Retract"
 msgstr "Dra tillbaka"
 
