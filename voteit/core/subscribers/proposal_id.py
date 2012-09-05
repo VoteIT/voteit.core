@@ -10,14 +10,10 @@ from voteit.core.models.interfaces import IProposal
 from voteit.core.models.catalog import metadata_for_query
 
 
-@subscriber([IProposal, IObjectAddedEvent])
-def proposal_id(obj, event):
-    """ Assign a propsal ID to all proposals when they're added.
-    """
+def create_proposal_id(obj):
     root = find_root(obj)
     meeting = find_interface(obj, IMeeting)
     catalog = root.catalog
-
     creators = obj.get_field_value('creators')
     if not creators:
         raise ValueError("The object %s doesn't have a creator assigned. Can't generate automatic id." % obj)
@@ -34,3 +30,10 @@ def proposal_id(obj, event):
         aid_int = 1
     aid = "%s-%s" % (creator, aid_int)
     obj.set_field_appstruct({'aid': aid, 'aid_int': aid_int})
+
+
+@subscriber([IProposal, IObjectAddedEvent])
+def proposal_id(obj, event):
+    """ Assign a propsal ID to all proposals when they're added.
+    """
+    create_proposal_id(obj)

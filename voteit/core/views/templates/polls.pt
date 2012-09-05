@@ -101,7 +101,7 @@
 			<div tal:condition="can_vote and has_voted" 
 				 i18n:translate="can_change_vote_notice">
 				 	You have already voted, but you may change your vote as long as the poll is open. Click the button below if you wish to do so.</div>
-			<div tal:condition="wf_state == 'ongoing' and not can_vote"
+			<div tal:condition="wf_state in ('ongoing', 'upcoming') and not can_vote"
 				 i18n:translate="no_permission_to_vote_notice">
 						You do not have the permission to vote in this poll, please contact the moderator if you should be able to vote.</div>
 		</div>
