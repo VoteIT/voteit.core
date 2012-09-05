@@ -10,7 +10,8 @@ from voteit.core.testing_helpers import bootstrap_and_fixture
 class DefaultEditTests(unittest.TestCase):
     
     def setUp(self):
-        self.config = testing.setUp()
+        request = testing.DummyRequest()
+        self.config = testing.setUp(request = request)
 
     def tearDown(self):
         testing.tearDown()

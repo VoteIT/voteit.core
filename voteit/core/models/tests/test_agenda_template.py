@@ -14,7 +14,8 @@ owner = set([security.ROLE_OWNER])
 
 class AgendaTemplateTests(unittest.TestCase):
     def setUp(self):
-        self.config = testing.setUp()
+        request = testing.DummyRequest()
+        self.config = testing.setUp(request = request)
         self.config.scan('voteit.core.models.agenda_item')
 
     def tearDown(self):
