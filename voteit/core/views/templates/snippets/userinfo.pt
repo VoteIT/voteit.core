@@ -21,7 +21,7 @@
                 <tal:iterate repeat="brain last_entries">
                     <div class="${brain.content_type.lower()} icon iconpadding">
                         <span class="listitem">
-                            <a href="${brain.path}">${truncate(brain.title)}</a>
+                            <a href="${brain.path}" tal:content="truncate(brain.title, 100)[0]"></a>
                             <div class="meta">${relative_time_format(brain.created)}</div>
                         </span>
                     </div>

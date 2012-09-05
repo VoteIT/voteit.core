@@ -4,6 +4,7 @@ from betahaus.pyracont.decorators import schema_factory
 from pyramid.traversal import find_root
 
 from voteit.core.validators import deferred_existing_userid_validator
+from voteit.core.validators import deferred_context_roles_validator
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import ISiteRoot
 from voteit.core.security import MEETING_ROLES
@@ -20,7 +21,6 @@ def deferred_autocompleting_userid_widget(node, kw):
         size=15,
         values = choices,
         min_length=1)
-
 
 @colander.deferred
 def deferred_roles_widget(node, kw):
@@ -53,7 +53,8 @@ class UserIDAndGroupsSchema(colander.Schema):
     groups = colander.SchemaNode(
         deform.Set(allow_empty=True),
         title = _(u"Groups"),
-        widget=deferred_roles_widget,
+        widget = deferred_roles_widget,
+        validator = deferred_context_roles_validator,
     )
 
 
@@ -69,11 +70,10 @@ class PermissionsSchema(colander.Schema):
     userids_and_groups = UserIDsAndGroupsSequenceSchema(title=_(u'Role settings for users'))
 
 
-@schema_factory('SingelPermissionSchema',
-                title = _(u"Permission"),
-                description = _(u"single_permission_schema_main_description",
-                                default = u"Permissions for user"))
-class SingelPermissionSchema(colander.Schema):
+@schema_factory('SinglePermissionSchema',
+                title = _(u"add_existing_user_to_meeting",
+                          default = u"Add an existing user to this meeting"))
+class SinglePermissionSchema(colander.Schema):
     userid = colander.SchemaNode(
         colander.String(),
         title = _(u"UserID"),
@@ -86,5 +86,6 @@ class SingelPermissionSchema(colander.Schema):
     groups = colander.SchemaNode(
         deform.Set(allow_empty=True),
         title = _(u"Groups"),
-        widget=deferred_roles_widget,
+        widget = deferred_roles_widget,
+        validator = deferred_context_roles_validator,
     )

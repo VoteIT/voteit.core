@@ -16,14 +16,13 @@ from voteit.core import security
 class PermissionsView(BaseView):
     """ View for setting permissions """
 
-    @view_config(context=ISiteRoot, name="permissions", renderer="templates/permissions.pt", permission=security.MANAGE_GROUPS)
-    @view_config(context=IMeeting, name="permissions", renderer="templates/permissions.pt", permission=security.MANAGE_GROUPS)
+    @view_config(context=ISiteRoot, name="permissions", renderer="templates/base_edit.pt", permission=security.MANAGE_GROUPS)
+    @view_config(context=IMeeting, name="permissions", renderer="templates/base_edit.pt", permission=security.MANAGE_GROUPS)
     def group_form(self):
         if IMeeting.providedBy(self.context):
             self.response['title'] = _(u"Edit permissions")
         else:
             self.response['title'] = _(u"Root permissions")
-
         post = self.request.POST
         if 'cancel' in post:
             url = resource_url(self.context, self.request)
@@ -76,7 +75,7 @@ class PermissionsView(BaseView):
             url = resource_url(self.context, self.request)
             return HTTPFound(location=url)
 
-        schema = createSchema('SingelPermissionSchema').bind(context=self.context, request=self.request)
+        schema = createSchema('SinglePermissionSchema').bind(context=self.context, request=self.request)
         add_csrf_token(self.context, self.request, schema)
 
         form = Form(schema, buttons=('save', 'cancel'))

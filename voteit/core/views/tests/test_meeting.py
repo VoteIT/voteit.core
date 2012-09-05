@@ -23,7 +23,6 @@ class MeetingViewTests(unittest.TestCase):
         return MeetingView
     
     def _fixture(self):
-        """ Normal context for this view is an agenda item. """
         from voteit.core.models.meeting import Meeting
         from voteit.core.models.user import User
         root = bootstrap_and_fixture(self.config)
@@ -65,16 +64,6 @@ class MeetingViewTests(unittest.TestCase):
         obj = self._cut(context, request)
         response = obj.meeting_view()
         self.assertEqual(response.location, 'http://example.com/m/@@request_access')
-        
-    def test_participants_view(self):
-        self.config.testing_securitypolicy(userid='dummy',
-                                           permissive=True)
-        self._load_vcs()
-        context = self._fixture()
-        request = testing.DummyRequest()
-        obj = self._cut(context, request)
-        response = obj.participants_view()
-        self.assertIn('participants', response)
         
     def test_participants_emails(self):
         self.config.testing_securitypolicy(userid='dummy',

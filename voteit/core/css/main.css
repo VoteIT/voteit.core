@@ -760,12 +760,17 @@ table.listing > tbody > tr.odd > td {
 table.listing > tbody > tr.even > td {
     background: #fff;
 }
-
 .yes_icon {
     padding-left: 20px;
     height: 16px;
     display: block;
     background: url(/static/icons/icon_approved.png) no-repeat;
+}
+.no_icon {
+    padding-left: 20px;
+    height: 16px;
+    display: block;
+    background: url(/static/icons/icon_denied.png) no-repeat;
 }
 .discreet {
     color: #666;
@@ -826,6 +831,9 @@ table.listing > tbody > tr.even > td {
 .userinfo .profile-pic {
     float: right;
     margin: 0px 0px 1em 1em;
+}
+.changed {
+	font-weight: bold;
 }
 
 /* list of tagging users */
@@ -981,7 +989,6 @@ ul.agenda-templates > li {
     margin-right: 0.5em;
     list-style-type: none;
 }
-
 /* answer popup */
 .answer-popup textarea {
 	width: 100%;
