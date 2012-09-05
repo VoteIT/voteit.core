@@ -45,7 +45,8 @@ class CatalogMetadata(object):
     adapts(ICatalogMetadataEnabled)
     special_indexes = {IAgendaItem:'get_agenda_item_specific',
                        IWorkflowAware:'get_workflow_specific',
-                       IPoll:'get_poll_specific',}
+                       IPoll:'get_poll_specific',
+                       IProposal: 'get_proposal_specific'}
     
     def __init__(self, context):
         self.context = context
@@ -61,7 +62,6 @@ class CatalogMetadata(object):
             'content_type': get_content_type(self.context, None),
             'workflow_state': get_workflow_state(self.context, None),
             'uid': get_uid(self.context, None),
-            'aid': get_aid(self.context, None),
             'like_userids': get_like_userids(self.context, ()),
             'tags': get_tags(self.context, ()),
         }
@@ -89,6 +89,9 @@ class CatalogMetadata(object):
         """ Specific for polls. """
         results['voted_userids'] = get_voted_userids(self.context, ())
 
+    def get_proposal_specific(self, results):
+        results['aid'] = get_aid(self.context, u'')
+        results['aid_int'] = get_aid_int(self.context, 0)
 
 def update_indexes(catalog, reindex=True):
     """ Add or remove indexes. If reindex is True, also reindex all content if
@@ -102,6 +105,7 @@ def update_indexes(catalog, reindex=True):
         'description': CatalogFieldIndex(get_description),
         'uid': CatalogFieldIndex(get_uid),
         'aid': CatalogFieldIndex(get_aid),
+        'aid_int': CatalogFieldIndex(get_aid_int),
         'content_type': CatalogFieldIndex(get_content_type),
         'workflow_state': CatalogFieldIndex(get_workflow_state),
         'path': CatalogPathIndex(get_path),
@@ -251,9 +255,13 @@ def get_uid(object, default):
 
 def get_aid(object, default):
     """ Objects automatic id. """
-    aid = object.get_field_value('aid')
-    if aid:
-        return aid
+    if IProposal.providedBy(object):
+        return object.get_field_value('aid', default)
+    return default
+
+def get_aid_int(object, default):
+    if IProposal.providedBy(object):
+        return object.get_field_value('aid_int', default)
     return default
 
 def get_content_type(object, default):
