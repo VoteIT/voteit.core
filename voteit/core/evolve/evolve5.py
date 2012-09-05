@@ -11,6 +11,7 @@ from voteit.core.models.catalog import reindex_object
 from voteit.core.models.catalog import update_indexes
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.scripts.catalog import find_all_base_content
+from voteit.core.subscribers.proposal_id import create_proposal_id
 
 
 def evolve(root):
@@ -23,23 +24,7 @@ def evolve(root):
     result = catalog.search(content_type="Proposal")[1]
     for docid in result:
         obj = resolve_catalog_docid(catalog, root, docid)
-        meeting = find_interface(obj, IMeeting)
-        creators = obj.get_field_value('creators')
-        if not creators:
-            raise ValueError("The object %s doesn't have a creator assigned. Can't generate automatic id." % obj)
-    
-        #By convention, first name in list is main creator.
-        #No support for many creators yet but it might be implemented.
-        creator = creators[0]
-    
-        results = metadata_for_query(catalog, creators = creator, content_type = 'Proposal', path = resource_path(meeting))
-        current_aid_ints = [x['aid_int'] for x in results if x.get('aid_int')]
-        if current_aid_ints:
-            aid_int = max(current_aid_ints) + 1
-        else:
-            aid_int = 1
-        aid = "%s-%s" % (creator, aid_int)
-        obj.set_field_appstruct({'aid': aid, 'aid_int': aid_int})
+        create_proposal_id(obj)
     
     print "initial reindex of catalog to make sure everything is up to date"
     clear_and_reindex(root)
