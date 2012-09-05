@@ -4,6 +4,7 @@ from pyramid.traversal import resource_path
 from pyramid.traversal import find_interface
 from repoze.catalog.query import Eq
 
+from voteit.core.models.catalog import metadata_for_query
 from voteit.core.models.catalog import resolve_catalog_docid
 from voteit.core.models.catalog import index_object
 from voteit.core.models.catalog import reindex_object
@@ -22,21 +23,23 @@ def evolve(root):
     result = catalog.search(content_type="Proposal")[1]
     for docid in result:
         obj = resolve_catalog_docid(catalog, root, docid)
-        print obj
         meeting = find_interface(obj, IMeeting)
         creators = obj.get_field_value('creators')
-        if creators:
-            creator = creators[0]
-            for n in range(1, 500):
-                aid = "%s-%s" % (creator, n)
-                
-                #check that aid is unique in meeting
-                count, result = catalog.query(Eq('path', resource_path(meeting)) & \
-                                              Eq('aid', aid))
-                if count == 0:
-                    obj.set_field_value('aid', aid)
-                    reindex_object(root.catalog, obj, indexes=('aid',))
-                    continue
+        if not creators:
+            raise ValueError("The object %s doesn't have a creator assigned. Can't generate automatic id." % obj)
+    
+        #By convention, first name in list is main creator.
+        #No support for many creators yet but it might be implemented.
+        creator = creators[0]
+    
+        results = metadata_for_query(catalog, creators = creator, content_type = 'Proposal', path = resource_path(meeting))
+        current_aid_ints = [x['aid_int'] for x in results if x.get('aid_int')]
+        if current_aid_ints:
+            aid_int = max(current_aid_ints) + 1
+        else:
+            aid_int = 1
+        aid = "%s-%s" % (creator, aid_int)
+        obj.set_field_appstruct({'aid': aid, 'aid_int': aid_int})
     
     print "initial reindex of catalog to make sure everything is up to date"
     clear_and_reindex(root)
