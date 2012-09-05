@@ -504,7 +504,7 @@ li.notification_message {
 	float: right;
 }
 .booth.poll > .wf_state {
-	margin-right: 50%;
+	margin-right: 35%;
 }
 
 .poll_wrapper {
@@ -555,6 +555,10 @@ li.notification_message {
 }
 .show_denied {
 	text-align: center;
+}
+
+.booth .deform label.desc {
+	display: none;
 }
 
 /* proposals and discussions */
