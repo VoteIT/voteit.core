@@ -1,3 +1,4 @@
+import re
 from datetime import timedelta
 
 import colander
@@ -5,6 +6,9 @@ import deform
 from pyramid.traversal import find_root
 
 from voteit.core.models.interfaces import IDateTimeUtil
+
+
+NAME_PATTERN = re.compile(r'^[\w\s]{3,100}$', flags=re.UNICODE)
 
 
 @colander.deferred

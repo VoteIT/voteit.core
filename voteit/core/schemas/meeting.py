@@ -15,6 +15,8 @@ from voteit.core import security
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IPollPlugin
 from voteit.core.widgets import RecaptchaWidget
+from voteit.core.schemas.common import NAME_PATTERN
+
 
 @colander.deferred
 def poll_plugins_choices_widget(node, kw):
@@ -82,7 +84,7 @@ def meeting_mail_name_node():
     return colander.SchemaNode(colander.String(),
                                title = _(u"Name visible on system mail sent from this meeting"),
                                default = _(u"VoteIT"),
-                               validator = colander.Regex(regex=u'^[\w\sÅÄÖåäö]+$', msg=_(u"Only alphanumeric characters allowed")),)
+                               validator = colander.Regex(regex=NAME_PATTERN, msg=_(u"Only alphanumeric characters allowed")),)
 
 def meeting_mail_address_node():
     return colander.SchemaNode(colander.String(),
