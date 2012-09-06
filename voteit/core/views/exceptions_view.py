@@ -39,7 +39,7 @@ class ExceptionView(object):
                 obj = obj.__parent__
             return HTTPFound(location = self.request.application_url)
         #Redirect to login
-        return HTTPFound(location="%s/@@login?came_from=%s" %(self.request.application_url, self.request.url))
+        return HTTPFound(location="%s/login?came_from=%s" %(self.request.application_url, self.request.url))
 
     @view_config(context=HTTPNotFound, permission=NO_PERMISSION_REQUIRED)
     def not_found_view(self):

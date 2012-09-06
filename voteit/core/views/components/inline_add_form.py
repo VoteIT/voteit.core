@@ -42,7 +42,7 @@ def inline_add_form(context, request, va, **kw):
     tag = request.GET.get('tag', None)
     if tag:
         query['tag'] = tag
-    response['url'] = request.resource_url(context, '@@_inline_form', query=query)
+    response['url'] = request.resource_url(context, '_inline_form', query=query)
     if ctype == 'Proposal':
         response['text'] = _(u'${username} propose', mapping={'username': api.userid})
     else:

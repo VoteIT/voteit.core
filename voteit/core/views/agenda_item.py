@@ -83,7 +83,7 @@ class AgendaItemView(BaseView):
         add_csrf_token(self.context, self.request, schema)
         query = {'content_type': content_type,
                  'tag': tag}
-        url = self.request.resource_url(self.context, '@@add', query=query)
+        url = self.request.resource_url(self.context, 'add', query=query)
         form = Form(schema, action=url, buttons=(button_add,))
         #Note! Registration of form resources has to be in the view that has the javascript
         #that will include this!
@@ -143,7 +143,7 @@ class AgendaItemView(BaseView):
         
         url = self.api.resource_url(self.context, self.request)
         form = Form(schema, 
-                    action=url+"@@answer", 
+                    action=url+"answer", 
                     buttons=(button_add,),
                     formid="answer-form-%s" % self.context.uid, 
                     use_ajax=True,

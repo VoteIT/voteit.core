@@ -22,7 +22,7 @@
         <span class="hyphen">&#45;</span>
         <span tal:condition="show_retract(brain)">
             <a class="retract confirm-retract"
-               tal:attributes="href '%s%s/@@state?state=retracted' % (request.application_url, brain['path'])"
+               tal:attributes="href '%s%s/state?state=retracted' % (request.application_url, brain['path'])"
                i18n:translate="">Retract</a>
             <span class="hyphen">&#45;</span>
         </span>
@@ -32,7 +32,7 @@
         <span tal:condition="show_user_tags and api.meeting.get_field_value('tags_enabled', True)" class="hyphen">&#45;</span>
     	<tal:tags condition="api.meeting.get_field_value('tags_enabled', True)">
 	            <a class="answer" 
-	               tal:attributes="href '%s%s/@@answer' % (request.application_url, brain['path'])"
+	               tal:attributes="href '%s%s/answer' % (request.application_url, brain['path'])"
 	               i18n:translate="">Comment</a>
             <span class="hyphen">&#45;</span>
             <span class="aid">

@@ -57,7 +57,7 @@ def polls_menu(context, request, va, **kw):
             num = num + 1
             
     response['unvoted_polls_count'] = num
-    response['url'] = '%s@@meeting_poll_menu' % api.resource_url(api.meeting, request)
+    response['url'] = '%smeeting_poll_menu' % api.resource_url(api.meeting, request)
     return render('../templates/snippets/polls_menu.pt', response, request = request)
 
 @view_action('meeting_actions', 'help_contact', title = _(u"Help & contact"))
@@ -69,7 +69,7 @@ def help_contact_menu(context, request, va, **kw):
 def search_menu(context, request, va, **kw):
     api = kw['api']
     if api.meeting:
-        return u"""<li class="tab"><a href="%s@@search">%s</a></li>""" % (api.meeting_url, api.translate(va.title))
+        return u"""<li class="tab"><a href="%ssearch">%s</a></li>""" % (api.meeting_url, api.translate(va.title))
     return u""
 
 
@@ -88,9 +88,9 @@ def generic_menu(context, request, va, **kw):
     return render('../templates/snippets/generic_meeting_menu.pt', response, request = request)
 
 
-@view_action('admin_menu', 'recaptcha', title = _(u"ReCaptcha"), link = "@@recaptcha")
-@view_action('admin_menu', 'edit_root_permissions', title = _(u"Root permissions"), link = "@@permissions")
-@view_action('admin_menu', 'server_log', title = _(u"Server logs"), link = "@@server_logs")
+@view_action('admin_menu', 'recaptcha', title = _(u"ReCaptcha"), link = "recaptcha")
+@view_action('admin_menu', 'edit_root_permissions', title = _(u"Root permissions"), link = "permissions")
+@view_action('admin_menu', 'server_log', title = _(u"Server logs"), link = "server_logs")
 @view_action('admin_menu', 'agenda_templates', title = _(u"Agenda templates"), link = "agenda_templates")
 @view_action('admin_menu', 'users', title = _(u"Users"), link = "users")
 def generic_root_menu_link(context, request, va, **kw):
@@ -100,21 +100,21 @@ def generic_root_menu_link(context, request, va, **kw):
     return """<li><a href="%s">%s</a></li>""" % (url, api.translate(va.title))
 
 
-@view_action('settings_menu', 'meeting_poll_settings', title = _(u"Meeting poll settings"), link = "@@meeting_poll_settings", permission = MODERATE_MEETING)
-@view_action('settings_menu', 'agenda_templates', title = _(u"Agenda Templates"), link = "@@agenda_templates", permission = MODERATE_MEETING)
-@view_action('settings_menu', 'manage_layout', title = _(u"Layout and widgets"), link = "@@manage_layout", permission = MODERATE_MEETING)
-@view_action('settings_menu', 'access_policy', title = _(u"Access policy"), link = "@@access_policy", permission = MODERATE_MEETING)
-@view_action('settings_menu', 'mail_settings', title = _(u"Mail settings"), link = "@@mail_settings", permission = MODERATE_MEETING)
-@view_action('settings_menu', 'presentation', title = _(u"Presentation"), link = "@@presentation", permission = MODERATE_MEETING)
-@view_action('meeting', 'logs', title = _(u"Meeting actions log"), link = "@@logs", permission = MODERATE_MEETING)
-@view_action('meeting', 'minutes', title = _(u"Minutes"), link = "@@minutes")
-@view_action('participants_menu', 'participants_emails', title = _(u"Participants email addresses"), link = "@@participants_emails", permission = MODERATE_MEETING)
+@view_action('settings_menu', 'meeting_poll_settings', title = _(u"Meeting poll settings"), link = "meeting_poll_settings", permission = MODERATE_MEETING)
+@view_action('settings_menu', 'agenda_templates', title = _(u"Agenda Templates"), link = "agenda_templates", permission = MODERATE_MEETING)
+@view_action('settings_menu', 'manage_layout', title = _(u"Layout and widgets"), link = "manage_layout", permission = MODERATE_MEETING)
+@view_action('settings_menu', 'access_policy', title = _(u"Access policy"), link = "access_policy", permission = MODERATE_MEETING)
+@view_action('settings_menu', 'mail_settings', title = _(u"Mail settings"), link = "mail_settings", permission = MODERATE_MEETING)
+@view_action('settings_menu', 'presentation', title = _(u"Presentation"), link = "presentation", permission = MODERATE_MEETING)
+@view_action('meeting', 'logs', title = _(u"Meeting actions log"), link = "logs", permission = MODERATE_MEETING)
+@view_action('meeting', 'minutes', title = _(u"Minutes"), link = "minutes")
+@view_action('participants_menu', 'participants_emails', title = _(u"Participants email addresses"), link = "participants_emails", permission = MODERATE_MEETING)
 #FIXME: Remove below alternative, it's linked to participants now
-@view_action('participants_menu', 'permissions', title = _(u"Edit permissions"), link = "@@participants", permission = MANAGE_GROUPS)
-@view_action('participants_menu', 'manage_tickets', title = _(u"Manage invites"), link = "@@manage_tickets", permission = MANAGE_GROUPS)
-@view_action('participants_menu', 'add_tickets', title = _(u"Invite participants"), link = "@@add_tickets", permission = MANAGE_GROUPS)
-@view_action('participants_menu', 'add_participant', title = _(u"Add participant"), link = "@@add_permission", permission = MANAGE_GROUPS)
-@view_action('participants_menu', 'participant_list', title = _(u"Participant list"), link = "@@participants")
+@view_action('participants_menu', 'permissions', title = _(u"Edit permissions"), link = "participants", permission = MANAGE_GROUPS)
+@view_action('participants_menu', 'manage_tickets', title = _(u"Manage invites"), link = "manage_tickets", permission = MANAGE_GROUPS)
+@view_action('participants_menu', 'add_tickets', title = _(u"Invite participants"), link = "add_tickets", permission = MANAGE_GROUPS)
+@view_action('participants_menu', 'add_participant', title = _(u"Add participant"), link = "add_permission", permission = MANAGE_GROUPS)
+@view_action('participants_menu', 'participant_list', title = _(u"Participant list"), link = "participants")
 def generic_menu_link(context, request, va, **kw):
     """ This is for simple menu items for the meeting root """
     api = kw['api']

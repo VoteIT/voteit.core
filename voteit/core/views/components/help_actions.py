@@ -32,5 +32,5 @@ def action_wiki(context, request, va, **kw):
 def action_contact(context, request, va, **kw):
     api = kw['api']
     if api.meeting:
-        return """<li><a class="tab buttonize" href="%s">%s</a></li>""" % (resource_url(api.meeting, request)+"@@contact", api.translate(_(u"Contact")),)
+        return """<li><a class="tab buttonize" href="%s">%s</a></li>""" % (resource_url(api.meeting, request)+"contact", api.translate(_(u"Contact")),)
     return ""

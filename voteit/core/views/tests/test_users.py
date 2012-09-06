@@ -270,7 +270,7 @@ class UsersFormViewTests(unittest.TestCase):
                                                            ('change', 'change')]))
         obj = self._cut(context, request)
         response = obj.token_password_change()
-        self.assertEqual(response.location, 'http://example.com/@@login')
+        self.assertEqual(response.location, 'http://example.com/login')
         flash = [x for x in request.session.pop_flash()]
         self.assertEqual(flash, [{'msg': 'Password set. You may login now.',
                                   'close_button': True,

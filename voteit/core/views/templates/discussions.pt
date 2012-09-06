@@ -44,13 +44,13 @@
 	
 	        <tal:creators tal:replace="structure api.get_creators_info(post['creators'])">Creators</tal:creators>
 	        <span class="body" tal:content="structure api.transform(truncated[0])">text</span>
-	        <span class="more" tal:condition="truncated[1]"><a tal:attributes="href '%s%s/@@more' % (request.application_url, post['path'])" i18n:translate="">Read more</a></span>
+	        <span class="more" tal:condition="truncated[1]"><a tal:attributes="href '%s%s/more' % (request.application_url, post['path'])" i18n:translate="">Read more</a></span>
 	        <div class="meta">	
 	            <span class="time" tal:content="api.dt_util.relative_time_format(post['created'])"></span>
 	            <span class="hyphen">&#45;</span>
 	            <span tal:condition="show_delete(post)">
 	                <a class="delete"
-	                   tal:attributes="href '%s%s/@@delete' % (request.application_url, post['path'])"
+	                   tal:attributes="href '%s%s/delete' % (request.application_url, post['path'])"
 	                   i18n:translate="">Delete</a>
 	                <span class="hyphen">&#45;</span>
 	            </span>
@@ -58,7 +58,7 @@
 	            <tal:tags condition="api.meeting.get_field_value('tags_enabled', True)">
 				<span class="hyphen">&#45;</span>
 	            <a class="answer" 
-	               tal:attributes="href '%s%s/@@answer' % (request.application_url, post['path'])"
+	               tal:attributes="href '%s%s/answer' % (request.application_url, post['path'])"
 	               i18n:translate="">Reply</a>
                </tal:tags>
 	        </div>

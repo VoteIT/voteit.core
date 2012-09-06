@@ -53,7 +53,7 @@ class GlobalActionsComponentTests(unittest.TestCase):
         api = self._api(context, request)
         from voteit.core.views.components.global_actions import action_login
         response = action_login(context, request, va, api=api)
-        self.assertEqual('<li><a href="http://example.com/@@login">Login</a></li>', response)
+        self.assertEqual('<li><a href="http://example.com/login">Login</a></li>', response)
         
     def test_action_register(self):
         context = self._fixture()
@@ -62,7 +62,7 @@ class GlobalActionsComponentTests(unittest.TestCase):
         api = self._api(context, request)
         from voteit.core.views.components.global_actions import action_register
         response = action_register(context, request, va, api=api)
-        self.assertEqual('<li><a href="http://example.com/@@register">Register</a></li>', response)
+        self.assertEqual('<li><a href="http://example.com/register">Register</a></li>', response)
         
     def test_user_profile_action(self):
         self.config.testing_securitypolicy(userid='admin',
@@ -83,4 +83,4 @@ class GlobalActionsComponentTests(unittest.TestCase):
         api = self._api(context, request)
         from voteit.core.views.components.global_actions import logout_action
         response = logout_action(context, request, va, api=api)
-        self.assertEqual('<li><a href="http://example.com/@@logout" class="logout icon"><span>Logout</span></a></li>', response)
+        self.assertEqual('<li><a href="http://example.com/logout" class="logout icon"><span>Logout</span></a></li>', response)

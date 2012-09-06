@@ -8,15 +8,15 @@
 <body>
 <div metal:fill-slot="content" class="content_wrapper">
 	<div class="moderator-help-buttons">
-        <a tal:attributes="href '%s@@edit' % api.resource_url(context, request)"
+        <a tal:attributes="href '%sedit' % api.resource_url(context, request)"
            tal:condition="api.context_has_permission('Edit', context)"
            class="buttonize large"
            i18n:translate="">Edit</a>
-       <a tal:attributes="href '%s@@sort' % api.resource_url(context, request)"
+       <a tal:attributes="href '%ssort' % api.resource_url(context, request)"
            tal:condition="api.context_has_permission('Edit', context)"
            class="buttonize large"
            i18n:translate="">Sort</a>
-        <a tal:attributes="href '%s@@delete' % api.resource_url(context, request)"
+        <a tal:attributes="href '%sdelete' % api.resource_url(context, request)"
            tal:condition="api.context_has_permission('Delete', context)"
            class="buttonize large"
            i18n:translate="">Delete</a>

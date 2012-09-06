@@ -97,8 +97,8 @@ def discussions_listing(context, request, va, **kw):
         
     response = {}
     response['clear_tag_url'] = api.request.resource_url(context, query=clear_tag_query)
-    response['more_url_all'] = api.request.resource_url(context, '@@discussions', query=dict(more_query.items()+{'discussions': 'all'}.items()))
-    response['more_url_normal'] = api.request.resource_url(context, '@@discussions', query=more_query)
+    response['more_url_all'] = api.request.resource_url(context, 'discussions', query=dict(more_query.items()+{'discussions': 'all'}.items()))
+    response['more_url_normal'] = api.request.resource_url(context, 'discussions', query=more_query)
     response['discussions'] = tuple(results)
     if limit and limit < count:
         response['over_limit'] = count - limit

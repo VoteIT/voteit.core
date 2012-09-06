@@ -53,7 +53,7 @@ class MeetingViewTests(unittest.TestCase):
         request = testing.DummyRequest()
         obj = self._cut(context, request)
         response = obj.meeting_view()
-        self.assertEqual(response.location, 'http://example.com/m/@@request_access')
+        self.assertEqual(response.location, 'http://example.com/m/request_access')
         
     def test_meeting_view_no_permission_not_loggedin(self):
         self.config.include('voteit.core.models.flash_messages')
@@ -63,7 +63,7 @@ class MeetingViewTests(unittest.TestCase):
         request = testing.DummyRequest()
         obj = self._cut(context, request)
         response = obj.meeting_view()
-        self.assertEqual(response.location, 'http://example.com/m/@@request_access')
+        self.assertEqual(response.location, 'http://example.com/m/request_access')
         
     def test_participants_emails(self):
         self.config.testing_securitypolicy(userid='dummy',
@@ -95,7 +95,7 @@ class MeetingViewTests(unittest.TestCase):
         request = testing.DummyRequest()
         obj = self._cut(context, request)
         response = obj.claim_ticket()
-        self.assertEqual(response.location, 'http://example.com/@@login?came_from=http%3A//example.com')
+        self.assertEqual(response.location, 'http://example.com/login?came_from=http%3A//example.com')
         
     def test_claim_ticket_post(self):
         self.config.scan('voteit.core.schemas.invite_ticket')
@@ -417,7 +417,7 @@ class MeetingViewTests(unittest.TestCase):
         request = testing.DummyRequest()
         obj = self._cut(context, request)
         response = obj.request_meeting_access()
-        self.assertEqual(response.location, 'http://example.com/@@login?came_from=http%3A%2F%2Fexample.com%2Fm%2F%40%40request_access')
+        self.assertEqual(response.location, 'http://example.com/login?came_from=http%3A%2F%2Fexample.com%2Fm%2Frequest_access')
         
     def test_presentation(self):
         self.config.scan('voteit.core.schemas.meeting')

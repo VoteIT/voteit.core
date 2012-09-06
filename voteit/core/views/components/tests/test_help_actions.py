@@ -59,7 +59,7 @@ class HelpActionsComponentTests(unittest.TestCase):
         api = self._api(context, request)
         from voteit.core.views.components.help_actions import action_contact
         response = action_contact(context, request, va, api=api)
-        self.assertEqual('<li><a class="tab buttonize" href="http://example.com/m/@@contact">Contact</a></li>', response)
+        self.assertEqual('<li><a class="tab buttonize" href="http://example.com/m/contact">Contact</a></li>', response)
         
     def test_action_contact_no_meeting(self):
         context = bootstrap_and_fixture(self.config)

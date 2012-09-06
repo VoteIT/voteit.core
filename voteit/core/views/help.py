@@ -29,7 +29,7 @@ class HelpView(BaseView):
         schema = createSchema('ContactSchema').bind(context = self.context, request = self.request, api = self.api)
         add_csrf_token(self.context, self.request, schema)
             
-        form = Form(schema, action=resource_url(self.context, self.request)+"@@contact", buttons=(button_send,), formid="help-tab-contact-form", use_ajax=True)
+        form = Form(schema, action=resource_url(self.context, self.request)+"contact", buttons=(button_send,), formid="help-tab-contact-form", use_ajax=True)
         self.api.register_form_resources(form)
 
         post = self.request.POST

@@ -40,7 +40,7 @@ class MeetingView(BaseView):
         """
         if not has_permission(security.VIEW, self.context, self.request):
             #We delegate permission checks to the request_meeting_access part.
-            url = resource_url(self.context, self.request) + '@@request_access'
+            url = resource_url(self.context, self.request) + 'request_access'
             return HTTPFound(location = url)
 
         self.response['get_polls'] = self._get_polls
@@ -90,7 +90,7 @@ class MeetingView(BaseView):
             self.api.flash_messages.add(msg, type='info')
 
             came_from = urllib.quote(self.request.url)
-            url = "%s@@login?came_from=%s" % (resource_url(self.api.root, self.request), came_from)
+            url = "%slogin?came_from=%s" % (resource_url(self.api.root, self.request), came_from)
             return HTTPFound(location=url)
 
         self.response['title'] = _(u"Meeting Access")
@@ -287,8 +287,8 @@ class MeetingView(BaseView):
                     registered please log in or register an account here. You will be returned to the 
                     meeting afterwards""")
             self.api.flash_messages.add(msg, type='info')
-            came_from = resource_url(self.context, self.request, '@@request_access')
-            url = resource_url(self.api.root, self.request, '@@login', query={'came_from': came_from})
+            came_from = resource_url(self.context, self.request, 'request_access')
+            url = resource_url(self.api.root, self.request, 'login', query={'came_from': came_from})
             return HTTPFound(location=url)
         
         view_group = self.request.registry.getUtility(IViewGroup, name = 'request_meeting_access')        

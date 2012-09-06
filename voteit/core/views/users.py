@@ -146,7 +146,7 @@ class UsersFormView(BaseEdit):
             self.context.remove_password_token()
             self.context.set_password(appstruct['password'])
             self.api.flash_messages.add(_(u"Password set. You may login now."))
-            url = "%s@@login" % resource_url(self.api.root, self.request)
+            url = "%slogin" % resource_url(self.api.root, self.request)
             return HTTPFound(location=url)
 
         if 'cancel' in post:

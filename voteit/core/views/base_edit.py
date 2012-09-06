@@ -96,7 +96,7 @@ class DefaultEdit(BaseEdit):
                 msg = _(u"private_poll_info",
                         default = u"The poll is created in private state, to show it the participants you have to change the state to upcoming.")
                 self.api.flash_messages.add(msg)
-                url += '@@poll_config'
+                url += 'poll_config'
                 
             return HTTPFound(location=url)
 

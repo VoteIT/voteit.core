@@ -106,11 +106,11 @@
         </a>
         <tal:moderator condition="api.show_moderator_actions">
         <a class="buttonize large"
-           tal:attributes="href '%s@@add_tickets' % api.meeting_url">
+           tal:attributes="href '%sadd_tickets' % api.meeting_url">
             <span i18n:translate="">Invite participants</span>
         </a>
         <a class="buttonize large"
-           tal:attributes="href '%s@@add_permission' % api.meeting_url">
+           tal:attributes="href '%sadd_permission' % api.meeting_url">
             <span i18n:translate="">Add participant</span>
         </a>
         </tal:moderator>

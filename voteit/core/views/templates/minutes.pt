@@ -14,7 +14,7 @@
     <div class="iconpadding icon time end"><span i18n:translate="">Meeting closed</span>: ${api.dt_util.dt_format(context.end_time)|string:-}</div>
 
     <h3 i18n:translate="">Participants</h3>
-    <div><a href="${'%s@@participants' % api.meeting_url}" i18n:translate="">View participants list</a></div>
+    <div><a href="${'%sparticipants' % api.meeting_url}" i18n:translate="">View participants list</a></div>
 
     <h2 i18n:translate="">Agenda items</h2>
     <tal:iterate repeat="ai agenda_items">

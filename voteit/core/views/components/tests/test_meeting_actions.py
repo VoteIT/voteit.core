@@ -78,7 +78,7 @@ class MeetingActionsComponentTests(unittest.TestCase):
         api = self._api(context, request)
         from voteit.core.views.components.meeting_actions import polls_menu
         response = polls_menu(context, request, va, api=api)
-        self.assertIn('http://example.com/m/@@meeting_poll_menu', response)
+        self.assertIn('http://example.com/m/meeting_poll_menu', response)
         
     def test_polls_menu_no_meeting(self):
         context = bootstrap_and_fixture(self.config)
@@ -105,7 +105,7 @@ class MeetingActionsComponentTests(unittest.TestCase):
         api = self._api(context, request)
         from voteit.core.views.components.meeting_actions import search_menu
         response = search_menu(context, request, va, api=api)
-        self.assertIn('<a href="http://example.com/m/@@search">Search</a>', response)
+        self.assertIn('<a href="http://example.com/m/search">Search</a>', response)
         
     def test_search_menu_no_meeting(self):
         context = bootstrap_and_fixture(self.config)
@@ -149,11 +149,11 @@ class MeetingActionsComponentTests(unittest.TestCase):
     def test_generic_menu_link(self):
         context = self._fixture()
         request = testing.DummyRequest()
-        va = self._va(title='Meeting poll settings', kwargs={'link': '@@dummy'})
+        va = self._va(title='Meeting poll settings', kwargs={'link': 'dummy'})
         api = self._api(context, request)
         from voteit.core.views.components.meeting_actions import generic_menu_link
         response = generic_menu_link(context, request, va, api=api)
-        self.assertIn('<li><a href="http://example.com/m/@@dummy">Meeting poll settings</a></li>', response)
+        self.assertIn('<li><a href="http://example.com/m/dummy">Meeting poll settings</a></li>', response)
         
     def test_meeting_poll_menu(self):
         self.config.testing_securitypolicy(userid='dummy',

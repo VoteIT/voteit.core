@@ -39,7 +39,7 @@ def moderator_actions_wf_section(context, request, va, **kw):
         state_id  = context.get_workflow_state(),
         state_title = context.current_state_title(api.request),
         states = context.get_available_workflow_states(request),
-        state_change_url = "%s@@state?state=" % api.resource_url(context, request),
+        state_change_url = "%sstate?state=" % api.resource_url(context, request),
     )
     return render('../templates/snippets/moderator_actions_wf_section.pt', response, request = request)
 
@@ -55,8 +55,8 @@ def moderator_actions_section(context, request, va, **kw):
     )
     return render('../templates/snippets/moderator_actions_section.pt', response, request = request)
 
-@view_action('context_actions', 'edit', title = _(u"Edit"), context_perm = EDIT, viewname = '@@edit')
-@view_action('context_actions', 'delete', title = _(u"Delete"), context_perm = DELETE, viewname = '@@delete')
+@view_action('context_actions', 'edit', title = _(u"Edit"), context_perm = EDIT, viewname = 'edit')
+@view_action('context_actions', 'delete', title = _(u"Delete"), context_perm = DELETE, viewname = 'delete')
 def moderator_context_action(context, request, va, **kw):
     api = kw['api']
     context_perm = va.kwargs.get('context_perm', None)
@@ -73,7 +73,7 @@ def poll_settings_context_action(context, request, va, **kw):
     except Exception: # pragma: no cover (When plugin has been removed)
         return ''
     if api.context_has_permission(EDIT, context) and schema:
-        url = "%s@@poll_config" % api.resource_url(context, request)
+        url = "%spoll_config" % api.resource_url(context, request)
         return """<li><a href="%s">%s</a></li>""" % (url, api.translate(_(u"Poll settings")))
     return ''
 
