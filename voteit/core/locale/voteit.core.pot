@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2012-09-04 12:35+0200\n"
+"POT-Creation-Date: 2012-09-06 10:25+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -34,19 +34,17 @@ msgid "Registered users"
 msgstr ""
 
 #: voteit/core/bootstrap.py:34 voteit/core/security.py:68
+#: voteit/core/views/templates/participants.pt:38
 msgid "Administrator"
 msgstr ""
 
 #: voteit/core/js_translations.py:12
-#: voteit/core/views/templates/participants.pt:53
-#: voteit/core/views/templates/participants.pt:58
-#: voteit/core/views/templates/participants.pt:63
-#: voteit/core/views/templates/participants.pt:68
-#: voteit/core/views/templates/participants.pt:73
+#: voteit/core/views/templates/participants.pt:119
 msgid "Yes"
 msgstr ""
 
 #: voteit/core/js_translations.py:13
+#: voteit/core/views/templates/participants.pt:120
 msgid "No"
 msgstr ""
 
@@ -125,7 +123,7 @@ msgstr ""
 msgid "Moderator"
 msgstr ""
 
-#: voteit/core/security.py:70 voteit/core/views/templates/participants.pt:24
+#: voteit/core/security.py:70 voteit/core/views/templates/participants.pt:33
 msgid "View"
 msgstr ""
 
@@ -141,79 +139,88 @@ msgstr ""
 msgid "Voter (and view)"
 msgstr ""
 
-#: voteit/core/validators.py:27
+#: voteit/core/validators.py:32
 msgid "Too short. At least 6 chars required."
 msgstr ""
 
-#: voteit/core/validators.py:29
+#: voteit/core/validators.py:34
 msgid "Less than 100 chars please."
 msgstr ""
 
-#: voteit/core/validators.py:46
+#: voteit/core/validators.py:51
 msgid "HTML is not allowed."
 msgstr ""
 
-#: voteit/core/validators.py:64
+#: voteit/core/validators.py:69
 msgid "The following adresses is invalid: ${emails}"
 msgstr ""
 
 #. Default: The following userids is invalid: ${userids}. Remember that userids
 #. are case sensitive.
-#: voteit/core/validators.py:92
+#: voteit/core/validators.py:97
 msgid "userid_validator_error"
 msgstr ""
 
 #. Default: UserID must be 3-30 chars, start with lowercase a-z and only
 #. contain lowercase a-z, numbers, minus and underscore.
-#: voteit/core/validators.py:110
+#: voteit/core/validators.py:115
 msgid "userid_char_error"
 msgstr ""
 
 #. Default: UserID already registered. If it was registered by you, try to
 #. retrieve your password.
-#: voteit/core/validators.py:116
+#: voteit/core/validators.py:121
 msgid "already_registered_error"
 msgstr ""
 
-#: voteit/core/validators.py:136 voteit/core/schemas/invite_ticket.py:16
+#: voteit/core/validators.py:141 voteit/core/schemas/invite_ticket.py:16
 #: voteit/core/schemas/meeting.py:91
 msgid "Invalid email address."
 msgstr ""
 
 #. Default: Another user has already registered with that email address. If
 #. you've lost your password, request a new one instead.
-#: voteit/core/validators.py:144
+#: voteit/core/validators.py:149
 msgid "email_not_unique_error"
 msgstr ""
 
 #. Default: Password token doesn't match. Won't allow password change.
-#: voteit/core/validators.py:163
+#: voteit/core/validators.py:168
 msgid "check_password_token_error"
 msgstr ""
 
-#: voteit/core/validators.py:190
+#: voteit/core/validators.py:195
 msgid "Couldn't find any invitation for this email address."
 msgstr ""
 
-#: voteit/core/validators.py:194
+#: voteit/core/validators.py:199
 msgid "Email matches, but token doesn't"
 msgstr ""
 
-#: voteit/core/validators.py:195
+#: voteit/core/validators.py:200
 msgid "Check this field - token doesn't match"
 msgstr ""
 
 #. Default: UserID not found
-#: voteit/core/validators.py:219
+#: voteit/core/validators.py:224
 msgid "globally_existing_userid_validation_error"
 msgstr ""
 
-#: voteit/core/validators.py:243
+#: voteit/core/validators.py:248
 msgid "Current password didn't match"
 msgstr ""
 
-#: voteit/core/validators.py:260
+#: voteit/core/validators.py:265
 msgid "Contains forbidden HTML tags."
+msgstr ""
+
+#: voteit/core/validators.py:285
+msgid "You can't change groups in this context"
+msgstr ""
+
+#. Default: Group ${group} can't be assigned in this context
+#: voteit/core/validators.py:293
+msgid "wrong_context_for_roles_error"
 msgstr ""
 
 #: voteit/core/models/agenda_item.py:54 voteit/core/models/agenda_item.py:62
@@ -391,6 +398,7 @@ msgstr ""
 #: voteit/core/models/schemas.py:18
 #: voteit/core/views/templates/order_agenda_items.pt:31
 #: voteit/core/views/templates/order_agenda_template.pt:31
+#: voteit/core/views/templates/participants.pt:98
 msgid "Save"
 msgstr ""
 
@@ -577,7 +585,7 @@ msgstr ""
 
 #: voteit/core/schemas/help.py:23 voteit/core/schemas/user.py:60
 #: voteit/core/views/templates/list_users.pt:24
-#: voteit/core/views/templates/participants.pt:23
+#: voteit/core/views/templates/participants.pt:32
 msgid "Email"
 msgstr ""
 
@@ -605,7 +613,8 @@ msgid "claim_ticket_token_title"
 msgstr ""
 
 #: voteit/core/schemas/invite_ticket.py:24
-#: voteit/core/views/components/meeting_actions.py:114
+#: voteit/core/views/components/meeting_actions.py:115
+#: voteit/core/views/templates/participants.pt:110
 msgid "Invite participants"
 msgstr ""
 
@@ -664,7 +673,7 @@ msgstr ""
 msgid "apply_to_all_title"
 msgstr ""
 
-#: voteit/core/schemas/invite_ticket.py:78 voteit/core/views/meeting.py:209
+#: voteit/core/schemas/invite_ticket.py:78 voteit/core/views/meeting.py:182
 msgid "Current invitations"
 msgstr ""
 
@@ -672,7 +681,7 @@ msgstr ""
 msgid "<Disable>"
 msgstr ""
 
-#: voteit/core/schemas/layout.py:45 voteit/core/views/meeting.py:268
+#: voteit/core/schemas/layout.py:45 voteit/core/views/meeting.py:241
 msgid "Layout"
 msgstr ""
 
@@ -820,7 +829,7 @@ msgstr ""
 #: voteit/core/schemas/user.py:47 voteit/core/schemas/user.py:114
 #: voteit/core/schemas/user.py:131 voteit/core/views/templates/list_users.pt:21
 #: voteit/core/views/templates/logs.pt:20
-#: voteit/core/views/templates/participants.pt:20
+#: voteit/core/views/templates/participants.pt:29
 #: voteit/core/views/templates/email/request_password.pt:25
 msgid "UserID"
 msgstr ""
@@ -829,11 +838,11 @@ msgstr ""
 msgid "Groups"
 msgstr ""
 
-#: voteit/core/schemas/permissions.py:61
+#: voteit/core/schemas/permissions.py:62
 msgid "Roles for user"
 msgstr ""
 
-#: voteit/core/schemas/permissions.py:65
+#: voteit/core/schemas/permissions.py:66
 msgid "Permissions"
 msgstr ""
 
@@ -841,21 +850,17 @@ msgstr ""
 #. meeting. If you remove a UserID, their permissions will be cleared. View
 #. permission will be added automatically if needed for a higher permission -
 #. like Vote. Permissions also depend on the state of the meeting.
-#: voteit/core/schemas/permissions.py:66
+#: voteit/core/schemas/permissions.py:67
 msgid "permissions_schema_main_description"
 msgstr ""
 
-#: voteit/core/schemas/permissions.py:69
+#: voteit/core/schemas/permissions.py:70
 msgid "Role settings for users"
 msgstr ""
 
-#: voteit/core/schemas/permissions.py:73
-msgid "Permission"
-msgstr ""
-
-#. Default: Permissions for user
+#. Default: Add an existing user to this meeting
 #: voteit/core/schemas/permissions.py:74
-msgid "single_permission_schema_main_description"
+msgid "add_existing_user_to_meeting"
 msgstr ""
 
 #. Default: Start typing the first letters of the UserID you want to add. You
@@ -1017,12 +1022,12 @@ msgid "Password"
 msgstr ""
 
 #: voteit/core/schemas/user.py:65 voteit/core/views/templates/list_users.pt:22
-#: voteit/core/views/templates/participants.pt:21
+#: voteit/core/views/templates/participants.pt:30
 msgid "First name"
 msgstr ""
 
 #: voteit/core/schemas/user.py:70 voteit/core/views/templates/list_users.pt:23
-#: voteit/core/views/templates/participants.pt:22
+#: voteit/core/views/templates/participants.pt:31
 msgid "Last name"
 msgstr ""
 
@@ -1143,7 +1148,7 @@ msgstr ""
 msgid "order_agenda_template_view_title"
 msgstr ""
 
-#: voteit/core/views/agenda_templates.py:86 voteit/core/views/meeting.py:414
+#: voteit/core/views/agenda_templates.py:86 voteit/core/views/meeting.py:387
 msgid "Order updated"
 msgstr ""
 
@@ -1164,9 +1169,9 @@ msgid "private_poll_info"
 msgstr ""
 
 #: voteit/core/views/base_edit.py:104 voteit/core/views/base_edit.py:146
-#: voteit/core/views/base_edit.py:178 voteit/core/views/meeting.py:150
-#: voteit/core/views/meeting.py:170 voteit/core/views/meeting.py:255
-#: voteit/core/views/meeting.py:290 voteit/core/views/meeting.py:383
+#: voteit/core/views/base_edit.py:178 voteit/core/views/meeting.py:123
+#: voteit/core/views/meeting.py:143 voteit/core/views/meeting.py:228
+#: voteit/core/views/meeting.py:263 voteit/core/views/meeting.py:356
 #: voteit/core/views/poll.py:69 voteit/core/views/site.py:55
 #: voteit/core/views/users.py:52
 msgid "Canceled"
@@ -1197,14 +1202,6 @@ msgstr ""
 msgid "delete_form_locked_proposal_notice"
 msgstr ""
 
-#: voteit/core/views/base_view.py:21
-msgid "This meeting hasn't started yet."
-msgstr ""
-
-#: voteit/core/views/base_view.py:24
-msgid "This meeting has closed."
-msgstr ""
-
 #. Default: Can't find anything at '${path}'. Maybe it has been removed?
 #: voteit/core/views/exceptions_view.py:48
 msgid "404_error_msg"
@@ -1221,61 +1218,61 @@ msgstr ""
 #. Default: Welcome to VoteIT. To open the meeting you have been invited to
 #. please register in the form below. If you are already registered, please
 #. login.
-#: voteit/core/views/meeting.py:115
+#: voteit/core/views/meeting.py:88
 msgid "login_to_access_meeting_notice"
 msgstr ""
 
-#: voteit/core/views/meeting.py:123
+#: voteit/core/views/meeting.py:96
 msgid "Meeting Access"
 msgstr ""
 
-#: voteit/core/views/meeting.py:144
+#: voteit/core/views/meeting.py:117
 msgid "You've been granted access to the meeting. Welcome!"
 msgstr ""
 
-#: voteit/core/views/meeting.py:166
+#: voteit/core/views/meeting.py:139
 msgid "Send meeting invitations"
 msgstr ""
 
 #. Default: Successfully added and sent ${mail_count} invites
-#: voteit/core/views/meeting.py:195
+#: voteit/core/views/meeting.py:168
 msgid "sent_tickets_text"
 msgstr ""
 
 #. Default: Resending ${count_emails} invites
-#: voteit/core/views/meeting.py:237
+#: voteit/core/views/meeting.py:210
 msgid "resent_invites_notice"
 msgstr ""
 
 #. Default: Deleting ${count_emails} invites
-#: voteit/core/views/meeting.py:247
+#: voteit/core/views/meeting.py:220
 msgid "deleting_invites_notice"
 msgstr ""
 
 #. Default: This meeting requires the participants to be logged in. If you are
 #. registered please log in or register an account here. You will be returned
 #. to the                      meeting afterwards
-#: voteit/core/views/meeting.py:312
+#: voteit/core/views/meeting.py:285
 msgid "request_access_view_login_register"
 msgstr ""
 
 #. Default: Can't find an action associated with access policy ${policy}.
-#: voteit/core/views/meeting.py:324
+#: voteit/core/views/meeting.py:297
 msgid "request_access_view_action_not_found"
 msgstr ""
 
 #. Default: Drag and drop agenda items to reorder
-#: voteit/core/views/meeting.py:397
+#: voteit/core/views/meeting.py:370
 msgid "order_agenda_items_view_title"
 msgstr ""
 
 #. Default: This meeting hasn't closed yet so these minutes won't be complete
-#: voteit/core/views/meeting.py:433
+#: voteit/core/views/meeting.py:406
 msgid "meeting_not_closed_minutes_incomplete_notice"
 msgstr ""
 
 #: voteit/core/views/permissions.py:23
-#: voteit/core/views/components/meeting_actions.py:112
+#: voteit/core/views/components/meeting_actions.py:113
 msgid "Edit permissions"
 msgstr ""
 
@@ -1284,16 +1281,17 @@ msgstr ""
 msgid "Root permissions"
 msgstr ""
 
-#: voteit/core/views/permissions.py:70
-#: voteit/core/views/components/meeting_actions.py:115
+#: voteit/core/views/permissions.py:69
+#: voteit/core/views/components/meeting_actions.py:116
+#: voteit/core/views/templates/participants.pt:114
 msgid "Add participant"
 msgstr ""
 
-#: voteit/core/views/permissions.py:72
+#: voteit/core/views/permissions.py:71
 msgid "Add permission"
 msgstr ""
 
-#: voteit/core/views/permissions.py:95
+#: voteit/core/views/permissions.py:94
 msgid "Added permssion for user ${userid}"
 msgstr ""
 
@@ -1420,6 +1418,14 @@ msgstr ""
 msgid "${username} propose"
 msgstr ""
 
+#: voteit/core/views/components/main.py:48
+msgid "This meeting hasn't started yet."
+msgstr ""
+
+#: voteit/core/views/components/main.py:51
+msgid "This meeting has closed."
+msgstr ""
+
 #: voteit/core/views/components/meeting.py:9
 msgid "Description richtext field (default left column)"
 msgstr ""
@@ -1442,6 +1448,7 @@ msgstr ""
 
 #: voteit/core/views/components/meeting_actions.py:79
 #: voteit/core/views/templates/minutes.pt:16
+#: voteit/core/views/templates/participants.pt:17
 msgid "Participants"
 msgstr ""
 
@@ -1477,11 +1484,11 @@ msgstr ""
 msgid "Participants email addresses"
 msgstr ""
 
-#: voteit/core/views/components/meeting_actions.py:113
+#: voteit/core/views/components/meeting_actions.py:114
 msgid "Manage invites"
 msgstr ""
 
-#: voteit/core/views/components/meeting_actions.py:116
+#: voteit/core/views/components/meeting_actions.py:117
 msgid "Participant list"
 msgstr ""
 
@@ -1600,7 +1607,7 @@ msgstr ""
 #: voteit/core/views/templates/agenda_template.pt:37
 #: voteit/core/views/templates/list_users.pt:52
 #: voteit/core/views/templates/minutes.pt:45
-#: voteit/core/views/templates/participants.pt:84
+#: voteit/core/views/templates/participants.pt:105
 #: voteit/core/views/templates/participants_emails.pt:27
 msgid "Back"
 msgstr ""
@@ -1732,24 +1739,43 @@ msgstr ""
 msgid "Agenda"
 msgstr ""
 
-#: voteit/core/views/templates/participants.pt:11
-msgid "Showing ${count} participants"
+#. Default: Click the icons to change permission. Any permission that's changed
+#. will be listed in bold. When you're done, click save at the bottom. If all
+#. permissions are removed from a user, that user is removed from the meeting.
+#: voteit/core/views/templates/participants.pt:19
+msgid "participants_form_instructions"
 msgstr ""
 
-#: voteit/core/views/templates/participants.pt:25
+#: voteit/core/views/templates/participants.pt:34
 msgid "Discuss"
 msgstr ""
 
-#: voteit/core/views/templates/participants.pt:26
+#: voteit/core/views/templates/participants.pt:35
 msgid "Propose"
 msgstr ""
 
-#: voteit/core/views/templates/participants.pt:27
+#: voteit/core/views/templates/participants.pt:36
 msgid "Voter"
 msgstr ""
 
-#: voteit/core/views/templates/participants.pt:28
+#: voteit/core/views/templates/participants.pt:37
 msgid "Moderate"
+msgstr ""
+
+#: voteit/core/views/templates/participants.pt:44
+#: voteit/core/views/templates/participants.pt:49
+#: voteit/core/views/templates/participants.pt:54
+#: voteit/core/views/templates/participants.pt:59
+#: voteit/core/views/templates/participants.pt:64
+msgid "all"
+msgstr ""
+
+#: voteit/core/views/templates/participants.pt:45
+#: voteit/core/views/templates/participants.pt:50
+#: voteit/core/views/templates/participants.pt:55
+#: voteit/core/views/templates/participants.pt:60
+#: voteit/core/views/templates/participants.pt:65
+msgid "none"
 msgstr ""
 
 #: voteit/core/views/templates/participants_emails.pt:11

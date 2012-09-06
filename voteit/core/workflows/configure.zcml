@@ -3,15 +3,10 @@
     i18n:domain="voteit.core">
 
   <include package="repoze.workflow" file="meta.zcml"/>
-  
-  <!-- The translation tools don't pick up the filenames if they're named zcml,
-       so all the files we need should end with xml.
-	   Silly, but easier than maintaining manual dictionaries.
-  -->
-  <include file="agenda_item.xml" />
-  <include file="invite_ticket.xml" />
-  <include file="meeting.xml" />
-  <include file="proposal.xml" />
-  <include file="poll.xml" />
+  <include file="agenda_item.zcml" />
+  <include file="invite_ticket.zcml" />
+  <include file="meeting.zcml" />
+  <include file="proposal.zcml" />
+  <include file="poll.zcml" />
 
 </configure>
