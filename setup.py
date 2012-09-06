@@ -74,6 +74,7 @@ setup(name='voteit.core',
       message_extractors = { '.': [
               ('**.py',   'lingua_python', None ),
               ('**.pt',   'lingua_xml', None ),
-              ('**.zcml',   'lingua_zcml', None ),
+              #The ZCML extractor seems broken in lingua, but since it's ZCML is XML this works. /robinharms
+              ('**.zcml',   'lingua_xml', None ),
               ]},
       )

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2012-09-06 10:25+0200\n"
+"POT-Creation-Date: 2012-09-06 11:09+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1173,7 +1173,7 @@ msgstr ""
 #: voteit/core/views/meeting.py:143 voteit/core/views/meeting.py:228
 #: voteit/core/views/meeting.py:263 voteit/core/views/meeting.py:356
 #: voteit/core/views/poll.py:69 voteit/core/views/site.py:55
-#: voteit/core/views/users.py:52
+#: voteit/core/views/users.py:52 voteit/core/workflows/poll.zcml:33
 msgid "Canceled"
 msgstr ""
 
@@ -1526,18 +1526,26 @@ msgid "Forgot password?"
 msgstr ""
 
 #: voteit/core/views/components/navigation.py:38
+#: voteit/core/workflows/agenda_item.zcml:28
+#: voteit/core/workflows/meeting.zcml:23 voteit/core/workflows/poll.zcml:28
 msgid "Ongoing"
 msgstr ""
 
 #: voteit/core/views/components/navigation.py:39
+#: voteit/core/workflows/agenda_item.zcml:23
+#: voteit/core/workflows/meeting.zcml:18 voteit/core/workflows/poll.zcml:23
 msgid "Upcoming"
 msgstr ""
 
 #: voteit/core/views/components/navigation.py:40
+#: voteit/core/workflows/agenda_item.zcml:33
+#: voteit/core/workflows/invite_ticket.zcml:23
+#: voteit/core/workflows/meeting.zcml:28 voteit/core/workflows/poll.zcml:38
 msgid "Closed"
 msgstr ""
 
 #: voteit/core/views/components/navigation.py:41
+#: voteit/core/workflows/agenda_item.zcml:18 voteit/core/workflows/poll.zcml:18
 msgid "Private"
 msgstr ""
 
@@ -2037,5 +2045,33 @@ msgstr ""
 #. Default: more
 #: voteit/core/views/templates/snippets/user_tag.pt:28
 msgid "more_in_likes"
+msgstr ""
+
+#: voteit/core/workflows/invite_ticket.zcml:18
+msgid "Open"
+msgstr ""
+
+#: voteit/core/workflows/proposal.zcml:18
+msgid "Published"
+msgstr ""
+
+#: voteit/core/workflows/proposal.zcml:23
+msgid "Retracted"
+msgstr ""
+
+#: voteit/core/workflows/proposal.zcml:28
+msgid "Locked for voting"
+msgstr ""
+
+#: voteit/core/workflows/proposal.zcml:33
+msgid "Approved"
+msgstr ""
+
+#: voteit/core/workflows/proposal.zcml:38
+msgid "Denied"
+msgstr ""
+
+#: voteit/core/workflows/proposal.zcml:43
+msgid "Unhandled"
 msgstr ""
 

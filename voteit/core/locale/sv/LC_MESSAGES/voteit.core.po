@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2012-09-06 10:25+0200\n"
-"PO-Revision-Date: 2012-09-06 10:32+0100\n"
+"POT-Creation-Date: 2012-09-06 11:09+0200\n"
+"PO-Revision-Date: 2012-09-06 11:14+0100\n"
 "Last-Translator: Robin Harms Oredsson <robin@betahaus.net>\n"
 "Language-Team: sv <LL@li.org>\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
@@ -230,7 +230,6 @@ msgid "Contains forbidden HTML tags."
 msgstr "Innehåller otillåtna HTML-taggar."
 
 #: voteit/core/validators.py:285
-#| msgid "You can't change your vote now."
 msgid "You can't change groups in this context"
 msgstr "Du kan inte ändra grupper i denna kontext"
 
@@ -1270,7 +1269,7 @@ msgstr ""
 #: voteit/core/views/meeting.py:143 voteit/core/views/meeting.py:228
 #: voteit/core/views/meeting.py:263 voteit/core/views/meeting.py:356
 #: voteit/core/views/poll.py:69 voteit/core/views/site.py:55
-#: voteit/core/views/users.py:52
+#: voteit/core/views/users.py:52 voteit/core/workflows/poll.zcml:33
 msgid "Canceled"
 msgstr "Avbruten"
 
@@ -1642,18 +1641,27 @@ msgid "Forgot password?"
 msgstr "Glömt lösenord?"
 
 #: voteit/core/views/components/navigation.py:38
+#: voteit/core/workflows/agenda_item.zcml:28
+#: voteit/core/workflows/meeting.zcml:23 voteit/core/workflows/poll.zcml:28
 msgid "Ongoing"
 msgstr "Pågående"
 
 #: voteit/core/views/components/navigation.py:39
+#: voteit/core/workflows/agenda_item.zcml:23
+#: voteit/core/workflows/meeting.zcml:18 voteit/core/workflows/poll.zcml:23
 msgid "Upcoming"
 msgstr "Kommande"
 
 #: voteit/core/views/components/navigation.py:40
+#: voteit/core/workflows/agenda_item.zcml:33
+#: voteit/core/workflows/invite_ticket.zcml:23
+#: voteit/core/workflows/meeting.zcml:28 voteit/core/workflows/poll.zcml:38
 msgid "Closed"
 msgstr "Avslutad"
 
 #: voteit/core/views/components/navigation.py:41
+#: voteit/core/workflows/agenda_item.zcml:18
+#: voteit/core/workflows/poll.zcml:18
 msgid "Private"
 msgstr "Privat"
 
@@ -2203,11 +2211,33 @@ msgstr "personer"
 msgid "more_in_likes"
 msgstr "till"
 
-#~ msgid "Permission"
-#~ msgstr "Rättigheter"
+#: voteit/core/workflows/invite_ticket.zcml:18
+msgid "Open"
+msgstr "Öppen"
 
-#~ msgid "single_permission_schema_main_description"
-#~ msgstr "Rättigheter för användare"
+#: voteit/core/workflows/proposal.zcml:18
+msgid "Published"
+msgstr "Publicerad"
 
-#~ msgid "Showing ${count} participants"
-#~ msgstr "Visar ${count} deltagare"
+#: voteit/core/workflows/proposal.zcml:23
+#| msgid "Retract"
+msgid "Retracted"
+msgstr "Tillbakadragen"
+
+#: voteit/core/workflows/proposal.zcml:28
+#| msgid "Thank you for voting!"
+msgid "Locked for voting"
+msgstr "Låst för omröstning"
+
+#: voteit/core/workflows/proposal.zcml:33
+msgid "Approved"
+msgstr "Bifallen"
+
+#: voteit/core/workflows/proposal.zcml:38
+#| msgid "Send"
+msgid "Denied"
+msgstr "Avslagen"
+
+#: voteit/core/workflows/proposal.zcml:43
+msgid "Unhandled"
+msgstr "Ohanterad"
