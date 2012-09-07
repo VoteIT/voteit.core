@@ -31,4 +31,5 @@ def includeme(config):
         waiting = _(u"Waiting..."),
         error_loading = _(u"js_error_loading",
                           default = u"There was an error loding data from server"),
+        close_message = _(u"Close message")
     )

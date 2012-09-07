@@ -160,11 +160,13 @@ class PollView(BaseEdit):
                     use_ajax=True,
                     ajax_options=
                         """
-                        {success: voteit_deform_success,
-                        error: function(xhr, status, error) { voteit_poll_error(xhr, status, error, '#booth_%s'); },
-                        beforeSubmit: voteit_poll_beforeSubmit,
+                        {
                         target: '#booth_%s .booth.poll',
-                        timeout: 10000
+                        timeout: 10000,
+                        beforeSubmit: voteit_poll_beforeSubmit,
+                        success: voteit_deform_success,
+                        error: function(xhr, status, error) { voteit_poll_error(xhr, status, error, '#booth_%s'); },
+                        complete: function(xhr, textStatus) { voteit_poll_complete(xhr, textStatus); },
                         }
                         """ % (self.context.uid, self.context.uid))
         self.api.register_form_resources(form)

@@ -3,9 +3,39 @@ if(typeof(voteit) == "undefined"){
     var voteit = {};
 }
 
+function spinner() {
+	var _spinner = $(document.createElement('img'));
+	_spinner.addClass('spinner');
+	_spinner.attr('src', '/static/images/spinner.gif');
+	_spinner.attr('alt', voteit.translation['waiting']);
+	
+	return _spinner;
+}
+
+function flash_message(message, attr_class, close_button) {
+	var div = $(document.createElement('div'));
+	div.addClass('message');
+	if(attr_class)
+		div.addClass(attr_class);
+    var span = $(document.createElement('span'));
+    span.html(message);
+    div.append(span);
+    if(close_button) {
+    	var button = $(document.createElement('a'));
+    	button.addClass('close_message');
+    	button.attr('href', '#');
+    	button.attr('title', voteit.translation['close_message']);
+    	button.html('X');
+    	div.append(button);
+    }
+    
+    $('#flash_messages').append(div);
+}
+
 /* Flash messages */
 $(document).ready(function () {
     $('#flash_messages .close_message').live('click', function(event) {
+    	try { event.preventDefault(); } catch(e) {}
         //Parent of the .close_message class should be .message
         $(this).parent().slideUp(200);
     });
@@ -383,6 +413,9 @@ $(document).ready(function() {
 	    IE might throw an error calling preventDefault(), so use a try/catch block. */
 	    try { event.preventDefault(); } catch(e) {}
 	    
+	    var button = $(this);
+		spinner().appendTo(button);
+	    
 	    var poll = $(this).parents("div.listing_block.poll");
 	    var id = $(poll).attr('id');  
     	var url = $(this).attr('href');
@@ -398,8 +431,13 @@ $(document).ready(function() {
 		});
 		
 		$(booth).load(url, function(response, status, xhr) {
-            deform.processCallbacks();
-            display_deform_labels();
+			if (status == "error") {
+				flash_message("Sorry but there was an error loading poll: " + xhr.status + " " + xhr.statusText, 'error', true);
+            } else {
+            	deform.processCallbacks();
+            	display_deform_labels();
+            }
+            button.find('img.spinner').remove();
 	    });
 	});
 });
