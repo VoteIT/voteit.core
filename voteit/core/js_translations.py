@@ -12,6 +12,7 @@ def includeme(config):
         yes = _(u"Yes"),
         no = _(u"No"),
         close = _(u"Close"),
+        ok = _(u"Ok"),
         confirm_title = _(u"Please confirm"),
         confirm_state = _(u"js_confirm_state",
                           default = u"Are you sure you want to change the state?"),
@@ -31,5 +32,8 @@ def includeme(config):
         waiting = _(u"Waiting..."),
         error_loading = _(u"js_error_loading",
                           default = u"There was an error loding data from server"),
-        close_message = _(u"Close message")
+        close_message = _(u"Close message"),
+        delete_poll_notification_title = _(u"Can not delete poll"),
+        delete_poll_notification_text = _(u"delete_poll_notification_text",
+                                          default=u"There are proposals in this poll that is in state voting, approved or denied. You need to manualy change the state of the proposals first."),
     )

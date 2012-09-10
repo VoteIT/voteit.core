@@ -26,10 +26,23 @@ def proposal_listing(context, request, va, **kw):
             num, results = query(Any('uid', uids), sort_index = 'created')
             return [get_metadata(x) for x in results]
         
+        def _notify_delete(uids):
+            # check if there is proposals in locked for voteing, approved or deniyed
+            query = Eq('path', resource_path(context)) & \
+                    Eq('content_type', 'Proposal') & \
+                    Any('workflow_state', ('voting', 'approved', 'denied')) & \
+                    Any('uid', uids)
+        
+            if api.root.catalog.query(query)[0] > 0:
+                return 'notify_delete' 
+            else: 
+                return ''
+        
         response = {}
         response['api'] = api
         response['polls'] = polls
         response['get_proposal_brains'] = _get_proposal_brains
+        response['notify_delete'] = _notify_delete
         return render('../templates/polls.pt', response, request=request)
     
     polls = api.get_restricted_content(context, iface=IPoll, sort_on='created')

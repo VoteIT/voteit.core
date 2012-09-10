@@ -148,6 +148,20 @@ class PollView(BaseEdit):
         if not self.request.is_xhr:
             url = resource_url(self.context.__parent__, self.request, anchor=self.context.uid)
             return HTTPFound(location=url)
+        
+        def _notify_delete(uids):
+            # check if there is proposals in locked for voteing, approved or deniyed
+            query = Eq('path', resource_path(self.context)) & \
+                    Eq('content_type', 'Proposal') & \
+                    Any('workflow_state', ('voting', 'approved', 'denied')) & \
+                    Any('uid', uids)
+        
+            if self.api.root.catalog.query(query)[0] > 0:
+                return 'notify_delete' 
+            else: 
+                return ''
+            
+        self.response['notify_delete'] = _notify_delete
 
         poll_plugin = self.context.get_poll_plugin()
         schema = poll_plugin.get_vote_schema(self.request, self.api)

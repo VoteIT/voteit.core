@@ -24,6 +24,7 @@ def moderator_actions(context, request, va, **kw):
         #Assume brain - might need to change this later
         context = find_resource(api.root, context['path'])
     response = dict(
+        context = context,
         menu_content = api.render_view_group(context, request, 'moderator_actions_section', **kw),
     )
     return render('../templates/snippets/moderator_actions.pt', response, request = request)
@@ -63,7 +64,7 @@ def moderator_context_action(context, request, va, **kw):
     if context_perm and not api.context_has_permission(context_perm, context):
         return ''
     url = "%s%s" % (api.resource_url(context, request), va.kwargs['viewname'])
-    return """<li><a href="%s">%s</a></li>""" % (url, api.translate(va.title))
+    return """<li><a href="%s" class="%s">%s</a></li>""" % (url, va.kwargs['viewname'], api.translate(va.title))
 
 @view_action('context_actions', 'poll_config', title = _(u"Poll settings"), interface = IPoll)
 def poll_settings_context_action(context, request, va, **kw):

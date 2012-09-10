@@ -5,8 +5,9 @@
                      can_vote api.context_has_permission('Add Vote', poll);
                      has_voted api.userid in poll;
                      proposals get_proposal_brains(poll.proposal_uids);"
-         tal:attributes="class 'booth poll ' + poll.poll_plugin_name;
+         tal:attributes="class 'booth poll ' + poll.poll_plugin_name + ' ' + notify_delete(poll.proposal_uids);
                          name poll.__name__;
+                         id poll.uid;
                          style 'position: absolute';">
                          
         <span class="close_wrapper">
