@@ -22,15 +22,6 @@ p {
     margin-bottom: 0.5em;
     line-height: 1.25em;
 }
-table {
-	border: 1px solid black;
-}
-tbody, tfoot, thead, th, td, tr {
-	border: inherit;
-}
-th, td {
-	padding: 2px;
-}
 .clear {
     clear: both;
 }
@@ -115,6 +106,21 @@ th, td {
 .description ol {
     margin-left: 0;
     padding: 0 0 0 40px;
+}
+.description table {
+	border: 1px solid black;
+}
+.description tbody, 
+.description tfoot, 
+.description thead, 
+.description th, 
+.description td, 
+.description tr {
+	border: inherit;
+}
+.description th, 
+.description td {
+	padding: 2px;
 }
 
 /* Generic classes for positioning columns */
