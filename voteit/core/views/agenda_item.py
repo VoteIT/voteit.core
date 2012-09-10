@@ -76,27 +76,16 @@ class AgendaItemView(BaseView):
         tag = self.request.GET.get('tag', '')
         add_permission = self.api.content_types_add_perm(content_type)
         if not has_permission(add_permission, self.context, self.request):
-            raise HTTPForbidden("You're not allowed to add '%s' in this context." % content_type)
-        
+            raise HTTPForbidden("You're not allowed to add '%s' in this context." % content_type)        
         schema_name = self.api.get_schema_name(content_type, 'add')
-        schema = createSchema(schema_name).bind(context = self.context, request = self.request)
+        schema = createSchema(schema_name).bind(context = self.context, request = self.request, tag = tag)
         add_csrf_token(self.context, self.request, schema)
-        query = {'content_type': content_type,
-                 'tag': tag}
+        query = {'content_type': content_type, 'tag': tag}
         url = self.request.resource_url(self.context, 'add', query=query)
         form = Form(schema, action=url, buttons=(button_add,))
         #Note! Registration of form resources has to be in the view that has the javascript
         #that will include this!
-        appstruct={'tags': tag}
-        if tag:
-            if content_type == 'Proposal':
-                appstruct['title'] = " #%s" % tag
-            else:
-                appstruct['text'] = " #%s" % tag 
-        else:
-           if content_type == 'Proposal':
-                appstruct['title'] = "%s " % self.api.translate(_('I propose'))
-        self.response['form'] = form.render(appstruct=appstruct)
+        self.response['form'] = form.render()
         self.response['user_image_tag'] = self.api.user_profile.get_image_tag()
         self.response['content_type'] = content_type
         return Response(render('templates/snippets/inline_form.pt', self.response, request=self.request))
