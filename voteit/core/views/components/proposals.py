@@ -4,6 +4,7 @@ from pyramid.traversal import resource_path
 from pyramid.traversal import find_resource
 from repoze.catalog.query import Any
 from repoze.catalog.query import Eq
+from repoze.catalog.query import NotAny
 from zope.component.interfaces import ComponentLookupError
 
 from voteit.core import VoteITMF as _
@@ -55,10 +56,15 @@ def proposal_listing(context, request, va, **kw):
                         mapping = {'name': poll.get_field_value('poll_plugin')})
             api.flash_messages.add(err_msg, type="error")
             continue
+        
+    uids = set()
+    for poll in polls:
+        uids.update(poll.proposal_uids)
     
     query = Eq('path', resource_path(context)) & \
             Eq('content_type', 'Proposal') & \
-            Any('workflow_state', ('published', 'retracted', 'unhandled'))
+            (NotAny('uid', uids) | \
+            Any('workflow_state', ('published', 'retracted', 'unhandled')))
     
     total_count = api.root.catalog.query(query)[0]
     
