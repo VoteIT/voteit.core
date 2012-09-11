@@ -11,11 +11,11 @@
                          style 'position: absolute';">
                          
         <span class="close_wrapper">
-        	<a href="#" class="close" title="Close" i18n:attributes="title">
+    		<a href="#" class="close" title="Close" i18n:attributes="title">
         		<img src="${request.application_url}/static/icons/icon_close.png"
                      width="16" height="16"
                      alt="Close" i18n:attributes="alt" />
-             </a>
+     		</a>
         </span>
 
 		<span tal:condition="api.show_moderator_actions" tal:replace="structure api.get_moderator_actions(poll)">
@@ -38,21 +38,25 @@
 			<tal:poll_ongoing condition="wf_state == 'ongoing' and can_vote and form" content="structure form">
 				Form
 			</tal:poll_ongoing>
+			
 			<div tal:condition="success_msg|False" class="success message">${success_msg}</div>
 			<div class="error message"></div>
+			
 			<div class="col-65-35">
 				<div class="column column-1">
-			<tal:iterate condition="wf_state == 'ongoing' and not can_vote" repeat="proposal proposals">
-			    <tal:proposal replace="structure api.render_single_view_component(context, request, 'proposal', 'block', brain=proposal)">
-			    	Proposal
-			    </tal:proposal>
-			</tal:iterate>
+					<tal:iterate condition="wf_state == 'ongoing' and not can_vote" repeat="proposal proposals">
+					    <tal:proposal replace="structure api.render_single_view_component(context, request, 'proposal', 'block', brain=proposal)">
+					    	Proposal
+					    </tal:proposal>
+					</tal:iterate>
 				</div>
 			</div>
 			
 			<tal:poll_closed condition="wf_state == 'closed'">
 				<div tal:condition="has_voted and poll_plugin" tal:content="structure form">Render your vote</div>
+				<a href="#" class="close buttonize" title="Close" i18n:attributes="title" i18n:translate="">Close</a>
 			</tal:poll_closed>
+			
 			<div class="clear"><!-- --></div>
 		</div>
 		

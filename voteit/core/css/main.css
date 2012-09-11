@@ -561,18 +561,23 @@ li.notification_message {
 	float: right;
 	margin-top: 5px; 
 }
-.booth .close {
+.booth .close_wrapper .close {
     position: absolute;
     float: right;
 	z-index: 10000;
     top: 15px;
     right: 15px;
 }
+
+.booth .close.buttonize {
+	float: right;
+}
+
 .show_denied {
 	text-align: center;
 }
 
-.booth .deform label.desc {
+.booth .deform .desc {
 	display: none;
 }
 
