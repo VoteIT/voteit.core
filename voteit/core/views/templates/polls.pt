@@ -43,10 +43,6 @@
 		<div class="clear"><!-- --></div>
 		
 		<div class="poll_footer">
-			<div class="show_denied" tal:condition="wf_state == 'closed'">
-				<a href="#" i18n:translate="">Show denied proposals</a>
-			</div>
-			
 			<div class="clear"><!-- --></div>
 			
 			<div class="iconpadding icon time start" 
