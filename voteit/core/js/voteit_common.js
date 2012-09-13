@@ -537,6 +537,7 @@ $(document).ready(function() {
 	            }
 	        },
 	        style: {
+	        	width: 500,
             	classes: "answer-popup",
             	widget: true,
         	},

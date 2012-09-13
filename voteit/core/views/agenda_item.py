@@ -130,9 +130,9 @@ class AgendaItemView(BaseView):
         schema = createSchema(schema_name).bind(context = self.context, request = self.request)
         add_csrf_token(self.context, self.request, schema)
         
-        url = self.api.resource_url(self.context, self.request)
+        url = self.request.resource_url(self.context, 'answer')
         form = Form(schema, 
-                    action=url+"answer", 
+                    action=url, 
                     buttons=(button_add,),
                     formid="answer-form-%s" % self.context.uid, 
                     use_ajax=True,
@@ -148,7 +148,7 @@ class AgendaItemView(BaseView):
             except ValidationFailure, e:
                 self.response['form'] = e.render()
                 if self.request.is_xhr:
-                    return Response(render("templates/ajax_edit.pt", self.response, request = self.request))
+                    return Response(render("templates/snippets/inline_form.pt", self.response, request = self.request))
                 return self.response
             
             kwargs = {}
@@ -186,7 +186,9 @@ class AgendaItemView(BaseView):
                      'text': "%s:  %s" % (creator, " ".join(tags))}
         
         self.response['form'] = form.render(appstruct=appstruct)
+        self.response['user_image_tag'] = self.api.user_profile.get_image_tag()
+        self.response['content_type'] = content_type
         
         if self.request.is_xhr:
-            return Response(render('templates/ajax_edit.pt', self.response, request=self.request))
+            return Response(render('templates/snippets/inline_form.pt', self.response, request=self.request))
         return self.response
