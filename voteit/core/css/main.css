@@ -505,6 +505,7 @@ li.notification_message {
 .booth.poll {
 	background-color: #DBE0E5;
 	padding: 10px;
+	z-index: 1000;
 }
 .listing_block.poll > .cogwheel,
 .booth.poll > .cogwheel {
@@ -579,6 +580,9 @@ li.notification_message {
 
 .booth .deform .desc {
 	display: none;
+}
+.booth.poll {
+	position: absolute;
 }
 
 /* proposals and discussions */

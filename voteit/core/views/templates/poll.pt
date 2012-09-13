@@ -7,8 +7,7 @@
                      proposals get_proposal_brains(poll.proposal_uids);"
          tal:attributes="class 'booth poll ' + poll.poll_plugin_name + ' ' + notify_delete(poll.proposal_uids);
                          name poll.__name__;
-                         id poll.uid;
-                         style 'position: absolute';">
+                         id poll.uid;">
                          
         <span class="close_wrapper">
     		<a href="#" class="close" title="Close" i18n:attributes="title">
