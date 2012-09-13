@@ -392,6 +392,8 @@ p {
 .listing_block {
     margin-top: 1em;
     clear: both;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #ccc;
 }
 
 /* Flash messages */
@@ -497,15 +499,15 @@ li.notification_message {
 }
 
 /* polls and booth */
-.booth_wrapper {
-	width: 75%;
-}
-
 .listing_block.poll,
 .booth.poll {
-	background-color: #DBE0E5;
 	padding: 10px;
 	z-index: 1000;
+	background: #fff;
+    border: 2px solid #ccc;
+    border-radius: 0.5em;
+    -webkit-border-radius: 0.5em;
+    -moz-border-radius: 0.5em;
 }
 .listing_block.poll > .cogwheel,
 .booth.poll > .cogwheel {
@@ -513,7 +515,7 @@ li.notification_message {
 }
 .listing_block.poll h3,
 .booth.poll h3 {
-	margin: 0 0 0 30px;
+	margin: 0;
 }
 .listing_block.poll > .wf_state,
 .booth.poll > .wf_state {
@@ -524,8 +526,7 @@ li.notification_message {
 }
 
 .poll_wrapper {
-	margin-left: 30px;
-	padding: 5px 10px;
+	padding: 5px 0;
 	background-color: #fff;
 }
 .poll_wrapper .result div.approved .listing_block .meta .icon {
@@ -535,7 +536,7 @@ li.notification_message {
 	display: none;
 }
 .poll_footer {
-	padding: 10px;
+	padding-top: 10px;
 	width: 100%;
 }
 .poll_footer > .time,
@@ -583,6 +584,7 @@ li.notification_message {
 }
 .booth.poll {
 	position: absolute;
+	padding-bottom: 30px;
 }
 
 /* proposals and discussions */
