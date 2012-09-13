@@ -392,6 +392,8 @@ p {
 .listing_block {
     margin-top: 1em;
     clear: both;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #ccc;
 }
 
 /* Flash messages */
@@ -503,9 +505,13 @@ li.notification_message {
 
 .listing_block.poll,
 .booth.poll {
-	background-color: #DBE0E5;
 	padding: 10px;
 	z-index: 1000;
+	background: #fff;
+    border: 2px solid #ccc;
+    border-radius: 0.5em;
+    -webkit-border-radius: 0.5em;
+    -moz-border-radius: 0.5em;
 }
 .listing_block.poll > .cogwheel,
 .booth.poll > .cogwheel {
@@ -524,7 +530,7 @@ li.notification_message {
 }
 
 .poll_wrapper {
-	padding: 5px 10px;
+	padding: 5px 0;
 	background-color: #fff;
 }
 .poll_wrapper .result div.approved .listing_block .meta .icon {
@@ -582,6 +588,7 @@ li.notification_message {
 }
 .booth.poll {
 	position: absolute;
+	padding-bottom: 30px;
 }
 
 /* proposals and discussions */

@@ -5,6 +5,10 @@
     display: block;
     padding: 0 0 0.5em 0;
     border-bottom: 1px solid #ccc;
+    margin-bottom: 5px;
+}
+.starwidget .listing_block {
+	border: 0px;
 }
 /* jQuery.Rating Plugin CSS - http://www.fyneworks.com/jquery/star-rating/
  * This is our custom version of that code
