@@ -80,8 +80,13 @@ class MajorityPollPlugin(PollPlugin):
         return u"%s%%" % (round(num*100, 1))
         
     def render_result(self, request, api, complete=True):
+        votes = [x['uid']['proposal'] for x in self.context.poll_result]
+        novotes = self.context.proposal_uids - set(votes)
+        
         response = {}
+        response['api'] = api
         response['result'] = self.context.poll_result
+        response['novotes'] = novotes
         response['get_proposal_by_uid'] = self.context.get_proposal_by_uid
         response['complete'] = complete
         return render('templates/majority_poll.pt', response, request=request)

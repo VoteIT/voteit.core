@@ -1,6 +1,5 @@
 <tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core">
 
-<h4 class="" i18n:translate="">Poll result</h4>
 <div tal:condition="result">
     <tal:iterate repeat="item result">
     	<div>
@@ -8,11 +7,25 @@
     			<span tal:replace="item['percentage']">30%</span>
 				(<span tal:replace="item['count']">3</span> vote)
 			</strong>
-			&mdash;
-			<tal:proposal tal:define="proposal get_proposal_by_uid(item['uid']['proposal'])">
-				<span tal:content="structure proposal.title">Title</span>
-			</tal:proposal>
 		</div>
+		<tal:proposal
+			define="brain api.get_metadata_for_query(uid=item['uid']['proposal'])[0]" 
+			replace="structure api.render_single_view_component(api.context, api.request, 'proposal', 'block', brain=brain)">
+	    	Proposal
+	    </tal:proposal>
+    </tal:iterate>
+    <tal:iterate repeat="looser novotes">
+    	<div>
+    		<strong>
+    			<span>0%</span>
+				(<span>0</span> votes)
+			</strong>
+		</div>
+		<tal:proposal
+			define="brain api.get_metadata_for_query(uid=looser)[0]" 
+			replace="structure api.render_single_view_component(api.context, api.request, 'proposal', 'block', brain=brain)">
+	    	Proposal
+	    </tal:proposal>
     </tal:iterate>
 </div>
 </tal:main>

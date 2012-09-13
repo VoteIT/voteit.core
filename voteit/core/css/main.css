@@ -587,6 +587,11 @@ li.notification_message {
 	padding-bottom: 30px;
 }
 
+.poll_wrapper .result .listing_block {
+	margin-top: 0;
+	margin-bottom: 1em;
+}
+
 /* proposals and discussions */
 #proposals .creators img,
 #discussions .creators img,
