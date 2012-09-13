@@ -19,7 +19,7 @@
 
 		<span tal:condition="api.show_moderator_actions" tal:replace="structure api.get_moderator_actions(poll)">
              Cogwheel menu
-        </span>	
+        </span>
 
 		<div class="wf_state">
 		    <span class="iconpadding icon ${wf_state}">

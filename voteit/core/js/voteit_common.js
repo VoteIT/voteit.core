@@ -433,6 +433,7 @@ $(document).ready(function() {
 		$(booth).load(url, function(response, status, xhr) {
 			if (status == "error") {
 				flash_message("Sorry but there was an error loading poll: " + xhr.status + " " + xhr.statusText, 'error', true);
+				booth.remove();
             } else {
             	deform.processCallbacks();
             	display_deform_labels();
