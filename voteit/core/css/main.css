@@ -499,10 +499,6 @@ li.notification_message {
 }
 
 /* polls and booth */
-.booth_wrapper {
-	width: 75%;
-}
-
 .listing_block.poll,
 .booth.poll {
 	padding: 10px;
