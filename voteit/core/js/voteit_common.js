@@ -303,20 +303,56 @@ $(document).ready(function() {
     });
 });
 
-/* Modal window funcs */
-function open_modal_window(obj) {
-    //Prevent the page from scrolling
-    $("body").css("overflow", "hidden");
+/* Masking */
+function apply_mask($prevent_scrolling) {
+	//Prevent the page from scrolling
+	$prevent_scrolling = typeof $prevent_scrolling !== 'undefined' ? $prevent_scrolling : true;
+	if($prevent_scrolling)
+    	$("body").css("overflow", "hidden");
     
     //Get the screen height and width
     var maskHeight = $(document).height();
     var maskWidth = $(document).width();
  
     //Set height and width to mask to fill up the whole screen
-    $('#modal-mask').css({'width':maskWidth,'height':maskHeight});
+    $('#mask').css({'width':maskWidth,'height':maskHeight});
      
     //transition effect  
-    $('#modal-mask').fadeTo("slow", 0.8);
+    $('#mask').fadeTo("slow", 0.8);
+}
+
+function remove_mask() {
+	$('#mask').hide();
+    $("body").css("overflow", "auto");
+}
+
+$(document).ready(function() {     
+    //if mask is clicked
+    $('#mask').click(function() {
+        remove_mask();
+    });
+});
+
+$(document).keyup(function(e) {
+    if(e.keyCode == 27) {
+		remove_mask();
+    }
+});
+
+$(window).resize(reapply_mask);
+$(window).scroll(reapply_mask);
+
+function reapply_mask() {
+    //Get the screen height and width
+    var maskHeight = $(document).height();
+    var maskWidth = $(window).width();
+    //Set height and width to mask to fill up the whole screen
+    $('#mask').css({'width':maskWidth,'height':maskHeight});
+}
+
+/* Modal window funcs */
+function open_modal_window(obj) {
+    apply_mask();
  
     //Get the window height and width
     var winH = $(window).height();
@@ -333,21 +369,27 @@ function open_modal_window(obj) {
     $(obj).fadeIn(2000);
 }
 
-$(document).ready(function() {     
+$(document).ready(function() {
     //if close button is clicked
     $('.modal-window .close').click(function (e) {
         //Cancel the link behavior
         e.preventDefault();
-        $('#modal-mask, .modal-window').hide();
-        $("body").css("overflow", "auto");
-    });     
-     
-    //if mask is clicked
-    $('#modal-mask').click(function () {
-        $(this).hide();
         $('.modal-window').hide();
-        $("body").css("overflow", "auto");
+        remove_mask();
     });
+});
+
+$(document).ready(function() {     
+    //if mask is clicked
+    $('#mask').click(function() {
+        $('.modal-window').hide();
+    });
+});
+
+$(document).keyup(function(e) {
+    if(e.keyCode == 27) {
+		$('.modal-window').hide();
+    }
 });
 
 $(document).ready(function () {
@@ -356,11 +398,6 @@ $(document).ready(function () {
 });
 
 function recalc_modal_placement() {
-    //Get the screen height and width
-    var maskHeight = $(document).height();
-    var maskWidth = $(window).width();
-    //Set height and width to mask to fill up the whole screen
-    $('#modal-mask').css({'width':maskWidth,'height':maskHeight});
     //Get the window height and width
     var winH = $(window).height();
     var winW = $(window).width();
@@ -370,14 +407,6 @@ function recalc_modal_placement() {
     $(".modal-window").css('top',  Math.round(winH/2-$(".modal-window").outerHeight()/2+scrollT));
     $(".modal-window").css('left', Math.round(winW/2-$(".modal-window").outerWidth()/2+scrollL));
 }
-
-$(document).keyup(function(e) {
-    if(e.keyCode == 27) {
-        $('#modal-mask').hide();
-        $('.modal-window').hide();
-        $("body").css("overflow", "auto");
-    }
-});
 
 $(document).ready(function() {
     $('#help-tab > a').live('click', function(event) {
@@ -432,9 +461,10 @@ $(document).ready(function() {
                 flash_message("Sorry but there was an error loading poll: " + xhr.status + " " + xhr.statusText, 'error', true);
                 booth_wrapper.remove();
             } else {
+                apply_mask(false);
+                booth_wrapper.find('.booth').css('width', $('#content').width()*0.7);
                 deform.processCallbacks();
                 display_deform_labels();
-                booth_wrapper.find('.booth').css('width', $('#content').width()*0.7);
             }
             button.find('img.spinner').remove();
         });
@@ -450,7 +480,21 @@ $(document).ready(function() {
         
         var booth_wrapper = $(this).parents(".booth_wrapper");
         booth_wrapper.remove();
+        remove_mask();
     });
+});
+
+$(document).ready(function() {     
+    //if mask is clicked
+    $('#mask').click(function() {
+        $(".booth_wrapper").remove();
+    });
+});
+
+$(document).keyup(function(e) {
+    if(e.keyCode == 27) {
+		$(".booth_wrapper").remove();
+    }
 });
 
 /* Show denied proposals on closed polls */

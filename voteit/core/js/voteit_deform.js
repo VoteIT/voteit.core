@@ -86,6 +86,7 @@ function voteit_poll_beforeSubmit(arr, form, options) {
 } 
 
 function voteit_poll_complete(xhr, textStatus) {
+	$('.booth', xhr.responeText).css('width', $('#content').width()*0.7);
 	var button = $('form.deform', xhr.responeText).find('li.buttons button');
 	var message = $('form.deform', xhr.responeText).parents('.booth.poll').find('.success.message');
 	message.insertBefore(button);
