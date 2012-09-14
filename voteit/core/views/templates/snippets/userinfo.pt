@@ -9,12 +9,12 @@
         </h4>
 
         <h6><span i18n:translate="">Email</span>:</h6>
-        <p>
         <span tal:content="user.get_field_value('email')"></span>
         
         <h6><span i18n:translate="">About me</span>:</h6>
-        <div tal:content="structure about_me"></div>
-        
+        <div tal:condition="about_me" tal:content="structure about_me"></div>
+        <div tal:condition="not: about_me" i18n:translate="">This user hasn't entered anything</div>
+
         <div tal:condition="last_entries">
             <h6><span i18n:translate="">Last added</span>:</h6>
             <div class="list">
