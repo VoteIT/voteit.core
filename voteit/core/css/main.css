@@ -587,10 +587,16 @@ li.notification_message {
 	padding-bottom: 30px;
 }
 
+.poll_wrapper .result .listing_block {
+	margin-top: 0;
+	margin-bottom: 1em;
+}
+
 /* proposals and discussions */
 #proposals .creators img,
 #discussions .creators img,
-.inline_add_form img {
+.inline_add_form img,
+.answer-popup img {
     float: left;
 }
 #proposals .wf-state-retracted .body {
@@ -615,7 +621,8 @@ li.notification_message {
 .inline_add_form .deform label {
     display: none !important;
 }
-.inline_add_form .deform li {
+.inline_add_form .deform li,
+.answer-popup .deform li {
     margin: 0 !important;
     padding: 0 !important;
 }
@@ -630,7 +637,8 @@ li.notification_message {
     height: 34px;
     background-color: #fff;
 }
-.inline_add_form textarea {
+.inline_add_form textarea,
+.answer-popup  textarea {
     margin-top: 0px !important;
     height: 60px;
 }
@@ -893,10 +901,7 @@ table.listing > tbody > tr.even > td {
     min-width: 500px;
 }
 .answer-popup.ui-tooltip {
-	min-width: 400px;
-}
-.meeting-menu-body.ui-tooltip {
-    max-width: 500px;
+	min-width: 470px;
 }
 .qtip_menu .ui-tooltip-content {
     border: none;

@@ -493,54 +493,55 @@ $(document).ready(function() {
         IE might throw an error calling preventDefault(), so use a try/catch block. */
         try { event.preventDefault(); } catch(e) {}
 
-        if($(this).parents('#proposals').length > 0)
-            title_text = voteit.translation['answer_popup_title_comment'];
-        else
-            title_text = voteit.translation['answer_popup_title_answer'];
-        
-        var url = $(this).attr('href');
-        $(this).qtip({
-            overwrite: false, // Make sure the tooltip won't be overridden once created
-            content: { 
-                title: {
-                    text: title_text,
-                    button: voteit.translation['close'],
-                },
-                text: voteit.translation['loading'], // The text to use whilst the AJAX request is loading
-                ajax: {
-                    url: url,
-                    success: function(data, status) {
-                        this.set('content.text', data);
-                        deform.processCallbacks();
-                        $(this.elements.content).find('textarea').focus();
-                        $(this.elements.content).find('textarea').caretTo(':', 2);
-                    }
-                }
-            },
-            show: {
-                event: event.type, // Use the same show event as the one that triggered the event handler
-                ready: true, // Show the tooltip as soon as it's bound, vital so it shows up the first time you hover!
-                effect: true,
-                solo: true,
-            },
-            hide: {
-                event: "false",
-                fixed: true,
-                effect: false,
-            },
-            position: {
-                at: "bottom center",
-                my: "top center",
-                adjust: {
-                    method: 'flip',
-                }
-            },
-            style: {
-                classes: "answer-popup",
-                widget: true,
-            },
-        }, event);
-    });
+	    if($(this).parents('#proposals').length > 0)
+	    	title_text = voteit.translation['answer_popup_title_comment'];
+    	else
+	    	title_text = voteit.translation['answer_popup_title_answer'];
+	    
+	    var url = $(this).attr('href');
+	    $(this).qtip({
+	        overwrite: false, // Make sure the tooltip won't be overridden once created
+	        content: { 
+	        	title: {
+	        		text: title_text,
+	        		button: voteit.translation['close'],
+	        	},
+	            text: voteit.translation['loading'], // The text to use whilst the AJAX request is loading
+	            ajax: {
+	                url: url,
+	                success: function(data, status) {
+    					this.set('content.text', data);
+    					deform.processCallbacks();
+    					$(this.elements.content).find('textarea').focus();
+    					$(this.elements.content).find('textarea').caretTo(':', 2);
+	                }
+	            }
+	        },
+	        show: {
+	            event: event.type, // Use the same show event as the one that triggered the event handler
+	            ready: true, // Show the tooltip as soon as it's bound, vital so it shows up the first time you hover!
+	            effect: true,
+	            solo: true,
+	        },
+	        hide: {
+	        	event: "false",
+	            fixed: true,
+	            effect: false,
+	        },
+	        position: {
+	            at: "bottom center",
+	            my: "top center",
+	            adjust: {
+	                method: 'flip',
+	            }
+	        },
+	        style: {
+	        	width: 500,
+            	classes: "answer-popup",
+            	widget: true,
+        	},
+	    }, event);
+	});
 });
 
 /* ajaxifing tag filtering */
