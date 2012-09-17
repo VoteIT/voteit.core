@@ -81,7 +81,7 @@ class MajorityPollPlugin(PollPlugin):
         
     def render_result(self, request, api, complete=True):
         votes = [x['uid']['proposal'] for x in self.context.poll_result]
-        novotes = self.context.proposal_uids - set(votes)
+        novotes = set(self.context.proposal_uids) - set(votes)
         
         response = {}
         response['api'] = api

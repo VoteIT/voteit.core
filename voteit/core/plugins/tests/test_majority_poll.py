@@ -5,6 +5,7 @@ from pyramid.traversal import find_interface
 from zope.interface.verify import verifyObject
 
 from voteit.core.models.interfaces import IAgendaItem
+from voteit.core.models.interfaces import IMeeting
 
     
 class MPUnitTests(unittest.TestCase):
@@ -63,7 +64,9 @@ class MPIntegrationTests(unittest.TestCase):
     """
     
     def setUp(self):
-        self.config = testing.setUp(request=testing.DummyRequest())
+        self.request = testing.DummyRequest()
+        self.config = testing.setUp(request=self.request)
+        self.config.testing_securitypolicy(userid='admin')
         
         #Enable workflows
         self.config.include('pyramid_zcml')
@@ -71,10 +74,30 @@ class MPIntegrationTests(unittest.TestCase):
         
         #Register poll plugin
         self.config.include('voteit.core.plugins.majority_poll')
+        
+        # Adding catalog
+        self.config.include('voteit.core.models.catalog')
+        self.config.include('voteit.core.models.unread')
+        self.config.include('voteit.core.models.user_tags')
+        self.config.scan('voteit.core.subscribers.catalog')
+        
+        #Add root
+        from voteit.core.models.site import SiteRoot
+        root = SiteRoot()
+        
+        #Add users
+        from voteit.core.models.users import Users
+        root['users'] = users = Users()
+        from voteit.core.models.user import User
+        users['admin'] = User()
+        
+        #Add meeting
+        from voteit.core.models.meeting import Meeting
+        root['m'] = m = Meeting()
 
         #Add agenda item - needed for lookups
         from voteit.core.models.agenda_item import AgendaItem
-        ai = AgendaItem()
+        m['ai'] = ai = AgendaItem()
 
         #Add a poll
         from voteit.core.models.poll import Poll
@@ -109,19 +132,22 @@ class MPIntegrationTests(unittest.TestCase):
         vote_cls = plugin.get_vote_class()
                 
         v1 = vote_cls()
-        v1.set_vote_data({'proposal':self.ai['p1'].uid})
         self.poll['v1'] = v1
+        v1.set_vote_data({'proposal':self.ai['p1'].uid})
         
         v2 = vote_cls()
-        v2.set_vote_data({'proposal':self.ai['p1'].uid})
         self.poll['v2'] = v2
+        v2.set_vote_data({'proposal':self.ai['p1'].uid})
         
         v3 = vote_cls()
-        v3.set_vote_data({'proposal':self.ai['p2'].uid})
         self.poll['v3'] = v3
+        v3.set_vote_data({'proposal':self.ai['p2'].uid})
     
     def _close_poll(self):
-        request = testing.DummyRequest()
+        request = self.request
+        
+        m = find_interface(self.poll, IMeeting)
+        m.set_workflow_state(request, 'ongoing')
         
         ai = find_interface(self.poll, IAgendaItem)
         ai.set_workflow_state(request, 'upcoming')
@@ -145,11 +171,18 @@ class MPIntegrationTests(unittest.TestCase):
         self.assertEqual(plugin.render_raw_data().body, "(({'proposal': u'p1uid'}, 2), ({'proposal': u'p2uid'}, 1))")
             
     def test_render_result(self):
+        self.config.scan('voteit.core.views.components.main')
+        self.config.scan('voteit.core.views.components.moderator_actions')
+        self.config.scan('voteit.core.views.components.creators_info')
+        self.config.scan('voteit.core.views.components.proposals')
+        self.config.scan('voteit.core.views.components.user_tags')
+        self.config.registry.settings['default_timezone_name'] = "Europe/Stockholm"
+        self.config.include('voteit.core.models.date_time_util')
+        
         self._add_votes()
         self._close_poll()
         plugin = self.poll.get_poll_plugin()
-        request = testing.DummyRequest()
+        request = self.request
         from voteit.core.views.api import APIView
         api = APIView(self.poll, request)
-        self.assertTrue('p1' in plugin.render_result(request, api))
-        
+        self.assertTrue('p2uid' in plugin.render_result(request, api))
