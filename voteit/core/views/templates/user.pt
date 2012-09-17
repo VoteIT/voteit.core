@@ -7,8 +7,10 @@
       i18n:domain="voteit.core">
 <body>
     <div metal:fill-slot="left">
-        <div tal:replace="structure user_info"></div>
-
+        <div class="userinfo" class="content_wrapper"
+             tal:content="structure api.render_view_group(context, request, 'user_info', api = api)">
+            user info view group here, with profile information, picture etc...
+        </div>
     </div>
     <div metal:fill-slot="right">
         <div class="moderator-help-buttons">

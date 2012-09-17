@@ -29,6 +29,10 @@ $('a.moretag').live('click', function(event) {
         position: {
             at: "bottom center",
             my: "top center",
+            viewport: $(window),
+            adjust: {
+                method: 'shift',
+            },
         },
         style: { 
             classes: 'moretag-popup',
@@ -70,6 +74,10 @@ $('a.inlineinfo').live('click', function(event) {
         position: {
             at: "bottom center",
             my: "top center",
+            viewport: $(window),
+            adjust: {
+                method: 'shift',
+            },
         },
         style: { 
             classes: 'inlineinfo-popup',

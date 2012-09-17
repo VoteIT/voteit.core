@@ -3,6 +3,7 @@ import httpagentparser
 
 from decimal import Decimal
 from pyramid.view import view_config
+from pyramid.response import Response
 from deform import Form
 from deform.exception import ValidationFailure
 from pyramid.httpexceptions import HTTPFound
@@ -16,6 +17,8 @@ from betahaus.pyracont.factories import createContent
 from betahaus.pyracont.factories import createSchema
 
 from voteit.core import VoteITMF as _
+from voteit.core.security import find_authorized_userids
+from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import ISiteRoot
 from voteit.core.models.interfaces import IUser
 from voteit.core.models.interfaces import IUsers
@@ -31,7 +34,7 @@ from voteit.core.models.schemas import button_login
 from voteit.core.models.schemas import button_register
 from voteit.core.models.schemas import button_request
 from voteit.core.models.schemas import button_update
-from voteit.core.views.userinfo import user_info_view
+#from voteit.core.views.userinfo import user_info_view
 from voteit.core.views.base_view import BaseView
 from voteit.core.views.base_edit import BaseEdit
 
@@ -330,5 +333,27 @@ class UsersView(BaseView):
 
     @view_config(context=IUser, renderer='templates/user.pt', permission=VIEW)
     def view_user(self):
-        self.response['user_info'] = user_info_view(self.context, self.request, info_userid=self.context.userid)
         return self.response
+
+    @view_config(context=IMeeting, name="_userinfo", permission=VIEW, xhr=True)
+    def user_info_ajax_wrapper(self):
+        return Response(self.user_info())
+
+    @view_config(context=IMeeting, name="_userinfo", permission=VIEW)
+    def user_info(self):
+        """ Special view to allow other meeting participants to see information about a user
+            who's in the same meeting as them.
+            Normally called via AJAX and included in a popup or similar, but also a part of the
+            users profile page.
+            
+            Note that a user might have participated within a meeting, and after that lost their
+            permission. This view has to at least display the username of that person.
+        """
+        info_userid = self.request.GET['userid']
+        if not info_userid in find_authorized_userids(self.context, (VIEW,)):
+            msg = _(u"userid_not_registered_within_meeting_error",
+                    default = u"Couldn't find any user with userid '${info_userid}' within this meeting.",
+                    mapping = {'info_userid': info_userid})
+            return msg
+        user = self.api.get_user(info_userid)
+        return self.api.render_view_group(user, self.request, 'user_info', api = self.api)
