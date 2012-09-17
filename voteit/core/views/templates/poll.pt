@@ -43,7 +43,7 @@
 			
 			<div class="col-65-35">
 				<div class="column column-1">
-					<tal:iterate condition="wf_state == 'ongoing' and not can_vote" repeat="proposal proposals">
+					<tal:iterate condition="(wf_state == 'ongoing' and not can_vote) or (wf_state == 'closed' and not has_voted)" repeat="proposal proposals">
 					    <tal:proposal replace="structure api.render_single_view_component(context, request, 'proposal', 'block', brain=proposal)">
 					    	Proposal
 					    </tal:proposal>
