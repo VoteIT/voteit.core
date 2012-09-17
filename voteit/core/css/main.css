@@ -499,6 +499,10 @@ li.notification_message {
 }
 
 /* polls and booth */
+/* Z-index of .modal-window must heigher than #mask  */
+.booth_wrapper {
+	z-index: 9999;
+}
 .listing_block.poll,
 .booth.poll {
 	padding: 10px;
@@ -958,9 +962,8 @@ ul.agenda-templates > li {
 	padding-bottom: 10px;
 }
 
-/* modal */
-/* Z-index of #modal-mask must lower than .modal-window */
-#modal-mask {
+/* mask */
+#mask {
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -968,7 +971,9 @@ ul.agenda-templates > li {
 	background-color: #000;
 	display: none;
 }
-   
+
+/* modal */
+/* Z-index of .modal-window must heigher than #mask  */
 .modal-window {
 	position: absolute;
 	z-index: 9999;

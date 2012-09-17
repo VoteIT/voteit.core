@@ -126,7 +126,8 @@ class PollSchema(colander.MappingSchema):
          TZDateTime(),
          title = _(u"Start time of this poll."),
          description = _(u"You need to open it yourself."),
-         widget=deform.widget.DateTimeInputWidget(options={'timeFormat': 'hh:mm',
+         widget=deform.widget.DateTimeInputWidget(options={'dateFormat': 'yy-mm-dd',
+                                                           'timeFormat': 'hh:mm',
                                                            'separator': ' '}),
          default = deferred_default_start_time,
     )
@@ -135,7 +136,8 @@ class PollSchema(colander.MappingSchema):
          title = _(u"End time of this poll."),
          description = _(u"poll_end_time_description",
                          default = u"You need to close it yourself. A good default value is one day later."),
-         widget=deform.widget.DateTimeInputWidget(options={'timeFormat': 'hh:mm',
+         widget=deform.widget.DateTimeInputWidget(options={'dateFormat': 'yy-mm-dd',
+                                                           'timeFormat': 'hh:mm',
                                                            'separator': ' '}),
          default = deferred_default_end_time,
     )
