@@ -318,7 +318,7 @@ function apply_mask($prevent_scrolling) {
     $('#mask').css({'width':maskWidth,'height':maskHeight});
      
     //transition effect  
-    $('#mask').fadeTo("slow", 0.8);
+    $('#mask').fadeTo("slow", 0.3);
 }
 
 function remove_mask() {
