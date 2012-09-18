@@ -1,0 +1,25 @@
+<div xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+     i18n:domain="voteit.core"
+     class="block">
+    <div id="add_menu" tal:condition="api.show_moderator_actions">
+        <a tal:attributes="href request.resource_url(api.meeting, 'order_agenda_items')">
+            <img src="${request.application_url}/static/icons/icon_arrow_up_down.png"
+                 width="16" height="16"
+                 alt="Order agenda items"
+                 title="Order agenda items"
+                 i18n:attributes="alt; title;" />
+        </a>
+        <a tal:attributes="href request.resource_url(api.meeting, 'add', query = {'content_type':'AgendaItem'})">
+            <img src="${request.application_url}/static/icons/icon_add.png"
+                 width="16" height="16"
+                 alt="Add agenda item"
+                 title="Add agenda item"
+                 i18n:attributes="alt; title;" />
+        </a>
+    </div>
+    <h5 class="header">
+        <a href="${request.resource_url(api.meeting)}"
+           title="Click to go to meeting overview"
+           i18n:attributes="title">${title}</a>
+    </h5>
+</div>
