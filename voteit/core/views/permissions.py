@@ -83,7 +83,7 @@ class PermissionsView(BaseView):
         form = Form(schema, buttons=(button_add, button_cancel))
         self.api.register_form_resources(form)
 
-        if 'save' in post:
+        if 'add' in post:
             controls = post.items()
             try:
                 appstruct = form.validate(controls)
