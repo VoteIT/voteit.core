@@ -5,9 +5,7 @@
 	    <span i18n:translate="">Limited to <span i18n:name="tag_name" tal:content="'#'+request.GET.get('tag', '')"></span></span>
 	    <a class="tag" tal:attributes="href clear_tag_url"
 	       i18n:translate="">
-	        Show
-	        <span tal:content="hidden_count" i18n:name="count">5</span>
-	        hidden posts
+	        Show all posts
 	    </a>
 	    <div class="clear"><!-- --></div>
 	</div>
