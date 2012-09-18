@@ -10,6 +10,8 @@ from voteit.core.views.base_view import BaseView
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import ISiteRoot
 from voteit.core.models.schemas import add_csrf_token
+from voteit.core.models.schemas import button_add
+from voteit.core.models.schemas import button_cancel
 from voteit.core import security
 
 
@@ -78,7 +80,7 @@ class PermissionsView(BaseView):
         schema = createSchema('SinglePermissionSchema').bind(context=self.context, request=self.request)
         add_csrf_token(self.context, self.request, schema)
 
-        form = Form(schema, buttons=('save', 'cancel'))
+        form = Form(schema, buttons=(button_add, button_cancel))
         self.api.register_form_resources(form)
 
         if 'save' in post:
