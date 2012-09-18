@@ -12,7 +12,7 @@
     </span>	
 
     <tal:creators tal:replace="structure api.get_creators_info(brain['creators'])">Creators</tal:creators>:
-    <span class="body" tal:content="structure brain['title']">Title</span>
+    <span class="body" tal:content="structure api.transform(brain['title'])">Title</span>
 
     <div class="meta">
         <span class="${state_id} icon iconpadding"
