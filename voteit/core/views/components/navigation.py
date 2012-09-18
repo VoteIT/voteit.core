@@ -34,7 +34,17 @@ def login_box(context, request, va, **kwargs):
     login_form = Form(login_schema, buttons=(button_login,), action=action_url)
     api.register_form_resources(login_form)
     return """%s<div><a href="/request_password">%s</a></div>""" % (login_form.render(), api.translate(_(u"Forgot password?")))
-    
+
+
+@view_action('navigation_sections', 'meeting_sections_header',
+             title = _(u"Agenda"), interface = IMeeting)
+def meeting_sections_header(context, request, va, **kwargs):
+    response = dict(
+        api = kwargs['api'],
+        title = va.title,
+    )
+    return render('../templates/snippets/navigation_meeting_head.pt', response, request = request)
+
 @view_action('navigation_sections', 'ongoing', title = _(u"Ongoing"), state = 'ongoing')
 @view_action('navigation_sections', 'upcoming', title = _(u"Upcoming"), state = 'upcoming')
 @view_action('navigation_sections', 'closed', title = _(u"Closed"), state = 'closed')
