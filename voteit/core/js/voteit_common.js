@@ -1,3 +1,7 @@
+$.ajaxSetup ({
+	cache: false
+});
+
 /* JS that should be present on every page, regardless of its function.*/
 if(typeof(voteit) == "undefined"){
     var voteit = {};
