@@ -20,7 +20,7 @@ MODERATOR_SECTIONS = ('closed', 'ongoing', 'upcoming', 'private',)
 REGULAR_SECTIONS = ('closed', 'ongoing', 'upcoming',)
 
 
-@view_action('main', 'meeting_actions')
+@view_action('main', 'meeting_actions', permission=VIEW)
 def meeting_actions(context, request, va, **kw):
     """ This is the main renderer for meeting actions.
         The structure of the menu. it will call all view components
@@ -32,7 +32,7 @@ def meeting_actions(context, request, va, **kw):
     return """<ul id="meeting-actions-menu">%s</ul>""" % api.render_view_group(context, request, 'meeting_actions')
 
 
-@view_action('meeting_actions', 'polls', title = _(u"Polls"))
+@view_action('meeting_actions', 'polls', title = _(u"Polls"), permission=VIEW)
 def polls_menu(context, request, va, **kw):
     api = kw['api']
     if api.meeting is None:
@@ -60,12 +60,12 @@ def polls_menu(context, request, va, **kw):
     response['url'] = '%smeeting_poll_menu' % api.resource_url(api.meeting, request)
     return render('../templates/snippets/polls_menu.pt', response, request = request)
 
-@view_action('meeting_actions', 'help_contact', title = _(u"Help & contact"))
+@view_action('meeting_actions', 'help_contact', title = _(u"Help & contact"), permission=VIEW)
 def help_contact_menu(context, request, va, **kw):
     api = kw['api']
     return """<li id="help-tab" class="tab"><a href="#">%s</a></li>""" % api.translate(va.title)
 
-@view_action('meeting_actions', 'search', title = _(u"Search"))
+@view_action('meeting_actions', 'search', title = _(u"Search"), permission=VIEW)
 def search_menu(context, request, va, **kw):
     api = kw['api']
     if api.meeting:
@@ -75,8 +75,8 @@ def search_menu(context, request, va, **kw):
 
 @view_action('meeting_actions', 'admin_menu', title = _(u"Admin menu"), permission = MANAGE_SERVER)
 @view_action('meeting_actions', 'settings_menu', title = _(u"Settings"), permission = MODERATE_MEETING, meeting_only = True)
-@view_action('meeting_actions', 'meeting', title = _(u"Meeting"), meeting_only = True)
-@view_action('meeting_actions', 'participants_menu', title = _(u"Participants"), meeting_only = True, menu_css_cls = 'user-dark')
+@view_action('meeting_actions', 'meeting', title = _(u"Meeting"), permission=VIEW, meeting_only = True)
+@view_action('meeting_actions', 'participants_menu', title = _(u"Participants"), permission=VIEW, meeting_only = True, menu_css_cls = 'user-dark')
 def generic_menu(context, request, va, **kw):
     api = kw['api']
     if va.kwargs.get('meeting_only', False) == True and api.meeting is None:
