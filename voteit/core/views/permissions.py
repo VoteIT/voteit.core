@@ -18,8 +18,9 @@ from voteit.core import security
 class PermissionsView(BaseView):
     """ View for setting permissions """
 
+    #FIXME: This view is up for refactoring same way as participants
+    #@view_config(context=IMeeting, name="permissions", renderer="templates/base_edit.pt", permission=security.MANAGE_GROUPS)
     @view_config(context=ISiteRoot, name="permissions", renderer="templates/base_edit.pt", permission=security.MANAGE_GROUPS)
-    @view_config(context=IMeeting, name="permissions", renderer="templates/base_edit.pt", permission=security.MANAGE_GROUPS)
     def group_form(self):
         if IMeeting.providedBy(self.context):
             self.response['title'] = _(u"Edit permissions")
