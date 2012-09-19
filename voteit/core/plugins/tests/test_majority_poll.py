@@ -183,6 +183,7 @@ class MPIntegrationTests(unittest.TestCase):
         self._close_poll()
         plugin = self.poll.get_poll_plugin()
         request = self.request
+        ai = find_interface(self.poll, IAgendaItem)
         from voteit.core.views.api import APIView
-        api = APIView(self.poll, request)
+        api = APIView(ai, request)
         self.assertTrue('p2uid' in plugin.render_result(request, api))
