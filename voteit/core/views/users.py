@@ -354,6 +354,6 @@ class UsersView(BaseView):
             msg = _(u"userid_not_registered_within_meeting_error",
                     default = u"Couldn't find any user with userid '${info_userid}' within this meeting.",
                     mapping = {'info_userid': info_userid})
-            return msg
+            return self.api.translate(msg)
         user = self.api.get_user(info_userid)
         return self.api.render_view_group(user, self.request, 'user_info', api = self.api)
