@@ -1,5 +1,3 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
       xmlns:tal="http://xml.zope.org/namespaces/tal"
       metal:use-macro="load: ${api.template_dir}content.pt"
@@ -7,7 +5,7 @@
       i18n:domain="voteit.core">
 <body>
     <div metal:fill-slot="left">
-        <div class="userinfo" class="content_wrapper"
+        <div class="userinfo content_wrapper"
              tal:content="structure api.render_view_group(context, request, 'user_info', api = api)">
             user info view group here, with profile information, picture etc...
         </div>
