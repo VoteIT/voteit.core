@@ -45,6 +45,16 @@ class DiscussionTests(unittest.TestCase):
         self.assertIn('risus', obj._tags)
         self.assertIn('nunc', obj._tags)
         self.assertNotIn('eleifend', obj._tags)
+        
+    def test_mentioned(self):
+        obj = self._cut()
+        obj.mentioned['dummy'] = 'now'
+        self.assertIn('dummy', obj.mentioned)
+        
+    def test_add_mention(self):
+        obj = self._cut()
+        obj.add_mention('dummy')
+        self.assertIn('dummy', obj.mentioned)
 
 
 class DiscussionPostPermissionTests(unittest.TestCase):

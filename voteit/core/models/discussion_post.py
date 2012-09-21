@@ -1,5 +1,6 @@
 import colander
 import deform
+from BTrees.OOBTree import OOBTree
 from zope.interface import implements
 from pyramid.security import Allow
 from pyramid.security import DENY_ALL
@@ -13,6 +14,7 @@ from voteit.core.models.interfaces import ICatalogMetadataEnabled
 from voteit.core.models.interfaces import IDiscussionPost
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.base_content import BaseContent
+from voteit.core.models.date_time_util import utcnow
 from voteit.core.models.tags import Tags
 
 
@@ -46,8 +48,10 @@ class DiscussionPost(BaseContent, Tags):
     add_permission = security.ADD_DISCUSSION_POST
     schemas = {'add': 'DiscussionPostSchema'}
     custom_mutators = {'text': '_set_text',
-                       'title': '_set_title'}
-    custom_accessors = {'title': '_get_title'}
+                       'title': '_set_title',
+                       'mentioned': '_set_mentioned'}
+    custom_accessors = {'title': '_get_title',
+                        'mentioned': '_get_mentioned'}
 
     @property
     def __acl__(self):
@@ -76,3 +80,17 @@ class DiscussionPost(BaseContent, Tags):
         self.field_storage['text'] = value
         # add tags in title to tags
         self._find_tags(value)
+
+    def _get_mentioned(self, key = None, default = OOBTree()):
+        mentioned = getattr(self, '__mentioned__', None)
+        if mentioned is None:
+            mentioned = self.__mentioned__ =  OOBTree()
+        return mentioned
+
+    def _set_mentioned(self, value, key = None):
+        self._get_mentioned()['mentioned'] = value
+
+    mentioned = property(_get_mentioned, _set_mentioned)
+    
+    def add_mention(self, userid):
+        self.mentioned[userid] = utcnow()

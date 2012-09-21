@@ -29,5 +29,10 @@ def notify(obj, event):
         space, userid = matchobj.group(1, 2)
         #Force lowercase userid
         userid = userid.lower()
-        user = users[userid]
-        user.send_mention_notification(obj, request)
+        # check so the user is not already mentioned
+        if userid not in obj.mentioned: 
+            user = users[userid]
+            user.send_mention_notification(obj, request)
+
+            # add user to mentioned
+            obj.add_mention(userid)

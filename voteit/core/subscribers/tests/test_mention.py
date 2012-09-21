@@ -41,6 +41,17 @@ class MentionSubscriberTests(TestCase):
         mailer = get_mailer(self.request)
         self.assertEqual(len(mailer.outbox), 1)
         
+    def test_proposal_already_mentioned(self):
+        ai = self._fixture()
+        from voteit.core.models.proposal import Proposal
+        ai['o'] = obj = Proposal()
+        obj.mentioned['admin'] = 'now' 
+        self._fut(obj, None)
+        obj.title = '@admin'
+        self._fut(obj, None)
+        mailer = get_mailer(self.request)
+        self.assertEqual(len(mailer.outbox), 0)
+        
     def test_discussion_post(self):
         ai = self._fixture()
         from voteit.core.models.discussion_post import DiscussionPost 
@@ -48,3 +59,14 @@ class MentionSubscriberTests(TestCase):
         self._fut(obj, None)
         mailer = get_mailer(self.request)
         self.assertEqual(len(mailer.outbox), 1)
+        
+    def test_discussion_post_already_mentioned(self):
+        ai = self._fixture()
+        from voteit.core.models.discussion_post import DiscussionPost 
+        ai['o'] = obj = DiscussionPost()
+        obj.mentioned['admin'] = 'now' 
+        self._fut(obj, None)
+        obj.title = '@admin'
+        self._fut(obj, None)
+        mailer = get_mailer(self.request)
+        self.assertEqual(len(mailer.outbox), 0)

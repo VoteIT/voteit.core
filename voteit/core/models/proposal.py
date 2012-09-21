@@ -1,3 +1,4 @@
+from BTrees.OOBTree import OOBTree
 from zope.interface import implements
 from pyramid.security import Allow
 from pyramid.security import DENY_ALL
@@ -10,6 +11,7 @@ from voteit.core.models.base_content import BaseContent
 from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IProposal
 from voteit.core.models.interfaces import ICatalogMetadataEnabled
+from voteit.core.models.date_time_util import utcnow
 from voteit.core.models.workflow_aware import WorkflowAware
 from voteit.core.models.tags import Tags
 
@@ -69,9 +71,11 @@ class Proposal(BaseContent, WorkflowAware, Tags):
     allowed_contexts = ('AgendaItem',)
     add_permission = security.ADD_PROPOSAL
     schemas = {'add': 'ProposalSchema',
-               'edit': 'ProposalSchema'}
+               'edit': 'ProposalSchema',
+               'mentioned': '_set_mentioned'}
     custom_mutators = {'title': '_set_title',
-                       'aid': '_set_aid'}
+                       'aid': '_set_aid',
+                       'mentioned': '_get_mentioned'}
 
     @property
     def __acl__(self):
@@ -102,3 +106,17 @@ class Proposal(BaseContent, WorkflowAware, Tags):
         self.field_storage['aid'] = value
         # add aid to tags
         self.add_tag(value)
+        
+    def _get_mentioned(self, key = None, default = OOBTree()):
+        mentioned = getattr(self, '__mentioned__', None)
+        if mentioned is None:
+            mentioned = self.__mentioned__ =  OOBTree()
+        return mentioned
+
+    def _set_mentioned(self, value, key = None):
+        self._get_mentioned()['mentioned'] = value
+
+    mentioned = property(_get_mentioned, _set_mentioned)
+    
+    def add_mention(self, userid):
+        self.mentioned[userid] = utcnow()
