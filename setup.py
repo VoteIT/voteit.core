@@ -17,7 +17,7 @@ requires = (
     'ZODB3',
     'WebError',
     'colander',
-    'deform',
+    'deform>=0.9.5',
     'Babel',
     'slugify',
     'webtest',
