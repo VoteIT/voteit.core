@@ -72,7 +72,7 @@ def proposal_listing(context, request, va, **kw):
     if tag:
         query = query & Any('tags', (tag, ))
         
-    # build query string and remove tag=
+    # build query string and remove tag
     clear_tag_query = request.GET.copy()
     if 'tag' in clear_tag_query:
         del clear_tag_query['tag']

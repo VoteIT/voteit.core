@@ -608,9 +608,11 @@ $(document).ready(function() {
         $("#discussions .inline_add_form").empty();
         
         var url = $(this).attr('href');
+        var title = $(this).attr('title');
         $.ajax({
                url: url,
             success: function(response) {
+            	window.history.pushState(null, title, url);
                 $('#proposals .listing').html($('#proposals .listing', response).html());
                 $('#proposals .inline_add_form').html($('#proposals .inline_add_form', response).html());
                 $('#discussions .listing').html($('#discussions .listing', response).html());
