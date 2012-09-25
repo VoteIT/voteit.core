@@ -106,6 +106,14 @@ def deferred_default_profile_image_plugin(node, kw):
     request = kw['request']
     return 'gravatar_profile_image'
 
+@colander.deferred
+def deferred_local_profile_information_widget(node, kw):
+    """ Fetch any keys in auth_domains. """
+    context = kw['context']
+    choices = [(x, x) for x in context.auth_domains.keys()]
+    return deform.widget.CheckboxChoiceWidget(values=choices,
+                                              null_value = ())
+
 
 @schema_factory('AddUserSchema', title = _(u"Add user"), description = _(u"Use this form to add a user"))
 class AddUserSchema(colander.Schema):
@@ -200,3 +208,15 @@ class TokenPasswordChangeSchema(colander.Schema):
                                 missing = u'',
                                 widget = deform.widget.HiddenWidget(),)
     password = password_node()
+
+
+@schema_factory('ManageConnectedProfilesSchema', title = _(u"Manage connected profiles"),
+                description = _(u"manage_connected_profiles_schema_description",
+                                default = u"You can remove local authentication information for any connected services. "
+                                u"This will make you unable to login with that service. "
+                                u"Be sure to have other means of login in before doing so!"))
+class ManageConnectedProfilesSchema(colander.Schema):
+    auth_domains = colander.SchemaNode(deform.Set(allow_empty = True),
+                                       title = u"Remove domains?",
+                                       missing = colander.null,
+                                       widget = deferred_local_profile_information_widget,)
