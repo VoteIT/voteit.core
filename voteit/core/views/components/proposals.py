@@ -100,7 +100,7 @@ def proposal_block(context, request, va, **kw):
     show_user_tags = kw.get('show_user_tags', True)
     
     # crearting dummy proposal to get state info dict
-    state_info = Proposal().workflow.state_info(None, request)
+    state_info = _dummy_proposal.workflow.state_info(None, request)
     
     def _show_retract(brain):
         #Do more expensive checks last!
@@ -127,3 +127,5 @@ def proposal_block(context, request, va, **kw):
     response['show_user_tags'] = show_user_tags
     
     return render('../templates/proposal.pt', response, request=request)
+
+_dummy_proposal = Proposal()
