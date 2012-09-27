@@ -101,7 +101,7 @@ class SecurityAware(object):
                 del self._groups[userid]
 
         for item in value:
-            self.set_groups(item['userid'], item['groups'])
+            self.set_groups(item['userid'], item['groups'], event = False)
         if event:
             self._notify()
 
