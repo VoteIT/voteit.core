@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2012-09-19 13:32+0200\n"
+"POT-Creation-Date: 2012-09-25 14:53+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -292,8 +292,8 @@ msgstr ""
 msgid "${diff} hours ago"
 msgstr ""
 
-#: voteit/core/models/discussion_post.py:36
-#: voteit/core/models/discussion_post.py:44
+#: voteit/core/models/discussion_post.py:38
+#: voteit/core/models/discussion_post.py:46
 msgid "Discussion Post"
 msgstr ""
 
@@ -375,7 +375,7 @@ msgstr ""
 msgid "VoteIT: Open poll"
 msgstr ""
 
-#: voteit/core/models/proposal.py:59 voteit/core/models/proposal.py:68
+#: voteit/core/models/proposal.py:61 voteit/core/models/proposal.py:70
 #: voteit/core/schemas/proposal.py:26
 #: voteit/core/views/templates/snippets/ai_proposals.pt:9
 msgid "Proposal"
@@ -404,7 +404,7 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
-#: voteit/core/models/schemas.py:15 voteit/core/schemas/user.py:165
+#: voteit/core/models/schemas.py:15 voteit/core/schemas/user.py:173
 #: voteit/core/views/components/global_actions.py:21
 msgid "Login"
 msgstr ""
@@ -846,8 +846,8 @@ msgid "mps_poll_plugins_description"
 msgstr ""
 
 #: voteit/core/schemas/permissions.py:42 voteit/core/schemas/permissions.py:79
-#: voteit/core/schemas/user.py:47 voteit/core/schemas/user.py:114
-#: voteit/core/schemas/user.py:131 voteit/core/views/templates/list_users.pt:21
+#: voteit/core/schemas/user.py:47 voteit/core/schemas/user.py:122
+#: voteit/core/schemas/user.py:139 voteit/core/views/templates/list_users.pt:21
 #: voteit/core/views/templates/logs.pt:20
 #: voteit/core/views/templates/participants.pt:29
 #: voteit/core/views/templates/email/request_password.pt:25
@@ -1033,12 +1033,12 @@ msgstr ""
 #. change this later. OK characters are: a-z, '.', '-', '_'.
 #. Default:  Used as a nickname, in @-links and as a unique id. You can't
 #. change this later. OK characters are: a-z, 0-9, '.', '-', '_'.
-#: voteit/core/schemas/user.py:48 voteit/core/schemas/user.py:115
-#: voteit/core/schemas/user.py:132
+#: voteit/core/schemas/user.py:48 voteit/core/schemas/user.py:123
+#: voteit/core/schemas/user.py:140
 msgid "userid_description"
 msgstr ""
 
-#: voteit/core/schemas/user.py:56 voteit/core/schemas/user.py:170
+#: voteit/core/schemas/user.py:56 voteit/core/schemas/user.py:178
 msgid "Password"
 msgstr ""
 
@@ -1057,69 +1057,80 @@ msgstr ""
 msgid "registration_captcha_description"
 msgstr ""
 
-#: voteit/core/schemas/user.py:110
+#: voteit/core/schemas/user.py:118
 msgid "Add user"
 msgstr ""
 
-#: voteit/core/schemas/user.py:110
+#: voteit/core/schemas/user.py:118
 msgid "Use this form to add a user"
 msgstr ""
 
-#: voteit/core/schemas/user.py:127
+#: voteit/core/schemas/user.py:135
 msgid "Registration"
 msgstr ""
 
-#: voteit/core/schemas/user.py:144
+#: voteit/core/schemas/user.py:152
 msgid "Edit user"
 msgstr ""
 
-#: voteit/core/schemas/user.py:144
+#: voteit/core/schemas/user.py:152
 msgid "Use this form to edit a user"
 msgstr ""
 
-#: voteit/core/schemas/user.py:151
+#: voteit/core/schemas/user.py:159
 #: voteit/core/views/templates/snippets/user_basic_info.pt:11
 msgid "About me"
 msgstr ""
 
 #. Default: Please note that anything you type here will be visible to all
 #. users in the same meeting as you.
-#: voteit/core/schemas/user.py:152
+#: voteit/core/schemas/user.py:160
 msgid "user_about_me_description"
 msgstr ""
 
-#: voteit/core/schemas/user.py:158
+#: voteit/core/schemas/user.py:166
 msgid "Profile image provider"
 msgstr ""
 
 #. Default:
-#: voteit/core/schemas/user.py:159
+#: voteit/core/schemas/user.py:167
 msgid "profile_image_plugin_description"
 msgstr ""
 
-#: voteit/core/schemas/user.py:168 voteit/core/schemas/user.py:192
+#: voteit/core/schemas/user.py:176 voteit/core/schemas/user.py:200
 msgid "UserID or email address."
 msgstr ""
 
-#: voteit/core/schemas/user.py:175 voteit/core/schemas/user.py:184
+#: voteit/core/schemas/user.py:183 voteit/core/schemas/user.py:192
 #: voteit/core/views/templates/user.pt:19
 msgid "Change password"
 msgstr ""
 
-#: voteit/core/schemas/user.py:178
+#: voteit/core/schemas/user.py:186
 msgid "Current password"
 msgstr ""
 
-#: voteit/core/schemas/user.py:184
+#: voteit/core/schemas/user.py:192
 msgid "Use this form to change password"
 msgstr ""
 
-#: voteit/core/schemas/user.py:189
+#: voteit/core/schemas/user.py:197
 msgid "Request new password"
 msgstr ""
 
-#: voteit/core/schemas/user.py:189
+#: voteit/core/schemas/user.py:197
 msgid "Use this form to request a new password"
+msgstr ""
+
+#: voteit/core/schemas/user.py:213 voteit/core/views/templates/user.pt:37
+msgid "Manage connected profiles"
+msgstr ""
+
+#. Default: You can remove local authentication information for any connected
+#. services. This will make you unable to login with that service. Be sure to
+#. have other means of login in before doing so!
+#: voteit/core/schemas/user.py:214
+msgid "manage_connected_profiles_schema_description"
 msgstr ""
 
 #: voteit/core/subscribers/logs.py:37
@@ -1170,7 +1181,7 @@ msgstr ""
 msgid "Order updated"
 msgstr ""
 
-#: voteit/core/views/base_edit.py:85 voteit/core/views/users.py:82
+#: voteit/core/views/base_edit.py:85 voteit/core/views/users.py:84
 msgid "Successfully added"
 msgstr ""
 
@@ -1191,7 +1202,7 @@ msgstr ""
 #: voteit/core/views/meeting.py:143 voteit/core/views/meeting.py:228
 #: voteit/core/views/meeting.py:263 voteit/core/views/meeting.py:356
 #: voteit/core/views/poll.py:69 voteit/core/views/site.py:55
-#: voteit/core/views/users.py:55 voteit/core/workflows/poll.zcml:33
+#: voteit/core/views/users.py:57 voteit/core/workflows/poll.zcml:33
 msgid "Canceled"
 msgstr ""
 
@@ -1200,6 +1211,7 @@ msgid "Successfully updated"
 msgstr ""
 
 #: voteit/core/views/base_edit.py:140 voteit/core/views/poll.py:63
+#: voteit/core/views/users.py:354
 msgid "Nothing updated"
 msgstr ""
 
@@ -1295,27 +1307,27 @@ msgstr ""
 msgid "meeting_not_closed_minutes_incomplete_notice"
 msgstr ""
 
-#: voteit/core/views/permissions.py:25
+#: voteit/core/views/permissions.py:26
 #: voteit/core/views/components/meeting_actions.py:113
 msgid "Edit permissions"
 msgstr ""
 
-#: voteit/core/views/permissions.py:27
+#: voteit/core/views/permissions.py:28
 #: voteit/core/views/components/meeting_actions.py:92
 msgid "Root permissions"
 msgstr ""
 
-#: voteit/core/views/permissions.py:71
+#: voteit/core/views/permissions.py:72
 #: voteit/core/views/components/meeting_actions.py:116
 #: voteit/core/views/templates/participants.pt:114
 msgid "Add participant"
 msgstr ""
 
-#: voteit/core/views/permissions.py:73
+#: voteit/core/views/permissions.py:74
 msgid "Add permission"
 msgstr ""
 
-#: voteit/core/views/permissions.py:96
+#: voteit/core/views/permissions.py:97
 msgid "Added permssion for user ${userid}"
 msgstr ""
 
@@ -1360,37 +1372,41 @@ msgstr ""
 msgid "search_exception_notice"
 msgstr ""
 
-#: voteit/core/views/users.py:88
+#: voteit/core/views/users.py:90
 msgid "Add new user"
 msgstr ""
 
-#: voteit/core/views/users.py:118
+#: voteit/core/views/users.py:120
 msgid "Password changed"
 msgstr ""
 
-#: voteit/core/views/users.py:151
+#: voteit/core/views/users.py:153
 msgid "Password set. You may login now."
 msgstr ""
 
-#: voteit/core/views/users.py:162
+#: voteit/core/views/users.py:164
 msgid "Invalid security token. Did you click the link in your email?"
 msgstr ""
 
-#: voteit/core/views/users.py:236
+#: voteit/core/views/users.py:238
 msgid "Login failed."
 msgstr ""
 
-#: voteit/core/views/users.py:304
+#: voteit/core/views/users.py:306
 msgid "Email sent."
 msgstr ""
 
-#: voteit/core/views/users.py:308
+#: voteit/core/views/users.py:310
 msgid "Username or email not found."
+msgstr ""
+
+#: voteit/core/views/users.py:350
+msgid "Removing information for: ${domains}"
 msgstr ""
 
 #. Default: Couldn't find any user with userid '${info_userid}' within this
 #. meeting.
-#: voteit/core/views/users.py:354
+#: voteit/core/views/users.py:389
 msgid "userid_not_registered_within_meeting_error"
 msgstr ""
 

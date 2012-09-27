@@ -24,6 +24,7 @@ from voteit.core.models.interfaces import IUser
 from voteit.core.models.interfaces import IUsers
 from voteit.core.views.api import APIView
 from voteit.core.security import CHANGE_PASSWORD
+from voteit.core.security import EDIT
 from voteit.core.security import VIEW
 from voteit.core.security import MANAGE_SERVER
 from voteit.core.models.schemas import add_csrf_token
@@ -34,6 +35,7 @@ from voteit.core.models.schemas import button_login
 from voteit.core.models.schemas import button_register
 from voteit.core.models.schemas import button_request
 from voteit.core.models.schemas import button_update
+from voteit.core.models.schemas import button_delete
 #from voteit.core.views.userinfo import user_info_view
 from voteit.core.views.base_view import BaseView
 from voteit.core.views.base_edit import BaseEdit
@@ -322,6 +324,43 @@ class UsersFormView(BaseEdit):
         return HTTPFound(location = resource_url(self.context, self.request),
                          headers = headers)
 
+    @view_config(context=IUser, renderer='templates/user.pt', permission=VIEW)
+    def view_user(self):
+        return self.response
+
+    @view_config(context=IUser, name="manage_connections", renderer='templates/base_edit.pt', permission=EDIT)
+    def view_edit_manage_connected_profiles(self):
+        schema = createSchema('ManageConnectedProfilesSchema').bind(context=self.context, request=self.request)
+        add_csrf_token(self.context, self.request, schema)
+        form = Form(schema, buttons=(button_delete, button_cancel))
+        self.api.register_form_resources(form)
+    
+        #Handle submitted information
+        if 'delete' in self.request.POST:
+            controls = self.request.POST.items()
+            try:
+                appstruct = form.validate(controls)
+            except ValidationFailure, e:
+                self.response['form'] = e.render()
+                return self.response
+            domains = appstruct['auth_domains']
+            if domains:
+                for domain in domains:
+                    del self.context.auth_domains[domain]
+                msg = _(u"Removing information for: ${domains}",
+                        mapping = {'domains': ", ".join(domains)})
+                self.api.flash_messages.add(msg)
+            else:
+                self.api.flash_messages.add(_(u"Nothing updated"))
+            url = resource_url(self.context, self.request)
+            return HTTPFound(location = url)
+        if 'cancel' in self.request.POST:
+            url = resource_url(self.context, self.request)
+            return HTTPFound(location = url)
+        #Render form
+        self.response['form'] = form.render()
+        return self.response
+
 
 class UsersView(BaseView):
     """ Any regular view action without forms. """
@@ -329,10 +368,6 @@ class UsersView(BaseView):
     @view_config(context=IUsers, renderer='templates/list_users.pt', permission=VIEW)
     def list_users(self):
         self.response['users'] = self.context.get_content(content_type = 'User', sort_on = 'userid')
-        return self.response
-
-    @view_config(context=IUser, renderer='templates/user.pt', permission=VIEW)
-    def view_user(self):
         return self.response
 
     @view_config(context=IMeeting, name="_userinfo", permission=VIEW, xhr=True)
