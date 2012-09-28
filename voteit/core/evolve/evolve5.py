@@ -48,3 +48,4 @@ def clear_and_reindex(root):
             p = 0
         i+=1
         p+=1
+        

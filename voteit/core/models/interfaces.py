@@ -831,3 +831,18 @@ class ITags(Interface):
         """ Stores tag in tags
             Will send IObjectUpdatedEvent
         """
+
+
+class IProposalIds(Interface):
+    """
+    """
+    
+    _proposal_ids = Attribute('')
+    
+    def add(userid, value):
+        """ Add the latest value for the user 
+        """
+        
+    def get(userid):
+        """ Returns the latest value for the user
+        """
