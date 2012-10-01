@@ -36,21 +36,6 @@ class UsersViewTests(unittest.TestCase):
         obj = self._cut(context, request)
         response = obj.list_users()
         self.assertIn('users', response)
-        
-    def test_view_user(self):
-        self.config.registry.settings['default_timezone_name'] = "Europe/Stockholm"
-        self.config.registry.settings['default_locale_name'] = 'sv'
-        self.config.include('voteit.core.models.date_time_util')
-        self.config.include('voteit.core.plugins.gravatar_profile_image')
-        #self.config.scan('voteit.core.views.components.user_info')
-        self.config.testing_securitypolicy(userid='dummy',
-                                           permissive=True)
-        users = self._fixture()
-        context = users['dummy1'] 
-        request = testing.DummyRequest(is_xhr=True)
-        obj = self._cut(context, request)
-        response = obj.view_user()
-        #FIXME: Test rendering
 
         
 class UsersFormViewTests(unittest.TestCase):
@@ -558,3 +543,18 @@ class UsersFormViewTests(unittest.TestCase):
         obj = self._cut(context, request)
         response = obj.logout()
         self.assertEqual(response.location, 'http://example.com/')
+
+    def test_view_user(self):
+        self.config.registry.settings['default_timezone_name'] = "Europe/Stockholm"
+        self.config.registry.settings['default_locale_name'] = 'sv'
+        self.config.include('voteit.core.models.date_time_util')
+        self.config.include('voteit.core.plugins.gravatar_profile_image')
+        #self.config.scan('voteit.core.views.components.user_info')
+        self.config.testing_securitypolicy(userid='dummy',
+                                           permissive=True)
+        users = self._fixture()
+        context = users['dummy1'] 
+        request = testing.DummyRequest(is_xhr=True)
+        obj = self._cut(context, request)
+        response = obj.view_user()
+        #FIXME: Test rendering
