@@ -36,11 +36,8 @@ function toggle_checked_roles(role_elem) {
     var checkbox = $(role_elem).find('input');
     
     var role_selector = role_elem.attr('name').replace(':', '_');
-    console.log(role_selector); 
     var count_span = $('#permissions thead span.count.'+role_selector);
-    console.log(count_span);
     var count = parseInt(count_span.text());
-    console.log(count);
     
     if (checkbox.attr('checked') == 'checked') {
         var out = $('#listing_templates .no_icon').clone();
