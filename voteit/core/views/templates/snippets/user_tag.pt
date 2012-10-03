@@ -1,8 +1,8 @@
-<span tal:attributes="id 'user_tag_form_'+context_id;"
+<span tal:attributes="id tag+'_form_'+context_id;"
      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
      i18n:domain="voteit.core">
 
-    <form tal:condition="show_form" method="post" tal:attributes="action toggle_url;" class="user_tag_form inline_form">
+    <form tal:condition="show_form" method="post" tal:attributes="action toggle_url;" class="user_tag_form inline_form ${tag}">
         <input name="tag" type="hidden" tal:attributes="value tag" />
         <input name="do" type="hidden" tal:attributes="value do" />
         <input name="display_name" type="hidden" tal:attributes="value display_name" />
