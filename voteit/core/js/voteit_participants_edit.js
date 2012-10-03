@@ -1,11 +1,21 @@
 $(document).ready(function () {
     $('.submit_participants_form').live('click', function(event) {
         try { event.preventDefault(); } catch(e) {};
+        var button = this;
+        spinner().appendTo(button);
         var form = $(this).parents('form');
         link = $(this).attr('href');
         $.post(link, $(form).serialize(), function(data, textStatus, jqXHR) {
             load_participants_data();
-        });
+        })
+        .success(function() { 
+        	$(button).find('img.spinner').remove();
+        	flash_message(voteit.translation['permssions_updated_success'], 'info', true); 
+    	})
+    	.error(function() {
+    		$(button).find('img.spinner').remove(); 
+    		flash_message(voteit.translation['permssions_updated_error'], 'error', true); 
+		});
     });
     $('.role').live('click', function(event) {
         try { event.preventDefault(); } catch(e) {};

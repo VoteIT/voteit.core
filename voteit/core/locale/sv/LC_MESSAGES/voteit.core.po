@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2012-09-25 14:53+0200\n"
-"PO-Revision-Date: 2012-09-25 14:54+0100\n"
-"Last-Translator: Robin Harms Oredsson <robin@betahaus.net>\n"
+"POT-Creation-Date: 2012-10-03 11:48+0200\n"
+"PO-Revision-Date: 2012-10-03 11:49+0100\n"
+"Last-Translator: Fredrik Nilson <sassur@gmail.com>\n"
 "Language-Team: sv <LL@li.org>\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "MIME-Version: 1.0\n"
@@ -151,6 +151,16 @@ msgstr ""
 "Det finns förslag i denna omröstning som är i någon av tillstånden 'låst för "
 "omröstning', 'bifallna' eller 'avslagna'. Du måste manuellt ändra "
 "tillstånden på dessa förslag först."
+
+#. Default: Permssions was updated successfully
+#: voteit/core/js_translations.py:39
+msgid "permssions_updated_success"
+msgstr "Updateringen av rättigheter lyckades."
+
+#. Default: There was an error updateing permissions
+#: voteit/core/js_translations.py:41
+msgid "permssions_updated_error"
+msgstr "Updateringen av rättigheter lyckades inte."
 
 #: voteit/core/security.py:69
 msgid "Moderator"
@@ -1213,7 +1223,6 @@ msgid "Use this form to request a new password"
 msgstr "Använd detta formulär för att begära ett nytt lösenord"
 
 #: voteit/core/schemas/user.py:213 voteit/core/views/templates/user.pt:37
-#| msgid "Change profile"
 msgid "Manage connected profiles"
 msgstr "Hantera anslutna profiler"
 
@@ -1221,7 +1230,6 @@ msgstr "Hantera anslutna profiler"
 #. services. This will make you unable to login with that service. Be sure to
 #. have other means of login in before doing so!
 #: voteit/core/schemas/user.py:214
-#| msgid "contact_schema_name_description"
 msgid "manage_connected_profiles_schema_description"
 msgstr ""
 "Du kan ta bort lokal autentiseringsinformation för anslutna profiler. Det "

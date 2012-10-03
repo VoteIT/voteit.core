@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2012-09-25 14:53+0200\n"
+"POT-Creation-Date: 2012-10-03 11:48+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -139,6 +139,16 @@ msgstr ""
 #. or denied. You need to manualy change the state of the proposals first.
 #: voteit/core/js_translations.py:37
 msgid "delete_poll_notification_text"
+msgstr ""
+
+#. Default: Permssions was updated successfully
+#: voteit/core/js_translations.py:39
+msgid "permssions_updated_success"
+msgstr ""
+
+#. Default: There was an error updateing permissions
+#: voteit/core/js_translations.py:41
+msgid "permssions_updated_error"
 msgstr ""
 
 #: voteit/core/security.py:69

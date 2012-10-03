@@ -36,4 +36,8 @@ def includeme(config):
         delete_poll_notification_title = _(u"Can not delete poll"),
         delete_poll_notification_text = _(u"delete_poll_notification_text",
                                           default=u"There are proposals in this poll that is in state voting, approved or denied. You need to manualy change the state of the proposals first."),
+        permssions_updated_success = _(u"permssions_updated_success",
+                                       default=u"Permssions was updated successfully"),
+        permssions_updated_error = _(u"permssions_updated_error",
+                                     default=u"There was an error updateing permissions"),
     )
