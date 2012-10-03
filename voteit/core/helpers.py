@@ -19,7 +19,7 @@ ajax_options = """
 }
 """
 
-AT_PATTERN = re.compile(r'(\A|\s)@([a-zA-Z1-9]{1}[\w-]{1,14})', flags=re.UNICODE)
+AT_PATTERN = re.compile(r'(\A|\s)@([a-zA-Z1-9]{1}[\w-]+)', flags=re.UNICODE)
 
 def at_userid_link(text, obj, request=None):
     """ Transform @userid to a link.
