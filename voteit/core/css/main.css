@@ -914,6 +914,12 @@ table.listing > tbody > tr.even > td {
 	border-width: 1px;
 }
 
+/* user inline info */
+.inlineinfo-popup .ui-tooltip-content {
+	max-height: 500px;
+	overflow-y: auto;
+}
+
 /* Cogwheel qtip styling. 
  * FIXME: We need to clean this a bit. */
 .cogwheel-body .menu-body a {
