@@ -30,12 +30,12 @@
                     <th i18n:translate="" class="heading">First name</th>
                     <th i18n:translate="" class="heading">Last name</th>
                     <th i18n:translate="" class="heading">Email</th>
-                    <th i18n:translate="" class="heading">View</th>
-                    <th i18n:translate="" class="heading">Discuss</th>
-                    <th i18n:translate="" class="heading">Propose</th>
-                    <th i18n:translate="" class="heading">Voter</th>
-                    <th i18n:translate="" class="heading">Moderate</th>
-                    <th i18n:translate="" class="heading">Administrator</th>
+                    <th class="heading"><span i18n:translate="">View</span> (<span class="count ${role_viewer.replace(':', '_')}">0</span>)</th>
+                    <th class="heading"><span i18n:translate="">Discuss</span> (<span class="count ${role_discuss.replace(':', '_')}">0</span>)</th>
+                    <th class="heading"><span i18n:translate="">Propose</span> (<span class="count ${role_propose.replace(':', '_')}">0</span>)</th>
+                    <th class="heading"><span i18n:translate="">Voter</span> (<span class="count ${role_voter.replace(':', '_')}">0</span>)</th>
+                    <th class="heading"><span i18n:translate="">Moderate</span> (<span class="count ${role_moderator.replace(':', '_')}">0</span>)</th>
+                    <th class="heading"><span i18n:translate="">Administrator</span> (<span class="count ${role_admin.replace(':', '_')}">0</span>)</th>
                 </tr>
                 <tr tal:condition="api.show_moderator_actions">
                     <th colspan="4"></th>

@@ -34,20 +34,34 @@ function toggle_checked_roles(role_elem) {
     var role_elem = $(role_elem);
     role_elem.toggleClass('changed');
     var checkbox = $(role_elem).find('input');
+    
+    var role_selector = role_elem.attr('name').replace(':', '_');
+    console.log(role_selector); 
+    var count_span = $('#permissions thead span.count.'+role_selector);
+    console.log(count_span);
+    var count = parseInt(count_span.text());
+    console.log(count);
+    
     if (checkbox.attr('checked') == 'checked') {
         var out = $('#listing_templates .no_icon').clone();
         checkbox.removeAttr('checked');
+        if(!isNaN(count) && count > 0)
+    		count_span.text(--count);
     }
     else {
         var out = $('#listing_templates .yes_icon').clone();
         checkbox.attr('checked', true);
+        if(isNaN(count))
+    		count_span.text(1);
+    	else
+			count_span.text(++count);
     }
     role_elem.find('.graphic_checkbox').replaceWith(out);
 }
 
 function check_all(event) {
     try { event.preventDefault(); } catch(e) {};
-    var role_selector = '.'+$(this).parents('th.toggle_all').attr('name');
+    var role_selector = '.role.'+$(this).parents('th.toggle_all').attr('name');
     $(role_selector).each(function () {
         if ($(this).find('input').attr('checked') != 'checked') {
             toggle_checked_roles(this);
@@ -56,7 +70,7 @@ function check_all(event) {
 }
 function uncheck_all(event) {
     try { event.preventDefault(); } catch(e) {};
-    var role_selector = '.'+$(this).parents('th.toggle_all').attr('name');
+    var role_selector = '.role.'+$(this).parents('th.toggle_all').attr('name');
     $(role_selector).each(function () {
         if ($(this).find('input').attr('checked') == 'checked') {
             toggle_checked_roles(this);

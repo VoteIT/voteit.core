@@ -20,6 +20,9 @@ function load_participants_data() {
     $.getJSON('./_participants_data.json', function(data) {
 
         $('table.listing tbody').empty();
+        $('#permissions thead span.count').each(function() {
+			$(this).text(0);
+        });
         for (var userid in data) {
             //Need to use hasOwnProperty?
             udata = data[userid];
@@ -42,6 +45,13 @@ function load_participants_data() {
                 if ($.inArray(role, udata['roles']) != -1) {
                     out.find(role_selector).append(get_part_tpl('yes_icon'));
                     $(listing_checkbox).attr('checked', true);
+                    // update role count in header 
+                    var count_span = $('#permissions thead span.count'+role_selector);
+                    var count = parseInt(count_span.text());
+                    if(isNaN(count))
+                    	count_span.text(1);
+                	else
+                		count_span.text(++count);
                 }
                 else {
                     out.find(role_selector).append(get_part_tpl('no_icon'));
