@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2012-10-03 11:48+0200\n"
-"PO-Revision-Date: 2012-10-03 11:49+0100\n"
+"PO-Revision-Date: 2012-10-04 11:15+0100\n"
 "Last-Translator: Fredrik Nilson <sassur@gmail.com>\n"
 "Language-Team: sv <LL@li.org>\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -155,12 +155,12 @@ msgstr ""
 #. Default: Permssions was updated successfully
 #: voteit/core/js_translations.py:39
 msgid "permssions_updated_success"
-msgstr "Updateringen av rättigheter lyckades."
+msgstr "Uppdateringen av rättigheter lyckades."
 
 #. Default: There was an error updateing permissions
 #: voteit/core/js_translations.py:41
 msgid "permssions_updated_error"
-msgstr "Updateringen av rättigheter lyckades inte."
+msgstr "Uppdateringen av rättigheter lyckades inte."
 
 #: voteit/core/security.py:69
 msgid "Moderator"
