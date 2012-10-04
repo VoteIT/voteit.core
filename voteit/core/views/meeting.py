@@ -88,16 +88,12 @@ class MeetingView(BaseView):
             msg = _('login_to_access_meeting_notice',
                     default=u"Welcome to VoteIT. To open the meeting you have been invited to please register in the form below. If you are already registered, please login.")
             self.api.flash_messages.add(msg, type='info')
-
             came_from = urllib.quote(self.request.url)
             url = "%slogin?came_from=%s" % (resource_url(self.api.root, self.request), came_from)
             return HTTPFound(location=url)
 
         self.response['title'] = _(u"Meeting Access")
-
         schema = createSchema('ClaimTicketSchema', validator = deferred_token_form_validator).bind(context=self.context, request=self.request)
-        add_csrf_token(self.context, self.request, schema)
-
         form = Form(schema, buttons=(button_add, button_cancel))
         self.api.register_form_resources(form)
 
@@ -113,9 +109,7 @@ class MeetingView(BaseView):
             
             ticket = self.context.invite_tickets[appstruct['email']]
             ticket.claim(self.request)
-            
             self.api.flash_messages.add(_(u"You've been granted access to the meeting. Welcome!"))
-            
             url = resource_url(self.context, self.request)
             return HTTPFound(location=url)
         
