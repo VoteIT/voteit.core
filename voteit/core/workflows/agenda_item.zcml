@@ -40,6 +40,22 @@
 			to_state="upcoming"
 			permission="Change Workflow State"
 		/>
+		
+		<transition
+			name="private_to_ongoing"
+			from_state="private"
+			to_state="ongoing"
+			permission="Change Workflow State"
+			callback="voteit.core.models.agenda_item.ongoing_agenda_item_callback"
+		/>
+		
+		<transition
+			name="private_to_closed"
+			from_state="private"
+			to_state="closed"
+			permission="Change Workflow State"
+			callback="voteit.core.models.agenda_item.closing_agenda_item_callback"
+		/>
 
 		<transition
 			name="upcoming_to_ongoing"
@@ -57,6 +73,13 @@
 		/>
 		
 		<transition
+			name="upcoming_to_private"
+			from_state="upcoming"
+			to_state="private"
+			permission="Change Workflow State"
+		/>
+		
+		<transition
 			name="ongoing_to_upcoming"
 			from_state="ongoing"
 			to_state="upcoming"
@@ -69,6 +92,13 @@
 			to_state="closed"
 			permission="Change Workflow State"
             callback="voteit.core.models.agenda_item.closing_agenda_item_callback"
+		/>
+
+		<transition
+			name="ongoing_to_private"
+			from_state="ongoing"
+			to_state="private"
+			permission="Change Workflow State"
 		/>
 		
 		<transition
@@ -83,6 +113,13 @@
 			name="closed_to_upcoming"
 			from_state="closed"
 			to_state="upcoming"
+			permission="Change Workflow State"
+		/>
+		
+		<transition
+			name="closed_to_private"
+			from_state="closed"
+			to_state="private"
 			permission="Change Workflow State"
 		/>
 
