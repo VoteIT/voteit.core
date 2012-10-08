@@ -7,6 +7,10 @@
       i18n:domain="voteit.core">
 <body>
 	<div metal:fill-slot="form" class="content_wrapper">
+		<tal:menu 
+	    	replace="structure api.render_single_view_component(context, request, 'agenda_item', 'edit_menu')">
+	    	Edit menu
+	    </tal:menu>
 	    <form method="post" class="deform agenda-item-sort">
 	    	<tal:states repeat="state states">
 	    		<h3 class="iconpadding icon ${state}" tal:content="translated_state_title(state)">State</h3>

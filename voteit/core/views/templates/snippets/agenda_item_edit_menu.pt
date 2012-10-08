@@ -1,0 +1,8 @@
+<tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core">
+<ul>
+	<li><a href="${request.resource_url(api.meeting, 'add', query={'content_type': 'AgendaItem'})}" i18n:translate="">Add</a></li>
+	<li><a href="${request.resource_url(api.meeting, 'agenda_templates')}" i18n:translate="">Add an agenda template</a></li>
+	<li><a href="${request.resource_url(api.meeting, 'handle_agenda_items')}" i18n:translate="">Change</a></li>
+	<li><a href="${request.resource_url(api.meeting, 'order_agenda_items')}" i18n:translate="">Sort</a></li>
+</ul>
+</tal:main>

@@ -1,0 +1,16 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+	  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+	  i18n:domain="voteit.core">
+<body metal:use-macro="load: ${api.template_dir}main.pt">
+	<div metal:fill-slot="main_window">
+		<tal:menu 
+	    	replace="structure api.render_single_view_component(context, request, 'agenda_item', 'edit_menu')">
+	    	Edit menu
+	    </tal:menu>
+		<div metal:define-slot="form" class="content_wrapper" tal:content="structure form">Form</div>
+	</div>
+</body>
+</html>

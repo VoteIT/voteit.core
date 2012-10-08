@@ -17,6 +17,10 @@
            class="buttonize large"
            i18n:translate="">Create new template</a>
     </div>
+    <tal:menu tal:condition="api.meeting" 
+    	replace="structure api.render_single_view_component(context, request, 'agenda_item', 'edit_menu')">
+    	Edit menu
+    </tal:menu>
     <div tal:condition="not api.meeting" i18n:translate="agenda_templates_outside_meeting_help">
         If you wish to apply a template to a meeting,
         go to that meeting and select 'Agenda templates' from the 'Settings' menu.
