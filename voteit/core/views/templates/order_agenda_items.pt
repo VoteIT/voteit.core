@@ -20,7 +20,7 @@
 	    	replace="structure api.render_single_view_component(context, request, 'agenda_item', 'edit_menu')">
 	    	Edit menu
 	    </tal:menu>
-
+		<h2 i18n:translate="">Sortera</h2>
 	    <form method="post" class="deform agenda-item-sort">
 	        <fieldset>
 	            <ul>

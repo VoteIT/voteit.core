@@ -1,8 +1,17 @@
 <tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core">
-<ul>
-	<li><a href="${request.resource_url(api.meeting, 'add', query={'content_type': 'AgendaItem'})}" i18n:translate="">Add</a></li>
-	<li><a href="${request.resource_url(api.meeting, 'agenda_templates')}" i18n:translate="">Add an agenda template</a></li>
-	<li><a href="${request.resource_url(api.meeting, 'handle_agenda_items')}" i18n:translate="">Change</a></li>
-	<li><a href="${request.resource_url(api.meeting, 'order_agenda_items')}" i18n:translate="">Sort</a></li>
+<ul id="agenda_item_edit_menu">
+	<li tal:define="url request.resource_url(api.meeting, 'add', query={'content_type': 'AgendaItem'})"
+		tal:attributes="class request.url==url and 'selected' or '';">
+		<a href="${url}" i18n:translate="">Add</a></li>
+	<li tal:define="url request.resource_url(api.meeting, 'agenda_templates')"
+		tal:attributes="class request.url==url and 'selected' or '';">
+		<a href="${url}" i18n:translate="">Add an agenda template</a></li>
+	<li tal:define="url request.resource_url(api.meeting, 'handle_agenda_items')"
+		tal:attributes="class request.url==url and 'selected' or '';">
+		<a href="${url}" i18n:translate="">Change</a></li>
+	<li tal:define="url request.resource_url(api.meeting, 'order_agenda_items')"
+		tal:attributes="class request.url==url and 'selected' or '';">
+		<a href="${url}" i18n:translate="">Sort</a></li>
 </ul>
+<div class="cler">&nbsp;</div>
 </tal:main>
