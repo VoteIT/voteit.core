@@ -1,0 +1,8 @@
+<tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core">
+<div class="meta">
+	<tal:vas repeat="view_action view_actions">
+        <span tal:condition="not repeat.view_action.start" class="hyphen">&#45;</span>
+		<tal:content replace="structure view_action">Meta</tal:content>
+	</tal:vas>
+</div>
+</tal:main>

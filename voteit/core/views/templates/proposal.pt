@@ -13,35 +13,8 @@
 
     <tal:creators tal:replace="structure api.get_creators_info(brain['creators'])">Creators</tal:creators>:
     <span class="body" tal:content="structure api.transform(brain['title'])">Title</span>
-
-    <div class="meta">
-        <span class="${state_id} icon iconpadding"
-              tal:content="translated_state_title(state_id)">private</span>
-        <span class="hyphen">&#45;</span>
-        <span class="time" tal:content="api.dt_util.relative_time_format(brain['created'])"></span>
-        <span class="hyphen">&#45;</span>
-        <span tal:condition="show_retract(brain)">
-            <a class="retract confirm-retract"
-               tal:attributes="href '%s%s/state?state=retracted' % (request.application_url, brain['path'])"
-               i18n:translate="">Retract</a>
-            <span class="hyphen">&#45;</span>
-        </span>
-        <span class="user_tags" 
-        	tal:condition="show_user_tags" 
-        	tal:content="structure api.render_view_group(brain, request, 'user_tags')"></span>
-        <span tal:condition="show_user_tags and api.meeting.get_field_value('tags_enabled', True) and not api.context.get_field_value('discussion_block', False)" class="hyphen">&#45;</span>
-    	<tal:tags condition="api.meeting.get_field_value('tags_enabled', True) and not api.context.get_field_value('discussion_block', False)">
-	            <a class="answer" 
-	               tal:attributes="href '%s%s/answer' % (request.application_url, brain['path'])"
-	               i18n:translate="">Comment</a>
-            <span class="hyphen">&#45;</span>
-            <span class="aid">
-            	<a class="tag" 
-            	   tal:attributes="href '?tag=%s' % brain['aid']" 
-            	   tal:content="'#%s' % brain['aid']">Autotag</a></span>
-    	   </tal:tags>
-    </div>
-    <div class="clear"><!-- --></div>
+    <tal:meta replace="structure api.render_single_view_component(context, request, 'object', 'meta_data_listing', brain=brain)">Meta</tal:meta>
+    <div class="clear"><!-- --></div> 
 </div>
 
 </tal:main>

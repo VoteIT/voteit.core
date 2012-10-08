@@ -1,0 +1,6 @@
+<tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core">
+<tal:tags repeat="tag tags">
+    <span tal:condition="tag and not repeat.tag.start" class="hyphen">&#45;</span>
+	<tal:content replace="structure tag">User tag</tal:content>
+</tal:tags>
+</tal:main>
