@@ -43,23 +43,7 @@
 	        <tal:creators tal:replace="structure api.get_creators_info(post['creators'])">Creators</tal:creators>
 	        <span class="body" tal:content="structure api.transform(truncated[0])">text</span>
 	        <span class="more" tal:condition="truncated[1]"><a tal:attributes="href '%s%s/more' % (request.application_url, post['path'])" i18n:translate="">Read more</a></span>
-	        <div class="meta">	
-	            <span class="time" tal:content="api.dt_util.relative_time_format(post['created'])"></span>
-	            <span class="hyphen">&#45;</span>
-	            <span tal:condition="show_delete(post)">
-	                <a class="delete"
-	                   tal:attributes="href '%s%s/delete' % (request.application_url, post['path'])"
-	                   i18n:translate="">Delete</a>
-	                <span class="hyphen">&#45;</span>
-	            </span>
-	            <span class="user_tags" tal:content="structure api.render_view_group(post, request, 'user_tags')"></span>
-	            <tal:tags condition="api.meeting.get_field_value('tags_enabled', True) and not api.context.get_field_value('discussion_block', False)">
-				<span class="hyphen">&#45;</span>
-	            <a class="answer" 
-	               tal:attributes="href '%s%s/answer' % (request.application_url, post['path'])"
-	               i18n:translate="">Reply</a>
-               </tal:tags>
-	        </div>
+	        <tal:meta replace="structure api.render_single_view_component(context, request, 'object', 'meta_data_listing', brain=post)">Meta</tal:meta>
 	        <div class="clear"><!-- --></div>
 	    </div>
 	
