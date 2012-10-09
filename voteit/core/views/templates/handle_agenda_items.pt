@@ -11,18 +11,18 @@
 	    	replace="structure api.render_single_view_component(context, request, 'agenda_item', 'edit_menu')">
 	    	Edit menu
 	    </tal:menu>
-	    <form method="post" class="deform agenda-item-sort">
+	    <form method="post" class="deform agenda-item-handle">
 	    	<tal:states repeat="state states">
 	    		<h3 class="iconpadding icon ${state}" tal:content="translated_state_title(state)">State</h3>
-	    		<table>
+	    		<table class="listing">
 	    			<thead>
 	    				<tr>
-	    					<td>&nbsp;</td>
-	    					<td i18n:translate="">Edit</td>
-	    					<td i18n:translate="">Delete</td>
-	    					<td i18n:translate="">Proposals enabled</td>
-	    					<td i18n:translate="">Discussions enabled</td>
-	    					<td i18n:translate="">Agenda item</td>
+	    					<th class="heading state">&nbsp;</th>
+	    					<th class="heading edit" i18n:translate="">Edit</th>
+	    					<th class="heading delete" i18n:translate="">Delete</th>
+	    					<th class="heading enabled" i18n:translate="">Proposals enabled</th>
+	    					<th class="heading enabled" i18n:translate="">Discussions enabled</th>
+	    					<th class="heading" i18n:translate="">Agenda item</th>
 	    				</tr>
 	    			</thead>
 	    			<tal:ais repeat="ai ais[state]">
@@ -30,18 +30,24 @@
 	    					<td>
 	    						<input type="checkbox" name="ais" value="${ai['name']}"></input>
 	    					</td>
-	    					<td><a href="${ai['path']}/edit" class="buttonize edit" i18n:translate="">Edit</a></td>
-	    					<td><a href="${ai['path']}/delete" class="delete"><span i18n:translate="">Delete</span></a></td>
-	    					<td tal:define="block_state obj.get_field_value('proposal_block', False) and '0' or '1'">
+	    					<td class="edit"><a href="${ai['path']}/edit" class="buttonize edit" i18n:translate="">Edit</a></td>
+	    					<td class="delete"><a href="${ai['path']}/delete" class="delete">
+	    						<img src="${request.application_url}/static/icons/icon_delete.png"
+					                 width="16" height="16"
+					                 alt="Delete"
+					                 title="Delete"
+					                 i18n:attributes="alt; title;" />
+	    						</a></td>
+	    					<td class="enabled" tal:define="block_state obj.get_field_value('proposal_block', False) and '0' or '1'">
 	    						<a href="${request.resource_url(obj, '_toggle_block', query={'proposal_block': block_state})}"
-	    							class="class obj.get_field_value('proposal_block', False) and 'disabled' or 'enabled'">
-	    							<span>${obj.get_field_value('proposal_block', False) and api.translate('No') or api.translate('Yes')}</span>
+	    							tal:attributes="class obj.get_field_value('proposal_block', False) and 'no_icon' or 'yes_icon'">
+	    							${obj.get_field_value('proposal_block', False) and api.tstring('No') or api.tstring('Yes')}
 	    						</a>
 	    					</td>
-	    					<td tal:define="block_state obj.get_field_value('discussion_block', False) and '0' or '1'">
+	    					<td class="enabled" tal:define="block_state obj.get_field_value('discussion_block', False) and '0' or '1'">
 	    						<a href="${request.resource_url(obj, '_toggle_block', query={'discussion_block': block_state})}"
-	    							class="class obj.get_field_value('discussion_block', False) and 'disabled' or 'enabled'">
-	    							<span>${obj.get_field_value('discussion_block', False) and api.translate('No') or api.translate('Yes')}</span>
+	    							tal:attributes="class obj.get_field_value('discussion_block', False) and 'no_icon' or 'yes_icon'">
+	    							${obj.get_field_value('discussion_block', False) and api.tstring('No') or api.tstring('Yes')}
 	    						</a>
 	    					</td>
 	    					<td><a href="${ai['path']}">${ai['title']}</a></td>
@@ -49,11 +55,14 @@
 	    			</tal:ais>
 	    		</table>
 	    	</tal:states>
+	    	<p>&nbsp;</p>
 	    	<p>
-	    		<label for="state_id" i18n:translate="">Ändra tillstånd på markerade till</label>
+	    		<label for="state_id" i18n:translate="">Ändra tillstånd på markerade till</label><br />
 	    		<select id="state_id" name="state_id">
 	    			<option tal:repeat="state states" value="${state}">${translated_state_title(state)}</option>
 	    		</select>
+    		</p>
+    		<p>
 	    		<button class="buttonize" type="submit" name="change" i18n:translate="">Change</button>
 	    		<button class="buttonize" type="submit" name="cancel" i18n:translate="">Cancel</button>
 	    	</p>
