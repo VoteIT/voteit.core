@@ -12,7 +12,7 @@ from voteit.core.security import VIEW
 
 
 
-@view_action('object', 'meta_data_listing', permission=VIEW)
+@view_action('main', 'meta_data_listing', permission=VIEW)
 def meta_data_listing(context, request, va, **kw):
     """ This is the main renderer for post meta.
         It will call all view components in the group meta_data_listing.
