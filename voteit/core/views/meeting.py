@@ -8,18 +8,22 @@ from pyramid.view import view_config
 from pyramid.httpexceptions import HTTPFound
 from pyramid.httpexceptions import HTTPRedirection
 from pyramid.traversal import resource_path
+from pyramid.traversal import find_resource
 from pyramid.renderers import render
 from pyramid.response import Response
 from pyramid.url import resource_url
 from betahaus.pyracont.factories import createContent
 from betahaus.pyracont.factories import createSchema
 from betahaus.viewcomponent.interfaces import IViewGroup
+from repoze.workflow.workflow import WorkflowError
+
 
 from voteit.core import security
 from voteit.core import VoteITMF as _
 from voteit.core.views.base_view import BaseView
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IMeeting
+from voteit.core.models.agenda_item import AgendaItem
 from voteit.core.models.schemas import add_csrf_token
 from voteit.core.models.schemas import button_save
 from voteit.core.models.schemas import button_add
@@ -359,6 +363,51 @@ class MeetingView(BaseView):
         self.response['form'] = form.render(appstruct)
         return self.response
     
+    @view_config(context=IMeeting, name="handle_agenda_items", renderer="templates/handle_agenda_items.pt", permission=security.EDIT)
+    def handle_agenda_items(self):
+        post = self.request.POST
+        if 'cancel' in self.request.POST:
+            url = self.request.resource_url(self.context, 'handle_agenda_items')
+            return HTTPFound(location = url)
+
+        if 'change' in post:
+            state_id = self.request.POST['state_id']
+            controls = self.request.POST.items()
+            for (k, v) in controls:
+                if k == 'ais':
+                    ai = self.context[v]
+                    try:
+                        ai.set_workflow_state(self.request, state_id)
+                    except WorkflowError, e:
+                        self.api.flash_messages.add(_('Unable to change state on ${title}, ${error}', mapping={'title': ai.title}), type='error')
+            self.api.flash_messages.add(_('States updated'))
+
+        state_info = _dummy_agenda_item.workflow.state_info(None, self.request)
+        def _translated_state_title(state):
+            for info in state_info:
+                if info['name'] == state:
+                    return self.api.tstring(info['title'])
+        
+            return state
+        self.response['translated_state_title'] = _translated_state_title
+    
+        self.response['find_resource'] = find_resource
+        self.response['states'] = states = ('ongoing', 'upcoming', 'closed', 'private') 
+        self.response['ais'] = {}
+        for state in states:
+            context_path = resource_path(self.context)
+            query = dict(
+                path = context_path,
+                content_type = 'AgendaItem',
+                sort_index = 'order',
+                workflow_state = state,
+            )
+            self.response['ais'][state] = self.api.get_metadata_for_query(**query)
+        
+        fanstaticlib.jquery_deform.need()
+
+        return self.response
+    
     @view_config(context=IMeeting, name="order_agenda_items", renderer="templates/order_agenda_items.pt", permission=security.EDIT)
     def order_agenda_items(self):
         self.response['title'] = _(u"order_agenda_items_view_title",
@@ -414,3 +463,5 @@ class MeetingView(BaseView):
 
         self.response['agenda_items'] = agenda_items
         return self.response
+
+_dummy_agenda_item = AgendaItem()
