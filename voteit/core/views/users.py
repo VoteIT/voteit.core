@@ -181,7 +181,7 @@ class UsersFormView(BaseEdit):
             user_agent = httpagentparser.detect(self.request.user_agent)
             browser_name = user_agent['browser']['name']
             browser_version = Decimal(user_agent['browser']['version'][0:user_agent['browser']['version'].find('.')])
-        except (TypeError, ValueError):
+        except:
             pass
         #FIXME: maybe this definition should be somewhere else
         if browser_name == u'Microsoft Internet Explorer' and browser_version < Decimal(8):
