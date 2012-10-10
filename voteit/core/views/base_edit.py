@@ -50,6 +50,7 @@ class DefaultEdit(BaseEdit):
     @view_config(context=IBaseContent, name="add", renderer=DEFAULT_TEMPLATE)
     def add_form(self):
         content_type = self.request.params.get('content_type')
+        tag = self.request.GET.get('tag', None)
         
         #Permission check
         add_permission = self.api.content_types_add_perm(content_type)
@@ -58,7 +59,7 @@ class DefaultEdit(BaseEdit):
 
         factory = self.api.get_content_factory(content_type)
         schema_name = self.api.get_schema_name(content_type, 'add')
-        schema = createSchema(schema_name).bind(context=self.context, request=self.request, api=self.api)
+        schema = createSchema(schema_name).bind(context=self.context, request=self.request, api=self.api, tag=tag)
         add_csrf_token(self.context, self.request, schema)
         
         form = Form(schema, buttons=(button_add, button_cancel))
@@ -89,8 +90,8 @@ class DefaultEdit(BaseEdit):
 
             #Success, redirect
             url = self.request.resource_url(obj)
-            if (content_type == 'Proposal' or content_type == 'DiscussionPost') and self.request.GET.get('tag', None):
-                url = self.request.resource_url(obj, query={'tag': self.request.GET.get('tag', None)})
+            if (content_type == 'Proposal' or content_type == 'DiscussionPost') and tag:
+                url = self.request.resource_url(obj, query={'tag': tag})
             #Polls might have a special redirect action if the poll plugin has a settings schema:
             if content_type == 'Poll' and obj.get_poll_plugin().get_settings_schema() is not None:
                 msg = _(u"review_poll_settings_info",
