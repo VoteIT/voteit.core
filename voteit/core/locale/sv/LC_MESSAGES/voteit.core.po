@@ -645,11 +645,9 @@ msgstr "Dagordningspunkter"
 
 #. Default: Only the default content is not valid
 #: voteit/core/schemas/discussion_post.py:55 voteit/core/schemas/proposal.py:58
-#, fuzzy
 msgid "only_default_text_validator_error"
 msgstr ""
-"Följande användarnamn är ogiltiga: ${userids}. Kom ihåg att användarnamn "
-"är skiftlägeskänsliga."
+"Att enbart posta den förifyllda texten är inte tillräckligt"
 
 #: voteit/core/schemas/discussion_post.py:77
 msgid "Text"
