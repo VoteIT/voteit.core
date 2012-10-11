@@ -47,6 +47,7 @@ class ParticipantsView(BaseView):
                 {'userid':{'first_name': '<name>',
                            'last_name': '<name>',
                            'email': '<email>',
+                           'extras: {'extra_data': '<extra_data>',},
                            'role_discuss': '<bool>', #<etc...>,
                           }
         """
