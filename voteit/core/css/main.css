@@ -778,12 +778,14 @@ ui-dialog {
 
 /* table listing */
 table.listing > thead > tr > th,
+table.listing > tbody > tr.thead > th,
 table.listing > tbody > tr > td {
     padding: 5px;
     border-right: 1px solid #fff;
 }
 
-table.listing > thead > tr > th.heading {
+table.listing > thead > tr > th.heading,
+table.listing > tbody > tr.thead > th.heading {
     background: #054265;
     color: #fff;
     text-transform: uppercase;
