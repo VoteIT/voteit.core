@@ -115,6 +115,8 @@ class AgendaItemView(BaseView):
             self.context.set_field_value('proposal_block', val)
         self.api.flash_messages.add(_(u"Status changed - note that workflow state also matters."))
         url = resource_url(self.context, self.request)
+        if self.request.referer:
+            url = self.request.referer
         return HTTPFound(location=url)
 
     @view_config(context=IDiscussionPost, name="answer", permission=VIEW, renderer='templates/base_edit.pt')

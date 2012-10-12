@@ -403,6 +403,7 @@ class MeetingView(BaseView):
                 workflow_state = state,
             )
             self.response['ais'][state] = self.api.get_metadata_for_query(**query)
+        self.response['came_from'] = self.request.url
         
         fanstaticlib.jquery_deform.need()
 
