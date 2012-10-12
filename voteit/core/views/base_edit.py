@@ -1,4 +1,5 @@
 #from datetime import timedelta
+import urllib
 
 from pyramid.view import view_config
 from pyramid.url import resource_url
@@ -16,6 +17,7 @@ from voteit.core import VoteITMF as _
 from voteit.core.security import EDIT
 from voteit.core.security import DELETE
 from voteit.core.models.schemas import add_csrf_token
+from voteit.core.models.schemas import add_came_from
 from voteit.core.models.schemas import button_add
 from voteit.core.models.schemas import button_cancel
 from voteit.core.models.schemas import button_update
@@ -123,6 +125,7 @@ class DefaultEdit(BaseEdit):
         schema_name = self.api.get_schema_name(content_type, 'edit')
         schema = createSchema(schema_name).bind(context=self.context, request=self.request, api=self.api)
         add_csrf_token(self.context, self.request, schema)
+        add_came_from(self.context, self.request, schema)
 
         form = Form(schema, buttons=(button_update, button_cancel))
         self.api.register_form_resources(form)
@@ -137,14 +140,20 @@ class DefaultEdit(BaseEdit):
                 self.response['form'] = e.render()
                 return self.response
             
+            #Came from should not be stored either
+            came_from = appstruct['came_from']
+            del appstruct['came_from']
+            
             updated = self.context.set_field_appstruct(appstruct)
 
             if updated:
                 self.api.flash_messages.add(_(u"Successfully updated"))
             else:
                 self.api.flash_messages.add(_(u"Nothing updated"))
-
+                
             url = resource_url(self.context, self.request)
+            if came_from:
+                url = urllib.unquote(came_from)
             return HTTPFound(location=url)
 
         if 'cancel' in post:
@@ -154,6 +163,9 @@ class DefaultEdit(BaseEdit):
 
         #No action - Render edit form
         appstruct = self.context.get_field_appstruct(schema)
+        came_from = self.request.GET.get('came_from', None)
+        if came_from:
+            appstruct['came_from'] = came_from
         self.response['form'] = form.render(appstruct=appstruct)
         return self.response
 
@@ -162,6 +174,7 @@ class DefaultEdit(BaseEdit):
 
         schema = colander.Schema()
         add_csrf_token(self.context, self.request, schema)
+        add_came_from(self.context, self.request, schema)
         
         form = Form(schema, buttons=(button_delete, button_cancel))
         self.api.register_form_resources(form)
@@ -177,6 +190,9 @@ class DefaultEdit(BaseEdit):
             self.api.flash_messages.add(_(u"Deleted"))
 
             url = resource_url(parent, self.request)
+            came_from = self.request.POST.get('came_from', None)
+            if came_from:
+                url = urllib.unquote(came_from) 
             return HTTPFound(location=url)
 
         if 'cancel' in post:
@@ -194,7 +210,13 @@ class DefaultEdit(BaseEdit):
             msg = _(u"delete_form_locked_proposal_notice",
                     default = u"This proposal is locked for voting. If you delete it, you will NEVER be able to close the poll it's participating in. Are you really sure that you want to do this?")
             self.api.flash_messages.add(msg, type = 'error', close_button = False)
-        self.response['form'] = form.render()
+        
+        appstruct = {}
+        came_from = self.request.GET.get('came_from', None)
+        if came_from:
+            appstruct['came_from'] = came_from
+            
+        self.response['form'] = form.render(appstruct)
         return self.response
 
     def generate_slug(self, text, limit=40):
