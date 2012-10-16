@@ -109,14 +109,13 @@ class UserTests(unittest.TestCase):
         self.config.include('voteit.core.plugins.gravatar_profile_image')
         obj = self._make_obj()
         obj.set_field_value('email', 'hello@world.com')
-        
         self.assertEqual(obj.get_image_tag(size=45),
-                         '<img src="http://www.gravatar.com/avatar/4b3cdf9adfc6258a102ab90eb64565ea?d=mm&s=45" height="45" width="45" class="profile-pic" />')
+                         '<img src="https://secure.gravatar.com/avatar/4b3cdf9adfc6258a102ab90eb64565ea?d=mm&s=45" height="45" width="45" class="profile-pic" />')
         
     def test_blank_email_hash_generation(self):
         self.config.include('voteit.core.plugins.gravatar_profile_image')
         obj = self._make_obj()
-        self.assertEqual(obj.get_image_tag(), '<img src="http://www.gravatar.com/avatar/?d=mm&s=40" height="40" width="40" class="profile-pic" />')
+        self.assertEqual(obj.get_image_tag(), '<img src="https://secure.gravatar.com/avatar/?d=mm&s=40" height="40" width="40" class="profile-pic" />')
                          
     def test_mentioned_email(self):
         request = testing.DummyRequest()

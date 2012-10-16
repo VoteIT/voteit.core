@@ -18,7 +18,7 @@
 	                <div class="item">
 	                    <a tal:attributes="href brain['path']">
 	                        <div tal:content="brain['title']">Title</div>
-	                        <div tal:condition="brain['content_type'] == 'AgendaItem'" class="info">
+	                        <div class="info">
 	                            <span class="cinfo iconpadding icon proposal"
 	                                  tal:define="unread_count not current_context and count_query(brain['path'], 'Proposal', unread = 1) or 0">
                                     <span class="total"

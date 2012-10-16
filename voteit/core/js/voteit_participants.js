@@ -37,6 +37,9 @@ function load_participants_data() {
             out.find('.first_name').append(udata['first_name']);
             out.find('.last_name').append(udata['last_name']);
             out.find('.email').append('<a href="mailto:' + udata['email'] + '">' + udata['email'] + '</a>');
+            for(var extra in udata['extras']) {
+            	out.find('.'+extra).append(udata['extras'][extra]);
+            }
             out.find('.role').each(function() {
                 var role = $(this).attr('name');
                 var role_selector = "." + role.replace(':', '_');
