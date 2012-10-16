@@ -33,7 +33,7 @@ class GravatarProfileImagePlugin(object):
     def url(self, size):
         
         email_hash = self._generate_email_hash(self.context.get_field_value('email', ''))
-        url = 'http://www.gravatar.com/avatar/'
+        url = 'https://secure.gravatar.com/avatar/'
         if email_hash:
             url += email_hash
         url += '?d=mm&s=%(size)s' % {'size': size}
