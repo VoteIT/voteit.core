@@ -29,13 +29,15 @@ class RecaptchaWidget(CheckedInputWidget):
     template = 'captcha'
     readonly_template = 'captcha'
     requirements = ()
-    url = "http://www.google.com/recaptcha/api/verify"
+    url = "www.google.com/recaptcha/api/verify"
     headers = {'Content-type': 'application/x-www-form-urlencoded'}
+    testing = False
     
-    def __init__(self, captcha_public_key = u'', captcha_private_key = u''):
+    def __init__(self, captcha_public_key = u'', captcha_private_key = u'', testing = False):
         super(RecaptchaWidget, self).__init__()
         self.captcha_public_key = captcha_public_key
         self.captcha_private_key = captcha_private_key
+        self.testing = testing
 
     def serialize(self, field, cstruct, readonly=False):
         if cstruct in (null, None):
@@ -46,7 +48,7 @@ class RecaptchaWidget(CheckedInputWidget):
                               public_key=self.captcha_public_key,
                               )
 
-    def deserialize(self, field, pstruct): #pragma : no cover
+    def deserialize(self, field, pstruct):
         #We can't test this part properly since it requires Google API connection :(
         if pstruct is null:
             return null
@@ -57,6 +59,7 @@ class RecaptchaWidget(CheckedInputWidget):
         if not challenge:
             raise Invalid(field.schema, 'Missing challenge')
         request = get_current_request()
+        url = "%s://%s" % (request.scheme, self.url)
         remoteip = request.remote_addr
         data = urlencode(dict(privatekey=self.captcha_private_key,
                               remoteip=remoteip,
@@ -64,10 +67,14 @@ class RecaptchaWidget(CheckedInputWidget):
                               response=response))
         h = httplib2.Http(timeout=10)
         try:
-            resp, content = h.request(self.url,
-                                      "POST",
-                                      headers=self.headers,
-                                      body=data)
+            if self.testing:
+                resp = {'status': '200'}
+                content = "true\nno reason"
+            else:
+                resp, content = h.request(url,
+                                          "POST",
+                                          headers=self.headers,
+                                          body=data)
         except AttributeError as e:
             if e == "'NoneType' object has no attribute 'makefile'":
                 ## XXX: catch a possible httplib regression in 2.7 where

@@ -32,7 +32,7 @@ class StarWidgetTests(unittest.TestCase):
 class RecaptchaWidgetTests(unittest.TestCase):
     
     def setUp(self):
-        request = testing.DummyRequest(remote_addr = '127.0.0.1')
+        request = testing.DummyRequest(remote_addr = '127.0.0.1', scheme="http")
         self.config = testing.setUp(request = request)
         self.config.include('voteit.core.deform_bindings')
 
@@ -51,9 +51,16 @@ class RecaptchaWidgetTests(unittest.TestCase):
                                              widget = self._cut())
         form = deform.Form(DummySchema())
         return form['this_field']
+    
+    def test_deserialize(self):
+        obj = self._cut(testing=True)
+        field = self._dummy_field()
+        pstruct = {'recaptcha_challenge_field': 'dummy_challenge',
+                   'recaptcha_response_field': 'dummy_response'}
+        self.assertEqual(obj.deserialize(field, pstruct), None)
 
     def test_serialize(self):
-        obj = self._cut()
+        obj = self._cut(testing=True)
         field = self._dummy_field()
         self.assertIn('http://www.google.com/recaptcha', obj.serialize(field, ''))
 
