@@ -1,15 +1,18 @@
-from betahaus.viewcomponent import view_action
-from pyramid.renderers import render
-
-from deform import Form
-from pyramid.url import resource_url
 from betahaus.pyracont.factories import createSchema
+from betahaus.viewcomponent import view_action
+from deform import Form
+from pyramid.renderers import render
+from pyramid.security import effective_principals
+from pyramid.traversal import resource_path
+from pyramid.url import resource_url
+
+from voteit.core import VoteITMF as _
+from voteit.core.helpers import strip_and_truncate
+from voteit.core.models.interfaces import IMeeting
+from voteit.core.models.interfaces import ISiteRoot
 from voteit.core.models.schemas import button_login
 from voteit.core.security import ADD_MEETING
 from voteit.core.security import MODERATE_MEETING
-from voteit.core import VoteITMF as _
-from voteit.core.models.interfaces import IMeeting, ISiteRoot
-from pyramid.traversal import resource_path
 
 
 @view_action('main', 'navigation')
@@ -44,6 +47,7 @@ def meeting_sections_header(context, request, va, **kwargs):
         title = va.title,
     )
     return render('../templates/snippets/navigation_meeting_head.pt', response, request = request)
+
 
 @view_action('navigation_sections', 'ongoing', title = _(u"Ongoing"), state = 'ongoing')
 @view_action('navigation_sections', 'upcoming', title = _(u"Upcoming"), state = 'upcoming')
@@ -100,3 +104,39 @@ def navigation_section(context, request, va, **kwargs):
     response['closed_section'] = False
     response['in_current_context'] = _in_current_context
     return render('../templates/snippets/navigation_section.pt', response, request = request)
+
+
+@view_action('navigation_sections', 'latest_meeting_entries',)
+def latest_meeting_entries(context, request, va, **kwargs):
+    api = kwargs['api']
+    
+    # only avaible in meeting
+    if not api.meeting:
+        return ''
+    
+    response = dict(
+        api = api,
+        context = context,
+        truncate = strip_and_truncate,
+        closed_section = False,
+    )
+    
+    if request.cookies.get('latest_meeting_entries'):
+        response['closed_section'] = True
+        return render('../templates/snippets/latest_meeting_entries.pt', response, request = request)
+    
+    response['closed_section'] = False
+    
+    query = {}
+    query['path'] = resource_path(api.meeting)
+    query['allowed_to_view'] = {'operator':'or', 'query': effective_principals(request)}
+    query['content_type'] = {'query':('Proposal','DiscussionPost'), 'operator':'or'}
+    query['sort_index'] = 'created'
+    query['reverse'] = True
+    query['limit'] = 5
+    
+    response['last_entries'] = api.get_metadata_for_query(**query)
+    
+    return render('../templates/snippets/latest_meeting_entries.pt', response, request = request)
+    
+    
