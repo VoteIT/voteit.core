@@ -80,6 +80,16 @@ def description_node():
         widget=deform.widget.RichTextWidget(),
         validator=richtext_validator,)
 
+def public_description_node():
+     return colander.SchemaNode(
+        colander.String(),
+        title = _(u"Public presentation"),
+        description = _(u"meeting_public_description_description",
+                        default=u"The public description is visible on the request access page and to not loghed in visitors."),
+        missing = u"",
+        widget=deform.widget.RichTextWidget(),
+        validator=richtext_validator,)
+
 def meeting_mail_name_node():
     return colander.SchemaNode(colander.String(),
                                title = _(u"Name visible on system mail sent from this meeting"),
@@ -91,7 +101,6 @@ def meeting_mail_address_node():
                                title = _(u"Email address to send from"),
                                default = u"noreply@somehost.voteit",
                                validator = colander.All(colander.Email(msg = _(u"Invalid email address.")), html_string_validator,),)
-    
 
 def access_policy_node():
     return colander.SchemaNode(colander.String(),
@@ -114,6 +123,7 @@ def recaptcha_node():
 class AddMeetingSchema(colander.MappingSchema):
     title = title_node();
     description = description_node();
+    public_description = public_description_node();
     meeting_mail_name = meeting_mail_name_node();
     meeting_mail_address = meeting_mail_address_node();
     access_policy = access_policy_node();
@@ -123,6 +133,7 @@ class AddMeetingSchema(colander.MappingSchema):
 class EditMeetingSchema(colander.MappingSchema):
     title = title_node();
     description = description_node();
+    public_description = public_description_node();
     meeting_mail_name = meeting_mail_name_node();
     meeting_mail_address = meeting_mail_address_node();
     access_policy = access_policy_node();

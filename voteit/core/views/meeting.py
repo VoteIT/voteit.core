@@ -1,5 +1,7 @@
 import urllib
 
+import deform
+from colander import Schema
 from deform import Form
 from deform.exception import ValidationFailure
 from pyramid.security import has_permission
@@ -269,7 +271,7 @@ class MeetingView(BaseView):
         return self.response
 
     @view_config(name = 'request_access', context = IMeeting,
-                 renderer = "templates/base_edit.pt", permission = NO_PERMISSION_REQUIRED)
+                 renderer = "templates/request_meeting_access.pt", permission = NO_PERMISSION_REQUIRED)
     def request_meeting_access(self):
         #If user already has permissions redirect to main meeting view
         if has_permission(security.VIEW, self.context, self.request):
@@ -287,7 +289,11 @@ class MeetingView(BaseView):
             self.api.flash_messages.add(msg, type='info')
             came_from = resource_url(self.context, self.request, 'request_access')
             url = resource_url(self.api.root, self.request, 'login', query={'came_from': came_from})
-            return HTTPFound(location=url)
+            schema = Schema()
+            form = Form(schema, buttons=(deform.Button('login_register', _(u"Login/Register")),), action=url)
+            self.api.register_form_resources(form)
+            self.response['form'] = form.render()
+            return self.response 
         
         view_group = self.request.registry.getUtility(IViewGroup, name = 'request_meeting_access')        
         va = view_group.get(access_policy, None)

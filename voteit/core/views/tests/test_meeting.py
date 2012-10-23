@@ -417,7 +417,7 @@ class MeetingViewTests(unittest.TestCase):
         request = testing.DummyRequest()
         obj = self._cut(context, request)
         response = obj.request_meeting_access()
-        self.assertEqual(response.location, 'http://example.com/login?came_from=http%3A%2F%2Fexample.com%2Fm%2Frequest_access')
+        self.assertIn('form', response)
         
     def test_presentation(self):
         self.config.scan('voteit.core.schemas.meeting')
