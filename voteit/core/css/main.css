@@ -778,12 +778,14 @@ ui-dialog {
 
 /* table listing */
 table.listing > thead > tr > th,
+table.listing > tbody > tr.thead > th,
 table.listing > tbody > tr > td {
     padding: 5px;
     border-right: 1px solid #fff;
 }
 
-table.listing > thead > tr > th.heading {
+table.listing > thead > tr > th.heading,
+table.listing > tbody > tr.thead > th.heading {
     background: #054265;
     color: #fff;
     text-transform: uppercase;
@@ -1056,4 +1058,47 @@ button .spinner {
 	margin-left: 5px;
 	width: 12px;
 	height: 12px;
+}
+
+/* Agenda item edit menu*/
+#agenda_item_edit_menu {
+	margin: 0 0 15px;
+}
+
+#agenda_item_edit_menu li {
+	float: left;
+	padding: 0 9px 0 10px;
+	border-right: 1px solid black;
+	font-size: 14px;
+	font-weight: bold;
+	text-transform: uppercase;
+}
+
+#agenda_item_edit_menu li:last-child {
+	border-right: none;
+}
+
+#agenda_item_edit_menu li.selected {
+	font-size: 16px;	
+}
+
+
+/* Handle agenda items */
+form.agenda-item-handle th.state {
+	min-width: 20px;
+}
+form.agenda-item-handle th.edit {
+	min-width: 90px;
+	text-align: center;
+}
+form.agenda-item-handle th.delete {
+	min-width: 45px;
+}
+form.agenda-item-handle th.enabled {
+	min-width: 50px;
+	white-space: normal;	
+}
+
+form.agenda-item-handle td.delete {
+	text-align: center;
 }

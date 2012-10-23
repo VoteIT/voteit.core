@@ -78,7 +78,7 @@ class AgendaItemView(BaseView):
         if not has_permission(add_permission, self.context, self.request):
             raise HTTPForbidden("You're not allowed to add '%s' in this context." % content_type)        
         schema_name = self.api.get_schema_name(content_type, 'add')
-        schema = createSchema(schema_name).bind(context = self.context, request = self.request, tag = tag)
+        schema = createSchema(schema_name).bind(context = self.context, request = self.request, api = self.api, tag = tag)
         add_csrf_token(self.context, self.request, schema)
         query = {'content_type': content_type, 'tag': tag}
         url = self.request.resource_url(self.context, 'add', query=query)
@@ -115,6 +115,8 @@ class AgendaItemView(BaseView):
             self.context.set_field_value('proposal_block', val)
         self.api.flash_messages.add(_(u"Status changed - note that workflow state also matters."))
         url = resource_url(self.context, self.request)
+        if self.request.referer:
+            url = self.request.referer
         return HTTPFound(location=url)
 
     @view_config(context=IDiscussionPost, name="answer", permission=VIEW, renderer='templates/base_edit.pt')
@@ -127,7 +129,7 @@ class AgendaItemView(BaseView):
             raise HTTPForbidden("You're not allowed to add '%s' in this context." % content_type)
         
         schema_name = self.api.get_schema_name(content_type, 'add')
-        schema = createSchema(schema_name).bind(context = self.context, request = self.request)
+        schema = createSchema(schema_name).bind(context = self.context, request = self.request, api = self.api)
         add_csrf_token(self.context, self.request, schema)
         
         url = self.request.resource_url(self.context, 'answer')
@@ -173,22 +175,7 @@ class AgendaItemView(BaseView):
                 return Response(headers = [('X-Relocate', url)])
             return HTTPFound(location=url)
         
-        # get creator of answered object
-        creators = self.context.get_field_value('creators')
-        if creators:
-            creator = "@%s" % creators[0]
-        else:
-            creator = ''
-            
-        # get tags and make a string of them
-        tags = []
-        for tag in self.context._tags:
-            tags.append("#%s" % tag)
-        
-        appstruct = {'tags': " ".join(self.context._tags),
-                     'text': "%s:  %s" % (creator, " ".join(tags))}
-        
-        self.response['form'] = form.render(appstruct=appstruct)
+        self.response['form'] = form.render()
         
         if self.request.is_xhr:
             return Response(render('templates/snippets/inline_form.pt', self.response, request=self.request))

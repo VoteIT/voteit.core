@@ -11,6 +11,7 @@ class ProposalIDSubscriberTests(TestCase):
 
     def setUp(self):
         self.config = testing.setUp(request = testing.DummyRequest())
+        self.config.include('voteit.core.models.proposal_ids')
         self.config.include('voteit.core.models.user_tags')
         self.config.include('voteit.core.models.catalog')
         self.config.scan('voteit.core.subscribers.catalog')

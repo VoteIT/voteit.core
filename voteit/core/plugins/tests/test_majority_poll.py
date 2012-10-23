@@ -176,6 +176,7 @@ class MPIntegrationTests(unittest.TestCase):
         self.config.scan('voteit.core.views.components.creators_info')
         self.config.scan('voteit.core.views.components.proposals')
         self.config.scan('voteit.core.views.components.user_tags')
+        self.config.scan('voteit.core.views.components.meta_data_listing')
         self.config.registry.settings['default_timezone_name'] = "Europe/Stockholm"
         self.config.include('voteit.core.models.date_time_util')
         
