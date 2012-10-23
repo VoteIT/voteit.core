@@ -145,6 +145,7 @@ class EditMeetingSchema(colander.MappingSchema):
 class PresentationMeetingSchema(colander.MappingSchema):
     title = title_node();
     description = description_node();
+    public_description = public_description_node();
     
 @schema_factory('MailSettingsMeetingSchema', title = _(u"Mail settings"))
 class MailSettingsMeetingSchema(colander.MappingSchema):
