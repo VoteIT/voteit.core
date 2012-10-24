@@ -385,6 +385,7 @@ p {
 /* Main window */
 #main_window h1,
 #main_window h2,
+#main_window h4,
 .modal-window #modal-header {
     border-bottom: 2px solid #86A3B4;
     padding-bottom: 0.5em;
@@ -1110,4 +1111,22 @@ form.agenda-item-handle th.enabled {
 
 form.agenda-item-handle td.delete {
 	text-align: center;
+}
+
+/* Tag stats */
+div.tag_stats {
+	padding-top: 15px;
+}
+
+div.tag_stats li {
+	float: left;
+	padding: 0 9px 0 10px;
+	border-right: 1px solid black;
+	font-size: 14px;
+	font-weight: bold;
+	text-transform: uppercase;
+}
+
+div.tag_stats li:last-child {
+	border-right: none;
 }

@@ -8,6 +8,7 @@
     <div id="polls" metal:fill-slot="top_content">
 
         <div class="description" tal:condition="context.description" tal:content="structure context.description">Description</div>
+        <div class="tag_stats content_wrapper" tal:replace="structure api.render_single_view_component(context, request, 'main', 'tag_stats')">Tag stats</div>
 
     </div> <!-- top_content -->
 
