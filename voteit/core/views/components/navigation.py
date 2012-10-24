@@ -86,9 +86,19 @@ def navigation_section(context, request, va, **kwargs):
     
     def _count_query(path, content_type, unread = False):
         """ Returns number of an item, possbly unread only. """
+        query = {}
+        query['path'] = path
+        query['content_type'] = content_type 
+        
+        if content_type == 'Proposal':
+            query['workflow_state'] = {'query':('published', 'retracted', 'unhandled', 'voting', 'approved', 'denied'), 'operator':'or'}
+            if not api.meeting.get_field_value('show_retracted', True):
+                query['workflow_state'] = {'query':('published', 'unhandled', 'voting', 'approved', 'denied'), 'operator':'or'}
+        
         if unread:
-            return api.search_catalog(path = path, content_type = content_type, unread = api.userid)[0]
-        return api.search_catalog(path = path, content_type = content_type)[0]
+            query['unread'] = api.userid
+        
+        return api.search_catalog(**query)[0]
     
     def _in_current_context(path, context_path):
         path = path.split('/')

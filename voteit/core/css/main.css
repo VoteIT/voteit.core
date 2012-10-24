@@ -676,6 +676,15 @@ li.notification_message {
 #proposals > .moderator-help-buttons .buttonize {
 	padding: 0.5em !important;
 }
+#proposals > .moderator-help-buttons .buttonize:last-child {
+	margin-left: 2px;
+}
+
+#proposals > .show_retracted {
+	float: right;
+	clear: both;
+}
+
 
 /* search */
 #search .listing_block {

@@ -8,10 +8,21 @@ from voteit.core.security import MODERATE_MEETING
 def proposals(context, request, va, **kw):
     """ Render all proposal-related widgets. """
     api = kw['api']
+        
+    # build query string for show retraced link
+    show_retracted_query = request.GET.copy()
+    if not request.GET.get('show_retracted') == '1':
+        show_retracted_query['show_retracted'] = 1
+    elif 'show_retracted' in show_retracted_query:
+        del show_retracted_query['show_retracted']
+        
+    show_retracted_url = api.request.resource_url(context, query=show_retracted_query)
+        
     response = dict(
         proposal_widgets = api.render_view_group(context, request, 'proposals', **kw),
         api = api,
         context = context,
+        show_retracted_url = show_retracted_url,
     )
     return render('../templates/snippets/ai_proposals.pt', response, request = request)
 

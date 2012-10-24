@@ -1,7 +1,21 @@
 <tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core">
 <div id="proposals">
+    <div class="show_retracted" 
+    	 tal:condition="not api.meeting.get_field_value('show_retracted', True) and 
+						not api.context_has_permission('Add Poll', context)">
+    <a class="buttonize" href="${show_retracted_url}">
+        <span tal:condition="not request.GET.get('show_retracted') == '1'" i18n:translate="">Show retracted</span>
+        <span tal:condition="request.GET.get('show_retracted') == '1'"     i18n:translate="">Hide retracted</span>
+	</a>
+	</div>
 	<div class="moderator-help-buttons"
          tal:condition="api.show_moderator_actions and api.context_has_permission('Add Poll', context)">
+        <a class="buttonize" 
+           href="${show_retracted_url}"
+           tal:condition="not api.meeting.get_field_value('show_retracted', True)">
+        	<span tal:condition="not request.GET.get('show_retracted') == '1'" i18n:translate="">Show retracted</span>
+        	<span tal:condition="request.GET.get('show_retracted') == '1'"     i18n:translate="">Hide retracted</span>
+		</a>
         <a class="buttonize" tal:attributes="href api.resource_url(context, request) + 'add?content_type=Poll'">
             <span i18n:translate="">Add poll</span>
         </a>

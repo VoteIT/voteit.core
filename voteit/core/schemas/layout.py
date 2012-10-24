@@ -82,3 +82,8 @@ class LayoutSchema(colander.Schema):
                                       default = True,
                                       widget = deform.widget.CheckboxWidget(),
                                       missing = True,)
+    show_retracted = colander.SchemaNode(colander.Boolean(),
+                               title = _(u"Show retracted"),
+                               description = _(u"meeting_show_retracted_description",
+                                               default=u"Always show retracted proposals."),
+                               default = True,)

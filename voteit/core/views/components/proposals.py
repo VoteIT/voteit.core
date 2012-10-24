@@ -62,9 +62,18 @@ def proposal_listing(context, request, va, **kw):
         uids.update(poll.proposal_uids)
     
     query = Eq('path', resource_path(context)) & \
-            Eq('content_type', 'Proposal') & \
-            (NotAny('uid', uids) | \
-            Any('workflow_state', ('published', 'retracted', 'unhandled')))
+            Eq('content_type', 'Proposal')
+             
+    # proposals that are not in polls or in certain state are to be shown 
+    # show retracted if it is activated in the meeting or if the user requests it
+    if api.meeting.get_field_value('show_retracted', True) or request.GET.get('show_retracted') == '1':
+        query = query & \
+                (NotAny('uid', uids) | \
+                 Any('workflow_state', ('published', 'retracted', 'unhandled')))
+    else:
+        query = query & \
+                (NotAny('uid', uids) & NotAny('workflow_state', ('retracted',)) | \
+                 Any('workflow_state', ('published', 'unhandled')))
     
     total_count = api.root.catalog.query(query)[0]
     
