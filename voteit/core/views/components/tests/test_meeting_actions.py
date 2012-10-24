@@ -39,7 +39,11 @@ class MeetingActionsComponentTests(unittest.TestCase):
         self.config.include('voteit.core.models.catalog')
         
     def test_meeting_actions(self):
+        self.config.testing_securitypolicy(userid='dummy',
+                                           permissive=True)
+        
         self.config.scan('voteit.core.views.components.meeting_actions')
+        self.config.scan('voteit.core.views.components.moderator_actions')
         context = self._fixture()
         request = testing.DummyRequest()
         va = self._va(title='')

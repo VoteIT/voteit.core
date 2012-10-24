@@ -74,7 +74,7 @@ def search_menu(context, request, va, **kw):
 
 
 @view_action('meeting_actions', 'admin_menu', title = _(u"Admin menu"), permission = MANAGE_SERVER)
-@view_action('meeting_actions', 'settings_menu', title = _(u"Settings"), permission = MODERATE_MEETING, meeting_only = True)
+#@view_action('meeting_actions', 'settings_menu', title = _(u"Settings"), permission = MODERATE_MEETING, meeting_only = True)
 @view_action('meeting_actions', 'meeting', title = _(u"Meeting"), permission=VIEW, meeting_only = True)
 @view_action('meeting_actions', 'participants_menu', title = _(u"Participants"), permission=VIEW, meeting_only = True, menu_css_cls = 'user-dark')
 def generic_menu(context, request, va, **kw):
@@ -152,3 +152,21 @@ def meeting_poll_menu(context, request):
     response['polls_metadata'] = metadata
 
     return response
+
+
+@view_action('meeting', 'settings', permission = MODERATE_MEETING, meeting_only = True)
+def settings_menu(context, request, va, **kw):
+    api = kw['api']
+    return """<li><span class="menusection">%s</span></li>%s""" % (api.translate(_(u"Settings")),
+                                                                   api.render_view_group(api.meeting, request, 'settings_menu'))
+
+@view_action('meeting', 'workflow', permission = MODERATE_MEETING, meeting_only = True)
+def workflow_menu(context, request, va, **kw):
+    api = kw['api']
+    return api.render_single_view_component(api.meeting, request, 'moderator_actions_section', 'workflow')
+
+@view_action('meeting', 'actions', permission = MODERATE_MEETING, meeting_only = True)
+def actions_menu(context, request, va, **kw):
+    api = kw['api']
+    return """<li><span class="menusection">%s</span></li>%s""" % (api.translate(_(u"Actions here")),
+                                                                   api.render_view_group(api.meeting, request, 'context_actions'))
