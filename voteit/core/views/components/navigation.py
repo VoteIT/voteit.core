@@ -3,6 +3,7 @@ from betahaus.viewcomponent import view_action
 from deform import Form
 from pyramid.renderers import render
 from pyramid.security import effective_principals
+from pyramid.traversal import find_interface
 from pyramid.traversal import resource_path
 from pyramid.url import resource_url
 
@@ -88,11 +89,11 @@ def navigation_section(context, request, va, **kwargs):
         """ Returns number of an item, possbly unread only. """
         query = {}
         query['path'] = path
-        query['content_type'] = content_type 
+        query['content_type'] = content_type
         
         if content_type == 'Proposal':
             query['workflow_state'] = {'query':('published', 'retracted', 'unhandled', 'voting', 'approved', 'denied'), 'operator':'or'}
-            if not api.meeting.get_field_value('show_retracted', True):
+            if api.meeting and not api.meeting.get_field_value('show_retracted', True):
                 query['workflow_state'] = {'query':('published', 'unhandled', 'voting', 'approved', 'denied'), 'operator':'or'}
         
         if unread:
