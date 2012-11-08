@@ -24,6 +24,7 @@ _MODERATOR_DEFAULTS = (security.VIEW,
 
 ACL = {}
 ACL['default'] = [(Allow, security.ROLE_ADMIN, security.REGULAR_ADD_PERMISSIONS),
+                  (Allow, security.ROLE_ADMIN, security.MANAGE_SERVER),
                   (Allow, security.ROLE_ADMIN, _MODERATOR_DEFAULTS),
                   (Allow, security.ROLE_MODERATOR, security.REGULAR_ADD_PERMISSIONS),
                   (Allow, security.ROLE_MODERATOR, _MODERATOR_DEFAULTS),

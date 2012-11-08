@@ -1,12 +1,8 @@
 from pyramid.renderers import render
 from pyramid.url import resource_url
 from betahaus.viewcomponent import view_action
-from betahaus.pyracont.factories import createSchema
 
 from voteit.core import VoteITMF as _
-from voteit.core.models.schemas import add_csrf_token
-from voteit.core.models.schemas import button_send
-from voteit.core.views.help import HelpView
 from voteit.core.fanstaticlib import jquery_form 
 
 

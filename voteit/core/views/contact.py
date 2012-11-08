@@ -19,7 +19,9 @@ from voteit.core.security import find_authorized_userids
 from voteit.core.security import MODERATE_MEETING
 
 
-class HelpView(BaseView):
+class ContactView(BaseView):
+    """ Contact view - refactor this into separate functions. """
+
     @view_config(name = 'contact', context=IMeeting, renderer="templates/ajax_edit.pt", permission=security.VIEW)
     def contact(self):
         """ Contact moderators of the meeting

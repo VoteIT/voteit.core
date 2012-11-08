@@ -6,7 +6,7 @@ from pyramid.httpexceptions import HTTPForbidden
 from pyramid_mailer import get_mailer
 
 
-class HelpViewTests(unittest.TestCase):
+class ContactViewTests(unittest.TestCase):
 
     def setUp(self):
         self.request = testing.DummyRequest()
@@ -19,8 +19,8 @@ class HelpViewTests(unittest.TestCase):
 
     @property
     def _cut(self):
-        from voteit.core.views.help import HelpView
-        return HelpView
+        from voteit.core.views.contact import ContactView
+        return ContactView
 
     def _fixture(self):
         from voteit.core.testing_helpers import bootstrap_and_fixture
