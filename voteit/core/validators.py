@@ -6,7 +6,7 @@ from pyramid.traversal import find_interface
 from pyramid.traversal import find_root
 from pyramid.security import authenticated_userid
 from pyramid.security import has_permission
-
+from betahaus.pyracont import check_unique_name
 from voteit.core import VoteITMF as _
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import ISiteRoot
@@ -294,3 +294,25 @@ class ContextRolesValidator(object):
                                                default = u"Group ${group} can't be assigned in this context",
                                                mapping = {'group': v}))
 
+
+@colander.deferred
+def deferred_check_context_unique_name(node, kw):
+    """ Check that a name isn't used within context, or that it's a view within this context.
+    """
+    context = kw['context']
+    request = kw['request']
+    return ContextUniqueNameValidator(context, request)
+
+
+class ContextUniqueNameValidator(object):
+    """ Make sure that a name in a context doesn't exist, or is a view.
+    """
+    def __init__(self, context, request):
+        self.context = context
+        self.request = request
+    
+    def __call__(self, node, value):
+        if not check_unique_name(self.context, self.request, value):
+            raise colander.Invalid(node, _(u"not_unique_name_within_context",
+                                            default = u"Something with the name '${value}' already exists within this context. Pick another name!",
+                                            mapping = {'value': value}))
