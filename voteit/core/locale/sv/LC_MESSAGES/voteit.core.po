@@ -2236,7 +2236,7 @@ msgstr "Diskussion"
 #: voteit/core/views/templates/snippets/ai_proposals.pt:7
 #: voteit/core/views/templates/snippets/ai_proposals.pt:16
 msgid "Show retracted proposals"
-msgstr "Visa alla förslag"
+msgstr "Visa tillbakadragna förslag"
 
 #: voteit/core/views/templates/snippets/ai_proposals.pt:8
 #: voteit/core/views/templates/snippets/ai_proposals.pt:17
