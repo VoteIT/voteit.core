@@ -65,7 +65,7 @@
 	    		</select>
     		</p>
     		<p>
-	    		<button class="buttonize" type="submit" name="change" i18n:translate="">Change</button>
+	    		<button class="buttonize" type="submit" name="change" i18n:translate="">Change state</button>
 	    		<button class="buttonize" type="submit" name="cancel" i18n:translate="">Cancel</button>
 	    	</p>
 	    </form>
