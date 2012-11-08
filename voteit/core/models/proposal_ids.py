@@ -1,9 +1,5 @@
-import re
-
 from BTrees.OOBTree import OOBTree
-from BTrees.OOBTree import OOSet
 from zope.interface import implements
-from zope.component.event import objectEventNotify
 
 from voteit.core.models.interfaces import IProposalIds
 from voteit.core.models.interfaces import IMeeting

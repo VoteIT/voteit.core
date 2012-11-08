@@ -21,8 +21,8 @@ class ProposalIDSubscriberTests(TestCase):
 
     @property
     def _fut(self):
-        from voteit.core.subscribers.proposal_id import proposal_id
-        return proposal_id
+        from voteit.core.subscribers.proposal_id import create_proposal_id
+        return create_proposal_id
     
     def _fixture(self):
         from voteit.core.models.meeting import Meeting
