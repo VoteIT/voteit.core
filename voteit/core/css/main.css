@@ -1001,7 +1001,7 @@ ul.agenda-templates > li {
     display: none;
     width: 60%;
     height: 60%;
-    overflow:hidden;
+    overflow: auto;
     background-color: white;
     padding: 15px;
     padding-right: 0px; 
@@ -1026,13 +1026,9 @@ ul.agenda-templates > li {
 	background-color: #054265;
 	color: #fff;
 }
-
 .modal-inner {
-	overflow:auto;
-	height: 100%;
 	padding-right: 15px;
 }
-
 /* help tab */
 #help-dialog > ul {
     margin: 5px 0 25px 0;

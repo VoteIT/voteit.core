@@ -87,7 +87,7 @@
                      i18n:attributes="alt; title;" />
 		</a>
         <div tal:replace="structure api.render_single_view_component(context, request, 'main', 'help_actions')"></div>
-		<div class="content" i18n:translate="">Click a button above to select category</div>
+		<div class="modal-inner content" i18n:translate="">Click a button above to select category</div>
 	</div>
 </body>
 </html>
