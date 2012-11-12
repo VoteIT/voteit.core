@@ -32,7 +32,7 @@
 							<input type="checkbox" name="ais" value="${ai['name']}"></input>
 						</td>
 						<td><a href="${ai['path']}">${ai['title']}</a></td>
-						<td class="edit"><a href="${ai['path']}/edit?came_from=${came_from}" class="buttonize edit" i18n:translate="">Edit</a></td>
+						<td class="edit"><a href="${ai['path']}/edit?came_from=${request.url}" class="buttonize edit" i18n:translate="">Edit</a></td>
 						<td class="enabled" tal:define="block_state obj.get_field_value('proposal_block', False) and '0' or '1'">
 							<a href="${request.resource_url(obj, '_toggle_block', query={'proposal_block': block_state})}"
 								tal:attributes="class obj.get_field_value('proposal_block', False) and 'no_icon' or 'yes_icon'">
@@ -45,7 +45,7 @@
 								${obj.get_field_value('discussion_block', False) and api.tstring('No') or api.tstring('Yes')}
 							</a>
 						</td>
-						<td class="delete"><a href="${ai['path']}/delete?came_from=${came_from}" class="delete">
+						<td class="delete"><a href="${ai['path']}/delete?came_from=${request.url}" class="delete">
 							<img src="${request.application_url}/static/icons/icon_delete.png"
 				                 width="16" height="16"
 				                 alt="Delete"
@@ -61,6 +61,7 @@
 	    	<p>
 	    		<label for="state_id" i18n:translate="">Change state on marked items to</label><br />
 	    		<select id="state_id" name="state_id">
+                    <option value="" i18n:translate="">&lt;select state&gt;</option>
 	    			<option tal:repeat="state states" value="${state}">${translated_state_title(state)}</option>
 	    		</select>
     		</p>

@@ -385,23 +385,25 @@ class MeetingView(BaseView):
                     try:
                         ai.set_workflow_state(self.request, state_id)
                     except WorkflowError, e:
-                        self.api.flash_messages.add(_('Unable to change state on ${title}, ${error}', mapping={'title': ai.title}), type='error')
+                        self.api.flash_messages.add(_('Unable to change state on ${title}: ${error}',
+                                                      mapping={'title': ai.title, 'error': e}),
+                                                    type='error')
             self.api.flash_messages.add(_('States updated'))
 
         state_info = _dummy_agenda_item.workflow.state_info(None, self.request)
+
         def _translated_state_title(state):
             for info in state_info:
                 if info['name'] == state:
                     return self.api.tstring(info['title'])
-        
             return state
+        
         self.response['translated_state_title'] = _translated_state_title
-    
         self.response['find_resource'] = find_resource
         self.response['states'] = states = ('ongoing', 'upcoming', 'closed', 'private') 
         self.response['ais'] = {}
+        context_path = resource_path(self.context)
         for state in states:
-            context_path = resource_path(self.context)
             query = dict(
                 path = context_path,
                 content_type = 'AgendaItem',
@@ -409,10 +411,8 @@ class MeetingView(BaseView):
                 workflow_state = state,
             )
             self.response['ais'][state] = self.api.get_metadata_for_query(**query)
-        self.response['came_from'] = self.request.url
-        
-        fanstaticlib.jquery_deform.need()
 
+        fanstaticlib.jquery_deform.need()
         return self.response
     
     @view_config(context=IMeeting, name="order_agenda_items", renderer="templates/order_agenda_items.pt", permission=security.EDIT)
