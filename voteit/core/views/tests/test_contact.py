@@ -28,6 +28,7 @@ class ContactViewTests(unittest.TestCase):
         from voteit.core.models.meeting import Meeting
         from voteit.core.models.agenda_item import AgendaItem
         self.config.scan('voteit.core.schemas')
+        self.config.include('voteit.core.models.flash_messages')
         self.config.include('pyramid_mailer.testing')
         self.config.registry.settings['default_timezone_name'] = "Europe/Stockholm"
         register_catalog(self.config)
@@ -44,7 +45,7 @@ class ContactViewTests(unittest.TestCase):
         res = obj.contact()
         self.assertIn("Contact moderator", res['form'])
 
-    def test_contact_post_without_ajax(self):
+    def test_contact_post(self):
         root = self._fixture()
         request = testing.DummyRequest(post = {'save': 'save', 
                                                '__formid__': 'deform',
@@ -55,24 +56,7 @@ class ContactViewTests(unittest.TestCase):
                                        is_xhr = False)
         obj = self._cut(root['m'], request)
         res = obj.contact()
-        self.assertEqual(res.status, '200 OK')
-        self.assertIn("Message sent to the moderators", res.text)
-        mailer = get_mailer(request)
-        self.assertEqual(len(mailer.outbox), 1)
-
-    def test_contact_with_ajax(self):
-        root = self._fixture()
-        request = testing.DummyRequest(post = {'save': 'save', 
-                                               '__formid__': 'deform',
-                                               'name': 'Dummy Dumbson',
-                                               'email': 'dummy@test.com',
-                                               'subject': 'Test',
-                                               'message': 'Lorem ipsum',},
-                                       is_xhr = True)
-        obj = self._cut(root['m'], request)
-        res = obj.contact()
-        self.assertEqual(res.status, '200 OK')
-        self.assertIn("Message sent to the moderators", res.text)
+        self.assertEqual(res.status, '302 Found')
         mailer = get_mailer(request)
         self.assertEqual(len(mailer.outbox), 1)
 

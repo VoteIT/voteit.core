@@ -1,5 +1,0 @@
-<tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core">
-	<ul id="help-actions" 
-		tal:content="structure api.render_view_group(context, request, 'help_action')">
-	</ul>
-</tal:main>

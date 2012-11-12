@@ -32,17 +32,7 @@ class HelpActionsComponentTests(unittest.TestCase):
                 self.title = title
                 self.kwargs = kwargs
         return ViewAction(name, title, kwargs)
-        
-    def test_help_actions(self):
-        self.config.scan('voteit.core.views.components.help_actions')
-        context = self._fixture()
-        request = testing.DummyRequest()
-        va = self._va()
-        api = self._api(context, request)
-        from voteit.core.views.components.help_actions import help_actions
-        response = help_actions(context, request, va, api=api)
-        self.assertIn('<ul id="help-actions">', response)
-        
+
     def test_action_wiki(self):
         context = self._fixture()
         request = testing.DummyRequest()
@@ -50,7 +40,7 @@ class HelpActionsComponentTests(unittest.TestCase):
         api = self._api(context, request)
         from voteit.core.views.components.help_actions import action_wiki
         response = action_wiki(context, request, va, api=api)
-        self.assertEqual('<li><a class="buttonize" href="http://wiki.voteit.se" target="_blank">VoteIT Wiki</a></li>', response)
+        self.assertIn('VoteIT Wiki', response)
         
     def test_action_contact(self):
         context = self._fixture()
@@ -59,7 +49,7 @@ class HelpActionsComponentTests(unittest.TestCase):
         api = self._api(context, request)
         from voteit.core.views.components.help_actions import action_contact
         response = action_contact(context, request, va, api=api)
-        self.assertEqual('<li><a class="tab buttonize" href="http://example.com/m/contact">Contact</a></li>', response)
+        self.assertIn('Contact', response)
         
     def test_action_contact_no_meeting(self):
         context = bootstrap_and_fixture(self.config)

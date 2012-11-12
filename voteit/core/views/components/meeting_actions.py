@@ -60,10 +60,6 @@ def polls_menu(context, request, va, **kw):
     response['url'] = '%smeeting_poll_menu' % api.resource_url(api.meeting, request)
     return render('../templates/snippets/polls_menu.pt', response, request = request)
 
-@view_action('meeting_actions', 'help_contact', title = _(u"Help & contact"), permission=VIEW)
-def help_contact_menu(context, request, va, **kw):
-    api = kw['api']
-    return """<li id="help-tab" class="tab"><a href="#">%s</a></li>""" % api.translate(va.title)
 
 @view_action('meeting_actions', 'search', title = _(u"Search"), permission=VIEW)
 def search_menu(context, request, va, **kw):
@@ -77,6 +73,7 @@ def search_menu(context, request, va, **kw):
 @view_action('meeting_actions', 'settings_menu', title = _(u"Settings"), permission = MODERATE_MEETING, meeting_only = True)
 @view_action('meeting_actions', 'meeting', title = _(u"Meeting"), permission=VIEW, meeting_only = True)
 @view_action('meeting_actions', 'participants_menu', title = _(u"Participants"), permission=VIEW, meeting_only = True, menu_css_cls = 'user-dark')
+@view_action('meeting_actions', 'help_action', title = _(u"Help & contact"), permission=VIEW)
 def generic_menu(context, request, va, **kw):
     api = kw['api']
     if va.kwargs.get('meeting_only', False) == True and api.meeting is None:

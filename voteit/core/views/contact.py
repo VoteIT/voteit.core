@@ -1,16 +1,15 @@
 from deform import Form
 from deform.exception import ValidationFailure
 from pyramid.view import view_config
-from pyramid.url import resource_url
 from pyramid.renderers import render
-from pyramid.response import Response
+from pyramid.httpexceptions import HTTPFound
 from pyramid_mailer import get_mailer
 from pyramid_mailer.message import Message
 from betahaus.pyracont.factories import createSchema
 
 from voteit.core import security
 from voteit.core import VoteITMF as _
-from voteit.core.views.base_view import BaseView
+from voteit.core.views.base_edit import BaseEdit
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.schemas import add_csrf_token
 from voteit.core.models.schemas import button_send
@@ -19,10 +18,10 @@ from voteit.core.security import find_authorized_userids
 from voteit.core.security import MODERATE_MEETING
 
 
-class ContactView(BaseView):
+class ContactView(BaseEdit):
     """ Contact view - refactor this into separate functions. """
 
-    @view_config(name = 'contact', context=IMeeting, renderer="templates/ajax_edit.pt", permission=security.VIEW)
+    @view_config(name = 'contact', context=IMeeting, renderer="templates/base_edit.pt", permission=security.VIEW)
     def contact(self):
         """ Contact moderators of the meeting
         """
@@ -31,7 +30,7 @@ class ContactView(BaseView):
         schema = createSchema('ContactSchema').bind(context = self.context, request = self.request, api = self.api)
         add_csrf_token(self.context, self.request, schema)
             
-        form = Form(schema, action=resource_url(self.context, self.request)+"contact", buttons=(button_send,), formid="help-tab-contact-form", use_ajax=True)
+        form = Form(schema, action=self.request.resource_url(self.context, 'contact'), buttons=(button_send,))
         self.api.register_form_resources(form)
 
         post = self.request.POST
@@ -74,12 +73,11 @@ class ContactView(BaseView):
                           sender = sender and sender or None,
                           recipients=recipients,
                           html=body_html)
-        
             mailer = get_mailer(self.request)
             mailer.send(msg)
-            
-            self.response['message'] = _(u"Message sent to the moderators")
-            return Response(render("templates/ajax_success.pt", self.response, request = self.request))
+            self.api.flash_messages.add(_(u"Message sent to the moderators"))
+            url = self.request.resource_url(self.context)
+            return HTTPFound(location = url)
             
         #No action - Render form
         self.response['form'] = form.render()

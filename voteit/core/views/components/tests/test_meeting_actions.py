@@ -42,6 +42,7 @@ class MeetingActionsComponentTests(unittest.TestCase):
         self.config.testing_securitypolicy(userid='dummy',
                                            permissive=True)
         self.config.scan('voteit.core.views.components.meeting_actions')
+        self.config.scan('voteit.core.views.components.help_actions')
         self.config.scan('voteit.core.views.components.moderator_actions')
         context = self._fixture()
         request = testing.DummyRequest()
@@ -91,16 +92,7 @@ class MeetingActionsComponentTests(unittest.TestCase):
         from voteit.core.views.components.meeting_actions import polls_menu
         response = polls_menu(context, request, va, api=api)
         self.assertEqual('', response)
-        
-    def test_help_contact_menu(self):
-        context = self._fixture()
-        request = testing.DummyRequest()
-        va = self._va(title='Help & contact')
-        api = self._api(context, request)
-        from voteit.core.views.components.meeting_actions import help_contact_menu
-        response = help_contact_menu(context, request, va, api=api)
-        self.assertIn('<li id="help-tab" class="tab">', response)
-        
+
     def test_search_menu(self):
         context = self._fixture()
         request = testing.DummyRequest()
