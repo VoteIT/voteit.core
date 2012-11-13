@@ -4,8 +4,6 @@ from pyramid.renderers import render
 from voteit.core import VoteITMF as _
 from voteit.core.security import ADD_PROPOSAL
 from voteit.core.security import ADD_DISCUSSION_POST
-from voteit.core.fanstaticlib import voteit_deform
-
 
 
 @view_action('proposals', 'add_form', ctype = 'Proposal')
@@ -34,8 +32,6 @@ def inline_add_form(context, request, va, **kw):
             msg = api.translate(_(u"no_discuss_perm_notice",
                                   default = u"You don't have the required permission to add a discussion post here"))
         return "<hr/>%s" % msg
-    #Important! This widget must register all the needed resources for the form that will be included later!
-    voteit_deform.need()
     response = {}
     response['user_image_tag'] = api.user_profile.get_image_tag()
     query = {'content_type': va.kwargs['ctype']}

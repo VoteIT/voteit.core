@@ -16,7 +16,6 @@ voteit_core_csslib = Library('voteit_css', 'css')
 jquery_deform = Resource(deformlib, 'scripts/jquery-1.7.2.min.js')
 
 reset = Resource(voteit_core_csslib, 'reset.css') #Must be loaded before all other css!
-voteit_main_css = Resource(voteit_core_csslib, 'main.css', depends=(reset,))
 
 #jQuery UI
 _jquery_ui_css = Resource(voteit_core_csslib, 'jquery-ui-1.8.16.custom.css', depends=(reset,))
@@ -30,8 +29,7 @@ jquery_caret = Resource(voteit_core_jslib, 'jquery.caret.js', depends=(jquery_de
 tinymce = Resource(deformlib, 'tinymce/jscripts/tiny_mce/tiny_mce.js')
 
 #qTip
-_qtip_css = Resource(voteit_core_csslib, 'jquery.qtip.css', minified = 'jquery.qtip.min.css',
-                     supersedes=(voteit_main_css,), depends = (reset,))
+_qtip_css = Resource(voteit_core_csslib, 'jquery.qtip.css', minified = 'jquery.qtip.min.css', depends = (reset,))
 _qtip_js = Resource(voteit_core_jslib, 'jquery.qtip.js', minified = 'jquery.qtip.min.js',
                     depends = (jquery_ui,))
 qtip = Group((_qtip_css, _qtip_js))
@@ -53,10 +51,14 @@ autoresizable_textarea_js = Resource(voteit_core_jslib, 'jquery.autoResizable.js
                                   depends = (jquery_deform,))
 
 #VoteIT core
+voteit_main_css = Resource(voteit_core_csslib, 'main.css', depends=(reset, _qtip_css,))
+
 _star_rating_css = Resource(voteit_core_csslib, 'star_rating.css', depends=(voteit_main_css,))
 star_rating = Group((_star_rating_css, jquery_rating))
 
-voteit_common_js = Resource(voteit_core_jslib, 'voteit_common.js', depends=(jquery_deform, jquery_cookie, qtip), bottom=True)
+voteit_common_js = Resource(voteit_core_jslib, 'voteit_common.js',
+                            depends=(jquery_deform, jquery_cookie, qtip, jquery_caret, autoresizable_textarea_js),
+                            bottom=True)
 voteit_user_inline_info_js = Resource(voteit_core_jslib, 'voteit_user_inline_info.js', depends=(qtip, voteit_common_js), bottom=True)
 _voteit_deform_js = Resource(voteit_core_jslib, 'voteit_deform.js', depends=(_deform_js,), bottom=True)
 voteit_workflow_js = Resource(voteit_core_jslib, 'voteit_workflow.js', depends=(jquery_easy_confirm_dialog, voteit_common_js), bottom=True)
@@ -92,6 +94,9 @@ def is_participants_view(context, request, view):
 def is_participants_view_moderator(context, request, view):
     return view.api.show_moderator_actions and is_participants_view(context, request, view)
 
+def is_agenda_item(context, request, view):
+    return getattr(context, 'content_type', '') == 'AgendaItem'
+
 #Positional arguments
 #key, resource, discriminator (if any)
 DEFAULT_FANSTATIC_RESOURCES = (
@@ -99,7 +104,8 @@ DEFAULT_FANSTATIC_RESOURCES = (
     ('voteit_common_js', voteit_common_js),
     ('voteit_workflow_js', voteit_workflow_js),
     ('voteit_deform', voteit_deform),
-    ('voteit_user_inline_info_js', voteit_user_inline_info_js, is_base_view),
+    ('voteit_user_inline_info_js', voteit_user_inline_info_js),
     ('voteit_participants', voteit_participants, is_participants_view),
     ('voteit_participants_edit', voteit_participants_edit, is_participants_view_moderator),
+    ('star_rating', star_rating, is_agenda_item), #Resources loaded with ajax, so this needs to be loaded in advance.
 )

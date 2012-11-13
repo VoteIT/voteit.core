@@ -34,7 +34,6 @@ from voteit.core.models.schemas import button_resend
 from voteit.core.models.schemas import button_delete
 from voteit.core.validators import deferred_token_form_validator
 from voteit.core.helpers import ajax_options
-from voteit.core import fanstaticlib
 
 
 class MeetingView(BaseView):
@@ -332,11 +331,8 @@ class MeetingView(BaseView):
 
     def form(self, schema):
         add_csrf_token(self.context, self.request, schema)
-            
         form = Form(schema, buttons=(button_save, button_cancel), use_ajax=True, ajax_options=ajax_options)
         self.api.register_form_resources(form)
-        fanstaticlib.jquery_form.need()
-
         post = self.request.POST
         if 'save' in post:
             controls = post.items()
@@ -350,7 +346,6 @@ class MeetingView(BaseView):
                 return self.response
             
             self.context.set_field_appstruct(appstruct)
-            
             url = resource_url(self.context, self.request)
             if self.request.is_xhr:
                 return Response(headers = [('X-Relocate', url)])
@@ -412,14 +407,12 @@ class MeetingView(BaseView):
             )
             self.response['ais'][state] = self.api.get_metadata_for_query(**query)
 
-        fanstaticlib.jquery_deform.need()
         return self.response
     
     @view_config(context=IMeeting, name="order_agenda_items", renderer="templates/order_agenda_items.pt", permission=security.EDIT)
     def order_agenda_items(self):
         self.response['title'] = _(u"order_agenda_items_view_title",
                                    default = u"Drag and drop agenda items to reorder")
-
         post = self.request.POST
         if 'cancel' in self.request.POST:
             url = resource_url(self.context, self.request)
@@ -443,9 +436,6 @@ class MeetingView(BaseView):
             sort_index = 'order',
         )
         self.response['brains'] = self.api.get_metadata_for_query(**query)
-        
-        fanstaticlib.jquery_deform.need()
-
         return self.response
 
     @view_config(context = IMeeting, name = "minutes", renderer = "templates/minutes.pt", permission = security.VIEW)
@@ -456,7 +446,6 @@ class MeetingView(BaseView):
             msg = _(u"meeting_not_closed_minutes_incomplete_notice",
                     default = u"This meeting hasn't closed yet so these minutes won't be complete")
             self.api.flash_messages.add(msg)
-
         #Add agenda item objects to response
         agenda_items = []
         query = dict(

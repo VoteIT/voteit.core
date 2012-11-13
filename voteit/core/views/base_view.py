@@ -3,7 +3,6 @@ from pyramid.view import view_config
 from voteit.core.views.api import APIView
 from voteit.core.security import VIEW
 from voteit.core.models.interfaces import IBaseContent
-from voteit.core import fanstaticlib
 
 
 class BaseView(object):

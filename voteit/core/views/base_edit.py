@@ -26,7 +26,6 @@ from voteit.core.models.interfaces import IBaseContent
 from voteit.core.models.interfaces import IWorkflowAware
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import IAgendaItem
-from voteit.core import fanstaticlib
 from voteit.core.views.api import APIView
 from voteit.core.helpers import generate_slug
 

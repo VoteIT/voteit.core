@@ -8,7 +8,6 @@ from voteit.core import VoteITMF as _
 from voteit.core.views.base_view import BaseView
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.schemas import add_csrf_token
-from voteit.core.fanstaticlib import voteit_participants
 
 
 class ParticipantsView(BaseView):

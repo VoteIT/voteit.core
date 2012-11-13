@@ -9,15 +9,14 @@ from pyramid.httpexceptions import HTTPFound
 from pyramid.traversal import find_root
 
 from voteit.core import VoteITMF as _
-from voteit.core.views.base_view import BaseView
+from voteit.core.views.base_edit import BaseEdit
 from voteit.core.models.interfaces import IAgendaTemplates
 from voteit.core.models.interfaces import IAgendaTemplate
 from voteit.core.models.interfaces import IMeeting
 from voteit.core import security
-from voteit.core import fanstaticlib
 
 
-class AgendaTempalteView(BaseView):
+class AgendaTempalteView(BaseEdit):
     """ View for Agenda tempaltes """
     
     @view_config(context=IAgendaTemplates, renderer="templates/agenda_templates.pt", permission=security.VIEW)
@@ -87,7 +86,5 @@ class AgendaTempalteView(BaseView):
             
             url = resource_url(self.context, self.request)
             return HTTPFound(location = url)
-        
-        fanstaticlib.jquery_deform.need()
 
         return self.response

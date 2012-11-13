@@ -13,7 +13,6 @@ from voteit.core.views.base_edit import BaseEdit
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.schemas import add_csrf_token
 from voteit.core.models.schemas import button_send
-from voteit.core import fanstaticlib
 from voteit.core.security import find_authorized_userids
 from voteit.core.security import MODERATE_MEETING
 
@@ -25,16 +24,12 @@ class ContactView(BaseEdit):
     def contact(self):
         """ Contact moderators of the meeting
         """
-        fanstaticlib.jquery_form.need()
-        
         schema = createSchema('ContactSchema').bind(context = self.context, request = self.request, api = self.api)
         add_csrf_token(self.context, self.request, schema)
-            
         form = Form(schema, action=self.request.resource_url(self.context, 'contact'), buttons=(button_send,))
         self.api.register_form_resources(form)
 
         post = self.request.POST
-
         if self.request.method == 'POST':
             controls = post.items()
             try:

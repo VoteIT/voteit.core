@@ -25,11 +25,6 @@ from voteit.core.security import ADD_VOTE
 from voteit.core.security import MODERATE_MEETING
 from voteit.core.models.schemas import button_vote
 from voteit.core.models.schemas import button_add
-from voteit.core.fanstaticlib import voteit_deform
-from voteit.core.fanstaticlib import autoresizable_textarea_js
-from voteit.core.fanstaticlib import jquery_form
-from voteit.core.fanstaticlib import star_rating
-from voteit.core.fanstaticlib import jquery_caret
 from voteit.core.helpers import generate_slug
 from voteit.core.helpers import ajax_options
 
@@ -53,16 +48,6 @@ class AgendaItemView(BaseView):
         self.response['ai_columns'] = self.api.render_single_view_component(self.context, self.request,
                                                                             'main', 'columns',
                                                                             **colkwargs)
-                                                                            
-        # is needed because we load the forms with ajax
-        voteit_deform.need()
-        jquery_form.need()
-        star_rating.need()
-        jquery_caret.need()
-        
-        # for autoexpanding textareas
-        autoresizable_textarea_js.need()
-        
         if self.request.is_xhr:
             Response(render('templates/ajax_tag_filter.pt', self.response, request=self.request))
         return self.response

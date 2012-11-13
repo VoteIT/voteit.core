@@ -2,34 +2,29 @@ from betahaus.pyracont.factories import createSchema
 from deform import Form
 from deform.exception import ValidationFailure
 from pyramid.httpexceptions import HTTPFound
-from pyramid.httpexceptions import HTTPRedirection
 from pyramid.renderers import render
 from pyramid.response import Response
 from pyramid.url import resource_url
 from pyramid.view import view_config
 
-from voteit.core import fanstaticlib
 from voteit.core import security
 from voteit.core.helpers import ajax_options
 from voteit.core.models.interfaces import ISiteRoot
 from voteit.core.models.schemas import add_csrf_token
 from voteit.core.models.schemas import button_save
 from voteit.core.models.schemas import button_cancel
-from voteit.core.views.base_view import BaseView
+from voteit.core.views.base_edit import BaseEdit
 from voteit.core import VoteITMF as _
 
 
-class SiteView(BaseView):
+class SiteView(BaseEdit):
     
     @view_config(name="recaptcha", context=ISiteRoot, renderer="templates/base_edit.pt", permission = security.EDIT)
     def recaptcha(self):
         schema = createSchema("CaptchaSiteRootSchema").bind(context=self.context, request=self.request)
-        
         add_csrf_token(self.context, self.request, schema)
-            
         form = Form(schema, buttons=(button_save, button_cancel), use_ajax=True, ajax_options=ajax_options)
         self.api.register_form_resources(form)
-        fanstaticlib.jquery_form.need()
 
         post = self.request.POST
         if 'save' in post:
