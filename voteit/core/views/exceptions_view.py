@@ -71,7 +71,7 @@ class ExceptionView(object):
         return HTTPFound(location = self.request.application_url)
 
 
-    @view_config(context=HTTPServerError, renderer="templates/httpexception.pt", permission=NO_PERMISSION_REQUIRED)
+    @view_config(context=HTTPServerError, renderer="templates/main.pt", permission=NO_PERMISSION_REQUIRED)
     def server_error_view(self):
         """ I.e. 500.
         """
