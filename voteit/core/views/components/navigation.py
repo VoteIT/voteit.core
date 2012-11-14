@@ -119,6 +119,8 @@ def navigation_section(context, request, va, **kwargs):
 
 @view_action('navigation_sections', 'latest_meeting_entries',)
 def latest_meeting_entries(context, request, va, **kwargs):
+    #FIXME: This is disabled for now, needs proper design
+    return ''
     api = kwargs['api']
     
     # only avaible in meeting
