@@ -1,7 +1,7 @@
-import colander
-import deform
 from unittest import TestCase
 
+import colander
+import deform
 from pyramid import testing
 from pyramid.authentication import AuthTktAuthenticationPolicy
 from pyramid.authorization import ACLAuthorizationPolicy
@@ -498,8 +498,9 @@ class DeferredValidatorsTests(TestCase):
         res = deferred_context_roles_validator(None, {'context': context, 'request': request})
         self.assertIsInstance(res, ContextRolesValidator)
 
-class html_string_validatorTests(TestCase):
-    
+
+class HTMLStringValidatorTests(TestCase):
+
     def setUp(self):
         self.config = testing.setUp()
 
@@ -507,19 +508,20 @@ class html_string_validatorTests(TestCase):
         testing.tearDown()
     
     @property
-    def _cut(self):
+    def _fut(self):
         from voteit.core.validators import html_string_validator
         return html_string_validator
 
     def test_normal_text(self):
         node = None
-        self.assertEqual(self._cut(node, "Here's some normal text that should pass\nShouldn't it?"), None)
+        self.assertEqual(self._fut(node, "Here's some normal text that should pass\nShouldn't it?"), None)
 
     def test_text_with_html(self):
         node = None
-        self.assertRaises(colander.Invalid, self._cut, node, "<html> is not allowed")
-        
-class richtext_validator(TestCase):
+        self.assertRaises(colander.Invalid, self._fut, node, "<html> is not allowed")
+
+
+class RichTextValidatorTests(TestCase):
     
     def setUp(self):
         self.config = testing.setUp()
@@ -528,14 +530,14 @@ class richtext_validator(TestCase):
         testing.tearDown()
     
     @property
-    def _cut(self):
+    def _fut(self):
         from voteit.core.validators import richtext_validator
         return richtext_validator
 
     def test_normal_text(self):
         node = None
-        self.assertEqual(self._cut(node, "Here's some <strong>normal</strong> html that should pass."), None)
+        self.assertEqual(self._fut(node, "Here's some <strong>normal</strong> html that should pass."), None)
 
     def test_text_with_html(self):
         node = None
-        self.assertRaises(colander.Invalid, self._cut, node, "Here's some html with forbidden tags <script>alert('test');</script>that should <strong>not</strong> pass.")
+        self.assertRaises(colander.Invalid, self._fut, node, "Here's some html with forbidden tags <script>alert('test');</script>that should <strong>not</strong> pass.")
