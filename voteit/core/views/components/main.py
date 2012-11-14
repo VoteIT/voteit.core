@@ -7,8 +7,8 @@ from voteit.core import VoteITMF as _
 
 @view_action('main', 'logo_tag')
 def logo_image_tag(context, request, *args, **kwargs):
-    url = "%s/static/images/logo.png" % request.application_url
-    return '<img src="%(url)s" height="%(h)s" width="%(w)s" id="logo" />' % {'url':url, 'h':31, 'w':85}
+    url = "%s/static/images/voteit_logo.png" % request.application_url
+    return '<img src="%(url)s" height="%(h)s" width="%(w)s" id="logo" />' % {'url':url, 'h':42, 'w':109}
 
 
 @view_action('main', 'columns')

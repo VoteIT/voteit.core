@@ -1,0 +1,36 @@
+
+.wrapper {
+	width: 990px;
+	margin: 0 auto;
+}
+.section {
+	clear: both;
+}
+
+/* Top header section, with meeting title */
+#header-meeting-title {
+	float: left;
+	width: 700px;
+}
+#header-user-actions {
+	float: left;
+	width: 170px;
+}
+#header-logo {
+	float: left;
+	width: 120px;
+}
+/* End top header section */
+
+
+/* Meeting section, the one just below the upper section with logo */
+#meeting-actions {
+	float: left;
+	width: 600px;
+}
+#search-help {
+	float: left;
+	width: 390px;
+}
+/* End meeting section */
+

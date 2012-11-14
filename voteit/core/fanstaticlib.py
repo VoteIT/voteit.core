@@ -51,7 +51,8 @@ autoresizable_textarea_js = Resource(voteit_core_jslib, 'jquery.autoResizable.js
                                   depends = (jquery_deform,))
 
 #VoteIT core
-voteit_main_css = Resource(voteit_core_csslib, 'main.css', depends=(reset, _qtip_css,))
+voteit_layout_css = Resource(voteit_core_csslib, 'layout.css')
+voteit_main_css = Resource(voteit_core_csslib, 'main.css', depends=(voteit_layout_css, reset, _qtip_css,))
 
 _star_rating_css = Resource(voteit_core_csslib, 'star_rating.css', depends=(voteit_main_css,))
 star_rating = Group((_star_rating_css, jquery_rating))
