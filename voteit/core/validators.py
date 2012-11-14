@@ -1,10 +1,11 @@
 import re
+
 import colander
+from translationstring import TranslationString
 from BeautifulSoup import BeautifulSoup
 from webhelpers.html.tools import strip_tags
 from pyramid.traversal import find_interface
 from pyramid.traversal import find_root
-from pyramid.security import authenticated_userid
 from pyramid.security import has_permission
 from betahaus.pyracont import check_unique_name
 from voteit.core import VoteITMF as _
@@ -316,3 +317,24 @@ class ContextUniqueNameValidator(object):
             raise colander.Invalid(node, _(u"not_unique_name_within_context",
                                             default = u"Something with the name '${value}' already exists within this context. Pick another name!",
                                             mapping = {'value': value}))
+
+
+class NotOnlyDefaultTextValidator(object):
+    """ Validator which fails if only default text or only tag is pressent
+    """
+    def __init__(self, context, api, default_deferred):
+        self.context = context
+        self.api = api
+        self.default_deferred = default_deferred
+
+    def __call__(self, node, value):
+        # since colander.All doesn't handle deferred validators we call the validator for AtEnabledTextArea here 
+        at_enabled_validator = AtEnabledTextArea(self.context)
+        at_enabled_validator(node, value)
+        #default = deferred_default_proposal_text(node, {'context':self.context, 'tag':self.tag})
+        default = self.default_deferred(node, {'context': self.context})
+        if isinstance(default, TranslationString):
+            default = self.api.translate(default)
+        if value.strip() == default.strip():
+            raise colander.Invalid(node, _(u"only_default_text_validator_error",
+                                           default=u"Only the default content is not valid",))

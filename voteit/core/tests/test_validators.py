@@ -437,6 +437,121 @@ class ContextRolesValidatorTests(TestCase):
         self.assertRaises(colander.Invalid, obj, None, ['role:Admin'])
 
 
+class HTMLStringValidatorTests(TestCase):
+
+    def setUp(self):
+        self.config = testing.setUp()
+
+    def tearDown(self):
+        testing.tearDown()
+    
+    @property
+    def _fut(self):
+        from voteit.core.validators import html_string_validator
+        return html_string_validator
+
+    def test_normal_text(self):
+        node = None
+        self.assertEqual(self._fut(node, "Here's some normal text that should pass\nShouldn't it?"), None)
+
+    def test_text_with_html(self):
+        node = None
+        self.assertRaises(colander.Invalid, self._fut, node, "<html> is not allowed")
+
+
+class RichTextValidatorTests(TestCase):
+    
+    def setUp(self):
+        self.config = testing.setUp()
+
+    def tearDown(self):
+        testing.tearDown()
+    
+    @property
+    def _fut(self):
+        from voteit.core.validators import richtext_validator
+        return richtext_validator
+
+    def test_normal_text(self):
+        node = None
+        self.assertEqual(self._fut(node, "Here's some <strong>normal</strong> html that should pass."), None)
+
+    def test_text_with_html(self):
+        node = None
+        self.assertRaises(colander.Invalid, self._fut, node, "Here's some html with forbidden tags <script>alert('test');</script>that should <strong>not</strong> pass.")
+
+
+class ContextUniqueNameValidatorTests(TestCase):
+    
+    def setUp(self):
+        self.config = testing.setUp()
+
+    def tearDown(self):
+        testing.tearDown()
+    
+    @property
+    def _cut(self):
+        from voteit.core.validators import ContextUniqueNameValidator
+        return ContextUniqueNameValidator
+
+    def test_pass(self):
+        context = testing.DummyResource()
+        request = testing.DummyRequest()
+        obj = self._cut(context, request)
+        self.assertEqual(obj(None, 'i_dont_exist'), None)
+
+    def test_existing_obj_in_context(self):
+        context = testing.DummyResource()
+        request = testing.DummyRequest()
+        context['existing_name'] = testing.DummyResource()
+        obj = self._cut(context, request)
+        self.assertRaises(colander.Invalid, obj, None, 'existing_name')
+
+    def test_existing_view_in_context(self):
+        def _dummy(**kw):
+            pass
+        self.config.add_view(_dummy, name = 'existing_view')
+        context = testing.DummyResource()
+        request = testing.DummyRequest()
+        obj = self._cut(context, request)
+        self.assertRaises(colander.Invalid, obj, None, 'existing_view')
+
+
+def _dummy_default_deferred(*kw):
+    from voteit.core import VoteITMF
+    return VoteITMF(u'Proposal')
+
+
+class NotOnlyDefaultTextValidatorTests(TestCase):
+    
+    def setUp(self):
+        self.config = testing.setUp()
+
+    def tearDown(self):
+        testing.tearDown()
+    
+    @property
+    def _cut(self):
+        from voteit.core.validators import NotOnlyDefaultTextValidator
+        return NotOnlyDefaultTextValidator
+
+    def _mk_one(self, context = testing.DummyModel(), default_deferred = _dummy_default_deferred):
+        from voteit.core.views.api import APIView
+        request = testing.DummyRequest()
+        api = APIView(context, request)
+        return self._cut(context, api, default_deferred)
+
+#FIXME: Make a test with translations as well? Right now we're only testing EN
+
+    def test_same_as_default(self):
+        obj = self._mk_one()
+        self.assertRaises(colander.Invalid, obj, None, 'Proposal')
+
+    def test_clear(self):
+        obj = self._mk_one()
+        self.assertEqual(obj(None, 'Not the same'), None)
+
+
 class DeferredValidatorsTests(TestCase):
     def setUp(self):
         self.config = testing.setUp()
@@ -498,46 +613,12 @@ class DeferredValidatorsTests(TestCase):
         res = deferred_context_roles_validator(None, {'context': context, 'request': request})
         self.assertIsInstance(res, ContextRolesValidator)
 
-
-class HTMLStringValidatorTests(TestCase):
-
-    def setUp(self):
-        self.config = testing.setUp()
-
-    def tearDown(self):
-        testing.tearDown()
-    
-    @property
-    def _fut(self):
-        from voteit.core.validators import html_string_validator
-        return html_string_validator
-
-    def test_normal_text(self):
-        node = None
-        self.assertEqual(self._fut(node, "Here's some normal text that should pass\nShouldn't it?"), None)
-
-    def test_text_with_html(self):
-        node = None
-        self.assertRaises(colander.Invalid, self._fut, node, "<html> is not allowed")
+    def test_deferred_check_context_unique_name(self):
+        from voteit.core.validators import deferred_check_context_unique_name
+        from voteit.core.validators import ContextUniqueNameValidator
+        context = testing.DummyResource()
+        request = testing.DummyRequest()
+        res = deferred_check_context_unique_name(None, {'context': context, 'request': request})
+        self.assertIsInstance(res, ContextUniqueNameValidator)
 
 
-class RichTextValidatorTests(TestCase):
-    
-    def setUp(self):
-        self.config = testing.setUp()
-
-    def tearDown(self):
-        testing.tearDown()
-    
-    @property
-    def _fut(self):
-        from voteit.core.validators import richtext_validator
-        return richtext_validator
-
-    def test_normal_text(self):
-        node = None
-        self.assertEqual(self._fut(node, "Here's some <strong>normal</strong> html that should pass."), None)
-
-    def test_text_with_html(self):
-        node = None
-        self.assertRaises(colander.Invalid, self._fut, node, "Here's some html with forbidden tags <script>alert('test');</script>that should <strong>not</strong> pass.")
