@@ -1,10 +1,8 @@
 import unittest
 from datetime import datetime
 
-import colander
 from pyramid import testing
 
-from voteit.core.models.interfaces import IDateTimeUtil
 from voteit.core.testing_helpers import bootstrap_and_fixture
 
 
@@ -63,3 +61,70 @@ class CommonSchemaTests(unittest.TestCase):
         self.config.testing_securitypolicy(userid='404')
         kw = {'api': APIView(root, self.request)}
         self.assertEqual(fut(None, kw), '')
+
+
+class DeferredDefaultTagsTests(unittest.TestCase):
+
+    def setUp(self):
+        self.config = testing.setUp()
+
+    def tearDown(self):
+        testing.tearDown()
+
+    @property
+    def _fut(self):
+        from voteit.core.schemas.common import deferred_default_tags
+        return deferred_default_tags
+
+    def test_no_tags_context(self):
+        self.assertEqual(self._fut(None, {'context': object()}), u"")
+
+    def test_with_int_tags(self):
+        from voteit.core.models.discussion_post import DiscussionPost
+        context = DiscussionPost()
+        context.add_tags("HELLO World")
+        self.assertEqual(self._fut(None, {'context': context}), u"hello world")
+
+
+class DeferredDefaultHashtagTextTests(unittest.TestCase):
+
+    def setUp(self):
+        self.config = testing.setUp()
+
+    def tearDown(self):
+        testing.tearDown()
+
+    @property
+    def _fut(self):
+        from voteit.core.schemas.common import deferred_default_hashtag_text
+        return deferred_default_hashtag_text
+
+    @property
+    def _prop(self):
+        from voteit.core.models.proposal import Proposal
+        return Proposal
+
+    def test_context_is_agenda_item(self):
+        from voteit.core.models.agenda_item import AgendaItem
+        context = AgendaItem()
+        self.assertEqual(self._fut(None, {'context': context}), u"")
+
+    def test_context_without_creators(self):
+        #This is not the normal case
+        context = self._prop()
+        self.assertEqual(self._fut(None, {'context': context}), u"")
+
+    def test_context_has_creators(self):
+        context = self._prop(creators = ['jeff'])
+        self.assertEqual(self._fut(None, {'context': context}), u"@jeff: ")
+
+    def test_context_has_tags(self):
+        #Tags without creator isn't the normal case
+        context = self._prop()
+        context.add_tags("HELLO World")
+        self.assertEqual(self._fut(None, {'context': context}), u" #hello #world")        
+
+    def test_context_has_tags_and_creators(self):
+        context = self._prop(creators = ['jeff'])
+        context.add_tags("HELLO World")
+        self.assertEqual(self._fut(None, {'context': context}), u"@jeff:  #hello #world") 
