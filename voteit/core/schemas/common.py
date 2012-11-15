@@ -6,8 +6,8 @@ import colander
 from voteit.core.models.interfaces import IDateTimeUtil
 from voteit.core.models.interfaces import IAgendaItem
 
-
 NAME_PATTERN = re.compile(r'^[\w\s]{3,100}$', flags=re.UNICODE)
+#Used for tags validation too!
 
 
 @colander.deferred
@@ -58,8 +58,15 @@ def deferred_default_hashtag_text(node, kw):
     """
     context = kw['context']
     output = u""
+    request_tag = kw.get('tag', None)
+    if request_tag:
+        if not NAME_PATTERN.match(request_tag):
+            request_tag = None #Blank it, since it's invalid!
     if IAgendaItem.providedBy(context):
-        #This is a first post - don't add any hashtags or similar
+        #This is a first post - don't add any hashtags or similar,
+        #unless they're part of query string
+        if request_tag:
+            output += "#%s" % request_tag
         return output
     # get creator of answered object
     creators = context.get_field_value('creators')
@@ -67,7 +74,10 @@ def deferred_default_hashtag_text(node, kw):
         output += "@%s: " % creators[0]
     # get tags and make a string of them
     #FIXME: Don't use private attr _tags - REWRITE!
-    for tag in getattr(context, '_tags', ()):
+    tags = list(getattr(context, '_tags', []))
+    if request_tag and request_tag not in tags:
+        tags.append(request_tag)
+    for tag in tags:
         output += " #%s" % tag
     return output
 
