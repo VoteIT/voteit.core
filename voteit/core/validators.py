@@ -331,8 +331,7 @@ class NotOnlyDefaultTextValidator(object):
         # since colander.All doesn't handle deferred validators we call the validator for AtEnabledTextArea here 
         at_enabled_validator = AtEnabledTextArea(self.context)
         at_enabled_validator(node, value)
-        #default = deferred_default_proposal_text(node, {'context':self.context, 'tag':self.tag})
-        default = self.default_deferred(node, {'context': self.context})
+        default = self.default_deferred(node, {'context': self.context, 'request': self.api.request, 'api': self.api})
         if isinstance(default, TranslationString):
             default = self.api.translate(default)
         if value.strip() == default.strip():

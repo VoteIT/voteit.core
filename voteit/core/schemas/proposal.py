@@ -17,7 +17,6 @@ def deferred_default_proposal_text(node, kw):
         
         This might be used in the context of an agenda item or a proposal.
     """
-    context = kw['context']
     api = kw['api']
     hashtag_text = deferred_default_hashtag_text(node, kw)
     proposal_default_text = api.translate(_(u"proposal_default_text", default = u"proposes"))
