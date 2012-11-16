@@ -29,7 +29,7 @@ def meeting_actions(context, request, va, **kw):
     """
     api = kw['api']
     context = api.meeting and api.meeting or api.root
-    return """<ul id="meeting-actions-menu">%s</ul>""" % api.render_view_group(context, request, 'meeting_actions')
+    return """<ul id="meeting-actions-menu" class="actions-menu">%s</ul>""" % api.render_view_group(context, request, 'meeting_actions')
 
 
 @view_action('meeting_actions', 'polls', title = _(u"Polls"), permission=VIEW)

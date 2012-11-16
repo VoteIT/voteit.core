@@ -22,7 +22,6 @@
 }
 /* End top header section */
 
-
 /* Meeting section, the one just below the upper section with logo */
 #meeting-actions {
 	float: left;
@@ -34,3 +33,21 @@
 }
 /* End meeting section */
 
+/* Main area / navigation */
+#main {
+	float: left;
+	width: 770px;
+}
+#navigation {
+	float: left;
+	width: 210px;
+	padding-right: 10px;
+}
+/* End main area / navigation */
+
+/* Menus */
+.actions-menu {
+}
+.actions-menu li {
+	float: left;
+}
