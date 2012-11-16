@@ -7,7 +7,7 @@ from voteit.core.models.interfaces import IDateTimeUtil
 from voteit.core.models.interfaces import IAgendaItem
 
 NAME_PATTERN = re.compile(r'^[\w\s]{3,100}$', flags=re.UNICODE)
-#Used for tags validation too!
+HASHTAG_PATTERN = re.compile(r'^[\w\s_\-]{2,100}$', flags=re.UNICODE)
 
 
 @colander.deferred
@@ -57,10 +57,11 @@ def deferred_default_hashtag_text(node, kw):
         contain the userid of the original poster + any hashtags used.
     """
     context = kw['context']
+    request = kw['request']
     output = u""
-    request_tag = kw.get('tag', None)
+    request_tag = request.GET.get('tag', None)
     if request_tag:
-        if not NAME_PATTERN.match(request_tag):
+        if not HASHTAG_PATTERN.match(request_tag):
             request_tag = None #Blank it, since it's invalid!
     if IAgendaItem.providedBy(context):
         #This is a first post - don't add any hashtags or similar,

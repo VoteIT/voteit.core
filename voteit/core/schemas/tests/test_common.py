@@ -107,24 +107,35 @@ class DeferredDefaultHashtagTextTests(unittest.TestCase):
     def test_context_is_agenda_item(self):
         from voteit.core.models.agenda_item import AgendaItem
         context = AgendaItem()
-        self.assertEqual(self._fut(None, {'context': context}), u"")
+        request = testing.DummyRequest()
+        self.assertEqual(self._fut(None, {'context': context, 'request': request}), u"")
 
     def test_context_without_creators(self):
         #This is not the normal case
         context = self._prop()
-        self.assertEqual(self._fut(None, {'context': context}), u"")
+        request = testing.DummyRequest()
+        self.assertEqual(self._fut(None, {'context': context, 'request': request}), u"")
 
     def test_context_has_creators(self):
         context = self._prop(creators = ['jeff'])
-        self.assertEqual(self._fut(None, {'context': context}), u"@jeff: ")
+        request = testing.DummyRequest()
+        self.assertEqual(self._fut(None, {'context': context, 'request': request}), u"@jeff: ")
 
     def test_context_has_tags(self):
         #Tags without creator isn't the normal case
         context = self._prop()
         context.add_tags("HELLO World")
-        self.assertEqual(self._fut(None, {'context': context}), u" #hello #world")        
+        request = testing.DummyRequest()
+        self.assertEqual(self._fut(None, {'context': context, 'request': request}), u" #hello #world")
 
     def test_context_has_tags_and_creators(self):
         context = self._prop(creators = ['jeff'])
         context.add_tags("HELLO World")
-        self.assertEqual(self._fut(None, {'context': context}), u"@jeff:  #hello #world") 
+        request = testing.DummyRequest()
+        self.assertEqual(self._fut(None, {'context': context, 'request': request}), u"@jeff:  #hello #world")
+
+    def test_context_has_tags_and_creators_and_request_has_tag(self):
+        context = self._prop(creators = ['jeff'])
+        context.add_tags("HELLO World")
+        request = testing.DummyRequest(params = {'tag': 'me-is_tag-2'})
+        self.assertEqual(self._fut(None, {'context': context, 'request': request}), u"@jeff:  #hello #world #me-is_tag-2")
