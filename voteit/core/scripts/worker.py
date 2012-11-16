@@ -21,12 +21,16 @@ class ScriptWorker(object):
         """ Initialize worker.
             id will be part of the pid-file.
         """
+        #FIXME: There must be a smarter way to handle PID-files. I'm no console scripting expert :) /Robin
         self.id = id
 
         #Buildout path
         me = sys.argv[0]
         me = os.path.abspath(me)        
         self.buildoutpath = os.path.dirname(os.path.dirname(me))
+        
+        if len(sys.argv) != 2:
+            sys.exit("Must specify paster.ini file to run")
 
         #setup logging
         self._setup_log()
@@ -41,11 +45,9 @@ class ScriptWorker(object):
             msg = "PID-file already exists. Maybe the script is already running?"
             self.logger.exception(msg)
             sys.exit(msg)
-            
-        
+
         #Start wsgi stuff
-        config = os.path.join(self.buildoutpath, 'etc', 'development.ini') #FIXME: buildout info for script?
-        config = os.path.abspath(os.path.normpath(config))
+        config = os.path.join(self.buildoutpath, sys.argv[1])
         self.app = loadapp('config:%s' % config, name='VoteIT')
         self.root, self.closer = get_root(self.app)
         

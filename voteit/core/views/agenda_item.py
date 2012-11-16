@@ -63,7 +63,7 @@ class AgendaItemView(BaseView):
         if not has_permission(add_permission, self.context, self.request):
             raise HTTPForbidden("You're not allowed to add '%s' in this context." % content_type)        
         schema_name = self.api.get_schema_name(content_type, 'add')
-        schema = createSchema(schema_name).bind(context = self.context, request = self.request, api = self.api, tag = tag)
+        schema = createSchema(schema_name).bind(context = self.context, request = self.request, api = self.api)
         add_csrf_token(self.context, self.request, schema)
         query = {'content_type': content_type, 'tag': tag}
         url = self.request.resource_url(self.context, 'add', query=query)
