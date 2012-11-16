@@ -18,12 +18,10 @@ def deferred_default_proposal_text(node, kw):
         This might be used in the context of an agenda item or a proposal.
     """
     context = kw['context']
+    api = kw['api']
     hashtag_text = deferred_default_hashtag_text(node, kw)
-    if IAgendaItem.providedBy(context) and not hashtag_text:
-        #This is a default add form, no reply
-        return _(u"proposal_default_text",
-                 default = u"proposes ")
-    return hashtag_text
+    proposal_default_text = api.translate(_(u"proposal_default_text", default = u"proposes"))
+    return "%s %s" % (proposal_default_text, hashtag_text)
 
 
 @colander.deferred    
