@@ -12,7 +12,6 @@ from voteit.core import VoteITMF as _
 @view_action('main', 'tag_stats')
 def tag_stats(context, request, *args, **kwargs):
     api = kwargs['api']
-
     if not api.meeting:
         return ""
     
@@ -28,35 +27,22 @@ def tag_stats(context, request, *args, **kwargs):
     num, docids = api.root.catalog.query(query)
     stats = {}
     for docid in docids:
-        entrie = api.root.catalog.document_map.get_metadata(docid)
-        for tag in entrie['tags']:
+        entry = api.root.catalog.document_map.get_metadata(docid)
+        for tag in entry['tags']:
             if not tag in stats:
                 stats[tag] = 1
             else:
-                stats[tag] = stats[tag] + 1
-     
-    query = query & Eq('unread', api.userid)
-    num, docids = api.root.catalog.query(query)
-    unread = {}
-    for docid in docids:
-        entrie = api.root.catalog.document_map.get_metadata(docid)
-        for tag in entrie['tags']:
-            if not tag in unread:
-                unread[tag] = 1
-            else:
-                unread[tag] = unread[tag] + 1
-                
+                stats[tag] += 1
+
     def _make_url(tag):
         query = request.GET.copy()
         query['tag'] = tag
-        return request.resource_url(context, '', query=query)
-    
+        return request.resource_url(context, query=query)
+
     response = dict(
         api = api,
         context = context,
         stats = sorted(stats.items(), key=lambda x: x[1], reverse=True)[:5],
-        unread = unread,
         make_url = _make_url,
     )
-
     return render('../templates/snippets/tag_stats.pt', response, request = request)

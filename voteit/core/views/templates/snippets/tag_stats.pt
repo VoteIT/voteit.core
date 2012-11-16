@@ -8,9 +8,6 @@
 	    		<a tal:condition="context.content_type == 'AgendaItem'" href="${make_url(tag)}">#${tag}</a>
 	    		<tal:notai condition="not context.content_type == 'AgendaItem'">#${tag}</tal:notai>
     		</span>
-    		<span class="count" tal:condition="tag in unread">
-				(${unread[tag]})
-			</span>
 	    </li>
 	    </tal:for>
     </ul>
