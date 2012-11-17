@@ -29,7 +29,7 @@ class ScriptWorker(object):
         me = os.path.abspath(me)        
         self.buildoutpath = os.path.dirname(os.path.dirname(me))
         
-        if len(sys.argv) != 2:
+        if len(sys.argv) >= 2:
             sys.exit("Must specify paster.ini file to run")
 
         #setup logging
