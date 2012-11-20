@@ -1,0 +1,49 @@
+/* Fonts, headlines, text */
+body {
+	font: 16px Helvetica, Arial, sans-serif;
+}
+h1 { font-size: 200%;}
+h2 { font-size: 175%; }
+h3 { font-size: 150%; }
+h4 { font-size: 125%; }
+h5 { font-size: 100%; }
+h6 { font-size: 90%; }
+h1, h2, h3, h4, h5, h6 {
+	padding: 0.5em 0 0.25em 0;
+}
+
+/* Links */
+a, a:hover, a:active {
+	color: #006680;
+}
+a {
+	text-decoration: none;
+}
+#content a:hover {
+	text-decoration: underline;
+}
+
+/* Backgrounds and area borders */
+body {
+	background-color: #f2f2f2;
+}
+#header-global-outer {
+	background-color: #fff;
+}
+#navigation .block {
+	background-color: #fff;
+}
+#flash_messages {
+	background-color: #fff;
+}
+#top {
+	background-color: #fff;
+}
+.description {
+	background-color: #fff;
+}
+#left,
+#right {
+	background-color: #fff;
+	margin-top: 10px;
+}

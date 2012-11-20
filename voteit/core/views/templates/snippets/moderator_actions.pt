@@ -1,6 +1,6 @@
 <metal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core">
 <span tal:attributes="class 'action_menu dropdown_menu cogwheel ' + context.content_type;">
-    <a class="menu_header" href="#" title="Moderator menu" i18n:attributes="title">&nbsp;</a>
+    <a class="menu_header" href="#" title="Moderator menu" i18n:attributes="title" i18n:translate="">Moderator menu</a>
     <ul tal:attributes="id 'action_menu_'+context.uid ;class 'menu_body ' + context.content_type;" tal:content="structure menu_content">Content</ul>
 </span>
 </metal:main>

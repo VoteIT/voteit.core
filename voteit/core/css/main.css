@@ -1,0 +1,119 @@
+.wrapper {
+	width: 990px;
+	margin: 0 auto;
+}
+.section {
+	clear: both;
+}
+
+/* Top header section, with meeting title */
+#global-actions {
+	height: 60px;
+}
+#header-meeting-title {
+	float: left;
+	width: 700px;
+}
+#header-user-actions {
+	float: left;
+	width: 170px;
+}
+#header-logo {
+	float: left;
+	width: 120px;
+}
+/* End top header section */
+
+/* Meeting section, the one just below the upper section with logo */
+#meeting-actions {
+	float: left;
+	width: 600px;
+}
+#search-help {
+	float: left;
+	width: 390px;
+}
+/* End meeting section */
+
+/* Main area / navigation */
+#main {
+	float: left;
+	width: 770px;
+}
+#navigation {
+	float: left;
+	width: 210px;
+	padding-right: 10px;
+}
+#top {
+	padding: 10px;
+}
+/* End main area / navigation */
+
+/* Content section - content area is 770px */
+#left {
+	float: left;
+	width: 360px;
+	padding: 10px;
+	margin-right: 10px;
+}
+#right {
+	float: left;
+	padding: 10px;
+	width: 360px;
+}
+/* End content section */
+
+/* Menus */
+.actions-menu li {
+	float: left;
+}
+.menu_body {
+    display: none;
+}
+/* End Menus */
+
+
+/* Generic classes for positioning columns
+ 	FIXME: We'll want to phase out these since they're a bit too complex.
+ 	Just using float in wrappers seems to make more sense.
+*/
+.col-20-80,
+.col-50-50,
+.col-65-35 {
+    float: left;
+    width: 100%;
+    display: block;
+    position: relative;
+    clear: both;
+}
+.column {
+    position: relative;
+    float: left;
+    left: 100%;
+}
+.col-20-80 .column-1 {
+    margin-left: -100%;
+    width: 20%;
+}
+.col-20-80 .column-2 {
+    margin-left: -80%;
+    width: 80%;
+}
+.col-50-50 .column-1 {
+    margin-left: -100%;
+    width: 50%;
+}
+.col-50-50 .column-2 {
+    margin-left: -50%;
+    width: 50%;
+}
+.col-65-35 .column-1 {
+    margin-left: -100%;
+    width: 65%;
+}
+.col-65-35 .column-2 {
+    margin-left: -35%;
+    width: 35%;
+}
+/* end col classes */

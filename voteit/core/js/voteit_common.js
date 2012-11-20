@@ -2,6 +2,11 @@ $.ajaxSetup ({
 	cache: false
 });
 
+$.fn.hasAttr = function(name) {
+    var attr = $(this).attr(name);
+    return (typeof attr !== 'undefined' && attr !== false);
+};
+
 /* JS that should be present on every page, regardless of its function.*/
 if(typeof(voteit) == "undefined"){
     var voteit = {};
@@ -56,16 +61,48 @@ $(document).ready(function() {
    }
 });
 
-$('.cogwheel .menu_header').live('hover', display_cogwheel_menu);
-function display_cogwheel_menu(event) {
+/* Display all kinds of menus */
+$('.menu_header').live('hover', display_qtip_menu);
+function display_qtip_menu(event) {
     /* stop form from submitting normally 
     IE might throw an error calling preventDefault(), so use a try/catch block. */
     try { event.preventDefault(); } catch(e) {}
+    if ($(this).hasAttr('url')) {
+        var url = $(this).attr('url');
+        var q_content = { 
+            text: voteit.translation['loading'], // The text to use whilst the AJAX request is loading
+            ajax: {
+                url: url,
+            }
+        };
+    }
+    else {
+        //We need a copy of the content, otherwise qtip will try to locate it every time it triggers
+        var q_content = { text: $(this).parent().find('.menu_body').clone() };
+    }
+    if ($(this).hasClass('cogwheel')) {
+        var q_position = {
+            viewport: $(window),
+            at: "right center",
+            my: "left center",
+            adjust: {
+                method: 'flip',
+            }
+        };
+    }
+    else {
+        var q_position = {
+            viewport: $(window),
+            at: "right bottom",
+            my: "right top",
+            adjust: {
+                method: 'flip',
+            }
+        };
+    }
     $(this).qtip({
         overwrite: false, // Make sure the tooltip won't be overridden once created
-        content: { 
-            text: $(this).parent().find('.menu_body'), // The text to use whilst the AJAX request is loading
-        },
+        content: q_content,
         show: {
             event: event.type, // Use the same show event as the one that triggered the event handler
             ready: true, // Show the tooltip as soon as it's bound, vital so it shows up the first time you hover!
@@ -78,91 +115,9 @@ function display_cogwheel_menu(event) {
             effect: false,
             delay: 100,
         },
-        position: {
-            viewport: $(window),
-            at: "right center",
-            my: "left center",
-            adjust: {
-                method: 'flip',
-            }
-        },
+        position: q_position,
         style: {
-            classes: "qtip_menu cogwheel-body",
-        },
-    }, event);
-}
-
-$('#meeting-actions-menu .dropdown_menu').live('hover', display_meeting_menu);
-function display_meeting_menu(event) {
-    /* stop form from submitting normally 
-    IE might throw an error calling preventDefault(), so use a try/catch block. */
-    try { event.preventDefault(); } catch(e) {}
-    
-    $(this).qtip({
-        overwrite: false, // Make sure the tooltip won't be overridden once created
-        content: { 
-            text: $(this).find('.menu_body'), // The text to use whilst the AJAX request is loading
-        },
-        show: {
-            event: event.type, // Use the same show event as the one that triggered the event handler
-            ready: true, // Show the tooltip as soon as it's bound, vital so it shows up the first time you hover!
-            effect: false,
-        },
-        hide: {
-            event: "mouseleave",
-            fixed: true,
-            effect: false,
-        },
-        position: {
-            viewport: $(window),
-            at: "right bottom",
-            my: "right top",
-            adjust: {
-                method: 'flip',
-            }
-        },
-        style: {
-            classes: "qtip_menu meeting-menu-body",
-        },
-    }, event);
-}
-
-$('#meeting-actions-menu .dropdown_menu_poll').live('hover', display_meeting_menu_poll);
-function display_meeting_menu_poll(event) {
-    /* stop form from submitting normally 
-    IE might throw an error calling preventDefault(), so use a try/catch block. */
-    try { event.preventDefault(); } catch(e) {}
-    
-    var url = $(this).attr('url');
-    $(this).qtip({
-        overwrite: false, // Make sure the tooltip won't be overridden once created
-        content: { 
-            text: voteit.translation['loading'], // The text to use whilst the AJAX request is loading
-            ajax: {
-                url: url,
-            }
-        },
-        show: {
-            event: event.type, // Use the same show event as the one that triggered the event handler
-            ready: true, // Show the tooltip as soon as it's bound, vital so it shows up the first time you hover!
-            effect: false,
-        },
-        hide: {
-            event: "mouseleave",
-            fixed: true,
-            effect: false,
-        },
-        position: {
-            viewport: $(window),
-            at: "right bottom",
-            my: "right top",
-            effect: false,
-            adjust: {
-                method: 'flip',
-            }
-        },
-        style: {
-            classes: "qtip_menu meeting-menu-body",
+            classes: "qtip_menu",
         },
     }, event);
 }
