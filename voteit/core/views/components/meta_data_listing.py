@@ -19,7 +19,9 @@ def meta_data_listing(context, request, va, **kw):
     """ This is the main renderer for post meta.
         It will call all view components in the group meta_data_listing.
         In turn, some of those will call other groups.
-    """   
+    """
+    if not kw.get('show_user_tags', True):
+        return u""
     api = kw['api']
     util = request.registry.getUtility(IViewGroup, name='meta_data_listing')
     view_actions = []
@@ -77,14 +79,14 @@ def meta_retract(context, request, va, **kw):
            '>%s</a>' % (request.application_url, brain['path'], api.translate(_(u'Retract')))
            
 @view_action('meta_data_listing', 'user_tags', permission=VIEW)
-def meta_user_tags(context, request, va, **kw): 
+def meta_user_tags(context, request, va, **kw):
     brain = kw['brain']
-    del kw['brain']
-    
+    del kw['brain'] #XXX: Why?
+
     util = request.registry.getUtility(IViewGroup, name='user_tags')
     tags = []
     for _va in util.get_context_vas(context, request):
-            tags.append(_va(brain, request, **kw))
+        tags.append(_va(brain, request, **kw))
     
     response = {'tags': tags,}
     return render('../templates/snippets/meta_data_listing_user_tags.pt', response, request = request)

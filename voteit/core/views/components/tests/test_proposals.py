@@ -31,6 +31,7 @@ class ProposalsComponentTests(unittest.TestCase):
         from voteit.core.views.api import APIView
         context = context and context or testing.DummyResource()
         request = request and request or testing.DummyRequest()
+        request.context = context
         return APIView(context, request)
 
     def _va(self):
@@ -47,6 +48,7 @@ class ProposalsComponentTests(unittest.TestCase):
         self.config.registry.settings['default_timezone_name'] = "Europe/Stockholm"
         self.config.registry.settings['default_locale_name'] = 'sv'
         self.config.include('voteit.core.models.date_time_util')
+        self.config.scan('voteit.core.models.proposal')
         self.config.scan('voteit.core.views.components.main')
         self.config.scan('voteit.core.views.components.moderator_actions')
         self.config.scan('voteit.core.views.components.creators_info')
