@@ -2,8 +2,10 @@ from betahaus.viewcomponent import view_action
 from betahaus.viewcomponent.interfaces import IViewGroup
 from pyramid.renderers import render
 from pyramid.traversal import find_resource
+from pyramid.traversal import find_interface
 
 from voteit.core import VoteITMF as _
+from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IWorkflowAware
 from voteit.core.models.discussion_post import DiscussionPost
 from voteit.core.models.proposal import Proposal
@@ -17,7 +19,9 @@ def meta_data_listing(context, request, va, **kw):
     """ This is the main renderer for post meta.
         It will call all view components in the group meta_data_listing.
         In turn, some of those will call other groups.
-    """   
+    """
+    if not kw.get('show_user_tags', True):
+        return u""
     api = kw['api']
     util = request.registry.getUtility(IViewGroup, name='meta_data_listing')
     view_actions = []
@@ -75,14 +79,14 @@ def meta_retract(context, request, va, **kw):
            '>%s</a>' % (request.application_url, brain['path'], api.translate(_(u'Retract')))
            
 @view_action('meta_data_listing', 'user_tags', permission=VIEW)
-def meta_user_tags(context, request, va, **kw): 
+def meta_user_tags(context, request, va, **kw):
     brain = kw['brain']
-    del kw['brain']
-    
+    del kw['brain'] #XXX: Why?
+
     util = request.registry.getUtility(IViewGroup, name='user_tags')
     tags = []
     for _va in util.get_context_vas(context, request):
-            tags.append(_va(brain, request, **kw))
+        tags.append(_va(brain, request, **kw))
     
     response = {'tags': tags,}
     return render('../templates/snippets/meta_data_listing_user_tags.pt', response, request = request)
@@ -92,11 +96,15 @@ def meta_user_tags(context, request, va, **kw):
 def meta_answer(context, request, va, **kw):
     api = kw['api']
     brain = kw['brain']
-    
     if not api.meeting.get_field_value('tags_enabled', True) or \
-       api.context.get_field_value('discussion_block', False):
-       return '' 
-    
+        api.context.get_field_value('discussion_block', False):
+        return u""
+    #Check add permission
+    ai = find_interface(context, IAgendaItem)
+    add_perm = api.content_types_add_perm('Proposal')
+    if not api.context_has_permission(add_perm, ai):
+        return u""
+
     if brain['content_type'] == 'Proposal':
         label = _(u'Comment')
     else:

@@ -188,6 +188,8 @@ class PollView(BaseEdit):
         can_vote = has_permission(ADD_VOTE, self.context, self.request)
         userid = self.api.userid
         success_msg = None
+
+        self.response['get_proposal_brains'] = self._get_proposal_brains
         
         post = self.request.POST
         if 'vote' in post:
@@ -249,12 +251,8 @@ class PollView(BaseEdit):
         else:
             readonly = not can_vote
             self.response['form'] = form.render(readonly=readonly)
-            
         if success_msg:
             self.response['success_msg'] = success_msg
-            
-        self.response['get_proposal_brains'] = self._get_proposal_brains
-
         return self.response
     
     @view_config(context=IPoll, name="poll_raw_data", permission=VIEW)

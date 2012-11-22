@@ -171,6 +171,7 @@ class MPIntegrationTests(unittest.TestCase):
         self.assertEqual(plugin.render_raw_data().body, "(({'proposal': u'p1uid'}, 2), ({'proposal': u'p2uid'}, 1))")
             
     def test_render_result(self):
+        self.config.scan('voteit.core.models.proposal')
         self.config.scan('voteit.core.views.components.main')
         self.config.scan('voteit.core.views.components.moderator_actions')
         self.config.scan('voteit.core.views.components.creators_info')
@@ -185,6 +186,7 @@ class MPIntegrationTests(unittest.TestCase):
         plugin = self.poll.get_poll_plugin()
         request = self.request
         ai = find_interface(self.poll, IAgendaItem)
+        request.context = ai
         from voteit.core.views.api import APIView
         api = APIView(ai, request)
         self.assertTrue('p2uid' in plugin.render_result(request, api))

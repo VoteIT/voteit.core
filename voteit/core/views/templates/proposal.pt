@@ -13,7 +13,7 @@
 
     <tal:creators tal:replace="structure api.get_creators_info(brain['creators'])">Creators</tal:creators>:
     <span class="body" tal:content="structure api.transform(brain['title'])">Title</span>
-    <tal:meta replace="structure api.render_single_view_component(context, request, 'main', 'meta_data_listing', brain=brain)">Meta</tal:meta>
+    <tal:meta replace="structure api.render_single_view_component(context, request, 'main', 'meta_data_listing', brain=brain, show_user_tags=show_user_tags)">Meta</tal:meta>
     <div class="clear"><!-- --></div> 
 </div>
 

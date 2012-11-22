@@ -487,3 +487,45 @@ $('.menu_body.Poll a.delete').live('click', function(event) {
         $(dialog).dialog('open');
     }
 });
+
+
+/* Masking */
+function apply_mask($prevent_scrolling) {
+    //Prevent the page from scrolling
+    $prevent_scrolling = typeof $prevent_scrolling !== 'undefined' ? $prevent_scrolling : true;
+    if($prevent_scrolling)
+        $("body").css("overflow", "hidden");
+    //Get the screen height and width
+    var maskHeight = $(document).height();
+    var maskWidth = $(document).width();
+    //Set height and width to mask to fill up the whole screen
+    $('#mask').css({'width':maskWidth,'height':maskHeight});
+    //transition effect
+    $('#mask').fadeTo("slow", 0.3);
+}
+function remove_mask() {
+    $('#mask').hide();
+    $("body").css("overflow", "auto");
+}
+$(document).ready(function() {
+    //if mask is clicked
+    $('#mask').click(function() {
+        remove_mask();
+    });
+});
+$(document).keyup(function(e) {
+    if(e.keyCode == 27) {
+        remove_mask();
+    }
+});
+
+$(window).resize(reapply_mask);
+$(window).scroll(reapply_mask);
+
+function reapply_mask() {
+    //Get the screen height and width
+    var maskHeight = $(document).height();
+    var maskWidth = $(window).width();
+    //Set height and width to mask to fill up the whole screen
+    $('#mask').css({'width':maskWidth,'height':maskHeight});
+}

@@ -80,5 +80,6 @@
 		<a tal:condition="api.root" name="root_url" href="${api.resource_url(api.root, request)}"></a>
 		<a tal:condition="api.meeting" name="meeting_url" href="${api.resource_url(api.meeting, request)}"></a>
 	</div>
+	<div id="mask"></div>
 </body>
 </html>
