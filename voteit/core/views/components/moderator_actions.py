@@ -8,6 +8,7 @@ from voteit.core.security import EDIT
 from voteit.core.security import MODERATE_MEETING
 from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IBaseContent
+from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IWorkflowAware
 
@@ -27,7 +28,7 @@ def moderator_actions(context, request, va, **kw):
         context = context,
         menu_content = api.render_view_group(context, request, 'moderator_actions_section', **kw),
     )
-    return render('../templates/snippets/moderator_actions.pt', response, request = request)
+    return render('templates/cogwheel/moderator_actions.pt', response, request = request)
 
 @view_action('moderator_actions_section', 'workflow',
              interface = IWorkflowAware, title = _(u"Change workflow state"))
@@ -42,7 +43,7 @@ def moderator_actions_wf_section(context, request, va, **kw):
         states = context.get_available_workflow_states(request),
         state_change_url = "%sstate?state=" % api.resource_url(context, request),
     )
-    return render('../templates/snippets/moderator_actions_wf_section.pt', response, request = request)
+    return render('templates/cogwheel/moderator_actions_wf_section.pt', response, request = request)
 
 @view_action('moderator_actions_section', 'context_actions',
              title = _(u"Actions here"), contained_section = 'context_actions')
@@ -54,7 +55,7 @@ def moderator_actions_section(context, request, va, **kw):
         api = api,
         section_data = api.render_view_group(context, request, va.kwargs['contained_section'], **kw),
     )
-    return render('../templates/snippets/moderator_actions_section.pt', response, request = request)
+    return render('templates/cogwheel/moderator_actions_section.pt', response, request = request)
 
 @view_action('context_actions', 'edit', title = _(u"Edit"), context_perm = EDIT, viewname = 'edit')
 @view_action('context_actions', 'delete', title = _(u"Delete"), context_perm = DELETE, viewname = 'delete')
@@ -98,3 +99,14 @@ def block_specific_perm_action(context, request, va, **kw):
     else:
         url = "%s1" % url
     return """<li><a href="%s">%s</a></li>""" % (url, api.translate(va.title))
+
+@view_action('context_actions', 'manage_agenda_items',
+             interface = IMeeting, permission = MODERATE_MEETING)
+def manage_agenda_items(context, request, va, **kw):
+    """ Provide a link to the manage agenda items screen.
+        Only for moderators and meeting objects.
+    """
+    api = kw['api']
+    #FIXME: Note that order agenda items is a silly name for this view. It should change.
+    return """<li><a href="%s">%s</a></li>""" % (request.resource_url(context, 'order_agenda_items'),
+                                                 api.translate(_(u"Manage agenda items")))

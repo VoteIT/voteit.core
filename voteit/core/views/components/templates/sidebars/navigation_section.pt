@@ -1,6 +1,6 @@
 <tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core">
 <div tal:attributes="id toggle_id;
-                     class closed_section and 'toggle_area toggle_closed block' or 'toggle_area toggle_opened block';">
+                     class closed_section and 'toggle_area toggle_closed sidebar_block' or 'toggle_area toggle_opened sidebar_block';">
     <h6 class="toggle_minimize reload">
         <span href="${request.url}" class="iconpadding icon ${state}">${section_title}</span>
     </h6>

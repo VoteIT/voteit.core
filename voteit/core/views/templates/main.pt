@@ -50,8 +50,8 @@
     <div id="main-outer">
         <div class="wrapper">
             <div class="section">
-                <div id="navigation" tal:content="structure api.render_single_view_component(context, request, 'main', 'navigation')">
-                    Meeting Navigation
+                <div id="sidebar" tal:content="structure api.render_view_group(context, request, 'sidebar')">
+                    Sidebar, navigation / login etc
                 </div>
                 <div id="main">
                     <tal:messages replace="structure api.render_single_view_component(context, request, 'main', 'flash_messages')">Messages</tal:messages>

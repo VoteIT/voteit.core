@@ -1,54 +1,40 @@
-from betahaus.pyracont.factories import createSchema
 from betahaus.viewcomponent import view_action
-from deform import Form
 from pyramid.renderers import render
-from pyramid.security import effective_principals
-from pyramid.traversal import find_interface
 from pyramid.traversal import resource_path
-from pyramid.url import resource_url
 
 from voteit.core import VoteITMF as _
-from voteit.core.helpers import strip_and_truncate
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import ISiteRoot
-from voteit.core.models.schemas import button_login
-from voteit.core.security import ADD_MEETING
 from voteit.core.security import MODERATE_MEETING
 
 
-@view_action('main', 'navigation')
+@view_action('sidebar', 'navigation')
 def navigation(context, request, va, **kwargs):
-    response = dict(
-        api = kwargs['api']
-    )
-    return render('../templates/navigation.pt', response, request = request)
-
-@view_action('navigation', 'login')
-def login_box(context, request, va, **kwargs):
     api = kwargs['api']
+    if api.meeting:
+        return api.render_view_group(api.meeting, request, 'navigation_sections', **kwargs)
+    return api.render_view_group(api.root, request, 'navigation_sections', **kwargs)
 
-    #FIXME: Ticket system makes it a bit of a hassle to make login detached from registration.
-    #We'll do that later. For now, let's just check if user is on login or registration page
-
-    url = request.path_url
-    if url.endswith('login') or url.endswith('register'):
-        return u""
-    login_schema = createSchema('LoginSchema').bind(context = context, request = request)
-    action_url = resource_url(api.root, request) + 'login'
-    login_form = Form(login_schema, buttons=(button_login,), action=action_url)
-    api.register_form_resources(login_form)
-    return """%s<div><a href="/request_password">%s</a></div>""" % (login_form.render(), api.translate(_(u"Forgot password?")))
-
-
-@view_action('navigation_sections', 'meeting_sections_header',
-             title = _(u"Agenda"), interface = IMeeting)
+@view_action('navigation_sections', 'meeting_sections_header')
 def meeting_sections_header(context, request, va, **kwargs):
+    api = kwargs['api']
+    if not api.userid:
+        return u""
+    if api.meeting:
+        title = _(u"Agenda")
+        description = _(u"Click to go to meeting overview")
+        url = api.meeting_url
+    else:
+        title = _(u"Meetings")
+        description = u""
+        url = "/" #FIXME: Is this okay?
     response = dict(
-        api = kwargs['api'],
-        title = va.title,
+        api = api,
+        title = title,
+        description = description,
+        url = url,
     )
-    return render('../templates/snippets/navigation_meeting_head.pt', response, request = request)
-
+    return render('templates/sidebars/navigation_head.pt', response, request = request)
 
 @view_action('navigation_sections', 'ongoing', title = _(u"Ongoing"), state = 'ongoing')
 @view_action('navigation_sections', 'upcoming', title = _(u"Upcoming"), state = 'upcoming')
@@ -56,7 +42,11 @@ def meeting_sections_header(context, request, va, **kwargs):
 @view_action('navigation_sections', 'private', title = _(u"Private"), state = 'private',
              permission = MODERATE_MEETING, interface = IMeeting)
 def navigation_section(context, request, va, **kwargs):
+    """ Navigation sections. These doesn't work for unauthenticated currently. """
     api = kwargs['api']
+    if not api.userid:
+        return u""
+
     state = va.kwargs['state']
 
     response = {}
@@ -67,7 +57,7 @@ def navigation_section(context, request, va, **kwargs):
 
     if request.cookies.get(response['toggle_id']):
         response['closed_section'] = True
-        return render('../templates/snippets/navigation_section.pt', response, request = request)
+        return render('templates/sidebars/navigation_section.pt', response, request = request)
 
     context_path = resource_path(context)
     query = dict(
@@ -114,42 +104,4 @@ def navigation_section(context, request, va, **kwargs):
     response['count_query'] = _count_query
     response['closed_section'] = False
     response['in_current_context'] = _in_current_context
-    return render('../templates/snippets/navigation_section.pt', response, request = request)
-
-
-@view_action('navigation_sections', 'latest_meeting_entries',)
-def latest_meeting_entries(context, request, va, **kwargs):
-    #FIXME: This is disabled for now, needs proper design
-    return ''
-    api = kwargs['api']
-    
-    # only avaible in meeting
-    if not api.meeting:
-        return ''
-    
-    response = dict(
-        api = api,
-        context = context,
-        truncate = strip_and_truncate,
-        closed_section = False,
-    )
-    
-    if request.cookies.get('latest_meeting_entries'):
-        response['closed_section'] = True
-        return render('../templates/snippets/latest_meeting_entries.pt', response, request = request)
-    
-    response['closed_section'] = False
-    
-    query = {}
-    query['path'] = resource_path(api.meeting)
-    query['allowed_to_view'] = {'operator':'or', 'query': effective_principals(request)}
-    query['content_type'] = {'query':('Proposal','DiscussionPost'), 'operator':'or'}
-    query['sort_index'] = 'created'
-    query['reverse'] = True
-    query['limit'] = 5
-    
-    response['last_entries'] = api.get_metadata_for_query(**query)
-    
-    return render('../templates/snippets/latest_meeting_entries.pt', response, request = request)
-    
-    
+    return render('templates/sidebars/navigation_section.pt', response, request = request)

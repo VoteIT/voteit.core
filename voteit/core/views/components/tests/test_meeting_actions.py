@@ -50,7 +50,9 @@ class MeetingActionsComponentTests(unittest.TestCase):
         api = self._api(context, request)
         from voteit.core.views.components.meeting_actions import meeting_actions
         response = meeting_actions(context, request, va, api=api)
-        self.assertIn('<ul id="meeting-actions-menu">', response)
+        self.assertIn('Participants', response)
+        self.assertIn('Meeting', response)
+        self.assertIn('Polls', response)
         
     def test_polls_menu(self):
         self.config.testing_securitypolicy(userid='dummy',

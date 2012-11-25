@@ -43,8 +43,8 @@ class NavigationComponentTests(unittest.TestCase):
         self.config.scan('voteit.core.subscribers.catalog')
         self.config.include('voteit.core.models.user_tags')
         self.config.include('voteit.core.models.catalog')
-        
-    def test_navigation(self):
+
+    def test_navigation_root(self):
         self.config.scan('voteit.core.views.components.navigation')
         self.config.testing_securitypolicy(userid='dummy',
                                            permissive=True)
@@ -54,19 +54,23 @@ class NavigationComponentTests(unittest.TestCase):
         api = self._api(context, request)
         from voteit.core.views.components.navigation import navigation
         response = navigation(context, request, va, api=api)
-        self.assertIn('<div id="add_menu">', response)
-        
-    def test_login_box(self):
-        self.config.scan('voteit.core.schemas.user')
+        self.assertIn('Upcoming', response)
+
+    def test_navigation_meeting(self):
+        self.config.scan('voteit.core.views.components.navigation')
+        self.config.testing_securitypolicy(userid='dummy',
+                                           permissive=True)
         context = self._fixture()
         request = testing.DummyRequest()
         va = self._va()
-        api = self._api(context, request)
-        from voteit.core.views.components.navigation import login_box
-        response = login_box(context, request, va, api=api)
-        self.assertIn('<span>Login</span>', response)
-        
+        api = self._api(context.__parent__, request)
+        from voteit.core.views.components.navigation import navigation
+        response = navigation(context, request, va, api=api)
+        self.assertIn('Upcoming', response)
+
     def test_navigation_section_root(self):
+        self.config.testing_securitypolicy(userid='dummy',
+                                           permissive=True)
         context = bootstrap_and_fixture(self.config)
         request = testing.DummyRequest()
         va = self._va(title='Upcoming', kwargs={'state': 'upcoming'})
@@ -76,6 +80,8 @@ class NavigationComponentTests(unittest.TestCase):
         self.assertIn('Upcoming', response)
         
     def test_navigation_section_meeting(self):
+        self.config.testing_securitypolicy(userid='dummy',
+                                           permissive=True)
         context = self._fixture()
         request = testing.DummyRequest()
         va = self._va(title='Upcoming', kwargs={'state': 'upcoming'})
@@ -85,6 +91,8 @@ class NavigationComponentTests(unittest.TestCase):
         self.assertIn('Upcoming', response)
 
     def test_navigation_section_cookie(self):
+        self.config.testing_securitypolicy(userid='dummy',
+                                           permissive=True)
         context = self._fixture()
         request = testing.DummyRequest(cookies={'%s-%s' % (context.uid, 'upcoming'): 'closed'})
         va = self._va(title='Upcoming', kwargs={'state': 'upcoming'})
