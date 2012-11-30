@@ -13,6 +13,7 @@ from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import ISiteRoot
 from voteit.core.models.schemas import button_login
 from voteit.core.security import ADD_MEETING
+from voteit.core.security import VIEW
 from voteit.core.security import MODERATE_MEETING
 
 
@@ -41,7 +42,7 @@ def login_box(context, request, va, **kwargs):
 
 
 @view_action('navigation_sections', 'meeting_sections_header',
-             title = _(u"Agenda"), interface = IMeeting)
+             title = _(u"Agenda"), interface = IMeeting, permission=VIEW)
 def meeting_sections_header(context, request, va, **kwargs):
     response = dict(
         api = kwargs['api'],
@@ -50,9 +51,9 @@ def meeting_sections_header(context, request, va, **kwargs):
     return render('../templates/snippets/navigation_meeting_head.pt', response, request = request)
 
 
-@view_action('navigation_sections', 'ongoing', title = _(u"Ongoing"), state = 'ongoing')
-@view_action('navigation_sections', 'upcoming', title = _(u"Upcoming"), state = 'upcoming')
-@view_action('navigation_sections', 'closed', title = _(u"Closed"), state = 'closed')
+@view_action('navigation_sections', 'ongoing', title = _(u"Ongoing"), state = 'ongoing', permission = VIEW)
+@view_action('navigation_sections', 'upcoming', title = _(u"Upcoming"), state = 'upcoming', permission = VIEW)
+@view_action('navigation_sections', 'closed', title = _(u"Closed"), state = 'closed', permission = VIEW)
 @view_action('navigation_sections', 'private', title = _(u"Private"), state = 'private',
              permission = MODERATE_MEETING, interface = IMeeting)
 def navigation_section(context, request, va, **kwargs):
@@ -117,7 +118,7 @@ def navigation_section(context, request, va, **kwargs):
     return render('../templates/snippets/navigation_section.pt', response, request = request)
 
 
-@view_action('navigation_sections', 'latest_meeting_entries',)
+@view_action('navigation_sections', 'latest_meeting_entries', permission=VIEW)
 def latest_meeting_entries(context, request, va, **kwargs):
     #FIXME: This is disabled for now, needs proper design
     return ''
