@@ -11,6 +11,7 @@ from voteit.core.models.discussion_post import DiscussionPost
 from voteit.core.models.proposal import Proposal
 from voteit.core.security import RETRACT 
 from voteit.core.security import VIEW
+from voteit.core.security import ADD_PROPOSAL
 
 
 
@@ -71,13 +72,15 @@ def meta_retract(context, request, va, **kw):
         return ''
     #Now for the 'expensive' stuff
     obj = find_resource(api.root, brain['path'])
-    if not api.context_has_permission(RETRACT, obj):
+    ai = find_interface(context, IAgendaItem)
+    if not api.context_has_permission(ADD_PROPOSAL, ai) and api.context_has_permission(RETRACT, obj):
         return ''
         
     return '<a class="retract confirm-retract" ' \
            'href="%s%s/state?state=retracted" ' \
            '>%s</a>' % (request.application_url, brain['path'], api.translate(_(u'Retract')))
-           
+
+
 @view_action('meta_data_listing', 'user_tags', permission=VIEW)
 def meta_user_tags(context, request, va, **kw):
     brain = kw['brain']
