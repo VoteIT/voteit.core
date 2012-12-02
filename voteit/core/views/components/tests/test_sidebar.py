@@ -1,55 +1,106 @@
 import unittest
 
 from pyramid import testing
+from betahaus.viewcomponent.interfaces import IViewGroup
+from betahaus.viewcomponent.models import ViewAction
+from betahaus.viewcomponent.models import ViewGroup
 
-from voteit.core.testing_helpers import bootstrap_and_fixture
 
+class LoginBoxTests(unittest.TestCase):
 
-class SidebarComponentTests(unittest.TestCase):
-    
     def setUp(self):
         self.config = testing.setUp()
 
     def tearDown(self):
         testing.tearDown()
-        
-    def _fixture(self):
-        from voteit.core.models.agenda_item import AgendaItem
-        from voteit.core.models.meeting import Meeting
-        from voteit.core.models.proposal import Proposal
-        root = bootstrap_and_fixture(self.config)
-        root['m'] = meeting = Meeting()
-        meeting['ai1'] = AgendaItem()
-        meeting['ai2'] = AgendaItem()
-        meeting['ai3'] = AgendaItem()
-        meeting['ai4'] = AgendaItem()
-        return meeting
-    
-    def _api(self, context=None, request=None):
-        from voteit.core.views.api import APIView
-        context = context and context or testing.DummyResource()
-        request = request and request or testing.DummyRequest()
-        return APIView(context, request)
 
-    def _va(self, name=None, title=None, kwargs={}):
-        class ViewAction():
-            def __init__(self, name, title, kwargs):
-                self.name = name
-                self.title = title
-                self.kwargs = kwargs
-        return ViewAction(name, title, kwargs)
-    
-    def _enable_catalog(self):
-        self.config.scan('voteit.core.subscribers.catalog')
-        self.config.include('voteit.core.models.user_tags')
-        self.config.include('voteit.core.models.catalog')
+    @property
+    def _fut(self):
+        from voteit.core.views.components.sidebars import login_box
+        return login_box
 
     def test_login_box(self):
         self.config.scan('voteit.core.schemas.user')
-        context = self._fixture()
+        context = testing.DummyModel()
         request = testing.DummyRequest()
-        va = self._va()
-        api = self._api(context, request)
-        from voteit.core.views.components.sidebars import login_box
-        response = login_box(context, request, va, api=api)
+        va = ViewAction(object, 'name')
+        api = _api(context, request)
+        response = self._fut(context, request, va, api=api)
         self.assertIn('<span>Login</span>', response)
+
+    def test_login_box_register_page(self):
+        self.config.scan('voteit.core.schemas.user')
+        context = testing.DummyModel()
+        request = testing.DummyRequest(path='/register')
+        va = ViewAction(object, 'name')
+        api = _api(context, request)
+        response = self._fut(context, request, va, api=api)
+        self.assertIn('', response)
+
+    def test_login_box_login_page(self):
+        self.config.scan('voteit.core.schemas.user')
+        context = testing.DummyModel()
+        request = testing.DummyRequest(path='/login')
+        va = ViewAction(object, 'name')
+        api = _api(context, request)
+        response = self._fut(context, request, va, api=api)
+        self.assertIn('', response)
+
+    def test_login_already_logged_in(self):
+        self.config.scan('voteit.core.schemas.user')
+        self.config.testing_securitypolicy('dummy', permissive=True)
+        context = testing.DummyModel()
+        request = testing.DummyRequest()
+        va = ViewAction(object, 'name')
+        api = _api(context, request)
+        response = self._fut(context, request, va, api=api)
+        self.assertIn('', response)
+
+
+class LoginAltTests(unittest.TestCase):
+
+    def setUp(self):
+        self.config = testing.setUp()
+
+    def tearDown(self):
+        testing.tearDown()
+
+    @property
+    def _fut(self):
+        from voteit.core.views.components.sidebars import alternative_login_methods
+        return alternative_login_methods
+
+    def _register_dummy_va(self):
+        def _dummy_callable(*args, **kw):
+            return "Hello world"
+        view_group = ViewGroup('login_forms')
+        self.config.registry.registerUtility(view_group, IViewGroup, name = 'login_forms')
+        view_group.add(ViewAction(_dummy_callable, 'dummy'))
+
+    def test_nothing_to_render(self):
+        self.config.scan('voteit.core.schemas.user')
+        context = testing.DummyModel()
+        request = testing.DummyRequest()
+        va = ViewAction(object, 'name')
+        api = _api(context, request)
+        response = self._fut(context, request, va, api=api)
+        self.assertIn('', response)
+
+    def test_render_dummy(self):
+        self.config.scan('voteit.core.schemas.user')
+        self._register_dummy_va()
+        context = testing.DummyModel()
+        request = testing.DummyRequest()
+        va = ViewAction(object, 'name')
+        api = _api(context, request)
+        response = self._fut(context, request, va, api=api)
+        self.assertIn('id="login_alt"', response)
+        self.assertIn('Hello world', response)
+
+
+
+def _api(context=None, request=None):
+    from voteit.core.views.api import APIView
+    context = context and context or testing.DummyResource()
+    request = request and request or testing.DummyRequest()
+    return APIView(context, request)

@@ -48,6 +48,7 @@ def alternative_login_methods(context, request, va, **kwargs):
 
 @view_action('sidebar', 'moderator_agenda_actions')
 def moderator_agenda_actions(context, request, va, **kwargs):
+    #FIXME: This will be moved later on, we'll just display some buttons
     api = kwargs['api']
     if not api.show_moderator_actions:
         return u""
