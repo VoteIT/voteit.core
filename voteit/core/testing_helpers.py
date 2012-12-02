@@ -121,6 +121,9 @@ def register_catalog(config):
     config.include('voteit.core.models.unread')
     config.include('voteit.core.models.user_tags')
     config.scan('voteit.core.subscribers.catalog')
+    #Without order, sorting in that index will remove content rather than show it. Very weird.
+    config.scan('voteit.core.subscribers.agenda_item')
+    
 
 
 def active_poll_fixture(config):

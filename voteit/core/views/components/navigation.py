@@ -6,6 +6,7 @@ from voteit.core import VoteITMF as _
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import ISiteRoot
 from voteit.core.security import MODERATE_MEETING
+from voteit.core.security import VIEW
 
 
 @view_action('sidebar', 'navigation')
@@ -15,8 +16,8 @@ def navigation(context, request, va, **kwargs):
         return api.render_view_group(api.meeting, request, 'navigation_sections', **kwargs)
     return api.render_view_group(api.root, request, 'navigation_sections', **kwargs)
 
-@view_action('navigation_sections', 'meeting_sections_header')
-def meeting_sections_header(context, request, va, **kwargs):
+@view_action('navigation_sections', 'navigation_section_header', permission=VIEW)
+def navigation_section_header(context, request, va, **kwargs):
     api = kwargs['api']
     if not api.userid:
         return u""
@@ -36,19 +37,17 @@ def meeting_sections_header(context, request, va, **kwargs):
     )
     return render('templates/sidebars/navigation_head.pt', response, request = request)
 
-@view_action('navigation_sections', 'ongoing', title = _(u"Ongoing"), state = 'ongoing')
-@view_action('navigation_sections', 'upcoming', title = _(u"Upcoming"), state = 'upcoming')
-@view_action('navigation_sections', 'closed', title = _(u"Closed"), state = 'closed')
+@view_action('navigation_sections', 'ongoing', title = _(u"Ongoing"), state = 'ongoing', permission=VIEW)
+@view_action('navigation_sections', 'upcoming', title = _(u"Upcoming"), state = 'upcoming', permission=VIEW)
+@view_action('navigation_sections', 'closed', title = _(u"Closed"), state = 'closed', permission=VIEW)
 @view_action('navigation_sections', 'private', title = _(u"Private"), state = 'private',
              permission = MODERATE_MEETING, interface = IMeeting)
-def navigation_section(context, request, va, **kwargs):
+def navigation_sections(context, request, va, **kwargs):
     """ Navigation sections. These doesn't work for unauthenticated currently. """
     api = kwargs['api']
     if not api.userid:
         return u""
-
     state = va.kwargs['state']
-
     response = {}
     response['api'] = api
     response['state'] = state
@@ -83,6 +82,8 @@ def navigation_section(context, request, va, **kwargs):
         
         if content_type == 'Proposal':
             query['workflow_state'] = {'query':('published', 'retracted', 'unhandled', 'voting', 'approved', 'denied'), 'operator':'or'}
+            #Uhm shouldn't we show them in listing regardless?
+            #FIXME: This is probably the unread-bug in nav
             if api.meeting and not api.meeting.get_field_value('show_retracted', True):
                 query['workflow_state'] = {'query':('published', 'unhandled', 'voting', 'approved', 'denied'), 'operator':'or'}
         
