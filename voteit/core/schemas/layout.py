@@ -17,19 +17,6 @@ def _get_choices(request, group_name):
     return choices
 
 @colander.deferred
-def deferred_meeting_layout_left_widget(node, kw):
-    request = kw['request']
-    choices = _get_choices(request, 'meeting_widgets')
-    return deform.widget.RadioChoiceWidget(values=choices)
-
-@colander.deferred
-def deferred_meeting_layout_right_widget(node, kw):
-    request = kw['request']
-    choices = _get_choices(request, 'meeting_widgets')
-    choices.append(('', _(u"<Disable>")))
-    return deform.widget.RadioChoiceWidget(values=choices)
-
-@colander.deferred
 def deferred_ai_layout_left_widget(node, kw):
     request = kw['request']
     choices = _get_choices(request, 'ai_widgets')
@@ -46,17 +33,6 @@ def deferred_ai_layout_right_widget(node, kw):
                 description=_(u"layuot_schema_main_description",
                               default = u"Change layout of the different parts in the meeting (advanced feature)"))
 class LayoutSchema(colander.Schema):
-    meeting_left_widget = colander.SchemaNode(colander.String(),
-                                              title = _(u"Meeting left column widget"),
-                                              description = _(u"meeting_left_widget_description",
-                                                              default = u"If no right column widget is selected, this will take up the whole page space."),
-                                              widget = deferred_meeting_layout_left_widget,
-                                              default = 'description_richtext',
-                                              missing = u"",)
-    meeting_right_widget = colander.SchemaNode(colander.String(),
-                                               title = _(u"Meeting right column widget"),
-                                               widget = deferred_meeting_layout_right_widget,
-                                               missing = u"",)
     ai_left_widget = colander.SchemaNode(colander.String(),
                                          title = _(u"Agenda item left column widget"),
                                          widget = deferred_ai_layout_left_widget,

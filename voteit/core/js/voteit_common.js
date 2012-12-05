@@ -519,8 +519,10 @@ $(document).keyup(function(e) {
     }
 });
 
+/* FIXME: Masking currently behaves odd
 $(window).resize(reapply_mask);
 $(window).scroll(reapply_mask);
+*/
 
 function reapply_mask() {
     //Get the screen height and width

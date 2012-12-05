@@ -332,20 +332,18 @@ class SearchViewTests(unittest.TestCase):
         self.assertEqual(obj.get_schema_name('AgendaItem', 'edit'), 'EditAgendaItemSchema')
 
     def test_render_view_group(self):
-        self.config.scan('voteit.core.views.components.meeting')
+        self.config.scan('voteit.core.views.components.help_actions')
         context = testing.DummyResource()
-        context.description = 'Hello' #Just to make 'meeting_widgets' view group work
         request = testing.DummyRequest()
         obj = self._cut(context, request)
-        self.assertIn('description', obj.render_view_group(context, request, 'meeting_widgets'))
+        self.assertIn('wiki.voteit.se', obj.render_view_group(context, request, 'help_action'))
 
     def test_render_single_view_component(self):
-        self.config.scan('voteit.core.views.components.meeting')
+        self.config.scan('voteit.core.views.components.help_actions')
         context = testing.DummyResource()
-        context.description = 'Hello' #Just to make 'meeting_widgets' view group work
         request = testing.DummyRequest()
         obj = self._cut(context, request)
-        self.assertIn('description', obj.render_single_view_component(context, request, 'meeting_widgets', 'description_richtext'))
+        self.assertIn('wiki.voteit.se', obj.render_single_view_component(context, request, 'help_action', 'wiki'))
 
 
 _DUMMY_URL_MESSAGE = u"""Website: www.betahaus.net,

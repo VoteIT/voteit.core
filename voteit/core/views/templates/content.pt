@@ -4,7 +4,7 @@
 	  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
 	  i18n:domain="voteit.core">
 <body>
-    <div metal:fill-slot="main_window">
+    <tal:main_window metal:fill-slot="main_window">
         <div id="top">
             <div class="content_wrapper">
                 <div metal:define-slot="page_heading"
@@ -35,6 +35,6 @@
                 </div>
             </div> <!-- right column-->
         </div> <!-- content -->
-    </div>
+    </tal:main_window>
 </body>
 </html>

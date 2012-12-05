@@ -5,11 +5,10 @@
 	  i18n:domain="voteit.core">
 <body>
 <div metal:fill-slot="top_content">
-    <div class="content_wrapper">
-        <div class="description"
-             tal:condition="context.description"
-             tal:content="structure context.description">Description</div>
-    </div>
+    <div class="description"
+         tal:condition="context.description"
+         tal:content="structure context.description">Description</div>
 </div>
+<tal:content metal:fill-slot="content"></tal:content>
 </body>
 </html>

@@ -33,7 +33,7 @@ from voteit.core.helpers import ajax_options
 
 class MeetingView(BaseView):
     
-    @view_config(context=IMeeting, renderer="templates/meeting.pt", permission = NO_PERMISSION_REQUIRED)
+    @view_config(context=IMeeting, renderer="templates/base_view.pt", permission = NO_PERMISSION_REQUIRED)
     def meeting_view(self):
         """ Meeting view behaves a bit differently than regular views since
             it should allow users to request access if unauthorized is raised.
@@ -42,21 +42,9 @@ class MeetingView(BaseView):
             #We delegate permission checks to the request_meeting_access part.
             url = resource_url(self.context, self.request) + 'request_access'
             return HTTPFound(location = url)
-
-        self.response['get_polls'] = self._get_polls
         
-        colkwargs = dict(group_name = 'meeting_widgets',
-                         col_one = self.context.get_field_value('meeting_left_widget', 'description_richtext'),
-                         col_two = self.context.get_field_value('meeting_right_widget', None),
-                         )
-        self.response['meeting_columns'] = self.api.render_single_view_component(self.context, self.request,
-                                                                                 'main', 'columns',
-                                                                                 **colkwargs)
         return self.response
 
-    def _get_polls(self, agenda_item):
-        return agenda_item.get_content(iface=IPoll, states=('upcoming', 'ongoing', 'closed'), sort_on='sort_index')
-        
     @view_config(name="participants_emails", context=IMeeting, renderer="templates/participants_emails.pt", permission=security.MODERATE_MEETING)
     def participants_emails(self):
         """ List all participants emails in this meeting. """

@@ -31,7 +31,6 @@ class MeetingViewTests(unittest.TestCase):
 
     def _load_vcs(self):
         self.config.scan('voteit.core.views.components.main')
-        self.config.scan('voteit.core.views.components.meeting')
 
     def test_participants_view(self):
         self.config.testing_securitypolicy(userid='dummy',
