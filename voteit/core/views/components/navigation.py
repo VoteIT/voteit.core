@@ -13,8 +13,12 @@ from voteit.core.security import VIEW
 def navigation(context, request, va, **kwargs):
     api = kwargs['api']
     if api.meeting:
-        return api.render_view_group(api.meeting, request, 'navigation_sections', **kwargs)
-    return api.render_view_group(api.root, request, 'navigation_sections', **kwargs)
+        nav_out = api.render_view_group(api.meeting, request, 'navigation_sections', **kwargs)
+    else:
+        nav_out = api.render_view_group(api.root, request, 'navigation_sections', **kwargs)
+    if nav_out:
+        return '<div id="navigation" class="sidebar_block">%s</div>' % nav_out
+    return u""
 
 @view_action('navigation_sections', 'navigation_section_header', permission=VIEW)
 def navigation_section_header(context, request, va, **kwargs):

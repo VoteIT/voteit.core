@@ -41,10 +41,12 @@ def alternative_login_methods(context, request, va, **kwargs):
     if not _show_login(api):
         return u""
     try:
-        return """<div class="sidebar_block" id="login_alt">%s</div>""" % \
-            api.render_view_group(api.root, request, 'login_forms', **kwargs)
+        alt_out = api.render_view_group(api.root, request, 'login_forms', **kwargs)
+        if alt_out:
+            return """<div class="sidebar_block" id="login_alt">%s</div>""" % alt_out
     except ComponentLookupError: #There's no login_forms view group
-        return u""
+        pass
+    return u""
 
 @view_action('sidebar', 'moderator_agenda_actions')
 def moderator_agenda_actions(context, request, va, **kwargs):
