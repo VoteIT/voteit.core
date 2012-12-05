@@ -53,14 +53,14 @@
 /* Content section - content area is 770px */
 #left {
 	float: left;
-	width: 360px;
+	width: 358px; /* + 1px border = 360px */
 	padding: 10px;
 	margin-right: 10px;
 }
 #right {
 	float: left;
 	padding: 10px;
-	width: 360px;
+	width: 358px; /* + 1px border = 360px */
 }
 /* End content section */
 

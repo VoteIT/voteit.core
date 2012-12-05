@@ -22,19 +22,14 @@
             </div> <!-- content_wrapper -->
         </div> <!-- top -->
 
-        <div id="content" class="col-50-50" metal:define-slot="content">
-            <div id="left" class="column column-1">
-                <div class="content_wrapper">
-                   <metal:left define-slot="left"></metal:left>
-                </div>
-            </div> <!-- left column-->
-            
-            <div id="right" class="column column-2">
-                <div class="content_wrapper">
-                   <metal:right define-slot="right"></metal:right>
-                </div>
-            </div> <!-- right column-->
-        </div> <!-- content -->
+        <div id="content" metal:define-slot="content">
+            <div id="left">
+               <metal:left define-slot="left"></metal:left>
+            </div>
+            <div id="right">
+               <metal:right define-slot="right"></metal:right>
+            </div>
+        </div><!-- content -->
     </tal:main_window>
 </body>
 </html>

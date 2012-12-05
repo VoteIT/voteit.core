@@ -5,8 +5,8 @@
 	  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
 	  i18n:domain="voteit.core">
 <body metal:use-macro="load: ${api.template_dir}main.pt">
-	<div metal:fill-slot="main_window">
-		<div metal:define-slot="form" class="content_wrapper" tal:content="structure form">Form</div>
+	<div id="top" metal:fill-slot="main_window">
+		<div metal:define-slot="form" tal:content="structure form">Form</div>
 	</div>
 </body>
 </html>

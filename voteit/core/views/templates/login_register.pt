@@ -6,15 +6,18 @@
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
       i18n:domain="voteit.core">
 <body>
+    <div metal:fill-slot="page_heading"><h1 i18n:translate="login_or_register">Login or register</h1></div>
+    <tal:top metal:fill-slot="top_content">
+        <a href="${request.application_url}/request_password"
+           i18n:translate="recover_password_link_text">Already have an account but forgot your password? Click here</a>
+    </tal:top>
     <div metal:fill-slot="left">
         <div tal:condition="login_form|False" tal:replace="structure login_form">Login form</div>
         <div><a href="request_password" i18n:translate="">Forgot password?</a></div>
 		<div tal:replace="structure api.render_view_group(api.root, request, 'login_forms')|''">Login forms</div>
     </div>
-
     <div metal:fill-slot="right">
         <div tal:condition="reg_form|False" tal:replace="structure reg_form">Reg form</div>
-    
     </div>
 </body>
 </html>
