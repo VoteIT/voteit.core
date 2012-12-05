@@ -76,6 +76,13 @@
 }
 /* End Menus */
 
+/* Footer */
+#footer-outer {
+	clear: both;
+	height: 50px;
+	background-color: #ccc;
+}
+/* End footer */
 
 /* Generic classes for positioning columns
  	FIXME: We'll want to phase out these since they're a bit too complex.
