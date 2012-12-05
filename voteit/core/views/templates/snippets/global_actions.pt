@@ -1,14 +1,21 @@
 <tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core">
-<ul id="global-actions-menu">
-	<li><a class="meeting_time icon"
-	       tal:content="meeting_time"
-		   title="The time that the server think it is. If this is wrong, you need to change the server time."
-		   i18n:attributes="title">1999</a></li>
-    <tal:authenticated condition="api.userid">
-        <div tal:replace="structure api.render_view_group(context, request, 'global_actions_authenticated')">Actions</div>
-    </tal:authenticated>
-    <tal:anon condition="not api.userid">
-        <div tal:replace="structure api.render_view_group(context, request, 'global_actions_anon')">Actions</div>
-    </tal:anon>
-</ul>
+<span class="dropdown_menu" id="global-actions-menu">
+    <a href="#" class="menu_header">
+        <span class="iconpadding icon">Global menu &raquo;</span>
+    </a>
+    <ul class="menu_body" >
+        <li>
+            <a class="meeting_time icon"
+               tal:content="meeting_time"
+               title="The time that the server think it is. If this is wrong, you need to change the server time."
+               i18n:attributes="title">1999</a>
+        </li>
+        <tal:authenticated condition="api.userid">
+            <div tal:replace="structure api.render_view_group(context, request, 'global_actions_authenticated')">Actions</div>
+        </tal:authenticated>
+        <tal:anon condition="not api.userid">
+            <div tal:replace="structure api.render_view_group(context, request, 'global_actions_anon')">Actions</div>
+        </tal:anon>
+    </ul>
+</span>
 </tal:main>

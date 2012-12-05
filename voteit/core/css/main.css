@@ -7,7 +7,7 @@
 }
 
 /* Top header section, with meeting title */
-#global-actions {
+#header-global-outer .wrapper {
 	height: 60px;
 }
 #header-meeting-title {
@@ -42,8 +42,8 @@
 }
 #sidebar {
 	float: left;
-	width: 210px;
-	padding-right: 10px;
+	width: 205px;
+	padding-right: 15px;
 }
 #top {
 	padding: 10px;

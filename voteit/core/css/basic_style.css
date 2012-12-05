@@ -1,6 +1,7 @@
 /* Fonts, headlines, text */
 body {
-	font: 16px Helvetica, Arial, sans-serif;
+	font: 18px "Helvetica Neue", Helvetica, Arial, sans-serif;
+	line-height: 1.5em;
 }
 h1 { font-size: 200%;}
 h2 { font-size: 175%; }
@@ -11,7 +12,12 @@ h6 { font-size: 90%; }
 h1, h2, h3, h4, h5, h6 {
 	padding: 0.5em 0 0.25em 0;
 }
-
+#header-meeting-title h1 {
+	text-transform: uppercase;
+}
+#header-meeting-title a {
+	color: #5c5a5d;
+}
 /* Links */
 a, a:hover, a:active {
 	color: #006680;
@@ -49,4 +55,9 @@ body {
 #right {
 	background-color: #fff;
 	margin-top: 10px;
+}
+#header-meeting-outer {
+	background: url(/static/images/menu_bg.png) repeat-x bottom left;
+	height: 60px;
+	margin-bottom: 20px;
 }

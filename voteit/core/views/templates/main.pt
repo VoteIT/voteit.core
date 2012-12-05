@@ -13,7 +13,7 @@
 </head>
 <body>
     <div id="header-global-outer">
-        <div id="global-actions" class="wrapper">
+        <div class="wrapper">
             <div class="section">
                 <div id="header-meeting-title">
                     <h1>
