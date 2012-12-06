@@ -27,11 +27,11 @@
 /* Meeting section, the one just below the upper section with logo */
 #meeting-actions {
 	float: left;
-	width: 600px;
+	width: 690px;
 }
-#search-help {
+#search_form {
 	float: left;
-	width: 390px;
+	width: 300px;
 }
 /* End meeting section */
 

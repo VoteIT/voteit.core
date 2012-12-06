@@ -61,26 +61,23 @@ def polls_menu(context, request, va, **kw):
     return render('../templates/snippets/polls_menu.pt', response, request = request)
 
 
-@view_action('meeting_actions', 'search', title = _(u"Search"), permission=VIEW)
-def search_menu(context, request, va, **kw):
-    api = kw['api']
-    if api.meeting:
-        return u"""<li class="tab"><a href="%ssearch">%s</a></li>""" % (api.meeting_url, api.translate(va.title))
-    return u""
-
-
-@view_action('meeting_actions', 'admin_menu', title = _(u"Admin menu"), permission = MANAGE_SERVER)
-@view_action('meeting_actions', 'settings_menu', title = _(u"Settings"), permission = MODERATE_MEETING, meeting_only = True)
-@view_action('meeting_actions', 'meeting', title = _(u"Meeting"), permission=VIEW, meeting_only = True)
-@view_action('meeting_actions', 'participants_menu', title = _(u"Participants"), permission=VIEW, meeting_only = True, menu_css_cls = 'user-dark')
-@view_action('meeting_actions', 'help_action', title = _(u"Help & contact"), permission=VIEW)
+@view_action('meeting_actions', 'admin_menu', title = _(u"Admin menu"), permission = MANAGE_SERVER,
+             menu_css_cls = 'admin_menu')
+@view_action('meeting_actions', 'settings_menu', title = _(u"Settings"), permission = MODERATE_MEETING,
+             meeting_only = True, menu_css_cls = 'settings_menu')
+@view_action('meeting_actions', 'meeting', title = _(u"Meeting"), permission=VIEW, meeting_only = True,
+             menu_css_cls = 'meeting_menu')
+@view_action('meeting_actions', 'participants_menu', title = _(u"Participants"), permission=VIEW,
+             meeting_only = True, menu_css_cls = 'participants_menu')
+@view_action('meeting_actions', 'help_action', title = _(u"Help & contact"), permission=VIEW,
+             menu_css_cls = 'help_contact_menu')
 def generic_menu(context, request, va, **kw):
     api = kw['api']
     if va.kwargs.get('meeting_only', False) == True and api.meeting is None:
         return ''
     response = {}
     response['menu_title'] = va.title
-    response['menu_css_cls'] = va.kwargs.get('menu_css_cls', False) or 'cog-dark'
+    response['menu_css_cls'] = va.kwargs.get('menu_css_cls', '')
     response['rendered_menu'] = api.render_view_group(context, request, va.name)
     return render('../templates/snippets/generic_meeting_menu.pt', response, request = request)
 

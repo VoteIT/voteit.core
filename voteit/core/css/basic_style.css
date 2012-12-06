@@ -18,6 +18,30 @@ h1, h2, h3, h4, h5, h6 {
 #header-meeting-title a {
 	color: #5c5a5d;
 }
+#header-meeting-outer {
+	font-size: 23px;
+}
+#header-meeting-outer a {
+	color: #5c5a5d;
+}
+#header-meeting-outer .tab {
+	line-height: 30px;
+	padding: 10px 10px 15px 0px;
+}
+#search_form {
+	text-align: right;
+}
+#search_query {
+	font-size: 16px;
+	height: 16px;
+	padding: 2px;
+	margin: 15px 10px 15px 0px;
+	width: 170px;
+}
+#search_button {
+
+}
+/* End Fonts, headlines, text */
 /* Links */
 a, a:hover, a:active {
 	color: #006680;
@@ -28,7 +52,7 @@ a {
 #content a:hover {
 	text-decoration: underline;
 }
-
+/* End links */
 /* Backgrounds and area borders */
 body {
 	background-color: #f2f2f2;
@@ -58,10 +82,10 @@ body {
 }
 #header-meeting-outer {
 	background: url(/static/images/menu_bg.png) repeat-x bottom left;
-	height: 60px;
+	height: 50px;
 	margin-bottom: 20px;
 }
-
+/* End Backgrounds and area borders */
 /* main element borders */
 #left, #right, #top,
 .sidebar_block {
@@ -73,3 +97,44 @@ body {
     -moz-box-shadow:  1px 1px 5px 2px #888;
     -webkit-box-shadow: 1px 1px 5px 2px #888;
 }
+/* end main element borders */
+/* Icons */
+.iconpadding { padding-left: 20px; }
+.icon.closed { background: url(/static/icons/icon_past.png) no-repeat; }
+.icon.canceled { background: url(/static/icons/icon_past.png) no-repeat; }
+.icon.ongoing { background: url(/static/icons/icon_ongoing.png) no-repeat; }
+.icon.upcoming { background: url(/static/icons/icon_upcoming.png) no-repeat; }
+.icon.private { background: url(/static/icons/icon_upcoming_red.png) no-repeat; }
+.icon.proposal { background: url(/static/icons/icon_proposal_lb.png) no-repeat left 25%; }
+.icon.discussion,
+.icon.discussionpost { background: url(/static/icons/icon_disc_lb.png) no-repeat left 25%; }
+.icon.poll { background: url(/static/icons/icon_poll_lb.png) no-repeat left 50%; }
+.icon.poll-dark { background: url(/static/icons/icon_poll.png) no-repeat; }
+.cog-dark { background: url(/static/icons/icon_settings.png) no-repeat top left; }
+.icon.published { background: url(/static/icons/icon_doc.png) left center no-repeat; }
+.icon.retracted { background: url(/static/icons/icon_doc_retracted.png) left center no-repeat; }
+.icon.unhandled { background: url(/static/icons/icon_doc.png) left center no-repeat; }
+.icon.voting { background: url(/static/icons/icon_lock.png) left center no-repeat; }
+.icon.approved { background: url(/static/icons/icon_approved.png) left center no-repeat; }
+.icon.denied { background: url(/static/icons/icon_denied.png) left center no-repeat; }
+.user-dark { background: url(/static/icons/icon_user_db.png) no-repeat top left; }
+.icon.time { background: url(/static/icons/icon_clock.png) no-repeat 0 0; }
+/* End icons */
+
+/* form elements */
+button.small {
+	background: url(/static/buttons/button_small_grey.png) repeat-x bottom left;
+	font-size: 16px;
+	height: 25px;
+	border: 1px solid #b2b2b5;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+}
+button.small:hover {
+	border-color: #968c89;
+}
+button.small:active {
+	background: #ccc;
+}
+/* End form elements */

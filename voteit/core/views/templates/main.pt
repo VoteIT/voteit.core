@@ -43,7 +43,7 @@
                     Meeting actions - like who's in a meeting, search etc
                     </tal:menu>
                 </div>
-                <div id="search-help">search help</div>
+                <tal:search tal:replace="structure api.render_single_view_component(context, request, 'main', 'search')">search</tal:search>
             </div>
         </div>
     </div>

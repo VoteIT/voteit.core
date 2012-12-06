@@ -1,7 +1,7 @@
 <tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core">
 <span class="dropdown_menu" id="global-actions-menu">
     <a href="#" class="menu_header">
-        <span class="iconpadding icon">Global menu &raquo;</span>
+        <span class="iconpadding icon">Global menu</span>
     </a>
     <ul class="menu_body" >
         <li>

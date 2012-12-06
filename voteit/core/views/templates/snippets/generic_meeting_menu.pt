@@ -1,7 +1,7 @@
 <tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core">
 <li class="tab dropdown_menu" tal:condition="rendered_menu">
     <a href="#" class="menu_header">
-        <span class="iconpadding icon ${menu_css_cls}">${menu_title} &raquo;</span>
+        <span class="${menu_css_cls}">${menu_title}</span>
     </a>
     <ul class="menu_body" tal:content="structure rendered_menu">Menu</ul>
 </li>
