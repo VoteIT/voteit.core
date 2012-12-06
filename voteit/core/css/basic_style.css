@@ -146,8 +146,30 @@ button.small:active {
 	width: 23px;
 }
 .cogwheel a {
-	color: transparent;
+	color: transparent !important;
 	background: url(/static/buttons/cogwheel.png) no-repeat;
 	display: block;
 }
 /* End Cogwheel menu */
+/* Sidebar styles */
+#sidebar,
+#sidebar a {
+	color: #5c5a5d;
+	font-size: 17px;
+}
+#sidebar h5.header,
+#sidebar h5.header a {
+	font-size: 26px;
+	display: block;
+	height: 34px; /* Due to icons */
+	line-height: 34px;
+}
+#sidebar h6 {
+	font-size: 19px;
+	text-transform: uppercase;
+}
+#navigation .header a {
+	padding-left: 40px;
+	background: url(/static/sidebar_icons/agenda_navigation.png) no-repeat left top;
+}
+/* End Sidebar styles */
