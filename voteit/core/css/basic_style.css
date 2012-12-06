@@ -138,3 +138,16 @@ button.small:active {
 	background: #ccc;
 }
 /* End form elements */
+
+/* Cogwheel menu */
+.cogwheel {
+	float: right;
+	height: 19px;
+	width: 23px;
+}
+.cogwheel a {
+	color: transparent;
+	background: url(/static/buttons/cogwheel.png) no-repeat;
+	display: block;
+}
+/* End Cogwheel menu */
