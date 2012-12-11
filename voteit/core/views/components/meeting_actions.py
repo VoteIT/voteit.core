@@ -1,13 +1,14 @@
 from betahaus.viewcomponent import view_action
 from pyramid.renderers import render
 from pyramid.traversal import resource_path
+from pyramid.traversal import find_resource
 from pyramid.view import view_config
 from repoze.catalog.query import Eq
 from repoze.catalog.query import NotAny
 
-from voteit.core.security import MANAGE_SERVER, MODERATE_MEETING
+from voteit.core.security import MANAGE_SERVER
+from voteit.core.security import MODERATE_MEETING
 from voteit.core.security import VIEW
-from voteit.core.security import EDIT
 from voteit.core.security import MANAGE_GROUPS
 from voteit.core.security import ADD_VOTE
 from voteit.core import VoteITMF as _
@@ -55,7 +56,7 @@ def polls_menu(context, request, va, **kw):
         poll = resolve_catalog_docid(api.root.catalog, api.root, docid)
         if api.context_has_permission(ADD_VOTE, poll):
             num = num + 1
-            
+
     response['unvoted_polls_count'] = num
     response['url'] = '%smeeting_poll_menu' % api.resource_url(api.meeting, request)
     return render('../templates/snippets/polls_menu.pt', response, request = request)
@@ -140,7 +141,12 @@ def meeting_poll_menu(context, request):
         if metadata[section]:
             show_polls = True
 
+    def _get_poll_url(path):
+        poll = find_resource(api.root, path)
+        return request.resource_url(poll.__parent__, anchor=poll.uid)
+
     response = {}
+    response['get_poll_url'] = _get_poll_url
     response['api'] = api
     response['sections'] = sections
     response['show_polls'] = show_polls

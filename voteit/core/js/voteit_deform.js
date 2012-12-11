@@ -52,7 +52,7 @@ $(document).delegate('input[name="start_time"]', 'change', function() {
 function voteit_deform_success(rText, sText, xhr, form) {
 	var url = xhr.getResponseHeader('X-Relocate');
 	if (url) {
-		window.location.assign(url)
+		window.location.assign(url);
 	} else {
 		deform.processCallbacks();
 		deform.focusFirstInput();
@@ -86,9 +86,13 @@ function voteit_poll_beforeSubmit(arr, form, options) {
 } 
 
 function voteit_poll_complete(xhr, textStatus) {
-	$('.booth', xhr.responeText).css('width', $('#content').width()*0.7);
-	var button = $('form.deform', xhr.responeText).find('li.buttons button');
-	var message = $('form.deform', xhr.responeText).parents('.booth.poll').find('.success.message');
-	message.insertBefore(button);
-	message.fadeIn(3000);
+    if (xhr.status == 200) {
+        $('.booth', xhr.responeText).css('width', $('#content').width()*0.7);
+        var button = $('form.deform', xhr.responeText).find('li.buttons button');
+        var message = $('form.deform', xhr.responeText).parents('.booth.poll').find('.success.message');
+        message.insertBefore(button);
+        message.fadeIn(3000);
+    } else {
+        window.location.reload();
+    }
 }
