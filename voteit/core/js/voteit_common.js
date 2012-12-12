@@ -49,14 +49,14 @@ $(document).ready(function () {
 });
 
 $(document).ready(function() {
+    // This won't work in IE'
     var div = $('#flash_messages');
     if(div) {
-        var start = $(div).offset().top;
-     
+        var start = div.offset().top;
         $.event.add(window, "scroll", function() {
             var p = $(window).scrollTop();
-            $(div).css('position',((p)>start) ? 'fixed' : 'static');
-            $(div).css('top',((p)>start) ? '0px' : '');
+            div.css('position',((p)>start) ? 'fixed' : 'static');
+            div.css('top',((p)>start) ? '0px' : '');
         });
    }
 });

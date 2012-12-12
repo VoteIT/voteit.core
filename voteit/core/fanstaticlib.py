@@ -38,7 +38,7 @@ qtip = Group((_qtip_css, _qtip_js))
 _deform_js = Resource(deformlib, 'scripts/deform.js', depends = (jquery_deform,))
 _voteit_deform_css = Resource(voteit_core_csslib, 'deform.css', depends = (reset,))
 
-jquery_form = Resource(deformlib, 'scripts/jquery.form.js', depends = (jquery_deform,))
+jquery_form = Resource(deformlib, 'scripts/jquery.form-3.09.js', depends = (jquery_deform,))
 jquery_maskedinput = Resource(deformlib, 'scripts/jquery.maskedinput-1.2.2.min.js', depends = (jquery_deform,))
 
 #Timepicker
@@ -49,6 +49,7 @@ jquery_timepicker = Group((_jquery_timepicker_css, _jquery_timepicker_js))
 #Autoresize textarea
 autoresizable_textarea_js = Resource(voteit_core_jslib, 'jquery.autoResizable.js', minified='jquery.autoResizable.min.js',
                                   depends = (jquery_deform,))
+
 
 #VoteIT core
 voteit_main_css = Resource(voteit_core_csslib, 'main.css', depends=(reset, _qtip_css,))

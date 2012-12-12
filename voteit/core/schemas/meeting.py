@@ -94,7 +94,9 @@ def meeting_mail_name_node():
     return colander.SchemaNode(colander.String(),
                                title = _(u"Name visible on system mail sent from this meeting"),
                                default = _(u"VoteIT"),
-                               validator = colander.Regex(regex=NAME_PATTERN, msg=_(u"Only alphanumeric characters allowed")),)
+                               validator = colander.Regex(regex=NAME_PATTERN,
+                                                          msg=_(u"name_pattern_error",
+                                                                default = u"Must be at least 3 chars + only alphanumeric characters allowed")),)
 
 def meeting_mail_address_node():
     return colander.SchemaNode(colander.String(),

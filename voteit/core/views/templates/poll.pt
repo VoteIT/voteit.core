@@ -1,5 +1,6 @@
-<tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core" define="poll api.context">
-
+<html xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core" tal:define="poll api.context" tal:omit-tag="request.is_xhr">
+<head tal:omit-tag="request.is_xhr"><!-- plug point for fanstatic in case page is loaded stand-alone - important! --></head>
+<body tal:omit-tag="request.is_xhr">
     <div tal:define="poll_plugin poll.get_poll_plugin()|None;
                      wf_state poll.get_workflow_state();
                      can_vote api.context_has_permission('Add Vote', poll);
@@ -44,7 +45,7 @@
 			<div class="col-65-35">
 				<div class="column column-1">
 					<tal:iterate condition="(wf_state == 'ongoing' and not can_vote) or (wf_state == 'closed' and not has_voted)" repeat="proposal proposals">
-					    <tal:proposal replace="structure api.render_single_view_component(context, request, 'proposal', 'block', brain=proposal, show_user_tags=show_user_tags)">
+					    <tal:proposal replace="structure api.render_single_view_component(context, request, 'proposal', 'block', brain=proposal, show_user_tags=False)">
 					    	Proposal
 					    </tal:proposal>
 					</tal:iterate>
@@ -101,7 +102,6 @@
 		     	<p tal:content="structure poll_plugin.description|string:">Description</p>
 	     	</div>
 		</div>
-
     </div>
-    
-</tal:main>
+</body>
+</html>

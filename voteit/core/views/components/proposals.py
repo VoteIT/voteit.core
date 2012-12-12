@@ -10,7 +10,6 @@ from zope.component.interfaces import ComponentLookupError
 from voteit.core import VoteITMF as _
 from voteit.core.security import RETRACT
 from voteit.core.models.interfaces import IPoll
-from voteit.core.models.proposal import Proposal
 
 
 @view_action('proposals', 'listing')
@@ -107,34 +106,9 @@ def proposal_block(context, request, va, **kw):
     api = kw['api']
     brain = kw['brain']
     show_user_tags = kw.get('show_user_tags', True)
-    
-    # crearting dummy proposal to get state info dict
-    state_info = _dummy_proposal.workflow.state_info(None, request)
-    
-    def _show_retract(brain):
-        #Do more expensive checks last!
-        if brain['workflow_state'] != 'published':
-            return
-        if not api.userid in brain['creators']:
-            return
-        #Now for the 'expensive' stuff
-        obj = find_resource(api.root, brain['path'])
-        return api.context_has_permission(RETRACT, obj)
-    
-    def _translated_state_title(state):
-        for info in state_info:
-            if info['name'] == state:
-                return api.tstring(info['title'])
-        
-        return state
-    
     response = {}
     response['api'] = api
     response['brain'] = brain
-    response['translated_state_title'] = _translated_state_title
-    response['show_retract'] = _show_retract
     response['show_user_tags'] = show_user_tags
     
     return render('../templates/proposal.pt', response, request=request)
-
-_dummy_proposal = Proposal()

@@ -3,10 +3,10 @@ from pyramid.renderers import render
 from pyramid.traversal import resource_path
 
 from voteit.core import VoteITMF as _
-from voteit.core.models.interfaces import IMeeting
-from voteit.core.models.interfaces import ISiteRoot
 from voteit.core.security import MODERATE_MEETING
 from voteit.core.security import VIEW
+from voteit.core.models.interfaces import IMeeting
+from voteit.core.models.interfaces import ISiteRoot
 
 
 @view_action('sidebar', 'navigation')
@@ -41,9 +41,9 @@ def navigation_section_header(context, request, va, **kwargs):
     )
     return render('templates/sidebars/navigation_head.pt', response, request = request)
 
-@view_action('navigation_sections', 'ongoing', title = _(u"Ongoing"), state = 'ongoing', permission=VIEW)
-@view_action('navigation_sections', 'upcoming', title = _(u"Upcoming"), state = 'upcoming', permission=VIEW)
-@view_action('navigation_sections', 'closed', title = _(u"Closed"), state = 'closed', permission=VIEW)
+@view_action('navigation_sections', 'ongoing', title = _(u"Ongoing"), state = 'ongoing', permission = VIEW)
+@view_action('navigation_sections', 'upcoming', title = _(u"Upcoming"), state = 'upcoming', permission = VIEW)
+@view_action('navigation_sections', 'closed', title = _(u"Closed"), state = 'closed', permission = VIEW)
 @view_action('navigation_sections', 'private', title = _(u"Private"), state = 'private',
              permission = MODERATE_MEETING, interface = IMeeting)
 def navigation_sections(context, request, va, **kwargs):
