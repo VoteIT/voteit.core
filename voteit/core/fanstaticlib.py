@@ -67,6 +67,7 @@ voteit_workflow_js = Resource(voteit_core_jslib, 'voteit_workflow.js', depends=(
 voteit_deform = Group((_voteit_deform_js, _voteit_deform_css))
 voteit_participants = Resource(voteit_core_jslib, 'voteit_participants.js', bottom=True, depends=(voteit_user_inline_info_js, jquery_deform,))
 voteit_participants_edit = Resource(voteit_core_jslib, 'voteit_participants_edit.js', bottom=True, depends=(voteit_participants,))
+voteit_moderator_js = Resource(voteit_core_jslib, 'voteit_moderator.js', bottom=True, depends=(voteit_common_js,))
 
 
 DEFORM_RESOURCES = {
@@ -99,6 +100,9 @@ def is_participants_view_moderator(context, request, view):
 def is_agenda_item(context, request, view):
     return getattr(context, 'content_type', '') == 'AgendaItem'
 
+def is_moderator(context, request, view):
+    return view.api.show_moderator_actions
+
 #Positional arguments
 #key, resource, discriminator (if any)
 DEFAULT_FANSTATIC_RESOURCES = (
@@ -110,5 +114,6 @@ DEFAULT_FANSTATIC_RESOURCES = (
     ('voteit_user_inline_info_js', voteit_user_inline_info_js),
     ('voteit_participants', voteit_participants, is_participants_view),
     ('voteit_participants_edit', voteit_participants_edit, is_participants_view_moderator),
+    ('voteit_moderator_js', voteit_moderator_js, is_moderator),
     ('star_rating', star_rating, is_agenda_item), #Resources loaded with ajax, so this needs to be loaded in advance.
 )

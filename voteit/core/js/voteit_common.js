@@ -61,10 +61,10 @@ $(document).ready(function() {
    }
 });
 
-/* Display all kinds of menus */
-$('.menu_header').live('hover', display_qtip_menu);
-function display_qtip_menu(event) {
-    /* stop form from submitting normally 
+
+/* Meeting sections menus */
+$('#meeting-actions .menu_header').live('hover', function(event) {
+    /* stop form using default action
     IE might throw an error calling preventDefault(), so use a try/catch block. */
     try { event.preventDefault(); } catch(e) {}
     if ($(this).hasAttr('url')) {
@@ -79,26 +79,6 @@ function display_qtip_menu(event) {
     else {
         //We need a copy of the content, otherwise qtip will try to locate it every time it triggers
         var q_content = { text: $(this).parent().find('.menu_body').clone() };
-    }
-    if ($(this).hasClass('cogwheel')) {
-        var q_position = {
-            viewport: $(window),
-            at: "right center",
-            my: "left center",
-            adjust: {
-                method: 'flip',
-            }
-        };
-    }
-    else {
-        var q_position = {
-            viewport: $(window),
-            at: "right bottom",
-            my: "right top",
-            adjust: {
-                method: 'flip',
-            }
-        };
     }
     $(this).qtip({
         overwrite: false, // Make sure the tooltip won't be overridden once created
@@ -115,12 +95,25 @@ function display_qtip_menu(event) {
             effect: false,
             delay: 100,
         },
-        position: q_position,
+        position: {
+            viewport: $(window),
+            at: "right bottom",
+            my: "right top",
+            adjust: {
+                method: 'flip',
+            },
+            effect: false,
+            adjust: {
+                y: 11 // Match padding 10px and border 1px
+            }
+        },
         style: {
-            classes: "qtip_menu",
+            classes: "meeting_actions_menu",
+            tip: false,
+            default: false, //Documentation says "def:" - keep an eye on this
         },
     }, event);
-}
+});
 
 /*  User tag methods */
 $(document).ready(function() {

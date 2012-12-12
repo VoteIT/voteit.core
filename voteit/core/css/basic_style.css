@@ -26,7 +26,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 #header-meeting-outer .tab {
 	line-height: 30px;
-	padding: 10px 10px 15px 0px;
+	padding: 10px 10px 10px 0px;
 }
 #search_form {
 	text-align: right;
@@ -173,3 +173,7 @@ button.small:active {
 	background: url(/static/sidebar_icons/agenda_navigation.png) no-repeat left top;
 }
 /* End Sidebar styles */
+
+/* Dropdown menus */
+
+/* End Dropdown menus */
