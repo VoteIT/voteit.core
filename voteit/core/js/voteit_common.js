@@ -111,29 +111,25 @@ $('#meeting-actions .menu_header').live('hover', function(event) {
     }, event);
 });
 
-/*  User tag methods */
-$(document).ready(function() {
-    $(".user_tag_form").live('submit', function(event) {
-        /* stop form from submitting normally 
-        IE might throw an error calling preventDefault(), so use a try/catch block. */
-        try { event.preventDefault(); } catch(e) {}
+/*  User tag methods - requires an a.user_tag_link within .user_tag block. Like this:
 
-        /* get some values from elements on the page: */
-        var $form = $( this ),
-            tag = $form.find('input[name="tag"]').val(),
-            _do = $form.find('input[name="do"]').val(),
-            display_name = $form.find('input[name="display_name"]').val(),
-            expl_display_name = $form.find('input[name="expl_display_name"]').val(),
-            url = $form.attr('action'),
-            id = $form.parent().attr('id');
-        /* Send the data using post and put the results in a div */
-        $.post(url, {'tag': tag, 'do': _do, 'display_name': display_name, 'expl_display_name':expl_display_name},
-          function(data) {
-              $("#"+id).html(data);
-          }
-        );
+<div class="user_tag">
+  <a class="user_tag_link" href="http://link-to-action">Text</a>
+</div>
+
+*/
+$(".user_tag_link").live('click', function(event) {
+    try { event.preventDefault(); } catch(e) {} //For IE bugs?
+    spinner().appendTo(this);
+    var user_tag = $(this).parents('.user_tag');
+    user_tag.load($(this).attr('href'), function(response, status, xhr) {
+        if (status == 'error') {
+            flash_message(voteit.translation['error_loading'], 'error');
+        }
     });
+    user_tag.find('.spinner').remove()
 });
+
 /* Minimize
  * Structure to make minimize work. elem can be most html tags
  * <elem id="something_unique" class="toggle_area toggle_closed"> <!--or toggle_opened -->

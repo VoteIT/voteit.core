@@ -29,21 +29,15 @@ class UserTagsView(object):
         """
         #FIXME: Permission for setting should perhaps be adaptive? Right now all viewers can set.
         #See https://github.com/VoteIT/voteit.core/issues/16
-        #FIXME: Use normal colander Schema + CSRF?
         request = self.request
         api = self.api
-
-        tag = request.POST.get('tag')
-        do = int(request.POST.get('do')) #0 for remove, 1 for add
-
+        tag = request.GET.get('tag')
+        do = int(request.GET.get('do')) #0 for remove, 1 for add
         user_tags = request.registry.getAdapter(request.context, IUserTags)
-
         if do:
             user_tags.add(tag, api.userid)
-
         if not do:
             user_tags.remove(tag, api.userid)
-
         if not request.is_xhr:
             return HTTPFound(location=resource_url(request.context, request))
         else:
@@ -60,7 +54,7 @@ class UserTagsView(object):
 
         tag = self.request.GET['tag']
         display_name = self.request.GET.get('display_name', _(tag))
-        expl_display_name = self.request.GET.get('expl_display_name', _(tag))
+        #expl_display_name = self.request.GET.get('expl_display_name', _(tag))
 
         user_tags = self.request.registry.getAdapter(context, IUserTags)
         userids = list(user_tags.userids_for_tag(tag))
@@ -71,5 +65,5 @@ class UserTagsView(object):
         response['display_name'] = display_name
         response['get_userinfo_url'] = api.get_userinfo_url
         response['userids'] = userids
-        response['expl_display_name'] = expl_display_name
+        #response['expl_display_name'] = expl_display_name
         return response

@@ -1,10 +1,8 @@
 <tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core">
 <div class="tagging_users content_wrapper">
-
     <tal:iterate repeat="userid userids">
         <div tal:content="structure api.get_creators_info((userid, ))">Creators</div>
         <div class="clear"><!-- --></div>
     </tal:iterate>
-    
 </div>
 </tal:main>
