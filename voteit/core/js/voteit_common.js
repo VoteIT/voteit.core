@@ -110,7 +110,7 @@ $('#meeting-actions .menu_header').live('hover', function(event) {
         style: {
             classes: "meeting_actions_menu",
             tip: false,
-            default: false, //Documentation says "def:" - keep an eye on this
+            def: false,
         },
     }, event);
 });
