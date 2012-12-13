@@ -1,5 +1,4 @@
 from betahaus.viewcomponent import view_action
-from betahaus.viewcomponent.interfaces import IViewGroup
 from pyramid.renderers import render
 from pyramid.security import effective_principals
 from pyramid.traversal import resource_path
@@ -9,7 +8,7 @@ from repoze.catalog.query import Any
 from voteit.core import VoteITMF as _
 
 
-@view_action('main', 'tag_stats')
+@view_action('agenda_item_top', 'tag_stats')
 def tag_stats(context, request, *args, **kwargs):
     api = kwargs['api']
     if not api.meeting:
@@ -34,6 +33,10 @@ def tag_stats(context, request, *args, **kwargs):
             else:
                 stats[tag] += 1
 
+    stats = sorted([(k, v) for (k, v) in stats.items() if v > 1], key=lambda x: x[1], reverse=True)[:5]
+    if not stats:
+        return u"" #No reason to continue rendering
+
     def _make_url(tag):
         query = request.GET.copy()
         query['tag'] = tag
@@ -42,7 +45,7 @@ def tag_stats(context, request, *args, **kwargs):
     response = dict(
         api = api,
         context = context,
-        stats = sorted(stats.items(), key=lambda x: x[1], reverse=True)[:5],
+        stats = stats,
         make_url = _make_url,
     )
     return render('../templates/snippets/tag_stats.pt', response, request = request)

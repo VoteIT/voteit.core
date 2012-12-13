@@ -1,12 +1,12 @@
 <tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core">
-<div class="tag_stats">
-	<h4 i18n:translate="">Active subjects</h4>
+<div class="tag_stats clear">
+	<h4 i18n:translate="">Popular subjects</h4>
 	<ul tal:condition="stats">
 		<tal:for repeat="(tag, count) stats">
-	    <li tal:condition="count > 1">
+	    <li>
 	    	<span class="tag">
 	    		<a tal:condition="context.content_type == 'AgendaItem'" href="${make_url(tag)}">#${tag}</a>
-	    		<tal:notai condition="not context.content_type == 'AgendaItem'">#${tag}</tal:notai>
+	    		<tal:notag condition="not context.content_type == 'AgendaItem'">#${tag}</tal:notag>
     		</span>
 	    </li>
 	    </tal:for>

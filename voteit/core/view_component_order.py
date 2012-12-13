@@ -11,4 +11,5 @@ DEFAULT_VC_ORDER = (
     ('context_actions', ('edit', 'delete', 'poll_config')),
     ('help_action', ('contact', 'wiki')),
     ('meta_data_listing', ('state','time','retract', 'user_tags','answer','tag')),
+    ('agenda_item_top', ('description', 'tag_stats')),
 )
