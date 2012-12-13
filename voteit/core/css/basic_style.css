@@ -237,3 +237,24 @@ button.small:active {
 	padding: 0px;
 }
 /* End Override qTip defaults */
+
+/* Minimizable content */
+.toggle_opened .toggle_minimize {
+    background: url(/static/icons/icon_arrow_up_lb.png) no-repeat top right;
+}
+.toggle_opened .toggle_minimize:hover {
+    background-image: url(/static/icons/icon_arrow_up.png);
+}
+.toggle_closed .toggle_minimize {
+    background: url(/static/icons/icon_arrow_down_lb.png) no-repeat top right;
+}
+.toggle_closed .toggle_minimize:hover {
+    background-image: url(/static/icons/icon_arrow_down.png);
+}
+.toggle_area.toggle_closed .minimizable_area {
+    display: none !important;
+}
+.toggle_area.toggle_opened .minimizable_inverted {
+    display: none !important;
+}
+/* End minimizable content */

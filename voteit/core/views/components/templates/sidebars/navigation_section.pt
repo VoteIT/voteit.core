@@ -6,10 +6,10 @@
     </h6>
 	
     <tal:open_section condition="not closed_section">
-	    <ul class="section">
+	    <ul class="section minimizable_area">
 	        <tal:iterate condition="brains" repeat="brain brains">
 	            <tal:defs define="current_context in_current_context(request.path, brain['path'])">
-	            <li tal:attributes="class current_context and 'selected minimizable_area' or 'plain minimizable_area'"
+	            <li tal:attributes="class current_context and 'selected' or 'plain'"
 	                tal:define="prop_unread_count not current_context and count_query(brain['path'], 'Proposal', unread = 1) or 0;
                                 disc_unread_count not current_context and count_query(brain['path'], 'DiscussionPost', unread = 1) or 0;">
 	                <tal:moderator_menu condition="api.show_moderator_actions">
