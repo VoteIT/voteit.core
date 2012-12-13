@@ -20,7 +20,7 @@
             <span i18n:translate="">Add poll</span>
         </a>
     </div>
-    <h2 class="iconpadding icon proposal" i18n:translate="">Proposal</h2>
+    <h1 class="large-iconpadding icon proposal" i18n:translate="">Proposal</h1>
 	<span tal:replace="structure proposal_widgets">Widget code</span>
 </div>
 </tal:main>

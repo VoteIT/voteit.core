@@ -10,7 +10,7 @@ h4 { font-size: 125%; }
 h5 { font-size: 100%; }
 h6 { font-size: 90%; }
 h1, h2, h3, h4, h5, h6 {
-	padding: 0.5em 0 0.25em 0;
+	padding: 0.25em 0 0.5em 0;
 }
 #header-meeting-title h1 {
 	text-transform: uppercase;
@@ -103,6 +103,7 @@ body {
 /* end main element borders */
 /* Icons */
 .iconpadding { padding-left: 20px; }
+.large-iconpadding { padding-left: 45px; }
 .icon.closed { background: url(/static/icons/icon_past.png) no-repeat; }
 .icon.canceled { background: url(/static/icons/icon_past.png) no-repeat; }
 .icon.ongoing { background: url(/static/icons/icon_ongoing.png) no-repeat; }
@@ -123,6 +124,11 @@ body {
 .icon.denied { background: url(/static/icons/icon_denied.png) left center no-repeat; }
 .user-dark { background: url(/static/icons/icon_user_db.png) no-repeat top left; }
 .icon.time { background: url(/static/icons/icon_clock.png) no-repeat 0 0; }
+
+/* header icons */
+h1.icon.proposal { background: url(/static/header_icons/proposal.png) no-repeat; }
+h1.icon.discussion { background: url(/static/header_icons/discussion.png) no-repeat; }
+#agenda_item_title.icon { background: url(/static/header_icons/agenda.png) no-repeat; }
 /* End icons */
 
 /* form elements */
@@ -171,6 +177,7 @@ button.small:active {
 #sidebar h6 {
 	font-size: 19px;
 	text-transform: uppercase;
+	margin-top: 20px;
 }
 #navigation .header a {
 	padding-left: 40px;

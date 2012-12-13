@@ -4,7 +4,12 @@
 	  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
 	  i18n:domain="voteit.core">
 <body>
-
+    <div metal:fill-slot="page_heading" id="page_heading">
+        <tal:moderator_actions metal:define-slot="action_menu"
+             tal:condition="api.context_has_permission('Moderate Meeting', context)"
+             tal:content="structure api.get_moderator_actions(context)">Cogwheel menu</tal:moderator_actions>
+        <h1 id="agenda_item_title" class="icon large-iconpadding">${context.title}</h1>
+    </div> <!-- page_heading -->
     <div metal:fill-slot="top_content">
         <div class="description" tal:condition="context.description" tal:content="structure context.description">Description</div>
         <div class="tag_stats" tal:replace="structure api.render_single_view_component(context, request, 'main', 'tag_stats')">Tag stats</div>
