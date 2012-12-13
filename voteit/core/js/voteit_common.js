@@ -204,7 +204,7 @@ $(document).ready(function() {
     if (url_config.length > 0) {
         var url = url_config.attr('href') + '/_mark_read';
         var unread_names = [];
-        $("#main_window .unread").each( function() {
+        $("#main .unread").each( function() {
             unread_names.push( $(this).attr('name') );
         });
         if (unread_names.length > 0) {
