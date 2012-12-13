@@ -61,7 +61,6 @@ $(document).ready(function() {
    }
 });
 
-
 /* Meeting sections menus */
 $('#meeting-actions .menu_header').live('hover', function(event) {
     /* stop form using default action
@@ -103,9 +102,6 @@ $('#meeting-actions .menu_header').live('hover', function(event) {
                 method: 'flip',
             },
             effect: false,
-            adjust: {
-                y: 11 // Match padding 10px and border 1px
-            }
         },
         style: {
             classes: "meeting_actions_menu",
@@ -446,41 +442,6 @@ $(document).ready(function() {
         });
     });
 });
-
-/* Notify about proposals when deleting a poll */
-$('.menu_body.Poll a.delete').live('click', function(event) {
-    var id = $(this).parents('.menu_body').attr('id').replace('action_menu_', '');
-    
-    var poll = $.find('#'+id+'.notify_delete');
-    if(poll.length > 0) {
-    
-        /* stops normal events function 
-        IE might throw an error calling preventDefault(), so use a try/catch block. */
-        try { event.preventDefault(); } catch(e) {}
-        
-        var dialog = $('<div class="dialog confirm">' + voteit.translation['delete_poll_notification_text'] + '</div>');
-
-        $(dialog).dialog({
-            autoOpen: false,
-            resizable: false,
-            draggable: true,
-            closeOnEscape: true,
-            width: 400,
-            minHeight: 120,
-            maxHeight: 200,
-            buttons: [{
-                text: voteit.translation['ok'],
-                click: function() { $(this).dialog("close"); }
-            }],
-            title: voteit.translation['delete_poll_notification_title'],
-            closeText: voteit.translation['close'],
-            modal: true
-        });
-        
-        $(dialog).dialog('open');
-    }
-});
-
 
 /* Masking */
 function apply_mask($prevent_scrolling) {

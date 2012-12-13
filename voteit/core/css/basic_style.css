@@ -23,10 +23,13 @@ h1, h2, h3, h4, h5, h6 {
 }
 #header-meeting-outer a {
 	color: #5c5a5d;
+	height: 50px;
+	display: block;
 }
 #header-meeting-outer .tab {
-	line-height: 30px;
-	padding: 10px 10px 10px 0px;
+	line-height: 50px;
+	height: 50px;
+	padding: 0px 10px 0px 0px;
 }
 #search_form {
 	text-align: right;
@@ -175,5 +178,33 @@ button.small:active {
 /* End Sidebar styles */
 
 /* Dropdown menus */
-
+.meeting_actions_menu .menu_body {
+	background-color: #968c89;
+	color: #fff;
+	padding: 10px;
+	font-size: 16px;
+	line-height: 1em;
+}
+.meeting_actions_menu .menu_body a,
+.meeting_actions_menu .menu_body .menutext {
+	color: #fff;
+	padding: 5px;
+	display: block;
+	border-top: 1px transparent solid;
+	border-bottom: 1px transparent solid;
+}
+.meeting_actions_menu .menu_body a:hover {
+	background-color: #7d7778;
+	border-color: #B2B2B5;
+}
 /* End Dropdown menus */
+
+/* Override qTip defaults - should be same as body */
+.qtip {
+	font-size: 18px;
+	line-height: 1.5em;
+}
+.qtip-content {
+	padding: 0px;
+}
+/* End Override qTip defaults */

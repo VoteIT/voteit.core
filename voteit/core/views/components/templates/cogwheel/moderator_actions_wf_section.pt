@@ -1,7 +1,7 @@
 <metal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core">
 <li><span class="menusection">${section_title}</span></li>
 <li>
-    <span class="readonly">
+    <span class="menutext">
         <span class="iconpadding icon ${state_id}">
         ${api.tstring(state_title)}
         - (<span i18n:translate="">current</span>)

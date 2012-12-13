@@ -4,7 +4,7 @@
             <tal:section repeat="section sections">
                 <tal:defs define="metadatas polls_metadata[section]">
                 <tal:exists condition="metadatas">
-                    <li class="readonly"><span class="iconpadding icon ${section}">${api.tstring(section.title())}</span></li>
+                    <li class="menutext"><span class="iconpadding icon ${section}">${api.tstring(section.title())}</span></li>
                     <li tal:repeat="poll_metadata metadatas">
                         <a href="${get_poll_url(poll_metadata['path'])}">
                            <span>
