@@ -66,9 +66,6 @@ body {
 #sidebar .sidebar_block {
 	background-color: #fff;
 }
-#flash_messages {
-	background-color: #fff;
-}
 #top {
 	background-color: #fff;
 }
@@ -258,3 +255,53 @@ button.small:active {
     display: none !important;
 }
 /* End minimizable content */
+/* Flash messages and similar */
+#flash_messages,
+#notify-meetingstate,
+.booth.poll .message {
+    clear: both;
+    z-index: 10000;
+}
+#flash_messages .message,
+#notify-meetingstate .message,
+.booth.poll .message {
+    /* Info is default */
+    padding: 5px 10px 5px 30px;
+    border: 1px solid #fff;
+    background: #968C89 url(/static/icons/icon_info.png) no-repeat 10px 50%;
+    float: left;
+    clear: both;
+    font-size: 14px;
+    color: #fff;
+	border: 1px solid #b2b2b5;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    box-shadow: 1px 1px 5px 2px #888;
+    -moz-box-shadow:  1px 1px 5px 2px #888;
+    -webkit-box-shadow: 1px 1px 5px 2px #888;
+    margin-bottom: 10px;
+}
+.booth.poll .message {
+	display: none;
+	margin: 5px 0px 10px 0px;
+}
+#flash_messages .lock {
+    background-image: url(/static/icons/icon_lock.png);
+}
+#flash_messages .info {
+}
+#flash_messages .error,
+.booth.poll .error.message {
+	/* FIXME: Design?
+    border-color: red;
+    background-color: #fdc;
+    */
+}
+#flash_messages .close_message {
+    font-weight: bold;
+    font-style: normal;
+    margin-left: 1em;
+    color: #fff;
+}
+/* End flash messages */
