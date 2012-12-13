@@ -9,27 +9,27 @@
 	    <ul class="section">
 	        <tal:iterate condition="brains" repeat="brain brains">
 	            <tal:defs define="current_context in_current_context(request.path, brain['path'])">
-	            <li tal:attributes="class current_context and 'selected minimizable_area' or 'plain minimizable_area'">
+	            <li tal:attributes="class current_context and 'selected minimizable_area' or 'plain minimizable_area'"
+	                tal:define="prop_unread_count not current_context and count_query(brain['path'], 'Proposal', unread = 1) or 0;
+                                disc_unread_count not current_context and count_query(brain['path'], 'DiscussionPost', unread = 1) or 0;">
 	                <tal:moderator_menu condition="api.show_moderator_actions">
 	                    <span tal:replace="structure api.get_moderator_actions(brain)">
 	                         Cogwheel menu
 	                    </span>
 	                </tal:moderator_menu>
-	                <div class="item">
+	                <div tal:attributes="class (prop_unread_count or disc_unread_count) and 'item has_unread' or 'item'">
 	                    <a tal:attributes="href brain['path']">
 	                        <div tal:content="brain['title']">Title</div>
 	                        <div class="info">
-	                            <span class="cinfo iconpadding icon proposal"
-	                                  tal:define="unread_count not current_context and count_query(brain['path'], 'Proposal', unread = 1) or 0">
+	                            <span class="cinfo iconpadding icon proposal">
                                     <span class="total"
                                           tal:content="count_query(brain['path'], 'Proposal')">0</span>
-                                    <span class="unread" tal:condition="unread_count">(${unread_count})</span>
+                                    <span class="unread" tal:condition="prop_unread_count">(${prop_unread_count})</span>
 	                            </span>
-	                            <span class="cinfo iconpadding icon discussion"
-	                                  tal:define="unread_count not current_context and count_query(brain['path'], 'DiscussionPost', unread = 1) or 0">
+	                            <span class="cinfo iconpadding icon discussion">
                                     <span class="total"
                                           tal:content="count_query(brain['path'], 'DiscussionPost')">0</span>
-                                    <span class="unread" tal:condition="unread_count">(${unread_count})</span>
+                                    <span class="unread" tal:condition="disc_unread_count">(${disc_unread_count})</span>
 	                            </span>
 	                        </div>
 	                        <div class="clear"><!-- --></div>
