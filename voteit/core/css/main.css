@@ -5,6 +5,9 @@
 .section {
 	clear: both;
 }
+.clear {
+	clear: both;
+}
 
 /* Top header section, with meeting title */
 #header-global-outer {
@@ -68,6 +71,10 @@
 .sidebar_block {
 	padding: 10px;
 }
+#main-outer {
+	display: block;
+	padding-bottom: 20px;
+}
 /* End main area / navigation */
 
 /* Content section - content area is 770px */
@@ -96,8 +103,12 @@
 /* Footer */
 #footer-outer {
 	clear: both;
-	height: 50px;
-	background-color: #ccc;
+	border-top: #C1C1C0 solid 1px;
+	background: transparent url(/static/images/footer_bg.png) repeat-x top left;
+}
+#footer {
+	text-align: center;
+	padding: 10px 0 20px 0; /* Otherwise clear won't work */
 }
 /* End footer */
 
