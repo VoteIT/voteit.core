@@ -7,6 +7,9 @@
 }
 
 /* Top header section, with meeting title */
+#header-global-outer {
+	padding-top: 15px;
+}
 #header-global-outer .wrapper {
 	height: 60px;
 }
@@ -14,10 +17,24 @@
 	float: left;
 	width: 700px;
 }
+#header-meeting-title h1 {
+	margin: 0;
+}
 #header-user-actions {
 	float: left;
-	width: 170px;
+	width: 160px;
+	overflow:hidden;
+	margin-right: 10px;
 }
+#global-actions-menu {
+	float: right;
+}
+#global-actions-menu #anon li {
+	float: right;
+	clear: right;
+	font-size: 16px;
+}
+
 #header-logo {
 	float: left;
 	width: 120px;

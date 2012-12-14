@@ -61,13 +61,20 @@ $(document).ready(function() {
    }
 });
 
-/* Meeting sections menus */
-$('#meeting-actions .menu_header').live('hover', function(event) {
+
+
+/* Meeting sections menus + possibly other */
+$(document).ready(function() {
+    $('#global-actions-menu .menu_header').live('hover', function(event) { dropdown_menus(event, this, 'meeting_actions_menu') });
+    $('#meeting-actions .menu_header').live('hover', function(event) { dropdown_menus(event, this, 'meeting_actions_menu') });
+});
+function dropdown_menus(event, hover_object, css_classes) {
     /* stop form using default action
     IE might throw an error calling preventDefault(), so use a try/catch block. */
     try { event.preventDefault(); } catch(e) {}
-    if ($(this).hasAttr('url')) {
-        var url = $(this).attr('url');
+    var hover_object = $(hover_object);
+    if (hover_object.hasAttr('url')) {
+        var url = hover_object.attr('url');
         var q_content = { 
             text: voteit.translation['loading'], // The text to use whilst the AJAX request is loading
             ajax: {
@@ -77,9 +84,9 @@ $('#meeting-actions .menu_header').live('hover', function(event) {
     }
     else {
         //We need a copy of the content, otherwise qtip will try to locate it every time it triggers
-        var q_content = { text: $(this).parent().find('.menu_body').clone() };
+        var q_content = { text: hover_object.parent().find('.menu_body').clone() };
     }
-    $(this).qtip({
+    hover_object.qtip({
         overwrite: false, // Make sure the tooltip won't be overridden once created
         content: q_content,
         show: {
@@ -104,12 +111,12 @@ $('#meeting-actions .menu_header').live('hover', function(event) {
             effect: false,
         },
         style: {
-            classes: "meeting_actions_menu",
+            classes: css_classes,
             tip: false,
             def: false,
         },
     }, event);
-});
+}
 
 /*  User tag methods - requires an a.user_tag_link within .user_tag block. Like this:
 

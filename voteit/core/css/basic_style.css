@@ -240,6 +240,18 @@ button.small:active {
 	background-color: #7d7778;
 	border-color: #B2B2B5;
 }
+#global-actions-menu img {
+	float: left;
+}
+#global-actions-menu .userid {
+	line-height: 40px;
+	height: 40px;
+	display: block;
+	float: left;
+	margin-left: 5px;
+	padding-right: 25px;
+    background: url(/static/arrow_icons/arrow_right.png) no-repeat right 50%;
+}
 /* End Dropdown menus */
 
 /* Override qTip defaults - should be same as body */

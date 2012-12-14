@@ -23,9 +23,11 @@
                     </h1>
                 </div>
                 <div id="header-user-actions">
-                    <tal:menu replace="structure api.render_single_view_component(context, request, 'main', 'global_actions')">
+                    <tal:menu tal:condition="api.userid"
+                         replace="structure api.render_single_view_component(context, request, 'main', 'global_actions')">
                          Global actions toolbar - like login, profile etc
                     </tal:menu>
+                    &nbsp;
                 </div>
                 <div id="header-logo">
                     <a tal:attributes="href request.resource_url(api.root)">
