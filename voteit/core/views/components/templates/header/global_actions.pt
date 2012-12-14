@@ -5,7 +5,7 @@
         <span class="userid">${api.user_profile.userid}</span>
     </a>
     <ul class="menu_body">
-        <li><span class="menutext">
+        <li><span class="menusection">
             <div i18n:translate="">Logged in as:</div>
             <tal:name tal:content="api.user_profile.title">Fullname</tal:name>
         </span></li>

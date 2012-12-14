@@ -42,8 +42,9 @@ $('.cogwheel').live('hover', function(event) {
             effect: false
         },
         style: {
-            classes: "qtip_menu",
+            classes: "cogwheel_menu",
             tip: false,
+            def: false
         },
     }, event);
 });
