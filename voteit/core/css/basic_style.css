@@ -129,7 +129,8 @@ h1.icon.discussion { background: url(/static/header_icons/discussion.png) no-rep
 /* End icons */
 
 /* form elements */
-button {
+button,
+.buttonize {
 	font-size: 16px;
 	border: 1px solid #4a484a;
     border-radius: 10px;
@@ -147,18 +148,27 @@ button:hover {
 	border-color: black;
 }
 button:active {}
-button.small {
+button.small,
+.buttonize.small {
 	background-image: url(/static/buttons/button_small_bg.png);
 	height: 25px;
 	line-height: 25px;
 	border: 1px solid #5C5A5D;
 	color: #000;
 }
-button.small:hover { /* FIXME: Proper colors */
+#sidebar .buttonize.small {
+	color: #000;
+	display: block;
+	text-align:center;
+	margin-bottom: 5px;
+}
+button.small:hover,
+.buttonize.small:hover { /* FIXME: Proper colors */
 	background-image: url(/static/buttons/button_small_bg.png);
 	border: 1px solid #968c89;
 }
-button.small:active {
+button.small:active,
+.buttonize.small:active {
 	background: #ccc;
 }
 /* End form elements */
