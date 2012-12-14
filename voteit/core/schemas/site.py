@@ -17,6 +17,11 @@ class SiteRootSchema(colander.MappingSchema):
                                       missing = u"",
                                       widget=deform.widget.RichTextWidget(),
                                       validator=richtext_validator,)
+    footer = colander.SchemaNode(colander.String(),
+                                      title = _(u"Footer"),
+                                      missing = u"",
+                                      widget=deform.widget.RichTextWidget(),
+                                      validator=richtext_validator,)
     allow_add_meeting = colander.SchemaNode(colander.Boolean(),
                                             title = _(u"Allow authenticated users to add meetings"),
                                             default = False,)

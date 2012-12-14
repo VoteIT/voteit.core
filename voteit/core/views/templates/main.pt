@@ -67,12 +67,8 @@
     <div id="footer-outer">
         <div class="wrapper">
             <div class="section">
-                <div id="footer">
-                    <a href="http://www.voteit.se">www.voteit.se</a>
-                    &mdash;
-                    <a href="http://wiki.voteit.se">Wiki</a>
-                    <br/>
-                    <div id="footer-logos"></div>
+                <div id="footer" tal:content="structure api.root.get_field_value('footer', '')">
+                    Footer content
                 </div>
                 <div class="clear"><!-- --></div>
             </div>

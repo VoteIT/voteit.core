@@ -15,9 +15,11 @@ def bootstrap_voteit(echo=True):
 
     if echo:
         print "Bootstrapping site - creating 'admin' user with password 'admin'"
-    
+
     #Add root
     root = createContent('SiteRoot', title = _(u"VoteIT"), creators = ['admin'])
+    root.set_field_value('footer', u'<a href="http://www.voteit.se">www.voteit.se</a>&mdash;'
+                                   u'<a href="http://wiki.voteit.se">Wiki</a>')
 
     #Add users folder
     root['agenda_templates'] = createContent('AgendaTemplates', title = _(u"Agenda templates"), creators = ['admin'])
