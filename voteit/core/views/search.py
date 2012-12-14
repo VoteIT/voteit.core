@@ -15,7 +15,6 @@ from zope.index.text.parsetree import ParseError
 from voteit.core.views.base_view import BaseView
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.schemas import button_search
-from voteit.core.models.schemas import add_csrf_token
 from voteit.core.security import VIEW
 from voteit.core.helpers import strip_and_truncate
 from voteit.core import VoteITMF as _
@@ -33,7 +32,6 @@ class SearchView(BaseView):
     @view_config(context=IMeeting, name="search", renderer="templates/search.pt", permission = VIEW)
     def search(self):
         schema = createSchema('SearchSchema').bind(context = self.context, request = self.request)
-        add_csrf_token(self.context, self.request, schema)        
         form = Form(schema, buttons=(button_search,))
         self.api.register_form_resources(form)
         appstruct = {}
