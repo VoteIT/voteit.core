@@ -3,7 +3,7 @@
       i18n:domain="voteit.core"
       id="search_form">
 
-<form action="" method="POST" enctype="multipart/form-data" accept-charset="utf-8">
+<form action="${'%ssearch' % api.meeting_url}" method="POST" enctype="multipart/form-data" accept-charset="utf-8">
     <input id="search_query" type="text" name="query" value="" />
     <button name="search" type="submit" id="search_button" value="search" class="small">
         <span i18n:translate="">Search</span>
