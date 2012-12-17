@@ -1,4 +1,3 @@
-#from datetime import timedelta
 import urllib
 
 from pyramid.view import view_config
@@ -12,7 +11,6 @@ from pyramid.httpexceptions import HTTPFound
 from betahaus.pyracont.factories import createContent
 from betahaus.pyracont.factories import createSchema
 
-#from voteit.core.views.api import APIView
 from voteit.core import VoteITMF as _
 from voteit.core.security import EDIT
 from voteit.core.security import DELETE
@@ -24,8 +22,6 @@ from voteit.core.models.schemas import button_update
 from voteit.core.models.schemas import button_delete
 from voteit.core.models.interfaces import IBaseContent
 from voteit.core.models.interfaces import IWorkflowAware
-from voteit.core.models.interfaces import IMeeting
-from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.views.api import APIView
 from voteit.core.helpers import generate_slug
 
@@ -47,7 +43,6 @@ class BaseEdit(object):
 class DefaultEdit(BaseEdit):
     """ Default view class for adding, editing or deleting dynamic content. """
 
-    @view_config(context=IMeeting, name="add", renderer='templates/agenda_item_edit.pt', request_param="content_type=AgendaItem")
     @view_config(context=IBaseContent, name="add", renderer=DEFAULT_TEMPLATE)
     def add_form(self):
         content_type = self.request.params.get('content_type')
@@ -115,7 +110,6 @@ class DefaultEdit(BaseEdit):
         self.response['form'] = form.render()
         return self.response
 
-    @view_config(context=IAgendaItem, name="edit", renderer='templates/agenda_item_edit.pt', permission=EDIT)
     @view_config(context=IBaseContent, name="edit", renderer=DEFAULT_TEMPLATE, permission=EDIT)
     def edit_form(self):
         self.response['title'] = _(u"Edit %s" % self.api.translate(self.context.display_name))

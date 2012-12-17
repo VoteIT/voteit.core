@@ -13,5 +13,5 @@
 		tal:attributes="class request.url==url and 'selected' or '';">
 		<a href="${url}" i18n:translate="">Add an agenda template</a></li>
 </ul>
-<div class="cler">&nbsp;</div>
+<div class="clear"><!-- --></div>
 </tal:main>
