@@ -5,29 +5,20 @@
 	  i18n:domain="voteit.core">
 <body>
     <tal:main_window metal:fill-slot="main_window">
-        <div id="top">
-            <div class="content_wrapper">
-                <div metal:define-slot="page_heading"
-                     id="page_heading">
-                    <tal:moderator_actions metal:define-slot="action_menu"
-                         tal:condition="api.context_has_permission('Moderate Meeting', context)"
-                         tal:content="structure api.get_moderator_actions(context)">Cogwheel menu</tal:moderator_actions>
-                    <h2 tal:condition="not title|True" tal:content="context.title">Title</h2>
-                    <h2 tal:condition="title|False" tal:content="title">Title</h2>
-
-                </div> <!-- page_heading -->
-                <div id="top_content" metal:define-slot="top_content"></div>
-            </div> <!-- content_wrapper -->
-        </div> <!-- top -->
-
-        <div id="content" metal:define-slot="content">
-            <div id="left">
-               <metal:left define-slot="left"></metal:left>
-            </div>
-            <div id="right">
-               <metal:right define-slot="right"></metal:right>
-            </div>
-        </div><!-- content -->
+        <div id="content">
+            <metal:heading define-slot="page_heading">
+                <tal:moderator_actions metal:define-slot="action_menu"
+                     tal:condition="api.context_has_permission('Moderate Meeting', context)"
+                     tal:content="structure api.get_moderator_actions(context)">Cogwheel menu</tal:moderator_actions>
+                <h2 tal:content="title|context.title" id="page_heading">Title</h2>
+            </metal:heading>
+            <metal:top_content metal:define-slot="top_content"></metal:top_content><!-- b/c compat -->
+            <metal:content metal:define-slot="content"></metal:content>
+        </div>
+        <metal:columns metal:define-slot="columns">
+            <metal:left metal:define-slot="left"></metal:left>
+            <metal:right metal:define-slot="right"></metal:right>
+        </metal:columns>
     </tal:main_window>
 </body>
 </html>

@@ -68,9 +68,12 @@ body {
 }
 #top {
 	background-color: #fff;
+	margin-bottom: 10px;
 }
 #content {
 	background-color: #fff;
+	margin-bottom: 10px;
+
 }
 .description {
 	background-color: #fff;
@@ -78,7 +81,6 @@ body {
 #left,
 #right {
 	background-color: #fff;
-	margin-top: 10px;
 }
 #header-meeting-outer {
 	background: url(/static/images/menu_bg.png) repeat-x bottom left;
@@ -87,7 +89,7 @@ body {
 }
 /* End Backgrounds and area borders */
 /* main element borders */
-#left, #right, #top,
+#left, #right, #top, #content,
 .sidebar_block {
 	border: 1px solid #b2b2b5;
     border-radius: 5px;

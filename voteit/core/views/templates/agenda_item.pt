@@ -10,9 +10,9 @@
              tal:content="structure api.get_moderator_actions(context)">Cogwheel menu</tal:moderator_actions>
         <h1 id="agenda_item_title" class="icon large-iconpadding">${context.title}</h1>
     </div> <!-- page_heading -->
-    <div metal:fill-slot="top_content" tal:content="structure api.render_view_group(context, request, 'agenda_item_top')">">Top content</div>
-
-    <div metal:fill-slot="content" id="content">
+    <div metal:fill-slot="content"
+         tal:content="structure api.render_view_group(context, request, 'agenda_item_top')">Top content</div>
+    <div metal:fill-slot="columns" class="columns">
         <tal:columns replace="structure ai_columns">Columns</tal:columns>
     </div>
 </body>

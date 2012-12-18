@@ -6,8 +6,7 @@
 	  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
 	  i18n:domain="voteit.core">
 <body>
-<h1 metal:fill-slot="page_heading">${context.title}</h1>
-<div metal:fill-slot="content" class="content_wrapper">
+<div metal:fill-slot="top_content">
     
     <div class="iconpadding icon time start"><span i18n:translate="">Meeting opened</span>: ${api.dt_util.dt_format(context.start_time)|string:-}</div>
 

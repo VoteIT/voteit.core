@@ -1,16 +1,17 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
       xmlns:tal="http://xml.zope.org/namespaces/tal"
-      metal:use-macro="load: ${api.template_dir}content.pt"
+      metal:use-macro="load: ${api.template_dir}main.pt"
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
       i18n:domain="voteit.core">
 <body>
-    <tal:left metal:fill-slot="left">
-        <div class="userinfo content_wrapper"
+<metal:main fill-slot="main_window">
+    <div id="left">
+        <div class="userinfo"
              tal:content="structure api.render_view_group(context, request, 'user_info', api = api)">
             user info view group here, with profile information, picture etc...
         </div>
-    </tal:left>
-    <tal:right metal:fill-slot="right">
+    </div>
+    <div id="right">
         <div class="moderator-help-buttons">
             <a tal:attributes="href '%sedit' % api.resource_url(context, request)"
                tal:condition="api.context_has_permission('Edit', context)"
@@ -39,6 +40,7 @@
                class="buttonize"
                i18n:translate="">Manage connected profiles</a>
         </div>
-    </tal:right>
+    </div>
+</metal:main>
 </body>
 </html>

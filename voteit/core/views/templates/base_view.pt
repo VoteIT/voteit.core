@@ -4,11 +4,10 @@
 	  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
 	  i18n:domain="voteit.core">
 <body>
-<div metal:fill-slot="top_content">
+<div metal:fill-slot="content">
     <div class="description"
          tal:condition="context.description"
          tal:content="structure context.description">Description</div>
 </div>
-<tal:content metal:fill-slot="content"></tal:content>
 </body>
 </html>
