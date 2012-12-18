@@ -145,11 +145,14 @@ button,
 	line-height: 30px;
 	color: #fff;
 }
-button:hover {
+button:hover,
+.buttonize:hover {
 	background: url(/static/buttons/button_bg_mo.png) repeat-x bottom left;
-	border-color: black;
+	border-color: #000;
+	color: #fff;
 }
-button:active {}
+button:active,
+.buttonize:active {}
 button.small,
 .buttonize.small {
 	background-image: url(/static/buttons/button_small_bg.png);
@@ -172,6 +175,9 @@ button.small:hover,
 button.small:active,
 .buttonize.small:active {
 	background: #ccc;
+}
+.buttonize {
+	display: inline-block;
 }
 /* End form elements */
 
