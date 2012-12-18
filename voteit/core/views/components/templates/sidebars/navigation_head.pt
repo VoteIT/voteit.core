@@ -7,11 +7,11 @@
            title="${description}">${title}</a>
     </h5>
     <div tal:condition="api.show_moderator_actions">
-        <tal:root tal:condition="context == api.root">
-            <a href="${request.resource_url(api.meeting, 'add', query={'content_type': 'Meeting'})}"
+        <tal:root tal:condition="not api.meeting">
+            <a href="${request.resource_url(api.root, 'add', query={'content_type': 'Meeting'})}"
                class="buttonize small" i18n:translate="">Add</a>
         </tal:root>
-        <tal:meeting tal:condition="context == api.meeting">
+        <tal:meeting tal:condition="api.meeting">
             <a href="${request.resource_url(api.meeting, 'add', query={'content_type': 'AgendaItem'})}"
                class="buttonize small" i18n:translate="">Add</a>
             <a href="${request.resource_url(api.meeting, 'order_agenda_items')}"
