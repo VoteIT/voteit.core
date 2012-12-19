@@ -13,11 +13,11 @@ from voteit.core.models.agenda_item import AgendaItem
 
 
 class ManageAgendaItemsView(BaseEdit):
-    @view_config(context=IMeeting, name="handle_agenda_items", renderer="templates/handle_agenda_items.pt", permission=security.EDIT)
-    def handle_agenda_items(self):
+    @view_config(context=IMeeting, name="manage_agenda_items", renderer="templates/manage_agenda_items.pt", permission=security.EDIT)
+    def manage_agenda_items(self):
         post = self.request.POST
         if 'cancel' in self.request.POST:
-            url = self.request.resource_url(self.context, 'handle_agenda_items')
+            url = self.request.resource_url(self.context, 'manage_agenda_items')
             return HTTPFound(location = url)
 
         if 'change' in post:
