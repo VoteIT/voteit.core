@@ -1,6 +1,6 @@
 /* Fonts, headlines, text */
 body {
-	font: 18px "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font: 16px "Helvetica Neue", Helvetica, Arial, sans-serif;
 	line-height: 1.5em;
 }
 h1 { font-size: 200%;}
@@ -359,3 +359,19 @@ button.small:active,
     color: #fff;
 }
 /* End flash messages */
+
+/* tables  */
+.listing th,
+.listing td {
+    border-bottom: 1px solid #B2B2B5;
+    padding: 3px;
+}
+.listing th {
+    background: #ededed;
+}
+.listing tr {
+	background: #fff;
+}
+.listing .odd {
+	background: #f8f8f8;
+}
