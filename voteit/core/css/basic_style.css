@@ -103,11 +103,6 @@ body {
 /* Icons */
 .iconpadding { padding-left: 20px; }
 .large-iconpadding { padding-left: 45px; }
-.icon.closed { background: url(/static/icons/icon_past.png) no-repeat; }
-.icon.canceled { background: url(/static/icons/icon_past.png) no-repeat; }
-.icon.ongoing { background: url(/static/icons/icon_ongoing.png) no-repeat; }
-.icon.upcoming { background: url(/static/icons/icon_upcoming.png) no-repeat; }
-.icon.private { background: url(/static/icons/icon_upcoming_red.png) no-repeat; }
 .icon.proposal { background: url(/static/type_icons/proposal_mini.png) no-repeat; }
 .selected .icon.proposal { background: url(/static/type_icons/proposal_mini_selected.png) no-repeat; }
 .icon.discussion, .icon.discussionpost { background: url(/static/type_icons/discussion_mini.png) no-repeat; }
@@ -115,15 +110,26 @@ body {
 .icon.poll { background: url(/static/icons/icon_poll_lb.png) no-repeat left 50%; }
 .icon.poll-dark { background: url(/static/icons/icon_poll.png) no-repeat; }
 .cog-dark { background: url(/static/icons/icon_settings.png) no-repeat top left; }
-.icon.published { background: url(/static/icons/icon_doc.png) left center no-repeat; }
-.icon.retracted { background: url(/static/icons/icon_doc_retracted.png) left center no-repeat; }
-.icon.unhandled { background: url(/static/icons/icon_doc.png) left center no-repeat; }
-.icon.voting { background: url(/static/icons/icon_lock.png) left center no-repeat; }
-.icon.approved { background: url(/static/icons/icon_approved.png) left center no-repeat; }
-.icon.denied { background: url(/static/icons/icon_denied.png) left center no-repeat; }
 .user-dark { background: url(/static/icons/icon_user_db.png) no-repeat top left; }
 .icon.time { background: url(/static/icons/icon_clock.png) no-repeat 0 0; }
-
+/* wf icons */
+.icon.denied { background: url(/static/workflow_icons/denied.png) left center no-repeat; }
+.icon.closed { background: url(/static/workflow_icons/closed.png) left center no-repeat; }
+.icon.canceled { background: url(/static/workflow_icons/canceled.png) left center no-repeat; }
+.icon.approved { background: url(/static/workflow_icons/approved.png) left center no-repeat; }
+.icon.upcoming { background: url(/static/workflow_icons/upcoming.png) left center no-repeat; }
+.icon.published { background: url(/static/workflow_icons/published.png) left center no-repeat; }
+.icon.retracted { background: url(/static/workflow_icons/retracted.png) left center no-repeat; }
+.icon.ongoing { background: url(/static/workflow_icons/ongoing.png) left center no-repeat; }
+.icon.unhandled { background: url(/static/workflow_icons/unhandled.png) left center no-repeat; }
+.icon.private { background: url(/static/workflow_icons/private.png) left center no-repeat; }
+.icon.voting { background: url(/static/workflow_icons/locked.png) left center no-repeat; }
+/* icons within menus */
+.menu_body .icon.canceled { background: url(/static/workflow_icons/canceled_menu.png) left center no-repeat; }
+.menu_body .icon.closed { background: url(/static/workflow_icons/closed_menu.png) left center no-repeat; }
+.menu_body .icon.ongoing { background: url(/static/workflow_icons/ongoing_menu.png) left center no-repeat; }
+.menu_body .icon.private { background: url(/static/workflow_icons/private_menu.png) left center no-repeat; }
+.menu_body .icon.upcoming { background: url(/static/workflow_icons/upcoming_menu.png) left center no-repeat; }
 /* header icons */
 h1.icon.proposal { background: url(/static/header_icons/proposal.png) no-repeat; }
 h1.icon.discussion { background: url(/static/header_icons/discussion.png) no-repeat; }
