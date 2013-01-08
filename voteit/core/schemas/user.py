@@ -3,7 +3,6 @@ from urllib import quote
 import colander
 import deform
 from betahaus.pyracont.decorators import schema_factory
-from betahaus.pyracont.factories import createContent
 
 from voteit.core import VoteITMF as _
 from voteit.core.models.interfaces import IProfileImage
@@ -39,7 +38,7 @@ def deferred_referer(node, kw):
     request = kw['request']
     return quote(request.GET.get('came_from', '/'))
 
-def userid_preparer(value):
+def to_lowercase(value):
     return value.lower()
 
 def userid_node():
@@ -58,7 +57,8 @@ def password_node():
 def email_node():
     return colander.SchemaNode(colander.String(),
                                title=_(u"Email"),
-                               validator=deferred_unique_email_validator,)
+                               validator=deferred_unique_email_validator,
+                               preparer=to_lowercase,)
 
 def first_name_node():
     return colander.SchemaNode(colander.String(),
@@ -123,7 +123,7 @@ class AddUserSchema(colander.Schema):
                                  description = _('userid_description',
                                                  default=u" Used as a nickname, in @-links and as a unique id. You can't change this later. OK characters are: a-z, '.', '-', '_'."),
                                  validator=deferred_new_userid_validator,
-                                 preparer=userid_preparer,)
+                                 preparer=to_lowercase,)
 
     password = password_node()
     email = email_node()
@@ -140,7 +140,7 @@ class RegisterUserSchema(colander.Schema):
                                  description = _('userid_description',
                                                  default=u" Used as a nickname, in @-links and as a unique id. You can't change this later. OK characters are: a-z, 0-9, '.', '-', '_'."),
                                  validator=deferred_new_userid_validator,
-                                 preparer=userid_preparer,)
+                                 preparer=to_lowercase,)
     password = password_node()
     email = email_node()
     first_name = first_name_node()
