@@ -15,16 +15,16 @@ from voteit.core.security import ADD_PROPOSAL
 
 
 
-@view_action('main', 'meta_data_listing', permission=VIEW)
-def meta_data_listing(context, request, va, **kw):
+@view_action('main', 'metadata_listing', permission=VIEW)
+def metadata_listing(context, request, va, **kw):
     """ This is the main renderer for post meta.
-        It will call all view components in the group meta_data_listing.
+        It will call all view components in the group metadata_listing.
         In turn, some of those will call other groups.
     """
     if not kw.get('show_user_tags', True):
         return u""
     api = kw['api']
-    util = request.registry.getUtility(IViewGroup, name='meta_data_listing')
+    util = request.registry.getUtility(IViewGroup, name='metadata_listing')
     view_actions = []
     for _va in util.get_context_vas(context, request):
         output = _va(context, request, **kw)
@@ -32,10 +32,10 @@ def meta_data_listing(context, request, va, **kw):
             view_actions.append(output)
     
     response = {'view_actions': view_actions,}
-    return render('../templates/snippets/meta_data_listing.pt', response, request = request)
+    return render('../templates/snippets/metadata_listing.pt', response, request = request)
 
 
-@view_action('meta_data_listing', 'state', permission=VIEW)
+@view_action('metadata_listing', 'state', permission=VIEW)
 def meta_state(context, request, va, **kw):
     api = kw['api']
     brain = kw['brain']
@@ -54,14 +54,14 @@ def meta_state(context, request, va, **kw):
 
     return '<span class="%s icon iconpadding">%s</span>' % (state_id, translated_state_title)
 
-@view_action('meta_data_listing', 'time', permission=VIEW)
+@view_action('metadata_listing', 'time', permission=VIEW)
 def meta_time(context, request, va, **kw):
     api = kw['api']
     brain = kw['brain']
 
     return '<span class="time">%s</span>' % api.translate(api.dt_util.relative_time_format(brain['created']))
 
-@view_action('meta_data_listing', 'retract', permission=VIEW)
+@view_action('metadata_listing', 'retract', permission=VIEW)
 def meta_retract(context, request, va, **kw):
     api = kw['api']
     brain = kw['brain']
@@ -81,7 +81,7 @@ def meta_retract(context, request, va, **kw):
            '>%s</a>' % (request.application_url, brain['path'], api.translate(_(u'Retract')))
 
 
-@view_action('meta_data_listing', 'user_tags', permission=VIEW)
+@view_action('metadata_listing', 'user_tags', permission=VIEW)
 def meta_user_tags(context, request, va, **kw):
     brain = kw['brain']
     del kw['brain'] #XXX: Why?
@@ -92,10 +92,10 @@ def meta_user_tags(context, request, va, **kw):
         tags.append(_va(brain, request, **kw))
     
     response = {'tags': tags,}
-    return render('../templates/snippets/meta_data_listing_user_tags.pt', response, request = request)
+    return render('../templates/snippets/metadata_listing_user_tags.pt', response, request = request)
 
 
-@view_action('meta_data_listing', 'answer', permission=VIEW)
+@view_action('metadata_listing', 'answer', permission=VIEW)
 def meta_answer(context, request, va, **kw):
     api = kw['api']
     brain = kw['brain']
@@ -117,7 +117,7 @@ def meta_answer(context, request, va, **kw):
            'href="%s%s/answer" ' \
            '>%s</a>'  % (request.application_url, brain['path'], api.translate(label))
 
-@view_action('meta_data_listing', 'tag', permission=VIEW)
+@view_action('metadata_listing', 'tag', permission=VIEW)
 def meta_tag(context, request, va, **kw):
     api = kw['api']
     brain = kw['brain']
