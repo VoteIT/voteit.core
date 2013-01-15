@@ -78,8 +78,7 @@ class DiscussionPost(BaseContent, Tags):
 
     def _set_text(self, value, key = None):
         self.field_storage['text'] = value
-        # add tags in title to tags
-        self._find_tags(value)
+        self.set_tags(self.find_tags(value))
 
     def _get_mentioned(self, key = None, default = OOBTree()):
         mentioned = getattr(self, '__mentioned__', None)

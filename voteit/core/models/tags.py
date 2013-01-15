@@ -26,20 +26,30 @@ class Tags(object):
             self.__tags__ = OOSet()
             return self.__tags__
     
-    def _find_tags(self, value):
+    def find_tags(self, value):
+        tags = set()
         for matchobj in re.finditer(TAG_PATTERN, value):
-            tag = matchobj.group('tag')
+            tags.add(matchobj.group('tag').lower())
+        return tags
+
+    def add_tags(self, tags, notify = False):
+        if isinstance(tags, basestring):
+            tags = [x.strip() for x in tags.split()]
+        for tag in tags:
             self._tags.add(tag.lower())
-            
-    def add_tag(self, tag):
-        self._tags.add(tag.lower())
-        objectEventNotify(ObjectUpdatedEvent(self, indexes=('tags',), metadata=True))
-        
-    def add_tags(self, tags):
-        for tag in tags.split():
-            self._tags.add(tag.lower())
-        objectEventNotify(ObjectUpdatedEvent(self, indexes=('tags',), metadata=True))
-        
-    def remove_tag(self, tag):
-        self._tags.remove(tag.lower())
-        objectEventNotify(ObjectUpdatedEvent(self, indexes=('tags',), metadata=True))
+        if notify:
+            objectEventNotify(ObjectUpdatedEvent(self, indexes=('tags',), metadata=True))
+
+    def set_tags(self, tags, notify = False):
+        self._tags.clear()
+        self.add_tags(tags, notify = notify)
+
+    def remove_tags(self, tags, notify = False):
+        if isinstance(tags, basestring):
+            tags = [x.strip() for x in tags.split()]
+        for tag in tags:
+            self._tags.remove(tag.lower())
+        if notify:
+            objectEventNotify(ObjectUpdatedEvent(self, indexes=('tags',), metadata=True))
+
+#FIXME: Inetegration tests, catalog etc

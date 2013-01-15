@@ -22,43 +22,37 @@ class UserTagsTests(unittest.TestCase):
         obj = self._make_obj()
         self.assertTrue(verifyObject(ITags, obj))
 
-    def test__find_tags(self):
+    def test_find_tags(self):
         obj = self._make_obj()
-        obj._find_tags(u"#Quisque #aliquam,#ante in #tincidunt #Äliqöåm. #Risus neque#eleifend #nunc&#34;")
-        self.assertIn('quisque', obj._tags)
-        self.assertIn('aliquam', obj._tags)
-        self.assertIn('ante', obj._tags)
-        self.assertIn('tincidunt', obj._tags)
-        self.assertIn(u'äliqöåm', obj._tags)
-        self.assertIn('risus', obj._tags)
-        self.assertIn('nunc', obj._tags)
-        self.assertNotIn('eleifend', obj._tags)
-        self.assertNotIn('34', obj._tags)
-        
-    def test_add_tag(self):
-        obj = self._make_obj()
-        obj.add_tag('Quisque')
-        self.assertIn('quisque', obj._tags)
-        
-    def test_add_tag_twice(self):
-        obj = self._make_obj()
-        obj.add_tag('Quisque')
-        self.assertIn('quisque', obj._tags)
-        obj.add_tag('Quisque')
-        self.assertIn('quisque', obj._tags)
-        self.assertEqual(len(obj._tags), 1)
-        
-    def test_add_tas(self):
+        res = obj.find_tags(u"#Quisque #aliquam,#ante in #tincidunt #Äliqöåm. #Risus neque#eleifend #nunc&#34;")
+        self.assertIn('quisque', res)
+        self.assertIn('aliquam', res)
+        self.assertIn('ante', res)
+        self.assertIn('tincidunt', res)
+        self.assertIn(u'äliqöåm', res)
+        self.assertIn('risus', res)
+        self.assertIn('nunc', res)
+        self.assertNotIn('eleifend', res)
+        self.assertNotIn('34', res)
+
+    def test_add_tags(self):
         obj = self._make_obj()
         obj.add_tags('Quisque aliquam ante')
         self.assertIn('quisque', obj._tags)
         self.assertIn('aliquam', obj._tags)
         self.assertIn('ante', obj._tags)
         
-    def test_remove_tag(self):
+    def test_remove_tags(self):
         obj = self._make_obj()
-        obj.add_tag('Quisque')
+        obj.add_tags('Quisque')
         self.assertIn('quisque', obj._tags)
-        obj.remove_tag('Quisque')
+        obj.remove_tags('Quisque')
         self.assertNotIn('Quisque', obj._tags)
         self.assertNotIn('quisque', obj._tags)
+
+    def test_set_tags(self):
+        obj = self._make_obj()
+        obj.add_tags('Quisque')
+        self.assertIn('quisque', obj._tags)
+        obj.set_tags('hello WORLD')
+        self.assertEqual(set(obj._tags), set(['hello', 'world']))

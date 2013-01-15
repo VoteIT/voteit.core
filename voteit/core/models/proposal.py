@@ -97,15 +97,18 @@ class Proposal(BaseContent, WorkflowAware, Tags):
     
     def _set_title(self, value, key=None):
         self.field_storage['title'] = value
-        # add tags in title to tags
-        self._find_tags(value)
+        tags = self.find_tags(value)
+        auto_id = self.get_field_value('aid', None)
+        if auto_id:
+            tags.add(auto_id)
+        self.set_tags(tags)
     
     title = property(_get_title, _set_title)
     
     def _set_aid(self, value, key=None):
         self.field_storage['aid'] = value
         # add aid to tags
-        self.add_tag(value)
+        self.add_tags(value)
         
     def _get_mentioned(self, key = None, default = OOBTree()):
         mentioned = getattr(self, '__mentioned__', None)

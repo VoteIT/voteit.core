@@ -29,5 +29,6 @@ def create_proposal_id(obj, event):
         aid_int = 0
     aid_int = aid_int+1
     aid = "%s-%s" % (creator, aid_int)
+    obj.add_tags(aid, notify = True) #Make sure aid is part of the tags list, which it probably won't be on first add
     obj.set_field_appstruct({'aid': aid, 'aid_int': aid_int})
     proposal_ids.add(creator, aid_int)

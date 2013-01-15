@@ -814,21 +814,28 @@ class ICatalogMetadataEnabled(Interface):
 
 #Mixin class interfaces
 class ITags(Interface):
-    """ Mixin class for content that needs workflow. """
+    """ Mixin class for content that needs workflow.
+        Note that changes to tag attributes don't update the catalog unless notify is True.
+        Normally this doesn't matter, since tags aren't manipulated directly.
+    """
     
     _tags = Attribute('The tags for this content.')
     
-    def _find_tags(value):
-        """ Find tags in value and stores them in tags 
+    def find_tags(value):
+        """ Find tags in value and returns a string with all tags lowercased separated by space.
         """
-        
-    def add_tag(tag):
-        """ Stores tag in tags
+
+    def add_tags(tags, notify = False):
+        """ tags should be a simple string of words that should be tags. Separated by space.
             Will send IObjectUpdatedEvent
         """
+
+    def set_tags(tags, notify = False):
+        """ Set tags. tags should be a string where the tags are separated by space.
+        """
     
-    def remove_tag(tag):
-        """ Stores tag in tags
+    def remove_tags(tags, notify = False):
+        """ tags should be a simple string of words that should be tags. Separated by space.
             Will send IObjectUpdatedEvent
         """
 
