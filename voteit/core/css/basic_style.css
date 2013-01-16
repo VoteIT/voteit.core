@@ -388,3 +388,19 @@ button.small:active,
 .listing .odd {
 	background: #f8f8f8;
 }
+/* end tables */
+
+/* popular subjects */
+.tag_stats {
+    border: 1px solid #B2B2B5;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    padding: 10px;
+    background-color: #F2F2F2;
+}
+.tag_stats li {
+    display:inline;
+}
+
+/* end popular subjects */
