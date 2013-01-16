@@ -266,6 +266,17 @@ class IDiscussionPost(IBaseFolder):
     """ A discussion post.
     """
 
+    mentioned = Attribute("""
+        All users who've been mentioned within this discussion post.
+        This is to make sure several notifications aren't set when anything is updated.
+        It's a key/value storage with userid as key and a datetime as value. """)
+
+    def add_mention(userid):
+        """ Set a userid as mentioned. """
+
+    def get_tags(default = ()):
+        """ Return all used tags within this discussion post. """
+
 
 class IProposal(IBaseFolder):
     """ Proposal content type
@@ -299,6 +310,17 @@ class IProposal(IBaseFolder):
         (This is simply to help editing things to avoid mistakes.) After that, the proposals will be locked
         without any option to alter them. In that case, the ACL table 'closed' is used.
     """
+    mentioned = Attribute("""
+        All users who've been mentioned within this discussion post.
+        This is to make sure several notifications aren't set when anything is updated.
+        It's a key/value storage with userid as key and a datetime as value. """)
+
+    def add_mention(userid):
+        """ Set a userid as mentioned. """
+
+    def get_tags(default = ()):
+        """ Return all used tags within this proposal. The automatically set id (hashtag) for this
+            proposal will also be returned. """
 
 
 class IPoll(IBaseFolder):
@@ -673,6 +695,40 @@ class IUnread(Interface):
         """ Sets unread as newly created """
 
 
+class IProposalIds(Interface):
+    """ Computes and stores used proposal ids or automatic ids.
+        They're used as hashtags and unique identifiers on proposals.
+    """
+    
+    def add(userid, value):
+        """ Create a tag for userid.
+        """
+        
+    def get(userid):
+        """ Get latets tag for userid
+        """
+
+
+class IProfileImage(Interface):
+    """ Adapts a user object to serve profile image from different sources
+    """
+    name = Attribute("Adapters name, used like an id")
+    title = Attribute("Human readable title")
+    description = Attribute("Description of this profile image type and where it's from. Ment as information to help regular users.")
+
+    def url(size):
+        """ Return a URL to the profile picture, if no url could be created
+            this function should return None
+        
+            size
+                Prefered size of image 
+        """
+        
+    def is_valid_for_user():
+        """ Checks if this adapter is usable with this user
+        """
+
+
 #Utilities
 class IDateTimeUtil(Interface):
     """ Utility that handles display of datetime formats.
@@ -783,26 +839,6 @@ class IFanstaticResources(Interface):
             Returns keys of included resources.
         """
 
-        
-class IProfileImage(Interface):
-    """ Adapts a user object to serve profile image from different sources
-    """
-    name = Attribute("Adapters name, used like an id")
-    title = Attribute("Human readable title")
-    description = Attribute("Description of this profile image type and where it's from. Ment as information to help regular users.")
-
-    def url(size):
-        """ Return a URL to the profile picture, if no url could be created
-            this function should return None
-        
-            size
-                Prefered size of image 
-        """
-        
-    def is_valid_for_user():
-        """ Checks if this adapter is usable with this user
-        """
-
 
 #Marker interfaces
 class ICatalogMetadataEnabled(Interface):
@@ -810,39 +846,3 @@ class ICatalogMetadataEnabled(Interface):
         The interface itself doesn't do anything, but the ICatalogMetadata
         adapter is registered for it.
     """
-
-
-#Mixin class interfaces
-class ITags(Interface):
-    """ Mixin class for content that needs workflow. """
-    
-    _tags = Attribute('The tags for this content.')
-    
-    def _find_tags(value):
-        """ Find tags in value and stores them in tags 
-        """
-        
-    def add_tag(tag):
-        """ Stores tag in tags
-            Will send IObjectUpdatedEvent
-        """
-    
-    def remove_tag(tag):
-        """ Stores tag in tags
-            Will send IObjectUpdatedEvent
-        """
-
-
-class IProposalIds(Interface):
-    """
-    """
-    
-    _proposal_ids = Attribute('')
-    
-    def add(userid, value):
-        """ Add the latest value for the user 
-        """
-        
-    def get(userid):
-        """ Returns the latest value for the user
-        """

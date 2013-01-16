@@ -166,8 +166,12 @@ class UniqueEmailIDTests(TestCase):
     def test_already_existing_address(self):
         root = _fixture(self.config)
         obj = self._cut(root.users)
-        node = None
-        self.assertRaises(colander.Invalid, obj, node, "moderator@voteit.se")
+        self.assertRaises(colander.Invalid, obj, None, "moderator@voteit.se")
+
+    def test_already_existing_case_insensitive(self):
+        root = _fixture(self.config)
+        obj = self._cut(root.users)
+        self.assertRaises(colander.Invalid, obj, None, "MODERATOR@voteit.se")
 
 #FIXME: Full integration test with schema
 

@@ -13,6 +13,7 @@ def create_proposal_id(obj, event):
     """ Assign a propsal ID to all proposals when they're added,
         unless they already have an id.
     """
+    #FIXME The code here should be in the adapter
     if obj.get_field_value('aid') and obj.get_field_value('aid_int'):
         return
     meeting = find_interface(obj, IMeeting)

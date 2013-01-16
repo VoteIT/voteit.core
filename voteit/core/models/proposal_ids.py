@@ -1,5 +1,6 @@
 from BTrees.OOBTree import OOBTree
 from zope.interface import implements
+from zope.component import adapts
 
 from voteit.core.models.interfaces import IProposalIds
 from voteit.core.models.interfaces import IMeeting
@@ -11,6 +12,7 @@ class ProposalIds(object):
         All methods are documented in the interface of this class.
     """
     implements(IProposalIds)
+    adapts(IMeeting)
     
     def __init__(self, context):
         """ Context to adapt """

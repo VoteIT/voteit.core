@@ -54,7 +54,7 @@ class ProposalsComponentTests(unittest.TestCase):
         self.config.scan('voteit.core.views.components.creators_info')
         self.config.scan('voteit.core.views.components.user_tags')
         self.config.scan('voteit.core.views.components.proposals')
-        self.config.scan('voteit.core.views.components.meta_data_listing')
+        self.config.scan('voteit.core.views.components.metadata_listing')
         self.config.testing_securitypolicy(userid='dummy',
                                            permissive=True)
         self._enable_catalog()

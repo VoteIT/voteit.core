@@ -138,7 +138,8 @@ class UniqueEmail(object):
     def __init__(self, context):
         self.context = context
 
-    def __call__(self, node, value):        
+    def __call__(self, node, value):
+        value = value.lower() #Make sure it'slowercase
         default_email_validator = colander.Email(msg=_(u"Invalid email address."))
         default_email_validator(node, value)
         #context can be IUser or IUsers
@@ -152,7 +153,7 @@ class UniqueEmail(object):
             raise colander.Invalid(node, 
                                    msg)
 
-        
+
 @colander.deferred
 def deferred_unique_email_validator(node, kw):
     context = kw['context']

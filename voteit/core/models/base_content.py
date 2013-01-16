@@ -1,4 +1,3 @@
-from logging import getLogger
 from datetime import datetime
 
 from betahaus.pyracont import BaseFolder
@@ -66,6 +65,10 @@ class BaseContent(BaseFolder, SecurityAware):
         
         updated = super(BaseContent, self).set_field_appstruct(values, notify=notify, mark_modified=mark_modified)
         if updated and notify:
+            #FIXME: This hack can be removed when transformations are live
+            #Currently we need to reindex whenever some fields have changed
+            if 'tags' not in updated:
+                updated.add('tags')
             objectEventNotify(ObjectUpdatedEvent(self, indexes=updated, metadata=True))
         return updated
 

@@ -9,6 +9,6 @@ DEFAULT_VC_ORDER = (
     ('moderator_actions_section', ('context_actions', 'workflow',)),
     ('context_actions', ('edit', 'delete', 'poll_config')),
     ('help_action', ('contact', 'wiki')),
-    ('meta_data_listing', ('state','time','retract', 'user_tags','answer','tag')),
+    ('metadata_listing', ('state','time','retract', 'user_tags','answer','tag')),
     ('agenda_item_top', ('description', 'tag_stats')),
 )

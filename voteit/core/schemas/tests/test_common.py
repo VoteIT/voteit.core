@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import unittest
 from datetime import datetime
 
@@ -79,10 +80,9 @@ class DeferredDefaultTagsTests(unittest.TestCase):
     def test_no_tags_context(self):
         self.assertEqual(self._fut(None, {'context': object()}), u"")
 
-    def test_with_int_tags(self):
+    def test_with_tags(self):
         from voteit.core.models.discussion_post import DiscussionPost
-        context = DiscussionPost()
-        context.add_tags("HELLO World")
+        context = DiscussionPost(text = '#HELLO #world')
         self.assertEqual(self._fut(None, {'context': context}), u"hello world")
 
 
@@ -123,19 +123,23 @@ class DeferredDefaultHashtagTextTests(unittest.TestCase):
 
     def test_context_has_tags(self):
         #Tags without creator isn't the normal case
-        context = self._prop()
-        context.add_tags("HELLO World")
+        context = self._prop(title="#HELLO #world")
         request = testing.DummyRequest()
         self.assertEqual(self._fut(None, {'context': context, 'request': request}), u" #hello #world")
 
     def test_context_has_tags_and_creators(self):
-        context = self._prop(creators = ['jeff'])
-        context.add_tags("HELLO World")
+        context = self._prop(creators = ['jeff'], title = "#HELLO #World")
         request = testing.DummyRequest()
         self.assertEqual(self._fut(None, {'context': context, 'request': request}), u"@jeff:  #hello #world")
 
     def test_context_has_tags_and_creators_and_request_has_tag(self):
-        context = self._prop(creators = ['jeff'])
-        context.add_tags("HELLO World")
+        context = self._prop(creators = ['jeff'], title = "#HELLO #World")
         request = testing.DummyRequest(params = {'tag': 'me-is_tag-2'})
         self.assertEqual(self._fut(None, {'context': context, 'request': request}), u"@jeff:  #hello #world #me-is_tag-2")
+
+    def test_with_int_chars(self):
+        context = self._prop(creators = ['jeff'],
+                             title = u"#Quisque #aliquam,#ante in #tincidunt #Äliqöåm. #Risus neque#eleifend #nunc&#34;")
+        request = testing.DummyRequest()
+        self.assertEqual(self._fut(None, {'context': context, 'request': request}),
+                         u"@jeff:  #quisque #aliquam #ante #tincidunt #äliqöåm #risus #nunc")

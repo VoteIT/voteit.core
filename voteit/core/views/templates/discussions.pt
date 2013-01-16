@@ -43,7 +43,7 @@
 	        <tal:creators tal:replace="structure api.get_creators_info(post['creators'])">Creators</tal:creators>
 	        <span class="body" tal:content="structure api.transform(truncated[0])">text</span>
 	        <span class="more" tal:condition="truncated[1]"><a tal:attributes="href '%s%s/more' % (request.application_url, post['path'])" i18n:translate="">Read more</a></span>
-	        <tal:meta replace="structure api.render_single_view_component(context, request, 'main', 'meta_data_listing', brain=post)">Meta</tal:meta>
+	        <tal:meta replace="structure api.render_single_view_component(context, request, 'main', 'metadata_listing', brain=post)">Meta</tal:meta>
 	        <div class="clear"><!-- --></div>
 	    </div>
 	

@@ -1,5 +1,5 @@
-import colander
-import deform
+import re
+
 from BTrees.OOBTree import OOBTree
 from zope.interface import implements
 from pyramid.security import Allow
@@ -9,13 +9,13 @@ from betahaus.pyracont.decorators import content_factory
 
 from voteit.core import VoteITMF as _
 from voteit.core import security
+from voteit.core.helpers import TAG_PATTERN
 from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import ICatalogMetadataEnabled
 from voteit.core.models.interfaces import IDiscussionPost
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.base_content import BaseContent
 from voteit.core.models.date_time_util import utcnow
-from voteit.core.models.tags import Tags
 
 
 ACL =  {}
@@ -36,7 +36,7 @@ ACL['private'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, security.DELETE, 
                   ]
 
 @content_factory('DiscussionPost', title=_(u"Discussion Post"))
-class DiscussionPost(BaseContent, Tags):
+class DiscussionPost(BaseContent):
     """ Discussion Post content type.
         See :mod:`voteit.core.models.interfaces.IDiscussionPost`.
         All methods are documented in the interface of this class.
@@ -78,8 +78,6 @@ class DiscussionPost(BaseContent, Tags):
 
     def _set_text(self, value, key = None):
         self.field_storage['text'] = value
-        # add tags in title to tags
-        self._find_tags(value)
 
     def _get_mentioned(self, key = None, default = OOBTree()):
         mentioned = getattr(self, '__mentioned__', None)
@@ -94,3 +92,11 @@ class DiscussionPost(BaseContent, Tags):
     
     def add_mention(self, userid):
         self.mentioned[userid] = utcnow()
+
+    def get_tags(self, default = ()):
+        tags = []
+        for matchobj in re.finditer(TAG_PATTERN, self.get_field_value('text', '')):
+            tag = matchobj.group('tag').lower()
+            if tag not in tags:
+                tags.append(tag)
+        return tags and tags or default

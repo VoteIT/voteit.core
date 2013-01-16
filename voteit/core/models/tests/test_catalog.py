@@ -3,16 +3,12 @@ from datetime import datetime
 from calendar import timegm
 
 from pyramid import testing
-from pyramid.security import principals_allowed_by_permission
-from pyramid.security import remember
-from zope.interface.verify import verifyObject
 from zope.component.event import objectEventNotify
 from betahaus.pyracont.factories import createContent
 from pyramid.authorization import ACLAuthorizationPolicy
 from pyramid.authentication import AuthTktAuthenticationPolicy
 
 from voteit.core.bootstrap import bootstrap_voteit
-from voteit.core.interfaces import IObjectUpdatedEvent
 from voteit.core.events import ObjectUpdatedEvent
 from voteit.core import security
 from voteit.core.security import groupfinder
@@ -335,14 +331,10 @@ class CatalogIndexTests(CatalogTestCase):
     def test_tags(self):
         meeting = self._add_mock_meeting()
         from voteit.core.models.discussion_post import DiscussionPost
-        obj = DiscussionPost()
+        obj = DiscussionPost(text = '#test')
         meeting['post'] = obj
-        
-        obj.add_tag('Test')
         self.assertEqual(self.search(tags='test')[0], 1)
-        
-        obj.remove_tag('Test')
-        objectEventNotify(ObjectUpdatedEvent(obj, indexes=('tags',), metadata=True))
+        obj.set_field_appstruct({'text': 'test'})
         self.assertEqual(self.search(tags='test')[0], 0)
 
 
@@ -464,18 +456,14 @@ class CatalogMetadataTests(CatalogTestCase):
     def test_tags(self):
         meeting = self._add_mock_meeting()
         from voteit.core.models.discussion_post import DiscussionPost
-        obj = DiscussionPost()
+        obj = DiscussionPost(text = '#test')
         meeting['post'] = obj
         
         def _get_metadata():
             result = self.search(content_type = 'DiscussionPost')
             doc_id = result[1][0]
             return self.get_metadata(doc_id)
-        
-        self.assertEqual(_get_metadata()['tags'], ())
 
-        obj.add_tag('test')
         self.assertEqual(_get_metadata()['tags'], ('test',))
-        
-        obj.remove_tag('test')
+        obj.set_field_appstruct({'text': 'test'})
         self.assertEqual(_get_metadata()['tags'], ())

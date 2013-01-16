@@ -37,14 +37,15 @@ class DiscussionTests(unittest.TestCase):
     def test_title_tags(self):
         obj = self._cut()
         obj.title = '#Quisque #aliquam,#ante in #tincidunt #aliquam. #Risus neque#eleifend #nunc'
-        self.assertIn('quisque', obj._tags)
-        self.assertIn('aliquam', obj._tags)
-        self.assertIn('ante', obj._tags)
-        self.assertIn('tincidunt', obj._tags)
-        self.assertIn('aliquam', obj._tags)
-        self.assertIn('risus', obj._tags)
-        self.assertIn('nunc', obj._tags)
-        self.assertNotIn('eleifend', obj._tags)
+        tags = obj.get_tags()
+        self.assertIn('quisque', tags)
+        self.assertIn('aliquam', tags)
+        self.assertIn('ante', tags)
+        self.assertIn('tincidunt', tags)
+        self.assertIn('aliquam', tags)
+        self.assertIn('risus', tags)
+        self.assertIn('nunc', tags)
+        self.assertNotIn('eleifend', tags)
         
     def test_mentioned(self):
         obj = self._cut()
