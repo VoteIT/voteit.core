@@ -23,7 +23,6 @@
                i18n:translate="">Change password</a>
         </div>
         <div class="clear"><!-- --></div>
-        <br/><br/>
         <div tal:condition="api.context_has_permission('Edit', context)" class="meta">
             <div tal:content="structure context.get_image_plugin().description|'Broken image plugin'" /><br/>
             <div i18n:translate="edit_profile_image_help">
