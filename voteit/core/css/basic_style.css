@@ -192,6 +192,7 @@ button.small:active,
 	float: right;
 	height: 19px;
 	width: 23px;
+	margin-top: 5px;
 }
 .cogwheel a {
 	color: transparent !important;
@@ -203,7 +204,7 @@ button.small:active,
 #sidebar,
 #sidebar a {
 	color: #5c5a5d;
-	font-size: 17px;
+	font-size: 14px;
 }
 #sidebar h5.header,
 #sidebar h5.header a {
@@ -242,6 +243,18 @@ button.small:active,
 #navigation .selected a {
 	color: #fff;
 }
+#navigation .cinfo {
+    line-height: 18px;
+    display: block;
+    float: left;
+}
+#navigation .cinfo.proposal {
+    width: 80px;
+}
+#navigaion .info {
+    clear: both;
+}
+
 /* End Sidebar styles */
 
 /* Dropdown menus */
