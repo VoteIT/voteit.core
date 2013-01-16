@@ -408,7 +408,7 @@ $(document).ready(function() {
 
 /* ajaxifing tag filtering */
 $(document).ready(function() {
-    $('#proposals a.tag, #discussions a.tag').live('click', function(event) {
+    $('#proposals a.tag, #discussions a.tag, .tag_stats a').live('click', function(event) {
         /* stops normal events function 
         IE might throw an error calling preventDefault(), so use a try/catch block. */
         try { event.preventDefault(); } catch(e) {}
