@@ -13,6 +13,7 @@ def create_proposal_id(obj, event):
     """ Assign a propsal ID to all proposals when they're added,
         unless they already have an id.
     """
+    #FIXME The code here should be in the adapter
     if obj.get_field_value('aid') and obj.get_field_value('aid_int'):
         return
     meeting = find_interface(obj, IMeeting)
@@ -29,6 +30,5 @@ def create_proposal_id(obj, event):
         aid_int = 0
     aid_int = aid_int+1
     aid = "%s-%s" % (creator, aid_int)
-    obj.add_tags(aid, notify = True) #Make sure aid is part of the tags list, which it probably won't be on first add
     obj.set_field_appstruct({'aid': aid, 'aid_int': aid_int})
     proposal_ids.add(creator, aid_int)

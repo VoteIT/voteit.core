@@ -11,7 +11,6 @@ from betahaus.pyracont import generate_slug #For b/c, please keep this until cle
 
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import IAgendaItem
-from voteit.core.models.tags import TAG_PATTERN
 
 
 ajax_options = """
@@ -20,6 +19,9 @@ ajax_options = """
 """
 
 AT_PATTERN = re.compile(r'(\A|\s)@([a-zA-Z1-9]{1}[\w-]+)', flags=re.UNICODE)
+TAG_PATTERN = re.compile(r'(\A|\s|[,.;:!?])#(?P<tag>\w*[\w-]+)(\w*)', flags=re.UNICODE)
+#TAG_PATTERN = re.compile(r'(\A|\s|[,.;:!?])#(?P<tag>\w+)', flags=re.UNICODE)
+
 
 def at_userid_link(text, obj, request=None):
     """ Transform @userid to a link.

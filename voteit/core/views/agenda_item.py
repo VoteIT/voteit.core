@@ -166,8 +166,6 @@ class AgendaItemView(BaseView):
             obj = createContent(content_type, **kwargs)
             name = generate_slug(ai, obj.title)
             ai[name] = obj
-            # add the tags
-            obj.add_tags(appstruct['tags'])
 
             #Success, redirect
             url = self.request.resource_url(ai, anchor=obj.uid)

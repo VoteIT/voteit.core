@@ -47,9 +47,10 @@ def deferred_default_tags(node, kw):
     #FIXME: Accessing tags this way is wrong - rewrite!
     #FIXME: Missing tests
     context = kw['context']
-    if hasattr(context, '_tags'):
-        return u" ".join(context._tags)
-    return u""
+    if not hasattr(context, 'get_tags'):
+        return u""
+    tags = context.get_tags()
+    return tags and u" ".join(tags) or u""
 
 @colander.deferred
 def deferred_default_hashtag_text(node, kw):
@@ -67,19 +68,18 @@ def deferred_default_hashtag_text(node, kw):
         #This is a first post - don't add any hashtags or similar,
         #unless they're part of query string
         if request_tag:
-            output += "#%s" % request_tag
+            output += u"#%s" % request_tag
         return output
     # get creator of answered object
     creators = context.get_field_value('creators')
     if creators:
-        output += "@%s: " % creators[0]
+        output += u"@%s: " % creators[0]
     # get tags and make a string of them
-    #FIXME: Don't use private attr _tags - REWRITE!
-    tags = list(getattr(context, '_tags', []))
+    tags = list(context.get_tags([]))
     if request_tag and request_tag not in tags:
         tags.append(request_tag)
     for tag in tags:
-        output += " #%s" % tag
+        output += u" #%s" % tag
     return output
 
 def strip_whitespace(value):
