@@ -21,7 +21,7 @@ class DiscussionPostSchema(colander.Schema):
                                title = _(u"Text"),
                                validator = deferred_discussion_text_validator,
                                default = deferred_default_hashtag_text,
-                               widget = deform.widget.TextAreaWidget(rows=3, cols=40),)
+                               widget = deform.widget.TextAreaWidget(rows=3),)
     tags = colander.SchemaNode(colander.String(),
                                title = _(u"Tags"),
                                default = deferred_default_tags,

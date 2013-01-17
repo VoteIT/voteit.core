@@ -464,33 +464,33 @@ button.small:active,
 }
 .inline_add_form {
     margin-top: 1em;
-    padding: 10px;
     position: relative;
 }
-#proposals .inline_add_form {
-    text-align: center;
+.inline_add_form .buttons {
+    text-align: right;
 } 
 .inline_add_form p.discreet {
-    text-align: left;
+    padding-top: 10px;
+    font-size: 14px;
+    color: #666;
 }
 .inline_form_placeholder {
     padding-left: 50px;
-    padding-right: 10px;
 }
 .inline_add_form .deform label {
     display: none !important;
 }
 .inline_add_form .deform li,
 .answer-popup .deform li {
-    margin: 0 !important;
-    padding: 0 !important;
+    margin: 0;
+    padding: 0;
 }
 .inline_add_form .dummy-textarea,
 .inline_add_form textarea {
     display: block;
     border: 1px solid #666;
     padding: 2px !important;
-    width: 100%;
+    width: 302px;
 }
 .inline_add_form .dummy-textarea {
     height: 34px;
@@ -501,7 +501,7 @@ button.small:active,
     margin-top: 0px !important;
     height: 60px;
 }
-#content .inline_add_form button {
+#main .inline_add_form button {
     margin-top: 10px;
     float: right;
 }
@@ -532,16 +532,6 @@ button.small:active,
 #discussions .tag-title > a {
     float: right;
 }
-/*
-#proposals > .moderator-help-buttons .buttonize {
-    padding: 0.5em !important;
-}
-*/
-/*
-#proposals > .moderator-help-buttons .buttonize:last-child {
-    margin-left: 2px;
-}
-*/
 #proposals > .show_retracted {
     float: right;
     clear: both;
