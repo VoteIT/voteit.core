@@ -549,6 +549,14 @@ button.small:active,
 }
 /* proposals and discussions */
 
+/* poll section and popup */
+
+.poll_wrapper .result div.denied {
+    /* FIXME: This code is crappy and has nothing to do with core. It's a badly implemented function within schulze. FIX! */
+    display: none;
+}
+
+/* end poll section and popup */
 
 /* various */
 .moderator-help-buttons {

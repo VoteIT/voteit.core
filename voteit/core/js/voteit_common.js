@@ -316,17 +316,15 @@ $(document).keyup(function(e) {
 });
 
 /* Show denied proposals on closed polls */
-$(document).ready(function() {
-    $('#proposals .show_denied a').live('click', function(event) {
-        /* stops normal events function 
-        IE might throw an error calling preventDefault(), so use a try/catch block. */
-        try { event.preventDefault(); } catch(e) {}
-        
-        var poll = $(this).parents("div.listing_block.poll");
-           poll.find('.result div.denied').toggle();
-           $(this).toggle();
-    });
+// FIXME: Class names collide with icons + need way to close again
+// This code has nothing to do with this package either, but with schulze
+$('#proposals .show_denied a').live('click', function(event) {
+    try { event.preventDefault(); } catch(e) {}
+    var poll = $(this).parents("div.listing_block.poll");
+       poll.find('.result div.denied').toggle();
+       $(this).toggle();
 });
+
 
 /* ajaxifing show previous posts */
 $(document).ready(function() {
