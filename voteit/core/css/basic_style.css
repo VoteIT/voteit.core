@@ -550,11 +550,106 @@ button.small:active,
 /* proposals and discussions */
 
 /* poll section and popup */
-
 .poll_wrapper .result div.denied {
     /* FIXME: This code is crappy and has nothing to do with core. It's a badly implemented function within schulze. FIX! */
     display: none;
 }
+
+.booth_wrapper {
+    z-index: 9999;
+}
+.listing_block.poll,
+.booth.poll {
+    padding: 10px;
+    z-index: 1000;
+    background: #F2F2F2;
+    border: 2px solid #ccc;
+    border-radius: 0.5em;
+    -webkit-border-radius: 0.5em;
+    -moz-border-radius: 0.5em;
+}
+.listing_block.poll > .cogwheel,
+.booth.poll > .cogwheel {
+    float: left;
+}
+.listing_block.poll h3,
+.booth.poll h3 {
+    margin: 0;
+}
+.listing_block.poll > .wf_state,
+.booth.poll > .wf_state {
+    float: right;
+}
+.booth.poll > .wf_state {
+    margin-right: 35%;
+}
+
+.poll_wrapper {
+    padding: 5px 0;
+    /*background-color: #fff;*/
+}
+.poll_wrapper .result div.approved .listing_block .meta .icon {
+    background: url(/static/icons/icon_approved.png) left center no-repeat !important;
+}
+.poll_wrapper .result div.denied {
+    display: none;
+}
+.poll_footer {
+    padding-top: 10px;
+    width: 100%;
+}
+.poll_footer > .time,
+.poll_footer > .info {
+    width: 30%;
+    float: left;
+}
+.booth .poll_footer > .time {
+    width: 40%;
+    float: left;
+}
+.booth .poll_footer > .time.end {
+    width: auto;
+    float: right;
+    padding-right: 10px;
+}
+.poll_footer .time {
+    font-size: 12px;
+}
+.poll_footer .info {
+    text-align: center;
+}
+.booth button.submit {
+    float: right;
+    margin-top: 5px;
+}
+.booth .close_wrapper .close {
+    position: absolute;
+    float: right;
+    z-index: 10000;
+    top: 15px;
+    right: 15px;
+}
+
+.booth .close.buttonize {
+    float: right;
+}
+
+.show_denied {
+    text-align: center;
+}
+
+.booth .deform .desc {
+    display: none;
+}
+.booth.poll {
+    position: absolute;
+    padding-bottom: 30px;
+}
+.poll_wrapper .result .listing_block {
+    margin-top: 0;
+    margin-bottom: 1em;
+}
+
 
 /* end poll section and popup */
 
