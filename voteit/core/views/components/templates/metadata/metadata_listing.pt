@@ -1,0 +1,9 @@
+<tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core">
+<div class="meta">
+	<tal:vas repeat="va view_actions">
+	    <tal:out define="out va(context, request, **va_kwargs)">
+		  <span tal:condition="out" class="meta_va ${va.name}" tal:content="structure out">Meta</span>
+		</tal:out>
+	</tal:vas>
+</div>
+</tal:main>

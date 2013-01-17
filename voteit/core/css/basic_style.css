@@ -12,6 +12,16 @@ h6 { font-size: 90%; }
 h1, h2, h3, h4, h5, h6 {
 	padding: 0.25em 0 0.5em 0;
 }
+#page_heading {
+    border-bottom: 1px solid #B2B2B5;
+    margin-bottom: 10px;
+}
+#agenda_item_title {
+    padding-top: 0px;
+    padding-bottom: 10px;
+    line-height: 42px;
+}
+
 #header-meeting-title h1 {
 	text-transform: uppercase;
 }
@@ -88,7 +98,7 @@ body {
 	margin-bottom: 20px;
 }
 /* End Backgrounds and area borders */
-/* main element borders */
+/* main element borders + fix for overflow */
 #left, #right, #top, #content,
 .sidebar_block {
 	border: 1px solid #b2b2b5;
@@ -98,6 +108,7 @@ body {
     box-shadow: 1px 1px 5px 2px #888;
     -moz-box-shadow:  1px 1px 5px 2px #888;
     -webkit-box-shadow: 1px 1px 5px 2px #888;
+    overflow: hidden;
 }
 /* end main element borders */
 /* Icons */
@@ -397,12 +408,157 @@ button.small:active,
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     padding: 10px;
+    margin-top: 10px;
     background-color: #F2F2F2;
 }
 .tag_stats li {
     display:inline;
 }
 /* end popular subjects */
+
+/* creators and metadata */
+.creators img {
+    margin: 0px 5px 5px 0px;
+}
+.meta {
+    clear: both;
+    color: #666;
+    font-size: 14px;
+    margin: 5px 0 5px 0;
+}
+.meta_va {
+    line-height: 20px;
+    float: left;
+    padding-right: 5px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    border-right: 1px solid #B2B2B5;
+}
+.meta .state {
+    text-transform: uppercase;
+    font-weight: bold;
+    clear: both;
+    border-right: 0px;
+}
+.meta .state .icon {
+    line-height: 18px;
+    display: block;
+}
+.meta .time {
+    float: right;
+    border-right: 0px;
+    margin-right: 0px;
+    padding-right: 0px;
+}
+/* end creators and metadata */
+
+/* proposals and discussions */
+#proposals .creators img,
+#discussions .creators img,
+.inline_add_form img,
+.answer-popup img {
+    float: left;
+}
+#proposals .wf-state-retracted .body {
+    text-decoration: line-through;
+}
+.inline_add_form {
+    margin-top: 1em;
+    padding: 10px;
+    position: relative;
+}
+#proposals .inline_add_form {
+    text-align: center;
+} 
+.inline_add_form p.discreet {
+    text-align: left;
+}
+.inline_form_placeholder {
+    padding-left: 50px;
+    padding-right: 10px;
+}
+.inline_add_form .deform label {
+    display: none !important;
+}
+.inline_add_form .deform li,
+.answer-popup .deform li {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+.inline_add_form .dummy-textarea,
+.inline_add_form textarea {
+    display: block;
+    border: 1px solid #666;
+    padding: 2px !important;
+    width: 100%;
+}
+.inline_add_form .dummy-textarea {
+    height: 34px;
+    background-color: #fff;
+}
+.inline_add_form textarea,
+.answer-popup  textarea {
+    margin-top: 0px !important;
+    height: 60px;
+}
+#content .inline_add_form button {
+    margin-top: 10px;
+    float: right;
+}
+.inline_add_form .dummy-error {
+    /*
+    background-color: #FFDFDF;
+    color: #DF0000;
+    */
+}
+#proposals .tag-title,
+#discussions .tag-title {
+    /*
+    color: #054265;
+    border-bottom: 1px solid #86A3B4;
+    margin-bottom: 10px;
+    padding: 0 5px 10px 5px;
+    text-transform: uppercase;
+    font-weight: bold;
+    */
+}
+
+#proposals .tag-title > span,
+#discussions .tag-title > span {
+    float: left;
+}
+
+#proposals .tag-title > a,
+#discussions .tag-title > a {
+    float: right;
+}
+/*
+#proposals > .moderator-help-buttons .buttonize {
+    padding: 0.5em !important;
+}
+*/
+/*
+#proposals > .moderator-help-buttons .buttonize:last-child {
+    margin-left: 2px;
+}
+*/
+#proposals > .show_retracted {
+    float: right;
+    clear: both;
+}
+.listing_block {
+    margin-top: 10px;
+    clear: both;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #ccc;
+}
+#main .unread {
+    margin-left: -10px;
+    padding-left: 5px;
+    border-left: solid 5px #B2B2B5;    
+}
+/* proposals and discussions */
+
 
 /* various */
 .moderator-help-buttons {

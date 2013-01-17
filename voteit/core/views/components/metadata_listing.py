@@ -14,7 +14,6 @@ from voteit.core.security import VIEW
 from voteit.core.security import ADD_PROPOSAL
 
 
-
 @view_action('main', 'metadata_listing', permission=VIEW)
 def metadata_listing(context, request, va, **kw):
     """ This is the main renderer for post meta.
@@ -23,16 +22,9 @@ def metadata_listing(context, request, va, **kw):
     """
     if not kw.get('show_user_tags', True):
         return u""
-    api = kw['api']
     util = request.registry.getUtility(IViewGroup, name='metadata_listing')
-    view_actions = []
-    for _va in util.get_context_vas(context, request):
-        output = _va(context, request, **kw)
-        if output:
-            view_actions.append(output)
-    
-    response = {'view_actions': view_actions,}
-    return render('../templates/snippets/metadata_listing.pt', response, request = request)
+    response = {'view_actions': util.get_context_vas(context, request), 'va_kwargs': kw,}
+    return render('templates/metadata/metadata_listing.pt', response, request = request)
 
 
 @view_action('metadata_listing', 'state', permission=VIEW)
@@ -92,7 +84,7 @@ def meta_user_tags(context, request, va, **kw):
         tags.append(_va(brain, request, **kw))
     
     response = {'tags': tags,}
-    return render('../templates/snippets/metadata_listing_user_tags.pt', response, request = request)
+    return render('templates/metadata/metadata_listing_user_tags.pt', response, request = request)
 
 
 @view_action('metadata_listing', 'answer', permission=VIEW)
@@ -113,9 +105,9 @@ def meta_answer(context, request, va, **kw):
     else:
         label = _(u'Reply')
                   
-    return '<a class="answer" ' \
+    return '<span><a class="answer" ' \
            'href="%s%s/answer" ' \
-           '>%s</a>'  % (request.application_url, brain['path'], api.translate(label))
+           '>%s</a></span>'  % (request.application_url, brain['path'], api.translate(label))
 
 @view_action('metadata_listing', 'tag', permission=VIEW)
 def meta_tag(context, request, va, **kw):
@@ -125,9 +117,9 @@ def meta_tag(context, request, va, **kw):
     if not brain['content_type'] == 'Proposal':
         return ''
 
-    return '<a class="tag" ' \
+    return '<span><a class="tag" ' \
            'href="?tag=%s" ' \
-           '>#%s</a>' % (brain['aid'], brain['aid'])
+           '>#%s</a></span>' % (brain['aid'], brain['aid'])
 
 _dummy = {'Proposal': Proposal(),
           'DiscussionPost': DiscussionPost()}
