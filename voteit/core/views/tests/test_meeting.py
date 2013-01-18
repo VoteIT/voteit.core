@@ -1,11 +1,9 @@
 import unittest
 
 from pyramid import testing
-from pyramid.httpexceptions import HTTPForbidden
 from pyramid_mailer import get_mailer
 
 from voteit.core.testing_helpers import bootstrap_and_fixture
-from voteit.core.testing_helpers import register_security_policies
 from voteit.core.testing_helpers import register_catalog
 
 
@@ -490,22 +488,7 @@ class MeetingViewTests(unittest.TestCase):
         schema = createSchema("PresentationMeetingSchema").bind(context=context, request=request)
         response = obj.form(schema)
         self.assertEqual(response.location, 'http://example.com/m/')
-        
-    def test_form_cancel_with_ajax(self):
-        self.config.scan('voteit.core.schemas.meeting')
-        self.config.include('voteit.core.models.flash_messages')
-        self.config.testing_securitypolicy(userid='dummy',
-                                           permissive=True)
-        self._load_vcs()
-        context = self._fixture()
-        request = testing.DummyRequest(post={'cancel': 'cancel'}, is_xhr=True)
-        obj = self._cut(context, request)
-        
-        from betahaus.pyracont.factories import createSchema
-        schema = createSchema("PresentationMeetingSchema").bind(context=context, request=request)
-        response = obj.form(schema)
-        self.assertIn(response.headers['X-Relocate'], 'http://example.com/m/')
-        
+
     def test_form_save(self):
         self.config.scan('voteit.core.schemas.meeting')
         self.config.include('voteit.core.models.flash_messages')
@@ -520,22 +503,7 @@ class MeetingViewTests(unittest.TestCase):
         schema = createSchema("PresentationMeetingSchema").bind(context=context, request=request)
         response = obj.form(schema)
         self.assertEqual(response.location, 'http://example.com/m/')
-        
-    def test_form_save_with_ajax(self):
-        self.config.scan('voteit.core.schemas.meeting')
-        self.config.include('voteit.core.models.flash_messages')
-        self.config.testing_securitypolicy(userid='dummy',
-                                           permissive=True)
-        self._load_vcs()
-        context = self._fixture()
-        request = testing.DummyRequest(post={'save': 'save', 'title': 'Dummy Title', 'description': 'Dummy Description'}, is_xhr=True)
-        obj = self._cut(context, request)
-        
-        from betahaus.pyracont.factories import createSchema
-        schema = createSchema("PresentationMeetingSchema").bind(context=context, request=request)
-        response = obj.form(schema)
-        self.assertIn(response.headers['X-Relocate'], 'http://example.com/m/')
-        
+
     def test_form_validation_error(self):
         self.config.scan('voteit.core.schemas.meeting')
         self.config.include('voteit.core.models.flash_messages')
@@ -550,23 +518,7 @@ class MeetingViewTests(unittest.TestCase):
         schema = createSchema("PresentationMeetingSchema").bind(context=context, request=request)
         response = obj.form(schema)
         self.assertIn('form', response)
-        
-    def test_form_validation_error_with_ajax(self):
-        self.config.scan('voteit.core.schemas.meeting')
-        self.config.include('voteit.core.models.flash_messages')
-        self.config.testing_securitypolicy(userid='dummy',
-                                           permissive=True)
-        self._load_vcs()
-        context = self._fixture()
-        request = testing.DummyRequest(post={'save': 'save', 'title': '', 'description': 'Dummy Description'}, is_xhr=True)
-        obj = self._cut(context, request)
-        
-        from betahaus.pyracont.factories import createSchema
-        schema = createSchema("PresentationMeetingSchema").bind(context=context, request=request)
-        response = obj.form(schema)
-        self.assertEqual(response.status, '200 OK')
-        self.assertIn("<legend>Presentation</legend>", response.text)
-        
+
     def test_order_agenda_items(self):
         self.config.testing_securitypolicy(userid='dummy',
                                            permissive=True)
