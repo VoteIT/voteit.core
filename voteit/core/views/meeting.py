@@ -9,8 +9,6 @@ from pyramid.security import NO_PERMISSION_REQUIRED
 from pyramid.view import view_config
 from pyramid.httpexceptions import HTTPFound
 from pyramid.httpexceptions import HTTPRedirection
-from pyramid.renderers import render
-from pyramid.response import Response
 from pyramid.url import resource_url
 from betahaus.pyracont.factories import createContent
 from betahaus.pyracont.factories import createSchema
@@ -19,7 +17,6 @@ from betahaus.viewcomponent.interfaces import IViewGroup
 from voteit.core import security
 from voteit.core import VoteITMF as _
 from voteit.core.views.base_view import BaseView
-from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.schemas import add_csrf_token
 from voteit.core.models.schemas import button_save
@@ -28,7 +25,6 @@ from voteit.core.models.schemas import button_cancel
 from voteit.core.models.schemas import button_resend
 from voteit.core.models.schemas import button_delete
 from voteit.core.validators import deferred_token_form_validator
-from voteit.core.helpers import ajax_options
 
 
 class MeetingView(BaseView):
@@ -314,7 +310,7 @@ class MeetingView(BaseView):
 
     def form(self, schema):
         add_csrf_token(self.context, self.request, schema)
-        form = Form(schema, buttons=(button_save, button_cancel), use_ajax=True, ajax_options=ajax_options)
+        form = Form(schema, buttons=(button_save, button_cancel))
         self.api.register_form_resources(form)
         post = self.request.POST
         if 'save' in post:
@@ -323,23 +319,19 @@ class MeetingView(BaseView):
                 appstruct = form.validate(controls)
             except ValidationFailure, e:
                 self.response['form'] = e.render()
-                if self.request.is_xhr:
-                    return Response(render("templates/ajax_edit.pt", self.response, request = self.request))
-                
                 return self.response
-            
-            self.context.set_field_appstruct(appstruct)
+
+            updated = self.context.set_field_appstruct(appstruct)
+            if updated:
+                self.api.flash_messages.add(_(u"Successfully updated"))
+            else:
+                self.api.flash_messages.add(_(u"Nothing updated"))                
             url = resource_url(self.context, self.request)
-            if self.request.is_xhr:
-                return Response(headers = [('X-Relocate', url)])
             return HTTPFound(location=url)
 
         if 'cancel' in post:
             self.api.flash_messages.add(_(u"Canceled"))
-
             url = resource_url(self.context, self.request)
-            if self.request.is_xhr:
-                return Response(headers = [('X-Relocate', url)])
             return HTTPFound(location=url)
 
         #No action - Render form
