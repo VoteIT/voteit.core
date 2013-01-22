@@ -201,16 +201,24 @@ class DefaultEdit(BaseEdit):
             return HTTPFound(location=url)
 
         #No action - Render edit form
+        if self.context.content_type == 'Proposal':
+            used_in_polls = []
+            ai = self.context.__parent__
+            for poll in ai.get_content(content_type = 'Poll'):
+                if self.context.uid in poll.proposal_uids:
+                    used_in_polls.append("'%s'" % poll.title)
+            if used_in_polls:
+                msg = _(u"deleting_proposals_used_in_polls_not_allowed_error",
+                        default = u"You can't remove this proposal - it's used within the following polls: ${poll_titles}",
+                        mapping = {'poll_titles': u", ".join(used_in_polls)})
+                self.api.flash_messages.add(msg, type = 'error', close_button = False)
+                raise HTTPFound(location = self.request.resource_url(ai))
+
         msg = _(u"delete_form_notice",
                 default = u"Are you sure you want to delete '${display_name}' with title: ${title}?",
                 mapping = {'display_name': self.api.translate(self.context.display_name),
                            'title': self.context.title})
         self.api.flash_messages.add(msg, close_button = False)
-        if self.context.content_type == 'Proposal' and self.context.get_workflow_state() == 'voting':
-            msg = _(u"delete_form_locked_proposal_notice",
-                    default = u"This proposal is locked for voting. If you delete it, you will NEVER be able to close the poll it's participating in. Are you really sure that you want to do this?")
-            self.api.flash_messages.add(msg, type = 'error', close_button = False)
-        
         appstruct = {}
         came_from = self.request.GET.get('came_from', None)
         if came_from:
