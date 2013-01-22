@@ -265,7 +265,7 @@ $(document).ready(function() {
         
         var booth_wrapper = $('<div class="booth_wrapper">');
         $(booth_wrapper).attr('id', 'booth_'+id);
-        $(booth_wrapper).appendTo('#proposals');
+        $(booth_wrapper).appendTo('#main');
         $(booth_wrapper).position({
             of: $(poll),
             my: "left top",
@@ -278,7 +278,7 @@ $(document).ready(function() {
                 booth_wrapper.remove();
             } else {
                 apply_mask(false);
-                booth_wrapper.find('.booth').css('width', $('#content').width()*0.7);
+                booth_wrapper.find('.booth').css('width', '600px');
                 deform.processCallbacks();
                 display_deform_labels();
             }
@@ -473,9 +473,9 @@ $(document).keyup(function(e) {
 
 
 /* FIXME: Masking currently behaves odd
+*/
 $(window).resize(reapply_mask);
 $(window).scroll(reapply_mask);
-*/
 
 function reapply_mask() {
     //Get the screen height and width
