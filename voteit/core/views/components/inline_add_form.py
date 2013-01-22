@@ -4,10 +4,11 @@ from pyramid.renderers import render
 from voteit.core import VoteITMF as _
 from voteit.core.security import ADD_PROPOSAL
 from voteit.core.security import ADD_DISCUSSION_POST
+from voteit.core.models.interfaces import IAgendaItem
 
 
-@view_action('proposals', 'add_form', ctype = 'Proposal')
-@view_action('discussions', 'add_form', ctype = 'DiscussionPost')
+@view_action('proposals', 'add_form', ctype = 'Proposal', interface = IAgendaItem)
+@view_action('discussions', 'add_form', ctype = 'DiscussionPost', interface = IAgendaItem)
 def inline_add_form(context, request, va, **kw):
     """ For agenda item contexts.
     """

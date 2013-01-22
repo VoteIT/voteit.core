@@ -147,20 +147,16 @@ def active_poll_fixture(config):
     root['users']['admin'].set_field_value('email', 'this@that.com')
     meeting = root['meeting'] = Meeting()
     meeting.add_groups('admin', [ROLE_VOTER])
-    #unrestricted_wf_transition_to(meeting, 'ongoing')
     meeting.set_workflow_state(request, 'ongoing')
     
     ai = meeting['ai'] = AgendaItem()
-    ai['prop1'] = Proposal()
-    ai['prop2'] = Proposal()
-    #unrestricted_wf_transition_to(ai, 'upcoming')
-    #unrestricted_wf_transition_to(ai, 'ongoing')
+    ai['prop1'] = Proposal(title = u"Proposal 1")
+    ai['prop2'] = Proposal(title = u"Proposal 2")
     ai.set_workflow_state(request, 'upcoming')
     ai.set_workflow_state(request, 'ongoing')
-    ai['poll'] = Poll()
+    ai['poll'] = Poll(title = 'A poll')
     poll = ai['poll']
     poll.set_field_value('proposals', set([ai['prop1'].uid, ai['prop2'].uid]))
-    #unrestricted_wf_transition_to(poll, 'upcoming')
     poll.set_workflow_state(request, 'upcoming')
     register_security_policies(config)
     return root

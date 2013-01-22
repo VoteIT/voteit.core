@@ -39,6 +39,7 @@ class AgendaItemViewTests(unittest.TestCase):
 
     def _load_vcs(self):
         self.config.scan('voteit.core.views.components.main')
+        self.config.scan('voteit.core.views.components.poll')
         self.config.scan('voteit.core.views.components.agenda_item')
         self.config.scan('voteit.core.views.components.proposals')
         self.config.scan('voteit.core.views.components.discussions')

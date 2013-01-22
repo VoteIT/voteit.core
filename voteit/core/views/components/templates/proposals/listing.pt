@@ -1,0 +1,25 @@
+<tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core">
+<div class="listing">
+	<div tal:condition="tag"
+	     class="tag-title">
+	    <span i18n:translate="">Limited to <tal:tag i18n:name="tag_name">#${tag}</tal:tag></span>
+	    <a class="tag" tal:attributes="href clear_tag_url"
+	       i18n:translate="">
+	        Show all proposals
+	    </a>
+	</div>
+
+    <!-- polls first -->
+	<tal:iterate tal:repeat="poll polls">
+	    <tal:poll replace="structure api.render_view_group(poll, request, 'poll')">
+	</tal:iterate>
+
+	<tal:iterate condition="proposals" repeat="proposal proposals">
+	    <tal:proposal 
+	    	replace="structure api.render_view_group(context, request, 'proposal', brain=proposal)">
+	    	Proposal
+	    </tal:proposal>	
+	</tal:iterate>
+
+</div>
+</tal:main>

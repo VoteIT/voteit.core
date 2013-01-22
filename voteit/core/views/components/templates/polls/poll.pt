@@ -1,0 +1,98 @@
+<tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core">
+<div tal:attributes="class 'listing_block poll ' + context.poll_plugin_name;
+                     name context.__name__;
+                     id context.uid;">
+
+    <span tal:condition="api.show_moderator_actions" tal:replace="structure api.get_moderator_actions(context)">
+         Cogwheel menu
+    </span> 
+
+    <div class="wf_state">
+        <span class="iconpadding icon ${wf_state}">
+        ${api.tstring(wf_state.title())}
+        </span>
+    </div>
+    <h3 tal:content="context.title">Title</h3>
+    
+    <div class="poll_wrapper">
+        
+        <div class="description"
+             tal:condition="wf_state != 'closed'"
+             tal:content="structure context.description">
+                 Description</div>
+        
+        <tal:iterate condition="wf_state != 'closed' and proposals" repeat="proposal proposals">
+            <tal:proposal replace="structure api.render_view_group(context, request, 'proposal', brain=proposal)">
+                Proposal
+            </tal:proposal>
+        </tal:iterate>
+        
+        <div class="result" 
+            tal:condition="wf_state == 'closed'"
+            tal:content="structure context.render_poll_result(request, api, complete=False)">
+                Poll result</div>
+    </div>
+    
+    <div class="clear"><!-- --></div>
+    
+    <div class="poll_footer">
+        <div class="clear"><!-- --></div>
+        
+        <div class="iconpadding icon time start" 
+             tal:define="start_time api.dt_util.dt_format(context.start_time)">
+            <span tal:condition="wf_state in ('private', 'upcoming', )"
+                i18n:translate="">
+                Starts <span tal:replace="start_time" i18n:name="start_time" />
+            </span>
+            <span tal:condition="wf_state in ('ongoing', 'closed', 'canceled')"
+                i18n:translate="">
+                Started <span tal:replace="start_time" i18n:name="start_time" />
+            </span>
+        </div>
+        
+        <div class="info">
+            <tal:poll_ongoing condition="wf_state == 'ongoing'">
+                <div tal:condition="can_vote and not has_voted">
+                    <a href="${request.resource_url(context)}" class="poll_booth buttonize" i18n:translate="add_vote_button">Vote</a>
+                </div>
+                
+                <div tal:condition="can_vote and has_voted">
+                    <a href="${request.resource_url(context)}" class="poll_booth buttonize" i18n:translate="">Your vote</a>
+                </div>
+                      
+                <div tal:condition="not can_vote">
+                    <a href="${request.resource_url(context)}" class="poll_booth buttonize" i18n:translate="">View details</a>
+                </div>
+            </tal:poll_ongoing>
+            
+            <tal:poll_closed condition="wf_state == 'closed'">
+                <div>
+                    <a tal:condition="has_voted" href="${request.resource_url(context)}" class="poll_booth buttonize" i18n:translate="">Your vote</a>
+                    <a tal:condition="not has_voted" href="${request.resource_url(context)}" class="poll_booth buttonize" i18n:translate="">View details</a>
+                </div>
+            </tal:poll_closed>
+        </div>
+        
+        <div class="iconpadding icon time end"
+             tal:define="end_time api.dt_util.dt_format(context.end_time)">
+            <span tal:condition="wf_state in ('private', 'upcoming', 'ongoing', )"
+                  i18n:translate="">
+                  Closes <span tal:replace="end_time" i18n:name="end_time" />
+              </span>
+            <span tal:condition="wf_state in ('closed', 'canceled')"
+                i18n:translate="">
+                Closed <span tal:replace="end_time" i18n:name="end_time" />
+            </span>
+        </div>
+        
+        <div class="clear"><!-- --></div>
+        
+        <div tal:condition="can_vote and has_voted" 
+             i18n:translate="can_change_vote_notice">
+                You have already voted, but you may change your vote as long as the poll is open. Click the button above if you wish to do so.</div>
+        <div tal:condition="wf_state in ('ongoing') and not can_vote"
+             i18n:translate="no_permission_to_vote_notice">
+                    You do not have the permission to vote in this poll, please contact the moderator if you should be able to vote.</div>
+    </div>
+</div>
+</tal:main>

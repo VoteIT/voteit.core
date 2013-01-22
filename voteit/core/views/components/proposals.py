@@ -1,52 +1,26 @@
 from betahaus.viewcomponent import view_action
 from pyramid.renderers import render
 from pyramid.traversal import resource_path
-from pyramid.traversal import find_resource
 from repoze.catalog.query import Any
 from repoze.catalog.query import Eq
 from repoze.catalog.query import NotAny
 from zope.component.interfaces import ComponentLookupError
 
 from voteit.core import VoteITMF as _
-from voteit.core.security import RETRACT
 from voteit.core.models.interfaces import IPoll
+from voteit.core.models.interfaces import IAgendaItem
 
 
-@view_action('proposals', 'listing')
+@view_action('proposals', 'listing', interface = IAgendaItem)
 def proposal_listing(context, request, va, **kw):
-    """ Get proposals for a specific context """
+    """ Get proposals for a specific context.
+    """
     api = kw['api']
-    
-    def _get_polls(polls):
-        
-        def _get_proposal_brains(uids):
-            query = api.root.catalog.query
-            get_metadata = api.root.catalog.document_map.get_metadata
-            
-            num, results = query(Any('uid', uids), sort_index = 'created')
-            return [get_metadata(x) for x in results]
-        
-        def _notify_delete(uids):
-            # check if there is proposals in locked for voteing, approved or deniyed
-            query = Eq('path', resource_path(context)) & \
-                    Eq('content_type', 'Proposal') & \
-                    Any('workflow_state', ('voting', 'approved', 'denied')) & \
-                    Any('uid', uids)
-        
-            if api.root.catalog.query(query)[0] > 0:
-                return 'notify_delete' 
-            else: 
-                return ''
-        
-        response = {}
-        response['api'] = api
-        response['polls'] = polls
-        response['get_proposal_brains'] = _get_proposal_brains
-        response['notify_delete'] = _notify_delete
-        return render('../templates/polls.pt', response, request=request)
-    
-    polls = api.get_restricted_content(context, iface=IPoll, sort_on='created')
-    for poll in polls:
+
+    #Start with checking which polls that exist in this context and store shown uids
+    shown_uids = set()
+    polls = []
+    for poll in api.get_restricted_content(context, iface=IPoll, sort_on='created'):
         try:
             plugin = poll.get_poll_plugin()
         except ComponentLookupError:
@@ -55,54 +29,53 @@ def proposal_listing(context, request, va, **kw):
                         mapping = {'name': poll.get_field_value('poll_plugin')})
             api.flash_messages.add(err_msg, type="error")
             continue
-        
-    uids = set()
-    for poll in polls:
-        uids.update(poll.proposal_uids)
+        shown_uids.update(poll.proposal_uids)
+        polls.append(poll)
+
+    #The agenda item query must be based on the context and to exclude all already shown
+    #This view also cares about retracted proposals where as poll version doesn't
+    #if api.meeting.get_field_value('show_retracted', True) or request.GET.get('show_retracted') == '1':
+    #    wf_states = ('published', 'retracted', 'locked', 'unhandled') #More?
+    #else:
+    #    wf_states = ('published', 'retracted', 'locked')
+    #FIXME: Show retracted stuff
+    #wf_states = ('published', 'retracted', 'locked', 'unhandled')
     
-    query = Eq('path', resource_path(context)) & \
-            Eq('content_type', 'Proposal')
-             
-    # proposals that are not in polls or in certain state are to be shown 
-    # show retracted if it is activated in the meeting or if the user requests it
-    if api.meeting.get_field_value('show_retracted', True) or request.GET.get('show_retracted') == '1':
-        query = query & \
-                (NotAny('uid', uids) | \
-                 Any('workflow_state', ('published', 'retracted', 'unhandled')))
-    else:
-        query = query & \
-                (NotAny('uid', uids) & NotAny('workflow_state', ('retracted',)) | \
-                 Any('workflow_state', ('published', 'unhandled')))
-    
-    total_count = api.root.catalog.query(query)[0]
-    
+    query = Eq('path', resource_path(context)) &\
+            Eq('content_type', 'Proposal') &\
+            NotAny('uid', shown_uids)
+            #(NotAny('uid', shown_uids) | Any('workflow_state', wf_states))
+
     tag = request.GET.get('tag', None)
     if tag:
+        #Only apply tag limit for things that aren't polls.
+        #This is a safegard against user errors
         query = query & Any('tags', (tag, ))
         
     # build query string and remove tag
     clear_tag_query = request.GET.copy()
     if 'tag' in clear_tag_query:
         del clear_tag_query['tag']
-        
-    count, docids = api.root.catalog.query(query, sort_index='created', reverse=True)
+
+    count, docids = api.root.catalog.query(query, sort_index='created')
     get_metadata = api.root.catalog.document_map.get_metadata
     results = []
     for docid in docids:
-        #Insert the resolved docid first, since we need to reverse order again.
-        results.insert(0, get_metadata(docid))
+        metadata = get_metadata(docid)
+        results.append(metadata)
 
     response = {}
-    response['get_polls'] = _get_polls
-    response['polls'] = polls
-    response['clear_tag_url'] = api.request.resource_url(context, query=clear_tag_query)
+    response['clear_tag_url'] = request.resource_url(context, query=clear_tag_query)
     response['proposals'] = tuple(results)
-    response['hidden_count'] = total_count - count
+    response['tag'] = tag
     response['api'] = api 
-    return render('../templates/proposals.pt', response, request = request)
+    response['polls'] = polls
+    return render('templates/proposals/listing.pt', response, request = request)
+
 
 @view_action('proposal', 'block')
 def proposal_block(context, request, va, **kw):
+    """ This is the view group for each individual proposal. """
     api = kw['api']
     brain = kw['brain']
     show_user_tags = kw.get('show_user_tags', True)

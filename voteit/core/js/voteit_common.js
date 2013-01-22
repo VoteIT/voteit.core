@@ -254,14 +254,12 @@ $(document).ready(function() {
 /* Open poll booth when poll buttons is pressed*/
 $(document).ready(function() {
     $('#proposals a.poll_booth').live('click', function(event) {
-        /* stops normal events function 
-        IE might throw an error calling preventDefault(), so use a try/catch block. */
         try { event.preventDefault(); } catch(e) {}
         
         var button = $(this);
         spinner().appendTo(button);
         
-        var poll = $(this).parents("div.listing_block.poll");
+        var poll = $(this).parents(".poll");
         var id = $(poll).attr('id');  
         var url = $(this).attr('href');
         
@@ -289,11 +287,10 @@ $(document).ready(function() {
     });
 });
 
+
 /* close booth when close button is clicked */
 $(document).ready(function() {
     $('.booth.poll a.close').live('click', function(event) {
-        /* stops normal events function 
-        IE might throw an error calling preventDefault(), so use a try/catch block. */
         try { event.preventDefault(); } catch(e) {}
         
         var booth_wrapper = $(this).parents(".booth_wrapper");
@@ -301,6 +298,7 @@ $(document).ready(function() {
         remove_mask();
     });
 });
+
 
 $(document).ready(function() {     
     //if mask is clicked
@@ -315,16 +313,18 @@ $(document).keyup(function(e) {
     }
 });
 
+
 /* Show denied proposals on closed polls */
 // FIXME: Class names collide with icons + need way to close again
 // This code has nothing to do with this package either, but with schulze
+/*
 $('#proposals .show_denied a').live('click', function(event) {
     try { event.preventDefault(); } catch(e) {}
     var poll = $(this).parents("div.listing_block.poll");
        poll.find('.result div.denied').toggle();
        $(this).toggle();
 });
-
+*/
 
 /* ajaxifing show previous posts */
 $(document).ready(function() {
@@ -404,7 +404,7 @@ $(document).ready(function() {
 	});
 });
 
-/* ajaxifing tag filtering */
+/* tag filtering */
 $(document).ready(function() {
     $('#proposals a.tag, #discussions a.tag, .tag_stats a').live('click', function(event) {
         /* stops normal events function 
@@ -470,6 +470,7 @@ $(document).keyup(function(e) {
         remove_mask();
     }
 });
+
 
 /* FIXME: Masking currently behaves odd
 $(window).resize(reapply_mask);

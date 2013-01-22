@@ -15,8 +15,8 @@ def tag_stats(context, request, *args, **kwargs):
         return ""
     
     workflow_state = ('published', 'unhandled', 'voting', 'approved', 'denied',)
-    if api.meeting.get_field_value('show_retracted', True) or request.GET.get('show_retracted') == '1':
-        workflow_state = ('published', 'retracted', 'unhandled', 'voting', 'approved', 'denied',)
+    #if api.meeting.get_field_value('show_retracted', True) or request.GET.get('show_retracted') == '1':
+    #    workflow_state = ('published', 'retracted', 'unhandled', 'voting', 'approved', 'denied',)
     
     query = Eq('path', resource_path(context)) & \
             Any('allowed_to_view', effective_principals(request)) & \

@@ -335,14 +335,12 @@ button.small:active,
 /* End minimizable content */
 /* Flash messages and similar */
 #flash_messages,
-#notify-meetingstate,
-.booth.poll .message {
+#notify-meetingstate {
     clear: both;
     z-index: 10000;
 }
 #flash_messages .message,
-#notify-meetingstate .message,
-.booth.poll .message {
+#notify-meetingstate .message {
     /* Info is default */
     padding: 5px 10px 5px 30px;
     border: 1px solid #fff;
@@ -369,8 +367,7 @@ button.small:active,
 }
 #flash_messages .info {
 }
-#flash_messages .error,
-.booth.poll .error.message {
+#flash_messages .error {
 	/* FIXME: Design?
     border-color: red;
     background-color: #fdc;
@@ -532,10 +529,6 @@ button.small:active,
 #discussions .tag-title > a {
     float: right;
 }
-#proposals > .show_retracted {
-    float: right;
-    clear: both;
-}
 .listing_block {
     margin-top: 10px;
     clear: both;
@@ -550,8 +543,15 @@ button.small:active,
 /* proposals and discussions */
 
 /* poll section and popup */
+
+#main .poll {
+    border: 1px solid #B2B2B5;
+    background-color: #F2F2F2;
+    padding: 10px;
+}
+
+
 .poll_wrapper .result div.denied {
-    /* FIXME: This code is crappy and has nothing to do with core. It's a badly implemented function within schulze. FIX! */
     display: none;
 }
 
@@ -568,6 +568,7 @@ button.small:active,
     -webkit-border-radius: 0.5em;
     -moz-border-radius: 0.5em;
 }
+
 .listing_block.poll > .cogwheel,
 .booth.poll > .cogwheel {
     float: left;
@@ -586,7 +587,6 @@ button.small:active,
 
 .poll_wrapper {
     padding: 5px 0;
-    /*background-color: #fff;*/
 }
 .poll_wrapper .result div.approved .listing_block .meta .icon {
     background: url(/static/icons/icon_approved.png) left center no-repeat !important;
