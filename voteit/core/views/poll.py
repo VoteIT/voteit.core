@@ -6,20 +6,14 @@ from pyramid.security import has_permission
 from pyramid.exceptions import Forbidden
 from pyramid.httpexceptions import HTTPFound
 from pyramid.httpexceptions import HTTPForbidden
-from pyramid.traversal import find_interface
 from betahaus.pyracont.factories import createSchema
 from pyramid.renderers import render
 from pyramid.response import Response
-from repoze.catalog.query import Any
-from repoze.catalog.query import Eq
-from repoze.catalog.query import Name
-from pyramid.traversal import resource_path
 
 from voteit.core import VoteITMF as _
 from voteit.core.security import ADD_VOTE
 from voteit.core.security import EDIT
 from voteit.core.security import VIEW
-from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IVote
 from voteit.core.models.schemas import add_csrf_token
@@ -29,9 +23,6 @@ from voteit.core.models.schemas import button_update
 from voteit.core.models.schemas import button_save
 from voteit.core.views.base_edit import BaseEdit
 from voteit.core.schemas.poll import poll_schema_after_bind
-
-
-_POLL_TEMPLATE = "templates/poll.pt"
 
 
 class PollView(BaseEdit):
@@ -122,64 +113,55 @@ class PollView(BaseEdit):
         self.response['form'] = form.render(appstruct=self.context.poll_settings)
         return self.response
 
-    def _get_proposal_brains(self, uids):
-        query = self.api.root.catalog.query
-        get_metadata = self.api.root.catalog.document_map.get_metadata
-        ai = find_interface(self.context, IAgendaItem)
-        names = {'path': resource_path(ai),
-                 'uids': uids}
-        num, results = query(Eq('path', Name('path')) \
-                             & Eq('content_type', ('Proposal' )) \
-                             & Any('uid', Name('uids')), 
-                             names = names, sort_index = 'created', reverse = True)
-        return [get_metadata(x) for x in results]
-
-    def get_poll_form(self):
-        """ Return the Form object that will be used for voting within this poll.
-        """
+    @view_config(name="_poll_form", context=IPoll, renderer="templates/ajax_edit.pt", permission=VIEW, xhr=True)
+    def poll_form(self):
+        """ Return rendered poll form or process a vote. """
         poll_plugin = self.context.get_poll_plugin()
         schema = poll_plugin.get_vote_schema(self.request, self.api)
         add_csrf_token(self.context, self.request, schema)
-        form_id = self.context.__name__
         form = Form(schema,
-                    action=resource_url(self.context, self.request),
+                    action=self.request.resource_url(self.context, '_poll_form'),
                     buttons=(button_vote,),
-                    formid=form_id,
-                    use_ajax=True,
-                    ajax_options=
-                        """
-                        {
-                        target: '#booth_%(uid)s .booth.poll',
-                        timeout: 10000,
-                        beforeSubmit: voteit_poll_beforeSubmit,
-                        success: voteit_deform_success,
-                        error: function(xhr, status, error) { voteit_poll_error(xhr, status, error, '#booth_%(uid)s'); },
-                        complete: function(xhr, textStatus) { voteit_poll_complete(xhr, textStatus); },
-                        }
-                        """ % {'uid': self.context.uid, 'formid': form_id})
-                        #(self.context.uid, self.context.uid))
-        #FIXME: This won't work within ajax requests, and we do use ajax now.
-        #We need to think about another structure for this
-        self.api.register_form_resources(form)
-        return form
-
-    @view_config(context=IPoll, renderer=_POLL_TEMPLATE, permission=VIEW)
-    def poll_view(self, msg=u""):
-        """ Poll view - render the form for voting. This is ment to be fetched from an ajax request,
-            but since requests aren't marked as XHR when using IE and deform, it has to render
-            a responce regardless. So don't limit loading of this to only ajax!
-            The process_poll method does the processing of the data.
-        """
-        self.response['get_proposal_brains'] = self._get_proposal_brains
-        self.response['success_msg'] = msg
-        form = self.get_poll_form()
+                    formid="vote_form")
         can_vote = has_permission(ADD_VOTE, self.context, self.request)
         userid = self.api.userid
+
+        post = self.request.POST
+        if 'vote' in post:
+            if not can_vote:
+                raise HTTPForbidden(u"You're not allowed to vote")
+            controls = post.items()
+            try:
+                appstruct = form.validate(controls)
+            except ValidationFailure, e:
+                self.response['form'] = e.render()
+                return self.request
+
+            Vote = poll_plugin.get_vote_class()
+            if not IVote.implementedBy(Vote):
+                raise TypeError("Poll plugins method get_vote_class returned something that didn't implement IVote.")
+
+            #Remove crsf_token from appstruct after validation
+            del appstruct['csrf_token']
+
+            if userid in self.context:
+                vote = self.context[userid]
+                assert IVote.providedBy(vote)
+                vote.set_vote_data(appstruct)
+                #FIXME: success_msg = _(u"Your vote was updated.")
+            else:
+                vote = Vote(creators = [userid])
+                #We don't need to send events here, since object added will take care of that
+                vote.set_vote_data(appstruct, notify = False)
+                #To fire events after set_vote_data is done
+                self.context[userid] = vote
+                #FIXME: success_msg = _(u"Thank you for voting!")
+            return Response(render("templates/snippets/vote_success.pt", self.response, request = self.request))
+
+        #No vote recieved, continue to render form
         if userid in self.context:
-            #If editing a vote is allowed, redirect. Editing is only allowed in open polls
             vote = self.context[userid]
             assert IVote.providedBy(vote)
-            #show the users vote and edit button
             appstruct = vote.get_vote_data()
             #Poll might still be open, in that case the poll should be changable
             readonly = not can_vote
@@ -190,63 +172,17 @@ class PollView(BaseEdit):
             self.response['form'] = form.render(readonly=readonly)
         return self.response
 
-    @view_config(context=IPoll, renderer=_POLL_TEMPLATE, permission=ADD_VOTE, request_method='POST')
-    def process_poll(self):
-        """ Handles the incoming POST which is the result of a poll form generated by the poll_view.
+    @view_config(context=IPoll, permission=VIEW)
+    def modal_poll_view(self):
+        """ This is the modal window that opens when you click for instance the vote button
+            It will also call the view that renders the actual poll form.
         """
-        self.response['get_proposal_brains'] = self._get_proposal_brains
-        post = self.request.POST
-        if not 'vote' in post:
-            raise HTTPForbidden(u"Process poll expected 'vote'-action - aborting.")
-        form = self.get_poll_form()
-        controls = post.items()
-        try:
-            #appstruct is deforms convention. It will be the submitted data in a dict.
-            appstruct = form.validate(controls)
-        except ValidationFailure, e:
-            self.response['form'] = e.render()
-            if self.request.is_xhr:
-                return Response(render(_POLL_TEMPLATE, self.response, request = self.request))
-            #Quirks mode for broken browsers like IE
-            error_msg = _(u"bad_browser_validation_error",
-                          default = u"There was a validation error when you voted, but since you're using "
-                                    u"a browser that doesn't handle standards well (like Internet Explorer) we can't "
-                                    u"inline-check your data. Please try again. And we really recommend switching browser.")
-            self.api.flash_messages.add(error_msg, type='error')
-            url = self.request.resource_url(self.context.__parent__, anchor=self.context.uid)
-            return Response(headers = [('X-Relocate', url)])
-
-        poll_plugin = self.context.get_poll_plugin()
-        Vote = poll_plugin.get_vote_class()
-        if not IVote.implementedBy(Vote):
-            raise TypeError("Poll plugins method get_vote_class returned something that didn't implement IVote.")
-
-        #Remove crsf_token from appstruct after validation
-        del appstruct['csrf_token']
-
-        userid = self.api.userid
-        if userid in self.context:
-            vote = self.context[userid]
-            assert IVote.providedBy(vote)
-            vote.set_vote_data(appstruct)
-            success_msg = _(u"Your vote was updated.")
-        else:
-            vote = Vote(creators = [userid])
-            #We don't need to send events here, since object added will take care of that
-            vote.set_vote_data(appstruct, notify = False)
-            #To fire events after set_vote_data is done
-            self.context[userid] = vote
-            success_msg = _(u"Thank you for voting!")
-        if self.request.is_xhr:
-            return self.poll_view(msg = success_msg)
-        #This is a "quirks mode" for IE which doesn't set XHR on ajax submit with deform
-        self.api.flash_messages.add(success_msg)
-        warning_message = _(u"evil_browser_on_vote_notice",
-                            default = u"Warning! You're using a browser that doesn't handle standards well (For instance Internet Explorer). "
-                                      u"We recommend you review your vote to make sure it got saved, and that you switch to another browser.")
-        self.api.flash_messages.add(warning_message, 'warning')
-        url = self.request.resource_url(self.context.__parent__, anchor=self.context.uid)
-        return Response(headers = [('X-Relocate', url)])
+        self.response['poll_plugin'] = self.context.get_poll_plugin()
+        self.response['wf_state'] = self.context.get_workflow_state()
+        self.response['can_vote'] = self.api.context_has_permission(ADD_VOTE, self.context)
+        self.response['has_voted'] = self.api.userid in self.context
+        self.response['form'] = render('templates/ajax_edit.pt', self.poll_form(), request = self.request)
+        return Response(render('templates/modal_poll.pt', self.response, request = self.request))
 
     @view_config(context=IPoll, name="poll_raw_data", permission=VIEW)
     def poll_raw_data(self):

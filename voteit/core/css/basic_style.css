@@ -532,7 +532,6 @@ button.small:active,
 }
 .listing_block {
     margin-top: 10px;
-    clear: both;
     padding-bottom: 5px;
     border-bottom: 1px solid #ccc;
 }
@@ -558,6 +557,7 @@ button.small:active,
 .booth_wrapper {
     z-index: 9999;
     width: 600px;
+    position: absolute;
 }
 
 .listing_block.poll,
@@ -618,18 +618,6 @@ button.small:active,
     float: right;
     margin-top: 5px;
 }
-.booth .close_wrapper .close {
-    position: absolute;
-    float: right;
-    z-index: 10000;
-    top: 15px;
-    right: 15px;
-}
-
-.booth .close.buttonize {
-    float: right;
-}
-
 .show_denied {
     text-align: center;
 }

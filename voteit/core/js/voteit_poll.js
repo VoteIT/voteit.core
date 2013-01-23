@@ -1,49 +1,69 @@
 
 /* Open poll booth when poll buttons is pressed*/
-$(document).ready(function() {
-    $('.open_poll_button').live('click', function(event) {
-        try { event.preventDefault(); } catch(e) {}
-        
-        var button = $(this);
-        spinner().appendTo(button);
-        
-        var poll = $(this).parents(".poll");
-        var id = $(poll).attr('id');  
-        var url = button.attr('href');
-        
-        var booth_wrapper = $('<div class="booth_wrapper">');
-        $(booth_wrapper).attr('id', 'booth_'+id);
-        $(booth_wrapper).appendTo('#main');
-        $(booth_wrapper).position({
-            of: $(poll),
-            my: "left top",
-            at: "left top",
-            collision: "none none",
-        });
-        $(booth_wrapper).load(url, function(response, status, xhr) {
-            if (status == "error") {
-                flash_message("Sorry but there was an error loading poll: " + xhr.status + " " + xhr.statusText, 'error', true);
-                booth_wrapper.remove();
-            } else {
-                apply_mask(false);
-                //booth_wrapper.find('.booth').css('width', '600px');
-                deform.processCallbacks();
-                display_deform_labels();
-            }
-            button.find('img.spinner').remove();
-        });
+$('.open_poll_button').live('click', function(event) {
+    try { event.preventDefault(); } catch(e) {}
+
+    var button = $(this);
+    spinner().appendTo(button);
+
+    var poll = $(this).parents(".poll");
+    var id = $(poll).attr('id');
+    var url = button.attr('href');
+    var booth_wrapper = $('<div class="booth_wrapper">');
+    $(booth_wrapper).attr('id', 'booth_'+id);
+    $(booth_wrapper).appendTo('#main');
+    $(booth_wrapper).position({
+        of: $(poll),
+        my: "left top",
+        at: "left top",
+        collision: "none none",
+    });
+    $(booth_wrapper).load(url, function(response, status, xhr) {
+        if (status == "error") {
+            flash_message("Sorry but there was an error loading poll: " + xhr.status + " " + xhr.statusText, 'error', true);
+            booth_wrapper.remove();
+        } else {
+            apply_mask(false);
+            //booth_wrapper.find('.booth').css('width', '600px');
+            deform.processCallbacks();
+            display_deform_labels();
+        }
+        button.find('img.spinner').remove();
     });
 });
 
+//Submitting the actual vote
+$('#vote_form button.submit').live('click', function(event) {
+    try { event.preventDefault(); } catch(e) {};
+    var button = $(this);
+    spinner().appendTo(button);
+    var form = button.parents('form')
+    var form_data = form.serialize();
+    var target = form.parents('.vote_form_area');
+    form_data += '&vote=1'; //XXX Hack to make sure add is in there
+    $.post(form.attr('action'), form_data, function(data, status, xhr) {
+        //Update with response data
+        target.empty();
+        target.html(data);
+        deform.processCallbacks();
+        display_deform_labels();
+    })
+    .error(function(xhr, status, error) {
+        button.find('img.spinner').remove();
+        flash_message('Server error', 'error', true);
+    });
+})
 
-/* close booth when close button is clicked */
+/* close booth when close button is clicked
+ * 
+ *FIXME: This html is now removed, i don't know if i want to readd it since it conflicts with cogwheel for moderators.
 $('.booth.poll a.close').live('click', function(event) {
     try { event.preventDefault(); } catch(e) {}
     var booth_wrapper = $(this).parents(".booth_wrapper");
     booth_wrapper.remove();
     remove_mask();
 });
-
+*/
 
 //Remove if mask area is clicked - this might not be a good idea to keep
 $('#mask').click(function() {
@@ -84,9 +104,9 @@ function remove_mask() {
 }
 
 
+/*
 //$(window).resize(reapply_mask);
 //$(window).scroll(reapply_mask);
-/*
 function reapply_mask() {
     //Get the screen height and width
     var maskHeight = $(document).height();

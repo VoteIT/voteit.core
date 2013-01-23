@@ -11,24 +11,24 @@
     </div>
     
     <div class="poll_wrapper">    
+        <h3 tal:content="context.title">Title</h3>
         <div class="wf_state">
             <span class="iconpadding icon ${wf_state}">
             ${api.tstring(wf_state.title())}
             </span>
         </div>
-        <h3 tal:content="context.title">Title</h3>
 
         <div class="description"
              tal:condition="wf_state != 'closed'"
              tal:content="structure context.description">
                  Description</div>
-        
+
         <tal:iterate condition="wf_state != 'closed' and proposals" repeat="proposal proposals">
             <tal:proposal replace="structure api.render_view_group(context, request, 'proposal', brain=proposal)">
                 Proposal
             </tal:proposal>
         </tal:iterate>
-        
+
         <div class="result" 
             tal:condition="wf_state == 'closed'"
             tal:content="structure context.render_poll_result(request, api, complete=False)">
