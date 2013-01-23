@@ -26,7 +26,7 @@ $(document).ready(function() {
                 booth_wrapper.remove();
             } else {
                 apply_mask(false);
-                booth_wrapper.find('.booth').css('width', '600px');
+                //booth_wrapper.find('.booth').css('width', '600px');
                 deform.processCallbacks();
                 display_deform_labels();
             }
