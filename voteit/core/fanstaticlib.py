@@ -68,7 +68,7 @@ voteit_deform = Group((_voteit_deform_js, _voteit_deform_css))
 voteit_participants = Resource(voteit_core_jslib, 'voteit_participants.js', bottom=True, depends=(voteit_user_inline_info_js, jquery_deform,))
 voteit_participants_edit = Resource(voteit_core_jslib, 'voteit_participants_edit.js', bottom=True, depends=(voteit_participants,))
 voteit_moderator_js = Resource(voteit_core_jslib, 'voteit_moderator.js', bottom=True, depends=(voteit_common_js,))
-
+voteit_poll_js = Resource(voteit_core_jslib, 'voteit_poll.js', bottom=True, depends=(voteit_common_js,))
 
 DEFORM_RESOURCES = {
     'jquery': (jquery_deform,),
@@ -116,4 +116,5 @@ DEFAULT_FANSTATIC_RESOURCES = (
     ('voteit_participants_edit', voteit_participants_edit, is_participants_view_moderator),
     ('voteit_moderator_js', voteit_moderator_js, is_moderator),
     ('star_rating', star_rating, is_agenda_item), #Resources loaded with ajax, so this needs to be loaded in advance.
+    ('voteit_poll_js', voteit_poll_js, is_agenda_item), #Resources loaded with ajax, so this needs to be loaded in advance.
 )

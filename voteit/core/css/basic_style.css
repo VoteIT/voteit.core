@@ -358,10 +358,12 @@ button.small:active,
     -webkit-box-shadow: 1px 1px 5px 2px #888;
     margin-bottom: 10px;
 }
+/*
 .booth.poll .message {
 	display: none;
 	margin: 5px 0px 10px 0px;
 }
+*/
 #flash_messages .lock {
     background-image: url(/static/icons/icon_lock.png);
 }
@@ -554,10 +556,10 @@ button.small:active,
 .poll_wrapper .result div.denied {
     display: none;
 }
-
 .booth_wrapper {
     z-index: 9999;
 }
+
 .listing_block.poll,
 .booth.poll {
     padding: 10px;
@@ -653,12 +655,14 @@ button.small:active,
 
 /* end poll section and popup */
 
+
 /* various */
 .moderator-help-buttons {
     border-bottom: 1px solid #B2B2B5;
     padding-bottom: 10px;
     margin-bottom: 10px;
 }
+/* Needed by js to create modal windows */
 #mask {
     position: absolute;
     top: 0;

@@ -53,22 +53,22 @@
         <div class="info">
             <tal:poll_ongoing condition="wf_state == 'ongoing'">
                 <div tal:condition="can_vote and not has_voted">
-                    <a href="${request.resource_url(context)}" class="poll_booth buttonize" i18n:translate="add_vote_button">Vote</a>
+                    <a href="${request.resource_url(context)}" class="open_poll_button buttonize" i18n:translate="add_vote_button">Vote</a>
                 </div>
                 
                 <div tal:condition="can_vote and has_voted">
-                    <a href="${request.resource_url(context)}" class="poll_booth buttonize" i18n:translate="">Your vote</a>
+                    <a href="${request.resource_url(context)}" class="open_poll_button buttonize" i18n:translate="">Your vote</a>
                 </div>
                       
                 <div tal:condition="not can_vote">
-                    <a href="${request.resource_url(context)}" class="poll_booth buttonize" i18n:translate="">View details</a>
+                    <a href="${request.resource_url(context)}" class="open_poll_button buttonize" i18n:translate="">View details</a>
                 </div>
             </tal:poll_ongoing>
             
             <tal:poll_closed condition="wf_state == 'closed'">
                 <div>
-                    <a tal:condition="has_voted" href="${request.resource_url(context)}" class="poll_booth buttonize" i18n:translate="">Your vote</a>
-                    <a tal:condition="not has_voted" href="${request.resource_url(context)}" class="poll_booth buttonize" i18n:translate="">View details</a>
+                    <a tal:condition="has_voted" href="${request.resource_url(context)}" class="open_poll_button buttonize" i18n:translate="">Your vote</a>
+                    <a tal:condition="not has_voted" href="${request.resource_url(context)}" class="open_poll_button buttonize" i18n:translate="">View details</a>
                 </div>
             </tal:poll_closed>
         </div>
