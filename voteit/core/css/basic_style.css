@@ -656,5 +656,33 @@ button.small:active,
     background-color: black;
     display: none;
 }
-
 /* end various */
+
+/* modification of description section where richtext results will be */
+.description ul {
+    list-style: disc;
+}
+.description ol {
+    list-style: decimal;
+}
+.description ul,
+.description ol {
+    margin-left: 0;
+    padding: 0 0 0 40px;
+}
+.description table {
+    border: 1px solid black;
+}
+.description tbody, 
+.description tfoot, 
+.description thead, 
+.description th, 
+.description td, 
+.description tr {
+    border: inherit;
+}
+.description th, 
+.description td {
+    padding: 2px;
+}
+/* end description */
