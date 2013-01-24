@@ -74,16 +74,9 @@ def meta_retract(context, request, va, **kw):
 @view_action('metadata_listing', 'user_tags', permission=VIEW)
 def meta_user_tags(context, request, va, **kw):
     brain = kw['brain']
-    del kw['brain'] #XXX: Why?
-
-    util = request.registry.getUtility(IViewGroup, name='user_tags')
-    tags = []
-    for _va in util.get_context_vas(context, request):
-        tags.append(_va(brain, request, **kw))
-    
-    response = {'tags': tags,}
-    return render('templates/metadata/metadata_listing_user_tags.pt', response, request = request)
-
+    api = kw['api']
+    del kw['brain'] #So we don't pass it along as well, causing an argument conflict
+    return api.render_view_group(brain, request, 'user_tags', **kw)
 
 @view_action('metadata_listing', 'answer', permission=VIEW)
 def meta_answer(context, request, va, **kw):
