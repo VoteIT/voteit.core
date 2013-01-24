@@ -20,8 +20,6 @@ def metadata_listing(context, request, va, **kw):
         It will call all view components in the group metadata_listing.
         In turn, some of those will call other groups.
     """
-    if not kw.get('show_user_tags', True):
-        return u""
     util = request.registry.getUtility(IViewGroup, name='metadata_listing')
     response = {'view_actions': util.get_context_vas(context, request), 'va_kwargs': kw,}
     return render('templates/metadata/metadata_listing.pt', response, request = request)

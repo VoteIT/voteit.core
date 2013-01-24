@@ -6,7 +6,7 @@
     <input type="hidden" name="__start__" value="${field.name}:rename"/>
     <div class="column column-1">
 		<tal:proposal 
-			replace="structure api.render_single_view_component(api.context, api.request, 'proposal', 'block', brain=field.widget.proposal, show_user_tags=False)">
+			replace="structure api.render_single_view_component(api.context, api.request, 'proposal', 'block', brain=field.widget.proposal)">
 	    	Proposal
 	    </tal:proposal>
 	</div>

@@ -551,9 +551,8 @@ button.small:active,
     border: 1px solid #B2B2B5;
     background-color: #F2F2F2;
     padding: 10px;
+    clear: both;
 }
-
-
 .poll_wrapper .result div.denied {
     display: none;
 }

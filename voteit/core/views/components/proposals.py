@@ -78,10 +78,7 @@ def proposal_block(context, request, va, **kw):
     """ This is the view group for each individual proposal. """
     api = kw['api']
     brain = kw['brain']
-    show_user_tags = kw.get('show_user_tags', True)
     response = {}
     response['api'] = api
     response['brain'] = brain
-    response['show_user_tags'] = show_user_tags
-    
     return render('../templates/proposal.pt', response, request=request)

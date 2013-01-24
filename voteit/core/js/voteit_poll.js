@@ -24,7 +24,6 @@ $('.open_poll_button').live('click', function(event) {
             booth_wrapper.remove();
         } else {
             apply_mask(false);
-            //booth_wrapper.find('.booth').css('width', '600px');
             deform.processCallbacks();
             display_deform_labels();
         }

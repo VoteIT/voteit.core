@@ -7,7 +7,7 @@
 	       i18n:translate="">
 	        Show all proposals
 	    </a>
-	    <div class="clear"><!-- --></div>
+        <div class="clear"><!-- --></div>
 	</div>
 	
 	<span tal:replace="structure get_polls(polls)">Render poll listing</span>
