@@ -6,7 +6,8 @@
     <div class="poll_header">
         <span tal:condition="api.show_moderator_actions" tal:replace="structure api.get_moderator_actions(context)">
              Cogwheel menu
-        </span> 
+        </span>
+        <a name="${context.uid}"></a>
         <h2 i18n:translate="">Poll</h2>
     </div>
     

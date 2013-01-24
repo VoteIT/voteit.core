@@ -172,7 +172,7 @@ class PollView(BaseEdit):
             self.response['form'] = form.render(readonly=readonly)
         return self.response
 
-    @view_config(context=IPoll, permission=VIEW)
+    @view_config(context=IPoll, permission=VIEW, xhr=True)
     def modal_poll_view(self):
         """ This is the modal window that opens when you click for instance the vote button
             It will also call the view that renders the actual poll form.
@@ -183,6 +183,14 @@ class PollView(BaseEdit):
         self.response['has_voted'] = self.api.userid in self.context
         self.response['form'] = render('templates/ajax_edit.pt', self.poll_form(), request = self.request)
         return Response(render('templates/modal_poll.pt', self.response, request = self.request))
+
+    @view_config(context=IPoll, permission=VIEW, xhr=False)
+    def redirect_from_poll_view(self):
+        """ Poll view isn't directly accessible - it should be opened in a modal
+            window by a javascript ajax load.
+        """
+        url = self.request.resource_url(self.context.__parent__, anchor=self.context.uid)
+        return HTTPFound(location = url)
 
     @view_config(context=IPoll, name="poll_raw_data", permission=VIEW)
     def poll_raw_data(self):
