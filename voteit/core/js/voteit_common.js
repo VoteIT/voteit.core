@@ -146,6 +146,7 @@ $(".user_tag_link").live('click', function(event) {
  * </elem>
  */
 $('.toggle_minimize').live('click', function(event) {
+    try { event.preventDefault(); } catch(e) {}
     min_parent = $(this).parents('.toggle_area');
     // set cookie for opened or closed
     var cookie_id = min_parent.attr('id');

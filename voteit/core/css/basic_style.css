@@ -317,6 +317,9 @@ button.small:active,
 /* End Override qTip defaults */
 
 /* Minimizable content */
+.toggle_minimize {
+    padding-right: 30px;
+}
 .toggle_opened .toggle_minimize {
     background: url(/static/arrow_icons/arrow_down.png) no-repeat top right;
 }
