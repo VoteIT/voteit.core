@@ -50,25 +50,18 @@
         <div class="iconpadding icon time start" 
              tal:define="start_time api.dt_util.dt_format(context.start_time)">
             <span tal:condition="wf_state in ('private', 'upcoming', )"
-                i18n:translate="">
-                Starts <span tal:replace="start_time" i18n:name="start_time" />
-            </span>
+                  i18n:translate="">Starts</span>
             <span tal:condition="wf_state in ('ongoing', 'closed', 'canceled')"
-                i18n:translate="">
-                Started <span tal:replace="start_time" i18n:name="start_time" />
-            </span>
+                i18n:translate="">Started</span>
+            <span tal:replace="start_time">1970-10-10</span>
         </div>
-
         <div class="iconpadding icon time end"
              tal:define="end_time api.dt_util.dt_format(context.end_time)">
             <span tal:condition="wf_state in ('private', 'upcoming', 'ongoing', )"
-                  i18n:translate="">
-                  Closes <span tal:replace="end_time" i18n:name="end_time" />
-              </span>
+                  i18n:translate="">Closes</span>
             <span tal:condition="wf_state in ('closed', 'canceled')"
-                i18n:translate="">
-                Closed <span tal:replace="end_time" i18n:name="end_time" />
-            </span>
+                i18n:translate="">Closed</span>
+            <span tal:replace="end_time">1970-10-10</span>
         </div>
 	</div>
 </div>

@@ -121,7 +121,7 @@ body {
 .icon.poll-dark { background: url(/static/icons/icon_poll.png) no-repeat; }
 .cog-dark { background: url(/static/icons/icon_settings.png) no-repeat top left; }
 .user-dark { background: url(/static/icons/icon_user_db.png) no-repeat top left; }
-.icon.time { background: url(/static/icons/icon_clock.png) no-repeat 0 0; }
+.icon.time { background: url(/static/icons/time.png) no-repeat 0 0; }
 /* wf icons */
 .icon.denied { background: url(/static/workflow_icons/denied.png) left center no-repeat; }
 .icon.closed { background: url(/static/workflow_icons/closed.png) left center no-repeat; }
@@ -360,12 +360,7 @@ button.small:active,
     -webkit-box-shadow: 1px 1px 5px 2px #888;
     margin-bottom: 10px;
 }
-/*
-.booth.poll .message {
-	display: none;
-	margin: 5px 0px 10px 0px;
-}
-*/
+
 #flash_messages .lock {
     background-image: url(/static/icons/icon_lock.png);
 }
@@ -635,9 +630,22 @@ button.small:active,
     margin-top: 0;
     margin-bottom: 1em;
 }
-
-
-
+/*
+.booth.poll .message {
+    display: none;
+    margin: 5px 0px 10px 0px;
+}
+*/
+.poll_footer .time {
+    color: #666;
+    font-size: 14px;
+    line-height: 18px;
+    margin: 5px 0;
+}
+.poll_footer .time span {
+    width: 90px;
+    display: inline-block;
+}
 /* end poll section and popup */
 
 
