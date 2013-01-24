@@ -17,8 +17,8 @@ from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.catalog import resolve_catalog_docid
 
 
-MODERATOR_SECTIONS = ('closed', 'ongoing', 'upcoming', 'private',)
-REGULAR_SECTIONS = ('closed', 'ongoing', 'upcoming',)
+MODERATOR_SECTIONS = ('ongoing', 'upcoming', 'closed', 'private',)
+REGULAR_SECTIONS = ('ongoing', 'upcoming', 'closed',)
 
 
 @view_action('main', 'meeting_actions', permission=VIEW)
@@ -59,7 +59,7 @@ def polls_menu(context, request, va, **kw):
 
     response['unvoted_polls_count'] = num
     response['url'] = '%smeeting_poll_menu' % api.resource_url(api.meeting, request)
-    return render('../templates/snippets/polls_menu.pt', response, request = request)
+    return render('templates/polls/polls_menu.pt', response, request = request)
 
 
 @view_action('meeting_actions', 'admin_menu', title = _(u"Admin menu"), permission = MANAGE_SERVER,
@@ -115,7 +115,7 @@ def generic_menu_link(context, request, va, **kw):
     return """<li><a href="%s">%s</a></li>""" % (url, api.translate(va.title))
 
 
-@view_config(name="meeting_poll_menu", context=IMeeting, renderer="../templates/snippets/polls_menu_body.pt", permission=VIEW)
+@view_config(name="meeting_poll_menu", context=IMeeting, renderer="templates/polls/polls_menu_body.pt", permission=VIEW)
 def meeting_poll_menu(context, request):
     api = APIView(context, request)
     if api.meeting is None:
