@@ -40,7 +40,7 @@ class HelpActionsComponentTests(unittest.TestCase):
         api = self._api(context, request)
         from voteit.core.views.components.help_actions import action_wiki
         response = action_wiki(context, request, va, api=api)
-        self.assertIn('VoteIT Wiki', response)
+        self.assertIn('VoteIT Manual', response)
         
     def test_action_contact(self):
         context = self._fixture()
