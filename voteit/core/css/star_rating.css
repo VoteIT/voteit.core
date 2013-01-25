@@ -1,5 +1,6 @@
 .star-rating-control {
     float: right;
+    margin-top: 10px;
 }
 .starwidget {
     display: block;

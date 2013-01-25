@@ -455,7 +455,8 @@ button.small:active,
 #proposals .creators img,
 #discussions .creators img,
 .inline_add_form img,
-.answer-popup img {
+.answer-popup img,
+.poll .creators img {
     float: left;
 }
 #proposals .wf-state-retracted .body {
@@ -648,6 +649,10 @@ button.small:active,
 .poll_footer .time span {
     width: 90px;
     display: inline-block;
+}
+/* ugly hack to hide double titles. Get rid of this ... */
+.vote_form_area .deform .desc {
+    display: none;
 }
 /* end poll section and popup */
 
