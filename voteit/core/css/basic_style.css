@@ -94,7 +94,7 @@ body {
 }
 #header-meeting-outer {
 	background: url(/static/images/menu_bg.png) repeat-x bottom left;
-	height: 42px;
+	height: 43px;
 	display: block;
 }
 #main-outer {
@@ -318,8 +318,24 @@ button.small:active,
 	display: block;
 	float: left;
 	margin-left: 5px;
-	padding-right: 25px;
     background: url(/static/arrow_icons/arrow_right.png) no-repeat right 50%;
+    padding-right: 25px;
+    max-width: 110px;
+}
+#global-actions-menu .userid span {
+    overflow: hidden;
+    display: block;
+}
+#global-actions-menu {
+    padding: 0 10px;
+    margin: 0 5px;
+    border-left: 1px solid #d9d7d5;
+    border-right: 1px solid #d9d7d5;
+}
+#meeting-actions-menu .dropdown_menu {
+    border-left: 1px solid #d9d7d5;
+    border-right: 1px solid #d9d7d5;
+    padding-left: 10px;
 }
 /* End Dropdown menus */
 
@@ -723,4 +739,13 @@ button.small:active,
 .description td {
     padding: 2px;
 }
+.description h1,
+.description h2,
+.description h3,
+.description h4,
+.description h5,
+.description h6 {
+    padding: 0.75em 0 0.25em 0;
+}
+
 /* end description */

@@ -2,7 +2,9 @@
 <span class="dropdown_menu" id="global-actions-menu">
     <a href="#" class="menu_header">
         <img tal:replace="structure api.user_profile.get_image_tag(size=40)" />
-        <span class="userid">${api.user_profile.userid}</span>
+        <span class="icon userid">
+            <span>${api.user_profile.userid}</span>
+        </span>
     </a>
     <ul class="menu_body">
         <li><span class="menusection">

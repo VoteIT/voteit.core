@@ -19,14 +19,14 @@
 }
 #header-meeting-title {
 	float: left;
-	width: 700px;
+	width: 640px;
 }
 #header-meeting-title h1 {
 	margin: 0;
 }
 #header-user-actions {
 	float: left;
-	width: 160px;
+	width: 220px;
 	overflow:hidden;
 	margin-right: 10px;
 }
