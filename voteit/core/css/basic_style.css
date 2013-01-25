@@ -33,12 +33,12 @@ h1, h2, h3, h4, h5, h6 {
 }
 #header-meeting-outer a {
 	color: #5c5a5d;
-	height: 50px;
+	height: 42px;
 	display: block;
 }
 #header-meeting-outer .tab {
-	line-height: 50px;
-	height: 50px;
+	line-height: 42px;
+	height: 42px;
 	padding: 0px 10px 0px 0px;
 }
 #search_form {
@@ -48,7 +48,7 @@ h1, h2, h3, h4, h5, h6 {
 	font-size: 16px;
 	height: 16px;
 	padding: 2px;
-	margin: 15px 10px 15px 0px;
+	margin: 10px 10px 5px 0px;
 	width: 170px;
 }
 #search_button {
@@ -94,8 +94,11 @@ body {
 }
 #header-meeting-outer {
 	background: url(/static/images/menu_bg.png) repeat-x bottom left;
-	height: 50px;
-	margin-bottom: 20px;
+	height: 42px;
+	display: block;
+}
+#main-outer {
+    padding-top: 20px;
 }
 /* End Backgrounds and area borders */
 /* main element borders */
