@@ -103,8 +103,8 @@ function dropdown_menus(event, hover_object, css_classes) {
         },
         position: {
             viewport: $(window),
-            at: "right bottom",
-            my: "right top",
+            at: "left bottom",
+            my: "left top",
             adjust: {
                 method: 'flip',
             },
