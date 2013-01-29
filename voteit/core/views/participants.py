@@ -43,8 +43,7 @@ class ParticipantsView(BaseView):
             
             .. code-block :: py
             
-                {'userid':{'first_name': '<name>',
-                           'last_name': '<name>',
+                {'userid':{'userinfo': <html structure with firstname, lastname and userid>,
                            'email': '<email>',
                            'extras: {'extra_data': '<extra_data>',},
                            'role_discuss': '<bool>', #<etc...>,
@@ -57,8 +56,7 @@ class ParticipantsView(BaseView):
             user = users.get(userid, None)
             if user:
                 results[userid] = dict(
-                    first_name = user.get_field_value('first_name', u""),
-                    last_name = user.get_field_value('last_name', u""),
+                    userinfo = self.api.get_creators_info((userid,), portrait = False),
                     email = user.get_field_value('email', u""),
                     #Make sure context is meeting here!
                     roles = self.context.get_groups(userid)

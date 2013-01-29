@@ -5,7 +5,8 @@ $(document).ready(function () {
     voteit.participants_tpl['data_tpl'].removeAttr('style');
     voteit.participants_tpl['yes_icon'] = $('#listing_templates .yes_icon').clone()
     voteit.participants_tpl['no_icon'] = $('#listing_templates .no_icon').clone()
-    voteit.participants_tpl['userid_tpl'] = $('#listing_templates .userid').clone()
+    //voteit.participants_tpl['userid_tpl'] = $('#listing_templates .userid').clone()
+    voteit.participants_tpl['userinfo_tpl'] = $('#listing_templates .userinfo').clone()
     voteit.participants_tpl['listing_checkbox'] = $('#listing_templates .listing_checkbox').clone()
     load_participants_data();
 });
@@ -24,18 +25,11 @@ function load_participants_data() {
 			$(this).text(0);
         });
         for (var userid in data) {
-            //Need to use hasOwnProperty?
             udata = data[userid];
             out = get_part_tpl('data_tpl');
-            //console.log(udata);
-            var userid_data = get_part_tpl('userid_tpl');
-            userid_data.find('input').attr('value', userid);
-            var userid_atag = userid_data.find('a');
-            userid_atag.attr('href', userid_atag.attr('href') + userid);
-            userid_atag.append(userid);
-            out.find('.userid').append(userid_data);
-            out.find('.first_name').append(udata['first_name']);
-            out.find('.last_name').append(udata['last_name']);
+            // Insert form element so serialize will work
+            udata['userinfo'] += '<input type="hidden" name="userid" value="' + userid + '" />';
+            out.find('.userinfo').append(udata['userinfo']);
             out.find('.email').append('<a href="mailto:' + udata['email'] + '">' + udata['email'] + '</a>');
             for(var extra in udata['extras']) {
             	out.find('.'+extra).append(udata['extras'][extra]);

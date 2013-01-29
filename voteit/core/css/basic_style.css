@@ -125,6 +125,16 @@ body {
 .cog-dark { background: url(/static/icons/icon_settings.png) no-repeat top left; }
 .user-dark { background: url(/static/icons/icon_user_db.png) no-repeat top left; }
 .icon.time { background: url(/static/icons/time.png) no-repeat 0 0; }
+.yes_icon {
+    padding-left: 20px;
+    display: block;
+    background: url(/static/workflow_icons/approved.png) no-repeat;
+}
+.no_icon {
+    padding-left: 20px;
+    display: block;
+    background: url(/static/workflow_icons/denied.png) no-repeat;
+}
 /* wf icons */
 .icon.denied { background: url(/static/workflow_icons/denied.png) left center no-repeat; }
 .icon.closed { background: url(/static/workflow_icons/closed.png) left center no-repeat; }
@@ -414,6 +424,9 @@ button.small:active,
 /* End flash messages */
 
 /* tables  */
+table.listing {
+    width: 100%;
+}
 .listing th,
 .listing td {
     border-bottom: 1px solid #B2B2B5;
@@ -442,6 +455,9 @@ button.small:active,
 }
 .tag_stats li {
     display:inline;
+}
+.changed {
+    font-weight: bold;
 }
 /* end popular subjects */
 

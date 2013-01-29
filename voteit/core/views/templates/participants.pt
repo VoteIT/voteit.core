@@ -2,43 +2,63 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
       xmlns:tal="http://xml.zope.org/namespaces/tal"
-      metal:use-macro="load: ${api.template_dir}content.pt"
+      metal:use-macro="load: ${api.template_dir}main.pt"
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
       i18n:domain="voteit.core">
 <body>
-    <div metal:fill-slot="content" class="content_wrapper">
+    <div metal:fill-slot="full_window" id="content">
 
-    <tal:comment condition="False">
-        FIXME: Handle errors within js + any validation trouble
-        FIXME: When icons are clickable, they need to look clickable
-        FIXME: Display a load spinner
-    </tal:comment>
+        <tal:messages replace="structure api.render_single_view_component(context, request, 'main', 'flash_messages')">Messages</tal:messages>
+        <div class="clear"><!-- --></div>
+    
+        <tal:comment condition="False">
+            FIXME: Handle errors within js + any validation trouble
+            FIXME: When icons are clickable, they need to look clickable
+        </tal:comment>
 
 	    <h3 i18n:translate="">Participants</h3>
-	    
+
+	    <a href="${request.resource_url(context)}" i18n:translate="">Back</a>
+
 	    <div tal:condition="api.show_moderator_actions" i18n:translate="participants_form_instructions">
 	        Click the icons to change permission. Any permission that's changed will be listed in bold.
 	        When you're done, click save at the bottom.
 	        If all permissions are removed from a user, that user is removed from the meeting.
 	    </div>
-
+        <br/>
         <form id="permissions">
         <table class="listing">
             <thead>
                 <tr>
-                    <th i18n:translate="" class="heading">UserID</th>
-                    <th i18n:translate="" class="heading">First name</th>
-                    <th i18n:translate="" class="heading">Last name</th>
+                    <th i18n:translate="" class="heading">Name</th>
                     <th i18n:translate="" class="heading">Email</th>
-                    <th class="heading"><span i18n:translate="">View</span> (<span class="count ${role_viewer.replace(':', '_')}">0</span>)</th>
-                    <th class="heading"><span i18n:translate="">Discuss</span> (<span class="count ${role_discuss.replace(':', '_')}">0</span>)</th>
-                    <th class="heading"><span i18n:translate="">Propose</span> (<span class="count ${role_propose.replace(':', '_')}">0</span>)</th>
-                    <th class="heading"><span i18n:translate="">Voter</span> (<span class="count ${role_voter.replace(':', '_')}">0</span>)</th>
-                    <th class="heading"><span i18n:translate="">Moderate</span> (<span class="count ${role_moderator.replace(':', '_')}">0</span>)</th>
-                    <th class="heading"><span i18n:translate="">Administrator</span> (<span class="count ${role_admin.replace(':', '_')}">0</span>)</th>
+                    <th class="heading">
+                        <div i18n:translate="">View</div>
+                        (<span class="count ${role_viewer.replace(':', '_')}">0</span>)
+                    </th>
+                    <th class="heading">
+                        <div i18n:translate="">Discuss</div>
+                        (<span class="count ${role_discuss.replace(':', '_')}">0</span>)
+                    </th>
+                    <th class="heading">
+                        <div i18n:translate="">Propose</div>
+                        (<span class="count ${role_propose.replace(':', '_')}">0</span>)
+                    </th>
+                    <th class="heading">
+                        <div i18n:translate="">Voter</div>
+                        (<span class="count ${role_voter.replace(':', '_')}">0</span>)
+                    </th>
+                    <th class="heading"
+                        ><div i18n:translate="">Moderate</div>
+                        (<span class="count ${role_moderator.replace(':', '_')}">0</span>)
+                    </th>
+                    <th class="heading">
+                        <div i18n:translate="">Administrator</div>
+                        (<span class="count ${role_admin.replace(':', '_')}">0</span>)
+                    </th>
                 </tr>
                 <tr tal:condition="api.show_moderator_actions">
-                    <th colspan="4"></th>
+                    <th colspan="2"></th>
                     <th name="${role_viewer.replace(':', '_')}"
                         class="toggle_all">
                         <a class="check_all" href="#" i18n:translate="">all</a> /
@@ -72,9 +92,7 @@
             <tbody>
                 <tr style="display: None" id="participant_data_template">
                     <input type="hidden" name="__start__" value="userid_and_groups:mapping" />
-                    <td class="userid"></td>
-                    <td class="first_name"></td>
-                    <td class="last_name"></td>
+                    <td class="userinfo"></td>
                     <td class="email"></td>
                     <input type="hidden" name="__start__" value="groups:sequence" />
                     <td name="${role_viewer}" class="role ${role_viewer.replace(':', '_')}"></td>
@@ -118,10 +136,6 @@
         <div style="display: None" id="listing_templates">
             <span class="yes_icon graphic_checkbox" i18n:translate="">Yes</span>
             <span class="no_icon graphic_checkbox" i18n:translate="">No</span>
-            <span class="userid">
-                <a class="inlineinfo" href="${api.meeting_url}_userinfo?userid="></a>
-                <input type="hidden" name="userid"></input>
-            </span>
             <input type="checkbox" name="checkbox" class="listing_checkbox" style="display: None" />
         </div>
 
