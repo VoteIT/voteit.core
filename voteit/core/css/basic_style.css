@@ -347,6 +347,19 @@ button.small:active,
     border-right: 1px solid #d9d7d5;
     padding-left: 10px;
 }
+#meeting-actions-menu .selected {
+    background-color: #968c89;
+    margin-left: -11px;
+    margin-right: -11px;
+    padding-left: 11px;
+    padding-right: 11px;
+    color: #fff;
+    border-bottom: 1px solid #B2B2B5;
+}
+.meeting_actions_menu .qtip-content {
+    margin-left: 0px;
+}
+
 /* End Dropdown menus */
 
 /* Override qTip defaults - should be same as body */

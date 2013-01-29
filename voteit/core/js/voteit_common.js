@@ -63,11 +63,9 @@ $(document).ready(function() {
 
 
 
-/* Meeting sections menus + possibly other */
-$(document).ready(function() {
-    $('#global-actions-menu .menu_header').live('hover', function(event) { dropdown_menus(event, this, 'meeting_actions_menu') });
-    $('#meeting-actions .menu_header').live('hover', function(event) { dropdown_menus(event, this, 'meeting_actions_menu') });
-});
+/* Bind meeting sections menus + possibly other */
+$('#global-actions-menu .menu_header').live('hover', function(event) { dropdown_menus(event, this, 'meeting_actions_menu') });
+$('#meeting-actions .menu_header').live('hover', function(event) { dropdown_menus(event, this, 'meeting_actions_menu') });
 function dropdown_menus(event, hover_object, css_classes) {
     /* stop form using default action
     IE might throw an error calling preventDefault(), so use a try/catch block. */
@@ -115,8 +113,17 @@ function dropdown_menus(event, hover_object, css_classes) {
             tip: false,
             def: false,
         },
+        events: {
+            show: function(event, api) {
+                api.elements.target.addClass('selected');
+            },
+            hide: function(event, api) {
+                api.elements.target.removeClass('selected');
+            },
+        },
     }, event);
 }
+
 
 /*  User tag methods - requires an a.user_tag_link within .user_tag block. Like this:
 
