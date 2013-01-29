@@ -1,12 +1,12 @@
 <tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core">
 <div id="proposals">
-	<div class="moderator-help-buttons"
+    <h1 class="large-iconpadding icon proposal" i18n:translate="">Proposal</h1>
+    <div class="moderator-help-buttons"
          tal:condition="api.show_moderator_actions and api.context_has_permission('Add Poll', context)">
         <a class="buttonize" tal:attributes="href api.resource_url(context, request) + 'add?content_type=Poll'">
             <span i18n:translate="">Add poll</span>
         </a>
     </div>
-    <h1 class="large-iconpadding icon proposal" i18n:translate="">Proposal</h1>
 	<span tal:replace="structure proposal_widgets">Widget code</span>
 </div>
 </tal:main>

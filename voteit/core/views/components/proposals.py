@@ -81,4 +81,4 @@ def proposal_block(context, request, va, **kw):
     response = {}
     response['api'] = api
     response['brain'] = brain
-    return render('../templates/proposal.pt', response, request=request)
+    return render('templates/proposals/proposal.pt', response, request=request)
