@@ -182,6 +182,7 @@ button,
 	height: 30px;
 	line-height: 30px;
 	color: #fff;
+	margin: 0px 10px 10px 0;
 }
 button:hover,
 .buttonize:hover {

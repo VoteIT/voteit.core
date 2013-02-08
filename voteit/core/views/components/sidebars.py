@@ -43,7 +43,7 @@ def alternative_login_methods(context, request, va, **kwargs):
     try:
         alt_out = api.render_view_group(api.root, request, 'login_forms', **kwargs)
         if alt_out:
-            return """<div class="sidebar_block" id="login_alt">%s</div>""" % alt_out
+            return render('templates/sidebars/login_alt.pt', {'api': api, 'alt_out': alt_out}, request = request)
     except ComponentLookupError: #There's no login_forms view group
         pass
     return u""
