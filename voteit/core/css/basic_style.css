@@ -52,7 +52,7 @@ h1, h2, h3, h4, h5, h6 {
 	width: 140px;
 }
 #search_button {
-
+    font: inherit;
 }
 /* End Fonts, headlines, text */
 /* Links */
@@ -364,12 +364,15 @@ button.small:active,
 
 /* Override qTip defaults - should be same as body */
 .qtip {
-	font-size: 18px;
-	line-height: 1.5em;
+	font-size: inherit;
+	line-height: inherit;
+	max-width: 600px;
 }
 .qtip-content {
 	padding: 0px;
 }
+
+
 /* End Override qTip defaults */
 
 /* Minimizable content */
@@ -514,7 +517,6 @@ table.listing {
 #proposals .creators img,
 #discussions .creators img,
 .inline_add_form img,
-.answer-popup img,
 .poll .creators img {
     float: left;
 }
@@ -526,7 +528,8 @@ table.listing {
 #proposals .wf-state-retracted .body {
     text-decoration: line-through;
 }
-.inline_add_form {
+#discussions .inline_add_form,
+#proposals .inline_add_form {
     margin-top: 1em;
     position: relative;
 }
@@ -565,7 +568,7 @@ table.listing {
     margin-top: 0px !important;
     height: 60px;
 }
-#main .inline_add_form button {
+.inline_add_form button {
     margin-top: 10px;
     float: right;
 }
@@ -728,6 +731,42 @@ table.listing {
 }
 /* end poll section and popup */
 
+
+/* popups, generic - should behave similar to poll booth*/
+.qtip.popup {
+    padding: 10px;
+    background: #F2F2F2;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    font-size: 13px;
+    line-height: 150%;
+}
+.qtip .ui-widget-header {
+    padding: 10px;
+    margin: -11px -11px 10px -11px;
+    border: #969692 1px solid;
+    border-radius: 10px 10px 0 0;
+    -webkit-border-radius: 10px 10px 0 0;
+    -moz-border-radius: 10px 10px 0 0;
+    background: url(/static/images/poll_header_bg.png) repeat-x bottom left;
+    text-align: center;
+}
+
+.qtip .ui-widget-content {
+    border: none;
+    background: inherit;
+    color: inherit;
+}
+.popup .profile-pic {
+    float: left;
+    padding: 10px 10px 0 0;
+}
+.popup .meta {
+    margin: 0 0 5px 0;
+}
+/* end generic popups */
 
 /* various */
 .moderator-help-buttons {

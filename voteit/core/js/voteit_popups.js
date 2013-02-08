@@ -1,56 +1,17 @@
-/* Agenda Item common JS */
-/* more tag popup */
-$('a.moretag').live('click', function(event) {
-    /* stop form from submitting normally 
-    IE might throw an error calling preventDefault(), so use a try/catch block. */
-    try { event.preventDefault(); } catch(e) {}
-    event.preventDefault(); 
-    $(this).qtip({
-        overwrite: false, // Make sure the tooltip won't be overridden once created
-                content: { 
-           title: {
-                text: voteit.translation['more_tag_list'],
-                button: voteit.translation['close'],
-            },
-            text: voteit.translation['loading'], // The text to use whilst the AJAX request is loading
-            ajax: { 
-                url: this.href,
-            },
-        },
-        show: {
-            event: event.type, // Use the same show event as the one that triggered the event handler
-            ready: true, // Show the tooltip as soon as it's bound, vital so it shows up the first time you hover!
-            effect: false,
-        },
-        hide: {
-            event: "unfocus",
-            effect: false,
-        },
-        position: {
-            at: "bottom center",
-            my: "top center",
-            viewport: $(window),
-            adjust: {
-                method: 'shift',
-            },
-        },
-        style: { 
-            classes: 'moretag-popup',
-            widget: true,
-            tip: true,
-        },
-    }, event);
+/* Generic popups, not modal */
+
+$('a.inlineinfo').live('click', function(event) {
+    voteit_inline_info(event, 'inline_info');
 });
 
-//FIXME: This is almost the same as the moretag. Seems silly to duplicate.
-/* profile popup */
-$('a.inlineinfo').live('click', function(event) {
-    /* stop form from submitting normally 
-    IE might throw an error calling preventDefault(), so use a try/catch block. */
-    try { event.preventDefault(); } catch(e) {}
-    event.preventDefault(); 
-    
-    $(this).qtip({
+$('a.moretag').live('click', function(event) {
+    voteit_inline_info(event, 'inline_more');
+});
+
+function voteit_inline_info(event, css_classes) {
+    try { event.preventDefault(); } catch(e) {};
+    var target = $(event.currentTarget);
+    target.qtip({
         overwrite: false, // Make sure the tooltip won't be overridden once created
         content: { 
            title: {
@@ -59,7 +20,7 @@ $('a.inlineinfo').live('click', function(event) {
             },
             text: voteit.translation['loading'], // The text to use whilst the AJAX request is loading
             ajax: { 
-                url: this.href,
+                url: target.attr('href'),
             },
         },
         show: {
@@ -74,15 +35,71 @@ $('a.inlineinfo').live('click', function(event) {
         position: {
             at: "bottom center",
             my: "top center",
-            viewport: $(window),
             adjust: {
                 method: 'shift',
             },
         },
         style: { 
-            classes: 'inlineinfo-popup',
+            classes: 'popup ' + css_classes,
             widget: true,
             tip: true,
+        },
+    }, event);
+
+}
+
+/* answer popup */
+$('a.answer').live('click', function(event) {
+    try { event.preventDefault(); } catch(e) {}
+
+    if($(this).parents('#proposals').length > 0)
+        title_text = voteit.translation['answer_popup_title_comment'];
+    else
+        title_text = voteit.translation['answer_popup_title_answer'];
+    
+    var url = $(this).attr('href');
+    $(this).qtip({
+        overwrite: false, // Make sure the tooltip won't be overridden once created
+        content: { 
+            title: {
+                text: title_text,
+                button: voteit.translation['close'],
+            },
+            text: voteit.translation['loading'], // The text to use whilst the AJAX request is loading
+            ajax: {
+                url: url,
+                success: function(data, status) {
+                    this.set('content.text', data);
+                    deform.processCallbacks();
+                    var txtar = $(this.elements.content).find('textarea');
+                    txtar.autoResizable();
+                    txtar.focus();
+                    txtar.caretTo(':', 2);
+                }
+            }
+        },
+        show: {
+            event: event.type, // Use the same show event as the one that triggered the event handler
+            ready: true, // Show the tooltip as soon as it's bound, vital so it shows up the first time you hover!
+            effect: false,
+            solo: true,
+        },
+        hide: {
+            event: "false",
+            fixed: true,
+            effect: false,
+        },
+        position: {
+            at: "bottom center",
+            my: "top center",
+            adjust: {
+                method: 'flip',
+            }
+        },
+        style: {
+            classes: "answer-popup popup inline_add_form", //popup class is general
+            widget: true,
+            width: 358, // Exact same as columns!
         },
     }, event);
 });

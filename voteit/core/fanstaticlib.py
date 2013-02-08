@@ -61,11 +61,11 @@ star_rating = Group((_star_rating_css, jquery_rating))
 voteit_common_js = Resource(voteit_core_jslib, 'voteit_common.js',
                             depends=(jquery_deform, jquery_cookie, qtip, jquery_caret, autoresizable_textarea_js),
                             bottom=True)
-voteit_user_inline_info_js = Resource(voteit_core_jslib, 'voteit_user_inline_info.js', depends=(qtip, voteit_common_js), bottom=True)
+voteit_popups_js = Resource(voteit_core_jslib, 'voteit_popups.js', depends=(qtip, voteit_common_js), bottom=True)
 _voteit_deform_js = Resource(voteit_core_jslib, 'voteit_deform.js', depends=(_deform_js,), bottom=True)
 voteit_workflow_js = Resource(voteit_core_jslib, 'voteit_workflow.js', depends=(jquery_easy_confirm_dialog, voteit_common_js), bottom=True)
 voteit_deform = Group((_voteit_deform_js, _voteit_deform_css))
-voteit_participants = Resource(voteit_core_jslib, 'voteit_participants.js', bottom=True, depends=(voteit_user_inline_info_js, jquery_deform,))
+voteit_participants = Resource(voteit_core_jslib, 'voteit_participants.js', bottom=True, depends=(voteit_popups_js, jquery_deform,))
 voteit_participants_edit = Resource(voteit_core_jslib, 'voteit_participants_edit.js', bottom=True, depends=(voteit_participants,))
 voteit_moderator_js = Resource(voteit_core_jslib, 'voteit_moderator.js', bottom=True, depends=(voteit_common_js,))
 voteit_poll_js = Resource(voteit_core_jslib, 'voteit_poll.js', bottom=True, depends=(voteit_common_js,))
@@ -111,7 +111,7 @@ DEFAULT_FANSTATIC_RESOURCES = (
     ('voteit_common_js', voteit_common_js),
     ('voteit_workflow_js', voteit_workflow_js),
     ('voteit_deform', voteit_deform),
-    ('voteit_user_inline_info_js', voteit_user_inline_info_js),
+    ('voteit_popups_js', voteit_popups_js),
     ('voteit_participants', voteit_participants, is_participants_view),
     ('voteit_participants_edit', voteit_participants_edit, is_participants_view_moderator),
     ('voteit_moderator_js', voteit_moderator_js, is_moderator),
