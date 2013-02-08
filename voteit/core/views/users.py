@@ -374,7 +374,11 @@ class UsersView(BaseView):
     def user_info_ajax_wrapper(self):
         return Response(self.user_info())
 
-    @view_config(context=IMeeting, name="_userinfo", permission=VIEW, xhr=False)
+    @view_config(context=IMeeting, name="_userinfo", permission=VIEW, xhr=False, renderer="templates/simple_view.pt")
+    def user_info_fallback(self):
+        self.response['content'] = self.user_info()
+        return self.response
+
     def user_info(self):
         """ Special view to allow other meeting participants to see information about a user
             who's in the same meeting as them.
