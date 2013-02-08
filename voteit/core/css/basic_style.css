@@ -151,11 +151,17 @@ body {
 .icon.private { background: url(/static/workflow_icons/private.png) left center no-repeat; }
 .icon.voting { background: url(/static/workflow_icons/locked.png) left center no-repeat; }
 /* icons within menus */
-.menu_body .icon.canceled { background: url(/static/workflow_icons/canceled_menu.png) left center no-repeat; }
-.menu_body .icon.closed { background: url(/static/workflow_icons/closed_menu.png) left center no-repeat; }
-.menu_body .icon.ongoing { background: url(/static/workflow_icons/ongoing_menu.png) left center no-repeat; }
-.menu_body .icon.private { background: url(/static/workflow_icons/private_menu.png) left center no-repeat; }
-.menu_body .icon.upcoming { background: url(/static/workflow_icons/upcoming_menu.png) left center no-repeat; }
+.menu_body .icon.canceled { background-image: url(/static/workflow_icons/canceled_menu.png); }
+.menu_body .icon.closed { background-image: url(/static/workflow_icons/closed_menu.png); }
+.menu_body .icon.ongoing { background-image: url(/static/workflow_icons/ongoing_menu.png); }
+.menu_body .icon.private { background-image: url(/static/workflow_icons/private_menu.png); }
+.menu_body .icon.upcoming { background-image: url(/static/workflow_icons/upcoming_menu.png); }
+.menu_body .icon.unhandled { background-image: url(/static/workflow_icons/unhandled_menu.png); }
+.menu_body .icon.denied { background-image: url(/static/workflow_icons/denied_menu.png); }
+.menu_body .icon.approved { background-image: url(/static/workflow_icons/approved_menu.png); }
+.menu_body .icon.published { background-image: url(/static/workflow_icons/published_menu.png); }
+.menu_body .icon.voting { background-image: url(/static/workflow_icons/locked_menu.png); }
+
 /* header icons */
 h1.icon.proposal { background: url(/static/header_icons/proposal.png) no-repeat; }
 h1.icon.discussion { background: url(/static/header_icons/discussion.png) no-repeat; }
@@ -425,7 +431,7 @@ button.small:active,
 }
 
 #flash_messages .lock {
-    background-image: url(/static/icons/icon_lock.png);
+    background-image: url(/static/workflow_icons/locked_x.png);
 }
 #flash_messages .info {
 }
