@@ -12,6 +12,7 @@
     <metal:head define-slot="head"></metal:head>
 </head>
 <body>
+    <div id="page_wrapper">
     <div id="header-global-outer">
         <div class="wrapper">
             <div class="section">
@@ -64,6 +65,14 @@
         </div>
         <div class="clear"><!-- --></div>
     </div>
+    <script type="text/javascript" src="${request.application_url}/translations.js"></script>
+    <div id="js_config" style="display: none !important;">
+        <a name="current_url" href="${api.resource_url(context, request)}"></a>
+        <a tal:condition="api.root" name="root_url" href="${api.resource_url(api.root, request)}"></a>
+        <a tal:condition="api.meeting" name="meeting_url" href="${api.resource_url(api.meeting, request)}"></a>
+    </div>
+    <div id="mask"></div>
+    </div>
     <div id="footer-outer">
         <div class="wrapper">
             <div class="section">
@@ -74,13 +83,5 @@
             </div>
         </div>
     </div>
-
-    <script type="text/javascript" src="${request.application_url}/translations.js"></script>
-	<div id="js_config" style="display: none !important;">
-		<a name="current_url" href="${api.resource_url(context, request)}"></a>
-		<a tal:condition="api.root" name="root_url" href="${api.resource_url(api.root, request)}"></a>
-		<a tal:condition="api.meeting" name="meeting_url" href="${api.resource_url(api.meeting, request)}"></a>
-	</div>
-	<div id="mask"></div>
 </body>
 </html>

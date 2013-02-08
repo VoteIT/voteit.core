@@ -77,8 +77,12 @@
 }
 #main-outer {
 	display: block;
-	padding-bottom: 20px;
+	padding-bottom: 120px;
 }
+#page_wrapper {
+    min-height: 100%;
+}
+
 /* End main area / navigation */
 
 /* Content section - content area is 770px */
@@ -106,9 +110,12 @@
 
 /* Footer */
 #footer-outer {
+    position: relative;
 	clear: both;
 	border-top: #C1C1C0 solid 1px;
 	background: transparent url(/static/images/footer_bg.png) repeat-x top left;
+	margin-top: -100px;
+	height: 100px;
 }
 #footer {
 	text-align: center;
