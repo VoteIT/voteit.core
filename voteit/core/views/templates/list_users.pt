@@ -13,7 +13,7 @@
         users
     </span>
 </h1>
-<div metal:fill-slot="content" class="content_wrapper">
+<div metal:fill-slot="content">
     <table class="listing">
         <thead>
             <tr>

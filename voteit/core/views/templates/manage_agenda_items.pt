@@ -6,7 +6,7 @@
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
       i18n:domain="voteit.core">
 <body>
-	<div metal:fill-slot="form" class="content_wrapper">
+	<div metal:fill-slot="form">
 		<tal:menu 
 	    	replace="structure api.render_single_view_component(context, request, 'agenda_item', 'edit_menu')">
 	    	Edit menu

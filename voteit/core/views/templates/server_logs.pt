@@ -9,7 +9,7 @@
     <h1 i18n:translate="">VoteIT logs</h1>
 </div>
 
-<div metal:fill-slot="content" class="content_wrapper">
+<div metal:fill-slot="content">
     <ul>
     <tal:iterate repeat="filename logfiles">
         <li><a tal:attributes="href string:?file=$filename" tal:content="filename">

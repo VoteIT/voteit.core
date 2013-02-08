@@ -6,17 +6,17 @@
 	  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
 	  i18n:domain="voteit.core">
 <body>
-<div metal:fill-slot="content" class="content_wrapper">
+<div metal:fill-slot="content">
 	<div class="moderator-help-buttons">
-        <a tal:attributes="href '%sedit' % api.resource_url(context, request)"
+        <a tal:attributes="href request.resource_url(context, 'edit')"
            tal:condition="api.context_has_permission('Edit', context)"
            class="buttonize large"
            i18n:translate="">Edit</a>
-       <a tal:attributes="href '%ssort' % api.resource_url(context, request)"
+       <a tal:attributes="href request.resource_url(context, 'sort')"
            tal:condition="api.context_has_permission('Edit', context)"
            class="buttonize large"
            i18n:translate="">Sort</a>
-        <a tal:attributes="href '%sdelete' % api.resource_url(context, request)"
+        <a tal:attributes="href request.resource_url(context, 'delete')"
            tal:condition="api.context_has_permission('Delete', context)"
            class="buttonize large"
            i18n:translate="">Delete</a>
@@ -34,7 +34,7 @@
 		</li>
 	</ul>
 
-    <a tal:attributes="href api.resource_url(context.__parent__, request)"
+    <a tal:attributes="href request.resource_url(context.__parent__)"
        class="buttonize"
        i18n:translate="">Back</a>
 

@@ -8,7 +8,7 @@
 <body>
     <h2 i18n:translate="">Log entries</h2>
 
-    <div metal:fill-slot="content" class="content_wrapper">
+    <div metal:fill-slot="content">
 
         <table class="listing">
             <thead>

@@ -3,18 +3,21 @@ body {
 	font: 15px "Helvetica Neue", Helvetica, Arial, sans-serif;
 	line-height: 1.5em;
 }
-h1 { font-size: 200%;}
+h1, legend { font-size: 200%;}
 h2 { font-size: 175%; }
 h3 { font-size: 150%; }
 h4 { font-size: 125%; }
 h5 { font-size: 100%; }
 h6 { font-size: 90%; }
-h1, h2, h3, h4, h5, h6 {
+h1, h2, h3, h4, h5, h6, legend {
 	padding: 0.25em 0 0.5em 0;
 }
-#page_heading {
+
+#page_heading, legend {
     border-bottom: 1px solid #B2B2B5;
     margin-bottom: 10px;
+    display: block;
+    width: 100%;
 }
 #agenda_item_title {
     padding-top: 0px;
@@ -208,6 +211,7 @@ button.small:active,
 .buttonize {
 	display: inline-block;
 }
+
 /* End form elements */
 
 /* Cogwheel menu */

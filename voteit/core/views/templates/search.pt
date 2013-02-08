@@ -9,7 +9,7 @@
 
 <metal:blank_heading fill-slot="page_heading"></metal:blank_heading>
 
-<div metal:fill-slot="content" class="content_wrapper" id="search">
+<div metal:fill-slot="content" id="search">
     <div tal:replace="structure search_form"></div>
 
     <tal:results condition="results">

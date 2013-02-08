@@ -12,7 +12,7 @@
         Email addresses of participants
     </h2>
 
-    <div metal:fill-slot="content" class="content_wrapper">
+    <div metal:fill-slot="content">
 
         <tal:iterate repeat="user participants">
             <a tal:content="user.get_field_value('email')"

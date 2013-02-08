@@ -15,7 +15,7 @@
 	    </script>
 	</metal:head>
 
-	<div metal:fill-slot="form" class="content_wrapper">
+	<div metal:fill-slot="form">
 
 	    <form method="post" class="deform agenda-item-sort">
 	        <fieldset>

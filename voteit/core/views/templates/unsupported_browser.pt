@@ -5,7 +5,7 @@
       i18n:domain="voteit.core">
 <body>
     <div metal:fill-slot="content">
-        <div class="content_wrapper">
+        <div>
             <p i18n:translate="unsupported_browser_notice">
                 You're using a very old version of Internet Explorer.
                 You need to upgrade it or switch to another browser to use VoteIT.

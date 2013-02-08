@@ -1,5 +1,5 @@
 <tal:main
     xmlns:i18n="http://xml.zope.org/namespaces/i18n"
 	i18n:domain="voteit.core">
-<div class="content_wrapper"><span tal:replace="structure column_one">col1</span></div>
+<div tal:content="structure column_one"></div>
 </tal:main>
