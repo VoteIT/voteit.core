@@ -78,7 +78,8 @@
 }
 #main-outer {
 	display: block;
-	padding-bottom: 120px;
+	padding: 0 10px 120px 10px;
+	
 }
 #page_wrapper {
     min-height: 100%;
