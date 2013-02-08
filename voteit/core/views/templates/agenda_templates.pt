@@ -43,18 +43,18 @@
 	        	</div>
 	        </div>
 			<a class="buttonize apply" 
-				href="${api.resource_url(api.context, api.request)}agenda_templates?apply=${template.__name__}"
+			    tal:attributes="href request.resource_url(context, 'agenda_templates', query = {'apply': template.__name__})}"
 				tal:condition="api.meeting" 
 				i18n:translate="">Apply to meeting</a>
-			<a tal:attributes="href '%sedit' % api.resource_url(template, request)"
+			<a tal:attributes="href request.resource_url(template, 'edit')"
            	   tal:condition="api.context_has_permission('Edit', template)"
                class="buttonize"
                i18n:translate="">Edit</a>
-            <a tal:attributes="href '%ssort' % api.resource_url(template, request)"
+            <a tal:attributes="href request.resource_url(template, 'sort')"
            	   tal:condition="api.context_has_permission('Edit', context)"
            	   class="buttonize"
                i18n:translate="">Sort</a>
-            <a tal:attributes="href '%sdelete' % api.resource_url(template, request)"
+            <a tal:attributes="href request.resource_url(template, 'delete')"
                tal:condition="api.context_has_permission('Delete', template)"
                class="buttonize"
                i18n:translate="">Delete</a>
