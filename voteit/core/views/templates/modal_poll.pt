@@ -11,10 +11,8 @@
     </div>
 		
 	<div class="poll_wrapper">
-        <div class="wf_state">
-            <span class="iconpadding icon ${wf_state}">
-            ${api.tstring(context.get_workflow_state().title())}
-            </span>
+        <div class="wf_state iconpadding icon ${wf_state}">
+            ${api.tstring(wf_state.title())}
         </div>
         <h3 tal:content="context.title">Title</h3>
 

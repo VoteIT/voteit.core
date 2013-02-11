@@ -12,10 +12,8 @@
     </div>
     
     <div class="poll_wrapper">    
-        <div class="wf_state">
-            <span class="iconpadding icon ${wf_state}">
+        <div class="iconpadding icon ${wf_state} wf_state">
             ${api.tstring(wf_state.title())}
-            </span>
         </div>
         <h3 tal:content="context.title">Title</h3>
 

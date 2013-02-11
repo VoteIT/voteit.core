@@ -113,7 +113,9 @@ body {
 /* end main element borders */
 /* Icons */
 .iconpadding { padding-left: 20px; }
+.icon-right { padding-right: 20px; }
 .large-iconpadding { padding-left: 45px; }
+.icon { min-height: 18px; }
 .icon.proposal { background: url(/static/type_icons/proposal_mini.png) no-repeat; }
 .selected .icon.proposal { background: url(/static/type_icons/proposal_mini_selected.png) no-repeat; }
 .icon.discussion, .icon.discussionpost { background: url(/static/type_icons/discussion_mini.png) no-repeat; }
@@ -133,6 +135,8 @@ body {
     display: block;
     background: url(/static/workflow_icons/denied.png) no-repeat;
 }
+.icon-right.arrow-right { background: url(/static/arrow_icons/arrow_right.png) right center no-repeat; }
+
 /* wf icons */
 .icon.denied { background: url(/static/workflow_icons/denied.png) left center no-repeat; }
 .icon.closed { background: url(/static/workflow_icons/closed.png) left center no-repeat; }
@@ -646,10 +650,6 @@ table.listing {
 .booth.poll > .wf_state {
     float: right;
 }
-.booth.poll > .wf_state {
-    margin-right: 35%;
-}
-
 .poll_wrapper {
     padding: 5px 0;
 }
