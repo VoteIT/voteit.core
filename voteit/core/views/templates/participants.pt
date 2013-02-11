@@ -16,7 +16,7 @@
             FIXME: When icons are clickable, they need to look clickable
         </tal:comment>
 
-	    <h3 i18n:translate="">Participants</h3>
+	    <h2 id="page_heading" i18n:translate="">Participants</h2>
 
 	    <a href="${request.resource_url(context)}" i18n:translate="">Back</a>
 
