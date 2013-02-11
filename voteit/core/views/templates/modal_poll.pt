@@ -11,12 +11,12 @@
     </div>
 		
 	<div class="poll_wrapper">
-        <h3 tal:content="context.title">Title</h3>
         <div class="wf_state">
             <span class="iconpadding icon ${wf_state}">
             ${api.tstring(context.get_workflow_state().title())}
             </span>
         </div>
+        <h3 tal:content="context.title">Title</h3>
 
 		<div class="description listing_block"
 		     tal:condition="context.description"

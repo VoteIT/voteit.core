@@ -86,13 +86,8 @@ body {
 #content {
 	background-color: #fff;
 	margin-bottom: 10px;
-
 }
-.description {
-	background-color: #fff;
-}
-#left,
-#right {
+#left, #right {
 	background-color: #fff;
 }
 #header-meeting-outer {
@@ -539,11 +534,6 @@ table.listing {
 #proposals .wf-state-retracted .body {
     text-decoration: line-through;
 }
-#discussions .inline_add_form,
-#proposals .inline_add_form {
-    margin-top: 1em;
-    position: relative;
-}
 .inline_add_form .buttons {
     text-align: right;
 } 
@@ -583,12 +573,6 @@ table.listing {
     margin-top: 10px;
     float: right;
 }
-.inline_add_form .dummy-error {
-    /*
-    background-color: #FFDFDF;
-    color: #DF0000;
-    */
-}
 #proposals .tag-title,
 #discussions .tag-title {
     /*
@@ -611,9 +595,9 @@ table.listing {
     float: right;
 }
 .listing_block {
-    margin-top: 10px;
-    padding-bottom: 5px;
-    border-bottom: 1px solid #ccc;
+    margin-bottom: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #ccc;
 }
 #main .unread {
     margin-left: -10px;
@@ -623,11 +607,11 @@ table.listing {
 /* proposals and discussions */
 
 /* poll section and popup */
-
 #main .poll {
     border: 1px solid #B2B2B5;
     background-color: #F2F2F2;
     padding: 10px 10px 0 10px;
+    margin-bottom: 30px;
     clear: both;
 }
 .poll_wrapper .result div.denied {
@@ -693,7 +677,7 @@ table.listing {
     padding: 10px;
     border: #969692 1px solid;
     background: #fff url(/static/images/poll_footer_bg.png) repeat-x top left;
-    margin: 10px -11px -11px -11px;
+    margin: 0 -11px -11px -11px;
     border-radius: 0 0 10px 10px;
     -webkit-border-radius: 0 0 10px 10px;
     -moz-border-radius: 0 0 10px 10px;
@@ -739,6 +723,10 @@ table.listing {
 /* ugly hack to hide double titles. Get rid of this ... */
 .vote_form_area .deform .desc {
     display: none;
+}
+.open_poll_button {
+    padding-left: 20px;
+    padding-right: 20px;
 }
 /* end poll section and popup */
 

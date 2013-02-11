@@ -1,7 +1,7 @@
 <tal:main
     xmlns:i18n="http://xml.zope.org/namespaces/i18n"
     i18n:domain="voteit.core">
-<div class="inline_add_form">
+<div class="inline_add_form listing_block">
     <img tal:replace="structure user_image_tag" />
     <div class="inline_form_placeholder">
         <a class="dummy-textarea discreet" href="${url}">${text}</a>
