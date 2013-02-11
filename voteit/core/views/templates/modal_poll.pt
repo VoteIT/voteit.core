@@ -4,9 +4,6 @@
                      id context.uid;">
 
     <div class="poll_header">
-        <span tal:condition="api.show_moderator_actions" tal:replace="structure api.get_moderator_actions(context)">
-             Cogwheel menu
-        </span>
         <h2 i18n:translate="">Poll</h2>
     </div>
 		
@@ -14,6 +11,9 @@
         <div class="wf_state iconpadding icon ${wf_state}">
             ${api.tstring(wf_state.title())}
         </div>
+        <span tal:condition="api.show_moderator_actions" tal:replace="structure api.get_moderator_actions(context)">
+             Cogwheel menu
+        </span>
         <h3 tal:content="context.title">Title</h3>
 
 		<div class="description listing_block"
