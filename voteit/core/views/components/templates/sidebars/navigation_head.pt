@@ -13,8 +13,6 @@
         </tal:root>
         <tal:meeting tal:condition="api.meeting">
             <a href="${request.resource_url(api.meeting, 'add', query={'content_type': 'AgendaItem'})}"
-               class="buttonize small" i18n:translate="">Add</a>
-            <a href="${request.resource_url(api.meeting, 'manage_agenda_items')}"
                class="buttonize small" i18n:translate="">Manage agenda</a>
         </tal:meeting>
     </div>

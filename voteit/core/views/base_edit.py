@@ -21,6 +21,7 @@ from voteit.core.models.schemas import button_cancel
 from voteit.core.models.schemas import button_update
 from voteit.core.models.schemas import button_delete
 from voteit.core.models.interfaces import IBaseContent
+from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import IWorkflowAware
 from voteit.core.views.api import APIView
 from voteit.core.helpers import generate_slug
@@ -44,6 +45,7 @@ class DefaultEdit(BaseEdit):
     """ Default view class for adding, editing or deleting dynamic content. """
 
     @view_config(context=IBaseContent, name="add", renderer=DEFAULT_TEMPLATE)
+    @view_config(context=IMeeting, name="add", renderer='templates/add_agenda_item.pt', request_param = "content_type=AgendaItem")
     def add_form(self):
         content_type = self.request.params.get('content_type')
         tag = self.request.GET.get('tag', None)
