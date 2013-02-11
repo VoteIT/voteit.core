@@ -2,7 +2,7 @@
 <div tal:attributes="id toggle_id;
                      class closed_section and 'toggle_area toggle_closed' or 'toggle_area toggle_opened';">
     <h6 class="toggle_minimize reload">
-        <span href="${request.url}" class="iconpadding icon ${state}">${section_title}</span>
+        <a href="${request.url}" class="iconpadding icon ${state}">${section_title}</a>
     </h6>
 	
     <tal:open_section condition="not closed_section">

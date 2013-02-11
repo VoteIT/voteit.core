@@ -249,10 +249,12 @@ button[name="cancel"]:hover {
 }
 /* End Cogwheel menu */
 /* Sidebar styles */
+#sidebar {
+    font-size: 14px;
+}
 #sidebar,
 #sidebar a {
 	color: #5c5a5d;
-	font-size: 14px;
 }
 #sidebar h5.header,
 #sidebar h5.header a {
@@ -265,6 +267,11 @@ button[name="cancel"]:hover {
 	font-size: 19px;
 	text-transform: uppercase;
 	margin-top: 20px;
+	padding: 10px 0;
+}
+#sidebar h6 a {
+    line-height: 20px;
+    display: block;
 }
 #navigation .header a {
 	padding-left: 40px;
@@ -433,11 +440,11 @@ button[name="cancel"]:hover {
     padding-right: 30px;
 }
 .toggle_opened .toggle_minimize {
-    background: url(/static/arrow_icons/arrow_down.png) no-repeat top right;
+    background: url(/static/arrow_icons/arrow_down.png) no-repeat right 50% ;
 }
 .toggle_opened .toggle_minimize:hover {}
 .toggle_closed .toggle_minimize {
-    background: url(/static/arrow_icons/arrow_right.png) no-repeat top right;
+    background: url(/static/arrow_icons/arrow_right.png) no-repeat right 50% ;
 }
 .toggle_closed .toggle_minimize:hover {}
 .toggle_area.toggle_closed .minimizable_area {
