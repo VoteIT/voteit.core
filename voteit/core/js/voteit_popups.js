@@ -25,7 +25,7 @@ function voteit_inline_info(event, css_classes) {
         },
         show: {
             event: event.type, // Use the same show event as the one that triggered the event handler
-            ready: true, // Show the tooltip as soon as it's bound, vital so it shows up the first time you hover!
+            ready: true,
             effect: false,
         },
         hide: {
@@ -33,10 +33,11 @@ function voteit_inline_info(event, css_classes) {
             effect: false,
         },
         position: {
+            viewport: $(window),
             at: "bottom center",
             my: "top center",
             adjust: {
-                method: 'shift',
+                method: 'shift none',
             },
         },
         style: { 
