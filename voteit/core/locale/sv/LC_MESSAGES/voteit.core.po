@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2013-01-22 15:14+0100\n"
-"PO-Revision-Date: 2013-01-22 15:21+0100\n"
+"PO-Revision-Date: 2013-02-11 11:07+0100\n"
 "Last-Translator: Robin Harms Oredsson <robin@betahaus.net>\n"
 "Language-Team: sv <LL@li.org>\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -1676,7 +1676,7 @@ msgstr "Omröstningar"
 
 #: voteit/core/views/components/meeting_actions.py:73
 msgid "Admin menu"
-msgstr "Admin meny"
+msgstr "Adminmeny"
 
 #: voteit/core/views/components/meeting_actions.py:74
 msgid "Settings"
