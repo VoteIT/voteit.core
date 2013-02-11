@@ -2,22 +2,22 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
       xmlns:tal="http://xml.zope.org/namespaces/tal"
-      metal:use-macro="load: ${api.template_dir}main.pt"
+      metal:use-macro="load: ${api.template_dir}base_edit.pt"
 	  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
 	  i18n:domain="voteit.core">
 <body>
-<div metal:fill-slot="main_window">
+<div metal:fill-slot="form">
     <tal:menu tal:condition="api.meeting" 
-    	replace="structure api.render_single_view_component(context, request, 'agenda_item', 'edit_menu')">
+    	replace="structure api.render_single_view_component(context, request, 'tabs', 'manage_agenda')">
     	Edit menu
     </tal:menu>
-	<div class="moderator-help-buttons">
+    <h2 id="page_heading" i18n:translate="">Agenda templates</h2>
+    <div class="moderator-help-buttons">
         <a tal:attributes="href '%sadd?content_type=AgendaTemplate' % api.resource_url(agenda_templates, request)"
-           tal:condition="api.context_has_permission('Add Meeting', agenda_templates)"
+           tal:condition="api.context_has_permission('Add Agenda Template', agenda_templates)"
            class="buttonize large"
            i18n:translate="">Create new template</a>
     </div>
-    <h2 i18n:translate="">Agenda templates</h2>
     <div tal:condition="not api.meeting" i18n:translate="agenda_templates_outside_meeting_help">
         If you wish to apply a template to a meeting,
         go to that meeting and select 'Agenda templates' from the 'Settings' menu.
@@ -43,7 +43,7 @@
 	        	</div>
 	        </div>
 			<a class="buttonize apply" 
-			    tal:attributes="href request.resource_url(context, 'agenda_templates', query = {'apply': template.__name__})}"
+			    tal:attributes="href request.resource_url(context, 'agenda_templates', query = {'apply': template.__name__})"
 				tal:condition="api.meeting" 
 				i18n:translate="">Apply to meeting</a>
 			<a tal:attributes="href request.resource_url(template, 'edit')"

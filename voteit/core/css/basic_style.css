@@ -371,6 +371,32 @@ button.small:active,
 
 /* End Dropdown menus */
 
+/* Tabs menu */
+.tabs_menu {
+    background: url(/static/images/tab_menu.png) repeat-x bottom left;
+    height: 30px;
+    line-height: 30px;
+    border: 1px solid #d9d7d5;
+    margin-bottom: 10px;
+}
+.tabs_menu a {
+    color: #5c5a5d;
+}
+.tabs_menu > li {
+    float: left;
+    height: 30px;
+    line-height: 30px;
+    border-right: 1px solid #d9d7d5;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+.tabs_menu > li.selected {
+    background: url(/static/images/tab_menu_selected.png) repeat-x bottom left;
+}
+
+
+/* End tabs menu */
+
 /* Override qTip defaults - should be same as body */
 .qtip {
 	font-size: inherit;

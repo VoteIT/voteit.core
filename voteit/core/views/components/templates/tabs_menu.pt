@@ -1,0 +1,8 @@
+<tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core">
+<ul class="tabs_menu">
+    <tal:tabs repeat="tab tabs">
+        <li tal:replace="structure tab" />
+    </tal:tabs>
+</ul>
+<div class="clear"><!-- --></div>
+</tal:main>

@@ -64,3 +64,5 @@ def render_poll_state_info(context, request, *args, **kwargs):
         poll = context,
     )
     return render('../templates/snippets/poll_state_info.pt', response, request = request)
+
+
