@@ -183,20 +183,24 @@ button,
 	color: #fff;
 	margin: 0px 10px 10px 0;
 }
-button:hover,
-.buttonize:hover {
+button:active,
+.buttonize:active {
 	background: url(/static/buttons/button_bg_mo.png) repeat-x bottom left;
 	border-color: #000;
 	color: #fff;
+	cursor: pointer;
 }
-button:active,
-.buttonize:active {}
+button:hover,
+.buttonize:hover {
+    border-color: #000;
+}
+
 button.small,
 .buttonize.small {
 	background-image: url(/static/buttons/button_small_bg.png);
 	height: 25px;
 	line-height: 25px;
-	border: 1px solid #5C5A5D;
+    border: 1px solid #968c89;
 	color: #000;
 }
 #sidebar .buttonize.small {
@@ -207,8 +211,7 @@ button.small,
 }
 button.small:hover,
 .buttonize.small:hover { /* FIXME: Proper colors */
-	background-image: url(/static/buttons/button_small_bg.png);
-	border: 1px solid #968c89;
+    border-color: #5C5A5D;
 }
 button.small:active,
 .buttonize.small:active {
@@ -217,7 +220,19 @@ button.small:active,
 .buttonize {
 	display: inline-block;
 }
-
+/* specifics */
+button[name="cancel"] {
+    background-image: url(/static/buttons/button_grey_bg.png);
+    color: #000;
+    border: 1px solid #968c89;
+}
+button[name="cancel"]:active {
+    background-color: #ccc;
+    background-image: none;
+}
+button[name="cancel"]:hover {
+    border-color: #5C5A5D;
+}
 /* End form elements */
 
 /* Cogwheel menu */
