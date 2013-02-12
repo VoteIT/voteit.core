@@ -46,13 +46,15 @@ class MeetingViewTests(unittest.TestCase):
     def test_participants_json_data(self):
         self.config.testing_securitypolicy(userid='dummy',
                                            permissive=True)
+        self.config.scan('voteit.core.views.components.creators_info')
         context = self._fixture()
         request = testing.DummyRequest()
         obj = self._cut(context, request)
         response = obj.participants_json_data()
-        expected = {'first_name': u'VoteIT', 'last_name': u'Administrator',
+        expected = {'userinfo': u'<span class="creators"><a href="http://example.com/m/_userinfo?userid=admin" class="inlineinfo"> VoteIT Administrator (admin)</a></span>',
                     'email': '', 'roles': ('role:Admin',)}
         self.assertEqual(response['admin'], expected)
-        expected = {'first_name': u"", 'last_name': u"", 'email': u"", 'roles': ()}
+        expected = {'userinfo': u'<span class="creators"><a href="http://example.com/m/_userinfo?userid=dummy" class="inlineinfo">  (dummy)</a></span>',
+                    'email': u"", 'roles': ()}
         self.assertEqual(response['dummy'], expected)
 
