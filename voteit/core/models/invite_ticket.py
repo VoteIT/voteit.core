@@ -45,7 +45,7 @@ class InviteTicket(Folder, WorkflowAware):
     add_permission = None
     #No schemas
     
-    def __init__(self, email, roles, message):
+    def __init__(self, email, roles, message, sent_by = None):
         self.email = email
         for role in roles:
             if role not in SELECTABLE_ROLES:
@@ -55,6 +55,7 @@ class InviteTicket(Folder, WorkflowAware):
         self.created = utcnow()
         self.closed = None
         self.claimed_by = None
+        self.sent_by = sent_by
         self.token = ''.join([choice(string.letters + string.digits) for x in range(30)])
         self.sent_dates = []
         self.uid = unicode(uuid4())

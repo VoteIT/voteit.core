@@ -45,14 +45,18 @@ def userid_node():
     return colander.SchemaNode(colander.String(),
                                title = _(u"UserID"),
                                description = _('userid_description',
-                                               default=u"Used as a nickname, in @-links and as a unique id. You can't change this later. OK characters are: a-z, 0-9, '.', '-', '_'."),
+                                               default=u"Used as a nickname, in @-links and as a unique id. "
+                                                       u"You can't change this later. OK characters are: a-z, 0-9, '.', '-', '_'."),
                                validator=deferred_new_userid_validator,)
 
 def password_node():
     return colander.SchemaNode(colander.String(),
                                validator=colander.All(password_validation, html_string_validator,),
                         widget=deform.widget.CheckedPasswordWidget(size=20),
-                        title=_('Password'))
+                        title=_('Password'),
+                        description = _(u"password_creation_tip",
+                                        default = u"Use at least 6 chars. A good rule is to use long passwords that "
+                                                  u"doesn't contain any personal information or things that someone else might guess."))
 
 def email_node():
     return colander.SchemaNode(colander.String(),

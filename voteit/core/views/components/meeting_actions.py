@@ -70,7 +70,7 @@ def polls_menu(context, request, va, **kw):
              menu_css_cls = 'meeting_menu')
 @view_action('meeting_actions', 'participants_menu', title = _(u"Participants"), permission=VIEW,
              meeting_only = True, menu_css_cls = 'participants_menu')
-@view_action('meeting_actions', 'help_action', title = _(u"Help & contact"), permission=VIEW,
+@view_action('meeting_actions', 'help_action', title = _(u"Help & contact"),
              menu_css_cls = 'help_contact_menu')
 def generic_menu(context, request, va, **kw):
     api = kw['api']

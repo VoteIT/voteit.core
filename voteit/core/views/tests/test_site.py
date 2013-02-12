@@ -7,8 +7,6 @@ from webob.multidict import MultiDict
 from voteit.core.testing_helpers import bootstrap_and_fixture
 
 
-
-
 class SiteFormViewTests(unittest.TestCase):
         
     def setUp(self):
@@ -42,7 +40,6 @@ class SiteFormViewTests(unittest.TestCase):
         response = obj.login_or_register()
         self.assertIn('login_form', response)
         self.assertIn('reg_form', response)
-
 
     def test_login_or_register_unsupported_browser(self):
         self.config.scan('voteit.core.schemas.user')

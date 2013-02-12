@@ -28,10 +28,8 @@ from voteit.core import VoteITMF as _
 
 class SiteFormView(BaseEdit):
 
-    @view_config(context=ISiteRoot, name="register", renderer="templates/login_register.pt")
-    @view_config(context=ISiteRoot, name='login', renderer="templates/login_register.pt")
-    def login_or_register(self):
-        #Browser check
+    def browser_check(self):
+        """ Will redirect to an error page if an unsupported browser is used. """
         browser_name = u''
         browser_version = 0
         try:
@@ -45,91 +43,102 @@ class SiteFormView(BaseEdit):
         if browser_name == u'Microsoft Internet Explorer' and browser_version < Decimal(8):
             url = self.request.resource_url(self.context, 'unsupported_browser')
             return HTTPFound(location=url)
-        
-        users = self.api.root.users
-        
-        login_schema = createSchema('LoginSchema').bind(context=self.context, request=self.request, api=self.api)        
-        register_schema = createSchema('RegisterUserSchema').bind(context=self.context, request=self.request, api=self.api)
 
-        login_form = deform.Form(login_schema, buttons=(button_login,))
-        reg_form = deform.Form(register_schema, buttons=(button_register,))
-
-        self.api.register_form_resources(login_form)
-        self.api.register_form_resources(reg_form)
-
-        appstruct = {}
-
+    @view_config(context=ISiteRoot, name='login', renderer = 'templates/base_edit.pt')
+    def login(self):
+        """ Login action used by sidebar widget for password login. """
+        browser_result = self.browser_check()
+        if browser_result:
+            return browser_result
+        #FIXME: Validation in schema, not in view
+        schema = createSchema('LoginSchema').bind(context=self.context, request=self.request, api=self.api)
+        form = deform.Form(schema, buttons=(button_login,))
+        self.api.register_form_resources(form)
+        users = self.context.users
         POST = self.request.POST
-    
-        #Handle submitted information
         if 'login' in POST:
             controls = POST.items()
-    
             try:
-                #appstruct is deforms convention. It will be the submitted data in a dict.
-                appstruct = login_form.validate(controls)
+                appstruct = form.validate(controls)
             except deform.ValidationFailure, e:
-                self.response['login_form'] = e.render()
+                self.response['form'] = e.render()
                 return self.response
-            
-            # Forece lowercase userid
+            # Force lowercase userid
             userid = appstruct['userid'].lower()
             password = appstruct['password']
             came_from = appstruct['came_from']
-    
             #userid here can be either an email address or a login name
             if '@' in userid:
                 #assume email
                 user = users.get_user_by_email(userid)
             else:
                 user = users.get(userid)
-            
-            if IUser.providedBy(user):
-                pw_field = user.get_custom_field('password')
-                if pw_field.check_input(password):
-                    headers = remember(self.request, user.__name__)
-                    url = self.request.resource_url(self.context)
-                    if came_from:
-                        url = urllib.unquote(came_from)
-                    return HTTPFound(location = url,
-                                     headers = headers)
-            self.response['api'].flash_messages.add(_('Login failed.'), type='error')
+            if not IUser.providedBy(user):
+                raise HTTPForbidden(u"Userid returned something else then a user from users folder.")
+            pw_field = user.get_custom_field('password')
+            if pw_field.check_input(password):
+                headers = remember(self.request, user.__name__)
+                url = self.request.resource_url(self.context)
+                if came_from:
+                    url = urllib.unquote(came_from)
+                return HTTPFound(location = url,
+                                 headers = headers)
+        #This view should not really be rendered, but in case someone accesses it directly
+        self.response['form'] = form.render()
+        return self.response
+
+    @view_config(context=ISiteRoot, name="register", renderer="templates/register.pt")
+    def register(self):
+        """ Register and log in a user. Be sure to catch came_from since ticket system will use that url
+            to send people who've been invited but haven't registered yet to this view.
+        """
+        browser_result = self.browser_check()
+        if browser_result:
+            return browser_result
+        schema = createSchema('RegisterUserSchema').bind(context=self.context, request=self.request, api=self.api)
+        form = deform.Form(schema, buttons=(button_register,))
+        self.api.register_form_resources(form)
+        appstruct = {}
+
+        POST = self.request.POST
+        users = self.context.users
 
         if 'register' in POST:
             controls = POST.items()
             try:
-                #appstruct is deforms convention. It will be the submitted data in a dict.
-                appstruct = reg_form.validate(controls)
+                appstruct = form.validate(controls)
             except deform.ValidationFailure, e:
-                self.response['reg_form'] = e.render()
+                self.response['form'] = e.render()
                 return self.response
-            
             #Userid and name should be consistent - and not stored
             name = appstruct['userid']
             del appstruct['userid']
-
             #Came from should not be stored either
             came_from = urllib.unquote(appstruct['came_from'])
-            if came_from:
-                url = came_from
-            else:
-                url = self.request.resource_url(self.context, 'login')
+            if came_from == u'/':
+                came_from = None
             del appstruct['came_from']
-
             obj = createContent('User', creators=[name], **appstruct)
             self.context.users[name] = obj
             headers = remember(self.request, name)  # login user
-
-            return HTTPFound(location=url, headers=headers)
+            if came_from:
+                msg = _(u"You're now registered. Welcome!")
+                self.api.flash_messages.add(msg)
+                return HTTPFound(location=came_from, headers=headers)
+            msg = _(u"joined_without_ticket_intro_text",
+                    default = u"You're now registered. Welcome! "
+                              u"Please take some time to update your profile and write something about yourself. "
+                              u"To join a meeting, you need to either have an invitaion that will have been sent "
+                              u"to you via email, or the url of a meeting to request access to it.")
+            self.api.flash_messages.add(msg)
+            return HTTPFound(location=self.request.resource_url(obj), headers=headers)
 
         #Set came from in form
         came_from = self.request.GET.get('came_from', None)
         if came_from:
             appstruct['came_from'] = came_from
-
         #Render forms
-        self.response['login_form'] = login_form.render(appstruct)
-        self.response['reg_form'] = reg_form.render(appstruct)
+        self.response['form'] = form.render(appstruct)
         return self.response
 
     @view_config(context=ISiteRoot, name='logout')

@@ -1,0 +1,29 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      metal:use-macro="load: ${api.template_dir}content.pt"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="voteit.core">
+<body>
+<div metal:fill-slot="content">
+
+    <div tal:content="structure context.get_field_value('public_description', u'')">Public description</div>
+
+    <h3>You're logged in as</h3>
+    <div tal:content="structure api.get_creators_info([api.userid], portrait = False)"></div>
+
+    <p>Would you like to use this invitation to gain acces to meeting? It will only work for one user.
+        If not, log out and click the invitation link again.
+    </p>
+    
+    <br/>
+    <p>
+        <a href="${claim_action_url}"
+           class="buttonize large" i18n:translate="">Use ticket</a>
+        <a href="${request.resource_url(api.root, 'logout')}"
+           class="buttonize large" i18n:translate="">Logout</a>
+    </p>
+</div>
+</body>
+</html>

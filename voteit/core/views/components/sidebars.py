@@ -9,19 +9,10 @@ from voteit.core import VoteITMF as _
 from voteit.core.helpers import strip_and_truncate
 
 
-def _show_login(api):
-    if api.userid:
-        return False
-    url = api.request.path_url
-    if url.endswith('login') or url.endswith('register'):
-        return False
-    return True
-
-
 @view_action('sidebar', 'login_pw')
 def login_box(context, request, va, **kwargs):
     api = kwargs['api']
-    if not _show_login(api):
+    if api.userid or request.url.endswith('login'):
         return u""
     #FIXME: Ticket system makes it a bit of a hassle to make login detached from registration.
     #We'll do that later. For now, let's just check if user is on login or registration page
@@ -38,7 +29,7 @@ def login_box(context, request, va, **kwargs):
 @view_action('sidebar', 'login_alt')
 def alternative_login_methods(context, request, va, **kwargs):
     api = kwargs['api']
-    if not _show_login(api):
+    if api.userid:
         return u""
     try:
         alt_out = api.render_view_group(api.root, request, 'login_forms', **kwargs)
@@ -47,7 +38,6 @@ def alternative_login_methods(context, request, va, **kwargs):
     except ComponentLookupError: #There's no login_forms view group
         pass
     return u""
-
 
 @view_action('sidebar', 'latest_meeting_entries')
 def latest_meeting_entries(context, request, va, **kwargs):
