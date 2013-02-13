@@ -315,7 +315,8 @@ $(document).ready(function() {
         $.ajax({
                url: url,
             success: function(response) {
-            	window.history.pushState(null, title, url);
+                //pushState doesn't work on IE 8, perhaps others
+                try { window.history.pushState(null, title, url); } catch(e) {}
                 $('#proposals .listing').html($('#proposals .listing', response).html());
                 $('#proposals .inline_add_form').html($('#proposals .inline_add_form', response).html());
                 $('#discussions .listing').html($('#discussions .listing', response).html());
