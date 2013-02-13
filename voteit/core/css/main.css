@@ -12,7 +12,8 @@
 
 /* Top header section, with meeting title */
 #header-global-outer {
-	padding-top: 15px;
+	padding: 15px 10px 0 10px;
+	min-width: 990px;
 }
 #header-global-outer .wrapper {
 	height: 60px;
@@ -53,7 +54,7 @@
 	width: 720px;
 }
 #search_form {
-	float: left;
+	float: right;
 	width: 270px;
 }
 /* End meeting section */
@@ -81,7 +82,6 @@
 #main-outer {
 	display: block;
 	padding: 0 10px 120px 10px;
-	
 }
 #page_wrapper {
     min-height: 100%;
@@ -120,6 +120,7 @@
 	background: transparent url(/static/images/footer_bg.png) repeat-x top left;
 	margin-top: -100px;
 	height: 100px;
+    min-width: 1010px;
 }
 #footer {
 	text-align: center;

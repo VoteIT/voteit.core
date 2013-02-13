@@ -56,6 +56,7 @@ h1, h2, h3, h4, h5, h6, legend {
 }
 #search_button {
     font: inherit;
+    margin-right: 0px;
 }
 /* End Fonts, headlines, text */
 /* Links */
@@ -94,6 +95,7 @@ body {
 	background: url(/static/images/menu_bg.png) repeat-x bottom left;
 	height: 43px;
 	display: block;
+    min-width: 1010px;
 }
 #main-outer {
     padding-top: 20px;
