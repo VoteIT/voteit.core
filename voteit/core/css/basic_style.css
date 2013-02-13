@@ -136,6 +136,7 @@ body {
     background: url(/static/workflow_icons/denied.png) no-repeat;
 }
 .icon-right.arrow-right { background: url(/static/arrow_icons/arrow_right.png) right center no-repeat; }
+.icon.arrow-right { background: url(/static/arrow_icons/arrow_right.png) left center no-repeat; }
 
 /* wf icons */
 .icon.denied { background: url(/static/workflow_icons/denied.png) left center no-repeat; }
@@ -309,7 +310,10 @@ button[name="cancel"]:hover {
 #navigaion .info {
     clear: both;
 }
-
+#login_pw a {
+    line-height: 24px;
+    color: #006680;
+}
 /* End Sidebar styles */
 
 /* Dropdown menus */

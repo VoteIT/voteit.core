@@ -4,6 +4,6 @@
       class="sidebar_block"
       id="login_pw">
     <div tal:content="structure form">Login form</div>
-    <div><a href="/request_password" i18n:translate="">Forgot password?</a></div>
-    <div><a href="/register" i18n:translate="">Need to register?</a></div>
+    <a class="arrow-right iconpadding icon" href="/register" i18n:translate="">Register</a><br/>
+    <a class="arrow-right iconpadding icon" href="/request_password" i18n:translate="">Recover password</a>
 </div>
