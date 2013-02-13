@@ -5,12 +5,6 @@ from betahaus.viewcomponent.interfaces import IViewGroup
 from voteit.core import VoteITMF as _
 
 
-@view_action('main', 'logo_tag')
-def logo_image_tag(context, request, *args, **kwargs):
-    url = "%s/static/images/voteit_logo.png" % request.application_url
-    return '<img src="%(url)s" height="%(h)s" width="%(w)s" id="logo" />' % {'url':url, 'h':42, 'w':109}
-
-
 @view_action('main', 'columns')
 def columns(context, request, *args, **kwargs):
     api = kwargs['api']

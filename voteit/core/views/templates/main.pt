@@ -30,11 +30,7 @@
                     </tal:menu>
                     &nbsp;
                 </div>
-                <div id="header-logo">
-                    <a tal:attributes="href request.resource_url(api.root)">
-                        <img tal:replace="structure api.render_single_view_component(context, request, 'main', 'logo_tag')" />
-                    </a>
-                </div>
+                <a id="header-logo" tal:attributes="href request.resource_url(api.root)">&nbsp;</a>
             </div>
         </div>
         <div class="clear"><!-- Push down in case of large heading --></div>
