@@ -585,6 +585,7 @@ table.listing {
 #discussions > h1 {
     border-bottom: 1px solid #B2B2B5;
     padding-bottom: 20px;
+    margin-bottom: 10px;
 }
 #proposals .wf-state-retracted .body {
     text-decoration: line-through;
@@ -628,16 +629,10 @@ table.listing {
     margin-top: 10px;
     float: right;
 }
-#proposals .tag-title,
-#discussions .tag-title {
-    /*
-    color: #054265;
-    border-bottom: 1px solid #86A3B4;
+.tag-title {
+    border-bottom: 1px solid #ccc;
     margin-bottom: 10px;
-    padding: 0 5px 10px 5px;
-    text-transform: uppercase;
-    font-weight: bold;
-    */
+    padding: 0 0 10px 0;
 }
 
 #proposals .tag-title > span,
@@ -659,6 +654,10 @@ table.listing {
     padding-left: 5px;
     border-left: solid 5px #B2B2B5;    
 }
+.load_more {
+    margin-bottom: 10px;
+}
+
 /* proposals and discussions */
 
 /* poll section and popup */

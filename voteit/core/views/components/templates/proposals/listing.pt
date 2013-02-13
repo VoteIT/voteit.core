@@ -3,10 +3,11 @@
 	<div tal:condition="tag"
 	     class="tag-title">
 	    <span i18n:translate="">Limited to <tal:tag i18n:name="tag_name">#${tag}</tal:tag></span>
-	    <a class="tag" tal:attributes="href clear_tag_url"
+	    <a class="tag icon-right arrow-right" tal:attributes="href clear_tag_url"
 	       i18n:translate="">
 	        Show all proposals
 	    </a>
+	    <div class="clear"><!-- --></div>
 	</div>
 
     <!-- polls first -->
