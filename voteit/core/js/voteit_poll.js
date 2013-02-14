@@ -46,6 +46,7 @@ $('#vote_form button.submit').live('click', function(event) {
         target.html(data);
         deform.processCallbacks();
         display_deform_labels();
+        $('html, body').animate({scrollTop: target.parents('.poll').offset().top - 50}, 200);
     })
     .error(function(xhr, status, error) {
         button.find('img.spinner').remove();

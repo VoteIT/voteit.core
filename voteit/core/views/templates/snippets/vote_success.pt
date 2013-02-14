@@ -1,5 +1,14 @@
 <tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core">
-
-That worked splendid!
-
+<div class="listing_block">
+    <h3 i18n:translate="">Your vote has been registered!</h3>
+    <p>As long as the poll is open, you may change your vote. If you want to review it, just open this window again.</p>
+    <p>&nbsp;</p>
+    <form action="${request.resource_url(context.__parent__, anchor = context.uid)}" method="GET">
+        <ul>
+            <li class="buttons">
+                <button i18n:translate="">Close</button>
+            </li>
+        </ul>
+    </form>
+</div>
 </tal:main>

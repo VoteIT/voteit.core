@@ -784,8 +784,14 @@ table.listing {
     padding-left: 20px;
     padding-right: 20px;
 }
+.poll .buttons {
+    text-align: center;
+}
+.poll .buttons button {
+    padding-left: 20px;
+    padding-right: 20px;
+}
 /* end poll section and popup */
-
 
 /* popups, generic - should behave similar to poll booth*/
 .qtip.popup {
