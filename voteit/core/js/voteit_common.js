@@ -263,18 +263,6 @@ $(document).ready(function() {
     });
 });
 
-/* Show denied proposals on closed polls */
-// FIXME: Class names collide with icons + need way to close again
-// This code has nothing to do with this package either, but with schulze
-/*
-$('#proposals .show_denied a').live('click', function(event) {
-    try { event.preventDefault(); } catch(e) {}
-    var poll = $(this).parents("div.listing_block.poll");
-       poll.find('.result div.denied').toggle();
-       $(this).toggle();
-});
-*/
-
 /* show previous posts */
 $(document).ready(function() {
     $('#discussions div.load_more a').live('click', function(event) {
