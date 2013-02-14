@@ -321,6 +321,9 @@ $(document).ready(function() {
                 $('#proposals .inline_add_form').html($('#proposals .inline_add_form', response).html());
                 $('#discussions .listing').html($('#discussions .listing', response).html());
                 $('#discussions .inline_add_form').html($('#discussions .inline_add_form', response).html());
+                //Scroll to top of proposals
+                $('html, body').animate({scrollTop: $('#proposals').offset().top}, 200);
+
             },
             error: function(response) {
                 $("#proposals .listing").empty();
