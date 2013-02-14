@@ -338,3 +338,38 @@ class NotOnlyDefaultTextValidator(object):
         if value.strip() == default.strip():
             raise colander.Invalid(node, _(u"only_default_text_validator_error",
                                            default=u"Only the default content is not valid",))
+
+
+class LoginPasswordValidator(object):
+    """ Make sure a user exist and check that users password. This is a validator for a form,
+        since it checks the field userid and password.
+        
+        Displaying information about bad password or userid might not be a good idea, so we won't do that now.
+    """
+    def __init__(self, context):
+        assert ISiteRoot.providedBy(context)
+        self.context = context
+    
+    def __call__(self, form, value):
+        password = value['password']
+        userid = value['userid'] #Might be an email address!
+        exc = colander.Invalid(form, u"Login invalid") #Raised if trouble
+        exc['userid'] = _(u"Use either email address or userid to login.")
+        exc['password'] = _(u"Password is case sensitive.")
+        #First, retrieve user object
+        if u'@' in userid:
+            user = self.context.users.get_user_by_email(userid)
+        else:
+            user = self.context.users.get(userid)
+        if user is None:
+            raise exc
+        #Validate password
+        pw_field = user.get_custom_field('password')
+        if not pw_field.check_input(password):
+            raise exc
+
+@colander.deferred
+def deferred_login_password_validator(form, kw):
+    context = kw['context']
+    root = find_root(context)
+    return LoginPasswordValidator(root)

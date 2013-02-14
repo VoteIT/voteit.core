@@ -1,10 +1,7 @@
 from unittest import TestCase
 
 import colander
-import deform
 from pyramid import testing
-from pyramid.authentication import AuthTktAuthenticationPolicy
-from pyramid.authorization import ACLAuthorizationPolicy
 
 from voteit.core.testing_helpers import bootstrap_and_fixture
 from voteit.core.testing_helpers import register_security_policies
@@ -15,7 +12,6 @@ from voteit.core import security
 def _fixture(config):
     from voteit.core.models.user import User
     from voteit.core.models.meeting import Meeting
-    
     root = bootstrap_and_fixture(config)
     tester = User(password = 'tester',
                   creators = ['tester'],
@@ -27,7 +23,6 @@ def _fixture(config):
                      first_name = u'Moderator',
                      email = "moderator@voteit.se",)
     root.users['moderator'] = moderator
-
     meeting = Meeting()
     meeting.add_groups('tester', [security.ROLE_DISCUSS, security.ROLE_PROPOSE, security.ROLE_VOTER])
     meeting.add_groups('moderator', [security.ROLE_MODERATOR])
@@ -556,6 +551,44 @@ class NotOnlyDefaultTextValidatorTests(TestCase):
         self.assertEqual(obj(None, 'Not the same'), None)
 
 
+class LoginPasswordValidatorTests(TestCase):
+    
+    def setUp(self):
+        self.config = testing.setUp()
+
+    def tearDown(self):
+        testing.tearDown()
+    
+    @property
+    def _cut(self):
+        from voteit.core.validators import LoginPasswordValidator
+        return LoginPasswordValidator
+
+    def test_nonexistent_users(self):
+        root = bootstrap_and_fixture(self.config)
+        obj = self._cut(root)
+        self.assertRaises(colander.Invalid, obj, None, {'userid': u'moderator', 'password': u'moderator'})
+
+    def test_existing_user_wrong_password(self):
+        root = _fixture(self.config)
+        obj = self._cut(root)
+        self.assertRaises(colander.Invalid, obj, None, {'userid': u'moderator', 'password': u'wrong'})
+
+    def test_existing_user_correct_password(self):
+        from voteit.core.schemas.user import LoginSchema
+        root = _fixture(self.config)
+        obj = self._cut(root)
+        node = LoginSchema()
+        self.assertEqual(obj(node, {'userid': u'moderator', 'password': u'moderator'}), None)
+
+    def test_existing_email_correct_password(self):
+        from voteit.core.schemas.user import LoginSchema
+        root = _fixture(self.config)
+        obj = self._cut(root)
+        node = LoginSchema()
+        self.assertEqual(obj(node, {'userid': u'moderator@voteit.se', 'password': u'moderator'}), None)
+
+
 class DeferredValidatorsTests(TestCase):
     def setUp(self):
         self.config = testing.setUp()
@@ -625,4 +658,11 @@ class DeferredValidatorsTests(TestCase):
         res = deferred_check_context_unique_name(None, {'context': context, 'request': request})
         self.assertIsInstance(res, ContextUniqueNameValidator)
 
-
+    def test_deferred_deferred_login_password_validator(self):
+        from voteit.core.validators import deferred_login_password_validator
+        from voteit.core.validators import LoginPasswordValidator
+        from voteit.core.models.site import SiteRoot
+        context = SiteRoot()
+        request = testing.DummyRequest()
+        res = deferred_login_password_validator(None, {'context': context, 'request': request})
+        self.assertIsInstance(res, LoginPasswordValidator)

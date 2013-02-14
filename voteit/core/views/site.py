@@ -6,6 +6,7 @@ from decimal import Decimal
 from pyramid.view import view_config
 from pyramid.response import Response
 from pyramid.httpexceptions import HTTPFound
+from pyramid.httpexceptions import HTTPForbidden
 from pyramid.security import NO_PERMISSION_REQUIRED
 from pyramid.security import remember
 from pyramid.security import forget
@@ -24,6 +25,7 @@ from voteit.core.models.schemas import button_login
 from voteit.core.models.schemas import button_register
 from voteit.core.views.base_edit import BaseEdit
 from voteit.core import VoteITMF as _
+from voteit.core.validators import deferred_login_password_validator
 
 
 class SiteFormView(BaseEdit):
@@ -51,7 +53,7 @@ class SiteFormView(BaseEdit):
         if browser_result:
             return browser_result
         #FIXME: Validation in schema, not in view
-        schema = createSchema('LoginSchema').bind(context=self.context, request=self.request, api=self.api)
+        schema = createSchema('LoginSchema', validator = deferred_login_password_validator).bind(context=self.context, request=self.request, api=self.api)
         form = deform.Form(schema, buttons=(button_login,))
         self.api.register_form_resources(form)
         users = self.context.users
@@ -75,14 +77,13 @@ class SiteFormView(BaseEdit):
                 user = users.get(userid)
             if not IUser.providedBy(user):
                 raise HTTPForbidden(u"Userid returned something else then a user from users folder.")
-            pw_field = user.get_custom_field('password')
-            if pw_field.check_input(password):
-                headers = remember(self.request, user.__name__)
-                url = self.request.resource_url(self.context)
-                if came_from:
-                    url = urllib.unquote(came_from)
-                return HTTPFound(location = url,
-                                 headers = headers)
+            #Password validation already handled by schema here
+            headers = remember(self.request, user.__name__)
+            url = self.request.resource_url(self.context)
+            if came_from:
+                url = urllib.unquote(came_from)
+            return HTTPFound(location = url,
+                             headers = headers)
         #This view should not really be rendered, but in case someone accesses it directly
         self.response['form'] = form.render()
         return self.response
