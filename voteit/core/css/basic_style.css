@@ -874,3 +874,21 @@ table.listing {
 }
 
 /* end description */
+
+/* jQuery sorting */
+ul.ui-sortable > li {
+    cursor: move;
+    margin: 5px 0px;
+    padding: 5px;
+    padding-right: 15px;
+    background: #F2F2F2;
+    color: #006680;
+    border: 1px solid #B2B2B5;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+}
+ul.ui-sortable > li:hover {
+    border-color: #006680;
+}
+/* End jQuery sorting */
