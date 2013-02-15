@@ -5,17 +5,15 @@
       i18n:domain="voteit.core">
 <body>
     <div metal:fill-slot="content">
-        <div>
-            <p i18n:translate="unsupported_browser_notice">
-                You're using a very old version of Internet Explorer.
-                You need to upgrade it or switch to another browser to use VoteIT.
-                We recommend using Firefox, Chrome, Safari or any other standards compliant browser.
-            </p>
-            <p><strong i18n:translate="">To upgrade go to:</strong>&nbsp;<a href="http://windows.microsoft.com/en-US/internet-explorer/downloads/ie-8">http://windows.microsoft.com/en-US/internet-explorer/downloads/ie-8</a></p>
-            <p><strong i18n:translate="">To download Firefox go to:</strong>&nbsp;<a href="http://www.getfirefox.net/">http://www.getfirefox.net/</a></p>
-            <p><tal:trans i18n:translate="">We apologize for the inconvenience.</tal:trans><br/>
-            /<a href="mailto:info@voteit.se" i18n:translate="">The VoteIT team</a></p>
-        </div>
+        <p i18n:translate="unsupported_browser_notice">
+            You're using a very old version of Internet Explorer.
+            You need to upgrade it or switch to another browser to use VoteIT.
+            We recommend using Firefox, Chrome, Safari or any other standards compliant browser.
+        </p>
+        <p><strong i18n:translate="">To upgrade go to:</strong>&nbsp;<a href="http://windows.microsoft.com/en-US/internet-explorer/downloads/ie-8">http://windows.microsoft.com/en-US/internet-explorer/downloads/ie-8</a></p>
+        <p><strong i18n:translate="">To download Firefox go to:</strong>&nbsp;<a href="http://www.getfirefox.net/">http://www.getfirefox.net/</a></p>
+        <p><tal:trans i18n:translate="">We apologize for the inconvenience.</tal:trans><br/>
+        /<a href="mailto:info@voteit.se" i18n:translate="">The VoteIT team</a></p>
     </div>
 </body>
 </html>
