@@ -15,10 +15,11 @@
         You need to be logged in to use the invitation.
     </p>
 
-    <h4 i18n:translate="">Already have an account?</h4>
+    <h4 i18n:translate="">If you already have an account:</h4>
     <p i18n:translate="">Simply log in by using the form on the left hand side.</p>
     
-    <h4 i18n:translate="">Need to register a new account?</h4>
+    <h4 i18n:translate="">If you do not have an account:</h4>
+    <p i18n:translate="">You need to register a new account by using the button below.</p>
     <p><a href="${request.resource_url(api.root, 'register', query = {'came_from': came_from})}"
        class="buttonize large" i18n:translate="">Register</a>
     </p>
