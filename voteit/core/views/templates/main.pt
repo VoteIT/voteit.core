@@ -49,6 +49,12 @@
     </div>
     <div id="main-outer">
         <div class="wrapper">
+            <ul id="breadcrumbs" tal:condition="api.breadcrumbs">
+                <li tal:repeat="obj api.breadcrumbs">
+                    <span>&raquo;</span>
+                    <a href="${request.resource_url(obj)}">${obj.title}</a>
+                </li>
+            </ul>
             <div class="section" metal:define-slot="full_window">
                 <div id="sidebar" tal:content="structure api.render_view_group(context, request, 'sidebar')">
                     Sidebar, navigation / login etc

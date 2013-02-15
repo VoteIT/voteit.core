@@ -1,5 +1,6 @@
 from pkg_resources import resource_filename
 
+from pyramid.location import lineage
 from pyramid.renderers import get_renderer
 from pyramid.renderers import render
 from pyramid.security import authenticated_userid
@@ -112,6 +113,11 @@ class APIView(object):
         if not self.userid:
             return ()
         return self.search_catalog(context = self.context, unread = self.userid)[1]
+
+    @reify
+    def breadcrumbs(self):
+        """ Get objects from root and out, so we can iterate over them and get links etc. """
+        return reversed(tuple(lineage(self.context)))
 
     def register_form_resources(self, form):
         """ Append form resources if they don't already exist in self.form_resources """

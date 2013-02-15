@@ -98,7 +98,7 @@ body {
     min-width: 1010px;
 }
 #main-outer {
-    padding-top: 20px;
+    padding-top: 10px;
 }
 /* End Backgrounds and area borders */
 /* main element borders */
@@ -898,3 +898,13 @@ ul.ui-sortable > li:hover {
     border-color: #006680;
 }
 /* End jQuery sorting */
+
+/* Breadcrumbs */
+#breadcrumbs {
+    display: block;
+    margin-bottom: 10px;
+}
+#breadcrumbs li {
+    display: inline-block;
+}
+/* End Breadcrumbs */
