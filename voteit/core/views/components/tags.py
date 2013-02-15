@@ -14,28 +14,25 @@ def tag_stats(context, request, *args, **kwargs):
     if not api.meeting:
         return ""
     
-    workflow_state = ('published', 'unhandled', 'voting', 'approved', 'denied',)
-    #if api.meeting.get_field_value('show_retracted', True) or request.GET.get('show_retracted') == '1':
-    #    workflow_state = ('published', 'retracted', 'unhandled', 'voting', 'approved', 'denied',)
-    
-    query = Eq('path', resource_path(context)) & \
-            Any('allowed_to_view', effective_principals(request)) & \
-            (Eq('content_type', 'Proposal') & Any('workflow_state', workflow_state) | \
-             Eq('content_type', 'DiscussionPost'))
+    query = Eq('path', resource_path(context)) &\
+            Any('allowed_to_view', effective_principals(request)) &\
+            Any('content_type', ('Proposal', 'DiscussionPost',))
 
     num, docids = api.root.catalog.query(query)
-    stats = {}
+    unique_tags = set()
+    #FIXME: There must be a smarter way to load uniques!?
     for docid in docids:
         entry = api.root.catalog.document_map.get_metadata(docid)
-        for tag in entry['tags']:
-            if not tag in stats:
-                stats[tag] = 1
-            else:
-                stats[tag] += 1
+        unique_tags.update(entry['tags'])
+    
+    results = []
+    for tag in sorted(unique_tags):
+        count = api.get_tag_count(tag)
+        if count > 1:
+            results.append((tag, count))
 
-    stats = sorted([(k, v) for (k, v) in stats.items() if v > 1], key=lambda x: x[1], reverse=True)[:5]
-    if not stats:
-        return u"" #No reason to continue rendering
+    if not results:
+        return u""
 
     def _make_url(tag):
         query = request.GET.copy()
@@ -45,7 +42,7 @@ def tag_stats(context, request, *args, **kwargs):
     response = dict(
         api = api,
         context = context,
-        stats = stats,
+        stats = results,
         make_url = _make_url,
     )
-    return render('../templates/snippets/tag_stats.pt', response, request = request)
+    return render('templates/tag_stats.pt', response, request = request)
