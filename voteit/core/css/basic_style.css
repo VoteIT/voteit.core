@@ -538,6 +538,9 @@ table.listing {
 }
 .tag_stats li {
     display:inline;
+    color: #666;
+    font-size: 14px;
+    margin-right: 5px;
 }
 .changed {
     font-weight: bold;
