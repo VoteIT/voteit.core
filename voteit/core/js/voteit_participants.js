@@ -17,10 +17,10 @@ function get_part_tpl(name) {
 
 function load_participants_data() {
     var userdata_rows = new Array();
+    $('table.listing tbody').empty();
+    spinner().appendTo($('table.listing'));
 
     $.getJSON('./_participants_data.json', function(data) {
-
-        $('table.listing tbody').empty();
         $('#permissions thead span.count').each(function() {
 			$(this).text(0);
         });
@@ -66,5 +66,6 @@ function load_participants_data() {
             $(val).appendTo('table.listing tbody');
         });
     });
+    $('.spinner').remove()
 
 };
