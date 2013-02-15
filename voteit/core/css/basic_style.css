@@ -315,6 +315,7 @@ button[name="cancel"]:hover {
 #login_pw a {
     line-height: 24px;
     color: #006680;
+    display: block;
 }
 /* End Sidebar styles */
 
