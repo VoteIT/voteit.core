@@ -12,7 +12,7 @@ from voteit.core.helpers import strip_and_truncate
 @view_action('sidebar', 'login_pw')
 def login_box(context, request, va, **kwargs):
     api = kwargs['api']
-    if api.userid or request.path_url.endswith('login'):
+    if api.userid or request.path_url.endswith('/login'):
         return u""
     #FIXME: Ticket system makes it a bit of a hassle to make login detached from registration.
     #We'll do that later. For now, let's just check if user is on login or registration page
