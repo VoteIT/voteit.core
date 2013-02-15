@@ -13,7 +13,7 @@ def tag_stats(context, request, *args, **kwargs):
     api = kwargs['api']
     if not api.meeting:
         return ""
-    
+
     query = Eq('path', resource_path(context)) &\
             Any('allowed_to_view', effective_principals(request)) &\
             Any('content_type', ('Proposal', 'DiscussionPost',))
@@ -24,7 +24,7 @@ def tag_stats(context, request, *args, **kwargs):
     for docid in docids:
         entry = api.root.catalog.document_map.get_metadata(docid)
         unique_tags.update(entry['tags'])
-    
+
     results = []
     for tag in sorted(unique_tags):
         count = api.get_tag_count(tag)

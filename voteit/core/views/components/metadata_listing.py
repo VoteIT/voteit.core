@@ -12,6 +12,7 @@ from voteit.core.models.proposal import Proposal
 from voteit.core.security import RETRACT 
 from voteit.core.security import VIEW
 from voteit.core.security import ADD_PROPOSAL
+from voteit.core.security import DELETE
 
 
 @view_action('main', 'metadata_listing', permission=VIEW)
@@ -23,7 +24,6 @@ def metadata_listing(context, request, va, **kw):
     util = request.registry.getUtility(IViewGroup, name='metadata_listing')
     response = {'view_actions': util.get_context_vas(context, request), 'va_kwargs': kw,}
     return render('templates/metadata/metadata_listing.pt', response, request = request)
-
 
 @view_action('metadata_listing', 'state', permission=VIEW)
 def meta_state(context, request, va, **kw):
@@ -41,7 +41,6 @@ def meta_state(context, request, va, **kw):
     for info in state_info:
         if info['name'] == state_id:
             translated_state_title = api.translate(api.tstring(info['title']))
-
     return '<span class="%s icon iconpadding">%s</span>' % (state_id, translated_state_title)
 
 @view_action('metadata_listing', 'time', permission=VIEW)
@@ -69,7 +68,6 @@ def meta_retract(context, request, va, **kw):
     return '<a class="retract confirm-retract" ' \
            'href="%s%s/state?state=retracted" ' \
            '>%s</a>' % (request.application_url, brain['path'], api.translate(_(u'Retract')))
-
 
 @view_action('metadata_listing', 'user_tags', permission=VIEW)
 def meta_user_tags(context, request, va, **kw):
@@ -106,11 +104,22 @@ def meta_tag(context, request, va, **kw):
     brain = kw['brain']
     
     if not brain['content_type'] == 'Proposal':
-        return ''
+        return u''
 
     return '<span><a class="tag" ' \
            'href="?tag=%s" ' \
            '>#%s</a> (%s) </span>' % (brain['aid'], brain['aid'], api.get_tag_count(brain['aid']))
+
+@view_action('metadata_listing', 'delete')
+def meta_delete(context, request, va, **kw):
+    api = kw['api']
+    brain = kw['brain']
+    if not brain['content_type'] == 'DiscussionPost' and api.userid not in brain['creators']:
+        return u''
+    obj = find_resource(api.root, brain['path'])
+    if not api.context_has_permission(DELETE, obj):
+        return u''
+    return u'<span><a class="delete" href="%s">%s</a></span>' % (request.resource_url(obj, 'delete'), api.translate(_(u"Delete")))
 
 _dummy = {'Proposal': Proposal(),
           'DiscussionPost': DiscussionPost()}
