@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2013-02-15 09:30+0100\n"
+"POT-Creation-Date: 2013-02-15 11:07-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -790,7 +790,7 @@ msgid "Public presentation"
 msgstr ""
 
 #. Default: The public description is visible on the request access page and to
-#. not logged in visitors. It can be left empty for hidden meetings.
+#. not yet logged in visitors.
 #: voteit/core/schemas/meeting.py:87
 msgid "meeting_public_description_description"
 msgstr ""
@@ -1727,6 +1727,10 @@ msgstr ""
 msgid "Remove ${display_name}"
 msgstr ""
 
+#: voteit/core/views/components/templates/tag_stats.pt:3
+msgid "Popular subjects"
+msgstr ""
+
 #: voteit/core/views/components/templates/cogwheel/moderator_actions.pt:3
 msgid "Moderator menu"
 msgstr ""
@@ -2186,10 +2190,6 @@ msgstr ""
 
 #: voteit/core/views/templates/snippets/poll_state_info.pt:28
 msgid "The poll closed ${end_time}"
-msgstr ""
-
-#: voteit/core/views/templates/snippets/tag_stats.pt:3
-msgid "Popular subjects"
 msgstr ""
 
 #: voteit/core/views/templates/snippets/user_basic_info.pt:13

@@ -85,7 +85,7 @@ def public_description_node():
         colander.String(),
         title = _(u"Public presentation"),
         description = _(u"meeting_public_description_description",
-                        default=u"The public description is visible on the request access page and to not logged in visitors. It can be left empty for hidden meetings."),
+                        default=u"The public description is visible on the request access page and to not yet logged in visitors."),
         missing = u"",
         widget=deform.widget.RichTextWidget(),
         validator=richtext_validator,)
