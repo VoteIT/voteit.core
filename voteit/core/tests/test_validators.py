@@ -346,7 +346,6 @@ class MultipleEmailValidatorTests(TestCase):
         self.assertRaises(colander.Invalid, self._fut, None, "one@two.com\nthree@four.net\nfive@six.com\none@two.com hello! \n")
 
 
-
 class CurrentPasswordValidatorTests(TestCase):
 
     def setUp(self):
@@ -564,29 +563,29 @@ class LoginPasswordValidatorTests(TestCase):
         from voteit.core.validators import LoginPasswordValidator
         return LoginPasswordValidator
 
+    def _get_login_schema(self):
+        from voteit.core.schemas.user import LoginSchema
+        return LoginSchema()
+
     def test_nonexistent_users(self):
         root = bootstrap_and_fixture(self.config)
         obj = self._cut(root)
-        self.assertRaises(colander.Invalid, obj, None, {'userid': u'moderator', 'password': u'moderator'})
+        self.assertRaises(colander.Invalid, obj, self._get_login_schema(), {'userid': u'moderator', 'password': u'moderator'})
 
     def test_existing_user_wrong_password(self):
         root = _fixture(self.config)
         obj = self._cut(root)
-        self.assertRaises(colander.Invalid, obj, None, {'userid': u'moderator', 'password': u'wrong'})
+        self.assertRaises(colander.Invalid, obj, self._get_login_schema(), {'userid': u'moderator', 'password': u'wrong'})
 
     def test_existing_user_correct_password(self):
-        from voteit.core.schemas.user import LoginSchema
         root = _fixture(self.config)
         obj = self._cut(root)
-        node = LoginSchema()
-        self.assertEqual(obj(node, {'userid': u'moderator', 'password': u'moderator'}), None)
+        self.assertEqual(obj(self._get_login_schema(), {'userid': u'moderator', 'password': u'moderator'}), None)
 
     def test_existing_email_correct_password(self):
-        from voteit.core.schemas.user import LoginSchema
         root = _fixture(self.config)
         obj = self._cut(root)
-        node = LoginSchema()
-        self.assertEqual(obj(node, {'userid': u'moderator@voteit.se', 'password': u'moderator'}), None)
+        self.assertEqual(obj(self._get_login_schema(), {'userid': u'moderator@voteit.se', 'password': u'moderator'}), None)
 
 
 class DeferredValidatorsTests(TestCase):
