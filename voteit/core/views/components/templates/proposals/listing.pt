@@ -12,7 +12,7 @@
 
     <!-- polls first -->
 	<tal:iterate tal:repeat="poll polls">
-	    <tal:poll replace="structure api.render_view_group(poll, request, 'poll')">
+	    <tal:poll replace="structure api.render_view_group(poll, request, 'poll')">Poll group here</tal:poll>
 	</tal:iterate>
 
 	<tal:iterate condition="proposals" repeat="proposal proposals">

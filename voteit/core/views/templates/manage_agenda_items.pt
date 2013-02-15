@@ -6,20 +6,20 @@
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
       i18n:domain="voteit.core">
 <body>
-	<div metal:fill-slot="form">
+    <div metal:fill-slot="form">
 		<tal:menu 
 	    	replace="structure api.render_single_view_component(context, request, 'tabs', 'manage_agenda')">
-	    	Edit menu
+            Edit menu
 	    </tal:menu>
         <h2 id="page_heading" i18n:translate="">Manage agenda</h2>
 
-	    <form method="post" class="deform agenda-item-handle">
+	    <form method="post" class="deform">
     		<table class="listing">
-    			<tbody>
 		    	<tal:states repeat="state states">
+                <thead>
 		    		<tr>
 		    			<td colspan="6"><h3 class="iconpadding icon ${state}" tal:content="translated_state_title(state)">State</h3></td>
-		    		<tr>
+		    		</tr>
 					<tr class="thead">
 						<th class="heading state">&nbsp;</th>
 						<th class="heading" i18n:translate="">Agenda item</th>
@@ -28,6 +28,8 @@
 						<th class="heading enabled" i18n:translate="">Allow discussions</th>
 						<th class="heading delete" i18n:translate="">Delete</th>
 					</tr>
+                </thead>
+                <tbody>
 	    			<tal:ais repeat="ai ais[state]">
 					<tr tal:attributes="class repeat.ai.odd and 'odd'" tal:define="obj find_resource(api.root, ai['path'])">
 						<td>
@@ -53,11 +55,12 @@
 				                 alt="Delete"
 				                 title="Delete"
 				                 i18n:attributes="alt; title;" />
-							</a></td>
+							</a>
+						</td>
 					</tr>
 	    			</tal:ais>
-		    	</tal:states>
-		    	</tbody>
+                </tbody>
+                </tal:states>
     		</table>
 	    	<p>&nbsp;</p>
 	    	<p>

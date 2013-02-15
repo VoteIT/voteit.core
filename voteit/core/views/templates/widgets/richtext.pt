@@ -1,4 +1,4 @@
-<tal:block tal:omit-tag="" xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="deform">
+<tal:block xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="deform">
   <textarea id="${field.oid}" name="${field.name}" class='tinymce' tal:content="structure cstruct" />
   <span id="${field.oid}-preload" class="tinymce-preload" tal:content="structure cstruct" />
   <script language="javascript" type="text/javascript">

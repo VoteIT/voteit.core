@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2013-02-14 15:14-0500\n"
+"POT-Creation-Date: 2013-02-15 09:30+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -416,6 +416,7 @@ msgid "Add"
 msgstr ""
 
 #: voteit/core/models/schemas.py:12
+#: voteit/core/views/templates/manage_agenda_items.pt:76
 #: voteit/core/views/templates/order_agenda_items.pt:36
 #: voteit/core/views/templates/order_agenda_template.pt:32
 msgid "Cancel"
@@ -430,7 +431,7 @@ msgstr ""
 #: voteit/core/views/templates/agenda_template.pt:19
 #: voteit/core/views/templates/agenda_templates.pt:57
 #: voteit/core/views/templates/manage_agenda_items.pt:29
-#: voteit/core/views/templates/manage_agenda_items.pt:51
+#: voteit/core/views/templates/manage_agenda_items.pt:53
 msgid "Delete"
 msgstr ""
 
@@ -1606,7 +1607,7 @@ msgstr ""
 #: voteit/core/views/templates/agenda_template.pt:11
 #: voteit/core/views/templates/agenda_templates.pt:49
 #: voteit/core/views/templates/manage_agenda_items.pt:26
-#: voteit/core/views/templates/manage_agenda_items.pt:37
+#: voteit/core/views/templates/manage_agenda_items.pt:39
 msgid "Edit"
 msgstr ""
 
@@ -1904,6 +1905,18 @@ msgstr ""
 
 #: voteit/core/views/templates/manage_agenda_items.pt:28
 msgid "Allow discussions"
+msgstr ""
+
+#: voteit/core/views/templates/manage_agenda_items.pt:67
+msgid "Change state on marked items to"
+msgstr ""
+
+#: voteit/core/views/templates/manage_agenda_items.pt:69
+msgid "&lt;select state&gt;"
+msgstr ""
+
+#: voteit/core/views/templates/manage_agenda_items.pt:75
+msgid "Change state"
 msgstr ""
 
 #: voteit/core/views/templates/minutes.pt:11

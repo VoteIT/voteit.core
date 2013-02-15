@@ -1,3 +1,6 @@
+<tal:main
+    xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+    i18n:domain="voteit.core">
 <input type="hidden" name="__start__" value="${field.name}:mapping"/>
     <script type="text/javascript"
        src="http://www.google.com/recaptcha/api/challenge?k=${public_key}">
@@ -14,3 +17,4 @@
 	     id="${field.oid}-recaptcha_response_field"/>
     </noscript>
 <input type="hidden" name="__end__" value="${field.name}:mapping"/>
+</tal:main>
