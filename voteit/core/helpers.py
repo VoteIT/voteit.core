@@ -53,19 +53,16 @@ def at_userid_link(text, obj, request=None):
     return re.sub(AT_PATTERN, handle_match, text)
 
 
-def tags2links(text, context, request):
+def tags2links(text, api):
     """ Transform #tag to a link.
     """
-    ai = find_interface(context, IAgendaItem)
-    assert ai
-
+    #FIXME: Breaks outside of ais? Ehh?
+    ai = find_interface(api.context, IAgendaItem)
     def handle_match(matchobj):
         pre, tag, post = matchobj.group(1, 2, 3)
-        link = {'href': request.resource_url(ai, '', query={'tag': tag}).replace(request.application_url, ''),
+        link = {'href': api.request.resource_url(ai, '', query={'tag': tag}).replace(api.request.application_url, ''),
                 'class': "tag",}
-        
-        return pre + HTML.a('#%s' % tag, **link) + post
-
+        return """%(pre)s%(link)s%(post)s""" % {'pre': pre, 'link': HTML.a('#%s' % tag, **link), 'post': post}
     return re.sub(TAG_PATTERN, handle_match, text)
 
 def strip_and_truncate(text, limit=200):

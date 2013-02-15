@@ -96,14 +96,18 @@ class Tags2linksTests(unittest.TestCase):
     def _fixture(self):
         from voteit.core.models.agenda_item import AgendaItem
         from voteit.core.models.meeting import Meeting
+        from voteit.core.views.api import APIView
         root = bootstrap_and_fixture(self.config)
         root['m'] = meeting = Meeting()
         meeting['ai'] = ai = AgendaItem()
-        return ai
+        request = testing.DummyRequest()
+        return APIView(ai, request)
 
     def test_function(self):
-        value = self._fut(u'#åäöÅÄÖ', self._fixture(), self.request)
+        api = self._fixture()
+        value = self._fut(u'#åäöÅÄÖ', api)
         self.assertIn(u'/m/ai/?tag=%C3%A5%C3%A4%C3%B6%C3%85%C3%84%C3%96', value)
+
 
 class StripAndTruncateTests(unittest.TestCase):
     

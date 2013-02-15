@@ -110,7 +110,7 @@ def meta_tag(context, request, va, **kw):
 
     return '<span><a class="tag" ' \
            'href="?tag=%s" ' \
-           '>#%s</a></span>' % (brain['aid'], brain['aid'])
+           '>#%s</a> (%s) </span>' % (brain['aid'], brain['aid'], api.get_tag_count(brain['aid']))
 
 _dummy = {'Proposal': Proposal(),
           'DiscussionPost': DiscussionPost()}

@@ -6,6 +6,7 @@
 	    <li>
     		<a tal:condition="context.content_type == 'AgendaItem'" href="${make_url(tag)}">#${tag}</a>
     		<tal:notag condition="not context.content_type == 'AgendaItem'">#${tag}</tal:notag>
+    		(${api.get_tag_count(tag)})
 	    </li>
 	    </tal:for>
     </ul>

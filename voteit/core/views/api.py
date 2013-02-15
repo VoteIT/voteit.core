@@ -17,6 +17,8 @@ from pyramid.i18n import get_localizer
 from betahaus.pyracont.interfaces import IContentFactory
 from betahaus.viewcomponent import render_view_group
 from betahaus.viewcomponent.interfaces import IViewGroup
+from repoze.catalog.query import Eq
+from repoze.catalog.query import Any
 from webhelpers.html.tools import auto_link
 from webhelpers.html.converters import nl2br
 from webhelpers.html.render import sanitize
@@ -47,6 +49,7 @@ class APIView(object):
         self.root = find_root(context)
         self.userid = authenticated_userid(request)
         self.template_dir = TEMPLATE_DIR
+        self.tag_count = {}
 
     @reify
     def authn_policy(self):
@@ -93,6 +96,13 @@ class APIView(object):
         """ Get the current localizer. See the Pyramid docs for more on localizers.
         """
         return get_localizer(self.request)
+
+    @reify
+    def cached_effective_principals(self):
+        """ Effective principals for the view that APIView was wrapped with. self.context in other words, should always
+            be same as request.context.
+        """
+        return self.context_effective_principals(self.context)
 
     @property
     def translate(self):
@@ -312,7 +322,18 @@ class APIView(object):
         text = sanitize(text)
         text = auto_link(text, link='urls')
         text = nl2br(text)
-        if self.meeting.get_field_value('tags_enabled', True):
-            text = tags2links(unicode(text), self.context, self.request)
+        if self.meeting.get_field_value('tags_enabled', True): #FIXME: Lookup everytime + breaks outside of meetings...
+            text = tags2links(unicode(text), self)
         text = at_userid_link(text, self.context, self.request)
         return text
+
+    def get_tag_count(self, tag):
+        """ Returns total count for a tag withing the context this view was registered on. """
+        try:
+            return self.tag_count[tag]
+        except KeyError:
+            query = Eq('path', resource_path(self.context)) &\
+                    Any('allowed_to_view', self.cached_effective_principals) &\
+                    Any('tags', tag)
+            self.tag_count[tag] = self.root.catalog.query(query)[0]
+            return self.tag_count[tag]
