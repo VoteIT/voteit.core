@@ -636,9 +636,7 @@ table.listing {
     float: right;
 }
 .tag-title {
-    border-bottom: 1px solid #ccc;
     margin-bottom: 10px;
-    padding: 0 0 10px 0;
 }
 
 #proposals .tag-title > span,
@@ -878,7 +876,6 @@ table.listing {
 .description h6 {
     padding: 0.75em 0 0.25em 0;
 }
-
 /* end description */
 
 /* jQuery sorting */
