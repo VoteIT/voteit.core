@@ -11,7 +11,7 @@ def page_title(context, request, va, **kw):
             title = u"%s | %s" % (context.title, api.meeting.title)
     else:
         if context == api.root:
-            title = api.root.title
+            title = api.root.get_field_value('site_title', u"VoteIT")
         else:
-            title = u"%s | %s" % (context.title, api.root.title)
+            title = u"%s | %s" % (context.title, api.root.get_field_value('site_title', u"VoteIT"))
     return u"""<title>%s</title>""" % title

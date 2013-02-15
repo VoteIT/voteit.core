@@ -18,7 +18,9 @@
             <div class="section">
                 <div id="header-meeting-title">
                     <h1>
-                        <span tal:condition="not api.meeting">VoteIT</span>
+                        <a tal:condition="not api.meeting"
+                           tal:attributes="href request.resource_url(api.root)"
+                           tal:content="api.root.get_field_value('site_title', 'VoteIT')">Root title</a>
                         <a tal:condition="api.meeting"
                            tal:attributes="href request.resource_url(api.meeting)" tal:content="api.meeting.title">Meeting title</a>
                     </h1>

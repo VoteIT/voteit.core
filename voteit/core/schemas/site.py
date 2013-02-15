@@ -17,6 +17,10 @@ class SiteRootSchema(colander.MappingSchema):
                                       missing = u"",
                                       widget=deform.widget.RichTextWidget(),
                                       validator=richtext_validator,)
+    site_title = colander.SchemaNode(colander.String(),
+                                title = _(u"Site title"),
+                                description = _(u"Displayed in the header when you're not in a meeting. Keep it short!"),
+                                validator=html_string_validator,)
     footer = colander.SchemaNode(colander.String(),
                                       title = _(u"Footer"),
                                       missing = u"",
