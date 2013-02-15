@@ -139,7 +139,7 @@ function dropdown_menus(event, hover_object, css_classes) {
 */
 $(".user_tag_link").live('click', function(event) {
     try { event.preventDefault(); } catch(e) {} //For IE bugs?
-    spinner().appendTo(this);
+    spinner().appendTo($(this));
     var user_tag = $(this).parents('.user_tag');
     user_tag.load($(this).attr('href'), function(response, status, xhr) {
         if (status == 'error') {
