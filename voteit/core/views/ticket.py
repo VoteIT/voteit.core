@@ -68,8 +68,8 @@ class TicketView(BaseView):
         #No action, render page
         claim_action_query = dict(
             claim = '1',
-            email = self.request.GET.get('email'),
-            token = self.request.GET.get('token'),
+            email = self.request.GET.get('email', ''),
+            token = self.request.GET.get('token', ''),
         )
         #FIXME: Use logout button + redirect link to go back to claim ticket
         self.response['claim_action_url'] = self.request.resource_url(self.context, 'ticket_claim', query = claim_action_query)
