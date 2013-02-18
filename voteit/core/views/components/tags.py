@@ -26,13 +26,16 @@ def tag_stats(context, request, *args, **kwargs):
         unique_tags.update(entry['tags'])
 
     results = []
-    for tag in sorted(unique_tags):
+    for tag in unique_tags:
         count = api.get_tag_count(tag)
         if count > 1:
             results.append((tag, count))
 
     if not results:
         return u""
+
+    #Sort the tags based on occurence and show the top 5
+    results = sorted(results, key=lambda x: x[1], reverse = True)[:5]
 
     def _make_url(tag):
         query = request.GET.copy()
