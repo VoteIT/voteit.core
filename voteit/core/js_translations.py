@@ -21,7 +21,6 @@ def includeme(config):
         user_info = _(u"About..."),
         more_tag_list = _(u"More..."),
         loading = _(u"Loading..."),
-        help_contact = _(u"Help &amp; Contact"),
         poll = _(u"Poll"),
         answer_popup_title_answer = _("Reply"),
         answer_popup_title_comment = _("Comment"),
