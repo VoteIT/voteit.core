@@ -22,4 +22,4 @@ def action_lost_password(context, request, va, **kw):
     if api.userid:
         return u""
     return u"""<li><a href="%s">%s</a></li>""" % (request.resource_url(api.root, 'request_password'),
-                                                                       api.translate(_(u"Recover password")),)
+                                                                       api.translate(_(u"Lost your password?")),)

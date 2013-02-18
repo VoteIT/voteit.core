@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2013-02-15 11:07-0500\n"
+"POT-Creation-Date: 2013-02-18 17:48+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -96,12 +96,12 @@ msgid "Poll"
 msgstr ""
 
 #: voteit/core/js_translations.py:26
-#: voteit/core/views/components/metadata_listing.py:97
+#: voteit/core/views/components/metadata_listing.py:95
 msgid "Reply"
 msgstr ""
 
 #: voteit/core/js_translations.py:27
-#: voteit/core/views/components/metadata_listing.py:95
+#: voteit/core/views/components/metadata_listing.py:93
 msgid "Comment"
 msgstr ""
 
@@ -427,6 +427,7 @@ msgid "Change"
 msgstr ""
 
 #: voteit/core/models/schemas.py:14
+#: voteit/core/views/components/metadata_listing.py:122
 #: voteit/core/views/components/moderator_actions.py:61
 #: voteit/core/views/templates/agenda_template.pt:19
 #: voteit/core/views/templates/agenda_templates.pt:57
@@ -1019,40 +1020,48 @@ msgid "Use this form to edit the site root"
 msgstr ""
 
 #: voteit/core/schemas/site.py:21
+msgid "Site title"
+msgstr ""
+
+#: voteit/core/schemas/site.py:22
+msgid "Displayed in the header when you're not in a meeting. Keep it short!"
+msgstr ""
+
+#: voteit/core/schemas/site.py:25
 msgid "Footer"
 msgstr ""
 
-#: voteit/core/schemas/site.py:26
+#: voteit/core/schemas/site.py:30
 msgid "Allow authenticated users to add meetings"
 msgstr ""
 
-#: voteit/core/schemas/site.py:30
+#: voteit/core/schemas/site.py:34
 msgid "ReCaptcha settings"
 msgstr ""
 
 #. Default: CAPTCHAs can protect the site from spam attacks by robots. You'll
 #. need to register with ReCaptcha and  add the API keys here to activate this
 #. service.
-#: voteit/core/schemas/site.py:31
+#: voteit/core/schemas/site.py:35
 msgid "captcha_site_root_schema_main_description"
 msgstr ""
 
 #. Default: Require when registering on the site.
-#: voteit/core/schemas/site.py:40
+#: voteit/core/schemas/site.py:44
 msgid "captcha_registration_title"
 msgstr ""
 
 #. Default: Require when creating a new meeting. (If users are allowed to do
 #. that)
-#: voteit/core/schemas/site.py:44
+#: voteit/core/schemas/site.py:48
 msgid "captcha_meeting_title"
 msgstr ""
 
-#: voteit/core/schemas/site.py:47
+#: voteit/core/schemas/site.py:51
 msgid "Public ReCaptcha key"
 msgstr ""
 
-#: voteit/core/schemas/site.py:51
+#: voteit/core/schemas/site.py:55
 msgid "Private ReCaptcha key"
 msgstr ""
 
@@ -1479,12 +1488,16 @@ msgstr ""
 msgid "Logout"
 msgstr ""
 
-#: voteit/core/views/components/help_actions.py:10
+#: voteit/core/views/components/help_actions.py:9
 msgid "VoteIT Manual"
 msgstr ""
 
-#: voteit/core/views/components/help_actions.py:18
+#: voteit/core/views/components/help_actions.py:16
 msgid "Contact"
+msgstr ""
+
+#: voteit/core/views/components/help_actions.py:25
+msgid "Lost your password?"
 msgstr ""
 
 #. Default: The agenda item is closed, you can't add a proposal here
@@ -1587,7 +1600,7 @@ msgstr ""
 msgid "Participant list"
 msgstr ""
 
-#: voteit/core/views/components/metadata_listing.py:71
+#: voteit/core/views/components/metadata_listing.py:70
 msgid "Retract"
 msgstr ""
 
@@ -1829,7 +1842,7 @@ msgstr ""
 #: voteit/core/views/templates/minutes.pt:44
 #: voteit/core/views/templates/participants.pt:21
 #: voteit/core/views/templates/participants.pt:123
-#: voteit/core/views/templates/participants_emails.pt:27
+#: voteit/core/views/templates/participants_emails.pt:25
 msgid "Back"
 msgstr ""
 
@@ -1994,7 +2007,7 @@ msgstr ""
 msgid "none"
 msgstr ""
 
-#: voteit/core/views/templates/participants_emails.pt:11
+#: voteit/core/views/templates/participants_emails.pt:9
 msgid "Email addresses of participants"
 msgstr ""
 
@@ -2047,23 +2060,23 @@ msgstr ""
 #. Default: You're using a very old version of Internet Explorer. You need to
 #. upgrade it or switch to another browser to use VoteIT. We recommend using
 #. Firefox, Chrome, Safari or any other standards compliant browser.
-#: voteit/core/views/templates/unsupported_browser.pt:9
+#: voteit/core/views/templates/unsupported_browser.pt:8
 msgid "unsupported_browser_notice"
 msgstr ""
 
-#: voteit/core/views/templates/unsupported_browser.pt:14
+#: voteit/core/views/templates/unsupported_browser.pt:13
 msgid "To upgrade go to:"
 msgstr ""
 
-#: voteit/core/views/templates/unsupported_browser.pt:15
+#: voteit/core/views/templates/unsupported_browser.pt:14
 msgid "To download Firefox go to:"
 msgstr ""
 
-#: voteit/core/views/templates/unsupported_browser.pt:16
+#: voteit/core/views/templates/unsupported_browser.pt:15
 msgid "We apologize for the inconvenience."
 msgstr ""
 
-#: voteit/core/views/templates/unsupported_browser.pt:17
+#: voteit/core/views/templates/unsupported_browser.pt:16
 msgid "The VoteIT team"
 msgstr ""
 
