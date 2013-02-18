@@ -33,13 +33,13 @@ class HelpActionsComponentTests(unittest.TestCase):
                 self.kwargs = kwargs
         return ViewAction(name, title, kwargs)
 
-    def test_action_wiki(self):
+    def test_action_manual(self):
         context = self._fixture()
         request = testing.DummyRequest()
         va = self._va()
         api = self._api(context, request)
-        from voteit.core.views.components.help_actions import action_wiki
-        response = action_wiki(context, request, va, api=api)
+        from voteit.core.views.components.help_actions import action_manual
+        response = action_manual(context, request, va, api=api)
         self.assertIn('VoteIT Manual', response)
         
     def test_action_contact(self):

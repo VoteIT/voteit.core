@@ -44,7 +44,7 @@ def render_flash_messages(context, request, *args, **kwargs):
         if api.meeting_state == u'closed':
             msg = _(u"This meeting has closed.")
             api.flash_messages.add(msg, type = 'lock')
-    except:
+    except Exception:
         pass
     response = dict(messages = api.flash_messages.get_messages(),)
     return render('../templates/snippets/flash_messages.pt', response, request = request)

@@ -1,12 +1,7 @@
-from betahaus.pyracont.factories import createSchema
 from betahaus.pyracont.factories import createContent
-from deform import Form
-from deform.exception import ValidationFailure
 from pyramid.url import resource_url
-from pyramid.traversal import resource_path
 from pyramid.view import view_config
 from pyramid.httpexceptions import HTTPFound
-from pyramid.traversal import find_root
 
 from voteit.core import VoteITMF as _
 from voteit.core.views.base_edit import BaseEdit
@@ -22,7 +17,6 @@ class AgendaTempalteView(BaseEdit):
     @view_config(context=IAgendaTemplates, renderer="templates/agenda_templates.pt", permission=security.VIEW)
     def agenda_templates(self):
         self.response['agenda_templates'] = self.context
-        
         return self.response
     
     @view_config(context=IAgendaTemplate, renderer="templates/agenda_template.pt", permission=security.VIEW)
@@ -82,8 +76,7 @@ class AgendaTempalteView(BaseEdit):
                     order += 1
                     agenda_items.append(ai)
             self.context.set_field_value('agenda_items', agenda_items)
-            self.api.flash_messages.add(_('Order updated'))
-            
+            self.api.flash_messages.add(_(u'Order updated'))
             url = resource_url(self.context, self.request)
             return HTTPFound(location = url)
 

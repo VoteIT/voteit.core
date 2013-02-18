@@ -198,34 +198,33 @@ class DefaultEditTests(unittest.TestCase):
         self.assertIn('form', response)
         
     def test_delete_form_cancel(self):
-       self.config.include('voteit.core.models.flash_messages')
-       meeting = self._fixture()
-       from voteit.core.models.agenda_item import AgendaItem
-       meeting['ai'] = context = AgendaItem()
-       request = testing.DummyRequest(post={'cancel': 'cancel'})
-       obj = self._cut(context, request)
-       response = obj.delete_form()
-       self.assertEqual(response.location, 'http://example.com/m/ai/')
+        self.config.include('voteit.core.models.flash_messages')
+        meeting = self._fixture()
+        from voteit.core.models.agenda_item import AgendaItem
+        meeting['ai'] = context = AgendaItem()
+        request = testing.DummyRequest(post={'cancel': 'cancel'})
+        obj = self._cut(context, request)
+        response = obj.delete_form()
+        self.assertEqual(response.location, 'http://example.com/m/ai/')
  
     def test_delete_form_delete(self):
-       self.config.include('voteit.core.models.flash_messages')
-       meeting = self._fixture()
-       from voteit.core.models.agenda_item import AgendaItem
-       meeting['ai'] = context = AgendaItem()
-       request = testing.DummyRequest(post={'delete': 'delete'})
-       obj = self._cut(context, request)
-       response = obj.delete_form()
-       self.assertNotIn('ai', meeting)
-       self.assertEqual(response.location, 'http://example.com/m/')
+        self.config.include('voteit.core.models.flash_messages')
+        meeting = self._fixture()
+        from voteit.core.models.agenda_item import AgendaItem
+        meeting['ai'] = context = AgendaItem()
+        request = testing.DummyRequest(post={'delete': 'delete'})
+        obj = self._cut(context, request)
+        response = obj.delete_form()
+        self.assertNotIn('ai', meeting)
+        self.assertEqual(response.location, 'http://example.com/m/')
 
     def test_delete_form_delete_forbidden(self):
-       self.config.include('voteit.core.models.flash_messages')
-       
-       meeting = self._fixture()
-       context = meeting.__parent__ 
-       request = testing.DummyRequest(post={'delete': 'delete'})
-       obj = self._cut(context, request)
-       self.assertRaises(Exception, obj.delete_form)
+        self.config.include('voteit.core.models.flash_messages')
+        meeting = self._fixture()
+        context = meeting.__parent__ 
+        request = testing.DummyRequest(post={'delete': 'delete'})
+        obj = self._cut(context, request)
+        self.assertRaises(Exception, obj.delete_form)
        
     def test_state_change(self):
         context = self._fixture()

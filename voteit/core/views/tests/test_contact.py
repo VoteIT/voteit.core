@@ -1,8 +1,6 @@
 import unittest
 
-from deform.exception import ValidationFailure
 from pyramid import testing
-from pyramid.httpexceptions import HTTPForbidden
 from pyramid_mailer import get_mailer
 
 

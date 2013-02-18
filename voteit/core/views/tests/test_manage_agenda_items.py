@@ -1,9 +1,9 @@
 import unittest
 
 from pyramid import testing
+from webob.multidict import MultiDict
 
 from voteit.core.testing_helpers import bootstrap_and_fixture
-
 
 class MeetingViewTests(unittest.TestCase):
     
@@ -45,10 +45,10 @@ class MeetingViewTests(unittest.TestCase):
         context['a1'] = AgendaItem(title = 'Agenda Item 1')
         context['a2'] = AgendaItem(title = 'Agenda Item 2')
         context['a3'] = AgendaItem(title = 'Agenda Item 3')
-        request = testing.DummyRequest(post = {'save': 'save', 
-                                               'agenda_items': 'a1', 
-                                               'agenda_items': 'a2', 
-                                               'agenda_items': 'a3'},)
+        request = testing.DummyRequest(post = MultiDict((('save', 'save'),
+                                                         ('agenda_items', 'a1'),
+                                                         ('agenda_items', 'a2'),
+                                                         ('agenda_items', 'a3'))))
         obj = self._cut(context, request)
         response = obj.order_agenda_items()
         self.assertIn('title', response)

@@ -1,7 +1,6 @@
 from deform import Form
 from deform.exception import ValidationFailure
 from pyramid.view import view_config
-from pyramid.traversal import find_resource
 from pyramid.traversal import resource_path
 from pyramid.security import Everyone
 from pyramid.security import effective_principals

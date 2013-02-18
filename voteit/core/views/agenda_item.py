@@ -4,7 +4,6 @@ from pyramid.response import Response
 from pyramid.view import view_config
 from pyramid.url import resource_url
 from pyramid.security import has_permission
-from zope.component.interfaces import ComponentLookupError
 from pyramid.httpexceptions import HTTPForbidden
 from pyramid.httpexceptions import HTTPFound
 from betahaus.pyracont.factories import createContent
@@ -17,13 +16,9 @@ from voteit.core.views.base_view import BaseView
 from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IDiscussionPost
 from voteit.core.models.interfaces import IProposal
-from voteit.core.models.interfaces import IPoll
-from voteit.core.models.interfaces import IVote
 from voteit.core.models.schemas import add_csrf_token
 from voteit.core.security import VIEW
-from voteit.core.security import ADD_VOTE
 from voteit.core.security import MODERATE_MEETING
-from voteit.core.models.schemas import button_vote
 from voteit.core.models.schemas import button_add
 from voteit.core.helpers import generate_slug
 from voteit.core.helpers import ajax_options

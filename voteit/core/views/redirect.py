@@ -2,7 +2,6 @@ from pyramid.traversal import find_interface
 from pyramid.traversal import find_root
 from pyramid.traversal import resource_path
 from pyramid.view import view_config
-from pyramid.url import resource_url
 from pyramid.httpexceptions import HTTPFound
 from pyramid.exceptions import NotFound
 

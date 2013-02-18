@@ -1,12 +1,10 @@
 from pyramid.view import view_config
 from pyramid.traversal import find_root
-from pyramid.response import Response
 from pyramid.security import NO_PERMISSION_REQUIRED
 from pyramid.security import authenticated_userid
 
 from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IUnread
-from voteit.core.models.catalog import reindex_object
 
 
 @view_config(context = IAgendaItem, name = "_mark_read", permission = NO_PERMISSION_REQUIRED, renderer='json')

@@ -1,4 +1,3 @@
-import datetime
 import unittest
 
 from pyramid import testing
@@ -69,17 +68,6 @@ class AgendaItemViewTests(unittest.TestCase):
         obj = self._cut(context, request)
         response = obj.agenda_item_view()
         self.assertIn('ai_columns', response) #Silly, but better than nothing
-
-    def test_inline_add_form_proposal(self):
-        self.config.testing_securitypolicy(userid='dummy',
-                                           permissive=True)
-        self.config.scan('voteit.core.models.proposal')
-        self.config.scan('voteit.core.schemas.proposal')
-        context = self._fixture()
-        request = testing.DummyRequest(params={'content_type': 'Proposal'})
-        aiv = self._cut(context, request)
-        response = aiv.inline_add_form()
-        self.assertIn(u"content_type=Proposal", response.ubody)
 
     def test_inline_add_form_no_permission(self):
         register_security_policies(self.config)

@@ -1,7 +1,6 @@
 import unittest
 
 from pyramid import testing
-from pyramid.httpexceptions import HTTPForbidden
 from betahaus.viewcomponent import render_view_action
 
 from voteit.core.testing_helpers import bootstrap_and_fixture

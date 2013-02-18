@@ -1,11 +1,7 @@
 from pkg_resources import resource_filename
 
 from pyramid.location import lineage
-from pyramid.renderers import get_renderer
-from pyramid.renderers import render
 from pyramid.security import authenticated_userid
-from pyramid.security import Authenticated
-from pyramid.security import Everyone
 from pyramid.url import resource_url
 from pyramid.traversal import find_interface
 from pyramid.traversal import find_root
@@ -29,7 +25,6 @@ from voteit.core.models.interfaces import IDateTimeUtil
 from voteit.core.models.interfaces import IFanstaticResources
 from voteit.core.models.interfaces import IFlashMessages
 from voteit.core.models.interfaces import IMeeting
-from voteit.core.models.interfaces import IUnread
 from voteit.core.models.catalog import metadata_for_query
 from voteit.core.models.catalog import resolve_catalog_docid
 from voteit.core.fanstaticlib import DEFORM_RESOURCES

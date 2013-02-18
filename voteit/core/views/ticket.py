@@ -1,8 +1,6 @@
-from urllib import quote
 
 import deform
 from pyramid.security import NO_PERMISSION_REQUIRED
-from pyramid.security import Authenticated
 from pyramid.view import view_config
 from pyramid.httpexceptions import HTTPFound
 from pyramid.httpexceptions import HTTPForbidden

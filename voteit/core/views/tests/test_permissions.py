@@ -1,13 +1,9 @@
 import unittest
 
 from pyramid import testing
-from pyramid.httpexceptions import HTTPForbidden
-from pyramid_mailer import get_mailer
 from webob.multidict import MultiDict
 
 from voteit.core.testing_helpers import bootstrap_and_fixture
-from voteit.core.testing_helpers import register_security_policies
-from voteit.core.testing_helpers import register_catalog
 
 
 class PermissionsViewTests(unittest.TestCase):

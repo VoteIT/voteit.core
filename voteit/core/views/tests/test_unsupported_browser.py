@@ -1,7 +1,6 @@
 import unittest
 
 from pyramid import testing
-from pyramid.httpexceptions import HTTPForbidden
 
 
 class UnsupportedBrowserTests(unittest.TestCase):

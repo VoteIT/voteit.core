@@ -1,8 +1,7 @@
 import unittest
 
 from pyramid import testing
-from pyramid.httpexceptions import HTTPForbidden
-from pyramid_mailer import get_mailer
+from webob.multidict import MultiDict
 
 
 class AgendaTempalteViewTests(unittest.TestCase):
@@ -81,10 +80,10 @@ class AgendaTempalteViewTests(unittest.TestCase):
     def test_sort_save(self):
         self.config.include('voteit.core.models.flash_messages')
         root = self._fixture()
-        request = testing.DummyRequest(post = {'save': 'save', 
-                                               'agenda_items': '0', 
-                                               'agenda_items': '1', 
-                                               'agenda_items': '2'},
+        request = testing.DummyRequest(post = MultiDict([('save', 'save'),
+                                                         ('agenda_items', '0'),
+                                                         ('agenda_items', '1'),
+                                                         ('agenda_items', '2')]),
                                        is_xhr = False)
         obj = self._cut(root['agenda_templates']['dummy_template'], request)
         res = obj.sort()

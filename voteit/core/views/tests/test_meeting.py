@@ -1,10 +1,8 @@
 import unittest
 
 from pyramid import testing
-from pyramid_mailer import get_mailer
 
 from voteit.core.testing_helpers import bootstrap_and_fixture
-from voteit.core.testing_helpers import register_catalog
 
 
 class MeetingViewTests(unittest.TestCase):
@@ -297,7 +295,7 @@ class MeetingViewTests(unittest.TestCase):
         self.assertIn('form', response)
 
     def test_minutes(self):
-        register_catalog(self.config)
+        self.config.include('voteit.core.testing_helpers.register_catalog')
         self.config.scan('voteit.core.subscribers.agenda_item')
         self.config.include('voteit.core.models.flash_messages')
         self.config.testing_securitypolicy(userid='dummy',
