@@ -3,7 +3,6 @@ import unittest
 from pyramid import testing
 from pyramid.authorization import ACLAuthorizationPolicy
 from pyramid.security import Authenticated
-from pyramid.url import resource_url
 from zope.interface.verify import verifyClass
 from zope.interface.verify import verifyObject
 

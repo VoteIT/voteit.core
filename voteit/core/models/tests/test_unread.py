@@ -3,17 +3,11 @@ import unittest
 from pyramid import testing
 from zope.interface.verify import verifyClass
 from zope.interface.verify import verifyObject
-from BTrees.OOBTree import OOSet
-from pyramid.authorization import ACLAuthorizationPolicy
-from pyramid.authentication import AuthTktAuthenticationPolicy
 
 from voteit.core import security
 from voteit.core.testing_helpers import bootstrap_and_fixture
 from voteit.core.testing_helpers import register_security_policies
 from voteit.core.models.interfaces import IUnread
-
-
-
 
 
 class UnreadTests(unittest.TestCase):

@@ -1,12 +1,9 @@
 import unittest
 from datetime import timedelta
-from datetime import datetime
 
-from pyramid import testing
 from zope.interface.verify import verifyObject
-from zope.component.event import objectEventNotify
+from pyramid import testing
 from pyramid_mailer import get_mailer
-from repoze.folder.events import ObjectAddedEvent
 from pyramid.url import resource_url
 from pyramid.security import principals_allowed_by_permission
 
@@ -111,12 +108,12 @@ class UserTests(unittest.TestCase):
         obj.set_field_value('email', 'hello@world.com')
         self.assertEqual(obj.get_image_tag(size=45),
                          '<img src="https://secure.gravatar.com/avatar/4b3cdf9adfc6258a102ab90eb64565ea?d=mm&s=45" height="45" width="45" class="profile-pic" />')
-        
+
     def test_blank_email_hash_generation(self):
         self.config.include('voteit.core.plugins.gravatar_profile_image')
         obj = self._make_obj()
         self.assertEqual(obj.get_image_tag(), '<img src="https://secure.gravatar.com/avatar/?d=mm&s=40" height="40" width="40" class="profile-pic" />')
-                         
+
     def test_mentioned_email(self):
         request = testing.DummyRequest()
         self.config = testing.setUp(request=request)
@@ -132,12 +129,12 @@ class UserTests(unittest.TestCase):
         self.config.scan('betahaus.pyracont.fields.password')
 
         from voteit.core.bootstrap import bootstrap_voteit
-        self.root = bootstrap_voteit(echo=False)
-        self.root.users['admin'].set_field_value('email', 'admin@voteit.se')
+        root = bootstrap_voteit(echo=False)
+        root.users['admin'].set_field_value('email', 'admin@voteit.se')
 
         from voteit.core.models.meeting import Meeting
         meeting = Meeting()
-        self.root['meeting'] = meeting
+        root['meeting'] = meeting
         
         from voteit.core.models.agenda_item import AgendaItem
         agenda_item = AgendaItem()

@@ -4,7 +4,6 @@ from datetime import timedelta
 
 from zope.interface import implements
 from zope.component import queryAdapter
-from repoze.folder import unicodify
 from pyramid.url import resource_url
 from pyramid.security import Allow
 from pyramid.security import DENY_ALL

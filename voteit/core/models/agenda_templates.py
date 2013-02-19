@@ -4,7 +4,6 @@ from pyramid.security import DENY_ALL
 
 from voteit.core import VoteITMF as _
 from voteit.core.models.base_content import BaseContent
-from voteit.core.models.interfaces import IAgendaTemplate
 from voteit.core.models.interfaces import IAgendaTemplates
 from voteit.core import security
 from betahaus.pyracont.decorators import content_factory

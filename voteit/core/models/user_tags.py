@@ -9,8 +9,8 @@ from voteit.core.models.interfaces import IUserTags
 from voteit.core.models.interfaces import IBaseContent
 from voteit.core.events import ObjectUpdatedEvent
 
-
-TAG_PATTERN = re.compile(r'^[a-zA-Z\_\-]{3,15}$')
+_TAG_STRING = r'^[a-zA-Z\_\-]{3,15}$'
+TAG_PATTERN = re.compile(_TAG_STRING)
 
 
 class UserTags(object):
@@ -38,7 +38,7 @@ class UserTags(object):
         if not isinstance(tag, basestring):
             raise TypeError('tag must be a string. Was: %s' % tag)
         if not TAG_PATTERN.match(tag):
-            raise ValueError("'tag' doesn't conform to tag standard: '^[a-zA-Z\_\-]{3,15}$'")
+            raise ValueError("'tag' doesn't conform to tag standard: %s" % _TAG_STRING)
         if tag not in self.tags_storage:
             self.tags_storage[tag] = OOSet()
 

@@ -5,6 +5,8 @@ from zope.component import adapts
 
 from voteit.core.security import find_authorized_userids
 from voteit.core.security import VIEW
+from voteit.core.models.interfaces import IDiscussionPost
+from voteit.core.models.interfaces import IProposal
 from voteit.core.models.interfaces import IUnread
 from voteit.core.events import ObjectUpdatedEvent
 
@@ -14,6 +16,7 @@ class Unread(object):
         All methods are documented in the interface of this class.
     """
     implements(IUnread)
+    adapts(IDiscussionPost, IProposal)
     
     def __init__(self, context):
         self.context = context
@@ -45,9 +48,5 @@ class Unread(object):
 
 def includeme(config):
     """ Register unread adapter. """
-    from voteit.core.models.interfaces import IDiscussionPost
-    from voteit.core.models.interfaces import IProposal
     config.registry.registerAdapter(Unread, (IDiscussionPost,), IUnread)
     config.registry.registerAdapter(Unread, (IProposal,), IUnread)
-
-#FIXME: method to disable unread adapter?

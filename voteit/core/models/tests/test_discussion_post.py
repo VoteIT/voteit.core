@@ -1,13 +1,11 @@
 import unittest
 
 from pyramid import testing
-from pyramid.url import resource_url
 from pyramid.security import principals_allowed_by_permission
 from zope.interface.verify import verifyClass
 from zope.interface.verify import verifyObject
 
 from voteit.core import security
-from voteit.core.testing_helpers import register_security_policies
 from voteit.core.models.interfaces import IDiscussionPost
 
 
@@ -15,6 +13,7 @@ admin = set([security.ROLE_ADMIN])
 owner = set([security.ROLE_OWNER])
 viewer = set([security.ROLE_VIEWER])
 moderator = set([security.ROLE_MODERATOR])
+
 
 class DiscussionTests(unittest.TestCase):
     def setUp(self):
@@ -61,10 +60,8 @@ class DiscussionTests(unittest.TestCase):
 class DiscussionPostPermissionTests(unittest.TestCase):
     def setUp(self):
         self.config = testing.setUp()
-        register_security_policies(self.config)
-        # load workflow
-        self.config.include('pyramid_zcml')
-        self.config.load_zcml('voteit.core:configure.zcml')
+        self.config.include('voteit.core.testing_helpers.register_security_policies')
+        self.config.include('voteit.core.testing_helpers.register_workflows')
 
     def tearDown(self):
         testing.tearDown()

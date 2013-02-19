@@ -3,24 +3,19 @@ from random import choice
 from uuid import uuid4
 
 from repoze.folder import Folder
-from zope.component import getUtility
 from zope.interface import implements
 from pyramid_mailer import get_mailer
 from pyramid_mailer.message import Message
 from pyramid.traversal import find_interface
-from pyramid.url import resource_url
 from pyramid.exceptions import Forbidden
 from pyramid.security import authenticated_userid
-from pyramid.renderers import render
 from betahaus.pyracont.decorators import content_factory
 from betahaus.viewcomponent import render_view_action
 
 from voteit.core import VoteITMF as _
 from voteit.core import security
 from voteit.core.models.interfaces import IInviteTicket
-from voteit.core.models.interfaces import IUser
 from voteit.core.models.interfaces import IMeeting
-from voteit.core.models.interfaces import ISiteRoot
 from voteit.core.models.workflow_aware import WorkflowAware
 from voteit.core.models.date_time_util import utcnow
 

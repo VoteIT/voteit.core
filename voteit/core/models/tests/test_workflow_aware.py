@@ -30,11 +30,7 @@ class WorkflowAwareTests(unittest.TestCase):
     def test_workflow_not_found(self):
         from voteit.core.models.workflow_aware import WorkflowAware
         obj = WorkflowAware()
-        try:
-            obj.workflow
-            self.fail("Didn't raise workflow error for a content type that didn't have a workflow")
-        except WorkflowError:
-            pass
+        self.assertRaises(WorkflowError, obj.get_workflow_state) #Has no wf
 
     def test_workflow_event_on_state_change(self):
         from voteit.core.interfaces import IWorkflowStateChange

@@ -5,21 +5,18 @@ from pyramid import testing
 from zope.interface.verify import verifyClass
 from zope.interface.verify import verifyObject
 from pyramid.authorization import ACLAuthorizationPolicy
-from pyramid.authentication import AuthTktAuthenticationPolicy
 from pyramid.traversal import find_interface
 from pyramid_mailer import get_mailer
 from pyramid.security import Authenticated
-from repoze.workflow.workflow import WorkflowError
+from pyramid.httpexceptions import HTTPForbidden
 
 from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IPollPlugin
 from voteit.core.models.poll_plugin import PollPlugin
 from voteit.core import security
-from voteit.core.testing_helpers import register_security_policies
 from voteit.core.testing_helpers import active_poll_fixture
 from voteit.core.testing_helpers import register_workflows
-from pyramid.httpexceptions import HTTPForbidden
 
 
 admin = set([security.ROLE_ADMIN])

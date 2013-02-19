@@ -1,7 +1,6 @@
 from BTrees.OOBTree import OOBTree
 from zope.interface import implements
 from pyramid.security import Allow
-from pyramid.security import Authenticated
 from pyramid.security import DENY_ALL
 from betahaus.pyracont.decorators import content_factory
 from pyramid.httpexceptions import HTTPForbidden

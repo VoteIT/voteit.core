@@ -1,14 +1,13 @@
 import unittest
-from datetime import datetime
 
 from pyramid import testing
 from pyramid.traversal import resource_path
-from zope.interface import implements
+from zope.interface.verify import verifyClass
 from zope.interface.verify import verifyObject
 
-from voteit.core.models.interfaces import ICatalogMetadataEnabled
 from voteit.core.models.site import SiteRoot
-        
+from voteit.core.models.interfaces import ICatalogMetadata
+
 
 class CatalogMetadataTests(unittest.TestCase):
     """ Testcase for CatalogMetadata adapter. The metadata is covered in the catalog tests.
@@ -20,13 +19,19 @@ class CatalogMetadataTests(unittest.TestCase):
     def tearDown(self):
         testing.tearDown()
 
-    def _make_obj(self):
+    @property
+    def _cut(self):
         from voteit.core.models.catalog import CatalogMetadata
-        from voteit.core.models.base_content import BaseContent
-        return CatalogMetadata(BaseContent())
+        return CatalogMetadata
 
-    def test_interface(self):
-        from voteit.core.models.interfaces import ICatalogMetadata
+    def _make_obj(self):
+        from voteit.core.models.base_content import BaseContent
+        return self._cut(BaseContent())
+
+    def test_class_implementation(self):
+        verifyClass(ICatalogMetadata, self._cut)
+
+    def test_obj_implementation(self):
         obj = self._make_obj()
         verifyObject(ICatalogMetadata, obj)
 
