@@ -6,8 +6,10 @@
 <body>
 <div metal:fill-slot="content">
     <div class="description"
-         tal:condition="context.description"
-         tal:content="structure context.description">Description</div>
+         tal:condition="context.description">
+         <tal:desc tal:content="structure context.description">Description</tal:desc>
+         <div class="clear"><!-- --></div>
+    </div>
 </div>
 </body>
 </html>
