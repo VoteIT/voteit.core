@@ -81,7 +81,7 @@
 }
 #main-outer {
 	display: block;
-	padding: 0 10px 120px 10px;
+	padding: 0 10px 180px 10px; /* Bottom padding due to footer! */
 }
 #page_wrapper {
     min-height: 100%;
@@ -115,12 +115,13 @@
 /* Footer */
 #footer-outer {
     position: relative;
-	clear: both;
-	border-top: #C1C1C0 solid 1px;
-	background: transparent url(/static/images/footer_bg.png) repeat-x top left;
-	margin-top: -100px;
-	height: 100px;
+    clear: both;
+    border-top: #C1C1C0 solid 1px;
+    background: transparent url(/static/images/footer_bg.png) repeat-x top left;
+    margin-top: -160px;
+    height: 160px;
     min-width: 1010px;
+    overflow: hidden;
 }
 #footer {
 	text-align: center;
