@@ -9,7 +9,7 @@ DEFAULT_VC_ORDER = (
     ('moderator_actions_section', ('context_actions', 'workflow',)),
     ('context_actions', ('edit', 'delete', 'poll_config')),
     ('help_action', ('contact', 'wiki')),
-    ('metadata_listing', ('user_tags', 'answer', 'retract', 'tag', 'state','time')),
+    ('metadata_listing', ('user_tags', 'answer', 'retract', 'delete', 'tag', 'state','time')),
     ('agenda_item_top', ('description', 'tag_stats')),
     ('sidebar', ('login_pw', 'login_alt', 'navigation')), #latest_meeting_entries
 )
