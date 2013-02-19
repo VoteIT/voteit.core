@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2013-02-18 17:48+0100\n"
+"POT-Creation-Date: 2013-02-19 14:58+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,9 +21,9 @@ msgstr ""
 msgid "VoteIT"
 msgstr ""
 
-#: voteit/core/bootstrap.py:25 voteit/core/models/agenda_templates.py:13
-#: voteit/core/models/agenda_templates.py:21
-#: voteit/core/views/agenda_templates.py:38
+#: voteit/core/bootstrap.py:25 voteit/core/models/agenda_templates.py:12
+#: voteit/core/models/agenda_templates.py:20
+#: voteit/core/views/agenda_templates.py:32
 #: voteit/core/views/components/agenda.py:10
 #: voteit/core/views/components/meeting_actions.py:89
 #: voteit/core/views/templates/agenda_templates.pt:14
@@ -84,68 +84,64 @@ msgstr ""
 msgid "Loading..."
 msgstr ""
 
-#: voteit/core/js_translations.py:24
-msgid "Help &amp; Contact"
-msgstr ""
-
-#: voteit/core/js_translations.py:25 voteit/core/models/poll.py:72
+#: voteit/core/js_translations.py:24 voteit/core/models/poll.py:72
 #: voteit/core/models/poll.py:82
 #: voteit/core/views/components/templates/polls/poll.pt:8
 #: voteit/core/views/templates/modal_poll.pt:7
 msgid "Poll"
 msgstr ""
 
-#: voteit/core/js_translations.py:26
+#: voteit/core/js_translations.py:25
 #: voteit/core/views/components/metadata_listing.py:95
 msgid "Reply"
 msgstr ""
 
-#: voteit/core/js_translations.py:27
+#: voteit/core/js_translations.py:26
 #: voteit/core/views/components/metadata_listing.py:93
 msgid "Comment"
 msgstr ""
 
 #. Default: An error occurred while voting, please try again.
-#: voteit/core/js_translations.py:28
+#: voteit/core/js_translations.py:27
 msgid "js_voting_error_msg"
 msgstr ""
 
 #. Default: Server didn't respond, many participants may be voteing right now,
 #. please try again.
-#: voteit/core/js_translations.py:30
+#: voteit/core/js_translations.py:29
 msgid "js_voting_timeout_msg"
 msgstr ""
 
-#: voteit/core/js_translations.py:32
+#: voteit/core/js_translations.py:31
 msgid "Waiting..."
 msgstr ""
 
 #. Default: There was an error loding data from server
-#: voteit/core/js_translations.py:33
+#: voteit/core/js_translations.py:32
 msgid "js_error_loading"
 msgstr ""
 
-#: voteit/core/js_translations.py:35
+#: voteit/core/js_translations.py:34
 msgid "Close message"
 msgstr ""
 
-#: voteit/core/js_translations.py:36
+#: voteit/core/js_translations.py:35
 msgid "Can not delete poll"
 msgstr ""
 
 #. Default: There are proposals in this poll that is in state voting, approved
 #. or denied. You need to manualy change the state of the proposals first.
-#: voteit/core/js_translations.py:37
+#: voteit/core/js_translations.py:36
 msgid "delete_poll_notification_text"
 msgstr ""
 
 #. Default: Permssions was updated successfully
-#: voteit/core/js_translations.py:39
+#: voteit/core/js_translations.py:38
 msgid "permssions_updated_success"
 msgstr ""
 
 #. Default: There was an error updateing permissions
-#: voteit/core/js_translations.py:41
+#: voteit/core/js_translations.py:40
 msgid "permssions_updated_error"
 msgstr ""
 
@@ -325,11 +321,11 @@ msgstr ""
 msgid "Discussion Post"
 msgstr ""
 
-#: voteit/core/models/invite_ticket.py:36
+#: voteit/core/models/invite_ticket.py:31
 msgid "Invite ticket"
 msgstr ""
 
-#: voteit/core/models/invite_ticket.py:69
+#: voteit/core/models/invite_ticket.py:64
 msgid "VoteIT meeting invitation"
 msgstr ""
 
@@ -337,14 +333,14 @@ msgstr ""
 msgid "Log entry"
 msgstr ""
 
-#: voteit/core/models/meeting.py:44 voteit/core/models/meeting.py:52
+#: voteit/core/models/meeting.py:43 voteit/core/models/meeting.py:51
 #: voteit/core/views/components/meeting_actions.py:69
 msgid "Meeting"
 msgstr ""
 
 #. Default: This meeting still has ongoing Agenda items in it. You can't close
 #. it until they're closed.
-#: voteit/core/models/meeting.py:107
+#: voteit/core/models/meeting.py:106
 msgid "error_cant_close_meeting_with_ongoing_ais"
 msgstr ""
 
@@ -489,21 +485,21 @@ msgstr ""
 msgid "Site root"
 msgstr ""
 
-#: voteit/core/models/user.py:35 voteit/core/models/user.py:43
+#: voteit/core/models/user.py:34 voteit/core/models/user.py:42
 msgid "User"
 msgstr ""
 
-#: voteit/core/models/user.py:113
+#: voteit/core/models/user.py:112
 msgid "Password reset request from VoteIT"
 msgstr ""
 
 #. Default: You have been mentioned in ${meeting} on ${agenda_item}. Click the
 #. following link to go there, ${link}.
-#: voteit/core/models/user.py:140
+#: voteit/core/models/user.py:139
 msgid "mentioned_notification"
 msgstr ""
 
-#: voteit/core/models/user.py:144
+#: voteit/core/models/user.py:143
 msgid "You have been mentioned in VoteIT"
 msgstr ""
 
@@ -512,11 +508,11 @@ msgstr ""
 msgid "Users"
 msgstr ""
 
-#: voteit/core/models/vote.py:26 voteit/core/models/vote.py:34
+#: voteit/core/models/vote.py:25 voteit/core/models/vote.py:33
 msgid "Vote"
 msgstr ""
 
-#: voteit/core/models/vote.py:38
+#: voteit/core/models/vote.py:37
 #: voteit/core/views/components/templates/polls/poll.pt:44
 #: voteit/core/views/components/templates/polls/poll.pt:54
 msgid "Your vote"
@@ -524,7 +520,7 @@ msgstr ""
 
 #. Default: This is your vote. While the poll is open, you can delete or change
 #. it if you wish.
-#: voteit/core/models/vote.py:39
+#: voteit/core/models/vote.py:38
 msgid "your_vote_description"
 msgstr ""
 
@@ -728,7 +724,7 @@ msgstr ""
 msgid "apply_to_all_title"
 msgstr ""
 
-#: voteit/core/schemas/invite_ticket.py:78 voteit/core/views/ticket.py:151
+#: voteit/core/schemas/invite_ticket.py:78 voteit/core/views/ticket.py:149
 msgid "Current invitations"
 msgstr ""
 
@@ -771,6 +767,16 @@ msgstr ""
 #. Default: Enable tags in proposals and discussion posts
 #: voteit/core/schemas/layout.py:56
 msgid "enable_tags_description"
+msgstr ""
+
+#: voteit/core/schemas/layout.py:62
+msgid "Hide retracted proposals"
+msgstr ""
+
+#. Default: You can still access retracted proposals by using a collapsible
+#. link below the regular proposals
+#: voteit/core/schemas/layout.py:63
+msgid "meeting_hide_retracted_description"
 msgstr ""
 
 #. Default: Set a title for the meeting that separates it from previous
@@ -1206,26 +1212,26 @@ msgstr ""
 msgid "workflow_error_when_setting_proposal_as_voting"
 msgstr ""
 
-#: voteit/core/views/agenda_item.py:101
+#: voteit/core/views/agenda_item.py:96
 msgid "Status changed - note that workflow state also matters."
 msgstr ""
 
 #. Default: Selected template applied to meeting.
-#: voteit/core/views/agenda_templates.py:48
+#: voteit/core/views/agenda_templates.py:42
 msgid "agenda_template_apply_template_success"
 msgstr ""
 
 #. Default: No template named ${template} could be found.
-#: voteit/core/views/agenda_templates.py:54
+#: voteit/core/views/agenda_templates.py:48
 msgid "agenda_template_apply_invalid_template"
 msgstr ""
 
 #. Default: Drag and drop agenda items to reorder
-#: voteit/core/views/agenda_templates.py:65
+#: voteit/core/views/agenda_templates.py:59
 msgid "order_agenda_template_view_title"
 msgstr ""
 
-#: voteit/core/views/agenda_templates.py:85
+#: voteit/core/views/agenda_templates.py:79
 #: voteit/core/views/manage_agenda_items.py:79
 msgid "Order updated"
 msgstr ""
@@ -1249,8 +1255,8 @@ msgstr ""
 #: voteit/core/views/base_edit.py:106 voteit/core/views/base_edit.py:155
 #: voteit/core/views/base_edit.py:194 voteit/core/views/meeting.py:80
 #: voteit/core/views/meeting.py:172 voteit/core/views/poll.py:59
-#: voteit/core/views/site.py:179 voteit/core/views/ticket.py:112
-#: voteit/core/views/ticket.py:197 voteit/core/views/users.py:44
+#: voteit/core/views/site.py:179 voteit/core/views/ticket.py:110
+#: voteit/core/views/ticket.py:195 voteit/core/views/users.py:44
 #: voteit/core/workflows/poll.zcml:33
 msgid "Canceled"
 msgstr ""
@@ -1371,13 +1377,13 @@ msgstr ""
 msgid "review_poll_settings_info_getback"
 msgstr ""
 
-#: voteit/core/views/search.py:45
+#: voteit/core/views/search.py:44
 msgid "items"
 msgstr ""
 
 #. Default: Search resulted in an error - it's not possible to search for
 #. common operator words like 'if' or 'the'.
-#: voteit/core/views/search.py:74
+#: voteit/core/views/search.py:73
 msgid "search_exception_notice"
 msgstr ""
 
@@ -1393,43 +1399,43 @@ msgstr ""
 msgid "joined_without_ticket_intro_text"
 msgstr ""
 
-#: voteit/core/views/ticket.py:33
+#: voteit/core/views/ticket.py:31
 msgid "Login or register to gain access"
 msgstr ""
 
 #. Default: Ticket validation failed. Either the ticket doesn't exist, was
 #. already used or the url used improperly. If you need help, please contact
 #. the moderator that invited you to this meeting.
-#: voteit/core/views/ticket.py:54
+#: voteit/core/views/ticket.py:52
 msgid "ticket_validation_fail"
 msgstr ""
 
-#: voteit/core/views/ticket.py:64
+#: voteit/core/views/ticket.py:62
 msgid "You've been granted access to the meeting. Welcome!"
 msgstr ""
 
 #. Default: The ticket link did not contain a token and an email address.
 #. Perhaps you came to this page by mistake?
-#: voteit/core/views/ticket.py:93
+#: voteit/core/views/ticket.py:91
 msgid "ticket_link_wrong_parameters_error"
 msgstr ""
 
-#: voteit/core/views/ticket.py:108
+#: voteit/core/views/ticket.py:106
 msgid "Send meeting invitations"
 msgstr ""
 
 #. Default: Successfully added and sent ${mail_count} invites
-#: voteit/core/views/ticket.py:137
+#: voteit/core/views/ticket.py:135
 msgid "sent_tickets_text"
 msgstr ""
 
 #. Default: Resending ${count_emails} invites
-#: voteit/core/views/ticket.py:179
+#: voteit/core/views/ticket.py:177
 msgid "resent_invites_notice"
 msgstr ""
 
 #. Default: Deleting ${count_emails} invites
-#: voteit/core/views/ticket.py:189
+#: voteit/core/views/ticket.py:187
 msgid "deleting_invites_notice"
 msgstr ""
 
@@ -1684,7 +1690,7 @@ msgstr ""
 
 #. Default: Can't find any poll plugin with name '${name}'. Perhaps that
 #. package has been uninstalled?
-#: voteit/core/views/components/proposals.py:27
+#: voteit/core/views/components/proposals.py:26
 msgid "plugin_missing_error"
 msgstr ""
 
@@ -1807,6 +1813,10 @@ msgstr ""
 
 #: voteit/core/views/components/templates/proposals/listing.pt:6
 msgid "Show all proposals"
+msgstr ""
+
+#: voteit/core/views/components/templates/proposals/listing.pt:26
+msgid "Show ${count} retracted proposals"
 msgstr ""
 
 #: voteit/core/views/components/templates/sidebars/login_alt.pt:7

@@ -85,14 +85,9 @@ def navigation_sections(context, request, va, **kwargs):
         query['content_type'] = content_type
         
         if content_type == 'Proposal':
-            query['workflow_state'] = {'query':('published', 'retracted', 'unhandled', 'voting', 'approved', 'denied'), 'operator':'or'}
-            #Uhm shouldn't we show them in listing regardless? Otherwise they'll never be marked as read...
-            #if api.meeting and not api.meeting.get_field_value('show_retracted', True):
-            #    query['workflow_state'] = {'query':('published', 'unhandled', 'voting', 'approved', 'denied'), 'operator':'or'}
-        
+            query['workflow_state'] = {'query':('published', 'retracted', 'unhandled', 'voting', 'approved', 'denied'), 'operator':'or'}        
         if unread:
             query['unread'] = api.userid
-        
         return api.search_catalog(**query)[0]
     
     def _in_current_context(path, context_path):

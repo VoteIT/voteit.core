@@ -16,7 +16,6 @@ def proposal_listing(context, request, va, **kw):
     """ Get proposals for a specific context.
     """
     api = kw['api']
-
     #Start with checking which polls that exist in this context and store shown uids
     shown_uids = set()
     polls = []
@@ -34,23 +33,19 @@ def proposal_listing(context, request, va, **kw):
 
     #The agenda item query must be based on the context and to exclude all already shown
     #This view also cares about retracted proposals where as poll version doesn't
-    #if api.meeting.get_field_value('show_retracted', True) or request.GET.get('show_retracted') == '1':
-    #    wf_states = ('published', 'retracted', 'locked', 'unhandled') #More?
-    #else:
-    #    wf_states = ('published', 'retracted', 'locked')
-    #FIXME: Show retracted stuff
-    #wf_states = ('published', 'retracted', 'locked', 'unhandled')
-    
     query = Eq('path', resource_path(context)) &\
             Eq('content_type', 'Proposal') &\
             NotAny('uid', shown_uids)
-            #(NotAny('uid', shown_uids) | Any('workflow_state', wf_states))
+
+    hide_retracted = api.meeting.get_field_value('hide_retracted', False)
+    if hide_retracted:
+        query &= NotAny('workflow_state', ('retracted',))
 
     tag = request.GET.get('tag', None)
     if tag:
         #Only apply tag limit for things that aren't polls.
         #This is a safegard against user errors
-        query = query & Any('tags', (tag, ))
+        query &= Any('tags', (tag, ))
         
     # build query string and remove tag
     clear_tag_query = request.GET.copy()
@@ -59,19 +54,26 @@ def proposal_listing(context, request, va, **kw):
 
     count, docids = api.root.catalog.query(query, sort_index='created')
     get_metadata = api.root.catalog.document_map.get_metadata
-    results = []
-    for docid in docids:
-        metadata = get_metadata(docid)
-        results.append(metadata)
+    results = [get_metadata(x) for x in docids]
+    retracted_proposals = []
+    if hide_retracted:
+        query = Eq('path', resource_path(context)) &\
+                Eq('content_type', 'Proposal') &\
+                NotAny('uid', shown_uids) &\
+                Any('workflow_state', ('retracted',))
+        if tag:
+            query &= Any('tags', (tag, ))
+        count, docids = api.root.catalog.query(query, sort_index='created')
+        retracted_proposals = [get_metadata(x) for x in docids]
 
     response = {}
     response['clear_tag_url'] = request.resource_url(context, query=clear_tag_query)
     response['proposals'] = tuple(results)
+    response['retracted_proposals'] = tuple(retracted_proposals)
     response['tag'] = tag
     response['api'] = api 
     response['polls'] = polls
     return render('templates/proposals/listing.pt', response, request = request)
-
 
 @view_action('proposal', 'block')
 def proposal_block(context, request, va, **kw):

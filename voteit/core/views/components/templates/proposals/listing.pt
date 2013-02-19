@@ -22,5 +22,16 @@
 	    </tal:proposal>	
 	</tal:iterate>
 
+    <div tal:condition="retracted_proposals" class="toggle_area toggle_closed">
+        <a class="toggle_minimize" href="javascript: void(0)" i18n:translate="">Show <tal:count i18n:name="count">${len(retracted_proposals)}</tal:count> retracted proposals</a>
+        <div class="minimizable_area">
+            <tal:iterate repeat="proposal retracted_proposals">
+                <tal:proposal replace="structure api.render_view_group(context, request, 'proposal', brain=proposal)">
+                    Proposal
+                </tal:proposal>
+            </tal:iterate>
+        </div>
+    </div><!-- retracted -->
+
 </div>
 </tal:main>
