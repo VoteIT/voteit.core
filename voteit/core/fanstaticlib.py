@@ -53,7 +53,6 @@ autoresizable_textarea_js = Resource(voteit_core_jslib, 'jquery.autoResizable.js
 
 #VoteIT core
 voteit_main_css = Resource(voteit_core_csslib, 'main.css', depends=(reset, _qtip_css,))
-voteit_basic_style = Resource(voteit_core_csslib, 'basic_style.css', depends=(voteit_main_css,))
 
 _star_rating_css = Resource(voteit_core_csslib, 'star_rating.css', depends=(voteit_main_css,))
 star_rating = Group((_star_rating_css, jquery_rating))
@@ -107,7 +106,6 @@ def is_moderator(context, request, view):
 #key, resource, discriminator (if any)
 DEFAULT_FANSTATIC_RESOURCES = (
     ('voteit_main_css', voteit_main_css),
-    ('voteit_basic_style', voteit_basic_style),
     ('voteit_common_js', voteit_common_js),
     ('voteit_workflow_js', voteit_workflow_js),
     ('voteit_deform', voteit_deform),
