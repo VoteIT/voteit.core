@@ -729,6 +729,30 @@ class IProfileImage(Interface):
         """
 
 
+class IAccessPolicy(Interface):
+    """ Adapts a meeting to handle an access policy. They're methods for granting
+        access to users that request it.
+    """
+    name = Attribute("Works like an internal id for the access policy")
+    title = Attribute("Readable title of the access policy. Should be a translation string")
+    description = Attribute("Longer description to make it easier for moderators"
+                            " to understand what this policy does. Also translation string")
+    configurable = Attribute("Does this policy have any configuration options?")
+
+    def is_public():
+        """ Is this access policy configured so the meeting is public?
+            Note: This feature might not be implemented yet. """
+
+    def view(api):
+        """ Render view """
+
+    def config_schema(api, **kw):
+        """ Return a schema to be used for configuring this access policy. Optional. """
+
+    def config_form(schema):
+        """ Return a form for configuring access policy. """
+
+
 #Utilities
 class IDateTimeUtil(Interface):
     """ Utility that handles display of datetime formats.

@@ -76,6 +76,8 @@ def required_components(config):
     config.include('voteit.core.models.fanstatic_resources')
     config.include('voteit.core.deform_bindings')
     config.include('voteit.core.models.proposal_ids')
+    config.include('voteit.core.plugins.immediate_ap') #FIXME: Shouldn't be forced!
+    config.include('voteit.core.plugins.invite_only_ap')
     #For password storage
     config.scan('betahaus.pyracont.fields.password')
 

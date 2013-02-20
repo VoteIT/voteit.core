@@ -15,6 +15,7 @@ from voteit.core import security
 from voteit.core import VoteITMF as _
 from voteit.core.views.base_view import BaseView
 from voteit.core.models.interfaces import IMeeting
+from voteit.core.models.interfaces import IAccessPolicy
 from voteit.core.models.schemas import add_csrf_token
 from voteit.core.models.schemas import button_save
 from voteit.core.models.schemas import button_cancel
@@ -29,9 +30,8 @@ class MeetingView(BaseView):
         """
         if not has_permission(security.VIEW, self.context, self.request):
             #We delegate permission checks to the request_meeting_access part.
-            url = resource_url(self.context, self.request) + 'request_access'
+            url = self.request.resource_url(self.context, 'request_access')
             return HTTPFound(location = url)
-        
         return self.response
 
     @view_config(name="participants_emails", context=IMeeting, renderer="templates/participants_emails.pt", permission=security.MODERATE_MEETING)
@@ -94,38 +94,63 @@ class MeetingView(BaseView):
         if has_permission(security.VIEW, self.context, self.request):
             url = resource_url(self.context, self.request)
             return HTTPFound(location = url)
-        
-        access_policy = self.context.get_field_value('access_policy', 'invite_only')
-        
-        # show log in/register view if user is not logged in and access policy is no invite only
-        if not self.api.userid and not access_policy == 'invite_only':
+        if not self.api.userid:
             msg = _('request_access_view_login_register',
-                    default=u"""This meeting requires the participants to be logged in. If you are 
-                    registered please log in or register an account here. You will be returned to the 
-                    meeting afterwards""")
+                    default=u"You need to login or register before you can use any meetings.")
             self.api.flash_messages.add(msg, type='info')
             came_from = resource_url(self.context, self.request, 'request_access')
-            url = resource_url(self.api.root, self.request, 'login', query={'came_from': came_from})
-            schema = Schema()
-            form = Form(schema, buttons=(deform.Button('login_register', _(u"Login/Register")),), action=url)
-            self.api.register_form_resources(form)
-            self.response['form'] = form.render()
-            return self.response 
-        
-        view_group = self.request.registry.getUtility(IViewGroup, name = 'request_meeting_access')        
-        va = view_group.get(access_policy, None)
-        if va is None:
-            err_msg = _(u"request_access_view_action_not_found",
-                        default = u"Can't find an action associated with access policy ${policy}.",
-                        mapping = {'policy': access_policy})
+            url = self.request.resource_url(self.api.root, query={'came_from': came_from})
+            return HTTPFound(location = url)
+
+        access_policy_name = self.context.get_field_value('access_policy', 'invite_only')
+        access_policy = self.request.registry.queryAdapter(self.context, IAccessPolicy, name = access_policy_name)
+        self.response['access_policy'] = access_policy
+        if access_policy is None:
+            err_msg = _(u"access_policy_not_found",
+                        default = u"""Can't find an access policy with the id '${policy}'.
+                                    This might mean that the registered access type for this meeting doesn't exist anylonger.
+                                    Please contact the moderator about this.""",
+                        mapping = {'policy': access_policy_name})
             self.api.flash_messages.add(err_msg, type="error")
-            url = resource_url(self.api.root, self.request)
-            return HTTPFound(location=url)
-        result = va(self.context, self.request, api = self.api)
-        if isinstance(result, HTTPRedirection):
-            return result
-        self.response['form'] = result
+            self.response['form'] = u''
+        else:
+            self.response['form'] = access_policy.view(self.api)
         return self.response
+
+    @view_config(context=IMeeting, name="configure_access_policy", renderer="templates/base_edit.pt", permission=security.MODERATE_MEETING)
+    def configure_access_policy(self):
+        access_policy_name = self.context.get_field_value('access_policy', 'invite_only')
+        access_policy = self.request.registry.queryAdapter(self.context, IAccessPolicy, name = access_policy_name)
+        if not access_policy:
+            err_msg = _(u"access_policy_not_found_moderator",
+                        default = u"""Can't find an access policy with the id '${policy}'.
+                                    This might mean that the registered access type for this meeting doesn't exist anylonger.
+                                    Please change access policy.""",
+                        mapping = {'policy': access_policy_name})
+            self.api.flash_messages.add(err_msg, type="error")
+            url = self.request.resource_url(self.api.meeting, 'access_policy')
+            return HTTPFound(location=url)
+        
+        schema = access_policy.config_schema(self.api)
+        form = access_policy.config_form(schema)
+        post = self.request.POST
+        if 'save' in post:
+            controls = post.items()
+            form = access_policy.config_form(schema)
+            try:
+                appstruct = form.validate(controls)
+            except deform.ValidationFailure, e:
+                self.response['form'] = e.render()
+                return self.response
+            self.context.set_field_appstruct(appstruct)
+            #FIXME: Flash: saved
+            url = self.request.resource_url(self.api.meeting)
+            return HTTPFound(location=url)
+        else:
+            #Render normal form
+            appstruct = self.context.get_field_appstruct(schema)
+            self.response['form'] = form.render(appstruct = appstruct)
+            return self.response
 
     @view_config(context=IMeeting, name="presentation", renderer="templates/base_edit.pt", permission=security.MODERATE_MEETING)
     def presentation(self):
@@ -140,7 +165,14 @@ class MeetingView(BaseView):
     @view_config(context=IMeeting, name="access_policy", renderer="templates/base_edit.pt", permission=security.MODERATE_MEETING)
     def access_policy(self):
         schema = createSchema("AccessPolicyMeetingSchema").bind(context=self.context, request=self.request)
-        return self.form(schema)
+        result = self.form(schema)
+        if 'save' in self.request.POST:
+            ap = self.request.registry.queryAdapter(self.context, IAccessPolicy, name = self.context.get_field_value('access_policy', ''))
+            if ap and ap.configurable:
+                self.api.flash_messages.add(_(u"Review access policy configuration"))
+                url = self.request.resource_url(self.context, 'configure_access_policy')
+                return HTTPFound(location = url)
+        return result
 
     @view_config(context=IMeeting, name="meeting_poll_settings", renderer="templates/base_edit.pt", permission=security.MODERATE_MEETING)
     def global_poll_settings(self):

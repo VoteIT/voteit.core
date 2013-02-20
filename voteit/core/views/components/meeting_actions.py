@@ -13,6 +13,7 @@ from voteit.core.security import MANAGE_GROUPS
 from voteit.core.security import ADD_VOTE
 from voteit.core import VoteITMF as _
 from voteit.core.views.api import APIView
+from voteit.core.models.interfaces import IAccessPolicy
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.catalog import resolve_catalog_docid
 
@@ -114,6 +115,21 @@ def generic_menu_link(context, request, va, **kw):
     url = "%s%s" % (api.meeting_url, va.kwargs['link'])
     return """<li><a href="%s">%s</a></li>""" % (url, api.translate(va.title))
 
+@view_action('settings_menu', 'configure_access_policy', title = _(u"Configure selected access policy"),
+             link = "configure_access_policy", permission = MODERATE_MEETING)
+def configure_access_policy_menu_link(context, request, va, **kw):
+    """ Only show this if it has any settings to be configured """
+    api = kw['api']
+    if not api.meeting:
+        return u""
+    access_policy_name = api.meeting.get_field_value('access_policy', None)
+    if not access_policy_name:
+        return u""
+    ap = request.registry.queryAdapter(api.meeting, IAccessPolicy, name = access_policy_name)
+    if ap and ap.configurable:
+        url = "%s%s" % (api.meeting_url, va.kwargs['link'])
+        return """<li><a href="%s">%s</a></li>""" % (url, api.translate(va.title))
+    return u""
 
 @view_config(name="meeting_poll_menu", context=IMeeting, renderer="templates/polls/polls_menu_body.pt", permission=VIEW)
 def meeting_poll_menu(context, request):

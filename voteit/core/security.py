@@ -72,6 +72,11 @@ MEETING_ROLES = ((ROLE_MODERATOR, _(u'Moderator')),
                  (ROLE_PROPOSE, _(u'Propose (and view)')),
                  (ROLE_VOTER, _(u'Voter (and view)')),
                 )
+STANDARD_ROLES = ((ROLE_VIEWER, _(u'View')),
+                  (ROLE_DISCUSS, _(u'Discuss (and view)')),
+                  (ROLE_PROPOSE, _(u'Propose (and view)')),
+                  (ROLE_VOTER, _(u'Voter (and view)')),
+                  )
 
 
 # An empty value tells the catalog to match anything, whereas when

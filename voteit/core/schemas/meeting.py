@@ -4,16 +4,15 @@ import colander
 import deform
 from betahaus.pyracont.decorators import schema_factory
 from betahaus.pyracont.factories import createContent
-from betahaus.viewcomponent.interfaces import IViewGroup
-from pyramid.security import authenticated_userid
 
 from voteit.core.validators import html_string_validator
 from voteit.core.validators import richtext_validator
 
 from voteit.core import VoteITMF as _
 from voteit.core import security 
-from voteit.core.models.interfaces import IPoll
+from voteit.core.models.interfaces import IAccessPolicy
 from voteit.core.models.interfaces import IPollPlugin
+from voteit.core.models.meeting import Meeting
 from voteit.core.widgets import RecaptchaWidget
 from voteit.core.schemas.common import NAME_PATTERN
 
@@ -37,12 +36,9 @@ def poll_plugins_choices_widget(node, kw):
 @colander.deferred
 def deferred_access_policy_widget(node, kw):
     request = kw['request']
-    view_group = request.registry.getUtility(IViewGroup, name = 'request_meeting_access')
     choices = []
-    for (name, va) in view_group.items():
-        choices.append((name, va.title))
-    if not choices:
-        raise ValueError("Can't find anything in the request_meeting_access view group. There's no way to select any policy on how to gain access to the meeting.")
+    for (name, plugin) in request.registry.getAdapters([_dummy_meeting], IAccessPolicy):
+        choices.append((name, plugin.title))
     return deform.widget.RadioChoiceWidget(values = choices)
 
 @colander.deferred
@@ -52,16 +48,13 @@ def deferred_recaptcha_widget(node, kw):
     context = kw['context']
     request = kw['request']
     api = kw['api']
-    
     # Get principals for current user
     principals = api.context_effective_principals(context)
-    
     if api.root.get_field_value('captcha_meeting', False) and security.ROLE_ADMIN not in principals:
         pub_key = api.root.get_field_value('captcha_public_key', '')
         priv_key = api.root.get_field_value('captcha_private_key', '')
         return RecaptchaWidget(captcha_public_key = pub_key,
                                captcha_private_key = priv_key)
-
     return deform.widget.HiddenWidget()
 
 def title_node():
@@ -71,7 +64,7 @@ def title_node():
                                                 default=u"Set a title for the meeting that separates it from previous meetings"),
                                 validator=html_string_validator,)
 def description_node():
-     return colander.SchemaNode(
+    return colander.SchemaNode(
         colander.String(),
         title = _(u"Description"),
         description = _(u"meeting_description_description",
@@ -81,7 +74,7 @@ def description_node():
         validator=richtext_validator,)
 
 def public_description_node():
-     return colander.SchemaNode(
+    return colander.SchemaNode(
         colander.String(),
         title = _(u"Public presentation"),
         description = _(u"meeting_public_description_description",
@@ -123,41 +116,44 @@ def recaptcha_node():
 
 @schema_factory('AddMeetingSchema', title = _(u"Add meeting"))
 class AddMeetingSchema(colander.MappingSchema):
-    title = title_node();
-    description = description_node();
-    public_description = public_description_node();
-    meeting_mail_name = meeting_mail_name_node();
-    meeting_mail_address = meeting_mail_address_node();
-    access_policy = access_policy_node();
-    captcha=recaptcha_node();
+    title = title_node()
+    description = description_node()
+    public_description = public_description_node()
+    meeting_mail_name = meeting_mail_name_node()
+    meeting_mail_address = meeting_mail_address_node()
+    access_policy = access_policy_node()
+    captcha=recaptcha_node()
+
 
 @schema_factory('EditMeetingSchema', title = _(u"Edit meeting"))
 class EditMeetingSchema(colander.MappingSchema):
-    title = title_node();
-    description = description_node();
-    public_description = public_description_node();
-    meeting_mail_name = meeting_mail_name_node();
-    meeting_mail_address = meeting_mail_address_node();
-    access_policy = access_policy_node();
+    title = title_node()
+    description = description_node()
+    public_description = public_description_node()
+    meeting_mail_name = meeting_mail_name_node()
+    meeting_mail_address = meeting_mail_address_node()
+
 
 @schema_factory('PresentationMeetingSchema',
                 title = _(u"Presentation"),
                 description = _(u"presentation_meeting_schema_main_description",
                                 default = u"Edit the first page of the meeting into an informative and pleasant page for your users. You can for instance place your logo here. The time table can be presented in a table and updated as you go along. It's also advised to add links to the manual and to meeting documents."))
 class PresentationMeetingSchema(colander.MappingSchema):
-    title = title_node();
-    description = description_node();
-    public_description = public_description_node();
-    
+    title = title_node()
+    description = description_node()
+    public_description = public_description_node()
+
+
 @schema_factory('MailSettingsMeetingSchema', title = _(u"Mail settings"))
 class MailSettingsMeetingSchema(colander.MappingSchema):
-    meeting_mail_name = meeting_mail_name_node();
-    meeting_mail_address = meeting_mail_address_node();
-    
+    meeting_mail_name = meeting_mail_name_node()
+    meeting_mail_address = meeting_mail_address_node()
+
+
 @schema_factory('AccessPolicyMeetingSchema', title = _(u"Access policy"))
 class AccessPolicyeMeetingSchema(colander.MappingSchema):
-    access_policy = access_policy_node();
-    
+    access_policy = access_policy_node()
+
 
 @schema_factory('MeetingPollSettingsSchema', title = _(u"Poll settings"),
                 description = _(u"meeting_poll_settings_main_description",
@@ -171,3 +167,5 @@ class MeetingPollSettingsSchema(colander.MappingSchema):
                                                                u"If nothing is selected, only the servers default poll method will be available."),
                                        missing=set(),
                                        widget = poll_plugins_choices_widget,)
+
+_dummy_meeting = Meeting()
