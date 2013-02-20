@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2013-02-19 14:58+0100\n"
+"POT-Creation-Date: 2013-02-20 15:55-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2243,6 +2243,10 @@ msgstr ""
 
 #: voteit/core/views/templates/snippets/vote_success.pt:3
 msgid "Your vote has been registered!"
+msgstr ""
+
+#: voteit/core/views/templates/snippets/vote_success.pt:4
+msgid "As long as the poll is open, you may change your vote. If you want to review it, just open this window again."
 msgstr ""
 
 #. Default: en
