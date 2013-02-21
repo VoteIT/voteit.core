@@ -6,14 +6,11 @@
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
       i18n:domain="voteit.core">
 <body>
-<div metal:fill-slot="main_window">
+<div metal:fill-slot="main_window" tal:define="reg_info context.get_field_value('registration_info', u'')">
     <div id="left">
         <tal:form replace="structure form">Form here</tal:form>
     </div>
-    <div id="right">
-        Some text and a nice image?
-        
-    </div>
+    <div id="right" tal:condition="reg_info" tal:content="structure reg_info">Registration info</div>
 </div>
 </body>
 </html>
