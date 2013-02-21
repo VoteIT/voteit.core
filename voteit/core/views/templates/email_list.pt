@@ -6,13 +6,11 @@
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
       i18n:domain="voteit.core">
 <body>
-    <h2 id="page_heading" metal:fill-slot="page_heading" i18n:translate="">
-        Email addresses of participants
-    </h2>
+    <h2 id="page_heading" metal:fill-slot="page_heading">${title}</h2>
 
     <div metal:fill-slot="content">
 
-        <tal:iterate repeat="user participants">
+        <tal:iterate repeat="user users">
             <a tal:content="user.get_field_value('email')"
                tal:attributes="href 'mailto:%s' % user.get_field_value('email')">
                 voteit@betahaus.net

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2013-02-21 12:01+0100\n"
+"POT-Creation-Date: 2013-02-21 12:39+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,7 +25,7 @@ msgstr ""
 #: voteit/core/models/agenda_templates.py:20
 #: voteit/core/views/agenda_templates.py:32
 #: voteit/core/views/components/agenda.py:10
-#: voteit/core/views/components/meeting_actions.py:90
+#: voteit/core/views/components/meeting_actions.py:91
 #: voteit/core/views/templates/agenda_templates.pt:14
 msgid "Agenda templates"
 msgstr ""
@@ -505,7 +505,7 @@ msgid "You have been mentioned in VoteIT"
 msgstr ""
 
 #: voteit/core/models/users.py:15 voteit/core/models/users.py:20
-#: voteit/core/views/components/meeting_actions.py:91
+#: voteit/core/views/components/meeting_actions.py:92
 msgid "Users"
 msgstr ""
 
@@ -721,7 +721,7 @@ msgid "claim_ticket_token_title"
 msgstr ""
 
 #: voteit/core/schemas/invite_ticket.py:24
-#: voteit/core/views/components/meeting_actions.py:109
+#: voteit/core/views/components/meeting_actions.py:110
 #: voteit/core/views/templates/participants.pt:128
 msgid "Invite participants"
 msgstr ""
@@ -785,7 +785,7 @@ msgstr ""
 msgid "<Disable>"
 msgstr ""
 
-#: voteit/core/schemas/layout.py:32 voteit/core/views/meeting.py:58
+#: voteit/core/schemas/layout.py:32 voteit/core/views/meeting.py:56
 msgid "Layout"
 msgstr ""
 
@@ -890,7 +890,7 @@ msgid "Edit meeting"
 msgstr ""
 
 #: voteit/core/schemas/meeting.py:138
-#: voteit/core/views/components/meeting_actions.py:104
+#: voteit/core/views/components/meeting_actions.py:105
 msgid "Presentation"
 msgstr ""
 
@@ -903,12 +903,12 @@ msgid "presentation_meeting_schema_main_description"
 msgstr ""
 
 #: voteit/core/schemas/meeting.py:147
-#: voteit/core/views/components/meeting_actions.py:103
+#: voteit/core/views/components/meeting_actions.py:104
 msgid "Mail settings"
 msgstr ""
 
 #: voteit/core/schemas/meeting.py:153
-#: voteit/core/views/components/meeting_actions.py:102
+#: voteit/core/views/components/meeting_actions.py:103
 msgid "Access policy"
 msgstr ""
 
@@ -1306,20 +1306,20 @@ msgid "private_poll_info"
 msgstr ""
 
 #: voteit/core/views/base_edit.py:106 voteit/core/views/base_edit.py:155
-#: voteit/core/views/base_edit.py:194 voteit/core/views/meeting.py:80
-#: voteit/core/views/meeting.py:204 voteit/core/views/poll.py:59
+#: voteit/core/views/base_edit.py:194 voteit/core/views/meeting.py:78
+#: voteit/core/views/meeting.py:202 voteit/core/views/poll.py:59
 #: voteit/core/views/site.py:179 voteit/core/views/ticket.py:110
 #: voteit/core/views/ticket.py:195 voteit/core/views/users.py:44
 #: voteit/core/workflows/poll.zcml:33
 msgid "Canceled"
 msgstr ""
 
-#: voteit/core/views/base_edit.py:145 voteit/core/views/meeting.py:197
+#: voteit/core/views/base_edit.py:145 voteit/core/views/meeting.py:195
 #: voteit/core/views/poll.py:51
 msgid "Successfully updated"
 msgstr ""
 
-#: voteit/core/views/base_edit.py:147 voteit/core/views/meeting.py:199
+#: voteit/core/views/base_edit.py:147 voteit/core/views/meeting.py:197
 #: voteit/core/views/users.py:231
 msgid "Nothing updated"
 msgstr ""
@@ -1372,8 +1372,12 @@ msgstr ""
 msgid "order_agenda_items_view_title"
 msgstr ""
 
+#: voteit/core/views/meeting.py:49
+msgid "Email addresses of participants"
+msgstr ""
+
 #. Default: You need to login or register before you can use any meetings.
-#: voteit/core/views/meeting.py:98
+#: voteit/core/views/meeting.py:96
 msgid "request_access_view_login_register"
 msgstr ""
 
@@ -1381,7 +1385,7 @@ msgstr ""
 #. This might mean that the registered access type for this meeting doesn't
 #. exist anylonger.                                     Please contact the
 #. moderator about this.
-#: voteit/core/views/meeting.py:109
+#: voteit/core/views/meeting.py:107
 msgid "access_policy_not_found"
 msgstr ""
 
@@ -1389,16 +1393,16 @@ msgstr ""
 #. This might mean that the registered access type for this meeting doesn't
 #. exist anylonger.                                     Please change access
 #. policy.
-#: voteit/core/views/meeting.py:125
+#: voteit/core/views/meeting.py:123
 msgid "access_policy_not_found_moderator"
 msgstr ""
 
-#: voteit/core/views/meeting.py:172
+#: voteit/core/views/meeting.py:170
 msgid "Review access policy configuration"
 msgstr ""
 
 #. Default: This meeting hasn't closed yet so these minutes won't be complete
-#: voteit/core/views/meeting.py:218
+#: voteit/core/views/meeting.py:216
 msgid "meeting_not_closed_minutes_incomplete_notice"
 msgstr ""
 
@@ -1407,12 +1411,12 @@ msgid "Edit permissions"
 msgstr ""
 
 #: voteit/core/views/permissions.py:28
-#: voteit/core/views/components/meeting_actions.py:88
+#: voteit/core/views/components/meeting_actions.py:89
 msgid "Root permissions"
 msgstr ""
 
 #: voteit/core/views/permissions.py:72
-#: voteit/core/views/components/meeting_actions.py:110
+#: voteit/core/views/components/meeting_actions.py:111
 #: voteit/core/views/templates/participants.pt:132
 msgid "Add participant"
 msgstr ""
@@ -1459,6 +1463,10 @@ msgstr ""
 #. the url of a meeting to request access to it.
 #: voteit/core/views/site.py:129
 msgid "joined_without_ticket_intro_text"
+msgstr ""
+
+#: voteit/core/views/site.py:205
+msgid "Email addresses of moderators with upcoming or ongoing meetings"
 msgstr ""
 
 #: voteit/core/views/ticket.py:31
@@ -1629,46 +1637,50 @@ msgid "Help & contact"
 msgstr ""
 
 #: voteit/core/views/components/meeting_actions.py:87
+msgid "Moderators emails"
+msgstr ""
+
+#: voteit/core/views/components/meeting_actions.py:88
 msgid "ReCaptcha"
 msgstr ""
 
-#: voteit/core/views/components/meeting_actions.py:89
+#: voteit/core/views/components/meeting_actions.py:90
 msgid "Server logs"
 msgstr ""
 
-#: voteit/core/views/components/meeting_actions.py:99
+#: voteit/core/views/components/meeting_actions.py:100
 msgid "Meeting poll settings"
 msgstr ""
 
-#: voteit/core/views/components/meeting_actions.py:100
+#: voteit/core/views/components/meeting_actions.py:101
 msgid "Agenda Templates"
 msgstr ""
 
-#: voteit/core/views/components/meeting_actions.py:101
+#: voteit/core/views/components/meeting_actions.py:102
 msgid "Layout and widgets"
 msgstr ""
 
-#: voteit/core/views/components/meeting_actions.py:105
+#: voteit/core/views/components/meeting_actions.py:106
 msgid "Meeting actions log"
 msgstr ""
 
-#: voteit/core/views/components/meeting_actions.py:106
+#: voteit/core/views/components/meeting_actions.py:107
 msgid "Minutes"
 msgstr ""
 
-#: voteit/core/views/components/meeting_actions.py:107
+#: voteit/core/views/components/meeting_actions.py:108
 msgid "Participants email addresses"
 msgstr ""
 
-#: voteit/core/views/components/meeting_actions.py:108
+#: voteit/core/views/components/meeting_actions.py:109
 msgid "Manage invites"
 msgstr ""
 
-#: voteit/core/views/components/meeting_actions.py:111
+#: voteit/core/views/components/meeting_actions.py:112
 msgid "Participant list"
 msgstr ""
 
-#: voteit/core/views/components/meeting_actions.py:118
+#: voteit/core/views/components/meeting_actions.py:119
 msgid "Configure selected access policy"
 msgstr ""
 
@@ -1874,11 +1886,11 @@ msgid "Sort"
 msgstr ""
 
 #: voteit/core/views/templates/agenda_template.pt:37
+#: voteit/core/views/templates/email_list.pt:23
 #: voteit/core/views/templates/list_users.pt:52
 #: voteit/core/views/templates/minutes.pt:44
 #: voteit/core/views/templates/participants.pt:21
 #: voteit/core/views/templates/participants.pt:123
-#: voteit/core/views/templates/participants_emails.pt:25
 msgid "Back"
 msgstr ""
 
@@ -2041,10 +2053,6 @@ msgstr ""
 #: voteit/core/views/templates/participants.pt:80
 #: voteit/core/views/templates/participants.pt:85
 msgid "none"
-msgstr ""
-
-#: voteit/core/views/templates/participants_emails.pt:9
-msgid "Email addresses of participants"
 msgstr ""
 
 #: voteit/core/views/templates/search.pt:20
@@ -2269,6 +2277,10 @@ msgstr ""
 
 #: voteit/core/views/templates/snippets/vote_success.pt:3
 msgid "Your vote has been registered!"
+msgstr ""
+
+#: voteit/core/views/templates/snippets/vote_success.pt:4
+msgid "As long as the poll is open, you may change your vote. If you want to review it, just open this window again."
 msgstr ""
 
 #. Default: en
