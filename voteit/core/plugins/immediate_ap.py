@@ -56,7 +56,8 @@ class ImmediateAPConfigSchema(colander.Schema):
     immediate_access_grant_roles = colander.SchemaNode(
         deform.Set(),
         title = _(u"Roles"),
-        description = _(u"Users will be granted these roles IMMEDIATELY upon requesting access."),
+        description = _(u"immediate_ap_schema_grant_description",
+                        default = u"Users will be granted these roles IMMEDIATELY upon requesting access."),
         default = (security.ROLE_VIEWER,),
         widget = deform.widget.CheckboxChoiceWidget(values=security.STANDARD_ROLES,),
     )
