@@ -187,3 +187,20 @@ class SiteFormView(BaseEdit):
         appstruct = self.context.get_field_appstruct(schema)
         self.response['form'] = form.render(appstruct)
         return self.response
+
+    @view_config(name="moderators_emails", context=ISiteRoot, renderer="templates/email_list.pt", permission=security.MANAGE_SERVER)
+    def moderators_emails(self):
+        """ List all moderators emails. """
+        userids = set()
+        for meeting in self.context.get_content(content_type = 'Meeting', states = ('ongoing', 'upcoming')):
+            userids.update(security.find_authorized_userids(meeting, (security.MODERATE_MEETING,)))
+        users = []
+        for userid in userids:
+            user = self.context.users.get(userid, None)
+            if user:
+                users.append(user)
+        def _sorter(obj):
+            return obj.get_field_value('email')
+        self.response['users'] = tuple(sorted(users, key = _sorter))
+        self.response['title'] = _(u"Email addresses of moderators with upcoming or ongoing meetings")
+        return self.response
