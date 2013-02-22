@@ -41,7 +41,7 @@ function voteit_inline_info(event, css_classes) {
             },
         },
         style: { 
-            classes: 'popup ' + css_classes,
+            classes: 'popup popup_dropshadow ' + css_classes,
             widget: true,
             tip: true,
         },
@@ -98,7 +98,7 @@ $('a.answer').live('click', function(event) {
             }
         },
         style: {
-            classes: "answer-popup popup inline_add_form", //popup class is general
+            classes: "answer-popup popup popup_dropshadow inline_add_form", //popup class is general
             widget: true,
             width: 358, // Exact same as columns!
         },

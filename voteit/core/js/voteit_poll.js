@@ -9,7 +9,7 @@ $('.open_poll_button').live('click', function(event) {
     var poll = $(this).parents(".poll");
     var id = $(poll).attr('id');
     var url = button.attr('href');
-    var booth_wrapper = $('<div class="booth_wrapper">');
+    var booth_wrapper = $('<div class="booth_wrapper popup_dropshadow">');
     $(booth_wrapper).attr('id', 'booth_'+id);
     $(booth_wrapper).appendTo('#main');
     $(booth_wrapper).position({
