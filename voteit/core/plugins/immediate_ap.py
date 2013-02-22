@@ -47,6 +47,11 @@ class ImmediateAP(AccessPolicy):
         )
         return render('templates/request_access_immediate.pt', response, request = api.request)
 
+    def view_submit(self, api):
+        roles = self.context.get_field_value('immediate_access_grant_roles')
+        self.context.add_groups(api.userid, roles)
+        api.flash_messages.add(_(u"Access granted - welcome!"))
+
     def config_schema(self, api, **kw):
         return createSchema('ImmediateAPConfigSchema')
 

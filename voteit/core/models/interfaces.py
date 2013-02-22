@@ -746,6 +746,9 @@ class IAccessPolicy(Interface):
     def view(api):
         """ Render view """
 
+    def view_submit(api):
+        """ Handle a possibly submitted form, i.e. granting roles or doing something else. """
+
     def config_schema(api, **kw):
         """ Return a schema to be used for configuring this access policy. Optional. """
 

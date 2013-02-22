@@ -28,6 +28,9 @@ class AccessPolicy(object):
     def view(self, api):
         raise NotImplementedError("Must be implementet by subclass")
 
+    def view_submit(self, api):
+        pass
+
     def config_schema(self, api, **kw):
         pass
 

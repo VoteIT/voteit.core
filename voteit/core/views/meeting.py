@@ -102,6 +102,10 @@ class MeetingView(BaseView):
 
         access_policy_name = self.context.get_field_value('access_policy', 'invite_only')
         access_policy = self.request.registry.queryAdapter(self.context, IAccessPolicy, name = access_policy_name)
+        if access_policy and 'request' in self.request.POST:
+            access_policy.view_submit(self.api)
+            return HTTPFound(location = self.api.meeting_url)
+
         self.response['access_policy'] = access_policy
         if access_policy is None:
             err_msg = _(u"access_policy_not_found",
