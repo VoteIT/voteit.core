@@ -1,3 +1,5 @@
+from pyramid.renderers import render
+
 from voteit.core.models.access_policy import AccessPolicy
 from voteit.core import VoteITMF as _
 
@@ -13,9 +15,8 @@ class InviteOnlyAP(AccessPolicy):
                     Contact meeting moderators for more information.""")
 
     def view(self, api):
-        msg = _(u"invite_only_meeting_access_request_description",
-                default = u"This meeting is invite only. That means that a mail will be sent with an access ticket. "
-                          u"Contact meeting moderators for more information.")
+        response = dict(api = api)
+        return render('templates/invite_only.pt', response, request = api.request)
 
 
 def includeme(config):
