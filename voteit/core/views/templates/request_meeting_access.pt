@@ -11,6 +11,7 @@
 			Public presentation
 		</div>
 		<div metal:define-slot="form" tal:content="structure form">Form</div>
+		<div class="clear"><!-- --></div>
 	</div>
 </body>
 </html>
