@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2013-02-21 12:32+0100\n"
+"POT-Creation-Date: 2013-02-22 11:10+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -149,7 +149,8 @@ msgstr ""
 msgid "Moderator"
 msgstr ""
 
-#: voteit/core/security.py:70 voteit/core/views/templates/participants.pt:36
+#: voteit/core/security.py:70 voteit/core/views/templates/agenda_template.pt:12
+#: voteit/core/views/templates/participants.pt:36
 msgid "View"
 msgstr ""
 
@@ -1038,36 +1039,45 @@ msgid "Footer"
 msgstr ""
 
 #: voteit/core/schemas/site.py:30
+msgid "Registration info"
+msgstr ""
+
+#. Default: Information displayed on the registration page, right hand side.
+#: voteit/core/schemas/site.py:31
+msgid "site_root_registration_info_description"
+msgstr ""
+
+#: voteit/core/schemas/site.py:37
 msgid "Allow authenticated users to add meetings"
 msgstr ""
 
-#: voteit/core/schemas/site.py:34
+#: voteit/core/schemas/site.py:41
 msgid "ReCaptcha settings"
 msgstr ""
 
 #. Default: CAPTCHAs can protect the site from spam attacks by robots. You'll
 #. need to register with ReCaptcha and  add the API keys here to activate this
 #. service.
-#: voteit/core/schemas/site.py:35
+#: voteit/core/schemas/site.py:42
 msgid "captcha_site_root_schema_main_description"
 msgstr ""
 
 #. Default: Require when registering on the site.
-#: voteit/core/schemas/site.py:44
+#: voteit/core/schemas/site.py:51
 msgid "captcha_registration_title"
 msgstr ""
 
 #. Default: Require when creating a new meeting. (If users are allowed to do
 #. that)
-#: voteit/core/schemas/site.py:48
+#: voteit/core/schemas/site.py:55
 msgid "captcha_meeting_title"
 msgstr ""
 
-#: voteit/core/schemas/site.py:51
+#: voteit/core/schemas/site.py:58
 msgid "Public ReCaptcha key"
 msgstr ""
 
-#: voteit/core/schemas/site.py:55
+#: voteit/core/schemas/site.py:62
 msgid "Private ReCaptcha key"
 msgstr ""
 
@@ -1212,7 +1222,7 @@ msgstr ""
 msgid "workflow_error_when_setting_proposal_as_voting"
 msgstr ""
 
-#: voteit/core/views/agenda_item.py:96
+#: voteit/core/views/agenda_item.py:122
 msgid "Status changed - note that workflow state also matters."
 msgstr ""
 
@@ -1635,7 +1645,7 @@ msgid "Actions here"
 msgstr ""
 
 #: voteit/core/views/components/moderator_actions.py:60
-#: voteit/core/views/templates/agenda_template.pt:11
+#: voteit/core/views/templates/agenda_template.pt:13
 #: voteit/core/views/templates/agenda_templates.pt:49
 #: voteit/core/views/templates/manage_agenda_items.pt:26
 #: voteit/core/views/templates/manage_agenda_items.pt:39
@@ -1663,6 +1673,7 @@ msgid "Manage agenda items"
 msgstr ""
 
 #: voteit/core/views/components/navigation.py:29
+#: voteit/core/views/templates/agenda_template.pt:29
 msgid "Agenda"
 msgstr ""
 
@@ -1853,13 +1864,21 @@ msgstr ""
 msgid "(hidden, click above to open)"
 msgstr ""
 
-#: voteit/core/views/templates/agenda_template.pt:15
+#: voteit/core/views/templates/agenda_item.pt:12
+msgid "Previous"
+msgstr ""
+
+#: voteit/core/views/templates/agenda_item.pt:14
+msgid "Next"
+msgstr ""
+
+#: voteit/core/views/templates/agenda_template.pt:16
 #: voteit/core/views/templates/agenda_templates.pt:53
 #: voteit/core/views/templates/order_agenda_items.pt:23
 msgid "Sort"
 msgstr ""
 
-#: voteit/core/views/templates/agenda_template.pt:37
+#: voteit/core/views/templates/agenda_template.pt:39
 #: voteit/core/views/templates/email_list.pt:23
 #: voteit/core/views/templates/list_users.pt:52
 #: voteit/core/views/templates/minutes.pt:44

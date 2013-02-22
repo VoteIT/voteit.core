@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2013-02-21 12:32+0100\n"
-"PO-Revision-Date: 2013-02-21 12:33+0100\n"
+"POT-Creation-Date: 2013-02-22 11:10+0100\n"
+"PO-Revision-Date: 2013-02-22 11:11+0100\n"
 "Last-Translator: Robin Harms Oredsson <robin@betahaus.net>\n"
 "Language-Team: sv <LL@li.org>\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -159,7 +159,9 @@ msgstr "Uppdateringen av rättigheter lyckades inte."
 msgid "Moderator"
 msgstr "Moderator"
 
-#: voteit/core/security.py:70 voteit/core/views/templates/participants.pt:36
+#: voteit/core/security.py:70
+#: voteit/core/views/templates/agenda_template.pt:12
+#: voteit/core/views/templates/participants.pt:36
 msgid "View"
 msgstr "Läsa"
 
@@ -1125,17 +1127,28 @@ msgid "Footer"
 msgstr "Footer"
 
 #: voteit/core/schemas/site.py:30
+#| msgid "Registration"
+msgid "Registration info"
+msgstr "Registreringsinfo"
+
+#. Default: Information displayed on the registration page, right hand side.
+#: voteit/core/schemas/site.py:31
+#| msgid "registration_captcha_description"
+msgid "site_root_registration_info_description"
+msgstr "Information att visa på registreringssidan, höger sida."
+
+#: voteit/core/schemas/site.py:37
 msgid "Allow authenticated users to add meetings"
 msgstr "Tillåt inloggade användare att lägga till möten"
 
-#: voteit/core/schemas/site.py:34
+#: voteit/core/schemas/site.py:41
 msgid "ReCaptcha settings"
 msgstr "ReCaptcha-inställningar"
 
 #. Default: CAPTCHAs can protect the site from spam attacks by robots. You'll
 #. need to register with ReCaptcha and  add the API keys here to activate this
 #. service.
-#: voteit/core/schemas/site.py:35
+#: voteit/core/schemas/site.py:42
 msgid "captcha_site_root_schema_main_description"
 msgstr ""
 "CAPTCHAs kan skydda sidan mot spamattacker från robotar. Du behöver "
@@ -1143,21 +1156,21 @@ msgstr ""
 "aktivera tjänsten."
 
 #. Default: Require when registering on the site.
-#: voteit/core/schemas/site.py:44
+#: voteit/core/schemas/site.py:51
 msgid "captcha_registration_title"
 msgstr "Kräv vid registrering på sidan."
 
 #. Default: Require when creating a new meeting. (If users are allowed to do
 #. that)
-#: voteit/core/schemas/site.py:48
+#: voteit/core/schemas/site.py:55
 msgid "captcha_meeting_title"
 msgstr "Kräv för att skapa ett nytt möte. (Om användare får göra det)"
 
-#: voteit/core/schemas/site.py:51
+#: voteit/core/schemas/site.py:58
 msgid "Public ReCaptcha key"
 msgstr "Publik ReCaptcha-nyckel"
 
-#: voteit/core/schemas/site.py:55
+#: voteit/core/schemas/site.py:62
 msgid "Private ReCaptcha key"
 msgstr "Privat ReCaptcha-nyckel"
 
@@ -1316,7 +1329,7 @@ msgstr ""
 "annat sätt. Alla ändringar har avbrutits, vänligen kontrollera förslagen och "
 "försök igen."
 
-#: voteit/core/views/agenda_item.py:96
+#: voteit/core/views/agenda_item.py:122
 msgid "Status changed - note that workflow state also matters."
 msgstr "Status ändrad - notera att arbetsflödestillstånd också har betydelse"
 
@@ -1708,7 +1721,6 @@ msgid "Help & contact"
 msgstr "Hjälp & kontakt"
 
 #: voteit/core/views/components/meeting_actions.py:86
-#| msgid "Moderator actions"
 msgid "Moderators emails"
 msgstr "Moderatorernas epost"
 
@@ -1769,7 +1781,7 @@ msgid "Actions here"
 msgstr "Funktioner här"
 
 #: voteit/core/views/components/moderator_actions.py:60
-#: voteit/core/views/templates/agenda_template.pt:11
+#: voteit/core/views/templates/agenda_template.pt:13
 #: voteit/core/views/templates/agenda_templates.pt:49
 #: voteit/core/views/templates/manage_agenda_items.pt:26
 #: voteit/core/views/templates/manage_agenda_items.pt:39
@@ -1797,6 +1809,7 @@ msgid "Manage agenda items"
 msgstr "Hantera dagordningspunkter"
 
 #: voteit/core/views/components/navigation.py:29
+#: voteit/core/views/templates/agenda_template.pt:29
 msgid "Agenda"
 msgstr "Dagordning"
 
@@ -2002,13 +2015,22 @@ msgstr "(Inget)"
 msgid "(hidden, click above to open)"
 msgstr "(gömd, klicka ovan för att öppna)"
 
-#: voteit/core/views/templates/agenda_template.pt:15
+#: voteit/core/views/templates/agenda_item.pt:12
+msgid "Previous"
+msgstr "Föregående"
+
+#: voteit/core/views/templates/agenda_item.pt:14
+#| msgid "Text"
+msgid "Next"
+msgstr "Nästa"
+
+#: voteit/core/views/templates/agenda_template.pt:16
 #: voteit/core/views/templates/agenda_templates.pt:53
 #: voteit/core/views/templates/order_agenda_items.pt:23
 msgid "Sort"
 msgstr "Sortera"
 
-#: voteit/core/views/templates/agenda_template.pt:37
+#: voteit/core/views/templates/agenda_template.pt:39
 #: voteit/core/views/templates/email_list.pt:23
 #: voteit/core/views/templates/list_users.pt:52
 #: voteit/core/views/templates/minutes.pt:44

@@ -236,12 +236,20 @@ class APIView(object):
     def search_catalog(self, context=None, **kwargs):
         """ Same as catalog.search, but also extracts path from context if it's specified.
             returns the same tuple with (itemcount, docid_set) as result.
+            
+            Note: search is deprecated in catalog so this will removed. Use query instead!
         """
         if context is not None:
             if 'path' in kwargs:
                 ValueError("Can't specify both context and path")
             kwargs['path'] = resource_path(context)
         return self.root.catalog.search(**kwargs)
+
+    def query_catalog(self, query, **kw):
+        """ Return a tuple of (itemcount, docids). Query object is either a CQE or a string.
+            Check repoze.catalog documentation for usage.
+        """
+        return self.root.catalog.query(query, **kw)
 
     def resolve_catalog_docid(self, docid):
         """ Take a catalog docid and fetch its object. Convenience wrapper for api view"""

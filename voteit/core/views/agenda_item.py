@@ -2,7 +2,7 @@ from deform import Form
 from pyramid.renderers import render
 from pyramid.response import Response
 from pyramid.view import view_config
-from pyramid.url import resource_url
+from pyramid.traversal import resource_path
 from pyramid.security import has_permission
 from pyramid.httpexceptions import HTTPForbidden
 from pyramid.httpexceptions import HTTPFound
@@ -43,10 +43,36 @@ class AgendaItemView(BaseView):
         self.response['ai_columns'] = self.api.render_single_view_component(self.context, self.request,
                                                                             'main', 'columns',
                                                                             **colkwargs)
+        self.response['next_ai'] = self.next_ai()
+        self.response['previous_ai'] = self.previous_ai()
         if self.request.is_xhr:
             Response(render('templates/ajax_tag_filter.pt', self.response, request=self.request))
         return self.response
-        
+
+    def next_ai(self):
+        """ Return next qgenda item within this workflow category, if there is one.
+        """
+        query = u"path == '%s' and content_type == 'AgendaItem'" % resource_path(self.context.__parent__)
+        query += u" and order > %s" % self.context.get_field_value('order')
+        query += u" and workflow_state == '%s'" % self.context.get_workflow_state()
+        #Note that docids might be a generator here
+        count, docids = self.api.query_catalog(query , limit = 1, sort_index='order')
+        if not count:
+            return
+        return self.api.resolve_catalog_docid(tuple(docids)[0])
+
+    def previous_ai(self):
+        """ Return previous agenda item within this workflow category, if there is one.
+        """
+        query = u"path == '%s' and content_type == 'AgendaItem'" % resource_path(self.context.__parent__)
+        query += u" and order < %s" % self.context.get_field_value('order')
+        query += u" and workflow_state == '%s'" % self.context.get_workflow_state()
+        #Note that docids might be a generator here
+        count, docids = self.api.query_catalog(query , limit = 1, sort_index='order', reverse = True)
+        if not count:
+            return
+        return self.api.resolve_catalog_docid(tuple(docids)[0])
+
     @view_config(context=IAgendaItem, name='_inline_form', permission=VIEW)
     def inline_add_form(self):
         """ Inline add form. Note the somewhat odd permissions on the view configuration.
@@ -79,7 +105,7 @@ class AgendaItemView(BaseView):
         if self.request.is_xhr:
             return Response(self.api.render_single_view_component(self.context, self.request, 'discussions', 'listing', api = self.api))
         
-        url = resource_url(self.context, self.request, query=self.request.GET, anchor="discussions")
+        url = self.request.resource_url(self.context, query=self.request.GET, anchor="discussions")
         return HTTPFound(location=url)
 
     @view_config(context = IAgendaItem, name = "_toggle_block", permission = MODERATE_MEETING)
@@ -94,7 +120,7 @@ class AgendaItemView(BaseView):
             val = bool(int(proposal_block))
             self.context.set_field_value('proposal_block', val)
         self.api.flash_messages.add(_(u"Status changed - note that workflow state also matters."))
-        url = resource_url(self.context, self.request)
+        url = self.request.resource_url(self.context)
         if self.request.referer:
             url = self.request.referer
         return HTTPFound(location=url)
