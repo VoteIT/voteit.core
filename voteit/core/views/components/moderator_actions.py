@@ -101,7 +101,7 @@ def block_specific_perm_action(context, request, va, **kw):
     return """<li><a href="%s">%s</a></li>""" % (url, api.translate(va.title))
 
 @view_action('context_actions', 'manage_agenda_items',
-             interface = IMeeting, permission = MODERATE_MEETING)
+             interface = IMeeting, permission = EDIT)
 def manage_agenda_items(context, request, va, **kw):
     """ Provide a link to the manage agenda items screen.
         Only for moderators and meeting objects.
