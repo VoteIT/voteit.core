@@ -33,7 +33,7 @@ ACL['default'] = [(Allow, security.ROLE_ADMIN, security.REGULAR_ADD_PERMISSIONS)
                   DENY_ALL,
                    ]
 
-ACL['closed'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, security.MODERATE_MEETING, security.MANAGE_GROUPS, security.DELETE, )),
+ACL['closed'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, security.MODERATE_MEETING, security.MANAGE_GROUPS, security.DELETE, security.CHANGE_WORKFLOW_STATE)),
                  (Allow, security.ROLE_MODERATOR, (security.VIEW, security.MODERATE_MEETING, security.MANAGE_GROUPS, )),
                  (Allow, security.ROLE_VIEWER, (security.VIEW, )),
                  DENY_ALL,
@@ -102,8 +102,8 @@ def closing_meeting_callback(context, info):
         raise an exception if any agenda item is ongoing.
     """
     #get_content returns a generator. It's "True" even if it's empty!
-    if tuple(context.get_content(iface=IAgendaItem, states='ongoing')):
+    if tuple(context.get_content(iface=IAgendaItem, states=('ongoing', 'upcoming'))):
         err_msg = _(u"error_cant_close_meeting_with_ongoing_ais",
-                    default = u"This meeting still has ongoing Agenda items in it. You can't close it until they're closed.")
+                    default = u"This meeting still has ongoing or upcoming Agenda items in it. You can't close it until they're closed.")
         raise HTTPForbidden(err_msg)
 
