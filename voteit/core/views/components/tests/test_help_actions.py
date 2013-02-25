@@ -45,7 +45,7 @@ class HelpActionsComponentTests(unittest.TestCase):
     def test_action_contact(self):
         context = self._fixture()
         request = testing.DummyRequest()
-        va = self._va()
+        va = self._va(title = 'Contact moderator')
         api = self._api(context, request)
         from voteit.core.views.components.help_actions import action_contact
         response = action_contact(context, request, va, api=api)
