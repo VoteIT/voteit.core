@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2013-02-25 13:36+0100\n"
+"POT-Creation-Date: 2013-02-25 16:33+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -268,6 +268,16 @@ msgstr ""
 
 #: voteit/core/validators.py:358
 msgid "Password is case sensitive."
+msgstr ""
+
+#. Default: Security token did not match. This may happen when you take a long
+#. time before completing a form, or during a server restart. Reload this page
+#. and try again. If you like to keep your information, copy it from this form.
+#. If you ended up on this page while filling in a form on another site,
+#. someone tried to hack your account. Please report this to the moderators
+#. immediately.
+#: voteit/core/validators.py:387
+msgid "csrf_token_error_notice"
 msgstr ""
 
 #: voteit/core/models/agenda_item.py:54 voteit/core/models/agenda_item.py:62
@@ -819,7 +829,7 @@ msgstr ""
 msgid "apply_to_all_title"
 msgstr ""
 
-#: voteit/core/schemas/invite_ticket.py:78 voteit/core/views/ticket.py:149
+#: voteit/core/schemas/invite_ticket.py:78 voteit/core/views/ticket.py:150
 msgid "Current invitations"
 msgstr ""
 
@@ -1326,7 +1336,7 @@ msgstr ""
 msgid "workflow_error_when_setting_proposal_as_voting"
 msgstr ""
 
-#: voteit/core/views/agenda_item.py:122
+#: voteit/core/views/agenda_item.py:120
 msgid "Status changed - note that workflow state also matters."
 msgstr ""
 
@@ -1350,54 +1360,54 @@ msgstr ""
 msgid "Order updated"
 msgstr ""
 
-#: voteit/core/views/base_edit.py:87 voteit/core/views/users.py:71
+#: voteit/core/views/base_edit.py:88 voteit/core/views/users.py:71
 msgid "Successfully added"
 msgstr ""
 
 #. Default: Please review poll specific settings. Any default value in a field
 #. is a suggestion from the plugin.
-#: voteit/core/views/base_edit.py:95
+#: voteit/core/views/base_edit.py:96
 msgid "review_poll_settings_info"
 msgstr ""
 
 #. Default: The poll is created in private state, to show it the participants
 #. you have to change the state to upcoming.
-#: voteit/core/views/base_edit.py:98
+#: voteit/core/views/base_edit.py:99
 msgid "private_poll_info"
 msgstr ""
 
-#: voteit/core/views/base_edit.py:106 voteit/core/views/base_edit.py:155
-#: voteit/core/views/base_edit.py:194 voteit/core/views/meeting.py:78
-#: voteit/core/views/meeting.py:206 voteit/core/views/poll.py:59
-#: voteit/core/views/site.py:179 voteit/core/views/ticket.py:110
-#: voteit/core/views/ticket.py:195 voteit/core/views/users.py:44
+#: voteit/core/views/base_edit.py:107 voteit/core/views/base_edit.py:157
+#: voteit/core/views/base_edit.py:197 voteit/core/views/meeting.py:79
+#: voteit/core/views/meeting.py:214 voteit/core/views/poll.py:60
+#: voteit/core/views/site.py:180 voteit/core/views/ticket.py:110
+#: voteit/core/views/ticket.py:193 voteit/core/views/users.py:44
 #: voteit/core/workflows/poll.zcml:33
 msgid "Canceled"
 msgstr ""
 
-#: voteit/core/views/base_edit.py:145 voteit/core/views/meeting.py:199
-#: voteit/core/views/poll.py:51
+#: voteit/core/views/base_edit.py:147 voteit/core/views/meeting.py:207
+#: voteit/core/views/poll.py:52
 msgid "Successfully updated"
 msgstr ""
 
-#: voteit/core/views/base_edit.py:147 voteit/core/views/meeting.py:201
-#: voteit/core/views/users.py:231
+#: voteit/core/views/base_edit.py:149 voteit/core/views/meeting.py:209
+#: voteit/core/views/users.py:229
 msgid "Nothing updated"
 msgstr ""
 
-#: voteit/core/views/base_edit.py:185
+#: voteit/core/views/base_edit.py:188
 msgid "Deleted"
 msgstr ""
 
 #. Default: You can't remove this proposal - it's used within the following
 #. polls: ${poll_titles}
-#: voteit/core/views/base_edit.py:206
+#: voteit/core/views/base_edit.py:209
 msgid "deleting_proposals_used_in_polls_not_allowed_error"
 msgstr ""
 
 #. Default: Are you sure you want to delete '${display_name}' with title:
 #. ${title}?
-#: voteit/core/views/base_edit.py:212
+#: voteit/core/views/base_edit.py:215
 msgid "delete_form_notice"
 msgstr ""
 
@@ -1450,7 +1460,7 @@ msgid "Email addresses of participants"
 msgstr ""
 
 #. Default: You need to login or register before you can use any meetings.
-#: voteit/core/views/meeting.py:96
+#: voteit/core/views/meeting.py:97
 msgid "request_access_view_login_register"
 msgstr ""
 
@@ -1458,7 +1468,7 @@ msgstr ""
 #. This might mean that the registered access type for this meeting doesn't
 #. exist anylonger.                                     Please contact the
 #. moderator about this.
-#: voteit/core/views/meeting.py:111
+#: voteit/core/views/meeting.py:112
 msgid "access_policy_not_found"
 msgstr ""
 
@@ -1466,16 +1476,16 @@ msgstr ""
 #. This might mean that the registered access type for this meeting doesn't
 #. exist anylonger.                                     Please change access
 #. policy.
-#: voteit/core/views/meeting.py:127
+#: voteit/core/views/meeting.py:128
 msgid "access_policy_not_found_moderator"
 msgstr ""
 
-#: voteit/core/views/meeting.py:174
+#: voteit/core/views/meeting.py:181
 msgid "Review access policy configuration"
 msgstr ""
 
 #. Default: This meeting hasn't closed yet so these minutes won't be complete
-#: voteit/core/views/meeting.py:220
+#: voteit/core/views/meeting.py:228
 msgid "meeting_not_closed_minutes_incomplete_notice"
 msgstr ""
 
@@ -1488,31 +1498,31 @@ msgstr ""
 msgid "Root permissions"
 msgstr ""
 
-#: voteit/core/views/permissions.py:72
+#: voteit/core/views/permissions.py:73
 #: voteit/core/views/components/meeting_actions.py:111
 #: voteit/core/views/templates/participants.pt:132
 msgid "Add participant"
 msgstr ""
 
-#: voteit/core/views/permissions.py:74
+#: voteit/core/views/permissions.py:75
 msgid "Add permission"
 msgstr ""
 
-#: voteit/core/views/permissions.py:97
+#: voteit/core/views/permissions.py:98
 msgid "Added permssion for user ${userid}"
 msgstr ""
 
-#: voteit/core/views/poll.py:53
+#: voteit/core/views/poll.py:54
 msgid "Nothing changed"
 msgstr ""
 
-#: voteit/core/views/poll.py:76
+#: voteit/core/views/poll.py:77
 msgid "Poll config"
 msgstr ""
 
 #. Default: To get back to the poll settings you click the cogwheel menu and
 #. select configure poll.
-#: voteit/core/views/poll.py:88
+#: voteit/core/views/poll.py:90
 msgid "review_poll_settings_info_getback"
 msgstr ""
 
@@ -1538,7 +1548,7 @@ msgstr ""
 msgid "joined_without_ticket_intro_text"
 msgstr ""
 
-#: voteit/core/views/site.py:205
+#: voteit/core/views/site.py:206
 msgid "Email addresses of moderators with upcoming or ongoing meetings"
 msgstr ""
 
@@ -1568,17 +1578,17 @@ msgid "Send meeting invitations"
 msgstr ""
 
 #. Default: Successfully added and sent ${mail_count} invites
-#: voteit/core/views/ticket.py:135
+#: voteit/core/views/ticket.py:136
 msgid "sent_tickets_text"
 msgstr ""
 
 #. Default: Resending ${count_emails} invites
-#: voteit/core/views/ticket.py:177
+#: voteit/core/views/ticket.py:175
 msgid "resent_invites_notice"
 msgstr ""
 
 #. Default: Deleting ${count_emails} invites
-#: voteit/core/views/ticket.py:187
+#: voteit/core/views/ticket.py:185
 msgid "deleting_invites_notice"
 msgstr ""
 
@@ -1586,33 +1596,33 @@ msgstr ""
 msgid "Add new user"
 msgstr ""
 
-#: voteit/core/views/users.py:107
+#: voteit/core/views/users.py:106
 msgid "Password changed"
 msgstr ""
 
-#: voteit/core/views/users.py:140
+#: voteit/core/views/users.py:139
 msgid "Password set. You may login now."
 msgstr ""
 
-#: voteit/core/views/users.py:151
+#: voteit/core/views/users.py:150
 msgid "Invalid security token. Did you click the link in your email?"
 msgstr ""
 
-#: voteit/core/views/users.py:190
+#: voteit/core/views/users.py:189
 msgid "Email sent."
 msgstr ""
 
-#: voteit/core/views/users.py:194
+#: voteit/core/views/users.py:193
 msgid "Username or email not found."
 msgstr ""
 
-#: voteit/core/views/users.py:227
+#: voteit/core/views/users.py:225
 msgid "Removing information for: ${domains}"
 msgstr ""
 
 #. Default: Couldn't find any user with userid '${info_userid}' within this
 #. meeting.
-#: voteit/core/views/users.py:270
+#: voteit/core/views/users.py:268
 msgid "userid_not_registered_within_meeting_error"
 msgstr ""
 

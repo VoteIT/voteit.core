@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2013-02-25 13:36+0100\n"
-"PO-Revision-Date: 2013-02-25 13:42+0100\n"
+"POT-Creation-Date: 2013-02-25 16:33+0100\n"
+"PO-Revision-Date: 2013-02-25 16:35+0100\n"
 "Last-Translator: Robin Harms Oredsson <robin@betahaus.net>\n"
 "Language-Team: sv <LL@li.org>\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -289,6 +289,23 @@ msgstr "Använd epostadress eller användarnamn för att logga in"
 #: voteit/core/validators.py:358
 msgid "Password is case sensitive."
 msgstr "Lösenord är skiftlägeskänsliga"
+
+#. Default: Security token did not match. This may happen when you take a long
+#. time before completing a form, or during a server restart. Reload this page
+#. and try again. If you like to keep your information, copy it from this form.
+#. If you ended up on this page while filling in a form on another site,
+#. someone tried to hack your account. Please report this to the moderators
+#. immediately.
+#: voteit/core/validators.py:387
+#| msgid "check_password_token_error"
+msgid "csrf_token_error_notice"
+msgstr ""
+"Säkerhetstoken matchade inte. Det kan hända när du tar tid på dig innan du "
+"är klar med ett formulär, eller under serveromstart. Ladda om denna sida och "
+"försök igen. Om du vill behålla din information, kopiera den från detta "
+"formulär. Om du hamnade på denna sida från ett formulär på en annan site så "
+"beror det på att någon försöker hacka ditt konto. Vänligen rapportera detta "
+"till moderatorerna omgående."
 
 #: voteit/core/models/agenda_item.py:54 voteit/core/models/agenda_item.py:62
 #: voteit/core/schemas/agenda_template.py:11
@@ -789,7 +806,6 @@ msgstr "Support"
 #. what's the title of the meeting? (It doesn't have to be exact, it's just so
 #. we know what to look for!)
 #: voteit/core/schemas/contact.py:65
-#| msgid "layuot_schema_main_description"
 msgid "support_schema_meeting_description"
 msgstr ""
 "Är denna fråga om ett specifikt möte? I så fall, vad är mötets namn? (Det "
@@ -804,7 +820,6 @@ msgstr "Vad behöver du hjälp med?"
 #. doing and how we can reproduce the error. The more information you send us,
 #. the better. We're really bad at reading minds...
 #: voteit/core/schemas/contact.py:74
-#| msgid "layuot_schema_main_description"
 msgid "support_schema_message_description"
 msgstr ""
 "Var vänlig och beskriv utförligt vilket problem du har. Om du rapporterar "
@@ -893,7 +908,7 @@ msgstr "Påminn deltagare som ännu inte anlänt till mötet"
 msgid "apply_to_all_title"
 msgstr "Använd för allt nedan, oavsett valda"
 
-#: voteit/core/schemas/invite_ticket.py:78 voteit/core/views/ticket.py:149
+#: voteit/core/schemas/invite_ticket.py:78 voteit/core/views/ticket.py:150
 msgid "Current invitations"
 msgstr "Nuvarande inbjudningar"
 
@@ -1254,7 +1269,6 @@ msgstr "Support-epost för denna site"
 #. Default: This email will receive mail sent through the support request form
 #. visible in the help menu.
 #: voteit/core/schemas/site.py:41
-#| msgid "search_schema_query_description"
 msgid "support_email_schema_desription"
 msgstr ""
 "Denna epostadress kommer ta emot mail skickat via support-formuläret som "
@@ -1448,7 +1462,7 @@ msgstr ""
 "annat sätt. Alla ändringar har avbrutits, vänligen kontrollera förslagen och "
 "försök igen."
 
-#: voteit/core/views/agenda_item.py:122
+#: voteit/core/views/agenda_item.py:120
 msgid "Status changed - note that workflow state also matters."
 msgstr "Status ändrad - notera att arbetsflödestillstånd också har betydelse"
 
@@ -1472,13 +1486,13 @@ msgstr "Dra och släpp dagordningspunkter för att ändra ordningen"
 msgid "Order updated"
 msgstr "Ordningen är uppdaterad"
 
-#: voteit/core/views/base_edit.py:87 voteit/core/views/users.py:71
+#: voteit/core/views/base_edit.py:88 voteit/core/views/users.py:71
 msgid "Successfully added"
 msgstr "Tillagt"
 
 #. Default: Please review poll specific settings. Any default value in a field
 #. is a suggestion from the plugin.
-#: voteit/core/views/base_edit.py:95
+#: voteit/core/views/base_edit.py:96
 msgid "review_poll_settings_info"
 msgstr ""
 "Vänligen granska de omröstningsmetodspecifika inställningarna. "
@@ -1486,38 +1500,38 @@ msgstr ""
 
 #. Default: The poll is created in private state, to show it the participants
 #. you have to change the state to upcoming.
-#: voteit/core/views/base_edit.py:98
+#: voteit/core/views/base_edit.py:99
 msgid "private_poll_info"
 msgstr ""
 "Denna omröstning är skapad i status privat, för att visa den för dina "
 "deltagare måste du ändra dess status till kommande."
 
-#: voteit/core/views/base_edit.py:106 voteit/core/views/base_edit.py:155
-#: voteit/core/views/base_edit.py:194 voteit/core/views/meeting.py:78
-#: voteit/core/views/meeting.py:206 voteit/core/views/poll.py:59
-#: voteit/core/views/site.py:179 voteit/core/views/ticket.py:110
-#: voteit/core/views/ticket.py:195 voteit/core/views/users.py:44
+#: voteit/core/views/base_edit.py:107 voteit/core/views/base_edit.py:157
+#: voteit/core/views/base_edit.py:197 voteit/core/views/meeting.py:79
+#: voteit/core/views/meeting.py:214 voteit/core/views/poll.py:60
+#: voteit/core/views/site.py:180 voteit/core/views/ticket.py:110
+#: voteit/core/views/ticket.py:193 voteit/core/views/users.py:44
 #: voteit/core/workflows/poll.zcml:33
 msgid "Canceled"
 msgstr "Avbruten"
 
-#: voteit/core/views/base_edit.py:145 voteit/core/views/meeting.py:199
-#: voteit/core/views/poll.py:51
+#: voteit/core/views/base_edit.py:147 voteit/core/views/meeting.py:207
+#: voteit/core/views/poll.py:52
 msgid "Successfully updated"
 msgstr "Uppdaterad"
 
-#: voteit/core/views/base_edit.py:147 voteit/core/views/meeting.py:201
-#: voteit/core/views/users.py:231
+#: voteit/core/views/base_edit.py:149 voteit/core/views/meeting.py:209
+#: voteit/core/views/users.py:229
 msgid "Nothing updated"
 msgstr "Inget uppdaterat"
 
-#: voteit/core/views/base_edit.py:185
+#: voteit/core/views/base_edit.py:188
 msgid "Deleted"
 msgstr "Raderad"
 
 #. Default: You can't remove this proposal - it's used within the following
 #. polls: ${poll_titles}
-#: voteit/core/views/base_edit.py:206
+#: voteit/core/views/base_edit.py:209
 msgid "deleting_proposals_used_in_polls_not_allowed_error"
 msgstr ""
 "Du kan inte radera förslaget - det används i följande omröstningar: "
@@ -1525,7 +1539,7 @@ msgstr ""
 
 #. Default: Are you sure you want to delete '${display_name}' with title:
 #. ${title}?
-#: voteit/core/views/base_edit.py:212
+#: voteit/core/views/base_edit.py:215
 msgid "delete_form_notice"
 msgstr ""
 "Är du säker på att du vill radera '${display_name}' med titeln: ${title}"
@@ -1581,7 +1595,7 @@ msgid "Email addresses of participants"
 msgstr "Epostadresser till alla registrerade deltagare"
 
 #. Default: You need to login or register before you can use any meetings.
-#: voteit/core/views/meeting.py:96
+#: voteit/core/views/meeting.py:97
 msgid "request_access_view_login_register"
 msgstr ""
 "Detta möte kräver att deltagarna är inloggade. Om du är registrerad var "
@@ -1592,7 +1606,7 @@ msgstr ""
 #. This might mean that the registered access type for this meeting doesn't
 #. exist anylonger.                                     Please contact the
 #. moderator about this.
-#: voteit/core/views/meeting.py:111
+#: voteit/core/views/meeting.py:112
 msgid "access_policy_not_found"
 msgstr ""
 "Kan inte hitta någon accesspolicy med id ${policy}. Det kan betyda att den "
@@ -1603,19 +1617,19 @@ msgstr ""
 #. This might mean that the registered access type for this meeting doesn't
 #. exist anylonger.                                     Please change access
 #. policy.
-#: voteit/core/views/meeting.py:127
+#: voteit/core/views/meeting.py:128
 msgid "access_policy_not_found_moderator"
 msgstr ""
 "Kan inte hitta en accesspolicy med id '${policy}'. Det kan betyda att den "
 "registrerade accesspolicyn för mötet inte existerar längre. Vänligen "
 "kontakta moderatorn om detta."
 
-#: voteit/core/views/meeting.py:174
+#: voteit/core/views/meeting.py:181
 msgid "Review access policy configuration"
 msgstr "Granska konfiguration för accesspolicy"
 
 #. Default: This meeting hasn't closed yet so these minutes won't be complete
-#: voteit/core/views/meeting.py:220
+#: voteit/core/views/meeting.py:228
 msgid "meeting_not_closed_minutes_incomplete_notice"
 msgstr "Mötet har inte avslutats så protokollet är inte komplett"
 
@@ -1628,31 +1642,31 @@ msgstr "Redigera rättigheter"
 msgid "Root permissions"
 msgstr "Rooträttigheter"
 
-#: voteit/core/views/permissions.py:72
+#: voteit/core/views/permissions.py:73
 #: voteit/core/views/components/meeting_actions.py:111
 #: voteit/core/views/templates/participants.pt:132
 msgid "Add participant"
 msgstr "Lägg till användare"
 
-#: voteit/core/views/permissions.py:74
+#: voteit/core/views/permissions.py:75
 msgid "Add permission"
 msgstr "Lägg till rättighet"
 
-#: voteit/core/views/permissions.py:97
+#: voteit/core/views/permissions.py:98
 msgid "Added permssion for user ${userid}"
 msgstr "Rättigheter för användare ${userid} tillagd"
 
-#: voteit/core/views/poll.py:53
+#: voteit/core/views/poll.py:54
 msgid "Nothing changed"
 msgstr "Inget ändrat"
 
-#: voteit/core/views/poll.py:76
+#: voteit/core/views/poll.py:77
 msgid "Poll config"
 msgstr "Omröstningsinställning"
 
 #. Default: To get back to the poll settings you click the cogwheel menu and
 #. select configure poll.
-#: voteit/core/views/poll.py:88
+#: voteit/core/views/poll.py:90
 msgid "review_poll_settings_info_getback"
 msgstr ""
 "För att komma tillbak till omröstningsinställningarna klicka på "
@@ -1686,7 +1700,7 @@ msgstr ""
 "möte behöver du antingen använda inbjudan som du fått per epost eller känna "
 "till en direktlänk till mötet för att begära tillträde till det."
 
-#: voteit/core/views/site.py:205
+#: voteit/core/views/site.py:206
 msgid "Email addresses of moderators with upcoming or ongoing meetings"
 msgstr "Epostadresser för moderatorer med pågående eller kommande möten"
 
@@ -1721,17 +1735,17 @@ msgid "Send meeting invitations"
 msgstr "Skicka mötesinbjudningar"
 
 #. Default: Successfully added and sent ${mail_count} invites
-#: voteit/core/views/ticket.py:135
+#: voteit/core/views/ticket.py:136
 msgid "sent_tickets_text"
 msgstr "La till och skickade ${mail_count} inbjudningar"
 
 #. Default: Resending ${count_emails} invites
-#: voteit/core/views/ticket.py:177
+#: voteit/core/views/ticket.py:175
 msgid "resent_invites_notice"
 msgstr "Skickar om ${count_emails} inbjudningar"
 
 #. Default: Deleting ${count_emails} invites
-#: voteit/core/views/ticket.py:187
+#: voteit/core/views/ticket.py:185
 msgid "deleting_invites_notice"
 msgstr "Raderar ${count_emails} inbjudningar"
 
@@ -1739,33 +1753,33 @@ msgstr "Raderar ${count_emails} inbjudningar"
 msgid "Add new user"
 msgstr "Lägg till ny användare"
 
-#: voteit/core/views/users.py:107
+#: voteit/core/views/users.py:106
 msgid "Password changed"
 msgstr "Lösenord ändrat"
 
-#: voteit/core/views/users.py:140
+#: voteit/core/views/users.py:139
 msgid "Password set. You may login now."
 msgstr "Lösenord satt. Du kan logga in nu."
 
-#: voteit/core/views/users.py:151
+#: voteit/core/views/users.py:150
 msgid "Invalid security token. Did you click the link in your email?"
 msgstr "Ogiltigt engångslösenord. Klickade du på länken du fick med epost?"
 
-#: voteit/core/views/users.py:190
+#: voteit/core/views/users.py:189
 msgid "Email sent."
 msgstr "Epost skickad."
 
-#: voteit/core/views/users.py:194
+#: voteit/core/views/users.py:193
 msgid "Username or email not found."
 msgstr "Användarnamn eller epost hittades inte"
 
-#: voteit/core/views/users.py:227
+#: voteit/core/views/users.py:225
 msgid "Removing information for: ${domains}"
 msgstr "Tar bort information för: ${domains}"
 
 #. Default: Couldn't find any user with userid '${info_userid}' within this
 #. meeting.
-#: voteit/core/views/users.py:270
+#: voteit/core/views/users.py:268
 msgid "userid_not_registered_within_meeting_error"
 msgstr ""
 "Ingen användare med användarnamn '${info_userid}' kan hittas i detta möte."
@@ -2477,7 +2491,6 @@ msgid "Link to VoteIT"
 msgstr "Länk till VoteIT"
 
 #: voteit/core/views/templates/email/support.pt:18
-#| msgid "Edit meeting"
 msgid "Regarding meeting"
 msgstr "Angående möte"
 
@@ -2593,6 +2606,3 @@ msgstr "Avslagen"
 #: voteit/core/workflows/proposal.zcml:43
 msgid "Unhandled"
 msgstr "Ohanterad"
-
-#~ msgid "Contact"
-#~ msgstr "Kontakt"
