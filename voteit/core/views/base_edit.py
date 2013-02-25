@@ -57,10 +57,7 @@ class DefaultEdit(BaseEdit):
 
         factory = self.api.get_content_factory(content_type)
         schema_name = self.api.get_schema_name(content_type, 'add')
-        schema = createSchema(schema_name)
-        add_csrf_token(self.context, self.request, schema)
-        schema = schema.bind(context=self.context, request=self.request, api=self.api, tag=tag)
-        
+        schema = createSchema(schema_name).bind(context=self.context, request=self.request, api=self.api, tag=tag)        
         form = Form(schema, buttons=(button_add, button_cancel))
         self.api.register_form_resources(form)
 
