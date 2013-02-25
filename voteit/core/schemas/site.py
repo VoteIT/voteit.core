@@ -36,6 +36,11 @@ class SiteRootSchema(colander.MappingSchema):
     allow_add_meeting = colander.SchemaNode(colander.Boolean(),
                                             title = _(u"Allow authenticated users to add meetings"),
                                             default = False,)
+    support_email = colander.SchemaNode(colander.String(),
+           title = _(u"Support email for this site"),
+           description = _(u"support_email_schema_desription",
+                           default = u"This email will receive mail sent through the support request form visible in the help menu."),
+           validator = colander.Email(),) 
 
 
 @schema_factory('CaptchaSiteRootSchema', title = _(u"ReCaptcha settings"),
