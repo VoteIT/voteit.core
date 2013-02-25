@@ -150,8 +150,9 @@ class SiteFormView(BaseEdit):
 
     @view_config(name="recaptcha", context=ISiteRoot, renderer="templates/base_edit.pt", permission = security.EDIT)
     def recaptcha(self):
-        schema = createSchema("CaptchaSiteRootSchema").bind(context=self.context, request=self.request)
+        schema = createSchema("CaptchaSiteRootSchema")
         add_csrf_token(self.context, self.request, schema)
+        schema = schema.bind(context=self.context, request=self.request, api = self.api)
         form = deform.Form(schema, buttons=(button_save, button_cancel), use_ajax=True, ajax_options=ajax_options)
         self.api.register_form_resources(form)
 

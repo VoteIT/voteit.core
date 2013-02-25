@@ -111,8 +111,9 @@ class TicketView(BaseView):
             url = resource_url(self.context, self.request)
             return HTTPFound(location=url)
 
-        schema = createSchema('AddTicketsSchema').bind(context=self.context, request=self.request)
+        schema = createSchema('AddTicketsSchema')
         add_csrf_token(self.context, self.request, schema)
+        schema = schema.bind(context=self.context, request=self.request, api = self.api)
 
         form = deform.Form(schema, buttons=(button_add, button_cancel))
         self.api.register_form_resources(form)
@@ -147,15 +148,12 @@ class TicketView(BaseView):
         """ A form for handling and reviewing already sent tickets.
         """
         self.response['title'] = _(u"Current invitations")
-
-        schema = createSchema('ManageTicketsSchema').bind(context=self.context, request=self.request)
+        schema = createSchema('ManageTicketsSchema')
         add_csrf_token(self.context, self.request, schema)
-            
+        schema = schema.bind(context=self.context, request=self.request, api = self.api)
         form = deform.Form(schema, buttons=(button_resend, button_delete, button_cancel,))
         self.api.register_form_resources(form)
-
         post = self.request.POST
-
         emails = ()
 
         if 'resend' in post or 'delete' in post:

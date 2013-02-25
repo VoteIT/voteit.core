@@ -2,9 +2,13 @@ import re
 from datetime import timedelta
 
 import colander
+import deform
+from pyramid.testing import DummyRequest
 
 from voteit.core.models.interfaces import IDateTimeUtil
 from voteit.core.models.interfaces import IAgendaItem
+from voteit.core.validators import deferred_csrf_token_validator
+
 
 NAME_PATTERN = re.compile(r'^[\w\s]{3,100}$', flags=re.UNICODE)
 HASHTAG_PATTERN = re.compile(r'^[\w\s_\-]{2,100}$', flags=re.UNICODE)
@@ -87,3 +91,22 @@ def strip_whitespace(value):
     if not isinstance(value, basestring):
         return value
     return "\n".join([x.strip() for x in value.splitlines()])
+
+def add_csrf_token(context, request, schema):
+    """ Append csrf-token to schema, if it isn't added by a testing script. """
+    #Make sure this is not a blank testing request
+    if isinstance(request, DummyRequest) and request.session.get_csrf_token() == 'csrft':
+        return
+    schema.add(colander.SchemaNode(
+                   colander.String(),
+                   name="csrf_token",
+                   widget = deform.widget.HiddenWidget(),
+                   default = deferred_default_csrf_token,
+                   validator = deferred_csrf_token_validator,
+                   )
+               )
+
+@colander.deferred
+def deferred_default_csrf_token(node, kw):
+    request = kw['request']
+    return request.session.get_csrf_token()

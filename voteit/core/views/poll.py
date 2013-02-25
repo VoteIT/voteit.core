@@ -32,8 +32,9 @@ class PollView(BaseEdit):
     def edit_form(self):
         """ For configuring polls that haven't started yet. """
         schema_name = self.api.get_schema_name(self.context.content_type, 'edit')
-        schema = createSchema(schema_name, after_bind=poll_schema_after_bind).bind(context=self.context, request=self.request)
+        schema = createSchema(schema_name, after_bind=poll_schema_after_bind)
         add_csrf_token(self.context, self.request, schema)
+        schema = schema.bind(context=self.context, request=self.request, api = self.api)
         form = Form(schema, buttons=(button_update, button_cancel))
         self.api.register_form_resources(form)
         post = self.request.POST
@@ -80,6 +81,7 @@ class PollView(BaseEdit):
         if schema is None:
             raise Forbidden("No settings for this poll")
         add_csrf_token(self.context, self.request, schema)
+        schema = schema.bind(context=self.context, request=self.request, api = self.api)
 
         form = Form(schema, buttons=(button_save, button_cancel))
         self.api.register_form_resources(form)
@@ -119,6 +121,7 @@ class PollView(BaseEdit):
         poll_plugin = self.context.get_poll_plugin()
         schema = poll_plugin.get_vote_schema(self.request, self.api)
         add_csrf_token(self.context, self.request, schema)
+        schema = schema.bind(context=self.context, request=self.request, api = self.api)        
         form = Form(schema,
                     action=self.request.resource_url(self.context, '_poll_form'),
                     buttons=(button_vote,),

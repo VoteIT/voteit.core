@@ -4,7 +4,6 @@ from zope.component import adapts
 
 from voteit.core.models.interfaces import IAccessPolicy
 from voteit.core.models.interfaces import IMeeting
-from voteit.core.models.schemas import add_csrf_token
 from voteit.core.models.schemas import button_cancel
 from voteit.core.models.schemas import button_save
 

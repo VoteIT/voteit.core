@@ -26,8 +26,9 @@ class ParticipantsView(BaseView):
 
     @view_config(name="_participants_set_groups", context=IMeeting, xhr = True, permission = security.MANAGE_GROUPS)
     def ajax_set_groups(self):
-        schema = createSchema('PermissionsSchema').bind(context=self.context, request=self.request)
+        schema = createSchema('PermissionsSchema')
         add_csrf_token(self.context, self.request, schema)
+        schema = schema.bind(context=self.context, request=self.request, api = self.api)
         form = Form(schema, buttons=('save', 'cancel'))
         controls = self.request.POST.items()
         appstruct = form.validate(controls)

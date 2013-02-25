@@ -55,8 +55,9 @@ class MeetingView(BaseView):
         """
         self.response['title'] = _(u"Layout")
 
-        schema = createSchema('LayoutSchema').bind(context=self.context, request=self.request)
+        schema = createSchema('LayoutSchema')
         add_csrf_token(self.context, self.request, schema)
+        schema = schema.bind(context=self.context, request=self.request, api=self.api)
             
         form = Form(schema, buttons=(button_save, button_cancel,))
         self.api.register_form_resources(form)
@@ -156,17 +157,23 @@ class MeetingView(BaseView):
 
     @view_config(context=IMeeting, name="presentation", renderer="templates/base_edit.pt", permission=security.MODERATE_MEETING)
     def presentation(self):
-        schema = createSchema("PresentationMeetingSchema").bind(context=self.context, request=self.request)
+        schema = createSchema("PresentationMeetingSchema")
+        add_csrf_token(self.context, self.request, schema)
+        schema = schema.bind(context=self.context, request=self.request, api = self.api)
         return self.form(schema)
     
     @view_config(context=IMeeting, name="mail_settings", renderer="templates/base_edit.pt", permission=security.MODERATE_MEETING)
     def mail_settings(self):
-        schema = createSchema("MailSettingsMeetingSchema").bind(context=self.context, request=self.request)
+        schema = createSchema("MailSettingsMeetingSchema")
+        add_csrf_token(self.context, self.request, schema)
+        schema = schema.bind(context=self.context, request=self.request, api = self.api)
         return self.form(schema)
         
     @view_config(context=IMeeting, name="access_policy", renderer="templates/base_edit.pt", permission=security.MODERATE_MEETING)
     def access_policy(self):
-        schema = createSchema("AccessPolicyMeetingSchema").bind(context=self.context, request=self.request)
+        schema = createSchema("AccessPolicyMeetingSchema")
+        add_csrf_token(self.context, self.request, schema)
+        schema = schema.bind(context=self.context, request=self.request, api = self.api)
         result = self.form(schema)
         if 'save' in self.request.POST:
             ap = self.request.registry.queryAdapter(self.context, IAccessPolicy, name = self.context.get_field_value('access_policy', ''))
@@ -178,11 +185,12 @@ class MeetingView(BaseView):
 
     @view_config(context=IMeeting, name="meeting_poll_settings", renderer="templates/base_edit.pt", permission=security.MODERATE_MEETING)
     def global_poll_settings(self):
-        schema = createSchema("MeetingPollSettingsSchema").bind(context=self.context, request=self.request)
+        schema = createSchema("MeetingPollSettingsSchema")
+        add_csrf_token(self.context, self.request, schema)
+        schema = schema.bind(context=self.context, request=self.request, api = self.api)
         return self.form(schema)
 
     def form(self, schema):
-        add_csrf_token(self.context, self.request, schema)
         form = Form(schema, buttons=(button_save, button_cancel))
         self.api.register_form_resources(form)
         post = self.request.POST

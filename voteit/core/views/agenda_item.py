@@ -16,7 +16,6 @@ from voteit.core.views.base_view import BaseView
 from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IDiscussionPost
 from voteit.core.models.interfaces import IProposal
-from voteit.core.models.schemas import add_csrf_token
 from voteit.core.security import VIEW
 from voteit.core.security import MODERATE_MEETING
 from voteit.core.models.schemas import button_add
@@ -85,7 +84,6 @@ class AgendaItemView(BaseView):
             raise HTTPForbidden("You're not allowed to add '%s' in this context." % content_type)        
         schema_name = self.api.get_schema_name(content_type, 'add')
         schema = createSchema(schema_name).bind(context = self.context, request = self.request, api = self.api)
-        add_csrf_token(self.context, self.request, schema)
         query = {'content_type': content_type, 'tag': tag}
         url = self.request.resource_url(self.context, 'add', query=query)
         form = Form(schema, action=url, buttons=(button_add,))
@@ -136,7 +134,6 @@ class AgendaItemView(BaseView):
         
         schema_name = self.api.get_schema_name(content_type, 'add')
         schema = createSchema(schema_name).bind(context = self.context, request = self.request, api = self.api)
-        add_csrf_token(self.context, self.request, schema)
         
         url = self.request.resource_url(self.context, 'answer')
         form = Form(schema, 

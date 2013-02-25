@@ -31,8 +31,9 @@ class PermissionsView(BaseView):
             url = resource_url(self.context, self.request)
             return HTTPFound(location=url)
 
-        schema = createSchema('PermissionsSchema').bind(context=self.context, request=self.request)
+        schema = createSchema('PermissionsSchema')
         add_csrf_token(self.context, self.request, schema)
+        schema = schema.bind(context=self.context, request=self.request, api = self.api)
 
         form = Form(schema, buttons=('save', 'cancel'))
         self.api.register_form_resources(form)
@@ -78,9 +79,9 @@ class PermissionsView(BaseView):
             url = resource_url(self.context, self.request)
             return HTTPFound(location=url)
 
-        schema = createSchema('SinglePermissionSchema').bind(context=self.context, request=self.request)
+        schema = createSchema('SinglePermissionSchema')
         add_csrf_token(self.context, self.request, schema)
-
+        schema = schema.bind(context=self.context, request=self.request, api = self.api)
         form = Form(schema, buttons=(button_add, button_cancel))
         self.api.register_form_resources(form)
 

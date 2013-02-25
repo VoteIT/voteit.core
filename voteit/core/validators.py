@@ -373,3 +373,29 @@ def deferred_login_password_validator(form, kw):
     context = kw['context']
     root = find_root(context)
     return LoginPasswordValidator(root)
+
+
+class CSRFTokenValidator(object):
+    """ Validate CSRF token. Important for all forms regarding security.
+    """
+    def __init__(self, api):
+        self.api = api
+    
+    def __call__(self, node, value):
+        token = self.api.request.session.get_csrf_token()
+        if not value or value != token:
+            msg = _(u"csrf_token_error_notice",
+                    default = u"Security token did not match. This may happen when you take a long "
+                              u"time before completing a form, or during a server restart. "
+                              u"Reload this page and try again. If you like to keep your information, copy it from this form. "
+                              u"If you ended up on this page while filling in a form on another site, someone tried to hack your account. "
+                              u"Please report this to the moderators immediately.")
+            #Add to flash message as well, hidden fields won't display validation errors!
+            self.api.flash_messages.add(msg, type = 'error')
+            raise colander.Invalid(node, msg)
+
+
+@colander.deferred
+def deferred_csrf_token_validator(node, kw):
+    api = kw['api']
+    return CSRFTokenValidator(api)

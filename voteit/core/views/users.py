@@ -45,9 +45,9 @@ class UsersFormView(BaseEdit):
             url = resource_url(self.context, self.request)
             return HTTPFound(location=url)
 
-        schema = createSchema('AddUserSchema').bind(context=self.context, request=self.request)
+        schema = createSchema('AddUserSchema')
         add_csrf_token(self.context, self.request, schema)
-
+        schema = schema.bind(context=self.context, request=self.request, api = self.api)
         form = Form(schema, buttons=(button_add, button_cancel))
         self.api.register_form_resources(form)
 
@@ -83,12 +83,11 @@ class UsersFormView(BaseEdit):
     def password_form(self):
         # if admin is changing password for another user no verification of current password is needed
         if self.context != self.api.user_profile and self.api.context_has_permission(MANAGE_SERVER, self.api.root):
-            schema = createSchema('ChangePasswordAdminSchema').bind(context=self.context, request=self.request)
+            schema = createSchema('ChangePasswordAdminSchema')
         else:
-            schema = createSchema('ChangePasswordSchema').bind(context=self.context, request=self.request)
-        
+            schema = createSchema('ChangePasswordSchema')
         add_csrf_token(self.context, self.request, schema)
-
+        schema = schema.bind(context=self.context, request=self.request, api = self.api)
         form = Form(schema, buttons=(button_update, button_cancel))
         self.api.register_form_resources(form)
 
@@ -208,7 +207,6 @@ class UsersFormView(BaseEdit):
     @view_config(context=IUser, name="manage_connections", renderer='templates/base_edit.pt', permission=EDIT)
     def view_edit_manage_connected_profiles(self):
         schema = createSchema('ManageConnectedProfilesSchema').bind(context=self.context, request=self.request)
-        add_csrf_token(self.context, self.request, schema)
         form = Form(schema, buttons=(button_delete, button_cancel))
         self.api.register_form_resources(form)
     
