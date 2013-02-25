@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2013-02-22 11:19+0100\n"
+"POT-Creation-Date: 2013-02-25 13:36+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -336,12 +336,13 @@ msgid "Log entry"
 msgstr ""
 
 #: voteit/core/models/meeting.py:43 voteit/core/models/meeting.py:51
+#: voteit/core/schemas/contact.py:64
 #: voteit/core/views/components/meeting_actions.py:70
 msgid "Meeting"
 msgstr ""
 
-#. Default: This meeting still has ongoing Agenda items in it. You can't close
-#. it until they're closed.
+#. Default: This meeting still has ongoing or upcoming Agenda items in it. You
+#. can't close it until they're closed.
 #: voteit/core/models/meeting.py:106
 msgid "error_cant_close_meeting_with_ongoing_ais"
 msgstr ""
@@ -549,23 +550,27 @@ msgstr ""
 msgid "public_access_description"
 msgstr ""
 
-#: voteit/core/plugins/immediate_ap.py:54
+#: voteit/core/plugins/immediate_ap.py:53
+msgid "Access granted - welcome!"
+msgstr ""
+
+#: voteit/core/plugins/immediate_ap.py:59
 msgid "Configure immediate access policy"
 msgstr ""
 
-#: voteit/core/plugins/immediate_ap.py:58
+#: voteit/core/plugins/immediate_ap.py:63
 #: voteit/core/schemas/invite_ticket.py:30
 msgid "Roles"
 msgstr ""
 
 #. Default: Users will be granted these roles IMMEDIATELY upon requesting
 #. access.
-#: voteit/core/plugins/immediate_ap.py:59
+#: voteit/core/plugins/immediate_ap.py:64
 msgid "immediate_ap_schema_grant_description"
 msgstr ""
 
 #. Default: Access will only be granted through invites (Default)
-#: voteit/core/plugins/invite_only_ap.py:8
+#: voteit/core/plugins/invite_only_ap.py:10
 msgid "meeting_access_invite_only_label"
 msgstr ""
 
@@ -574,8 +579,8 @@ msgstr ""
 #. moderators for more information.
 #. Default: This meeting is invite only. That means that a mail will be sent
 #. with an access ticket. Contact meeting moderators for more information.
-#: voteit/core/plugins/invite_only_ap.py:10
-#: voteit/core/plugins/invite_only_ap.py:16
+#: voteit/core/plugins/invite_only_ap.py:12
+#: voteit/core/plugins/templates/invite_only.pt:2
 msgid "invite_only_meeting_access_request_description"
 msgstr ""
 
@@ -593,6 +598,16 @@ msgstr ""
 
 #: voteit/core/plugins/majority_poll.py:42
 msgid "You can't change your vote now."
+msgstr ""
+
+#: voteit/core/plugins/templates/invite_only.pt:7
+#: voteit/core/views/templates/agenda_template.pt:39
+#: voteit/core/views/templates/email_list.pt:23
+#: voteit/core/views/templates/list_users.pt:52
+#: voteit/core/views/templates/minutes.pt:44
+#: voteit/core/views/templates/participants.pt:21
+#: voteit/core/views/templates/participants.pt:123
+msgid "Back"
 msgstr ""
 
 #. Default: This is a meeting where anyone can request access. The roles below
@@ -663,27 +678,29 @@ msgstr ""
 msgid "Agenda items"
 msgstr ""
 
-#: voteit/core/schemas/contact.py:11
+#: voteit/core/schemas/contact.py:19
+#: voteit/core/views/components/help_actions.py:11
 msgid "Contact moderator"
 msgstr ""
 
 #. Default: Send a message to the meeting moderators
-#: voteit/core/schemas/contact.py:12
+#: voteit/core/schemas/contact.py:20
 msgid "contact_schema_main_description"
 msgstr ""
 
-#: voteit/core/schemas/contact.py:16 voteit/core/schemas/permissions.py:48
+#: voteit/core/schemas/contact.py:24 voteit/core/schemas/contact.py:50
+#: voteit/core/schemas/permissions.py:48
 #: voteit/core/views/templates/participants.pt:33
 msgid "Name"
 msgstr ""
 
 #. Default: Leave this field empty if you want to be anonymous
-#: voteit/core/schemas/contact.py:17
+#: voteit/core/schemas/contact.py:25
 msgid "contact_schema_name_description"
 msgstr ""
 
-#: voteit/core/schemas/contact.py:23 voteit/core/schemas/user.py:63
-#: voteit/core/views/templates/list_users.pt:24
+#: voteit/core/schemas/contact.py:31 voteit/core/schemas/contact.py:54
+#: voteit/core/schemas/user.py:63 voteit/core/views/templates/list_users.pt:24
 #: voteit/core/views/templates/participants.pt:34
 #: voteit/core/views/templates/snippets/user_basic_info.pt:8
 msgid "Email"
@@ -691,16 +708,40 @@ msgstr ""
 
 #. Default: Leave this field empty if you want to be anonymous. Remember that
 #. you won't be able to receive a reply if it's empty!
-#: voteit/core/schemas/contact.py:24
+#: voteit/core/schemas/contact.py:32 voteit/core/schemas/contact.py:55
 msgid "contact_schema_email_description"
 msgstr ""
 
-#: voteit/core/schemas/contact.py:30
+#: voteit/core/schemas/contact.py:38 voteit/core/schemas/contact.py:61
 msgid "Subject"
 msgstr ""
 
-#: voteit/core/schemas/contact.py:33 voteit/core/views/templates/logs.pt:16
+#: voteit/core/schemas/contact.py:41 voteit/core/views/templates/logs.pt:16
 msgid "Message"
+msgstr ""
+
+#: voteit/core/schemas/contact.py:46
+#: voteit/core/views/components/help_actions.py:27
+msgid "Support"
+msgstr ""
+
+#. Default: Is this support request about a specific meeting? In that case,
+#. what's the title of the meeting? (It doesn't have to be exact, it's just so
+#. we know what to look for!)
+#: voteit/core/schemas/contact.py:65
+msgid "support_schema_meeting_description"
+msgstr ""
+
+#: voteit/core/schemas/contact.py:73
+msgid "What do you need help with?"
+msgstr ""
+
+#. Default: Please take time to describe what you need help with, or what went
+#. wrong. If you're submitting an error report, please explain what you were
+#. doing and how we can reproduce the error. The more information you send us,
+#. the better. We're really bad at reading minds...
+#: voteit/core/schemas/contact.py:74
+msgid "support_schema_message_description"
 msgstr ""
 
 #: voteit/core/schemas/discussion_post.py:21
@@ -1104,33 +1145,43 @@ msgstr ""
 msgid "Allow authenticated users to add meetings"
 msgstr ""
 
+#: voteit/core/schemas/site.py:40
+msgid "Support email for this site"
+msgstr ""
+
+#. Default: This email will receive mail sent through the support request form
+#. visible in the help menu.
 #: voteit/core/schemas/site.py:41
+msgid "support_email_schema_desription"
+msgstr ""
+
+#: voteit/core/schemas/site.py:46
 msgid "ReCaptcha settings"
 msgstr ""
 
 #. Default: CAPTCHAs can protect the site from spam attacks by robots. You'll
 #. need to register with ReCaptcha and  add the API keys here to activate this
 #. service.
-#: voteit/core/schemas/site.py:42
+#: voteit/core/schemas/site.py:47
 msgid "captcha_site_root_schema_main_description"
 msgstr ""
 
 #. Default: Require when registering on the site.
-#: voteit/core/schemas/site.py:51
+#: voteit/core/schemas/site.py:56
 msgid "captcha_registration_title"
 msgstr ""
 
 #. Default: Require when creating a new meeting. (If users are allowed to do
 #. that)
-#: voteit/core/schemas/site.py:55
+#: voteit/core/schemas/site.py:60
 msgid "captcha_meeting_title"
 msgstr ""
 
-#: voteit/core/schemas/site.py:58
+#: voteit/core/schemas/site.py:63
 msgid "Public ReCaptcha key"
 msgstr ""
 
-#: voteit/core/schemas/site.py:62
+#: voteit/core/schemas/site.py:67
 msgid "Private ReCaptcha key"
 msgstr ""
 
@@ -1317,19 +1368,19 @@ msgstr ""
 
 #: voteit/core/views/base_edit.py:106 voteit/core/views/base_edit.py:155
 #: voteit/core/views/base_edit.py:194 voteit/core/views/meeting.py:78
-#: voteit/core/views/meeting.py:202 voteit/core/views/poll.py:59
+#: voteit/core/views/meeting.py:206 voteit/core/views/poll.py:59
 #: voteit/core/views/site.py:179 voteit/core/views/ticket.py:110
 #: voteit/core/views/ticket.py:195 voteit/core/views/users.py:44
 #: voteit/core/workflows/poll.zcml:33
 msgid "Canceled"
 msgstr ""
 
-#: voteit/core/views/base_edit.py:145 voteit/core/views/meeting.py:195
+#: voteit/core/views/base_edit.py:145 voteit/core/views/meeting.py:199
 #: voteit/core/views/poll.py:51
 msgid "Successfully updated"
 msgstr ""
 
-#: voteit/core/views/base_edit.py:147 voteit/core/views/meeting.py:197
+#: voteit/core/views/base_edit.py:147 voteit/core/views/meeting.py:201
 #: voteit/core/views/users.py:231
 msgid "Nothing updated"
 msgstr ""
@@ -1356,6 +1407,18 @@ msgstr ""
 
 #: voteit/core/views/contact.py:73
 msgid "Message sent to the moderators"
+msgstr ""
+
+#: voteit/core/views/contact.py:89
+msgid "No support email set for this site. Form won't work!"
+msgstr ""
+
+#: voteit/core/views/contact.py:115
+msgid "VoteIT Support"
+msgstr ""
+
+#: voteit/core/views/contact.py:122
+msgid "Support request sent!"
 msgstr ""
 
 #. Default: Can't find anything at '${path}'. Maybe it has been removed?
@@ -1395,7 +1458,7 @@ msgstr ""
 #. This might mean that the registered access type for this meeting doesn't
 #. exist anylonger.                                     Please contact the
 #. moderator about this.
-#: voteit/core/views/meeting.py:107
+#: voteit/core/views/meeting.py:111
 msgid "access_policy_not_found"
 msgstr ""
 
@@ -1403,16 +1466,16 @@ msgstr ""
 #. This might mean that the registered access type for this meeting doesn't
 #. exist anylonger.                                     Please change access
 #. policy.
-#: voteit/core/views/meeting.py:123
+#: voteit/core/views/meeting.py:127
 msgid "access_policy_not_found_moderator"
 msgstr ""
 
-#: voteit/core/views/meeting.py:170
+#: voteit/core/views/meeting.py:174
 msgid "Review access policy configuration"
 msgstr ""
 
 #. Default: This meeting hasn't closed yet so these minutes won't be complete
-#: voteit/core/views/meeting.py:216
+#: voteit/core/views/meeting.py:220
 msgid "meeting_not_closed_minutes_incomplete_notice"
 msgstr ""
 
@@ -1578,11 +1641,7 @@ msgstr ""
 msgid "VoteIT Manual"
 msgstr ""
 
-#: voteit/core/views/components/help_actions.py:16
-msgid "Contact"
-msgstr ""
-
-#: voteit/core/views/components/help_actions.py:25
+#: voteit/core/views/components/help_actions.py:19
 msgid "Lost your password?"
 msgstr ""
 
@@ -1753,7 +1812,7 @@ msgstr ""
 
 #: voteit/core/views/components/navigation.py:44
 #: voteit/core/workflows/agenda_item.zcml:28
-#: voteit/core/workflows/meeting.zcml:23 voteit/core/workflows/poll.zcml:28
+#: voteit/core/workflows/meeting.zcml:22 voteit/core/workflows/poll.zcml:28
 msgid "Ongoing"
 msgstr ""
 
@@ -1768,7 +1827,7 @@ msgstr ""
 #: voteit/core/views/templates/modal_poll.pt:60
 #: voteit/core/workflows/agenda_item.zcml:33
 #: voteit/core/workflows/invite_ticket.zcml:23
-#: voteit/core/workflows/meeting.zcml:28 voteit/core/workflows/poll.zcml:38
+#: voteit/core/workflows/meeting.zcml:26 voteit/core/workflows/poll.zcml:38
 msgid "Closed"
 msgstr ""
 
@@ -1902,15 +1961,6 @@ msgstr ""
 #: voteit/core/views/templates/agenda_templates.pt:53
 #: voteit/core/views/templates/order_agenda_items.pt:23
 msgid "Sort"
-msgstr ""
-
-#: voteit/core/views/templates/agenda_template.pt:39
-#: voteit/core/views/templates/email_list.pt:23
-#: voteit/core/views/templates/list_users.pt:52
-#: voteit/core/views/templates/minutes.pt:44
-#: voteit/core/views/templates/participants.pt:21
-#: voteit/core/views/templates/participants.pt:123
-msgid "Back"
 msgstr ""
 
 #: voteit/core/views/templates/agenda_templates.pt:16
@@ -2156,10 +2206,12 @@ msgid "edit_profile_image_help"
 msgstr ""
 
 #: voteit/core/views/templates/email/help_contact.pt:12
+#: voteit/core/views/templates/email/support.pt:11
 msgid "From"
 msgstr ""
 
 #: voteit/core/views/templates/email/help_contact.pt:21
+#: voteit/core/views/templates/email/support.pt:21
 msgid "Click the link to get to the VoteIT meeting:"
 msgstr ""
 
@@ -2226,6 +2278,10 @@ msgstr ""
 
 #: voteit/core/views/templates/email/request_password.pt:26
 msgid "Link to VoteIT"
+msgstr ""
+
+#: voteit/core/views/templates/email/support.pt:18
+msgid "Regarding meeting"
 msgstr ""
 
 #: voteit/core/views/templates/snippets/ai_discussions.pt:3
