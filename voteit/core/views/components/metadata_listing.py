@@ -12,6 +12,7 @@ from voteit.core.models.proposal import Proposal
 from voteit.core.security import RETRACT 
 from voteit.core.security import VIEW
 from voteit.core.security import ADD_PROPOSAL
+from voteit.core.security import ADD_DISCUSSION_POST
 from voteit.core.security import DELETE
 
 
@@ -78,25 +79,24 @@ def meta_user_tags(context, request, va, **kw):
 
 @view_action('metadata_listing', 'answer', permission=VIEW)
 def meta_answer(context, request, va, **kw):
+    """ Create a reply link. Replies are always discussion posts. Brain here is a metadata object
+        of the content that's being replied to.
+    """
     api = kw['api']
     brain = kw['brain']
-    if not api.meeting.get_field_value('tags_enabled', True) or \
-        api.context.get_field_value('discussion_block', False):
-        return u""
+#    if not api.meeting.get_field_value('tags_enabled', True) or \
+#        api.context.get_field_value('discussion_block', False):
+#        return u""
     #Check add permission
     ai = find_interface(context, IAgendaItem)
-    add_perm = api.content_types_add_perm('Proposal')
-    if not api.context_has_permission(add_perm, ai):
+    if not api.context_has_permission(ADD_DISCUSSION_POST, ai):
         return u""
-
     if brain['content_type'] == 'Proposal':
         label = _(u'Comment')
     else:
         label = _(u'Reply')
-                  
-    return '<span><a class="answer" ' \
-           'href="%s%s/answer" ' \
-           '>%s</a></span>'  % (request.application_url, brain['path'], api.translate(label))
+    return '<a class="answer" href="%s%s/answer">%s</a>'  %\
+        (request.application_url, brain['path'], api.translate(label))
 
 @view_action('metadata_listing', 'tag', permission=VIEW)
 def meta_tag(context, request, va, **kw):
