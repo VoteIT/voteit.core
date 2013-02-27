@@ -286,50 +286,59 @@ class Ballots(object):
             self.ballots[value] = 1
 
 
-def closing_poll_callback(content, info):
-    """ Workflow callback when a poll is closed. Content is a poll here. """
-    content.close_poll()
+def closing_poll_callback(poll, info):
+    """ Workflow callback when a poll is closed."""
+    poll.close_poll()
 
+def lock_proposals(poll, request):
+    """ Set proposals to voting. """
+    count = 0
+    for proposal in poll.get_proposal_objects():
+        if 'voting' in [x['name'] for x in proposal.get_available_workflow_states(request)]:
+            proposal.set_workflow_state(request, 'voting')
+            count += 1
+    if count:
+        fm = FlashMessages(request)
+        localizer = get_localizer(request)
+        prop_form = localizer.pluralize(_(u"proposal"), _(u"proposals"), count)
+        ts = _ #So i18n tools don't pick it up
+        prop_form = localizer.translate(ts(prop_form))
+        msg = _(u'poll_proposals_locked_notice',
+                default=u"Setting ${count} ${prop_form} as 'locked for vote'. "
+                        u"They can no longer be edited or retracted by normal users. "
+                        u"All proposals participating in an ongoing poll should be locked.",
+                mapping={'count':count,
+                         'prop_form': prop_form})
+        fm.add(msg)
 
-def upcoming_poll_callback(content, info):
+def upcoming_poll_callback(poll, info):
     """ Workflow callback when a poll is set in the upcoming state.
         This method sets all proposals in the locked for vote-state.
     """
     request = get_current_request()
-    count = 0
-    for proposal in content.get_proposal_objects():
-        if 'voting' in [x['name'] for x in proposal.get_available_workflow_states(request)]:
-            proposal.set_workflow_state(request, 'voting')
-            count += 1
-
+    lock_proposals(poll, request)
     fm = FlashMessages(request)
     msg = _('poll_upcoming_state_notice',
             default=u"Setting poll in upcoming state. It's now visible for meeting participants.")
     fm.add(msg)
-    if count:
-        msg = _(u'poll_closed_proposals_locked_notice',
-                default=u"${count} selected proposals were set in the 'locked for vote' state. They can no longer be edited or retracted by normal users.",
-                mapping={'count':count})
-        fm.add(msg)
 
-
-def ongoing_poll_callback(context, info):
+def ongoing_poll_callback(poll, info):
     """ Workflow callback when a poll is set in the ongoing state.
         This method will raise an exeption if the parent agenda item is not ongoing or if there is no proposals in the poll.
     """
-    ai = find_interface(context, IAgendaItem)
+    ai = find_interface(poll, IAgendaItem)
     if ai.get_workflow_state() != 'ongoing':
         err_msg = _(u"error_poll_cant_be_ongoing_unless_ai_is",
                     default = u"You can't set a poll to ongoing if the agenda item is not ongoing.")
         raise HTTPForbidden(err_msg)
-    if not context.proposal_uids:
-        request = get_current_request()
-        edit_tag = '<a href="%sedit"><b>%s</b></a>' % (resource_url(context, request), context.title)
+    request = get_current_request()
+    if not poll.proposal_uids:
+        edit_tag = '<a href="%sedit"><b>%s</b></a>' % (resource_url(poll, request), poll.title)
         err_msg = _(u"error_no_proposals_in_poll",
                     default = u"A poll with no proposal can not be set to ongoing. Click link to edit: ${tag}",
                     mapping = {'tag': edit_tag})
         raise HTTPForbidden(err_msg)
-
+    lock_proposals(poll, request)
 
 def email_voters_about_ongoing_poll(poll, request=None):
     """ Email voters about that a poll they have voting permission in is open.

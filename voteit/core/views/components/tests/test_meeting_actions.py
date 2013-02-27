@@ -32,12 +32,7 @@ class MeetingActionsComponentTests(unittest.TestCase):
                 self.title = title
                 self.kwargs = kwargs
         return ViewAction(name, title, kwargs)
-    
-    def _enable_catalog(self):
-        self.config.scan('voteit.core.subscribers.catalog')
-        self.config.include('voteit.core.models.user_tags')
-        self.config.include('voteit.core.models.catalog')
-        
+
     def test_meeting_actions(self):
         self.config.testing_securitypolicy(userid='dummy',
                                            permissive=True)
@@ -57,16 +52,13 @@ class MeetingActionsComponentTests(unittest.TestCase):
     def test_polls_menu(self):
         self.config.testing_securitypolicy(userid='dummy',
                                            permissive=True)
-        
         from voteit.core.models.agenda_item import AgendaItem
         from voteit.core.models.proposal import Proposal
         from voteit.core.models.poll import Poll
         self.config.include('voteit.core.plugins.majority_poll')
-
-        self._enable_catalog()
-        
+        self.config.include('voteit.core.testing_helpers.register_catalog')
         request = testing.DummyRequest()
-
+        self.config = testing.setUp(request = request)
         context = self._fixture()
         context.set_workflow_state(request, 'ongoing')
         context['ai'] = ai = AgendaItem()
@@ -79,7 +71,6 @@ class MeetingActionsComponentTests(unittest.TestCase):
         ai['poll'].set_field_value('proposals', set((p1.uid, p2.uid)))
         ai['poll'].set_workflow_state(request, 'upcoming')
         ai['poll'].set_workflow_state(request, 'ongoing')
-        
         va = self._va('Poll')
         api = self._api(context, request)
         from voteit.core.views.components.meeting_actions import polls_menu
@@ -141,9 +132,7 @@ class MeetingActionsComponentTests(unittest.TestCase):
         from voteit.core.models.proposal import Proposal
         from voteit.core.models.poll import Poll
         self.config.include('voteit.core.plugins.majority_poll')
-
-        self._enable_catalog()
-        
+        self.config.include('voteit.core.testing_helpers.register_catalog')
         request = testing.DummyRequest()
         context = self._fixture()
         context.set_workflow_state(request, 'ongoing')

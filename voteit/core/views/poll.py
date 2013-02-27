@@ -47,6 +47,14 @@ class PollView(BaseEdit):
                 self.response['form'] = e.render()
                 return self.response
 
+            removed_uids = set(self.context.proposal_uids) - set(appstruct['proposals'])
+            if removed_uids:
+                #Adjust removed proposals back to published state, if they're locked
+                for uid in removed_uids:
+                    prop = self.context.get_proposal_by_uid(uid)
+                    if prop.get_workflow_state() == 'voting':
+                        prop.set_workflow_state(self.request, u'published')
+
             updated = self.context.set_field_appstruct(appstruct)
             if updated:
                 self.api.flash_messages.add(_(u"Successfully updated"))
