@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2013-02-25 16:33+0100\n"
-"PO-Revision-Date: 2013-02-25 16:35+0100\n"
+"POT-Creation-Date: 2013-02-27 13:07+0100\n"
+"PO-Revision-Date: 2013-02-27 13:09+0100\n"
 "Last-Translator: Robin Harms Oredsson <robin@betahaus.net>\n"
 "Language-Team: sv <LL@li.org>\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -95,12 +95,12 @@ msgid "Poll"
 msgstr "Omröstning"
 
 #: voteit/core/js_translations.py:25
-#: voteit/core/views/components/metadata_listing.py:95
+#: voteit/core/views/components/metadata_listing.py:97
 msgid "Reply"
 msgstr "Svara"
 
 #: voteit/core/js_translations.py:26
-#: voteit/core/views/components/metadata_listing.py:93
+#: voteit/core/views/components/metadata_listing.py:95
 msgid "Comment"
 msgstr "Kommentera"
 
@@ -297,7 +297,6 @@ msgstr "Lösenord är skiftlägeskänsliga"
 #. someone tried to hack your account. Please report this to the moderators
 #. immediately.
 #: voteit/core/validators.py:387
-#| msgid "check_password_token_error"
 msgid "csrf_token_error_notice"
 msgstr ""
 "Säkerhetstoken matchade inte. Det kan hända när du tar tid på dig innan du "
@@ -423,25 +422,37 @@ msgstr ""
 "Omröstningspluginen är trasig. Kan inte visa resultat.För att se felet, slå "
 "på debug_templates på servern."
 
+#: voteit/core/models/poll.py:303
+#| msgid "Proposal"
+msgid "proposal"
+msgstr "förslag"
+
+#: voteit/core/models/poll.py:303
+#| msgid "Proposals"
+msgid "proposals"
+msgstr "förslag"
+
+#. Default: Setting ${count} ${prop_form} as 'locked for vote'. They can no
+#. longer be edited or retracted by normal users. All proposals participating
+#. in an ongoing poll should be locked.
+#: voteit/core/models/poll.py:306
+#| msgid "poll_closed_proposals_locked_notice"
+msgid "poll_proposals_locked_notice"
+msgstr ""
+"Sätter ${count} ${prop_form} som 'låst för omröstning'. De kan inte längre "
+"ändras eller dras tillbaka av icke moderatorer. Alla förslag som deltar i en "
+"omröstning bör vara låsta."
+
 #. Default: Setting poll in upcoming state. It's now visible for meeting
 #. participants.
-#: voteit/core/models/poll.py:306
+#: voteit/core/models/poll.py:321
 msgid "poll_upcoming_state_notice"
 msgstr ""
 "Omröstning är nu i tillståndet 'kommande'. Den är nu synlig för "
 "mötesdeltagare."
 
-#. Default: ${count} selected proposals were set in the 'locked for vote'
-#. state. They can no longer be edited or retracted by normal users.
-#: voteit/core/models/poll.py:310
-msgid "poll_closed_proposals_locked_notice"
-msgstr ""
-"De ${count} förslag som ingår i omröstningen har satts i tillståndet 'låst "
-"för omröstning'. De kan inte längre ändras eller dras tillbaka av icke "
-"moderatorer."
-
 #. Default: You can't set a poll to ongoing if the agenda item is not ongoing.
-#: voteit/core/models/poll.py:322
+#: voteit/core/models/poll.py:331
 msgid "error_poll_cant_be_ongoing_unless_ai_is"
 msgstr ""
 "Du kan inte göra en omröstning till pågående om dagordningspunkten inte är "
@@ -449,13 +460,13 @@ msgstr ""
 
 #. Default: A poll with no proposal can not be set to ongoing. Click link to
 #. edit: ${tag}
-#: voteit/core/models/poll.py:328
+#: voteit/core/models/poll.py:337
 msgid "error_no_proposals_in_poll"
 msgstr ""
 "En omröstning utan förslagn kan inte göras till pågående. Klicka på länken "
 "för att ändra: ${tag}"
 
-#: voteit/core/models/poll.py:370
+#: voteit/core/models/poll.py:379
 msgid "VoteIT: Open poll"
 msgstr "VoteIT: Pågående omröstning"
 
@@ -673,7 +684,7 @@ msgstr "Du kan inte ändra din röst nu"
 #: voteit/core/plugins/templates/invite_only.pt:7
 #: voteit/core/views/templates/agenda_template.pt:39
 #: voteit/core/views/templates/email_list.pt:23
-#: voteit/core/views/templates/list_users.pt:52
+#: voteit/core/views/templates/list_users.pt:54
 #: voteit/core/views/templates/minutes.pt:44
 #: voteit/core/views/templates/participants.pt:21
 #: voteit/core/views/templates/participants.pt:123
@@ -775,7 +786,7 @@ msgid "contact_schema_name_description"
 msgstr "Lämna fältet tomt om du vill vara anonym"
 
 #: voteit/core/schemas/contact.py:31 voteit/core/schemas/contact.py:54
-#: voteit/core/schemas/user.py:63 voteit/core/views/templates/list_users.pt:24
+#: voteit/core/schemas/user.py:63 voteit/core/views/templates/list_users.pt:27
 #: voteit/core/views/templates/participants.pt:34
 #: voteit/core/views/templates/snippets/user_basic_info.pt:8
 msgid "Email"
@@ -797,7 +808,7 @@ msgstr "Ämne"
 msgid "Message"
 msgstr "Meddelande"
 
-#: voteit/core/schemas/contact.py:46
+#: voteit/core/schemas/contact.py:46 voteit/core/views/contact.py:115
 #: voteit/core/views/components/help_actions.py:27
 msgid "Support"
 msgstr "Support"
@@ -1085,7 +1096,7 @@ msgstr ""
 #: voteit/core/schemas/permissions.py:42 voteit/core/schemas/permissions.py:79
 #: voteit/core/schemas/user.py:46 voteit/core/schemas/user.py:126
 #: voteit/core/schemas/user.py:143
-#: voteit/core/views/templates/list_users.pt:21
+#: voteit/core/views/templates/list_users.pt:24
 #: voteit/core/views/templates/logs.pt:20
 #: voteit/core/views/templates/email/request_password.pt:25
 msgid "UserID"
@@ -1336,11 +1347,11 @@ msgstr ""
 "Använd minst 6 tecken. En bra princip är att ha långa lösenord som inte "
 "baseras på personlig information eller riktiga ord."
 
-#: voteit/core/schemas/user.py:69 voteit/core/views/templates/list_users.pt:22
+#: voteit/core/schemas/user.py:69 voteit/core/views/templates/list_users.pt:25
 msgid "First name"
 msgstr "Förnamn"
 
-#: voteit/core/schemas/user.py:74 voteit/core/views/templates/list_users.pt:23
+#: voteit/core/schemas/user.py:74 voteit/core/views/templates/list_users.pt:26
 msgid "Last name"
 msgstr "Efternamn"
 
@@ -1486,13 +1497,13 @@ msgstr "Dra och släpp dagordningspunkter för att ändra ordningen"
 msgid "Order updated"
 msgstr "Ordningen är uppdaterad"
 
-#: voteit/core/views/base_edit.py:88 voteit/core/views/users.py:71
+#: voteit/core/views/base_edit.py:85 voteit/core/views/users.py:71
 msgid "Successfully added"
 msgstr "Tillagt"
 
 #. Default: Please review poll specific settings. Any default value in a field
 #. is a suggestion from the plugin.
-#: voteit/core/views/base_edit.py:96
+#: voteit/core/views/base_edit.py:93
 msgid "review_poll_settings_info"
 msgstr ""
 "Vänligen granska de omröstningsmetodspecifika inställningarna. "
@@ -1500,38 +1511,38 @@ msgstr ""
 
 #. Default: The poll is created in private state, to show it the participants
 #. you have to change the state to upcoming.
-#: voteit/core/views/base_edit.py:99
+#: voteit/core/views/base_edit.py:96
 msgid "private_poll_info"
 msgstr ""
 "Denna omröstning är skapad i status privat, för att visa den för dina "
 "deltagare måste du ändra dess status till kommande."
 
-#: voteit/core/views/base_edit.py:107 voteit/core/views/base_edit.py:157
-#: voteit/core/views/base_edit.py:197 voteit/core/views/meeting.py:79
-#: voteit/core/views/meeting.py:214 voteit/core/views/poll.py:60
+#: voteit/core/views/base_edit.py:104 voteit/core/views/base_edit.py:154
+#: voteit/core/views/base_edit.py:194 voteit/core/views/meeting.py:79
+#: voteit/core/views/meeting.py:214 voteit/core/views/poll.py:68
 #: voteit/core/views/site.py:180 voteit/core/views/ticket.py:110
 #: voteit/core/views/ticket.py:193 voteit/core/views/users.py:44
 #: voteit/core/workflows/poll.zcml:33
 msgid "Canceled"
 msgstr "Avbruten"
 
-#: voteit/core/views/base_edit.py:147 voteit/core/views/meeting.py:207
-#: voteit/core/views/poll.py:52
+#: voteit/core/views/base_edit.py:144 voteit/core/views/meeting.py:207
+#: voteit/core/views/poll.py:60
 msgid "Successfully updated"
 msgstr "Uppdaterad"
 
-#: voteit/core/views/base_edit.py:149 voteit/core/views/meeting.py:209
+#: voteit/core/views/base_edit.py:146 voteit/core/views/meeting.py:209
 #: voteit/core/views/users.py:229
 msgid "Nothing updated"
 msgstr "Inget uppdaterat"
 
-#: voteit/core/views/base_edit.py:188
+#: voteit/core/views/base_edit.py:185
 msgid "Deleted"
 msgstr "Raderad"
 
 #. Default: You can't remove this proposal - it's used within the following
 #. polls: ${poll_titles}
-#: voteit/core/views/base_edit.py:209
+#: voteit/core/views/base_edit.py:206
 msgid "deleting_proposals_used_in_polls_not_allowed_error"
 msgstr ""
 "Du kan inte radera förslaget - det används i följande omröstningar: "
@@ -1539,7 +1550,7 @@ msgstr ""
 
 #. Default: Are you sure you want to delete '${display_name}' with title:
 #. ${title}?
-#: voteit/core/views/base_edit.py:215
+#: voteit/core/views/base_edit.py:212
 msgid "delete_form_notice"
 msgstr ""
 "Är du säker på att du vill radera '${display_name}' med titeln: ${title}"
@@ -1556,11 +1567,7 @@ msgstr "Meddelandet har skickats till moderator"
 msgid "No support email set for this site. Form won't work!"
 msgstr "Ingen support-epost satt för denna site. Formuläret fungerar inte!"
 
-#: voteit/core/views/contact.py:115
-msgid "VoteIT Support"
-msgstr "VoteIT support"
-
-#: voteit/core/views/contact.py:122
+#: voteit/core/views/contact.py:123
 msgid "Support request sent!"
 msgstr "Supportförfrågan skickad!"
 
@@ -1656,17 +1663,17 @@ msgstr "Lägg till rättighet"
 msgid "Added permssion for user ${userid}"
 msgstr "Rättigheter för användare ${userid} tillagd"
 
-#: voteit/core/views/poll.py:54
+#: voteit/core/views/poll.py:62
 msgid "Nothing changed"
 msgstr "Inget ändrat"
 
-#: voteit/core/views/poll.py:77
+#: voteit/core/views/poll.py:85
 msgid "Poll config"
 msgstr "Omröstningsinställning"
 
 #. Default: To get back to the poll settings you click the cogwheel menu and
 #. select configure poll.
-#: voteit/core/views/poll.py:90
+#: voteit/core/views/poll.py:98
 msgid "review_poll_settings_info_getback"
 msgstr ""
 "För att komma tillbak till omröstningsinställningarna klicka på "
@@ -1923,7 +1930,7 @@ msgstr "Deltagarlista"
 msgid "Configure selected access policy"
 msgstr "Inställningar för vald accesspolicy"
 
-#: voteit/core/views/components/metadata_listing.py:70
+#: voteit/core/views/components/metadata_listing.py:71
 msgid "Retract"
 msgstr "Dra tillbaka"
 
@@ -2197,13 +2204,9 @@ msgstr "Visa 5 senaste inläggen"
 msgid "Read more"
 msgstr "Läs mer"
 
-#: voteit/core/views/templates/list_users.pt:10
+#: voteit/core/views/templates/list_users.pt:11
 msgid "Showing ${count} users"
 msgstr "Visar ${count} användare"
-
-#: voteit/core/views/templates/list_users.pt:20
-msgid "Image"
-msgstr "Bild"
 
 #: voteit/core/views/templates/logs.pt:9
 msgid "Log entries"
@@ -2606,3 +2609,9 @@ msgstr "Avslagen"
 #: voteit/core/workflows/proposal.zcml:43
 msgid "Unhandled"
 msgstr "Ohanterad"
+
+#~ msgid "VoteIT Support"
+#~ msgstr "VoteIT support"
+
+#~ msgid "Image"
+#~ msgstr "Bild"
