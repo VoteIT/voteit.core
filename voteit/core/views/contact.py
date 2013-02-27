@@ -112,7 +112,8 @@ class ContactView(BaseEdit):
                         'meeting_title': appstruct.get('meeting_title', ''),
                         }
             body_html = render('templates/email/support.pt', response, request = self.request)
-            subject = "[%s] | %s" % (self.api.translate(_(u"VoteIT Support")), appstruct['subject'])
+            title = "%s %s" % (self.api.root.get_field_value('site_title', u"VoteIT"), self.api.translate(_(u"Support")))
+            subject = "[%s] | %s" % (title, appstruct['subject'])
             msg = Message(subject = subject,
                           sender = sender and sender or None,
                           recipients=(support_email,),
