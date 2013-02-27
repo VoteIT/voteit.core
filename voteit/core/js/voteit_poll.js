@@ -26,6 +26,7 @@ $('.open_poll_button').live('click', function(event) {
             apply_mask(false);
             deform.processCallbacks();
             display_deform_labels();
+            $('html, body').animate({scrollTop: $(this).offset().top}, 200);
         }
         button.find('img.spinner').remove();
     });
