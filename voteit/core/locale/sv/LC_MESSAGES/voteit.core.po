@@ -697,12 +697,11 @@ msgstr "Tillbaka"
 #: voteit/core/plugins/templates/request_access_immediate.pt:3
 msgid "granted_roles_immediate_ap_explanation"
 msgstr ""
-"Användare ges rättigheterna du väljer utan att moderatorn behöver godkänna "
-"dem. För publika möten."
+"Detta är ett öppet möte som alla kan begära tillträde till. Nedan anges vilka rättigheter du får i mötet om du begär tillträde."
 
 #: voteit/core/plugins/templates/request_access_immediate.pt:8
 msgid "Granted roles"
-msgstr "Givna roller"
+msgstr "Dina rättigheter i mötet:"
 
 #: voteit/core/plugins/templates/request_access_immediate.pt:13
 msgid "No roles selected"
