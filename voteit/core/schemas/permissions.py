@@ -1,26 +1,16 @@
 import colander
 import deform
 from betahaus.pyracont.decorators import schema_factory
-from pyramid.traversal import find_root
 
 from voteit.core.validators import deferred_existing_userid_validator
 from voteit.core.validators import deferred_context_roles_validator
+from voteit.core.schemas.common import deferred_autocompleting_userid_widget
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import ISiteRoot
 from voteit.core.security import MEETING_ROLES
 from voteit.core.security import ROOT_ROLES
 from voteit.core import VoteITMF as _
 
-
-@colander.deferred
-def deferred_autocompleting_userid_widget(node, kw):
-    context = kw['context']
-    root = find_root(context)
-    choices = tuple(root.users.keys())
-    return deform.widget.AutocompleteInputWidget(
-        size=15,
-        values = choices,
-        min_length=1)
 
 @colander.deferred
 def deferred_roles_widget(node, kw):

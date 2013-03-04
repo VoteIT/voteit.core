@@ -4,6 +4,7 @@ from datetime import timedelta
 import colander
 import deform
 from pyramid.testing import DummyRequest
+from pyramid.traversal import find_root
 
 from voteit.core.models.interfaces import IDateTimeUtil
 from voteit.core.models.interfaces import IAgendaItem
@@ -110,3 +111,13 @@ def add_csrf_token(context, request, schema):
 def deferred_default_csrf_token(node, kw):
     request = kw['request']
     return request.session.get_csrf_token()
+
+@colander.deferred
+def deferred_autocompleting_userid_widget(node, kw):
+    context = kw['context']
+    root = find_root(context)
+    choices = tuple(root.users.keys())
+    return deform.widget.AutocompleteInputWidget(
+        size=15,
+        values = choices,
+        min_length=1)
