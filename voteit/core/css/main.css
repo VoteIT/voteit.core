@@ -348,7 +348,7 @@ h1.icon.discussion { background: url(/static/header_icons/discussion.png) no-rep
 /* form elements */
 button,
 .buttonize {
-    font-size: 15px;
+    font: 15px "Helvetica Neue", Helvetica, Arial, sans-serif;
     border: 1px solid #4a484a;
     border-radius: 10px;
     -webkit-border-radius: 10px;
