@@ -8,6 +8,6 @@
 			   tal:condition="flash['close_button']">X</a>
         </div>
 	</tal:iterate>
-	<div class="clear"><!-- --></div>
 </div>
+<div class="clear"><!-- --></div>
 </tal:main>
