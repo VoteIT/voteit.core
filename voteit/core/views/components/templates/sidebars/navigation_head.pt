@@ -4,6 +4,7 @@
       id="navigation_head">
     <h5 class="header">
         <a href="${url}"
+           tal:attributes="class api.meeting and 'meeting_header' or 'root_header'"
            title="${description}">${title}</a>
     </h5>
     <div tal:condition="api.show_moderator_actions">

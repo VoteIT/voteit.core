@@ -453,7 +453,12 @@ button[name="cancel"]:hover {
 }
 #navigation .header a {
     padding-left: 40px;
+}
+#navigation .meeting_header {
     background: url(/static/sidebar_icons/agenda_navigation.png) no-repeat left top;
+}
+#navigation .root_header {
+    background: url(/static/sidebar_icons/meeting_navigation.png) no-repeat left top;    
 }
 #navigation .item {
     margin-top: -1px; /* Overwrite line when bottom and top are next to each other */
