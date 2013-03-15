@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2013-02-27 13:07+0100\n"
-"PO-Revision-Date: 2013-02-27 13:09+0100\n"
+"POT-Creation-Date: 2013-03-15 13:43+0100\n"
+"PO-Revision-Date: 2013-03-15 13:47+0100\n"
 "Last-Translator: Robin Harms Oredsson <robin@betahaus.net>\n"
 "Language-Team: sv <LL@li.org>\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -121,24 +121,28 @@ msgstr ""
 msgid "Waiting..."
 msgstr "Laddar..."
 
-#. Default: There was an error loding data from server
+#. Default: There was an error loading data from server
 #: voteit/core/js_translations.py:32
 msgid "js_error_loading"
-msgstr ""
-"Ett fel uppstod vid laddnign av data från servern. Var vänlig försök igen om "
-"en liten stund."
+msgstr "Ett fel uppstod vid laddning av data från servern"
 
+#. Default: There was an error saving data to the server
 #: voteit/core/js_translations.py:34
+#| msgid "js_error_loading"
+msgid "js_error_saving"
+msgstr "Det gick inte att spara"
+
+#: voteit/core/js_translations.py:36
 msgid "Close message"
 msgstr "Stäng meddelande"
 
-#: voteit/core/js_translations.py:35
+#: voteit/core/js_translations.py:37
 msgid "Can not delete poll"
 msgstr "Omröstning kan inte raderas"
 
 #. Default: There are proposals in this poll that is in state voting, approved
 #. or denied. You need to manualy change the state of the proposals first.
-#: voteit/core/js_translations.py:36
+#: voteit/core/js_translations.py:38
 msgid "delete_poll_notification_text"
 msgstr ""
 "Det finns förslag i denna omröstning som är i någon av tillstånden 'låst för "
@@ -146,12 +150,12 @@ msgstr ""
 "tillstånden på dessa förslag först."
 
 #. Default: Permssions was updated successfully
-#: voteit/core/js_translations.py:38
+#: voteit/core/js_translations.py:40
 msgid "permssions_updated_success"
 msgstr "Uppdateringen av rättigheter lyckades."
 
 #. Default: There was an error updateing permissions
-#: voteit/core/js_translations.py:40
+#: voteit/core/js_translations.py:42
 msgid "permssions_updated_error"
 msgstr "Uppdateringen av rättigheter lyckades inte."
 
@@ -423,12 +427,10 @@ msgstr ""
 "på debug_templates på servern."
 
 #: voteit/core/models/poll.py:303
-#| msgid "Proposal"
 msgid "proposal"
 msgstr "förslag"
 
 #: voteit/core/models/poll.py:303
-#| msgid "Proposals"
 msgid "proposals"
 msgstr "förslag"
 
@@ -436,7 +438,6 @@ msgstr "förslag"
 #. longer be edited or retracted by normal users. All proposals participating
 #. in an ongoing poll should be locked.
 #: voteit/core/models/poll.py:306
-#| msgid "poll_closed_proposals_locked_notice"
 msgid "poll_proposals_locked_notice"
 msgstr ""
 "Sätter ${count} ${prop_form} som 'låst för omröstning'. De kan inte längre "
@@ -478,7 +479,7 @@ msgstr "Förslag"
 
 #: voteit/core/models/schemas.py:11
 #: voteit/core/views/components/inline_add_form.py:46
-#: voteit/core/views/components/templates/sidebars/navigation_head.pt:11
+#: voteit/core/views/components/templates/sidebars/navigation_head.pt:12
 msgid "Add"
 msgstr "Lägg till"
 
@@ -627,7 +628,6 @@ msgstr ""
 "det. För publika möten."
 
 #: voteit/core/plugins/immediate_ap.py:53
-#, fuzzy
 msgid "Access granted - welcome!"
 msgstr "Du har fått tillgång till mötet - välkommen!"
 
@@ -697,7 +697,8 @@ msgstr "Tillbaka"
 #: voteit/core/plugins/templates/request_access_immediate.pt:3
 msgid "granted_roles_immediate_ap_explanation"
 msgstr ""
-"Detta är ett öppet möte som alla kan begära tillträde till. Nedan anges vilka rättigheter du får i mötet om du begär tillträde."
+"Detta är ett öppet möte som alla kan begära tillträde till. Nedan anges "
+"vilka rättigheter du får i mötet om du begär tillträde."
 
 #: voteit/core/plugins/templates/request_access_immediate.pt:8
 msgid "Granted roles"
@@ -774,7 +775,7 @@ msgid "contact_schema_main_description"
 msgstr "Skicka meddelande till mötesmoderatorerna"
 
 #: voteit/core/schemas/contact.py:24 voteit/core/schemas/contact.py:50
-#: voteit/core/schemas/permissions.py:48
+#: voteit/core/schemas/permissions.py:38
 #: voteit/core/views/templates/participants.pt:33
 msgid "Name"
 msgstr "Namn"
@@ -1092,7 +1093,7 @@ msgstr ""
 "Bara omröstningsmetoder valda här kommer att vara tillgängliga i mötet. Om "
 "inget är valt så kommer baraserverns standardmetod finnas tillgänglig."
 
-#: voteit/core/schemas/permissions.py:42 voteit/core/schemas/permissions.py:79
+#: voteit/core/schemas/permissions.py:32 voteit/core/schemas/permissions.py:69
 #: voteit/core/schemas/user.py:46 voteit/core/schemas/user.py:126
 #: voteit/core/schemas/user.py:143
 #: voteit/core/views/templates/list_users.pt:24
@@ -1101,15 +1102,15 @@ msgstr ""
 msgid "UserID"
 msgstr "Användarnamn"
 
-#: voteit/core/schemas/permissions.py:55 voteit/core/schemas/permissions.py:88
+#: voteit/core/schemas/permissions.py:45 voteit/core/schemas/permissions.py:78
 msgid "Groups"
 msgstr "Grupper"
 
-#: voteit/core/schemas/permissions.py:62
+#: voteit/core/schemas/permissions.py:52
 msgid "Roles for user"
 msgstr "rättigheter för en specifik användare"
 
-#: voteit/core/schemas/permissions.py:66
+#: voteit/core/schemas/permissions.py:56
 msgid "Permissions"
 msgstr "Rättigheter"
 
@@ -1117,7 +1118,7 @@ msgstr "Rättigheter"
 #. meeting. If you remove a UserID, their permissions will be cleared. View
 #. permission will be added automatically if needed for a higher permission -
 #. like Vote. Permissions also depend on the state of the meeting.
-#: voteit/core/schemas/permissions.py:67
+#: voteit/core/schemas/permissions.py:57
 msgid "permissions_schema_main_description"
 msgstr ""
 "Sätt rättigheter för varje användarnamn som ska ha tillgång till mötet. Om "
@@ -1125,18 +1126,18 @@ msgstr ""
 "Rättigheten 'Visa' kommer läggas till automatiskt om den krävs för en högre "
 "rättighet - t.ex. 'Rösta'. Rättigheter beror också på mötets status."
 
-#: voteit/core/schemas/permissions.py:70
+#: voteit/core/schemas/permissions.py:60
 msgid "Role settings for users"
 msgstr "Rollinställningar för användare"
 
 #. Default: Add an existing user to this meeting
-#: voteit/core/schemas/permissions.py:74
+#: voteit/core/schemas/permissions.py:64
 msgid "add_existing_user_to_meeting"
 msgstr "Lägg till en existerande användare till detta möte"
 
 #. Default: Start typing the first letters of the UserID you want to add. You
 #. should see a popup below if that UserID exists.
-#: voteit/core/schemas/permissions.py:80
+#: voteit/core/schemas/permissions.py:70
 msgid "single_permission_schema_userid_description"
 msgstr ""
 "Börja skriva första bokstäverna i det användarID du vill lägga till. Du "
@@ -1571,13 +1572,13 @@ msgid "Support request sent!"
 msgstr "Supportförfrågan skickad!"
 
 #. Default: Can't find anything at '${path}'. Maybe it has been removed?
-#: voteit/core/views/exceptions_view.py:55
+#: voteit/core/views/exceptions_view.py:54
 msgid "404_error_msg"
 msgstr "Ingenting kan hittas vid '${path}'. Kanske har det flyttats?"
 
 #. Default: The server has either erred or is incapable of performing the
 #. requested operation.
-#: voteit/core/views/exceptions_view.py:78
+#: voteit/core/views/exceptions_view.py:77
 msgid "500_error_msg"
 msgstr ""
 "Antingen är det ett fel på servern eller så kan inte den begärda funktionen "
@@ -2118,7 +2119,7 @@ msgstr "Logga in med:"
 msgid "Recover password"
 msgstr "Återställ lösenord"
 
-#: voteit/core/views/components/templates/sidebars/navigation_head.pt:15
+#: voteit/core/views/components/templates/sidebars/navigation_head.pt:16
 #: voteit/core/views/templates/manage_agenda_items.pt:14
 msgid "Manage agenda"
 msgstr "Ändra dagordning"
@@ -2608,9 +2609,3 @@ msgstr "Avslagen"
 #: voteit/core/workflows/proposal.zcml:43
 msgid "Unhandled"
 msgstr "Ohanterad"
-
-#~ msgid "VoteIT Support"
-#~ msgstr "VoteIT support"
-
-#~ msgid "Image"
-#~ msgstr "Bild"

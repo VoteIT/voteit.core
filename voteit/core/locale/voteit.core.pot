@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2013-02-27 13:07+0100\n"
+"POT-Creation-Date: 2013-03-15 13:43+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -116,32 +116,37 @@ msgstr ""
 msgid "Waiting..."
 msgstr ""
 
-#. Default: There was an error loding data from server
+#. Default: There was an error loading data from server
 #: voteit/core/js_translations.py:32
 msgid "js_error_loading"
 msgstr ""
 
+#. Default: There was an error saving data to the server
 #: voteit/core/js_translations.py:34
+msgid "js_error_saving"
+msgstr ""
+
+#: voteit/core/js_translations.py:36
 msgid "Close message"
 msgstr ""
 
-#: voteit/core/js_translations.py:35
+#: voteit/core/js_translations.py:37
 msgid "Can not delete poll"
 msgstr ""
 
 #. Default: There are proposals in this poll that is in state voting, approved
 #. or denied. You need to manualy change the state of the proposals first.
-#: voteit/core/js_translations.py:36
+#: voteit/core/js_translations.py:38
 msgid "delete_poll_notification_text"
 msgstr ""
 
 #. Default: Permssions was updated successfully
-#: voteit/core/js_translations.py:38
+#: voteit/core/js_translations.py:40
 msgid "permssions_updated_success"
 msgstr ""
 
 #. Default: There was an error updateing permissions
-#: voteit/core/js_translations.py:40
+#: voteit/core/js_translations.py:42
 msgid "permssions_updated_error"
 msgstr ""
 
@@ -429,7 +434,7 @@ msgstr ""
 
 #: voteit/core/models/schemas.py:11
 #: voteit/core/views/components/inline_add_form.py:46
-#: voteit/core/views/components/templates/sidebars/navigation_head.pt:11
+#: voteit/core/views/components/templates/sidebars/navigation_head.pt:12
 msgid "Add"
 msgstr ""
 
@@ -708,7 +713,7 @@ msgid "contact_schema_main_description"
 msgstr ""
 
 #: voteit/core/schemas/contact.py:24 voteit/core/schemas/contact.py:50
-#: voteit/core/schemas/permissions.py:48
+#: voteit/core/schemas/permissions.py:38
 #: voteit/core/views/templates/participants.pt:33
 msgid "Name"
 msgstr ""
@@ -996,7 +1001,7 @@ msgstr ""
 msgid "mps_poll_plugins_description"
 msgstr ""
 
-#: voteit/core/schemas/permissions.py:42 voteit/core/schemas/permissions.py:79
+#: voteit/core/schemas/permissions.py:32 voteit/core/schemas/permissions.py:69
 #: voteit/core/schemas/user.py:46 voteit/core/schemas/user.py:126
 #: voteit/core/schemas/user.py:143 voteit/core/views/templates/list_users.pt:24
 #: voteit/core/views/templates/logs.pt:20
@@ -1004,15 +1009,15 @@ msgstr ""
 msgid "UserID"
 msgstr ""
 
-#: voteit/core/schemas/permissions.py:55 voteit/core/schemas/permissions.py:88
+#: voteit/core/schemas/permissions.py:45 voteit/core/schemas/permissions.py:78
 msgid "Groups"
 msgstr ""
 
-#: voteit/core/schemas/permissions.py:62
+#: voteit/core/schemas/permissions.py:52
 msgid "Roles for user"
 msgstr ""
 
-#: voteit/core/schemas/permissions.py:66
+#: voteit/core/schemas/permissions.py:56
 msgid "Permissions"
 msgstr ""
 
@@ -1020,22 +1025,22 @@ msgstr ""
 #. meeting. If you remove a UserID, their permissions will be cleared. View
 #. permission will be added automatically if needed for a higher permission -
 #. like Vote. Permissions also depend on the state of the meeting.
-#: voteit/core/schemas/permissions.py:67
+#: voteit/core/schemas/permissions.py:57
 msgid "permissions_schema_main_description"
 msgstr ""
 
-#: voteit/core/schemas/permissions.py:70
+#: voteit/core/schemas/permissions.py:60
 msgid "Role settings for users"
 msgstr ""
 
 #. Default: Add an existing user to this meeting
-#: voteit/core/schemas/permissions.py:74
+#: voteit/core/schemas/permissions.py:64
 msgid "add_existing_user_to_meeting"
 msgstr ""
 
 #. Default: Start typing the first letters of the UserID you want to add. You
 #. should see a popup below if that UserID exists.
-#: voteit/core/schemas/permissions.py:80
+#: voteit/core/schemas/permissions.py:70
 msgid "single_permission_schema_userid_description"
 msgstr ""
 
@@ -1437,13 +1442,13 @@ msgid "Support request sent!"
 msgstr ""
 
 #. Default: Can't find anything at '${path}'. Maybe it has been removed?
-#: voteit/core/views/exceptions_view.py:55
+#: voteit/core/views/exceptions_view.py:54
 msgid "404_error_msg"
 msgstr ""
 
 #. Default: The server has either erred or is incapable of performing the
 #. requested operation.
-#: voteit/core/views/exceptions_view.py:78
+#: voteit/core/views/exceptions_view.py:77
 msgid "500_error_msg"
 msgstr ""
 
@@ -1950,7 +1955,7 @@ msgstr ""
 msgid "Recover password"
 msgstr ""
 
-#: voteit/core/views/components/templates/sidebars/navigation_head.pt:15
+#: voteit/core/views/components/templates/sidebars/navigation_head.pt:16
 #: voteit/core/views/templates/manage_agenda_items.pt:14
 msgid "Manage agenda"
 msgstr ""

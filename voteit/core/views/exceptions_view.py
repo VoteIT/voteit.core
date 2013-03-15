@@ -28,7 +28,6 @@ class ExceptionView(object):
             find first context where user has view permission
             if they're logged in, otherwise redirect to login form.
         """
-
         if self.request.is_xhr:
             return HTTPForbidden()
         
