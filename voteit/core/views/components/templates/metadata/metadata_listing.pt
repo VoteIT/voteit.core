@@ -1,4 +1,5 @@
 <tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core">
+<div class="clear"><!-- --></div>
 <div class="meta">
 	<tal:vas repeat="va view_actions">
 	    <tal:out define="out va(context, request, **va_kwargs)">
