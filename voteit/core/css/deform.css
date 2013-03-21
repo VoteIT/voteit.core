@@ -5,7 +5,8 @@
 
 .deform label.desc{
     display: block;
-    font-weight:bold;
+    font-size: 22px;
+    line-height: 1.25em;
 }
 
 .deform ul {
@@ -70,6 +71,8 @@ div.deformReplaces {
 
 .deform_description {
     color: #666;
+    line-height: 1.25em;
+    padding-bottom: 10px;
 }
 
 /* timepicker */
