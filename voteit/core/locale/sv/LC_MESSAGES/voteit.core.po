@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2013-03-15 13:43+0100\n"
-"PO-Revision-Date: 2013-03-15 13:47+0100\n"
+"POT-Creation-Date: 2013-03-21 14:11+0100\n"
+"PO-Revision-Date: 2013-03-21 14:12+0100\n"
 "Last-Translator: Robin Harms Oredsson <robin@betahaus.net>\n"
 "Language-Team: sv <LL@li.org>\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -128,7 +128,6 @@ msgstr "Ett fel uppstod vid laddning av data från servern"
 
 #. Default: There was an error saving data to the server
 #: voteit/core/js_translations.py:34
-#| msgid "js_error_loading"
 msgid "js_error_saving"
 msgstr "Det gick inte att spara"
 
@@ -2333,6 +2332,21 @@ msgstr "Välj logg ovan"
 #: voteit/core/views/templates/server_logs.pt:23
 msgid "Current log"
 msgstr "Nuvarande logg"
+
+#: voteit/core/views/templates/ticket_claim.pt:13
+msgid "You're logged in as"
+msgstr "Du är inloggad som"
+
+#. Default: Would you like to use this invitation to gain access to this
+#. meeting? It will only work for one user. If not, log out and click the
+#. invitation link again.
+#: voteit/core/views/templates/ticket_claim.pt:16
+#| msgid "public_access_description"
+msgid "use_ticket_to_gain_access_description"
+msgstr ""
+"Vill du använda biljetten för att få tillgång till mötet? Den kommer bara "
+"fungera för en användare. Om inte, logga ut och klicka på inbjudningslänken "
+"igen."
 
 #: voteit/core/views/templates/ticket_claim.pt:22
 msgid "Use ticket"

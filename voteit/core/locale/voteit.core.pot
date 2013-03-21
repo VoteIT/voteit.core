@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2013-03-15 13:43+0100\n"
+"POT-Creation-Date: 2013-03-21 14:11+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2158,6 +2158,17 @@ msgstr ""
 
 #: voteit/core/views/templates/server_logs.pt:23
 msgid "Current log"
+msgstr ""
+
+#: voteit/core/views/templates/ticket_claim.pt:13
+msgid "You're logged in as"
+msgstr ""
+
+#. Default: Would you like to use this invitation to gain access to this
+#. meeting? It will only work for one user. If not, log out and click the
+#. invitation link again.
+#: voteit/core/views/templates/ticket_claim.pt:16
+msgid "use_ticket_to_gain_access_description"
 msgstr ""
 
 #: voteit/core/views/templates/ticket_claim.pt:22

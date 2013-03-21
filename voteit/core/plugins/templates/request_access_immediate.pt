@@ -1,5 +1,5 @@
 <tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core">
-    <hr>
+    <hr/>
     <div i18n:translate="granted_roles_immediate_ap_explanation">
         This is a meeting where anyone can request access.
         The roles below will be granted immediately to your user if your request access to the meeting.

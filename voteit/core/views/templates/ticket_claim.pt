@@ -10,13 +10,13 @@
 
     <div tal:content="structure context.get_field_value('public_description', u'')">Public description</div>
 
-    <h3>You're logged in as</h3>
+    <h3 i18n:translate="">You're logged in as</h3>
     <div tal:content="structure api.get_creators_info([api.userid], portrait = False)"></div>
 
-    <p>Would you like to use this invitation to gain acces to meeting? It will only work for one user.
-        If not, log out and click the invitation link again.
+    <p i18n:translate="use_ticket_to_gain_access_description">
+        Would you like to use this invitation to gain access to this meeting?
+        It will only work for one user. If not, log out and click the invitation link again.
     </p>
-    
     <br/>
     <p>
         <a href="${claim_action_url}"
