@@ -24,9 +24,6 @@
    border: 0;
    cursor: pointer;
    float: left;
-   /* width: 1em; */
-   /* height: 1em; */
-   /* margin: .5em; */
 }
 
 .deformClosebuttonActive:before {
@@ -69,6 +66,10 @@ div.deformReplaces {
 
 .deform p.error{
     font-size: 70%;
+}
+
+.deform_description {
+    color: #666;
 }
 
 /* timepicker */

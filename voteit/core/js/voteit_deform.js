@@ -8,7 +8,7 @@ function display_deform_labels() {
     $('label.desc').each(function() {
         var desc = $(this).attr('title');
         if(desc != '')
-            $(this).after('<p>'+desc+'</p>');
+            $(this).after('<p class="deform_description">'+desc+'</p>');
             $(this).attr('title', '');
     });
 }
