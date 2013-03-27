@@ -32,7 +32,6 @@ class ContactViewTests(unittest.TestCase):
         register_catalog(self.config)
         root = bootstrap_and_fixture(self.config)
         root['m'] = Meeting()
-        root['m'].set_field_value('rss_feed', True)
         root['m']['ai'] = AgendaItem()
         root['m']['ai'].set_workflow_state(self.request, 'upcoming')
         return root
