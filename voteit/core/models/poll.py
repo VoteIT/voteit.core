@@ -346,14 +346,17 @@ def email_voters_about_ongoing_poll(poll, request=None):
         This function is triggered by a workflow subscriber, so not all functionality
         is nested in the workflow callback. (It would make permission tests very
         annoying and hard to write otherwise)
+        
+        Note that there's a setting on the meeting called poll_notification_setting
+        that controls wether this should be executed or not.
     """
+    meeting = find_interface(poll, IMeeting)
+    assert meeting
+    if not meeting.get_field_value('poll_notification_setting', True):
+        return
     if request is None:
         request = get_current_request()
     userids = security.find_authorized_userids(poll, (security.ADD_VOTE,))
-
-    meeting = find_interface(poll, IMeeting)
-    assert meeting
-
     root = find_root(meeting)
     users = root['users']
     email_addresses = set()
@@ -363,21 +366,17 @@ def email_voters_about_ongoing_poll(poll, request=None):
         email = users[userid].get_field_value('email')
         if email:
             email_addresses.add(email)
-
     response = {}
     response['meeting'] = meeting
     response['meeting_url'] = resource_url(meeting, request)
     response['poll_url'] = resource_url(poll, request)
-
     sender = "%s <%s>" % (meeting.get_field_value('meeting_mail_name'), meeting.get_field_value('meeting_mail_address'))
     #FIXME: This should be detatched into a view component
     body_html = render('../views/templates/email/ongoing_poll_notification.pt', response, request=request)
-
     #Since subject won't be part of a renderer, we need to translate it manually
     #Keep the _ -syntax otherwise Babel/lingua won't pick up the string
     localizer = get_localizer(request)
     subject = localizer.translate(_(u"VoteIT: Open poll"))
-
     mailer = get_mailer(request)
     #We need to send individual messages anyway
     for email in email_addresses:

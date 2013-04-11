@@ -102,8 +102,7 @@ def access_policy_node():
                                title = _(u"Meeting access policy"),
                                widget = deferred_access_policy_widget,
                                default = "invite_only",)
-    
-    
+
 def recaptcha_node():
     return colander.SchemaNode(colander.String(),
                                #FIXME: write a good title and description here
@@ -113,6 +112,17 @@ def recaptcha_node():
                                missing=u"",
                                widget=deferred_recaptcha_widget,)
 
+def mention_notification_setting_node():
+    return colander.SchemaNode(colander.Bool(),
+                               title = _(u"Send mail to mentioned users."),
+                               default = True,
+                               missing = True)
+
+def poll_notification_setting_node():
+    return colander.SchemaNode(colander.Bool(),
+                               title = _(u"Send mail to voters when a poll starts."),
+                               default = True,
+                               missing = True)
 
 @schema_factory('AddMeetingSchema', title = _(u"Add meeting"))
 class AddMeetingSchema(colander.MappingSchema):
@@ -122,6 +132,8 @@ class AddMeetingSchema(colander.MappingSchema):
     meeting_mail_name = meeting_mail_name_node()
     meeting_mail_address = meeting_mail_address_node()
     access_policy = access_policy_node()
+    mention_notification_setting = mention_notification_setting_node()
+    poll_notification_setting = poll_notification_setting_node()
     captcha=recaptcha_node()
 
 
@@ -153,6 +165,12 @@ class MailSettingsMeetingSchema(colander.MappingSchema):
 @schema_factory('AccessPolicyMeetingSchema', title = _(u"Access policy"))
 class AccessPolicyeMeetingSchema(colander.MappingSchema):
     access_policy = access_policy_node()
+
+
+@schema_factory('MailNotificationSettingsSchema', title = _(u"Mail notifications"))
+class MailNotificationSettingsSchema(colander.Schema):
+    mention_notification_setting = mention_notification_setting_node()
+    poll_notification_setting = poll_notification_setting_node()
 
 
 @schema_factory('MeetingPollSettingsSchema', title = _(u"Poll settings"),

@@ -125,25 +125,20 @@ class User(BaseContent):
     def send_mention_notification(self, context, request):
         """ Sends an email when the user is mentioned in a proposal or a discussion post
         """
-        
         # do not send mail if there is no emailadress
         if self.get_field_value('email'):
             locale = get_localizer(request)
-            
             meeting = find_interface(context, IMeeting)
             agenda_item = find_interface(context, IAgendaItem)
-            
             #FIXME: Email should use a proper template
             url = resource_url(context, request)
             link = "<a href=\"%s\">%s</a>" % (url, url)
             body = locale.translate(_('mentioned_notification',
                      default=u"You have been mentioned in ${meeting} on ${agenda_item}. Click the following link to go there, ${link}.",
                      mapping={'meeting':meeting.title, 'agenda_item': agenda_item.title, 'link': link,},))
-            
             msg = Message(subject=_(u"You have been mentioned in VoteIT"),
                            recipients=[self.get_field_value('email')],
                            html=body)
-
             mailer = get_mailer(request)
             mailer.send(msg)
 

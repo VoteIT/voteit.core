@@ -1,15 +1,12 @@
 import deform
-from colander import Schema
 from deform import Form
 from deform.exception import ValidationFailure
 from pyramid.security import has_permission
 from pyramid.security import NO_PERMISSION_REQUIRED
 from pyramid.view import view_config
 from pyramid.httpexceptions import HTTPFound
-from pyramid.httpexceptions import HTTPRedirection
 from pyramid.url import resource_url
 from betahaus.pyracont.factories import createSchema
-from betahaus.viewcomponent.interfaces import IViewGroup
 
 from voteit.core import security
 from voteit.core import VoteITMF as _
@@ -186,6 +183,13 @@ class MeetingView(BaseView):
     @view_config(context=IMeeting, name="meeting_poll_settings", renderer="templates/base_edit.pt", permission=security.MODERATE_MEETING)
     def global_poll_settings(self):
         schema = createSchema("MeetingPollSettingsSchema")
+        add_csrf_token(self.context, self.request, schema)
+        schema = schema.bind(context=self.context, request=self.request, api = self.api)
+        return self.form(schema)
+
+    @view_config(context=IMeeting, name="mail_notification_settings", renderer="templates/base_edit.pt", permission=security.MODERATE_MEETING)
+    def mail_notification_settings(self):
+        schema = createSchema("MailNotificationSettingsSchema")
         add_csrf_token(self.context, self.request, schema)
         schema = schema.bind(context=self.context, request=self.request, api = self.api)
         return self.form(schema)

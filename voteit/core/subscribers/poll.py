@@ -7,7 +7,6 @@ from pyramid.exceptions import HTTPForbidden
 
 from voteit.core import VoteITMF as _
 from voteit.core.models.interfaces import IPoll
-from voteit.core.models.interfaces import IUnread
 from voteit.core.interfaces import IObjectUpdatedEvent
 from voteit.core.interfaces import IWorkflowStateChange
 from voteit.core.models.poll import email_voters_about_ongoing_poll
@@ -17,7 +16,6 @@ from voteit.core.models.poll import email_voters_about_ongoing_poll
 def change_states_proposals(obj, event):
     """ Change state on proposals when adding them to upcoming poll. """
     request = get_current_request()
-    
     if obj.get_workflow_state() == 'upcoming':
         for proposal in obj.get_proposal_objects():
             if proposal.get_workflow_state() != 'voting':
@@ -32,6 +30,7 @@ def change_states_proposals(obj, event):
 def email_voters_about_ongoing_poll_subscriber(obj, event):
     if event.new_state != 'ongoing':
         return
+    #This method will check poll_notification_setting to determine if mail should be sent
     email_voters_about_ongoing_poll(obj)
 
 @subscriber([IPoll, IObjectAddedEvent])
