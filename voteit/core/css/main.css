@@ -302,6 +302,7 @@ body {
 .cog-dark { background: url(/static/icons/icon_settings.png) no-repeat top left; }
 .user-dark { background: url(/static/icons/icon_user_db.png) no-repeat top left; }
 .icon.time { background: url(/static/icons/time.png) no-repeat 0 0; }
+.icon.user { background: url(/static/icons/user.png) no-repeat 0 0; }
 .yes_icon {
     padding-left: 20px;
     display: block;
@@ -940,12 +941,6 @@ table.listing {
     margin-top: 0;
     margin-bottom: 1em;
 }
-/*
-.booth.poll .message {
-    display: none;
-    margin: 5px 0px 10px 0px;
-}
-*/
 .poll_footer .time {
     color: #666;
     font-size: 14px;
@@ -971,6 +966,10 @@ table.listing {
     padding-left: 20px;
     padding-right: 20px;
 }
+.poll_stats {
+    color: #666;
+}
+
 /* end poll section and popup */
 
 /* popups, generic - should behave similar to poll booth*/

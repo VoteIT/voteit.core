@@ -22,6 +22,16 @@
              tal:content="structure context.description">
                  Description</div>
 
+        <div class="poll_stats" tal:condition="wf_state == 'ongoing'">
+            <span class="iconpadding icon user" i18n:translate="">Votes used:</span>
+            ${voted_count} <tal:trans i18n:translate="">of</tal:trans> ${voters_count} (${voted_percentage}%)
+        </div>
+
+        <div class="poll_stats" tal:condition="wf_state == 'closed'">
+            <span class="iconpadding icon user" i18n:translate="">Votes used:</span>
+            ${voted_count}
+        </div>
+
         <tal:iterate condition="wf_state != 'closed' and proposals" repeat="proposal proposals">
             <tal:proposal replace="structure api.render_view_group(context, request, 'proposal', brain=proposal)">
                 Proposal
