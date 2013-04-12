@@ -22,6 +22,7 @@ from voteit.core.models.schemas import button_update
 from voteit.core.models.schemas import button_delete
 from voteit.core.models.interfaces import IBaseContent
 from voteit.core.models.interfaces import IMeeting
+from voteit.core.models.interfaces import ISiteRoot
 from voteit.core.models.interfaces import IWorkflowAware
 from voteit.core.views.api import APIView
 from voteit.core.helpers import generate_slug
@@ -49,18 +50,15 @@ class DefaultEdit(BaseEdit):
     def add_form(self):
         content_type = self.request.params.get('content_type')
         tag = self.request.GET.get('tag', None)
-        
         #Permission check
         add_permission = self.api.content_types_add_perm(content_type)
         if not has_permission(add_permission, self.context, self.request):
             raise Forbidden("You're not allowed to add '%s' in this context." % content_type)
-
         factory = self.api.get_content_factory(content_type)
         schema_name = self.api.get_schema_name(content_type, 'add')
         schema = createSchema(schema_name).bind(context=self.context, request=self.request, api=self.api, tag=tag)        
         form = Form(schema, buttons=(button_add, button_cancel))
         self.api.register_form_resources(form)
-
         post = self.request.POST
         if 'add' in post:
             controls = post.items()
@@ -70,20 +68,16 @@ class DefaultEdit(BaseEdit):
             except ValidationFailure, e:
                 self.response['form'] = e.render()
                 return self.response
-            
             kwargs = {}
             kwargs.update(appstruct)
             if self.api.userid:
                 kwargs['creators'] = [self.api.userid]
-
             obj = createContent(content_type, **kwargs)
             name = self.generate_slug(obj.title)
             self.context[name] = obj
-            
             #Only show message if new object isn't discussion or proposal
             if content_type not in ('DiscussionPost', 'Proposal',):
                 self.api.flash_messages.add(_(u"Successfully added"))
-
             #Success, redirect
             url = self.request.resource_url(obj)
             if (content_type == 'Proposal' or content_type == 'DiscussionPost') and tag:
@@ -97,15 +91,62 @@ class DefaultEdit(BaseEdit):
                         default = u"The poll is created in private state, to show it the participants you have to change the state to upcoming.")
                 self.api.flash_messages.add(msg)
                 url += 'poll_config'
-                
             return HTTPFound(location=url)
-
         if 'cancel' in post:
             self.api.flash_messages.add(_(u"Canceled"))
-
             url = resource_url(self.context, self.request)
             return HTTPFound(location=url)
+        #No action - Render add form
+        self.response['form'] = form.render()
+        return self.response
 
+    @view_config(context=ISiteRoot, name="add", renderer=DEFAULT_TEMPLATE, request_param = "content_type=Meeting")
+    def add_meeting(self):
+        """ Custom view used when adding meetings.
+            FIXME: We may want to use custom callbacks on add instead, rather than lots of hacks in views.
+        """
+        content_type = self.request.params.get('content_type')
+        #Permission check
+        add_permission = self.api.content_types_add_perm(content_type)
+        if not has_permission(add_permission, self.context, self.request):
+            raise Forbidden("You're not allowed to add '%s' in this context." % content_type)
+        factory = self.api.get_content_factory(content_type)
+        schema_name = self.api.get_schema_name(content_type, 'add')
+        schema = createSchema(schema_name)
+        add_csrf_token(self.context, self.request, schema)
+        schema = schema.bind(context=self.context, request=self.request, api=self.api)
+        form = Form(schema, buttons=(button_add, button_cancel))
+        self.api.register_form_resources(form)
+        post = self.request.POST
+        if 'add' in post:
+            controls = post.items()
+            try:
+                #appstruct is deforms convention. It will be the submitted data in a dict.
+                appstruct = form.validate(controls)
+            except ValidationFailure, e:
+                self.response['form'] = e.render()
+                return self.response
+            copy_users_and_perms = appstruct['copy_users_and_perms']
+            del appstruct['copy_users_and_perms']
+            kwargs = {}
+            kwargs.update(appstruct)
+            if self.api.userid:
+                kwargs['creators'] = [self.api.userid]
+            obj = createContent(content_type, **kwargs)
+            name = self.generate_slug(obj.title)
+            self.context[name] = obj
+            if copy_users_and_perms:
+                obj.copy_users_and_perms(copy_users_and_perms)
+                self.api.flash_messages.add(_(u"Users and their permissions successfully copied"))
+            else:
+                self.api.flash_messages.add(_(u"Successfully added"))
+            #Success, redirect
+            url = self.request.resource_url(obj)
+            return HTTPFound(location=url)
+        if 'cancel' in post:
+            self.api.flash_messages.add(_(u"Canceled"))
+            url = resource_url(self.context, self.request)
+            return HTTPFound(location=url)
         #No action - Render add form
         self.response['form'] = form.render()
         return self.response
@@ -113,14 +154,12 @@ class DefaultEdit(BaseEdit):
     @view_config(context=IBaseContent, name="edit", renderer=DEFAULT_TEMPLATE, permission=EDIT)
     def edit_form(self):
         self.response['title'] = _(u"Edit %s" % self.api.translate(self.context.display_name))
-
         content_type = self.context.content_type
         schema_name = self.api.get_schema_name(content_type, 'edit')
         schema = createSchema(schema_name)
         add_csrf_token(self.context, self.request, schema)
         add_came_from(self.context, self.request, schema)
         schema = schema.bind(context=self.context, request=self.request, api=self.api)
-
         form = Form(schema, buttons=(button_update, button_cancel))
         self.api.register_form_resources(form)
 

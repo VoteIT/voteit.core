@@ -11,6 +11,7 @@ from zope.interface.verify import verifyObject
 from voteit.core import security
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.testing_helpers import register_workflows
+from voteit.core.testing_helpers import bootstrap_and_fixture
 
 admin = set([security.ROLE_ADMIN])
 moderator = set([security.ROLE_MODERATOR])
@@ -91,6 +92,16 @@ class MeetingTests(unittest.TestCase):
         ticket = InviteTicket('blabla@hello.se', ['role:Moderator'], 'Hello!')
         obj.add_invite_ticket(ticket, request)
         self.assertEqual(obj, ticket.__parent__)
+
+    def test_copy_users_and_perms(self):
+        root = bootstrap_and_fixture(self.config)
+        root['m1'] = m1 = self._cut()
+        m1.add_groups('first', ['role:A', 'role:B'])
+        m1.add_groups('second', ['role:A', 'role:C'])
+        root['m2'] = m2 = self._cut()
+        m2.copy_users_and_perms('m1')
+        self.assertEqual(m1.get_security(), m2.get_security())
+        self.assertEqual(m2.get_groups('second'), ('role:A', 'role:C'))
 
 
 class MeetingPermissionTests(unittest.TestCase):

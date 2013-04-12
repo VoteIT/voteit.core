@@ -261,6 +261,13 @@ class IMeeting(IBaseFolder):
             in that case be the meeting.
         """
 
+    def copy_users_and_perms(name, event = True):
+        """ Copy users and their perms from a previous meeting.
+            This is a low level function that shouldn't be exposed directly.
+            It's a good idea to only let users copy permissions from meetings they're already
+            moderators in.
+        """
+
 
 class IDiscussionPost(IBaseFolder):
     """ A discussion post.

@@ -57,6 +57,17 @@ def deferred_recaptcha_widget(node, kw):
                                captcha_private_key = priv_key)
     return deform.widget.HiddenWidget()
 
+@colander.deferred
+def deferred_copy_perms_widget(node, kw):
+    context = kw['context']
+    request = kw['request']
+    api = kw['api']
+    choices = [('', _(u"<Don't copy>"))]
+    for meeting in api.root.get_content(content_type = 'Meeting'):
+        if api.context_has_permission(security.MODERATE_MEETING, meeting):
+            choices.append((meeting.__name__, "%s (%s)" % (meeting.title, meeting.__name__)))
+    return deform.widget.SelectWidget(values=choices)
+
 def title_node():
     return colander.SchemaNode(colander.String(),
                                 title = _(u"Title"),
@@ -134,7 +145,13 @@ class AddMeetingSchema(colander.MappingSchema):
     access_policy = access_policy_node()
     mention_notification_setting = mention_notification_setting_node()
     poll_notification_setting = poll_notification_setting_node()
-    captcha=recaptcha_node()
+    captcha = recaptcha_node()
+    copy_users_and_perms = colander.SchemaNode(colander.String(),
+                                               title = _(u"Copy users and permissions from a previous meeting."),
+                                               description = _(u"You can only pick meeting where you've been a moderator."),
+                                               widget = deferred_copy_perms_widget,
+                                               default = u"",
+                                               missing = u"")
 
 
 @schema_factory('EditMeetingSchema', title = _(u"Edit meeting"))

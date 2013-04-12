@@ -2,6 +2,7 @@ from BTrees.OOBTree import OOBTree
 from zope.interface import implements
 from pyramid.security import Allow
 from pyramid.security import DENY_ALL
+from pyramid.traversal import find_root
 from betahaus.pyracont.decorators import content_factory
 from pyramid.httpexceptions import HTTPForbidden
 
@@ -54,7 +55,7 @@ class Meeting(BaseContent, WorkflowAware):
     #FIXME: Property schema should return different add schema when user is not an admin.
     #Ie captcha
     schemas = {'add': 'AddMeetingSchema', 'edit': 'EditMeetingSchema'}
-
+    custom_mutators = {'copy_perms_and_users': 'copy_perms_and_users'}
 
     def __init__(self, data=None, **kwargs):
         """ When meetings are added, whoever added them should become moderator and voter.
@@ -95,6 +96,12 @@ class Meeting(BaseContent, WorkflowAware):
         ticket.__parent__ = self
         self.invite_tickets[ticket.email] = ticket
         ticket.send(request)
+
+    def copy_users_and_perms(self, name, event = True):
+        root = find_root(self)
+        origin = root[name]
+        value = origin.get_security()
+        self.set_security(value, event = event)
 
 
 def closing_meeting_callback(context, info):
