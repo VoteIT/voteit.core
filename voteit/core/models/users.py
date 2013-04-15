@@ -34,8 +34,12 @@ class Users(BaseContent):
         for user in self.get_content(iface=IUser):
             if user.get_field_value('email') == email:
                 return user
-                
-    def get_user_by_oauth_token(self, domain, token):
+
+    def get_auth_domain_user(self, domain, key, value):
         for user in self.get_content(iface=IUser):
-            if domain in user.auth_domains and user.auth_domains[domain]['oauth_access_token'] == token:
+            if domain in user.auth_domains and user.auth_domains[domain][key] == value:
                 return user
+
+    def get_user_by_oauth_token(self, domain, token):
+        #b / c compat - remove
+        return self.get_auth_domain_user(domain, 'oauth_access_token', token)
