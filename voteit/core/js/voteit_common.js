@@ -56,7 +56,7 @@ $(document).ready(function () {
 $(document).ready(function() {
     // This won't work in IE'
     var div = $('#flash_messages');
-    if(div) {
+    if(div.length > 0) {
         var start = div.offset().top;
         $.event.add(window, "scroll", function() {
             var p = $(window).scrollTop();
@@ -65,8 +65,6 @@ $(document).ready(function() {
         });
    }
 });
-
-
 
 /* Bind meeting sections menus + possibly other */
 $('#global-actions-menu .menu_header').live('hover', function(event) { dropdown_menus(event, this, 'meeting_actions_menu') });
