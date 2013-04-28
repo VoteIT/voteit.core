@@ -24,6 +24,7 @@
 }
 #header-meeting-title h1 {
 	margin: 0;
+	line-height: 125%;
 }
 #header-user-actions {
 	float: left;
@@ -45,6 +46,10 @@
 	width: 110px;
 	height: 50px;
 	background: url(/static/images/voteit_logo.png) right top no-repeat;
+}
+#meeting-logo {
+    float: left;
+    margin: 0 10px 10px 0;
 }
 /* End top header section */
 
