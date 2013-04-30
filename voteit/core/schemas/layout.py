@@ -37,7 +37,8 @@ class LayoutSchema(colander.Schema):
                                            title = _(u"URL to a meeting logo."),
                                            description = _(u"It will be shown to the left of the header. "
                                                            u"Dimensions should be no more than the text height. "
-                                                           u"If you use the wrong dimensions, you may break the layout."))
+                                                           u"If you use the wrong dimensions, you may break the layout."),
+                                           missing = u"")
     ai_left_widget = colander.SchemaNode(colander.String(),
                                          title = _(u"Agenda item left column widget"),
                                          widget = deferred_ai_layout_left_widget,
