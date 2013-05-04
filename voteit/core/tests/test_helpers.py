@@ -5,6 +5,7 @@ import unittest
 from pyramid import testing
 
 from voteit.core.testing_helpers import bootstrap_and_fixture
+from voteit.core.testing_helpers import active_poll_fixture
 
 
 class AtUseridLinkTests(unittest.TestCase):
@@ -126,4 +127,27 @@ class StripAndTruncateTests(unittest.TestCase):
         text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris at enim nec nunc facilisis semper. Sed vel magna sit amet augue aliquet rhoncus metus."
         truncated = self._fut(text, 100)
         self.assertEqual(truncated, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris at enim nec nunc facilisis semper. S&lt;...&gt;') 
+
+
+class MoveObjectTests(unittest.TestCase):
+    
+    def setUp(self):
+        self.config = testing.setUp()
+
+    def tearDown(self):
+        testing.tearDown()
+    
+    @property
+    def _fut(self):
+        from voteit.core.helpers import move_object
+        return move_object
+
+    def test_move_object(self):
+        root = active_poll_fixture(self.config)
+        from voteit.core.models.agenda_item import AgendaItem
+        ai = root['meeting']['ai']
+        ai2 = root['meeting']['ai2'] = AgendaItem()
+        self._fut(ai['prop1'], ai2)
+        self.assertIn('prop1', root['meeting']['ai2'])
+        self.assertNotIn('prop1', root['meeting']['ai'])
 

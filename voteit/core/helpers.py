@@ -1,9 +1,9 @@
 import re
+from copy import deepcopy
 
 from pyramid.threadlocal import get_current_request
 from pyramid.traversal import find_root
 from pyramid.traversal import find_interface
-from pyramid.url import resource_url
 from webhelpers.html import HTML
 from webhelpers.html.render import sanitize
 from webhelpers.html.converters import nl2br
@@ -75,3 +75,14 @@ def strip_and_truncate(text, limit=200):
     if len(text) > limit:
         text = u"%s<...>" % nl2br(text[:limit])
     return nl2br(text)
+
+def move_object(obj, new_parent):
+    """ Move an object to a new location. """
+    name = obj.__name__
+    if name in new_parent:
+        raise ValueError("Already exist")
+    old_parent = obj.__parent__
+    new_obj = deepcopy(obj)
+    del old_parent[name]
+    new_parent[name] = new_obj
+    return new_obj

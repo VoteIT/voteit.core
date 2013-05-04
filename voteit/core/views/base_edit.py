@@ -4,6 +4,7 @@ from pyramid.view import view_config
 from pyramid.url import resource_url
 from pyramid.security import has_permission
 from pyramid.exceptions import Forbidden
+from pyramid.traversal import find_resource
 import colander
 from deform import Form
 from deform.exception import ValidationFailure
@@ -14,6 +15,7 @@ from betahaus.pyracont.factories import createSchema
 from voteit.core import VoteITMF as _
 from voteit.core.security import EDIT
 from voteit.core.security import DELETE
+from voteit.core.security import MODERATE_MEETING
 from voteit.core.models.schemas import add_csrf_token
 from voteit.core.models.schemas import add_came_from
 from voteit.core.models.schemas import button_add
@@ -24,8 +26,11 @@ from voteit.core.models.interfaces import IBaseContent
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import ISiteRoot
 from voteit.core.models.interfaces import IWorkflowAware
+from voteit.core.models.interfaces import IProposal
+from voteit.core.models.interfaces import IDiscussionPost
 from voteit.core.views.api import APIView
 from voteit.core.helpers import generate_slug
+from voteit.core.helpers import move_object
 
 
 DEFAULT_TEMPLATE = "templates/base_edit.pt"
@@ -281,3 +286,35 @@ class DefaultEdit(BaseEdit):
         
         url = resource_url(self.context, self.request)
         return HTTPFound(location=url)
+
+    @view_config(name = "move_object", context = IProposal, permission = MODERATE_MEETING,
+                 renderer = DEFAULT_TEMPLATE)
+    @view_config(name = "move_object", context = IDiscussionPost, permission = MODERATE_MEETING,
+                 renderer = DEFAULT_TEMPLATE)
+    def move_object(self):
+        """ Move object to a new parent. """
+        schema = createSchema('MoveObjectSchema')
+        add_csrf_token(self.context, self.request, schema)
+        schema = schema.bind(context=self.context, request=self.request, api=self.api)
+        form = Form(schema, buttons=(button_update, button_cancel))
+
+        post = self.request.POST
+        if 'update' in post:
+            controls = post.items()
+            try:
+                appstruct = form.validate(controls)
+            except ValidationFailure, e:
+                self.response['form'] = e.render()
+                return self.response
+            new_parent_path = urllib.unquote(appstruct['new_parent_path'])
+            new_parent = find_resource(self.api.root, new_parent_path)
+            context = move_object(self.context, new_parent)
+            self.api.flash_messages.add(_(u"Moved"))
+            url = self.request.resource_url(context)
+            return HTTPFound(location=url)
+        if 'cancel' in post:
+            self.api.flash_messages.add(_(u"Canceled"))
+            url = resource_url(self.context, self.request)
+            return HTTPFound(location=url)
+        self.response['form'] = form.render()
+        return self.response
