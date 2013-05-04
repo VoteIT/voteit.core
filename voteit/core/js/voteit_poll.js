@@ -1,3 +1,5 @@
+var ongoing_vote = false;
+
 
 /* Open poll booth when poll buttons is pressed*/
 $('.open_poll_button').live('click', function(event) {
@@ -33,8 +35,11 @@ $('.open_poll_button').live('click', function(event) {
 });
 
 //Submitting the actual vote
-$('#vote_form button.submit').live('click', function(event) {
+$('#vote_form button.submit').live('click', submit_vote_data);
+function submit_vote_data(event) {
     try { event.preventDefault(); } catch(e) {};
+    if (ongoing_vote == true) return false;
+    ongoing_vote = true;
     var button = $(this);
     spinner().appendTo(button);
     var form = button.parents('form')
@@ -47,13 +52,16 @@ $('#vote_form button.submit').live('click', function(event) {
         target.html(data);
         deform.processCallbacks();
         display_deform_labels();
+        ongoing_vote = false;
         $('html, body').animate({scrollTop: target.parents('.poll').offset().top - 50}, 200);
     })
     .error(function(xhr, status, error) {
-        button.find('img.spinner').remove();
-        flash_message('Server error', 'error', true);
+        flash_message(voteit.translation['voting_timeout_msg'], true);
+        $('img.spinner').remove();
+        ongoing_vote = false;
+        //FIXME: Retry post
     });
-})
+}
 
 /* close booth when close button is clicked
  * 
