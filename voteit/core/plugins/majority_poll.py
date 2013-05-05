@@ -33,7 +33,8 @@ class MajorityPollPlugin(PollPlugin):
         choices = set()
         
         for prop in proposals:
-            choices.add((prop.uid, prop.title))
+            title = u"#%s - %s" % (prop.get_field_value('aid'), prop.title)
+            choices.add((prop.uid, title))
 
         poll_wf_state = self.context.get_workflow_state()
         if poll_wf_state == 'ongoing':
