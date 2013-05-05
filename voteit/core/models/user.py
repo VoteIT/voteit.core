@@ -75,7 +75,9 @@ class User(BaseContent):
             url = plugin.url(size)
         except Exception:
             #FIXME: Log exception
-            url = "" #FIXME: Broken-symbol for image?
+            url = None
+        if not url:
+            url = u"/static/images/default_user.png"
         tag = '<img src="%(url)s" height="%(size)s" width="%(size)s"' % {'url': url, 'size': size}
         for (k, v) in kwargs.items():
             tag += ' %s="%s"' % (k, v)
