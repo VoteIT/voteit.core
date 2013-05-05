@@ -83,12 +83,20 @@ class MajorityPollPlugin(PollPlugin):
         votes = [x['uid']['proposal'] for x in self.context.poll_result]
         novotes = set(self.context.proposal_uids) - set(votes)
         
+        vote_singular = api.translate(_(u"vote_singular",
+                                        default = u"Vote"))
+        vote_plural = api.translate(_(u"vote_plural",
+                                      default = u"Votes"))
+        def _vote_text(count):
+            return api.pluralize(vote_singular, vote_plural, count)
+
         response = {}
         response['api'] = api
         response['result'] = self.context.poll_result
         response['novotes'] = novotes
         response['get_proposal_by_uid'] = self.context.get_proposal_by_uid
         response['complete'] = complete
+        response['vote_text'] = _vote_text
         return render('templates/majority_poll.pt', response, request=request)
 
     def change_states_of(self):
