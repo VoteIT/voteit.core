@@ -1,10 +1,8 @@
 from betahaus.viewcomponent import view_action
 from pyramid.renderers import render
 from pyramid.traversal import resource_path
-from pyramid.traversal import find_resource
 from pyramid.view import view_config
 from repoze.catalog.query import Eq
-from repoze.catalog.query import NotAny
 
 from voteit.core.security import MANAGE_SERVER
 from voteit.core.security import MODERATE_MEETING
@@ -12,7 +10,7 @@ from voteit.core.security import VIEW
 from voteit.core.security import MANAGE_GROUPS
 from voteit.core.security import ADD_VOTE
 from voteit.core import VoteITMF as _
-from voteit.core.views.api import APIView
+from voteit.core.views.base_view import BaseView
 from voteit.core.models.interfaces import IAccessPolicy
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.catalog import resolve_catalog_docid
@@ -38,25 +36,20 @@ def polls_menu(context, request, va, **kw):
     api = kw['api']
     if api.meeting is None:
         return ''
-
     response = {}
     response['api'] = api
     response['menu_title'] = va.title
-    
-    # get all polls that is ongoing an the user hasn't voted in yet
+    # get all polls that is ongoing
     query = Eq('content_type', 'Poll' ) & \
             Eq('path', resource_path(api.meeting)) & \
-            Eq('workflow_state', 'ongoing') & \
-            NotAny('voted_userids', api.userid)
+            Eq('workflow_state', 'ongoing')
     num, results = api.root.catalog.query(query)
-    
     # count the polls the user has the right to vote in
     num = 0
     for docid in results:
         poll = resolve_catalog_docid(api.root.catalog, api.root, docid)
-        if api.context_has_permission(ADD_VOTE, poll):
+        if api.context_has_permission(ADD_VOTE, poll) and api.userid not in poll:
             num = num + 1
-
     response['unvoted_polls_count'] = num
     response['url'] = '%smeeting_poll_menu' % api.resource_url(api.meeting, request)
     return render('templates/polls/polls_menu.pt', response, request = request)
@@ -140,35 +133,23 @@ def configure_access_policy_menu_link(context, request, va, **kw):
         return """<li><a href="%s">%s</a></li>""" % (url, api.translate(va.title))
     return u""
 
-@view_config(name="meeting_poll_menu", context=IMeeting, renderer="templates/polls/polls_menu_body.pt", permission=VIEW)
-def meeting_poll_menu(context, request):
-    api = APIView(context, request)
-    if api.meeting is None:
-        return ''
-    if api.show_moderator_actions:
-        sections = MODERATOR_SECTIONS
-    else:
-        sections = REGULAR_SECTIONS
 
-    metadata = {}
-    meeting_path = resource_path(api.meeting)
-    show_polls = False
-    for section in sections:
-        #Note, as long as we don't query for private wf state, we don't have to check perms
-        metadata[section] = api.get_metadata_for_query(content_type = 'Poll',
-                                                        path = meeting_path,
-                                                        workflow_state = section)
-        if metadata[section]:
-            show_polls = True
-
-    def _get_poll_url(path):
-        poll = find_resource(api.root, path)
-        return request.resource_url(poll.__parent__, anchor=poll.uid)
-
-    response = {}
-    response['get_poll_url'] = _get_poll_url
-    response['api'] = api
-    response['sections'] = sections
-    response['show_polls'] = show_polls
-    response['polls_metadata'] = metadata
-    return response
+class MeetingActionsMenuBody(BaseView):
+    
+    @view_config(name="meeting_poll_menu", context=IMeeting, renderer="templates/polls/polls_menu_body.pt", permission=VIEW)
+    def meeting_poll_menu(self):
+        if self.api.show_moderator_actions:
+            sections = MODERATOR_SECTIONS
+        else:
+            sections = REGULAR_SECTIONS
+        meeting_path = resource_path(self.api.meeting)
+        results = {}
+        for section in sections:
+            #Note, as long as we don't query for private wf state, we don't have to check perms
+            num, docids = self.api.search_catalog(content_type = 'Poll',
+                                                  path = meeting_path,
+                                                  workflow_state = section)
+            results[section] = [self.api.resolve_catalog_docid(x) for x in docids]
+        self.response['sections'] = sections
+        self.response['results'] = results
+        return self.response

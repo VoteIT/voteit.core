@@ -1,24 +1,25 @@
 <tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core">
     <ul class="menu_body" style="display: block;">
-        <tal:polls condition="show_polls">
-            <tal:section repeat="section sections">
-                <tal:defs define="metadatas polls_metadata[section]">
-                <tal:exists condition="metadatas">
-                    <li class="menusection"><span class="iconpadding icon ${section}">${api.tstring(section.title())}</span></li>
-                    <li tal:repeat="poll_metadata metadatas">
-                        <a href="${get_poll_url(poll_metadata['path'])}">
-                           <span>
-                            <tal:not_voted condition="api.userid not in poll_metadata['voted_userids']">*</tal:not_voted>
-                            ${poll_metadata['title']}</span>
-                        </a>
-                    </li>
-                </tal:exists>
-                </tal:defs>
-            </tal:section>
-            <li class="legend menutext">
-                * <span i18n:translate="">means you've not voted in that poll.</span>
-            </li>
-        </tal:polls>
-        <li tal:condition="not show_polls" i18n:translate="">(No polls yet)</li>
+        <tal:section repeat="section sections">
+            <tal:defs define="polls results[section]">
+            <li class="menusection"><span class="iconpadding icon ${section}">${api.tstring(section.title())}</span></li>
+            <tal:results condition="polls">
+                <li tal:repeat="poll polls">
+                    <a href="${request.resource_url(poll)}">
+                        <span>
+                            <tal:not_voted condition="api.userid not in poll">*</tal:not_voted>
+                            ${poll.title}
+                        </span>
+                    </a>
+                </li>
+            </tal:results>
+            <tal:no_results condition="not polls">
+                <li class="menutext" i18n:translate="">(Nothing)</li>
+            </tal:no_results>
+            </tal:defs>
+        </tal:section>
+        <li class="legend menutext">
+            * <span i18n:translate="">means you've not voted in that poll.</span>
+        </li>
     </ul>
 </tal:main>

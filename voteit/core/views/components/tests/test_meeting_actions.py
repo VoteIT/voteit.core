@@ -166,25 +166,15 @@ class MeetingActionsComponentTests(unittest.TestCase):
         poll4.set_workflow_state(request, 'ongoing')
         poll4.set_workflow_state(request, 'closed')
         
-        from voteit.core.views.components.meeting_actions import meeting_poll_menu
-        response = meeting_poll_menu(context, request)
-        self.assertIn('polls_metadata', response)
-        self.assertIn('private', response['polls_metadata'])
-        self.assertIn('upcoming', response['polls_metadata'])
-        self.assertIn('ongoing', response['polls_metadata'])
-        self.assertIn('closed', response['polls_metadata'])
-        
-        self.assertEqual(len(response['polls_metadata']['private']), 1)
-        self.assertEqual(len(response['polls_metadata']['upcoming']), 1)
-        self.assertEqual(len(response['polls_metadata']['ongoing']), 1)
-        self.assertEqual(len(response['polls_metadata']['closed']), 1)
-        
-    def test_meeting_poll_menu_no_meeting(self):
-        self.config.testing_securitypolicy(userid='dummy',
-                                           permissive=True)
-        context = bootstrap_and_fixture(self.config)
-        request = testing.DummyRequest()
-        from voteit.core.views.components.meeting_actions import meeting_poll_menu
-        response = meeting_poll_menu(context, request)
-        self.assertEqual('', response)
-        
+        from voteit.core.views.components.meeting_actions import MeetingActionsMenuBody
+        view_obj = MeetingActionsMenuBody(context, request)
+        response = view_obj.meeting_poll_menu()
+        self.assertIn('results', response)
+        self.assertIn('private', response['results'])
+        self.assertIn('upcoming', response['results'])
+        self.assertIn('ongoing', response['results'])
+        self.assertIn('closed', response['results'])
+        self.assertEqual(len(response['results']['private']), 1)
+        self.assertEqual(len(response['results']['upcoming']), 1)
+        self.assertEqual(len(response['results']['ongoing']), 1)
+        self.assertEqual(len(response['results']['closed']), 1)

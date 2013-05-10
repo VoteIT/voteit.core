@@ -45,7 +45,6 @@ class CatalogMetadata(object):
     adapts(ICatalogMetadataEnabled)
     special_indexes = {IAgendaItem:'get_agenda_item_specific',
                        IWorkflowAware:'get_workflow_specific',
-                       IPoll:'get_poll_specific',
                        IProposal: 'get_proposal_specific'}
     
     def __init__(self, context):
@@ -85,10 +84,6 @@ class CatalogMetadata(object):
         """ Specific for workflow aware items. """
         results['workflow_state'] = get_workflow_state(self.context, None)
 
-    def get_poll_specific(self, results):
-        """ Specific for polls. """
-        results['voted_userids'] = get_voted_userids(self.context, ())
-
     def get_proposal_specific(self, results):
         results['aid'] = get_aid(self.context, u'')
         results['aid_int'] = get_aid_int(self.context, 0)
@@ -118,7 +113,6 @@ def update_indexes(catalog, reindex=True):
         'end_time' : CatalogFieldIndex(get_end_time),
         'unread': CatalogKeywordIndex(get_unread),
         'like_userids': CatalogKeywordIndex(get_like_userids),
-        'voted_userids': CatalogKeywordIndex(get_voted_userids),
         'order': CatalogFieldIndex(get_order),
         'tags': CatalogKeywordIndex(get_tags),
     }
@@ -361,19 +355,7 @@ def get_like_userids(object, default):
         likes = user_tags.userids_for_tag('like')
         if likes:
             return likes
-        
     return default
-    
-def get_voted_userids(object, default):
-    """ Returns all userids who voted in a poll.
-        Warning! An empty list doesn't update the catalog.
-        If default is returned to an index, it will cause that index to remove index,
-        which is the correct behaviour for the catalog.
-    """
-    if not IPoll.providedBy(object):
-        return default
-    voted_userids = object.get_voted_userids()
-    return voted_userids and voted_userids or default
 
 def get_order(object, default):
     """ Return order, if object has that field. """

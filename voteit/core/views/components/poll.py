@@ -28,7 +28,7 @@ def poll_listing(context, request, va, **kw):
     response['wf_state'] = wf_state = context.get_workflow_state()
     response['context'] = context #make sure context within the template is this context and nothing else
     if wf_state in ('ongoing', 'closed'):
-        response['voted_count'] = len(api.get_metadata_for_query(uid = context.uid)[0]['voted_userids'])
+        response['voted_count'] = len(context.get_voted_userids())
     if wf_state == 'ongoing':
         response['voters_count'] = len(security.find_authorized_userids(context, [security.ADD_VOTE]))
         try:
