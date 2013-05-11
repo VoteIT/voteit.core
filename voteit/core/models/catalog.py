@@ -31,7 +31,8 @@ from voteit.core.security import find_authorized_userids
 
 
 SEARCHABLE_TEXT_INDEXES = ('title',
-                           'description',)
+                           'description',
+                           'aid')
 
 
 class CatalogMetadata(object):
@@ -313,9 +314,11 @@ def get_searchable_text(object, default):
     """
     text = u''
     for index in SEARCHABLE_TEXT_INDEXES:
-        res = getattr(object, index, None)
+        res = object.get_field_value(index, None)
         if res:
             text += u' %s' % res
+            if index == 'aid':
+                text += u' #%s' % res
     text = text.strip()
     return text and text or default
 

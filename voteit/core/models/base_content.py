@@ -11,6 +11,7 @@ from voteit.core.events import ObjectUpdatedEvent
 from voteit.core.models.interfaces import IBaseContent
 from voteit.core.models.security_aware import SecurityAware
 from voteit.core.security import ROLE_OWNER
+from voteit.core.models.catalog import SEARCHABLE_TEXT_INDEXES
 
 #FIXME: This should be changable some way.
 #Things that should never be saved
@@ -42,13 +43,11 @@ class BaseContent(BaseFolder, SecurityAware):
                 #but if we log in voteit.core, any poll plugin test will die very strangely
                 #It has something with cleanup of logging in multithreading in setuptools
                 pass #pragma : no cover
-
         #Set owner - if it is in kwargs now
         if 'creators' in kwargs:
             userid = kwargs['creators'][0]
             #Don't send updated event on add
             self.add_groups(userid, (ROLE_OWNER,), event = False)
-
         super(BaseContent, self).__init__(data=data, **kwargs)
 
     def set_field_value(self, key, value):
@@ -62,11 +61,12 @@ class BaseContent(BaseFolder, SecurityAware):
         for restricted_key in RESTRICTED_KEYS:
             if restricted_key in values:
                 del values[restricted_key]
-        
         updated = super(BaseContent, self).set_field_appstruct(values, notify=notify, mark_modified=mark_modified)
         if updated and notify:
             #FIXME: This hack can be removed when transformations are live
             #Currently we need to reindex whenever some fields have changed
+            if [x for x in updated if x in SEARCHABLE_TEXT_INDEXES]:
+                updated.add('searchable_text')
             if 'tags' not in updated:
                 updated.add('tags')
             objectEventNotify(ObjectUpdatedEvent(self, indexes=updated, metadata=True))
