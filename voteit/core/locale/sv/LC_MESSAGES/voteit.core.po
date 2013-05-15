@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2013-05-05 10:42+0200\n"
-"PO-Revision-Date: 2013-05-05 11:02+0100\n"
+"POT-Creation-Date: 2013-05-15 17:37+0200\n"
+"PO-Revision-Date: 2013-05-15 17:41+0100\n"
 "Last-Translator: Robin Harms Oredsson <robin@betahaus.net>\n"
 "Language-Team: sv <LL@li.org>\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -28,7 +28,7 @@ msgstr "VoteIT"
 #: voteit/core/models/agenda_templates.py:20
 #: voteit/core/views/agenda_templates.py:32
 #: voteit/core/views/components/agenda.py:10
-#: voteit/core/views/components/meeting_actions.py:88
+#: voteit/core/views/components/meeting_actions.py:81
 #: voteit/core/views/templates/agenda_templates.pt:14
 msgid "Agenda templates"
 msgstr "Standarddagordningar"
@@ -379,7 +379,7 @@ msgstr "Loggpost"
 
 #: voteit/core/models/meeting.py:44 voteit/core/models/meeting.py:52
 #: voteit/core/schemas/contact.py:64
-#: voteit/core/views/components/meeting_actions.py:68
+#: voteit/core/views/components/meeting_actions.py:61
 msgid "Meeting"
 msgstr "Möte"
 
@@ -577,7 +577,7 @@ msgid "You have been mentioned in VoteIT"
 msgstr "Du har blivit nämnd i VoteIT"
 
 #: voteit/core/models/users.py:15 voteit/core/models/users.py:20
-#: voteit/core/views/components/meeting_actions.py:89
+#: voteit/core/views/components/meeting_actions.py:82
 msgid "Users"
 msgstr "Användare"
 
@@ -672,21 +672,21 @@ msgstr ""
 "Rösta på ett av flera alternativ. När omröstningen avslutas utses det "
 "förslag som fått egen majoritet av de avgivna rösterna som vinnande"
 
-#: voteit/core/plugins/majority_poll.py:40
+#: voteit/core/plugins/majority_poll.py:41
 msgid "Vote for one"
 msgstr "Rösta på en"
 
-#: voteit/core/plugins/majority_poll.py:42
+#: voteit/core/plugins/majority_poll.py:43
 msgid "You can't change your vote now."
 msgstr "Du kan inte ändra din röst nu"
 
 #. Default: Vote
-#: voteit/core/plugins/majority_poll.py:86
+#: voteit/core/plugins/majority_poll.py:87
 msgid "vote_singular"
 msgstr "Röst"
 
 #. Default: Votes
-#: voteit/core/plugins/majority_poll.py:88
+#: voteit/core/plugins/majority_poll.py:89
 msgid "vote_plural"
 msgstr "Röster"
 
@@ -780,7 +780,6 @@ msgstr "Flytta objekt"
 #. Default: WARNING: This might break discissions or references. Backup your
 #. data before doing this! If proposals are part of a poll, remove them first.
 #: voteit/core/schemas/common.py:143
-#| msgid "contact_schema_name_description"
 msgid "move_object_schema_description"
 msgstr ""
 "VARNING: Detta kan få diskusisoner eller referenser att försvinna. Ta bakcup "
@@ -888,7 +887,7 @@ msgid "claim_ticket_token_title"
 msgstr "Inbjudningskoden som du fick i dett ebrev"
 
 #: voteit/core/schemas/invite_ticket.py:24
-#: voteit/core/views/components/meeting_actions.py:116
+#: voteit/core/views/components/meeting_actions.py:110
 #: voteit/core/views/templates/participants.pt:128
 msgid "Invite participants"
 msgstr "Bjud in deltagare"
@@ -958,7 +957,9 @@ msgstr "Nuvarande inbjudningar"
 msgid "<Disable>"
 msgstr "<Inaktivera>"
 
-#: voteit/core/schemas/layout.py:32 voteit/core/views/meeting.py:53
+#: voteit/core/schemas/layout.py:32 voteit/core/schemas/site.py:70
+#: voteit/core/views/meeting.py:53
+#: voteit/core/views/components/meeting_actions.py:83
 msgid "Layout"
 msgstr "Layout"
 
@@ -969,53 +970,55 @@ msgid "layuot_schema_main_description"
 msgstr "Ändra layouten för olika delar i mötet. (Avancerat)"
 
 #: voteit/core/schemas/layout.py:37
-#| msgid "Apply to meeting"
 msgid "URL to a meeting logo."
 msgstr "URL till möteslogo."
 
-#: voteit/core/schemas/layout.py:38
-msgid ""
-"It will be shown to the left of the header. Dimensions should be no more "
-"than the text height. If you use the wrong dimensions, you may break the "
-"layout."
+#. Default: It will be shown to the left of the header. Dimensions should be no
+#. more than the text height. If you use the wrong dimensions, you may break
+#. the layout.
+#: voteit/core/schemas/layout.py:38 voteit/core/schemas/site.py:76
+#| msgid "your_vote_description"
+msgid "logo_description_text"
 msgstr ""
+"Kommer visas till vänster om sidrubriken. Bilden bör inte vara högre än "
+"texten. Om du använder fel dimensioner kan layouten bli märklig."
 
-#: voteit/core/schemas/layout.py:43
+#: voteit/core/schemas/layout.py:44
 msgid "Agenda item left column widget"
 msgstr "Vänsterkolumn i dagordningspunktsvy"
 
-#: voteit/core/schemas/layout.py:48
+#: voteit/core/schemas/layout.py:49
 msgid "Agenda item right column widget"
 msgstr "Högerkolumn i dagordningspunktsvy"
 
-#: voteit/core/schemas/layout.py:53
+#: voteit/core/schemas/layout.py:54
 msgid "Truncate discussion length"
 msgstr "Trunkera diskussionslängd"
 
 #. Default: Set the number of always visible characters in discussion posts.
 #. Enter 0 for no truncating.
-#: voteit/core/schemas/layout.py:54
+#: voteit/core/schemas/layout.py:55
 msgid "truncate_discussion_length_description"
 msgstr ""
 "Sätt längden på hur många tecken som ska visas innan trunkering. 0 betyder "
 "ingen tunkering."
 
-#: voteit/core/schemas/layout.py:61
+#: voteit/core/schemas/layout.py:62
 msgid "Enable tags"
 msgstr "Aktivera hashtaggar"
 
 #. Default: Enable tags in proposals and discussion posts
-#: voteit/core/schemas/layout.py:62
+#: voteit/core/schemas/layout.py:63
 msgid "enable_tags_description"
 msgstr "Aktivera hashtaggar i förslag och diskussioner"
 
-#: voteit/core/schemas/layout.py:68
+#: voteit/core/schemas/layout.py:69
 msgid "Hide retracted proposals"
 msgstr "Göm tillbakadragna förslag"
 
 #. Default: You can still access retracted proposals by using a collapsible
 #. link below the regular proposals
-#: voteit/core/schemas/layout.py:69
+#: voteit/core/schemas/layout.py:70
 msgid "meeting_hide_retracted_description"
 msgstr ""
 "Du kan fortfarande komma åt tillbakadragna förslag genom att använda länken "
@@ -1105,7 +1108,7 @@ msgid "Edit meeting"
 msgstr "Redigera möte"
 
 #: voteit/core/schemas/meeting.py:167
-#: voteit/core/views/components/meeting_actions.py:106
+#: voteit/core/views/components/meeting_actions.py:100
 msgid "Presentation"
 msgstr "Mötespresentation"
 
@@ -1122,12 +1125,12 @@ msgstr ""
 "också att länka till manualen och till mötesdokumenten."
 
 #: voteit/core/schemas/meeting.py:176
-#: voteit/core/views/components/meeting_actions.py:104
+#: voteit/core/views/components/meeting_actions.py:98
 msgid "Mail settings"
 msgstr "Epostinställningar"
 
 #: voteit/core/schemas/meeting.py:182
-#: voteit/core/views/components/meeting_actions.py:102
+#: voteit/core/views/components/meeting_actions.py:96
 msgid "Access policy"
 msgstr "Accesspolicy"
 
@@ -1367,23 +1370,46 @@ msgstr ""
 "aktivera tjänsten."
 
 #. Default: Require when registering on the site.
-#: voteit/core/schemas/site.py:56
+#: voteit/core/schemas/site.py:54
 msgid "captcha_registration_title"
 msgstr "Kräv vid registrering på sidan."
 
 #. Default: Require when creating a new meeting. (If users are allowed to do
 #. that)
-#: voteit/core/schemas/site.py:60
+#: voteit/core/schemas/site.py:58
 msgid "captcha_meeting_title"
 msgstr "Kräv för att skapa ett nytt möte. (Om användare får göra det)"
 
-#: voteit/core/schemas/site.py:63
+#: voteit/core/schemas/site.py:61
 msgid "Public ReCaptcha key"
 msgstr "Publik ReCaptcha-nyckel"
 
-#: voteit/core/schemas/site.py:67
+#: voteit/core/schemas/site.py:65
 msgid "Private ReCaptcha key"
 msgstr "Privat ReCaptcha-nyckel"
+
+#. Default: Global layout settings
+#: voteit/core/schemas/site.py:71
+#| msgid "captcha_site_root_schema_main_description"
+msgid "layout_site_root_schema_description"
+msgstr "Globala layoutinställningar"
+
+#: voteit/core/schemas/site.py:75
+msgid "URL to a default logo used in meetings and in the site root."
+msgstr "URL till en standardlogga att använda i möten och i roten."
+
+#: voteit/core/schemas/site.py:82
+msgid "Custom CSS code to inject in each page."
+msgstr "Anpassad CSS-kod att sticka in på varje sida."
+
+#. Default: Use this for small customisation. Note that you may break the site
+#. horribly if you tinker with this!
+#: voteit/core/schemas/site.py:83
+#| msgid "your_vote_description"
+msgid "custom_css_code_descrption"
+msgstr ""
+"Använd detta för små anpassningar. Notera att du kan ha sönder siten rejlt "
+"om du inte vet vad du gör!"
 
 #: voteit/core/schemas/tzdatetime.py:31 voteit/core/schemas/tzdatetime.py:51
 msgid "'${val}' is not valid as date and time"
@@ -1589,7 +1615,7 @@ msgstr ""
 #: voteit/core/views/base_edit.py:198 voteit/core/views/base_edit.py:238
 #: voteit/core/views/base_edit.py:316 voteit/core/views/meeting.py:76
 #: voteit/core/views/meeting.py:218 voteit/core/views/poll.py:68
-#: voteit/core/views/site.py:180 voteit/core/views/ticket.py:110
+#: voteit/core/views/site.py:187 voteit/core/views/ticket.py:110
 #: voteit/core/views/ticket.py:193 voteit/core/views/users.py:44
 #: voteit/core/workflows/poll.zcml:33
 msgid "Canceled"
@@ -1600,12 +1626,12 @@ msgid "Users and their permissions successfully copied"
 msgstr "Användare och deras rättigheter kopierades"
 
 #: voteit/core/views/base_edit.py:188 voteit/core/views/meeting.py:211
-#: voteit/core/views/poll.py:60
+#: voteit/core/views/poll.py:60 voteit/core/views/site.py:181
 msgid "Successfully updated"
 msgstr "Uppdaterad"
 
 #: voteit/core/views/base_edit.py:190 voteit/core/views/meeting.py:213
-#: voteit/core/views/users.py:229
+#: voteit/core/views/site.py:183 voteit/core/views/users.py:229
 msgid "Nothing updated"
 msgstr "Inget uppdaterat"
 
@@ -1629,7 +1655,6 @@ msgstr ""
 "Är du säker på att du vill radera '${display_name}' med titeln: ${title}"
 
 #: voteit/core/views/base_edit.py:312
-#| msgid "Approved"
 msgid "Moved"
 msgstr "Flyttad"
 
@@ -1723,12 +1748,12 @@ msgid "Edit permissions"
 msgstr "Redigera rättigheter"
 
 #: voteit/core/views/permissions.py:28
-#: voteit/core/views/components/meeting_actions.py:86
+#: voteit/core/views/components/meeting_actions.py:79
 msgid "Root permissions"
 msgstr "Rooträttigheter"
 
 #: voteit/core/views/permissions.py:73
-#: voteit/core/views/components/meeting_actions.py:118
+#: voteit/core/views/components/meeting_actions.py:112
 #: voteit/core/views/templates/participants.pt:132
 msgid "Add participant"
 msgstr "Lägg till användare"
@@ -1769,7 +1794,7 @@ msgstr ""
 "Sökningen fungerade inte. Det är inte möjligt att söka på vissa "
 "'funktionsord' som 'if' eller 'the'."
 
-#: voteit/core/views/site.py:126
+#: voteit/core/views/site.py:122
 msgid "You're now registered. Welcome!"
 msgstr "Du är nu registrerad. Välkommen!"
 
@@ -1777,7 +1802,7 @@ msgstr "Du är nu registrerad. Välkommen!"
 #. your profile and write something about yourself. To join a meeting, you need
 #. to either have an invitaion that will have been sent to you via email, or
 #. the url of a meeting to request access to it.
-#: voteit/core/views/site.py:129
+#: voteit/core/views/site.py:125
 msgid "joined_without_ticket_intro_text"
 msgstr ""
 "Du är nu registrerad. Välkommen! Vänligen ägna några minuter åt att "
@@ -1785,7 +1810,7 @@ msgstr ""
 "möte behöver du antingen använda inbjudan som du fått per epost eller känna "
 "till en direktlänk till mötet för att begära tillträde till det."
 
-#: voteit/core/views/site.py:206
+#: voteit/core/views/site.py:161
 msgid "Email addresses of moderators with upcoming or ongoing meetings"
 msgstr "Epostadresser för moderatorer med pågående eller kommande möten"
 
@@ -1938,77 +1963,77 @@ msgstr "Detta möte har inte startats ännu."
 msgid "This meeting has closed."
 msgstr "Detta möte är stängt och kan inte ändras."
 
-#: voteit/core/views/components/meeting_actions.py:36
+#: voteit/core/views/components/meeting_actions.py:34
 msgid "Polls"
 msgstr "Omröstningar"
 
-#: voteit/core/views/components/meeting_actions.py:64
+#: voteit/core/views/components/meeting_actions.py:57
 msgid "Admin menu"
 msgstr "Adminmeny"
 
-#: voteit/core/views/components/meeting_actions.py:66
+#: voteit/core/views/components/meeting_actions.py:59
 msgid "Settings"
 msgstr "Inställningar"
 
-#: voteit/core/views/components/meeting_actions.py:70
+#: voteit/core/views/components/meeting_actions.py:63
 #: voteit/core/views/templates/minutes.pt:15
 #: voteit/core/views/templates/participants.pt:19
 msgid "Participants"
 msgstr "Deltagare"
 
-#: voteit/core/views/components/meeting_actions.py:72
+#: voteit/core/views/components/meeting_actions.py:65
 msgid "Help & contact"
 msgstr "Hjälp & kontakt"
 
-#: voteit/core/views/components/meeting_actions.py:84
+#: voteit/core/views/components/meeting_actions.py:77
 msgid "Moderators emails"
 msgstr "Moderatorers epost"
 
-#: voteit/core/views/components/meeting_actions.py:85
+#: voteit/core/views/components/meeting_actions.py:78
 msgid "ReCaptcha"
 msgstr "ReCaptcha"
 
-#: voteit/core/views/components/meeting_actions.py:87
+#: voteit/core/views/components/meeting_actions.py:80
 msgid "Server logs"
 msgstr "Serverloggar"
 
-#: voteit/core/views/components/meeting_actions.py:96
+#: voteit/core/views/components/meeting_actions.py:90
 msgid "Meeting poll settings"
 msgstr "Mötets omröstningsinställningar"
 
-#: voteit/core/views/components/meeting_actions.py:98
+#: voteit/core/views/components/meeting_actions.py:92
 msgid "Agenda Templates"
 msgstr "Standarddagordningar"
 
-#: voteit/core/views/components/meeting_actions.py:100
+#: voteit/core/views/components/meeting_actions.py:94
 msgid "Layout and widgets"
 msgstr "Layout och widgets"
 
-#: voteit/core/views/components/meeting_actions.py:108
+#: voteit/core/views/components/meeting_actions.py:102
 msgid "Mail notification settings"
 msgstr "Inställningar för epostnotifiering"
 
-#: voteit/core/views/components/meeting_actions.py:110
+#: voteit/core/views/components/meeting_actions.py:104
 msgid "Meeting actions log"
 msgstr "Möteslogg"
 
-#: voteit/core/views/components/meeting_actions.py:111
+#: voteit/core/views/components/meeting_actions.py:105
 msgid "Minutes"
 msgstr "Protokoll"
 
-#: voteit/core/views/components/meeting_actions.py:112
+#: voteit/core/views/components/meeting_actions.py:106
 msgid "Participants email addresses"
 msgstr "Deltagarnas epostadresser"
 
-#: voteit/core/views/components/meeting_actions.py:114
+#: voteit/core/views/components/meeting_actions.py:108
 msgid "Manage invites"
 msgstr "Hantera inbjudningar"
 
-#: voteit/core/views/components/meeting_actions.py:120
+#: voteit/core/views/components/meeting_actions.py:114
 msgid "Participant list"
 msgstr "Deltagarlista"
 
-#: voteit/core/views/components/meeting_actions.py:127
+#: voteit/core/views/components/meeting_actions.py:121
 msgid "Configure selected access policy"
 msgstr "Inställningar för vald accesspolicy"
 
@@ -2035,10 +2060,6 @@ msgstr "Funktioner här"
 #: voteit/core/views/templates/manage_agenda_items.pt:39
 msgid "Edit"
 msgstr "Redigera"
-
-#: voteit/core/views/components/moderator_actions.py:62
-msgid "Move"
-msgstr "Flytta"
 
 #: voteit/core/views/components/moderator_actions.py:83
 msgid "Block proposals"
@@ -2185,13 +2206,14 @@ msgstr "Startad"
 msgid "Closes"
 msgstr "Stänger"
 
-#: voteit/core/views/components/templates/polls/polls_menu_body.pt:19
-msgid "means you've not voted in that poll."
-msgstr "betyder att du inte röstat i omröstningen"
+#: voteit/core/views/components/templates/polls/polls_menu_body.pt:17
+#: voteit/core/views/components/templates/sidebars/navigation_section.pt:42
+msgid "(Nothing)"
+msgstr "(Inget)"
 
 #: voteit/core/views/components/templates/polls/polls_menu_body.pt:22
-msgid "(No polls yet)"
-msgstr "(Ännu inga omröstningar)"
+msgid "means you've not voted in that poll."
+msgstr "betyder att du inte röstat i omröstningen"
 
 #: voteit/core/views/components/templates/proposals/listing.pt:5
 #: voteit/core/views/templates/discussions.pt:6
@@ -2218,10 +2240,6 @@ msgstr "Återställ lösenord"
 #: voteit/core/views/templates/manage_agenda_items.pt:14
 msgid "Manage agenda"
 msgstr "Ändra dagordning"
-
-#: voteit/core/views/components/templates/sidebars/navigation_section.pt:42
-msgid "(Nothing)"
-msgstr "(Inget)"
 
 #: voteit/core/views/components/templates/sidebars/navigation_section.pt:48
 #: voteit/core/views/templates/snippets/latest_meeting_entries.pt:15
@@ -2314,11 +2332,6 @@ msgstr "Tid"
 #: voteit/core/views/templates/logs.pt:21
 msgid "Scripted"
 msgstr "Skriptad"
-
-#: voteit/core/views/templates/main.pt:21
-#| msgid "Meeting closed"
-msgid "Meeting logo"
-msgstr "Möteslogo"
 
 #: voteit/core/views/templates/manage_agenda_items.pt:27
 msgid "Allow proposals"
@@ -2723,3 +2736,9 @@ msgstr "Avslagen"
 #: voteit/core/workflows/proposal.zcml:43
 msgid "Unhandled"
 msgstr "Ohanterad"
+
+#~ msgid "Move"
+#~ msgstr "Flytta"
+
+#~ msgid "(No polls yet)"
+#~ msgstr "(Ännu inga omröstningar)"
