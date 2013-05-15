@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2013-05-15 17:37+0200\n"
-"PO-Revision-Date: 2013-05-15 17:41+0100\n"
+"PO-Revision-Date: 2013-05-15 18:31+0100\n"
 "Last-Translator: Robin Harms Oredsson <robin@betahaus.net>\n"
 "Language-Team: sv <LL@li.org>\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -1949,7 +1949,7 @@ msgstr "Mötet är stängt, du kan inte lägga till ett diskussionsinlägg här.
 #: voteit/core/views/components/inline_add_form.py:33
 msgid "no_discuss_perm_notice"
 msgstr ""
-"Du har inte tillräckliga rättigher för att lägga in diskussionsinlägg här."
+"Du har inte tillräckliga rättigheter för att lägga in diskussionsinlägg här."
 
 #: voteit/core/views/components/inline_add_form.py:44
 msgid "${username} propose"
