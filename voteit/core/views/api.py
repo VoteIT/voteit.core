@@ -124,6 +124,16 @@ class APIView(object):
         """ Get objects from root and out, so we can iterate over them and get links etc. """
         return reversed(tuple(lineage(self.context)))
 
+    @reify
+    def custom_logo_tag(self):
+        url = None
+        if self.meeting:
+            url = self.meeting.get_field_value('meeting_logo_url')
+        if not url:
+            url = self.root.get_field_value('default_logo_url')
+        if url:
+            return u'<img src="%s" id="meeting-logo" alt="Meeting logo" />' % url
+
     def register_form_resources(self, form):
         """ Append form resources if they don't already exist in self.form_resources """
         for (key, version) in form.get_widget_requirements():

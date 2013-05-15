@@ -35,7 +35,8 @@ def deferred_ai_layout_right_widget(node, kw):
 class LayoutSchema(colander.Schema):
     meeting_logo_url = colander.SchemaNode(colander.String(),
                                            title = _(u"URL to a meeting logo."),
-                                           description = _(u"It will be shown to the left of the header. "
+                                           description = _(u"logo_description_text",
+                                                           default = u"It will be shown to the left of the header. "
                                                            u"Dimensions should be no more than the text height. "
                                                            u"If you use the wrong dimensions, you may break the layout."),
                                            missing = u"")

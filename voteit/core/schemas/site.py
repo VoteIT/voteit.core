@@ -71,6 +71,13 @@ class CaptchaSiteRootSchema(colander.MappingSchema):
                 description = _(u"layout_site_root_schema_description",
                                 default = u"Global layout settings"))
 class LayoutSiteRootSchema(colander.Schema):
+    default_logo_url = colander.SchemaNode(colander.String(),
+                                           title = _(u"URL to a default logo used in meetings and in the site root."),
+                                           description = _(u"logo_description_text",
+                                                           default = u"It will be shown to the left of the header. "
+                                                           u"Dimensions should be no more than the text height. "
+                                                           u"If you use the wrong dimensions, you may break the layout."),
+                                           missing = u"")
     custom_css = colander.SchemaNode(colander.String(),
                                      title = _(u"Custom CSS code to inject in each page."),
                                      description = _(u"custom_css_code_descrption",
