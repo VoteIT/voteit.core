@@ -80,6 +80,7 @@ def generic_menu(context, request, va, **kw):
 @view_action('admin_menu', 'server_log', title = _(u"Server logs"), link = "server_logs")
 @view_action('admin_menu', 'agenda_templates', title = _(u"Agenda templates"), link = "agenda_templates")
 @view_action('admin_menu', 'users', title = _(u"Users"), link = "users")
+@view_action('admin_menu', 'layout', title = _(u"Layout"), link = "layout")
 def generic_root_menu_link(context, request, va, **kw):
     """ This is for simple menu items for the root """
     api = kw['api']

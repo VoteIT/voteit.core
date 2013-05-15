@@ -48,8 +48,6 @@ class SiteRootSchema(colander.MappingSchema):
                                 default = u"CAPTCHAs can protect the site from spam attacks by robots. "
                                           u"You'll need to register with ReCaptcha and  "
                                           u"add the API keys here to activate this service."))
-
-
 class CaptchaSiteRootSchema(colander.MappingSchema):
     captcha_registration = colander.SchemaNode(
         colander.Boolean(),
@@ -67,3 +65,16 @@ class CaptchaSiteRootSchema(colander.MappingSchema):
                                               title = _(u"Private ReCaptcha key"),
                                               validator=html_string_validator,
                                               missing=u"")
+
+
+@schema_factory('LayoutSiteRootSchema', title = _(u"Layout"),
+                description = _(u"layout_site_root_schema_description",
+                                default = u"Global layout settings"))
+class LayoutSiteRootSchema(colander.Schema):
+    custom_css = colander.SchemaNode(colander.String(),
+                                     title = _(u"Custom CSS code to inject in each page."),
+                                     description = _(u"custom_css_code_descrption",
+                                                     default = u"Use this for small customisation. "
+                                                               u"Note that you may break the site horribly if you tinker with this!"),
+                                     missing = u"",
+                                     widget = deform.widget.TextAreaWidget(cols = 80, rows = 20))

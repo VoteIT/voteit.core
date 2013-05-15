@@ -9,6 +9,8 @@
     <meta name="keywords" content="python web application" />
     <meta name="description" content="pyramid web application" />
     <tal:head tal:content="structure api.render_view_group(context, request, 'head')"></tal:head>
+    <style type="text/css" tal:content="api.root.get_field_value('custom_css', '')">
+    </style>
     <metal:head define-slot="head"></metal:head>
 </head>
 <body>
