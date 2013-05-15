@@ -30,7 +30,7 @@
 		     class="vote_form_area" tal:content="structure form">Initial poll form rendered here</div>
 
         <div tal:condition="wf_state == 'closed' and api.userid in context" class="toggle_area toggle_closed">
-            <a class="toggle_minimize" href="#">Show your vote</a>
+            <a class="toggle_minimize" href="#" i18n:translate="">Show your vote</a>
             <div class="vote_form_area minimizable_area" tal:content="structure form">Readonly poll form here</div>
         </div>
 

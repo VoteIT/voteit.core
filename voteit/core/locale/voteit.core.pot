@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2013-05-15 17:37+0200\n"
+"POT-Creation-Date: 2013-05-15 18:40+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2203,6 +2203,10 @@ msgstr ""
 
 #: voteit/core/views/templates/modal_poll.pt:25
 msgid "Poll method"
+msgstr ""
+
+#: voteit/core/views/templates/modal_poll.pt:33
+msgid "Show your vote"
 msgstr ""
 
 #. Default: Click the icons to change permission. Any permission that's changed

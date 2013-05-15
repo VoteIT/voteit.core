@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2013-05-15 17:37+0200\n"
-"PO-Revision-Date: 2013-05-15 18:31+0100\n"
+"POT-Creation-Date: 2013-05-15 18:40+0200\n"
+"PO-Revision-Date: 2013-05-15 18:41+0100\n"
 "Last-Translator: Robin Harms Oredsson <robin@betahaus.net>\n"
 "Language-Team: sv <LL@li.org>\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -977,7 +977,6 @@ msgstr "URL till möteslogo."
 #. more than the text height. If you use the wrong dimensions, you may break
 #. the layout.
 #: voteit/core/schemas/layout.py:38 voteit/core/schemas/site.py:76
-#| msgid "your_vote_description"
 msgid "logo_description_text"
 msgstr ""
 "Kommer visas till vänster om sidrubriken. Bilden bör inte vara högre än "
@@ -1390,7 +1389,6 @@ msgstr "Privat ReCaptcha-nyckel"
 
 #. Default: Global layout settings
 #: voteit/core/schemas/site.py:71
-#| msgid "captcha_site_root_schema_main_description"
 msgid "layout_site_root_schema_description"
 msgstr "Globala layoutinställningar"
 
@@ -1405,7 +1403,6 @@ msgstr "Anpassad CSS-kod att sticka in på varje sida."
 #. Default: Use this for small customisation. Note that you may break the site
 #. horribly if you tinker with this!
 #: voteit/core/schemas/site.py:83
-#| msgid "your_vote_description"
 msgid "custom_css_code_descrption"
 msgstr ""
 "Använd detta för små anpassningar. Notera att du kan ha sönder siten rejlt "
@@ -2385,6 +2382,11 @@ msgstr "Avslagna förslag"
 msgid "Poll method"
 msgstr "Omröstningsmetod"
 
+#: voteit/core/views/templates/modal_poll.pt:33
+#| msgid "Your vote"
+msgid "Show your vote"
+msgstr "Visa din röst"
+
 #. Default: Click the icons to change permission. Any permission that's changed
 #. will be listed in bold. When you're done, click save at the bottom. If all
 #. permissions are removed from a user, that user is removed from the meeting.
@@ -2736,9 +2738,3 @@ msgstr "Avslagen"
 #: voteit/core/workflows/proposal.zcml:43
 msgid "Unhandled"
 msgstr "Ohanterad"
-
-#~ msgid "Move"
-#~ msgstr "Flytta"
-
-#~ msgid "(No polls yet)"
-#~ msgstr "(Ännu inga omröstningar)"
