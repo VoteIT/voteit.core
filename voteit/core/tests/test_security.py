@@ -99,3 +99,20 @@ class SecurityTests(unittest.TestCase):
         request = testing.DummyRequest()
         request.context = DummyContext()
         self.assertEqual(security.groupfinder('hello_world', request), 'hello_world')
+
+    def test_find_role_userids(self):
+        self.assertEqual(security.find_role_userids(self.root, 'role:Admin'), frozenset(['admin']))
+
+    def test_find_role_userids_other_context(self):
+        from voteit.core.models.meeting import Meeting
+        from voteit.core.models.user import User
+        self.root['m'] = meeting = Meeting()
+        self.root.users['a_user'] = User()
+        self.root.users['b_user'] = User()
+        self.root.users['c_user'] = User()
+        meeting.add_groups('a_user', ['role:a'])
+        meeting.add_groups('b_user', ['role:a'])
+        self.assertEqual(security.find_role_userids(meeting, 'role:a'), frozenset(['a_user', 'b_user']))
+
+    def test_find_role_userids_no_match(self):
+        self.assertEqual(security.find_role_userids(self.root, 'role:404'), frozenset())

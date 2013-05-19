@@ -140,8 +140,19 @@ def context_effective_principals(context, userid):
     return effective_principals    
 
 def unrestricted_wf_transition_to(obj, state):
-    """ Transition to a stade WITHOUT checking permission.
+    """ Transition to a state WITHOUT checking permission.
     """
     old_state = obj.get_workflow_state()
     obj.workflow._transition_to_state(obj, state, guards=())
     objectEventNotify(WorkflowStateChange(obj, old_state, state))
+
+def find_role_userids(context, role):
+    """ Return a frozenset of userids that have the specific role. No security check will be performed.
+        Note that this process is slow and shouldn't be a part of a regular view.
+    """
+    root = find_root(context)
+    results = set()
+    for userid in root.users.keys():
+        if role in context_effective_principals(context, userid):
+            results.add(userid)
+    return frozenset(results)
