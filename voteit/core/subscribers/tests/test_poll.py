@@ -5,7 +5,7 @@ from zope.component.event import objectEventNotify
 from pyramid.exceptions import HTTPForbidden
 
 from voteit.core.events import ObjectUpdatedEvent
-from voteit.core.security import unrestricted_wf_transition_to
+from voteit.core import security
 from voteit.core.testing_helpers import register_workflows
 from voteit.core.testing_helpers import bootstrap_and_fixture
 from voteit.core.testing_helpers import register_security_policies
@@ -79,3 +79,28 @@ class PollTests(unittest.TestCase):
         
         self.assertEqual(ai['prop1'].get_workflow_state(), 'published')
         self.assertEqual(ai['prop2'].get_workflow_state(), 'published')
+
+    def test_ongoing_saves_voters(self):
+        root = _voters_fixture(self.config)
+        poll = root['meeting']['ai']['poll']
+        security.unrestricted_wf_transition_to(poll, 'ongoing')
+        self.assertEqual(poll.get_field_value('voters_mark_ongoing'), frozenset(['alice', 'ben', 'celine', 'admin']))
+
+    def test_closed_saves_voters(self):
+        self.config.include('voteit.core.plugins.majority_poll')
+        root = _voters_fixture(self.config)
+        root['meeting'].del_groups('admin', [security.ROLE_VOTER])
+        poll = root['meeting']['ai']['poll']
+        poll.set_field_value('poll_plugin', 'majority_poll')
+        security.unrestricted_wf_transition_to(poll, 'ongoing')
+        security.unrestricted_wf_transition_to(poll, 'closed')
+        self.assertEqual(poll.get_field_value('voters_mark_closed'), frozenset(['alice', 'ben', 'celine']))
+
+
+def _voters_fixture(config):
+    from voteit.core.models.user import User
+    root = active_poll_fixture(config)
+    for userid in ('alice', 'ben', 'celine'):
+        root.users[userid] = User()
+        root['meeting'].add_groups(userid, [security.ROLE_VOTER])
+    return root

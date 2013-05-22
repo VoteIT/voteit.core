@@ -29,8 +29,10 @@ def poll_listing(context, request, va, **kw):
     response['context'] = context #make sure context within the template is this context and nothing else
     if wf_state in ('ongoing', 'closed'):
         response['voted_count'] = len(context.get_voted_userids())
-    if wf_state == 'ongoing':
-        response['voters_count'] = len(security.find_authorized_userids(context, [security.ADD_VOTE]))
+        if wf_state == 'ongoing':
+            response['voters_count'] = len(security.find_authorized_userids(context, [security.ADD_VOTE]))
+        else:
+            response['voters_count'] = len(context.voters_mark_closed)
         try:
             response['voted_percentage'] = round(100 * float(response['voted_count']) / float(response['voters_count']), 1)
         except ZeroDivisionError:

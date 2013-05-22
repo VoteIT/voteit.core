@@ -22,14 +22,10 @@
              tal:content="structure context.description">
                  Description</div>
 
-        <div class="poll_stats" tal:condition="wf_state == 'ongoing'">
+        <div class="poll_stats" tal:condition="wf_state in ('ongoing', 'closed')">
             <span class="iconpadding icon user" i18n:translate="">Votes used:</span>
-            ${voted_count} <tal:trans i18n:translate="">of</tal:trans> ${voters_count} (${voted_percentage}%)
-        </div>
-
-        <div class="poll_stats" tal:condition="wf_state == 'closed'">
-            <span class="iconpadding icon user" i18n:translate="">Votes used:</span>
-            ${voted_count}
+            ${voted_count} <tal:trans i18n:translate="">of</tal:trans> ${voters_count}
+            <tal:perc condition="voted_percentage">(${voted_percentage}%)</tal:perc>
         </div>
 
         <tal:iterate condition="wf_state != 'closed' and proposals" repeat="proposal proposals">

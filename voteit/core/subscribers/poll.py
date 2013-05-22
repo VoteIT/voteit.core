@@ -6,6 +6,7 @@ from repoze.workflow.workflow import WorkflowError
 from pyramid.exceptions import HTTPForbidden
 
 from voteit.core import VoteITMF as _
+from voteit.core import security
 from voteit.core.models.interfaces import IPoll
 from voteit.core.interfaces import IObjectUpdatedEvent
 from voteit.core.interfaces import IWorkflowStateChange
@@ -32,6 +33,15 @@ def email_voters_about_ongoing_poll_subscriber(obj, event):
         return
     #This method will check poll_notification_setting to determine if mail should be sent
     email_voters_about_ongoing_poll(obj)
+
+@subscriber([IPoll, IWorkflowStateChange])
+def save_voters_userids(obj, event):
+    if event.new_state == 'ongoing':
+        obj.set_field_value('voters_mark_ongoing', security.find_role_userids(obj, security.ROLE_VOTER))
+    if event.new_state == 'closed':
+        obj.set_field_value('voters_mark_closed', security.find_role_userids(obj, security.ROLE_VOTER))
+        #FIXME: Add vote information if there are votes from users who don't have vote permission currently.
+        #That must be regarded as fishy :)
 
 @subscriber([IPoll, IObjectAddedEvent])
 @subscriber([IPoll, IObjectUpdatedEvent])

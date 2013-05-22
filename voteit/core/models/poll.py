@@ -103,6 +103,14 @@ class Poll(BaseContent, WorkflowAware):
     def end_time(self):
         return self.get_field_value('end_time')
 
+    @property
+    def voters_mark_ongoing(self):
+        return self.get_field_value('voters_mark_ongoing', frozenset())
+
+    @property
+    def voters_mark_closed(self):
+        return self.get_field_value('voters_mark_closed', frozenset())
+
     def _get_proposal_uids(self):
         return self.get_field_value('proposals', ())
 
