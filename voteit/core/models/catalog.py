@@ -23,7 +23,6 @@ from voteit.core.models.interfaces import IWorkflowAware
 from voteit.core.models.interfaces import ICatalogMetadata
 from voteit.core.models.interfaces import IUnread
 from voteit.core.models.interfaces import IDiscussionPost
-from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IProposal
 from voteit.core.security import NEVER_EVER_PRINCIPAL
 from voteit.core.security import VIEW
@@ -142,10 +141,8 @@ def reindex_indexes(catalog):
     """ Warning! This will only update things that already are in the catalog! """
     root = find_root(catalog)
     for path, docid in catalog.document_map.address_to_docid.items():
-
         obj = find_resource(root, path)
         reindex_object(catalog, obj)
-        
 
 def index_object(catalog, obj):
     """ Index an object and add metadata. """
@@ -153,16 +150,13 @@ def index_object(catalog, obj):
     if catalog.document_map.docid_for_address(resource_path(obj)) is not None:
         reindex_object(catalog, obj)
         return
-
     obj_id = catalog.document_map.add(resource_path(obj))
     catalog.index_doc(obj_id, obj)
-    
     #Add metadata
     if ICatalogMetadataEnabled.providedBy(obj):
         metadata = getAdapter(obj, ICatalogMetadata)()
         metadata['docid'] = obj_id
         catalog.document_map.add_metadata(obj_id, metadata)
-
 
 def reindex_object(catalog, obj, indexes = (), metadata = True):
     """ Reindex an object and update metadata.
@@ -187,16 +181,15 @@ def reindex_object(catalog, obj, indexes = (), metadata = True):
         metadata['docid'] = obj_id
         catalog.document_map.add_metadata(obj_id, metadata)
 
-
 def unindex_object(catalog, obj):
-    """ Remove an index and its metadata. """
+    """ Remove an index and its metadata if it exists in the catalog. """
     obj_id = catalog.document_map.docid_for_address(resource_path(obj))
+    if obj_id is None:
+        return
     catalog.unindex_doc(obj_id)
-
     #Remove metadata
     if ICatalogMetadataEnabled.providedBy(obj):
         catalog.document_map.remove_metadata(obj_id)
-
 
 def reindex_object_security(catalog, obj):
     """ Update security information in the catalog.
@@ -226,7 +219,6 @@ def metadata_for_query(catalog, **kwargs):
     num, docids = catalog.search(**kwargs)
     metadata = [catalog.document_map.get_metadata(x) for x in docids]
     return tuple(metadata)
-
 
 #Indexes
 def get_title(object, default):
