@@ -425,12 +425,14 @@ button[name="cancel"]:hover {
     float: right;
     height: 19px;
     width: 23px;
-    margin-top: 5px;
 }
 .cogwheel a {
     color: transparent !important;
     background: url(/static/buttons/cogwheel.png) no-repeat;
     display: block;
+}
+#sidebar .cogwheel {
+    margin-top: 10px;
 }
 /* End Cogwheel menu */
 /* Sidebar styles */

@@ -17,8 +17,8 @@
 .deform li {
     clear: left;
     display: block;
-    margin: 6px 0px;
-    padding: 3px;
+    margin: 5px 0px;
+    padding: 3px 0;
 }
 
 .deformClosebuttonActive {
