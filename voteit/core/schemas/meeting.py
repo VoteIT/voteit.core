@@ -177,17 +177,13 @@ class PresentationMeetingSchema(colander.MappingSchema):
 class MailSettingsMeetingSchema(colander.MappingSchema):
     meeting_mail_name = meeting_mail_name_node()
     meeting_mail_address = meeting_mail_address_node()
+    mention_notification_setting = mention_notification_setting_node()
+    poll_notification_setting = poll_notification_setting_node()
 
 
 @schema_factory('AccessPolicyMeetingSchema', title = _(u"Access policy"))
 class AccessPolicyeMeetingSchema(colander.MappingSchema):
     access_policy = access_policy_node()
-
-
-@schema_factory('MailNotificationSettingsSchema', title = _(u"Mail notifications"))
-class MailNotificationSettingsSchema(colander.Schema):
-    mention_notification_setting = mention_notification_setting_node()
-    poll_notification_setting = poll_notification_setting_node()
 
 
 @schema_factory('MeetingPollSettingsSchema', title = _(u"Poll settings"),

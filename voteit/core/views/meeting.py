@@ -187,13 +187,6 @@ class MeetingView(BaseView):
         schema = schema.bind(context=self.context, request=self.request, api = self.api)
         return self.form(schema)
 
-    @view_config(context=IMeeting, name="mail_notification_settings", renderer="templates/base_edit.pt", permission=security.MODERATE_MEETING)
-    def mail_notification_settings(self):
-        schema = createSchema("MailNotificationSettingsSchema")
-        add_csrf_token(self.context, self.request, schema)
-        schema = schema.bind(context=self.context, request=self.request, api = self.api)
-        return self.form(schema)
-
     def form(self, schema):
         form = Form(schema, buttons=(button_save, button_cancel))
         self.api.register_form_resources(form)
