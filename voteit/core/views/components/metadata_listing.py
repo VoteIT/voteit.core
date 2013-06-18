@@ -23,7 +23,7 @@ def metadata_listing(context, request, va, **kw):
         In turn, some of those will call other groups.
     """
     util = request.registry.getUtility(IViewGroup, name='metadata_listing')
-    response = {'view_actions': util.get_context_vas(context, request), 'va_kwargs': kw,}
+    response = {'view_actions': util.values(), 'va_kwargs': kw,}
     return render('templates/metadata/metadata_listing.pt', response, request = request)
 
 @view_action('metadata_listing', 'state', permission=VIEW)

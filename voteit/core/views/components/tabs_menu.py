@@ -12,7 +12,7 @@ def render_tabs_menu(context, request, va, **kw):
     view_group = request.registry.queryUtility(IViewGroup, name = va.name)
     if not view_group:
         return u""
-    tabs = [x(context, request, **kw) for x in view_group.get_context_vas(context, request)]
+    tabs = [x(context, request, **kw) for x in view_group.values()]
     if not tabs:
         return u""
     response = {'api': kw['api'], 'tabs': tabs}
