@@ -5,6 +5,7 @@ from pyramid.security import authenticated_userid
 from pyramid.url import resource_url
 from pyramid.traversal import find_interface
 from pyramid.traversal import find_root
+from pyramid.traversal import find_resource
 from pyramid.traversal import resource_path
 from pyramid.interfaces import IAuthenticationPolicy
 from pyramid.interfaces import IAuthorizationPolicy
@@ -21,6 +22,7 @@ from webhelpers.html.render import sanitize
 
 from voteit.core import VoteITMF as _
 from voteit.core import security
+from voteit.core.models.interfaces import IBaseContent
 from voteit.core.models.interfaces import IDateTimeUtil
 from voteit.core.models.interfaces import IFanstaticResources
 from voteit.core.models.interfaces import IFlashMessages
@@ -190,7 +192,10 @@ class APIView(object):
             return resource_url(self.meeting, self.request)
 
     def get_moderator_actions(self, context):
-        """ A.k.a. the cogwheel-menu. """
+        """ A.k.a. the cogwheel-menu. context might be a brain here, but the view component must have an object context."""
+        if not IBaseContent.providedBy(context):
+            #Assume brain - might need to change this later
+            context = find_resource(self.root, context['path'])
         return self.render_single_view_component(context, self.request, 'main', 'moderator_actions')
         
     def get_time_created(self, context):

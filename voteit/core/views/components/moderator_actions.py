@@ -1,13 +1,11 @@
 from betahaus.viewcomponent import view_action
 from pyramid.renderers import render
-from pyramid.traversal import find_resource
 
 from voteit.core import VoteITMF as _
 from voteit.core.security import DELETE
 from voteit.core.security import EDIT
 from voteit.core.security import MODERATE_MEETING
 from voteit.core.models.interfaces import IAgendaItem
-from voteit.core.models.interfaces import IBaseContent
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IWorkflowAware
@@ -21,9 +19,6 @@ def moderator_actions(context, request, va, **kw):
         menu alternatives.
     """
     api = kw['api']
-    if not IBaseContent.providedBy(context):
-        #Assume brain - might need to change this later
-        context = find_resource(api.root, context['path'])
     response = dict(
         context = context,
         menu_content = api.render_view_group(context, request, 'moderator_actions_section', **kw),
