@@ -156,8 +156,12 @@ class DefaultEditTests(unittest.TestCase):
         self.config.include('voteit.core.models.flash_messages')
         meeting = self._fixture()
         from voteit.core.models.agenda_item import AgendaItem
-        meeting['ai'] = context = AgendaItem(title='Dummy AI', description='Dummy description')
-        request = testing.DummyRequest(post={'update': 'update', 'title': 'Dummy AI updated', 'description': 'Dummy description'})
+        meeting['ai'] = context = AgendaItem(title='Dummy AI updated', description='Dummy description')
+        post_vars = {'update': 'update',
+                     'title': 'Dummy AI',
+                     'description': 'Dummy description',
+                     'csrf_token': '0123456789012345678901234567890123456789'}
+        request = testing.DummyRequest(post=post_vars)
         obj = self._cut(context, request)
         response = obj.edit_form()
         self.assertEqual(response.location, 'http://example.com/m/ai/')
@@ -169,7 +173,11 @@ class DefaultEditTests(unittest.TestCase):
         meeting = self._fixture()
         from voteit.core.models.agenda_item import AgendaItem
         meeting['ai'] = context = AgendaItem(title='Dummy AI', description='Dummy description')
-        request = testing.DummyRequest(post={'update': 'update', 'title': 'Dummy AI', 'description': 'Dummy description'})
+        post_vars = {'update': 'update',
+                     'title': 'Dummy AI',
+                     'description': 'Dummy description',
+                     'csrf_token': '0123456789012345678901234567890123456789'}
+        request = testing.DummyRequest(post=post_vars)
         obj = self._cut(context, request)
         response = obj.edit_form()
         self.assertEqual(response.location, 'http://example.com/m/ai/')

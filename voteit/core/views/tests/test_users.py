@@ -101,7 +101,8 @@ class UsersFormViewTests(unittest.TestCase):
                                                            ('first_name', 'Dummy'), 
                                                            ('last_name', 'Person'), 
                                                            ('came_from', '/'), 
-                                                           ('add', 'add')]))
+                                                           ('add', 'add'),
+                                                           ('csrf_token', '0123456789012345678901234567890123456789')]))
         obj = self._cut(context, request)
         response = obj.add_form()
         self.assertIn('dummy4', context)
@@ -126,7 +127,8 @@ class UsersFormViewTests(unittest.TestCase):
                                                            ('first_name', 'Dummy'), 
                                                            ('last_name', 'Person'), 
                                                            ('came_from', '/'), 
-                                                           ('add', 'add')]))
+                                                           ('add', 'add'),
+                                                           ('csrf_token', '0123456789012345678901234567890123456789')]))
         obj = self._cut(context, request)
         response = obj.add_form()
         self.assertIn('form', response)
@@ -176,7 +178,8 @@ class UsersFormViewTests(unittest.TestCase):
                                                            ('password', 'dummy1234'), 
                                                            ('password-confirm', 'dummy1234'), 
                                                            ('__end__', 'password:mapping'), 
-                                                           ('update', 'update')]))
+                                                           ('update', 'update'),
+                                                           ('csrf_token', '0123456789012345678901234567890123456789')]))
         obj = self._cut(context, request)
         response = obj.password_form()
         self.assertEqual(response.location, 'http://example.com/users/dummy3/')
