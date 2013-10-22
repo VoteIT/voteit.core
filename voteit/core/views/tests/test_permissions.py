@@ -66,7 +66,8 @@ class PermissionsViewTests(unittest.TestCase):
                                                            ('checkbox', 'role:Admin'), 
                                                            ('__end__', 'groups:sequence'),
                                                            ('__end__', 'userid_and_groups:mapping'),
-                                                           ('__end__', 'userids_and_groups:sequence'),   
+                                                           ('__end__', 'userids_and_groups:sequence'),
+                                                           ('csrf_token', '0123456789012345678901234567890123456789'),
                                                            ('save', 'save')]))
         obj = self._cut(context, request)
         response = obj.group_form()
@@ -81,7 +82,7 @@ class PermissionsViewTests(unittest.TestCase):
                                                            ('checkbox', 'role:Admin'), 
                                                            ('__end__', 'groups:sequence'),
                                                            ('__end__', 'userid_and_groups:mapping'),
-                                                           ('__end__', 'userids_and_groups:sequence'),   
+                                                           ('__end__', 'userids_and_groups:sequence'),
                                                            ('save', 'save')]))
         obj = self._cut(context, request)
         response = obj.group_form()
@@ -125,7 +126,8 @@ class PermissionsViewTests(unittest.TestCase):
         request = testing.DummyRequest(post = MultiDict([('userid', 'admin'), 
                                                          ('__start__', 'groups:sequence'),  
                                                          ('checkbox', 'role:Admin'), 
-                                                         ('__end__', 'groups:sequence'), 
+                                                         ('__end__', 'groups:sequence'),
+                                                         ('csrf_token', '0123456789012345678901234567890123456789'),
                                                          ('add', 'add')]))
         obj = self._cut(context, request)
         response = obj.add_permission()

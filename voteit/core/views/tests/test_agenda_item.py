@@ -123,7 +123,7 @@ class AgendaItemViewTests(unittest.TestCase):
         request = testing.DummyRequest(is_xhr = False)
         obj = self._cut(context, request)
         res = obj.discussions()
-        self.assertEqual(res.location, 'http://example.com/m/ai/?#discussions')
+        self.assertEqual(res.location, 'http://example.com/m/ai/#discussions')
 
     def test_discussions_no_ajax_load_all(self):
         self.config.scan('voteit.core.views.components.discussions')
