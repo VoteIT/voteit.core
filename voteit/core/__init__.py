@@ -28,7 +28,8 @@ def default_configurator(settings):
 
     #Authentication policies
     authn_policy = AuthTktAuthenticationPolicy(secret = read_salt(settings),
-                                               callback = groupfinder)
+                                               callback = groupfinder,
+                                               hashalg = 'sha512')
     authz_policy = ACLAuthorizationPolicy()
     sessionfact = UnencryptedCookieSessionFactoryConfig('messages')
     return Configurator(settings=settings,
