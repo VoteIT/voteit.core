@@ -106,7 +106,8 @@ class MeetingViewTests(unittest.TestCase):
                                                'meeting_right_widget': '', 
                                                'ai_left_widget': '',
                                                'ai_right_widget': '',
-                                               'truncate_discussion_length': ''})
+                                               'truncate_discussion_length': '',
+                                               'csrf_token': '0123456789012345678901234567890123456789'})
         obj = self._cut(context, request)
         response = obj.manage_layout()
         self.assertEqual(response.location, 'http://example.com/m/')
@@ -124,7 +125,8 @@ class MeetingViewTests(unittest.TestCase):
                                                'meeting_right_widget': '', 
                                                'ai_left_widget': '',
                                                'ai_right_widget': '',
-                                               'truncate_discussion_length': 'not_integer'})
+                                               'truncate_discussion_length': 'not_integer',
+                                               'csrf': '0123456789012345678901234567890123456789'})
         obj = self._cut(context, request)
         response = obj.manage_layout()
         self.assertIn('form', response)

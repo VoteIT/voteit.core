@@ -235,7 +235,8 @@ class TicketViewTests(unittest.TestCase):
         request = testing.DummyRequest(post = {'add': 'add', 
                                                'emails': 'dummy1@test.com\ndummy1@test.com', 
                                                'message': 'Welcome to the meeting!', 
-                                               'roles': ['role:Moderator']})
+                                               'roles': ['role:Moderator'],
+                                               'csrf_token': '0123456789012345678901234567890123456789'})
         obj = self._cut(context, request)
         response = obj.add_tickets()
         self.assertEqual(response.location, 'http://example.com/m/')
@@ -298,7 +299,8 @@ class TicketViewTests(unittest.TestCase):
                                            permissive=True)
         context = self._fixture()
         request = testing.DummyRequest(post = {'resend': 'resend', 
-                                               'emails': ['dummy@test.com'],})
+                                               'emails': ['dummy@test.com'],
+                                               'csrf_token': '0123456789012345678901234567890123456789'})
         from voteit.core.models.invite_ticket import InviteTicket
         ticket = InviteTicket('dummy@test.com', ['role:Moderator'], 'Welcome to the meeting!')
         ticket.__parent__ = context
@@ -316,7 +318,8 @@ class TicketViewTests(unittest.TestCase):
                                            permissive=True)
         context = self._fixture()
         request = testing.DummyRequest(post = {'delete': 'delete', 
-                                               'emails': ['dummy@test.com'],})
+                                               'emails': ['dummy@test.com'],
+                                               'csrf_token': '0123456789012345678901234567890123456789'})
         from voteit.core.models.invite_ticket import InviteTicket
         ticket = InviteTicket('dummy@test.com', ['role:Moderator'], 'Welcome to the meeting!')
         ticket.__parent__ = context

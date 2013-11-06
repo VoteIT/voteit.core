@@ -29,6 +29,7 @@ def default_configurator(settings):
     #Authentication policies
     authn_policy = AuthTktAuthenticationPolicy(secret = read_salt(settings),
                                                callback = groupfinder)
+    #FIXME: Note that argument hashalg = 'sha512' isn't valid on Pyramid <1.4 ! We need to check version
     authz_policy = ACLAuthorizationPolicy()
     sessionfact = UnencryptedCookieSessionFactoryConfig('messages')
     return Configurator(settings=settings,
