@@ -68,6 +68,11 @@ def deferred_copy_perms_widget(node, kw):
             choices.append((meeting.__name__, "%s (%s)" % (meeting.title, meeting.__name__)))
     return deform.widget.SelectWidget(values=choices)
 
+@colander.deferred
+def defferred_robot_mail(node, kw):
+    request = kw['request']
+    return u"noreply@%s" % request.server_name
+
 def title_node():
     return colander.SchemaNode(colander.String(),
                                 title = _(u"Title"),
@@ -77,9 +82,11 @@ def title_node():
 def description_node():
     return colander.SchemaNode(
         colander.String(),
-        title = _(u"Description"),
+        title = _(u"Participants description"),
         description = _(u"meeting_description_description",
-                        default=u"The description is visible on the first page of the meeting. You can include things like information about the meeting, how to contact the moderator and your logo."),
+                        default=u"This is only visible to participants, so don't put information on how to register here. "
+                            u"Displayed on the first page of the meeting. You can include things "
+                            u"like information about the meeting, how to contact the moderator and your logo."),
         missing = u"",
         widget=deform.widget.RichTextWidget(),
         validator=richtext_validator,)
@@ -89,7 +96,8 @@ def public_description_node():
         colander.String(),
         title = _(u"Public presentation"),
         description = _(u"meeting_public_description_description",
-                        default=u"The public description is visible on the request access page and to not yet logged in visitors."),
+                        default=u"The public description is visible on the request access "
+                            u"page and to not yet logged in visitors."),
         missing = u"",
         widget=deform.widget.RichTextWidget(),
         validator=richtext_validator,)
@@ -105,7 +113,7 @@ def meeting_mail_name_node():
 def meeting_mail_address_node():
     return colander.SchemaNode(colander.String(),
                                title = _(u"Email address to send from"),
-                               default = u"noreply@somehost.voteit",
+                               default = defferred_robot_mail,
                                validator = colander.All(colander.Email(msg = _(u"Invalid email address.")), html_string_validator,),)
 
 def access_policy_node():
@@ -135,13 +143,14 @@ def poll_notification_setting_node():
                                default = True,
                                missing = True)
 
+
 @schema_factory('AddMeetingSchema', title = _(u"Add meeting"))
 class AddMeetingSchema(colander.MappingSchema):
     title = title_node()
-    description = description_node()
-    public_description = public_description_node()
     meeting_mail_name = meeting_mail_name_node()
     meeting_mail_address = meeting_mail_address_node()
+    description = description_node()
+    public_description = public_description_node()
     access_policy = access_policy_node()
     mention_notification_setting = mention_notification_setting_node()
     poll_notification_setting = poll_notification_setting_node()
