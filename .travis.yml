@@ -4,4 +4,9 @@ python:
   - 2.6
   - 2.7
 
-script: python setup.py test -q
+install:
+  - python bootstrap.py
+  - bin/buildout
+
+script: bin/py setup.py test -q
+
