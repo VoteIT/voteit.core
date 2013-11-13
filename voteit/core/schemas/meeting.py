@@ -71,7 +71,7 @@ def deferred_copy_perms_widget(node, kw):
 @colander.deferred
 def defferred_robot_mail(node, kw):
     request = kw['request']
-    return u"noreply@%s" % request.server_name
+    return u"noreply@%s" % getattr(request, 'server_name', 'dummy')
 
 def title_node():
     return colander.SchemaNode(colander.String(),
