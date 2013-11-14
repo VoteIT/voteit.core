@@ -35,7 +35,7 @@ requires = (
 
 
 setup(name='voteit.core',
-      version='0.0',
+      version='0.1dev',
       description='Core VoteIT package',
       long_description=README + '\n\n' +  CHANGES,
       classifiers=[
