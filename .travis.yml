@@ -4,7 +4,7 @@ python:
   - 2.7
 
 install:
-  - pip install -I setuptools==7.0
+  - wget http://downloads.buildout.org/2/bootstrap.py
   - python bootstrap.py
   - bin/buildout
 
