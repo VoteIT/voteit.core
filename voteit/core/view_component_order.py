@@ -11,5 +11,5 @@ DEFAULT_VC_ORDER = (
     ('help_action', ('contact', 'wiki')),
     ('metadata_listing', ('user_tags', 'answer', 'retract', 'delete', 'tag', 'state','time')),
     ('agenda_item_top', ('description', 'tag_stats')),
-    ('sidebar', ('login_pw', 'login_alt', 'navigation')), #latest_meeting_entries
+    ('sidebar', ('login_alt', 'navigation')), #latest_meeting_entries
 )

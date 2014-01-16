@@ -225,9 +225,6 @@ class IUser(IBaseFolder):
     def remove_password_token():
         """ Remove password token. """
 
-    def get_token():
-        """ Get password token, or None. """
-
     def send_mention_notification(context, request):
         """ Sends an email when the user is mentioned in a proposal or a discussion post
         """
@@ -645,6 +642,111 @@ class IPollPlugin(Interface):
             The method needs to return an instance of either:
             - pyramid.renderers.render
             - pyramid.response.Response
+        """
+
+
+class IAuthPlugin(Interface):
+    """ Authentication plugin.
+        This handles login, registration and rendering of those resources.
+    """
+    name = Attribute("""The name of this authentication method. It will be used to register
+        this as an adapter,so it's a good idea to only use a-z and _.""")
+
+    def __init__(context, request):
+        """ Initialize.
+        
+            context
+                Must be what this adapts, which in this case is the site root.
+            
+            request
+                Current request.
+        """
+
+    def login(appstruct):
+        """ Login a user. Any information in the appstruct is ment to be used by the plugin.
+            This probably includes a userid, or perhaps a password to validate. With OpenID or similar,
+            appstruct will be a URI. Note that this method must be implemented by the subclass that
+            inherits this base. Note that the actual login is performed by the remember / HTTPFound methods.
+            
+            appstruct
+                A dict containing relevant data to  perform login. For the most simple methods, it might just be a
+                userid.
+
+            .. code-block:: python
+            
+                from pyramid.security import remember
+                from pyramid.httpexceptions import HTTPFound
+
+                userid = appstruct['userid']
+                user = self.context.users[userid]
+                #<do something to validate that this userid is owned by whoever tries to login, and then...
+                headers = remember(self.request, userid)
+                #If url is passed along as a keyword in appstruct, redirect to that url
+                url = appstruct.get('url', self.request.resource_url(self.context))
+                return HTTPFound(location = url,
+                                 headers = headers)
+        """
+
+    def register(appstruct):
+        """ Register a user. Appropriate fields in this appstruct should be used to construct the new user object,
+            or as information for some other storage system for user objects. You don't have to modify this
+            view if you add fields to the registration schema. It will be saved to the user object.
+            
+            The following keys are required in the appstruct if you wish to use the default implementation.
+            
+            userid
+                UserID picked by the user during the registration process. Must be unique.
+            
+            came_from
+                A URL to send the user to when the process is finished. This is good to keep.
+            
+            email
+                Users email
+            
+            first_name
+                Users first name
+            
+            last_name
+                Users last name            
+        """
+
+    def modify_login_schema(schema):
+        """ Optional method to adjust the default login schema when this method is used.
+            Any fields added there will be passed along to the login method aswell.
+        
+            schema
+                An instantiated schema object.
+
+            .. code-block:: python
+
+                import colander
+
+                schema.add(colander.SchemaNode(colander.String(),
+                                               title = u"OpenID URL",
+                                               name = 'open_id_url')
+                                               validator = some_kind_of_validator)
+
+            The above will add a field to the login schema when this method is used, which will
+            cause the appstruct that's sent to the login method to contain a field called 'open_id_url'.
+        """
+
+    def modify_register_schema(schema):
+        """ Optional method to adjust the default registration schema when this method is used.
+            Any fields present here will be passed along to the set_field_appstruct and saved
+            to the user object.
+        
+            schema
+                An instantiated schema object.
+
+            .. code-block:: python
+            
+                import colander
+            
+                schema.add(colander.SchemaNode(colander.String(),
+                                               title = u"Your favourite band!",
+                                               name = 'favourite_band'))
+            
+            This example will add a "Favourite band" field to registration, and store it to the newly registered user.
         """
 
 

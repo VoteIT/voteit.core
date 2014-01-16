@@ -170,56 +170,6 @@ class UniqueEmailIDTests(TestCase):
 
 #FIXME: Full integration test with schema
 
-class CheckPasswordTokenTests(TestCase):
-
-    def setUp(self):
-        self.config = testing.setUp()
-        self.config.scan('voteit.core.views.components.email')
-
-    def tearDown(self):
-        testing.tearDown()
-    
-    @property
-    def _cut(self):
-        from voteit.core.validators import CheckPasswordToken
-        return CheckPasswordToken
-
-    def test_wrong_context(self):
-        self.assertRaises(AssertionError, self._cut, testing.DummyModel())
-
-    def test_no_data(self):
-        root = _fixture(self.config)
-        user = root.users['tester']
-        obj = self._cut(user)
-        node = None
-        self.assertRaises(colander.Invalid, obj, node, "")
-
-    def test_valid_token(self):
-        #Scan of user package should have been performed in fixture
-        root = _fixture(self.config)
-        request = testing.DummyRequest()
-        self.config.include('pyramid_mailer.testing')
-        user = root.users['tester']
-        user.new_request_password_token(request)
-        
-        token_value = user.__token__()
-        obj = self._cut(user)
-        node = None
-        self.assertEqual(obj(node, token_value), None)
-
-    def test_valid_token_wrong_string_entered(self):
-        #Scan of user package should have been performed in fixture
-        root = _fixture(self.config)
-        request = testing.DummyRequest()
-        self.config.include('pyramid_mailer.testing')
-        user = root.users['tester']
-        user.new_request_password_token(request)
-        obj = self._cut(user)
-        node = None
-        self.assertRaises(colander.Invalid, obj, node, "wrong value for token")
-
-#FIXME: Full integration test with schema
-
 
 class TokenFormValidatorTests(TestCase):
 
@@ -296,30 +246,6 @@ class GlobalExistingUserIdTests(TestCase):
         self.assertEqual(obj(node, 'admin'), None)
 
 
-class PasswordValidationTests(TestCase):
-
-    def setUp(self):
-        self.config = testing.setUp()
-
-    def tearDown(self):
-        testing.tearDown()
-
-    @property
-    def _fut(self):
-        from voteit.core.validators import password_validation
-        return password_validation
-
-    def test_pw_length_too_short(self):
-        self.assertRaises(colander.Invalid, self._fut, None, '123')
-    
-    def test_pw_length_too_long(self):
-        pw = "123456789".join(['0' for x in range(11)])
-        self.assertRaises(colander.Invalid, self._fut, None, pw)
-    
-    def test_pw_length(self):
-        self.assertEqual(self._fut(None, 'good password'), None)
-
-
 class MultipleEmailValidatorTests(TestCase):
 
     def setUp(self):
@@ -344,30 +270,6 @@ class MultipleEmailValidatorTests(TestCase):
 
     def test_multiple_one_bad(self):
         self.assertRaises(colander.Invalid, self._fut, None, "one@two.com\nthree@four.net\nfive@six.com\none@two.com hello! \n")
-
-
-class CurrentPasswordValidatorTests(TestCase):
-
-    def setUp(self):
-        self.config = testing.setUp()
-
-    def tearDown(self):
-        testing.tearDown()
-
-    def _cut(self):
-        from voteit.core.validators import CurrentPasswordValidator
-        from voteit.core.models.user import User
-        self.config.scan('betahaus.pyracont.fields.password')
-        user = User(password = 'Hello')
-        return CurrentPasswordValidator(user)
-
-    def test_good_pw(self):
-        obj = self._cut()
-        self.assertEqual(obj(None, 'Hello'), None)
-
-    def test_bad_pw(self):
-        obj = self._cut()
-        self.assertRaises(colander.Invalid, obj, None, "Incorrect pw")
 
 
 class ContextRolesValidatorTests(TestCase):
@@ -550,42 +452,6 @@ class NotOnlyDefaultTextValidatorTests(TestCase):
         self.assertEqual(obj(None, 'Not the same'), None)
 
 
-class LoginPasswordValidatorTests(TestCase):
-    
-    def setUp(self):
-        self.config = testing.setUp()
-
-    def tearDown(self):
-        testing.tearDown()
-    
-    @property
-    def _cut(self):
-        from voteit.core.validators import LoginPasswordValidator
-        return LoginPasswordValidator
-
-    def _get_login_schema(self):
-        from voteit.core.schemas.user import LoginSchema
-        return LoginSchema()
-
-    def test_nonexistent_users(self):
-        root = bootstrap_and_fixture(self.config)
-        obj = self._cut(root)
-        self.assertRaises(colander.Invalid, obj, self._get_login_schema(), {'userid': u'moderator', 'password': u'moderator'})
-
-    def test_existing_user_wrong_password(self):
-        root = _fixture(self.config)
-        obj = self._cut(root)
-        self.assertRaises(colander.Invalid, obj, self._get_login_schema(), {'userid': u'moderator', 'password': u'wrong'})
-
-    def test_existing_user_correct_password(self):
-        root = _fixture(self.config)
-        obj = self._cut(root)
-        self.assertEqual(obj(self._get_login_schema(), {'userid': u'moderator', 'password': u'moderator'}), None)
-
-    def test_existing_email_correct_password(self):
-        root = _fixture(self.config)
-        obj = self._cut(root)
-        self.assertEqual(obj(self._get_login_schema(), {'userid': u'moderator@voteit.se', 'password': u'moderator'}), None)
 
 
 class DeferredValidatorsTests(TestCase):
@@ -613,41 +479,11 @@ class DeferredValidatorsTests(TestCase):
         res = deferred_unique_email_validator(None, {'context': None})
         self.failUnless(isinstance(res, UniqueEmail))
 
-    def test_deferred_password_token_validator(self):
-        from voteit.core.validators import deferred_password_token_validator
-        from voteit.core.validators import CheckPasswordToken
-        from voteit.core.models.user import User
-        res = deferred_password_token_validator(None, {'context': User()})
-        self.failUnless(isinstance(res, CheckPasswordToken))
-
-    def test_deferred_token_form_validator(self):
-        from voteit.core.validators import deferred_token_form_validator
-        from voteit.core.validators import TokenFormValidator
-        from voteit.core.models.meeting import Meeting
-        res = deferred_token_form_validator(None, {'context': Meeting()})
-        self.failUnless(isinstance(res, TokenFormValidator))
-
     def test_deferred_existing_userid_validator(self):
         from voteit.core.validators import deferred_existing_userid_validator
         from voteit.core.validators import GlobalExistingUserId
         res = deferred_existing_userid_validator(None, {'context': None})
         self.failUnless(isinstance(res, GlobalExistingUserId))
-
-    def test_deferred_current_password_validator(self):
-        from voteit.core.validators import deferred_current_password_validator
-        from voteit.core.validators import CurrentPasswordValidator
-        from voteit.core.models.user import User
-        context = User()
-        res = deferred_current_password_validator(None, {'context': context})
-        self.assertIsInstance(res, CurrentPasswordValidator)
-
-    def test_deferred_current_password_validator(self):
-        from voteit.core.validators import deferred_context_roles_validator
-        from voteit.core.validators import ContextRolesValidator
-        context = testing.DummyResource()
-        request = testing.DummyRequest()
-        res = deferred_context_roles_validator(None, {'context': context, 'request': request})
-        self.assertIsInstance(res, ContextRolesValidator)
 
     def test_deferred_check_context_unique_name(self):
         from voteit.core.validators import deferred_check_context_unique_name
@@ -657,11 +493,3 @@ class DeferredValidatorsTests(TestCase):
         res = deferred_check_context_unique_name(None, {'context': context, 'request': request})
         self.assertIsInstance(res, ContextUniqueNameValidator)
 
-    def test_deferred_deferred_login_password_validator(self):
-        from voteit.core.validators import deferred_login_password_validator
-        from voteit.core.validators import LoginPasswordValidator
-        from voteit.core.models.site import SiteRoot
-        context = SiteRoot()
-        request = testing.DummyRequest()
-        res = deferred_login_password_validator(None, {'context': context, 'request': request})
-        self.assertIsInstance(res, LoginPasswordValidator)

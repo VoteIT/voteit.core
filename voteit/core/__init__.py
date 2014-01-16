@@ -25,6 +25,10 @@ def main(global_config, **settings):
 
 def default_configurator(settings):
     from voteit.core.security import groupfinder
+    
+    #Default pluggable auth
+    if 'voteit.default_auth' not in settings:
+        settings['voteit.default_auth'] = 'password'
 
     #Authentication policies
     authn_policy = AuthTktAuthenticationPolicy(secret = read_salt(settings),
@@ -88,7 +92,10 @@ def required_components(config):
     config.add_translation_dirs('deform:locale/',
                                 'colander:locale/',
                                 '%s:locale/' % PROJECTNAME,)
-    config.scan(PROJECTNAME)
+    config.add_route('login', '/login/{method}')
+    config.add_route('register', '/register/{method}')
+    for scan_dir in ('models', 'schemas', 'subscribers', 'views'):
+        config.scan('%s.%s' % (PROJECTNAME, scan_dir))
     config.include(adjust_default_view_component_order)
     from voteit.core.security import VIEW
     config.set_default_permission(VIEW)    

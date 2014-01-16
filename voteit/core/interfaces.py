@@ -22,4 +22,23 @@ class IObjectUpdatedEvent(Interface):
     
     def __init__(object, indexes=(), metadata=True):
         """ Create event. """
-        
+
+
+class ILoginSchemaCreated(Interface):
+    """ Fires when a LoginSchema is created. Good place to hook schema changes
+    """
+    schema = Attribute("The schema")
+    method = Attribute("The IAuthPlugin method used.")
+    
+    def __init__(schema, method):
+        """ Create event. """
+
+
+class IRegisterSchemaCreated(Interface):
+    """ Fires when a RegisterSchema is created. Good place to hook schema changes
+    """
+    schema = Attribute("The schema")
+    method = Attribute("The IAuthPlugin method used.")
+    
+    def __init__(schema, method):
+        """ Create event. """

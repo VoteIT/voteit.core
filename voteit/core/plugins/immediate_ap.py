@@ -70,3 +70,4 @@ class ImmediateAPConfigSchema(colander.Schema):
 
 def includeme(config):
     config.registry.registerAdapter(ImmediateAP, name = ImmediateAP.name)
+    config.scan('voteit.core.plugins.immediate_ap')

@@ -1,5 +1,6 @@
 import re
 from datetime import timedelta
+from urllib import quote
 
 import colander
 import deform
@@ -148,3 +149,14 @@ class MoveObjectSchema(colander.Schema):
                                           title = _(u"Select new parent"),
                                           description = _(u"Only objects at the same level as this objects parent will be selectable."),
                                           widget = deferred_move_object_widget,)
+
+@colander.deferred
+def deferred_referer(node, kw):
+    request = kw['request']
+    return quote(request.GET.get('came_from', '/'))
+
+def came_from_node():
+    return colander.SchemaNode(colander.String(),
+                               missing = u"",
+                               widget = deform.widget.HiddenWidget(),
+                               default = deferred_referer)

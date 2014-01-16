@@ -11,28 +11,16 @@ from betahaus.pyracont import check_unique_name
 from voteit.core import VoteITMF as _
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import ISiteRoot
-from voteit.core.models.interfaces import IUser
 from voteit.core.security import find_authorized_userids
 from voteit.core.security import VIEW
 from voteit.core.security import MANAGE_GROUPS
 from voteit.core.security import MEETING_ROLES
 from voteit.core.security import ROOT_ROLES
 from voteit.core.models.user import USERID_REGEXP
-from voteit.core.exceptions import TokenValidationError
 
 
 AT_USERID_PATTERN = re.compile(r'(\A|\s)@('+USERID_REGEXP+r')')
 NEW_USERID_PATTERN = re.compile(r'^'+USERID_REGEXP+r'$')
-
-
-def password_validation(node, value):
-    """ check that password is
-        - at least 6 chars and at most 100.
-    """
-    if len(value) < 6:
-        raise colander.Invalid(node, _(u"Too short. At least 6 chars required."))
-    if len(value) > 100:
-        raise colander.Invalid(node, _(u"Less than 100 chars please."))
 
 
 def html_string_validator(node, value):
@@ -160,30 +148,6 @@ def deferred_unique_email_validator(node, kw):
     return UniqueEmail(context)
 
 
-class CheckPasswordToken(object):
-    def __init__(self, context):
-        assert IUser.providedBy(context)
-        self.context = context
-    
-    def __call__(self, node, value):
-        token = self.context.get_token()
-        msg = _(u"check_password_token_error",
-                default="Password token doesn't match. Won't allow password change.")
-        exc = colander.Invalid(node, msg)
-        if token is None:
-            raise exc
-        try:
-            token.validate(value)
-        except TokenValidationError:
-            raise exc
-
-
-@colander.deferred
-def deferred_password_token_validator(node, kw):
-    context = kw['context']
-    return CheckPasswordToken(context)
-
-
 class TokenFormValidator(object):
     def __init__(self, context):
         assert IMeeting.providedBy(context)
@@ -227,27 +191,6 @@ class GlobalExistingUserId(object):
                     default=u"UserID not found")
             raise colander.Invalid(node, 
                                    msg)
-
-
-@colander.deferred
-def deferred_current_password_validator(node, kw):
-    context = kw['context']
-    return CurrentPasswordValidator(context)
-
-
-class CurrentPasswordValidator(object):
-    """ Check that current password matches. Used for sensitive operations
-        when logged in to make sure that no one else changes the password for instance.
-    """
-    
-    def __init__(self, context):
-        assert IUser.providedBy(context) # pragma : no cover
-        self.context = context
-    
-    def __call__(self, node, value):
-        pw_field = self.context.get_custom_field('password')
-        if not pw_field.check_input(value):
-            raise colander.Invalid(node, _(u"Current password didn't match"))
 
 
 def richtext_validator(node, value):
@@ -339,40 +282,6 @@ class NotOnlyDefaultTextValidator(object):
             raise colander.Invalid(node, _(u"only_default_text_validator_error",
                                            default=u"Only the default content is not valid",))
 
-
-class LoginPasswordValidator(object):
-    """ Make sure a user exist and check that users password. This is a validator for a form,
-        since it checks the field userid and password.
-        
-        Displaying information about bad password or userid might not be a good idea, so we won't do that now.
-    """
-    def __init__(self, context):
-        assert ISiteRoot.providedBy(context)
-        self.context = context
-    
-    def __call__(self, form, value):
-        password = value['password']
-        userid = value['userid'] #Might be an email address!
-        exc = colander.Invalid(form, u"Login invalid") #Raised if trouble
-        exc['userid'] = _(u"Use either email address or userid to login.")
-        exc['password'] = _(u"Password is case sensitive.")
-        #First, retrieve user object
-        if u'@' in userid:
-            user = self.context.users.get_user_by_email(userid)
-        else:
-            user = self.context.users.get(userid)
-        if user is None:
-            raise exc
-        #Validate password
-        pw_field = user.get_custom_field('password')
-        if not pw_field.check_input(password):
-            raise exc
-
-@colander.deferred
-def deferred_login_password_validator(form, kw):
-    context = kw['context']
-    root = find_root(context)
-    return LoginPasswordValidator(root)
 
 
 class CSRFTokenValidator(object):

@@ -1,30 +1,9 @@
-from deform import Form
-from betahaus.pyracont.factories import createSchema
 from betahaus.viewcomponent import view_action
 from pyramid.renderers import render
 from zope.interface.interfaces import ComponentLookupError
 
-from voteit.core.models.schemas import button_login
 from voteit.core import VoteITMF as _
-from voteit.core.helpers import strip_and_truncate
 
-
-@view_action('sidebar', 'login_pw')
-def login_box(context, request, va, **kwargs):
-    api = kwargs['api']
-    if api.userid or request.path_url.endswith('/login'):
-        return u""
-    #FIXME: Ticket system makes it a bit of a hassle to make login detached from registration.
-    #We'll do that later. For now, let's just check if user is on login or registration page
-    login_schema = createSchema('LoginSchema').bind(context = context, request = request)
-    action_url = request.resource_url(api.root, 'login')
-    login_form = Form(login_schema, buttons=(button_login,), action=action_url)
-    api.register_form_resources(login_form)
-    response = dict(
-        api = api,
-        form = login_form.render(),
-    )
-    return render('templates/sidebars/login_pw.pt', response, request = request)
 
 @view_action('sidebar', 'login_alt')
 def alternative_login_methods(context, request, va, **kwargs):

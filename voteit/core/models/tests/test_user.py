@@ -9,7 +9,6 @@ from pyramid.security import principals_allowed_by_permission
 
 from voteit.core import security
 from voteit.core.models.date_time_util import utcnow
-from voteit.core.exceptions import TokenValidationError
 from voteit.core.testing_helpers import register_security_policies
 from voteit.core.models.interfaces import IProfileImage
 from voteit.core.models.interfaces import IUser
@@ -57,11 +56,9 @@ class UserTests(unittest.TestCase):
     def test_get_and_set_password(self):
         self.config.scan('betahaus.pyracont.fields.password')
         pw = 'very_secret'
-        
         obj = self._make_obj()
         field = obj.get_custom_field('password')
         hashed = field.hash_method(pw)
-        
         obj.set_password(pw)
         self.assertEqual(obj.get_password(), hashed)
     
@@ -69,27 +66,6 @@ class UserTests(unittest.TestCase):
         self.config.scan('betahaus.pyracont.fields.password')
         obj = self._make_obj()
         self.assertEqual(obj.get_password(), None)    
-
-    def test_new_request_password_token(self):
-        self.config.scan('voteit.core.models.user')
-        self.config.scan('voteit.core.views.components.email')
-        obj = self._make_obj()
-        request = testing.DummyRequest()
-        self.config.include('pyramid_mailer.testing')
-        obj.new_request_password_token(request)
-        self.failUnless(obj.__token__())
-    
-    def test_new_request_password_token_mailed(self):
-        self.config.scan('voteit.core.models.user')
-        self.config.scan('voteit.core.views.components.email')
-        obj = self._make_obj()
-        request = testing.DummyRequest()
-        self.config.include('pyramid_mailer.testing')
-        obj.new_request_password_token(request)
-        mailer = get_mailer(request)
-        self.assertEqual(len(mailer.outbox), 1)
-        msg = mailer.outbox[0]
-        self.failUnless(obj.__token__() in msg.html)
 
     def test_get_image_plugin(self):
         self._register_mock_image_plugin()
