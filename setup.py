@@ -6,7 +6,7 @@ here = os.path.abspath(os.path.dirname(__file__))
 README = open(os.path.join(here, 'README.rst')).read()
 CHANGES = open(os.path.join(here, 'CHANGES.rst')).read()
 
-requires = (
+install_requires = (
     'pyramid>=1.2',
     'pyramid_mailer',
     'pyramid_zcml',
@@ -15,7 +15,6 @@ requires = (
     'repoze.folder',
     'repoze.workflow',
     'ZODB3',
-    'WebError',
     'colander',
     'deform>=0.9.5',
     'Babel',
@@ -26,13 +25,22 @@ requires = (
     'httplib2',
     'betahaus.pyracont>=0.1a3',
     'betahaus.viewcomponent',
-    'pyramid_debugtoolbar', #Won't be active unless included
     'fanstatic',
     'repoze.evolution',
     'httpagentparser',
     'BeautifulSoup',
     )
 
+docs_extras = [
+    'Sphinx',
+    'docutils',
+    'repoze.sphinx.autointerface',
+    ]
+
+testing_extras = [
+    'nose',
+    'coverage',
+    ]
 
 setup(name='voteit.core',
       version='0.1dev',
@@ -51,8 +59,12 @@ setup(name='voteit.core',
       packages=find_packages(),
       include_package_data=True,
       zip_safe=False,
-      install_requires = requires,
-      tests_require= requires,
+      install_requires = install_requires,
+      extras_require = {
+          'testing': testing_extras,
+          'docs': docs_extras,
+          },
+      tests_require = testing_extras,
       test_suite="voteit.core",
       entry_points = """\
       [paste.app_factory]
