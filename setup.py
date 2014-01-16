@@ -64,7 +64,7 @@ setup(name='voteit.core',
           'testing': testing_extras,
           'docs': docs_extras,
           },
-      tests_require = testing_extras,
+      tests_require = install_requires,
       test_suite="voteit.core",
       entry_points = """\
       [paste.app_factory]
@@ -77,10 +77,7 @@ setup(name='voteit.core',
       voteit_core_csslib = voteit.core.fanstaticlib:voteit_core_csslib
       voteit_core_jslib = voteit.core.fanstaticlib:voteit_core_jslib
       deformlib = voteit.core.fanstaticlib:deformlib
-      [paste.paster_create_template]
-      voteit_poll_plugin=voteit.core.scaffolds:PollPluginTemplate
       """,
-      paster_plugins=['pyramid'],
       message_extractors = { '.': [
               ('**.py',   'lingua_python', None ),
               ('**.pt',   'lingua_xml', None ),
