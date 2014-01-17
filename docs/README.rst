@@ -9,7 +9,7 @@ Some notes on building the docs, commands from the buldout root.
 
    source bin/activate
    cd src/voteit.core
-   #This will need to change - we pull the wrong packages. Use pip instead?
+   pip install -r requirements.txt
    python setup.py develop
    cd docs
    make html

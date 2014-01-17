@@ -13,11 +13,11 @@ Checklist
  * Make sure you have Python 2.7 installed. If not, consult the :term:`Python`
    or :term:`Pyramid` docs for installation instructions.
  * You need a C-compiler, like GCC installed. On some Linux systems, there's a bundle called
-   **build-essential** that you can install. On macs, you need **Xcode**. (Some components are
-   written in C-code**) 
+   ``build-essential`` that you can install. On macs, you need ``XCode``. (Some components are
+   written in C-code) Typing ``gcc`` in a terminal should produce some result if you have it.
  * We use :term:`git` as source control, but it's only needed in this example.
  * You need some kind of editor. We use `Aptana <http://www.aptana.com>`_ but you can use anything
-   you like. Typing ``gcc`` in a terminal should produce some result if you have it.
+   you like.
  * :term:`Setuptools` should be installed, if you can type ``easy_install`` you have it.
  * :term:`virtualenv` is highly recommended. Typing ``easy_install virtualenv`` as root should
    install it.
@@ -68,12 +68,8 @@ When buildout finishes, you should be able to start the regular development serv
 
 .. code-block :: bash
 
-   ./bin/paster serve etc/development.ini
-
-Note: For Pyramid 1.3 and later, it's ``pserve`` instead of ``paster serve``!
+   ./bin/pserve etc/development.ini
 
 If everything worked as expected, you should now have a server up and running on the port specified.
 
-
 If you want to develop your own plugin and add it to the configuration, see :ref:`basic_plugin`
-

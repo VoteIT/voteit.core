@@ -116,7 +116,7 @@ Save the file as `development.ini` and run the HTTP server this way:
 
 .. code-block:: text
 
-    bin/paster serve development.ini
+    bin/pserve serve development.ini
 
 This should start a server on `localhost port 6543 <http://127.0.0.1:6543>`_.
 

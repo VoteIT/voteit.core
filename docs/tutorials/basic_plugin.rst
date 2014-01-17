@@ -8,14 +8,14 @@ Writing a basic plugin
     You need to have an installed development environment to do this. In case you haven't, see:
     :ref:`development_environment`
 
-Go into your :term:`buildout` directory and runt the command ``bin/paster create`` to create a
+For the purpose of this tutorial, your package will be called ``demo_plugin``.
+
+Go into your :term:`buildout` directory and runt the command ``bin/pcreate -t starter demo_plugin`` to create a
 new package. You'll get some questions about your package - you can always change this information
 later, but it's important to pick a suitable project name that reflects what the package should do.
 
-For the purpose of this tutorial, your package will be called ``demo_plugin``.
-
-Within the demo_plugin folder, there's package information + a folder with the plugin code.
-It will also be named ``demo_plugin`` and should only contain a ``__init__.py`` file.
+Within the ``demo_plugin folder``, there's package information + a folder with the plugin code.
+It will also be named ``demo_plugin`` and will probably contain a bit of sample code.
 
 To make the plugin available in Python, you need to add it as a development package.
 In ``buildout.cfg`` find the section ``[buildout]`` and add ``demo_plugin`` to the list of ``eggs``
@@ -34,6 +34,10 @@ In ``buildout.cfg`` find the section ``[buildout]`` and add ``demo_plugin`` to t
 
     develop =
         src/demo_plugin
+
+.. tip::
+
+    :term:`mr.developer` can handle development packages for you through :term:`buildout`.
 
 To enable it, you need to rerun buildout:
 
@@ -68,7 +72,7 @@ This code will be executed whenever the following function is run with a configu
     config.include('demo_plugin')
 
 Pyramid and VoteIT each has plug points within their paster configuration files. In the file used for
-VoteIT core development, you'll find the following sections:
+VoteIT core development, you'll probably find the following sections:
 
   .. code-block :: text
 

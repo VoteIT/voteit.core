@@ -27,7 +27,7 @@ Indices and tables
 * :ref:`glossary`
 
 
-.. stuff not ment to be visible, but still included
+.. stuff not ment to be invisible, but still included
 .. toctree::
    :glob:
    :hidden:

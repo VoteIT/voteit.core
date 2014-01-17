@@ -17,18 +17,18 @@ Framework                :term:`Pyramid`
 Schema library           :term:`colander`
 Form library             :term:`deform`
 Static serving (JS/CSS)  :term:`Fanstatic`
-Web server               :term:`Paste` - but any WSGI-compatible can be used.
+Web server               :term:`waitress` - but any :term:`WSGI`-compatible can be used.
 ======================== ==================
 
 
 .. _zca:
 
-The Zope Component Architechture
---------------------------------
+The :term:`Zope Component Architechture`
+----------------------------------------
 
 A large part of VoteIT and Pyramid is built on the Zope Component Architechture.
 It's important to understand some of the basic concepts if you wish to do any
-advanced modifications of VoteIT. A more complete guide is available at: TODO: ZCA-LINK
+advanced modifications of VoteIT.
 
 While it will make some code more hard to read and understand, it will make most parts
 completely pluggable and changable, without latering any source code from other packages.
