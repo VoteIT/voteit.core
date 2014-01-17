@@ -97,7 +97,8 @@ class PollSchema(colander.MappingSchema):
     poll_plugin = colander.SchemaNode(colander.String(),
                                       title = _(u"Poll method to use"),
                                       description = _(u"poll_poll_plugin_description",
-                                                      default=u"Read in the help wiki about pros and cons of different polling methods."),
+                                                      default=u"Each poll method should have its own documentation. "
+                                                        u"The standard ones from VoteITwill be in the manual - check the help menu!"),
                                       widget = poll_plugin_choices_widget,
                                       default = deferred_default_poll_method,)
                                       
