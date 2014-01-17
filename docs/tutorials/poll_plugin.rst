@@ -1,17 +1,29 @@
 Poll Plugin
 ===========
 
-  .. note::
+.. note::
 
     You should be familiar with :ref:`development_environment` and :ref:`basic_plugin`
     before you try this out.
+
+.. warning::
+
+    This tutorial is outdated and needs an update!
+
 
 Poll plugins are responsible for a large portion of the voting process. They calculate the result,
 provide data so a vote form can be created and they display the result. If you want to implement
 a specific polling method, this is what you'll want to write.
 
-For this tutorial, we'll assume that your using VoteITs development buildout.
-(Again, see the :ref:`development_environment` for information on how to set that up.)
+
+.. tip::
+
+    Rather learn by example? There are several poll plugins available:
+
+    * `Schulze STV / PR <https://github.com/VoteIT/voteit.schulze>`_
+    * `Combined simple <https://github.com/VoteIT/voteit.combined_simple>`_
+    * `Dutt <https://github.com/VoteIT/voteit.dutt>`_
+    * Majority Poll is an example that comes with the VoteIT source: :mod:`voteit.core.plugins.majority_poll`
 
 
 The poll layout
@@ -50,22 +62,14 @@ Creating the package
     If you'd like to download the example from this tutorial, it's available here:
     :download:`demo_poll.tgz <../files/demo_poll.tgz>`.
 
-From within the buildout directory, go to the ``src`` folder and create a new package using paster.
-VoteIT provides a skeleton for creating poll plugins called ``voteit_poll_plugin``.
-
-  .. code-block :: bash
-
-    ../bin/paster create -t voteit_poll_plugin
+From within the buildout directory, go to the ``src`` folder and create a new package using Pyramid scaffolds.
+Follow the instructions from :ref:`basic_plugin`.
 
 We'll use the project name ``demo_poll`` for this tutorial.
 
-If you go into the package, you'll find setup.py and setup.cfg + some readme files. You might
-want to take a look at these if you plan to release the package publicly.
+Remove any example content in ``demo_poll/demo_poll``.
 
-You'll also find another folder called ``demo_poll``. This is where all the relevant code is.
-By default, an example poll plugin will be shipped with this package.
-
-Now register the package in buildout as described in :ref:`basic_plugin`.
+Now register the package in buildout and your paster.ini file as described in :ref:`basic_plugin`.
 
 
 An example poll method
@@ -89,7 +93,7 @@ needs to be registered as an adapter.
 All of the important attributes and methods of a class are always documented in the interface
 of that class. If you want to read more about something, check the interface documentation.
 
-Let's change the code in ``models.py`` a bit.
+Create ``models.py``
 
   .. code-block :: py
 
@@ -167,7 +171,7 @@ startup in the method ``includeme``. Open ``__init__.py`` and add our plugin the
         config.registry.registerAdapter(RandomPollPluginTests, #The class the adapter will be implemented from
                                         (IPoll,), #Which kind of objects is this adapter for?
                                         IPollPlugin, #Interface this adapter implements
-                                        RandomPollPluginTests.name) #Name of the adapter.
+                                        name = RandomPollPluginTests.name) #Name of the adapter.
 
 To make sure the adapter is registered as expected, we have to write an integration test.
 Add the following lines to ``tests.py``
@@ -268,13 +272,18 @@ We'll simply fetch all the votes.
   .. code-block :: py
 
     def handle_close(self):
+        #self.context here is the poll object
         votes = self.context.get_content(content_type = 'Vote')
+        if not votes:
+            raise ValueError("Need at least one vote")
+        #Note that this will cause an error if no votes exist.
         winner_vote = choice(votes)
         winner_uid = winner_vote.get_vote_data()['proposal']
         result = dict(
             winner = winner_uid,
             total_votes = len(votes),
         )
+        #The result must be stored in the attribute poll_result.
         self.context.poll_result = result
 
  * ``self.context`` is always the poll object. It's the only valid object to adapt for a
@@ -318,7 +327,7 @@ code for render result a bit.
 
   .. code-block :: py
 
-    def render_result(self, request):
+    def render_result(self, request, api, complete=True):
         winner = self.context.get_proposal_by_uid(self.context.poll_result['winner'])
         response = dict(
             total_votes = self.context.poll_result['total_votes'],
@@ -348,14 +357,16 @@ Finally, we need to make sure the template renders as expected by writing a test
 
     def test_render_result(self):
         from voteit.core.models.vote import Vote
+        from voteit.core.views.api import APIView
         request = testing.DummyRequest()
         ai = self._fixture()
         poll = ai['poll']
+        api = APIView(poll, request)
         poll['vote'] = Vote()
         poll['vote'].set_vote_data({'proposal': ai['prop1'].uid})
         obj = self._cut(poll)
         obj.handle_close()
-        out = obj.render_result(request)
+        out = obj.render_result(request, api)
         self.assertIn('http://example.com/meeting/ai/prop1/', out)
 
 The test is almost equal to the previous one, but instead we check the generated output.
@@ -374,7 +385,7 @@ Start the server:
 
   .. code-block :: py
 
-    ./bin/paster serve etc/development.ini
+    ./bin/pserve etc/development.ini
 
 Create a meeting, and enable our poll plugin in ``meeting poll settings`` in
 the ``settings`` menu. (Make sure ``random poll method`` is checked)
