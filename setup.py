@@ -3,10 +3,10 @@ import os
 from setuptools import setup, find_packages
 
 here = os.path.abspath(os.path.dirname(__file__))
-README = open(os.path.join(here, 'README.txt')).read()
-CHANGES = open(os.path.join(here, 'CHANGES.txt')).read()
+README = open(os.path.join(here, 'README.rst')).read()
+CHANGES = open(os.path.join(here, 'CHANGES.rst')).read()
 
-requires = (
+install_requires = (
     'pyramid>=1.2',
     'pyramid_mailer',
     'pyramid_zcml',
@@ -15,7 +15,6 @@ requires = (
     'repoze.folder',
     'repoze.workflow',
     'ZODB3',
-    'WebError',
     'colander',
     'deform>=0.9.5',
     'Babel',
@@ -26,16 +25,25 @@ requires = (
     'httplib2',
     'betahaus.pyracont>=0.1a3',
     'betahaus.viewcomponent',
-    'pyramid_debugtoolbar', #Won't be active unless included
     'fanstatic',
     'repoze.evolution',
     'httpagentparser',
     'BeautifulSoup',
     )
 
+docs_extras = [
+    'Sphinx',
+    'docutils',
+    'repoze.sphinx.autointerface',
+    ]
+
+testing_extras = [
+    'nose',
+    'coverage',
+    ]
 
 setup(name='voteit.core',
-      version='0.0',
+      version='0.1dev',
       description='Core VoteIT package',
       long_description=README + '\n\n' +  CHANGES,
       classifiers=[
@@ -51,8 +59,12 @@ setup(name='voteit.core',
       packages=find_packages(),
       include_package_data=True,
       zip_safe=False,
-      install_requires = requires,
-      tests_require= requires,
+      install_requires = install_requires,
+      extras_require = {
+          'testing': testing_extras,
+          'docs': docs_extras,
+          },
+      tests_require = install_requires,
       test_suite="voteit.core",
       entry_points = """\
       [paste.app_factory]
@@ -65,10 +77,7 @@ setup(name='voteit.core',
       voteit_core_csslib = voteit.core.fanstaticlib:voteit_core_csslib
       voteit_core_jslib = voteit.core.fanstaticlib:voteit_core_jslib
       deformlib = voteit.core.fanstaticlib:deformlib
-      [paste.paster_create_template]
-      voteit_poll_plugin=voteit.core.scaffolds:PollPluginTemplate
       """,
-      paster_plugins=['pyramid'],
       message_extractors = { '.': [
               ('**.py',   'lingua_python', None ),
               ('**.pt',   'lingua_xml', None ),

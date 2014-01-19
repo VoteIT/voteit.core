@@ -1,6 +1,9 @@
 Introduction
 ============
 
+.. image:: https://travis-ci.org/VoteIT/voteit.core.png?branch=master
+   :target: https://travis-ci.org/VoteIT/voteit.core
+
 VoteIT is a tool for creating online meetings.
 It's meant for decision making processes similar to large scale meetings of NGOs.
 

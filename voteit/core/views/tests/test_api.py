@@ -334,14 +334,14 @@ class SearchViewTests(unittest.TestCase):
         context = testing.DummyResource()
         request = testing.DummyRequest()
         obj = self._cut(context, request)
-        self.assertIn('wiki.voteit.se', obj.render_view_group(context, request, 'help_action'))
+        self.assertIn('manual.voteit.se', obj.render_view_group(context, request, 'help_action'))
 
     def test_render_single_view_component(self):
         self.config.scan('voteit.core.views.components.help_actions')
         context = testing.DummyResource()
         request = testing.DummyRequest()
         obj = self._cut(context, request)
-        self.assertIn('wiki.voteit.se', obj.render_single_view_component(context, request, 'help_action', 'wiki'))
+        self.assertIn('manual.voteit.se', obj.render_single_view_component(context, request, 'help_action', 'manual'))
 
 
 _DUMMY_URL_MESSAGE = u"""Website: www.betahaus.net,

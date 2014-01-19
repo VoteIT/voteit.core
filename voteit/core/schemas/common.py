@@ -16,7 +16,8 @@ from voteit.core import VoteITMF as _
 
 
 NAME_PATTERN = re.compile(r'^[\w\s]{3,100}$', flags=re.UNICODE)
-HASHTAG_PATTERN = re.compile(r'^[\w\s_\-]{2,100}$', flags=re.UNICODE)
+#For when it's part of a http GET - no # in front of it
+HASHTAG_PATTERN = re.compile(r'^[\w\s_\-]{1,100}$', flags=re.UNICODE)
 
 
 @colander.deferred

@@ -3,10 +3,10 @@ from betahaus.viewcomponent import view_action
 from voteit.core import VoteITMF as _
 
 
-@view_action('help_action', 'wiki')
+@view_action('help_action', 'manual')
 def action_manual(context, request, va, **kw):
     api = kw['api']
-    return u"""<li><a href="http://wiki.voteit.se" target="_blank">%s</a></li>""" % (api.translate(_(u"VoteIT Manual")),)
+    return u"""<li><a href="http://manual.voteit.se" target="_blank">%s</a></li>""" % (api.translate(_(u"VoteIT Manual")),)
 
 @view_action('help_action', 'contact', title = _(u"Contact moderator"))
 def action_contact(context, request, va, **kw):
