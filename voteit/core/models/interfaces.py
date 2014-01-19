@@ -213,18 +213,6 @@ class IUser(IBaseFolder):
             value is the unencrypted password, it will be stored as a SHA1-hash.
         """
 
-    def new_request_password_token(request):
-        """ Create a new password request token. Used for resetting a users password.
-            It will email the link to reset password to that user.
-        """
-
-    def get_token():
-        """ Return password request token, or None.
-        """
-
-    def remove_password_token():
-        """ Remove password token. """
-
     def send_mention_notification(context, request):
         """ Sends an email when the user is mentioned in a proposal or a discussion post
         """

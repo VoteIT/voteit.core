@@ -5,6 +5,7 @@ from pyramid import testing
 from zope.interface.verify import verifyClass
 from zope.interface.verify import verifyObject
 from pyramid_mailer import get_mailer
+from webob.multidict import MultiDict
 
 from voteit.core.testing_helpers import bootstrap_and_fixture
 from voteit.core.testing_helpers import register_security_policies
@@ -111,6 +112,260 @@ class PasswordHandlerTests(TestCase):
 # 
 #     def test_get_token(self):
 #         return getattr(self, '__pw_request_token__', None)
+
+class PasswordAuthViewTests(TestCase):
+
+    def setUp(self):
+        self.config = testing.setUp()
+
+    def tearDown(self):
+        testing.tearDown()
+    
+    @property
+    def _cut(self):
+        from .views import PasswordAuthView
+        return PasswordAuthView
+    
+    def _fixture(self):
+        from voteit.core.models.user import User
+        root = bootstrap_and_fixture(self.config)
+        self.config.include('voteit.core.plugins.password_auth')
+        root.users['dummy1'] = User(title='Dummy 1')
+        root.users['dummy2'] = User(title='Dummy 2')
+        root.users['dummy3'] = User(title='Dummy 3', email='dummy3@test.com')
+        root.users['dummy3'].set_password('dummy1234')
+        return root.users
+    
+
+    def test_password_form(self):
+        self.config.testing_securitypolicy(userid='dummy',
+                                           permissive=False)
+        users = self._fixture()
+        context = users['dummy3']
+        request = testing.DummyRequest()
+        obj = self._cut(context, request)
+        response = obj.password_form()
+        self.assertIn('form', response)
+        
+    def test_password_form_admin(self):
+        self.config.testing_securitypolicy(userid='admin',
+                                           permissive=True)
+        users = self._fixture()
+        context = users['dummy3']
+        request = testing.DummyRequest()
+        obj = self._cut(context, request)
+        response = obj.password_form()
+        self.assertIn('form', response)
+        
+    def test_password_form_cancel(self):
+        self.config.testing_securitypolicy(userid='dummy',
+                                           permissive=True)
+        users = self._fixture()
+        context = users['dummy3']
+        request = testing.DummyRequest(post={'cancel': 'cancel'})
+        obj = self._cut(context, request)
+        response = obj.password_form()
+        self.assertEqual(response.location, 'http://example.com/users/dummy3/')
+        
+    def test_password_form_post(self):
+        self.config.include('voteit.core.models.flash_messages')
+        self.config.testing_securitypolicy(userid='dummy',
+                                           permissive=True)
+        users = self._fixture()
+        context = users['dummy3']
+        # the values needs to be in order for password field to work
+        request = testing.DummyRequest(post = MultiDict([('__start__', 'password:mapping'), 
+                                                           ('password', 'dummy1234'), 
+                                                           ('password-confirm', 'dummy1234'), 
+                                                           ('__end__', 'password:mapping'), 
+                                                           ('update', 'update'),
+                                                           ('csrf_token', '0123456789012345678901234567890123456789')]))
+        obj = self._cut(context, request)
+        response = obj.password_form()
+        self.assertEqual(response.location, 'http://example.com/users/dummy3/')
+        flash = [x for x in request.session.pop_flash()]
+        self.assertEqual(flash, [{'msg': 'Password changed',
+                                  'close_button': True,
+                                  'type': 'info'}])
+        
+    def test_password_form_validation_error(self):
+        self.config.testing_securitypolicy(userid='dummy',
+                                           permissive=True)
+        users = self._fixture()
+        context = users['dummy3']
+        # the values needs to be in order for password field to work
+        request = testing.DummyRequest(post = MultiDict([('__start__', 'password:mapping'), 
+                                                           ('password', 'dummy1234'), 
+                                                           ('password-confirm', 'dummy1234_'), 
+                                                           ('__end__', 'password:mapping'), 
+                                                           ('update', 'update')]))
+        obj = self._cut(context, request)
+        response = obj.password_form()
+        self.assertIn('form', response)
+        
+    def test_token_password_change(self):
+        self.config.include('voteit.core.models.flash_messages')
+        self.config.testing_securitypolicy(userid='dummy',
+                                           permissive=True)
+        users = self._fixture()
+        context = users['dummy3']
+        request = testing.DummyRequest()
+        obj = self._cut(context, request)
+        response = obj.token_password_change()
+        self.assertEqual(response.location, 'http://example.com/')
+        flash = [x for x in request.session.pop_flash()]
+        self.assertEqual(flash, [{'msg': 'Invalid security token. Did you click the link in your email?',
+                                  'close_button': True,
+                                  'type': 'error'}])
+    
+    def test_token_password_change_get(self):
+        self.config.testing_securitypolicy(userid='dummy',
+                                           permissive=True)
+        users = self._fixture()
+        context = users['dummy3']
+        request = testing.DummyRequest(params={'token': 'dummy_token'})
+        obj = self._cut(context, request)
+        response = obj.token_password_change()
+        self.assertIn('form', response)
+        
+    def test_token_password_change_cancel(self):
+        self.config.testing_securitypolicy(userid='dummy',
+                                           permissive=True)
+        users = self._fixture()
+        context = users['dummy3']
+        request = testing.DummyRequest(post={'cancel': 'cancel'})
+        obj = self._cut(context, request)
+        response = obj.token_password_change()
+        self.assertEqual(response.location, 'http://example.com/')
+        
+    def test_token_password_change_post(self):
+        self.config.include('voteit.core.models.flash_messages')
+        self.config.include('pyramid_mailer.testing')
+        self.config.testing_securitypolicy(userid='dummy',
+                                           permissive=True)
+        users = self._fixture()
+        context = users['dummy3']
+        request = testing.DummyRequest()
+        pw_handler = self.config.registry.getAdapter(context, IPasswordHandler)
+        pw_handler.new_pw_token(request)
+        token = pw_handler.get_token()
+        # the values needs to be in order for password field to work
+        request = testing.DummyRequest(post = MultiDict([('token', token()),
+                                                           ('__start__', 'password:mapping'), 
+                                                           ('password', 'dummy1234'), 
+                                                           ('password-confirm', 'dummy1234'), 
+                                                           ('__end__', 'password:mapping'), 
+                                                           ('change', 'change'),
+                                                           ('csrf_token', '0123456789012345678901234567890123456789'),]))
+        obj = self._cut(context, request)
+        response = obj.token_password_change()
+        self.assertEqual(response.location, 'http://example.com/login/password')
+        flash = [x for x in request.session.pop_flash()]
+        self.assertEqual(flash, [{'msg': 'Password set. You may login now.',
+                                  'close_button': True,
+                                  'type': 'info'}])
+        
+    def test_token_password_change_validation_error(self):
+        self.config.testing_securitypolicy(userid='dummy',
+                                           permissive=True)
+        users = self._fixture()
+        context = users['dummy3']
+        from .models import RequestPasswordToken
+        context.__token__ = RequestPasswordToken()
+        # the values needs to be in order for password field to work
+        request = testing.DummyRequest(post = MultiDict([('token', context.__token__()),
+                                                           ('__start__', 'password:mapping'), 
+                                                           ('password', 'dummy1234'), 
+                                                           ('password-confirm', 'dummy1234_'), 
+                                                           ('__end__', 'password:mapping'), 
+                                                           ('change', 'change'),
+                                                           ('csrf_token', '0123456789012345678901234567890123456789')]))
+        obj = self._cut(context, request)
+        response = obj.token_password_change()
+        self.assertIn('form', response)
+        
+    def test_request_password(self):
+        self.config.testing_securitypolicy(userid='dummy',
+                                           permissive=True)
+        users = self._fixture()
+        context = users.__parent__
+        request = testing.DummyRequest()
+        obj = self._cut(context, request)
+        response = obj.request_password()
+        self.assertIn('form', response)
+        
+    def test_request_password_cancel(self):
+        self.config.testing_securitypolicy(userid='dummy',
+                                           permissive=True)
+        context = self._fixture()
+        request = testing.DummyRequest(post={'cancel': 'cancel'})
+        obj = self._cut(context, request)
+        response = obj.request_password()
+        self.assertEqual(response.location, 'http://example.com/')
+        
+    def test_request_password_userid(self):
+        self.config.include('voteit.core.models.flash_messages')
+        self.config.include('pyramid_mailer.testing')
+        self.config.testing_securitypolicy(userid='dummy',
+                                           permissive=True)
+        users = self._fixture()
+        context = users.__parent__
+        request = testing.DummyRequest(post = {'request': 'request', 'userid_or_email': 'dummy3',
+                                               'csrf_token': '0123456789012345678901234567890123456789'})
+        obj = self._cut(context, request)
+        response = obj.request_password()
+        self.assertEqual(response.location, 'http://example.com/')
+        mailer = get_mailer(request)
+        self.assertEqual(len(mailer.outbox), 1)
+        flash = [x for x in request.session.pop_flash()]
+        self.assertEqual(flash, [{'msg': 'Email sent.',
+                                  'close_button': True,
+                                  'type': 'info'}])
+        
+    def test_request_password_email(self):
+        self.config.include('voteit.core.models.flash_messages')
+        self.config.include('pyramid_mailer.testing')
+        self.config.testing_securitypolicy(userid='dummy',
+                                           permissive=True)
+        users = self._fixture()
+        context = users.__parent__
+        request = testing.DummyRequest(post = {'request': 'request', 'userid_or_email': 'dummy3@test.com',
+                                               'csrf_token': '0123456789012345678901234567890123456789'})
+        obj = self._cut(context, request)
+        response = obj.request_password()
+        self.assertEqual(response.location, 'http://example.com/')
+        mailer = get_mailer(request)
+        self.assertEqual(len(mailer.outbox), 1)
+        flash = [x for x in request.session.pop_flash()]
+        self.assertEqual(flash, [{'msg': 'Email sent.',
+                                  'close_button': True,
+                                  'type': 'info'}])
+        
+    def test_request_password_validation_error(self):
+        self.config.testing_securitypolicy(userid='dummy',
+                                           permissive=True)
+        users = self._fixture()
+        context = users.__parent__
+        request = testing.DummyRequest(post = {'request': 'request', 'userid_or_email': ''})
+        obj = self._cut(context, request)
+        response = obj.request_password()
+        self.assertIn('form', response)
+        
+    def test_request_password_not_found(self):
+        self.config.include('voteit.core.models.flash_messages')
+        self.config.testing_securitypolicy(userid='dummy',
+                                           permissive=True)
+        users = self._fixture()
+        context = users.__parent__
+        request = testing.DummyRequest(post = {'request': 'request', 'userid_or_email': 'dummy4',
+                                               'csrf_token': '0123456789012345678901234567890123456789'})
+        obj = self._cut(context, request)
+        response = obj.request_password()
+        self.assertIn('form', response)
+        flash = [x for x in request.session.pop_flash()]
+        self.assertEqual(flash, [{'msg': 'Username or email not found.',
+                                  'close_button': True,
+                                  'type': 'error'}])
 
 
 
@@ -286,7 +541,7 @@ class DeferredValidatorsTests(TestCase):
         from .schemas import deferred_password_token_validator
         from .schemas import CheckPasswordToken
         from voteit.core.models.user import User
-        res = deferred_password_token_validator(None, {'context': User()})
+        res = deferred_password_token_validator(None, {'context': User(), 'request': testing.DummyRequest()})
         self.failUnless(isinstance(res, CheckPasswordToken))
 
     def test_deferred_current_password_validator(self):

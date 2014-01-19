@@ -78,7 +78,7 @@ class PasswordHandler(object):
         if not token or value != token():
             raise colander.Invalid(node, _(u"Token doesn't match."))
         if  utcnow() > token.expires:
-            raise colander.Invalid(node, _(u"Token doesn't match."))
+            raise colander.Invalid(node, _(u"Token expired."))
 
     def get_token(self):
         return getattr(self.context, '__pw_request_token__', None)

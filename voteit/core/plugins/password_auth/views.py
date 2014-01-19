@@ -21,7 +21,7 @@ from voteit.core.models.schemas import button_request
 from voteit.core.models.schemas import button_update
 from voteit.core.models.schemas import button_login
 from voteit.core.views.base_view import BaseView
-
+from .interfaces import IPasswordHandler
 
 DEFAULT_TEMPLATE = "voteit.core:views/templates/base_edit.pt"
 
@@ -77,7 +77,8 @@ class PasswordAuthView(BaseView):
             except ValidationFailure, e:
                 self.response['form'] = e.render()
                 return self.response
-            self.context.remove_password_token()
+            pw_handler = self.request.registry.getAdapter(self.context, IPasswordHandler)
+            pw_handler.remove_password_token()
             self.context.set_password(appstruct['password'])
             self.api.flash_messages.add(_(u"Password set. You may login now."))
             url = self.request.resource_url(self.api.root, 'login', 'password')
@@ -99,7 +100,7 @@ class PasswordAuthView(BaseView):
 
     @view_config(context = ISiteRoot, name = 'request_password',
                  renderer = DEFAULT_TEMPLATE, permission = NO_PERMISSION_REQUIRED)
-    def request_password(self):        
+    def request_password(self):
         schema = createSchema('RequestNewPasswordSchema')
         add_csrf_token(self.context, self.request, schema)
         schema = schema.bind(context = self.context, request = self.request, api = self.api)
@@ -120,7 +121,8 @@ class PasswordAuthView(BaseView):
             else:
                 user = self.context['users'].get(userid_or_email)
             if IUser.providedBy(user):
-                user.new_request_password_token(self.request)
+                pw_handler = self.request.registry.getAdapter(user, IPasswordHandler)
+                pw_handler.new_pw_token(self.request)
                 self.api.flash_messages.add(_('Email sent.'))
                 url = self.request.resource_url(self.api.root)
                 return HTTPFound(location = url)

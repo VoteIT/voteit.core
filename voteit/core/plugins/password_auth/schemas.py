@@ -3,11 +3,12 @@ import deform
 from betahaus.pyracont.decorators import schema_factory
 from pyramid.traversal import find_root
 
+
 from voteit.core.validators import html_string_validator
 from voteit.core.models.interfaces import IUser
 from voteit.core.models.interfaces import ISiteRoot
 from voteit.core import VoteITMF as _
-
+from .interfaces import IPasswordHandler
 
 
 
@@ -43,27 +44,22 @@ def deferred_current_password_validator(node, kw):
 
 
 class CheckPasswordToken(object):
-    def __init__(self, context):
+    #FIXME: This validator is probably not needed. We should hook into the adapter directly
+    def __init__(self, context, request):
         assert IUser.providedBy(context)
         self.context = context
+        self.request = request
     
     def __call__(self, node, value):
-        token = self.context.get_token()
-        msg = _(u"check_password_token_error",
-                default="Password token doesn't match. Won't allow password change.")
-        exc = colander.Invalid(node, msg)
-        if token is None:
-            raise exc
-        try:
-            token.validate(value)
-        except TokenValidationError:
-            raise exc
+        pw_handler = self.request.registry.getAdapter(self.context, IPasswordHandler)
+        pw_handler.token_validator(node, value)
 
 
 @colander.deferred
 def deferred_password_token_validator(node, kw):
     context = kw['context']
-    return CheckPasswordToken(context)
+    request = kw['request']
+    return CheckPasswordToken(context, request)
 
 
 class LoginPasswordValidator(object):
