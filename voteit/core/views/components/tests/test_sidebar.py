@@ -6,57 +6,6 @@ from betahaus.viewcomponent.models import ViewAction
 from betahaus.viewcomponent.models import ViewGroup
 
 
-class LoginBoxTests(unittest.TestCase):
-
-    def setUp(self):
-        self.config = testing.setUp()
-
-    def tearDown(self):
-        testing.tearDown()
-
-    @property
-    def _fut(self):
-        from voteit.core.views.components.sidebars import login_box
-        return login_box
-
-    def test_login_box(self):
-        self.config.scan('voteit.core.schemas.user')
-        context = testing.DummyModel()
-        request = testing.DummyRequest()
-        va = ViewAction(object, 'name')
-        api = _api(context, request)
-        response = self._fut(context, request, va, api=api)
-        self.assertIn('<span>Login</span>', response)
-
-    def test_login_box_register_page(self):
-        self.config.scan('voteit.core.schemas.user')
-        context = testing.DummyModel()
-        request = testing.DummyRequest(path='/register')
-        va = ViewAction(object, 'name')
-        api = _api(context, request)
-        response = self._fut(context, request, va, api=api)
-        self.assertIn('', response)
-
-    def test_login_box_login_page(self):
-        self.config.scan('voteit.core.schemas.user')
-        context = testing.DummyModel()
-        request = testing.DummyRequest(path='/login')
-        va = ViewAction(object, 'name')
-        api = _api(context, request)
-        response = self._fut(context, request, va, api=api)
-        self.assertIn('', response)
-
-    def test_login_already_logged_in(self):
-        self.config.scan('voteit.core.schemas.user')
-        self.config.testing_securitypolicy('dummy', permissive=True)
-        context = testing.DummyModel()
-        request = testing.DummyRequest()
-        va = ViewAction(object, 'name')
-        api = _api(context, request)
-        response = self._fut(context, request, va, api=api)
-        self.assertIn('', response)
-
-
 class LoginAltTests(unittest.TestCase):
 
     def setUp(self):

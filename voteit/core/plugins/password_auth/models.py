@@ -44,7 +44,9 @@ class PasswordAuth(AuthPlugin):
         userid = appstruct['userid']
         assert 'password' in appstruct #Just to make sure, but it has already been validated.
         headers = remember(self.request, userid)
-        url = appstruct.get('url', self.request.resource_url(self.context))
+        url = appstruct.get('came_from', None)
+        if url is None:
+            url = self.request.resource_url(self.context)
         return HTTPFound(location = url,
                          headers = headers)
 

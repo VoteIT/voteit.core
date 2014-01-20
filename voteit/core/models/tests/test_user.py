@@ -1,5 +1,4 @@
 import unittest
-from datetime import timedelta
 
 from zope.interface.verify import verifyObject
 from pyramid import testing
@@ -162,43 +161,6 @@ class UserPermissionTests(unittest.TestCase):
     def test_change_password(self):
         obj = self._cut()
         self.assertEqual(principals_allowed_by_permission(obj, security.CHANGE_PASSWORD), admin | owner)
-
-
-class RequestPasswordTokenTests(unittest.TestCase):
-    def setUp(self):
-        self.config = testing.setUp()
-
-    def tearDown(self):
-        testing.tearDown()
-    
-    def _make_obj(self):
-        from voteit.core.models.user import RequestPasswordToken
-        return RequestPasswordToken()
-
-    def test_initial_values(self):
-        obj = self._make_obj()
-        self.assertEqual(obj.created + timedelta(days=3), obj.expires)
-
-    def test_call_returns_token(self):
-        obj = self._make_obj()
-        self.assertEqual(obj(), obj.token)
-        self.assertEqual(len(obj()), 30)
-    
-    def test_validate_works(self):
-        obj = self._make_obj()
-        obj.token = 'dummy'
-        obj.validate('dummy')
-    
-    def test_validate_expired(self):
-        obj = self._make_obj()
-        obj.token = 'dummy'
-        obj.expires = utcnow() - timedelta(days=1)
-        self.assertRaises(TokenValidationError, obj.validate, 'dummy')
-
-    def test_validate_wrong_token(self):
-        obj = self._make_obj()
-        obj.token = 'dummy'
-        self.assertRaises(TokenValidationError, obj.validate, 'wrong')
 
 
 class _MockImagePlugin(object):

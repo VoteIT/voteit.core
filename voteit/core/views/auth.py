@@ -44,8 +44,11 @@ class AuthView(BaseEdit):
 
     @view_config(route_name = 'login', renderer = "templates/base_edit.pt", permission = NO_PERMISSION_REQUIRED)
     def login(self):
+        browser_check_result = self.browser_check()
+        if browser_check_result:
+            return browser_check_result
         method_name = self.request.matchdict.get('method')
-        auth_method = self.request.registry.queryMultiAdapter((self.context, self.request), IAuthPlugin, name = method_name)
+        auth_method = self.request.registry.getMultiAdapter((self.context, self.request), IAuthPlugin, name = method_name)            
         schema = createSchema('LoginSchema')
         add_csrf_token(self.context, self.request, schema)
         event = LoginSchemaCreated(schema, auth_method)
@@ -66,8 +69,11 @@ class AuthView(BaseEdit):
 
     @view_config(route_name = 'register', renderer = "templates/base_edit.pt", permission = NO_PERMISSION_REQUIRED)
     def register(self):
+        browser_check_result = self.browser_check()
+        if browser_check_result:
+            return browser_check_result
         method_name = self.request.matchdict.get('method')
-        auth_method = self.request.registry.queryMultiAdapter((self.context, self.request), IAuthPlugin, name = method_name)
+        auth_method = self.request.registry.getMultiAdapter((self.context, self.request), IAuthPlugin, name = method_name)
         schema = createSchema('RegisterSchema')
         add_csrf_token(self.context, self.request, schema)
         event = RegisterSchemaCreated(schema, auth_method)

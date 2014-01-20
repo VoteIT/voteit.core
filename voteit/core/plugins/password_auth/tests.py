@@ -1,4 +1,5 @@
 from unittest import TestCase
+from datetime import timedelta
 
 import colander
 from pyramid import testing
@@ -6,6 +7,9 @@ from zope.interface.verify import verifyClass
 from zope.interface.verify import verifyObject
 from pyramid_mailer import get_mailer
 from webob.multidict import MultiDict
+from betahaus.viewcomponent.interfaces import IViewGroup
+from betahaus.viewcomponent.models import ViewAction
+from betahaus.viewcomponent.models import ViewGroup
 
 from voteit.core.testing_helpers import bootstrap_and_fixture
 from voteit.core.testing_helpers import register_security_policies
@@ -98,6 +102,23 @@ class PasswordHandlerTests(TestCase):
         self.assertEqual(len(mailer.outbox), 1)
         msg = mailer.outbox[0]
         self.failUnless(obj.get_token()() in msg.html)
+
+#     def test_validate_works(self):
+#         obj = self._cut()
+#         obj.token = 'dummy'
+#         obj.validate('dummy')
+#     
+#     def test_validate_expired(self):
+#         obj = self._cut()
+#         obj.token = 'dummy'
+#         obj.expires = utcnow() - timedelta(days=1)
+#         self.assertRaises(TokenValidationError, obj.validate, 'dummy')
+# 
+#     def test_validate_wrong_token(self):
+#         obj = self._cut()
+#         obj.token = 'dummy'
+#         self.assertRaises(TokenValidationError, obj.validate, 'wrong')
+
 
 #    def test_remove_password_token(self):
 #        if hasattr(self, '__pw_request_token__'):
@@ -369,25 +390,27 @@ class PasswordAuthViewTests(TestCase):
 
 
 
-def _fixture(config):
-    from voteit.core.models.user import User
-    from voteit.core.models.meeting import Meeting
-    root = bootstrap_and_fixture(config)
-    tester = User(password = 'tester',
-                  creators = ['tester'],
-                  first_name = u'Tester',
-                  email = "tester@voteit.se",)
-    root.users['tester'] = tester
-    moderator = User(password = 'moderator',
-                     creators = ['moderator'],
-                     first_name = u'Moderator',
-                     email = "moderator@voteit.se",)
-    root.users['moderator'] = moderator
-    meeting = Meeting()
-    meeting.add_groups('tester', [security.ROLE_DISCUSS, security.ROLE_PROPOSE, security.ROLE_VOTER])
-    meeting.add_groups('moderator', [security.ROLE_MODERATOR])
-    root['meeting'] = meeting
-    return root
+class RequestPasswordTokenTests(TestCase):
+    def setUp(self):
+        self.config = testing.setUp()
+
+    def tearDown(self):
+        testing.tearDown()
+    
+    @property
+    def _cut(self):
+        from .models import RequestPasswordToken
+        return RequestPasswordToken
+
+    def test_initial_values(self):
+        obj = self._cut()
+        self.assertEqual(obj.created + timedelta(days=3), obj.expires)
+
+    def test_call_returns_token(self):
+        obj = self._cut()
+        self.assertEqual(obj(), obj.token)
+        self.assertEqual(len(obj()), 30)
+
 
 #FIXME: Full integration test with schema
 
@@ -560,3 +583,79 @@ class DeferredValidatorsTests(TestCase):
         request = testing.DummyRequest()
         res = deferred_login_password_validator(None, {'context': context, 'request': request})
         self.assertIsInstance(res, LoginPasswordValidator)
+
+
+
+class LoginPwTests(TestCase):
+
+    def setUp(self):
+        self.config = testing.setUp()
+        self.config.scan('voteit.core.schemas.auth')
+
+    def tearDown(self):
+        testing.tearDown()
+
+    @property
+    def _fut(self):
+        from .views import login_pw
+        return login_pw
+
+    def test_login_box(self):
+        context = testing.DummyModel()
+        request = testing.DummyRequest()
+        va = ViewAction(object, 'name')
+        api = _api(context, request)
+        response = self._fut(context, request, va, api = api)
+        self.assertIn('<span>Login</span>', response)
+
+    def test_login_box_register_page(self):
+        context = testing.DummyModel()
+        request = testing.DummyRequest(path='/register')
+        va = ViewAction(object, 'name')
+        api = _api(context, request)
+        response = self._fut(context, request, va, api = api)
+        self.assertIn('', response)
+
+    def test_login_box_login_page(self):
+        context = testing.DummyModel()
+        request = testing.DummyRequest(path='/login')
+        va = ViewAction(object, 'name')
+        api = _api(context, request)
+        response = self._fut(context, request, va, api = api)
+        self.assertIn('', response)
+
+    def test_login_already_logged_in(self):
+        self.config.testing_securitypolicy('dummy', permissive=True)
+        context = testing.DummyModel()
+        request = testing.DummyRequest()
+        va = ViewAction(object, 'name')
+        api = _api(context, request)
+        response = self._fut(context, request, va, api = api)
+        self.assertIn('', response)
+
+
+def _api(context=None, request=None):
+    from voteit.core.views.api import APIView
+    context = context and context or testing.DummyResource()
+    request = request and request or testing.DummyRequest()
+    return APIView(context, request)
+
+def _fixture(config):
+    from voteit.core.models.user import User
+    from voteit.core.models.meeting import Meeting
+    root = bootstrap_and_fixture(config)
+    tester = User(password = 'tester',
+                  creators = ['tester'],
+                  first_name = u'Tester',
+                  email = "tester@voteit.se",)
+    root.users['tester'] = tester
+    moderator = User(password = 'moderator',
+                     creators = ['moderator'],
+                     first_name = u'Moderator',
+                     email = "moderator@voteit.se",)
+    root.users['moderator'] = moderator
+    meeting = Meeting()
+    meeting.add_groups('tester', [security.ROLE_DISCUSS, security.ROLE_PROPOSE, security.ROLE_VOTER])
+    meeting.add_groups('moderator', [security.ROLE_MODERATOR])
+    root['meeting'] = meeting
+    return root

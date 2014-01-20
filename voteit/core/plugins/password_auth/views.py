@@ -136,7 +136,7 @@ class PasswordAuthView(BaseView):
 
 
 @view_action('sidebar', 'login_pw')
-def login_box(context, request, va, **kwargs):
+def login_pw(context, request, va, **kwargs):
     api = kwargs['api']
     if api.userid:
         return u""
