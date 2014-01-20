@@ -62,7 +62,6 @@ def full_app_settings():
         "zodbconn.uri": "memory://testingstorage",
         #VoteIT settings
         "default_locale_name": "en",
-        "available_languages": "en sv",
         "default_timezone_name": "Europe/Stockholm",
         "tkt_secret": "testing",
         "cache_ttl_seconds": "3600"
