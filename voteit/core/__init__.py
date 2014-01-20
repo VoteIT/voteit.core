@@ -10,6 +10,10 @@ from pyramid.authentication import AuthTktAuthenticationPolicy
 #Must be before all of this packages imports since some other methods might import it
 PROJECTNAME = 'voteit.core'
 VoteITMF = TranslationStringFactory(PROJECTNAME)
+DEFAULT_SETTINGS = {
+    'default_locale_name': 'en',
+    'default_timezone_name': 'UTC',
+}
 
 
 def main(global_config, **settings):
@@ -39,6 +43,7 @@ def default_configurator(settings):
                         session_factory = sessionfact,)
 
 def read_salt(settings):
+    """ Read salt file or create a new one if salt_file is specified in the settings. """
     from uuid import uuid4
     from os.path import isfile
     filename = settings.get('salt_file', None)
@@ -65,6 +70,7 @@ def read_salt(settings):
         return salt
 
 def required_components(config):
+    config.include(check_required_settings)
     #Component includes
     config.include('voteit.core.models.user_tags')
     config.include('voteit.core.models.logs')
@@ -77,7 +83,7 @@ def required_components(config):
     config.include('voteit.core.models.fanstatic_resources')
     config.include('voteit.core.deform_bindings')
     config.include('voteit.core.models.proposal_ids')
-    config.include('voteit.core.plugins.immediate_ap') #FIXME: Shouldn't be forced!
+    config.include('voteit.core.plugins.immediate_ap')
     config.include('voteit.core.plugins.invite_only_ap')
     #For password storage
     config.scan('betahaus.pyracont.fields.password')
@@ -94,8 +100,8 @@ def required_components(config):
     config.set_default_permission(VIEW)    
     config.include(register_plugins)
     config.include(register_dynamic_fanstatic_resources)
+    config.include(check_required_components)
     config.include(adjust_view_component_order)
-
 
 def register_plugins(config):
     """ Register any plugins specified in paster .init file.
@@ -109,13 +115,52 @@ def register_plugins(config):
         for plugin in plugins.strip().splitlines():
             config.include(plugin)
 
+def check_required_settings(config):
+    """ Check that at least the required settings are present in the paster.ini file.
+        If not, add sane defaults.
+    """
+    settings = config.registry.settings
+    for (k, v) in DEFAULT_SETTINGS.items():
+        if k not in settings:
+            settings[k] = v
+            #FIXME: Logger instead, not stdout!
+            print "INFO: No value for '%s' found. Adding '%s' as default value." % (k, v)
+
+def check_required_components(config):
+    """ After the process of including components is run, check that something has been included in the required sections.
+        For instance poll methods.
+    """
+    from voteit.core.models.interfaces import IPollPlugin
+    from voteit.core.models.interfaces import IProfileImage
+    from voteit.core.models.interfaces import IAccessPolicy
+    need_at_least_one = {IPollPlugin: ('voteit.core.plugins.majority_poll',),
+                         IProfileImage: ('voteit.core.plugins.gravatar_profile_image',),
+                         IAccessPolicy: (('voteit.core.plugins.immediate_ap'),
+                                         ('voteit.core.plugins.invite_only_ap')),}
+    found_adapters = {}
+    for adapter_registration in config.registry.registeredAdapters():
+        if adapter_registration.provided in need_at_least_one:
+            del need_at_least_one[adapter_registration.provided]
+    for (k, vals) in need_at_least_one.items():
+        #FIXME: Propper logging instead...
+        print "INFO: Nothing providing '%s.%s' included in configuration." % (k.__module__, k.__name__)
+        for v in vals:
+            config.include(v)
+            print "Including default: '%s'" % v
 
 def root_factory(request):
+    """ Returns root object for each request. See pyramid docs. """
     conn = get_connection(request)
     return appmaker(conn.root())
 
-
 def appmaker(zodb_root):
+    """ This determines the root object for each request. If no site root exists,
+        this function will run bootstrap_voteit and create one.
+        Read more about traversal in the Pyramid docs.
+        
+        The funny looking try / except here is to bootstrap the site in case it hasn't been bootstrapped.
+        This is faster than using an if statement.
+    """
     try:
         return zodb_root['app_root']
     except KeyError:
@@ -123,18 +168,16 @@ def appmaker(zodb_root):
         zodb_root['app_root'] = bootstrap_voteit() #Returns a site root
         import transaction
         transaction.commit()
-
         #Set intitial version of database
         from repoze.evolution import ZODBEvolutionManager
         from voteit.core.evolve import VERSION
         manager = ZODBEvolutionManager(zodb_root['app_root'], evolve_packagename='voteit.core.evolve', sw_version=VERSION)
         manager.set_db_version(VERSION)
         manager.transaction.commit()
-        
         return zodb_root['app_root']
 
-
 def adjust_view_component_order(config):
+    """ Set the default order of view components. """
     from betahaus.viewcomponent.interfaces import IViewGroup
     prefix = "vieworder."
     lprefix = len(prefix)
@@ -144,14 +187,13 @@ def adjust_view_component_order(config):
             util = config.registry.getUtility(IViewGroup, name = name)
             util.order = v.strip().splitlines()
 
-
 def adjust_default_view_component_order(config):
+    """ Adjust component order if something is specified in the paster.ini file. """
     from betahaus.viewcomponent.interfaces import IViewGroup
     from voteit.core.view_component_order import DEFAULT_VC_ORDER
     for (name, items) in DEFAULT_VC_ORDER:
         util = config.registry.getUtility(IViewGroup, name = name)
         util.order = items
-
 
 def register_dynamic_fanstatic_resources(config):
     from voteit.core.models.interfaces import IFanstaticResources
@@ -159,7 +201,6 @@ def register_dynamic_fanstatic_resources(config):
     util = config.registry.getUtility(IFanstaticResources)
     for res in DEFAULT_FANSTATIC_RESOURCES:
         util.add(*res)
-
 
 def includeme(config):
     """ Called when voteit.core is used as a component of another application.
