@@ -140,10 +140,12 @@ def check_required_components(config):
     from voteit.core.models.interfaces import IPollPlugin
     from voteit.core.models.interfaces import IProfileImage
     from voteit.core.models.interfaces import IAccessPolicy
+    from voteit.core.models.interfaces import IAuthPlugin
     need_at_least_one = {IPollPlugin: ('voteit.core.plugins.majority_poll',),
                          IProfileImage: ('voteit.core.plugins.gravatar_profile_image',),
                          IAccessPolicy: (('voteit.core.plugins.immediate_ap'),
-                                         ('voteit.core.plugins.invite_only_ap')),}
+                                         ('voteit.core.plugins.invite_only_ap')),
+                         IAuthPlugin: ('voteit.core.plugins.password_auth',)}
     found_adapters = {}
     for adapter_registration in config.registry.registeredAdapters():
         if adapter_registration.provided in need_at_least_one:
