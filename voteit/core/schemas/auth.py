@@ -13,6 +13,8 @@ from voteit.core.validators import deferred_new_userid_validator
 
 def fetch_userid(value):
     """ A preparer to fetch userid at login, in case an email address is used. """
+    if not value:
+        return value
     request = get_current_request()
     context = getattr(request, 'context')
     if context is None:
