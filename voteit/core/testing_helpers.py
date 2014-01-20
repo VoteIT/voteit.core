@@ -80,8 +80,11 @@ def dummy_zodb_root(config):
         a ZODB database that only exist in memory. It will behave
         the same way as a database that would be stored permanently.
     """
-
-    db = db_from_uri('memory://')
+    settings = config.registry.settings
+    if 'zodbconn.uri' not in settings:
+        settings['zodbconn.uri'] = 'memory://'
+    config.include('pyramid_zodbconn')
+    db = config.registry._zodb_databases['']
     conn = db.open()
     zodb_root = conn.root()
     zodb_root['app_root'] = bootstrap_and_fixture(config)
