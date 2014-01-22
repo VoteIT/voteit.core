@@ -42,13 +42,16 @@ class AuthView(BaseEdit):
             url = self.request.resource_url(self.context, 'unsupported_browser')
             return HTTPFound(location=url)
 
-    @view_config(route_name = 'login', renderer = "templates/base_edit.pt", permission = NO_PERMISSION_REQUIRED)
+    @view_config(name = 'login', renderer = "templates/base_edit.pt", permission = NO_PERMISSION_REQUIRED)
     def login(self):
         browser_check_result = self.browser_check()
         if browser_check_result:
             return browser_check_result
-        method_name = self.request.matchdict.get('method')
-        auth_method = self.request.registry.getMultiAdapter((self.context, self.request), IAuthPlugin, name = method_name)            
+        method_name = self.request.GET.get('method')
+        if not method_name:
+            self.api.flash_messages.add('Pick login method') #FIXME
+            return HTTPFound(location = "/")
+        auth_method = self.request.registry.getMultiAdapter((self.context, self.request), IAuthPlugin, name = method_name)  
         schema = createSchema('LoginSchema')
         add_csrf_token(self.context, self.request, schema)
         event = LoginSchemaCreated(schema, auth_method)
@@ -67,7 +70,11 @@ class AuthView(BaseEdit):
         self.response['form'] = form.render()
         return self.response
 
-    @view_config(route_name = 'register', renderer = "templates/base_edit.pt", permission = NO_PERMISSION_REQUIRED)
+    @view_config(name = 'register', renderer = "string", permission = NO_PERMISSION_REQUIRED)
+    def select_registration_method(self):
+        return "Hello"
+
+    @view_config(route_name = 'register', renderer = "templates/base_edit.pt", permission  = NO_PERMISSION_REQUIRED)
     def register(self):
         browser_check_result = self.browser_check()
         if browser_check_result:
@@ -106,18 +113,21 @@ class AuthView(BaseEdit):
                                   u"to you via email, or the url of a meeting to request access to it.")            
             self.api.flash_messages.add(msg)
             return HTTPFound(location = url, headers = headers)
-        self.response['form'] = form.render()
+        
+        #Adjust appstruct to include any default values that might have been passed along
+        appstruct = auth_method.register_appstruct(self.context, self.request, schema)
+        self.response['form'] = form.render(appstruct = appstruct)
         return self.response
 
-    @view_config(context=ISiteRoot, name='login', permission = NO_PERMISSION_REQUIRED)
-    @view_config(context=ISiteRoot, name='register', permission = NO_PERMISSION_REQUIRED)
-    def auth_redirect(self):
-        #FIXME: Add to docs, message must reference docs
-        method_name = self.request.registry.settings.get('voteit.default_auth', None)
-        if not self.request.registry.queryMultiAdapter((self.context, self.request), IAuthPlugin, name = method_name):
-            self.api.flash_messages.add(_("No default authentication method found. You need to configure one."), type = "error")
-            return HTTPFound(location = self.request.resource_url(self.context))
-        return HTTPFound(location = self.request.resource_url(self.context, self.request.view_name, method_name))
+#     @view_config(context=ISiteRoot, name='login', permission = NO_PERMISSION_REQUIRED)
+#     @view_config(context=ISiteRoot, name='register', permission = NO_PERMISSION_REQUIRED)
+#     def auth_redirect(self):
+#         #FIXME: Add to docs, message must reference docs
+#         method_name = self.request.registry.settings.get('voteit.default_auth', None)
+#         if not self.request.registry.queryMultiAdapter((self.context, self.request), IAuthPlugin, name = method_name):
+#             self.api.flash_messages.add(_("No default authentication method found. You need to configure one."), type = "error")
+#             return HTTPFound(location = self.request.resource_url(self.context))
+#         return HTTPFound(location = self.request.resource_url(self.context, self.request.view_name, method_name))
 
     @view_config(context=ISiteRoot, name='logout', permission = NO_PERMISSION_REQUIRED)
     def logout(self):

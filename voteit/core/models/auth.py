@@ -35,8 +35,14 @@ class AuthPlugin(object):
     def modify_login_schema(self, schema):
         pass
 
+    def login_appstruct(self, context, request, schema):
+        return {}
+
     def modify_register_schema(self, schema):
         pass
+
+    def register_appstruct(self, context, request, schema):
+        return {}
 
 @subscriber(ILoginSchemaCreated)
 def modify_login_schema(event):

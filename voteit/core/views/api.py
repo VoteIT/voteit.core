@@ -43,10 +43,13 @@ class APIView(object):
         self.context = context
         self.request = request
         self.resource_url = resource_url
-        self.root = find_root(context)
         self.userid = authenticated_userid(request)
         self.template_dir = TEMPLATE_DIR
         self.tag_count = {}
+
+    @reify
+    def root(self):
+        return find_root(self.context)
 
     @reify
     def authn_policy(self):

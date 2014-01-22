@@ -24,6 +24,7 @@ class AuthViewTests(unittest.TestCase):
         self.config.scan('voteit.core.schemas.auth') #Login / register form
         self.config.scan('voteit.core.models.auth') #Subscribers
         self.config.include('voteit.core.plugins.password_auth') #As a default
+        self.config.include('voteit.core.models.flash_messages')
         root = bootstrap_and_fixture(self.config)
         root.users['dummy1'] = User(title='Dummy 1')
         root.users['dummy2'] = User(title='Dummy 2')
@@ -36,9 +37,9 @@ class AuthViewTests(unittest.TestCase):
                                            permissive=True)
         context = self._fixture()
         request = testing.DummyRequest(context = context,
-                                       matchdict = {'method': 'password'},
                                        user_agent='Dummy agent',
-                                       params={'came_from': '/'})
+                                       params={'came_from': '/',
+                                               'method': 'password'})
         obj = self._cut(context, request)
         response = obj.login()
         self.assertIn('form', response)
@@ -48,7 +49,7 @@ class AuthViewTests(unittest.TestCase):
                                            permissive=True)
         context = self._fixture()
         request = testing.DummyRequest(context = context,
-                                       matchdict = {'method': 'password'},
+                                       params = {'method': 'password'},
                                        post = MultiDict([('userid', 'dummy3'),
                                                            ('password', 'dummy1234'),
                                                            ('csrf_token', '0123456789012345678901234567890123456789'),
@@ -65,7 +66,7 @@ class AuthViewTests(unittest.TestCase):
                                            permissive=True)
         context = self._fixture()
         request = testing.DummyRequest(context = context,
-                                       matchdict = {'method': 'password'},
+                                       params = {'method': 'password'},
                                        post = MultiDict([('userid', 'dummy3@test.com'),
                                                          ('password', 'dummy1234'),
                                                          ('csrf_token', '0123456789012345678901234567890123456789'),
@@ -79,7 +80,7 @@ class AuthViewTests(unittest.TestCase):
 
     def test_login_came_from(self):
         context = self._fixture()
-        request = testing.DummyRequest(matchdict = {'method': 'password'},
+        request = testing.DummyRequest(params = {'method': 'password'},
                                        post = MultiDict([('userid', 'dummy3@test.com'),
                                                          ('password', 'dummy1234'),
                                                          ('came_from', 'dummy_url'),
@@ -98,7 +99,7 @@ class AuthViewTests(unittest.TestCase):
     def test_login_validation_error(self):
         context = self._fixture()
         request = testing.DummyRequest(context = context,
-                                       matchdict = {'method': 'password'},
+                                       params = {'method': 'password'},
                                        post = MultiDict([('userid', 'dummy3@test.com'),
                                                            ('password', ''),
                                                            ('came_from', 'dummy_url'),

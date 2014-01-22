@@ -98,13 +98,12 @@ def required_components(config):
     config.add_translation_dirs('deform:locale/',
                                 'colander:locale/',
                                 '%s:locale/' % PROJECTNAME,)
-    config.add_route('login', '/login/{method}')
     config.add_route('register', '/register/{method}')
     for scan_dir in ('models', 'schemas', 'subscribers', 'views'):
         config.scan('%s.%s' % (PROJECTNAME, scan_dir))
     config.include(adjust_default_view_component_order)
     from voteit.core.security import VIEW
-    config.set_default_permission(VIEW)    
+    config.set_default_permission(VIEW)
     config.include(register_plugins)
     config.include(register_dynamic_fanstatic_resources)
     config.include(check_required_components)

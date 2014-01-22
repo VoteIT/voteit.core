@@ -18,6 +18,15 @@ def alternative_login_methods(context, request, va, **kwargs):
         pass
     return u""
 
+
+@view_action('sidebar', 'register')
+def register(context, request, va, **kwargs):
+    api = kwargs['api']
+    if api.userid:
+        return u""
+    return """<a class="arrow-right iconpadding icon" href="/register">%s</a>""" % api.translate(_(u"Register"))
+
+
 @view_action('sidebar', 'latest_meeting_entries')
 def latest_meeting_entries(context, request, va, **kwargs):
     #FIXME: This is disabled for now, needs proper design

@@ -146,7 +146,7 @@ def login_pw(context, request, va, **kwargs):
     event = LoginSchemaCreated(schema, auth_method)
     request.registry.notify(event)
     schema = schema.bind(context = context, request = request, api = api)
-    action_url = request.resource_url(api.root, 'login', 'password')
+    action_url = request.resource_url(api.root, 'login', query = {'method': 'password'})
     form = Form(schema, buttons = (button_login,), action = action_url)
     api.register_form_resources(form)
     response = dict(
