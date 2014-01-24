@@ -606,7 +606,7 @@ class LoginPwTests(TestCase):
         va = ViewAction(object, 'name')
         api = _api(context, request)
         response = self._fut(context, request, va, api = api)
-        self.assertIn('<span>Login</span>', response)
+        self.assertIn('Login', response)
 
     def test_login_box_register_page(self):
         context = testing.DummyModel()
