@@ -11,7 +11,7 @@ from voteit.core import VoteITMF as _
 from voteit.core.models.interfaces import ISiteRoot
 from voteit.core.models.interfaces import IUser
 from voteit.core.models.interfaces import IAuthPlugin
-from voteit.core.events import LoginSchemaCreated
+#from voteit.core.events import LoginSchemaCreated
 from voteit.core.security import CHANGE_PASSWORD
 from voteit.core.security import MANAGE_SERVER
 from voteit.core.models.schemas import add_csrf_token
@@ -19,7 +19,7 @@ from voteit.core.models.schemas import button_cancel
 from voteit.core.models.schemas import button_change
 from voteit.core.models.schemas import button_request
 from voteit.core.models.schemas import button_update
-from voteit.core.models.schemas import button_login
+#from voteit.core.models.schemas import button_login
 from voteit.core.views.base_view import BaseView
 from .interfaces import IPasswordHandler
 
@@ -141,16 +141,16 @@ def login_pw(context, request, va, **kwargs):
     if api.userid:
         return u""
     auth_method = request.registry.queryMultiAdapter((context, request), IAuthPlugin, name = 'password')
-    schema = createSchema('LoginSchema')
-    add_csrf_token(context, request, schema)
-    event = LoginSchemaCreated(schema, auth_method)
-    request.registry.notify(event)
-    schema = schema.bind(context = context, request = request, api = api)
-    action_url = request.resource_url(api.root, 'login', query = {'method': 'password'})
-    form = Form(schema, buttons = (button_login,), action = action_url)
-    api.register_form_resources(form)
+#     schema = createSchema('LoginSchema')
+#     add_csrf_token(context, request, schema)
+#     event = LoginSchemaCreated(schema, auth_method)
+#     request.registry.notify(event)
+#     schema = schema.bind(context = context, request = request, api = api)
+#     action_url = request.resource_url(api.root, 'login', query = {'method': 'password'})
+#     form = Form(schema, buttons = (button_login,), action = action_url)
+#     api.register_form_resources(form)
     response = dict(
         api = api,
-        form = form.render(),
+        #form = form.render(),
     )
     return render('login_pw.pt', response, request = request)

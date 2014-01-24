@@ -5,4 +5,4 @@ def includeme(config):
     from .models import PasswordHandler
     config.registry.registerAdapter(PasswordAuth, name = PasswordAuth.name)
     config.registry.registerAdapter(PasswordHandler)
-    config.scan()
+    config.scan(__name__)

@@ -3,6 +3,14 @@
       i18n:domain="voteit.core"
       class="sidebar_block"
       id="login_pw">
-    <div tal:content="structure form">Login form</div>
-    <a class="arrow-right iconpadding icon" href="/request_password" i18n:translate="">Recover password</a>
+    <h4 i18n:translate="">Login or register</h4>
+    <a class="arrow-right iconpadding icon"
+       href="${request.resource_url(api.root, 'login', query = {'method': 'password'})}"
+       i18n:translate="">Login with password</a>
+    <a class="arrow-right iconpadding icon"
+       href="${request.resource_url(api.root, 'request_password')}"
+       i18n:translate="">Recover password</a>
+    <a class="arrow-right iconpadding icon"
+       href="${request.resource_url(api.root, 'register', 'password')}"
+       i18n:translate="">Register with password</a>
 </div>
