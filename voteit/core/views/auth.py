@@ -70,10 +70,6 @@ class AuthView(BaseEdit):
         self.response['form'] = form.render()
         return self.response
 
-    @view_config(name = 'register', renderer = "string", permission = NO_PERMISSION_REQUIRED)
-    def select_registration_method(self):
-        return "Hello"
-
     @view_config(route_name = 'register', renderer = "templates/base_edit.pt", permission  = NO_PERMISSION_REQUIRED)
     def register(self):
         browser_check_result = self.browser_check()
