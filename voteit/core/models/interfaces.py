@@ -818,11 +818,11 @@ class IProfileImage(Interface):
             this function should return None
         
             size
-                Prefered size of image 
+                Prefered size of image. This is always a square, so you just specify the size as an int.
         """
         
     def is_valid_for_user():
-        """ Checks if this adapter is usable with this user
+        """ Checks if this adapter is usable with this user. Should return 'True' if it is.
         """
 
 
