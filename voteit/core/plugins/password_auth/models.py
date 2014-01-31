@@ -27,6 +27,7 @@ from .interfaces import IPasswordHandler
 
 class PasswordAuth(AuthPlugin):
     name = u"password"
+    title = _(u"Password")
 
     def modify_login_schema(self, schema):
         schema.add(colander.SchemaNode(colander.String(),

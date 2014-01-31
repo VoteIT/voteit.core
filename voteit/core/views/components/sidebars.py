@@ -5,6 +5,14 @@ from zope.interface.interfaces import ComponentLookupError
 from voteit.core import VoteITMF as _
 
 
+@view_action('sidebar', 'login_or_register')
+def login_or_register(context, request, va, **kwargs):
+    api = kwargs['api']
+    if api.userid:
+        return u""
+    return render('templates/sidebars/login_or_register.pt', {'api': api}, request = request)
+
+
 @view_action('sidebar', 'login_alt')
 def alternative_login_methods(context, request, va, **kwargs):
     api = kwargs['api']

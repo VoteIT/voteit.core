@@ -17,11 +17,24 @@ class AuthPlugin(object):
     """ Authentication base.
         See :mod:`voteit.core.models.interfaces.IAuthPlugin`.
     """
-    name = u''
+    name = u""
+    title = u""
     
     def __init__(self, context, request):
         self.context = context
         self.request = request
+
+    def login_url(self):
+        return self.request.resource_url(self.context, 'login', query = {'method': self.name})
+    
+    def register_url(self):
+        return self.request.resource_url(self.context, 'register', self.name)
+
+    def render_login_info(self):
+        pass
+
+    def render_register_info(self):
+        pass
 
     def login(self, appstruct):
         raise NotImplementedError("Must be implemented by subclass")

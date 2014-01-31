@@ -1,0 +1,6 @@
+<form xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core"
+      action="${auth_plugin.login_url()}" method="POST">
+<button type="submit">
+    <span tal:content="auth_plugin.title and auth_plugin.title or auth_plugin.name.capitalize()"></span>
+</button>
+</form>

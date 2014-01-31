@@ -1,0 +1,21 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      metal:use-macro="load: ${api.template_dir}main.pt"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="voteit.core">
+<body>
+<tal:main_window metal:fill-slot="main_window">
+    <div tal:attributes="id alternative_methods and 'left' or 'content'">
+        <tal:form tal:replace="structure form">Main login method form</tal:form>
+    </div>
+    <div id="right" tal:condition="alternative_methods">
+        <h1 i18n:translate="">...or use</h1>
+        <tal:iterate repeat="alt_method alternative_methods">
+            <div class="listing_block" tal:content="structure alt_method">Hello</div>
+        </tal:iterate>
+    </div>
+</tal:main_window>
+</body>
+</html>
