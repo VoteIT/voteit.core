@@ -28,7 +28,6 @@ class ContactView(BaseEdit):
         schema = createSchema('ContactSchema').bind(context = self.context, request = self.request, api = self.api)
         form = Form(schema, action=self.request.resource_url(self.context, 'contact'), buttons=(button_send,))
         self.api.register_form_resources(form)
-
         post = self.request.POST
         if self.request.method == 'POST':
             controls = post.items()
