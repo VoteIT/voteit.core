@@ -35,8 +35,6 @@ class AddTicketsSchema(colander.Schema):
                         to add a user that can only view, select View and uncheck everything else."""),
         widget = deform.widget.CheckboxChoiceWidget(values=security.MEETING_ROLES,),
     )
-    #FIXME: Validate that an invite doesn't already exist.
-    #FIXME: Add custom subject line. No sense in having it static!
     emails = colander.SchemaNode(colander.String(),
                                  title = _(u"add_tickets_emails_titles",
                                            default=u"Email addresses to give the roles above."),
@@ -47,11 +45,12 @@ class AddTicketsSchema(colander.Schema):
                                  validator = colander.All(html_string_validator, multiple_email_validator),
     )
     message = colander.SchemaNode(colander.String(),
-                                  title = _(u'Welcome text of the email that will be sent'),
-                                  description = _(u'No HTML tags allowed.'),
+                                  title = _(u"Welcome text of the email that will be sent"),
+                                  description = _(u"ticket_message_description",
+                                                  default = u"The mail will contain instructions on how to access the meeting, "
+                                                        u"so focus on anything that might be specific for your participants."),
                                   widget = deform.widget.TextAreaWidget(rows=5, cols=40),
-                                  default = _(u'invitation_default_text',
-                                              default=u"You've received a meeting invitation for a VoteIT meeting."),
+                                  missing = u"",
                                   validator = html_string_validator,
     )
     

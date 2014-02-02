@@ -9,8 +9,10 @@ from pyramid_mailer.message import Message
 from pyramid.traversal import find_interface
 from pyramid.exceptions import Forbidden
 from pyramid.security import authenticated_userid
+from pyramid.i18n import get_localizer
 from betahaus.pyracont.decorators import content_factory
 from betahaus.viewcomponent import render_view_action
+from html2text import HTML2Text
 
 from voteit.core import VoteITMF as _
 from voteit.core import security
@@ -40,12 +42,13 @@ class InviteTicket(Folder, WorkflowAware):
     add_permission = None
     #No schemas
     
-    def __init__(self, email, roles, message, sent_by = None):
+    def __init__(self, email, roles, message = u"", sent_by = None):
         self.email = email
         for role in roles:
             if role not in SELECTABLE_ROLES:
                 raise ValueError("InviteTicket got '%s' as a role, and that isn't selectable." % role)
         self.roles = roles
+        assert isinstance(message, basestring)
         self.message = message
         self.created = utcnow()
         self.closed = None
@@ -58,13 +61,19 @@ class InviteTicket(Folder, WorkflowAware):
 
     def send(self, request):
         meeting = find_interface(self, IMeeting)
-        sender = "%s <%s>" % (meeting.get_field_value('meeting_mail_name'),
-                              meeting.get_field_value('meeting_mail_address'))
         body_html = render_view_action(self, request, 'email', 'invite_ticket')
-        msg = Message(subject=_(u"VoteIT meeting invitation"),
-                      sender = sender and sender or None,
-                      recipients=[self.email],
-                      html=body_html)
+        h2t = HTML2Text()
+        h2t.ignore_links = True
+        h2t.ignore_images = True
+        h2t.body_width = 0
+        body_text = h2t.handle(body_html).strip()
+        localizer = get_localizer(request)
+        subject = localizer.translate(_(u"Invitation to ${meeting_title}",
+                                        mapping = {'meeting_title': meeting.title}))
+        msg = Message(subject = subject,
+                      recipients = [self.email],
+                      body = body_text,
+                      html = body_html)
         mailer = get_mailer(request)
         mailer.send(msg)
         self.sent_dates.append(utcnow())
@@ -76,14 +85,10 @@ class InviteTicket(Folder, WorkflowAware):
         #Find required resources and do some basic validation
         meeting = find_interface(self, IMeeting)
         assert meeting
-        
         userid = authenticated_userid(request)
         if userid is None:
             raise Forbidden("You can't claim a ticket unless you're authenticated.")
-        
         meeting.add_groups(userid, self.roles)
         self.claimed_by = userid
-
         self.set_workflow_state(request, 'closed')
-        
         self.closed = utcnow()

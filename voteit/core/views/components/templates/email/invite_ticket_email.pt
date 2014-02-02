@@ -1,0 +1,47 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="voteit.core">
+<body>
+
+<p>You've just received a meeting entry ticket to <b>${meeting.title}</b>.
+<tal:sender:profile condition="sender_profile">It was sent to you by <b>${sender_profile.title}</b>.</tal:sender:profile>
+</p>
+
+<tal:message condition="message">
+<p>${message}</p>
+</tal:message>
+
+<p>The link below grant you the following permissions within the meeting:
+<ul>
+    <li tal:repeat="role roles" tal:content="role">Role</li>
+</ul>
+</p>
+<p>
+To access this meeting use the link below:<br/>
+<a tal:attributes="href access_link"
+   tal:content="access_link">link</a>
+</p>
+<h3>Contact</h3>
+<p>
+The contact person for this meeting is 
+<b>${meeting.get_field_value('meeting_mail_name')}</b>
+<tal:mail condition="contact_mail">
+and can be reached on <a href="mailto:${contact_mail}">${contact_mail}</a>
+</tal:mail>
+</p>
+<h3>No clue what this is about or you just want to know more?</h3>
+<p>
+VoteIT is a meeting system created by a group of Swedish Non-profit NGOs.
+<a href="http://www.voteit.se">http://www.VoteIT.se</a>
+</p>
+<h3>Need the manual?</h3>
+<p>
+All manuals are here: <a href="http://manual.voteit.se">http://manual.VoteIT.se</a>
+</p>
+<p>
+Note that this message doesn't mean that you're subscribed to a mailing list or similar.
+You're probably receiving it since you're a member of an organisaiton.
+</p>
+</body>
+</html>
