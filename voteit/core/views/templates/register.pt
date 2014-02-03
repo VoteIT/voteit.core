@@ -7,10 +7,17 @@
       i18n:domain="voteit.core">
 <body>
 <div metal:fill-slot="main_window" tal:define="reg_info context.get_field_value('registration_info', u'')">
-    <div id="left">
-        <tal:form replace="structure form">Form here</tal:form>
+
+    <div tal:attributes="id alternative_methods and 'left' or 'content'">
+        <tal:form tal:replace="structure form">Main registration method form</tal:form>
     </div>
-    <div id="right" tal:condition="reg_info" tal:content="structure reg_info">Registration info</div>
+    <div id="right" tal:condition="alternative_methods">
+        <div tal:content="structure reg_info" tal:condition="reg_info">Registration info</div>
+        <h4 i18n:translate="">Alternative ways to register</h4>
+        <tal:iterate repeat="alt_method alternative_methods">
+            <div class="listing_block" tal:content="structure alt_method">Hello</div>
+        </tal:iterate>
+    </div>
 </div>
 </body>
 </html>

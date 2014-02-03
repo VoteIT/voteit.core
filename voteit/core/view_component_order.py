@@ -9,5 +9,5 @@ DEFAULT_VC_ORDER = (
     ('context_actions', ('edit', 'delete', 'poll_config')),
     ('metadata_listing', ('user_tags', 'answer', 'retract', 'delete', 'tag', 'state','time')),
     ('agenda_item_top', ('description', 'tag_stats')),
-    ('sidebar', ('login_alt', 'navigation')), #latest_meeting_entries
+    ('sidebar', ('navigation',)), #latest_meeting_entries
 )

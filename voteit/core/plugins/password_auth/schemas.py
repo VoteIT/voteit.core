@@ -3,13 +3,11 @@ import deform
 from betahaus.pyracont.decorators import schema_factory
 from pyramid.traversal import find_root
 
-
 from voteit.core.validators import html_string_validator
 from voteit.core.models.interfaces import IUser
 from voteit.core.models.interfaces import ISiteRoot
 from voteit.core import VoteITMF as _
 from .interfaces import IPasswordHandler
-
 
 
 def password_validation(node, value):
@@ -105,8 +103,6 @@ def password_node():
                                                   u"doesn't contain any personal information or things that someone else might guess."))
 
 
-
-
 @schema_factory('ChangePasswordSchema', title = _(u"Change password"))
 class ChangePasswordSchema(colander.Schema):
     current_password = colander.SchemaNode(colander.String(),
@@ -135,6 +131,3 @@ class TokenPasswordChangeSchema(colander.Schema):
                                 missing = u'',
                                 widget = deform.widget.HiddenWidget(),)
     password = password_node()
-
-
-

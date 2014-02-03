@@ -7,8 +7,5 @@
         <a href="${request.application_url}" class="root_header" i18n:translate="">Welcome!</a>
     </h5>
     <a class="buttonize small" href="${request.resource_url(api.root, 'login')}">Login</a>
-    <form action="${request.resource_url(api.root, 'login')}" method="POST">
-        <input type="submit" value"Login post" />
-    </form>    
     <a class="buttonize small" href="${request.resource_url(api.root, 'register')}">Register</a>
 </div>

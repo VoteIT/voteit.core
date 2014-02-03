@@ -9,17 +9,14 @@ from zope.component import adapter
 from pyramid.renderers import render
 from pyramid.security import remember
 from pyramid.httpexceptions import HTTPFound
-from pyramid.i18n import get_localizer
 from pyramid_mailer.message import Message
 from pyramid_mailer import get_mailer
-from betahaus.pyracont.decorators import content_factory
-from betahaus.pyracont.factories import createContent
-from betahaus.viewcomponent import render_view_action
 
 from voteit.core import VoteITMF as _
 from voteit.core.models.interfaces import IUser
 from voteit.core.models.auth import AuthPlugin
 from voteit.core.models.date_time_util import utcnow
+from voteit.core.models.schemas import button_login
 from .schemas import password_node
 from .schemas import deferred_login_password_validator
 from .interfaces import IPasswordHandler
@@ -35,6 +32,23 @@ class PasswordAuth(AuthPlugin):
                                        title = _('Password'),
                                        widget = deform.widget.PasswordWidget(size=20)))
         schema.validator = deferred_login_password_validator
+
+    def render_login(self, api, response):
+        schema = self.create_login_schema(api)
+        form = self.login_form(schema, buttons = (deform.Button('forgot', _(u"Forgot password?")), button_login), action = self.login_url())
+        POST = self.request.POST
+        if 'login' in POST:
+            controls = POST.items()
+            try:
+                appstruct = form.validate(controls)
+            except deform.ValidationFailure, e:
+                response['form'] = e.render()
+                return response
+            return self.login(appstruct)
+        if 'forgot' in POST:
+            return HTTPFound(location = self.request.resource_url(api.root, 'request_password'))
+        response['form'] = form.render()
+        return response
 
     def modify_register_schema(self, schema):
         pw_node = password_node()

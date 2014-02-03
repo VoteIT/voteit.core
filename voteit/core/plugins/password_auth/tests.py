@@ -7,13 +7,8 @@ from zope.interface.verify import verifyClass
 from zope.interface.verify import verifyObject
 from pyramid_mailer import get_mailer
 from webob.multidict import MultiDict
-from betahaus.viewcomponent.interfaces import IViewGroup
-from betahaus.viewcomponent.models import ViewAction
-from betahaus.viewcomponent.models import ViewGroup
 
 from voteit.core.testing_helpers import bootstrap_and_fixture
-from voteit.core.testing_helpers import register_security_policies
-from voteit.core.testing_helpers import register_workflows
 from voteit.core.models.interfaces import IAuthPlugin
 from voteit.core import security
 from .interfaces import IPasswordHandler
@@ -155,14 +150,13 @@ class PasswordAuthViewTests(TestCase):
         root.users['dummy2'] = User(title='Dummy 2')
         root.users['dummy3'] = User(title='Dummy 3', email='dummy3@test.com')
         root.users['dummy3'].set_password('dummy1234')
-        return root.users
-    
+        return root
 
     def test_password_form(self):
         self.config.testing_securitypolicy(userid='dummy',
                                            permissive=False)
-        users = self._fixture()
-        context = users['dummy3']
+        root = self._fixture()
+        context = root.users['dummy3']
         request = testing.DummyRequest()
         obj = self._cut(context, request)
         response = obj.password_form()
@@ -171,8 +165,8 @@ class PasswordAuthViewTests(TestCase):
     def test_password_form_admin(self):
         self.config.testing_securitypolicy(userid='admin',
                                            permissive=True)
-        users = self._fixture()
-        context = users['dummy3']
+        root = self._fixture()
+        context = root.users['dummy3']
         request = testing.DummyRequest()
         obj = self._cut(context, request)
         response = obj.password_form()
@@ -181,8 +175,8 @@ class PasswordAuthViewTests(TestCase):
     def test_password_form_cancel(self):
         self.config.testing_securitypolicy(userid='dummy',
                                            permissive=True)
-        users = self._fixture()
-        context = users['dummy3']
+        root = self._fixture()
+        context = root.users['dummy3']
         request = testing.DummyRequest(post={'cancel': 'cancel'})
         obj = self._cut(context, request)
         response = obj.password_form()
@@ -192,8 +186,8 @@ class PasswordAuthViewTests(TestCase):
         self.config.include('voteit.core.models.flash_messages')
         self.config.testing_securitypolicy(userid='dummy',
                                            permissive=True)
-        users = self._fixture()
-        context = users['dummy3']
+        root = self._fixture()
+        context = root.users['dummy3']
         # the values needs to be in order for password field to work
         request = testing.DummyRequest(post = MultiDict([('__start__', 'password:mapping'), 
                                                            ('password', 'dummy1234'), 
@@ -212,8 +206,8 @@ class PasswordAuthViewTests(TestCase):
     def test_password_form_validation_error(self):
         self.config.testing_securitypolicy(userid='dummy',
                                            permissive=True)
-        users = self._fixture()
-        context = users['dummy3']
+        root = self._fixture()
+        context = root.users['dummy3']
         # the values needs to be in order for password field to work
         request = testing.DummyRequest(post = MultiDict([('__start__', 'password:mapping'), 
                                                            ('password', 'dummy1234'), 
@@ -228,8 +222,8 @@ class PasswordAuthViewTests(TestCase):
         self.config.include('voteit.core.models.flash_messages')
         self.config.testing_securitypolicy(userid='dummy',
                                            permissive=True)
-        users = self._fixture()
-        context = users['dummy3']
+        root = self._fixture()
+        context = root.users['dummy3']
         request = testing.DummyRequest()
         obj = self._cut(context, request)
         response = obj.token_password_change()
@@ -242,8 +236,8 @@ class PasswordAuthViewTests(TestCase):
     def test_token_password_change_get(self):
         self.config.testing_securitypolicy(userid='dummy',
                                            permissive=True)
-        users = self._fixture()
-        context = users['dummy3']
+        root = self._fixture()
+        context = root.users['dummy3']
         request = testing.DummyRequest(params={'token': 'dummy_token'})
         obj = self._cut(context, request)
         response = obj.token_password_change()
@@ -252,8 +246,8 @@ class PasswordAuthViewTests(TestCase):
     def test_token_password_change_cancel(self):
         self.config.testing_securitypolicy(userid='dummy',
                                            permissive=True)
-        users = self._fixture()
-        context = users['dummy3']
+        root = self._fixture()
+        context = root.users['dummy3']
         request = testing.DummyRequest(post={'cancel': 'cancel'})
         obj = self._cut(context, request)
         response = obj.token_password_change()
@@ -264,8 +258,8 @@ class PasswordAuthViewTests(TestCase):
         self.config.include('pyramid_mailer.testing')
         self.config.testing_securitypolicy(userid='dummy',
                                            permissive=True)
-        users = self._fixture()
-        context = users['dummy3']
+        root = self._fixture()
+        context = root.users['dummy3']
         request = testing.DummyRequest()
         pw_handler = self.config.registry.getAdapter(context, IPasswordHandler)
         pw_handler.new_pw_token(request)
@@ -289,8 +283,8 @@ class PasswordAuthViewTests(TestCase):
     def test_token_password_change_validation_error(self):
         self.config.testing_securitypolicy(userid='dummy',
                                            permissive=True)
-        users = self._fixture()
-        context = users['dummy3']
+        root = self._fixture()
+        context = root.users['dummy3']
         from .models import RequestPasswordToken
         context.__token__ = RequestPasswordToken()
         # the values needs to be in order for password field to work
@@ -308,32 +302,30 @@ class PasswordAuthViewTests(TestCase):
     def test_request_password(self):
         self.config.testing_securitypolicy(userid='dummy',
                                            permissive=True)
-        users = self._fixture()
-        context = users.__parent__
+        root = self._fixture()
         request = testing.DummyRequest()
-        obj = self._cut(context, request)
+        obj = self._cut(root, request)
         response = obj.request_password()
         self.assertIn('form', response)
-        
+
     def test_request_password_cancel(self):
         self.config.testing_securitypolicy(userid='dummy',
                                            permissive=True)
-        context = self._fixture()
+        root = self._fixture()
         request = testing.DummyRequest(post={'cancel': 'cancel'})
-        obj = self._cut(context, request)
+        obj = self._cut(root, request)
         response = obj.request_password()
         self.assertEqual(response.location, 'http://example.com/')
-        
+
     def test_request_password_userid(self):
         self.config.include('voteit.core.models.flash_messages')
         self.config.include('pyramid_mailer.testing')
         self.config.testing_securitypolicy(userid='dummy',
                                            permissive=True)
-        users = self._fixture()
-        context = users.__parent__
-        request = testing.DummyRequest(post = {'request': 'request', 'userid_or_email': 'dummy3',
+        root = self._fixture()
+        request = testing.DummyRequest(post = {'send': 'send', 'userid_or_email': 'dummy3',
                                                'csrf_token': '0123456789012345678901234567890123456789'})
-        obj = self._cut(context, request)
+        obj = self._cut(root, request)
         response = obj.request_password()
         self.assertEqual(response.location, 'http://example.com/')
         mailer = get_mailer(request)
@@ -348,11 +340,10 @@ class PasswordAuthViewTests(TestCase):
         self.config.include('pyramid_mailer.testing')
         self.config.testing_securitypolicy(userid='dummy',
                                            permissive=True)
-        users = self._fixture()
-        context = users.__parent__
-        request = testing.DummyRequest(post = {'request': 'request', 'userid_or_email': 'dummy3@test.com',
+        root = self._fixture()
+        request = testing.DummyRequest(post = {'send': 'send', 'userid_or_email': 'dummy3@test.com',
                                                'csrf_token': '0123456789012345678901234567890123456789'})
-        obj = self._cut(context, request)
+        obj = self._cut(root, request)
         response = obj.request_password()
         self.assertEqual(response.location, 'http://example.com/')
         mailer = get_mailer(request)
@@ -365,10 +356,9 @@ class PasswordAuthViewTests(TestCase):
     def test_request_password_validation_error(self):
         self.config.testing_securitypolicy(userid='dummy',
                                            permissive=True)
-        users = self._fixture()
-        context = users.__parent__
-        request = testing.DummyRequest(post = {'request': 'request', 'userid_or_email': ''})
-        obj = self._cut(context, request)
+        root = self._fixture()
+        request = testing.DummyRequest(post = {'send': 'send', 'userid_or_email': ''})
+        obj = self._cut(root, request)
         response = obj.request_password()
         self.assertIn('form', response)
         
@@ -376,11 +366,10 @@ class PasswordAuthViewTests(TestCase):
         self.config.include('voteit.core.models.flash_messages')
         self.config.testing_securitypolicy(userid='dummy',
                                            permissive=True)
-        users = self._fixture()
-        context = users.__parent__
-        request = testing.DummyRequest(post = {'request': 'request', 'userid_or_email': 'dummy4',
+        root = self._fixture()
+        request = testing.DummyRequest(post = {'send': 'send', 'userid_or_email': 'dummy4',
                                                'csrf_token': '0123456789012345678901234567890123456789'})
-        obj = self._cut(context, request)
+        obj = self._cut(root, request)
         response = obj.request_password()
         self.assertIn('form', response)
         flash = [x for x in request.session.pop_flash()]
@@ -584,61 +573,6 @@ class DeferredValidatorsTests(TestCase):
         res = deferred_login_password_validator(None, {'context': context, 'request': request})
         self.assertIsInstance(res, LoginPasswordValidator)
 
-
-
-class LoginPwTests(TestCase):
-
-    def setUp(self):
-        self.config = testing.setUp()
-        self.config.scan('voteit.core.schemas.auth')
-
-    def tearDown(self):
-        testing.tearDown()
-
-    @property
-    def _fut(self):
-        from .views import login_pw
-        return login_pw
-
-    def test_login_box(self):
-        context = testing.DummyModel()
-        request = testing.DummyRequest()
-        va = ViewAction(object, 'name')
-        api = _api(context, request)
-        response = self._fut(context, request, va, api = api)
-        self.assertIn('Login', response)
-
-    def test_login_box_register_page(self):
-        context = testing.DummyModel()
-        request = testing.DummyRequest(path='/register')
-        va = ViewAction(object, 'name')
-        api = _api(context, request)
-        response = self._fut(context, request, va, api = api)
-        self.assertIn('', response)
-
-    def test_login_box_login_page(self):
-        context = testing.DummyModel()
-        request = testing.DummyRequest(path='/login')
-        va = ViewAction(object, 'name')
-        api = _api(context, request)
-        response = self._fut(context, request, va, api = api)
-        self.assertIn('', response)
-
-    def test_login_already_logged_in(self):
-        self.config.testing_securitypolicy('dummy', permissive=True)
-        context = testing.DummyModel()
-        request = testing.DummyRequest()
-        va = ViewAction(object, 'name')
-        api = _api(context, request)
-        response = self._fut(context, request, va, api = api)
-        self.assertIn('', response)
-
-
-def _api(context=None, request=None):
-    from voteit.core.views.api import APIView
-    context = context and context or testing.DummyResource()
-    request = request and request or testing.DummyRequest()
-    return APIView(context, request)
 
 def _fixture(config):
     from voteit.core.models.user import User

@@ -10,6 +10,7 @@ class AuthViewTests(unittest.TestCase):
         
     def setUp(self):
         self.config = testing.setUp()
+        self.config.registry.settings['voteit.default_auth'] = 'password'
 
     def tearDown(self):
         testing.tearDown()
@@ -58,7 +59,6 @@ class AuthViewTests(unittest.TestCase):
         self.config = testing.setUp(self.config.registry, request = request)
         obj = self._cut(context, request)
         response = obj.login()
-        #self.assertEqual(response.location, 'http://example.com/')
         self.assertEqual(response.status, '302 Found') #Redirect from login
         
     def test_login_email(self):
@@ -114,10 +114,9 @@ class AuthViewTests(unittest.TestCase):
         self.config.scan('voteit.core.schemas.auth')
         self.config.testing_securitypolicy(userid='dummy',
                                            permissive=True)
-        users = self._fixture()
-        context = users.__parent__
+        root = self._fixture()
         request = testing.DummyRequest(user_agent='Mozilla/4.0 (compatible; MSIE 7.0;)')
-        obj = self._cut(context, request)
+        obj = self._cut(root, request)
         response = obj.login()
         self.assertEqual(response.location, 'http://example.com/unsupported_browser')
 
