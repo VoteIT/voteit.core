@@ -6,13 +6,12 @@ import colander
 import deform
 from zope.interface import implementer
 from zope.component import adapter
-from pyramid.renderers import render
 from pyramid.security import remember
 from pyramid.httpexceptions import HTTPFound
-from pyramid_mailer.message import Message
-from pyramid_mailer import get_mailer
+from betahaus.viewcomponent import render_view_action
 
 from voteit.core import VoteITMF as _
+from voteit.core.helpers import send_email
 from voteit.core.models.interfaces import IUser
 from voteit.core.models.auth import AuthPlugin
 from voteit.core.models.date_time_util import utcnow
@@ -76,16 +75,12 @@ class PasswordHandler(object):
 
     def new_pw_token(self, request):
         self.context.__pw_request_token__ = token = RequestPasswordToken()
-        pw_link = request.resource_url(self.context, 'token_pw', query = {'token': token()})
-        response = {'pw_link': pw_link,
-                    'context': self.context}
-        html = render('request_password_email.pt', response, request = request)
-        msg = Message(subject = _(u"Password reset request from VoteIT"),
-                      recipients = [self.context.get_field_value('email')],
-                      html = html)
-        mailer = get_mailer(request)
-        mailer.send(msg)
-        
+        html = render_view_action(self.context, request, 'email', 'request_password', token = token())
+        send_email(_(u"Password reset request from VoteIT"),
+                   self.context.get_field_value('email'),
+                   html,
+                   request = request)
+
     def remove_password_token(self):
         if hasattr(self, '__pw_request_token__'):
             delattr(self, '__pw_request_token__')

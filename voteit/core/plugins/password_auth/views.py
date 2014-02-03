@@ -3,7 +3,9 @@ from deform import Form
 from deform.exception import ValidationFailure
 from pyramid.httpexceptions import HTTPFound
 from pyramid.security import NO_PERMISSION_REQUIRED
+from pyramid.renderers import render
 from betahaus.pyracont.factories import createSchema
+from betahaus.viewcomponent import view_action
 
 from voteit.core import VoteITMF as _
 from voteit.core.models.interfaces import ISiteRoot
@@ -130,3 +132,10 @@ class PasswordAuthView(BaseView):
         #Render form
         self.response['form'] = form.render()
         return self.response
+
+
+@view_action('email', 'request_password', interface = IUser)
+def request_password_email(context, request, va, **kw):
+    pw_link = request.resource_url(context, 'token_pw', query = {'token': kw['token']})
+    response = dict(pw_link = pw_link, context = context)
+    return render('request_password_email.pt', response, request = request)

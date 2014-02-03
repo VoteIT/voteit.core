@@ -105,6 +105,7 @@ def send_email(subject, recipients, html, sender = None, plaintext = None, reque
         subject = localizer.translate(subject)
     if isinstance(recipients, basestring):
         recipients = (recipients,)
+    assert isinstance(html, basestring)
     if plaintext is None:
         html2text = HTML2Text()
         html2text.ignore_links = True

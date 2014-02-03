@@ -79,8 +79,13 @@ class PasswordHandlerTests(TestCase):
     def test_verify_obj(self):
         self.failUnless(verifyObject(IPasswordHandler, self._cut(None)))
 
-    def test_new_pw_token(self):
+    def _fixture(self):
         self.config.include('pyramid_mailer.testing')
+        self.config.scan('voteit.core.plugins.password_auth.views')
+        self.config.registry.settings['default_locale_name'] = 'sv'
+
+    def test_new_pw_token(self):
+        self._fixture()
         user = self._user()
         obj = self._cut(user)
         request = testing.DummyRequest()
@@ -88,7 +93,7 @@ class PasswordHandlerTests(TestCase):
         self.failUnless(obj.get_token())
     
     def test_new_pw_token_mailed(self):
-        self.config.include('pyramid_mailer.testing')
+        self._fixture()
         user = self._user()
         obj = self._cut(user)
         request = testing.DummyRequest()
