@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: voteit.core 0.1dev\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2014-02-03 11:26+0100\n"
+"POT-Creation-Date: 2014-02-03 11:59+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -764,7 +764,9 @@ msgstr ""
 msgid "Subject"
 msgstr ""
 
-#: voteit/core/schemas/contact.py:41 voteit/core/views/templates/logs.pt:16
+#: voteit/core/schemas/contact.py:41
+#: voteit/core/views/components/templates/email/invite_ticket_email.pt:16
+#: voteit/core/views/templates/logs.pt:16
 msgid "Message"
 msgstr ""
 
@@ -1530,12 +1532,12 @@ msgid "Support request sent!"
 msgstr ""
 
 #. Default: Can't find anything at '${path}'. Maybe it has been removed?
-#: voteit/core/views/exceptions_view.py:53
+#: voteit/core/views/exceptions_view.py:57
 msgid "404_error_msg"
 msgstr ""
 
 #. Default: There was an error while sending mail. Error was: ${exc_txt}
-#: voteit/core/views/exceptions_view.py:70
+#: voteit/core/views/exceptions_view.py:75
 msgid "smtp_error_msg"
 msgstr ""
 
@@ -1971,6 +1973,57 @@ msgstr ""
 
 #: voteit/core/views/components/templates/cogwheel/moderator_actions_wf_section.pt:7
 msgid "current"
+msgstr ""
+
+#: voteit/core/views/components/templates/email/invite_ticket_email.pt:8
+msgid "You've just received a meeting entry ticket to ${meeting_title}."
+msgstr ""
+
+#: voteit/core/views/components/templates/email/invite_ticket_email.pt:10
+msgid "It was sent to you by ${sender_name}."
+msgstr ""
+
+#: voteit/core/views/components/templates/email/invite_ticket_email.pt:20
+msgid "The link below grant you the following permissions within the meeting:"
+msgstr ""
+
+#: voteit/core/views/components/templates/email/invite_ticket_email.pt:26
+msgid "To access this meeting use the link below:"
+msgstr ""
+
+#: voteit/core/views/components/templates/email/invite_ticket_email.pt:30
+msgid "Contact"
+msgstr ""
+
+#: voteit/core/views/components/templates/email/invite_ticket_email.pt:32
+msgid "The contact person for this meeting is ${contact_person_name}"
+msgstr ""
+
+#: voteit/core/views/components/templates/email/invite_ticket_email.pt:34
+msgid "and can be reached on ${contact_mail}"
+msgstr ""
+
+#: voteit/core/views/components/templates/email/invite_ticket_email.pt:38
+msgid "No clue what this is about or you just want to know more?"
+msgstr ""
+
+#: voteit/core/views/components/templates/email/invite_ticket_email.pt:40
+msgid "VoteIT is a meeting system created by a group of Swedish Non-profit NGOs."
+msgstr ""
+
+#: voteit/core/views/components/templates/email/invite_ticket_email.pt:43
+msgid "Need the manual?"
+msgstr ""
+
+#: voteit/core/views/components/templates/email/invite_ticket_email.pt:45
+msgid "All manuals are here:"
+msgstr ""
+
+#. Default: Note that this message doesn't mean that you're subscribed to a
+#. mailing list or similar. You're probably receiving it since you're a member
+#. of an organisaiton.
+#: voteit/core/views/components/templates/email/invite_ticket_email.pt:48
+msgid "invitation_no_maillist_notice"
 msgstr ""
 
 #: voteit/core/views/components/templates/header/global_actions.pt:11
