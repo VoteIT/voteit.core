@@ -3,6 +3,7 @@
 import unittest
 
 from pyramid import testing
+from pyramid.i18n import TranslationString
 
 from voteit.core.testing_helpers import bootstrap_and_fixture
 from voteit.core.testing_helpers import active_poll_fixture
@@ -150,4 +151,58 @@ class MoveObjectTests(unittest.TestCase):
         self._fut(ai['prop1'], ai2)
         self.assertIn('prop1', root['meeting']['ai2'])
         self.assertNotIn('prop1', root['meeting']['ai'])
+
+
+class SendEmailTests(unittest.TestCase):
+    
+    def setUp(self):
+        request = testing.DummyRequest()
+        self.config = testing.setUp(request = request)
+        #self.config.registry.settings['']
+        self.config.include('pyramid_mailer.testing')
+
+    def tearDown(self):
+        testing.tearDown()
+
+    @property
+    def _fut(self):
+        from voteit.core.helpers import send_email
+        return send_email
+
+    def test_convert_html(self):
+        html = "<p>Hello!</p>"
+        msg = self._fut(subject = 'subject', recipients = 'john@doe.com', html = html)
+        self.assertEqual(msg.body, u"Hello!")
+
+    def test_recipients_always_tuple(self):
+        html = "<p>Hello!</p>"
+        msg = self._fut(subject = 'subject', recipients = 'john@doe.com', html = html)
+        self.assertEqual(msg.recipients, ('john@doe.com',))
+
+    def test_subject_translated(self):
+        self.config.add_translation_dirs('voteit.core:locale/')
+        self.config.registry.settings['default_locale_name'] = 'sv'
+        html = "<p>Hello!</p>"
+        subject = TranslationString(u'Reply', domain = 'voteit.core')
+        msg = self._fut(subject = subject, recipients = 'john@doe.com', html = html)
+        self.assertEqual(msg.subject, u'Svara')
+
+    def test_plaintext_not_created_if_specified(self):
+        html = "<p>Hello!</p>"
+        plaintext = "Other stuff"
+        msg = self._fut(subject = 'subject', recipients = 'john@doe.com', html = html, plaintext = plaintext)
+        self.assertEqual(msg.body, plaintext)
+
+    def test_plaintext_not_created_if_false(self):
+        html = "<p>Hello!</p>"
+        plaintext = ""
+        msg = self._fut(subject = 'subject', recipients = 'john@doe.com', html = html, plaintext = plaintext)
+        self.assertEqual(msg.body, None)
+
+#FIXME: Current implementation of testing mailer behaves diffrently from the real one. Follow up!
+#    def test_default_sender_included(self):
+#        self.config.registry.settings['mail.default_sender'] = "VoteIT noreply <noreply@mailer.voteit.se>"
+#        html = "<p>Hello!</p>"
+#        msg = self._fut(subject = 'subject', recipients = 'john@doe.com', html = html)
+#        self.assertEqual(msg.sender, u"")
 

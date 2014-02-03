@@ -4,15 +4,12 @@ from uuid import uuid4
 
 from repoze.folder import Folder
 from zope.interface import implements
-from pyramid_mailer import get_mailer
-from pyramid_mailer.message import Message
+
 from pyramid.traversal import find_interface
 from pyramid.exceptions import Forbidden
 from pyramid.security import authenticated_userid
-from pyramid.i18n import get_localizer
 from betahaus.pyracont.decorators import content_factory
 from betahaus.viewcomponent import render_view_action
-from html2text import HTML2Text
 
 from voteit.core import VoteITMF as _
 from voteit.core import security
@@ -20,6 +17,7 @@ from voteit.core.models.interfaces import IInviteTicket
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.workflow_aware import WorkflowAware
 from voteit.core.models.date_time_util import utcnow
+from voteit.core.helpers import send_email
 
 
 SELECTABLE_ROLES = (security.ROLE_MODERATOR,
@@ -61,22 +59,10 @@ class InviteTicket(Folder, WorkflowAware):
 
     def send(self, request):
         meeting = find_interface(self, IMeeting)
-        body_html = render_view_action(self, request, 'email', 'invite_ticket')
-        h2t = HTML2Text()
-        h2t.ignore_links = True
-        h2t.ignore_images = True
-        h2t.body_width = 0
-        body_text = h2t.handle(body_html).strip()
-        localizer = get_localizer(request)
-        subject = localizer.translate(_(u"Invitation to ${meeting_title}",
-                                        mapping = {'meeting_title': meeting.title}))
-        msg = Message(subject = subject,
-                      recipients = [self.email],
-                      body = body_text,
-                      html = body_html)
-        mailer = get_mailer(request)
-        mailer.send(msg)
-        self.sent_dates.append(utcnow())
+        html = render_view_action(self, request, 'email', 'invite_ticket')
+        subject = _(u"Invitation to ${meeting_title}", mapping = {'meeting_title': meeting.title})
+        if send_email(subject = subject, recipients = self.email, html = html, request = request):
+            self.sent_dates.append(utcnow())
 
     def claim(self, request):
         #Is the ticket open?
