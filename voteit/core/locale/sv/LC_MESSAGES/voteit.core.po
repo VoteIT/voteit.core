@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2013-11-11 12:23+0100\n"
-"PO-Revision-Date: 2013-11-11 12:25+0100\n"
+"POT-Creation-Date: 2014-02-03 11:26+0100\n"
+"PO-Revision-Date: 2014-02-03 11:30+0100\n"
 "Last-Translator: Robin Harms Oredsson <robin@betahaus.net>\n"
 "Language-Team: sv <LL@li.org>\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -19,12 +19,11 @@ msgstr ""
 "Generated-By: Babel 1.3\n"
 "X-Generator: Poedit 1.5.7\n"
 
-#: voteit/core/bootstrap.py:20 voteit/core/bootstrap.py:35
-#: voteit/core/schemas/meeting.py:108
+#: voteit/core/bootstrap.py:18 voteit/core/bootstrap.py:31
 msgid "VoteIT"
 msgstr "VoteIT"
 
-#: voteit/core/bootstrap.py:25 voteit/core/models/agenda_templates.py:12
+#: voteit/core/bootstrap.py:23 voteit/core/models/agenda_templates.py:12
 #: voteit/core/models/agenda_templates.py:20
 #: voteit/core/views/agenda_templates.py:32
 #: voteit/core/views/components/agenda.py:10
@@ -33,11 +32,11 @@ msgstr "VoteIT"
 msgid "Agenda templates"
 msgstr "Standarddagordningar"
 
-#: voteit/core/bootstrap.py:28
+#: voteit/core/bootstrap.py:25
 msgid "Registered users"
 msgstr "Registrerade användare"
 
-#: voteit/core/bootstrap.py:36 voteit/core/security.py:68
+#: voteit/core/bootstrap.py:32 voteit/core/security.py:68
 #: voteit/core/views/templates/participants.pt:56
 msgid "Administrator"
 msgstr "Administratör"
@@ -221,7 +220,7 @@ msgstr ""
 "kan du försöka att återställa ditt lösenord."
 
 #: voteit/core/validators.py:143 voteit/core/schemas/invite_ticket.py:16
-#: voteit/core/schemas/meeting.py:117
+#: voteit/core/schemas/meeting.py:120
 msgid "Invalid email address."
 msgstr "Ogiltig epostadress"
 
@@ -369,9 +368,10 @@ msgstr "Diskussionsinlägg"
 msgid "Invite ticket"
 msgstr "Inbjudningsbiljett"
 
-#: voteit/core/models/invite_ticket.py:64
-msgid "VoteIT meeting invitation"
-msgstr "VoteIT mötesinbjudan"
+#: voteit/core/models/invite_ticket.py:63
+#| msgid "Manage invitations to the meeting"
+msgid "Invitation to ${meeting_title}"
+msgstr "Inbjudan till ${meeting_title}"
 
 #: voteit/core/models/logs.py:51
 msgid "Log entry"
@@ -424,10 +424,6 @@ msgid "broken_plugin_error"
 msgstr ""
 "Omröstningspluginen är trasig. Kan inte visa resultat.För att se felet, slå "
 "på debug_templates på servern."
-
-#: voteit/core/models/poll.py:311
-msgid "proposal"
-msgstr "förslag"
 
 #: voteit/core/models/poll.py:311
 msgid "proposals"
@@ -734,7 +730,7 @@ msgstr "Redigera dagordningspunkt"
 msgid "Use this form to edit an agenda item"
 msgstr "Använd detta formulär för att redigera en dagordningspunkt"
 
-#: voteit/core/schemas/agenda_item.py:14 voteit/core/schemas/meeting.py:78
+#: voteit/core/schemas/agenda_item.py:14 voteit/core/schemas/meeting.py:75
 #: voteit/core/schemas/poll.py:87 voteit/core/schemas/site.py:13
 msgid "Title"
 msgstr "Titel"
@@ -773,23 +769,23 @@ msgstr "Beskriv denna standarddagordning."
 msgid "Agenda items"
 msgstr "Dagordningspunkter"
 
-#: voteit/core/schemas/common.py:142
+#: voteit/core/schemas/common.py:143
 msgid "Move object"
 msgstr "Flytta objekt"
 
 #. Default: WARNING: This might break discissions or references. Backup your
 #. data before doing this! If proposals are part of a poll, remove them first.
-#: voteit/core/schemas/common.py:143
+#: voteit/core/schemas/common.py:144
 msgid "move_object_schema_description"
 msgstr ""
 "VARNING: Detta kan få diskusisoner eller referenser att försvinna. Ta bakcup "
 "innan du gör detta! Om förslag är en del av omröstningen, ta bort dem först."
 
-#: voteit/core/schemas/common.py:148
+#: voteit/core/schemas/common.py:149
 msgid "Select new parent"
 msgstr "Välj ny förälder"
 
-#: voteit/core/schemas/common.py:149
+#: voteit/core/schemas/common.py:150
 msgid ""
 "Only objects at the same level as this objects parent will be selectable."
 msgstr "Bara objekt på samma nivå som detta objekts förälder är valbara."
@@ -838,7 +834,7 @@ msgstr "Ämne"
 msgid "Message"
 msgstr "Meddelande"
 
-#: voteit/core/schemas/contact.py:46 voteit/core/views/contact.py:115
+#: voteit/core/schemas/contact.py:46 voteit/core/views/contact.py:114
 #: voteit/core/views/components/help_actions.py:27
 msgid "Support"
 msgstr "Support"
@@ -914,42 +910,42 @@ msgstr ""
 "användare som bara kan se, markera 'läsa' och avmarkera övriga."
 
 #. Default: Email addresses to give the roles above.
-#: voteit/core/schemas/invite_ticket.py:41
+#: voteit/core/schemas/invite_ticket.py:39
 msgid "add_tickets_emails_titles"
 msgstr "Epostadresser till användare vilka ges rollerna ovan."
 
 #. Default: Separate email addresses with a single line break.
-#: voteit/core/schemas/invite_ticket.py:43
+#: voteit/core/schemas/invite_ticket.py:41
 msgid "add_tickets_emails_description"
 msgstr "Åtskilj epostadresser med radbrytning."
 
-#: voteit/core/schemas/invite_ticket.py:50
+#: voteit/core/schemas/invite_ticket.py:48
 msgid "Welcome text of the email that will be sent"
 msgstr "Välkomsttext i brevet som kommer skickas"
 
-#: voteit/core/schemas/invite_ticket.py:51
-msgid "No HTML tags allowed."
-msgstr "Inga HTML-taggar tillåtna."
+#. Default: The mail will contain instructions on how to access the meeting, so
+#. focus on anything that might be specific for your participants.
+#: voteit/core/schemas/invite_ticket.py:49
+#| msgid "support_schema_message_description"
+msgid "ticket_message_description"
+msgstr ""
+"Eposten kommer innehålla instruktioner om tillgång till mötet, så fokusera "
+"på sådant som kan vara specifikt för era deltagare."
 
-#. Default: You've received a meeting invitation for a VoteIT meeting.
-#: voteit/core/schemas/invite_ticket.py:53
-msgid "invitation_default_text"
-msgstr "Du har fått en inbjudan till ett VoteIT-möte."
-
-#: voteit/core/schemas/invite_ticket.py:66
+#: voteit/core/schemas/invite_ticket.py:65
 msgid "Manage invitations"
 msgstr "Påminn inbjudna"
 
-#: voteit/core/schemas/invite_ticket.py:66
+#: voteit/core/schemas/invite_ticket.py:65
 msgid "Manage invitations to the meeting"
 msgstr "Påminn deltagare som ännu inte anlänt till mötet"
 
 #. Default: Apply to all of the below, regardless of selection
-#: voteit/core/schemas/invite_ticket.py:70
+#: voteit/core/schemas/invite_ticket.py:69
 msgid "apply_to_all_title"
 msgstr "Använd för allt nedan, oavsett valda"
 
-#: voteit/core/schemas/invite_ticket.py:78 voteit/core/views/ticket.py:150
+#: voteit/core/schemas/invite_ticket.py:77 voteit/core/views/ticket.py:148
 msgid "Current invitations"
 msgstr "Nuvarande inbjudningar"
 
@@ -1023,19 +1019,18 @@ msgstr ""
 "Du kan fortfarande komma åt tillbakadragna förslag genom att använda länken "
 "under de vanliga förslagen."
 
-#: voteit/core/schemas/meeting.py:65
+#: voteit/core/schemas/meeting.py:61
 msgid "<Don't copy>"
 msgstr "<Kopiera inte>"
 
 #. Default: Set a title for the meeting that separates it from previous
 #. meetings
-#: voteit/core/schemas/meeting.py:79
+#: voteit/core/schemas/meeting.py:76
 msgid "meeting_title_description"
 msgstr ""
 "Ange en titel för mötet som särskiljer det från föreningens andra möten"
 
-#: voteit/core/schemas/meeting.py:85
-#| msgid "participants_form_instructions"
+#: voteit/core/schemas/meeting.py:82
 msgid "Participants description"
 msgstr "Deltagarbeskrivning"
 
@@ -1043,76 +1038,77 @@ msgstr "Deltagarbeskrivning"
 #. how to register here. Displayed on the first page of the meeting. You can
 #. include things like information about the meeting, how to contact the
 #. moderator and your logo.
-#: voteit/core/schemas/meeting.py:86
+#: voteit/core/schemas/meeting.py:83
 msgid "meeting_description_description"
 msgstr ""
 "Denna beskrivning är bara synlig för deltagare, så skriv inget här om "
 "registreringsprocess. Visas på mötets förstasida. Du kan inkludera saker om "
 "mötet, hur moderatorerna kontaktas och logga."
 
-#: voteit/core/schemas/meeting.py:97
+#: voteit/core/schemas/meeting.py:94
 msgid "Public presentation"
 msgstr "Öppen mötespresentation"
 
 #. Default: The public description is visible on the request access page and to
 #. not yet logged in visitors.
-#: voteit/core/schemas/meeting.py:98
+#: voteit/core/schemas/meeting.py:95
 msgid "meeting_public_description_description"
 msgstr ""
 "Den öppna mötespresentationen är synlig för alla som vill begära tillträde "
 "till mötet och för deltagare som ännu inte använt sin inbjudan."
 
-#: voteit/core/schemas/meeting.py:107
-msgid "Name visible on system mail sent from this meeting"
-msgstr "Avsändarnamn på epost skickat från mötet"
+#: voteit/core/schemas/meeting.py:110
+msgid "Name of the contact person for this meeting"
+msgstr "Namnet på kontaktpersonen för mötet"
 
 #. Default: Must be at least 3 chars + only alphanumeric characters allowed
-#: voteit/core/schemas/meeting.py:110
+#: voteit/core/schemas/meeting.py:113
 msgid "name_pattern_error"
 msgstr "Måste vara minst 3 tecken som är alfanumeriska"
 
-#: voteit/core/schemas/meeting.py:115
-msgid "Email address to send from"
-msgstr "Epostadress att skicka från"
+#: voteit/core/schemas/meeting.py:118
+#| msgid "Support email for this site"
+msgid "Contact email for this site"
+msgstr "Kontaktepost för denna sida"
 
-#: voteit/core/schemas/meeting.py:121
+#: voteit/core/schemas/meeting.py:124
 msgid "Meeting access policy"
 msgstr "Mötestillgångspolicy"
 
-#: voteit/core/schemas/meeting.py:128 voteit/core/schemas/user.py:88
+#: voteit/core/schemas/meeting.py:131 voteit/core/schemas/user.py:88
 msgid "Verify you are human"
 msgstr "Verifiera att du är människa"
 
 #. Default: This is to prevent spambots from creating meetings
-#: voteit/core/schemas/meeting.py:129
+#: voteit/core/schemas/meeting.py:132
 msgid "meeting_captcha_description"
 msgstr "Detta är för att hindra spamrobotar från att skapa möten"
 
-#: voteit/core/schemas/meeting.py:136
+#: voteit/core/schemas/meeting.py:139
 msgid "Send mail to mentioned users."
 msgstr "Skicka epost till användare som omnämns."
 
-#: voteit/core/schemas/meeting.py:142
+#: voteit/core/schemas/meeting.py:145
 msgid "Send mail to voters when a poll starts."
 msgstr "Skicka epost till röstberättigade när en omröstning startar."
 
-#: voteit/core/schemas/meeting.py:147
+#: voteit/core/schemas/meeting.py:150
 msgid "Add meeting"
 msgstr "Lägg till möte"
 
-#: voteit/core/schemas/meeting.py:159
+#: voteit/core/schemas/meeting.py:162
 msgid "Copy users and permissions from a previous meeting."
 msgstr "Kopiera användare och rättigheter från ett föregående möte."
 
-#: voteit/core/schemas/meeting.py:160
+#: voteit/core/schemas/meeting.py:163
 msgid "You can only pick meeting where you've been a moderator."
 msgstr "Du kan bara välja ett möte där du har varit moderator."
 
-#: voteit/core/schemas/meeting.py:166
+#: voteit/core/schemas/meeting.py:169
 msgid "Edit meeting"
 msgstr "Redigera möte"
 
-#: voteit/core/schemas/meeting.py:176
+#: voteit/core/schemas/meeting.py:179
 #: voteit/core/views/components/meeting_actions.py:100
 msgid "Presentation"
 msgstr "Mötespresentation"
@@ -1121,7 +1117,7 @@ msgstr "Mötespresentation"
 #. page for your users. You can for instance place your logo here. The time
 #. table can be presented in a table and updated as you go along. It's also
 #. advised to add links to the manual and to meeting documents.
-#: voteit/core/schemas/meeting.py:177
+#: voteit/core/schemas/meeting.py:180
 msgid "presentation_meeting_schema_main_description"
 msgstr ""
 "Redigera mötets förstasida för att få en informativ och trevlig sida för "
@@ -1129,36 +1125,36 @@ msgstr ""
 "presenteras i tabellformat och uppdaterad under mötet. En rekommendation är "
 "också att länka till manualen och till mötesdokumenten."
 
-#: voteit/core/schemas/meeting.py:185
+#: voteit/core/schemas/meeting.py:188
 #: voteit/core/views/components/meeting_actions.py:98
 msgid "Mail settings"
 msgstr "Epostinställningar"
 
-#: voteit/core/schemas/meeting.py:193
+#: voteit/core/schemas/meeting.py:196
 #: voteit/core/views/components/meeting_actions.py:96
 msgid "Access policy"
 msgstr "Accesspolicy"
 
-#: voteit/core/schemas/meeting.py:198
+#: voteit/core/schemas/meeting.py:201
 #: voteit/core/views/components/moderator_actions.py:66
 #: voteit/core/views/components/moderator_actions.py:75
 msgid "Poll settings"
 msgstr "Inställningar för omröstning"
 
 #. Default: Settings for the whole meeting.
-#: voteit/core/schemas/meeting.py:199
+#: voteit/core/schemas/meeting.py:202
 msgid "meeting_poll_settings_main_description"
 msgstr "Inställningar för hela mötet"
 
 #. Default: Available poll methods within this meeting
-#: voteit/core/schemas/meeting.py:203
+#: voteit/core/schemas/meeting.py:206
 msgid "mps_poll_plugins_title"
 msgstr "Tillgängliga omröstningsmetoder inom mötet"
 
 #. Default: Only poll methods selected here will be available withing the
 #. meeting. If nothing is selected, only the servers default poll method will
 #. be available.
-#: voteit/core/schemas/meeting.py:205
+#: voteit/core/schemas/meeting.py:208
 msgid "mps_poll_plugins_description"
 msgstr ""
 "Bara omröstningsmetoder valda här kommer att vara tillgängliga i mötet. Om "
@@ -1243,59 +1239,59 @@ msgstr ""
 msgid "Poll method to use"
 msgstr "Omröstningsmetod"
 
-#. Default: Read in the help wiki about pros and cons of different polling
-#. methods.
+#. Default: Each poll method should have its own documentation. The standard
+#. ones from VoteITwill be in the manual - check the help menu!
 #: voteit/core/schemas/poll.py:99
 msgid "poll_poll_plugin_description"
 msgstr "Läs mer i hjälpen om olika metoder och dess för- och nackdelar."
 
-#: voteit/core/schemas/poll.py:106
+#: voteit/core/schemas/poll.py:107
 msgid "Proposals"
 msgstr "Förslag"
 
 #. Default: Only proposals in the state 'published' can be selected
-#: voteit/core/schemas/poll.py:107
+#: voteit/core/schemas/poll.py:108
 msgid "poll_proposals_description"
 msgstr "Endast förslag i tillståndet 'publicerad' kan väljas."
 
-#: voteit/core/schemas/poll.py:113
+#: voteit/core/schemas/poll.py:114
 msgid "Reject proposal"
 msgstr "Avslå förslag"
 
 #. Default: Should a 'Reject all proposals' proposal be added to the poll?
-#: voteit/core/schemas/poll.py:114
+#: voteit/core/schemas/poll.py:115
 msgid "add_reject_proposal_description"
 msgstr ""
 "Önskar du lägga till ett 'avslå alla förslag' förslag till omröstningen?"
 
-#: voteit/core/schemas/poll.py:120
+#: voteit/core/schemas/poll.py:121
 msgid "Proposal text for 'reject all proposals'"
 msgstr "Förslagstext för 'avslå alla förslag'"
 
-#: voteit/core/schemas/poll.py:121
+#: voteit/core/schemas/poll.py:122
 msgid "You can customise the proposal text if you want."
 msgstr "Du kan anpassa förslagstexten om du vill"
 
 #. Default: Reject all proposals
-#: voteit/core/schemas/poll.py:122
+#: voteit/core/schemas/poll.py:123
 msgid "reject_proposal_title_default"
 msgstr "Avslå alla förslag"
 
-#: voteit/core/schemas/poll.py:127
+#: voteit/core/schemas/poll.py:128
 msgid "Start time of this poll."
 msgstr "Starttid för omröstningen."
 
-#: voteit/core/schemas/poll.py:128
+#: voteit/core/schemas/poll.py:129
 msgid "You need to open it yourself."
 msgstr "Du kommer behöva öppna omröstningen själv."
 
-#: voteit/core/schemas/poll.py:136
+#: voteit/core/schemas/poll.py:137
 msgid "End time of this poll."
 msgstr "Sluttid för omröstningen."
 
 #. Default: You need to close it yourself. A good default value is one day
 #. later.
-#: voteit/core/schemas/poll.py:137
+#: voteit/core/schemas/poll.py:138
 msgid "poll_end_time_description"
 msgstr ""
 "Du måste stänga den själv. Ett bra standardvärde är en dag efter start."
@@ -1614,8 +1610,8 @@ msgstr ""
 #: voteit/core/views/base_edit.py:198 voteit/core/views/base_edit.py:238
 #: voteit/core/views/base_edit.py:316 voteit/core/views/meeting.py:76
 #: voteit/core/views/meeting.py:211 voteit/core/views/poll.py:68
-#: voteit/core/views/site.py:187 voteit/core/views/ticket.py:110
-#: voteit/core/views/ticket.py:193 voteit/core/views/users.py:44
+#: voteit/core/views/site.py:187 voteit/core/views/ticket.py:108
+#: voteit/core/views/ticket.py:191 voteit/core/views/users.py:44
 #: voteit/core/workflows/poll.zcml:33
 msgid "Canceled"
 msgstr "Avbruten"
@@ -1657,34 +1653,32 @@ msgstr ""
 msgid "Moved"
 msgstr "Flyttad"
 
-#: voteit/core/views/contact.py:67
+#: voteit/core/views/contact.py:66
 msgid "VoteIT - ${meeting}"
 msgstr "VoteIT - ${meeting}"
 
-#: voteit/core/views/contact.py:73
+#: voteit/core/views/contact.py:72
 msgid "Message sent to the moderators"
 msgstr "Meddelandet har skickats till moderator"
 
-#: voteit/core/views/contact.py:89
+#: voteit/core/views/contact.py:88
 msgid "No support email set for this site. Form won't work!"
 msgstr "Ingen support-epost satt för denna site. Formuläret fungerar inte!"
 
-#: voteit/core/views/contact.py:123
+#: voteit/core/views/contact.py:122
 msgid "Support request sent!"
 msgstr "Supportförfrågan skickad!"
 
 #. Default: Can't find anything at '${path}'. Maybe it has been removed?
-#: voteit/core/views/exceptions_view.py:54
+#: voteit/core/views/exceptions_view.py:53
 msgid "404_error_msg"
 msgstr "Ingenting kan hittas vid '${path}'. Kanske har det flyttats?"
 
-#. Default: The server has either erred or is incapable of performing the
-#. requested operation.
-#: voteit/core/views/exceptions_view.py:77
-msgid "500_error_msg"
-msgstr ""
-"Antingen är det ett fel på servern eller så kan inte den begärda funktionen "
-"utföras."
+#. Default: There was an error while sending mail. Error was: ${exc_txt}
+#: voteit/core/views/exceptions_view.py:70
+#| msgid "500_error_msg"
+msgid "smtp_error_msg"
+msgstr "Det blev ett fel när eposten skulle skickas. Felet var: ${exc_txt}"
 
 #: voteit/core/views/manage_agenda_items.py:32
 msgid "Unable to change state on ${title}: ${error}"
@@ -1827,34 +1821,34 @@ msgstr ""
 "inte finns, redan använts eller att du använde webbadressen fel. Om du "
 "behöver hjälp kan du kontakta den som skickade inbjudan."
 
-#: voteit/core/views/ticket.py:62
+#: voteit/core/views/ticket.py:61
 msgid "You've been granted access to the meeting. Welcome!"
 msgstr "Du har fått rätt att delta i mötet. Välkommen!"
 
 #. Default: The ticket link did not contain a token and an email address.
 #. Perhaps you came to this page by mistake?
-#: voteit/core/views/ticket.py:91
+#: voteit/core/views/ticket.py:89
 msgid "ticket_link_wrong_parameters_error"
 msgstr ""
 "Inbjudanslänken innehöll inte inbjudningskod och epostadress som de ska. "
 "Hamnade du kanske på denna sida av misstag?"
 
-#: voteit/core/views/ticket.py:106
+#: voteit/core/views/ticket.py:104
 msgid "Send meeting invitations"
 msgstr "Skicka mötesinbjudningar"
 
 #. Default: Successfully added and sent ${mail_count} invites
-#: voteit/core/views/ticket.py:136
+#: voteit/core/views/ticket.py:134
 msgid "sent_tickets_text"
 msgstr "La till och skickade ${mail_count} inbjudningar"
 
 #. Default: Resending ${count_emails} invites
-#: voteit/core/views/ticket.py:175
+#: voteit/core/views/ticket.py:173
 msgid "resent_invites_notice"
 msgstr "Skickar om ${count_emails} inbjudningar"
 
 #. Default: Deleting ${count_emails} invites
-#: voteit/core/views/ticket.py:185
+#: voteit/core/views/ticket.py:183
 msgid "deleting_invites_notice"
 msgstr "Raderar ${count_emails} inbjudningar"
 
@@ -2542,44 +2536,9 @@ msgid "Click the link to get to the VoteIT meeting:"
 msgstr "Klicka länken för att komma till VoteIT-mötet"
 
 #: voteit/core/views/templates/email/help_contact.pt:26
-#: voteit/core/views/templates/email/invite_ticket_email.pt:26
 #: voteit/core/views/templates/email/request_password.pt:29
 msgid "Warm regards, The VoteIT team"
 msgstr "Varma hälsningar, VoteIT-teamet"
-
-#: voteit/core/views/templates/email/invite_ticket_email.pt:13
-msgid "Click the link to access this VoteIT meeting:"
-msgstr "Klicka på länken för att få tillträde till VoteIT-mötet:"
-
-#: voteit/core/views/templates/email/invite_ticket_email.pt:17
-msgid "Have an account already?"
-msgstr "Har du ett konto redan?"
-
-#: voteit/core/views/templates/email/invite_ticket_email.pt:18
-msgid "Simply login after clicking this link."
-msgstr "Logga bara in efter att du klickat på länken."
-
-#: voteit/core/views/templates/email/invite_ticket_email.pt:20
-msgid "Need to register?"
-msgstr "Behöver du registrera dig?"
-
-#: voteit/core/views/templates/email/invite_ticket_email.pt:21
-msgid ""
-"Use the above link and simply register. You'll be granted access instantly."
-msgstr ""
-"Använd länken ovan och registrera dig. Du kommer att få tillträde direkt."
-
-#: voteit/core/views/templates/email/invite_ticket_email.pt:23
-msgid "Don't want to register now?"
-msgstr "Vill du inte registrera dig nu?"
-
-#: voteit/core/views/templates/email/invite_ticket_email.pt:24
-msgid ""
-"Remember that you need to click this link to gain access to the meeting "
-"you're invited to."
-msgstr ""
-"Kom ihåg att du behöver klicka på länken för att få tillträde till mötet du "
-"är inbjuden till."
 
 #: voteit/core/views/templates/email/ongoing_poll_notification.pt:11
 msgid "You can now vote"
@@ -2707,6 +2666,15 @@ msgstr ""
 msgid "language-code"
 msgstr "sv"
 
+#. Default: Plural
+#: voteit/core/views/tests/test_api.py:89
+#: voteit/core/views/tests/test_api.py:90
+#| msgid "vote_singular"
+msgid "Singular"
+msgid_plural "Plural"
+msgstr[0] "Röst"
+msgstr[1] "Röster"
+
 #: voteit/core/workflows/invite_ticket.zcml:18
 msgid "Open"
 msgstr "Öppen"
@@ -2740,3 +2708,49 @@ msgstr "Ohanterad"
 
 #~ msgid "Mail notification settings"
 #~ msgstr "Inställningar för epostnotifiering"
+
+#~ msgid "VoteIT meeting invitation"
+#~ msgstr "VoteIT mötesinbjudan"
+
+#~ msgid "proposal"
+#~ msgstr "förslag"
+
+#~ msgid "No HTML tags allowed."
+#~ msgstr "Inga HTML-taggar tillåtna."
+
+#~ msgid "invitation_default_text"
+#~ msgstr "Du har fått en inbjudan till ett VoteIT-möte."
+
+#~ msgid "Name visible on system mail sent from this meeting"
+#~ msgstr "Avsändarnamn på epost skickat från mötet"
+
+#~ msgid "Email address to send from"
+#~ msgstr "Epostadress att skicka från"
+
+#~ msgid "Click the link to access this VoteIT meeting:"
+#~ msgstr "Klicka på länken för att få tillträde till VoteIT-mötet:"
+
+#~ msgid "Have an account already?"
+#~ msgstr "Har du ett konto redan?"
+
+#~ msgid "Simply login after clicking this link."
+#~ msgstr "Logga bara in efter att du klickat på länken."
+
+#~ msgid "Need to register?"
+#~ msgstr "Behöver du registrera dig?"
+
+#~ msgid ""
+#~ "Use the above link and simply register. You'll be granted access "
+#~ "instantly."
+#~ msgstr ""
+#~ "Använd länken ovan och registrera dig. Du kommer att få tillträde direkt."
+
+#~ msgid "Don't want to register now?"
+#~ msgstr "Vill du inte registrera dig nu?"
+
+#~ msgid ""
+#~ "Remember that you need to click this link to gain access to the meeting "
+#~ "you're invited to."
+#~ msgstr ""
+#~ "Kom ihåg att du behöver klicka på länken för att få tillträde till mötet "
+#~ "du är inbjuden till."
