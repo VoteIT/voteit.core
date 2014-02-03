@@ -1,4 +1,5 @@
 from socket import error as SMTPError #At least in this case :)
+import logging
 
 from pyramid.view import view_config
 from pyramid.url import resource_url
@@ -11,6 +12,9 @@ from pyramid.security import NO_PERMISSION_REQUIRED
 from voteit.core import VoteITMF as _
 from voteit.core import security
 from voteit.core.views.api import APIView
+
+
+logger = logging.getLogger(__name__)
 
 
 class ExceptionView(object):
@@ -67,12 +71,14 @@ class ExceptionView(object):
             Note that the SMTP action is performed after the request has completed.
             In other words, things may be committed to database even though send failed.
         """
+        exc_txt = unicode(self.exception)
         err_msg = _(u"smtp_error_msg",
                     default = u"There was an error while sending mail. "
                         u"Error was: ${exc_txt}",
-                    mapping = {'exc_txt': unicode(self.exception)})
+                    mapping = {'exc_txt': exc_txt})
         self.api.flash_messages.add(err_msg,
                                     type = 'error')
+        logger.critical("SMTP exception: %s" % exc_txt)
         return HTTPFound(location = _find_good_redirect_url(self.context, self.request, self.api))
 
 
