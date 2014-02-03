@@ -1,14 +1,14 @@
 # Translations template for voteit.core.
-# Copyright (C) 2013 ORGANIZATION
+# Copyright (C) 2014 ORGANIZATION
 # This file is distributed under the same license as the voteit.core project.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: voteit.core 0.0\n"
+"Project-Id-Version: voteit.core 0.1dev\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2013-11-11 12:23+0100\n"
+"POT-Creation-Date: 2014-02-03 11:59+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,12 +17,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 1.3\n"
 
-#: voteit/core/bootstrap.py:20 voteit/core/bootstrap.py:35
-#: voteit/core/schemas/meeting.py:108
+#: voteit/core/bootstrap.py:18 voteit/core/bootstrap.py:31
 msgid "VoteIT"
 msgstr ""
 
-#: voteit/core/bootstrap.py:25 voteit/core/models/agenda_templates.py:12
+#: voteit/core/bootstrap.py:23 voteit/core/models/agenda_templates.py:12
 #: voteit/core/models/agenda_templates.py:20
 #: voteit/core/views/agenda_templates.py:32
 #: voteit/core/views/components/agenda.py:10
@@ -31,11 +30,11 @@ msgstr ""
 msgid "Agenda templates"
 msgstr ""
 
-#: voteit/core/bootstrap.py:28
+#: voteit/core/bootstrap.py:25
 msgid "Registered users"
 msgstr ""
 
-#: voteit/core/bootstrap.py:36 voteit/core/security.py:68
+#: voteit/core/bootstrap.py:32 voteit/core/security.py:68
 #: voteit/core/views/templates/participants.pt:56
 msgid "Administrator"
 msgstr ""
@@ -208,7 +207,7 @@ msgid "already_registered_error"
 msgstr ""
 
 #: voteit/core/validators.py:143 voteit/core/schemas/invite_ticket.py:16
-#: voteit/core/schemas/meeting.py:117
+#: voteit/core/schemas/meeting.py:120
 msgid "Invalid email address."
 msgstr ""
 
@@ -343,8 +342,8 @@ msgstr ""
 msgid "Invite ticket"
 msgstr ""
 
-#: voteit/core/models/invite_ticket.py:64
-msgid "VoteIT meeting invitation"
+#: voteit/core/models/invite_ticket.py:63
+msgid "Invitation to ${meeting_title}"
 msgstr ""
 
 #: voteit/core/models/logs.py:51
@@ -389,10 +388,6 @@ msgstr ""
 #. to see the error.
 #: voteit/core/models/poll.py:246
 msgid "broken_plugin_error"
-msgstr ""
-
-#: voteit/core/models/poll.py:311
-msgid "proposal"
 msgstr ""
 
 #: voteit/core/models/poll.py:311
@@ -677,7 +672,7 @@ msgstr ""
 msgid "Use this form to edit an agenda item"
 msgstr ""
 
-#: voteit/core/schemas/agenda_item.py:14 voteit/core/schemas/meeting.py:78
+#: voteit/core/schemas/agenda_item.py:14 voteit/core/schemas/meeting.py:75
 #: voteit/core/schemas/poll.py:87 voteit/core/schemas/site.py:13
 msgid "Title"
 msgstr ""
@@ -713,21 +708,21 @@ msgstr ""
 msgid "Agenda items"
 msgstr ""
 
-#: voteit/core/schemas/common.py:142
+#: voteit/core/schemas/common.py:143
 msgid "Move object"
 msgstr ""
 
 #. Default: WARNING: This might break discissions or references. Backup your
 #. data before doing this! If proposals are part of a poll, remove them first.
-#: voteit/core/schemas/common.py:143
+#: voteit/core/schemas/common.py:144
 msgid "move_object_schema_description"
 msgstr ""
 
-#: voteit/core/schemas/common.py:148
+#: voteit/core/schemas/common.py:149
 msgid "Select new parent"
 msgstr ""
 
-#: voteit/core/schemas/common.py:149
+#: voteit/core/schemas/common.py:150
 msgid "Only objects at the same level as this objects parent will be selectable."
 msgstr ""
 
@@ -769,11 +764,13 @@ msgstr ""
 msgid "Subject"
 msgstr ""
 
-#: voteit/core/schemas/contact.py:41 voteit/core/views/templates/logs.pt:16
+#: voteit/core/schemas/contact.py:41
+#: voteit/core/views/components/templates/email/invite_ticket_email.pt:16
+#: voteit/core/views/templates/logs.pt:16
 msgid "Message"
 msgstr ""
 
-#: voteit/core/schemas/contact.py:46 voteit/core/views/contact.py:115
+#: voteit/core/schemas/contact.py:46 voteit/core/views/contact.py:114
 #: voteit/core/views/components/help_actions.py:27
 msgid "Support"
 msgstr ""
@@ -837,42 +834,39 @@ msgid "add_tickets_roles_description"
 msgstr ""
 
 #. Default: Email addresses to give the roles above.
-#: voteit/core/schemas/invite_ticket.py:41
+#: voteit/core/schemas/invite_ticket.py:39
 msgid "add_tickets_emails_titles"
 msgstr ""
 
 #. Default: Separate email addresses with a single line break.
-#: voteit/core/schemas/invite_ticket.py:43
+#: voteit/core/schemas/invite_ticket.py:41
 msgid "add_tickets_emails_description"
 msgstr ""
 
-#: voteit/core/schemas/invite_ticket.py:50
+#: voteit/core/schemas/invite_ticket.py:48
 msgid "Welcome text of the email that will be sent"
 msgstr ""
 
-#: voteit/core/schemas/invite_ticket.py:51
-msgid "No HTML tags allowed."
+#. Default: The mail will contain instructions on how to access the meeting, so
+#. focus on anything that might be specific for your participants.
+#: voteit/core/schemas/invite_ticket.py:49
+msgid "ticket_message_description"
 msgstr ""
 
-#. Default: You've received a meeting invitation for a VoteIT meeting.
-#: voteit/core/schemas/invite_ticket.py:53
-msgid "invitation_default_text"
-msgstr ""
-
-#: voteit/core/schemas/invite_ticket.py:66
+#: voteit/core/schemas/invite_ticket.py:65
 msgid "Manage invitations"
 msgstr ""
 
-#: voteit/core/schemas/invite_ticket.py:66
+#: voteit/core/schemas/invite_ticket.py:65
 msgid "Manage invitations to the meeting"
 msgstr ""
 
 #. Default: Apply to all of the below, regardless of selection
-#: voteit/core/schemas/invite_ticket.py:70
+#: voteit/core/schemas/invite_ticket.py:69
 msgid "apply_to_all_title"
 msgstr ""
 
-#: voteit/core/schemas/invite_ticket.py:78 voteit/core/views/ticket.py:150
+#: voteit/core/schemas/invite_ticket.py:77 voteit/core/views/ticket.py:148
 msgid "Current invitations"
 msgstr ""
 
@@ -940,17 +934,17 @@ msgstr ""
 msgid "meeting_hide_retracted_description"
 msgstr ""
 
-#: voteit/core/schemas/meeting.py:65
+#: voteit/core/schemas/meeting.py:61
 msgid "<Don't copy>"
 msgstr ""
 
 #. Default: Set a title for the meeting that separates it from previous
 #. meetings
-#: voteit/core/schemas/meeting.py:79
+#: voteit/core/schemas/meeting.py:76
 msgid "meeting_title_description"
 msgstr ""
 
-#: voteit/core/schemas/meeting.py:85
+#: voteit/core/schemas/meeting.py:82
 msgid "Participants description"
 msgstr ""
 
@@ -958,71 +952,71 @@ msgstr ""
 #. how to register here. Displayed on the first page of the meeting. You can
 #. include things like information about the meeting, how to contact the
 #. moderator and your logo.
-#: voteit/core/schemas/meeting.py:86
+#: voteit/core/schemas/meeting.py:83
 msgid "meeting_description_description"
 msgstr ""
 
-#: voteit/core/schemas/meeting.py:97
+#: voteit/core/schemas/meeting.py:94
 msgid "Public presentation"
 msgstr ""
 
 #. Default: The public description is visible on the request access page and to
 #. not yet logged in visitors.
-#: voteit/core/schemas/meeting.py:98
+#: voteit/core/schemas/meeting.py:95
 msgid "meeting_public_description_description"
 msgstr ""
 
-#: voteit/core/schemas/meeting.py:107
-msgid "Name visible on system mail sent from this meeting"
+#: voteit/core/schemas/meeting.py:110
+msgid "Name of the contact person for this meeting"
 msgstr ""
 
 #. Default: Must be at least 3 chars + only alphanumeric characters allowed
-#: voteit/core/schemas/meeting.py:110
+#: voteit/core/schemas/meeting.py:113
 msgid "name_pattern_error"
 msgstr ""
 
-#: voteit/core/schemas/meeting.py:115
-msgid "Email address to send from"
+#: voteit/core/schemas/meeting.py:118
+msgid "Contact email for this site"
 msgstr ""
 
-#: voteit/core/schemas/meeting.py:121
+#: voteit/core/schemas/meeting.py:124
 msgid "Meeting access policy"
 msgstr ""
 
-#: voteit/core/schemas/meeting.py:128 voteit/core/schemas/user.py:88
+#: voteit/core/schemas/meeting.py:131 voteit/core/schemas/user.py:88
 msgid "Verify you are human"
 msgstr ""
 
 #. Default: This is to prevent spambots from creating meetings
-#: voteit/core/schemas/meeting.py:129
+#: voteit/core/schemas/meeting.py:132
 msgid "meeting_captcha_description"
 msgstr ""
 
-#: voteit/core/schemas/meeting.py:136
+#: voteit/core/schemas/meeting.py:139
 msgid "Send mail to mentioned users."
 msgstr ""
 
-#: voteit/core/schemas/meeting.py:142
+#: voteit/core/schemas/meeting.py:145
 msgid "Send mail to voters when a poll starts."
 msgstr ""
 
-#: voteit/core/schemas/meeting.py:147
+#: voteit/core/schemas/meeting.py:150
 msgid "Add meeting"
 msgstr ""
 
-#: voteit/core/schemas/meeting.py:159
+#: voteit/core/schemas/meeting.py:162
 msgid "Copy users and permissions from a previous meeting."
 msgstr ""
 
-#: voteit/core/schemas/meeting.py:160
+#: voteit/core/schemas/meeting.py:163
 msgid "You can only pick meeting where you've been a moderator."
 msgstr ""
 
-#: voteit/core/schemas/meeting.py:166
+#: voteit/core/schemas/meeting.py:169
 msgid "Edit meeting"
 msgstr ""
 
-#: voteit/core/schemas/meeting.py:176
+#: voteit/core/schemas/meeting.py:179
 #: voteit/core/views/components/meeting_actions.py:100
 msgid "Presentation"
 msgstr ""
@@ -1031,40 +1025,40 @@ msgstr ""
 #. page for your users. You can for instance place your logo here. The time
 #. table can be presented in a table and updated as you go along. It's also
 #. advised to add links to the manual and to meeting documents.
-#: voteit/core/schemas/meeting.py:177
+#: voteit/core/schemas/meeting.py:180
 msgid "presentation_meeting_schema_main_description"
 msgstr ""
 
-#: voteit/core/schemas/meeting.py:185
+#: voteit/core/schemas/meeting.py:188
 #: voteit/core/views/components/meeting_actions.py:98
 msgid "Mail settings"
 msgstr ""
 
-#: voteit/core/schemas/meeting.py:193
+#: voteit/core/schemas/meeting.py:196
 #: voteit/core/views/components/meeting_actions.py:96
 msgid "Access policy"
 msgstr ""
 
-#: voteit/core/schemas/meeting.py:198
+#: voteit/core/schemas/meeting.py:201
 #: voteit/core/views/components/moderator_actions.py:66
 #: voteit/core/views/components/moderator_actions.py:75
 msgid "Poll settings"
 msgstr ""
 
 #. Default: Settings for the whole meeting.
-#: voteit/core/schemas/meeting.py:199
+#: voteit/core/schemas/meeting.py:202
 msgid "meeting_poll_settings_main_description"
 msgstr ""
 
 #. Default: Available poll methods within this meeting
-#: voteit/core/schemas/meeting.py:203
+#: voteit/core/schemas/meeting.py:206
 msgid "mps_poll_plugins_title"
 msgstr ""
 
 #. Default: Only poll methods selected here will be available withing the
 #. meeting. If nothing is selected, only the servers default poll method will
 #. be available.
-#: voteit/core/schemas/meeting.py:205
+#: voteit/core/schemas/meeting.py:208
 msgid "mps_poll_plugins_description"
 msgstr ""
 
@@ -1138,58 +1132,58 @@ msgstr ""
 msgid "Poll method to use"
 msgstr ""
 
-#. Default: Read in the help wiki about pros and cons of different polling
-#. methods.
+#. Default: Each poll method should have its own documentation. The standard
+#. ones from VoteITwill be in the manual - check the help menu!
 #: voteit/core/schemas/poll.py:99
 msgid "poll_poll_plugin_description"
 msgstr ""
 
-#: voteit/core/schemas/poll.py:106
+#: voteit/core/schemas/poll.py:107
 msgid "Proposals"
 msgstr ""
 
 #. Default: Only proposals in the state 'published' can be selected
-#: voteit/core/schemas/poll.py:107
+#: voteit/core/schemas/poll.py:108
 msgid "poll_proposals_description"
 msgstr ""
 
-#: voteit/core/schemas/poll.py:113
+#: voteit/core/schemas/poll.py:114
 msgid "Reject proposal"
 msgstr ""
 
 #. Default: Should a 'Reject all proposals' proposal be added to the poll?
-#: voteit/core/schemas/poll.py:114
+#: voteit/core/schemas/poll.py:115
 msgid "add_reject_proposal_description"
 msgstr ""
 
-#: voteit/core/schemas/poll.py:120
+#: voteit/core/schemas/poll.py:121
 msgid "Proposal text for 'reject all proposals'"
 msgstr ""
 
-#: voteit/core/schemas/poll.py:121
+#: voteit/core/schemas/poll.py:122
 msgid "You can customise the proposal text if you want."
 msgstr ""
 
 #. Default: Reject all proposals
-#: voteit/core/schemas/poll.py:122
+#: voteit/core/schemas/poll.py:123
 msgid "reject_proposal_title_default"
 msgstr ""
 
-#: voteit/core/schemas/poll.py:127
+#: voteit/core/schemas/poll.py:128
 msgid "Start time of this poll."
 msgstr ""
 
-#: voteit/core/schemas/poll.py:128
+#: voteit/core/schemas/poll.py:129
 msgid "You need to open it yourself."
 msgstr ""
 
-#: voteit/core/schemas/poll.py:136
+#: voteit/core/schemas/poll.py:137
 msgid "End time of this poll."
 msgstr ""
 
 #. Default: You need to close it yourself. A good default value is one day
 #. later.
-#: voteit/core/schemas/poll.py:137
+#: voteit/core/schemas/poll.py:138
 msgid "poll_end_time_description"
 msgstr ""
 
@@ -1481,8 +1475,8 @@ msgstr ""
 #: voteit/core/views/base_edit.py:198 voteit/core/views/base_edit.py:238
 #: voteit/core/views/base_edit.py:316 voteit/core/views/meeting.py:76
 #: voteit/core/views/meeting.py:211 voteit/core/views/poll.py:68
-#: voteit/core/views/site.py:187 voteit/core/views/ticket.py:110
-#: voteit/core/views/ticket.py:193 voteit/core/views/users.py:44
+#: voteit/core/views/site.py:187 voteit/core/views/ticket.py:108
+#: voteit/core/views/ticket.py:191 voteit/core/views/users.py:44
 #: voteit/core/workflows/poll.zcml:33
 msgid "Canceled"
 msgstr ""
@@ -1521,31 +1515,30 @@ msgstr ""
 msgid "Moved"
 msgstr ""
 
-#: voteit/core/views/contact.py:67
+#: voteit/core/views/contact.py:66
 msgid "VoteIT - ${meeting}"
 msgstr ""
 
-#: voteit/core/views/contact.py:73
+#: voteit/core/views/contact.py:72
 msgid "Message sent to the moderators"
 msgstr ""
 
-#: voteit/core/views/contact.py:89
+#: voteit/core/views/contact.py:88
 msgid "No support email set for this site. Form won't work!"
 msgstr ""
 
-#: voteit/core/views/contact.py:123
+#: voteit/core/views/contact.py:122
 msgid "Support request sent!"
 msgstr ""
 
 #. Default: Can't find anything at '${path}'. Maybe it has been removed?
-#: voteit/core/views/exceptions_view.py:54
+#: voteit/core/views/exceptions_view.py:57
 msgid "404_error_msg"
 msgstr ""
 
-#. Default: The server has either erred or is incapable of performing the
-#. requested operation.
-#: voteit/core/views/exceptions_view.py:77
-msgid "500_error_msg"
+#. Default: There was an error while sending mail. Error was: ${exc_txt}
+#: voteit/core/views/exceptions_view.py:75
+msgid "smtp_error_msg"
 msgstr ""
 
 #: voteit/core/views/manage_agenda_items.py:32
@@ -1669,32 +1662,32 @@ msgstr ""
 msgid "ticket_validation_fail"
 msgstr ""
 
-#: voteit/core/views/ticket.py:62
+#: voteit/core/views/ticket.py:61
 msgid "You've been granted access to the meeting. Welcome!"
 msgstr ""
 
 #. Default: The ticket link did not contain a token and an email address.
 #. Perhaps you came to this page by mistake?
-#: voteit/core/views/ticket.py:91
+#: voteit/core/views/ticket.py:89
 msgid "ticket_link_wrong_parameters_error"
 msgstr ""
 
-#: voteit/core/views/ticket.py:106
+#: voteit/core/views/ticket.py:104
 msgid "Send meeting invitations"
 msgstr ""
 
 #. Default: Successfully added and sent ${mail_count} invites
-#: voteit/core/views/ticket.py:136
+#: voteit/core/views/ticket.py:134
 msgid "sent_tickets_text"
 msgstr ""
 
 #. Default: Resending ${count_emails} invites
-#: voteit/core/views/ticket.py:175
+#: voteit/core/views/ticket.py:173
 msgid "resent_invites_notice"
 msgstr ""
 
 #. Default: Deleting ${count_emails} invites
-#: voteit/core/views/ticket.py:185
+#: voteit/core/views/ticket.py:183
 msgid "deleting_invites_notice"
 msgstr ""
 
@@ -1980,6 +1973,57 @@ msgstr ""
 
 #: voteit/core/views/components/templates/cogwheel/moderator_actions_wf_section.pt:7
 msgid "current"
+msgstr ""
+
+#: voteit/core/views/components/templates/email/invite_ticket_email.pt:8
+msgid "You've just received a meeting entry ticket to ${meeting_title}."
+msgstr ""
+
+#: voteit/core/views/components/templates/email/invite_ticket_email.pt:10
+msgid "It was sent to you by ${sender_name}."
+msgstr ""
+
+#: voteit/core/views/components/templates/email/invite_ticket_email.pt:20
+msgid "The link below grant you the following permissions within the meeting:"
+msgstr ""
+
+#: voteit/core/views/components/templates/email/invite_ticket_email.pt:26
+msgid "To access this meeting use the link below:"
+msgstr ""
+
+#: voteit/core/views/components/templates/email/invite_ticket_email.pt:30
+msgid "Contact"
+msgstr ""
+
+#: voteit/core/views/components/templates/email/invite_ticket_email.pt:32
+msgid "The contact person for this meeting is ${contact_person_name}"
+msgstr ""
+
+#: voteit/core/views/components/templates/email/invite_ticket_email.pt:34
+msgid "and can be reached on ${contact_mail}"
+msgstr ""
+
+#: voteit/core/views/components/templates/email/invite_ticket_email.pt:38
+msgid "No clue what this is about or you just want to know more?"
+msgstr ""
+
+#: voteit/core/views/components/templates/email/invite_ticket_email.pt:40
+msgid "VoteIT is a meeting system created by a group of Swedish Non-profit NGOs."
+msgstr ""
+
+#: voteit/core/views/components/templates/email/invite_ticket_email.pt:43
+msgid "Need the manual?"
+msgstr ""
+
+#: voteit/core/views/components/templates/email/invite_ticket_email.pt:45
+msgid "All manuals are here:"
+msgstr ""
+
+#. Default: Note that this message doesn't mean that you're subscribed to a
+#. mailing list or similar. You're probably receiving it since you're a member
+#. of an organisaiton.
+#: voteit/core/views/components/templates/email/invite_ticket_email.pt:48
+msgid "invitation_no_maillist_notice"
 msgstr ""
 
 #: voteit/core/views/components/templates/header/global_actions.pt:11
@@ -2348,37 +2392,8 @@ msgid "Click the link to get to the VoteIT meeting:"
 msgstr ""
 
 #: voteit/core/views/templates/email/help_contact.pt:26
-#: voteit/core/views/templates/email/invite_ticket_email.pt:26
 #: voteit/core/views/templates/email/request_password.pt:29
 msgid "Warm regards, The VoteIT team"
-msgstr ""
-
-#: voteit/core/views/templates/email/invite_ticket_email.pt:13
-msgid "Click the link to access this VoteIT meeting:"
-msgstr ""
-
-#: voteit/core/views/templates/email/invite_ticket_email.pt:17
-msgid "Have an account already?"
-msgstr ""
-
-#: voteit/core/views/templates/email/invite_ticket_email.pt:18
-msgid "Simply login after clicking this link."
-msgstr ""
-
-#: voteit/core/views/templates/email/invite_ticket_email.pt:20
-msgid "Need to register?"
-msgstr ""
-
-#: voteit/core/views/templates/email/invite_ticket_email.pt:21
-msgid "Use the above link and simply register. You'll be granted access instantly."
-msgstr ""
-
-#: voteit/core/views/templates/email/invite_ticket_email.pt:23
-msgid "Don't want to register now?"
-msgstr ""
-
-#: voteit/core/views/templates/email/invite_ticket_email.pt:24
-msgid "Remember that you need to click this link to gain access to the meeting you're invited to."
 msgstr ""
 
 #: voteit/core/views/templates/email/ongoing_poll_notification.pt:11
@@ -2494,6 +2509,14 @@ msgstr ""
 #: voteit/core/views/templates/widgets/richtext.pt:15
 msgid "language-code"
 msgstr ""
+
+#. Default: Plural
+#: voteit/core/views/tests/test_api.py:89
+#: voteit/core/views/tests/test_api.py:90
+msgid "Singular"
+msgid_plural "Plural"
+msgstr[0] ""
+msgstr[1] ""
 
 #: voteit/core/workflows/invite_ticket.zcml:18
 msgid "Open"

@@ -4,8 +4,7 @@ from uuid import uuid4
 
 from repoze.folder import Folder
 from zope.interface import implements
-from pyramid_mailer import get_mailer
-from pyramid_mailer.message import Message
+
 from pyramid.traversal import find_interface
 from pyramid.exceptions import Forbidden
 from pyramid.security import authenticated_userid
@@ -18,6 +17,7 @@ from voteit.core.models.interfaces import IInviteTicket
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.workflow_aware import WorkflowAware
 from voteit.core.models.date_time_util import utcnow
+from voteit.core.helpers import send_email
 
 
 SELECTABLE_ROLES = (security.ROLE_MODERATOR,
@@ -40,12 +40,13 @@ class InviteTicket(Folder, WorkflowAware):
     add_permission = None
     #No schemas
     
-    def __init__(self, email, roles, message, sent_by = None):
+    def __init__(self, email, roles, message = u"", sent_by = None):
         self.email = email
         for role in roles:
             if role not in SELECTABLE_ROLES:
                 raise ValueError("InviteTicket got '%s' as a role, and that isn't selectable." % role)
         self.roles = roles
+        assert isinstance(message, basestring)
         self.message = message
         self.created = utcnow()
         self.closed = None
@@ -58,16 +59,10 @@ class InviteTicket(Folder, WorkflowAware):
 
     def send(self, request):
         meeting = find_interface(self, IMeeting)
-        sender = "%s <%s>" % (meeting.get_field_value('meeting_mail_name'),
-                              meeting.get_field_value('meeting_mail_address'))
-        body_html = render_view_action(self, request, 'email', 'invite_ticket')
-        msg = Message(subject=_(u"VoteIT meeting invitation"),
-                      sender = sender and sender or None,
-                      recipients=[self.email],
-                      html=body_html)
-        mailer = get_mailer(request)
-        mailer.send(msg)
-        self.sent_dates.append(utcnow())
+        html = render_view_action(self, request, 'email', 'invite_ticket')
+        subject = _(u"Invitation to ${meeting_title}", mapping = {'meeting_title': meeting.title})
+        if send_email(subject = subject, recipients = self.email, html = html, request = request):
+            self.sent_dates.append(utcnow())
 
     def claim(self, request):
         #Is the ticket open?
@@ -76,14 +71,10 @@ class InviteTicket(Folder, WorkflowAware):
         #Find required resources and do some basic validation
         meeting = find_interface(self, IMeeting)
         assert meeting
-        
         userid = authenticated_userid(request)
         if userid is None:
             raise Forbidden("You can't claim a ticket unless you're authenticated.")
-        
         meeting.add_groups(userid, self.roles)
         self.claimed_by = userid
-
         self.set_workflow_state(request, 'closed')
-        
         self.closed = utcnow()

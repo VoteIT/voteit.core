@@ -20,17 +20,13 @@ from voteit.core.schemas.common import NAME_PATTERN
 @colander.deferred
 def poll_plugins_choices_widget(node, kw):
     request = kw['request']
-    
     #Add all selectable plugins to schema. This chooses the poll method to use
     plugin_choices = set()
-
     #FIXME: The new object should probably be sent to construct schema
     #for now, we can fake this
     fake_poll = createContent('Poll')
-
     for (name, plugin) in request.registry.getAdapters([fake_poll], IPollPlugin):
         plugin_choices.add((name, plugin.title))
-
     return deform.widget.CheckboxChoiceWidget(values=plugin_choices)
 
 @colander.deferred
@@ -69,9 +65,10 @@ def deferred_copy_perms_widget(node, kw):
     return deform.widget.SelectWidget(values=choices)
 
 @colander.deferred
-def defferred_robot_mail(node, kw):
-    request = kw['request']
-    return u"noreply@%s" % getattr(request, 'server_name', 'dummy')
+def deferred_current_user_mail(node, kw):
+    api = kw['api']
+    if api.user_profile:
+        return api.user_profile.get_field_value('email')
 
 def title_node():
     return colander.SchemaNode(colander.String(),
@@ -102,18 +99,24 @@ def public_description_node():
         widget=deform.widget.RichTextWidget(),
         validator=richtext_validator,)
 
+@colander.deferred
+def _deferred_current_fullname(node, kw):
+    api = kw['api']
+    if api.user_profile:
+        return api.user_profile.title
+
 def meeting_mail_name_node():
     return colander.SchemaNode(colander.String(),
-                               title = _(u"Name visible on system mail sent from this meeting"),
-                               default = _(u"VoteIT"),
+                               title = _(u"Name of the contact person for this meeting"),
+                               default = _deferred_current_fullname,
                                validator = colander.Regex(regex=NAME_PATTERN,
                                                           msg=_(u"name_pattern_error",
                                                                 default = u"Must be at least 3 chars + only alphanumeric characters allowed")),)
 
 def meeting_mail_address_node():
     return colander.SchemaNode(colander.String(),
-                               title = _(u"Email address to send from"),
-                               default = defferred_robot_mail,
+                               title = _(u"Contact email for this site"),
+                               default = deferred_current_user_mail,
                                validator = colander.All(colander.Email(msg = _(u"Invalid email address.")), html_string_validator,),)
 
 def access_policy_node():

@@ -83,16 +83,6 @@ class MeetingTests(unittest.TestCase):
         obj['ai'].set_workflow_state(request, 'ongoing')
         self.assertRaises(HTTPForbidden, obj.set_workflow_state, request, 'closed')
 
-    def test_add_invite_ticket_traversal(self):
-        from voteit.core.models.invite_ticket import InviteTicket
-        self.config.include('pyramid_mailer.testing')
-        self.config.scan('voteit.core.views.components.email')
-        request = testing.DummyRequest()
-        obj = self._cut()
-        ticket = InviteTicket('blabla@hello.se', ['role:Moderator'], 'Hello!')
-        obj.add_invite_ticket(ticket, request)
-        self.assertEqual(obj, ticket.__parent__)
-
     def test_copy_users_and_perms(self):
         root = bootstrap_and_fixture(self.config)
         root['m1'] = m1 = self._cut()

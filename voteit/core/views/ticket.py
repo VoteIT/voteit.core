@@ -41,9 +41,9 @@ class TicketView(BaseView):
         """
         if not self.api.userid:
             raise HTTPForbidden("Direct access to this view for unauthorized users not allowed.")
-        schema = createSchema('ClaimTicketSchema', validator = deferred_token_form_validator).bind(context=self.context, request=self.request)
+        schema = createSchema('ClaimTicketSchema', validator = deferred_token_form_validator)
+        schema = schema.bind(context=self.context, request=self.request, api = self.api)
         form = deform.Form(schema, buttons=(button_add, button_cancel))
-
         if self.request.GET.get('claim'):
             controls = self.request.params.items()
             try:
@@ -55,14 +55,12 @@ class TicketView(BaseView):
                 self.api.flash_messages.add(msg, type = 'error')
                 url = self.request.resource_url(self.api.root)
                 return HTTPFound(location = url)
-
             #Everything in order, claim ticket
             ticket = self.context.invite_tickets[appstruct['email']]
             ticket.claim(self.request)
             self.api.flash_messages.add(_(u"You've been granted access to the meeting. Welcome!"))
             url = self.request.resource_url(self.context)
             return HTTPFound(location=url)
-            
         #No action, render page
         claim_action_query = dict(
             claim = '1',

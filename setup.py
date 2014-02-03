@@ -29,6 +29,7 @@ install_requires = (
     'repoze.evolution',
     'httpagentparser',
     'BeautifulSoup',
+    'html2text',
     )
 
 docs_extras = [
