@@ -12,7 +12,7 @@
     <div tal:condition="form|False" tal:content="structure form">Form, maybe</div>
 
     <tal:sender condition="'send' in request.GET">
-        <div id="status">Sending emails. In case something goes wrong, you may reload this page and try again.</div>
+        <div id="status" i18n:translate="">Sending emails. In case something goes wrong, you may reload this page and try again.</div>
         <form id="emails_to_handle">
             <tal:iterate repeat="email emails">
             <input type="hidden" name="emails" value="${email}" />
@@ -21,9 +21,9 @@
         <table class="listing">
             <thead>
                 <tr>
-                    <th>Total</th>
-                    <th>Remaining</th>
-                    <th colspan="2">Completed</th>
+                    <th i18n:translate="">Total</th>
+                    <th i18n:translate="">Remaining</th>
+                    <th colspan="2" i18n:translate="">Completed</th>
                 </tr>
             </thead>
             <tbody>
