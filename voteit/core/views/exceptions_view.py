@@ -71,6 +71,8 @@ class ExceptionView(object):
             Note that the SMTP action is performed after the request has completed.
             In other words, things may be committed to database even though send failed.
         """
+        if self.request.is_xhr:
+            raise self.exception
         exc_txt = unicode(self.exception)
         err_msg = _(u"smtp_error_msg",
                     default = u"There was an error while sending mail. "

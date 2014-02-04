@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: voteit.core 0.1dev\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2014-02-03 11:59+0100\n"
+"POT-Creation-Date: 2014-02-04 18:34+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -59,94 +59,106 @@ msgid "Ok"
 msgstr ""
 
 #: voteit/core/js_translations.py:16
+msgid "Nothing to do"
+msgstr ""
+
+#: voteit/core/js_translations.py:17
+msgid "Completed successfully"
+msgstr ""
+
+#: voteit/core/js_translations.py:18
+msgid "There was an error during the operation. You may need to try again. Error was: "
+msgstr ""
+
+#: voteit/core/js_translations.py:19
 msgid "Please confirm"
 msgstr ""
 
 #. Default: Are you sure you want to change the state?
-#: voteit/core/js_translations.py:17
+#: voteit/core/js_translations.py:20
 msgid "js_confirm_state"
 msgstr ""
 
 #. Default: Are you sure you want to retract this proposal?
-#: voteit/core/js_translations.py:19
+#: voteit/core/js_translations.py:22
 msgid "js_confirm_retract"
 msgstr ""
 
-#: voteit/core/js_translations.py:21
+#: voteit/core/js_translations.py:24
 msgid "About..."
 msgstr ""
 
-#: voteit/core/js_translations.py:22
+#: voteit/core/js_translations.py:25
 msgid "More..."
 msgstr ""
 
-#: voteit/core/js_translations.py:23
+#: voteit/core/js_translations.py:26
 msgid "Loading..."
 msgstr ""
 
-#: voteit/core/js_translations.py:24 voteit/core/models/poll.py:72
+#: voteit/core/js_translations.py:27 voteit/core/models/poll.py:72
 #: voteit/core/models/poll.py:82
 #: voteit/core/views/components/templates/polls/poll.pt:8
 #: voteit/core/views/templates/modal_poll.pt:7
 msgid "Poll"
 msgstr ""
 
-#: voteit/core/js_translations.py:25
+#: voteit/core/js_translations.py:28
 #: voteit/core/views/components/metadata_listing.py:97
 msgid "Reply"
 msgstr ""
 
-#: voteit/core/js_translations.py:26
+#: voteit/core/js_translations.py:29
 #: voteit/core/views/components/metadata_listing.py:95
 msgid "Comment"
 msgstr ""
 
 #. Default: An error occurred while voting, please try again.
-#: voteit/core/js_translations.py:27
+#: voteit/core/js_translations.py:30
 msgid "js_voting_error_msg"
 msgstr ""
 
 #. Default: Server didn't respond, many participants may be voteing right now,
 #. please try again.
-#: voteit/core/js_translations.py:29
+#: voteit/core/js_translations.py:32
 msgid "js_voting_timeout_msg"
 msgstr ""
 
-#: voteit/core/js_translations.py:31
+#: voteit/core/js_translations.py:34
 msgid "Waiting..."
 msgstr ""
 
 #. Default: There was an error loading data from server
-#: voteit/core/js_translations.py:32
+#: voteit/core/js_translations.py:35
 msgid "js_error_loading"
 msgstr ""
 
 #. Default: There was an error saving data to the server
-#: voteit/core/js_translations.py:34
+#: voteit/core/js_translations.py:37
 msgid "js_error_saving"
 msgstr ""
 
-#: voteit/core/js_translations.py:36
+#: voteit/core/js_translations.py:39
 msgid "Close message"
 msgstr ""
 
-#: voteit/core/js_translations.py:37
+#: voteit/core/js_translations.py:40
 msgid "Can not delete poll"
 msgstr ""
 
 #. Default: There are proposals in this poll that is in state voting, approved
 #. or denied. You need to manualy change the state of the proposals first.
-#: voteit/core/js_translations.py:38
+#: voteit/core/js_translations.py:41
 msgid "delete_poll_notification_text"
 msgstr ""
 
 #. Default: Permssions was updated successfully
-#: voteit/core/js_translations.py:40
+#: voteit/core/js_translations.py:43
 msgid "permssions_updated_success"
 msgstr ""
 
 #. Default: There was an error updateing permissions
-#: voteit/core/js_translations.py:42
+#: voteit/core/js_translations.py:45
 msgid "permssions_updated_error"
 msgstr ""
 
@@ -338,11 +350,11 @@ msgstr ""
 msgid "Discussion Post"
 msgstr ""
 
-#: voteit/core/models/invite_ticket.py:31
+#: voteit/core/models/invite_ticket.py:32
 msgid "Invite ticket"
 msgstr ""
 
-#: voteit/core/models/invite_ticket.py:63
+#: voteit/core/models/invite_ticket.py:64
 msgid "Invitation to ${meeting_title}"
 msgstr ""
 
@@ -350,7 +362,7 @@ msgstr ""
 msgid "Log entry"
 msgstr ""
 
-#: voteit/core/models/meeting.py:44 voteit/core/models/meeting.py:52
+#: voteit/core/models/meeting.py:45 voteit/core/models/meeting.py:53
 #: voteit/core/schemas/contact.py:64
 #: voteit/core/views/components/meeting_actions.py:61
 msgid "Meeting"
@@ -358,7 +370,7 @@ msgstr ""
 
 #. Default: This meeting still has ongoing or upcoming Agenda items in it. You
 #. can't close it until they're closed.
-#: voteit/core/models/meeting.py:113
+#: voteit/core/models/meeting.py:125
 msgid "error_cant_close_meeting_with_ongoing_ais"
 msgstr ""
 
@@ -637,6 +649,7 @@ msgstr ""
 #: voteit/core/views/templates/minutes.pt:50
 #: voteit/core/views/templates/participants.pt:21
 #: voteit/core/views/templates/participants.pt:123
+#: voteit/core/views/templates/send_tickets.pt:16
 msgid "Back"
 msgstr ""
 
@@ -853,21 +866,33 @@ msgstr ""
 msgid "ticket_message_description"
 msgstr ""
 
-#: voteit/core/schemas/invite_ticket.py:65
+#: voteit/core/schemas/invite_ticket.py:59
+msgid "Discard and recreate old invitations that weren't used?"
+msgstr ""
+
+#: voteit/core/schemas/invite_ticket.py:69
 msgid "Manage invitations"
 msgstr ""
 
-#: voteit/core/schemas/invite_ticket.py:65
+#: voteit/core/schemas/invite_ticket.py:69
 msgid "Manage invitations to the meeting"
 msgstr ""
 
 #. Default: Apply to all of the below, regardless of selection
-#: voteit/core/schemas/invite_ticket.py:69
+#: voteit/core/schemas/invite_ticket.py:73
 msgid "apply_to_all_title"
 msgstr ""
 
-#: voteit/core/schemas/invite_ticket.py:77 voteit/core/views/ticket.py:148
+#: voteit/core/schemas/invite_ticket.py:81 voteit/core/views/ticket.py:174
 msgid "Current invitations"
+msgstr ""
+
+#: voteit/core/schemas/invite_ticket.py:90
+msgid "Minimum days since last invite"
+msgstr ""
+
+#: voteit/core/schemas/invite_ticket.py:96
+msgid "Maximum number of previous invites"
 msgstr ""
 
 #: voteit/core/schemas/layout.py:29
@@ -1475,8 +1500,8 @@ msgstr ""
 #: voteit/core/views/base_edit.py:198 voteit/core/views/base_edit.py:238
 #: voteit/core/views/base_edit.py:316 voteit/core/views/meeting.py:76
 #: voteit/core/views/meeting.py:211 voteit/core/views/poll.py:68
-#: voteit/core/views/site.py:187 voteit/core/views/ticket.py:108
-#: voteit/core/views/ticket.py:191 voteit/core/views/users.py:44
+#: voteit/core/views/site.py:187 voteit/core/views/ticket.py:105
+#: voteit/core/views/ticket.py:217 voteit/core/views/users.py:44
 #: voteit/core/workflows/poll.zcml:33
 msgid "Canceled"
 msgstr ""
@@ -1537,7 +1562,7 @@ msgid "404_error_msg"
 msgstr ""
 
 #. Default: There was an error while sending mail. Error was: ${exc_txt}
-#: voteit/core/views/exceptions_view.py:75
+#: voteit/core/views/exceptions_view.py:77
 msgid "smtp_error_msg"
 msgstr ""
 
@@ -1651,43 +1676,55 @@ msgstr ""
 msgid "Email addresses of moderators with upcoming or ongoing meetings"
 msgstr ""
 
-#: voteit/core/views/ticket.py:31
+#: voteit/core/views/ticket.py:29
 msgid "Login or register to gain access"
 msgstr ""
 
 #. Default: Ticket validation failed. Either the ticket doesn't exist, was
 #. already used or the url used improperly. If you need help, please contact
 #. the moderator that invited you to this meeting.
-#: voteit/core/views/ticket.py:52
+#: voteit/core/views/ticket.py:50
 msgid "ticket_validation_fail"
 msgstr ""
 
-#: voteit/core/views/ticket.py:61
+#: voteit/core/views/ticket.py:59
 msgid "You've been granted access to the meeting. Welcome!"
 msgstr ""
 
 #. Default: The ticket link did not contain a token and an email address.
 #. Perhaps you came to this page by mistake?
-#: voteit/core/views/ticket.py:89
+#: voteit/core/views/ticket.py:87
 msgid "ticket_link_wrong_parameters_error"
 msgstr ""
 
-#: voteit/core/views/ticket.py:104
+#: voteit/core/views/ticket.py:102
 msgid "Send meeting invitations"
 msgstr ""
 
-#. Default: Successfully added and sent ${mail_count} invites
-#: voteit/core/views/ticket.py:134
-msgid "sent_tickets_text"
+#. Default: Successfully added ${added} invites
+#: voteit/core/views/ticket.py:132
+msgid "added_tickets_text"
+msgstr ""
+
+#. Default: No tickets added - all you specified probably exist already.
+#. (Proccessed ${rejected})
+#: voteit/core/views/ticket.py:135
+msgid "no_tickets_added"
+msgstr ""
+
+#. Default: Successfully added ${added} invites but discarded ${rejected} since
+#. they already existed or were already used.
+#: voteit/core/views/ticket.py:142
+msgid "added_tickets_text_some_rejected"
 msgstr ""
 
 #. Default: Resending ${count_emails} invites
-#: voteit/core/views/ticket.py:173
+#: voteit/core/views/ticket.py:199
 msgid "resent_invites_notice"
 msgstr ""
 
 #. Default: Deleting ${count_emails} invites
-#: voteit/core/views/ticket.py:183
+#: voteit/core/views/ticket.py:209
 msgid "deleting_invites_notice"
 msgstr ""
 
@@ -2295,6 +2332,30 @@ msgstr ""
 
 #: voteit/core/views/templates/search.pt:44
 msgid "No search results"
+msgstr ""
+
+#: voteit/core/views/templates/send_tickets.pt:9
+msgid "Send meeting tickets"
+msgstr ""
+
+#: voteit/core/views/templates/send_tickets.pt:15
+msgid "Doesn't seem to be anything to do..."
+msgstr ""
+
+#: voteit/core/views/templates/send_tickets.pt:20
+msgid "Sending emails. In case something goes wrong, you may reload this page and try again."
+msgstr ""
+
+#: voteit/core/views/templates/send_tickets.pt:29
+msgid "Total"
+msgstr ""
+
+#: voteit/core/views/templates/send_tickets.pt:30
+msgid "Remaining"
+msgstr ""
+
+#: voteit/core/views/templates/send_tickets.pt:31
+msgid "Completed"
 msgstr ""
 
 #: voteit/core/views/templates/server_logs.pt:9

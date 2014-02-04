@@ -33,69 +33,53 @@ class InviteTicketTests(unittest.TestCase):
     def test_send_message_sent(self):
         self.config.scan('voteit.core.views.components.email')
         self.config.include('pyramid_mailer.testing')
+        self.config.scan('voteit.core.models.invite_ticket')
         meeting = _fixture(self.config)['m']
-        obj = self._cut('me@home.com', [security.ROLE_MODERATOR, security.ROLE_DISCUSS], sent_by = 'admin')
         request = testing.DummyRequest()
-        #This method calls send on the ticket
-        meeting.add_invite_ticket(obj, request)
+        obj = meeting.add_invite_ticket('me@home.com', [security.ROLE_MODERATOR, security.ROLE_DISCUSS], sent_by = 'admin')
         mailer = get_mailer(request)
-        self.assertEqual(len(mailer.outbox), 1)
-        #Resend
+        self.assertEqual(len(mailer.outbox), 0)
+        #Send
         obj.send(request)
-        self.assertEqual(len(mailer.outbox), 2)
-        self.assertEqual(len(obj.sent_dates), 2)
+        self.assertEqual(len(mailer.outbox), 1)
+        self.assertEqual(len(obj.sent_dates), 1)
         
     def test_claim_ticket(self):
         self.config.scan('voteit.core.views.components.email')
-        self.config.include('pyramid_mailer.testing')
+        self.config.scan('voteit.core.models.invite_ticket')
         meeting = _fixture(self.config)['m']
-        obj = self._cut('this@email.com', [security.ROLE_MODERATOR, security.ROLE_DISCUSS])
         self.config.testing_securitypolicy(userid='some_user',
                                            permissive=True)
+        obj = meeting.add_invite_ticket('this@email.com', [security.ROLE_MODERATOR, security.ROLE_DISCUSS])
         request = testing.DummyRequest()
-        meeting.add_invite_ticket(obj, request)
-        ticket = meeting.invite_tickets['this@email.com']
-        ticket.claim(request)
-        self.assertTrue(isinstance(ticket.closed, datetime))
-        self.assertEqual(ticket.claimed_by, 'some_user')
-        self.assertEqual(ticket.get_workflow_state(), 'closed')
+        obj.claim(request)
+        self.assertTrue(isinstance(obj.closed, datetime))
+        self.assertEqual(obj.claimed_by, 'some_user')
+        self.assertEqual(obj.get_workflow_state(), 'closed')
         self.assertEqual(meeting.get_groups('some_user'), (security.ROLE_MODERATOR, security.ROLE_DISCUSS, security.ROLE_VIEWER))
 
     def test_claim_closed(self):
         self.config.scan('voteit.core.views.components.email')
-        self.config.include('pyramid_mailer.testing')
+        self.config.scan('voteit.core.models.invite_ticket')
         meeting = _fixture(self.config)['m']
-        obj = self._cut('this@email.com', [security.ROLE_PROPOSE])
         self.config.testing_securitypolicy(userid='some_user',
                                            permissive=True)
         request = testing.DummyRequest()
-        meeting.add_invite_ticket(obj, request)
-        ticket = meeting.invite_tickets['this@email.com']
+        obj = meeting.add_invite_ticket('this@email.com', [security.ROLE_PROPOSE])
         #Set ticket to closed
-        ticket.set_workflow_state(request, 'closed')
-        self.assertRaises(Forbidden, ticket.claim, request)
+        obj.set_workflow_state(request, 'closed')
+        self.assertRaises(Forbidden, obj.claim, request)
 
     def test_claim_unathenticated(self):
         self.config.scan('voteit.core.views.components.email')
-        self.config.include('pyramid_mailer.testing')
+        self.config.scan('voteit.core.models.invite_ticket')
         meeting = _fixture(self.config)['m']
-        obj = self._cut('this@email.com', [security.ROLE_PROPOSE])        
         request = testing.DummyRequest()
-        meeting.add_invite_ticket(obj, request)
-        ticket = meeting.invite_tickets['this@email.com']
-        self.assertRaises(Forbidden, ticket.claim, request)
+        obj = meeting.add_invite_ticket('this@email.com', [security.ROLE_PROPOSE])
+        self.assertRaises(Forbidden, obj.claim, request)
 
     def test_force_selectable_roles(self):
         self.assertRaises(ValueError, self._cut, 'hello@world.com', 'bad_role', "This won't work")
-
-    def test_add_invite_ticket_traversal(self):
-        self.config.scan('voteit.core.views.components.email')
-        self.config.include('pyramid_mailer.testing')
-        request = testing.DummyRequest()
-        meeting = _fixture(self.config)['m']
-        obj = self._cut('this@email.com', [security.ROLE_PROPOSE])        
-        meeting.add_invite_ticket(obj, request)
-        self.assertEqual(meeting, obj.__parent__)
 
 
 def _fixture(config):

@@ -1,0 +1,102 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      metal:use-macro="load: ${api.template_dir}content.pt"
+	  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+	  i18n:domain="voteit.core">
+<body>
+<h1 metal:fill-slot="page_heading" i18n:translate="">Send meeting tickets</h1>
+<div metal:fill-slot="content">
+
+    <div tal:condition="form|False" tal:content="structure form">Form, maybe</div>
+
+    <tal:nothing_to_do condition="not emails">
+        <div i18n:translate="">Doesn't seem to be anything to do...</div>
+        <a class="buttonize" href="${request.resource_url(context)}" i18n:translate="">Back</a>
+    </tal:nothing_to_do>
+
+    <tal:sender condition="emails">
+        <div id="status" i18n:translate="">Sending emails. In case something goes wrong, you may reload this page and try again.</div>
+        <form id="emails_to_handle">
+            <tal:iterate repeat="email emails">
+            <input type="hidden" name="emails" value="${email}" />
+            </tal:iterate>
+        </form>
+        <table class="listing">
+            <thead>
+                <tr>
+                    <th i18n:translate="">Total</th>
+                    <th i18n:translate="">Remaining</th>
+                    <th colspan="2" i18n:translate="">Completed</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>${tickets_to_send}</td>
+                    <td><span id="tickets_to_send">${tickets_to_send}</span></td>
+                    <td><span id="completed_percentage">0</span>%</td>
+                    <td style="width: 400px;">
+                        <div id="completed_percentage_bar"
+                             style="float: left; background-color: green; height: 15px; width: 1px;"><!-- --></div>
+                        <div style="float: left; background-color: black; height: 1px; width: 100%;"><!-- --></div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                function handle_success(data) {
+                    console.log('handle success');
+                    if (data['sent'] == 0) {
+                        flash_message(voteit.translation['there_was_an_error'] + 'No tickets to send returned');
+                        return;
+                    }
+                    tickets_left = tickets_left - data['sent'];
+                    $('#tickets_to_send').text(tickets_left);
+                    percentage_complete = Math.floor(100 - (tickets_left / ${tickets_to_send}) * 100);
+                    $('#completed_percentage').text(percentage_complete);
+                    $('#completed_percentage_bar').width(String(percentage_complete) + '%');
+                    var i=0, email;
+                    while(email = data['emails'][i++]){
+                        console.log(email);
+                        $('#emails_to_handle input[value="' + email + '"]').remove();
+                    }
+                    console.log(tickets_left);
+                    setTimeout(send_ticket_invites, 1000);
+                };
+                function send_ticket_invites() {
+                    if (tickets_left > 0) {
+                        var form_data = $('#emails_to_handle').serialize();
+                        console.log(form_data);
+                        $.ajax(url, 
+                              {dataType: 'json',
+                              data: form_data,
+                              type: 'POST',
+                              success: handle_success}).fail(function(jqXHR, textStatus, error) {
+                                console.log(error);
+                                flash_message(voteit.translation['there_was_an_error'] + String(error));
+                        });
+                    } else {
+                        $('#status').remove();
+                        flash_message(voteit.translation['completed_successfully']);
+                    }
+                };
+                console.log('starting');
+                var url = '${request.url}';
+                var tickets_left = ${tickets_to_send};
+                var percentage_complete = 0;
+                var emails_to_process = ${[str(x) for x in emails]};
+                console.log(emails_to_process);
+                if (tickets_left == 0) {
+                    flash_message(voteit.translation['nothing_to_do']);
+                } else {
+                    send_ticket_invites();
+                };
+            });
+        </script>
+    </tal:sender>
+        
+</div>
+</body>
+</html>

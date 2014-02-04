@@ -4,6 +4,7 @@ from pyramid.security import Allow
 from pyramid.security import DENY_ALL
 from pyramid.traversal import find_root
 from betahaus.pyracont.decorators import content_factory
+from betahaus.pyracont.factories import createContent
 from pyramid.httpexceptions import HTTPForbidden
 
 from voteit.core import VoteITMF as _
@@ -87,15 +88,26 @@ class Meeting(BaseContent, WorkflowAware):
             storage = self.__invite_tickets__ =  OOBTree()
         return storage
 
-    def add_invite_ticket(self, ticket, request):
-        """ Add an invite ticket to the storage invite_tickets.
-            It will also set the __parent__ attribute to allow
-            lookup of objects. The parent of the ticket will
-            in that case be the meeting.
-        """
-        ticket.__parent__ = self
-        self.invite_tickets[ticket.email] = ticket
-        ticket.send(request)
+    def get_ticket_names(self, previous_invites = 0):
+        assert isinstance(previous_invites, int)
+        results = []
+        for (name, ticket) in self.invite_tickets.items():
+            if previous_invites < 0:
+                continue
+            if previous_invites >= len(ticket.sent_dates):
+                results.append(name)
+        return results
+
+    def add_invite_ticket(self, email, roles, message = u"", sent_by = None, overwrite = False):
+        if email in self.invite_tickets:
+            if overwrite is False:
+                return
+            if self.invite_tickets[email].closed:
+                return
+        obj = createContent('InviteTicket', email, roles, message, sent_by = sent_by)
+        obj.__parent__ = self
+        self.invite_tickets[email] = obj
+        return obj
 
     def copy_users_and_perms(self, name, event = True):
         root = find_root(self)

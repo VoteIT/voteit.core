@@ -1,11 +1,8 @@
-
 import deform
 from pyramid.security import NO_PERMISSION_REQUIRED
 from pyramid.view import view_config
 from pyramid.httpexceptions import HTTPFound
 from pyramid.httpexceptions import HTTPForbidden
-from pyramid.url import resource_url
-from betahaus.pyracont.factories import createContent
 from betahaus.pyracont.factories import createSchema
 
 from voteit.core import security
@@ -16,6 +13,7 @@ from voteit.core.models.schemas import add_csrf_token
 from voteit.core.models.schemas import button_add
 from voteit.core.models.schemas import button_cancel
 from voteit.core.models.schemas import button_resend
+from voteit.core.models.schemas import button_send
 from voteit.core.models.schemas import button_delete
 from voteit.core.validators import deferred_token_form_validator
 
@@ -102,20 +100,16 @@ class TicketView(BaseView):
             users.
         """
         self.response['title'] = _(u"Send meeting invitations")
-
         post = self.request.POST
         if 'cancel' in post:
             self.api.flash_messages.add(_(u"Canceled"))
-            url = resource_url(self.context, self.request)
+            url = self.request.resource_url(self.context)
             return HTTPFound(location=url)
-
         schema = createSchema('AddTicketsSchema')
         add_csrf_token(self.context, self.request, schema)
         schema = schema.bind(context=self.context, request=self.request, api = self.api)
-
         form = deform.Form(schema, buttons=(button_add, button_cancel))
         self.api.register_form_resources(form)
-
         if 'add' in post:
             controls = post.items()
             try:
@@ -123,22 +117,54 @@ class TicketView(BaseView):
             except deform.ValidationFailure, e:
                 self.response['form'] = e.render()
                 return self.response
-            
             emails = appstruct['emails'].splitlines()
             message = appstruct['message']
             roles = appstruct['roles']
+            added = 0
+            rejected = 0
             for email in emails:
-                obj = createContent('InviteTicket', email, roles, message, sent_by = self.api.userid)
-                self.context.add_invite_ticket(obj, self.request) #Will also email user
-            
-            msg = _('sent_tickets_text', default=u"Successfully added and sent ${mail_count} invites", mapping={'mail_count':len(emails)} )
+                result = self.context.add_invite_ticket(email, roles, message, sent_by = self.api.userid, overwrite = appstruct['overwrite'])
+                if result:
+                    added += 1
+                else:
+                    rejected += 1
+            if not rejected:
+                msg = _('added_tickets_text', default=u"Successfully added ${added} invites",
+                        mapping={'added': added})
+            elif not added:
+                msg = _('no_tickets_added',
+                        default = u"No tickets added - all you specified probably exist already. (Proccessed ${rejected})",
+                        mapping = {'rejected': rejected})
+                self.api.flash_messages.add(msg)
+                url = self.request.resource_url(self.context, 'add_tickets')
+                return HTTPFound(location = url)
+            else:
+                msg = _('added_tickets_text_some_rejected',
+                        default=u"Successfully added ${added} invites but discarded ${rejected} since they already existed or were already used.",
+                        mapping={'added': added, 'rejected': rejected})
             self.api.flash_messages.add(msg)
-
-            url = resource_url(self.context, self.request)
+            url = self.request.resource_url(self.context, 'send_tickets', query = {'send': 'send', 'previous_invites': 0})
             return HTTPFound(location=url)
-
         #No action - Render add form
         self.response['form'] = form.render()
+        return self.response
+
+    @view_config(name = "send_tickets", context = IMeeting, renderer = "templates/send_tickets.pt", permission = security.MANAGE_GROUPS)
+    def send_tickets(self):
+        schema = createSchema('SendticketsSchema')
+        schema = schema.bind(context=self.context, request=self.request, api = self.api)
+        form = deform.Form(schema, buttons = (button_send,), method = 'GET')
+        if 'send' in self.request.GET:
+            controls = self.request.GET.items()
+            try:
+                appstruct = form.validate(controls)
+            except deform.ValidationFailure, e:
+                self.response['form'] = e.render()
+                return self.response
+            #FIXME implement later
+            del appstruct['remind_days']
+            self.response['emails'] = self.context.get_ticket_names(previous_invites = appstruct['previous_invites'])
+            self.response['tickets_to_send'] = len(self.response['emails'])
         return self.response
 
     @view_config(name="manage_tickets", context=IMeeting, renderer="templates/base_edit.pt", permission=security.MANAGE_GROUPS)
@@ -173,7 +199,7 @@ class TicketView(BaseView):
             self.api.flash_messages.add(_('resent_invites_notice',
                                           default=u"Resending ${count_emails} invites",
                                           mapping={'count_emails':len(emails)}))
-            url = resource_url(self.context, self.request)
+            url = self.request.resource_url(self.context)
             return HTTPFound(location=url)
 
         if emails and 'delete' in post:
@@ -184,15 +210,27 @@ class TicketView(BaseView):
                                           default=u"Deleting ${count_emails} invites",
                                           mapping={'count_emails':len(emails)}))
 
-            url = resource_url(self.context, self.request)
+            url = self.request.resource_url(self.context)
             return HTTPFound(location=url)
         
         if 'cancel' in post:
             self.api.flash_messages.add(_(u"Canceled"))
 
-            url = resource_url(self.context, self.request)
+            url = self.request.resource_url(self.context)
             return HTTPFound(location=url)
 
         #No action - Render add form
         self.response['form'] = form.render()
         return self.response
+
+
+@view_config(name = "send_tickets", context = IMeeting, renderer = "json", permission = security.MANAGE_GROUPS, xhr = True)
+def send_tickets_action(context, request):
+    result = []
+    post_vars = request.POST.dict_of_lists()
+    for email in post_vars.get('emails', ()):
+        context.invite_tickets[email].send(request)
+        result.append(email)
+        if len(result) > 19:
+            break
+    return {'sent': len(result), 'emails': result}

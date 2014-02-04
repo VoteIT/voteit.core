@@ -92,7 +92,7 @@ def move_object(obj, new_parent):
     new_parent[name] = new_obj
     return new_obj
 
-def send_email(subject, recipients, html, sender = None, plaintext = None, request = None, **kw):
+def send_email(subject, recipients, html, sender = None, plaintext = None, request = None, send_immediately = False, **kw):
     """ Send an email to users. This also checks the required settings and translates
         the subject.
         
@@ -123,6 +123,9 @@ def send_email(subject, recipients, html, sender = None, plaintext = None, reque
                   **kw)
     mailer = get_mailer(request)
     #Note that messages are sent during the transaction process. See pyramid_mailer docs
-    mailer.send(msg)
+    if send_immediately:
+        mailer.send_immediately(msg)
+    else:
+        mailer.send(msg)
     return msg
     #FIXME: Add logger
