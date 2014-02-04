@@ -126,7 +126,7 @@ class TicketView(BaseView):
             for email in emails:
                 obj = createContent('InviteTicket', email, roles, message, sent_by = self.api.userid)
                 self.context.add_invite_ticket(obj)
-            msg = _('added_tickets_text', default=u"Successfully added ${ccount} invites", mapping={'count':len(emails)} )
+            msg = _('added_tickets_text', default=u"Successfully added ${count} invites", mapping={'count':len(emails)} )
             self.api.flash_messages.add(msg)
             url = self.request.resource_url(self.context, 'send_tickets', query = {'send': 'send', 'previous_invites': 0})
             return HTTPFound(location=url)
