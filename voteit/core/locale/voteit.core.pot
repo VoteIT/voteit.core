@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: voteit.core 0.1dev\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2014-02-04 18:26+0100\n"
+"POT-Creation-Date: 2014-02-04 18:34+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -649,6 +649,7 @@ msgstr ""
 #: voteit/core/views/templates/minutes.pt:50
 #: voteit/core/views/templates/participants.pt:21
 #: voteit/core/views/templates/participants.pt:123
+#: voteit/core/views/templates/send_tickets.pt:16
 msgid "Back"
 msgstr ""
 
@@ -2338,18 +2339,22 @@ msgid "Send meeting tickets"
 msgstr ""
 
 #: voteit/core/views/templates/send_tickets.pt:15
+msgid "Doesn't seem to be anything to do..."
+msgstr ""
+
+#: voteit/core/views/templates/send_tickets.pt:20
 msgid "Sending emails. In case something goes wrong, you may reload this page and try again."
 msgstr ""
 
-#: voteit/core/views/templates/send_tickets.pt:24
+#: voteit/core/views/templates/send_tickets.pt:29
 msgid "Total"
 msgstr ""
 
-#: voteit/core/views/templates/send_tickets.pt:25
+#: voteit/core/views/templates/send_tickets.pt:30
 msgid "Remaining"
 msgstr ""
 
-#: voteit/core/views/templates/send_tickets.pt:26
+#: voteit/core/views/templates/send_tickets.pt:31
 msgid "Completed"
 msgstr ""
 
