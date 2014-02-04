@@ -93,6 +93,16 @@ class MeetingTests(unittest.TestCase):
         self.assertEqual(m1.get_security(), m2.get_security())
         self.assertEqual(m2.get_groups('second'), ('role:A', 'role:C'))
 
+    def test_get_ticket_names(self):
+        from voteit.core.models.invite_ticket import InviteTicket
+        obj = self._cut()
+        ticket1 = InviteTicket('john@doe.com', [security.ROLE_DISCUSS])
+        ticket2 = InviteTicket('jane@doe.com', [security.ROLE_MODERATOR])
+        obj.add_invite_ticket(ticket1)
+        obj.add_invite_ticket(ticket2)
+        results = obj.get_ticket_names(previous_invites = 0)
+        self.assertEqual(set(results), set([ticket1.email, ticket2.email]))
+
 
 class MeetingPermissionTests(unittest.TestCase):
     """ Check permissions in different meeting states. """

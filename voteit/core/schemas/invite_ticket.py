@@ -78,3 +78,19 @@ class ManageTicketsSchema(colander.Schema):
         missing = colander.null,
     )
 
+
+@schema_factory('SendticketsSchema')
+class SendTicketsSchema(colander.Schema):
+    remind_days = colander.SchemaNode(
+        colander.Int(),
+        title = _(u"Minimum days since last invite"),
+        default = 3,
+        missing = -1,
+    )
+    previous_invites = colander.SchemaNode(
+        colander.Int(),
+        title = _(u"Maximum number of previous invites"),
+        default = 2,
+        missing = -1,
+    )
+

@@ -4,6 +4,7 @@ from uuid import uuid4
 
 from repoze.folder import Folder
 from zope.interface import implements
+from persistent.list import PersistentList
 
 from pyramid.traversal import find_interface
 from pyramid.exceptions import Forbidden
@@ -53,7 +54,7 @@ class InviteTicket(Folder, WorkflowAware):
         self.claimed_by = None
         self.sent_by = sent_by
         self.token = ''.join([choice(string.letters + string.digits) for x in range(30)])
-        self.sent_dates = []
+        self.sent_dates = PersistentList()
         self.uid = unicode(uuid4())
         super(InviteTicket, self).__init__()
 
@@ -61,7 +62,7 @@ class InviteTicket(Folder, WorkflowAware):
         meeting = find_interface(self, IMeeting)
         html = render_view_action(self, request, 'email', 'invite_ticket')
         subject = _(u"Invitation to ${meeting_title}", mapping = {'meeting_title': meeting.title})
-        if send_email(subject = subject, recipients = self.email, html = html, request = request):
+        if send_email(subject = subject, recipients = self.email, html = html, request = request, send_immediately = True):
             self.sent_dates.append(utcnow())
 
     def claim(self, request):

@@ -37,13 +37,13 @@ class InviteTicketTests(unittest.TestCase):
         obj = self._cut('me@home.com', [security.ROLE_MODERATOR, security.ROLE_DISCUSS], sent_by = 'admin')
         request = testing.DummyRequest()
         #This method calls send on the ticket
-        meeting.add_invite_ticket(obj, request)
+        meeting.add_invite_ticket(obj)
         mailer = get_mailer(request)
-        self.assertEqual(len(mailer.outbox), 1)
+        self.assertEqual(len(mailer.outbox), 0)
         #Resend
         obj.send(request)
-        self.assertEqual(len(mailer.outbox), 2)
-        self.assertEqual(len(obj.sent_dates), 2)
+        self.assertEqual(len(mailer.outbox), 1)
+        self.assertEqual(len(obj.sent_dates), 1)
         
     def test_claim_ticket(self):
         self.config.scan('voteit.core.views.components.email')
@@ -53,7 +53,7 @@ class InviteTicketTests(unittest.TestCase):
         self.config.testing_securitypolicy(userid='some_user',
                                            permissive=True)
         request = testing.DummyRequest()
-        meeting.add_invite_ticket(obj, request)
+        meeting.add_invite_ticket(obj)
         ticket = meeting.invite_tickets['this@email.com']
         ticket.claim(request)
         self.assertTrue(isinstance(ticket.closed, datetime))
@@ -69,7 +69,7 @@ class InviteTicketTests(unittest.TestCase):
         self.config.testing_securitypolicy(userid='some_user',
                                            permissive=True)
         request = testing.DummyRequest()
-        meeting.add_invite_ticket(obj, request)
+        meeting.add_invite_ticket(obj)
         ticket = meeting.invite_tickets['this@email.com']
         #Set ticket to closed
         ticket.set_workflow_state(request, 'closed')
@@ -81,7 +81,7 @@ class InviteTicketTests(unittest.TestCase):
         meeting = _fixture(self.config)['m']
         obj = self._cut('this@email.com', [security.ROLE_PROPOSE])        
         request = testing.DummyRequest()
-        meeting.add_invite_ticket(obj, request)
+        meeting.add_invite_ticket(obj)
         ticket = meeting.invite_tickets['this@email.com']
         self.assertRaises(Forbidden, ticket.claim, request)
 
@@ -94,7 +94,7 @@ class InviteTicketTests(unittest.TestCase):
         request = testing.DummyRequest()
         meeting = _fixture(self.config)['m']
         obj = self._cut('this@email.com', [security.ROLE_PROPOSE])        
-        meeting.add_invite_ticket(obj, request)
+        meeting.add_invite_ticket(obj)
         self.assertEqual(meeting, obj.__parent__)
 
 

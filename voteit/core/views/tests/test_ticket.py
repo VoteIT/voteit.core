@@ -239,7 +239,7 @@ class TicketViewTests(unittest.TestCase):
                                                'csrf_token': '0123456789012345678901234567890123456789'})
         obj = self._cut(context, request)
         response = obj.add_tickets()
-        self.assertEqual(response.location, 'http://example.com/m/')
+        self.assertEqual(response.location, 'http://example.com/m/send_tickets?previous_invites=0&send=send')
 
     def test_add_tickets_post_validation_error(self):
         self.config.scan('voteit.core.schemas.invite_ticket')

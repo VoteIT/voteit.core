@@ -254,7 +254,7 @@ class IMeeting(IBaseFolder):
     invite_tickets = Attribute("""
         Storage for InviteTickets. Works pretty much like a folder.""")
 
-    def add_invite_ticket(ticket, request):
+    def add_invite_ticket(ticket):
         """ Add an invite ticket to the storage invite_tickets.
             It will also set the __parent__ attribute to allow
             lookup of objects. The parent of the ticket will

@@ -87,7 +87,17 @@ class Meeting(BaseContent, WorkflowAware):
             storage = self.__invite_tickets__ =  OOBTree()
         return storage
 
-    def add_invite_ticket(self, ticket, request):
+    def get_ticket_names(self, previous_invites = 0):
+        assert isinstance(previous_invites, int)
+        results = []
+        for (name, ticket) in self.invite_tickets.items():
+            if previous_invites < 0:
+                continue
+            if previous_invites >= len(ticket.sent_dates):
+                results.append(name)
+        return results
+
+    def add_invite_ticket(self, ticket):
         """ Add an invite ticket to the storage invite_tickets.
             It will also set the __parent__ attribute to allow
             lookup of objects. The parent of the ticket will
@@ -95,7 +105,7 @@ class Meeting(BaseContent, WorkflowAware):
         """
         ticket.__parent__ = self
         self.invite_tickets[ticket.email] = ticket
-        ticket.send(request)
+        #ticket.send(request)
 
     def copy_users_and_perms(self, name, event = True):
         root = find_root(self)

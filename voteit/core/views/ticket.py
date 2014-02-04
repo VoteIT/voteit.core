@@ -1,4 +1,3 @@
-
 import deform
 from pyramid.security import NO_PERMISSION_REQUIRED
 from pyramid.view import view_config
@@ -16,6 +15,7 @@ from voteit.core.models.schemas import add_csrf_token
 from voteit.core.models.schemas import button_add
 from voteit.core.models.schemas import button_cancel
 from voteit.core.models.schemas import button_resend
+from voteit.core.models.schemas import button_send
 from voteit.core.models.schemas import button_delete
 from voteit.core.validators import deferred_token_form_validator
 
@@ -102,20 +102,16 @@ class TicketView(BaseView):
             users.
         """
         self.response['title'] = _(u"Send meeting invitations")
-
         post = self.request.POST
         if 'cancel' in post:
             self.api.flash_messages.add(_(u"Canceled"))
             url = resource_url(self.context, self.request)
             return HTTPFound(location=url)
-
         schema = createSchema('AddTicketsSchema')
         add_csrf_token(self.context, self.request, schema)
         schema = schema.bind(context=self.context, request=self.request, api = self.api)
-
         form = deform.Form(schema, buttons=(button_add, button_cancel))
         self.api.register_form_resources(form)
-
         if 'add' in post:
             controls = post.items()
             try:
@@ -129,16 +125,31 @@ class TicketView(BaseView):
             roles = appstruct['roles']
             for email in emails:
                 obj = createContent('InviteTicket', email, roles, message, sent_by = self.api.userid)
-                self.context.add_invite_ticket(obj, self.request) #Will also email user
-            
-            msg = _('sent_tickets_text', default=u"Successfully added and sent ${mail_count} invites", mapping={'mail_count':len(emails)} )
+                self.context.add_invite_ticket(obj)
+            msg = _('added_tickets_text', default=u"Successfully added ${ccount} invites", mapping={'count':len(emails)} )
             self.api.flash_messages.add(msg)
-
-            url = resource_url(self.context, self.request)
+            url = self.request.resource_url(self.context, 'send_tickets', query = {'send': 'send', 'previous_invites': 0})
             return HTTPFound(location=url)
-
         #No action - Render add form
         self.response['form'] = form.render()
+        return self.response
+
+    @view_config(name = "send_tickets", context = IMeeting, renderer = "templates/send_tickets.pt", permission = security.MANAGE_GROUPS)
+    def send_tickets(self):
+        schema = createSchema('SendticketsSchema')
+        schema = schema.bind(context=self.context, request=self.request, api = self.api)
+        form = deform.Form(schema, buttons = (button_send,), method = 'GET')
+        if 'send' in self.request.GET:
+            controls = self.request.GET.items()
+            try:
+                appstruct = form.validate(controls)
+            except deform.ValidationFailure, e:
+                self.response['form'] = e.render()
+                return self.response
+            #FIXME implement later
+            del appstruct['remind_days']
+            self.response['emails'] = self.context.get_ticket_names(previous_invites = appstruct['previous_invites'])
+            self.response['tickets_to_send'] = len(self.response['emails'])
         return self.response
 
     @view_config(name="manage_tickets", context=IMeeting, renderer="templates/base_edit.pt", permission=security.MANAGE_GROUPS)
@@ -196,3 +207,15 @@ class TicketView(BaseView):
         #No action - Render add form
         self.response['form'] = form.render()
         return self.response
+
+
+@view_config(name = "send_tickets", context = IMeeting, renderer = "json", permission = security.MANAGE_GROUPS, xhr = True)
+def send_tickets_action(context, request):
+    result = []
+    post_vars = request.POST.dict_of_lists()
+    for email in post_vars.get('emails', ()):
+        context.invite_tickets[email].send(request)
+        result.append(email)
+        if len(result) > 19:
+            break
+    return {'sent': len(result), 'emails': result}
