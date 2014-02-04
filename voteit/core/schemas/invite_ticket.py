@@ -56,12 +56,7 @@ class AddTicketsSchema(colander.Schema):
     overwrite = colander.SchemaNode(colander.Bool(),
                                     default = False,
                                     missing = False,
-                                    title = _(u"Discard and recreate old invitations that weren't used?"),
-                                    description = _(u"add_tickets_overwrite_description",
-                                                    default = u"This means that if any invitation exists for the email "
-                                                        u"addresses you use, it will be removed. "
-                                                        u"If not, no email will be sent to the ones with existing invitations. "
-                                                        u"You can do that through the Manage invitations screen though."))
+                                    title = _(u"Discard and recreate old invitations that weren't used?"),)
     
 
 @colander.deferred

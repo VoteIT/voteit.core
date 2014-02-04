@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: voteit.core 0.1dev\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2014-02-04 16:13+0100\n"
+"POT-Creation-Date: 2014-02-04 18:26+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -362,7 +362,7 @@ msgstr ""
 msgid "Log entry"
 msgstr ""
 
-#: voteit/core/models/meeting.py:44 voteit/core/models/meeting.py:52
+#: voteit/core/models/meeting.py:45 voteit/core/models/meeting.py:53
 #: voteit/core/schemas/contact.py:64
 #: voteit/core/views/components/meeting_actions.py:61
 msgid "Meeting"
@@ -370,7 +370,7 @@ msgstr ""
 
 #. Default: This meeting still has ongoing or upcoming Agenda items in it. You
 #. can't close it until they're closed.
-#: voteit/core/models/meeting.py:123
+#: voteit/core/models/meeting.py:125
 msgid "error_cant_close_meeting_with_ongoing_ais"
 msgstr ""
 
@@ -865,28 +865,32 @@ msgstr ""
 msgid "ticket_message_description"
 msgstr ""
 
-#: voteit/core/schemas/invite_ticket.py:65
+#: voteit/core/schemas/invite_ticket.py:59
+msgid "Discard and recreate old invitations that weren't used?"
+msgstr ""
+
+#: voteit/core/schemas/invite_ticket.py:69
 msgid "Manage invitations"
 msgstr ""
 
-#: voteit/core/schemas/invite_ticket.py:65
+#: voteit/core/schemas/invite_ticket.py:69
 msgid "Manage invitations to the meeting"
 msgstr ""
 
 #. Default: Apply to all of the below, regardless of selection
-#: voteit/core/schemas/invite_ticket.py:69
+#: voteit/core/schemas/invite_ticket.py:73
 msgid "apply_to_all_title"
 msgstr ""
 
-#: voteit/core/schemas/invite_ticket.py:77 voteit/core/views/ticket.py:159
+#: voteit/core/schemas/invite_ticket.py:81 voteit/core/views/ticket.py:174
 msgid "Current invitations"
 msgstr ""
 
-#: voteit/core/schemas/invite_ticket.py:86
+#: voteit/core/schemas/invite_ticket.py:90
 msgid "Minimum days since last invite"
 msgstr ""
 
-#: voteit/core/schemas/invite_ticket.py:92
+#: voteit/core/schemas/invite_ticket.py:96
 msgid "Maximum number of previous invites"
 msgstr ""
 
@@ -1495,8 +1499,8 @@ msgstr ""
 #: voteit/core/views/base_edit.py:198 voteit/core/views/base_edit.py:238
 #: voteit/core/views/base_edit.py:316 voteit/core/views/meeting.py:76
 #: voteit/core/views/meeting.py:211 voteit/core/views/poll.py:68
-#: voteit/core/views/site.py:187 voteit/core/views/ticket.py:107
-#: voteit/core/views/ticket.py:202 voteit/core/views/users.py:44
+#: voteit/core/views/site.py:187 voteit/core/views/ticket.py:105
+#: voteit/core/views/ticket.py:217 voteit/core/views/users.py:44
 #: voteit/core/workflows/poll.zcml:33
 msgid "Canceled"
 msgstr ""
@@ -1671,43 +1675,55 @@ msgstr ""
 msgid "Email addresses of moderators with upcoming or ongoing meetings"
 msgstr ""
 
-#: voteit/core/views/ticket.py:31
+#: voteit/core/views/ticket.py:29
 msgid "Login or register to gain access"
 msgstr ""
 
 #. Default: Ticket validation failed. Either the ticket doesn't exist, was
 #. already used or the url used improperly. If you need help, please contact
 #. the moderator that invited you to this meeting.
-#: voteit/core/views/ticket.py:52
+#: voteit/core/views/ticket.py:50
 msgid "ticket_validation_fail"
 msgstr ""
 
-#: voteit/core/views/ticket.py:61
+#: voteit/core/views/ticket.py:59
 msgid "You've been granted access to the meeting. Welcome!"
 msgstr ""
 
 #. Default: The ticket link did not contain a token and an email address.
 #. Perhaps you came to this page by mistake?
-#: voteit/core/views/ticket.py:89
+#: voteit/core/views/ticket.py:87
 msgid "ticket_link_wrong_parameters_error"
 msgstr ""
 
-#: voteit/core/views/ticket.py:104
+#: voteit/core/views/ticket.py:102
 msgid "Send meeting invitations"
 msgstr ""
 
-#. Default: Successfully added ${count} invites
-#: voteit/core/views/ticket.py:129
+#. Default: Successfully added ${added} invites
+#: voteit/core/views/ticket.py:132
 msgid "added_tickets_text"
 msgstr ""
 
+#. Default: No tickets added - all you specified probably exist already.
+#. (Proccessed ${rejected})
+#: voteit/core/views/ticket.py:135
+msgid "no_tickets_added"
+msgstr ""
+
+#. Default: Successfully added ${added} invites but discarded ${rejected} since
+#. they already existed or were already used.
+#: voteit/core/views/ticket.py:142
+msgid "added_tickets_text_some_rejected"
+msgstr ""
+
 #. Default: Resending ${count_emails} invites
-#: voteit/core/views/ticket.py:184
+#: voteit/core/views/ticket.py:199
 msgid "resent_invites_notice"
 msgstr ""
 
 #. Default: Deleting ${count_emails} invites
-#: voteit/core/views/ticket.py:194
+#: voteit/core/views/ticket.py:209
 msgid "deleting_invites_notice"
 msgstr ""
 
@@ -2319,6 +2335,22 @@ msgstr ""
 
 #: voteit/core/views/templates/send_tickets.pt:9
 msgid "Send meeting tickets"
+msgstr ""
+
+#: voteit/core/views/templates/send_tickets.pt:15
+msgid "Sending emails. In case something goes wrong, you may reload this page and try again."
+msgstr ""
+
+#: voteit/core/views/templates/send_tickets.pt:24
+msgid "Total"
+msgstr ""
+
+#: voteit/core/views/templates/send_tickets.pt:25
+msgid "Remaining"
+msgstr ""
+
+#: voteit/core/views/templates/send_tickets.pt:26
+msgid "Completed"
 msgstr ""
 
 #: voteit/core/views/templates/server_logs.pt:9
