@@ -7,6 +7,9 @@
 	  i18n:domain="voteit.core">
 <body>
 <div metal:fill-slot="full_window" id="content">
+    <a tal:condition="api.context_has_permission('Add User', context)"
+       style="float: right;" class="buttonize"
+       href="${request.resource_url(context, 'add', query = {'content_type': 'User'})}" i18n:translate="">Add user</a>
     <h1 id="page_heading">
         <span i18n:translate="">
             Showing
