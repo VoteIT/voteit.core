@@ -81,6 +81,10 @@ class InviteTicketTests(unittest.TestCase):
     def test_force_selectable_roles(self):
         self.assertRaises(ValueError, self._cut, 'hello@world.com', 'bad_role', "This won't work")
 
+    def test_force_lowercase(self):
+        obj = self._cut('HELLO@WORLD.com', [security.ROLE_DISCUSS])
+        self.assertEqual(obj.email, 'hello@world.com')
+
 
 def _fixture(config):
     from voteit.core.models.meeting import Meeting

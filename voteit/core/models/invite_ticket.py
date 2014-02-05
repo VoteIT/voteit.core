@@ -42,7 +42,7 @@ class InviteTicket(Folder, WorkflowAware):
     #No schemas
     
     def __init__(self, email, roles, message = u"", sent_by = None):
-        self.email = email
+        self.email = email.lower()
         for role in roles:
             if role not in SELECTABLE_ROLES:
                 raise ValueError("InviteTicket got '%s' as a role, and that isn't selectable." % role)
