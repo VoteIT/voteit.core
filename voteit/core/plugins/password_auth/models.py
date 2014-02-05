@@ -34,7 +34,7 @@ class PasswordAuth(AuthPlugin):
 
     def render_login(self, api, response):
         schema = self.create_login_schema(api)
-        form = self.login_form(schema, buttons = (deform.Button('forgot', _(u"Forgot password?")), button_login), action = self.login_url())
+        form = self.login_form(schema, buttons = (button_login, deform.Button('forgot', _(u"Forgot password?"))), action = self.login_url())
         POST = self.request.POST
         if 'login' in POST:
             controls = POST.items()
