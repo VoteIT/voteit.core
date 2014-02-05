@@ -6,17 +6,21 @@
 	  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
 	  i18n:domain="voteit.core">
 <body>
-<h1 metal:fill-slot="page_heading" i18n:translate="">Send meeting tickets</h1>
+<tal:blank metal:fill-slot="page_heading"></tal:blank>
 <div metal:fill-slot="content">
-
+    <tal:menu tal:condition="api.meeting" 
+        replace="structure api.render_single_view_component(context, request, 'tabs', 'manage_tickets')">
+        Tabs
+    </tal:menu>
+    <h1 i18n:translate="">Send meeting tickets</h1>
     <div tal:condition="form|False" tal:content="structure form">Form, maybe</div>
 
-    <tal:nothing_to_do condition="not emails">
+    <tal:nothing_to_do condition="not emails|True">
         <div i18n:translate="">Doesn't seem to be anything to do...</div>
         <a class="buttonize" href="${request.resource_url(context)}" i18n:translate="">Back</a>
     </tal:nothing_to_do>
 
-    <tal:sender condition="emails">
+    <tal:sender condition="emails|False">
         <div id="status" i18n:translate="">Sending emails. In case something goes wrong, you may reload this page and try again.</div>
         <form id="emails_to_handle">
             <tal:iterate repeat="email emails">

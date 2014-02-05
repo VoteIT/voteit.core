@@ -51,7 +51,6 @@ class DefaultEdit(BaseEdit):
     """ Default view class for adding, editing or deleting dynamic content. """
 
     @view_config(context=IBaseContent, name="add", renderer=DEFAULT_TEMPLATE)
-    @view_config(context=IMeeting, name="add", renderer='templates/add_agenda_item.pt', request_param = "content_type=AgendaItem")
     def add_form(self):
         content_type = self.request.params.get('content_type')
         tag = self.request.GET.get('tag', None)
@@ -64,6 +63,8 @@ class DefaultEdit(BaseEdit):
         schema = createSchema(schema_name).bind(context=self.context, request=self.request, api=self.api, tag=tag)        
         form = Form(schema, buttons=(button_add, button_cancel))
         self.api.register_form_resources(form)
+        if content_type == 'AgendaItem':
+            self.response['tabs'] = self.api.render_single_view_component(self.context, self.request, 'tabs', 'manage_agenda')
         post = self.request.POST
         if 'add' in post:
             controls = post.items()

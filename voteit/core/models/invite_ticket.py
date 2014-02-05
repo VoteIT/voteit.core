@@ -42,7 +42,7 @@ class InviteTicket(Folder, WorkflowAware):
     #No schemas
     
     def __init__(self, email, roles, message = u"", sent_by = None):
-        self.email = email
+        self.email = email.lower()
         for role in roles:
             if role not in SELECTABLE_ROLES:
                 raise ValueError("InviteTicket got '%s' as a role, and that isn't selectable." % role)
@@ -59,6 +59,8 @@ class InviteTicket(Folder, WorkflowAware):
         super(InviteTicket, self).__init__()
 
     def send(self, request):
+        if self.closed: #Just as a precaution
+            return
         meeting = find_interface(self, IMeeting)
         html = render_view_action(self, request, 'email', 'invite_ticket')
         subject = _(u"Invitation to ${meeting_title}", mapping = {'meeting_title': meeting.title})

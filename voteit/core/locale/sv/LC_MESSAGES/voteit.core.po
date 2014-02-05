@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2014-02-04 18:34+0100\n"
-"PO-Revision-Date: 2014-02-04 18:34+0100\n"
+"POT-Creation-Date: 2014-02-05 19:29+0100\n"
+"PO-Revision-Date: 2014-02-05 19:30+0100\n"
 "Last-Translator: Robin Harms Oredsson <robin@betahaus.net>\n"
 "Language-Team: sv <LL@li.org>\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -26,8 +26,8 @@ msgstr "VoteIT"
 #: voteit/core/bootstrap.py:23 voteit/core/models/agenda_templates.py:12
 #: voteit/core/models/agenda_templates.py:20
 #: voteit/core/views/agenda_templates.py:32
-#: voteit/core/views/components/agenda.py:10
 #: voteit/core/views/components/meeting_actions.py:81
+#: voteit/core/views/components/tabs_menu.py:28
 #: voteit/core/views/templates/agenda_templates.pt:14
 msgid "Agenda templates"
 msgstr "Standarddagordningar"
@@ -383,7 +383,7 @@ msgstr "Diskussionsinlägg"
 msgid "Invite ticket"
 msgstr "Inbjudningsbiljett"
 
-#: voteit/core/models/invite_ticket.py:64
+#: voteit/core/models/invite_ticket.py:66
 msgid "Invitation to ${meeting_title}"
 msgstr "Inbjudan till ${meeting_title}"
 
@@ -553,6 +553,7 @@ msgid "Download"
 msgstr "Ladda ned"
 
 #: voteit/core/models/schemas.py:23
+#: voteit/core/views/templates/manage_tickets.pt:27
 msgid "Send"
 msgstr "Skicka"
 
@@ -703,11 +704,12 @@ msgstr "Röster"
 #: voteit/core/plugins/templates/invite_only.pt:7
 #: voteit/core/views/templates/agenda_template.pt:39
 #: voteit/core/views/templates/email_list.pt:23
-#: voteit/core/views/templates/list_users.pt:54
+#: voteit/core/views/templates/list_users.pt:57
+#: voteit/core/views/templates/manage_tickets.pt:15
 #: voteit/core/views/templates/minutes.pt:50
 #: voteit/core/views/templates/participants.pt:21
 #: voteit/core/views/templates/participants.pt:123
-#: voteit/core/views/templates/send_tickets.pt:16
+#: voteit/core/views/templates/send_tickets.pt:20
 msgid "Back"
 msgstr "Tillbaka"
 
@@ -729,7 +731,7 @@ msgid "No roles selected"
 msgstr "Inga roller valda"
 
 #: voteit/core/schemas/agenda_item.py:10
-#: voteit/core/views/components/agenda.py:20
+#: voteit/core/views/components/tabs_menu.py:44
 msgid "Add agenda item"
 msgstr "Lägg till dagordningspunkt"
 
@@ -827,7 +829,8 @@ msgid "contact_schema_name_description"
 msgstr "Lämna fältet tomt om du vill vara anonym"
 
 #: voteit/core/schemas/contact.py:31 voteit/core/schemas/contact.py:54
-#: voteit/core/schemas/user.py:63 voteit/core/views/templates/list_users.pt:27
+#: voteit/core/schemas/user.py:63 voteit/core/views/templates/list_users.pt:30
+#: voteit/core/views/templates/manage_tickets.pt:43
 #: voteit/core/views/templates/participants.pt:34
 #: voteit/core/views/templates/snippets/user_basic_info.pt:8
 msgid "Email"
@@ -901,6 +904,7 @@ msgstr "Inbjudningskoden som du fick i dett ebrev"
 
 #: voteit/core/schemas/invite_ticket.py:24
 #: voteit/core/views/components/meeting_actions.py:108
+#: voteit/core/views/components/tabs_menu.py:30
 #: voteit/core/views/templates/participants.pt:128
 msgid "Invite participants"
 msgstr "Bjud in deltagare"
@@ -952,28 +956,11 @@ msgstr ""
 msgid "Discard and recreate old invitations that weren't used?"
 msgstr "Ta bort och skapa om gamla inbjudningar som inte använts?"
 
-#: voteit/core/schemas/invite_ticket.py:69
-msgid "Manage invitations"
-msgstr "Påminn inbjudna"
-
-#: voteit/core/schemas/invite_ticket.py:69
-msgid "Manage invitations to the meeting"
-msgstr "Påminn deltagare som ännu inte anlänt till mötet"
-
-#. Default: Apply to all of the below, regardless of selection
-#: voteit/core/schemas/invite_ticket.py:73
-msgid "apply_to_all_title"
-msgstr "Använd för allt nedan, oavsett valda"
-
-#: voteit/core/schemas/invite_ticket.py:81 voteit/core/views/ticket.py:174
-msgid "Current invitations"
-msgstr "Nuvarande inbjudningar"
-
-#: voteit/core/schemas/invite_ticket.py:90
+#: voteit/core/schemas/invite_ticket.py:66
 msgid "Minimum days since last invite"
 msgstr "Minimum dagar sen sista inbjudan"
 
-#: voteit/core/schemas/invite_ticket.py:96
+#: voteit/core/schemas/invite_ticket.py:72
 msgid "Maximum number of previous invites"
 msgstr "Maximalt antal tidigare inbjudningar"
 
@@ -1190,7 +1177,7 @@ msgstr ""
 #: voteit/core/schemas/permissions.py:32 voteit/core/schemas/permissions.py:69
 #: voteit/core/schemas/user.py:46 voteit/core/schemas/user.py:126
 #: voteit/core/schemas/user.py:143
-#: voteit/core/views/templates/list_users.pt:24
+#: voteit/core/views/templates/list_users.pt:27
 #: voteit/core/views/templates/logs.pt:20
 #: voteit/core/views/templates/email/request_password.pt:25
 msgid "UserID"
@@ -1205,6 +1192,7 @@ msgid "Roles for user"
 msgstr "rättigheter för en specifik användare"
 
 #: voteit/core/schemas/permissions.py:56
+#: voteit/core/views/templates/manage_tickets.pt:51
 msgid "Permissions"
 msgstr "Rättigheter"
 
@@ -1462,11 +1450,11 @@ msgstr ""
 "Använd minst 6 tecken. En bra princip är att ha långa lösenord som inte "
 "baseras på personlig information eller riktiga ord."
 
-#: voteit/core/schemas/user.py:69 voteit/core/views/templates/list_users.pt:25
+#: voteit/core/schemas/user.py:69 voteit/core/views/templates/list_users.pt:28
 msgid "First name"
 msgstr "Förnamn"
 
-#: voteit/core/schemas/user.py:74 voteit/core/views/templates/list_users.pt:26
+#: voteit/core/schemas/user.py:74 voteit/core/views/templates/list_users.pt:29
 msgid "Last name"
 msgstr "Efternamn"
 
@@ -1476,6 +1464,7 @@ msgid "registration_captcha_description"
 msgstr "Detta är för att hindra spamrobotar från att registrera sig"
 
 #: voteit/core/schemas/user.py:122
+#: voteit/core/views/templates/list_users.pt:10
 msgid "Add user"
 msgstr "Lägg till användare"
 
@@ -1612,14 +1601,14 @@ msgstr "Dra och släpp dagordningspunkter för att ändra ordningen"
 msgid "Order updated"
 msgstr "Ordningen är uppdaterad"
 
-#: voteit/core/views/base_edit.py:85 voteit/core/views/base_edit.py:147
+#: voteit/core/views/base_edit.py:86 voteit/core/views/base_edit.py:148
 #: voteit/core/views/users.py:71
 msgid "Successfully added"
 msgstr "Tillagt"
 
 #. Default: Please review poll specific settings. Any default value in a field
 #. is a suggestion from the plugin.
-#: voteit/core/views/base_edit.py:92
+#: voteit/core/views/base_edit.py:93
 msgid "review_poll_settings_info"
 msgstr ""
 "Vänligen granska de omröstningsmetodspecifika inställningarna. "
@@ -1627,43 +1616,42 @@ msgstr ""
 
 #. Default: The poll is created in private state, to show it the participants
 #. you have to change the state to upcoming.
-#: voteit/core/views/base_edit.py:95
+#: voteit/core/views/base_edit.py:96
 msgid "private_poll_info"
 msgstr ""
 "Denna omröstning är skapad i status privat, för att visa den för dina "
 "deltagare måste du ändra dess status till kommande."
 
-#: voteit/core/views/base_edit.py:101 voteit/core/views/base_edit.py:152
-#: voteit/core/views/base_edit.py:198 voteit/core/views/base_edit.py:238
-#: voteit/core/views/base_edit.py:316 voteit/core/views/meeting.py:76
+#: voteit/core/views/base_edit.py:102 voteit/core/views/base_edit.py:153
+#: voteit/core/views/base_edit.py:199 voteit/core/views/base_edit.py:239
+#: voteit/core/views/base_edit.py:317 voteit/core/views/meeting.py:76
 #: voteit/core/views/meeting.py:211 voteit/core/views/poll.py:68
 #: voteit/core/views/site.py:187 voteit/core/views/ticket.py:105
-#: voteit/core/views/ticket.py:217 voteit/core/views/users.py:44
-#: voteit/core/workflows/poll.zcml:33
+#: voteit/core/views/users.py:44 voteit/core/workflows/poll.zcml:33
 msgid "Canceled"
 msgstr "Avbruten"
 
-#: voteit/core/views/base_edit.py:145
+#: voteit/core/views/base_edit.py:146
 msgid "Users and their permissions successfully copied"
 msgstr "Användare och deras rättigheter kopierades"
 
-#: voteit/core/views/base_edit.py:188 voteit/core/views/meeting.py:204
+#: voteit/core/views/base_edit.py:189 voteit/core/views/meeting.py:204
 #: voteit/core/views/poll.py:60 voteit/core/views/site.py:181
 msgid "Successfully updated"
 msgstr "Uppdaterad"
 
-#: voteit/core/views/base_edit.py:190 voteit/core/views/meeting.py:206
+#: voteit/core/views/base_edit.py:191 voteit/core/views/meeting.py:206
 #: voteit/core/views/site.py:183 voteit/core/views/users.py:229
 msgid "Nothing updated"
 msgstr "Inget uppdaterat"
 
-#: voteit/core/views/base_edit.py:229
+#: voteit/core/views/base_edit.py:230
 msgid "Deleted"
 msgstr "Raderad"
 
 #. Default: You can't remove this proposal - it's used within the following
 #. polls: ${poll_titles}
-#: voteit/core/views/base_edit.py:250
+#: voteit/core/views/base_edit.py:251
 msgid "deleting_proposals_used_in_polls_not_allowed_error"
 msgstr ""
 "Du kan inte radera förslaget - det används i följande omröstningar: "
@@ -1671,12 +1659,12 @@ msgstr ""
 
 #. Default: Are you sure you want to delete '${display_name}' with title:
 #. ${title}?
-#: voteit/core/views/base_edit.py:256
+#: voteit/core/views/base_edit.py:257
 msgid "delete_form_notice"
 msgstr ""
 "Är du säker på att du vill radera '${display_name}' med titeln: ${title}"
 
-#: voteit/core/views/base_edit.py:312
+#: voteit/core/views/base_edit.py:313
 msgid "Moved"
 msgstr "Flyttad"
 
@@ -1772,16 +1760,10 @@ msgid "Root permissions"
 msgstr "Rooträttigheter"
 
 #: voteit/core/views/permissions.py:73
-#: voteit/core/views/components/meeting_actions.py:110
-#: voteit/core/views/templates/participants.pt:132
-msgid "Add participant"
-msgstr "Lägg till användare"
-
-#: voteit/core/views/permissions.py:75
 msgid "Add permission"
 msgstr "Lägg till rättighet"
 
-#: voteit/core/views/permissions.py:98
+#: voteit/core/views/permissions.py:95
 msgid "Added permssion for user ${userid}"
 msgstr "Rättigheter för användare ${userid} tillagd"
 
@@ -1833,44 +1815,40 @@ msgstr ""
 msgid "Email addresses of moderators with upcoming or ongoing meetings"
 msgstr "Epostadresser för moderatorer med pågående eller kommande möten"
 
-#: voteit/core/views/ticket.py:29
+#: voteit/core/views/ticket.py:30
 msgid "Login or register to gain access"
 msgstr "Logga in eller registrera dig för att få tillträde"
 
 #. Default: Ticket validation failed. Either the ticket doesn't exist, was
 #. already used or the url used improperly. If you need help, please contact
 #. the moderator that invited you to this meeting.
-#: voteit/core/views/ticket.py:50
+#: voteit/core/views/ticket.py:51
 msgid "ticket_validation_fail"
 msgstr ""
 "Kontroll av inbjudan misslyckades. Detta kan bero på att inbjudningskoden "
 "inte finns, redan använts eller att du använde webbadressen fel. Om du "
 "behöver hjälp kan du kontakta den som skickade inbjudan."
 
-#: voteit/core/views/ticket.py:59
+#: voteit/core/views/ticket.py:60
 msgid "You've been granted access to the meeting. Welcome!"
 msgstr "Du har fått rätt att delta i mötet. Välkommen!"
 
 #. Default: The ticket link did not contain a token and an email address.
 #. Perhaps you came to this page by mistake?
-#: voteit/core/views/ticket.py:87
+#: voteit/core/views/ticket.py:88
 msgid "ticket_link_wrong_parameters_error"
 msgstr ""
 "Inbjudanslänken innehöll inte inbjudningskod och epostadress som de ska. "
 "Hamnade du kanske på denna sida av misstag?"
 
-#: voteit/core/views/ticket.py:102
-msgid "Send meeting invitations"
-msgstr "Skicka mötesinbjudningar"
-
 #. Default: Successfully added ${added} invites
-#: voteit/core/views/ticket.py:132
+#: voteit/core/views/ticket.py:133
 msgid "added_tickets_text"
 msgstr "La till ${count} inbjudningar"
 
 #. Default: No tickets added - all you specified probably exist already.
 #. (Proccessed ${rejected})
-#: voteit/core/views/ticket.py:135
+#: voteit/core/views/ticket.py:136
 msgid "no_tickets_added"
 msgstr ""
 "Inga inbjudningar las till - alla du specificerade finns förmodligen redan. "
@@ -1878,21 +1856,31 @@ msgstr ""
 
 #. Default: Successfully added ${added} invites but discarded ${rejected} since
 #. they already existed or were already used.
-#: voteit/core/views/ticket.py:142
+#: voteit/core/views/ticket.py:143
 msgid "added_tickets_text_some_rejected"
 msgstr ""
 "La till ${added} inbjudningar med hanterade inte ${rejected} eftersom de "
 "redan existerar eller redan har använts."
 
-#. Default: Resending ${count_emails} invites
-#: voteit/core/views/ticket.py:199
-msgid "resent_invites_notice"
-msgstr "Skickar om ${count_emails} inbjudningar"
+#: voteit/core/views/ticket.py:177
+msgid "Nothing selected - nothing to do!"
+msgstr "Inga valda - kan inte göra något!"
 
-#. Default: Deleting ${count_emails} invites
-#: voteit/core/views/ticket.py:209
-msgid "deleting_invites_notice"
-msgstr "Raderar ${count_emails} inbjudningar"
+#: voteit/core/views/ticket.py:182
+msgid "Removed ${count} tickets"
+msgstr "Tog bort ${count} inbjudningar"
+
+#: voteit/core/views/ticket.py:197
+msgid "Resent ${count} successfully"
+msgstr "Skickade om ${count}"
+
+#: voteit/core/views/ticket.py:200
+msgid ""
+"Resent ${count} of ${total}. ${aborted} were not sent since they're already "
+"claimed"
+msgstr ""
+"Skickade om ${count} av ${total}. ${aborted} skickades inte eftersom de "
+"redan använts"
 
 #: voteit/core/views/users.py:77
 msgid "Add new user"
@@ -1928,14 +1916,6 @@ msgstr "Tar bort information för: ${domains}"
 msgid "userid_not_registered_within_meeting_error"
 msgstr ""
 "Ingen användare med användarnamn '${info_userid}' kan hittas i detta möte."
-
-#: voteit/core/views/components/agenda.py:6
-msgid "Manage"
-msgstr "Hantera"
-
-#: voteit/core/views/components/agenda.py:8
-msgid "Order"
-msgstr "Sortera"
 
 #: voteit/core/views/components/agenda_item.py:7
 msgid "Proposals (default left column)"
@@ -2060,6 +2040,11 @@ msgstr "Deltagarnas epostadresser"
 msgid "Manage invites"
 msgstr "Hantera inbjudningar"
 
+#: voteit/core/views/components/meeting_actions.py:110
+#: voteit/core/views/templates/participants.pt:132
+msgid "Add participant"
+msgstr "Lägg till användare"
+
 #: voteit/core/views/components/meeting_actions.py:112
 msgid "Participant list"
 msgstr "Deltagarlista"
@@ -2159,6 +2144,23 @@ msgid "plugin_missing_error"
 msgstr ""
 "Kan inte hitta någon omröstningsmetod med namnet '${name}'. Kanske har det "
 "paketet inte installerats."
+
+#: voteit/core/views/components/tabs_menu.py:24
+msgid "Manage"
+msgstr "Hantera"
+
+#: voteit/core/views/components/tabs_menu.py:26
+msgid "Order"
+msgstr "Sortera"
+
+#: voteit/core/views/components/tabs_menu.py:32
+msgid "Add existing user"
+msgstr "Lägg till existerande användare"
+
+#: voteit/core/views/components/tabs_menu.py:34
+#: voteit/core/views/templates/manage_tickets.pt:14
+msgid "Manage invitations"
+msgstr "Hantera inbjudningar"
 
 #: voteit/core/views/components/user_tags.py:15
 msgid "Like"
@@ -2403,7 +2405,7 @@ msgstr "Visa 5 senaste inläggen"
 msgid "Read more"
 msgstr "Läs mer"
 
-#: voteit/core/views/templates/list_users.pt:11
+#: voteit/core/views/templates/list_users.pt:14
 msgid "Showing ${count} users"
 msgstr "Visar ${count} användare"
 
@@ -2438,6 +2440,58 @@ msgstr "&lt;välj tillstånd&gt;"
 #: voteit/core/views/templates/manage_agenda_items.pt:75
 msgid "Change state"
 msgstr "Ändra tillstånd"
+
+#. Default: ${open} open ticket(s) and ${closed} closed.
+#: voteit/core/views/templates/manage_tickets.pt:17
+msgid "total_tickets_header"
+msgstr "${open} öppna inbjudning(ar) och ${closed} stängd(a)."
+
+#. Default: Warning! There are ${count} tickets where no email were sent to the
+#. address it was intended for. It's a good idea to send these!
+#: voteit/core/views/templates/manage_tickets.pt:23
+msgid "never_invited_warning"
+msgstr ""
+"Varning! Det finns ${count} inbjudningar som inte epostats till adressen de "
+"var ämnade för. Det är en bra ide att skicka dem!"
+
+#: voteit/core/views/templates/manage_tickets.pt:36
+msgid "Email contains:"
+msgstr "Epost innehåller:"
+
+#: voteit/core/views/templates/manage_tickets.pt:46
+msgid "Claimed by"
+msgstr "Använd av"
+
+#: voteit/core/views/templates/manage_tickets.pt:47
+#| msgid "Published"
+msgid "Used"
+msgstr "Använd"
+
+#: voteit/core/views/templates/manage_tickets.pt:48
+msgid "Sent by"
+msgstr "Skickad av"
+
+#: voteit/core/views/templates/manage_tickets.pt:49
+#| msgid "Manage invites"
+msgid "Last invite"
+msgstr "Sista inbjudan"
+
+#: voteit/core/views/templates/manage_tickets.pt:50
+msgid "Times sent"
+msgstr "Gånger skickad"
+
+#: voteit/core/views/templates/manage_tickets.pt:79
+msgid "With ${count} selected"
+msgstr "Med ${count} valda"
+
+#: voteit/core/views/templates/manage_tickets.pt:80
+#| msgid "Presentation"
+msgid "Resend invitation"
+msgstr "Skicka om inbjudan"
+
+#: voteit/core/views/templates/manage_tickets.pt:81
+msgid "Remove"
+msgstr "Ta bort"
 
 #: voteit/core/views/templates/minutes.pt:11
 msgid "Meeting opened"
@@ -2525,15 +2579,15 @@ msgstr "Senaste objekt visas först"
 msgid "No search results"
 msgstr "Inga reslutat matchade sökningen"
 
-#: voteit/core/views/templates/send_tickets.pt:9
+#: voteit/core/views/templates/send_tickets.pt:15
 msgid "Send meeting tickets"
 msgstr "Skicka mötesinbjudningar"
 
-#: voteit/core/views/templates/send_tickets.pt:15
+#: voteit/core/views/templates/send_tickets.pt:19
 msgid "Doesn't seem to be anything to do..."
 msgstr "Verkar inte finnas något att göra…"
 
-#: voteit/core/views/templates/send_tickets.pt:20
+#: voteit/core/views/templates/send_tickets.pt:24
 msgid ""
 "Sending emails. In case something goes wrong, you may reload this page and "
 "try again."
@@ -2541,15 +2595,15 @@ msgstr ""
 "Skickar epost. Om något går fel så kan du ladda om denna sida och försöka "
 "igen."
 
-#: voteit/core/views/templates/send_tickets.pt:29
+#: voteit/core/views/templates/send_tickets.pt:33
 msgid "Total"
 msgstr "Total"
 
-#: voteit/core/views/templates/send_tickets.pt:30
+#: voteit/core/views/templates/send_tickets.pt:34
 msgid "Remaining"
 msgstr "Återstår"
 
-#: voteit/core/views/templates/send_tickets.pt:31
+#: voteit/core/views/templates/send_tickets.pt:35
 msgid "Completed"
 msgstr "Färdig"
 
@@ -2827,3 +2881,21 @@ msgstr "Avslagen"
 #: voteit/core/workflows/proposal.zcml:43
 msgid "Unhandled"
 msgstr "Ohanterad"
+
+#~ msgid "Manage invitations to the meeting"
+#~ msgstr "Hantera inbjudningar till mötet"
+
+#~ msgid "apply_to_all_title"
+#~ msgstr "Använd för allt nedan, oavsett valda"
+
+#~ msgid "Current invitations"
+#~ msgstr "Nuvarande inbjudningar"
+
+#~ msgid "Send meeting invitations"
+#~ msgstr "Skicka mötesinbjudningar"
+
+#~ msgid "resent_invites_notice"
+#~ msgstr "Skickar om ${count_emails} inbjudningar"
+
+#~ msgid "deleting_invites_notice"
+#~ msgstr "Raderar ${count_emails} inbjudningar"

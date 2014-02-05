@@ -21,6 +21,7 @@ class PermissionsViewTests(unittest.TestCase):
     
     def _fixture(self):
         self.config.scan('voteit.core.schemas.permissions')
+        self.config.scan('voteit.core.views.components.tabs_menu')
         from voteit.core.models.meeting import Meeting
         root = bootstrap_and_fixture(self.config)
         return root

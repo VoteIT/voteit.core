@@ -16,6 +16,7 @@ from voteit.core.models.schemas import button_resend
 from voteit.core.models.schemas import button_send
 from voteit.core.models.schemas import button_delete
 from voteit.core.validators import deferred_token_form_validator
+from voteit.core.fanstaticlib import voteit_manage_tickets_js
 
 
 class TicketView(BaseView):
@@ -99,7 +100,6 @@ class TicketView(BaseView):
             should have once they register. When the form is submitted, it will also email
             users.
         """
-        self.response['title'] = _(u"Send meeting invitations")
         post = self.request.POST
         if 'cancel' in post:
             self.api.flash_messages.add(_(u"Canceled"))
@@ -110,6 +110,7 @@ class TicketView(BaseView):
         schema = schema.bind(context=self.context, request=self.request, api = self.api)
         form = deform.Form(schema, buttons=(button_add, button_cancel))
         self.api.register_form_resources(form)
+        self.response['tabs'] = self.api.render_single_view_component(self.context, self.request, 'tabs', 'manage_tickets')
         if 'add' in post:
             controls = post.items()
             try:
@@ -167,60 +168,54 @@ class TicketView(BaseView):
             self.response['tickets_to_send'] = len(self.response['emails'])
         return self.response
 
-    @view_config(name="manage_tickets", context=IMeeting, renderer="templates/base_edit.pt", permission=security.MANAGE_GROUPS)
+    @view_config(name="manage_tickets", context=IMeeting, renderer="templates/manage_tickets.pt", permission=security.MANAGE_GROUPS)
     def manage_tickets(self):
-        """ A form for handling and reviewing already sent tickets.
-        """
-        self.response['title'] = _(u"Current invitations")
-        schema = createSchema('ManageTicketsSchema')
-        add_csrf_token(self.context, self.request, schema)
-        schema = schema.bind(context=self.context, request=self.request, api = self.api)
-        form = deform.Form(schema, buttons=(button_resend, button_delete, button_cancel,))
-        self.api.register_form_resources(form)
-        post = self.request.POST
-        emails = ()
-
-        if 'resend' in post or 'delete' in post:
-            controls = post.items()
-            try:
-                appstruct = form.validate(controls)
-                if appstruct['apply_to_all'] == True:
-                    emails = [x.email for x in self.context.invite_tickets.values() if x.get_workflow_state() != u'closed']
+        """ Handle and review tickets. """
+        if self.request.method == 'POST':
+            data = self.request.POST.dict_of_lists()
+            if 'email' not in data:
+                self.api.flash_messages.add(_(u"Nothing selected - nothing to do!"), type = "error")
+                return HTTPFound(location = self.request.url)
+            if 'remove' in data:
+                for email in data['email']:
+                    del self.context.invite_tickets[email]
+                self.api.flash_messages.add(_(u"Removed ${count} tickets",
+                                              mapping = {'count': len(data['email'])}))
+                return HTTPFound(location = self.request.url)
+            if 'resend' in data:
+                resent = 0
+                total = len(data['email'])
+                aborted = 0
+                for email in data['email']:
+                    ticket = self.context.invite_tickets[email]
+                    if not ticket.closed:
+                        ticket.send(self.request)
+                        resent += 1
+                    else:
+                        aborted += 1
+                if not aborted:
+                    msg = _(u"Resent ${count} successfully",
+                            mapping = {'count': resent})
                 else:
-                    emails = appstruct['emails']
-            except deform.ValidationFailure, e:
-                self.response['form'] = e.render()
-                return self.response
-
-        if emails and 'resend' in post:
-            for email in emails:
-                self.context.invite_tickets[email].send(self.request)
-            
-            self.api.flash_messages.add(_('resent_invites_notice',
-                                          default=u"Resending ${count_emails} invites",
-                                          mapping={'count_emails':len(emails)}))
-            url = self.request.resource_url(self.context)
-            return HTTPFound(location=url)
-
-        if emails and 'delete' in post:
-            for email in emails:
-                del self.context.invite_tickets[email]
-            
-            self.api.flash_messages.add(_('deleting_invites_notice',
-                                          default=u"Deleting ${count_emails} invites",
-                                          mapping={'count_emails':len(emails)}))
-
-            url = self.request.resource_url(self.context)
-            return HTTPFound(location=url)
-        
-        if 'cancel' in post:
-            self.api.flash_messages.add(_(u"Canceled"))
-
-            url = self.request.resource_url(self.context)
-            return HTTPFound(location=url)
-
-        #No action - Render add form
-        self.response['form'] = form.render()
+                    msg = _(u"Resent ${count} of ${total}. ${aborted} were not sent since they're already claimed",
+                            mapping = {'count': resent, 'total': total, 'aborted': aborted})
+                self.api.flash_messages.add(msg)
+                return HTTPFound(location = self.request.url)
+        voteit_manage_tickets_js.need()
+        self.response['tabs'] = self.api.render_single_view_component(self.context, self.request, 'tabs', 'manage_tickets')
+        closed = 0
+        results = []
+        never_invited = []
+        for ticket in self.context.invite_tickets.values():
+            results.append(ticket)
+            if ticket.closed != None:
+                closed += 1
+            if len(ticket.sent_dates) == 0:
+                never_invited.append(ticket.email)
+        self.response['invite_tickets'] = results
+        self.response['closed_count'] = closed
+        self.response['never_invited'] = never_invited
+        self.response['roles_dict'] = dict(security.MEETING_ROLES)
         return self.response
 
 
