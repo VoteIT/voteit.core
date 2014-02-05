@@ -33,28 +33,32 @@
         <thead>
             <tr>
                 <td colspan="2">
-                    Filter: <input type="text" name="search_email" id="search_email" size="20" />
-                    <span class="selection_email">(all)</span>
+                    <span i18n:translate="">Email contains:</span><br/> <input type="text" name="search_email" id="search_email" size="20" />
                 </td>
-                <td colspan="5"></td>
+                <td colspan="6"></td>
             </tr>
             <tr>
                 <th><input type="checkbox" name="select_all" /></th>
-                <th>Email</th>
-                <th>Claimed</th>
-                <th>Sent by</th>
-                <th>Last invite</th>
-                <th>Times sent</th>
-                <th>Permissions</th>
+                <th>
+                    <tal:ts i18n:translate="">Email</tal:ts>
+                    <span class="selection_email"></span>
+                </th>
+                <th i18n:translate="">Claimed by</th>
+                <th i18n:translate="">Used</th>
+                <th i18n:translate="">Sent by</th>
+                <th i18n:translate="">Last invite</th>
+                <th i18n:translate="">Times sent</th>
+                <th i18n:translate="">Permissions</th>
             </tr>
         </thead>
         <tbody>
             <tr tal:repeat="ticket invite_tickets">
                 <td><input type="checkbox" value="${ticket.email}" name="email" /></td>
                 <td class="email">${ticket.email}</td>
-                <td class="claimed">
+                <td class="claimed_by">
                     ${ticket.claimed_by}
                 </td>
+                <td class="closed">${ticket.closed and api.dt_util.relative_time_format(ticket.closed) or ''}</td>
                 <td class="sent_by">
                     ${ticket.sent_by}
                 </td>
@@ -73,8 +77,8 @@
     </table>
     <br/><br/>
         <h4 i18n:translate="">With <span id="selected_count" i18n:name="count">0</span> selected</h4>
-        <input class="buttonize" type="submit" name="resend" value="Resend invitation" />
-        <input class="buttonize" type="submit" name="remove" value="Remove" />
+        <input class="buttonize" type="submit" name="resend" value="Resend invitation" i18n:attributes="value" />
+        <input class="buttonize" type="submit" name="remove" value="Remove" i18n:attributes="value" />
     </form>
 
 </div> <!-- content - place nothing outside this ;) -->

@@ -18,14 +18,14 @@ $(document).ready(function() {
         //Show all
         if (search == '') {
             $('#tickets_table tbody tr').show();
-            $('.selection_email').text('(all)');
+            $('.selection_email').text('');
         }
         //Search active
         else {
             $('#tickets_table tbody tr').hide();
             var matching = $('#tickets_table tbody td.email:contains("' + search +'")');
             matching.parent().show();
-            $('.selection_email').text(matching.length);
+            $('.selection_email').text('(' + matching.length + ')');
         }
     });
     $('#tickets_table tbody td input[type="checkbox"]').on('click', function(event) {
