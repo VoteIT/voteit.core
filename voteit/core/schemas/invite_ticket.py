@@ -57,30 +57,6 @@ class AddTicketsSchema(colander.Schema):
                                     default = False,
                                     missing = False,
                                     title = _(u"Discard and recreate old invitations that weren't used?"),)
-    
-
-@colander.deferred
-def checkbox_of_invited_emails_widget(node, kw):
-    context = kw['context']
-    email_choices = [(x.email, x.email) for x in context.invite_tickets.values() if x.get_workflow_state() != u'closed']
-    return deform.widget.CheckboxChoiceWidget(values=email_choices)
-
-
-@schema_factory('ManageTicketsSchema', title = _(u"Manage invitations"), description = _(u"Manage invitations to the meeting"))
-class ManageTicketsSchema(colander.Schema):
-    apply_to_all = colander.SchemaNode(
-        colander.Bool(),
-        title = _(u"apply_to_all_title",
-                  default = u"Apply to all of the below, regardless of selection"),
-        default = False,
-        missing = False,
-    )
-    emails = colander.SchemaNode(
-        deform.Set(allow_empty = True),
-        widget = checkbox_of_invited_emails_widget,
-        title = _(u"Current invitations"),
-        missing = colander.null,
-    )
 
 
 @schema_factory('SendticketsSchema')

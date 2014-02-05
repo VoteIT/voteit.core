@@ -31,6 +31,7 @@ class DefaultEditTests(unittest.TestCase):
     def test_add_form(self):
         self.config.scan('voteit.core.models.agenda_item')
         self.config.scan('voteit.core.schemas.agenda_item')
+        self.config.scan('voteit.core.views.components.tabs_menu')
         context = self._fixture()
         request = testing.DummyRequest(params={'content_type': 'AgendaItem'})
         obj = self._cut(context, request)
@@ -51,6 +52,7 @@ class DefaultEditTests(unittest.TestCase):
         self.config.scan('voteit.core.models.agenda_item')
         self.config.scan('voteit.core.schemas.agenda_item')
         self.config.include('voteit.core.models.flash_messages')
+        self.config.scan('voteit.core.views.components.tabs_menu')
         context = self._fixture()
         request = testing.DummyRequest(params={'content_type': 'AgendaItem'}, post={'cancel': 'cancel'})
         obj = self._cut(context, request)
@@ -60,6 +62,7 @@ class DefaultEditTests(unittest.TestCase):
     def test_add_form_validation_error(self):
         self.config.scan('voteit.core.models.agenda_item')
         self.config.scan('voteit.core.schemas.agenda_item')
+        self.config.scan('voteit.core.views.components.tabs_menu')
         context = self._fixture()
         request = testing.DummyRequest(params={'content_type': 'AgendaItem'}, post={'add': 'add', 'title': ''})
         obj = self._cut(context, request)

@@ -30,6 +30,7 @@ install_requires = (
     'httpagentparser',
     'BeautifulSoup',
     'html2text',
+    'js.jquery_tablesorter',
     )
 
 docs_extras = [

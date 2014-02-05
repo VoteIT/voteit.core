@@ -69,22 +69,19 @@ class PermissionsView(BaseView):
     @view_config(context=ISiteRoot, name="add_permission", renderer="templates/base_edit.pt", permission=security.MANAGE_GROUPS)
     @view_config(context=IMeeting, name="add_permission", renderer="templates/base_edit.pt", permission=security.MANAGE_GROUPS)
     def add_permission(self):
-        if IMeeting.providedBy(self.context):
-            self.response['title'] = _(u"Add participant")
-        else:
+        if ISiteRoot.providedBy(self.context):
             self.response['title'] = _(u"Add permission")
-
         post = self.request.POST
         if 'cancel' in post:
             url = resource_url(self.context, self.request)
             return HTTPFound(location=url)
-
         schema = createSchema('SinglePermissionSchema')
         add_csrf_token(self.context, self.request, schema)
         schema = schema.bind(context=self.context, request=self.request, api = self.api)
         form = Form(schema, buttons=(button_add, button_cancel))
         self.api.register_form_resources(form)
-
+        if IMeeting.providedBy(self.context):
+            self.response['tabs'] = self.api.render_single_view_component(self.context, self.request, 'tabs', 'manage_tickets')
         if 'add' in post:
             controls = post.items()
             try:

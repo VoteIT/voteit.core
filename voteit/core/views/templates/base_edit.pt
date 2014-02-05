@@ -6,6 +6,7 @@
 	  i18n:domain="voteit.core">
 <body metal:use-macro="load: ${api.template_dir}main.pt">
 	<div id="top" metal:fill-slot="main_window">
+	    <div tal:condition="tabs|False" tal:replace="structure tabs"></div>
 		<div metal:define-slot="form" tal:content="structure form">Form</div>
 	</div>
 </body>

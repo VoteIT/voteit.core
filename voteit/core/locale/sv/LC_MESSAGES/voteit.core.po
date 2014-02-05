@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2014-02-04 18:34+0100\n"
-"PO-Revision-Date: 2014-02-04 18:34+0100\n"
+"PO-Revision-Date: 2014-02-05 11:20+0100\n"
 "Last-Translator: Robin Harms Oredsson <robin@betahaus.net>\n"
 "Language-Team: sv <LL@li.org>\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -954,11 +954,11 @@ msgstr "Ta bort och skapa om gamla inbjudningar som inte använts?"
 
 #: voteit/core/schemas/invite_ticket.py:69
 msgid "Manage invitations"
-msgstr "Påminn inbjudna"
+msgstr "Hantera inbjudningar"
 
 #: voteit/core/schemas/invite_ticket.py:69
 msgid "Manage invitations to the meeting"
-msgstr "Påminn deltagare som ännu inte anlänt till mötet"
+msgstr "Hantera inbjudningar till mötet"
 
 #. Default: Apply to all of the below, regardless of selection
 #: voteit/core/schemas/invite_ticket.py:73

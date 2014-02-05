@@ -59,6 +59,8 @@ class InviteTicket(Folder, WorkflowAware):
         super(InviteTicket, self).__init__()
 
     def send(self, request):
+        if self.closed: #Just as a precaution
+            return
         meeting = find_interface(self, IMeeting)
         html = render_view_action(self, request, 'email', 'invite_ticket')
         subject = _(u"Invitation to ${meeting_title}", mapping = {'meeting_title': meeting.title})

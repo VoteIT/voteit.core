@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      metal:use-macro="load: ${api.template_dir}main.pt"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="voteit.core">
+<body>
+<div metal:fill-slot="full_window" id="content">
+    <tal:messages replace="structure api.render_single_view_component(context, request, 'main', 'flash_messages')">Messages</tal:messages>
+    <div class="clear"><!-- --></div>
+
+    <tal:tabs tal:replace="structure tabs"></tal:tabs>
+    <h1 id="page_heading" i18n:translate="">Manage invitations</h1>
+    <a href="${request.resource_url(context)}" class="iconpadding icon arrow-left" i18n:translate="">Back</a>
+    <br/><br/>
+    <h4 i18n:translate="total_tickets_header">
+        <span i18n:name="open" tal:replace="len(invite_tickets) - closed_count">3</span>
+        open ticket(s) and <span i18n:name="closed" tal:replace="closed_count">3</span> closed.
+    </h4>
+
+    <div tal:condition="never_invited">
+        <p i18n:translate="never_invited_warning">Warning! There are
+            <tal:count tal:replace="len(never_invited)" i18n:name="count">5</tal:count>
+            tickets where no email were sent to the address it was intended for.
+            It's a good idea to send these!</p>
+        <a href="${request.resource_url(context, 'send_tickets', query = {'previous_invites': 0})}"
+           class="buttonize" i18n:translate="">Send</a>
+    </div>
+
+    <form name="tickets_table" method="POST">
+    <table class="listing tablesorter" id="tickets_table">
+        <thead>
+            <tr>
+                <td colspan="2">
+                    Filter: <input type="text" name="search_email" id="search_email" size="20" />
+                    <span class="selection_email">(all)</span>
+                </td>
+                <td colspan="5"></td>
+            </tr>
+            <tr>
+                <th><input type="checkbox" name="select_all" /></th>
+                <th>Email</th>
+                <th>Claimed</th>
+                <th>Sent by</th>
+                <th>Last invite</th>
+                <th>Times sent</th>
+                <th>Permissions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr tal:repeat="ticket invite_tickets">
+                <td><input type="checkbox" value="${ticket.email}" name="email" /></td>
+                <td class="email">${ticket.email}</td>
+                <td class="claimed">
+                    ${ticket.claimed_by}
+                </td>
+                <td class="sent_by">
+                    ${ticket.sent_by}
+                </td>
+                <td class="last_invite">
+                    <span tal:condition="ticket.sent_dates">${api.dt_util.relative_time_format(ticket.sent_dates[-1])}</span>
+                    <span tal:condition="not ticket.sent_dates">Unsent!</span>
+                </td>
+                <td class="times_sent">${len(ticket.sent_dates)}</td>
+                <td class="roles meta">
+                    <tal:iterate repeat="role ticket.roles">
+                        <div>${roles_dict[role]}</div>
+                    </tal:iterate>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <br/><br/>
+        <h4 i18n:translate="">With <span id="selected_count" i18n:name="count">0</span> selected</h4>
+        <input class="buttonize" type="submit" name="resend" value="Resend invitation" />
+        <input class="buttonize" type="submit" name="remove" value="Remove" />
+    </form>
+
+</div> <!-- content - place nothing outside this ;) -->
+</body>
+</html>

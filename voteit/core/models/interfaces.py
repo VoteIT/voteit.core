@@ -816,6 +816,9 @@ class IDateTimeUtil(Interface):
         datetime object, whereas this one includes the UTC tz info.
         """
 
+    def relative_time_format(time):
+        """ Get a readable relative format like "5 minutes ago". """
+
 
 class IJSUtil(Interface):
     """ """

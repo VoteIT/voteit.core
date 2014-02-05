@@ -2,9 +2,8 @@
 from fanstatic import Group
 from fanstatic import Library
 from fanstatic import Resource
-
 from pkg_resources import resource_filename
-
+from js.jquery_tablesorter import tablesorter
 
 #Libs
 deformlib = Library('deform', resource_filename('deform', 'static'))
@@ -68,6 +67,7 @@ voteit_participants = Resource(voteit_core_jslib, 'voteit_participants.js', bott
 voteit_participants_edit = Resource(voteit_core_jslib, 'voteit_participants_edit.js', bottom=True, depends=(voteit_participants,))
 voteit_moderator_js = Resource(voteit_core_jslib, 'voteit_moderator.js', bottom=True, depends=(voteit_common_js,))
 voteit_poll_js = Resource(voteit_core_jslib, 'voteit_poll.js', bottom=True, depends=(voteit_common_js,))
+voteit_manage_tickets_js = Resource(voteit_core_jslib, 'voteit_manage_tickets.js', bottom=True, depends=(voteit_common_js, tablesorter))
 
 DEFORM_RESOURCES = {
     'jquery': (jquery_deform,),
