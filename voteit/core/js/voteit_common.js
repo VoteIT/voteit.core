@@ -17,6 +17,53 @@ if(typeof(voteit) == "undefined"){
     var voteit = {};
 }
 
+$(document).ready(function () {
+    voteit['reload_timer'] = null;
+    voteit['reload_interval'] = 8000;
+    voteit['reload_data'] = null;
+    voteit['reload_fails'] = 0;
+    voteit['meeting_url'] = $("#js_config a[name=meeting_url]").attr('href'); //FIXME set var instead in config file
+    if (voteit['meeting_url']) {
+        voteit['reload_timer'] = setInterval(reload_meeting_data, voteit['reload_interval']);
+    }
+});
+
+function reload_meeting_data() {
+    if (voteit['reload_timer']) {
+        voteit['reload_timer'] = clearInterval(voteit['reload_timer']);
+    }
+    $.getJSON(voteit['meeting_url'] + '/reload_data.json', function(data) {
+        if (!voteit['reload_data']) {
+            voteit['reload_data'] = data;
+        }
+        //This will be the same as skip first run, or in case nothing new happened
+        if (JSON.stringify(voteit['reload_data']) == JSON.stringify(data)) {
+            return;
+        }
+        if (data['open_polls'] != voteit['reload_data']['open_polls']) {
+            $('.dropdown_menu_poll .menu_header').qtip('destroy');
+            if (data['open_polls'].length > 0) {
+                $('.dropdown_menu_poll .menu_header .closed').removeClass('closed').addClass('ongoing');
+            } else {
+                var ongoing = $('.dropdown_menu_poll .menu_header .ongoing');
+                ongoing.removeClass('ongoing').addClass('closed');
+                //FIXME: Another class perhaps?
+                ongoing.animate({opacity: 0.5}, 1000).animate({opacity: 1}, 1000);
+            }
+        }
+        voteit['reload_data'] = data;
+        voteit['reload_fails'] = 0;
+    }).fail(function(jqXHR) {
+        voteit['reload_fails']++;
+    }).always(function() {
+        if (voteit['reload_fails'] == 0) {
+            voteit['reload_timer'] = setInterval(reload_meeting_data, voteit['reload_interval']);
+        } else if (voteit['reload_fails'] < 20) {
+            voteit['reload_timer'] = setInterval(reload_meeting_data, voteit['reload_fails'] * voteit['reload_interval']);
+        }
+    });
+};
+
 function spinner() {
     var _spinner = $(document.createElement('img'));
     _spinner.addClass('spinner');

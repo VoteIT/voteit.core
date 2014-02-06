@@ -2,7 +2,6 @@ from deform import Form
 from deform.exception import ValidationFailure
 from pyramid.view import view_config
 from pyramid.url import resource_url
-from pyramid.traversal import resource_path
 from pyramid.security import has_permission
 from pyramid.exceptions import Forbidden
 from pyramid.httpexceptions import HTTPFound
@@ -10,13 +9,9 @@ from pyramid.httpexceptions import HTTPForbidden
 from betahaus.pyracont.factories import createSchema
 from pyramid.renderers import render
 from pyramid.response import Response
-from repoze.catalog.query import Eq
 
 from voteit.core import VoteITMF as _
-from voteit.core.security import ADD_VOTE
-from voteit.core.security import EDIT
-from voteit.core.security import VIEW
-from voteit.core.security import ROLE_VOTER
+from voteit.core import security
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IVote
 from voteit.core.models.schemas import add_csrf_token
@@ -24,7 +19,6 @@ from voteit.core.models.schemas import button_vote
 from voteit.core.models.schemas import button_cancel
 from voteit.core.models.schemas import button_update
 from voteit.core.models.schemas import button_save
-from voteit.core.models.catalog import resolve_catalog_docid
 from voteit.core.views.base_edit import BaseEdit
 from voteit.core.schemas.poll import poll_schema_after_bind
 
@@ -32,7 +26,7 @@ from voteit.core.schemas.poll import poll_schema_after_bind
 class PollView(BaseEdit):
     """ View class for poll objects """
         
-    @view_config(context=IPoll, name="edit", renderer='templates/base_edit.pt', permission=EDIT)
+    @view_config(context=IPoll, name="edit", renderer='templates/base_edit.pt', permission = security.EDIT)
     def edit_form(self):
         """ For configuring polls that haven't started yet. """
         schema_name = self.api.get_schema_name(self.context.content_type, 'edit')
@@ -78,7 +72,7 @@ class PollView(BaseEdit):
         self.response['form'] = form.render(appstruct=appstruct)
         return self.response
 
-    @view_config(context=IPoll, name="poll_config", renderer='templates/base_edit.pt', permission=EDIT)
+    @view_config(context=IPoll, name="poll_config", renderer='templates/base_edit.pt', permission=security.EDIT)
     def poll_config(self):
         """ Configure poll settings. Only for moderators.
             The settings themselves come from the poll plugin.
@@ -127,7 +121,7 @@ class PollView(BaseEdit):
         self.response['form'] = form.render(appstruct=self.context.poll_settings)
         return self.response
 
-    @view_config(name="_poll_form", context=IPoll, renderer="templates/ajax_edit.pt", permission=VIEW, xhr=True)
+    @view_config(name="_poll_form", context=IPoll, renderer="templates/ajax_edit.pt", permission=security.VIEW, xhr=True)
     def poll_form(self):
         """ Return rendered poll form or process a vote. """
         poll_plugin = self.context.get_poll_plugin()
@@ -138,7 +132,7 @@ class PollView(BaseEdit):
                     action=self.request.resource_url(self.context, '_poll_form'),
                     buttons=(button_vote,),
                     formid="vote_form")
-        can_vote = has_permission(ADD_VOTE, self.context, self.request)
+        can_vote = has_permission(security.ADD_VOTE, self.context, self.request)
         userid = self.api.userid
         post = self.request.POST
         if 'vote' in post:
@@ -182,14 +176,14 @@ class PollView(BaseEdit):
             self.response['form'] = form.render(readonly=readonly)
         return self.response
 
-    @view_config(name = 'modal_poll', context = IPoll, permission = VIEW, xhr = True) #
+    @view_config(name = 'modal_poll', context = IPoll, permission = security.VIEW, xhr = True) #
     def poll_view(self):
         """ This is the modal window that opens when you click for instance the vote button
             It will also call the view that renders the actual poll form.
         """
         self.response['poll_plugin'] = self.context.get_poll_plugin()
         self.response['wf_state'] = self.context.get_workflow_state()
-        self.response['can_vote'] = self.api.context_has_permission(ADD_VOTE, self.context)
+        self.response['can_vote'] = self.api.context_has_permission(security.ADD_VOTE, self.context)
         self.response['has_voted'] = self.api.userid in self.context
         self.response['form'] = render('templates/ajax_edit.pt', self.poll_form(), request = self.request)
         result = render('templates/poll_form.pt', self.response, request = self.request)
@@ -197,12 +191,12 @@ class PollView(BaseEdit):
             result = Response(result)
         return result
 
-    @view_config(context = IPoll, permission = VIEW, renderer = "templates/base_edit.pt")
+    @view_config(context = IPoll, permission = security.VIEW, renderer = "templates/base_edit.pt")
     def poll_full_window(self):
         self.response['form'] = self.poll_view()
         return self.response
 
-    @view_config(context=IPoll, name="poll_raw_data", permission=VIEW)
+    @view_config(context=IPoll, name="poll_raw_data", permission=security.VIEW)
     def poll_raw_data(self):
         """ View for all ballots. See intefaces.IPollPlugin.render_raw_data
         """
@@ -216,24 +210,3 @@ class PollView(BaseEdit):
         #removed the plugin.
         plugin = self.context.get_poll_plugin()
         return plugin.render_raw_data()
-
-def check_unvoted_polls(api, one = False):
-    """ Check wether it's any use to reload the polls menu for the current user.
-        Must be within meeting.
-    """
-    # get all polls that is ongoing
-    if ROLE_VOTER not in api.context_effective_principals(api.meeting):
-        return
-    query = Eq('content_type', 'Poll' ) & \
-            Eq('path', resource_path(api.meeting)) & \
-            Eq('workflow_state', 'ongoing')
-    results = api.root.catalog.query(query)[1]
-    polls = []
-    for docid in results:
-        poll = resolve_catalog_docid(api.root.catalog, api.root, docid)
-        if api.context_has_permission(ADD_VOTE, poll) and api.userid not in poll:
-            if one:
-                return True
-            else:
-                polls.append(poll)
-    return polls

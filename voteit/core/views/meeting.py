@@ -3,10 +3,13 @@ from deform import Form
 from deform.exception import ValidationFailure
 from pyramid.security import has_permission
 from pyramid.security import NO_PERMISSION_REQUIRED
+from pyramid.security import authenticated_userid
+from pyramid.traversal import resource_path
 from pyramid.view import view_config
 from pyramid.httpexceptions import HTTPFound
 from pyramid.url import resource_url
 from betahaus.pyracont.factories import createSchema
+from repoze.catalog.query import Eq
 
 from voteit.core import security
 from voteit.core import VoteITMF as _
@@ -238,3 +241,21 @@ class MeetingView(BaseView):
 
         self.response['agenda_items'] = agenda_items
         return self.response
+
+
+@view_config(name = "reload_data.json", context = IMeeting, permission = security.VIEW, renderer = 'json')
+def reload_data_json(context, request):
+    userid = authenticated_userid(request)
+    effective_principals = security.context_effective_principals(context, userid)
+    root = context.__parent__
+    response = {'open_polls': None}
+    if security.ROLE_VOTER in effective_principals:
+        query = Eq('content_type', 'Poll' ) & \
+                Eq('path', resource_path(context)) & \
+                Eq('workflow_state', 'ongoing')
+        response['open_polls'] = tuple(root.catalog.query(query)[1])
+    return response
+#                poll = resolve_catalog_docid(api.root.catalog, api.root, docid)
+#                if api.context_has_permission(ADD_VOTE, poll) and api.userid not in poll:
+#                    unvoted_polls = True
+#                    break
