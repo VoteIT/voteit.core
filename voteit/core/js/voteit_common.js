@@ -67,8 +67,8 @@ $(document).ready(function() {
 });
 
 /* Bind meeting sections menus + possibly other */
-$('#global-actions-menu .menu_header').live('hover', function(event) { dropdown_menus(event, this, 'meeting_actions_menu') });
-$('#meeting-actions .menu_header').live('hover', function(event) { dropdown_menus(event, this, 'meeting_actions_menu') });
+$('#global-actions-menu .menu_header').live('hover', function(event) { dropdown_menus(event, this, 'meeting_actions_menu'); });
+$('#meeting-actions .menu_header').live('hover', function(event) { dropdown_menus(event, this, 'meeting_actions_menu'); });
 function dropdown_menus(event, hover_object, css_classes) {
     /* stop form using default action
     IE might throw an error calling preventDefault(), so use a try/catch block. */
@@ -170,7 +170,8 @@ $('.toggle_minimize').live('click', function(event) {
     }
     // Set parent class as opened or closed
     min_parent.toggleClass('toggle_opened').toggleClass('toggle_closed');
-})
+});
+
 /* loading proposal and discussion forms with ajax */
 $(document).ready(function() {
     $("a.proposal_button").live('click', function(event) {
@@ -202,7 +203,7 @@ $(document).ready(function() {
             if (status == "error") {
                 var msg = "Sorry but there was an error: ";
                 $(this).find("div.dummy-textarea").html(msg + xhr.status + " " + xhr.statusText);
-                $(this).find("div.dummy-textarea").addClass('dummy-error')
+                $(this).find("div.dummy-textarea").addClass('dummy-error');
             } else {
                 var txtar = $(this).find("textarea");
                 txtar.focus();
