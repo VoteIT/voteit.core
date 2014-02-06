@@ -66,7 +66,9 @@ $(document).ready(function() {
    }
 });
 
-/* Bind meeting sections menus + possibly other */
+/* Bind meeting sections menus + possibly other
+ * To force reload of a cached menu: $('.<selector>').qtip('destroy')
+ * */
 $('#global-actions-menu .menu_header').live('hover', function(event) { dropdown_menus(event, this, 'meeting_actions_menu'); });
 $('#meeting-actions .menu_header').live('hover', function(event) { dropdown_menus(event, this, 'meeting_actions_menu'); });
 function dropdown_menus(event, hover_object, css_classes) {

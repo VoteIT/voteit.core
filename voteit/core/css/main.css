@@ -335,6 +335,9 @@ body {
 .icon.unhandled { background: url(/static/workflow_icons/unhandled.png) left center no-repeat; }
 .icon.private { background: url(/static/workflow_icons/private.png) left center no-repeat; }
 .icon.voting { background: url(/static/workflow_icons/locked.png) left center no-repeat; }
+/* Special voting menu case */
+.selected .icon.closed { background-image: url(/static/workflow_icons/closed_menu.png); }
+.selected .icon.ongoing { background-image: url(/static/workflow_icons/ongoing_menu.png); }
 /* icons within menus */
 .menu_body .icon.canceled { background-image: url(/static/workflow_icons/canceled_menu.png); }
 .menu_body .icon.closed { background-image: url(/static/workflow_icons/closed_menu.png); }

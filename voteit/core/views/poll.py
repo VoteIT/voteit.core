@@ -2,6 +2,7 @@ from deform import Form
 from deform.exception import ValidationFailure
 from pyramid.view import view_config
 from pyramid.url import resource_url
+from pyramid.traversal import resource_path
 from pyramid.security import has_permission
 from pyramid.exceptions import Forbidden
 from pyramid.httpexceptions import HTTPFound
@@ -9,11 +10,13 @@ from pyramid.httpexceptions import HTTPForbidden
 from betahaus.pyracont.factories import createSchema
 from pyramid.renderers import render
 from pyramid.response import Response
+from repoze.catalog.query import Eq
 
 from voteit.core import VoteITMF as _
 from voteit.core.security import ADD_VOTE
 from voteit.core.security import EDIT
 from voteit.core.security import VIEW
+from voteit.core.security import ROLE_VOTER
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IVote
 from voteit.core.models.schemas import add_csrf_token
@@ -21,6 +24,7 @@ from voteit.core.models.schemas import button_vote
 from voteit.core.models.schemas import button_cancel
 from voteit.core.models.schemas import button_update
 from voteit.core.models.schemas import button_save
+from voteit.core.models.catalog import resolve_catalog_docid
 from voteit.core.views.base_edit import BaseEdit
 from voteit.core.schemas.poll import poll_schema_after_bind
 
@@ -212,3 +216,24 @@ class PollView(BaseEdit):
         #removed the plugin.
         plugin = self.context.get_poll_plugin()
         return plugin.render_raw_data()
+
+def check_unvoted_polls(api, one = False):
+    """ Check wether it's any use to reload the polls menu for the current user.
+        Must be within meeting.
+    """
+    # get all polls that is ongoing
+    if ROLE_VOTER not in api.context_effective_principals(api.meeting):
+        return
+    query = Eq('content_type', 'Poll' ) & \
+            Eq('path', resource_path(api.meeting)) & \
+            Eq('workflow_state', 'ongoing')
+    results = api.root.catalog.query(query)[1]
+    polls = []
+    for docid in results:
+        poll = resolve_catalog_docid(api.root.catalog, api.root, docid)
+        if api.context_has_permission(ADD_VOTE, poll) and api.userid not in poll:
+            if one:
+                return True
+            else:
+                polls.append(poll)
+    return polls
