@@ -213,6 +213,8 @@ h1, h2, h3, h4, h5, h6, legend {
 }
 #header-meeting-outer {
     font-size: 18px;
+    width: 100%;
+    z-index: 150;
 }
 #header-meeting-outer a {
     color: #5c5a5d;
@@ -653,14 +655,15 @@ button[name="cancel"]:hover {
 #flash_messages,
 #notify-meetingstate {
     clear: both;
-    z-index: 10000;
+    z-index: 100;
 }
 #flash_messages .message,
 #notify-meetingstate .message {
     /* Info is default */
-    padding: 5px 10px 5px 30px;
+    position: relative;
+    padding: 5px 30px 5px 30px;
     border: 1px solid #fff;
-    background: #968C89 url(/static/icons/icon_info.png) no-repeat 10px 50%;
+    background: #968C89 url(/static/icons/icon_info.png) no-repeat 8px 8px;
     float: left;
     clear: both;
     font-size: 14px;
@@ -676,7 +679,7 @@ button[name="cancel"]:hover {
 }
 
 #flash_messages .lock {
-    background-image: url(/static/workflow_icons/locked_x.png);
+    background-image: url(/static/workflow_icons/locked_menu.png);
 }
 #flash_messages .info {
 }
@@ -689,8 +692,10 @@ button[name="cancel"]:hover {
 #flash_messages .close_message {
     font-weight: bold;
     font-style: normal;
-    margin-left: 1em;
     color: #fff;
+    position: absolute;
+    right: 6px;
+    top: 4px;
 }
 /* End flash messages */
 
