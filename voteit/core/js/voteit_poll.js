@@ -4,13 +4,11 @@ var ongoing_vote = false;
 /* Open poll booth when poll buttons is pressed*/
 $('.open_poll_button').live('click', function(event) {
     try { event.preventDefault(); } catch(e) {}
-
     var button = $(this);
     spinner().appendTo(button);
-
     var poll = $(this).parents(".poll");
     var id = $(poll).attr('id');
-    var url = button.attr('href');
+    var url = button.attr('href') + '/modal_poll';
     var booth_wrapper = $('<div class="booth_wrapper popup_dropshadow">');
     $(booth_wrapper).attr('id', 'booth_'+id);
     $(booth_wrapper).appendTo('#main');
@@ -42,7 +40,7 @@ function submit_vote_data(event) {
     ongoing_vote = true;
     var button = $(this);
     spinner().appendTo(button);
-    var form = button.parents('form')
+    var form = button.parents('form');
     var form_data = form.serialize();
     var target = form.parents('.vote_form_area');
     form_data += '&vote=1'; //XXX Hack to make sure add is in there
@@ -63,16 +61,16 @@ function submit_vote_data(event) {
     });
 }
 
-/* close booth when close button is clicked
- * 
- *FIXME: This html is now removed, i don't know if i want to readd it since it conflicts with cogwheel for moderators.
-$('.booth.poll a.close').live('click', function(event) {
-    try { event.preventDefault(); } catch(e) {}
-    var booth_wrapper = $(this).parents(".booth_wrapper");
-    booth_wrapper.remove();
-    remove_mask();
+/* close booth when close button is clicked */
+$('#close_vote_button').live('click', function(event) {
+    if ($('.booth_wrapper').length > 0) {
+        try { event.preventDefault(); } catch(e) {};
+        $(".booth_wrapper").remove();
+        remove_mask();
+    } else {
+        return event;
+    }
 });
-*/
 
 //Remove if mask area is clicked - this might not be a good idea to keep
 $('#mask').click(function() {
@@ -111,16 +109,3 @@ function remove_mask() {
     $('#mask').hide();
     $("body").css("overflow", "auto");
 }
-
-
-/*
-//$(window).resize(reapply_mask);
-//$(window).scroll(reapply_mask);
-function reapply_mask() {
-    //Get the screen height and width
-    var maskHeight = $(document).height();
-    var maskWidth = $(window).width();
-    //Set height and width to mask to fill up the whole screen
-    $('#mask').css({'width':maskWidth,'height':maskHeight});
-}
-*/
