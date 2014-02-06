@@ -42,6 +42,14 @@
 		<div tal:condition="success_msg|False" class="success message">${success_msg}</div>
 		<div class="error message"></div>
 		
+        <center tal:condition="not can_vote"><!-- close, same as in vote_success -->
+            <a href="${request.resource_url(context.__parent__, anchor = context.uid)}"
+               id="close_vote_button" class="buttonize"
+               i18n:translate="">
+                <span tal:condition="request.is_xhr" i18n:translate="">Close</span>
+                <span tal:condition="not request.is_xhr" i18n:translate="">Back</span>
+            </a>
+        </center>
 	</div>
 
 	<div class="poll_footer">

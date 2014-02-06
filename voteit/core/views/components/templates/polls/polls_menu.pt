@@ -1,8 +1,7 @@
 <tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core">
 <li class="tab dropdown_menu dropdown_menu_poll">
     <a href="#" class="menu_header" url="${url}">
-        <span>
-            <tal:unvoted condition="unvoted_polls_count">(${unvoted_polls_count})</tal:unvoted>
+        <span tal:attributes="class unvoted_polls and 'iconpadding icon ongoing' or 'iconpadding icon closed'">
             ${menu_title}
         </span>
     </a>

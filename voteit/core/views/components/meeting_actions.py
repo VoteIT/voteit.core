@@ -2,18 +2,16 @@ from betahaus.viewcomponent import view_action
 from pyramid.renderers import render
 from pyramid.traversal import resource_path
 from pyramid.view import view_config
-from repoze.catalog.query import Eq
 
 from voteit.core.security import MANAGE_SERVER
 from voteit.core.security import MODERATE_MEETING
 from voteit.core.security import VIEW
 from voteit.core.security import MANAGE_GROUPS
-from voteit.core.security import ADD_VOTE
 from voteit.core import VoteITMF as _
 from voteit.core.views.base_view import BaseView
+from voteit.core.views.poll import check_unvoted_polls
 from voteit.core.models.interfaces import IAccessPolicy
 from voteit.core.models.interfaces import IMeeting
-from voteit.core.models.catalog import resolve_catalog_docid
 
 
 MODERATOR_SECTIONS = ('ongoing', 'upcoming', 'closed', 'private',)
@@ -39,19 +37,8 @@ def polls_menu(context, request, va, **kw):
     response = {}
     response['api'] = api
     response['menu_title'] = va.title
-    # get all polls that is ongoing
-    query = Eq('content_type', 'Poll' ) & \
-            Eq('path', resource_path(api.meeting)) & \
-            Eq('workflow_state', 'ongoing')
-    num, results = api.root.catalog.query(query)
-    # count the polls the user has the right to vote in
-    num = 0
-    for docid in results:
-        poll = resolve_catalog_docid(api.root.catalog, api.root, docid)
-        if api.context_has_permission(ADD_VOTE, poll) and api.userid not in poll:
-            num = num + 1
-    response['unvoted_polls_count'] = num
-    response['url'] = '%smeeting_poll_menu' % api.resource_url(api.meeting, request)
+    response['unvoted_polls'] = check_unvoted_polls(api, one = True)
+    response['url'] = request.resource_url(api.meeting, 'meeting_poll_menu')
     return render('templates/polls/polls_menu.pt', response, request = request)
 
 @view_action('meeting_actions', 'admin_menu', title = _(u"Admin menu"), permission = MANAGE_SERVER,

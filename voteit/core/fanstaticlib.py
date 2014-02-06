@@ -102,6 +102,9 @@ def is_agenda_item(context, request, view):
 def is_moderator(context, request, view):
     return view.api.show_moderator_actions
 
+def is_votable_context(context, request, view):
+    return getattr(context, 'content_type', '') in ('AgendaItem', 'Poll')
+
 #Positional arguments
 #key, resource, discriminator (if any)
 DEFAULT_FANSTATIC_RESOURCES = (
@@ -114,5 +117,5 @@ DEFAULT_FANSTATIC_RESOURCES = (
     ('voteit_participants_edit', voteit_participants_edit, is_participants_view_moderator),
     ('voteit_moderator_js', voteit_moderator_js, is_moderator),
     ('star_rating', star_rating, is_agenda_item), #Resources loaded with ajax, so this needs to be loaded in advance.
-    ('voteit_poll_js', voteit_poll_js, is_agenda_item), #Resources loaded with ajax, so this needs to be loaded in advance.
+    ('voteit_poll_js', voteit_poll_js, is_votable_context), #Resources loaded with ajax, so this needs to be loaded in advance.
 )

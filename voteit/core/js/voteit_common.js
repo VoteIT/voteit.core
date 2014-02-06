@@ -53,22 +53,24 @@ $(document).ready(function () {
     });
 });
 
+/* Automove header */
 $(document).ready(function() {
-    // This won't work in IE'
-    var div = $('#flash_messages');
+    var div = $('#header-meeting-outer');
     if(div.length > 0) {
         var start = div.offset().top;
         $.event.add(window, "scroll", function() {
             var p = $(window).scrollTop();
             div.css('position',((p)>start) ? 'fixed' : 'static');
-            div.css('top',((p)>start) ? '0px' : '');
+            div.css('top',((p)>start) ? '-2px' : '');
         });
    }
 });
 
-/* Bind meeting sections menus + possibly other */
-$('#global-actions-menu .menu_header').live('hover', function(event) { dropdown_menus(event, this, 'meeting_actions_menu') });
-$('#meeting-actions .menu_header').live('hover', function(event) { dropdown_menus(event, this, 'meeting_actions_menu') });
+/* Bind meeting sections menus + possibly other
+ * To force reload of a cached menu: $('.<selector>').qtip('destroy')
+ * */
+$('#global-actions-menu .menu_header').live('hover', function(event) { dropdown_menus(event, this, 'meeting_actions_menu'); });
+$('#meeting-actions .menu_header').live('hover', function(event) { dropdown_menus(event, this, 'meeting_actions_menu'); });
 function dropdown_menus(event, hover_object, css_classes) {
     /* stop form using default action
     IE might throw an error calling preventDefault(), so use a try/catch block. */
@@ -144,7 +146,7 @@ $(".user_tag_link").live('click', function(event) {
             flash_message(voteit.translation['error_loading'], 'error');
         }
     });
-    user_tag.find('.spinner').remove()
+    user_tag.find('.spinner').remove();
 });
 
 /* Minimize
@@ -170,7 +172,8 @@ $('.toggle_minimize').live('click', function(event) {
     }
     // Set parent class as opened or closed
     min_parent.toggleClass('toggle_opened').toggleClass('toggle_closed');
-})
+});
+
 /* loading proposal and discussion forms with ajax */
 $(document).ready(function() {
     $("a.proposal_button").live('click', function(event) {
@@ -182,7 +185,7 @@ $(document).ready(function() {
             if (status == "error") {
                 var msg = "Sorry but there was an error: ";
                 $(this).html(msg + xhr.status + " " + xhr.statusText);
-                $(this).addClass('dummy-error')
+                $(this).addClass('dummy-error');
             } else {
                 var txtar = $(this).find("textarea");
                 txtar.focus();
@@ -202,7 +205,7 @@ $(document).ready(function() {
             if (status == "error") {
                 var msg = "Sorry but there was an error: ";
                 $(this).find("div.dummy-textarea").html(msg + xhr.status + " " + xhr.statusText);
-                $(this).find("div.dummy-textarea").addClass('dummy-error')
+                $(this).find("div.dummy-textarea").addClass('dummy-error');
             } else {
                 var txtar = $(this).find("textarea");
                 txtar.focus();
@@ -253,7 +256,7 @@ $(document).ready(function() {
         try { event.preventDefault(); } catch(e) {}
         var url = $(this).attr('href');
         var body = $(this).parents('.listing_block').find('.body');
-        var link = $(this)
+        var link = $(this);
         $.getJSON(url, function(data) {
             body.empty().append(data['body']);
             link.hide();

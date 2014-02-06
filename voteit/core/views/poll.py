@@ -2,6 +2,7 @@ from deform import Form
 from deform.exception import ValidationFailure
 from pyramid.view import view_config
 from pyramid.url import resource_url
+from pyramid.traversal import resource_path
 from pyramid.security import has_permission
 from pyramid.exceptions import Forbidden
 from pyramid.httpexceptions import HTTPFound
@@ -9,11 +10,13 @@ from pyramid.httpexceptions import HTTPForbidden
 from betahaus.pyracont.factories import createSchema
 from pyramid.renderers import render
 from pyramid.response import Response
+from repoze.catalog.query import Eq
 
 from voteit.core import VoteITMF as _
 from voteit.core.security import ADD_VOTE
 from voteit.core.security import EDIT
 from voteit.core.security import VIEW
+from voteit.core.security import ROLE_VOTER
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IVote
 from voteit.core.models.schemas import add_csrf_token
@@ -21,6 +24,7 @@ from voteit.core.models.schemas import button_vote
 from voteit.core.models.schemas import button_cancel
 from voteit.core.models.schemas import button_update
 from voteit.core.models.schemas import button_save
+from voteit.core.models.catalog import resolve_catalog_docid
 from voteit.core.views.base_edit import BaseEdit
 from voteit.core.schemas.poll import poll_schema_after_bind
 
@@ -136,7 +140,6 @@ class PollView(BaseEdit):
                     formid="vote_form")
         can_vote = has_permission(ADD_VOTE, self.context, self.request)
         userid = self.api.userid
-
         post = self.request.POST
         if 'vote' in post:
             if not can_vote:
@@ -147,14 +150,11 @@ class PollView(BaseEdit):
             except ValidationFailure, e:
                 self.response['form'] = e.render()
                 return self.request
-
             Vote = poll_plugin.get_vote_class()
             if not IVote.implementedBy(Vote):
                 raise TypeError("Poll plugins method get_vote_class returned something that didn't implement IVote.")
-
             #Remove crsf_token from appstruct after validation
             del appstruct['csrf_token']
-
             if userid in self.context:
                 vote = self.context[userid]
                 assert IVote.providedBy(vote)
@@ -168,7 +168,6 @@ class PollView(BaseEdit):
                 self.context[userid] = vote
                 #FIXME: success_msg = _(u"Thank you for voting!")
             return Response(render("templates/snippets/vote_success.pt", self.response, request = self.request))
-
         #No vote recieved, continue to render form
         if userid in self.context:
             vote = self.context[userid]
@@ -183,8 +182,8 @@ class PollView(BaseEdit):
             self.response['form'] = form.render(readonly=readonly)
         return self.response
 
-    @view_config(context=IPoll, permission=VIEW, xhr=True)
-    def modal_poll_view(self):
+    @view_config(name = 'modal_poll', context = IPoll, permission = VIEW, xhr = True) #
+    def poll_view(self):
         """ This is the modal window that opens when you click for instance the vote button
             It will also call the view that renders the actual poll form.
         """
@@ -193,15 +192,15 @@ class PollView(BaseEdit):
         self.response['can_vote'] = self.api.context_has_permission(ADD_VOTE, self.context)
         self.response['has_voted'] = self.api.userid in self.context
         self.response['form'] = render('templates/ajax_edit.pt', self.poll_form(), request = self.request)
-        return Response(render('templates/modal_poll.pt', self.response, request = self.request))
+        result = render('templates/poll_form.pt', self.response, request = self.request)
+        if self.request.is_xhr == True:
+            result = Response(result)
+        return result
 
-    @view_config(context=IPoll, permission=VIEW, xhr=False)
-    def redirect_from_poll_view(self):
-        """ Poll view isn't directly accessible - it should be opened in a modal
-            window by a javascript ajax load.
-        """
-        url = self.request.resource_url(self.context.__parent__, anchor=self.context.uid)
-        return HTTPFound(location = url)
+    @view_config(context = IPoll, permission = VIEW, renderer = "templates/base_edit.pt")
+    def poll_full_window(self):
+        self.response['form'] = self.poll_view()
+        return self.response
 
     @view_config(context=IPoll, name="poll_raw_data", permission=VIEW)
     def poll_raw_data(self):
@@ -212,9 +211,29 @@ class PollView(BaseEdit):
             self.api.flash_messages.add("Poll not closed yet", type='error')
             url = resource_url(self.context, self.request)
             return HTTPFound(location=url)
-
         #This will generate a ComponentLookupError if the plugin isn't found,
         #however, that should never happen for a closed poll unless someone
         #removed the plugin.
         plugin = self.context.get_poll_plugin()
         return plugin.render_raw_data()
+
+def check_unvoted_polls(api, one = False):
+    """ Check wether it's any use to reload the polls menu for the current user.
+        Must be within meeting.
+    """
+    # get all polls that is ongoing
+    if ROLE_VOTER not in api.context_effective_principals(api.meeting):
+        return
+    query = Eq('content_type', 'Poll' ) & \
+            Eq('path', resource_path(api.meeting)) & \
+            Eq('workflow_state', 'ongoing')
+    results = api.root.catalog.query(query)[1]
+    polls = []
+    for docid in results:
+        poll = resolve_catalog_docid(api.root.catalog, api.root, docid)
+        if api.context_has_permission(ADD_VOTE, poll) and api.userid not in poll:
+            if one:
+                return True
+            else:
+                polls.append(poll)
+    return polls
