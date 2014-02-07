@@ -859,6 +859,15 @@ table.listing {
 .load_more {
     margin-bottom: 10px;
 }
+.load_new_ai_items {
+    display: none;
+}
+.listing_control {
+    background-color: #F2F2F2;
+    margin-bottom: 0px;
+    padding: 10px;
+}
+
 
 /* proposals and discussions */
 

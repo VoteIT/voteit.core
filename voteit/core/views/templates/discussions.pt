@@ -51,7 +51,11 @@
 	        <tal:meta replace="structure api.render_single_view_component(context, request, 'main', 'metadata_listing', brain=post)">Meta</tal:meta>
 	        <div class="clear"><!-- --></div>
 	    </div>
-	
 	</tal:iterate>
+    <!-- Load more - hidden at first -->
+    <div class="listing_block load_new_ai_items">
+        <a name="discussions" href="${request.url}" class="icon-right arrow-right"
+           i18n:translate="">There are new discussion posts</a>
+    </div>
 </div> 
 </tal:main>
