@@ -21,9 +21,17 @@
 	    	Proposal
 	    </tal:proposal>	
 	</tal:iterate>
+	
+	<!-- Load more - hidden at first -->
+	<div class="listing_block load_new_ai_items listing_control">
+	    <a name="proposals" href="${request.url}" class="icon-right arrow-right"
+	       i18n:translate="">There are new proposals</a>
+	</div>
 
     <div tal:condition="retracted_proposals" class="toggle_area toggle_closed">
+        <div class="listing_block listing_control">
         <a class="toggle_minimize" href="javascript: void(0)" i18n:translate="">Show <tal:count i18n:name="count">${len(retracted_proposals)}</tal:count> retracted proposals</a>
+        </div>
         <div class="minimizable_area">
             <tal:iterate repeat="proposal retracted_proposals">
                 <tal:proposal replace="structure api.render_view_group(context, request, 'proposal', brain=proposal)">

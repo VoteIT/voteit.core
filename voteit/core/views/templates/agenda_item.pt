@@ -1,8 +1,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
       xmlns:tal="http://xml.zope.org/namespaces/tal"
       metal:use-macro="load: ${api.template_dir}content.pt"
-	  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
-	  i18n:domain="voteit.core">
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="voteit.core">
 <body>
     <div metal:fill-slot="page_heading" id="page_heading">
         <tal:moderator_actions metal:define-slot="action_menu"
@@ -18,6 +18,11 @@
     <div metal:fill-slot="content"
          tal:content="structure api.render_view_group(context, request, 'agenda_item_top')">Top content</div>
     <div metal:fill-slot="columns" class="columns">
+         <script type="text/javascript">
+            // See voteit_common.js - this has to do with autoreload
+            // Mind the fill-slots!s
+            voteit.cfg['reload_ai_name'] = '${context.__name__}';
+        </script>
         <tal:columns replace="structure ai_columns">Columns</tal:columns>
     </div>
 </body>

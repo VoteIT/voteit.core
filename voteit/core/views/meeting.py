@@ -10,12 +10,13 @@ from pyramid.httpexceptions import HTTPFound
 from pyramid.url import resource_url
 from betahaus.pyracont.factories import createSchema
 from repoze.catalog.query import Eq
+from repoze.catalog.query import Contains
 
 from voteit.core import security
 from voteit.core import VoteITMF as _
 from voteit.core.views.base_view import BaseView
-from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import IAccessPolicy
+from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.schemas import add_csrf_token
 from voteit.core.models.schemas import button_save
 from voteit.core.models.schemas import button_cancel
@@ -245,17 +246,23 @@ class MeetingView(BaseView):
 
 @view_config(name = "reload_data.json", context = IMeeting, permission = security.VIEW, renderer = 'json')
 def reload_data_json(context, request):
+    #import pdb;pdb.set_trace()
     userid = authenticated_userid(request)
     effective_principals = security.context_effective_principals(context, userid)
     root = context.__parent__
-    response = {'open_polls': None}
+    response = {'open_polls': (), 'unread_proposals': (), 'unread_discussionposts': ()}
+    #Get poll reload information
     if security.ROLE_VOTER in effective_principals:
         query = Eq('content_type', 'Poll' ) & \
                 Eq('path', resource_path(context)) & \
                 Eq('workflow_state', 'ongoing')
         response['open_polls'] = tuple(root.catalog.query(query)[1])
+    #Fetch proposals and discussions?
+    ai_name = request.GET.get('ai_name', None)
+    if ai_name and ai_name in context:
+        base_query = Eq('path', resource_path(context, ai_name))# &\
+                     #Contains('unread', userid)
+        for (ctype, key) in (('Proposal', 'unread_proposals'), ('DiscussionPost', 'unread_discussionposts')):
+            response[key] = tuple(root.catalog.query(base_query & Eq('content_type', ctype))[1])
     return response
-#                poll = resolve_catalog_docid(api.root.catalog, api.root, docid)
-#                if api.context_has_permission(ADD_VOTE, poll) and api.userid not in poll:
-#                    unvoted_polls = True
-#                    break
+

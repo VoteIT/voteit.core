@@ -11,6 +11,14 @@
     <tal:head tal:content="structure api.render_view_group(context, request, 'head')"></tal:head>
     <style type="text/css" tal:content="api.root.get_field_value('custom_css', '')">
     </style>
+    <script type="text/javascript">
+        //This is probably run first, but still
+        if(typeof(voteit) == "undefined"){
+            voteit = {};
+        }
+        voteit.cfg = {};
+        voteit.cfg['meeting_url'] = '${api.meeting and request.resource_url(api.meeting) or ""}';
+    </script>
     <metal:head define-slot="head"></metal:head>
 </head>
 <body>

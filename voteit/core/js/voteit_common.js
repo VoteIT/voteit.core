@@ -14,25 +14,29 @@ $.fn.qtip.defaults.position['effect'] = false;
 
 /* JS that should be present on every page, regardless of its function.*/
 if(typeof(voteit) == "undefined"){
-    var voteit = {};
+    voteit = {};
 }
 
 $(document).ready(function () {
     voteit['reload_timer'] = null;
-    voteit['reload_interval'] = 8000;
+    voteit['reload_interval'] = 7000;
     voteit['reload_data'] = null;
     voteit['reload_fails'] = 0;
-    voteit['meeting_url'] = $("#js_config a[name=meeting_url]").attr('href'); //FIXME set var instead in config file
-    if (voteit['meeting_url']) {
+    if (voteit.cfg['meeting_url']) {
         voteit['reload_timer'] = setInterval(reload_meeting_data, voteit['reload_interval']);
     }
+    mark_as_read();
 });
 
 function reload_meeting_data() {
     if (voteit['reload_timer']) {
         voteit['reload_timer'] = clearInterval(voteit['reload_timer']);
     }
-    $.getJSON(voteit['meeting_url'] + '/reload_data.json', function(data) {
+    var url = voteit.cfg['meeting_url'] + 'reload_data.json';
+    if (voteit.cfg['reload_ai_name']) {
+        url += '?ai_name=' + voteit.cfg['reload_ai_name'];
+    }
+    $.getJSON(url, function(data) {
         if (!voteit['reload_data']) {
             voteit['reload_data'] = data;
         }
@@ -40,7 +44,8 @@ function reload_meeting_data() {
         if (JSON.stringify(voteit['reload_data']) == JSON.stringify(data)) {
             return;
         }
-        if (data['open_polls'] != voteit['reload_data']['open_polls']) {
+        //Handle polls
+        if (JSON.stringify(data['open_polls']) != JSON.stringify(voteit['reload_data']['open_polls'])) {
             $('.dropdown_menu_poll .menu_header').qtip('destroy');
             if (data['open_polls'].length > 0) {
                 $('.dropdown_menu_poll .menu_header .closed').removeClass('closed').addClass('ongoing');
@@ -50,6 +55,12 @@ function reload_meeting_data() {
                 //FIXME: Another class perhaps?
                 ongoing.animate({opacity: 0.5}, 1000).animate({opacity: 1}, 1000);
             }
+        }
+        if (JSON.stringify(data['unread_discussionposts']) != JSON.stringify(voteit['reload_data']['unread_discussionposts'])) {
+            $('#discussions .load_new_ai_items').show();
+        }
+        if (JSON.stringify(data['unread_proposals']) != JSON.stringify(voteit['reload_data']['unread_proposals'])) {
+            $('#proposals .load_new_ai_items').show();
         }
         voteit['reload_data'] = data;
         voteit['reload_fails'] = 0;
@@ -63,6 +74,7 @@ function reload_meeting_data() {
         }
     });
 };
+
 
 function spinner() {
     var _spinner = $(document.createElement('img'));
@@ -264,7 +276,7 @@ $(document).ready(function() {
 });
 
 /* Action to mark content as read */
-$(document).ready(function() {
+function mark_as_read () {
     var url_config = $("#js_config a[name=current_url]");
     if (url_config.length > 0) {
         var url = url_config.attr('href') + '/_mark_read';
@@ -283,7 +295,6 @@ $(document).ready(function() {
                             if (key == 'error') {
                                 //Do things with error
                                 //FIXME: Exception view for js might be a good idea?
-                                console.log(val);
                             };
                             if ((key == 'marked_read') && (val != unread_names.length)) {
                                 console.log('Wrong number of marked read count returned.');
@@ -294,7 +305,7 @@ $(document).ready(function() {
             });
         }
     };
-});
+}
 
 /* Read more discussion post */
 $(document).ready(function() {
@@ -314,6 +325,7 @@ $(document).ready(function() {
 /* show previous posts */
 $(document).ready(function() {
     $('#discussions div.load_more a').live('click', function(event) {
+        //FIXME: Shouldn't this be the same as reaload_ai_listings function?
         /* stops normal events function 
         IE might throw an error calling preventDefault(), so use a try/catch block. */
         try { event.preventDefault(); } catch(e) {}
@@ -331,44 +343,58 @@ $(document).ready(function() {
     });
 });
 
+function reload_ai_listings(url, areas) {
+    areas = typeof areas !== 'undefined' ? areas : ['discussions', 'proposals'];
+    return $.ajax({
+           url: url,
+        success: function(response) {
+            $.each(areas, function(i, area_id) {
+                $('#'+area_id+' .listing').html($('#'+area_id+' .listing', response).html());
+                $('#'+area_id+' .inline_add_form').html($('#'+area_id+' .inline_add_form', response).html());
+            });
+        },
+        error: function(response) {
+            $.each(areas, function(i, area_id) {
+                $('#'+area_id+' .listing').empty();
+                $('#'+area_id+' .listing').append(voteit.translation['error_loading']);
+            });
+        },
+        complete: function() {
+            $('img.spinner').remove();
+        }
+    });
+}
+
+/* Load new things associated to agenda item */
+$(document).ready(function() {
+    $('.load_new_ai_items a').live('click', function(event) { 
+        try { event.preventDefault(); } catch(e) {}
+        var clicked = $(this);
+        var areas = [clicked.attr('name')];
+        var url = clicked.attr('href');
+        spinner().appendTo(clicked);
+        $.when( reload_ai_listings(url, areas) ).done(function() {
+            clicked.parents('.load_new_ai_items').hide();
+            mark_as_read();
+        });
+    });
+});
+
 /* tag filtering */
 $(document).ready(function() {
     $('#proposals a.tag, #discussions a.tag, .tag_stats a').live('click', function(event) {
         /* stops normal events function 
         IE might throw an error calling preventDefault(), so use a try/catch block. */
         try { event.preventDefault(); } catch(e) {}
-        
-        $("#proposals .listing").empty();
-        $("#proposals .listing").append(voteit.translation['loading']);
-        $("#discussions .inline_add_form").empty();
-        
-        $("#discussions .listing").empty();
-        $("#discussions .listing").append(voteit.translation['loading']);
-        $("#discussions .inline_add_form").empty();
-        
-        var url = $(this).attr('href');
-        var title = $(this).attr('title');
-        $.ajax({
-               url: url,
-            success: function(response) {
-                //pushState doesn't work on IE 8, perhaps others
-                try { window.history.pushState(null, title, url); } catch(e) {}
-                $('#proposals .listing').html($('#proposals .listing', response).html());
-                $('#proposals .inline_add_form').html($('#proposals .inline_add_form', response).html());
-                $('#discussions .listing').html($('#discussions .listing', response).html());
-                $('#discussions .inline_add_form').html($('#discussions .inline_add_form', response).html());
-                //Scroll to top of proposals
-                $('html, body').animate({scrollTop: $('#proposals').offset().top}, 200);
-
-            },
-            error: function(response) {
-                $("#proposals .listing").empty();
-                $("#proposals .listing").append(voteit.translation['error_loading']);
-                
-                $("#discussions .listing").empty();
-                $("#discussions .listing").append(voteit.translation['error_loading']);
-            }
-        });
+        var clicked = $(this);
+        var url = clicked.attr('href');
+        var title = clicked.attr('title');
+        //pushState doesn't work on IE 8, perhaps others
+        try { window.history.pushState(null, title, url); } catch(e) {}
+        spinner().appendTo(clicked);
+        reload_ai_listings(url, ['discussions', 'proposals']);
+        //Before, this function scrolled. Don't know if that's a smart idea
+        //$('html, body').animate({scrollTop: $('.tag_stats').offset().top}, 200);
     });
 });
 
