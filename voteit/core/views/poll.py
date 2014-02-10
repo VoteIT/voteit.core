@@ -121,7 +121,8 @@ class PollView(BaseEdit):
         self.response['form'] = form.render(appstruct=self.context.poll_settings)
         return self.response
 
-    @view_config(name="_poll_form", context=IPoll, renderer="templates/ajax_edit.pt", permission=security.VIEW, xhr=True)
+    @view_config(name="_poll_form", context = IPoll, renderer="templates/ajax_edit.pt", permission=security.VIEW, xhr=True)
+    @view_config(name="_poll_form", context = IPoll, renderer="templates/base_edit.pt", permission=security.VIEW, xhr=False)
     def poll_form(self):
         """ Return rendered poll form or process a vote. """
         poll_plugin = self.context.get_poll_plugin()
@@ -129,9 +130,9 @@ class PollView(BaseEdit):
         add_csrf_token(self.context, self.request, schema)
         schema = schema.bind(context=self.context, request=self.request, api = self.api)        
         form = Form(schema,
-                    action=self.request.resource_url(self.context, '_poll_form'),
-                    buttons=(button_vote,),
-                    formid="vote_form")
+                    action = self.request.resource_url(self.context, '_poll_form'),
+                    buttons = (button_vote,),
+                    formid = "vote_form")
         can_vote = has_permission(security.ADD_VOTE, self.context, self.request)
         userid = self.api.userid
         post = self.request.POST
@@ -143,7 +144,7 @@ class PollView(BaseEdit):
                 appstruct = form.validate(controls)
             except ValidationFailure, e:
                 self.response['form'] = e.render()
-                return self.request
+                return self.response
             Vote = poll_plugin.get_vote_class()
             if not IVote.implementedBy(Vote):
                 raise TypeError("Poll plugins method get_vote_class returned something that didn't implement IVote.")
@@ -160,8 +161,14 @@ class PollView(BaseEdit):
                 vote.set_vote_data(appstruct, notify = False)
                 #To fire events after set_vote_data is done
                 self.context[userid] = vote
-                #FIXME: success_msg = _(u"Thank you for voting!")
-            return Response(render("templates/snippets/vote_success.pt", self.response, request = self.request))
+            success_msg = _(u"Your vote has been registered!")
+            if self.request.is_xhr:
+                self.response['success_msg'] = success_msg
+                return Response(render("templates/snippets/vote_success.pt", self.response, request = self.request))
+            self.api.flash_messages.add(success_msg)
+            url = self.request.resource_url(self.context.__parent__, anchor = self.context.uid)
+            return HTTPFound(location = url)
+            
         #No vote recieved, continue to render form
         if userid in self.context:
             vote = self.context[userid]
