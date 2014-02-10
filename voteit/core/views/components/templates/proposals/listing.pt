@@ -25,7 +25,7 @@
 	<!-- Load more - hidden at first -->
 	<div class="listing_block load_new_ai_items listing_control">
 	    <a name="proposals" href="${request.url}" class="icon-right arrow-right"
-	       i18n:translate="">There are new proposals</a>
+	       i18n:translate="">Proposals updated, click to load</a>
 	</div>
 
     <div tal:condition="retracted_proposals" class="toggle_area toggle_closed">

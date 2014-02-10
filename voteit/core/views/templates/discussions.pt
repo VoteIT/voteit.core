@@ -55,7 +55,7 @@
     <!-- Load more - hidden at first -->
     <div class="listing_block load_new_ai_items">
         <a name="discussions" href="${request.url}" class="icon-right arrow-right"
-           i18n:translate="">There are new discussion posts</a>
+           i18n:translate="">Load new discussion posts</a>
     </div>
 </div> 
 </tal:main>

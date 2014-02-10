@@ -10,7 +10,7 @@ from pyramid.httpexceptions import HTTPFound
 from pyramid.url import resource_url
 from betahaus.pyracont.factories import createSchema
 from repoze.catalog.query import Eq
-from repoze.catalog.query import Contains
+from repoze.catalog.query import Any
 
 from voteit.core import security
 from voteit.core import VoteITMF as _
@@ -246,23 +246,32 @@ class MeetingView(BaseView):
 
 @view_config(name = "reload_data.json", context = IMeeting, permission = security.VIEW, renderer = 'json')
 def reload_data_json(context, request):
-    #import pdb;pdb.set_trace()
+    """ A json list of things interesting for an eventual update of agenda items view or poll menu.
+        See reload_meeting_data in voteit_common.js
+    
+        Note: This is not a smart way of doing this, so MAKE SURE this executes fast!
+        This will be replaced when proper websockets are in place.
+    """
     userid = authenticated_userid(request)
-    effective_principals = security.context_effective_principals(context, userid)
     root = context.__parent__
-    response = {'open_polls': (), 'unread_proposals': (), 'unread_discussionposts': ()}
+    response = {'polls': {}, 'proposals': {}, 'discussionposts': ()}
     #Get poll reload information
-    if security.ROLE_VOTER in effective_principals:
-        query = Eq('content_type', 'Poll' ) & \
-                Eq('path', resource_path(context)) & \
-                Eq('workflow_state', 'ongoing')
-        response['open_polls'] = tuple(root.catalog.query(query)[1])
-    #Fetch proposals and discussions?
+    query = Eq('content_type', 'Poll' ) & Eq('path', resource_path(context))
+    #ISn't there a smarter way to load wfs?
+    for wf_state in ('upcoming', 'ongoing', 'canceled', 'closed'):
+        response['polls'][wf_state] = tuple(root.catalog.query(query & Eq('workflow_state', wf_state),
+                                                               sort_index = 'created')[1])
+    #Fetch proposals and discussions? We'll focus on unread here, polls should catch wf changes on most proposals
     ai_name = request.GET.get('ai_name', None)
     if ai_name and ai_name in context:
-        base_query = Eq('path', resource_path(context, ai_name))# &\
-                     #Contains('unread', userid)
-        for (ctype, key) in (('Proposal', 'unread_proposals'), ('DiscussionPost', 'unread_discussionposts')):
-            response[key] = tuple(root.catalog.query(base_query & Eq('content_type', ctype))[1])
+        query = Eq('path', resource_path(context, ai_name))
+        #Proposal
+        #This seems silly too...
+        for wf_state in ('published', 'retracted', 'voting', 'approved', 'denied', 'unhandled'):
+            response['proposals'][wf_state] = tuple(root.catalog.query(query & Eq('content_type', 'Proposal') \
+                                                                       & Eq('workflow_state', wf_state),
+                                                                       sort_index = 'created')[1])
+        #DiscussionPost
+        response['discussionposts'] = tuple(root.catalog.query(query & Eq('content_type', 'DiscussionPost'),
+                                                               sort_index = 'created')[1])
     return response
-

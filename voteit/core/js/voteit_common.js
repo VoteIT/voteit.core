@@ -45,23 +45,21 @@ function reload_meeting_data() {
             return;
         }
         //Handle polls
-        //FIXME: Change to handle poll changes rather than open polls!
-        if (JSON.stringify(data['open_polls']) != JSON.stringify(voteit['reload_data']['open_polls'])) {
+        if (JSON.stringify(data['polls']) != JSON.stringify(voteit['reload_data']['polls'])) {
             $('.dropdown_menu_poll .menu_header').qtip('destroy');
-            if (data['open_polls'].length > 0) {
+            if (data['polls']['ongoing'].length > 0) {
                 $('.dropdown_menu_poll .menu_header .closed').removeClass('closed').addClass('ongoing');
             } else {
-                var ongoing = $('.dropdown_menu_poll .menu_header .ongoing');
-                ongoing.removeClass('ongoing').addClass('closed');
-                //FIXME: Another class perhaps?
-                flash_message(voteit.translation['polls_changed_in_context'], 'info', true, 10, true);
-                ongoing.animate({opacity: 0.5}, 1000).animate({opacity: 1}, 1000);
+                $('.dropdown_menu_poll .menu_header .ongoing').removeClass('ongoing').addClass('closed');
             }
+            //FIXME: Another class perhaps?
+            flash_message(voteit.translation['polls_changed_in_context'], 'info', true, 7, true);
+            $('#proposals .load_new_ai_items').show();
         }
-        if (JSON.stringify(data['unread_discussionposts']) != JSON.stringify(voteit['reload_data']['unread_discussionposts'])) {
+        if (JSON.stringify(data['discussionposts']) != JSON.stringify(voteit['reload_data']['discussionposts'])) {
             $('#discussions .load_new_ai_items').show();
         }
-        if (JSON.stringify(data['unread_proposals']) != JSON.stringify(voteit['reload_data']['unread_proposals'])) {
+        if (JSON.stringify(data['proposals']) != JSON.stringify(voteit['reload_data']['proposals'])) {
             $('#proposals .load_new_ai_items').show();
         }
         voteit['reload_data'] = data;
@@ -111,7 +109,6 @@ function flash_message(message, attr_class, close_button, timeout, fixed) {
         if (existing.length > 0) {
             var last_obj = $(existing[existing.length-1]);
             offset = last_obj.position().top + last_obj.height() - $(window).scrollTop();
-            console.log(offset);
         }
         div.css('top', 20 + offset);
     }
