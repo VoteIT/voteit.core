@@ -694,11 +694,17 @@ button[name="cancel"]:hover {
 }
 #flash_messages .close_message {
     font-weight: bold;
-    font-style: normal;
-    color: #fff;
     position: absolute;
     right: 6px;
     top: 4px;
+}
+#flash_messages a {
+    font-style: normal;
+    color: #fff;
+}
+#flash_messages .fixed_message {
+    position: fixed;
+    top: 10px;
 }
 /* End flash messages */
 

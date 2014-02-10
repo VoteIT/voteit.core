@@ -13,6 +13,8 @@ def includeme(config):
         no = _(u"No"),
         close = _(u"Close"),
         ok = _(u"Ok"),
+        polls_changed_in_context = _(u"polls_changed_in_context",
+                                 default = u"Polls here have updated. Check the polls menu or click reload below the proposals."),
         nothing_to_do = _(u"Nothing to do"),
         completed_successfully = _(u"Completed successfully"),
         there_was_an_error = _(u"There was an error during the operation. You may need to try again. Error was: "),

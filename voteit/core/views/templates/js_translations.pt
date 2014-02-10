@@ -4,6 +4,6 @@ if(typeof(voteit) == "undefined"){
 }
 voteit.translation = {};
 <tal:iterate repeat="item translations.items()">
-voteit.translation["${item[0]}"] = "${item[1]}";
+voteit.translation["${item[0]}"] = "<tal:ts tal:content="structure item[1]">ts</tal:ts>";
 </tal:iterate>
 </tal:main>
