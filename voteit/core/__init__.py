@@ -1,3 +1,5 @@
+import logging
+
 from pyramid.i18n import TranslationStringFactory
 from pyramid.session import UnencryptedCookieSessionFactoryConfig
 from pyramid_zodbconn import get_connection
@@ -5,6 +7,9 @@ from pyramid_zodbconn import get_connection
 from pyramid.config import Configurator
 from pyramid.authorization import ACLAuthorizationPolicy
 from pyramid.authentication import AuthTktAuthenticationPolicy
+
+
+log = logging.getLogger(__name__)
 
 
 #Must be before all of this packages imports since some other methods might import it
@@ -123,8 +128,7 @@ def check_required_settings(config):
     for (k, v) in DEFAULT_SETTINGS.items():
         if k not in settings:
             settings[k] = v
-            #FIXME: Logger instead, not stdout!
-            print "INFO: No value for '%s' found. Adding '%s' as default value." % (k, v)
+            log.warn("Required value '%s' not found. Adding '%s' as default value." % (k, v))
 
 def check_required_components(config):
     """ After the process of including components is run, check that something has been included in the required sections.
@@ -142,11 +146,10 @@ def check_required_components(config):
         if adapter_registration.provided in need_at_least_one:
             del need_at_least_one[adapter_registration.provided]
     for (k, vals) in need_at_least_one.items():
-        #FIXME: Propper logging instead...
-        print "INFO: Nothing providing '%s.%s' included in configuration." % (k.__module__, k.__name__)
+        log.warn("Nothing providing '%s.%s' included in configuration." % (k.__module__, k.__name__))
         for v in vals:
             config.include(v)
-            print "Including default: '%s'" % v
+            log.info("Including default: '%s'" % v)
 
 def root_factory(request):
     """ Returns root object for each request. See pyramid docs. """
