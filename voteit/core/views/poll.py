@@ -122,7 +122,7 @@ class PollView(BaseEdit):
         return self.response
 
     @view_config(name="_poll_form", context = IPoll, renderer="templates/ajax_edit.pt", permission=security.VIEW, xhr=True)
-    @view_config(name="_poll_form", context = IPoll, renderer="templates/base_edit.pt", permission=security.VIEW, xhr=False)
+    @view_config(name="_poll_form", context = IPoll, renderer="templates/poll_single.pt", permission=security.VIEW, xhr=False)
     def poll_form(self):
         """ Return rendered poll form or process a vote. """
         poll_plugin = self.context.get_poll_plugin()
@@ -198,7 +198,7 @@ class PollView(BaseEdit):
             result = Response(result)
         return result
 
-    @view_config(context = IPoll, permission = security.VIEW, renderer = "templates/base_edit.pt")
+    @view_config(context = IPoll, permission = security.VIEW, renderer = "templates/poll_single.pt")
     def poll_full_window(self):
         self.response['form'] = self.poll_view()
         return self.response
