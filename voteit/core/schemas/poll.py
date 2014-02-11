@@ -24,31 +24,26 @@ from voteit.core.schemas.common import deferred_default_start_time
 def poll_plugin_choices_widget(node, kw):
     context = kw['context']
     request = kw['request']
-    
     # get avaible plugins from the meeting
     meeting = find_interface(context, IMeeting)
     available_plugins = meeting.get_field_value('poll_plugins', ()) 
-    
     #Add all selectable plugins to schema. This chooses the poll method to use
     plugin_choices = set()
-
     #FIXME: The new object should probably be sent to construct schema
     #for now, we can fake this
     fake_poll = createContent('Poll')
-
     # add avaible plugins the the choice set
     for name in available_plugins:
         #FIXME: we should probably catch if a plugin is no lnger avaible on the site 
-        plugin = request.registry.getAdapter(fake_poll, name = name, interface = IPollPlugin) 
-        plugin_choices.add((name, plugin.title))
-        
+        plugin = request.registry.queryAdapter(fake_poll, name = name, interface = IPollPlugin)
+        if plugin:
+            plugin_choices.add((name, plugin.title))
     # if no plugins was set in the meetings add the default plugin if any is set 
     if not plugin_choices:
         name = request.registry.settings.get('default_poll_method', None)
-        if name:
-            plugin = request.registry.getAdapter(fake_poll, name = name, interface = IPollPlugin) 
+        plugin = request.registry.queryAdapter(fake_poll, name = name, interface = IPollPlugin)
+        if plugin:
             plugin_choices.add((name, plugin.title))
-
     return deform.widget.SelectWidget(values=plugin_choices)
 
 
