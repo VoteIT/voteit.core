@@ -1,9 +1,7 @@
 from deform import Form
 from deform.exception import ValidationFailure
 from pyramid.view import view_config
-from pyramid.url import resource_url
 from pyramid.security import has_permission
-from pyramid.exceptions import Forbidden
 from pyramid.httpexceptions import HTTPFound
 from pyramid.httpexceptions import HTTPForbidden
 from betahaus.pyracont.factories import createSchema
@@ -47,36 +45,31 @@ class PollView(BaseEdit):
         form = Form(schema, buttons=(button_update, button_cancel))
         self.api.register_form_resources(form)
         post = self.request.POST
-        if 'update' in post:
-            controls = post.items()
-            try:
-                #appstruct is deforms convention. It will be the submitted data in a dict.
-                appstruct = form.validate(controls)
-            except ValidationFailure, e:
-                self.response['form'] = e.render()
-                return self.response
-
-            removed_uids = set(self.context.proposal_uids) - set(appstruct['proposals'])
-            if removed_uids:
-                #Adjust removed proposals back to published state, if they're locked
-                for uid in removed_uids:
-                    prop = self.context.get_proposal_by_uid(uid)
-                    if prop.get_workflow_state() == 'voting':
-                        prop.set_workflow_state(self.request, u'published')
-
-            updated = self.context.set_field_appstruct(appstruct)
-            if updated:
-                self.api.flash_messages.add(_(u"Successfully updated"))
-            else:
-                self.api.flash_messages.add(_(u"Nothing changed"))
-
-            url = resource_url(self.context, self.request)
-            return HTTPFound(location=url)
-
-        if 'cancel' in post:
-            self.api.flash_messages.add(_(u"Canceled"))
-            url = resource_url(self.context, self.request)
-            return HTTPFound(location=url)
+        if self.request.method == 'POST':
+            if 'update' in post:
+                controls = post.items()
+                try:
+                    #appstruct is deforms convention. It will be the submitted data in a dict.
+                    appstruct = form.validate(controls)
+                except ValidationFailure, e:
+                    self.response['form'] = e.render()
+                    return self.response
+                removed_uids = set(self.context.proposal_uids) - set(appstruct['proposals'])
+                if removed_uids:
+                    #Adjust removed proposals back to published state, if they're locked
+                    for uid in removed_uids:
+                        prop = self.context.get_proposal_by_uid(uid)
+                        if prop.get_workflow_state() == 'voting':
+                            prop.set_workflow_state(self.request, u'published')
+                updated = self.context.set_field_appstruct(appstruct)
+                if updated:
+                    self.api.flash_messages.add(_(u"Successfully updated"))
+                else:
+                    self.api.flash_messages.add(_(u"Nothing changed"))
+            if 'cancel' in post:
+                self.api.flash_messages.add(_(u"Canceled"))
+            url = self.request.resource_url(self.context.__parent__, anchor = self.context.uid)
+            return HTTPFound(location = url)
 
         #No action - Render edit form
         appstruct = self.context.get_field_appstruct(schema)
@@ -97,35 +90,30 @@ class PollView(BaseEdit):
             return HTTPForbidden()
         schema = poll_plugin.get_settings_schema()
         if schema is None:
-            raise Forbidden("No settings for this poll")
+            raise HTTPForbidden("No settings for this poll")
         add_csrf_token(self.context, self.request, schema)
         schema = schema.bind(context=self.context, request=self.request, api = self.api)
         form = Form(schema, buttons=(button_save, button_cancel))
         self.api.register_form_resources(form)
-
         #FIXME: Better default text
         config_back_msg = _(u"review_poll_settings_info_getback",
                 default = u"To get back to the poll settings you click the cogwheel menu and select configure poll.")
-
         post = self.request.POST
-        if 'save' in post:
-            controls = post.items()
-            try:
-                appstruct = form.validate(controls)
-            except ValidationFailure, e:
-                self.response['form'] = e.render()
-                return self.response
-            appstruct.pop('csrf_token', None) #Otherwise it will be stored too
-            self.context.poll_settings = appstruct
-            self.api.flash_messages.add(config_back_msg)
-            url = resource_url(self.context, self.request)
-            return HTTPFound(location=url)
-
-        if 'cancel' in post:
-            self.api.flash_messages.add(config_back_msg)
-            url = resource_url(self.context, self.request)
-            return HTTPFound(location=url)
-
+        if self.request.method == 'POST':
+            if 'save' in post:
+                controls = post.items()
+                try:
+                    appstruct = form.validate(controls)
+                except ValidationFailure, e:
+                    self.response['form'] = e.render()
+                    return self.response
+                appstruct.pop('csrf_token', None) #Otherwise it will be stored too
+                self.context.poll_settings = appstruct
+                self.api.flash_messages.add(config_back_msg)
+            if 'cancel' in post:
+                self.api.flash_messages.add(config_back_msg)
+            url = self.request.resource_url(self.context.__parent__, anchor = self.context.uid)
+            return HTTPFound(location = url)
         self.response['form'] = form.render(appstruct=self.context.poll_settings)
         return self.response
 
@@ -221,7 +209,7 @@ class PollView(BaseEdit):
         """
         if self.context.get_workflow_state() != 'closed':
             self.api.flash_messages.add("Poll not closed yet", type='error')
-            url = resource_url(self.context, self.request)
+            url = self.request.resource_url(self.context)
             return HTTPFound(location=url)
         poll_plugin = self.query_poll_plugin(self.context)
         if not poll_plugin:
