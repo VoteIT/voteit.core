@@ -13,6 +13,7 @@ from pyramid.response import Response
 from voteit.core import VoteITMF as _
 from voteit.core import security
 from voteit.core.models.interfaces import IPoll
+from voteit.core.models.interfaces import IPollPlugin
 from voteit.core.models.interfaces import IVote
 from voteit.core.models.schemas import add_csrf_token
 from voteit.core.models.schemas import button_vote
@@ -25,6 +26,16 @@ from voteit.core.schemas.poll import poll_schema_after_bind
 
 class PollView(BaseEdit):
     """ View class for poll objects """
+
+    def query_poll_plugin(self, context):
+        plugin = self.request.registry.queryAdapter(context, IPollPlugin, context.poll_plugin_name)
+        if plugin:
+            return plugin
+        msg = _(u"poll_plugin_not_found_error",
+                default = u"This poll uses a plugin that can't be found. Make sure a poll "
+                          u"plugin with the name '${name}' is installed",
+                mapping = {'name': context.poll_plugin_name})
+        self.api.flash_messages.add(msg, type = 'error')
         
     @view_config(context=IPoll, name="edit", renderer='templates/base_edit.pt', permission = security.EDIT)
     def edit_form(self):
@@ -81,14 +92,14 @@ class PollView(BaseEdit):
             no settings may be changed.
         """
         self.response['title'] = _(u"Poll config")
-
-        poll_plugin = self.context.get_poll_plugin()
+        poll_plugin = self.query_poll_plugin(self.context)
+        if not poll_plugin:
+            return HTTPForbidden()
         schema = poll_plugin.get_settings_schema()
         if schema is None:
             raise Forbidden("No settings for this poll")
         add_csrf_token(self.context, self.request, schema)
         schema = schema.bind(context=self.context, request=self.request, api = self.api)
-
         form = Form(schema, buttons=(button_save, button_cancel))
         self.api.register_form_resources(form)
 
@@ -100,15 +111,12 @@ class PollView(BaseEdit):
         if 'save' in post:
             controls = post.items()
             try:
-                #appstruct is deforms convention. It will be the submitted data in a dict.
                 appstruct = form.validate(controls)
             except ValidationFailure, e:
                 self.response['form'] = e.render()
                 return self.response
-            
-            del appstruct['csrf_token'] #Otherwise it will be stored too
+            appstruct.pop('csrf_token', None) #Otherwise it will be stored too
             self.context.poll_settings = appstruct
-            
             self.api.flash_messages.add(config_back_msg)
             url = resource_url(self.context, self.request)
             return HTTPFound(location=url)
@@ -125,7 +133,9 @@ class PollView(BaseEdit):
     @view_config(name="_poll_form", context = IPoll, renderer="templates/poll_single.pt", permission=security.VIEW, xhr=False)
     def poll_form(self):
         """ Return rendered poll form or process a vote. """
-        poll_plugin = self.context.get_poll_plugin()
+        poll_plugin = self.query_poll_plugin(self.context)
+        if not poll_plugin:
+            return HTTPForbidden()
         schema = poll_plugin.get_vote_schema(self.request, self.api)
         add_csrf_token(self.context, self.request, schema)
         schema = schema.bind(context=self.context, request=self.request, api = self.api)        
@@ -149,12 +159,11 @@ class PollView(BaseEdit):
             if not IVote.implementedBy(Vote):
                 raise TypeError("Poll plugins method get_vote_class returned something that didn't implement IVote.")
             #Remove crsf_token from appstruct after validation
-            del appstruct['csrf_token']
+            appstruct.pop('csrf_token', None)
             if userid in self.context:
                 vote = self.context[userid]
                 assert IVote.providedBy(vote)
                 vote.set_vote_data(appstruct)
-                #FIXME: success_msg = _(u"Your vote was updated.")
             else:
                 vote = Vote(creators = [userid])
                 #We don't need to send events here, since object added will take care of that
@@ -188,7 +197,10 @@ class PollView(BaseEdit):
         """ This is the modal window that opens when you click for instance the vote button
             It will also call the view that renders the actual poll form.
         """
-        self.response['poll_plugin'] = self.context.get_poll_plugin()
+        poll_plugin = self.query_poll_plugin(self.context)
+        if not poll_plugin:
+            return HTTPForbidden()
+        self.response['poll_plugin'] = poll_plugin
         self.response['wf_state'] = self.context.get_workflow_state()
         self.response['can_vote'] = self.api.context_has_permission(security.ADD_VOTE, self.context)
         self.response['has_voted'] = self.api.userid in self.context
@@ -207,13 +219,11 @@ class PollView(BaseEdit):
     def poll_raw_data(self):
         """ View for all ballots. See intefaces.IPollPlugin.render_raw_data
         """
-        #Poll closed?
         if self.context.get_workflow_state() != 'closed':
             self.api.flash_messages.add("Poll not closed yet", type='error')
             url = resource_url(self.context, self.request)
             return HTTPFound(location=url)
-        #This will generate a ComponentLookupError if the plugin isn't found,
-        #however, that should never happen for a closed poll unless someone
-        #removed the plugin.
-        plugin = self.context.get_poll_plugin()
-        return plugin.render_raw_data()
+        poll_plugin = self.query_poll_plugin(self.context)
+        if not poll_plugin:
+            return HTTPForbidden()
+        return poll_plugin.render_raw_data()
