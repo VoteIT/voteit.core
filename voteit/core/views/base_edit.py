@@ -169,6 +169,7 @@ class DefaultEdit(BaseEdit):
 
         post = self.request.POST
         if self.request.method == 'POST':
+            came_from = None
             if 'update' in post:
                 controls = post.items()
                 try:
