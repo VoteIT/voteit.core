@@ -34,8 +34,9 @@ class AccessPolicy(object):
 
     def form(self, api):
         schema = self.schema(api)
-        schema = schema.bind(api = api, context = self.context, request = api.request)
-        return deform.Form(schema, buttons = (button_request_access, button_cancel))
+        if schema:
+            schema = schema.bind(api = api, context = self.context, request = api.request)
+            return deform.Form(schema, buttons = (button_request_access, button_cancel))
 
     def handle_success(self, api, appstruct):
         pass
