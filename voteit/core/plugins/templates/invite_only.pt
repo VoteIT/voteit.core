@@ -1,9 +1,0 @@
-<tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core">
-<div i18n:translate="invite_only_meeting_access_request_description">
-    This meeting is invite only. That means that a mail will be sent with an access ticket.
-    Contact meeting moderators for more information.
-</div>
-<ul class="buttons">
-    <li><a class="buttonize large" href="${request.resource_url(context.__parent__)}" i18n:translate="">Back</a></li>
-</ul>
-</tal:main>

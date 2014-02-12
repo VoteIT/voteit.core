@@ -1,7 +1,6 @@
 """ Common schema methods and buttons"""
 import colander
 import deform
-from pyramid.exceptions import Forbidden
 
 from voteit.core import VoteITMF as _
 from voteit.core.schemas.common import add_csrf_token as new_csrf_func
@@ -15,6 +14,7 @@ button_delete = deform.Button('delete', _(u"Delete"))
 button_login = deform.Button('login', _(u"Login"))
 button_register = deform.Button('register', _(u"Register"))
 button_request = deform.Button('request', _(u"Request"))
+button_request_access = deform.Button('request_access', _(u"Request access"))
 button_save = deform.Button('save', _(u"Save"))
 button_update = deform.Button('update', _(u"Update"))
 button_vote = deform.Button('vote', _(u"add_vote_button", default=u"Vote"))

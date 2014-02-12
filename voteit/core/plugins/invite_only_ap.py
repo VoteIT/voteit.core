@@ -1,4 +1,4 @@
-from pyramid.renderers import render
+from pyramid.httpexceptions import HTTPFound
 
 from voteit.core.models.access_policy import AccessPolicy
 from voteit.core import VoteITMF as _
@@ -13,10 +13,15 @@ class InviteOnlyAP(AccessPolicy):
                     default = u"""This meeting is invite only.
                     That means that a mail will be sent with an access ticket.
                     Contact meeting moderators for more information.""")
+    view = True
 
-    def view(self, api):
-        response = dict(api = api)
-        return render('templates/invite_only.pt', response, request = api.request)
+    def render_view(self, api):
+        msg = _(u"invite_only_ap_msg",
+                default = u"This meeting you tried to access is invite-only. "
+                    u"Normally the moderators will send a mail with an access ticket. "
+                    u"Contact meeting moderators for more information.")
+        api.flash_messages.add(msg)
+        return HTTPFound(location = api.request.application_url)
 
 
 def includeme(config):

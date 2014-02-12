@@ -744,21 +744,30 @@ class IAccessPolicy(Interface):
     description = Attribute("Longer description to make it easier for moderators"
                             " to understand what this policy does. Also translation string")
     configurable = Attribute("Does this policy have any configuration options?")
+    view = Attribute("Bool - Does this access policy use a custom view?")
 
     def is_public():
         """ Is this access policy configured so the meeting is public?
             Note: This feature might not be implemented yet. """
 
-    def view(api):
+    def render_view(api):
         """ Render view """
 
-    def view_submit(api):
-        """ Handle a possibly submitted form, i.e. granting roles or doing something else. """
+    def schema(api):
+        """ Optional, schema for this method """
 
-    def config_schema(api, **kw):
+    def form(api):
+        """ Optional, form for this method """
+
+    def handle_success(api, appstruct):
+        """ If this methods own form/schema was used, this is called when the form passes validation.
+            It should update permissions according to whatever the method granted.
+        """
+
+    def config_schema(api):
         """ Return a schema to be used for configuring this access policy. Optional. """
 
-    def config_form(schema):
+    def config_form(api):
         """ Return a form for configuring access policy. """
 
 
