@@ -11,8 +11,7 @@
 <tal:states tal:condition="states|False">
     <tal:iterate repeat="state states">
     <li>
-        <a class="confirm-state"
-           tal:attributes="href '%s%s' % (state_change_url, state.name)">
+        <a tal:attributes="href '%s%s' % (state_change_url, state.name)">
             <span class="iconpadding icon ${state.name}" tal:content="api.tstring(state.title)">Title</span>
         </a>
     </li>
