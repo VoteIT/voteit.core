@@ -1,5 +1,5 @@
 <tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core">
-    <img tal:replace="structure context.get_image_tag(size=100)" />
+    <img tal:replace="structure context.get_image_tag(size = 100, request = request)" />
     <h4>
         <span tal:content="context.title">My fullname</span>
         <span>(${context.userid})</span>

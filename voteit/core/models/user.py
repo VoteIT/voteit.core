@@ -1,13 +1,14 @@
 import string
 from random import choice
 from datetime import timedelta
+import logging
 
 from zope.interface import implements
-from zope.component import queryAdapter
 from pyramid.url import resource_url
 from pyramid.security import Allow
 from pyramid.security import DENY_ALL
 from pyramid.traversal import find_interface
+from pyramid.threadlocal import get_current_request
 from pyramid_mailer import get_mailer
 from pyramid_mailer.message import Message
 from pyramid.i18n import get_localizer
@@ -29,6 +30,7 @@ from voteit.core.exceptions import TokenValidationError
 
 
 USERID_REGEXP = r"[a-z]{1}[a-z0-9-_]{2,30}"
+log = logging.getLogger(__name__)
 
 
 @content_factory('User', title=_(u"User"))
@@ -63,21 +65,27 @@ class User(BaseContent):
             self.__auth_domains__ = OOBTree()
             return self.__auth_domains__
 
-    def get_image_plugin(self):
-        #get selected adapter, fallback to gravatar. Will return None on ComponentLookupError.
-        return queryAdapter(self,
-                            name = self.get_field_value('profile_image_plugin', u'gravatar_profile_image'),
-                            interface = IProfileImage)
+    def get_image_plugin(self, request):
+        name = self.get_field_value('profile_image_plugin', None)
+        adapter = None
+        if name:
+            adapter = request.registry.queryAdapter(self, IProfileImage, name = name)
+            if adapter:
+                return adapter
+        return request.registry.queryAdapter(self, IProfileImage, name = 'gravatar_profile_image')
 
-    def get_image_tag(self, size=40, **kwargs):
-        plugin = self.get_image_plugin()
-        try:
-            url = plugin.url(size)
-        except Exception:
-            #FIXME: Log exception
-            url = None
+    def get_image_tag(self, size = 40, request = None, **kwargs):
+        if request is None:
+            request = get_current_request()
+        plugin = self.get_image_plugin(request)
+        url = None
+        if plugin:
+            try:
+                url = plugin.url(size, request)
+            except Exception, e:
+                log.error('Image plugin %s caused the exception: %s') % (plugin, e)
         if not url:
-            url = u"/static/images/default_user.png"
+            url = request.registry.settings.get('voteit.default_profile_picture', '')
         tag = '<img src="%(url)s" height="%(size)s" width="%(size)s"' % {'url': url, 'size': size}
         for (k, v) in kwargs.items():
             tag += ' %s="%s"' % (k, v)

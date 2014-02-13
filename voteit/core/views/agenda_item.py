@@ -90,7 +90,7 @@ class AgendaItemView(BaseView):
         #Note! Registration of form resources has to be in the view that has the javascript
         #that will include this!
         self.response['form'] = form.render()
-        self.response['user_image_tag'] = self.api.user_profile.get_image_tag()
+        self.response['user_image_tag'] = self.api.user_profile.get_image_tag(request = self.request)
         self.response['content_type'] = content_type
         return Response(render('templates/snippets/inline_form.pt', self.response, request=self.request))
 
@@ -144,7 +144,7 @@ class AgendaItemView(BaseView):
                     ajax_options=ajax_options)
         self.api.register_form_resources(form)
         
-        self.response['user_image_tag'] = self.api.user_profile.get_image_tag()
+        self.response['user_image_tag'] = self.api.user_profile.get_image_tag(request = self.request)
         self.response['content_type'] = content_type
         
         post = self.request.POST

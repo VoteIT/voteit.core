@@ -1,17 +1,16 @@
 from hashlib import md5
 
-from zope.interface import implements
-from zope.component import adapts
+from zope.interface import implementer
+from zope.component import adapter
 
 from voteit.core import VoteITMF as _
 from voteit.core.models.interfaces import IUser
 from voteit.core.models.interfaces import IProfileImage
 
 
+@implementer(IProfileImage)
+@adapter(IUser)
 class GravatarProfileImagePlugin(object):
-    implements(IProfileImage)
-    adapts(IUser)
-    
     name = u'gravatar_profile_image'
     title = _('Gravatar')
     description = _(u'profile_gravatar_explanation',
@@ -21,25 +20,16 @@ class GravatarProfileImagePlugin(object):
     
     def __init__(self, context):
         self.context = context
-        
-    def _generate_email_hash(self, email):
-        """ Generat a md5 hash of an email address.
-        """
-        email = email.strip().lower()
-        if email:
-            return md5(email).hexdigest()
-        return None
-    
-    def url(self, size):
-        
-        email_hash = self._generate_email_hash(self.context.get_field_value('email', ''))
+
+    def url(self, size, request):
         url = 'https://secure.gravatar.com/avatar/'
-        if email_hash:
-            url += email_hash
-        url += '?d=mm&s=%(size)s' % {'size': size}
-        
+        email = self.context.get_field_value('email', '').strip().lower()
+        if email:
+            url += md5(email).hexdigest()
+        url += '?s=%s' % size
+        url += '&d=%s' % request.registry.settings.get('voteit.gravatar_default', 'mm')
         return url
-    
+
     def is_valid_for_user(self):
         return True
 
@@ -47,4 +37,4 @@ class GravatarProfileImagePlugin(object):
 def includeme(config):
     """ Include gravatar plugin
     """
-    config.registry.registerAdapter(GravatarProfileImagePlugin, (IUser,), IProfileImage, GravatarProfileImagePlugin.name)
+    config.registry.registerAdapter(GravatarProfileImagePlugin, name = GravatarProfileImagePlugin.name)

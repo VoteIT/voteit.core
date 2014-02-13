@@ -18,6 +18,8 @@ VoteITMF = TranslationStringFactory(PROJECTNAME)
 DEFAULT_SETTINGS = {
     'default_locale_name': 'en',
     'default_timezone_name': 'UTC',
+    'voteit.gravatar_default': 'mm',
+    'voteit.default_profile_picture': '/static/images/default_user.png',
 }
 
 

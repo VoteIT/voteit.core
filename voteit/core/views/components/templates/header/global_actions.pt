@@ -1,7 +1,7 @@
 <tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core">
 <span class="dropdown_menu" id="global-actions-menu">
     <a href="#" class="menu_header">
-        <img tal:replace="structure api.user_profile.get_image_tag(size=40)" />
+        <img tal:replace="structure api.user_profile.get_image_tag(size=40, request = request)" />
         <span class="icon userid">
             <span>${api.user_profile.userid}</span>
         </span>

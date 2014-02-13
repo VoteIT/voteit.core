@@ -34,7 +34,7 @@ def inline_add_form(context, request, va, **kw):
                                   default = u"You don't have the required permission to add a discussion post here"))
         return "<hr/>%s" % msg
     response = {}
-    response['user_image_tag'] = api.user_profile.get_image_tag()
+    response['user_image_tag'] = api.user_profile.get_image_tag(request = request)
     query = {'content_type': va.kwargs['ctype']}
     tag = request.GET.get('tag', None)
     if tag:

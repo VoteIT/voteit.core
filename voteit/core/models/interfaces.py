@@ -190,13 +190,13 @@ class IUser(IBaseFolder):
 
     auth_domains = Attribute("Contains domain information on different authentication systems.")
 
-    def get_image_plugin():
+    def get_image_plugin(request):
         """ Get the currently selected plugin (adapter) that this user has selected for
             profile picture.
             If the selected system is broken it will return None and not default to anything.
         """
 
-    def get_image_tag(size=40, **kwargs):
+    def get_image_tag(size=40, request = None, **kwargs):
         """ Get image tag. Always square, so size is enough.
             Other keyword args will be converted to html properties.
             Appends class 'profile-pic' to tag if class isn't part of keywords.
@@ -722,12 +722,15 @@ class IProfileImage(Interface):
     title = Attribute("Human readable title")
     description = Attribute("Description of this profile image type and where it's from. Ment as information to help regular users.")
 
-    def url(size):
+    def url(size, request):
         """ Return a URL to the profile picture, if no url could be created
             this function should return None
         
             size
-                Prefered size of image 
+                Prefered size of image
+            
+            request
+                Regular request object
         """
         
     def is_valid_for_user():
