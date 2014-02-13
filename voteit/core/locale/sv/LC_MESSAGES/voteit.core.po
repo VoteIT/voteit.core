@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2014-02-05 19:29+0100\n"
-"PO-Revision-Date: 2014-02-05 19:30+0100\n"
+"PO-Revision-Date: 2014-02-13 15:35+0100\n"
 "Last-Translator: Robin Harms Oredsson <robin@betahaus.net>\n"
 "Language-Team: sv <LL@li.org>\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -1844,7 +1844,7 @@ msgstr ""
 #. Default: Successfully added ${added} invites
 #: voteit/core/views/ticket.py:133
 msgid "added_tickets_text"
-msgstr "La till ${count} inbjudningar"
+msgstr "La till ${added} inbjudningar"
 
 #. Default: No tickets added - all you specified probably exist already.
 #. (Proccessed ${rejected})
