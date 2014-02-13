@@ -117,7 +117,7 @@ class DefaultEditTests(unittest.TestCase):
                                                                                        ('end_time', '2012-05-16 12:00')]))
         obj = self._cut(context, request)
         response = obj.add_form()
-        self.assertEqual(response.location, 'http://example.com/m/ai/dummy-poll/')
+        self.assertEqual(response.location.split('#')[0], 'http://example.com/m/ai/') #A redirect with an anchor
 
     def test_edit_form(self):
         self.config.scan('voteit.core.models.agenda_item')

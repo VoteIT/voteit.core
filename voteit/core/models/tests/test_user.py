@@ -19,7 +19,7 @@ owner = set([security.ROLE_OWNER])
 
 class UserTests(unittest.TestCase):
     def setUp(self):
-        self.config = testing.setUp()
+        self.config = testing.setUp(request = testing.DummyRequest())
 
     def tearDown(self):
         testing.tearDown()
@@ -69,25 +69,28 @@ class UserTests(unittest.TestCase):
     def test_get_image_plugin(self):
         self._register_mock_image_plugin()
         obj = self._make_obj()
+        request = testing.DummyRequest()
         obj.set_field_value('profile_image_plugin', 'mock_image_plugin')
-        self.assertIsInstance(obj.get_image_plugin(), _MockImagePlugin)
+        self.assertIsInstance(obj.get_image_plugin(request), _MockImagePlugin)
 
     def test_get_image_plugin_broken_plugin(self):
         obj = self._make_obj()
+        request = testing.DummyRequest()
         obj.set_field_value('profile_image_plugin', 'i_dont_exist')
-        self.assertEqual(obj.get_image_plugin(), None)
+        self.assertEqual(obj.get_image_plugin(request), None)
 
     def test_get_image_tag(self):
         self.config.include('voteit.core.plugins.gravatar_profile_image')
         obj = self._make_obj()
         obj.set_field_value('email', 'hello@world.com')
         self.assertEqual(obj.get_image_tag(size=45),
-                         '<img src="https://secure.gravatar.com/avatar/4b3cdf9adfc6258a102ab90eb64565ea?d=mm&s=45" height="45" width="45" class="profile-pic" />')
+                         '<img src="https://secure.gravatar.com/avatar/4b3cdf9adfc6258a102ab90eb64565ea?s=45&d=mm" height="45" width="45" class="profile-pic" />')
 
-    def test_blank_email_hash_generation(self):
-        self.config.include('voteit.core.plugins.gravatar_profile_image')
+    def test_get_image_tag_no_plugin(self):
+        self.config.registry.settings['voteit.default_profile_picture'] = 'some_pic.png'
         obj = self._make_obj()
-        self.assertEqual(obj.get_image_tag(), '<img src="https://secure.gravatar.com/avatar/?d=mm&s=40" height="40" width="40" class="profile-pic" />')
+        self.assertEqual(obj.get_image_tag(size=45),
+                         '<img src="some_pic.png" height="45" width="45" class="profile-pic" />')
 
     def test_mentioned_email(self):
         request = testing.DummyRequest()
@@ -171,7 +174,7 @@ class _MockImagePlugin(object):
     def __init__(self, context):
         self.context = context
 
-    def url(self, size):
+    def url(self, size, request):
         "http://www.voteit.se?size=%s" % size
 
     def is_valid_for_user(self):

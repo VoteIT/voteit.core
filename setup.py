@@ -7,7 +7,7 @@ README = open(os.path.join(here, 'README.rst')).read()
 CHANGES = open(os.path.join(here, 'CHANGES.rst')).read()
 
 install_requires = (
-    'pyramid>=1.2',
+    'pyramid>=1.4.5',
     'pyramid_mailer',
     'pyramid_zcml',
     'pyramid_zodbconn',
@@ -23,7 +23,7 @@ install_requires = (
     'repoze.catalog',
     'lingua',
     'httplib2',
-    'betahaus.pyracont>=0.1a3',
+    'betahaus.pyracont>=0.2b',
     'betahaus.viewcomponent',
     'fanstatic',
     'repoze.evolution',

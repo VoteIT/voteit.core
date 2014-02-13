@@ -24,31 +24,26 @@ from voteit.core.schemas.common import deferred_default_start_time
 def poll_plugin_choices_widget(node, kw):
     context = kw['context']
     request = kw['request']
-    
     # get avaible plugins from the meeting
     meeting = find_interface(context, IMeeting)
     available_plugins = meeting.get_field_value('poll_plugins', ()) 
-    
     #Add all selectable plugins to schema. This chooses the poll method to use
     plugin_choices = set()
-
     #FIXME: The new object should probably be sent to construct schema
     #for now, we can fake this
     fake_poll = createContent('Poll')
-
     # add avaible plugins the the choice set
     for name in available_plugins:
         #FIXME: we should probably catch if a plugin is no lnger avaible on the site 
-        plugin = request.registry.getAdapter(fake_poll, name = name, interface = IPollPlugin) 
-        plugin_choices.add((name, plugin.title))
-        
+        plugin = request.registry.queryAdapter(fake_poll, name = name, interface = IPollPlugin)
+        if plugin:
+            plugin_choices.add((name, plugin.title))
     # if no plugins was set in the meetings add the default plugin if any is set 
     if not plugin_choices:
         name = request.registry.settings.get('default_poll_method', None)
-        if name:
-            plugin = request.registry.getAdapter(fake_poll, name = name, interface = IPollPlugin) 
+        plugin = request.registry.queryAdapter(fake_poll, name = name, interface = IPollPlugin)
+        if plugin:
             plugin_choices.add((name, plugin.title))
-
     return deform.widget.SelectWidget(values=plugin_choices)
 
 
@@ -78,6 +73,13 @@ def proposal_choices_widget(node, kw):
 def deferred_default_poll_method(node, kw):
     request = kw['request']
     return request.registry.settings.get('default_poll_method', '')
+
+@colander.deferred
+def deferred_reject_proposal_title(node, kw):
+    """ Translation strings as default values doesn't seem to work, so this method translates it. """
+    api = kw['api']
+    msg = _(u"reject_proposal_title_default", default = u"Reject all proposals")
+    return api.translate(msg)
 
 
 @schema_factory('AddPollSchema', title = _(u"Add poll"), description = _(u"Use this form to add a poll"))
@@ -120,8 +122,7 @@ class PollSchema(colander.MappingSchema):
     reject_proposal_title = colander.SchemaNode(colander.String(),
                                                 title = _(u"Proposal text for 'reject all proposals'"),
                                                 description = _(u"You can customise the proposal text if you want."),
-                                                default = _(u"reject_proposal_title_default",
-                                                            default = u"Reject all proposals"),
+                                                default = deferred_reject_proposal_title,
                                                 widget = None)
     start_time = colander.SchemaNode(
          TZDateTime(),

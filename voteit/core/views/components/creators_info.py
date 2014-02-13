@@ -12,14 +12,13 @@ def creators_info(context, request, va, **kw):
     output = '<span class="creators">'
     for userid in kw['creators']:
         user = api.get_user(userid)
-        try:
+        if user:
             output += """<a href="%(userinfo_url)s" class="inlineinfo">%(portrait_tag)s %(usertitle)s (%(userid)s)</a>"""\
                 % {'userinfo_url': api.get_userinfo_url(userid),
-                   'portrait_tag': portrait and user.get_image_tag() or '',
+                   'portrait_tag': portrait and user.get_image_tag(request = request) or '',
                    'usertitle': user.title,
                    'userid':userid,}
-        except AttributeError:
-            #This is to avoid if-statements for things that will probably not happen.
+        else:
             output += "(%s)" % userid
     output += '</span>'
     return output

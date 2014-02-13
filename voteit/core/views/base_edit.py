@@ -1,9 +1,8 @@
 import urllib
 
 from pyramid.view import view_config
-from pyramid.url import resource_url
 from pyramid.security import has_permission
-from pyramid.exceptions import Forbidden
+from pyramid.httpexceptions import HTTPForbidden
 from pyramid.traversal import find_resource
 import colander
 from deform import Form
@@ -23,7 +22,6 @@ from voteit.core.models.schemas import button_cancel
 from voteit.core.models.schemas import button_update
 from voteit.core.models.schemas import button_delete
 from voteit.core.models.interfaces import IBaseContent
-from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import ISiteRoot
 from voteit.core.models.interfaces import IWorkflowAware
 from voteit.core.models.interfaces import IProposal
@@ -57,7 +55,7 @@ class DefaultEdit(BaseEdit):
         #Permission check
         add_permission = self.api.content_types_add_perm(content_type)
         if not has_permission(add_permission, self.context, self.request):
-            raise Forbidden("You're not allowed to add '%s' in this context." % content_type)
+            raise HTTPForbidden("You're not allowed to add '%s' in this context." % content_type)
         factory = self.api.get_content_factory(content_type)
         schema_name = self.api.get_schema_name(content_type, 'add')
         schema = createSchema(schema_name).bind(context=self.context, request=self.request, api=self.api, tag=tag)        
@@ -89,18 +87,18 @@ class DefaultEdit(BaseEdit):
             if (content_type == 'Proposal' or content_type == 'DiscussionPost') and tag:
                 url = self.request.resource_url(obj, query={'tag': tag})
             #Polls might have a special redirect action if the poll plugin has a settings schema:
-            if content_type == 'Poll' and obj.get_poll_plugin().get_settings_schema() is not None:
-                msg = _(u"review_poll_settings_info",
-                        default = u"Please review poll specific settings. Any default value in a field is a suggestion from the plugin.")
-                self.api.flash_messages.add(msg)
+            if content_type == 'Poll':
+                if obj.get_poll_plugin().get_settings_schema() is not None:
+                    url += 'poll_config'
+                else:
+                    url = self.request.resource_url(obj.__parent__, anchor = obj.uid)
                 msg = _(u"private_poll_info",
                         default = u"The poll is created in private state, to show it the participants you have to change the state to upcoming.")
                 self.api.flash_messages.add(msg)
-                url += 'poll_config'
             return HTTPFound(location=url)
         if 'cancel' in post:
             self.api.flash_messages.add(_(u"Canceled"))
-            url = resource_url(self.context, self.request)
+            url = self.request.resource_url(self.context)
             return HTTPFound(location=url)
         #No action - Render add form
         self.response['form'] = form.render()
@@ -115,7 +113,7 @@ class DefaultEdit(BaseEdit):
         #Permission check
         add_permission = self.api.content_types_add_perm(content_type)
         if not has_permission(add_permission, self.context, self.request):
-            raise Forbidden("You're not allowed to add '%s' in this context." % content_type)
+            raise HTTPForbidden("You're not allowed to add '%s' in this context." % content_type)
         factory = self.api.get_content_factory(content_type)
         schema_name = self.api.get_schema_name(content_type, 'add')
         schema = createSchema(schema_name)
@@ -151,7 +149,7 @@ class DefaultEdit(BaseEdit):
             return HTTPFound(location=url)
         if 'cancel' in post:
             self.api.flash_messages.add(_(u"Canceled"))
-            url = resource_url(self.context, self.request)
+            url = self.request.resource_url(self.context)
             return HTTPFound(location=url)
         #No action - Render add form
         self.response['form'] = form.render()
@@ -170,35 +168,31 @@ class DefaultEdit(BaseEdit):
         self.api.register_form_resources(form)
 
         post = self.request.POST
-        if 'update' in post:
-            controls = post.items()
-            try:
-                #appstruct is deforms convention. It will be the submitted data in a dict.
-                appstruct = form.validate(controls)
-            except ValidationFailure, e:
-                self.response['form'] = e.render()
-                return self.response
-            
-            #Came from should not be stored either
-            came_from = appstruct['came_from']
-            del appstruct['came_from']
-            
-            updated = self.context.set_field_appstruct(appstruct)
-
-            if updated:
-                self.api.flash_messages.add(_(u"Successfully updated"))
-            else:
-                self.api.flash_messages.add(_(u"Nothing updated"))
-                
-            url = resource_url(self.context, self.request)
+        if self.request.method == 'POST':
+            came_from = None
+            if 'update' in post:
+                controls = post.items()
+                try:
+                    appstruct = form.validate(controls)
+                except ValidationFailure, e:
+                    self.response['form'] = e.render()
+                    return self.response
+                #Came from should not be stored either
+                came_from = appstruct.pop('came_from', '')                
+                updated = self.context.set_field_appstruct(appstruct)
+                if updated:
+                    self.api.flash_messages.add(_(u"Successfully updated"))
+                else:
+                    self.api.flash_messages.add(_(u"Nothing updated"))
+            if 'cancel' in post:
+                self.api.flash_messages.add(_(u"Canceled"))
             if came_from:
                 url = urllib.unquote(came_from)
-            return HTTPFound(location=url)
-
-        if 'cancel' in post:
-            self.api.flash_messages.add(_(u"Canceled"))
-            url = resource_url(self.context, self.request)
-            return HTTPFound(location=url)
+            elif self.context.content_type == 'Poll':
+                url = self.request.resource_url(self.context.__parent__, anchor = self.context.uid)
+            else:
+                url = self.request.resource_url(self.context)
+            return HTTPFound(location = url)
 
         #No action - Render edit form
         appstruct = self.context.get_field_appstruct(schema)
@@ -215,29 +209,23 @@ class DefaultEdit(BaseEdit):
         add_csrf_token(self.context, self.request, schema)
         add_came_from(self.context, self.request, schema)
         schema = schema.bind(context=self.context, request=self.request, api=self.api)
-        
         form = Form(schema, buttons=(button_delete, button_cancel))
         self.api.register_form_resources(form)
-
         post = self.request.POST
         if 'delete' in post:
             if self.context.content_type in ('SiteRoot', 'Users', 'User'):
-                raise Exception("Can't delete this content type")
-
+                raise HTTPForbidden("Can't delete this content type")
             parent = self.context.__parent__
             del parent[self.context.__name__]
-
             self.api.flash_messages.add(_(u"Deleted"))
-
-            url = resource_url(parent, self.request)
+            url = self.request.resource_url(parent)
             came_from = self.request.POST.get('came_from', None)
             if came_from:
                 url = urllib.unquote(came_from) 
             return HTTPFound(location=url)
-
         if 'cancel' in post:
             self.api.flash_messages.add(_(u"Canceled"))
-            url = resource_url(self.context, self.request)
+            url = self.request.resource_url(self.context)
             return HTTPFound(location=url)
 
         #No action - Render edit form
@@ -279,13 +267,13 @@ class DefaultEdit(BaseEdit):
             Note that if this view is called without the required permission,
             it will raise a WorkflowError exception. This view should
             never be linked to without doing the proper permission checks first.
-            (Since the WorkflowError is not the same as Pyramids Forbidden exception,
+            (Since the WorkflowError is not the same as Pyramids HTTPForbidden exception,
             which will be handled by the application.)
         """
         state = self.request.params.get('state')
         self.context.set_workflow_state(self.request, state)
         
-        url = resource_url(self.context, self.request)
+        url = self.request.resource_url(self.context)
         return HTTPFound(location=url)
 
     @view_config(name = "move_object", context = IProposal, permission = MODERATE_MEETING,
@@ -315,7 +303,7 @@ class DefaultEdit(BaseEdit):
             return HTTPFound(location=url)
         if 'cancel' in post:
             self.api.flash_messages.add(_(u"Canceled"))
-            url = resource_url(self.context, self.request)
+            url = self.request.resource_url(self.context)
             return HTTPFound(location=url)
         self.response['form'] = form.render()
         return self.response

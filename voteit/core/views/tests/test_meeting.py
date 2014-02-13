@@ -1,6 +1,7 @@
 import unittest
 
 from pyramid import testing
+from betahaus.pyracont.factories import createSchema
 
 from voteit.core.testing_helpers import bootstrap_and_fixture
 
@@ -142,7 +143,8 @@ class MeetingViewTests(unittest.TestCase):
         request.context = context
         obj = self._cut(context, request)
         response = obj.request_meeting_access()
-        self.assertTrue(response['form']) #At least something...
+        #Return to app root since it isn't allowed
+        self.assertEqual(response.location, "http://example.com")
         
     def test_request_meeting_access_public(self):
         self.config.include('voteit.core.models.flash_messages')
@@ -151,18 +153,7 @@ class MeetingViewTests(unittest.TestCase):
         self._load_vcs()
         context = self._fixture()
         context.set_field_value('access_policy', 'public')
-        request = testing.DummyRequest()
-        obj = self._cut(context, request)
-        response = obj.request_meeting_access()
-        self.assertIn('form', response)
-        
-    def test_request_meeting_access_all_participant_permissions(self):
-        self.config.include('voteit.core.models.flash_messages')
-        self.config.testing_securitypolicy(userid='dummy',
-                                           permissive=False)
-        self._load_vcs()
-        context = self._fixture()
-        context.set_field_value('access_policy', 'all_participant_permissions')
+        self.config.include('voteit.core.plugins.immediate_ap')
         request = testing.DummyRequest()
         obj = self._cut(context, request)
         response = obj.request_meeting_access()
@@ -178,8 +169,7 @@ class MeetingViewTests(unittest.TestCase):
         request = testing.DummyRequest()
         obj = self._cut(context, request)
         response = obj.request_meeting_access()
-        self.assertEqual(response['form'], u'')
-        self.assertEqual(response['access_policy'], None)
+        self.assertEqual(response.status, "302 Found")
         
     def test_request_meeting_access_not_logged_in(self):
         self.config.include('voteit.core.models.flash_messages')
@@ -241,8 +231,6 @@ class MeetingViewTests(unittest.TestCase):
         context = self._fixture()
         request = testing.DummyRequest()
         obj = self._cut(context, request)
-        
-        from betahaus.pyracont.factories import createSchema
         schema = createSchema("PresentationMeetingSchema").bind(context=context, request=request)
         response = obj.form(schema)
         self.assertIn('form', response)
@@ -256,8 +244,6 @@ class MeetingViewTests(unittest.TestCase):
         context = self._fixture()
         request = testing.DummyRequest(post={'cancel': 'cancel'}, is_xhr=False)
         obj = self._cut(context, request)
-        
-        from betahaus.pyracont.factories import createSchema
         schema = createSchema("PresentationMeetingSchema").bind(context=context, request=request)
         response = obj.form(schema)
         self.assertEqual(response.location, 'http://example.com/m/')
@@ -271,8 +257,6 @@ class MeetingViewTests(unittest.TestCase):
         context = self._fixture()
         request = testing.DummyRequest(post={'save': 'save', 'title': 'Dummy Title', 'description': 'Dummy Description'}, is_xhr=False)
         obj = self._cut(context, request)
-        
-        from betahaus.pyracont.factories import createSchema
         schema = createSchema("PresentationMeetingSchema").bind(context=context, request=request)
         response = obj.form(schema)
         self.assertEqual(response.location, 'http://example.com/m/')
@@ -286,8 +270,6 @@ class MeetingViewTests(unittest.TestCase):
         context = self._fixture()
         request = testing.DummyRequest(post={'save': 'save', 'title': '', 'description': 'Dummy Description'}, is_xhr=False)
         obj = self._cut(context, request)
-        
-        from betahaus.pyracont.factories import createSchema
         schema = createSchema("PresentationMeetingSchema").bind(context=context, request=request)
         response = obj.form(schema)
         self.assertIn('form', response)
