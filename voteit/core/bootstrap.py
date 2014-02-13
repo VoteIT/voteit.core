@@ -34,3 +34,4 @@ def bootstrap_voteit(echo=True):
     #Add admin to group managers
     root.add_groups('admin', [ROLE_ADMIN])
     return root
+
