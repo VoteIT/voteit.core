@@ -150,6 +150,8 @@ def find_role_userids(context, role):
     """ Return a frozenset of userids that have the specific role. No security check will be performed.
         Note that this process is slow and shouldn't be a part of a regular view.
     """
+    if not role.startswith('role:'):
+        raise ValueError("role must be a single role. (See voteit.core.security) You specified '%s'" % role)
     root = find_root(context)
     results = set()
     for userid in root.users.keys():
