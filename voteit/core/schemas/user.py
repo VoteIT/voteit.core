@@ -6,6 +6,7 @@ from betahaus.pyracont.decorators import schema_factory
 
 from voteit.core import VoteITMF as _
 from voteit.core.models.interfaces import IProfileImage
+from voteit.core.schemas.interfaces import IEditUserSchema
 from voteit.core.validators import html_string_validator
 from voteit.core.validators import deferred_unique_email_validator
 from voteit.core.validators import password_validation
@@ -153,7 +154,8 @@ class RegisterUserSchema(colander.Schema):
     captcha = recaptcha_node();
 
 
-@schema_factory('EditUserSchema', title = _(u"Edit user"), description = _(u"Use this form to edit a user"))
+@schema_factory('EditUserSchema', title = _(u"Edit user"), description = _(u"Use this form to edit a user"),
+                provides = IEditUserSchema)
 class EditUserSchema(colander.Schema):
     """ Regular edit. """
     email = email_node()
