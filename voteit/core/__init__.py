@@ -3,10 +3,10 @@ import logging
 from pyramid.i18n import TranslationStringFactory
 from pyramid.session import UnencryptedCookieSessionFactoryConfig
 from pyramid_zodbconn import get_connection
-
 from pyramid.config import Configurator
 from pyramid.authorization import ACLAuthorizationPolicy
 from pyramid.authentication import AuthTktAuthenticationPolicy
+from zope.interface.interfaces import ComponentLookupError
 
 
 log = logging.getLogger(__name__)
@@ -20,6 +20,7 @@ DEFAULT_SETTINGS = {
     'default_timezone_name': 'UTC',
     'voteit.gravatar_default': 'mm',
     'voteit.default_profile_picture': '/static/images/default_user.png',
+    'voteit.default_auth': 'password',
 }
 
 
@@ -36,11 +37,6 @@ def main(global_config, **settings):
 
 def default_configurator(settings):
     from voteit.core.security import groupfinder
-    
-    #Default pluggable auth
-    if 'voteit.default_auth' not in settings:
-        settings['voteit.default_auth'] = 'password'
-
     #Authentication policies
     authn_policy = AuthTktAuthenticationPolicy(secret = read_salt(settings),
                                                callback = groupfinder)
@@ -160,6 +156,18 @@ def check_required_components(config):
         for v in vals:
             config.include(v)
             log.info("Including default: '%s'" % v)
+    #If default auth is specified, make sure it can be retrieved
+    default_auth = config.registry.settings.get('voteit.default_auth')
+    if default_auth:
+        found = False
+        for ar in config.registry.registeredAdapters():
+            if default_auth == ar.name and ar.provided == IAuthPlugin:
+                found = True
+                break
+        if not found:
+            msg = (u"voteit.default_auth is set to '%s' but no adapter providing IAuthPlugin "
+                   u"with that name was found. It's probably a configuration error.") % default_auth
+            raise ComponentLookupError(msg)
 
 def root_factory(request):
     """ Returns root object for each request. See pyramid docs. """
