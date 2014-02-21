@@ -8,13 +8,10 @@ from voteit.core.security import MANAGE_SERVER
 from voteit.core.security import MODERATE_MEETING
 from voteit.core.security import VIEW
 from voteit.core.security import MANAGE_GROUPS
-from voteit.core.security import ADD_VOTE
-from voteit.core.security import ROLE_VOTER
 from voteit.core import VoteITMF as _
 from voteit.core.views.base_view import BaseView
 from voteit.core.models.interfaces import IAccessPolicy
 from voteit.core.models.interfaces import IMeeting
-from voteit.core.models.catalog import resolve_catalog_docid
 
 
 MODERATOR_SECTIONS = ('ongoing', 'upcoming', 'closed', 'private',)
@@ -37,20 +34,11 @@ def polls_menu(context, request, va, **kw):
     api = kw['api']
     if api.meeting is None:
         return ''
-    unvoted_polls = False
-    if ROLE_VOTER in api.context_effective_principals(api.meeting):
-        query = Eq('content_type', 'Poll' ) & \
-                Eq('path', resource_path(api.meeting)) & \
-                Eq('workflow_state', 'ongoing')
-        for docid in api.root.catalog.query(query)[1]:
-            poll = resolve_catalog_docid(api.root.catalog, api.root, docid)
-            if api.context_has_permission(ADD_VOTE, poll) and api.userid not in poll:
-                unvoted_polls = True
-                break
+    query = Eq('content_type', 'Poll' ) & Eq('path', resource_path(api.meeting)) & Eq('workflow_state', 'ongoing')
     response = {}
     response['api'] = api
     response['menu_title'] = va.title
-    response['unvoted_polls'] = unvoted_polls
+    response['open_polls'] = bool(api.root.catalog.query(query)[0])
     response['url'] = request.resource_url(api.meeting, 'meeting_poll_menu')
     return render('templates/polls/polls_menu.pt', response, request = request)
 

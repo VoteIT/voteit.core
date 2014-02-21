@@ -1,7 +1,7 @@
 <tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core">
 <li class="tab dropdown_menu dropdown_menu_poll">
     <a href="#" class="menu_header" url="${url}">
-        <span tal:attributes="class unvoted_polls and 'iconpadding icon ongoing' or 'iconpadding icon closed'">
+        <span tal:attributes="class open_polls and 'iconpadding icon ongoing' or 'iconpadding icon closed'">
             ${menu_title}
         </span>
     </a>

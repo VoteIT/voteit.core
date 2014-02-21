@@ -3,7 +3,6 @@ from deform import Form
 from deform.exception import ValidationFailure
 from pyramid.security import has_permission
 from pyramid.security import NO_PERMISSION_REQUIRED
-from pyramid.security import authenticated_userid
 from pyramid.traversal import resource_path
 from pyramid.response import Response
 from pyramid.view import view_config
@@ -267,7 +266,6 @@ def reload_data_json(context, request):
         Note: This is not a smart way of doing this, so MAKE SURE this executes fast!
         This will be replaced when proper websockets are in place.
     """
-    userid = authenticated_userid(request)
     root = context.__parent__
     response = {'polls': {}, 'proposals': {}, 'discussionposts': ()}
     #Get poll reload information
