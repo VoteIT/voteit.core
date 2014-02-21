@@ -191,7 +191,7 @@ class MeetingView(BaseView):
         add_csrf_token(self.context, self.request, schema)
         schema = schema.bind(context=self.context, request=self.request, api = self.api)
         result = self.form(schema)
-        if 'save' in self.request.POST:
+        if 'save' in self.request.POST and isinstance(result, HTTPFound):
             ap = self.request.registry.queryAdapter(self.context, IAccessPolicy, name = self.context.get_field_value('access_policy', ''))
             if ap and ap.configurable:
                 self.api.flash_messages.add(_(u"Review access policy configuration"))
