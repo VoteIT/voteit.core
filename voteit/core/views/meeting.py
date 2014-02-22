@@ -7,7 +7,6 @@ from pyramid.traversal import resource_path
 from pyramid.response import Response
 from pyramid.view import view_config
 from pyramid.httpexceptions import HTTPFound
-from pyramid.url import resource_url
 from betahaus.pyracont.factories import createSchema
 from repoze.catalog.query import Eq
 
@@ -72,13 +71,13 @@ class MeetingView(BaseView):
                 self.response['form'] = e.render()
                 return self.response
             self.context.set_field_appstruct(appstruct)
-            url = resource_url(self.context, self.request)
+            url = self.request.resource_url(self.context)
             return HTTPFound(location=url)
 
         if 'cancel' in post:
             self.api.flash_messages.add(_(u"Canceled"))
 
-            url = resource_url(self.context, self.request)
+            url = self.request.resource_url(self.context)
             return HTTPFound(location=url)
 
         #No action - Render form
@@ -95,13 +94,12 @@ class MeetingView(BaseView):
         """
         #If user already has permissions redirect to main meeting view
         if has_permission(security.VIEW, self.context, self.request):
-            url = resource_url(self.request, self.context)
-            return HTTPFound(location = url)
+            return HTTPFound(location = self.request.resource_url(self.context))
         if not self.api.userid:
             msg = _('request_access_view_login_register',
                     default=u"You need to login or register before you can use any meetings.")
             self.api.flash_messages.add(msg, type='info')
-            came_from = resource_url(self.context, self.request, 'request_access')
+            came_from = self.request.resource_url(self.context, 'request_access')
             url = self.request.resource_url(self.api.root, query={'came_from': came_from})
             return HTTPFound(location = url)
         access_policy_name = self.context.get_field_value('access_policy', 'invite_only')
@@ -222,12 +220,12 @@ class MeetingView(BaseView):
                 self.api.flash_messages.add(_(u"Successfully updated"))
             else:
                 self.api.flash_messages.add(_(u"Nothing updated"))                
-            url = resource_url(self.context, self.request)
+            url = self.request.resource_url(self.context)
             return HTTPFound(location=url)
 
         if 'cancel' in post:
             self.api.flash_messages.add(_(u"Canceled"))
-            url = resource_url(self.context, self.request)
+            url = self.request.resource_url(self.context)
             return HTTPFound(location=url)
 
         #No action - Render form
