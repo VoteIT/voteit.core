@@ -68,6 +68,7 @@ voteit_participants_edit = Resource(voteit_core_jslib, 'voteit_participants_edit
 voteit_moderator_js = Resource(voteit_core_jslib, 'voteit_moderator.js', bottom=True, depends=(voteit_common_js,))
 voteit_poll_js = Resource(voteit_core_jslib, 'voteit_poll.js', bottom=True, depends=(voteit_common_js,))
 voteit_manage_tickets_js = Resource(voteit_core_jslib, 'voteit_manage_tickets.js', bottom=True, depends=(voteit_common_js, tablesorter))
+voteit_send_invitations = Resource(voteit_core_jslib, 'voteit_send_invitations.js', bottom = True, depends = (voteit_common_js,))
 
 DEFORM_RESOURCES = {
     'jquery': (jquery_deform,),

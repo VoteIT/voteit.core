@@ -254,7 +254,7 @@ class IMeeting(IBaseFolder):
     invite_tickets = Attribute("""
         Storage for InviteTickets. Works pretty much like a folder.""")
 
-    def add_invite_ticket(email, roles, message, sent_by = None, overwrite = False):
+    def add_invite_ticket(email, roles, sent_by = None):
         """ Create an invite ticket and add it do the invite_tickets storage.
             Note that this doesn't send the invitation.
             If the ticket was added, it will be returned.

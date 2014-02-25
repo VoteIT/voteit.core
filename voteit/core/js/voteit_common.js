@@ -76,6 +76,23 @@ function reload_meeting_data() {
 };
 
 
+function do_request(url, options) {
+    var settings = {url: url, async: false};
+    if (typeof(options) !== 'undefined') $.extend(settings, options);
+    var request = $.ajax(settings);
+    request.fail(function(jqXHR) {
+        flash_message(jqXHR.status + ' ' + jqXHR.statusText, 'error', true, 3, true);
+    });
+    request.done(function(data, textStatus, jqXHR) {
+        if (typeof(data) === 'object' && 'message' in data) {
+            var msg_cls = data['success'] == true ? 'info' : 'error';
+            flash_message(data['message'], msg_cls, true, 5, true);
+        }
+    });
+    return request;
+}
+voteit.do_request = do_request;
+
 function spinner() {
     var _spinner = $(document.createElement('img'));
     _spinner.addClass('spinner');

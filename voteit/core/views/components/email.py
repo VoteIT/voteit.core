@@ -22,6 +22,7 @@ def request_password_body(context, request, va, **kw):
 def invite_ticket(context, request, va, **kw):
     """ Render invite ticket email html.
         Uses ticket as a context.
+        Requires message to be passed as a keyword when using view_action
     """
     #FIXME: Include meeting logo in mail?
     roles = dict(MEETING_ROLES)
@@ -31,7 +32,7 @@ def invite_ticket(context, request, va, **kw):
     response = {}
     response['access_link'] = request.resource_url(meeting, 'ticket',
                                                    query = {'email': context.email, 'token': context.token})
-    response['message'] = context.message
+    response['message'] = kw['message']
     response['meeting'] = meeting
     response['contact_mail'] = meeting.get_field_value('meeting_mail_address')
     response['sender_profile'] = root.users.get(context.sent_by)

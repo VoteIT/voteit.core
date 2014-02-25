@@ -58,11 +58,11 @@ class InviteTicket(Folder, WorkflowAware):
         self.uid = unicode(uuid4())
         super(InviteTicket, self).__init__()
 
-    def send(self, request):
+    def send(self, request, message = u""):
         if self.closed: #Just as a precaution
             return
         meeting = find_interface(self, IMeeting)
-        html = render_view_action(self, request, 'email', 'invite_ticket')
+        html = render_view_action(self, request, 'email', 'invite_ticket', message = message)
         subject = _(u"Invitation to ${meeting_title}", mapping = {'meeting_title': meeting.title})
         if send_email(subject = subject, recipients = self.email, html = html, request = request, send_immediately = True):
             self.sent_dates.append(utcnow())

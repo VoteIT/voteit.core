@@ -75,7 +75,11 @@
             </tr>
         </tbody>
     </table>
-    <br/><br/>
+
+        <br/>
+        <div i18n:translate="">Message to any participants you resend tickets to</div><br/>
+        <textarea name="message" rows="5" cols="40"></textarea>
+        <div i18n:translate="">If you've marked any closed tickets, they won't receive a reinvite.</div>
         <h4 i18n:translate="">With <span id="selected_count" i18n:name="count">0</span> selected</h4>
         <input class="buttonize" type="submit" name="resend" value="Resend invitation" i18n:attributes="value" />
         <input class="buttonize" type="submit" name="remove" value="Remove" i18n:attributes="value" />

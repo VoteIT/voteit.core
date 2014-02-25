@@ -53,24 +53,3 @@ class AddTicketsSchema(colander.Schema):
                                   missing = u"",
                                   validator = html_string_validator,
     )
-    overwrite = colander.SchemaNode(colander.Bool(),
-                                    default = False,
-                                    missing = False,
-                                    title = _(u"Discard and recreate old invitations that weren't used?"),)
-
-
-@schema_factory('SendticketsSchema')
-class SendTicketsSchema(colander.Schema):
-    remind_days = colander.SchemaNode(
-        colander.Int(),
-        title = _(u"Minimum days since last invite"),
-        default = 3,
-        missing = -1,
-    )
-    previous_invites = colander.SchemaNode(
-        colander.Int(),
-        title = _(u"Maximum number of previous invites"),
-        default = 2,
-        missing = -1,
-    )
-

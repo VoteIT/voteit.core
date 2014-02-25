@@ -17,6 +17,7 @@ from voteit.core.models.schemas import button_send
 from voteit.core.models.schemas import button_delete
 from voteit.core.validators import deferred_token_form_validator
 from voteit.core.fanstaticlib import voteit_manage_tickets_js
+from voteit.core.fanstaticlib import voteit_send_invitations
 
 
 class TicketView(BaseView):
@@ -119,12 +120,11 @@ class TicketView(BaseView):
                 self.response['form'] = e.render()
                 return self.response
             emails = appstruct['emails'].splitlines()
-            message = appstruct['message']
             roles = appstruct['roles']
             added = 0
             rejected = 0
             for email in emails:
-                result = self.context.add_invite_ticket(email, roles, message, sent_by = self.api.userid, overwrite = appstruct['overwrite'])
+                result = self.context.add_invite_ticket(email, roles, sent_by = self.api.userid)
                 if result:
                     added += 1
                 else:
@@ -144,28 +144,12 @@ class TicketView(BaseView):
                         default=u"Successfully added ${added} invites but discarded ${rejected} since they already existed or were already used.",
                         mapping={'added': added, 'rejected': rejected})
             self.api.flash_messages.add(msg)
-            url = self.request.resource_url(self.context, 'send_tickets', query = {'send': 'send', 'previous_invites': 0})
-            return HTTPFound(location=url)
+            self.request.session['send_tickets.emails'] = emails
+            self.request.session['send_tickets.message'] = appstruct['message']
+            url = self.request.resource_url(self.context, 'send_tickets')
+            return HTTPFound(location = url)
         #No action - Render add form
         self.response['form'] = form.render()
-        return self.response
-
-    @view_config(name = "send_tickets", context = IMeeting, renderer = "templates/send_tickets.pt", permission = security.MANAGE_GROUPS)
-    def send_tickets(self):
-        schema = createSchema('SendticketsSchema')
-        schema = schema.bind(context=self.context, request=self.request, api = self.api)
-        form = deform.Form(schema, buttons = (button_send,), method = 'GET')
-        if 'send' in self.request.GET:
-            controls = self.request.GET.items()
-            try:
-                appstruct = form.validate(controls)
-            except deform.ValidationFailure, e:
-                self.response['form'] = e.render()
-                return self.response
-            #FIXME implement later
-            del appstruct['remind_days']
-            self.response['emails'] = self.context.get_ticket_names(previous_invites = appstruct['previous_invites'])
-            self.response['tickets_to_send'] = len(self.response['emails'])
         return self.response
 
     @view_config(name="manage_tickets", context=IMeeting, renderer="templates/manage_tickets.pt", permission=security.MANAGE_GROUPS)
@@ -183,24 +167,30 @@ class TicketView(BaseView):
                                               mapping = {'count': len(data['email'])}))
                 return HTTPFound(location = self.request.url)
             if 'resend' in data:
-                resent = 0
                 total = len(data['email'])
-                aborted = 0
-                for email in data['email']:
-                    ticket = self.context.invite_tickets[email]
-                    if not ticket.closed:
-                        ticket.send(self.request)
-                        resent += 1
-                    else:
-                        aborted += 1
-                if not aborted:
-                    msg = _(u"Resent ${count} successfully",
-                            mapping = {'count': resent})
+                if total > 50:
+                    #bulk send
+                    self.request.session['send_tickets.emails'] = data['email']
+                    self.request.session['send_tickets.message'] = data['message'][0]
+                    return HTTPFound(location = self.request.resource_url(self.context, 'send_tickets'))
                 else:
-                    msg = _(u"Resent ${count} of ${total}. ${aborted} were not sent since they're already claimed",
-                            mapping = {'count': resent, 'total': total, 'aborted': aborted})
-                self.api.flash_messages.add(msg)
-                return HTTPFound(location = self.request.url)
+                    resent = 0
+                    aborted = 0
+                    for email in data['email']:
+                        ticket = self.context.invite_tickets[email]
+                        if not ticket.closed:
+                            ticket.send(self.request, data['message'][0])
+                            resent += 1
+                        else:
+                            aborted += 1
+                    if not aborted:
+                        msg = _(u"Resent ${count} successfully",
+                                mapping = {'count': resent})
+                    else:
+                        msg = _(u"Resent ${count} of ${total}. ${aborted} were not sent since they're already claimed",
+                                mapping = {'count': resent, 'total': total, 'aborted': aborted})
+                    self.api.flash_messages.add(msg)
+                    return HTTPFound(location = self.request.url)
         voteit_manage_tickets_js.need()
         self.response['tabs'] = self.api.render_single_view_component(self.context, self.request, 'tabs', 'manage_tickets')
         closed = 0
@@ -218,14 +208,24 @@ class TicketView(BaseView):
         self.response['roles_dict'] = dict(security.MEETING_ROLES)
         return self.response
 
+    @view_config(name = "send_tickets", context = IMeeting, renderer = "templates/send_tickets.pt", permission = security.MANAGE_GROUPS)
+    def send_tickets(self):
+        emails = self.request.session.get('send_tickets.emails', ())
+        if emails:
+            voteit_send_invitations.need()
+        self.response['emails'] = emails
+        return self.response
+
 
 @view_config(name = "send_tickets", context = IMeeting, renderer = "json", permission = security.MANAGE_GROUPS, xhr = True)
 def send_tickets_action(context, request):
-    result = []
-    post_vars = request.POST.dict_of_lists()
-    for email in post_vars.get('emails', ()):
-        context.invite_tickets[email].send(request)
-        result.append(email)
-        if len(result) > 19:
-            break
-    return {'sent': len(result), 'emails': result}
+    session = request.session
+    emails = session['send_tickets.emails'][:20]
+    message = session['send_tickets.message']
+    for email in emails:
+        context.invite_tickets[email].send(request, message)
+        session['send_tickets.emails'].remove(email)
+    if len(session['send_tickets.emails']) == 0:
+        del session['send_tickets.emails']
+        del session['send_tickets.message']
+    return {'sent': len(emails), 'remaining': len(session.get('send_tickets.emails', ()))}

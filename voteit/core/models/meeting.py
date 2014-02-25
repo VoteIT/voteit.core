@@ -98,13 +98,10 @@ class Meeting(BaseContent, WorkflowAware):
                 results.append(name)
         return results
 
-    def add_invite_ticket(self, email, roles, message = u"", sent_by = None, overwrite = False):
+    def add_invite_ticket(self, email, roles, sent_by = None):
         if email in self.invite_tickets:
-            if overwrite is False:
-                return
-            if self.invite_tickets[email].closed:
-                return
-        obj = createContent('InviteTicket', email, roles, message, sent_by = sent_by)
+            return
+        obj = createContent('InviteTicket', email, roles, sent_by = sent_by)
         obj.__parent__ = self
         self.invite_tickets[email] = obj
         return obj
