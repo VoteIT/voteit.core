@@ -224,8 +224,6 @@ class TicketViewTests(unittest.TestCase):
     def test_manage_tickets_remove(self):
         self.config.scan('voteit.core.models.invite_ticket')
         self.config.scan('voteit.core.views.components.tabs_menu')
-        #self.config.scan('voteit.core.views.components.email')
-        #self.config.include('pyramid_mailer.testing')
         self.config.include('voteit.core.models.flash_messages')
         self.config.testing_securitypolicy(userid='dummy',
                                            permissive=True)
@@ -295,14 +293,3 @@ def _mk_invites(context, count = 1, roles = [security.ROLE_MODERATOR]):
     while count:
         context.add_invite_ticket('invite%s@voteit.se' % count, roles)
         count -= 1
-
-# @view_config(name = "send_tickets", context = IMeeting, renderer = "json", permission = security.MANAGE_GROUPS, xhr = True)
-# def send_tickets_action(context, request):
-#     result = []
-#     post_vars = request.POST.dict_of_lists()
-#     for email in post_vars.get('emails', ()):
-#         context.invite_tickets[email].send(request)
-#         result.append(email)
-#         if len(result) > 19:
-#             break
-#     return {'sent': len(result), 'emails': result}
