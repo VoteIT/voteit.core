@@ -144,7 +144,7 @@ class TicketViewTests(unittest.TestCase):
                                                'csrf_token': '0123456789012345678901234567890123456789'})
         obj = self._cut(context, request)
         response = obj.add_tickets()
-        self.assertEqual(response.location, 'http://example.com/m/send_tickets?previous_invites=0&send=send')
+        self.assertEqual(response.location, 'http://example.com/m/send_tickets')
 
     def test_add_tickets_submit_some_rejected(self):
         self.config.scan('voteit.core.models.invite_ticket')
@@ -162,28 +162,8 @@ class TicketViewTests(unittest.TestCase):
                                                'csrf_token': '0123456789012345678901234567890123456789'})
         obj = self._cut(context, request)
         response = obj.add_tickets()
-        self.assertEqual(response.location, 'http://example.com/m/send_tickets?previous_invites=0&send=send')
+        self.assertEqual(response.location, 'http://example.com/m/send_tickets')
         self.assertEqual(existing_ticket, context.invite_tickets['dummy1@test.com'])
-
-    def test_add_tickets_submit_some_overwritten(self):
-        self.config.scan('voteit.core.models.invite_ticket')
-        self.config.scan('voteit.core.schemas.invite_ticket')
-        self.config.scan('voteit.core.views.components.tabs_menu')
-        self.config.include('voteit.core.models.flash_messages')
-        self.config.testing_securitypolicy(userid='dummy',
-                                           permissive=True)
-        context = self._fixture()
-        existing_ticket = context.add_invite_ticket('dummy1@test.com', [security.ROLE_DISCUSS])
-        request = testing.DummyRequest(post = {'add': 'add', 
-                                               'emails': 'dummy1@test.com\ndummy2@test.com',
-                                               'message': 'Welcome to the meeting!', 
-                                               'roles': ['role:Moderator'],
-                                               'overwrite': 'true',
-                                               'csrf_token': '0123456789012345678901234567890123456789'})
-        obj = self._cut(context, request)
-        response = obj.add_tickets()
-        self.assertEqual(response.location, 'http://example.com/m/send_tickets?previous_invites=0&send=send')
-        self.assertNotEqual(existing_ticket, context.invite_tickets['dummy1@test.com'])
 
     def test_manage_tickets(self):
         self.config.scan('voteit.core.models.invite_ticket')
@@ -210,6 +190,7 @@ class TicketViewTests(unittest.TestCase):
         context.add_invite_ticket('john@doe.com', [security.ROLE_MODERATOR], sent_by = 'dummy')
         context.add_invite_ticket('jane@doe.com', [security.ROLE_MODERATOR], sent_by = 'dummy')
         request = testing.DummyRequest(post = MultiDict([('resend', 'Resend'),
+                                                         ('message', 'Hello world'),
                                                         ('email', 'john@doe.com'),
                                                         ('email', 'jane@doe.com'),
                                                         ]))
@@ -230,6 +211,7 @@ class TicketViewTests(unittest.TestCase):
         context.add_invite_ticket('john@doe.com', [security.ROLE_MODERATOR], sent_by = 'dummy')
         context.add_invite_ticket('jane@doe.com', [security.ROLE_MODERATOR], sent_by = 'dummy')
         request = testing.DummyRequest(post = MultiDict([('resend', 'Resend'),
+                                                         ('message', 'Hello world'),
                                                         ('email', 'john@doe.com'),
                                                         ('email', 'jane@doe.com'),
                                                         ]))
@@ -278,24 +260,27 @@ class SendTicketsActionTests(unittest.TestCase):
     def test_send_tickets_action(self):
         context = _fixture(self.config)
         _mk_invites(context)
-        request = testing.DummyRequest(post = MultiDict([('emails', 'invite1@voteit.se')]))
+        request = testing.DummyRequest()
+        request.session['send_tickets.emails'] = ['invite1@voteit.se']
+        request.session['send_tickets.message'] = 'Hello'
         response = self._fut(context, request)
         mailer = get_mailer(request)
         self.assertEqual(len(mailer.outbox), 1)
         self.assertEqual(len(context.invite_tickets['invite1@voteit.se'].sent_dates), 1)
-        self.assertEqual(response, {'sent': 1, 'emails': ['invite1@voteit.se']})
+        self.assertEqual(response, {'remaining': 0, 'sent': 1})
 
     def test_send_tickets_action_only_does_20(self):
         context = _fixture(self.config)
-        _mk_invites(context, count = 21)
-        emails = [('emails', x) for x in context.invite_tickets.keys()]
-        request = testing.DummyRequest(post = MultiDict(emails))
+        _mk_invites(context, count = 21)        
+        request = testing.DummyRequest()
+        request.session['send_tickets.message'] = 'Hello'
+        request.session['send_tickets.emails'] = list(context.invite_tickets.keys())
+        self.assertEqual(len(request.session['send_tickets.emails']), 21) #Just to make sure
         response = self._fut(context, request)
         mailer = get_mailer(request)
         self.assertEqual(len(mailer.outbox), 20)
         self.assertEqual(len(context.invite_tickets['invite5@voteit.se'].sent_dates), 1)
         self.assertEqual(response['sent'], 20)
-        self.assertEqual(len(emails), 21) #Just to make sure
 
 
 def _fixture(config):

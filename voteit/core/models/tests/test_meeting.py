@@ -107,23 +107,6 @@ class MeetingTests(unittest.TestCase):
         self.failUnless(obj.add_invite_ticket('john@doe.com', [security.ROLE_DISCUSS]))
         self.failIf(obj.add_invite_ticket('john@doe.com', [security.ROLE_DISCUSS]))
 
-    def test_add_invite_ticket_doesnt_touch_closed_even_with_overwrite(self):
-        self.config.scan('voteit.core.models.invite_ticket')
-        self.config.include('voteit.core.testing_helpers.register_workflows')
-        obj = self._cut()
-        ticket = obj.add_invite_ticket('john@doe.com', [security.ROLE_DISCUSS])
-        self.config.testing_securitypolicy(userid='some_user',
-                                           permissive=True)
-        request = testing.DummyRequest()
-        ticket.claim(request)
-        self.failIf(obj.add_invite_ticket('john@doe.com', [security.ROLE_DISCUSS], overwrite = True))
-
-    def test_add_invite_ticket_overwrite(self):
-        self.config.scan('voteit.core.models.invite_ticket')
-        obj = self._cut()
-        self.failUnless(obj.add_invite_ticket('john@doe.com', [security.ROLE_DISCUSS]))
-        self.failUnless(obj.add_invite_ticket('john@doe.com', [security.ROLE_DISCUSS], overwrite = True))
-
 
 class MeetingPermissionTests(unittest.TestCase):
     """ Check permissions in different meeting states. """
