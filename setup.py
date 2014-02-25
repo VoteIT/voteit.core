@@ -12,6 +12,7 @@ install_requires = (
     'pyramid_zcml',
     'pyramid_zodbconn',
     'pyramid_tm',
+    'pyramid_beaker',
     'repoze.folder',
     'repoze.workflow',
     'ZODB3',

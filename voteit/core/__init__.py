@@ -33,21 +33,16 @@ def main(global_config, **settings):
     config.hook_zca()
     return config.make_wsgi_app()
 
-
 def default_configurator(settings):
     from voteit.core.security import groupfinder
-
-    #Authentication policies
-    authn_policy = AuthTktAuthenticationPolicy(secret = read_salt(settings),
+    authn_policy = AuthTktAuthenticationPolicy(hashalg='sha512',
+                                               secret = read_salt(settings),
                                                callback = groupfinder)
-    #FIXME: Note that argument hashalg = 'sha512' isn't valid on Pyramid <1.4 ! We need to check version
     authz_policy = ACLAuthorizationPolicy()
-    sessionfact = UnencryptedCookieSessionFactoryConfig('messages')
     return Configurator(settings=settings,
                         authentication_policy=authn_policy,
                         authorization_policy=authz_policy,
-                        root_factory=root_factory,
-                        session_factory = sessionfact,)
+                        root_factory=root_factory,)
 
 def read_salt(settings):
     """ Read salt file or create a new one if salt_file is specified in the settings. """
