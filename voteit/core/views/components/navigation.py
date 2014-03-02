@@ -4,6 +4,7 @@ from pyramid.traversal import resource_path
 
 from voteit.core import VoteITMF as _
 from voteit.core.security import MODERATE_MEETING
+from voteit.core.security import ADD_MEETING
 from voteit.core.security import VIEW
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import ISiteRoot
@@ -20,7 +21,7 @@ def navigation(context, request, va, **kwargs):
         return '<div id="navigation" class="sidebar_block">%s</div>' % nav_out
     return u""
 
-@view_action('navigation_sections', 'navigation_section_header', permission=VIEW)
+@view_action('navigation_sections', 'navigation_section_header', permission = VIEW)
 def navigation_section_header(context, request, va, **kwargs):
     api = kwargs['api']
     if not api.userid:
@@ -32,12 +33,13 @@ def navigation_section_header(context, request, va, **kwargs):
     else:
         title = _(u"Meetings")
         description = u""
-        url = "/" #FIXME: Is this okay?
+        url = request.resource_url(api.root),
     response = dict(
         api = api,
         title = title,
         description = description,
         url = url,
+        show_add_meeting = not api.meeting and api.context_has_permission(ADD_MEETING, api.root),
     )
     return render('templates/sidebars/navigation_head.pt', response, request = request)
 

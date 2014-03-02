@@ -9,8 +9,10 @@ from voteit.core.events import WorkflowStateChange
 from voteit.core import VoteITMF as _
 
 
-#Roles, which are the same as groups really
+#Roles, which are the same as groups really, but we may detach group functionality so it's possible
+#to add regular groups and give them roles.
 ROLE_ADMIN = 'role:Admin'
+ROLE_MEETING_CREATOR = 'role:Meeting creator'
 ROLE_MODERATOR = 'role:Moderator'
 ROLE_VIEWER = 'role:Viewer'
 ROLE_DISCUSS = 'role:Discussion'
@@ -65,7 +67,8 @@ REGULAR_ADD_PERMISSIONS = (ADD_AGENDA_ITEM,
                            ADD_USER,
                            ADD_AGENDA_TEMPLATE,)
 
-ROOT_ROLES = ((ROLE_ADMIN, _(u'Administrator')),)
+ROOT_ROLES = ((ROLE_ADMIN, _(u'Administrator')),
+              (ROLE_MEETING_CREATOR, _(u"Meeting creator")),)
 MEETING_ROLES = ((ROLE_MODERATOR, _(u'Moderator')),
                  (ROLE_VIEWER, _(u'View')),
                  (ROLE_DISCUSS, _(u'Discuss (and view)')),

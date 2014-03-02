@@ -16,6 +16,7 @@ from voteit.core.models.catalog import update_indexes
 
 
 _DEFAULT_ACL = ((Allow, security.ROLE_ADMIN, ALL_PERMISSIONS),
+                (Allow, security.ROLE_MEETING_CREATOR, security.ADD_MEETING),
                 (Allow, Everyone, security.VIEW),
                 DENY_ALL)
 

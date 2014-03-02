@@ -9,8 +9,10 @@ from voteit.core import security
 
 
 admin = set([security.ROLE_ADMIN])
+meeting_creator = set([security.ROLE_MEETING_CREATOR])
 authenticated = set([Authenticated])
 everyone = set([Everyone])
+
 
 class SiteRootTests(unittest.TestCase):
     def setUp(self):
@@ -47,11 +49,11 @@ class SiteRootPermissionTests(unittest.TestCase):
 
     def test_add_meeting_perm(self):
         obj = self._cut()
-        self.assertEqual(self.pap(obj, security.ADD_MEETING), admin)
+        self.assertEqual(self.pap(obj, security.ADD_MEETING), admin | meeting_creator)
 
     def test_add_meeting_perm_allow_authenticated(self):
         obj = self._cut(allow_add_meeting = True)
-        self.assertEqual(self.pap(obj, security.ADD_MEETING), admin | authenticated)
+        self.assertEqual(self.pap(obj, security.ADD_MEETING), admin | meeting_creator | authenticated)
 
     def test_view(self):
         obj = self._cut()
