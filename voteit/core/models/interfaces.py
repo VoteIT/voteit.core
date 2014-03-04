@@ -702,16 +702,20 @@ class IUnread(Interface):
 
 
 class IProposalIds(Interface):
-    """ Computes and stores used proposal ids or automatic ids.
+    """ Computes and stores used proposal ids (or automatic ids as they were called).
         They're used as hashtags and unique identifiers on proposals.
-    """
-    
-    def add(userid, value):
-        """ Create a tag for userid.
-        """
         
-    def get(userid):
-        """ Get latets tag for userid
+        The adapter itself adapts the meeting.
+    """
+    proposal_ids = Attribute("""
+        Storage for the proposal ids. An OOBTree object which accepts dict-like operations.
+        It keeps track of current last key for a specific proposal. What kind of keys
+        it will track has to do with the implementation. It could be current key for a UserID
+        or perhaps for a specific context. It's up to the add method to decide what to do with it. """)
+
+    def add(proposal):
+        """ Add an id for this proposal. It will update both the proposal and
+            the global storage within the meeting.
         """
 
 
