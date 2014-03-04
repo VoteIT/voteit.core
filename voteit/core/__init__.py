@@ -29,6 +29,7 @@ def main(global_config, **settings):
         be sure to include the same things at least.
     """
     config = default_configurator(settings)
+    config.include(required_external_components)
     config.include(required_components)
     config.hook_zca()
     return config.make_wsgi_app()
@@ -104,6 +105,19 @@ def required_components(config):
     config.include(register_dynamic_fanstatic_resources)
     config.include(check_required_components)
     config.include(adjust_view_component_order)
+
+def required_external_components(config):
+    """ Include other packages that VoteIT depend on. This is so they don't
+        have to be specified in the paster ini file. However, having this here
+        might mean that it's harder to override external dependencies. But currently
+        that doesn't seem to be a problem.
+    """
+    settings = config.registry.settings
+    pyramid_includes = settings.get('pyramid.includes', '').split()
+    for requirement in ('pyramid_zodbconn', 'pyramid_tm', 'pyramid_beaker'):
+        if requirement not in pyramid_includes:
+            log.info("Requirement '%s' not found in 'pyramid.includes', including it now." % requirement)
+            config.include(requirement)
 
 def register_plugins(config):
     """ Register any plugins specified in paster .init file.
