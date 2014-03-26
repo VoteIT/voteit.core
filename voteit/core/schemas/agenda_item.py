@@ -5,10 +5,13 @@ import deform
 from voteit.core import VoteITMF as _
 from voteit.core.validators import html_string_validator
 from voteit.core.validators import richtext_validator
+from voteit.core.schemas.interfaces import IAgendaItemSchema
 
 
-@schema_factory('AddAgendaItemSchema', title = _(u"Add agenda item"), description = _(u"Use this form to add an agenda item"))
-@schema_factory('EditAgendaItemSchema', title = _(u"Edit agenda item"), description = _(u"Use this form to edit an agenda item"))
+@schema_factory('AddAgendaItemSchema', title = _(u"Add agenda item"),
+                provides = IAgendaItemSchema)
+@schema_factory('EditAgendaItemSchema', title = _(u"Edit agenda item"),
+                provides = IAgendaItemSchema)
 class AgendaItemSchema(colander.MappingSchema):
     title = colander.SchemaNode(colander.String(),
         title = _(u"Title"),

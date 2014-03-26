@@ -15,3 +15,7 @@ class ISchema(Interface):
 
 class IEditUserSchema(ISchema):
     """ When editing user profile. """
+
+
+class IAgendaItemSchema(ISchema):
+    """ When adding or editing an Angenda item. """
