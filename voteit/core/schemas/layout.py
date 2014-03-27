@@ -69,6 +69,6 @@ class LayoutSchema(colander.Schema):
                                    title = _(u"Hide retracted proposals"),
                                    description = _(u"meeting_hide_retracted_description",
                                                    default=u"You can still access retracted proposals by using a collapsible link below the regular proposals"),
-                                   default = False,
-                                   missing = False)
+                                   default = True,
+                                   missing = True)
 
