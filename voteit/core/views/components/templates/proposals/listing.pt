@@ -30,7 +30,7 @@
 
     <div tal:condition="retracted_proposals" class="toggle_area toggle_closed">
         <div class="listing_block listing_control">
-        <a class="toggle_minimize" href="javascript: void(0)" i18n:translate="">Show <tal:count i18n:name="count">${len(retracted_proposals)}</tal:count> retracted proposals</a>
+        <a class="toggle_minimize" href="javascript: void(0)" i18n:translate="">Show <tal:count i18n:name="count">${len(retracted_proposals)}</tal:count> retracted/unhandled proposals</a>
         </div>
         <div class="minimizable_area">
             <tal:iterate repeat="proposal retracted_proposals">

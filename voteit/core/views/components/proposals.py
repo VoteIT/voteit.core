@@ -39,7 +39,7 @@ def proposal_listing(context, request, va, **kw):
 
     hide_retracted = api.meeting.get_field_value('hide_retracted', False)
     if hide_retracted:
-        query &= NotAny('workflow_state', ('retracted',))
+        query &= NotAny('workflow_state', ('retracted', 'unhandled',))
 
     tag = request.GET.get('tag', None)
     if tag:
@@ -60,7 +60,7 @@ def proposal_listing(context, request, va, **kw):
         query = Eq('path', resource_path(context)) &\
                 Eq('content_type', 'Proposal') &\
                 NotAny('uid', shown_uids) &\
-                Any('workflow_state', ('retracted',))
+                Any('workflow_state', ('retracted', 'unhandled', ))
         if tag:
             query &= Any('tags', (tag, ))
         count, docids = api.root.catalog.query(query, sort_index='created')

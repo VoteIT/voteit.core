@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2014-03-02 11:57+0100\n"
-"PO-Revision-Date: 2014-03-02 11:58+0100\n"
+"POT-Creation-Date: 2014-03-27 15:01+0100\n"
+"PO-Revision-Date: 2014-03-27 15:02+0100\n"
 "Last-Translator: Robin Harms Oredsson <robin@betahaus.net>\n"
 "Language-Team: sv <LL@li.org>\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -182,7 +182,6 @@ msgid "permssions_updated_error"
 msgstr "Uppdateringen av rättigheter lyckades inte."
 
 #: voteit/core/security.py:71
-#| msgid "Meeting closed"
 msgid "Meeting creator"
 msgstr "Mötesskapare"
 
@@ -413,7 +412,7 @@ msgstr "Möte"
 
 #. Default: This meeting still has ongoing or upcoming Agenda items in it. You
 #. can't close it until they're closed.
-#: voteit/core/models/meeting.py:122
+#: voteit/core/models/meeting.py:124
 msgid "error_cant_close_meeting_with_ongoing_ais"
 msgstr ""
 "Detta möte har ännu pågående dagordningspunkter. Du kan inte stänga mötet "
@@ -736,33 +735,25 @@ msgstr "Röst"
 msgid "vote_plural"
 msgstr "Röster"
 
-#: voteit/core/schemas/agenda_item.py:10
+#: voteit/core/schemas/agenda_item.py:11
 #: voteit/core/views/components/tabs_menu.py:44
 msgid "Add agenda item"
 msgstr "Lägg till dagordningspunkt"
 
-#: voteit/core/schemas/agenda_item.py:10
-msgid "Use this form to add an agenda item"
-msgstr "Använd detta formulär för att lägga till en dagordningspunkt"
-
-#: voteit/core/schemas/agenda_item.py:11
+#: voteit/core/schemas/agenda_item.py:13
 msgid "Edit agenda item"
 msgstr "Redigera dagordningspunkt"
 
-#: voteit/core/schemas/agenda_item.py:11
-msgid "Use this form to edit an agenda item"
-msgstr "Använd detta formulär för att redigera en dagordningspunkt"
-
-#: voteit/core/schemas/agenda_item.py:14 voteit/core/schemas/meeting.py:75
+#: voteit/core/schemas/agenda_item.py:17 voteit/core/schemas/meeting.py:75
 #: voteit/core/schemas/poll.py:89 voteit/core/schemas/site.py:13
 msgid "Title"
 msgstr "Titel"
 
-#: voteit/core/schemas/agenda_item.py:15
+#: voteit/core/schemas/agenda_item.py:18
 msgid "Avoid a title with more than 20 characters"
 msgstr "Undvik att skriva fler än 20 tecken"
 
-#: voteit/core/schemas/agenda_item.py:20
+#: voteit/core/schemas/agenda_item.py:23
 #: voteit/core/schemas/agenda_template.py:23 voteit/core/schemas/poll.py:92
 #: voteit/core/schemas/site.py:16
 msgid "Description"
@@ -771,7 +762,7 @@ msgstr "Beskrivning"
 #. Default: Place the the agenda item background information here. You can link
 #. to external documents and memos. It's also a good idea to add an image, it
 #. will make it easier for participants to quickly see which page they're on.
-#: voteit/core/schemas/agenda_item.py:21
+#: voteit/core/schemas/agenda_item.py:24
 msgid "agenda_item_description_description"
 msgstr ""
 "Lägg in bakgrundsfakta om dagordningspunkten här. Länka gärna till externa "
@@ -1017,11 +1008,12 @@ msgid "enable_tags_description"
 msgstr "Aktivera hashtaggar i förslag och diskussioner"
 
 #: voteit/core/schemas/layout.py:69
-msgid "Hide retracted proposals"
-msgstr "Göm tillbakadragna förslag"
+#| msgid "Hide retracted proposals"
+msgid "Hide retracted or unhandled proposals"
+msgstr "Göm tillbakadragna eller ohanterade förslag"
 
-#. Default: You can still access retracted proposals by using a collapsible
-#. link below the regular proposals
+#. Default: You can still access hidden proposals by using a collapsible link
+#. below the regular proposals
 #: voteit/core/schemas/layout.py:70
 msgid "meeting_hide_retracted_description"
 msgstr ""
@@ -2315,8 +2307,9 @@ msgid "Proposals updated, click to load"
 msgstr "Förslag uppdaterade, ladda om"
 
 #: voteit/core/views/components/templates/proposals/listing.pt:33
-msgid "Show ${count} retracted proposals"
-msgstr "Visa ${count} tillbakadragna förslag"
+#| msgid "Show ${count} retracted proposals"
+msgid "Show ${count} retracted/unhandled proposals"
+msgstr "Visa ${count} tillbakadragna/ohanterade förslag"
 
 #: voteit/core/views/components/templates/sidebars/login_alt.pt:7
 msgid "Login with:"
@@ -2937,3 +2930,9 @@ msgstr "Ohanterad"
 
 #~ msgid "Maximum number of previous invites"
 #~ msgstr "Maximalt antal tidigare inbjudningar"
+
+#~ msgid "Use this form to add an agenda item"
+#~ msgstr "Använd detta formulär för att lägga till en dagordningspunkt"
+
+#~ msgid "Use this form to edit an agenda item"
+#~ msgstr "Använd detta formulär för att redigera en dagordningspunkt"

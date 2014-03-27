@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: voteit.core 0.1dev\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2014-03-02 11:57+0100\n"
+"POT-Creation-Date: 2014-03-27 15:01+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -381,7 +381,7 @@ msgstr ""
 
 #. Default: This meeting still has ongoing or upcoming Agenda items in it. You
 #. can't close it until they're closed.
-#: voteit/core/models/meeting.py:122
+#: voteit/core/models/meeting.py:124
 msgid "error_cant_close_meeting_with_ongoing_ais"
 msgstr ""
 
@@ -671,33 +671,25 @@ msgstr ""
 msgid "vote_plural"
 msgstr ""
 
-#: voteit/core/schemas/agenda_item.py:10
+#: voteit/core/schemas/agenda_item.py:11
 #: voteit/core/views/components/tabs_menu.py:44
 msgid "Add agenda item"
 msgstr ""
 
-#: voteit/core/schemas/agenda_item.py:10
-msgid "Use this form to add an agenda item"
-msgstr ""
-
-#: voteit/core/schemas/agenda_item.py:11
+#: voteit/core/schemas/agenda_item.py:13
 msgid "Edit agenda item"
 msgstr ""
 
-#: voteit/core/schemas/agenda_item.py:11
-msgid "Use this form to edit an agenda item"
-msgstr ""
-
-#: voteit/core/schemas/agenda_item.py:14 voteit/core/schemas/meeting.py:75
+#: voteit/core/schemas/agenda_item.py:17 voteit/core/schemas/meeting.py:75
 #: voteit/core/schemas/poll.py:89 voteit/core/schemas/site.py:13
 msgid "Title"
 msgstr ""
 
-#: voteit/core/schemas/agenda_item.py:15
+#: voteit/core/schemas/agenda_item.py:18
 msgid "Avoid a title with more than 20 characters"
 msgstr ""
 
-#: voteit/core/schemas/agenda_item.py:20
+#: voteit/core/schemas/agenda_item.py:23
 #: voteit/core/schemas/agenda_template.py:23 voteit/core/schemas/poll.py:92
 #: voteit/core/schemas/site.py:16
 msgid "Description"
@@ -706,7 +698,7 @@ msgstr ""
 #. Default: Place the the agenda item background information here. You can link
 #. to external documents and memos. It's also a good idea to add an image, it
 #. will make it easier for participants to quickly see which page they're on.
-#: voteit/core/schemas/agenda_item.py:21
+#: voteit/core/schemas/agenda_item.py:24
 msgid "agenda_item_description_description"
 msgstr ""
 
@@ -926,11 +918,11 @@ msgid "enable_tags_description"
 msgstr ""
 
 #: voteit/core/schemas/layout.py:69
-msgid "Hide retracted proposals"
+msgid "Hide retracted or unhandled proposals"
 msgstr ""
 
-#. Default: You can still access retracted proposals by using a collapsible
-#. link below the regular proposals
+#. Default: You can still access hidden proposals by using a collapsible link
+#. below the regular proposals
 #: voteit/core/schemas/layout.py:70
 msgid "meeting_hide_retracted_description"
 msgstr ""
@@ -2124,7 +2116,7 @@ msgid "Proposals updated, click to load"
 msgstr ""
 
 #: voteit/core/views/components/templates/proposals/listing.pt:33
-msgid "Show ${count} retracted proposals"
+msgid "Show ${count} retracted/unhandled proposals"
 msgstr ""
 
 #: voteit/core/views/components/templates/sidebars/login_alt.pt:7
