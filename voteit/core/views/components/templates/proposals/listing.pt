@@ -28,12 +28,12 @@
 	       i18n:translate="">Proposals updated, click to load</a>
 	</div>
 
-    <div tal:condition="retracted_proposals" class="toggle_area toggle_closed">
+    <div tal:condition="hidden_proposals" class="toggle_area toggle_closed">
         <div class="listing_block listing_control">
-        <a class="toggle_minimize" href="javascript: void(0)" i18n:translate="">Show <tal:count i18n:name="count">${len(retracted_proposals)}</tal:count> retracted/unhandled proposals</a>
+        <a class="toggle_minimize" href="javascript: void(0)" i18n:translate="">Show <tal:count i18n:name="count">${len(hidden_proposals)}</tal:count> hidden proposal(s)</a>
         </div>
         <div class="minimizable_area">
-            <tal:iterate repeat="proposal retracted_proposals">
+            <tal:iterate repeat="proposal hidden_proposals">
                 <tal:proposal replace="structure api.render_view_group(context, request, 'proposal', brain=proposal)">
                     Proposal
                 </tal:proposal>

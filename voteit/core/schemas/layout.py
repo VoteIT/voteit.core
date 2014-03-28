@@ -53,7 +53,8 @@ class LayoutSchema(colander.Schema):
     truncate_discussion_length = colander.SchemaNode(colander.Integer(),
                                           title = _(u"Truncate discussion length"),
                                           description = _(u"truncate_discussion_length_description",
-                                                          default = u"Set the number of always visible characters in discussion posts. Enter 0 for no truncating."),
+                                                          default = u"Set the number of always visible characters "
+                                                            u"in discussion posts. Enter 0 for no truncating."),
                                           default = 240,
                                           widget = deform.widget.TextInputWidget(),
                                           missing = 240,
@@ -62,13 +63,15 @@ class LayoutSchema(colander.Schema):
                                       title = _(u"Enable tags"),
                                       description = _(u"enable_tags_description",
                                                       default = u"Enable tags in proposals and discussion posts"),
-                                      default = True,
-                                      widget = deform.widget.CheckboxWidget(),
-                                      missing = True,)
+                                      widget = deform.widget.CheckboxWidget(),)
     hide_retracted = colander.SchemaNode(colander.Boolean(),
-                                   title = _(u"Hide retracted or unhandled proposals"),
+                                   title = _(u"Hide retracted proposals"),
                                    description = _(u"meeting_hide_retracted_description",
-                                                   default=u"You can still access hidden proposals by using a collapsible link below the regular proposals"),
-                                   default = True,
-                                   missing = True)
-
+                                                   default=u"You can still access hidden proposals "
+                                                      u"by using a collapsible link below the regular proposals."),)
+    hide_unhandled_proposals = colander.SchemaNode(colander.Boolean(),
+        title = _(u"Hide unhandled proposals"),
+        description = _(u"meeting_hide_unhandled_description",
+                        default=u"In the same fashion as retracted proposals."),
+        default = True,
+        missing = True)

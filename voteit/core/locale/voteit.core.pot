@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: voteit.core 0.1dev\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2014-03-27 15:01+0100\n"
+"POT-Creation-Date: 2014-03-28 12:33+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -908,23 +908,32 @@ msgstr ""
 msgid "truncate_discussion_length_description"
 msgstr ""
 
-#: voteit/core/schemas/layout.py:62
+#: voteit/core/schemas/layout.py:63
 msgid "Enable tags"
 msgstr ""
 
 #. Default: Enable tags in proposals and discussion posts
-#: voteit/core/schemas/layout.py:63
+#: voteit/core/schemas/layout.py:64
 msgid "enable_tags_description"
 msgstr ""
 
-#: voteit/core/schemas/layout.py:69
-msgid "Hide retracted or unhandled proposals"
+#: voteit/core/schemas/layout.py:68
+msgid "Hide retracted proposals"
 msgstr ""
 
 #. Default: You can still access hidden proposals by using a collapsible link
-#. below the regular proposals
-#: voteit/core/schemas/layout.py:70
+#. below the regular proposals.
+#: voteit/core/schemas/layout.py:69
 msgid "meeting_hide_retracted_description"
+msgstr ""
+
+#: voteit/core/schemas/layout.py:73
+msgid "Hide unhandled proposals"
+msgstr ""
+
+#. Default: In the same fashion as retracted proposals.
+#: voteit/core/schemas/layout.py:74
+msgid "meeting_hide_unhandled_description"
 msgstr ""
 
 #: voteit/core/schemas/meeting.py:61
@@ -2116,7 +2125,7 @@ msgid "Proposals updated, click to load"
 msgstr ""
 
 #: voteit/core/views/components/templates/proposals/listing.pt:33
-msgid "Show ${count} retracted/unhandled proposals"
+msgid "Show ${count} hidden proposal(s)"
 msgstr ""
 
 #: voteit/core/views/components/templates/sidebars/login_alt.pt:7

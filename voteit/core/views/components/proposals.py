@@ -38,8 +38,14 @@ def proposal_listing(context, request, va, **kw):
             NotAny('uid', shown_uids)
 
     hide_retracted = api.meeting.get_field_value('hide_retracted', False)
+    hide_unhandled = api.meeting.get_field_value('hide_unhandled_proposals', False)
+    hidden_states = []
     if hide_retracted:
-        query &= NotAny('workflow_state', ('retracted', 'unhandled',))
+        hidden_states.append('retracted')
+    if hide_unhandled:
+        hidden_states.append('unhandled')
+    if hidden_states:
+        query &= NotAny('workflow_state', hidden_states)
 
     tag = request.GET.get('tag', None)
     if tag:
@@ -55,21 +61,21 @@ def proposal_listing(context, request, va, **kw):
     count, docids = api.root.catalog.query(query, sort_index='created')
     get_metadata = api.root.catalog.document_map.get_metadata
     results = [get_metadata(x) for x in docids]
-    retracted_proposals = []
-    if hide_retracted:
+    hidden_proposals = []
+    if hidden_states:
         query = Eq('path', resource_path(context)) &\
                 Eq('content_type', 'Proposal') &\
                 NotAny('uid', shown_uids) &\
-                Any('workflow_state', ('retracted', 'unhandled', ))
+                Any('workflow_state', hidden_states)
         if tag:
             query &= Any('tags', (tag, ))
         count, docids = api.root.catalog.query(query, sort_index='created')
-        retracted_proposals = [get_metadata(x) for x in docids]
+        hidden_proposals = [get_metadata(x) for x in docids]
 
     response = {}
     response['clear_tag_url'] = request.resource_url(context, query=clear_tag_query)
     response['proposals'] = tuple(results)
-    response['retracted_proposals'] = tuple(retracted_proposals)
+    response['hidden_proposals'] = tuple(hidden_proposals)
     response['tag'] = tag
     response['api'] = api 
     response['polls'] = polls

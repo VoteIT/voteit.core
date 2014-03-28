@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2014-03-27 15:01+0100\n"
-"PO-Revision-Date: 2014-03-27 15:02+0100\n"
+"POT-Creation-Date: 2014-03-28 12:33+0100\n"
+"PO-Revision-Date: 2014-03-28 12:35+0100\n"
 "Last-Translator: Robin Harms Oredsson <robin@betahaus.net>\n"
 "Language-Team: sv <LL@li.org>\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -998,27 +998,38 @@ msgstr ""
 "Sätt längden på hur många tecken som ska visas innan trunkering. 0 betyder "
 "ingen tunkering."
 
-#: voteit/core/schemas/layout.py:62
+#: voteit/core/schemas/layout.py:63
 msgid "Enable tags"
 msgstr "Aktivera hashtaggar"
 
 #. Default: Enable tags in proposals and discussion posts
-#: voteit/core/schemas/layout.py:63
+#: voteit/core/schemas/layout.py:64
 msgid "enable_tags_description"
 msgstr "Aktivera hashtaggar i förslag och diskussioner"
 
-#: voteit/core/schemas/layout.py:69
-#| msgid "Hide retracted proposals"
-msgid "Hide retracted or unhandled proposals"
-msgstr "Göm tillbakadragna eller ohanterade förslag"
+#: voteit/core/schemas/layout.py:68
+#| msgid "Hide retracted or unhandled proposals"
+msgid "Hide retracted proposals"
+msgstr "Göm tillbakadragna förslag"
 
 #. Default: You can still access hidden proposals by using a collapsible link
-#. below the regular proposals
-#: voteit/core/schemas/layout.py:70
+#. below the regular proposals.
+#: voteit/core/schemas/layout.py:69
 msgid "meeting_hide_retracted_description"
 msgstr ""
 "Du kan fortfarande komma åt tillbakadragna förslag genom att använda länken "
 "under de vanliga förslagen."
+
+#: voteit/core/schemas/layout.py:73
+#| msgid "Hide retracted or unhandled proposals"
+msgid "Hide unhandled proposals"
+msgstr "Göm ohanterade förslag"
+
+#. Default: In the same fashion as retracted proposals.
+#: voteit/core/schemas/layout.py:74
+#| msgid "meeting_hide_retracted_description"
+msgid "meeting_hide_unhandled_description"
+msgstr "På samma sätt som tillbakadragna förslag."
 
 #: voteit/core/schemas/meeting.py:61
 msgid "<Don't copy>"
@@ -2307,9 +2318,9 @@ msgid "Proposals updated, click to load"
 msgstr "Förslag uppdaterade, ladda om"
 
 #: voteit/core/views/components/templates/proposals/listing.pt:33
-#| msgid "Show ${count} retracted proposals"
-msgid "Show ${count} retracted/unhandled proposals"
-msgstr "Visa ${count} tillbakadragna/ohanterade förslag"
+#| msgid "Show ${count} retracted/unhandled proposals"
+msgid "Show ${count} hidden proposal(s)"
+msgstr "Visa ${count} gömda förslag"
 
 #: voteit/core/views/components/templates/sidebars/login_alt.pt:7
 msgid "Login with:"
