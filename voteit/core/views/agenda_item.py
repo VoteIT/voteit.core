@@ -23,6 +23,18 @@ from voteit.core.helpers import generate_slug
 from voteit.core.helpers import ajax_options
 
 
+def inline_add_form(api, content_type, bind_data):
+    """ Expects the context for the add form to be the current requests context.
+        This is only used within the agenda item view currently.
+    """
+    tag = api.request.GET.get('tag', '')
+    schema_name = api.get_schema_name(content_type, 'add')
+    schema = createSchema(schema_name, bind = bind_data)
+    query = {'content_type': content_type, 'tag': tag}
+    url = api.request.resource_url(api.context, '_inline_form', query = query)
+    return Form(schema, action = url, buttons = (button_add,), use_ajax = True)
+
+
 class AgendaItemView(BaseView):
     """ View for agenda items. """
     
@@ -73,20 +85,45 @@ class AgendaItemView(BaseView):
         return self.api.resolve_catalog_docid(tuple(docids)[0])
 
     @view_config(context=IAgendaItem, name='_inline_form', permission=VIEW)
-    def inline_add_form(self):
+    def process_inline_add_form(self):
         """ Inline add form. Note the somewhat odd permissions on the view configuration.
             The actual permission check for each content type is preformed later.
         """
         content_type = self.request.GET['content_type']
-        tag = self.request.GET.get('tag', '')
         add_permission = self.api.content_types_add_perm(content_type)
         if not has_permission(add_permission, self.context, self.request):
-            raise HTTPForbidden("You're not allowed to add '%s' in this context." % content_type)        
-        schema_name = self.api.get_schema_name(content_type, 'add')
-        schema = createSchema(schema_name).bind(context = self.context, request = self.request, api = self.api)
-        query = {'content_type': content_type, 'tag': tag}
-        url = self.request.resource_url(self.context, 'add', query=query)
-        form = Form(schema, action=url, buttons=(button_add,))
+            raise HTTPForbidden("You're not allowed to add '%s' in this context." % content_type)
+        bind_data = dict(context = self.context, request = self.request, api = self.api)
+        form = inline_add_form(self.api, content_type, bind_data)
+        post = self.request.POST
+        if 'add' in post:
+            controls = post.items()
+            try:
+                #appstruct is deforms convention. It will be the submitted data in a dict.
+                appstruct = form.validate(controls)
+            except ValidationFailure, e:
+                return Response(e.render())
+            kwargs = {}
+            kwargs.update(appstruct)
+            if self.api.userid:
+                kwargs['creators'] = [self.api.userid]
+            obj = createContent(content_type, **kwargs)
+            name = generate_slug(self.context, obj.title)
+            self.context[name] = obj
+            #Prep js response
+            tag = self.request.GET.get('tag', '')
+            url = self.request.resource_url(self.context, query = {'tag': tag})
+            if content_type == 'Proposal':
+                area = 'proposals'
+            else:
+                area = 'discussions'
+            txt = self.api.translate(_(u"Posting..."))
+            response = '<div><img src="/static/images/spinner.gif" />%s</div>' % txt
+            response += '<script type="text/javascript">'
+            response += "reload_ai_listings('%s', ['%s']);" % (url, area)
+            response += "mark_as_read();"
+            response += '</script>'
+            return Response(response)
         #Note! Registration of form resources has to be in the view that has the javascript
         #that will include this!
         self.response['form'] = form.render()

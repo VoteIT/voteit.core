@@ -76,7 +76,7 @@ class AgendaItemViewTests(unittest.TestCase):
         context = self._fixture()
         request = testing.DummyRequest(params={'content_type': 'Proposal'})
         obj = self._cut(context, request)
-        self.assertRaises(HTTPForbidden, obj.inline_add_form)
+        self.assertRaises(HTTPForbidden, obj.process_inline_add_form)
 
     def test_inline_add_form_proposal(self):
         self.config.include('voteit.core.plugins.gravatar_profile_image')
@@ -87,7 +87,7 @@ class AgendaItemViewTests(unittest.TestCase):
         context = self._fixture()
         request = testing.DummyRequest(params={'content_type': 'Proposal'})
         aiv = self._cut(context, request)
-        response = aiv.inline_add_form()
+        response = aiv.process_inline_add_form()
         self.assertIn(u"content_type=Proposal", response.ubody)
         
     def test_inline_add_form_discussion_post(self):
@@ -99,7 +99,7 @@ class AgendaItemViewTests(unittest.TestCase):
         context = self._fixture()
         request = testing.DummyRequest(params={'content_type': 'DiscussionPost'})
         aiv = self._cut(context, request)
-        response = aiv.inline_add_form()
+        response = aiv.process_inline_add_form()
         self.assertIn(u"content_type=DiscussionPost", response.ubody)
         
     def test_discussion_more(self):

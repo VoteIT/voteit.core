@@ -31,26 +31,22 @@ class InlineAddFormComponentTests(unittest.TestCase):
         request = testing.DummyRequest()
         return APIView(context, request)
     
-    def _va(self, ctype):
-        class ViewAction():
-            def __init__(self, ctype):
-                self.kwargs = {'ctype': ctype, }
-        return ViewAction(ctype)
-    
     def test_inline_add_form_proposals(self):
-        from voteit.core.views.components.inline_add_form import inline_add_form
+        from voteit.core.views.components.inline_add_form import inline_add_proposal_form
         self.config.include('voteit.core.plugins.gravatar_profile_image')
+        self.config.scan('voteit.core.models.proposal')
+        self.config.scan('voteit.core.schemas.proposal')
         ai = self._fixture()
         api = self._api(ai)
-        va = self._va('Proposal')
-        res = inline_add_form(ai, api.request, va, api = api)
+        res = inline_add_proposal_form(ai, api.request, None, api = api)
         self.assertIn('inline_add_form', res)
         
     def test_inline_add_form_discussion_post(self):
-        from voteit.core.views.components.inline_add_form import inline_add_form
+        from voteit.core.views.components.inline_add_form import inline_add_discussion_form
         self.config.include('voteit.core.plugins.gravatar_profile_image')
+        self.config.scan('voteit.core.models.discussion_post')
+        self.config.scan('voteit.core.schemas.discussion_post')
         ai = self._fixture()
         api = self._api(ai)
-        va = self._va('DiscussionPost')
-        res = inline_add_form(ai, api.request, va, api = api)
+        res = inline_add_discussion_form(ai, api.request, None, api = api)
         self.assertIn('inline_add_form', res)

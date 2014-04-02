@@ -69,32 +69,6 @@ class DefaultEditTests(unittest.TestCase):
         response = obj.add_form()
         self.assertIn('form', response)
         
-    def test_add_form_add_proposal(self):
-        self.config.scan('voteit.core.models.proposal')
-        self.config.scan('voteit.core.schemas.proposal')
-        self.config.testing_securitypolicy(userid='dummy',
-                                           permissive=True)
-        meeting = self._fixture()
-        from voteit.core.models.agenda_item import AgendaItem
-        meeting['ai'] = context = AgendaItem()
-        request = testing.DummyRequest(params={'content_type': 'Proposal'}, post={'add': 'add', 'title': 'Dummy proposal'})
-        obj = self._cut(context, request)
-        response = obj.add_form()
-        self.assertEqual(response.location, 'http://example.com/m/ai/dummy-proposal/')
-        
-    def test_add_form_add_discussion_post(self):
-        self.config.scan('voteit.core.models.discussion_post')
-        self.config.scan('voteit.core.schemas.discussion_post')
-        self.config.testing_securitypolicy(userid='dummy',
-                                           permissive=True)
-        meeting = self._fixture()
-        from voteit.core.models.agenda_item import AgendaItem
-        meeting['ai'] = context = AgendaItem()
-        request = testing.DummyRequest(params={'content_type': 'DiscussionPost'}, post={'add': 'add', 'text': 'Dummy post'})
-        obj = self._cut(context, request)
-        response = obj.add_form()
-        self.assertEqual(response.location, 'http://example.com/m/ai/dummy-post/')
-        
     def test_add_form_add_poll(self):
         self.config.registry.settings['default_timezone_name'] = "Europe/Stockholm"
         self.config.registry.settings['default_locale_name'] = 'sv'

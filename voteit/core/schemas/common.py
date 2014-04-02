@@ -53,7 +53,6 @@ def deferred_default_user_email(node, kw):
 
 @colander.deferred
 def deferred_default_tags(node, kw):
-    #FIXME: Accessing tags this way is wrong - rewrite!
     #FIXME: Missing tests
     context = kw['context']
     if not hasattr(context, 'get_tags'):

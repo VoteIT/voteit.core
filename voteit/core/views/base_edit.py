@@ -58,7 +58,7 @@ class DefaultEdit(BaseEdit):
             raise HTTPForbidden("You're not allowed to add '%s' in this context." % content_type)
         factory = self.api.get_content_factory(content_type)
         schema_name = self.api.get_schema_name(content_type, 'add')
-        schema = createSchema(schema_name).bind(context=self.context, request=self.request, api=self.api, tag=tag)        
+        schema = createSchema(schema_name).bind(context=self.context, request=self.request, api=self.api)        
         form = Form(schema, buttons=(button_add, button_cancel))
         self.api.register_form_resources(form)
         if content_type == 'AgendaItem':
@@ -79,13 +79,9 @@ class DefaultEdit(BaseEdit):
             obj = createContent(content_type, **kwargs)
             name = self.generate_slug(obj.title)
             self.context[name] = obj
-            #Only show message if new object isn't discussion or proposal
-            if content_type not in ('DiscussionPost', 'Proposal',):
-                self.api.flash_messages.add(_(u"Successfully added"))
+            self.api.flash_messages.add(_(u"Successfully added"))
             #Success, redirect
             url = self.request.resource_url(obj)
-            if (content_type == 'Proposal' or content_type == 'DiscussionPost') and tag:
-                url = self.request.resource_url(obj, query={'tag': tag})
             #Polls might have a special redirect action if the poll plugin has a settings schema:
             if content_type == 'Poll':
                 if obj.get_poll_plugin().get_settings_schema() is not None:

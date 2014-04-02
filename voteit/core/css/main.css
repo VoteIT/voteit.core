@@ -839,6 +839,9 @@ table.listing {
     margin-top: 10px;
     float: right;
 }
+.inline_add_form .errorLi {
+    display: none;
+}
 .tag-title {
     margin-bottom: 10px;
 }

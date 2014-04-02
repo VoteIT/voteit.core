@@ -326,7 +326,7 @@ $(document).ready(function() {
 });
 
 /* Action to mark content as read */
-function mark_as_read () {
+function mark_as_read() {
     var url_config = $("#js_config a[name=current_url]");
     if (url_config.length > 0) {
         var url = url_config.attr('href') + '/_mark_read';
@@ -394,7 +394,9 @@ $(document).ready(function() {
 });
 
 function reload_ai_listings(url, areas) {
+    // FIXME: This must be refactored - it destroys the input area even if a user is typing something
     areas = typeof areas !== 'undefined' ? areas : ['discussions', 'proposals'];
+    // This is a really dumb way of cleaning the cache of json data for reload.
     return $.ajax({
            url: url,
         success: function(response) {
@@ -411,6 +413,7 @@ function reload_ai_listings(url, areas) {
         },
         complete: function() {
             $('img.spinner').remove();
+            voteit['reload_data'] = null;
         }
     });
 }
@@ -447,4 +450,3 @@ $(document).ready(function() {
         //$('html, body').animate({scrollTop: $('.tag_stats').offset().top}, 200);
     });
 });
-
