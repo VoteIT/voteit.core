@@ -7,6 +7,7 @@ from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.validators import NotOnlyDefaultTextValidator
 from voteit.core.schemas.common import deferred_default_tags
 from voteit.core.schemas.common import deferred_default_hashtag_text
+from voteit.core.schemas.interfaces import IProposalSchema
 
 
 @colander.deferred
@@ -30,7 +31,7 @@ def deferred_proposal_text_validator(node, kw):
     return NotOnlyDefaultTextValidator(context, api, deferred_default_proposal_text)
 
 
-@schema_factory('ProposalSchema')
+@schema_factory(provides = IProposalSchema)
 class ProposalSchema(colander.MappingSchema):
     title = colander.SchemaNode(colander.String(),
                                 title = _(u"Proposal"),

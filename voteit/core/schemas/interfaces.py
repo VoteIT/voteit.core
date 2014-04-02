@@ -19,3 +19,7 @@ class IEditUserSchema(ISchema):
 
 class IAgendaItemSchema(ISchema):
     """ When adding or editing an Angenda item. """
+
+
+class IProposalSchema(ISchema):
+    """ Adding or editing a proposal. """
