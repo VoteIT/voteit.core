@@ -59,11 +59,6 @@ class LayoutSchema(colander.Schema):
                                           widget = deform.widget.TextInputWidget(),
                                           missing = 240,
                                           validator=colander.Range(0),)
-    tags_enabled = colander.SchemaNode(colander.Boolean(),
-                                      title = _(u"Enable tags"),
-                                      description = _(u"enable_tags_description",
-                                                      default = u"Enable tags in proposals and discussion posts"),
-                                      widget = deform.widget.CheckboxWidget(),)
     hide_retracted = colander.SchemaNode(colander.Boolean(),
                                    title = _(u"Hide retracted proposals"),
                                    description = _(u"meeting_hide_retracted_description",

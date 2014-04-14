@@ -8,8 +8,8 @@
     <div class="clear"><!-- --></div>
 	<p class="discreet" tal:condition="content_type == 'Proposal'" i18n:translate="">Please note: A proposal is a statement the meeting can approve or deny.</p>
     <p class="discreet">
-    	<span i18n:translate="">@username is a connection to a user.</span>
-    	<span tal:condition="api.meeting.get_field_value('tags_enabled', True)" i18n:translate="">#word or #proposalID is a connection to a subject or a proposal.</span>
+        <span i18n:translate="">@username is a connection to a user.</span>
+        <span i18n:translate="">#word or #proposalID is a connection to a subject or a proposal.</span>
     </p>
 <script type="text/javascript">
     deform.processCallbacks();

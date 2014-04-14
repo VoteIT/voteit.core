@@ -84,9 +84,6 @@ def meta_answer(context, request, va, **kw):
     """
     api = kw['api']
     brain = kw['brain']
-#    if not api.meeting.get_field_value('tags_enabled', True) or \
-#        api.context.get_field_value('discussion_block', False):
-#        return u""
     #Check add permission
     ai = find_interface(context, IAgendaItem)
     if not api.context_has_permission(ADD_DISCUSSION_POST, ai):

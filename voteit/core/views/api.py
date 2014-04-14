@@ -340,8 +340,7 @@ class APIView(object):
         text = sanitize(text)
         text = auto_link(text, link='urls')
         text = nl2br(text)
-        if self.meeting.get_field_value('tags_enabled', True): #FIXME: Lookup everytime + breaks outside of meetings...
-            text = tags2links(unicode(text), self)
+        text = tags2links(unicode(text), self)
         text = at_userid_link(text, self.context, self.request)
         return text
 
