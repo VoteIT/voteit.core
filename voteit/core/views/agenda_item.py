@@ -102,7 +102,14 @@ class AgendaItemView(BaseView):
                 #appstruct is deforms convention. It will be the submitted data in a dict.
                 appstruct = form.validate(controls)
             except ValidationFailure, e:
-                return Response(e.render())
+                msg = self.api.translate(_(u"There were errors so your post hasn't been submitted yet."))
+                html = u"""
+                <script type="text/javascript">
+                    flash_message("%s", 'error', true, 3, true);
+                </script>
+                """ % msg
+                html += e.render()
+                return Response(html)
             kwargs = {}
             kwargs.update(appstruct)
             if self.api.userid:
