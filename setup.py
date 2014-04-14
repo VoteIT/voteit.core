@@ -7,7 +7,7 @@ README = open(os.path.join(here, 'README.rst')).read()
 CHANGES = open(os.path.join(here, 'CHANGES.rst')).read()
 
 install_requires = (
-    'pyramid>=1.4.5',
+    'pyramid==1.4.5', #To be migrated to 1.5
     'pyramid_mailer',
     'pyramid_zcml',
     'pyramid_zodbconn',
