@@ -4,7 +4,7 @@ from betahaus.pyracont.decorators import schema_factory
 from betahaus.viewcomponent.interfaces import IViewGroup
 
 from voteit.core import VoteITMF as _
-
+from voteit.core.schemas.interfaces import ILayoutSchema
 
 def _get_choices(request, group_name):
     util = request.registry.queryUtility(IViewGroup, name = group_name)
@@ -29,9 +29,12 @@ def deferred_ai_layout_right_widget(node, kw):
     choices.append(('', _(u"<Disable>")))
     return deform.widget.RadioChoiceWidget(values=choices)
 
-@schema_factory('LayoutSchema', title=_(u"Layout"),
+
+#Provides for schemas is to be considered experimental!
+@schema_factory(title=_(u"Layout"),
                 description=_(u"layuot_schema_main_description",
-                              default = u"Change layout of the different parts in the meeting (advanced feature)"))
+                              default = u"Change layout of the different parts in the meeting (advanced feature)"),
+                provides = ILayoutSchema)
 class LayoutSchema(colander.Schema):
     meeting_logo_url = colander.SchemaNode(colander.String(),
                                            title = _(u"URL to a meeting logo."),

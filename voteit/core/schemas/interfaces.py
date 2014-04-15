@@ -23,3 +23,7 @@ class IAgendaItemSchema(ISchema):
 
 class IProposalSchema(ISchema):
     """ Adding or editing a proposal. """
+
+
+class ILayoutSchema(ISchema):
+    """ Layout for meetings. """
