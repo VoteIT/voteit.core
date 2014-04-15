@@ -11,9 +11,8 @@ from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IAgendaItem
 
 
-@view_action('proposals', 'listing', interface = IAgendaItem)
-def proposal_listing(context, request, va, **kw):
-    """ Get proposals for a specific context.
+def proposal_response(context, request, va, **kw):
+    """ Prepair a response dict for the proposal view.
     """
     api = kw['api']
     #Start with checking which polls that exist in this context and store shown uids
@@ -79,7 +78,15 @@ def proposal_listing(context, request, va, **kw):
     response['tag'] = tag
     response['api'] = api 
     response['polls'] = polls
-    return render('templates/proposals/listing.pt', response, request = request)
+    return response
+
+@view_action('proposals', 'listing', interface = IAgendaItem)
+def proposal_listing(context, request, va, **kw):
+    """ Get proposals for a specific context.
+    """
+    return render('templates/proposals/listing.pt',
+                  proposal_response(context, request, va, **kw),
+                  request = request)
 
 @view_action('proposal', 'block')
 def proposal_block(context, request, va, **kw):
