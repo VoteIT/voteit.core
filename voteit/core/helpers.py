@@ -1,5 +1,6 @@
 import re
 from copy import deepcopy
+from urllib import urlencode
 
 from pyramid.threadlocal import get_current_request
 from pyramid.traversal import find_root
@@ -15,7 +16,6 @@ from pyramid_mailer.message import Message
 from html2text import HTML2Text
 
 from voteit.core.models.interfaces import IMeeting
-from voteit.core.models.interfaces import IAgendaItem
 
 
 ajax_options = """
@@ -24,8 +24,7 @@ ajax_options = """
 """
 
 AT_PATTERN = re.compile(r'(\A|\s)@([a-zA-Z1-9]{1}[\w-]+)', flags=re.UNICODE)
-TAG_PATTERN = re.compile(r'(\A|\s|[,.;:!?])#(?P<tag>\w*[\w-]+)(\w*)', flags=re.UNICODE)
-#TAG_PATTERN = re.compile(r'(\A|\s|[,.;:!?])#(?P<tag>\w+)', flags=re.UNICODE)
+TAG_PATTERN = re.compile(r'(?P<pre>\A|\s|[,.;:!?])#(?P<tag>\w*[\w-]+)', flags=re.UNICODE)
 
 
 def at_userid_link(text, obj, request=None):
@@ -58,16 +57,16 @@ def at_userid_link(text, obj, request=None):
     return re.sub(AT_PATTERN, handle_match, text)
 
 
-def tags2links(text, api):
-    """ Transform #tag to a link.
+def tags2links(text):
+    """ Transform #tag to a relative link in this context.
+        Not domain name or path will be included - it starts with './'
     """
-    #FIXME: Breaks outside of ais? Ehh?
-    ai = find_interface(api.context, IAgendaItem)
     def handle_match(matchobj):
-        pre, tag, post = matchobj.group(1, 2, 3)
-        link = {'href': api.request.resource_url(ai, '', query={'tag': tag}).replace(api.request.application_url, ''),
-                'class': "tag",}
-        return """%(pre)s%(link)s%(post)s""" % {'pre': pre, 'link': HTML.a('#%s' % tag, **link), 'post': post}
+        matched_dict = matchobj.groupdict()
+        tag = matched_dict['tag']
+        pre = matched_dict['pre']
+        url = u"?%s" % urlencode({'tag': tag.encode('utf-8')})
+        return u"""%s<a href="%s" class="tag">#%s</a>""" % (pre, url, tag)
     return re.sub(TAG_PATTERN, handle_match, text)
 
 def strip_and_truncate(text, limit=200):

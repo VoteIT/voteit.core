@@ -355,7 +355,7 @@ _DUMMY_MENTION_EXPECTED_RESULT = u"""<a class="inlineinfo" href="/m/_userinfo?us
 @test"""
 
 _DUMMY_TAG_MESSAGE = u"""#test"""
-_DUMMY_TAG_EXPECTED_RESULT = u"""<a class="tag" href="/m/ai/?tag=test">#test</a>"""
+_DUMMY_TAG_EXPECTED_RESULT = u"""<a href="?tag=test" class="tag">#test</a>"""
 
 class TestTransform(unittest.TestCase):
     def setUp(self):

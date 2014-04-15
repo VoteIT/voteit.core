@@ -22,7 +22,10 @@ class AgendaItemSchema(colander.MappingSchema):
         colander.String(),
         title = _(u"Description"),
         description = _(u"agenda_item_description_description",
-                        default=u"Place the the agenda item background information here. You can link to external documents and memos. It's also a good idea to add an image, it will make it easier for participants to quickly see which page they're on."),
+                        default=u"Place the the agenda item background information here. "
+                            u"You can link to external documents and memos. It's also a good "
+                            u"idea to add an image, it will make it easier for participants "
+                            u"to quickly see which page they're on."),
         missing = u"",
         widget=deform.widget.RichTextWidget(),
         validator=richtext_validator,

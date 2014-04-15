@@ -337,10 +337,11 @@ class APIView(object):
         return util[key](context, request, **kw)
 
     def transform(self, text):
+        """ Transform text. Base for any tags is current context. """
         text = sanitize(text)
         text = auto_link(text, link='urls')
         text = nl2br(text)
-        text = tags2links(unicode(text), self)
+        text = tags2links(unicode(text))
         text = at_userid_link(text, self.context, self.request)
         return text
 

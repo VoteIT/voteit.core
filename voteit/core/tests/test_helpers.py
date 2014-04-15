@@ -94,22 +94,36 @@ class Tags2linksTests(unittest.TestCase):
     def _fut(self):
         from voteit.core.helpers import tags2links
         return tags2links
-        
-    def _fixture(self):
-        from voteit.core.models.agenda_item import AgendaItem
-        from voteit.core.models.meeting import Meeting
-        from voteit.core.views.api import APIView
-        root = bootstrap_and_fixture(self.config)
-        root['m'] = meeting = Meeting()
-        meeting['ai'] = ai = AgendaItem()
-        request = testing.DummyRequest()
-        return APIView(ai, request)
 
-    def test_function(self):
-        api = self._fixture()
-        value = self._fut(u'#åäöÅÄÖ', api)
-        self.assertIn(u'/m/ai/?tag=%C3%A5%C3%A4%C3%B6%C3%85%C3%84%C3%96', value)
+    def test_simple(self):
+        value = self._fut("#hello world!")
+        self.assertEqual(u'<a href="?tag=hello" class="tag">#hello</a> world!', value)
 
+    def test_non_ascii(self):
+        value = self._fut(u'#åäöÅÄÖ')
+        self.assertIn(u'?tag=%C3%A5%C3%A4%C3%B6%C3%85%C3%84%C3%96', value)
+
+    def test_several_tags_and_br(self):
+        value = self._fut(u"Men #hörni, visst vore det väl trevligt med en #öl?")
+        self.assertIn(u'Men <a href="?tag=h%C3%B6rni" class="tag">#h\xf6rni</a>,', value)
+        self.assertIn(u'en <a href="?tag=%C3%B6l" class="tag">#\xf6l</a>?', value)
+
+    def test_existing_tags_not_touched(self):
+        value = self._fut(u'<a>#tag</a>')
+        self.assertEqual(u'<a>#tag</a>', value)
+
+    def test_several_tags_twice(self):
+        first = self._fut(u"Men #hörni, visst vore det väl trevligt med en #öl?")
+        second = self._fut(first)
+        self.assertEqual(first, second)
+
+    def test_text_before_tag_negates_conversion(self):
+        value = self._fut(u'this#that?')
+        self.assertEqual(u'this#that?', value)
+
+    def test_html_entities(self):
+        value = self._fut(u'this#that?')
+        self.assertEqual(u'this#that?', value)
 
 class StripAndTruncateTests(unittest.TestCase):
     
