@@ -874,8 +874,9 @@ table.listing {
     background-color: #F2F2F2;
     margin-bottom: 0px;
     padding: 10px;
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
 }
-
 
 /* proposals and discussions */
 
