@@ -2,7 +2,7 @@
 <!-- FIXME: Refactor and move! See components/proposals/listing.pt -->
 <div class="listing">
 	<div tal:condition="'tag' in request.GET"
-	     class="tag-title">
+	     class="tag-title listing_block listing_control">
 	    <span i18n:translate="">Limited to <span i18n:name="tag_name" tal:content="'#'+request.GET.get('tag', '')"></span></span>
 	    <a class="tag icon-right arrow-right" tal:attributes="href clear_tag_url"
 	       i18n:translate="">
@@ -13,7 +13,7 @@
 	
 	<tal:limit condition="'tag' not in request.GET">
 		<div tal:condition="over_limit"
-		     class="load_more">
+		     class="load_more listing_block listing_control">
 		    <a class="icon-right arrow-right" tal:attributes="href more_url_all"
 		       i18n:translate="">
 		        Show
@@ -22,7 +22,7 @@
 		    </a>
 		</div>
 		<div tal:condition="not limit"
-		     class="load_more">
+		     class="load_more listing_block listing_control">
 		    <a class="icon-right arrow-right" tal:attributes="href more_url_normal"
 		       i18n:translate="">
 		        Show the last 5 posts
