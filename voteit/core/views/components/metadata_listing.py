@@ -30,14 +30,11 @@ def metadata_listing(context, request, va, **kw):
 def meta_state(context, request, va, **kw):
     api = kw['api']
     brain = kw['brain']
-    
     obj = find_resource(api.root, brain['path'])
     if not IWorkflowAware.providedBy(obj):
         return ''
-    
     state_id = brain['workflow_state']
     state_info = _dummy[brain['content_type']].workflow.state_info(None, request)
-    
     translated_state_title = state_id
     for info in state_info:
         if info['name'] == state_id:
@@ -48,14 +45,12 @@ def meta_state(context, request, va, **kw):
 def meta_time(context, request, va, **kw):
     api = kw['api']
     brain = kw['brain']
-
     return '<span class="time">%s</span>' % api.translate(api.dt_util.relative_time_format(brain['created']))
 
 @view_action('metadata_listing', 'retract', permission=VIEW)
 def meta_retract(context, request, va, **kw):
     api = kw['api']
     brain = kw['brain']
-    
     if brain['workflow_state'] != 'published':
         return ''
     if not api.userid in brain['creators']:
@@ -65,7 +60,6 @@ def meta_retract(context, request, va, **kw):
     ai = find_interface(context, IAgendaItem)
     if not api.context_has_permission(ADD_PROPOSAL, ai) and api.context_has_permission(RETRACT, obj):
         return ''
-        
     return '<a class="retract confirm-retract" ' \
            'href="%s%s/state?state=retracted" ' \
            '>%s</a>' % (request.application_url, brain['path'], api.translate(_(u'Retract')))
@@ -95,14 +89,20 @@ def meta_answer(context, request, va, **kw):
     return '<a class="answer" href="%s%s/answer">%s</a>'  %\
         (request.application_url, brain['path'], api.translate(label))
 
+@view_action('metadata_listing', 'edit', title = _(u"Edit"))
+def edit_action(context, request, va, **kw):
+    api = kw['api']
+    if api.show_moderator_actions:
+        brain = kw['brain']
+        return '<a href="%s%s/edit">%s</a>'  %\
+            (request.application_url, brain['path'], api.translate(va.title))
+
 @view_action('metadata_listing', 'tag', permission=VIEW)
 def meta_tag(context, request, va, **kw):
     api = kw['api']
     brain = kw['brain']
-    
     if not brain['content_type'] == 'Proposal':
         return u''
-
     return '<span><a class="tag" ' \
            'href="?tag=%s" ' \
            '>#%s</a> (%s) </span>' % (brain['aid'], brain['aid'], api.get_tag_count(brain['aid']))

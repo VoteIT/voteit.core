@@ -19,19 +19,19 @@ from voteit.core.models.date_time_util import utcnow
 
 
 ACL =  {}
-ACL['open'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, security.DELETE, )),
-               (Allow, security.ROLE_MODERATOR, (security.VIEW, security.DELETE, )),
+ACL['open'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, security.DELETE, security.EDIT,)),
+               (Allow, security.ROLE_MODERATOR, (security.VIEW, security.DELETE, security.EDIT,)),
                (Allow, security.ROLE_OWNER, (security.DELETE, )),
                (Allow, security.ROLE_VIEWER, (security.VIEW,)),
                DENY_ALL,
                ]
-ACL['closed'] = [(Allow, security.ROLE_ADMIN, security.VIEW),
-                 (Allow, security.ROLE_MODERATOR, security.VIEW),
+ACL['closed'] = [(Allow, security.ROLE_ADMIN, (security.VIEW,)),
+                 (Allow, security.ROLE_MODERATOR, (security.VIEW,)),
                  (Allow, security.ROLE_VIEWER, (security.VIEW,)),
                  DENY_ALL,
                 ]
-ACL['private'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, security.DELETE, )),
-                  (Allow, security.ROLE_MODERATOR, (security.VIEW, security.DELETE, )),
+ACL['private'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, security.DELETE, security.EDIT,)),
+                  (Allow, security.ROLE_MODERATOR, (security.VIEW, security.DELETE, security.EDIT,)),
                   DENY_ALL,
                   ]
 
@@ -46,7 +46,7 @@ class DiscussionPost(BaseContent):
     display_name = _(u"Discussion Post")
     allowed_contexts = ('AgendaItem',)
     add_permission = security.ADD_DISCUSSION_POST
-    schemas = {'add': 'DiscussionPostSchema'}
+    schemas = {'add': 'DiscussionPostSchema', 'edit': 'DiscussionPostSchema'}
     custom_mutators = {'text': '_set_text',
                        'title': '_set_title',
                        'mentioned': '_set_mentioned'}
