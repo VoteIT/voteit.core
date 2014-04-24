@@ -26,6 +26,7 @@ from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IPollPlugin
 from voteit.core.models.interfaces import IVote
+from voteit.core.models.date_time_util import utcnow
 from voteit.core.views.flash_messages import FlashMessages
 from voteit.core.helpers import generate_slug
 
@@ -194,6 +195,7 @@ class Poll(BaseContent, WorkflowAware):
         uid_states = poll_plugin.change_states_of()
         if uid_states:
             self.adjust_proposal_states(uid_states)
+        self.set_field_appstruct({'end_time': utcnow()})
 
     def adjust_proposal_states(self, uid_states, request = None):
         assert isinstance(uid_states, dict)
