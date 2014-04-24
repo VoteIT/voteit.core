@@ -63,7 +63,7 @@ ACL['closed'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, security.DELETE, )
                  DENY_ALL,
                 ]
 ACL['canceled'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, security.DELETE, security.CHANGE_WORKFLOW_STATE)),
-                   (Allow, security.ROLE_MODERATOR, (security.VIEW, security.DELETE, security.CHANGE_WORKFLOW_STATE)),
+                   (Allow, security.ROLE_MODERATOR, _ONGOING_PERMS),
                    (Allow, security.ROLE_VIEWER, security.VIEW),
                    DENY_ALL,
                   ]
