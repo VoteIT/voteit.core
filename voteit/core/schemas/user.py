@@ -40,7 +40,9 @@ def deferred_referer(node, kw):
     return quote(request.GET.get('came_from', '/'))
 
 def to_lowercase(value):
-    return value.lower()
+    if isinstance(value, basestring):
+        return value.lower()
+    return value
 
 def userid_node():
     return colander.SchemaNode(colander.String(),
@@ -200,9 +202,11 @@ class ChangePasswordAdminSchema(colander.Schema):
     password = password_node()
 
 
-@schema_factory('RequestNewPasswordSchema', title = _(u"Request new password"), description = _(u"Use this form to request a new password"))
+@schema_factory(title = _(u"Request new password"),
+                description = _(u"Use this form to request a new password"))
 class RequestNewPasswordSchema(colander.Schema):
     userid_or_email = colander.SchemaNode(colander.String(),
+                                          preparer = to_lowercase,
                                           title = _(u"UserID or email address."))
 
 
