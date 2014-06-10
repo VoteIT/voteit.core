@@ -4,7 +4,7 @@ from betahaus.pyracont.decorators import schema_factory
 
 from voteit.core.validators import html_string_validator
 from voteit.core.validators import multiple_email_validator
-from voteit.core.schemas.common import strip_whitespace
+from voteit.core.schemas.common import strip_and_lowercase
 from voteit.core import security
 from voteit.core import VoteITMF as _
 
@@ -41,7 +41,7 @@ class AddTicketsSchema(colander.Schema):
                                  description = _(u"add_tickets_emails_description",
                                                  default=u'Separate email addresses with a single line break.'),
                                  widget = deform.widget.TextAreaWidget(rows=7, cols=40),
-                                 preparer = strip_whitespace,
+                                 preparer = strip_and_lowercase,
                                  validator = colander.All(html_string_validator, multiple_email_validator),
     )
     message = colander.SchemaNode(colander.String(),

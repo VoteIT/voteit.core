@@ -96,6 +96,12 @@ def strip_whitespace(value):
         return value
     return "\n".join([x.strip() for x in value.splitlines()])
 
+def strip_and_lowercase(value):
+    """ Used as preparer - strips whitespace from the end of rows and lowercases all content. """
+    if not isinstance(value, basestring):
+        return value
+    return "\n".join([x.strip().lower() for x in value.splitlines()])
+
 def add_csrf_token(context, request, schema):
     """ Append csrf-token to schema, if it isn't added by a testing script. """
     #Make sure this is not a blank testing request
