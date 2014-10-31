@@ -248,19 +248,6 @@ class PollTests(unittest.TestCase):
         obj._calculate_ballots()
         self.assertEqual(obj.ballots, (('hello_world', 2), ('other', 1)))
 
-    def test_ballots_object(self):
-        obj = self._cut()
-        #Unique choices
-        choice1 = object()
-        choice2 = object()
-        obj['vote1'] = self._make_vote(choice1)
-        obj['vote2'] = self._make_vote(choice1)
-        obj['vote3'] = self._make_vote(choice1)
-        obj['vote4'] = self._make_vote(choice2)
-        obj['vote5'] = self._make_vote(choice2)
-        obj._calculate_ballots()
-        self.assertEqual(len(obj.ballots), 2)
-
     def test_ballots_dict(self):
         obj = self._cut()
         #Unique choices
