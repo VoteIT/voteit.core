@@ -94,6 +94,7 @@ def dummy_zodb_root(config):
 
 def bootstrap_and_fixture(config):
     config.include('pyramid_zcml')
+    config.include('pyramid_chameleon')
     config.load_zcml('voteit.core:configure.zcml')
     config.scan('voteit.core.models.site')
     config.scan('voteit.core.models.agenda_templates')
@@ -142,7 +143,6 @@ def active_poll_fixture(config):
 
     request = testing.DummyRequest()
     config = testing.setUp(request = request, registry = config.registry)
-
     config.include('pyramid_mailer.testing')
     config.scan('voteit.core.subscribers.poll')
     config.scan('voteit.core.models.meeting')

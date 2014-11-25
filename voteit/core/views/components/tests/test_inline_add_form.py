@@ -33,6 +33,7 @@ class InlineAddFormComponentTests(unittest.TestCase):
     
     def test_inline_add_form_proposals(self):
         from voteit.core.views.components.inline_add_form import inline_add_proposal_form
+        self.config.include('pyramid_chameleon')
         self.config.include('voteit.core.plugins.gravatar_profile_image')
         self.config.scan('voteit.core.models.proposal')
         self.config.scan('voteit.core.schemas.proposal')
@@ -43,6 +44,7 @@ class InlineAddFormComponentTests(unittest.TestCase):
         
     def test_inline_add_form_discussion_post(self):
         from voteit.core.views.components.inline_add_form import inline_add_discussion_form
+        self.config.include('pyramid_chameleon')
         self.config.include('voteit.core.plugins.gravatar_profile_image')
         self.config.scan('voteit.core.models.discussion_post')
         self.config.scan('voteit.core.schemas.discussion_post')

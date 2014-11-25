@@ -93,10 +93,9 @@ class SiteFormViewTests(unittest.TestCase):
         self.config.scan('voteit.core.schemas.user')
         self.config.testing_securitypolicy(userid='dummy',
                                            permissive=True)
-        users = self._fixture()
-        context = users.__parent__
+        root = self._fixture()
         request = testing.DummyRequest(user_agent='Mozilla/4.0 (compatible; MSIE 7.0;)')
-        obj = self._cut(context, request)
+        obj = self._cut(root, request)
         response = obj.login()
         self.assertEqual(response.location, 'http://example.com/unsupported_browser')
 

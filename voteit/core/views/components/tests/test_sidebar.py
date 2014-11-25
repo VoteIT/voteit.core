@@ -20,6 +20,7 @@ class LoginBoxTests(unittest.TestCase):
         return login_box
 
     def test_login_box(self):
+        self.config.include('pyramid_chameleon')
         self.config.scan('voteit.core.schemas.user')
         context = testing.DummyModel()
         request = testing.DummyRequest()
@@ -29,6 +30,7 @@ class LoginBoxTests(unittest.TestCase):
         self.assertIn('<span>Login</span>', response)
 
     def test_login_box_register_page(self):
+        self.config.include('pyramid_chameleon')
         self.config.scan('voteit.core.schemas.user')
         context = testing.DummyModel()
         request = testing.DummyRequest(path='/register')
@@ -38,6 +40,7 @@ class LoginBoxTests(unittest.TestCase):
         self.assertIn('', response)
 
     def test_login_box_login_page(self):
+        self.config.include('pyramid_chameleon')
         self.config.scan('voteit.core.schemas.user')
         context = testing.DummyModel()
         request = testing.DummyRequest(path='/login')
@@ -87,6 +90,7 @@ class LoginAltTests(unittest.TestCase):
         self.assertIn('', response)
 
     def test_render_dummy(self):
+        self.config.include('pyramid_chameleon')
         self.config.scan('voteit.core.schemas.user')
         self._register_dummy_va()
         context = testing.DummyModel()

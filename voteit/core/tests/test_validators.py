@@ -12,6 +12,7 @@ from voteit.core import security
 def _fixture(config):
     from voteit.core.models.user import User
     from voteit.core.models.meeting import Meeting
+    config.include('pyramid_chameleon')
     root = bootstrap_and_fixture(config)
     tester = User(password = 'tester',
                   creators = ['tester'],
@@ -209,6 +210,7 @@ class CheckPasswordTokenTests(TestCase):
 
     def test_valid_token_wrong_string_entered(self):
         #Scan of user package should have been performed in fixture
+        self.config.include('pyramid_chameleon')
         root = _fixture(self.config)
         request = testing.DummyRequest()
         self.config.include('pyramid_mailer.testing')

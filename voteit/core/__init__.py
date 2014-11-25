@@ -74,6 +74,10 @@ def read_salt(settings):
 
 def required_components(config):
     config.include(check_required_settings)
+    #Other includes
+    config.include('pyramid_zodbconn')
+    config.include('pyramid_tm')
+    config.include('pyramid_chameleon')
     #Component includes
     config.include('voteit.core.models.user_tags')
     config.include('voteit.core.models.logs')

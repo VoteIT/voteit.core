@@ -71,6 +71,7 @@ class UserTests(unittest.TestCase):
         self.assertEqual(obj.get_password(), None)    
 
     def test_new_request_password_token(self):
+        self.config.include('pyramid_chameleon')
         self.config.scan('voteit.core.models.user')
         self.config.scan('voteit.core.views.components.email')
         obj = self._make_obj()
@@ -80,6 +81,7 @@ class UserTests(unittest.TestCase):
         self.failUnless(obj.__token__())
     
     def test_new_request_password_token_mailed(self):
+        self.config.include('pyramid_chameleon')
         self.config.scan('voteit.core.models.user')
         self.config.scan('voteit.core.views.components.email')
         obj = self._make_obj()

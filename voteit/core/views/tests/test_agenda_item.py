@@ -91,6 +91,7 @@ class AgendaItemViewTests(unittest.TestCase):
         self.assertIn(u"content_type=Proposal", response.ubody)
         
     def test_inline_add_form_discussion_post(self):
+        self.config.include('pyramid_chameleon')
         self.config.include('voteit.core.plugins.gravatar_profile_image')
         self.config.testing_securitypolicy(userid='dummy',
                                            permissive=True)

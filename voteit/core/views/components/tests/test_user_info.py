@@ -30,6 +30,7 @@ class UserBasicProfileTests(unittest.TestCase):
     def test_integration(self):
         from voteit.core.models.user import User
         from voteit.core.views.api import APIView
+        self.config.include('pyramid_chameleon')
         self.config.scan('voteit.core.views.components.user_info')
         context = User()
         request = testing.DummyRequest()

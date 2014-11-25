@@ -34,6 +34,7 @@ class GlobalActionsComponentTests(unittest.TestCase):
         return ViewAction(name, title, kwargs)
         
     def test_global_actions_authenticated(self):
+        self.config.include('pyramid_chameleon')
         self.config.scan('voteit.core.views.components.global_actions')
         self.config.testing_securitypolicy(userid='admin', permissive=True)
         context = self._fixture()

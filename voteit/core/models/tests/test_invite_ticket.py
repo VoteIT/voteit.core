@@ -31,6 +31,7 @@ class InviteTicketTests(unittest.TestCase):
         self.assertTrue(verifyObject(IInviteTicket, self._cut('me@home.com', [security.ROLE_MODERATOR])))
 
     def test_send_message_sent(self):
+        self.config.include('pyramid_chameleon')
         self.config.scan('voteit.core.views.components.email')
         self.config.include('pyramid_mailer.testing')
         self.config.scan('voteit.core.models.invite_ticket')

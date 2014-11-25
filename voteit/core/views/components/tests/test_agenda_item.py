@@ -29,6 +29,7 @@ class AgendaItemViewComponentTests(unittest.TestCase):
 
     def test_proposals(self):
         from voteit.core.views.components.agenda_item import proposals
+        self.config.include('pyramid_chameleon')
         self.config.testing_securitypolicy(userid='dummy',
                                            permissive=True)
         self.config.scan('voteit.core.views.components.proposals')
@@ -38,6 +39,7 @@ class AgendaItemViewComponentTests(unittest.TestCase):
 
     def test_discussions(self):
         from voteit.core.views.components.agenda_item import discussions
+        self.config.include('pyramid_chameleon')
         self.config.scan('voteit.core.views.components.discussions')
         ai = self._fixture()
         api = self._api(ai)

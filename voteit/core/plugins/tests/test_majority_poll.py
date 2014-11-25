@@ -3,6 +3,7 @@ import unittest
 from pyramid import testing
 from pyramid.traversal import find_interface
 from zope.interface.verify import verifyObject
+import colander
 
 from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IMeeting
@@ -35,16 +36,11 @@ class MPUnitTests(unittest.TestCase):
         #Enable workflows
         self.config.include('pyramid_zcml')
         self.config.load_zcml('voteit.core:configure.zcml')
-        
         obj = self._make_obj()
-        
         request = testing.DummyRequest()
         from voteit.core.views.api import APIView
         api = APIView(self.poll, request)
-        
-        #Shouldn't type return a string? :)
-        from colander import SchemaNode
-        self.assertEqual(type(obj.get_vote_schema(request, api)), SchemaNode)
+        self.assertTrue(obj.get_vote_schema(request, api), colander.Schema)
     
     def test_render_raw_data(self):
         """ Test that render_raw_data returns a Response
@@ -171,6 +167,7 @@ class MPIntegrationTests(unittest.TestCase):
         self.assertEqual(plugin.render_raw_data().body, "(({'proposal': u'p1uid'}, 2), ({'proposal': u'p2uid'}, 1))")
             
     def test_render_result(self):
+        self.config.include('pyramid_chameleon')
         self.config.scan('voteit.core.models.proposal')
         self.config.scan('voteit.core.views.components.main')
         self.config.scan('voteit.core.views.components.moderator_actions')

@@ -14,6 +14,7 @@ class MainViewComponentTests(unittest.TestCase):
 
     def test_render_flash_messages(self):
         from voteit.core.models.interfaces import IFlashMessages
+        self.config.include('pyramid_chameleon')
         self.config.include('voteit.core.models.flash_messages')
         self.config.scan('voteit.core.views.components.main')
         from pyramid.session import UnencryptedCookieSessionFactoryConfig
@@ -43,6 +44,7 @@ class MainViewComponentTests(unittest.TestCase):
         from voteit.core.views.api import APIView
         from voteit.core.testing_helpers import register_workflows
         register_workflows(self.config)
+        self.config.include('pyramid_chameleon')
         self.config.registry.settings['default_timezone_name'] = "Europe/Stockholm"
         self.config.include('voteit.core.models.date_time_util')
         self.config.scan('voteit.core.views.components.main')
