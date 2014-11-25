@@ -31,7 +31,6 @@ install_requires = (
     'repoze.evolution',
     'repoze.folder',
     'repoze.workflow',
-    'slugify',
     'webhelpers',
     )
 
