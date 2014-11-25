@@ -18,7 +18,6 @@ install_requires = (
     'colander',
     'deform>=0.9.5',
     'Babel',
-    'slugify',
     'webhelpers',
     'repoze.catalog',
     'lingua',
