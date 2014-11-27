@@ -13,7 +13,6 @@ from voteit.core.models.schemas import add_csrf_token
 from voteit.core.models.schemas import button_add
 from voteit.core.models.schemas import button_cancel
 from voteit.core.models.schemas import button_resend
-from voteit.core.models.schemas import button_send
 from voteit.core.models.schemas import button_delete
 from voteit.core.validators import deferred_token_form_validator
 from voteit.core.fanstaticlib import voteit_manage_tickets_js
