@@ -130,27 +130,3 @@ def deferred_autocompleting_userid_widget(node, kw):
         size=15,
         values = choices,
         min_length=1)
-
-@colander.deferred
-def deferred_move_object_widget(node, kw):
-    context = kw['context']
-    root = find_root(context)
-    grandparent = context.__parent__.__parent__ #FIXME: Unable to rename things like meetings
-    values = []
-    for obj in grandparent.values():
-        if obj is context.__parent__:
-            continue
-        values.append((resource_path(obj), "%s (%s)" % (obj.title, obj.__name__)))
-    values = sorted(values, key = lambda x: x[1].lower())
-    return deform.widget.SelectWidget(values = values)
-
-
-@schema_factory('MoveObjectSchema', title = _(u"Move object"),
-                description = _(u"move_object_schema_description",
-                                default = u"WARNING: This might break discissions or references. "
-                                          u"Backup your data before doing this! If proposals are part of a poll, remove them first."))
-class MoveObjectSchema(colander.Schema):
-    new_parent_path = colander.SchemaNode(colander.String(),
-                                          title = _(u"Select new parent"),
-                                          description = _(u"Only objects at the same level as this objects parent will be selectable."),
-                                          widget = deferred_move_object_widget,)

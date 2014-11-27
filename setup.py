@@ -10,6 +10,7 @@ install_requires = (
     'pyramid',
     'pyramid_beaker',
     'pyramid_chameleon',
+    'pyramid_deform',
     'pyramid_mailer',
     'pyramid_tm',
     'pyramid_zcml',

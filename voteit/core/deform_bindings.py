@@ -15,11 +15,11 @@ CURRENT_PATH = resource_filename('voteit.core', '')
 WIDGETS_PATH = join(CURRENT_PATH, 'views', 'templates', 'widgets')
 
 
-def deform_translator(term):
-    """ Special translator for deform templates. It doesn't register
-        one as default, since it's framework agnostic.
-    """
-    return get_localizer(get_current_request()).translate(term)
+# def deform_translator(term):
+#     """ Special translator for deform templates. It doesn't register
+#         one as default, since it's framework agnostic.
+#     """
+#     return get_localizer(get_current_request()).translate(term)
 
 def append_search_path(path):
     """ Add a search path to deform. This is the way to register
@@ -48,14 +48,14 @@ def includeme(config):
         WARNING! This method patches global variables, which means that
         it will affect ALL tests after this method is included.
     """
-    settings = config.registry.settings
-    auto_reload = settings['pyramid.reload_templates']
-    debug_templates = settings['pyramid.debug_templates']
-    zpt_renderer = ZPTRendererFactory(DEFORM_TEMPLATE_DIR,
-                                      translator = deform_translator,
-                                      auto_reload = auto_reload,
-                                      debug = debug_templates)
-    Form.set_default_renderer(zpt_renderer)
+#     settings = config.registry.settings
+#     auto_reload = settings['pyramid.reload_templates']
+#     debug_templates = settings['pyramid.debug_templates']
+#     zpt_renderer = ZPTRendererFactory(DEFORM_TEMPLATE_DIR,
+#                                       translator = deform_translator,
+#                                       auto_reload = auto_reload,
+#                                       debug = debug_templates)
+#     Form.set_default_renderer(zpt_renderer)
 
     append_search_path(WIDGETS_PATH)
 

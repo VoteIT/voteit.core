@@ -144,29 +144,6 @@ class StripAndTruncateTests(unittest.TestCase):
         self.assertEqual(truncated, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris at enim nec nunc facilisis semper. S&lt;...&gt;') 
 
 
-class MoveObjectTests(unittest.TestCase):
-    
-    def setUp(self):
-        self.config = testing.setUp()
-
-    def tearDown(self):
-        testing.tearDown()
-    
-    @property
-    def _fut(self):
-        from voteit.core.helpers import move_object
-        return move_object
-
-    def test_move_object(self):
-        root = active_poll_fixture(self.config)
-        from voteit.core.models.agenda_item import AgendaItem
-        ai = root['meeting']['ai']
-        ai2 = root['meeting']['ai2'] = AgendaItem()
-        self._fut(ai['prop1'], ai2)
-        self.assertIn('prop1', root['meeting']['ai2'])
-        self.assertNotIn('prop1', root['meeting']['ai'])
-
-
 class SendEmailTests(unittest.TestCase):
     
     def setUp(self):

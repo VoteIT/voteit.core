@@ -54,7 +54,6 @@ def moderator_actions_section(context, request, va, **kw):
 
 @view_action('context_actions', 'edit', title = _(u"Edit"), context_perm = EDIT, viewname = 'edit')
 @view_action('context_actions', 'delete', title = _(u"Delete"), context_perm = DELETE, viewname = 'delete')
-#@view_action('context_actions', 'move_object', title = _(u"Move"), context_perm = MODERATE_MEETING, viewname = 'move_object')
 def moderator_context_action(context, request, va, **kw):
     api = kw['api']
     context_perm = va.kwargs.get('context_perm', None)

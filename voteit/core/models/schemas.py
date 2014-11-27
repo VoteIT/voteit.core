@@ -30,7 +30,6 @@ def add_csrf_token(context, request, schema):
 def add_came_from(context, request, schema):
     """ Add came from to schema."""
     referer = getattr(request, 'referer', '')
-
     schema.add(colander.SchemaNode(
                    colander.String(),
                    name="came_from",

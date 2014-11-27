@@ -2,11 +2,11 @@ from socket import error as SMTPError #At least in this case :)
 import logging
 
 from pyramid.view import view_config
-from pyramid.url import resource_url
 from pyramid.httpexceptions import HTTPForbidden
 from pyramid.httpexceptions import HTTPFound
 from pyramid.httpexceptions import HTTPNotFound
-from pyramid.httpexceptions import HTTPServerError
+from pyramid.httpexceptions import HTTPError
+
 from pyramid.security import NO_PERMISSION_REQUIRED
 
 from voteit.core import VoteITMF as _
@@ -44,7 +44,7 @@ class ExceptionView(object):
             obj = self.context
             while obj.__parent__:
                 if self.api.context_has_permission(security.VIEW, obj):
-                    url = resource_url(obj, self.request)
+                    url = self.request.resource_url(obj)
                     return HTTPFound(location = url)
                 obj = obj.__parent__
             return HTTPFound(location = self.request.application_url)
@@ -83,6 +83,15 @@ class ExceptionView(object):
                                     type = 'error')
         logger.critical("SMTP exception: %s" % exc_txt)
         return HTTPFound(location = _find_good_redirect_url(self.context, self.request, self.api))
+
+    @view_config(context = HTTPError, permission = NO_PERMISSION_REQUIRED, renderer = "voteit.core:views/templates/exception.pt")
+    def error_view(self):
+        """ More chatty http-errors that users might need to understand.
+            Will also catch CSRF errors.
+        """
+        if self.request.is_xhr:
+            raise self.exception
+        return {'exc': self.exception, 'api': self.api}
 
 
 def _find_good_redirect_url(context, request, api):

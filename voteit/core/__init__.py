@@ -29,7 +29,6 @@ def main(global_config, **settings):
         be sure to include the same things at least.
     """
     config = default_configurator(settings)
-    config.include(required_external_components)
     config.include(required_components)
     config.hook_zca()
     return config.make_wsgi_app()
@@ -78,6 +77,8 @@ def required_components(config):
     config.include('pyramid_zodbconn')
     config.include('pyramid_tm')
     config.include('pyramid_chameleon')
+    config.include('pyramid_deform')
+    config.include('pyramid_beaker')
     #Component includes
     config.include('voteit.core.models.user_tags')
     config.include('voteit.core.models.logs')
@@ -88,7 +89,7 @@ def required_components(config):
     config.include('voteit.core.models.unread')
     config.include('voteit.core.models.flash_messages')
     config.include('voteit.core.models.fanstatic_resources')
-    config.include('voteit.core.deform_bindings')
+#    config.include('voteit.core.deform_bindings')
     config.include('voteit.core.models.proposal_ids')
     config.include('voteit.core.plugins.immediate_ap')
     config.include('voteit.core.plugins.invite_only_ap')
@@ -98,9 +99,7 @@ def required_components(config):
     cache_ttl_seconds = int(config.registry.settings.get('cache_ttl_seconds', 7200))
     config.add_static_view('static', '%s:static' % PROJECTNAME, cache_max_age = cache_ttl_seconds)
     config.add_static_view('deform', 'deform:static', cache_max_age = cache_ttl_seconds)
-    config.add_translation_dirs('deform:locale/',
-                                'colander:locale/',
-                                '%s:locale/' % PROJECTNAME,)
+    config.add_translation_dirs('%s:locale/' % PROJECTNAME,)
     config.scan(PROJECTNAME)
     config.include(adjust_default_view_component_order)
     from voteit.core.security import VIEW
@@ -109,19 +108,6 @@ def required_components(config):
     config.include(register_dynamic_fanstatic_resources)
     config.include(check_required_components)
     config.include(adjust_view_component_order)
-
-def required_external_components(config):
-    """ Include other packages that VoteIT depend on. This is so they don't
-        have to be specified in the paster ini file. However, having this here
-        might mean that it's harder to override external dependencies. But currently
-        that doesn't seem to be a problem.
-    """
-    settings = config.registry.settings
-    pyramid_includes = settings.get('pyramid.includes', '').split()
-    for requirement in ('pyramid_zodbconn', 'pyramid_tm', 'pyramid_beaker'):
-        if requirement not in pyramid_includes:
-            log.info("Requirement '%s' not found in 'pyramid.includes', including it now." % requirement)
-            config.include(requirement)
 
 def register_plugins(config):
     """ Register any plugins specified in paster .init file.
