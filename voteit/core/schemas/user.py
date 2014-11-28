@@ -5,33 +5,31 @@ import deform
 from betahaus.pyracont.decorators import schema_factory
 
 from voteit.core import VoteITMF as _
+from voteit.core import security
 from voteit.core.models.interfaces import IProfileImage
 from voteit.core.schemas.interfaces import IEditUserSchema
-from voteit.core.validators import html_string_validator
-from voteit.core.validators import deferred_unique_email_validator
-from voteit.core.validators import password_validation
+from voteit.core.validators import deferred_current_password_validator
+from voteit.core.validators import deferred_existing_userid_or_email_validator
 from voteit.core.validators import deferred_new_userid_validator
 from voteit.core.validators import deferred_password_token_validator
-from voteit.core.validators import deferred_current_password_validator
-from voteit.core import security 
+from voteit.core.validators import deferred_unique_email_validator
+from voteit.core.validators import html_string_validator
+from voteit.core.validators import password_validation
 from voteit.core.widgets import RecaptchaWidget
 
 
 @colander.deferred
 def deferred_recaptcha_widget(node, kw):
-    """ No recaptcha if captcha settings is now present or if the current user is an admin 
+    """ No recaptcha if captcha settings is now present or if the current user is an admin
     """
     context = kw['context']
     request = kw['request']
     api = kw['api']
-    
     # Get principals for current user
     principals = api.context_effective_principals(context)
-    
     if api.root.get_field_value('captcha_registration', False) and security.ROLE_ADMIN not in principals:
-        return RecaptchaWidget(api.root.get_field_value('captcha_public_key', ''), 
+        return RecaptchaWidget(api.root.get_field_value('captcha_public_key', ''),
                                api.root.get_field_value('captcha_private_key', ''))
-
     return deform.widget.HiddenWidget()
 
 @colander.deferred
@@ -93,7 +91,7 @@ def recaptcha_node():
                                                default=u"This is to prevent spambots from register"),
                                missing=u"",
                                widget=deferred_recaptcha_widget,)
-    
+
 @colander.deferred
 def profile_image_plugin_choices_widget(node, kw):
     context = kw['context']
@@ -153,7 +151,7 @@ class RegisterUserSchema(colander.Schema):
     first_name = first_name_node()
     last_name = last_name_node()
     came_from = came_from_node()
-    captcha = recaptcha_node();
+    captcha = recaptcha_node()
 
 
 @schema_factory('EditUserSchema', title = _(u"Edit user"), description = _(u"Use this form to edit a user"),
@@ -208,6 +206,7 @@ class ChangePasswordAdminSchema(colander.Schema):
 class RequestNewPasswordSchema(colander.Schema):
     userid_or_email = colander.SchemaNode(colander.String(),
                                           preparer = to_lowercase,
+                                          validator = deferred_existing_userid_or_email_validator,
                                           title = _(u"UserID or email address."))
 
 
@@ -216,7 +215,6 @@ class TokenPasswordChangeSchema(colander.Schema):
     #FIXME: Implement captcha here to avoid bruteforce
     token = colander.SchemaNode(colander.String(),
                                 validator = deferred_password_token_validator,
-                                missing = u'',
                                 widget = deform.widget.HiddenWidget(),)
     password = password_node()
 

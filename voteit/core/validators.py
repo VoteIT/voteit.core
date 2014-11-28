@@ -230,6 +230,30 @@ class GlobalExistingUserId(object):
 
 
 @colander.deferred
+def deferred_existing_userid_or_email_validator(node, kw):
+    context = kw['context']
+    return ExistingUserIdOrEmail(context)
+
+
+class ExistingUserIdOrEmail(object):
+    def __init__(self, context):
+        self.context = context
+    
+    def __call__(self, node, value):
+        if '@' in value:
+            #assume email
+            root = find_root(self.context)
+            user = root['users'].get_user_by_email(value)
+            if not IUser.providedBy(user):
+                msg = _(u"email_to_user_validation_error",
+                        default=u"I couldn't find any user with this email.")
+                raise colander.Invalid(node, msg)
+        else:
+            userid_validator = GlobalExistingUserId(self.context)
+            userid_validator(node, value)
+
+
+@colander.deferred
 def deferred_current_password_validator(node, kw):
     context = kw['context']
     return CurrentPasswordValidator(context)

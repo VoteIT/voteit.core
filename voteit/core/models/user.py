@@ -12,7 +12,7 @@ from pyramid.threadlocal import get_current_request
 from pyramid_mailer import get_mailer
 from pyramid_mailer.message import Message
 from pyramid.i18n import get_localizer
-from BTrees.OOBTree import OOBTree 
+from BTrees.OOBTree import OOBTree
 from betahaus.pyracont.decorators import content_factory
 from betahaus.pyracont.factories import createContent
 from betahaus.viewcomponent import render_view_action
@@ -48,15 +48,15 @@ class User(BaseContent):
     custom_fields = {'password':'PasswordField'}
     schemas = {'add': 'AddUserSchema', 'edit': 'EditUserSchema'}
 
-    __acl__ = [(Allow, security.ROLE_ADMIN, (security.EDIT, security.VIEW, security.CHANGE_PASSWORD, security.MANAGE_SERVER, )),
+    __acl__ = [(Allow, security.ROLE_ADMIN, (security.EDIT, security.VIEW, security.CHANGE_PASSWORD, security.MANAGE_SERVER, security.DELETE)),
                (Allow, security.ROLE_OWNER, (security.EDIT, security.VIEW, security.CHANGE_PASSWORD,)),
                DENY_ALL]
-    
+
     @property
     def userid(self):
         """ Convention - name should always be same as userid """
         return self.__name__
-    
+
     @property
     def auth_domains(self):
         try:
@@ -96,7 +96,7 @@ class User(BaseContent):
 
     def get_password(self):
         return self.get_field_value('password')
-    
+
     def set_password(self, value):
         """ Encrypt a plaintext password. Convenience method for field password for b/c."""
         self.set_field_value('password', value)
@@ -144,8 +144,11 @@ class User(BaseContent):
             url = resource_url(context, request)
             link = "<a href=\"%s\">%s</a>" % (url, url)
             body = locale.translate(_('mentioned_notification',
-                     default=u"You have been mentioned in ${meeting} on ${agenda_item}. Click the following link to go there, ${link}.",
-                     mapping={'meeting':meeting.title, 'agenda_item': agenda_item.title, 'link': link,},))
+                                      default = "You have been mentioned in ${meeting} on ${agenda_item}. "
+                                        "Click the following link to go there, ${link}.",
+                                        mapping = {'meeting':meeting.title,
+                                                   'agenda_item': agenda_item.title,
+                                                   'link': link,},))
             msg = Message(subject=_(u"You have been mentioned in VoteIT"),
                            recipients=[self.get_field_value('email')],
                            html=body)

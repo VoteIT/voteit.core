@@ -221,6 +221,51 @@ class AddPollFormTests(unittest.TestCase):
         self.assertEqual(response.location.split('#')[0], 'http://example.com/m/ai/') #A redirect with an anchor
 
 
+
+class AddUserFormTests(unittest.TestCase):
+     
+    def setUp(self):
+        request = testing.DummyRequest()
+        self.config = testing.setUp(request = request)
+ 
+    def tearDown(self):
+        testing.tearDown()
+
+    @property
+    def _cut(self):
+        from voteit.core.views.base_edit import AddUserForm
+        return AddUserForm
+
+    def test_add_user(self):
+        self.config.testing_securitypolicy('dummy', permissive = True)
+        #self.config.registry.settings['default_timezone_name'] = "Europe/Stockholm"
+        #self.config.registry.settings['default_locale_name'] = 'sv'
+        #self.config.include('voteit.core.models.date_time_util')
+        self.config.scan('voteit.core.models.user')
+        self.config.scan('voteit.core.schemas.user')
+        #self.config.include('voteit.core.plugins.majority_poll')
+        self.config.include('voteit.core.models.flash_messages')
+        root = bootstrap_and_fixture(self.config)
+        context = root['users']
+        postdata = MultiDict([('userid', 'dummy'),
+                              ('__start__', 'password:mapping'),
+                              ('password', 'secret'),
+                              ('password-confirm', 'secret'),
+                              ('__end__', 'password:mapping'),
+                              ('email', 'john@doe.com'),
+                              ('first_name', 'John'),
+                              ('add', 'Add')])
+        request = testing.DummyRequest(params = {'content_type': 'User'},
+                                       post = postdata,
+                                       method = 'POST')
+        obj = self._cut(context, request)
+        obj.check_csrf = False
+        response = obj()
+        self.assertEqual(response.location, 'http://example.com/users/dummy/')
+        user = context['dummy']
+        self.assertEqual(user.get_field_value('email'), 'john@doe.com')
+
+
 class DefaultEditFormTests(unittest.TestCase):
      
     def setUp(self):

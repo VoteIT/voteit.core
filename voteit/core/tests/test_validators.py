@@ -298,6 +298,42 @@ class GlobalExistingUserIdTests(TestCase):
         self.assertEqual(obj(node, 'admin'), None)
 
 
+class ExistingUserIdOrEmailTests(TestCase):
+
+    def setUp(self):
+        self.config = testing.setUp()
+
+    def tearDown(self):
+        testing.tearDown()
+
+    @property
+    def _cut(self):
+        from voteit.core.validators import ExistingUserIdOrEmail
+        return ExistingUserIdOrEmail
+
+    def test_existing_userid(self):
+        context = _fixture(self.config)
+        obj = self._cut(context)
+        node = None
+        self.assertEqual(obj(node, 'admin'), None)
+
+    def test_existing_email(self):
+        context = _fixture(self.config)
+        obj = self._cut(context)
+        node = None
+        self.assertEqual(obj(node, 'tester@voteit.se'), None)
+
+    def test_nonexisting_email(self):
+        context = _fixture(self.config)
+        obj = self._cut(context)
+        
+        class _Schema(colander.Schema):
+            node = colander.SchemaNode(colander.String())
+            
+        schema = _Schema()
+        self.assertRaises(colander.Invalid, obj, schema['node'], '404@voteit.se')
+
+
 class PasswordValidationTests(TestCase):
 
     def setUp(self):

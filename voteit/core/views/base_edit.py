@@ -3,13 +3,9 @@ import urllib
 
 from betahaus.pyracont.factories import createContent
 from betahaus.pyracont.factories import createSchema
-from deform import Form
-from deform.exception import ValidationFailure
 from pyramid.httpexceptions import HTTPForbidden
 from pyramid.httpexceptions import HTTPFound
-from pyramid.security import has_permission
 from pyramid.session import check_csrf_token
-from pyramid.traversal import find_resource
 from pyramid.view import view_config
 from pyramid_deform import FormView
 from repoze.workflow.workflow import WorkflowError
@@ -17,10 +13,9 @@ import colander
 
 from voteit.core import VoteITMF as _
 from voteit.core.models.interfaces import IBaseContent
-from voteit.core.models.interfaces import IDiscussionPost
 from voteit.core.models.interfaces import IFlashMessages
-from voteit.core.models.interfaces import IProposal
 from voteit.core.models.interfaces import ISiteRoot
+from voteit.core.models.interfaces import IUsers
 from voteit.core.models.interfaces import IWorkflowAware
 from voteit.core.models.schemas import add_came_from
 from voteit.core.models.schemas import add_csrf_token
@@ -28,10 +23,8 @@ from voteit.core.models.schemas import button_add
 from voteit.core.models.schemas import button_cancel
 from voteit.core.models.schemas import button_delete
 from voteit.core.models.schemas import button_save
-from voteit.core.models.schemas import button_update
 from voteit.core.security import DELETE
 from voteit.core.security import EDIT
-from voteit.core.security import MODERATE_MEETING
 from voteit.core.views.api import APIView
 
 
@@ -173,7 +166,7 @@ class AddMeetingForm(DefaultAddForm):
         return HTTPFound(location = self.request.resource_url(obj))
 
 
-@view_config(context=ISiteRoot, name="add", renderer=DEFAULT_TEMPLATE, request_param = "content_type=Poll")
+@view_config(context=IBaseContent, name="add", renderer=DEFAULT_TEMPLATE, request_param = "content_type=Poll")
 class AddPollForm(DefaultAddForm):
 
     def add_success(self, appstruct):
@@ -191,6 +184,19 @@ class AddPollForm(DefaultAddForm):
                     "participants you have to change the state to upcoming.")
         self.api.flash_messages.add(msg)
         return HTTPFound(location = url)
+
+
+@view_config(context=IUsers, name="add", renderer=DEFAULT_TEMPLATE, request_param = "content_type=User")
+class AddUserForm(DefaultAddForm):
+
+    def add_success(self, appstruct):
+        #Userid and name should be consistent
+        name = appstruct.pop('userid')
+        #creators takes care of setting the role owner as well as adding it to creators attr.
+        obj = createContent('User', creators=[name], **appstruct)
+        self.context[name] = obj
+        self.api.flash_messages.add(_(u"Successfully added"))
+        return HTTPFound(location = self.request.resource_url(obj))
 
 
 @view_config(context=IBaseContent,
@@ -221,6 +227,12 @@ class DefaultEditForm(BaseForm):
         return HTTPFound(location = url)
 
 
+@view_config(name = 'delete', context = ISiteRoot)
+@view_config(name = 'delete', context = IUsers)
+def no_delete(*args):
+    raise HTTPForbidden(_("Can't delete this content type"))
+
+
 @view_config(context=IBaseContent,
              name="delete",
              permission=DELETE,
@@ -229,8 +241,13 @@ class DefaultDeleteForm(BaseForm):
     buttons = (button_delete, button_cancel,)
 
     def __call__(self):
-        if self.context.content_type in ('SiteRoot', 'Users', 'User'):
-            raise HTTPForbidden("Can't delete this content type")
+        if self.context.content_type == 'User':
+            #Find any content created by this user. In case there's some, abort delete
+            res = self.api.search_catalog(creators = self.context.userid)[0]
+            if res.total > 1:
+                raise HTTPForbidden(_("deleting_user_notice",
+                                      default = "Deleting users that are main creators of content isn't supported yet. "
+                                      "Delete their content first."))
         if self.context.content_type == 'Proposal':
             used_in_polls = []
             ai = self.context.__parent__

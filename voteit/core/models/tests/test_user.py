@@ -180,9 +180,7 @@ class UserPermissionTests(unittest.TestCase):
 
     def test_delete(self):
         obj = self._cut()
-        #Currently, there's no way to delete a user.
-        #This has to do with ownership, we need a way to clean it up if we want to remove users.
-        self.assertEqual(principals_allowed_by_permission(obj, security.DELETE), set())
+        self.assertEqual(principals_allowed_by_permission(obj, security.DELETE), admin)
 
     def test_manage_server(self):
         obj = self._cut()

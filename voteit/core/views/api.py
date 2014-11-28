@@ -32,6 +32,7 @@ from voteit.core.models.catalog import resolve_catalog_docid
 from voteit.core.fanstaticlib import DEFORM_RESOURCES
 from voteit.core.helpers import at_userid_link
 from voteit.core.helpers import tags2links
+from zope.interface.interfaces import ComponentLookupError
 
 
 TEMPLATE_DIR = resource_filename('voteit.core.views', 'templates/')
@@ -77,7 +78,12 @@ class APIView(object):
         """ Flash messages adapter - stores and retrieves messages.
             See :mod:`voteit.core.models.interfaces.IFlashMessages`
         """
-        return self.request.registry.getAdapter(self.request, IFlashMessages)
+        try:
+            return self.request.registry.getAdapter(self.request, IFlashMessages)
+        except ComponentLookupError: #pragma : no cover
+            #Only for testing and similar
+            from voteit.core.models.flash_messages import FlashMessages
+            return FlashMessages(self.request)
 
     @reify
     def show_moderator_actions(self):
