@@ -181,6 +181,7 @@ class EditUserSchema(colander.Schema):
 @schema_factory('LoginSchema', title = _(u"Login"))
 class LoginSchema(colander.Schema):
     userid = colander.SchemaNode(colander.String(),
+                                 preparer = to_lowercase,
                                  title=_(u"UserID or email address."))
     password = colander.SchemaNode(colander.String(),
                                    title=_('Password'),
