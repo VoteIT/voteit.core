@@ -1,15 +1,13 @@
 from pyramid.events import subscriber
+from pyramid.exceptions import HTTPForbidden
 from pyramid.threadlocal import get_current_request
-from repoze.folder.interfaces import IObjectAddedEvent
 from repoze.folder.interfaces import IObjectWillBeRemovedEvent
 from repoze.workflow.workflow import WorkflowError
-from pyramid.exceptions import HTTPForbidden
 
 from voteit.core import VoteITMF as _
 from voteit.core import security
-from voteit.core.models.interfaces import IPoll
-from voteit.core.interfaces import IObjectUpdatedEvent
 from voteit.core.interfaces import IWorkflowStateChange
+from voteit.core.models.interfaces import IPoll
 from voteit.core.models.poll import email_voters_about_ongoing_poll
 
 
@@ -42,13 +40,6 @@ def save_voters_userids(obj, event):
         obj.set_field_value('voters_mark_closed', security.find_role_userids(obj, security.ROLE_VOTER))
         #FIXME: Add vote information if there are votes from users who don't have vote permission currently.
         #That must be regarded as fishy :)
-
-@subscriber([IPoll, IObjectAddedEvent])
-@subscriber([IPoll, IObjectUpdatedEvent])
-def create_reject_proposal(obj, event):
-    """ Adding a reject proposal to poll. This is a subscriber because
-        poll needs to be added to the agenda_item for this to work """
-    obj.create_reject_proposal()
 
 @subscriber([IPoll, IObjectWillBeRemovedEvent])
 def poll_is_deleted(obj, event):

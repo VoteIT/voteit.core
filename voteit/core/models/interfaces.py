@@ -392,11 +392,6 @@ class IPoll(IBaseFolder):
             it shouldn't be used with uids that don't exist.
         """
 
-    def create_reject_proposal():
-        """ Create a reject proposal if it was specified in the edit form.
-            This method might go away in the future.
-        """
-
 
 class IVote(Interface):
     """ Vote content type. This behaves different than other

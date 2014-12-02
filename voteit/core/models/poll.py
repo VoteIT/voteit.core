@@ -1,34 +1,31 @@
 from BTrees.OIBTree import OIBTree
-from zope.interface import implements
-from zope.component import getAdapter
-from pyramid.traversal import find_interface
-from pyramid.traversal import find_root
+from betahaus.pyracont.decorators import content_factory
+from pyramid.httpexceptions import HTTPForbidden
+from pyramid.i18n import get_localizer
+from pyramid.renderers import render
 from pyramid.security import Allow
 from pyramid.security import DENY_ALL
 from pyramid.threadlocal import get_current_request
-from pyramid.url import resource_url
+from pyramid.traversal import find_interface
+from pyramid.traversal import find_root
 from pyramid_mailer import get_mailer
 from pyramid_mailer.message import Message
-from pyramid.renderers import render
-from pyramid.i18n import get_localizer
 from repoze.workflow.workflow import WorkflowError
-from betahaus.pyracont.decorators import content_factory
-from betahaus.pyracont.factories import createContent
-from pyramid.httpexceptions import HTTPForbidden
+from zope.component import getAdapter
+from zope.interface import implements
 
-from voteit.core import security
 from voteit.core import VoteITMF as _
+from voteit.core import security
 from voteit.core.models.base_content import BaseContent
-from voteit.core.models.workflow_aware import WorkflowAware
+from voteit.core.models.date_time_util import utcnow
 from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import ICatalogMetadataEnabled
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IPollPlugin
 from voteit.core.models.interfaces import IVote
-from voteit.core.models.date_time_util import utcnow
+from voteit.core.models.workflow_aware import WorkflowAware
 from voteit.core.views.flash_messages import FlashMessages
-from voteit.core.helpers import generate_slug
 
 
 _UPCOMING_PERMS = (security.VIEW,
@@ -199,11 +196,9 @@ class Poll(BaseContent, WorkflowAware):
 
     def adjust_proposal_states(self, uid_states, request = None):
         assert isinstance(uid_states, dict)
-        
         if request is None:
             request = get_current_request()
-        locale = get_localizer(request)
-
+        locale = request.localizer
         fm = FlashMessages(request)        
 
         for (uid, state) in uid_states.items():
@@ -253,25 +248,6 @@ class Poll(BaseContent, WorkflowAware):
             if prop.uid == uid:
                 return prop
         raise KeyError("No proposal found with UID '%s'" % uid)
-        
-    def create_reject_proposal(self):
-        add_reject_proposal = self.get_field_value('add_reject_proposal', None)
-        reject_proposal_uid = self.get_field_value('reject_proposal_uid', None)
-        #Only add if it doesn't exist.
-        if add_reject_proposal and reject_proposal_uid is None:
-            proposal_title = self.get_field_value('reject_proposal_title')
-            proposal = createContent('Proposal', title = proposal_title)
-            self.set_field_value('reject_proposal_uid', proposal.uid)
-            
-            # add rejection proposal to agenda item
-            agenda_item = find_interface(self, IAgendaItem)
-            name = generate_slug(agenda_item, proposal.title)
-            agenda_item[name] = proposal
-            
-            # add proposal to polls proposal uids
-            proposal_uids = set(self.proposal_uids)
-            proposal_uids.add(proposal.uid)
-            self.proposal_uids = proposal_uids
 
 
 class Ballots(object):
@@ -343,7 +319,7 @@ def ongoing_poll_callback(poll, info):
         raise HTTPForbidden(err_msg)
     request = get_current_request()
     if not poll.proposal_uids:
-        edit_tag = '<a href="%sedit"><b>%s</b></a>' % (resource_url(poll, request), poll.title)
+        edit_tag = '<a href="%s"><b>%s</b></a>' % (request.resource_url(poll, 'edit'), poll.title)
         err_msg = _(u"error_no_proposals_in_poll",
                     default = u"A poll with no proposal can not be set to ongoing. Click link to edit: ${tag}",
                     mapping = {'tag': edit_tag})
@@ -378,8 +354,8 @@ def email_voters_about_ongoing_poll(poll, request=None):
             email_addresses.add(email)
     response = {}
     response['meeting'] = meeting
-    response['meeting_url'] = resource_url(meeting, request)
-    response['poll_url'] = resource_url(poll, request)
+    response['meeting_url'] = request.resource_url(meeting)
+    response['poll_url'] = request.resource_url(poll)
     sender = "%s <%s>" % (meeting.get_field_value('meeting_mail_name'), meeting.get_field_value('meeting_mail_address'))
     #FIXME: This should be detatched into a view component
     body_html = render('../views/templates/email/ongoing_poll_notification.pt', response, request=request)

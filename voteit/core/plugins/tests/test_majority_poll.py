@@ -63,38 +63,30 @@ class MPIntegrationTests(unittest.TestCase):
         self.request = testing.DummyRequest()
         self.config = testing.setUp(request=self.request)
         self.config.testing_securitypolicy(userid='admin')
-        
         #Enable workflows
         self.config.include('pyramid_zcml')
         self.config.load_zcml('voteit.core:configure.zcml')
-        
         #Register poll plugin
         self.config.include('voteit.core.plugins.majority_poll')
-        
         # Adding catalog
         self.config.include('voteit.core.models.catalog')
         self.config.include('voteit.core.models.unread')
         self.config.include('voteit.core.models.user_tags')
         self.config.scan('voteit.core.subscribers.catalog')
-        
         #Add root
         from voteit.core.models.site import SiteRoot
         root = SiteRoot()
-        
         #Add users
         from voteit.core.models.users import Users
         root['users'] = users = Users()
         from voteit.core.models.user import User
         users['admin'] = User()
-        
         #Add meeting
         from voteit.core.models.meeting import Meeting
         root['m'] = m = Meeting()
-
         #Add agenda item - needed for lookups
         from voteit.core.models.agenda_item import AgendaItem
         m['ai'] = ai = AgendaItem()
-
         #Add a poll
         from voteit.core.models.poll import Poll
         ai['poll'] = Poll()
@@ -103,7 +95,6 @@ class MPIntegrationTests(unittest.TestCase):
         #Select plugin to use
         from voteit.core.plugins.majority_poll import MajorityPollPlugin
         self.poll.set_field_value('poll_plugin', MajorityPollPlugin.name)
-        
         #Add proposals
         from voteit.core.models.proposal import Proposal
         p1 = Proposal()
@@ -114,10 +105,8 @@ class MPIntegrationTests(unittest.TestCase):
         p2.title = 'p2'
         p2.uid = 'p2uid' #To make it simpler to test against
         ai['p2'] = p2
-        
         #Select proposals for this poll
         self.poll.proposal_uids = (p1.uid, p2.uid, )
-        
         self.ai = ai
         
     def tearDown(self):
@@ -165,7 +154,7 @@ class MPIntegrationTests(unittest.TestCase):
         self._close_poll()
         plugin = self.poll.get_poll_plugin()
         self.assertEqual(plugin.render_raw_data().body, "(({'proposal': u'p1uid'}, 2), ({'proposal': u'p2uid'}, 1))")
-            
+
     def test_render_result(self):
         self.config.include('pyramid_chameleon')
         self.config.scan('voteit.core.models.proposal')

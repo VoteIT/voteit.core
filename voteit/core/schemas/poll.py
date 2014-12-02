@@ -1,23 +1,20 @@
-import colander
-import deform
 from betahaus.pyracont.decorators import schema_factory
 from betahaus.pyracont.factories import createContent
 from pyramid.traversal import find_interface
-
-from zope.interface.interfaces import ComponentLookupError
-
-from voteit.core.validators import html_string_validator
-from voteit.core.validators import richtext_validator
+import colander
+import deform
 
 from voteit.core import VoteITMF as _
-from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import IAgendaItem
-from voteit.core.models.interfaces import IProposal
+from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IPollPlugin
-from voteit.core.schemas.tzdatetime import TZDateTime
+from voteit.core.models.interfaces import IProposal
 from voteit.core.schemas.common import deferred_default_end_time
 from voteit.core.schemas.common import deferred_default_start_time
+from voteit.core.schemas.tzdatetime import TZDateTime
+from voteit.core.validators import html_string_validator
+from voteit.core.validators import richtext_validator
 
 
 @colander.deferred
@@ -82,8 +79,8 @@ def deferred_reject_proposal_title(node, kw):
     return api.translate(msg)
 
 
-@schema_factory('AddPollSchema', title = _(u"Add poll"), description = _(u"Use this form to add a poll"))
-@schema_factory('EditPollSchema', title = _(u"Edit poll"), description = _(u"Use this form to edit a poll"))
+@schema_factory('EditPollSchema', title = _(u"Edit poll"),
+                description = _(u"Use this form to edit a poll"))
 class PollSchema(colander.MappingSchema):
     title = colander.SchemaNode(colander.String(),
                                 title = _(u"Title"),
@@ -111,19 +108,6 @@ class PollSchema(colander.MappingSchema):
                                                     default=u"Only proposals in the state 'published' can be selected"),
                                     missing=set(),
                                     widget=proposal_choices_widget,)
-                                    
-    add_reject_proposal = colander.SchemaNode(colander.Boolean(),
-                                          title = _(u"Reject proposal"),
-                                          description = _(u"add_reject_proposal_description",
-                                                          default = u"Should a 'Reject all proposals' proposal be added to the poll?"),
-                                          missing=False,
-                                          widget=None)
-                                          
-    reject_proposal_title = colander.SchemaNode(colander.String(),
-                                                title = _(u"Proposal text for 'reject all proposals'"),
-                                                description = _(u"You can customise the proposal text if you want."),
-                                                default = deferred_reject_proposal_title,
-                                                widget = None)
     start_time = colander.SchemaNode(
          TZDateTime(),
          title = _(u"Start time of this poll."),
@@ -143,11 +127,17 @@ class PollSchema(colander.MappingSchema):
                                                            'separator': ' '}),
          default = deferred_default_end_time,
     )
-    
-def poll_schema_after_bind(node, kw):
-    """ if a rejection proposal is already attatched to the poll
-        those options should not be available """
-    context = kw['context']
-    if context.get_field_value('rejection_proposal_uid', None):
-        del node['proposal_rejection']
-        del node['proposal_rejection_title']
+
+
+@schema_factory('AddPollSchema', title = _(u"Add poll"),
+                description = _(u"Use this form to add a poll"))
+class AddPollSchema(PollSchema):
+    add_reject_proposal = colander.SchemaNode(colander.Boolean(),
+                                          title = _(u"Reject proposal"),
+                                          description = _(u"add_reject_proposal_description",
+                                                          default = u"Should a 'Reject all proposals' proposal be added to the poll?"),
+                                          missing=False)
+    reject_proposal_title = colander.SchemaNode(colander.String(),
+                                                title = _(u"Proposal text for 'reject all proposals'"),
+                                                description = _(u"You can customise the proposal text if you want."),
+                                                default = deferred_reject_proposal_title)

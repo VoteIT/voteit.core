@@ -166,26 +166,6 @@ class AddMeetingForm(DefaultAddForm):
         return HTTPFound(location = self.request.resource_url(obj))
 
 
-@view_config(context=IBaseContent, name="add", renderer=DEFAULT_TEMPLATE, request_param = "content_type=Poll")
-class AddPollForm(DefaultAddForm):
-
-    def add_success(self, appstruct):
-        factory = self.api.get_content_factory(self.content_type)
-        obj = createContent(self.content_type, **appstruct)
-        name = obj.suggest_name(self.context)
-        self.context[name] = obj
-        #Polls might have a special redirect action if the poll plugin has a settings schema
-        if obj.get_poll_plugin().get_settings_schema() is not None:
-            url = self.request.resource_url(obj, 'poll_config')
-        else:
-            url = self.request.resource_url(obj.__parent__, anchor = obj.uid)
-        msg = _("private_poll_info",
-                default = "The poll is created in private state, to show it the "
-                    "participants you have to change the state to upcoming.")
-        self.api.flash_messages.add(msg)
-        return HTTPFound(location = url)
-
-
 @view_config(context=IUsers, name="add", renderer=DEFAULT_TEMPLATE, request_param = "content_type=User")
 class AddUserForm(DefaultAddForm):
 
@@ -204,6 +184,7 @@ class AddUserForm(DefaultAddForm):
              renderer=DEFAULT_TEMPLATE,
              permission=EDIT)
 class DefaultEditForm(BaseForm):
+    buttons = (button_save, button_cancel,)
 
     def get_schema(self):
         schema_name = self.api.get_schema_name(self.context.content_type, 'edit')
@@ -298,4 +279,8 @@ def state_change(context, request):
         raise HTTPForbidden(str(exc))
     fm = IFlashMessages(request)
     fm.add(_(context.current_state_title(request)))
-    return HTTPFound(location = request.resource_url(context))
+    if context.content_type == 'Poll': #Redirect to polls anchor
+        url = request.resource_url(context.__parent__, anchor = context.uid)
+    else:
+        url = request.resource_url(context)
+    return HTTPFound(location = url)
