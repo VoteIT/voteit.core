@@ -4,3 +4,4 @@
 *.pt.py
 .tmp*
 .coverage
+.noseids
