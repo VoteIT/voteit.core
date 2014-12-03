@@ -111,7 +111,6 @@ class PollVoteForm(DefaultEditForm):
     @property
     def form_options(self):
         return {'action': self.request.resource_url(self.context, '_poll_form'),
-                'readonly': not self.can_vote,
                 'formid': 'vote_form'}
 
     @property
@@ -121,6 +120,10 @@ class PollVoteForm(DefaultEditForm):
     @property
     def poll_plugin(self):
         return _get_poll_plugin(self.context, self.request)
+
+    @property
+    def readonly(self):
+        return not self.can_vote
 
     def appstruct(self):
         if self.api.userid in self.context:

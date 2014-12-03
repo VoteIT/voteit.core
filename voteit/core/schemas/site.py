@@ -15,7 +15,7 @@ class SiteRootSchema(colander.MappingSchema):
     description = colander.SchemaNode(colander.String(),
                                       title = _(u"Description"),
                                       missing = u"",
-                                      widget=deform.widget.RichTextWidget(),
+                                      widget=deform.widget.RichTextWidget(options = (('theme', 'advanced'),)),
                                       validator=richtext_validator,)
     site_title = colander.SchemaNode(colander.String(),
                                 title = _(u"Site title"),
@@ -24,14 +24,14 @@ class SiteRootSchema(colander.MappingSchema):
     footer = colander.SchemaNode(colander.String(),
                                       title = _(u"Footer"),
                                       missing = u"",
-                                      widget=deform.widget.RichTextWidget(),
+                                      widget=deform.widget.RichTextWidget(options = (('theme', 'advanced'),)),
                                       validator=richtext_validator,)
     registration_info = colander.SchemaNode(colander.String(),
                                       title = _(u"Registration info"),
                                       description = _(u"site_root_registration_info_description",
                                                       default = u"Information displayed on the registration page, right hand side."),
                                       missing = u"",
-                                      widget=deform.widget.RichTextWidget(),
+                                      widget=deform.widget.RichTextWidget(options = (('theme', 'advanced'),)),
                                       validator=richtext_validator,)
     allow_add_meeting = colander.SchemaNode(colander.Boolean(),
                                             title = _(u"Allow authenticated users to add meetings"),

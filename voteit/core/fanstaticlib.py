@@ -39,6 +39,7 @@ _voteit_deform_css = Resource(voteit_core_csslib, 'deform.css', depends = (reset
 
 jquery_form = Resource(deformlib, 'scripts/jquery.form-3.09.js', depends = (jquery_deform,))
 jquery_maskedinput = Resource(deformlib, 'scripts/jquery.maskedinput-1.2.2.min.js', depends = (jquery_deform,))
+modernizr = Resource(deformlib, 'scripts/modernizr.custom.input-types-and-atts.js')
 
 #Timepicker
 _jquery_timepicker_js = Resource(voteit_core_jslib, 'jquery-ui-timepicker-addon.js', depends=(jquery_ui,))
@@ -78,6 +79,7 @@ DEFORM_RESOURCES = {
     'datetimepicker': (jquery_deform, jquery_timepicker,),
     'deform': (jquery_deform, voteit_deform,),
     'tinymce': (tinymce,),
+    'modernizr': (modernizr,),
 }
 
 

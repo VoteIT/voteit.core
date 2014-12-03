@@ -85,7 +85,7 @@ def description_node():
                             u"Displayed on the first page of the meeting. You can include things "
                             u"like information about the meeting, how to contact the moderator and your logo."),
         missing = u"",
-        widget=deform.widget.RichTextWidget(),
+        widget=deform.widget.RichTextWidget(options = (('theme', 'advanced'),)),
         validator=richtext_validator,)
 
 def public_description_node():
@@ -96,7 +96,7 @@ def public_description_node():
                         default=u"The public description is visible on the request access "
                             u"page and to not yet logged in visitors."),
         missing = u"",
-        widget=deform.widget.RichTextWidget(),
+        widget=deform.widget.RichTextWidget(options = (('theme', 'advanced'),)),
         validator=richtext_validator,)
 
 @colander.deferred

@@ -21,7 +21,7 @@ install_requires = (
     'betahaus.pyracont>=0.2b',
     'betahaus.viewcomponent',
     'colander',
-    'deform<2.0.0',
+    'deform==0.9.9',
     'fanstatic',
     'html2text',
     'httpagentparser',

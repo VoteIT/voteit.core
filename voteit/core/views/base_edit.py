@@ -49,6 +49,7 @@ class BaseForm(BaseEdit, FormView):
     default_cancel = _("Canceled")
     buttons = (button_save, button_cancel,)
     check_csrf = True
+    readonly = False
     schema = None #Good testing injection point too
 
     def __init__(self, context, request):
@@ -102,7 +103,12 @@ class BaseForm(BaseEdit, FormView):
                 'request': self.request}
 
     def show(self, form):
-        response = super(BaseForm, self).show(form)
+        appstruct = self.appstruct()
+        if appstruct is None:
+            appstruct = {}
+        rendered = form.render(appstruct = appstruct,
+                               readonly = self.readonly)
+        response = {'form': rendered}
         response.update(self.tpl_data())
         return response
 

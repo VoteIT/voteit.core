@@ -27,6 +27,6 @@ class AgendaItemSchema(colander.MappingSchema):
                             u"idea to add an image, it will make it easier for participants "
                             u"to quickly see which page they're on."),
         missing = u"",
-        widget=deform.widget.RichTextWidget(),
+        widget=deform.widget.RichTextWidget(options = (('theme', 'advanced'),)),
         validator=richtext_validator,
     )

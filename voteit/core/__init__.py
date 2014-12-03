@@ -1,12 +1,11 @@
 import logging
 
+from pyramid.authentication import AuthTktAuthenticationPolicy
+from pyramid.authorization import ACLAuthorizationPolicy
+from pyramid.config import Configurator
 from pyramid.i18n import TranslationStringFactory
 from pyramid.session import UnencryptedCookieSessionFactoryConfig
 from pyramid_zodbconn import get_connection
-
-from pyramid.config import Configurator
-from pyramid.authorization import ACLAuthorizationPolicy
-from pyramid.authentication import AuthTktAuthenticationPolicy
 
 
 log = logging.getLogger(__name__)
@@ -20,8 +19,8 @@ DEFAULT_SETTINGS = {
     'default_timezone_name': 'UTC',
     'voteit.gravatar_default': 'mm',
     'voteit.default_profile_picture': '/static/images/default_user.png',
+    'pyramid_deform.template_search_path': 'voteit.core:views/templates/widgets',
 }
-
 
 def main(global_config, **settings):
     """ This function returns a Pyramid WSGI application.
@@ -89,7 +88,6 @@ def required_components(config):
     config.include('voteit.core.models.unread')
     config.include('voteit.core.models.flash_messages')
     config.include('voteit.core.models.fanstatic_resources')
-#    config.include('voteit.core.deform_bindings')
     config.include('voteit.core.models.proposal_ids')
     config.include('voteit.core.plugins.immediate_ap')
     config.include('voteit.core.plugins.invite_only_ap')

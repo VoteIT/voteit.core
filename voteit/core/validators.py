@@ -279,14 +279,11 @@ def richtext_validator(node, value):
         checks that input doesn't contain forbidden html tags
     """
     INVALID_TAGS = ['textarea', 'select', 'option', 'input', 'button', 'script']
-
     soup = BeautifulSoup(value)
-
     invalid = False
     for tag in soup.findAll(True):
         if tag.name in INVALID_TAGS:
             invalid = True
-
     if invalid:
         raise colander.Invalid(node, _(u"Contains forbidden HTML tags."))
 
