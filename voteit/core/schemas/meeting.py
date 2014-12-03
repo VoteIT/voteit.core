@@ -13,7 +13,6 @@ from voteit.core import security
 from voteit.core.models.interfaces import IAccessPolicy
 from voteit.core.models.interfaces import IPollPlugin
 from voteit.core.models.meeting import Meeting
-from voteit.core.widgets import RecaptchaWidget
 from voteit.core.schemas.common import NAME_PATTERN
 
 
@@ -37,21 +36,6 @@ def deferred_access_policy_widget(node, kw):
         choices.append((name, plugin.title))
     return deform.widget.RadioChoiceWidget(values = choices)
 
-@colander.deferred
-def deferred_recaptcha_widget(node, kw):
-    """ No recaptcha if captcha settings is now present or if the current user is an admin 
-    """
-    context = kw['context']
-    request = kw['request']
-    api = kw['api']
-    # Get principals for current user
-    principals = api.context_effective_principals(context)
-    if api.root.get_field_value('captcha_meeting', False) and security.ROLE_ADMIN not in principals:
-        pub_key = api.root.get_field_value('captcha_public_key', '')
-        priv_key = api.root.get_field_value('captcha_private_key', '')
-        return RecaptchaWidget(captcha_public_key = pub_key,
-                               captcha_private_key = priv_key)
-    return deform.widget.HiddenWidget()
 
 @colander.deferred
 def deferred_copy_perms_widget(node, kw):
@@ -125,15 +109,6 @@ def access_policy_node():
                                widget = deferred_access_policy_widget,
                                default = "invite_only",)
 
-def recaptcha_node():
-    return colander.SchemaNode(colander.String(),
-                               #FIXME: write a good title and description here
-                               title=_(u"Verify you are human"),
-                               description = _(u"meeting_captcha_description",
-                                               default=u"This is to prevent spambots from creating meetings"),
-                               missing=u"",
-                               widget=deferred_recaptcha_widget,)
-
 def mention_notification_setting_node():
     return colander.SchemaNode(colander.Bool(),
                                title = _(u"Send mail to mentioned users."),
@@ -157,7 +132,6 @@ class AddMeetingSchema(colander.MappingSchema):
     access_policy = access_policy_node()
     mention_notification_setting = mention_notification_setting_node()
     poll_notification_setting = poll_notification_setting_node()
-    captcha = recaptcha_node()
     copy_users_and_perms = colander.SchemaNode(colander.String(),
                                                title = _(u"Copy users and permissions from a previous meeting."),
                                                description = _(u"You can only pick meeting where you've been a moderator."),

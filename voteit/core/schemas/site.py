@@ -43,30 +43,6 @@ class SiteRootSchema(colander.MappingSchema):
            validator = colander.Email(),) 
 
 
-@schema_factory('CaptchaSiteRootSchema', title = _(u"ReCaptcha settings"),
-                description = _(u"captcha_site_root_schema_main_description",
-                                default = u"CAPTCHAs can protect the site from spam attacks by robots. "
-                                          u"You'll need to register with ReCaptcha and  "
-                                          u"add the API keys here to activate this service."))
-class CaptchaSiteRootSchema(colander.MappingSchema):
-    captcha_registration = colander.SchemaNode(
-        colander.Boolean(),
-        title = _(u"captcha_registration_title",
-                  default = u"Require when registering on the site."),)
-    captcha_meeting = colander.SchemaNode(
-        colander.Boolean(),
-        title = _(u"captcha_meeting_title",
-                  default = u"Require when creating a new meeting. (If users are allowed to do that)"),)
-    captcha_public_key = colander.SchemaNode(colander.String(),
-                                             title = _(u"Public ReCaptcha key"),
-                                             validator=html_string_validator,
-                                             missing=u"")
-    captcha_private_key = colander.SchemaNode(colander.String(),
-                                              title = _(u"Private ReCaptcha key"),
-                                              validator=html_string_validator,
-                                              missing=u"")
-
-
 @schema_factory('LayoutSiteRootSchema', title = _(u"Layout"),
                 description = _(u"layout_site_root_schema_description",
                                 default = u"Global layout settings"))

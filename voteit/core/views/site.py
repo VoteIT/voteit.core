@@ -192,10 +192,6 @@ class SiteFormView(BaseEdit):
         self.response['form'] = form.render(appstruct)
         return self.response
 
-    @view_config(name = "recaptcha", context=ISiteRoot, renderer = "templates/base_edit.pt", permission = security.EDIT)
-    def recaptcha(self):
-        return self.form("CaptchaSiteRootSchema")
-
     @view_config(name = "layout", context = ISiteRoot, permission = security.EDIT, renderer = "templates/base_edit.pt")
     def layout(self):
         return self.form("LayoutSiteRootSchema")

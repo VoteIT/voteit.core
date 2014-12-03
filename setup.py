@@ -25,7 +25,6 @@ install_requires = (
     'fanstatic',
     'html2text',
     'httpagentparser',
-    'httplib2',
     'js.jquery_tablesorter',
     'lingua',
     'repoze.catalog',

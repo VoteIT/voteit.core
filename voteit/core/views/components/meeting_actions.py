@@ -63,7 +63,6 @@ def generic_menu(context, request, va, **kw):
     return render('../templates/snippets/generic_meeting_menu.pt', response, request = request)
 
 @view_action('admin_menu', 'moderators_emails', title = _(u"Moderators emails"), link = "moderators_emails")
-@view_action('admin_menu', 'recaptcha', title = _(u"ReCaptcha"), link = "recaptcha")
 @view_action('admin_menu', 'edit_root_permissions', title = _(u"Root permissions"), link = "permissions")
 @view_action('admin_menu', 'server_log', title = _(u"Server logs"), link = "server_logs")
 @view_action('admin_menu', 'agenda_templates', title = _(u"Agenda templates"), link = "agenda_templates")
