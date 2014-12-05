@@ -6,6 +6,14 @@ from betahaus.pyracont.factories import createSchema
 from voteit.core.testing_helpers import bootstrap_and_fixture
 
 
+def _fixture(config):
+    from voteit.core.models.meeting import Meeting
+    from voteit.core.models.user import User
+    root = bootstrap_and_fixture(config)
+    root['m'] = meeting = Meeting()
+    root.users['dummy'] = User()
+    return meeting
+
 class MeetingViewTests(unittest.TestCase):
     
     def setUp(self):
@@ -20,12 +28,7 @@ class MeetingViewTests(unittest.TestCase):
         return MeetingView
 
     def _fixture(self):
-        from voteit.core.models.meeting import Meeting
-        from voteit.core.models.user import User
-        root = bootstrap_and_fixture(self.config)
-        root['m'] = meeting = Meeting()
-        root.users['dummy'] = User()
-        return meeting
+        return _fixture(self.config)
 
     def _load_vcs(self):
         self.config.scan('voteit.core.views.components.main')
@@ -190,40 +193,7 @@ class MeetingViewTests(unittest.TestCase):
         obj = self._cut(context, request)
         response = obj.presentation()
         self.assertIn('form', response)
-        
-    def test_mail_settings(self):
-        self.config.scan('voteit.core.schemas.meeting')
-        self.config.testing_securitypolicy(userid='dummy',
-                                           permissive=True)
-        context = self._fixture()
-        request = testing.DummyRequest()
-        obj = self._cut(context, request)
-        response = obj.mail_settings()
-        self.assertIn('form', response)
-        
-    def test_access_policy(self):
-        self.config.scan('voteit.core.schemas.meeting')
-        self.config.registry.settings['pyramid_deform.template_search_path'] = 'voteit.core:views/templates/widgets'
-        self.config.include('pyramid_deform')
-        self.config.testing_securitypolicy(userid='dummy',
-                                           permissive=True)
-        context = self._fixture()
-        request = testing.DummyRequest()
-        obj = self._cut(context, request)
-        response = obj.access_policy()
-        self.assertIn('form', response)
-        
-    def test_global_poll_settings(self):
-        self.config.scan('voteit.core.models.poll')
-        self.config.scan('voteit.core.schemas.meeting')
-        self.config.testing_securitypolicy(userid='dummy',
-                                           permissive=True)
-        context = self._fixture()
-        request = testing.DummyRequest()
-        obj = self._cut(context, request)
-        response = obj.global_poll_settings()
-        self.assertIn('form', response)
-        
+
     def test_form(self):
         self.config.scan('voteit.core.schemas.meeting')
         self.config.include('voteit.core.models.flash_messages')
@@ -296,3 +266,29 @@ class MeetingViewTests(unittest.TestCase):
         obj = self._cut(context, request)
         response = obj.minutes()
         self.assertIn('agenda_items', response)
+
+
+class AccessPolicyFormTests(unittest.TestCase):
+    
+    def setUp(self):
+        self.config = testing.setUp()
+        self.config.scan('voteit.core.schemas.meeting')
+        self.config.registry.settings['pyramid_deform.template_search_path'] = 'voteit.core:views/templates/widgets'
+        self.config.include('pyramid_deform')
+        self.config.testing_securitypolicy(userid='dummy',
+                                           permissive=True)
+
+    def tearDown(self):
+        testing.tearDown()
+
+    @property
+    def _cut(self):
+        from voteit.core.views.meeting import AccessPolicyForm
+        return AccessPolicyForm
+
+    def test_access_policy(self):
+        context = _fixture(self.config)
+        request = testing.DummyRequest()
+        obj = self._cut(context, request)
+        response = obj()
+        self.assertIn('form', response)

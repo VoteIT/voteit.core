@@ -18,6 +18,7 @@ from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.schemas import add_csrf_token
 from voteit.core.models.schemas import button_save
 from voteit.core.models.schemas import button_cancel
+from voteit.core.views.base_edit import DefaultEditForm
 
 
 class MeetingView(BaseView):
@@ -174,34 +175,6 @@ class MeetingView(BaseView):
         add_csrf_token(self.context, self.request, schema)
         schema = schema.bind(context=self.context, request=self.request, api = self.api)
         return self.form(schema)
-    
-    @view_config(context=IMeeting, name="mail_settings", renderer="templates/base_edit.pt", permission=security.MODERATE_MEETING)
-    def mail_settings(self):
-        schema = createSchema("MailSettingsMeetingSchema")
-        add_csrf_token(self.context, self.request, schema)
-        schema = schema.bind(context=self.context, request=self.request, api = self.api)
-        return self.form(schema)
-        
-    @view_config(context=IMeeting, name="access_policy", renderer="templates/base_edit.pt", permission=security.MODERATE_MEETING)
-    def access_policy(self):
-        schema = createSchema("AccessPolicyMeetingSchema")
-        add_csrf_token(self.context, self.request, schema)
-        schema = schema.bind(context=self.context, request=self.request, api = self.api)
-        result = self.form(schema)
-        if 'save' in self.request.POST and isinstance(result, HTTPFound):
-            ap = self.request.registry.queryAdapter(self.context, IAccessPolicy, name = self.context.get_field_value('access_policy', ''))
-            if ap and ap.configurable:
-                self.api.flash_messages.add(_(u"Review access policy configuration"))
-                url = self.request.resource_url(self.context, 'configure_access_policy')
-                return HTTPFound(location = url)
-        return result
-
-    @view_config(context=IMeeting, name="meeting_poll_settings", renderer="templates/base_edit.pt", permission=security.MODERATE_MEETING)
-    def global_poll_settings(self):
-        schema = createSchema("MeetingPollSettingsSchema")
-        add_csrf_token(self.context, self.request, schema)
-        schema = schema.bind(context=self.context, request=self.request, api = self.api)
-        return self.form(schema)
 
     def form(self, schema):
         form = Form(schema, buttons=(button_save, button_cancel))
@@ -286,3 +259,44 @@ def reload_data_json(context, request):
         response['discussionposts'] = tuple(root.catalog.query(query & Eq('content_type', 'DiscussionPost'),
                                                                sort_index = 'created')[1])
     return response
+
+
+@view_config(context = IMeeting,
+             name = "mail_settings",
+             renderer = "voteit.core:views/templates/base_edit.pt",
+             permission = security.MODERATE_MEETING)
+class MailSettingsForm(DefaultEditForm):
+
+    def get_schema(self):
+        return createSchema("MailSettingsMeetingSchema")
+
+
+@view_config(context = IMeeting,
+             name = "access_policy",
+             renderer = "voteit.core:views/templates/base_edit.pt",
+             permission = security.MODERATE_MEETING)
+class AccessPolicyForm(DefaultEditForm):
+
+    def get_schema(self):
+        return createSchema("AccessPolicyMeetingSchema")
+
+    def save_success(self, appstruct):
+        response = super(AccessPolicyForm, self).save_success(appstruct)
+        ap = self.request.registry.queryAdapter(self.context,
+                                                IAccessPolicy,
+                                                name = self.context.get_field_value('access_policy', ''))
+        if ap and ap.configurable:
+            self.api.flash_messages.add(_(u"Review access policy configuration"))
+            url = self.request.resource_url(self.context, 'configure_access_policy')
+            return HTTPFound(location = url)
+        return response
+
+
+@view_config(context = IMeeting,
+             name = "meeting_poll_settings",
+             renderer = "voteit.core:views/templates/base_edit.pt",
+             permission = security.MODERATE_MEETING)
+class MeetingPollSettingsForm(DefaultEditForm):
+
+    def get_schema(self):
+        return createSchema("MeetingPollSettingsSchema")
