@@ -73,14 +73,12 @@ def profile_image_plugin_choices_widget(node, kw):
     context = kw['context']
     request = kw['request']
     api = kw['api']
-
     user = api.user_profile
     plugin_choices = set()
     for (name, adapter) in request.registry.getAdapters((user,), IProfileImage):
         if adapter.is_valid_for_user():
-            plugin_choices.add((name, adapter.title))
-
-    return deform.widget.RadioChoiceWidget(values=plugin_choices)
+            plugin_choices.add((name, adapter))
+    return deform.widget.RadioChoiceWidget(values=plugin_choices, template = "object_radio_choice", readonly_template = "readonly/object_radio_choice")
 
 @colander.deferred
 def deferred_default_profile_image_plugin(node, kw):

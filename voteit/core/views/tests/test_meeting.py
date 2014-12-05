@@ -203,6 +203,8 @@ class MeetingViewTests(unittest.TestCase):
         
     def test_access_policy(self):
         self.config.scan('voteit.core.schemas.meeting')
+        self.config.registry.settings['pyramid_deform.template_search_path'] = 'voteit.core:views/templates/widgets'
+        self.config.include('pyramid_deform')
         self.config.testing_securitypolicy(userid='dummy',
                                            permissive=True)
         context = self._fixture()

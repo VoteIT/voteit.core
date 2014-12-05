@@ -33,8 +33,8 @@ def deferred_access_policy_widget(node, kw):
     request = kw['request']
     choices = []
     for (name, plugin) in request.registry.getAdapters([_dummy_meeting], IAccessPolicy):
-        choices.append((name, plugin.title))
-    return deform.widget.RadioChoiceWidget(values = choices)
+        choices.append((name, plugin))
+    return deform.widget.RadioChoiceWidget(values = choices, template = "object_radio_choice", readonly_template = "readonly/object_radio_choice")
 
 
 @colander.deferred
