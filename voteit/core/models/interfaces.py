@@ -741,37 +741,31 @@ class IAccessPolicy(Interface):
     """ Adapts a meeting to handle an access policy. They're methods for granting
         access to users that request it.
     """
+    context = Attribute("Adapted context")
     name = Attribute("Works like an internal id for the access policy")
     title = Attribute("Readable title of the access policy. Should be a translation string")
     description = Attribute("Longer description to make it easier for moderators"
                             " to understand what this policy does. Also translation string")
-    configurable = Attribute("Does this policy have any configuration options?")
-    view = Attribute("Bool - Does this access policy use a custom view?")
+    #configurable = Attribute("Does this policy have any configuration options?")
+    view = Attribute("""
+        Name of a custom view to redirect to. Should normally be None
+        unless you want to do heavy customisations. """)
 
-    def is_public():
-        """ Is this access policy configured so the meeting is public?
-            Note: This feature might not be implemented yet. """
+    def schema():
+        """ If a form of some sort should be rendered, return a schema. """
 
-    def render_view(api):
-        """ Render view """
-
-    def schema(api):
-        """ Optional, schema for this method """
-
-    def form(api):
-        """ Optional, form for this method """
-
-    def handle_success(api, appstruct):
-        """ If this methods own form/schema was used, this is called when the form passes validation.
-            It should update permissions according to whatever the method granted.
+    def handle_success(view, appstruct):
+        """ If a schema existed, this gets called if it passed validation.
         """
 
-    def config_schema(api):
-        """ Return a schema to be used for configuring this access policy. Optional. """
+    def config_schema():
+        """ Return a schema to be used for configuring this access policy.
+            Return None if you don't want any configuration options.
+        """
 
-    def config_form(api):
-        """ Return a form for configuring access policy. """
-
+    def handle_config_success(view, appstruct):
+        """ Called when configuration schema passed validation.
+        """
 
 #Utilities
 class IDateTimeUtil(Interface):

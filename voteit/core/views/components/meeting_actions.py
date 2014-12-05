@@ -114,7 +114,7 @@ def configure_access_policy_menu_link(context, request, va, **kw):
     if not access_policy_name:
         return u""
     ap = request.registry.queryAdapter(api.meeting, IAccessPolicy, name = access_policy_name)
-    if ap and ap.configurable:
+    if ap and ap.config_schema():
         url = "%s%s" % (api.meeting_url, va.kwargs['link'])
         return """<li><a href="%s">%s</a></li>""" % (url, api.translate(va.title))
     return u""

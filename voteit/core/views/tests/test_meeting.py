@@ -4,6 +4,7 @@ from pyramid import testing
 from betahaus.pyracont.factories import createSchema
 
 from voteit.core.testing_helpers import bootstrap_and_fixture
+from pyramid.httpexceptions import HTTPForbidden
 
 
 def _fixture(config):
@@ -134,56 +135,7 @@ class MeetingViewTests(unittest.TestCase):
         obj = self._cut(context, request)
         response = obj.manage_layout()
         self.assertIn('form', response)
-        
-    def test_request_meeting_access_invite_only(self):
-        self.config.include('voteit.core.models.flash_messages')
-        self.config.include('voteit.core.plugins.invite_only_ap')
-        self.config.testing_securitypolicy(userid='dummy',
-                                           permissive=False)
-        self._load_vcs()
-        context = self._fixture()
-        request = testing.DummyRequest()
-        request.context = context
-        obj = self._cut(context, request)
-        response = obj.request_meeting_access()
-        #Return to app root since it isn't allowed
-        self.assertEqual(response.location, "http://example.com")
-        
-    def test_request_meeting_access_public(self):
-        self.config.include('voteit.core.models.flash_messages')
-        self.config.testing_securitypolicy(userid='dummy',
-                                           permissive=False)
-        self._load_vcs()
-        context = self._fixture()
-        context.set_field_value('access_policy', 'public')
-        self.config.include('voteit.core.plugins.immediate_ap')
-        request = testing.DummyRequest()
-        obj = self._cut(context, request)
-        response = obj.request_meeting_access()
-        self.assertIn('form', response)
-        
-    def test_request_meeting_access_invalid_policy(self):
-        self.config.include('voteit.core.models.flash_messages')
-        self.config.testing_securitypolicy(userid='dummy',
-                                           permissive=False)
-        self._load_vcs()
-        context = self._fixture()
-        context.set_field_value('access_policy', 'fake_policy')
-        request = testing.DummyRequest()
-        obj = self._cut(context, request)
-        response = obj.request_meeting_access()
-        self.assertEqual(response.status, "302 Found")
-        
-    def test_request_meeting_access_not_logged_in(self):
-        self.config.include('voteit.core.models.flash_messages')
-        self.config.testing_securitypolicy(permissive=False)
-        self._load_vcs()
-        context = self._fixture()
-        request = testing.DummyRequest()
-        obj = self._cut(context, request)
-        response = obj.request_meeting_access()
-        self.assertEqual(response.location, u"http://example.com/?came_from=http%3A%2F%2Fexample.com%2Fm%2Frequest_access")
-        
+
     def test_presentation(self):
         self.config.scan('voteit.core.schemas.meeting')
         self.config.testing_securitypolicy(userid='dummy',
@@ -292,3 +244,45 @@ class AccessPolicyFormTests(unittest.TestCase):
         obj = self._cut(context, request)
         response = obj()
         self.assertIn('form', response)
+
+
+class RequestAccessFormTests(unittest.TestCase):
+    
+    def setUp(self):
+        self.config = testing.setUp()
+
+    def tearDown(self):
+        testing.tearDown()
+
+    @property
+    def _cut(self):
+        from voteit.core.views.meeting import RequestAccessForm
+        return RequestAccessForm
+
+    def test_without_set_ap(self):
+        self.config.testing_securitypolicy(userid='dummy',
+                                           permissive=True)
+        context = _fixture(self.config)
+        request = testing.DummyRequest()
+        self.assertRaises(HTTPForbidden, self._cut, context, request)
+
+    def test_request_meeting_access_invite_only(self):
+        self.config.include('voteit.core.plugins.invite_only_ap')
+        self.config.testing_securitypolicy(userid='dummy',
+                                           permissive=True)
+        context = _fixture(self.config)
+        context.set_field_value('access_policy', 'invite_only')
+        request = testing.DummyRequest()
+        self.assertRaises(HTTPForbidden, self._cut, context, request)
+         
+    def test_request_meeting_access_not_logged_in(self):
+        self.config.include('voteit.core.plugins.immediate_ap')
+        self.config.testing_securitypolicy(permissive=False)
+        context = _fixture(self.config)
+        context.set_field_value('access_policy', 'public')
+        request = testing.DummyRequest()
+        obj = self._cut(context, request)
+        response = obj()
+        self.assertEqual(response.location, u"http://example.com/?came_from=http%3A%2F%2Fexample.com%2Fm%2Frequest_access")
+
+#FIXME: Dummy request access form usage?
