@@ -1,5 +1,10 @@
 from zope.interface import Interface
 from zope.interface import Attribute
+from repoze.folder.interfaces import IObjectAddedEvent #API
+from repoze.folder.interfaces import IObjectRemovedEvent #API
+from repoze.folder.interfaces import IObjectWillBeAddedEvent #API
+from repoze.folder.interfaces import IObjectWillBeRemovedEvent #API
+
 
 #Events
 class IWorkflowStateChange(Interface):
