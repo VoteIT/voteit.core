@@ -83,16 +83,20 @@ class PollConfigForm(DefaultEditForm):
         before the actual poll has been set in the ongoing state. After that,
         no settings may be changed.
     """
+
+    def __call__(self):
+        if self.schema is None:
+            msg = _("No settings for this poll")
+            self.api.flash_messages.add(msg, type = 'error')
+            raise HTTPFound(location = self.request.resource_url(self.context))
+        return super(PollConfigForm, self).__call__()
+
     def appstruct(self):
         return self.context.poll_settings
 
     def get_schema(self):
         plugin = _get_poll_plugin(self.context, self.request)
-        schema = plugin.get_settings_schema()
-        if schema is None:
-            msg = _("No settings for this poll")
-            self.api.flash_messages.add(msg, type = 'error')
-            raise HTTPFound(location = self.request.resource_url(self.context))
+        return plugin.get_settings_schema()
 
     def save_success(self, appstruct):
         self.context.poll_settings = appstruct
