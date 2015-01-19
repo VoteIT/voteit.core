@@ -1,6 +1,6 @@
 from deform.widget import RadioChoiceWidget
 
-from voteit.core.fanstaticlib import star_rating
+#from voteit.core.fanstaticlib import star_rating
 
 
 class StarWidget(RadioChoiceWidget):
@@ -13,4 +13,4 @@ class StarWidget(RadioChoiceWidget):
 
     def __init__(self, **kw):
         super(StarWidget, self).__init__(**kw)
-        star_rating.need()
+        #star_rating.need()

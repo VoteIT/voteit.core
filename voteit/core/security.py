@@ -1,9 +1,12 @@
+from hashlib import sha1
+
 from zope.component import getUtility
 from pyramid.interfaces import IAuthorizationPolicy
 from pyramid.traversal import find_root
 from pyramid.security import Authenticated
 from pyramid.security import Everyone
 from zope.component.event import objectEventNotify
+from arche import security as arche_sec
 
 from voteit.core.events import WorkflowStateChange
 from voteit.core import VoteITMF as _
@@ -11,14 +14,19 @@ from voteit.core import VoteITMF as _
 
 #Roles, which are the same as groups really, but we may detach group functionality so it's possible
 #to add regular groups and give them roles.
-ROLE_ADMIN = 'role:Admin'
+#ROLE_ADMIN = 'role:Admin'
+ROLE_ADMIN = arche_sec.ROLE_ADMIN
 ROLE_MEETING_CREATOR = 'role:Meeting creator'
 ROLE_MODERATOR = 'role:Moderator'
-ROLE_VIEWER = 'role:Viewer'
+ROLE_VIEWER = arche_sec.ROLE_VIEWER
 ROLE_DISCUSS = 'role:Discussion'
 ROLE_PROPOSE = 'role:Propose'
 ROLE_VOTER = 'role:Voter'
-ROLE_OWNER = 'role:Owner'
+ROLE_OWNER = arche_sec.ROLE_OWNER
+
+
+
+
 
 #Some roles are cumulative - admins are always moderators,
 #and discuss, propose and vote requres that you can view. It's always part of respective roles
@@ -33,8 +41,9 @@ ROLE_DEPENDENCIES[ROLE_VOTER] = (ROLE_VIEWER,)
 
 
 #Global Permissions
-VIEW = 'View'
-EDIT = 'Edit'
+#VIEW = 'View'
+VIEW = arche_sec.PERM_VIEW
+EDIT = arche_sec.PERM_EDIT
 DELETE = 'Delete'
 REGISTER = 'Register'
 RETRACT = 'Retract'
@@ -44,6 +53,8 @@ MANAGE_GROUPS = 'Manage Groups'
 MANAGE_SERVER = 'Manage Server'
 MODERATE_MEETING = 'Moderate Meeting'
 REQUEST_MEETING_ACCESS = 'Request Meeting Access'
+
+PERM_MANAGE_USERS = arche_sec.PERM_MANAGE_USERS
 
 #FIXME: We need to separate Edit and workflow permissions for most content types
 
@@ -161,3 +172,10 @@ def find_role_userids(context, role):
         if role in context_effective_principals(context, userid):
             results.add(userid)
     return frozenset(results)
+
+def get_sha_password(value, hashed = None):
+    """ Encode a plaintext password to sha1.
+        FIXME: SHA1 is a deprecated method, migration is a good idea!"""
+    if isinstance(value, unicode):
+        value = value.encode('UTF-8')
+    return 'SHA1:' + sha1(value).hexdigest()

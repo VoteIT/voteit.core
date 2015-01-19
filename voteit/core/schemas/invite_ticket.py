@@ -26,7 +26,7 @@ class ClaimTicketSchema(colander.Schema):
                                 default = u"Send invites to participants with email. If different participants should have different rights you should send invites to one level of rights at a time. Normally users have discuss, propose and vote."))
 class AddTicketsSchema(colander.Schema):
     roles = colander.SchemaNode(
-        deform.Set(),
+        colander.Set(),
         title = _(u"Roles"),
         default = (security.ROLE_DISCUSS, security.ROLE_PROPOSE, security.ROLE_VOTER),
         description = _(u"add_tickets_roles_description",

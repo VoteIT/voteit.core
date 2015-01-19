@@ -19,6 +19,6 @@ class BaseView(object):
 class DefaultView(BaseView):
     """ Default view when something doesn't have a specific view registered. """
 
-    @view_config(context=IBaseContent, renderer="templates/base_view.pt", permission=VIEW)
+  #  @view_config(context=IBaseContent, renderer="templates/base_view.pt", permission=VIEW)
     def dynamic_view(self):
         return self.response

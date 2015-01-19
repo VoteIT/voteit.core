@@ -43,7 +43,7 @@ class ImmediateAP(AccessPolicy):
 @schema_factory('ImmediateAPConfigSchema', title = _("Configure immediate access policy"))
 class ImmediateAPConfigSchema(colander.Schema):
     immediate_access_grant_roles = colander.SchemaNode(
-        deform.Set(),
+        colander.Set(),
         title = _("Roles"),
         description = _("immediate_ap_schema_grant_description",
                         default = "Users will be granted these roles IMMEDIATELY upon requesting access."),

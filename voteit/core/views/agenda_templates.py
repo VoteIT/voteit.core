@@ -1,14 +1,14 @@
-from betahaus.pyracont.factories import createContent
 from pyramid.url import resource_url
 from pyramid.view import view_config
 from pyramid.httpexceptions import HTTPFound
 
 from voteit.core import VoteITMF as _
-from voteit.core.views.base_edit import BaseEdit
-from voteit.core.models.interfaces import IAgendaTemplates
-from voteit.core.models.interfaces import IAgendaTemplate
-from voteit.core.models.interfaces import IMeeting
 from voteit.core import security
+from voteit.core.models.arche_compat import createContent
+from voteit.core.models.interfaces import IAgendaTemplate
+from voteit.core.models.interfaces import IAgendaTemplates
+from voteit.core.models.interfaces import IMeeting
+from voteit.core.views.base_edit import BaseEdit
 
 
 class AgendaTempalteView(BaseEdit):

@@ -7,14 +7,14 @@ from voteit.core.security import ADD_PROPOSAL
 from voteit.core.security import ADD_DISCUSSION_POST
 from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.views.agenda_item import inline_add_form
-from voteit.core.fanstaticlib import jquery_form
+#from voteit.core.fanstaticlib import jquery_form
 
 @view_action('proposals', 'add_form', interface = IAgendaItem)
 def inline_add_proposal_form(context, request, va, **kw):
     """ For agenda item contexts.
     """
     api = kw['api']
-    jquery_form.need() #This isn't included in widgets for some reason
+    #jquery_form.need() #This isn't included in widgets for some reason
     form = inline_add_form(api, 'Proposal', {})
     api.register_form_resources(form)
     if not api.context_has_permission(ADD_PROPOSAL, context):

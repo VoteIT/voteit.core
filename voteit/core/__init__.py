@@ -6,6 +6,7 @@ from pyramid.config import Configurator
 from pyramid.i18n import TranslationStringFactory
 from pyramid.session import UnencryptedCookieSessionFactoryConfig
 from pyramid_zodbconn import get_connection
+from arche import root_factory
 
 
 log = logging.getLogger(__name__)
@@ -13,13 +14,13 @@ log = logging.getLogger(__name__)
 
 #Must be before all of this packages imports since some other methods might import it
 PROJECTNAME = 'voteit.core'
-VoteITMF = TranslationStringFactory(PROJECTNAME)
+_ = VoteITMF = TranslationStringFactory(PROJECTNAME)
 DEFAULT_SETTINGS = {
     'default_locale_name': 'en',
     'default_timezone_name': 'UTC',
     'voteit.gravatar_default': 'mm',
     'voteit.default_profile_picture': '/static/images/default_user.png',
-    'pyramid_deform.template_search_path': 'voteit.core:views/templates/widgets',
+    'pyramid_deform.template_search_path': 'voteit.core:views/templates/widgets arche:templates/deform',
 }
 
 def main(global_config, **settings):
@@ -33,7 +34,8 @@ def main(global_config, **settings):
     return config.make_wsgi_app()
 
 def default_configurator(settings):
-    from voteit.core.security import groupfinder
+    from arche.security import groupfinder
+    #from voteit.core.security import groupfinder
     authn_policy = AuthTktAuthenticationPolicy(hashalg='sha512',
                                                secret = read_salt(settings),
                                                callback = groupfinder)
@@ -78,27 +80,29 @@ def required_components(config):
     config.include('pyramid_chameleon')
     config.include('pyramid_deform')
     config.include('pyramid_beaker')
-    #Component includes
-    config.include('voteit.core.models.user_tags')
-    config.include('voteit.core.models.logs')
-    config.include('voteit.core.models.date_time_util')
-    config.include('voteit.core.models.js_util')
+    config.include('deform_autoneed')
+    #Arche
+    cache_max_age = int(config.registry.settings.get('arche.cache_max_age', 60*60*24))
+    config.add_static_view('static', 'arche:static', cache_max_age = cache_max_age)
+    config.include('arche') #Must be included first to adjust settings for other packages!
+    config.include('arche.override_perm_methods')
+    #Content type includes
+    config.include('voteit.core.models')
+    #Include schemas
+    config.include('voteit.core.schemas')
+    #Other component includes
     config.include('voteit.core.js_translations')
-    config.include('voteit.core.models.catalog')
-    config.include('voteit.core.models.unread')
-    config.include('voteit.core.models.flash_messages')
-    config.include('voteit.core.models.fanstatic_resources')
-    config.include('voteit.core.models.proposal_ids')
     config.include('voteit.core.plugins.immediate_ap')
     config.include('voteit.core.plugins.invite_only_ap')
     #For password storage
-    config.scan('betahaus.pyracont.fields.password')
+    #config.scan('betahaus.pyracont.fields.password')
 
     cache_ttl_seconds = int(config.registry.settings.get('cache_ttl_seconds', 7200))
-    config.add_static_view('static', '%s:static' % PROJECTNAME, cache_max_age = cache_ttl_seconds)
-    config.add_static_view('deform', 'deform:static', cache_max_age = cache_ttl_seconds)
+    #config.add_static_view('static', '%s:static' % PROJECTNAME, cache_max_age = cache_ttl_seconds)
+    #config.add_static_view('deform', 'deform:static', cache_max_age = cache_ttl_seconds)
     config.add_translation_dirs('%s:locale/' % PROJECTNAME,)
-    config.scan(PROJECTNAME)
+    #config.scan(PROJECTNAME)
+    config.scan('voteit.core.subscribers.post_config_addons')
     config.include(adjust_default_view_component_order)
     from voteit.core.security import VIEW
     config.set_default_permission(VIEW)    
@@ -150,59 +154,62 @@ def check_required_components(config):
             config.include(v)
             log.info("Including default: '%s'" % v)
 
-def root_factory(request):
-    """ Returns root object for each request. See pyramid docs. """
-    conn = get_connection(request)
-    return appmaker(conn.root())
-
-def appmaker(zodb_root):
-    """ This determines the root object for each request. If no site root exists,
-        this function will run bootstrap_voteit and create one.
-        Read more about traversal in the Pyramid docs.
-        
-        The funny looking try / except here is to bootstrap the site in case it hasn't been bootstrapped.
-        This is faster than using an if statement.
-    """
-    try:
-        return zodb_root['app_root']
-    except KeyError:
-        from voteit.core.bootstrap import bootstrap_voteit
-        zodb_root['app_root'] = bootstrap_voteit() #Returns a site root
-        import transaction
-        transaction.commit()
-        #Set intitial version of database
-        from repoze.evolution import ZODBEvolutionManager
-        from voteit.core.evolve import VERSION
-        manager = ZODBEvolutionManager(zodb_root['app_root'], evolve_packagename='voteit.core.evolve', sw_version=VERSION)
-        manager.set_db_version(VERSION)
-        manager.transaction.commit()
-        return zodb_root['app_root']
+# def root_factory(request):
+#     """ Returns root object for each request. See pyramid docs. """
+#     conn = get_connection(request)
+#     return appmaker(conn.root())
+# 
+# def appmaker(zodb_root):
+#     """ This determines the root object for each request. If no site root exists,
+#         this function will run bootstrap_voteit and create one.
+#         Read more about traversal in the Pyramid docs.
+#         
+#         The funny looking try / except here is to bootstrap the site in case it hasn't been bootstrapped.
+#         This is faster than using an if statement.
+#     """
+#     try:
+#         return zodb_root['app_root']
+#     except KeyError:
+#         from voteit.core.bootstrap import bootstrap_voteit
+#         zodb_root['app_root'] = bootstrap_voteit() #Returns a site root
+#         import transaction
+#         transaction.commit()
+#         #Set intitial version of database
+#         from repoze.evolution import ZODBEvolutionManager
+#         from voteit.core.evolve import VERSION
+#         manager = ZODBEvolutionManager(zodb_root['app_root'], evolve_packagename='voteit.core.evolve', sw_version=VERSION)
+#         manager.set_db_version(VERSION)
+#         manager.transaction.commit()
+#         return zodb_root['app_root']
 
 def adjust_view_component_order(config):
     """ Set the default order of view components. """
-    from betahaus.viewcomponent.interfaces import IViewGroup
-    prefix = "vieworder."
-    lprefix = len(prefix)
-    for (k, v) in config.registry.settings.items():
-        if k.startswith(prefix):
-            name = k[lprefix:]
-            util = config.registry.getUtility(IViewGroup, name = name)
-            util.order = v.strip().splitlines()
+    return
+#     from betahaus.viewcomponent.interfaces import IViewGroup
+#     prefix = "vieworder."
+#     lprefix = len(prefix)
+#     for (k, v) in config.registry.settings.items():
+#         if k.startswith(prefix):
+#             name = k[lprefix:]
+#             util = config.registry.getUtility(IViewGroup, name = name)
+#             util.order = v.strip().splitlines()
 
 def adjust_default_view_component_order(config):
     """ Adjust component order if something is specified in the paster.ini file. """
-    from betahaus.viewcomponent.interfaces import IViewGroup
-    from voteit.core.view_component_order import DEFAULT_VC_ORDER
-    for (name, items) in DEFAULT_VC_ORDER:
-        util = config.registry.getUtility(IViewGroup, name = name)
-        util.order = items
+    return
+#     from betahaus.viewcomponent.interfaces import IViewGroup
+#     from voteit.core.view_component_order import DEFAULT_VC_ORDER
+#     for (name, items) in DEFAULT_VC_ORDER:
+#         util = config.registry.getUtility(IViewGroup, name = name)
+#         util.order = items
 
 def register_dynamic_fanstatic_resources(config):
-    from voteit.core.models.interfaces import IFanstaticResources
-    from voteit.core.fanstaticlib import DEFAULT_FANSTATIC_RESOURCES
-    util = config.registry.getUtility(IFanstaticResources)
-    for res in DEFAULT_FANSTATIC_RESOURCES:
-        util.add(*res)
+    return
+#     from voteit.core.models.interfaces import IFanstaticResources
+#     from voteit.core.fanstaticlib import DEFAULT_FANSTATIC_RESOURCES
+#     util = config.registry.getUtility(IFanstaticResources)
+#     for res in DEFAULT_FANSTATIC_RESOURCES:
+#         util.add(*res)
 
 def includeme(config):
     """ Called when voteit.core is used as a component of another application.

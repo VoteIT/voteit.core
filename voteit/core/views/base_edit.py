@@ -1,7 +1,6 @@
 from __future__ import unicode_literals
 import urllib
 
-from betahaus.pyracont.factories import createContent
 from betahaus.pyracont.factories import createSchema
 from pyramid.httpexceptions import HTTPForbidden
 from pyramid.httpexceptions import HTTPFound
@@ -12,6 +11,7 @@ from repoze.workflow.workflow import WorkflowError
 import colander
 
 from voteit.core import VoteITMF as _
+from voteit.core.models.arche_compat import createContent
 from voteit.core.models.interfaces import IBaseContent
 from voteit.core.models.interfaces import IFlashMessages
 from voteit.core.models.interfaces import ISiteRoot

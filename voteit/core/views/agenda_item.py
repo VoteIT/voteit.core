@@ -6,21 +6,20 @@ from pyramid.traversal import resource_path
 from pyramid.security import has_permission
 from pyramid.httpexceptions import HTTPForbidden
 from pyramid.httpexceptions import HTTPFound
-from betahaus.pyracont.factories import createContent
 from betahaus.pyracont.factories import createSchema
 from pyramid.traversal import find_interface
 from deform.exception import ValidationFailure
 
 from voteit.core import VoteITMF as _
-from voteit.core.views.base_view import BaseView
+from voteit.core.helpers import ajax_options
+from voteit.core.helpers import generate_slug
 from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IDiscussionPost
 from voteit.core.models.interfaces import IProposal
-from voteit.core.security import VIEW
-from voteit.core.security import MODERATE_MEETING
 from voteit.core.models.schemas import button_add
-from voteit.core.helpers import generate_slug
-from voteit.core.helpers import ajax_options
+from voteit.core.security import MODERATE_MEETING
+from voteit.core.security import VIEW
+from voteit.core.views.base_view import BaseView
 
 
 def inline_add_form(api, content_type, bind_data):
@@ -38,7 +37,7 @@ def inline_add_form(api, content_type, bind_data):
 class AgendaItemView(BaseView):
     """ View for agenda items. """
     
-    @view_config(context=IAgendaItem, renderer="templates/agenda_item.pt", permission=VIEW)
+#    @view_config(context=IAgendaItem, renderer="templates/agenda_item.pt", permission=VIEW)
     def agenda_item_view(self):
         """ Main overview of Agenda item. """
 
@@ -84,7 +83,7 @@ class AgendaItemView(BaseView):
             return
         return self.api.resolve_catalog_docid(tuple(docids)[0])
 
-    @view_config(context=IAgendaItem, name='_inline_form', permission=VIEW)
+ #   @view_config(context=IAgendaItem, name='_inline_form', permission=VIEW)
     def process_inline_add_form(self):
         """ Inline add form. Note the somewhat odd permissions on the view configuration.
             The actual permission check for each content type is preformed later.
@@ -138,11 +137,11 @@ class AgendaItemView(BaseView):
         self.response['content_type'] = content_type
         return Response(render('templates/snippets/inline_form.pt', self.response, request=self.request))
 
-    @view_config(context=IDiscussionPost, name="more", permission=VIEW, renderer='json')
+ #   @view_config(context=IDiscussionPost, name="more", permission=VIEW, renderer='json')
     def discussion_more(self):
         return {'body': self.api.transform(self.context.get_field_value('title'))}
     
-    @view_config(context=IAgendaItem, name="discussions", permission=VIEW)
+  #  @view_config(context=IAgendaItem, name="discussions", permission=VIEW)
     def discussions(self):
         if self.request.is_xhr:
             return Response(self.api.render_single_view_component(self.context, self.request, 'discussions', 'listing', api = self.api))
@@ -150,7 +149,7 @@ class AgendaItemView(BaseView):
         url = self.request.resource_url(self.context, query=self.request.GET, anchor="discussions")
         return HTTPFound(location=url)
 
-    @view_config(context = IAgendaItem, name = "_toggle_block", permission = MODERATE_MEETING)
+ #   @view_config(context = IAgendaItem, name = "_toggle_block", permission = MODERATE_MEETING)
     def toggle_block(self):
         """ Toggle wether discussion or proposals are allowed. """
         discussion_block = self.request.GET.get('discussion_block', None)
@@ -167,8 +166,8 @@ class AgendaItemView(BaseView):
             url = self.request.referer
         return HTTPFound(location=url)
 
-    @view_config(context=IDiscussionPost, name="answer", permission=VIEW, renderer='templates/base_edit.pt')
-    @view_config(context=IProposal, name="answer", permission=VIEW, renderer='templates/base_edit.pt')
+   # @view_config(context=IDiscussionPost, name="answer", permission=VIEW, renderer='templates/base_edit.pt')
+   # @view_config(context=IProposal, name="answer", permission=VIEW, renderer='templates/base_edit.pt')
     def discussion_answer(self):
         content_type = 'DiscussionPost'
         ai = find_interface(self.context, IAgendaItem)

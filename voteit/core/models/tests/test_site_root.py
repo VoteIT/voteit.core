@@ -5,6 +5,7 @@ from pyramid.authorization import ACLAuthorizationPolicy
 from pyramid.security import Authenticated
 from pyramid.security import Everyone
 from zope.interface.verify import verifyObject
+
 from voteit.core import security
 
 

@@ -1,10 +1,10 @@
 from betahaus.pyracont.decorators import schema_factory
-from betahaus.pyracont.factories import createContent
 from pyramid.traversal import find_interface
 import colander
 import deform
 
 from voteit.core import VoteITMF as _
+from voteit.core.models.arche_compat import createContent
 from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import IPoll
@@ -101,7 +101,7 @@ class PollSchema(colander.MappingSchema):
                                       widget = poll_plugin_choices_widget,
                                       default = deferred_default_poll_method,)
                                       
-    proposals = colander.SchemaNode(deform.Set(allow_empty=True), 
+    proposals = colander.SchemaNode(colander.Set(), 
                                     name="proposals",
                                     title = _(u"Proposals"),
                                     description = _(u"poll_proposals_description",

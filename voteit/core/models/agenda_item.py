@@ -1,12 +1,12 @@
-from zope.interface import implements
-from pyramid.traversal import find_interface
-from pyramid.security import Allow
-from pyramid.security import Deny
-from pyramid.security import Everyone
-from pyramid.security import DENY_ALL
-from pyramid.threadlocal import get_current_request
 from betahaus.pyracont.decorators import content_factory
 from pyramid.httpexceptions import HTTPForbidden
+from pyramid.security import Allow
+from pyramid.security import DENY_ALL
+from pyramid.security import Deny
+from pyramid.security import Everyone
+from pyramid.threadlocal import get_current_request
+from pyramid.traversal import find_interface
+from zope.interface import implementer
 
 from voteit.core import security
 from voteit.core import VoteITMF as _
@@ -51,17 +51,16 @@ ACL['closed_meeting'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, )),
                         ]
 
 
-@content_factory('AgendaItem', title=_(u"Agenda item"))
+@implementer(IAgendaItem, ICatalogMetadataEnabled)
 class AgendaItem(BaseContent, WorkflowAware):
     """ Agenda Item content type.
         See :mod:`voteit.core.models.interfaces.IAgendaItem`.
         All methods are documented in the interface of this class.
     """
-    implements(IAgendaItem, ICatalogMetadataEnabled)
-    content_type = 'AgendaItem'
-    display_name = _(u"Agenda item")
-    allowed_contexts = ('Meeting',)
-    add_permission = security.ADD_AGENDA_ITEM
+    type_name = 'AgendaItem'
+    type_title = _("Agenda item")
+    #allowed_contexts = ('Meeting',)
+    #add_permission = security.ADD_AGENDA_ITEM
     custom_mutators = {'proposal_block': '_set_proposal_block', 'discussion_block': '_set_discussion_block'}
     schemas = {'edit': 'EditAgendaItemSchema', 'add': 'AddAgendaItemSchema'}
 

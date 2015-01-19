@@ -41,7 +41,7 @@ class UserIDAndGroupsSchema(colander.Schema):
     )
     #It's called groups here, but we restrict choices to roles only
     groups = colander.SchemaNode(
-        deform.Set(allow_empty=True),
+        colander.Set(),
         title = _(u"Groups"),
         widget = deferred_roles_widget,
         validator = deferred_context_roles_validator,
@@ -74,7 +74,7 @@ class SinglePermissionSchema(colander.Schema):
     )
     #It's called groups here, but we restrict choices to roles only
     groups = colander.SchemaNode(
-        deform.Set(allow_empty=True),
+        colander.Set(),
         title = _(u"Groups"),
         widget = deferred_roles_widget,
         validator = deferred_context_roles_validator,

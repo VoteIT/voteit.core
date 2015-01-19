@@ -1,0 +1,17 @@
+def includeme(config):
+    """ Include all models. """
+    config.include('.agenda_templates')
+    config.include('.catalog')
+    config.include('.date_time_util')
+    config.include('.fanstatic_resources')
+    config.include('.flash_messages')
+    config.include('.js_util')
+    config.include('.logs')
+    config.include('.meeting')
+    config.include('.populator')
+    config.include('.proposal_ids')
+    config.include('.site')
+    config.include('.unread')
+    config.include('.user')
+    config.include('.user_tags')
+    config.include('.users')

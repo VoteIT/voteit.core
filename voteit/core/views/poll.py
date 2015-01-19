@@ -1,6 +1,5 @@
 import urllib
 
-from betahaus.pyracont.factories import createContent
 from betahaus.pyracont.factories import createSchema
 from pyramid.httpexceptions import HTTPForbidden
 from pyramid.httpexceptions import HTTPFound
@@ -11,6 +10,7 @@ from zope.interface.interfaces import ComponentLookupError
 
 from voteit.core import VoteITMF as _
 from voteit.core import security
+from voteit.core.models.arche_compat import createContent
 from voteit.core.models.interfaces import IPoll, IAgendaItem
 from voteit.core.models.interfaces import IPollPlugin
 from voteit.core.models.interfaces import IVote

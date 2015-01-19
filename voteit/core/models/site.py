@@ -1,18 +1,21 @@
+from arche.api import Root
+from betahaus.pyracont.decorators import content_factory
+from pyramid.security import ALL_PERMISSIONS
 from pyramid.security import Allow
 from pyramid.security import Authenticated
-from pyramid.security import Everyone
-from pyramid.security import ALL_PERMISSIONS
 from pyramid.security import DENY_ALL
-from zope.interface import implements
+from pyramid.security import Everyone
 from repoze.catalog.catalog import Catalog
 from repoze.catalog.document import DocumentMap
-from betahaus.pyracont.decorators import content_factory
+from zope.interface import implements
+from zope.interface.declarations import implementer
 
 from voteit.core import VoteITMF as _
 from voteit.core import security
 from voteit.core.models.interfaces import ISiteRoot
 from voteit.core.models.base_content import BaseContent
 from voteit.core.models.catalog import update_indexes
+from voteit.core.models.security_aware import SecurityAware
 
 
 _DEFAULT_ACL = ((Allow, security.ROLE_ADMIN, ALL_PERMISSIONS),
@@ -21,17 +24,16 @@ _DEFAULT_ACL = ((Allow, security.ROLE_ADMIN, ALL_PERMISSIONS),
                 DENY_ALL)
 
 
-@content_factory('SiteRoot', title=_(u"Site root"))
-class SiteRoot(BaseContent):
+#@content_factory('SiteRoot', title=_(u"Site root"))
+@implementer(ISiteRoot)
+class SiteRoot(BaseContent, SecurityAware, Root):
     """ Site root content type - there's only one of these.
         See :mod:`voteit.core.models.interfaces.ISiteRoot`.
         All methods are documented in the interface of this class.
     """
-    implements(ISiteRoot)
-    content_type = 'SiteRoot'
-    display_name = _(u"Site root")
-    allowed_contexts = ()
+    type_name = 'Root' #Arche compat
     schemas = {'edit':'SiteRootSchema'}
+    footer = ""
 
     @property
     def __acl__(self):
@@ -41,13 +43,13 @@ class SiteRoot(BaseContent):
         acl.extend(_DEFAULT_ACL)
         return acl
 
-    def __init__(self, data=None, **kwargs):
-        self.catalog = Catalog()
-        self.catalog.__parent__ = self #To make traversal work
-        self.catalog.document_map = DocumentMap()
-        super(SiteRoot, self).__init__(data=data, **kwargs)
-        update_indexes(self.catalog)
+    def __init__(self, data = None, **kwargs):
+        super(SiteRoot, self).__init__(data = data, **kwargs)
+        #Root.__init__(self, data = data, **kwargs)
 
     @property
     def users(self):
         return self['users']
+
+def includeme(config):
+    config.add_content_factory(SiteRoot, addable_in = ('Meeting',))

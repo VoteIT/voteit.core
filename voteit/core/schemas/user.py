@@ -198,7 +198,7 @@ class TokenPasswordChangeSchema(colander.Schema):
                                 u"This will make you unable to login with that service. "
                                 u"Be sure to have other means of login in before doing so!"))
 class ManageConnectedProfilesSchema(colander.Schema):
-    auth_domains = colander.SchemaNode(deform.Set(allow_empty = True),
+    auth_domains = colander.SchemaNode(colander.Set(),
                                        title = u"Remove domains?",
                                        missing = colander.null,
                                        widget = deferred_local_profile_information_widget,)

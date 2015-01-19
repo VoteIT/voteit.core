@@ -1,9 +1,9 @@
-from transaction import commit
-from pyramid_zodbconn import db_from_uri
+from pyramid import testing
 from pyramid.authentication import AuthTktAuthenticationPolicy
 from pyramid.authorization import ACLAuthorizationPolicy
-from pyramid import testing
 from pyramid_mailer.interfaces import IMailer
+from pyramid_zodbconn import db_from_uri
+from transaction import commit
 
 from voteit.core.bootstrap import bootstrap_voteit
 from voteit.core.security import ROLE_VOTER
@@ -94,16 +94,15 @@ def dummy_zodb_root(config):
 
 def bootstrap_and_fixture(config):
     config.include('pyramid_zcml')
-    config.include('pyramid_chameleon')
+    config.include('arche')
     config.load_zcml('voteit.core:configure.zcml')
-    config.scan('voteit.core.models.site')
-    config.scan('voteit.core.models.agenda_templates')
-    config.scan('voteit.core.models.user')
-    config.scan('voteit.core.models.users')
+    config.include('voteit.core.models.site')
+    config.include('voteit.core.models.agenda_templates')
+    config.include('voteit.core.models.user')
+    config.include('voteit.core.models.users')
     config.include('voteit.core.models.fanstatic_resources')
-    config.scan('betahaus.pyracont.fields.password')
+    #config.scan('betahaus.pyracont.fields.password')
     return bootstrap_voteit(echo=False)
-
 
 def register_security_policies(config):
     from voteit.core.security import groupfinder

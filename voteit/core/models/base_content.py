@@ -1,11 +1,15 @@
 from datetime import datetime
 
+from BTrees.OOBTree import OOBTree
 from betahaus.pyracont import BaseFolder
-from zope.component.event import objectEventNotify
-from zope.interface import implements
-from pyramid.threadlocal import get_current_request
 from pyramid.security import authenticated_userid
+from pyramid.threadlocal import get_current_request
 from repoze.folder import unicodify
+from zope.component.event import objectEventNotify
+from zope.interface import implementer
+from zope.interface import implements
+from arche.api import Base
+from arche.resources import LocalRolesMixin
 
 from voteit.core.events import ObjectUpdatedEvent
 from voteit.core.models.interfaces import IBaseContent
@@ -17,16 +21,20 @@ from voteit.core.models.catalog import SEARCHABLE_TEXT_INDEXES
 #Things that should never be saved
 RESTRICTED_KEYS = ('csrf_token', )
 
-
-class BaseContent(BaseFolder, SecurityAware):
+@implementer(IBaseContent)
+class BaseContent(BaseFolder, LocalRolesMixin):
     """ See :mod:`voteit.core.models.interfaces.IBaseContent`.
         All methods are documented in the interface of this class.
+        
+        This also contains compatibility fixes between Arche and old VoteIT code.
     """
-    implements(IBaseContent)
-    add_permission = None
-    content_type = None
-    allowed_contexts = ()
+#    add_permission = None
+#    allowed_contexts = ()
     schemas = {}
+    default_view = u"view"
+    nav_visible = True
+    listing_visible = True
+    search_visible = True
 
     def __init__(self, data=None, **kwargs):
         if 'creators' not in kwargs:
@@ -47,8 +55,16 @@ class BaseContent(BaseFolder, SecurityAware):
         if 'creators' in kwargs:
             userid = kwargs['creators'][0]
             #Don't send updated event on add
-            self.add_groups(userid, (ROLE_OWNER,), event = False)
+            self.local_roles[userid] = (ROLE_OWNER,)
         super(BaseContent, self).__init__(data=data, **kwargs)
+
+    @property
+    def field_storage(self):
+        try:
+            return self.__field_storage__
+        except AttributeError:
+            self.__field_storage__ = fs = OOBTree()
+            return fs
 
     def set_field_value(self, key, value):
         if key in RESTRICTED_KEYS:
@@ -90,7 +106,8 @@ class BaseContent(BaseFolder, SecurityAware):
         value = tuple(value)
         self.set_field_value('creators', value)
     creators = property(_get_creators, _set_creators)
-        
+    creator = property(_get_creators, _set_creators) #Arche compat
+
     def _get_created(self):
         return self.get_field_value('created', None)
     def _set_created(self, value):
@@ -153,3 +170,11 @@ class BaseContent(BaseFolder, SecurityAware):
             results = results[-limit:]
 
         return tuple(results)
+
+    @property
+    def content_type(self): #b/c
+        return self.type_name
+
+    @property
+    def display_name(self): #b/c
+        return self.type_title

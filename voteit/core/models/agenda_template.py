@@ -3,11 +3,11 @@ from pyramid.security import Allow
 from pyramid.security import DENY_ALL
 
 from betahaus.pyracont.decorators import content_factory
-from betahaus.pyracont.factories import createContent
 
-from voteit.core import security
 from voteit.core import VoteITMF as _
+from voteit.core import security
 from voteit.core.helpers import generate_slug
+from voteit.core.models.arche_compat import createContent
 from voteit.core.models.base_content import BaseContent
 from voteit.core.models.interfaces import IAgendaTemplate
 

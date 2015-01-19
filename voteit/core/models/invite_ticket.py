@@ -3,9 +3,8 @@ from random import choice
 from uuid import uuid4
 
 from repoze.folder import Folder
-from zope.interface import implements
 from persistent.list import PersistentList
-
+from zope.interface import implementer
 from pyramid.traversal import find_interface
 from pyramid.exceptions import Forbidden
 from pyramid.security import authenticated_userid
@@ -29,16 +28,16 @@ SELECTABLE_ROLES = (security.ROLE_MODERATOR,
                     )
 
 
-@content_factory('InviteTicket', title=_(u"Invite ticket"))
+#@content_factory('InviteTicket', title=_(u"Invite ticket"))
+@implementer(IInviteTicket)
 class InviteTicket(Folder, WorkflowAware):
     """ Invite ticket. Send these to give access to new users.
         See :mod:`voteit.core.models.interfaces.IInviteTicket`.
         All methods are documented in the interface of this class.
     """
-    implements(IInviteTicket)
-    content_type = 'InviteTicket'
-    allowed_contexts = () #Not addable through regular forms
-    add_permission = None
+    type_name = 'InviteTicket'
+#    allowed_contexts = () #Not addable through regular forms
+#    add_permission = None
     #No schemas
     
     def __init__(self, email, roles, message = u"", sent_by = None):
@@ -81,3 +80,7 @@ class InviteTicket(Folder, WorkflowAware):
         self.claimed_by = userid
         self.set_workflow_state(request, 'closed')
         self.closed = utcnow()
+
+
+def includeme(config):
+    config.add_content_factory(InviteTicket)

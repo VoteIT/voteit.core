@@ -8,20 +8,20 @@ from pyramid.httpexceptions import HTTPFound
 from pyramid.httpexceptions import HTTPForbidden
 from pyramid.security import remember
 from pyramid.security import forget
-from betahaus.pyracont.factories import createContent
 from betahaus.pyracont.factories import createSchema
 
+from voteit.core import VoteITMF as _
 from voteit.core import security
+from voteit.core.models.arche_compat import createContent
 from voteit.core.models.interfaces import ISiteRoot
 from voteit.core.models.interfaces import IUser
 from voteit.core.models.schemas import add_csrf_token
-from voteit.core.models.schemas import button_save
 from voteit.core.models.schemas import button_cancel
 from voteit.core.models.schemas import button_login
 from voteit.core.models.schemas import button_register
-from voteit.core.views.base_edit import BaseEdit
-from voteit.core import VoteITMF as _
+from voteit.core.models.schemas import button_save
 from voteit.core.validators import deferred_login_password_validator
+from voteit.core.views.base_edit import BaseEdit
 
 
 class SiteFormView(BaseEdit):
@@ -42,7 +42,7 @@ class SiteFormView(BaseEdit):
             url = self.request.resource_url(self.context, 'unsupported_browser')
             return HTTPFound(location=url)
 
-    @view_config(context=ISiteRoot, name='login', renderer = 'templates/base_edit.pt')
+   # @view_config(context=ISiteRoot, name='login', renderer = 'templates/base_edit.pt')
     def login(self):
         """ Login action used by sidebar widget for password login. """
         browser_result = self.browser_check()
@@ -84,7 +84,7 @@ class SiteFormView(BaseEdit):
         self.response['form'] = form.render()
         return self.response
 
-    @view_config(context=ISiteRoot, name="register", renderer="templates/register.pt")
+  #  @view_config(context=ISiteRoot, name="register", renderer="templates/register.pt")
     def register(self):
         """ Register and log in a user. Be sure to catch came_from since ticket system will use that url
             to send people who've been invited but haven't registered yet to this view.
@@ -138,7 +138,7 @@ class SiteFormView(BaseEdit):
         self.response['form'] = form.render(appstruct)
         return self.response
 
-    @view_config(context=ISiteRoot, name='logout')
+    #@view_config(context=ISiteRoot, name='logout')
     def logout(self):
         headers = forget(self.request)
         return HTTPFound(location = self.request.resource_url(self.context),
@@ -192,6 +192,6 @@ class SiteFormView(BaseEdit):
         self.response['form'] = form.render(appstruct)
         return self.response
 
-    @view_config(name = "layout", context = ISiteRoot, permission = security.EDIT, renderer = "templates/base_edit.pt")
+  #  @view_config(name = "layout", context = ISiteRoot, permission = security.EDIT, renderer = "templates/base_edit.pt")
     def layout(self):
         return self.form("LayoutSiteRootSchema")

@@ -2,10 +2,11 @@ from zope.interface import Attribute
 from zope.interface import Interface
 
 from betahaus.pyracont.interfaces import IBaseFolder
+from arche.interfaces import IBase, IContent, IIndexedContent
 
 
 #Content type interfaces
-class IBaseContent(IBaseFolder):
+class IBaseContent(IBaseFolder, IBase, IContent, IIndexedContent):
     """ Base content type that stores values in non-attributes to avoid
         collisions between regular attributes and fields.
         It expects validation to be done on the form level.

@@ -29,7 +29,7 @@ from voteit.core.models.interfaces import IFlashMessages
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.catalog import metadata_for_query
 from voteit.core.models.catalog import resolve_catalog_docid
-from voteit.core.fanstaticlib import DEFORM_RESOURCES
+#from voteit.core.fanstaticlib import DEFORM_RESOURCES
 from voteit.core.helpers import at_userid_link
 from voteit.core.helpers import tags2links
 from zope.interface.interfaces import ComponentLookupError

@@ -3,13 +3,13 @@ from zope.interface import implements
 from persistent import Persistent
 from BTrees.LOBTree import LOBTree
 from betahaus.pyracont.decorators import content_factory
-from betahaus.pyracont.factories import createContent
 
-from voteit.core.models.interfaces import IBaseContent
-from voteit.core.models.interfaces import ILogHandler
-from voteit.core.models.interfaces import ILogEntry
-from voteit.core.models.date_time_util import utcnow
 from voteit.core import VoteITMF as _
+from voteit.core.models.arche_compat import createContent
+from voteit.core.models.date_time_util import utcnow
+from voteit.core.models.interfaces import IBaseContent
+from voteit.core.models.interfaces import ILogEntry
+from voteit.core.models.interfaces import ILogHandler
 
 
 class LogHandler(object):

@@ -3,17 +3,16 @@
 import colander
 import deform
 from betahaus.pyracont.decorators import schema_factory
-from betahaus.pyracont.factories import createContent
-
-from voteit.core.validators import html_string_validator
-from voteit.core.validators import richtext_validator
 
 from voteit.core import VoteITMF as _
 from voteit.core import security 
+from voteit.core.models.arche_compat import createContent
 from voteit.core.models.interfaces import IAccessPolicy
 from voteit.core.models.interfaces import IPollPlugin
 from voteit.core.models.meeting import Meeting
 from voteit.core.schemas.common import NAME_PATTERN
+from voteit.core.validators import html_string_validator
+from voteit.core.validators import richtext_validator
 
 
 @colander.deferred
@@ -34,25 +33,25 @@ def deferred_access_policy_widget(node, kw):
     choices = []
     for (name, plugin) in request.registry.getAdapters([_dummy_meeting], IAccessPolicy):
         choices.append((name, plugin))
-    return deform.widget.RadioChoiceWidget(values = choices, template = "object_radio_choice", readonly_template = "readonly/object_radio_choice")
+    return deform.widget.RadioChoiceWidget(values = choices, template = "widgets/object_radio_choice", readonly_template = "widgets/readonly/object_radio_choice")
 
 
 @colander.deferred
 def deferred_copy_perms_widget(node, kw):
     context = kw['context']
     request = kw['request']
-    api = kw['api']
+    view = kw['view']
     choices = [('', _(u"<Don't copy>"))]
-    for meeting in api.root.get_content(content_type = 'Meeting'):
-        if api.context_has_permission(security.MODERATE_MEETING, meeting):
+    for meeting in view.root.get_content(content_type = 'Meeting'):
+        if request.has_permission(security.MODERATE_MEETING, meeting):
             choices.append((meeting.__name__, "%s (%s)" % (meeting.title, meeting.__name__)))
     return deform.widget.SelectWidget(values=choices)
 
 @colander.deferred
 def deferred_current_user_mail(node, kw):
-    api = kw['api']
-    if api.user_profile:
-        return api.user_profile.get_field_value('email')
+    view = kw['view']
+    if view.profile:
+        return view.profile.get_field_value('email')
 
 def title_node():
     return colander.SchemaNode(colander.String(),
@@ -85,9 +84,9 @@ def public_description_node():
 
 @colander.deferred
 def _deferred_current_fullname(node, kw):
-    api = kw['api']
-    if api.user_profile:
-        return api.user_profile.title
+    view = kw['view']
+    if view.profile:
+        return view.profile.title
 
 def meeting_mail_name_node():
     return colander.SchemaNode(colander.String(),
@@ -152,7 +151,9 @@ class EditMeetingSchema(colander.MappingSchema):
 @schema_factory('PresentationMeetingSchema',
                 title = _(u"Presentation"),
                 description = _(u"presentation_meeting_schema_main_description",
-                                default = u"Edit the first page of the meeting into an informative and pleasant page for your users. You can for instance place your logo here. The time table can be presented in a table and updated as you go along. It's also advised to add links to the manual and to meeting documents."))
+                                default = u"Edit the first page of the meeting into an informative and pleasant page for your users. "
+                                    "You can for instance place your logo here. The time table can be presented in a table and updated as you go along. "
+                                    "It's also advised to add links to the manual and to meeting documents."))
 class PresentationMeetingSchema(colander.MappingSchema):
     title = title_node()
     description = description_node()
@@ -176,7 +177,7 @@ class AccessPolicyeMeetingSchema(colander.MappingSchema):
                 description = _(u"meeting_poll_settings_main_description",
                                 default = u"Settings for the whole meeting."))
 class MeetingPollSettingsSchema(colander.MappingSchema):
-    poll_plugins = colander.SchemaNode(deform.Set(allow_empty=True),
+    poll_plugins = colander.SchemaNode(colander.Set(),
                                        title = _(u"mps_poll_plugins_title",
                                                  default = u"Available poll methods within this meeting"),
                                        description = _(u"mps_poll_plugins_description",
@@ -186,3 +187,8 @@ class MeetingPollSettingsSchema(colander.MappingSchema):
                                        widget = poll_plugins_choices_widget,)
 
 _dummy_meeting = Meeting()
+
+
+def includeme(config):
+    config.add_content_schema('Meeting', AddMeetingSchema, 'add')
+    config.add_content_schema('Meeting', EditMeetingSchema, 'edit')

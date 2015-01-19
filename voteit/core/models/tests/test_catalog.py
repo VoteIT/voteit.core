@@ -3,18 +3,17 @@ from datetime import datetime
 from calendar import timegm
 
 from pyramid import testing
-from zope.component.event import objectEventNotify
-from betahaus.pyracont.factories import createContent
-from pyramid.authorization import ACLAuthorizationPolicy
 from pyramid.authentication import AuthTktAuthenticationPolicy
+from pyramid.authorization import ACLAuthorizationPolicy
+from zope.component.event import objectEventNotify
 
+from voteit.core import security
 from voteit.core.bootstrap import bootstrap_voteit
 from voteit.core.events import ObjectUpdatedEvent
-from voteit.core import security
-from voteit.core.security import groupfinder
+from voteit.core.models.arche_compat import createContent
 from voteit.core.models.date_time_util import utcnow
 from voteit.core.models.interfaces import IUnread
-
+from voteit.core.security import groupfinder
 
 class CatalogTestCase(unittest.TestCase):
     """ Class for registering test setup and some helper methods.

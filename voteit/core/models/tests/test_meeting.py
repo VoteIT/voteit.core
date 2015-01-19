@@ -47,6 +47,8 @@ class MeetingTests(unittest.TestCase):
         self.assertTrue(verifyObject(IMeeting, self._cut()))
 
     def test_meeting_with_one_creator_sets_creator_as_moderator(self):
+        self.config.include('arche.utils')
+        self.config.include('arche.security')
         obj = self._cut(creators = ['jane'])
         self.assertIn('role:Moderator', obj.get_groups('jane'))
 
@@ -90,11 +92,11 @@ class MeetingTests(unittest.TestCase):
         m1.add_groups('second', ['role:A', 'role:C'])
         root['m2'] = m2 = self._cut()
         m2.copy_users_and_perms('m1')
-        self.assertEqual(m1.get_security(), m2.get_security())
-        self.assertEqual(m2.get_groups('second'), ('role:A', 'role:C'))
+        self.assertEqual(m2.get_groups('second'), frozenset(['role:A', 'role:C']))
 
     def test_get_ticket_names(self):
-        self.config.scan('voteit.core.models.invite_ticket')
+        self.config.include('arche')
+        self.config.include('voteit.core.models.invite_ticket')
         obj = self._cut()
         obj.add_invite_ticket('john@doe.com', [security.ROLE_DISCUSS])
         obj.add_invite_ticket('jane@doe.com', [security.ROLE_MODERATOR])
@@ -102,7 +104,8 @@ class MeetingTests(unittest.TestCase):
         self.assertEqual(set(results), set(['john@doe.com', 'jane@doe.com']))
 
     def test_add_invite_ticket_doesnt_touch_existing(self):
-        self.config.scan('voteit.core.models.invite_ticket')
+        self.config.include('arche')
+        self.config.include('voteit.core.models.invite_ticket')
         obj = self._cut()
         self.failUnless(obj.add_invite_ticket('john@doe.com', [security.ROLE_DISCUSS]))
         self.failIf(obj.add_invite_ticket('john@doe.com', [security.ROLE_DISCUSS]))
@@ -118,6 +121,9 @@ class MeetingPermissionTests(unittest.TestCase):
         # load workflow
         self.config.include('pyramid_zcml')
         self.config.load_zcml('voteit.core:configure.zcml')
+        self.config.include('arche.security')
+        self.config.include('arche.utils')
+        self.config.include('voteit.core.models.meeting')
 
     def tearDown(self):
         testing.tearDown()
