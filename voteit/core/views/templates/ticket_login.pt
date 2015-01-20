@@ -24,7 +24,7 @@
        class="buttonize large" i18n:translate="">Register</a>
     </p>
 
-    <div tal:content="structure api.render_view_group(api.root, request, 'login_forms')">Alternate login methods</div>
+    <div tal:content="structure api.render_view_group(api.root, request, 'login_forms')|''">Alternate login methods</div>
 
 </div>
 </body>
