@@ -1,4 +1,3 @@
-from betahaus.pyracont.decorators import content_factory
 from pyramid.httpexceptions import HTTPForbidden
 from pyramid.security import Allow
 from pyramid.security import DENY_ALL
@@ -6,17 +5,18 @@ from pyramid.security import Deny
 from pyramid.security import Everyone
 from pyramid.threadlocal import get_current_request
 from pyramid.traversal import find_interface
+from repoze.folder.interfaces import IObjectAddedEvent
 from zope.interface import implementer
 
-from voteit.core import security
 from voteit.core import VoteITMF as _
+from voteit.core import security
 from voteit.core.models.base_content import BaseContent
-from voteit.core.models.workflow_aware import WorkflowAware
 from voteit.core.models.interfaces import IAgendaItem
-from voteit.core.models.interfaces import IMeeting
-from voteit.core.models.interfaces import IProposal
-from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import ICatalogMetadataEnabled
+from voteit.core.models.interfaces import IMeeting
+from voteit.core.models.interfaces import IPoll
+from voteit.core.models.interfaces import IProposal
+from voteit.core.models.workflow_aware import WorkflowAware
 
 
 _PRIV_MOD_PERMS = (security.VIEW,
@@ -60,9 +60,9 @@ class AgendaItem(BaseContent, WorkflowAware):
     type_name = 'AgendaItem'
     type_title = _("Agenda item")
     #allowed_contexts = ('Meeting',)
-    #add_permission = security.ADD_AGENDA_ITEM
+    add_permission = security.ADD_AGENDA_ITEM
     custom_mutators = {'proposal_block': '_set_proposal_block', 'discussion_block': '_set_discussion_block'}
-    schemas = {'edit': 'EditAgendaItemSchema', 'add': 'AddAgendaItemSchema'}
+#    schemas = {'edit': 'EditAgendaItemSchema', 'add': 'AddAgendaItemSchema'}
 
     @property
     def __acl__(self):
@@ -95,10 +95,12 @@ class AgendaItem(BaseContent, WorkflowAware):
 
     @property
     def start_time(self):
+        """ Set by a subscriber when this item is opened. """
         return self.get_field_value('start_time')
 
     @property
     def end_time(self):
+        """ Set by a subscriber when this item closes. """
         return self.get_field_value('end_time')
 
 
@@ -116,7 +118,6 @@ def closing_agenda_item_callback(context, info):
         raise HTTPForbidden(err_msg)
     for proposal in context.get_content(iface=IProposal, states='published'):
         proposal.set_workflow_state(request, 'unhandled')
-       
 
 def ongoing_agenda_item_callback(context, info):
     """ Callback for workflow action. An agenda item can't be set as ongoing when meeting is not ongoing
@@ -126,3 +127,21 @@ def ongoing_agenda_item_callback(context, info):
         err_msg = _(u"error_ai_cannot_be_ongoing_in_not_ongoing_meeting",
                     default = u"You can't set an agenda item to ongoing if the meeting is not ongoing.")
         raise HTTPForbidden(err_msg)
+
+def set_initial_order(obj, event):
+    """ Subscriber to set the initial order of the agenda item """
+    meeting = find_interface(obj, IMeeting)
+    assert meeting
+    
+    order = 0
+    for ai in meeting.values():
+        if IAgendaItem.providedBy(ai):
+            if ai.get_field_value('order') >= order:
+                order = ai.get_field_value('order')+1
+
+    obj.set_field_appstruct({'order': order})
+
+
+def includeme(config):
+    config.add_content_factory(AgendaItem, addable_to = 'Meeting')
+    config.add_subscriber(set_initial_order, [IAgendaItem, IObjectAddedEvent])

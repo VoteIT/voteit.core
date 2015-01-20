@@ -7,6 +7,7 @@ from pyramid.security import Authenticated
 from zope.interface.verify import verifyObject
 
 from voteit.core import security
+from voteit.core.events import ObjectUpdatedEvent
 
 
 admin = set([security.ROLE_ADMIN])
@@ -109,11 +110,35 @@ class AgendaItemTests(unittest.TestCase):
         obj.set_workflow_state(request, 'ongoing')
 
 
+class AgendaItemSubscriberTests(unittest.TestCase):
+    def setUp(self):
+        request = testing.DummyRequest()
+        self.config = testing.setUp(request = request)
+        self.config.include('arche.testing')
+        self.config.include('voteit.core.models.agenda_item')
+
+    def tearDown(self):
+        testing.tearDown()
+
+    def test_order(self):
+        from voteit.core.models.meeting import Meeting
+        from voteit.core.models.agenda_item import AgendaItem
+        meeting = Meeting()
+        ai = AgendaItem()
+        meeting['a1'] = ai
+        ai = AgendaItem()
+        meeting['a2'] = ai
+        self.assertEqual(meeting['a1'].get_field_value('order'), 0)
+        self.assertEqual(meeting['a2'].get_field_value('order'), 1)
+
+
 class AgendaItemPermissionTests(unittest.TestCase):
     """ Check permissions in different agenda item states. """
 
     def setUp(self):
         self.config = testing.setUp()
+        self.config.include('arche.testing')
+        self.config.include('voteit.core.models.meeting')
         policy = ACLAuthorizationPolicy()
         self.pap = policy.principals_allowed_by_permission
         # load workflow

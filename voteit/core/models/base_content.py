@@ -8,7 +8,7 @@ from repoze.folder import unicodify
 from zope.component.event import objectEventNotify
 from zope.interface import implementer
 from zope.interface import implements
-from arche.api import Base
+from arche.api import BaseMixin
 from arche.resources import LocalRolesMixin
 
 from voteit.core.events import ObjectUpdatedEvent
@@ -22,7 +22,7 @@ from voteit.core.models.catalog import SEARCHABLE_TEXT_INDEXES
 RESTRICTED_KEYS = ('csrf_token', )
 
 @implementer(IBaseContent)
-class BaseContent(BaseFolder, LocalRolesMixin):
+class BaseContent(BaseFolder, BaseMixin, LocalRolesMixin):
     """ See :mod:`voteit.core.models.interfaces.IBaseContent`.
         All methods are documented in the interface of this class.
         

@@ -13,6 +13,7 @@ from voteit.core.models.interfaces import IMeeting
 from voteit.core.testing_helpers import register_workflows
 from voteit.core.testing_helpers import bootstrap_and_fixture
 
+
 admin = set([security.ROLE_ADMIN])
 moderator = set([security.ROLE_MODERATOR])
 authenticated = set([Authenticated])

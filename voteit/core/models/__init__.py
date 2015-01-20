@@ -1,5 +1,6 @@
 def includeme(config):
     """ Include all models. """
+    config.include('.agenda_item')
     config.include('.agenda_templates')
     config.include('.catalog')
     config.include('.date_time_util')
