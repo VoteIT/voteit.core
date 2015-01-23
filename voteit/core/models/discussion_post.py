@@ -6,7 +6,6 @@ from zope.interface import implementer
 from pyramid.security import Allow
 from pyramid.security import DENY_ALL
 from pyramid.traversal import find_interface
-from betahaus.pyracont.decorators import content_factory
 
 from voteit.core import VoteITMF as _
 from voteit.core import security
@@ -49,8 +48,7 @@ class DiscussionPost(BaseContent):
     add_permission = security.ADD_DISCUSSION_POST
     #schemas = {'add': 'DiscussionPostSchema', 'edit': 'DiscussionPostSchema'}
     custom_mutators = {'text': '_set_text',
-                       'title': '_set_title',
-                       'mentioned': '_set_mentioned'}
+                       'title': '_set_title',}
     custom_accessors = {'title': '_get_title',
                         'mentioned': '_get_mentioned'}
 

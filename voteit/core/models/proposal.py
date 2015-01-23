@@ -1,11 +1,10 @@
 import re
 
 from BTrees.OOBTree import OOBTree
-from zope.interface import implements
+from zope.interface import implementer
 from pyramid.security import Allow
 from pyramid.security import DENY_ALL
 from pyramid.traversal import find_interface
-from betahaus.pyracont.decorators import content_factory
 
 from voteit.core import VoteITMF as _
 from voteit.core import security
@@ -60,24 +59,20 @@ ACL['private'] = [(Allow, security.ROLE_ADMIN, _PUBLISHED_MODERATOR_PERMS),
                   ]
 
 
-@content_factory('Proposal', title=_(u"Proposal"))
+#@content_factory('Proposal', title=_(u"Proposal"))
+@implementer(IProposal, ICatalogMetadataEnabled)
 class Proposal(BaseContent, WorkflowAware):
     """ Proposal content type.
         See :mod:`voteit.core.models.interfaces.IProposal`.
         All methods are documented in the interface of this class.
     """
-
-    implements(IProposal, ICatalogMetadataEnabled)
-    content_type = 'Proposal'
-    display_name = _(u"Proposal")
-    allowed_contexts = ('AgendaItem',)
+    type_name = 'Proposal'
+    type_title = _(u"Proposal")
+    #allowed_contexts = ('AgendaItem',)
     add_permission = security.ADD_PROPOSAL
     schemas = {'add': 'ProposalSchema',
-               'edit': 'ProposalSchema',
-               'mentioned': '_set_mentioned'}
-    custom_mutators = {'title': '_set_title',
-                       'aid': '_set_aid',
-                       'mentioned': '_get_mentioned'}
+               'edit': 'ProposalSchema'}
+    custom_mutators = {'title': '_set_title'}
 
     @property
     def __acl__(self):
@@ -101,21 +96,15 @@ class Proposal(BaseContent, WorkflowAware):
         self.field_storage['title'] = value
     
     title = property(_get_title, _set_title)
-    
-    def _set_aid(self, value, key=None):
-        self.field_storage['aid'] = value
-        
-    def _get_mentioned(self, key = None, default = OOBTree()):
-        mentioned = getattr(self, '__mentioned__', None)
-        if mentioned is None:
-            mentioned = self.__mentioned__ =  OOBTree()
-        return mentioned
 
-    def _set_mentioned(self, value, key = None):
-        self._get_mentioned()['mentioned'] = value
+    @property
+    def mentioned(self):
+        try:
+            return self.__mentioned__
+        except AttributeError:
+            self.__mentioned__ = OOBTree()
+            return self.__mentioned__
 
-    mentioned = property(_get_mentioned, _set_mentioned)
-    
     def add_mention(self, userid):
         self.mentioned[userid] = utcnow()
 
@@ -129,3 +118,15 @@ class Proposal(BaseContent, WorkflowAware):
         if aid is not None and aid not in tags:
             tags.append(aid)
         return tags and tags or default
+
+    @property
+    def tags(self): #arche compat
+        return self.get_tags()
+    @tags.setter
+    def tags(self, value):
+        print "Tags shouldn't be set like this"
+
+
+def includeme(config):
+    config.add_content_factory(Proposal, addable_to = 'AgendaItem')
+    

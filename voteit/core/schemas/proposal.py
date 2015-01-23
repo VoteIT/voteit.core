@@ -1,13 +1,11 @@
 import colander
 import deform
-from betahaus.pyracont.decorators import schema_factory
 
 from voteit.core import VoteITMF as _
 from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.validators import NotOnlyDefaultTextValidator
 from voteit.core.schemas.common import deferred_default_tags
 from voteit.core.schemas.common import deferred_default_hashtag_text
-from voteit.core.schemas.interfaces import IProposalSchema
 
 
 @colander.deferred
@@ -18,20 +16,19 @@ def deferred_default_proposal_text(node, kw):
         
         This might be used in the context of an agenda item or a proposal.
     """
-    api = kw['api']
+    request = kw['request']
     hashtag_text = deferred_default_hashtag_text(node, kw)
-    proposal_default_text = api.translate(_(u"proposal_default_text", default = u"proposes"))
+    proposal_default_text = request.localizer.translate(_(u"proposal_default_text", default = u"proposes"))
     return "%s %s" % (proposal_default_text, hashtag_text)
 
 
 @colander.deferred    
 def deferred_proposal_text_validator(node, kw):
     context = kw['context']
-    api = kw['api']
-    return NotOnlyDefaultTextValidator(context, api, deferred_default_proposal_text)
+    request = kw['request']
+    return NotOnlyDefaultTextValidator(context, request, deferred_default_proposal_text)
 
 
-@schema_factory(provides = IProposalSchema)
 class ProposalSchema(colander.MappingSchema):
     title = colander.SchemaNode(colander.String(),
                                 title = _(u"Proposal"),
@@ -43,3 +40,6 @@ class ProposalSchema(colander.MappingSchema):
                                default = deferred_default_tags,
                                widget = deform.widget.HiddenWidget(),
                                missing = u'')
+
+def includeme(config):
+    config.add_content_schema('Proposal', ProposalSchema, ('add', 'edit'))

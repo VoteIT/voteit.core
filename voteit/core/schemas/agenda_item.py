@@ -4,7 +4,6 @@ import deform
 from voteit.core import VoteITMF as _
 from voteit.core.validators import html_string_validator
 from voteit.core.validators import richtext_validator
-from voteit.core.schemas.interfaces import IAgendaItemSchema
 
 
 # @schema_factory('AddAgendaItemSchema', title = _(u"Add agenda item"),

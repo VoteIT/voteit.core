@@ -1,15 +1,19 @@
 from hashlib import sha1
 
-from zope.component import getUtility
+from arche import security as arche_sec
+from arche.security import authz_context
+from arche.security import groupfinder
 from pyramid.interfaces import IAuthorizationPolicy
-from pyramid.traversal import find_root
 from pyramid.security import Authenticated
 from pyramid.security import Everyone
+from pyramid.threadlocal import get_current_request
+from pyramid.traversal import find_root
+from zope.component import getUtility
 from zope.component.event import objectEventNotify
-from arche import security as arche_sec
 
 from voteit.core.events import WorkflowStateChange
 from voteit.core import VoteITMF as _
+
 
 
 #Roles, which are the same as groups really, but we may detach group functionality so it's possible
@@ -99,18 +103,17 @@ STANDARD_ROLES = ((ROLE_VIEWER, _(u'View')),
 # as a userid, group or role name.
 NEVER_EVER_PRINCIPAL = 'NO ONE no way NO HOW'
 
-def groupfinder(name, request):
-    """ Get groups for the current user. See models/security_aware.py
-        This is also a callback for the Authorization policy.
-        In some cases, like automated scripts when nobody is logged in,
-        request won't have a context. In that case, no groups should exist.
-    """
-    try:
-        context = request.context
-        return context.get_groups(name)
-    except AttributeError: # pragma : no cover
-        return ()
-
+# def groupfinder(name, request):
+#     """ Get groups for the current user. See models/security_aware.py
+#         This is also a callback for the Authorization policy.
+#         In some cases, like automated scripts when nobody is logged in,
+#         request won't have a context. In that case, no groups should exist.
+#     """
+#     try:
+#         context = request.context
+#         return context.get_groups(name)
+#     except AttributeError: # pragma : no cover
+#         return ()
 
 def find_authorized_userids(context, permissions):
     """ Return a set of all userids that fullfill all of the permissions in permissions.
@@ -146,11 +149,14 @@ def context_effective_principals(context, userid):
     if userid is None:
         return effective_principals
     
-    groups = context.get_groups(userid)
-    
     effective_principals.append(Authenticated)
     effective_principals.append(userid)
-    effective_principals.extend(groups)
+
+    request = get_current_request()
+    with authz_context(context, request):
+        effective_principals.extend(groupfinder(userid, request))
+#    groups = context.get_groups(userid)
+    #effective_principals.extend(groups)
     return effective_principals    
 
 def unrestricted_wf_transition_to(obj, state):

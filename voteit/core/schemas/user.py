@@ -7,7 +7,6 @@ from betahaus.pyracont.decorators import schema_factory
 from voteit.core import VoteITMF as _
 from voteit.core import security
 from voteit.core.models.interfaces import IProfileImage
-from voteit.core.schemas.interfaces import IEditUserSchema
 from voteit.core.validators import deferred_current_password_validator
 from voteit.core.validators import deferred_existing_userid_or_email_validator
 from voteit.core.validators import deferred_new_userid_validator
@@ -127,8 +126,7 @@ class RegisterUserSchema(colander.Schema):
     came_from = came_from_node()
 
 
-@schema_factory('EditUserSchema', title = _(u"Edit user"), description = _(u"Use this form to edit a user"),
-                provides = IEditUserSchema)
+@schema_factory('EditUserSchema', title = _(u"Edit user"), description = _(u"Use this form to edit a user"))
 class EditUserSchema(colander.Schema):
     """ Regular edit. """
     email = email_node()

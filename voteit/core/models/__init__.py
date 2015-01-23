@@ -12,6 +12,7 @@ def includeme(config):
     config.include('.logs')
     config.include('.meeting')
     config.include('.populator')
+    config.include('.proposal')
     config.include('.proposal_ids')
     config.include('.site')
     config.include('.unread')
