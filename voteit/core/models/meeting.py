@@ -68,6 +68,27 @@ class Meeting(BaseContent, SecurityAware, WorkflowAware):
         return self.get_field_value('end_time')
 
     @property
+    def meeting_mail_name(self): #arche compat
+        return self.get_field_value('meeting_mail_name')
+    @meeting_mail_name.setter
+    def meeting_mail_name(self, value):
+        self.set_field_value('meeting_mail_name', value)
+
+    @property
+    def meeting_mail_address(self): #arche compat
+        return self.get_field_value('meeting_mail_address')
+    @meeting_mail_address.setter
+    def meeting_mail_address(self, value):
+        self.set_field_value('meeting_mail_address', value)
+
+    @property
+    def public_description(self): #arche compat
+        return self.get_field_value('public_description')
+    @public_description.setter
+    def public_description(self, value):
+        self.set_field_value('public_description', value)
+
+    @property
     def invite_tickets(self):
         storage = getattr(self, '__invite_tickets__', None)
         if storage is None:
