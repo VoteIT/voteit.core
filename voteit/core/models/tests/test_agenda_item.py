@@ -7,7 +7,6 @@ from pyramid.security import Authenticated
 from zope.interface.verify import verifyObject
 
 from voteit.core import security
-from voteit.core.events import ObjectUpdatedEvent
 
 
 admin = set([security.ROLE_ADMIN])

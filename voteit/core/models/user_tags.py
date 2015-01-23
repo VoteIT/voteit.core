@@ -60,7 +60,7 @@ def _notify(context):
     """ Send notification for Like tag. This might change later since
         the index is for a specific tag rather than a general solution.
     """
-    objectEventNotify(ObjectUpdatedEvent(context, indexes=('like_userids',), metadata=True))
+    objectEventNotify(ObjectUpdatedEvent(context, changed=('like_userids',)))
 
 
 def includeme(config):

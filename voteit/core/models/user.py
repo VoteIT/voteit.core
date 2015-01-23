@@ -12,7 +12,6 @@ from pyramid.security import Allow
 from pyramid.security import DENY_ALL
 from pyramid.threadlocal import get_current_request
 from pyramid.traversal import find_interface
-from pyramid.url import resource_url
 from pyramid_mailer import get_mailer
 from pyramid_mailer.message import Message
 from zope.interface import implementer
@@ -34,7 +33,6 @@ USERID_REGEXP = r"[a-z]{1}[a-z0-9-_]{2,30}"
 log = logging.getLogger(__name__)
 
 
-#@content_factory('User', title=_(u"User"))
 @implementer(IUser, ICatalogMetadataEnabled)
 class User(ArcheUser, BaseContent):
     """ User content type.
@@ -114,7 +112,7 @@ class User(ArcheUser, BaseContent):
     @property
     def first_name(self):
         #Arche compat
-        self.get_field_value('first_name', '')
+        return self.get_field_value('first_name', '')
     @first_name.setter
     def first_name(self, value):
         self.set_field_value('first_name', value)
@@ -122,10 +120,18 @@ class User(ArcheUser, BaseContent):
     @property
     def last_name(self):
         #Arche compat
-        self.get_field_value('last_name', '')
+        return self.get_field_value('last_name', '')
     @last_name.setter
     def last_name(self, value):
         self.set_field_value('last_name', value)
+
+    @property
+    def email(self):
+        #Arche compat
+        return self.get_field_value('email', '')
+    @email.setter
+    def email(self, value):
+        self.set_field_value('email', value)
 
 #     def new_request_password_token(self, request):
 #         """ Set a new request password token and email user. """
@@ -156,7 +162,7 @@ class User(ArcheUser, BaseContent):
             meeting = find_interface(context, IMeeting)
             agenda_item = find_interface(context, IAgendaItem)
             #FIXME: Email should use a proper template
-            url = resource_url(context, request)
+            url = request.resource_url(context)
             link = "<a href=\"%s\">%s</a>" % (url, url)
             body = locale.translate(_('mentioned_notification',
                                       default = "You have been mentioned in ${meeting} on ${agenda_item}. "

@@ -14,7 +14,7 @@ from voteit.core import VoteITMF as _
 from voteit.core import security
 from voteit.core.models.interfaces import ISiteRoot
 from voteit.core.models.base_content import BaseContent
-from voteit.core.models.catalog import update_indexes
+#from voteit.core.models.catalog import update_indexes
 from voteit.core.models.security_aware import SecurityAware
 
 
@@ -45,7 +45,7 @@ class SiteRoot(BaseContent, SecurityAware, Root):
 
     def __init__(self, data = None, **kwargs):
         super(SiteRoot, self).__init__(data = data, **kwargs)
-        #Root.__init__(self, data = data, **kwargs)
+        Root.__init__(self, data = data, **kwargs)
 
     @property
     def users(self):

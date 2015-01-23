@@ -16,4 +16,4 @@ def clear_unread_from_retracted_proposals(obj, event):
     unread = reg.queryAdapter(obj, IUnread)
     if unread and unread.unread_storage:
         unread.unread_storage.clear()
-        objectEventNotify(ObjectUpdatedEvent(obj, indexes = ('unread',), metadata = False))
+        objectEventNotify(ObjectUpdatedEvent(obj, changed = ('unread',)))

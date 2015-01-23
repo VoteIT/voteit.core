@@ -3,7 +3,6 @@ from pyramid.location import lineage
 from zope.interface import implements
 from zope.component.event import objectEventNotify
 
-from voteit.core.events import ObjectUpdatedEvent
 from voteit.core.models.interfaces import ISecurityAware
 from voteit.core import security
 from voteit.core import VoteITMF as _

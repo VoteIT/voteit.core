@@ -85,7 +85,7 @@ class BaseContent(BaseFolder, BaseMixin, LocalRolesMixin):
                 updated.add('searchable_text')
             if 'tags' not in updated:
                 updated.add('tags')
-            objectEventNotify(ObjectUpdatedEvent(self, indexes=updated, metadata=True))
+            objectEventNotify(ObjectUpdatedEvent(self, changed=updated))
         return updated
 
     def _get_title(self):

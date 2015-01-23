@@ -94,7 +94,7 @@ def dummy_zodb_root(config):
 
 def bootstrap_and_fixture(config):
     config.include('pyramid_zcml')
-    config.include('arche')
+    config.include('arche.testing')
     config.load_zcml('voteit.core:configure.zcml')
     config.include('voteit.core.models.site')
     config.include('voteit.core.models.agenda_templates')
@@ -105,11 +105,13 @@ def bootstrap_and_fixture(config):
     return bootstrap_voteit(echo=False)
 
 def register_security_policies(config):
-    from voteit.core.security import groupfinder
-    authn_policy = AuthTktAuthenticationPolicy(secret='secret',
-                                               callback=groupfinder)
-    authz_policy = ACLAuthorizationPolicy()
-    config.setup_registry(authorization_policy=authz_policy, authentication_policy=authn_policy)
+    config.include('arche.testing')
+    
+#     from voteit.core.security import groupfinder
+#     authn_policy = AuthTktAuthenticationPolicy(secret='secret',
+#                                                callback=groupfinder)
+#     authz_policy = ACLAuthorizationPolicy()
+#     config.setup_registry(authorization_policy=authz_policy, authentication_policy=authn_policy)
 
 
 def register_workflows(config):

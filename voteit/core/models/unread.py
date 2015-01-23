@@ -33,7 +33,7 @@ class Unread(object):
         storage = self.unread_storage
         if userid in storage:
             storage.remove(userid)
-            objectEventNotify(ObjectUpdatedEvent(self.context, indexes=('unread',), metadata=False))
+            objectEventNotify(ObjectUpdatedEvent(self.context, changed=('unread',)))
 
     def get_unread_userids(self):
         return frozenset(self.unread_storage.keys())
@@ -41,7 +41,7 @@ class Unread(object):
     def reset_unread(self):
         try:
             del self.context.__unread_storage__
-            objectEventNotify(ObjectUpdatedEvent(self.context, indexes=('unread',), metadata=False))
+            objectEventNotify(ObjectUpdatedEvent(self.context, changed=('unread',)))
         except AttributeError: #If there is no __unread_storage__ we shouldn't do something
             pass
 
