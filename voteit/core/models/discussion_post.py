@@ -1,7 +1,8 @@
+from __future__ import unicode_literals
 import re
 
 from BTrees.OOBTree import OOBTree
-from zope.interface import implements
+from zope.interface import implementer
 from pyramid.security import Allow
 from pyramid.security import DENY_ALL
 from pyramid.traversal import find_interface
@@ -35,18 +36,18 @@ ACL['private'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, security.DELETE, 
                   DENY_ALL,
                   ]
 
-@content_factory('DiscussionPost', title=_(u"Discussion Post"))
+#@content_factory('DiscussionPost', title=_(u"Discussion Post"))
+@implementer(IDiscussionPost, ICatalogMetadataEnabled)
 class DiscussionPost(BaseContent):
     """ Discussion Post content type.
         See :mod:`voteit.core.models.interfaces.IDiscussionPost`.
         All methods are documented in the interface of this class.
     """
-    implements(IDiscussionPost, ICatalogMetadataEnabled)
-    content_type = 'DiscussionPost'
-    display_name = _(u"Discussion Post")
-    allowed_contexts = ('AgendaItem',)
+    type_name = 'DiscussionPost'
+    type_title = _("Discussion Post")
+    #allowed_contexts = ('AgendaItem',)
     add_permission = security.ADD_DISCUSSION_POST
-    schemas = {'add': 'DiscussionPostSchema', 'edit': 'DiscussionPostSchema'}
+    #schemas = {'add': 'DiscussionPostSchema', 'edit': 'DiscussionPostSchema'}
     custom_mutators = {'text': '_set_text',
                        'title': '_set_title',
                        'mentioned': '_set_mentioned'}
@@ -79,17 +80,25 @@ class DiscussionPost(BaseContent):
     def _set_text(self, value, key = None):
         self.field_storage['text'] = value
 
-    def _get_mentioned(self, key = None, default = OOBTree()):
-        mentioned = getattr(self, '__mentioned__', None)
-        if mentioned is None:
-            mentioned = self.__mentioned__ =  OOBTree()
-        return mentioned
+#     def _get_mentioned(self, key = None, default = OOBTree()):
+#         mentioned = getattr(self, '__mentioned__', None)
+#         if mentioned is None:
+#             mentioned = self.__mentioned__ =  OOBTree()
+#         return mentioned
+# 
+#     def _set_mentioned(self, value, key = None):
+#         self._get_mentioned()['mentioned'] = value
+# 
+#     mentioned = property(_get_mentioned, _set_mentioned)
 
-    def _set_mentioned(self, value, key = None):
-        self._get_mentioned()['mentioned'] = value
+    @property
+    def mentioned(self):
+        try:
+            return self.__mentioned__
+        except AttributeError:
+            self.__mentioned__ = OOBTree()
+            return self.__mentioned__
 
-    mentioned = property(_get_mentioned, _set_mentioned)
-    
     def add_mention(self, userid):
         self.mentioned[userid] = utcnow()
 
@@ -100,3 +109,7 @@ class DiscussionPost(BaseContent):
             if tag not in tags:
                 tags.append(tag)
         return tags and tags or default
+
+
+def includeme(config):
+    config.add_content_factory(DiscussionPost, addable_to = 'AgendaItem')

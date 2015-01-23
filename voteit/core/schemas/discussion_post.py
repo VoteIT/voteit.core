@@ -11,8 +11,8 @@ from voteit.core.schemas.common import deferred_default_hashtag_text
 @colander.deferred    
 def deferred_discussion_text_validator(node, kw):
     context = kw['context']
-    api = kw['api']
-    return NotOnlyDefaultTextValidator(context, api, deferred_default_hashtag_text)
+    request = kw['request']
+    return NotOnlyDefaultTextValidator(context, request, deferred_default_hashtag_text)
 
 
 @schema_factory('DiscussionPostSchema')
@@ -27,3 +27,7 @@ class DiscussionPostSchema(colander.Schema):
                                default = deferred_default_tags,
                                widget = deform.widget.HiddenWidget(),
                                missing = u'')
+
+
+def includeme(config):
+    config.add_content_schema('DiscussionPost', DiscussionPostSchema, ('add','edit'))

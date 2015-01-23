@@ -105,8 +105,7 @@ def bootstrap_and_fixture(config):
     return bootstrap_voteit(echo=False)
 
 def register_security_policies(config):
-    config.include('arche.testing')
-    
+    config.include('arche.testing.setup_security')
 #     from voteit.core.security import groupfinder
 #     authn_policy = AuthTktAuthenticationPolicy(secret='secret',
 #                                                callback=groupfinder)

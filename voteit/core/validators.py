@@ -1,24 +1,25 @@
 import re
 
-import colander
-from translationstring import TranslationString
 from BeautifulSoup import BeautifulSoup
-from webhelpers.html.tools import strip_tags
+from betahaus.pyracont import check_unique_name
+from pyramid.security import has_permission
 from pyramid.traversal import find_interface
 from pyramid.traversal import find_root
-from pyramid.security import has_permission
-from betahaus.pyracont import check_unique_name
+from translationstring import TranslationString
+from webhelpers.html.tools import strip_tags
+import colander
+
 from voteit.core import VoteITMF as _
+from voteit.core.exceptions import TokenValidationError
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import ISiteRoot
 from voteit.core.models.interfaces import IUser
-from voteit.core.security import find_authorized_userids
-from voteit.core.security import VIEW
+from voteit.core.models.user import USERID_REGEXP
 from voteit.core.security import MANAGE_GROUPS
 from voteit.core.security import MEETING_ROLES
 from voteit.core.security import ROOT_ROLES
-from voteit.core.models.user import USERID_REGEXP
-from voteit.core.exceptions import TokenValidationError
+from voteit.core.security import VIEW
+from voteit.core.security import find_authorized_userids
 
 
 AT_USERID_PATTERN = re.compile(r'(\A|\s)@('+USERID_REGEXP+r')')
@@ -344,18 +345,20 @@ class ContextUniqueNameValidator(object):
 class NotOnlyDefaultTextValidator(object):
     """ Validator which fails if only default text or only tag is pressent
     """
-    def __init__(self, context, api, default_deferred):
+    def __init__(self, context, request, default_deferred):
         self.context = context
-        self.api = api
+        #self.api = api
+        self.request = request
         self.default_deferred = default_deferred
 
     def __call__(self, node, value):
         # since colander.All doesn't handle deferred validators we call the validator for AtEnabledTextArea here 
         at_enabled_validator = AtEnabledTextArea(self.context)
         at_enabled_validator(node, value)
-        default = self.default_deferred(node, {'context': self.context, 'request': self.api.request, 'api': self.api})
+        default = self.default_deferred(node, {'context': self.context, 'request': self.request})
         if isinstance(default, TranslationString):
-            default = self.api.translate(default)
+            default = self.request.localizer.translate(default)
+            #default = self.api.translate(default)
         if value.strip() == default.strip():
             raise colander.Invalid(node, _(u"only_default_text_validator_error",
                                            default=u"Only the default content is not valid",))
