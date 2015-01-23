@@ -48,13 +48,13 @@ ROLE_DEPENDENCIES[ROLE_VOTER] = (ROLE_VIEWER,)
 #VIEW = 'View'
 VIEW = arche_sec.PERM_VIEW
 EDIT = arche_sec.PERM_EDIT
-DELETE = 'Delete'
+DELETE = arche_sec.PERM_DELETE
 REGISTER = 'Register'
 RETRACT = 'Retract'
 CHANGE_WORKFLOW_STATE = 'Change Workflow State'
 CHANGE_PASSWORD = 'Change Password'
-MANAGE_GROUPS = 'Manage Groups'
-MANAGE_SERVER = 'Manage Server'
+MANAGE_GROUPS = arche_sec.PERM_MANAGE_USERS
+MANAGE_SERVER = arche_sec.PERM_MANAGE_SYSTEM
 MODERATE_MEETING = 'Moderate Meeting'
 REQUEST_MEETING_ACCESS = 'Request Meeting Access'
 

@@ -382,7 +382,7 @@ def get_order(object, default):
 #     return default
 
 
-def _update_if_ai_parent(catalog, obj):
+def _update_if_ai_parent(obj):
     """ Since AIs keep track of count of Poll, Proposal and Discussion objects.
         Only needed for add and remove.
     """
@@ -394,9 +394,9 @@ def _update_if_ai_parent(catalog, obj):
 @subscriber([IBaseContent, IObjectAddedEvent])
 def object_added(obj, event):
     """ Index a base content object. """
-    root = find_interface(obj, ISiteRoot)
+    _update_if_ai_parent(obj)
+    #root = find_interface(obj, ISiteRoot)
     #index_object(root.catalog, obj)
-    _update_if_ai_parent(root.catalog, obj)
 
 # @subscriber([IBaseContent, IObjectUpdatedEvent])
 # @subscriber([IBaseContent, IWorkflowStateChange])
@@ -434,11 +434,11 @@ def update_contained_in_ai(obj, event):
 @subscriber([IBaseContent, IObjectWillBeRemovedEvent])
 def object_removed(obj, event):
     """ Remove an index for a base content object. Also, remove all contained."""
+    _update_if_ai_parent(obj)
 #     root = find_interface(obj, ISiteRoot)
 #     for child in find_all_base_content(obj):
 #         unindex_object(root.catalog, child)
 #     unindex_object(root.catalog, obj)
-    _update_if_ai_parent(root.catalog, obj)
 
 
 def includeme(config):
