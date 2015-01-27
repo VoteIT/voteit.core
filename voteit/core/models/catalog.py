@@ -441,6 +441,24 @@ def object_removed(obj, event):
 #     unindex_object(root.catalog, obj)
 
 
+@adapter(IAgendaItem)
+class _CountMetadata(object):
+
+    def __call__(self, default=None):
+        root = find_root(self.context)
+        path = resource_path(self.context)
+        return root.catalog.search(type_name = self.type_counter, path = path)[0].total
+
+
+class ProposalCountMetadata(_CountMetadata, Metadata):
+    name = 'proposal_count'
+    type_counter = 'Proposal'
+
+class DiscussionCountMetadata(_CountMetadata, Metadata):
+    name = 'discussion_count'
+    type_counter = 'DiscussionPost'
+
+
 def includeme(config):
     """ Register metadata adapter. """
     config.add_searchable_text_index('aid')
@@ -460,4 +478,8 @@ def includeme(config):
     config.add_catalog_indexes(__name__, indexes)
     config.scan(__name__)
 
+    config.create_metadata_field('title', 'title')
+    config.create_metadata_field('__name__', '__name__')
+    config.add_metadata_field(ProposalCountMetadata)
+    config.add_metadata_field(DiscussionCountMetadata)
     #config.registry.registerAdapter(CatalogMetadata, (ICatalogMetadataEnabled,), ICatalogMetadata)

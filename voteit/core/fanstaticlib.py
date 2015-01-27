@@ -1,14 +1,23 @@
 # """ Fanstatic lib"""
+from arche.fanstatic_lib import common_js
+from arche.fanstatic_lib import pure_js
 from fanstatic import Group
 from fanstatic import Library
 from fanstatic import Resource
+from js.jquery import jquery
 from pkg_resources import resource_filename
+
+
 # from js.jquery_tablesorter import tablesorter
 # 
 # #Libs
 deformlib = Library('deform', resource_filename('deform', 'static'))
 voteit_core_jslib = Library('voteit_js', 'js')
 voteit_core_csslib = Library('voteit_css', 'css')
+
+ai_portlet_js = Resource(voteit_core_jslib, 'ai_portlet.js', depends = (jquery, pure_js, common_js))
+
+
 # 
 # #CSS and JS
 # #jquery

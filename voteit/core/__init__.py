@@ -102,6 +102,7 @@ def required_components(config):
     #config.add_static_view('deform', 'deform:static', cache_max_age = cache_ttl_seconds)
     config.add_translation_dirs('%s:locale/' % PROJECTNAME,)
     #config.scan(PROJECTNAME)
+    config.include('voteit.core.views')
     config.scan('voteit.core.subscribers.post_config_addons')
     config.include(adjust_default_view_component_order)
     from voteit.core.security import VIEW

@@ -8,6 +8,7 @@ from pyramid.security import has_permission
 from pyramid.traversal import resource_path
 from pyramid.view import view_config
 from repoze.catalog.query import Eq
+from zope.interface.interfaces import ComponentLookupError
 
 from voteit.core import security
 from voteit.core import VoteITMF as _
@@ -18,7 +19,6 @@ from voteit.core.models.schemas import add_csrf_token, button_request_access
 from voteit.core.models.schemas import button_save
 from voteit.core.models.schemas import button_cancel
 from voteit.core.views.base_edit import DefaultEditForm
-from zope.interface.interfaces import ComponentLookupError
 
 
 class MeetingView(BaseView):

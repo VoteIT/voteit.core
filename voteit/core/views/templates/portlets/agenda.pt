@@ -1,0 +1,37 @@
+<tal:main xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="voteit.core">
+<div id="agenda-item-portlet">
+  <div class="panel panel-default portlet">
+    <div class="panel-heading">
+      <h4 class="panel-title wf-title">
+        #
+      </h4>
+    </div>
+    <ul class="list-group">
+      <li class="list-group-item">
+        <a class="ai-link" href="${request.resource_url(meeting)}">
+        
+          <div class="ai-title"></div>
+          <div class="info">
+            P: <span class="proposal_count"></span>
+            D: <span class="discussion_count"></span>
+          </div>
+          
+        </a>
+        <a tal:condition="False" href="#" class="btn btn-sm btn-default pull-right">
+          <span class="glyphicon glyphicon-cog"></span>
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>
+<script type="text/javascript">
+  $(document).ready(function() {
+    var request = arche.do_request("${data_url}");
+    request.done(update_agenda_from_response);
+  });
+</script>
+</tal:main>
