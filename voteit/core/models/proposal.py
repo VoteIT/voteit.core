@@ -70,8 +70,8 @@ class Proposal(BaseContent, WorkflowAware):
     type_title = _(u"Proposal")
     #allowed_contexts = ('AgendaItem',)
     add_permission = security.ADD_PROPOSAL
-    schemas = {'add': 'ProposalSchema',
-               'edit': 'ProposalSchema'}
+#    schemas = {'add': 'ProposalSchema',
+#               'edit': 'ProposalSchema'}
     custom_mutators = {'title': '_set_title'}
 
     @property
@@ -125,6 +125,20 @@ class Proposal(BaseContent, WorkflowAware):
     @tags.setter
     def tags(self, value):
         print "Tags shouldn't be set like this"
+
+    @property
+    def aid(self): #arche compat
+        return self.get_field_value('aid', '')
+    @aid.setter
+    def aid(self, value):
+        self.set_field_value('aid', value)
+
+    @property #arche compat
+    def aid_int(self):
+        return self.get_field_value('aid_int', None)
+    @aid_int.setter
+    def aid_int(self, value):
+        self.set_field_value('aid_int', value)
 
 
 def includeme(config):

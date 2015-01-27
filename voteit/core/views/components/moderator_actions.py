@@ -25,20 +25,35 @@ def moderator_actions(context, request, va, **kw):
     )
     return render('templates/cogwheel/moderator_actions.pt', response, request = request)
 
-@view_action('moderator_actions_section', 'workflow',
-             interface = IWorkflowAware, title = _(u"Change workflow state"))
-def moderator_actions_wf_section(context, request, va, **kw):
-    """ Workflow actions section. """
-    api = kw['api']
+
+
+@view_action('actionbar_main', 'voteit_wf',
+             title = _("Workflow"),
+             priority = 5,
+             interface = IWorkflowAware)
+def wf_menu(context, request, va, **kw):
+    tstring = _
     response = dict(
         section_title = va.title,
-        api = api,
+        #api = api,
         state_id  = context.get_workflow_state(),
-        state_title = context.current_state_title(api.request),
+        state_title = tstring(context.current_state_title(request)), #Picked up by translation mechanism in zcml
         states = context.get_available_workflow_states(request),
-        state_change_url = "%sstate?state=" % api.resource_url(context, request),
+        context = context,
+        tstring = tstring,
+        #state_change_url = "%sstate?state=" % api.resource_url(context, request),
     )
-    return render('templates/cogwheel/moderator_actions_wf_section.pt', response, request = request)
+    return render('templates/workflow.pt', response, request = request)
+
+#     if not IContextACL.providedBy(context):
+#         return
+#     wf = get_context_wf(context)
+#     if wf:
+#         view = kw['view']
+#         transitions = tuple(wf.get_transitions(request))
+#         if transitions or request.has_permission(security.PERM_EDIT, context):
+#             return view.render_template('arche:templates/menus/workflow.pt', wf = wf, transitions = transitions)
+
 
 @view_action('moderator_actions_section', 'context_actions',
              title = _(u"Actions here"), contained_section = 'context_actions')

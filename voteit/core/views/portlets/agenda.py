@@ -1,6 +1,5 @@
 from __future__ import unicode_literals
 
-from arche import _
 from arche.portlets import PortletType
 from pyramid.renderers import render
 from pyramid.traversal import find_interface
@@ -10,7 +9,7 @@ import colander
 
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.fanstaticlib import ai_portlet_js
-
+from voteit.core import _
 
 class AgendaPortlet(PortletType):
     name = "agenda"

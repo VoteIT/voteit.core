@@ -23,7 +23,7 @@ from voteit.core.views.base_edit import DefaultEditForm
 
 class MeetingView(BaseView):
     
-    @view_config(context=IMeeting, renderer="templates/base_view.pt", permission = NO_PERMISSION_REQUIRED)
+#    @view_config(context=IMeeting, renderer="templates/base_view.pt", permission = NO_PERMISSION_REQUIRED)
     def meeting_view(self):
         """ Meeting view behaves a bit differently than regular views since
             it should allow users to request access if unauthorized is raised.

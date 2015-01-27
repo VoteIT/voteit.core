@@ -9,6 +9,7 @@ from pyramid.httpexceptions import HTTPFound
 from betahaus.pyracont.factories import createSchema
 from pyramid.traversal import find_interface
 from deform.exception import ValidationFailure
+from arche.views.base import BaseView
 
 from voteit.core import VoteITMF as _
 from voteit.core.helpers import ajax_options
@@ -19,7 +20,22 @@ from voteit.core.models.interfaces import IProposal
 from voteit.core.models.schemas import button_add
 from voteit.core.security import MODERATE_MEETING
 from voteit.core.security import VIEW
-from voteit.core.views.base_view import BaseView
+#from voteit.core.views.base_view import BaseView
+
+
+
+
+class AgendaItemView(BaseView):
+
+    def __call__(self):
+        return {}
+
+
+def includeme(config):
+    config.add_view(AgendaItemView,
+                    context = IAgendaItem,
+                    renderer = "voteit.core:views/templates/agenda_item.pt",
+                    permission = VIEW)
 
 
 def inline_add_form(api, content_type, bind_data):
@@ -34,7 +50,7 @@ def inline_add_form(api, content_type, bind_data):
     return Form(schema, action = url, buttons = (button_add,), use_ajax = True)
 
 
-class AgendaItemView(BaseView):
+class AgendaItemViewOld(BaseView):
     """ View for agenda items. """
     
 #    @view_config(context=IAgendaItem, renderer="templates/agenda_item.pt", permission=VIEW)

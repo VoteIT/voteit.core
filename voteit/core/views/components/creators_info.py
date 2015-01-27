@@ -3,7 +3,6 @@ from betahaus.viewcomponent import view_action
 
 @view_action('main', 'creators_info')
 def creators_info(context, request, va, **kw):
-    """ Get discussions for a specific context """
     api = kw['api']
     creators = kw['creators']
     portrait = kw['portrait']

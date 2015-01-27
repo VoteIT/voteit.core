@@ -1,0 +1,24 @@
+<tal:main xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="voteit.core">
+  <li tal:condition="not states|True"><p class="navbar-text">${state_title}</p></li>
+  <li class="dropdown" tal:condition="states|False">
+    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+      ${state_title}
+      <span class="caret"></span>
+    </a>
+    <ul class="dropdown-menu">
+      <tal:states tal:condition="states|False">
+        <tal:iterate repeat="state states">
+          <li>
+            <a href="${request.resource_url(context, 'state', query = {'state': state.name})}">
+              <span tal:content="tstring(state.title)">Title</span>
+            </a>
+        </li>
+        </tal:iterate>
+    </tal:states>
+    </ul>
+  </li>
+</tal:main>

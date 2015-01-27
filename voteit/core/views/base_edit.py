@@ -118,7 +118,7 @@ class BaseForm(BaseEdit, FormView):
         return response
 
 
-@view_config(context=IBaseContent, name="add", renderer=DEFAULT_TEMPLATE)
+#@view_config(context=IBaseContent, name="add", renderer=DEFAULT_TEMPLATE)
 class DefaultAddForm(BaseForm):
     buttons = (button_add, button_cancel,)
 
@@ -156,7 +156,7 @@ class DefaultAddForm(BaseForm):
         return HTTPFound(location=url)
 
 
-@view_config(context=ISiteRoot, name="add", renderer=DEFAULT_TEMPLATE, request_param = "content_type=Meeting")
+#@view_config(context=ISiteRoot, name="add", renderer=DEFAULT_TEMPLATE, request_param = "content_type=Meeting")
 class AddMeetingForm(DefaultAddForm):
 
     def add_success(self, appstruct):
@@ -172,7 +172,7 @@ class AddMeetingForm(DefaultAddForm):
         return HTTPFound(location = self.request.resource_url(obj))
 
 
-@view_config(context=IUsers, name="add", renderer=DEFAULT_TEMPLATE, request_param = "content_type=User")
+#@view_config(context=IUsers, name="add", renderer=DEFAULT_TEMPLATE, request_param = "content_type=User")
 class AddUserForm(DefaultAddForm):
 
     def add_success(self, appstruct):
@@ -185,10 +185,10 @@ class AddUserForm(DefaultAddForm):
         return HTTPFound(location = self.request.resource_url(obj))
 
 
-@view_config(context=IBaseContent,
-             name="edit",
-             renderer=DEFAULT_TEMPLATE,
-             permission=EDIT)
+#@view_config(context=IBaseContent,
+#             name="edit",
+#             renderer=DEFAULT_TEMPLATE,
+#             permission=EDIT)
 class DefaultEditForm(BaseForm):
     buttons = (button_save, button_cancel,)
 
@@ -220,10 +220,10 @@ def no_delete(*args):
     raise HTTPForbidden(_("Can't delete this content type"))
 
 
-@view_config(context=IBaseContent,
-             name="delete",
-             permission=DELETE,
-             renderer=DEFAULT_TEMPLATE)
+# @view_config(context=IBaseContent,
+#              name="delete",
+#              permission=DELETE,
+#              renderer=DEFAULT_TEMPLATE)
 class DefaultDeleteForm(BaseForm):
     buttons = (button_delete, button_cancel,)
 
