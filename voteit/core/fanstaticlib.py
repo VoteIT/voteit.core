@@ -16,6 +16,7 @@ voteit_core_jslib = Library('voteit_js', 'js')
 voteit_core_csslib = Library('voteit_css', 'css')
 
 ai_portlet_js = Resource(voteit_core_jslib, 'ai_portlet.js', depends = (jquery, pure_js, common_js))
+data_loader = Resource(voteit_core_jslib, 'data_loader.js', depends = (jquery, pure_js, common_js))
 
 
 # 

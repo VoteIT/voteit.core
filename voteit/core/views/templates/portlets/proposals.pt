@@ -8,15 +8,8 @@
     <div class="panel-heading">
       <h4 class="panel-title" i18n:translate="">Proposals</h4>
     </div>
-    <ul class="list-group">
-      <tal:iterate repeat="obj [x for x in context.values() if x.type_name == 'Proposal']">
-      <li class="list-group-item">
-        <tal:creator replace="structure request.creators_info(obj.creators)"></tal:creator>
-        ${obj.title}
-         
-        <tal:meta replace="structure view.render_view_group('metadata_listing', obj)"></tal:meta>
-      </li>
-      </tal:iterate>
+    <ul class="list-group" data-load-target="${request.resource_url(context, '__ai_proposals__')}">
+      
     </ul>
   </div>
 </div>
