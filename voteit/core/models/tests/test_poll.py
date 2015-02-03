@@ -141,19 +141,10 @@ class PollTests(unittest.TestCase):
     def test_get_voted_userids(self):
         obj = self._make_obj()
         vote1 = self._make_vote()
-        vote1.creators = ['admin']
         vote2 = self._make_vote()
-        vote2.creators = ['some_guy']
         obj['vote1'] = vote1
         obj['vote2'] = vote2
-
-        self.assertEqual(obj.get_voted_userids(), frozenset(['admin', 'some_guy']))
-
-    def test_get_voted_userids_bad_vote(self):
-        obj = self._make_obj()
-        vote1 = self._make_vote()
-        obj['v'] = vote1
-        self.assertRaises(ValueError, obj.get_voted_userids)
+        self.assertEqual(obj.get_voted_userids(), frozenset(['vote1', 'vote2']))
 
     def test_close_poll(self):
         register_workflows(self.config)
