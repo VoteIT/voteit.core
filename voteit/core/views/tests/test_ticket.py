@@ -291,5 +291,5 @@ def _fixture(config):
 
 def _mk_invites(context, count = 1, roles = [security.ROLE_MODERATOR]):
     while count:
-        context.add_invite_ticket('invite%s@voteit.se' % count, roles)
+        context.add_invite_ticket('invite%s@voteit.se' % count, roles, sent_by = 'dummy')
         count -= 1

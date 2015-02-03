@@ -248,6 +248,7 @@ class DefaultEditFormTests(unittest.TestCase):
         self.config.scan('voteit.core.models.meeting')
         self.config.scan('voteit.core.schemas.meeting')
         self.config.include('voteit.core.models.flash_messages')
+        self.config.testing_securitypolicy('dummy', permissive = True)
         context = _fixture(self.config)
         request = testing.DummyRequest(method = 'POST',
                                        post = {'title': 'Dummy',
