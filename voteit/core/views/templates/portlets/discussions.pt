@@ -3,16 +3,16 @@
       xmlns:tal="http://xml.zope.org/namespaces/tal"
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
       i18n:domain="voteit.core">
-<div id="ai-proposals">
+<div id="ai-discussions">
   <div class="panel panel-primary portlet">
     <div class="panel-heading">
-      <h4 class="panel-title" i18n:translate="">Proposals</h4>
+      <h4 class="panel-title" i18n:translate="">Discussions</h4>
     </div>
     <ul class="list-group" data-load-target="${load_url}">
       <li>Loading...</li>
     </ul>
     <div class="panel-footer">
-      <div tal:replace="structure view.render_template('voteit.core:views/templates/snippets/inline_dummy_proposal_button.pt')"></div>
+      <div tal:replace="structure view.render_template('voteit.core:views/templates/snippets/inline_dummy_form.pt')"></div>
     </div>
   </div>
 </div>

@@ -27,10 +27,10 @@ from voteit.core.views.base_view import BaseView
 DEFAULT_TEMPLATE = "voteit.core:views/templates/base_edit.pt"
 
 
-@view_config(context = IUser,
-             name = "change_password",
-             renderer = DEFAULT_TEMPLATE,
-             permission = CHANGE_PASSWORD)
+#@view_config(context = IUser,
+#             name = "change_password",
+#             renderer = DEFAULT_TEMPLATE,
+#             permission = CHANGE_PASSWORD)
 class ChangePasswordForm(BaseForm):
     """ Change password form.
     
@@ -59,10 +59,10 @@ class ChangePasswordForm(BaseForm):
 
 
 
-@view_config(context = ISiteRoot,
-             name = 'request_password',
-             renderer = DEFAULT_TEMPLATE,
-             permission = NO_PERMISSION_REQUIRED)
+#@view_config(context = ISiteRoot,
+#             name = 'request_password',
+#             renderer = DEFAULT_TEMPLATE,
+#             permission = NO_PERMISSION_REQUIRED)
 class RequestPasswordForm(BaseForm):
     """ Email a change password token to a users registered email address.
     """
@@ -87,10 +87,10 @@ class RequestPasswordForm(BaseForm):
         return HTTPFound(location = self.request.resource_url(self.api.root))
 
 
-@view_config(context = IUser,
-             name = "token_pw",
-             renderer = DEFAULT_TEMPLATE,
-             permission = NO_PERMISSION_REQUIRED)
+#@view_config(context = IUser,
+#             name = "token_pw",
+#             renderer = DEFAULT_TEMPLATE,
+#             permission = NO_PERMISSION_REQUIRED)
 class TokenChangePasswordForm(BaseForm):
     """ When a user has requested a change password link.
         Note that there's no permisison check here since the token from
@@ -140,7 +140,7 @@ class ManageConnectedProfilesForm(BaseForm):
 class UsersView(BaseView):
     """ Any regular view action without forms. """
 
-    @view_config(context=IUser, renderer='templates/user.pt', permission=VIEW)
+  #  @view_config(context=IUser, renderer='templates/user.pt', permission=VIEW)
     def profile_view(self):
         return self.response
 

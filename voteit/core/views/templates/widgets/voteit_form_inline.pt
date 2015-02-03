@@ -1,0 +1,99 @@
+<tal:main xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="Arche">
+<form
+  tal:define="style style|field.widget.style;
+              css_class css_class|string:${field.widget.css_class or field.css_class or ''};
+              item_template item_template|field.widget.item_template;
+              autocomplete autocomplete|field.autocomplete;
+              title title|field.title;
+              errormsg errormsg|field.errormsg;
+              description description|field.description;
+              buttons buttons|field.buttons;
+              use_ajax use_ajax|field.use_ajax;
+              ajax_options ajax_options|field.ajax_options;
+              formid formid|field.formid;
+              action action|field.action or None;
+              method method|field.method;
+              tabbed_fields field.tab_fields(field)|();
+              tab_titles field.tab_titles|{};"
+  tal:attributes="autocomplete autocomplete;
+                  style style;
+                  class css_class;
+                  action action;"
+  id="${formid}"
+  method="${method}"
+  enctype="multipart/form-data"
+  accept-charset="utf-8"
+  >
+  <fieldset class="deformFormFieldset">
+    <input type="hidden" name="_charset_" />
+    <input type="hidden" name="__formid__" value="${formid}"/>
+
+            <h3 tal:condition="field.heading|False" tal:content="field.heading"></h3>
+
+            <div class="alert alert-danger" tal:condition="field.error">
+              <div class="errorMsgLbl" i18n:translate=""
+                >There was a problem with your submission</div>
+              <p class="errorMsg">${field.errormsg}</p>
+            </div>
+
+            <div class="section first" tal:condition="description"
+              tal:content="structure description"></div>
+
+            <tal:fields repeat="child field">
+              <tal:field replace="structure child.render_template(item_template)" />
+            </tal:fields>
+
+            <div class="form-group">
+              <tal:loop tal:repeat="button buttons">
+                <button
+                      tal:define="btn_disposition repeat.button.start and 'btn-primary' or 'btn-default';
+                      btn_icon button.icon|None"
+                      tal:attributes="disabled button.disabled if button.disabled else None"
+                      id="${formid+button.name}"
+                      name="${button.name}"
+                      type="${button.type}"
+                      class="btn ${btn_disposition} ${button.css_class}"
+                      value="${button.value}">
+                  <i tal:condition="btn_icon" class="${btn_icon}"> </i>
+                  ${button.title}
+                </button>
+              </tal:loop>
+            </div>
+  </fieldset>
+
+  <script type="text/javascript" tal:condition="use_ajax">
+   deform.addCallback(
+     '${formid}',
+     function(oid) {
+       var target = '#' + oid;
+       var options = {
+         target: target,
+         replaceTarget: true,
+         success: function() {
+           deform.processCallbacks();
+           deform.focusFirstInput(target);
+         },
+         beforeSerialize: function() { 
+           // See http://bit.ly/1agBs9Z (hack to fix tinymce-related ajax bug)
+           if ('tinymce' in window) {
+             $(tinymce.get()).each(
+               function(i, el) {
+                 var content = el.getContent();
+                 var editor_input = document.getElementById(el.id);
+                 editor_input.value = content;
+             });
+           }
+         }
+       };
+       var extra_options = ${ajax_options} || {};
+       $('#' + oid).ajaxForm($.extend(options, extra_options));
+     }
+   );
+  </script>
+
+</form>
+</tal:main>

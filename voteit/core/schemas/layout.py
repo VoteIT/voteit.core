@@ -60,14 +60,4 @@ class LayoutSchema(colander.Schema):
                                           widget = deform.widget.TextInputWidget(),
                                           missing = 240,
                                           validator=colander.Range(0),)
-    hide_retracted = colander.SchemaNode(colander.Boolean(),
-                                   title = _(u"Hide retracted proposals"),
-                                   description = _(u"meeting_hide_retracted_description",
-                                                   default=u"You can still access hidden proposals "
-                                                      u"by using a collapsible link below the regular proposals."),)
-    hide_unhandled_proposals = colander.SchemaNode(colander.Boolean(),
-        title = _(u"Hide unhandled proposals"),
-        description = _(u"meeting_hide_unhandled_description",
-                        default=u"In the same fashion as retracted proposals."),
-        default = True,
-        missing = True)
+

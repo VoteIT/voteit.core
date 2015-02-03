@@ -20,7 +20,7 @@ class PermissionsView(BaseView):
 
     #FIXME: This view is up for refactoring same way as participants
     #@view_config(context=IMeeting, name="permissions", renderer="templates/base_edit.pt", permission=security.MANAGE_GROUPS)
-    @view_config(context=ISiteRoot, name="permissions", renderer="templates/base_edit.pt", permission=security.MANAGE_GROUPS)
+    #@view_config(context=ISiteRoot, name="permissions", renderer="templates/base_edit.pt", permission=security.MANAGE_GROUPS)
     def group_form(self):
         if IMeeting.providedBy(self.context):
             self.response['title'] = _(u"Edit permissions")
@@ -66,8 +66,8 @@ class PermissionsView(BaseView):
         self.response['form'] = form.render(appstruct=appstruct)
         return self.response
     
-    @view_config(context=ISiteRoot, name="add_permission", renderer="templates/base_edit.pt", permission=security.MANAGE_GROUPS)
-    @view_config(context=IMeeting, name="add_permission", renderer="templates/base_edit.pt", permission=security.MANAGE_GROUPS)
+    #@view_config(context=ISiteRoot, name="add_permission", renderer="templates/base_edit.pt", permission=security.MANAGE_GROUPS)
+    #@view_config(context=IMeeting, name="add_permission", renderer="templates/base_edit.pt", permission=security.MANAGE_GROUPS)
     def add_permission(self):
         if ISiteRoot.providedBy(self.context):
             self.response['title'] = _(u"Add permission")

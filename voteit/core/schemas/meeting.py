@@ -189,6 +189,20 @@ class MeetingPollSettingsSchema(colander.MappingSchema):
 _dummy_meeting = Meeting()
 
 
+class AgendaItemProposalsPortletSchema(colander.Schema):
+    hide_retracted = colander.SchemaNode(colander.Boolean(),
+                                   title = _(u"Hide retracted proposals"),
+                                   description = _(u"meeting_hide_retracted_description",
+                                                   default=u"You can still access hidden proposals "
+                                                      u"by using a collapsible link below the regular proposals."),)
+    hide_unhandled_proposals = colander.SchemaNode(colander.Boolean(),
+        title = _(u"Hide unhandled proposals"),
+        description = _(u"meeting_hide_unhandled_description",
+                        default=u"In the same fashion as retracted proposals."),
+        default = True,
+        missing = True)
+
+
 def includeme(config):
     config.add_content_schema('Meeting', AddMeetingSchema, 'add')
     config.add_content_schema('Meeting', EditMeetingSchema, 'edit')

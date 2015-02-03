@@ -1,8 +1,19 @@
-<tal:main
-    xmlns:i18n="http://xml.zope.org/namespaces/i18n"
-    i18n:domain="voteit.core">
-<div class="inline_add_form listing_block">
-	<a class="buttonize large proposal_button" href="${url}" i18n:translate="">Add a proposal</a>
-    <div class="clear"><!-- --></div>
+<div xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+  i18n:domain="voteit.core">
+  <a data-clickable-target="${request.resource_url(context, 'add', query = {'content_type': 'Proposal', 'tag': request.GET.get('tag', '')})}"
+    href="javascript:"
+    class="btn btn-primary" i18n:translate="">Add a proposal</a>
+  <script type="text/javascript">
+    $("[data-clickable-target]").on('click', function(event) {
+      var jthis;
+      jthis = $(this);
+      var url = jthis.data('clickable-target');
+      var request = arche.do_request(url);
+      request.done(function(data, textStatus, jqXHR) {
+        jthis.parent().html(data);
+        deform.processCallbacks();
+        deform.focusFirstInput();
+      });
+    });
+  </script>
 </div>
-</tal:main>

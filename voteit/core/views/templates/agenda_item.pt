@@ -8,7 +8,9 @@
 <div metal:fill-slot="main-content">
     <img tal:replace="structure view.thumb_tag(context, 'col-2', extra_cls = 'pull-right')" />
   
-    <h1>${context.title}</h1>
+    <div class="page-header">
+      <h1>${context.title}</h1>
+    </div>
 
     <p class="description lead"
          tal:define="description context.description|None"

@@ -8,8 +8,6 @@ from voteit.core import VoteITMF as _
 from voteit.core.models.interfaces import IAgendaItem, IProposal,\
     IDiscussionPost
 from voteit.core.models.interfaces import IWorkflowAware
-from voteit.core.models.discussion_post import DiscussionPost
-from voteit.core.models.proposal import Proposal
 from voteit.core.security import RETRACT 
 from voteit.core.security import VIEW
 from voteit.core.security import ADD_PROPOSAL
@@ -17,45 +15,26 @@ from voteit.core.security import ADD_DISCUSSION_POST
 from voteit.core.security import DELETE
 
 
-@view_action('main', 'metadata_listing', permission=VIEW)
-def metadata_listing(context, request, va, **kw):
-    """ This is the main renderer for post meta.
-        It will call all view components in the group metadata_listing.
-        In turn, some of those will call other groups.
-    """
-    util = request.registry.getUtility(IViewGroup, name='metadata_listing')
-    response = {'view_actions': util.values(), 'va_kwargs': kw,}
-    return render('templates/metadata/metadata_listing.pt', response, request = request)
+# @view_action('main', 'metadata_listing', permission=VIEW)
+# def metadata_listing(context, request, va, **kw):
+#     """ This is the main renderer for post meta.
+#         It will call all view components in the group metadata_listing.
+#         In turn, some of those will call other groups.
+#     """
+#     util = request.registry.getUtility(IViewGroup, name='metadata_listing')
+#     response = {'view_actions': util.values(), 'va_kwargs': kw,}
+#     return render('templates/metadata/metadata_listing.pt', response, request = request)
 
-@view_action('metadata_listing', 'state', permission=VIEW)
+@view_action('metadata_listing', 'state', permission=VIEW, interface = IWorkflowAware)
 def meta_state(context, request, va, **kw):
     state_id = context.get_workflow_state()
-    #obj = find_resource(api.root, brain['path'])
-    #if not IWorkflowAware.providedBy(obj):
-    #    return ''
-    #state_id = brain['workflow_state']
     state_info = context.workflow.state_info(None, request)
-    #state_info = _dummy[brain['content_type']].workflow.state_info(None, request)
     translated_state_title = state_id
     for info in state_info:
         if info['name'] == state_id:
             ts = _
             translated_state_title = request.localizer.translate(ts(info['title']))
             break
-    return '<span class="%s icon iconpadding">%s</span>' % (state_id, translated_state_title)
-
-def _meta_state(context, request, va, **kw):
-    api = kw['api']
-    brain = kw['brain']
-    obj = find_resource(api.root, brain['path'])
-    if not IWorkflowAware.providedBy(obj):
-        return ''
-    state_id = brain['workflow_state']
-    state_info = _dummy[brain['content_type']].workflow.state_info(None, request)
-    translated_state_title = state_id
-    for info in state_info:
-        if info['name'] == state_id:
-            translated_state_title = api.translate(api.tstring(info['title']))
     return '<span class="%s icon iconpadding">%s</span>' % (state_id, translated_state_title)
 
 @view_action('metadata_listing', 'time', permission=VIEW)
@@ -65,7 +44,7 @@ def meta_time(context, request, va, **kw):
     #return '<span class="time">%s</span>' % api.translate(api.dt_util.relative_time_format(brain['created']))
     return '<span class="time">%s</span>' % request.localizer.translate(request.dt_handler.format_relative(context.created))
 
-@view_action('metadata_listing', 'retract', permission=VIEW)
+@view_action('metadata_listing', 'retract', permission=VIEW, interface = IWorkflowAware)
 def meta_retract(context, request, va, **kw):
     if context.get_workflow_state() != 'published':
         return
@@ -120,13 +99,7 @@ def meta_tag(context, request, va, **kw):
     return '<span><a class="tag" ' \
            'href="?tag=%s" ' \
            '>#%s</a> </span>' % (aid, aid)
-#     return '<span><a class="tag" ' \
-#            'href="?tag=%s" ' \
-#            '>#%s</a> (%s) </span>' % (brain['aid'], brain['aid'], api.get_tag_count(brain['aid']))
 
 @view_action('metadata_listing', 'delete', permission = DELETE,interface = IDiscussionPost)
 def meta_delete(context, request, va, **kw):
     return u'<span><a class="delete" href="%s">%s</a></span>' % (request.resource_url(context, 'delete'), request.localizer.translate(_("Delete")))
-
-#_dummy = {'Proposal': Proposal(),
-#          'DiscussionPost': DiscussionPost()}
