@@ -1,3 +1,6 @@
+if(typeof(voteit) == "undefined"){
+    voteit = {};
+}
 
 function load_target(target) {
   var target = $(target);
@@ -9,9 +12,10 @@ function load_target(target) {
   });
   return request
 }
+voteit.load_target = load_target;
 
 $(document).ready(function () {
   $("[data-load-target]").each(function() {
-    load_target(this);
+    voteit.load_target(this);
   });
 });

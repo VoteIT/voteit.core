@@ -16,4 +16,9 @@
       });
     });
   </script>
+  <script type="text/javascript" tal:condition="update_selector|False">
+    $("${update_selector} [data-load-target]").each(function() {
+      voteit.load_target(this);  
+    });
+  </script>
 </div>

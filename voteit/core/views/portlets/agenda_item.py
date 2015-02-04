@@ -125,7 +125,7 @@ class ProposalsInline(BaseView):
         #if hidden_states:
         #    query &= NotAny('workflow_state', hidden_states)
         response = {}
-        response['contents'] = self.catalog_query(query, resolve = True)
+        response['contents'] = self.catalog_query(query, resolve = True, sort_index = 'created')
         #count, docids = .root.catalog.query(query, sort_index='created')
         #get_metadata = api.root.catalog.document_map.get_metadata
         #results = [get_metadata(x) for x in docids]
@@ -157,7 +157,6 @@ class DiscussionsInline(BaseView):
             'type_name': 'DiscussionPost',
             'sort_index': 'created',
              }
-    
         tag = self.request.GET.get('tag', None)
         if tag:
             query['tags'] = tag
@@ -169,32 +168,36 @@ class DiscussionsInline(BaseView):
 class StrippedInlineAddForm(DefaultAddForm):
     title = None
     response_template = ""
+    update_selector = ""
 
     def before(self, form):
+        super(StrippedInlineAddForm, self).before(form)
         form.widget.template = 'voteit_form_inline'
         form.use_ajax = True
 
-    def _response(self, *args):
-        return Response(self.render_template(self.response_template))
+    def _response(self, *args, **kw):
+        return Response(self.render_template(self.response_template, **kw))
 
     def save_success(self, appstruct):
         factory = self.get_content_factory(self.type_name)
         obj = factory(**appstruct)
         name = generate_slug(self.context, obj.uid)
         self.context[name] = obj
-        return self._response()
+        return self._response(update_selector = self.update_selector)
 
     cancel_success = cancel_failure = _response
 
 
 class ProposalAddForm(StrippedInlineAddForm):
-    response_template = 'voteit.core:views/templates/snippets/inline_dummy_proposal_button.pt'
+    response_template = 'voteit.core:views/templates/portlets/inline_dummy_proposal_button.pt'
     formid = 'proposal_inline_add'
+    update_selector = '#ai-proposals'
 
 
 class DiscussionAddForm(StrippedInlineAddForm):
-    response_template = 'voteit.core:views/templates/snippets/inline_dummy_form.pt'
+    response_template = 'voteit.core:views/templates/portlets/inline_dummy_form.pt'
     formid = 'discussion_inline_add'
+    update_selector = '#ai-discussions'
 
 
 def includeme(config):

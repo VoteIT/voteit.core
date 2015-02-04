@@ -15,7 +15,7 @@
       </li>
     </ul>
     <div class="panel-footer">
-      <div tal:replace="structure view.render_template('voteit.core:views/templates/snippets/inline_dummy_form.pt')"></div>
+      <div tal:replace="structure view.render_template('voteit.core:views/templates/portlets/inline_dummy_form.pt')"></div>
     </div>
   </div>
 </div>
