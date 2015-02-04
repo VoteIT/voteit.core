@@ -25,6 +25,7 @@ from voteit.core.models.interfaces import IDiscussionPost
 from voteit.core.schemas.meeting import AgendaItemProposalsPortletSchema
 #from fanstatic.core import get_needed
 
+#FIXME: Loading required resources for inline forms is still a problem.
 
 class ListingPortlet(PortletType):
     schema_factory = None
@@ -166,7 +167,6 @@ class DiscussionsInline(BaseView):
 
 
 class StrippedInlineAddForm(DefaultAddForm):
-
     title = None
     response_template = ""
 
@@ -189,10 +189,12 @@ class StrippedInlineAddForm(DefaultAddForm):
 
 class ProposalAddForm(StrippedInlineAddForm):
     response_template = 'voteit.core:views/templates/snippets/inline_dummy_proposal_button.pt'
+    formid = 'proposal_inline_add'
 
 
 class DiscussionAddForm(StrippedInlineAddForm):
     response_template = 'voteit.core:views/templates/snippets/inline_dummy_form.pt'
+    formid = 'discussion_inline_add'
 
 
 def includeme(config):

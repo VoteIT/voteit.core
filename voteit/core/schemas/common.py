@@ -1,22 +1,31 @@
-import re
 from datetime import timedelta
+from uuid import uuid4
+import re
 
-import colander
-import deform
 from betahaus.pyracont.decorators import schema_factory
 from pyramid.testing import DummyRequest
 from pyramid.traversal import find_root
 from pyramid.traversal import resource_path
+import colander
+import deform
 
-from voteit.core.models.interfaces import IDateTimeUtil
-from voteit.core.models.interfaces import IAgendaItem
-from voteit.core.validators import deferred_csrf_token_validator
 from voteit.core import VoteITMF as _
+from voteit.core.models.interfaces import IAgendaItem
+from voteit.core.models.interfaces import IDateTimeUtil
+from voteit.core.validators import deferred_csrf_token_validator
 
 
 NAME_PATTERN = re.compile(r'^[\w\s]{3,100}$', flags=re.UNICODE)
 #For when it's part of a http GET - no # in front of it
 HASHTAG_PATTERN = re.compile(r'^[\w\s_\-]{1,100}$', flags=re.UNICODE)
+
+
+@colander.deferred
+def random_oid(*args):
+    """ This is a really silly way to get a random form field.
+        Deform doesn't have this feature, and will cause fields ids to collide if used on the same page.
+    """
+    return str(uuid4())
 
 
 @colander.deferred

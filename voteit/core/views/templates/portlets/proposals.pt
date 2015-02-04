@@ -9,7 +9,7 @@
       <h4 class="panel-title" i18n:translate="">Proposals</h4>
     </div>
     <ul class="list-group" data-load-target="${load_url}">
-      <li>Loading...</li>
+      <li class="list-group-item">Loading...</li>
     </ul>
     <div class="panel-footer">
       <div tal:replace="structure view.render_template('voteit.core:views/templates/snippets/inline_dummy_proposal_button.pt')"></div>
