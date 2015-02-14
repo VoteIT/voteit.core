@@ -1,5 +1,6 @@
 from zope.interface import implementer
 from zope.component import adapter
+from pyramid.httpexceptions import HTTPFound
 
 from voteit.core.models.interfaces import IAccessPolicy
 from voteit.core.models.interfaces import IMeeting
@@ -28,4 +29,6 @@ class AccessPolicy(object):
         pass
 
     def handle_config_success(self, view, appstruct):
-        pass
+        self.context.set_field_appstruct(appstruct)
+        view.api.flash_messages.add(view.default_success)
+        return HTTPFound(location = view.api.meeting_url)
