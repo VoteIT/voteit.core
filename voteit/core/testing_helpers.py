@@ -160,5 +160,5 @@ def active_poll_fixture(config):
     poll = ai['poll']
     poll.set_field_value('proposals', set([ai['prop1'].uid, ai['prop2'].uid]))
     poll.set_workflow_state(request, 'upcoming')
-    register_security_policies(config)
+    #register_security_policies(config)
     return root

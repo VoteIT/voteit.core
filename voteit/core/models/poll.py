@@ -1,18 +1,15 @@
 from BTrees.OIBTree import OIBTree
-from betahaus.pyracont.decorators import content_factory
+from arche.utils import send_email
 from pyramid.httpexceptions import HTTPForbidden
-from pyramid.i18n import get_localizer
 from pyramid.renderers import render
 from pyramid.security import Allow
 from pyramid.security import DENY_ALL
+from pyramid.threadlocal import get_current_registry
 from pyramid.threadlocal import get_current_request
 from pyramid.traversal import find_interface
 from pyramid.traversal import find_root
-from pyramid_mailer import get_mailer
-from pyramid_mailer.message import Message
 from repoze.workflow.workflow import WorkflowError
-from zope.component import getAdapter
-from zope.interface import implements
+from zope.interface import implementer
 
 from voteit.core import VoteITMF as _
 from voteit.core import security
@@ -20,12 +17,12 @@ from voteit.core.models.base_content import BaseContent
 from voteit.core.models.date_time_util import utcnow
 from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import ICatalogMetadataEnabled
+from voteit.core.models.interfaces import IFlashMessages
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IPollPlugin
 from voteit.core.models.interfaces import IVote
 from voteit.core.models.workflow_aware import WorkflowAware
-from voteit.core.views.flash_messages import FlashMessages
 
 
 _UPCOMING_PERMS = (security.VIEW,
@@ -67,7 +64,8 @@ ACL['canceled'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, security.DELETE,
                   ]
 
 
-@content_factory('Poll', title=_(u"Poll"))
+#@content_factory('Poll', title=_(u"Poll"))
+@implementer(IPoll, ICatalogMetadataEnabled)
 class Poll(BaseContent, WorkflowAware):
     """ Poll content type.
         See :mod:`voteit.core.models.interfaces.IPoll`.
@@ -75,12 +73,10 @@ class Poll(BaseContent, WorkflowAware):
         Note that the actual poll method isn't decided by the poll
         content type. It calls a poll plugin to get that.
     """
-    implements(IPoll, ICatalogMetadataEnabled)
-    content_type = 'Poll'
-    display_name = _(u"Poll")
-    allowed_contexts = ('AgendaItem',)
+    type_name = 'Poll'
+    type_title = _(u"Poll")
     add_permission = security.ADD_POLL
-    schemas = {'add': 'AddPollSchema', 'edit': 'EditPollSchema'}
+    #schemas = {'add': 'AddPollSchema', 'edit': 'EditPollSchema'}
 
     @property
     def __acl__(self):
@@ -109,15 +105,15 @@ class Poll(BaseContent, WorkflowAware):
     def voters_mark_closed(self):
         return self.get_field_value('voters_mark_closed', frozenset())
 
-    def _get_proposal_uids(self):
+    @property
+    def proposals(self):
         return self.get_field_value('proposals', ())
-
-    def _set_proposal_uids(self, value):
-        if not isinstance(value, tuple):
-            value = tuple(value)
+    @proposals.setter
+    def proposals(self, value):
+        value = tuple(value)
         self.set_field_value('proposals', value)
 
-    proposal_uids = property(_get_proposal_uids, _set_proposal_uids)
+    proposal_uids = proposals #b/c
 
     def _get_poll_settings(self):
         return getattr(self, '_poll_settings', {})
@@ -146,13 +142,17 @@ class Poll(BaseContent, WorkflowAware):
     poll_result = property(_get_poll_result, _set_poll_result)
 
     @property
-    def poll_plugin_name(self):
-        """ Returns registered poll plugin name. Can be used to get registered utility
-        """
+    def poll_plugin(self):
         return self.get_field_value('poll_plugin')
+    @poll_plugin.setter
+    def poll_plugin(self, value):
+        self.set_field_value('poll_plugin', value)
+
+    poll_plugin_name = poll_plugin #b/c
 
     def get_poll_plugin(self):
-        return getAdapter(self, name = self.poll_plugin_name, interface = IPollPlugin)
+        reg = get_current_registry()
+        return reg.getAdapter(self, name = self.poll_plugin_name, interface = IPollPlugin)
 
     def get_proposal_objects(self):
         agenda_item = find_interface(self, IAgendaItem)
@@ -172,10 +172,7 @@ class Poll(BaseContent, WorkflowAware):
         """ Returns userids of all users who've voted. """
         userids = set()
         for vote in self.get_all_votes():
-            if not len(vote.creators) == 1:
-                raise ValueError("The creators attribute on a vote didn't have a single value. "
-                                 "Votes can only have one creator. Vote was: %s" % vote)
-            userids.add(vote.creators[0])
+            userids.add(vote.__name__)
         return frozenset(userids)
 
     def _calculate_ballots(self):
@@ -199,7 +196,7 @@ class Poll(BaseContent, WorkflowAware):
         if request is None:
             request = get_current_request()
         locale = request.localizer
-        fm = FlashMessages(request)        
+        fm = IFlashMessages(request)
 
         for (uid, state) in uid_states.items():
             if uid not in self.proposal_uids:
@@ -284,11 +281,10 @@ def lock_proposals(poll, request):
             proposal.set_workflow_state(request, 'voting')
             count += 1
     if count:
-        fm = FlashMessages(request)
-        localizer = get_localizer(request)
-        prop_form = localizer.pluralize(_(u"proposal"), _(u"proposals"), count)
+        fm = IFlashMessages(request)
+        prop_form = request.localizer.pluralize(_(u"proposal"), _(u"proposals"), count)
         ts = _ #So i18n tools don't pick it up
-        prop_form = localizer.translate(ts(prop_form))
+        prop_form = request.localizer.translate(ts(prop_form))
         msg = _(u'poll_proposals_locked_notice',
                 default=u"Setting ${count} ${prop_form} as 'locked for vote'. "
                         u"They can no longer be edited or retracted by normal users. "
@@ -303,7 +299,7 @@ def upcoming_poll_callback(poll, info):
     """
     request = get_current_request()
     lock_proposals(poll, request)
-    fm = FlashMessages(request)
+    fm = IFlashMessages(request)
     msg = _('poll_upcoming_state_notice',
             default=u"Setting poll in upcoming state. It's now visible for meeting participants.")
     fm.add(msg)
@@ -349,7 +345,7 @@ def email_voters_about_ongoing_poll(poll, request=None):
     for userid in userids:
         #In case user is deleted, they won't have the required permission either
         #find_authorized_userids loops through the users folder
-        email = users[userid].get_field_value('email')
+        email = users[userid].email
         if email:
             email_addresses.add(email)
     response = {}
@@ -361,13 +357,11 @@ def email_voters_about_ongoing_poll(poll, request=None):
     body_html = render('../views/templates/email/ongoing_poll_notification.pt', response, request=request)
     #Since subject won't be part of a renderer, we need to translate it manually
     #Keep the _ -syntax otherwise Babel/lingua won't pick up the string
-    localizer = get_localizer(request)
-    subject = localizer.translate(_(u"VoteIT: Open poll"))
-    mailer = get_mailer(request)
-    #We need to send individual messages anyway
+
+    subject = _(u"VoteIT: Open poll")
     for email in email_addresses:
-        msg = Message(subject = subject,
-                      sender = sender,
-                      recipients=[email,],
-                      html=body_html)
-        mailer.send(msg)
+        send_email(subject, [email], body_html, request = request)
+
+
+def includeme(config):
+    config.add_content_factory(Poll, addable_to = 'AgendaItem')

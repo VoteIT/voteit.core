@@ -31,7 +31,9 @@ owner = set([security.ROLE_OWNER])
 
 class PollTests(unittest.TestCase):
     def setUp(self):
-        self.config = testing.setUp()
+        request = testing.DummyRequest()
+        self.config = testing.setUp(request = request)
+        self.config.include('voteit.core.models.flash_messages')
 
     def tearDown(self):
         testing.tearDown()
@@ -141,19 +143,10 @@ class PollTests(unittest.TestCase):
     def test_get_voted_userids(self):
         obj = self._make_obj()
         vote1 = self._make_vote()
-        vote1.creators = ['admin']
         vote2 = self._make_vote()
-        vote2.creators = ['some_guy']
         obj['vote1'] = vote1
         obj['vote2'] = vote2
-
-        self.assertEqual(obj.get_voted_userids(), frozenset(['admin', 'some_guy']))
-
-    def test_get_voted_userids_bad_vote(self):
-        obj = self._make_obj()
-        vote1 = self._make_vote()
-        obj['v'] = vote1
-        self.assertRaises(ValueError, obj.get_voted_userids)
+        self.assertEqual(obj.get_voted_userids(), frozenset(['vote1', 'vote2']))
 
     def test_close_poll(self):
         register_workflows(self.config)
@@ -276,16 +269,15 @@ class PollTests(unittest.TestCase):
         obj.set_workflow_state(request, 'ongoing')
 
     def test_ongoing_wo_proposal(self):
-        request = testing.DummyRequest()
-        self.config = testing.setUp(registry = self.config.registry, request = request)
         register_workflows(self.config)
         poll = self._make_obj()
         ai = find_interface(poll, IAgendaItem)
-        ai.set_workflow_state(request, 'upcoming')
-        ai.set_workflow_state(request, 'ongoing')
+        security.unrestricted_wf_transition_to(ai, 'upcoming')
+        security.unrestricted_wf_transition_to(ai, 'ongoing')
         # remove all proposals on poll
         poll.set_field_value('proposals', set())
-        poll.set_workflow_state(request, 'upcoming')
+        security.unrestricted_wf_transition_to(poll, 'upcoming')
+        request = testing.DummyRequest()
         self.assertRaises(HTTPForbidden, poll.set_workflow_state, request, 'ongoing')
 
     def test_render_poll_result(self):
@@ -323,12 +315,15 @@ class PollTests(unittest.TestCase):
 class PollMethodsTests(unittest.TestCase):
     def setUp(self):
         self.config = testing.setUp()
+        self.config.include('voteit.core.models.flash_messages')
+        self.config.include('pyramid_chameleon')
 
     def tearDown(self):
         testing.tearDown()
 
     def test_email_voters_about_ongoing_poll(self):
         root = active_poll_fixture(self.config)
+        self.config.testing_securitypolicy('userid', permissive = True)
         poll = root['meeting']['ai']['poll']
         request = testing.DummyRequest()
         mailer = get_mailer(request)
@@ -347,10 +342,12 @@ class PollMethodsTests(unittest.TestCase):
 class PollPermissionTests(unittest.TestCase):
 
     def setUp(self):
-        self.config = testing.setUp()
+        request = testing.DummyRequest()
+        self.config = testing.setUp(request = request)
         policy = ACLAuthorizationPolicy()
         self.pap = policy.principals_allowed_by_permission
         register_workflows(self.config)
+        self.config.include('voteit.core.models.flash_messages')
 
     def tearDown(self):
         testing.tearDown()
@@ -398,7 +395,7 @@ class PollPermissionTests(unittest.TestCase):
     def test_upcoming_w_private_ai(self):
         poll = self._make_obj()
         request = testing.DummyRequest()
-        poll.set_workflow_state(request, 'upcoming')
+        security.unrestricted_wf_transition_to(poll, 'upcoming')
         self.assertEqual(self.pap(poll, security.VIEW), admin | moderator )
         self.assertEqual(self.pap(poll, security.EDIT), admin | moderator)
         self.assertEqual(self.pap(poll, security.DELETE), admin | moderator)

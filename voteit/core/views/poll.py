@@ -1,6 +1,6 @@
-import urllib
-
-from betahaus.pyracont.factories import createSchema
+from arche.utils import generate_slug
+from arche.views.base import DefaultAddForm
+from arche.views.base import DefaultEditForm
 from pyramid.httpexceptions import HTTPForbidden
 from pyramid.httpexceptions import HTTPFound
 from pyramid.renderers import render
@@ -11,14 +11,12 @@ from zope.interface.interfaces import ComponentLookupError
 from voteit.core import VoteITMF as _
 from voteit.core import security
 from voteit.core.models.arche_compat import createContent
-from voteit.core.models.interfaces import IPoll, IAgendaItem
+from voteit.core.models.interfaces import IAgendaItem
+from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IPollPlugin
 from voteit.core.models.interfaces import IVote
-from voteit.core.models.schemas import add_came_from
 from voteit.core.models.schemas import button_vote
 from voteit.core.views.base_edit import BaseEdit
-from voteit.core.views.base_edit import DefaultAddForm
-from voteit.core.views.base_edit import DefaultEditForm
 
 
 class PollView(BaseEdit):
@@ -165,22 +163,23 @@ class PollVoteForm(DefaultEditForm):
         return HTTPFound(location = url)
 
 
-@view_config(context=IAgendaItem, name="add", renderer='templates/base_edit.pt', request_param = "content_type=Poll")
+@view_config(context=IAgendaItem, name="add", renderer='arche:templates/form.pt', request_param = "content_type=Poll")
 class AddPollForm(DefaultAddForm):
 
-    def add_success(self, appstruct):
+    def save_success(self, appstruct):
         #Don't save this data
         add_reject_proposal = appstruct.pop('add_reject_proposal', None)
         reject_proposal_title = appstruct.pop('reject_proposal_title', None)
 
         if add_reject_proposal:
             reject_proposal = createContent('Proposal', title = reject_proposal_title)
-            name = reject_proposal.suggest_name(self.context)
+            name = generate_slug(self.context, reject_proposal_title)
+            #name = reject_proposal.suggest_name(self.context)
             self.context[name] = reject_proposal
             appstruct['proposals'].add(reject_proposal.uid)
 
-        obj = createContent(self.content_type, **appstruct)
-        name = obj.suggest_name(self.context)
+        obj = createContent(self.type_name, **appstruct)
+        name = generate_slug(self.context, appstruct['title'])
         self.context[name] = obj
 
         #Polls might have a special redirect action if the poll plugin has a settings schema
@@ -191,30 +190,19 @@ class AddPollForm(DefaultAddForm):
         msg = _("private_poll_info",
                 default = "The poll is created in private state, to show it the "
                     "participants you have to change the state to upcoming.")
-        self.api.flash_messages.add(msg)
+        self.flash_messages.add(msg)
         return HTTPFound(location = url)
 
 
 @view_config(context = IPoll,
              name = "edit",
-             renderer = 'templates/base_edit.pt',
+             renderer='arche:templates/form.pt',
              permission = security.EDIT)
 class EditPollForm(DefaultEditForm):
 
-    def get_schema(self):
-        schema_name = self.api.get_schema_name(self.context.content_type, 'edit')
-        schema = createSchema(schema_name)
-        add_came_from(self.context, self.request, schema)
-        return schema
-
     def save_success(self, appstruct):
-        came_from = appstruct.pop('came_from', None)
-        if came_from:
-            url = urllib.unquote(came_from)
-        else:
-            url = self.request.resource_url(self.context.__parent__, anchor = self.context.uid)
         #Change wf of any removed proposals
-        removed_uids = set(self.context.proposal_uids) - set(appstruct['proposals'])
+        removed_uids = set(self.context.proposals) - set(appstruct['proposals'])
         if removed_uids:
             #Adjust removed proposals back to published state, if they're locked
             for uid in removed_uids:
@@ -223,10 +211,10 @@ class EditPollForm(DefaultEditForm):
                     prop.set_workflow_state(self.request, u'published')
         updated = self.context.set_field_appstruct(appstruct)
         if updated:
-            self.api.flash_messages.add(_(u"Successfully updated"))
+            self.flash_messages.add(_(u"Successfully updated"))
         else:
-            self.api.flash_messages.add(_(u"Nothing changed"))
-        return HTTPFound(location = url)
+            self.flash_messages.add(_(u"Nothing changed"))
+        return HTTPFound(location = self.request.resource_url(self.context))
 
 
 def _get_poll_plugin(context, request):
