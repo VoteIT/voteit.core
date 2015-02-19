@@ -113,8 +113,15 @@ class PollConfigForm(DefaultEditForm):
 class PollVoteForm(DefaultEditForm):
     """ Adding and changing a vote object is always done with a poll object as context.
     """
-    use_ajax = True
     formid = 'vote_form'
+    use_ajax = True
+    ajax_options = """
+        {success:
+          function () {
+            voteit.load_target("#ai-polls [data-load-target]");
+          }
+        }
+    """
 
     @property
     def buttons(self):
