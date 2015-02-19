@@ -15,22 +15,29 @@ from voteit.core.events import WorkflowStateChange
 from voteit.core import VoteITMF as _
 
 
-
 #Roles, which are the same as groups really, but we may detach group functionality so it's possible
 #to add regular groups and give them roles.
 #ROLE_ADMIN = 'role:Admin'
 ROLE_ADMIN = arche_sec.ROLE_ADMIN
 ROLE_MEETING_CREATOR = 'role:Meeting creator'
-ROLE_MODERATOR = 'role:Moderator'
+ROLE_MODERATOR = arche_sec.Role('role:Moderator',
+                                title = _("Moderator"),
+                                inheritable = True,
+                                assignable = True)
 ROLE_VIEWER = arche_sec.ROLE_VIEWER
-ROLE_DISCUSS = 'role:Discussion'
-ROLE_PROPOSE = 'role:Propose'
-ROLE_VOTER = 'role:Voter'
+ROLE_DISCUSS = arche_sec.Role('role:Discussion',
+                              title = _("Discuss"),
+                              inheritable = True,
+                              assignable = True)
+ROLE_PROPOSE = arche_sec.Role('role:Propose',
+                              title = _("Propose"),
+                              inheritable = True,
+                              assignable = True)
+ROLE_VOTER = arche_sec.Role('role:Voter',
+                            title = _("Voter"),
+                            inheritable = True,
+                            assignable = True)
 ROLE_OWNER = arche_sec.ROLE_OWNER
-
-
-
-
 
 #Some roles are cumulative - admins are always moderators,
 #and discuss, propose and vote requres that you can view. It's always part of respective roles
@@ -45,7 +52,6 @@ ROLE_DEPENDENCIES[ROLE_VOTER] = (ROLE_VIEWER,)
 
 
 #Global Permissions
-#VIEW = 'View'
 VIEW = arche_sec.PERM_VIEW
 EDIT = arche_sec.PERM_EDIT
 DELETE = arche_sec.PERM_DELETE

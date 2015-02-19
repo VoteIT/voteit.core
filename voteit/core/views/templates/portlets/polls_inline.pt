@@ -1,0 +1,30 @@
+<tal:main xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="voteit.core">
+<tal:iterate repeat="obj contents">
+  <li class="list-group-item"
+      tal:define="can_vote request.has_permission(vote_perm, obj);
+                  has_voted request.authenticated_userid in obj">
+    <!-- 
+    <tal:creator replace="structure request.creators_info(obj.creators)"></tal:creator>
+    -->
+    <a tal:condition="can_vote or has_voted"
+      class="btn btn-primary"
+      href="javascript:arche.create_modal('#${obj.uid}')"
+      id="${obj.uid}"
+      data-modal-target="${request.resource_url(obj, '__vote__', query = {'modal': obj.uid})}">
+      <span tal:condition="can_vote and not has_voted" i18n:translate="add_vote_button">Vote</span>
+      <span tal:condition="can_vote and has_voted" i18n:translate="">Change vote</span>
+      <span tal:condition="not can_vote" i18n:translate="">View vote</span>
+    </a>
+    
+    <a href="${request.resource_url(obj)}">
+      ${obj.title}
+    </a>
+    
+    <tal:meta replace="structure view.render_view_group('metadata_listing', obj)"></tal:meta>
+  </li>
+</tal:iterate>
+</tal:main>

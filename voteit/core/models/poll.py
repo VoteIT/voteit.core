@@ -1,9 +1,8 @@
 from BTrees.OIBTree import OIBTree
+from arche.security import get_acl_registry
 from arche.utils import send_email
 from pyramid.httpexceptions import HTTPForbidden
 from pyramid.renderers import render
-from pyramid.security import Allow
-from pyramid.security import DENY_ALL
 from pyramid.threadlocal import get_current_registry
 from pyramid.threadlocal import get_current_request
 from pyramid.traversal import find_interface
@@ -25,46 +24,6 @@ from voteit.core.models.interfaces import IVote
 from voteit.core.models.workflow_aware import WorkflowAware
 
 
-_UPCOMING_PERMS = (security.VIEW,
-                   security.EDIT,
-                   security.DELETE,
-                   security.CHANGE_WORKFLOW_STATE,
-                   security.MODERATE_MEETING, )
-
-_ONGOING_PERMS = (security.VIEW,
-                  security.DELETE,
-                  security.CHANGE_WORKFLOW_STATE,
-                  security.MODERATE_MEETING, )
-
-ACL = {}
-ACL['private'] = [(Allow, security.ROLE_ADMIN, _UPCOMING_PERMS),
-                  (Allow, security.ROLE_MODERATOR, _UPCOMING_PERMS),
-                  DENY_ALL,
-                   ]
-ACL['upcoming'] = [(Allow, security.ROLE_ADMIN, _UPCOMING_PERMS),
-                  (Allow, security.ROLE_MODERATOR, _UPCOMING_PERMS),
-                  (Allow, security.ROLE_VIEWER, security.VIEW),
-                  DENY_ALL,
-                   ]
-ACL['ongoing'] = [(Allow, security.ROLE_ADMIN, _ONGOING_PERMS, ),
-                  (Allow, security.ROLE_MODERATOR, _ONGOING_PERMS, ),
-                  (Allow, security.ROLE_VOTER, (security.ADD_VOTE, )),
-                  (Allow, security.ROLE_VIEWER, security.VIEW),
-                  DENY_ALL,
-                   ]
-ACL['closed'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, security.DELETE, )),
-                 (Allow, security.ROLE_MODERATOR, (security.VIEW, security.DELETE, )),
-                 (Allow, security.ROLE_VIEWER, security.VIEW),
-                 DENY_ALL,
-                ]
-ACL['canceled'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, security.DELETE, security.CHANGE_WORKFLOW_STATE)),
-                   (Allow, security.ROLE_MODERATOR, _ONGOING_PERMS),
-                   (Allow, security.ROLE_VIEWER, security.VIEW),
-                   DENY_ALL,
-                  ]
-
-
-#@content_factory('Poll', title=_(u"Poll"))
 @implementer(IPoll, ICatalogMetadataEnabled)
 class Poll(BaseContent, WorkflowAware):
     """ Poll content type.
@@ -76,18 +35,24 @@ class Poll(BaseContent, WorkflowAware):
     type_name = 'Poll'
     type_title = _(u"Poll")
     add_permission = security.ADD_POLL
-    #schemas = {'add': 'AddPollSchema', 'edit': 'EditPollSchema'}
+    _poll_result = None
+    _ballots = None
+    _poll_settings = None
 
     @property
     def __acl__(self):
+        acl = get_acl_registry()
         #If ai is private, use private
         ai = find_interface(self, IAgendaItem)
         ai_state = ai.get_workflow_state()
         if ai_state == 'private':
-            return ACL['private']
+            return acl.get_acl('Poll:private')
         state = self.get_workflow_state()
         #As default - don't traverse to parent
-        return ACL.get(state, ACL['closed'])
+        acl_name = 'Poll:%s' % state
+        if acl_name in acl:
+            return acl.get_acl(acl_name)
+        return acl.get_acl('Poll:private')
 
     @property
     def start_time(self):
@@ -281,17 +246,18 @@ def lock_proposals(poll, request):
             proposal.set_workflow_state(request, 'voting')
             count += 1
     if count:
-        fm = IFlashMessages(request)
-        prop_form = request.localizer.pluralize(_(u"proposal"), _(u"proposals"), count)
-        ts = _ #So i18n tools don't pick it up
-        prop_form = request.localizer.translate(ts(prop_form))
-        msg = _(u'poll_proposals_locked_notice',
-                default=u"Setting ${count} ${prop_form} as 'locked for vote'. "
-                        u"They can no longer be edited or retracted by normal users. "
-                        u"All proposals participating in an ongoing poll should be locked.",
-                mapping={'count':count,
-                         'prop_form': prop_form})
-        fm.add(msg)
+        fm = IFlashMessages(request, None)
+        if fm:
+            singular = request.localizer.translate(_(u"proposal"))
+            plural = request.localizer.translate(_(u"proposals"))
+            prop_form = request.localizer.pluralize(singular, plural, count)
+            msg = _(u'poll_proposals_locked_notice',
+                    default=u"Setting ${count} ${prop_form} as 'locked for vote'. "
+                            u"They can no longer be edited or retracted by normal users. "
+                            u"All proposals participating in an ongoing poll should be locked.",
+                    mapping={'count':count,
+                             'prop_form': prop_form})
+            fm.add(msg)
 
 def upcoming_poll_callback(poll, info):
     """ Workflow callback when a poll is set in the upcoming state.
@@ -299,10 +265,11 @@ def upcoming_poll_callback(poll, info):
     """
     request = get_current_request()
     lock_proposals(poll, request)
-    fm = IFlashMessages(request)
-    msg = _('poll_upcoming_state_notice',
-            default=u"Setting poll in upcoming state. It's now visible for meeting participants.")
-    fm.add(msg)
+    fm = IFlashMessages(request, None)
+    if fm:
+        msg = _('poll_upcoming_state_notice',
+                default=u"Setting poll in upcoming state. It's now visible for meeting participants.")
+        fm.add(msg)
 
 def ongoing_poll_callback(poll, info):
     """ Workflow callback when a poll is set in the ongoing state.
@@ -328,7 +295,7 @@ def email_voters_about_ongoing_poll(poll, request=None):
         This function is triggered by a workflow subscriber, so not all functionality
         is nested in the workflow callback. (It would make permission tests very
         annoying and hard to write otherwise)
-        
+
         Note that there's a setting on the meeting called poll_notification_setting
         that controls wether this should be executed or not.
     """
@@ -365,3 +332,39 @@ def email_voters_about_ongoing_poll(poll, request=None):
 
 def includeme(config):
     config.add_content_factory(Poll, addable_to = 'AgendaItem')
+    aclreg = config.registry.acl
+
+    _UPCOMING_PERMS = (security.VIEW,
+                       security.EDIT,
+                       security.DELETE,
+                       security.CHANGE_WORKFLOW_STATE,
+                       security.MODERATE_MEETING, )
+    _ONGOING_PERMS = (security.VIEW,
+                      security.DELETE,
+                      security.CHANGE_WORKFLOW_STATE,
+                      security.MODERATE_MEETING, )
+
+    private = aclreg.new_acl('Poll:private')
+    private.add(security.ROLE_ADMIN, _UPCOMING_PERMS)
+    private.add(security.ROLE_MODERATOR, _UPCOMING_PERMS)
+
+    upcoming = aclreg.new_acl('Poll:upcoming')
+    upcoming.add(security.ROLE_ADMIN, _UPCOMING_PERMS)
+    upcoming.add(security.ROLE_MODERATOR, _UPCOMING_PERMS)
+    upcoming.add(security.ROLE_VIEWER, security.VIEW)
+
+    ongoing = aclreg.new_acl('Poll:ongoing')
+    ongoing.add(security.ROLE_ADMIN, _ONGOING_PERMS)
+    ongoing.add(security.ROLE_MODERATOR, _ONGOING_PERMS)
+    ongoing.add(security.ROLE_VOTER, security.ADD_VOTE)
+    ongoing.add(security.ROLE_VIEWER, security.VIEW)
+
+    closed = aclreg.new_acl('Poll:closed')
+    closed.add(security.ROLE_ADMIN, [security.VIEW, security.DELETE])
+    closed.add(security.ROLE_MODERATOR, [security.VIEW, security.DELETE])
+    closed.add(security.ROLE_VIEWER, security.VIEW)
+
+    canceled = aclreg.new_acl('Poll:canceled')
+    canceled.add(security.ROLE_ADMIN, _ONGOING_PERMS)
+    canceled.add(security.ROLE_MODERATOR, _ONGOING_PERMS)
+    canceled.add(security.ROLE_VIEWER, security.VIEW)

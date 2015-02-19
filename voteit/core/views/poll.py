@@ -16,6 +16,7 @@ from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IPollPlugin
 from voteit.core.models.interfaces import IVote
 from voteit.core.models.schemas import button_vote
+from voteit.core.models.schemas import button_cancel
 from voteit.core.views.base_edit import BaseEdit
 
 
@@ -70,10 +71,10 @@ class PollView(BaseEdit):
         return poll_plugin.render_raw_data()
 
 
-@view_config(context=IPoll,
-             name="poll_config",
-             renderer='templates/base_edit.pt',
-             permission=security.EDIT)
+@view_config(context = IPoll,
+             name = "poll_config",
+             renderer = 'arche:templates/form.pt',
+             permission = security.EDIT)
 class PollConfigForm(DefaultEditForm):
     """ Configure poll settings. Only for moderators.
         The settings themselves come from the poll plugin.
@@ -85,7 +86,7 @@ class PollConfigForm(DefaultEditForm):
     def __call__(self):
         if self.schema is None:
             msg = _("No settings for this poll")
-            self.api.flash_messages.add(msg, type = 'error')
+            self.flash_messages.add(msg, type = 'error')
             raise HTTPFound(location = self.request.resource_url(self.context))
         return super(PollConfigForm, self).__call__()
 
@@ -98,26 +99,37 @@ class PollConfigForm(DefaultEditForm):
 
     def save_success(self, appstruct):
         self.context.poll_settings = appstruct
-        self.api.flash_messages.add(self.default_success)
+        self.flash_messages.add(self.default_success)
         url = self.request.resource_url(self.context.__parent__, anchor = self.context.uid)
         return HTTPFound(location = url)
 
 
 @view_config(name="_poll_form", context = IPoll, renderer="templates/ajax_edit.pt", permission=security.VIEW, xhr=True)
 @view_config(name="_poll_form", context = IPoll, renderer="templates/poll_single.pt", permission=security.VIEW, xhr=False)
+@view_config(name = "__vote__",
+             context = IPoll,
+             renderer = "arche:templates/form.pt",
+             permission = security.VIEW)
 class PollVoteForm(DefaultEditForm):
     """ Adding and changing a vote object is always done with a poll object as context.
     """
-    buttons = (button_vote,)
+    use_ajax = True
+    formid = 'vote_form'
 
     @property
-    def form_options(self):
-        return {'action': self.request.resource_url(self.context, '_poll_form'),
-                'formid': 'vote_form'}
+    def buttons(self):
+        buttons = [self.button_cancel]
+        if self.can_vote:
+            buttons.insert(0, button_vote)
+        return buttons
+
+    @property
+    def title(self):
+        return self.context.title
 
     @property
     def can_vote(self):
-        return self.api.context_has_permission(security.ADD_VOTE, self.context)
+        return self.request.has_permission(security.ADD_VOTE, self.context)
 
     @property
     def poll_plugin(self):
@@ -127,13 +139,14 @@ class PollVoteForm(DefaultEditForm):
     def readonly(self):
         return not self.can_vote
 
-    def appstruct(self):
-        if self.api.userid in self.context:
-            return self.context[self.api.userid].get_vote_data()
-        return {}
+    def __call__(self):
+        self.schema = self.poll_plugin.get_vote_schema(self.request, None)
+        return super(PollVoteForm, self).__call__()
 
-    def get_schema(self):
-        return self.poll_plugin.get_vote_schema(self.request, self.api)
+    def appstruct(self):
+        if self.request.authenticated_userid in self.context:
+            return self.context[self.request.authenticated_userid].get_vote_data()
+        return {}
 
     def vote_success(self, appstruct):
         #Just in case the form rendered before the poll closed
@@ -143,27 +156,38 @@ class PollVoteForm(DefaultEditForm):
         if not IVote.implementedBy(Vote):
             raise TypeError("Poll plugins method get_vote_class returned something that didn't implement IVote.")
         appstruct.pop('csrf_token', None)
-        userid = self.api.userid
+        userid = self.request.authenticated_userid
         if userid in self.context:
             vote = self.context[userid]
-            assert IVote.providedBy(vote)
+            assert IVote.providedBy(vote), "%r doesn't provide IVote" % vote
             vote.set_vote_data(appstruct)
+            success_msg = _("Your vote was changed.")
         else:
             vote = Vote(creators = [userid])
             #We don't need to send events here, since object added will take care of that
             vote.set_vote_data(appstruct, notify = False)
             #To fire events after set_vote_data is done
             self.context[userid] = vote
-        success_msg = _(u"Your vote has been registered!")
-        if self.request.is_xhr:
-            self.response['success_msg'] = success_msg
-            return Response(render("templates/snippets/vote_success.pt", self.response, request = self.request))
-        self.api.flash_messages.add(success_msg)
-        url = self.request.resource_url(self.context.__parent__, anchor = self.context.uid)
-        return HTTPFound(location = url)
+            success_msg = _("Your vote has been added. If you wish to change it, you may do so as long as the poll is open.")
+        self.flash_messages.add(success_msg)
+        return self._remove_modal_response()
+
+    def _remove_modal_response(self, *args):
+        return Response(render("arche:templates/deform/destroy_modal.pt", {}, request = self.request))
+
+    cancel_success = _remove_modal_response
+
+    def show(self, form):
+        appstruct = self.appstruct()
+        if appstruct is None:
+            appstruct = {}
+        return {'form': form.render(appstruct = appstruct, readonly = self.readonly)}
 
 
-@view_config(context=IAgendaItem, name="add", renderer='arche:templates/form.pt', request_param = "content_type=Poll")
+@view_config(context = IAgendaItem,
+             name="add",
+             renderer='arche:templates/form.pt',
+             request_param = "content_type=Poll")
 class AddPollForm(DefaultAddForm):
 
     def save_success(self, appstruct):
@@ -196,7 +220,7 @@ class AddPollForm(DefaultAddForm):
 
 @view_config(context = IPoll,
              name = "edit",
-             renderer='arche:templates/form.pt',
+             renderer = 'arche:templates/form.pt',
              permission = security.EDIT)
 class EditPollForm(DefaultEditForm):
 

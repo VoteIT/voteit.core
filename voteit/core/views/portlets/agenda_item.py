@@ -10,20 +10,19 @@ from arche.views.base import DefaultAddForm
 from deform_autoneed import need_lib
 from pyramid.renderers import render
 from pyramid.response import Response
-from pyramid.traversal import find_interface
-from pyramid.traversal import find_root
+#from pyramid.traversal import find_interface
+#from pyramid.traversal import find_root
 from pyramid.traversal import resource_path
 from repoze.catalog.query import Eq, NotAny, Any
-import colander
+#import colander
 
 from voteit.core import _
 from voteit.core import security
 from voteit.core.fanstaticlib import data_loader
 from voteit.core.models.interfaces import IAgendaItem
-from voteit.core.models.interfaces import IProposal
-from voteit.core.models.interfaces import IDiscussionPost
+#from voteit.core.models.interfaces import IProposal
+#from voteit.core.models.interfaces import IDiscussionPost
 from voteit.core.schemas.meeting import AgendaItemProposalsPortletSchema
-#from fanstatic.core import get_needed
 
 #FIXME: Loading required resources for inline forms is still a problem.
 
@@ -64,33 +63,12 @@ class DiscussionsPortlet(ListingPortlet):
     view_name = '__ai_discussions__'
 
 
-# def inline_add_proposal_form(context, request, va, **kw):
-#     """ For agenda item contexts.
-#     """
-#     api = kw['api']
-#     #jquery_form.need() #This isn't included in widgets for some reason
-#     form = inline_add_form(api, 'Proposal', {})
-#     api.register_form_resources(form)
-#     if not api.context_has_permission(ADD_PROPOSAL, context):
-#         if context.get_workflow_state() == 'closed':
-#             msg = api.translate(_(u"no_propose_ai_closed",
-#                                   default = u"The agenda item is closed, you can't add a proposal here"))
-#         elif api.meeting.get_workflow_state() == 'closed':
-#             msg = api.translate(_(u"no_propose_meeting_closed",
-#                                   default = u"The meeting is closed, you can't add a proposal here"))
-#         else:
-#             msg = api.translate(_(u"no_propose_perm_notice",
-#                                   default = u"You don't have the required permission to add a proposal here"))
-#         return "<hr/>%s" % msg
-#     response = {}
-#     query = {'content_type': 'Proposal'}
-#     tag = request.GET.get('tag', None)
-#     if tag:
-#         query['tag'] = tag
-#     response['url'] = request.resource_url(context, '_inline_form', query = query)
-#     response['text'] = _(u'${username} propose', mapping={'username': api.userid})
-#     return render('../templates/snippets/inline_dummy_proposal_button.pt', response, request = request)
-
+class PollsPortlet(ListingPortlet):
+    name = "ai_polls"
+    title = _("Agenda Item: Polls listing")
+    template = "voteit.core:views/templates/portlets/polls.pt"
+    view_name = '__ai_polls__'
+#    schema_factory = FIXME: Schema for listing
 
 
 class ProposalsInline(BaseView):
@@ -98,54 +76,16 @@ class ProposalsInline(BaseView):
     def __call__(self):
         query = Eq('path', resource_path(self.context)) &\
                 Eq('type_name', 'Proposal')
-    
         hide = self.request.GET.getall('hide')
         if hide:
             query &= NotAny('workflow_state', hide)
-    
         tag = self.request.GET.get('tag', None)
         if tag:
             #Only apply tag limit for things that aren't polls.
             #This is a safegard against user errors
             query &= Any('tags', (tag, ))
-            #query['tags'] = tag
-            
-        # build query string and remove tag
-        #clear_tag_query = self.request.GET.copy()
-        #if 'tag' in clear_tag_query:
-        #    del clear_tag_query['tag']
-    
-        #hide_retracted = self.request.meeting.get_field_value('hide_retracted', False)
-        #hide_unhandled = self.request.meeting.get_field_value('hide_unhandled_proposals', False)
-        #hidden_states = []
-        #if hide_retracted:
-        #    hidden_states.append('retracted')
-        #if hide_unhandled:
-        #    hidden_states.append('unhandled')
-        #if hidden_states:
-        #    query &= NotAny('workflow_state', hidden_states)
         response = {}
         response['contents'] = self.catalog_query(query, resolve = True, sort_index = 'created')
-        #count, docids = .root.catalog.query(query, sort_index='created')
-        #get_metadata = api.root.catalog.document_map.get_metadata
-        #results = [get_metadata(x) for x in docids]
-#         hidden_proposals = []
-#         if hidden_states:
-#             query = Eq('path', resource_path(context)) &\
-#                     Eq('content_type', 'Proposal') &\
-#                     NotAny('uid', shown_uids) &\
-#                     Any('workflow_state', hidden_states)
-#             if tag:
-#                 query &= Any('tags', (tag, ))
-#             count, docids = api.root.catalog.query(query, sort_index='created')
-#             hidden_proposals = [get_metadata(x) for x in docids]
-    
-#         response['clear_tag_url'] = self.request.resource_url(self.context, query=clear_tag_query)
-#         response['proposals'] = tuple(results)
-#         response['hidden_proposals'] = tuple(hidden_proposals)
-#         response['tag'] = tag
-#         response['api'] = api 
-#         response['polls'] = polls
         return response
 
 
@@ -155,13 +95,25 @@ class DiscussionsInline(BaseView):
         query = {
             'path': resource_path(self.context),
             'type_name': 'DiscussionPost',
-            'sort_index': 'created',
-             }
+            'sort_index': 'created'}
         tag = self.request.GET.get('tag', None)
         if tag:
             query['tags'] = tag
         response = {}
         response['contents'] = self.catalog_search(resolve = True, **query)
+        return response
+
+
+class PollsInline(BaseView):
+    
+    def __call__(self):
+        query = {
+            'path': resource_path(self.context),
+            'type_name': 'Poll',
+            'sort_index': 'created',}
+        response = {}
+        response['contents'] = self.catalog_search(resolve = True, **query)
+        response['vote_perm'] = security.ADD_VOTE
         return response
 
 
@@ -204,6 +156,7 @@ def includeme(config):
     config.add_portlet_slot('agenda_item', title = _("Agenda Item portlets"), layout = 'vertical')
     config.add_portlet(ProposalsPortlet)
     config.add_portlet(DiscussionsPortlet)
+    config.add_portlet(PollsPortlet)
     config.add_view(ProposalAddForm,
                     context = IAgendaItem,
                     name = 'add',
@@ -226,3 +179,8 @@ def includeme(config):
                     context = IAgendaItem,
                     permission = security.VIEW,
                     renderer = 'voteit.core:views/templates/portlets/discussions_inline.pt')
+    config.add_view(PollsInline,
+                    name = '__ai_polls__',
+                    context = IAgendaItem,
+                    permission = security.VIEW,
+                    renderer = 'voteit.core:views/templates/portlets/polls_inline.pt')

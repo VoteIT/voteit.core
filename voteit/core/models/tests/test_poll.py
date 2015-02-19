@@ -344,10 +344,12 @@ class PollPermissionTests(unittest.TestCase):
     def setUp(self):
         request = testing.DummyRequest()
         self.config = testing.setUp(request = request)
+        self.config.include('arche.testing')
         policy = ACLAuthorizationPolicy()
         self.pap = policy.principals_allowed_by_permission
         register_workflows(self.config)
         self.config.include('voteit.core.models.flash_messages')
+        self.config.include('voteit.core.models.poll')
 
     def tearDown(self):
         testing.tearDown()

@@ -1,0 +1,24 @@
+<tal:main xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="voteit.core">
+<div id="ai-polls">
+  <div class="panel panel-primary portlet">
+    <div class="panel-heading">
+      <h4 class="panel-title" i18n:translate="">Polls</h4>
+    </div>
+    <ul class="list-group" data-load-target="${load_url}">
+      <li class="list-group-item">
+        <span class="glyphicon glyphicon-refresh rotate-me"></span>
+        Loading...
+      </li>
+    </ul>
+    <div class="panel-footer">
+    <!-- 
+      <div tal:replace="structure view.render_template('voteit.core:views/templates/portlets/inline_dummy_form.pt')"></div>
+       -->
+    </div>
+  </div>
+</div>
+</tal:main>
