@@ -9,6 +9,8 @@ from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IWorkflowAware
+from voteit.core.views.components.metadata_listing import meta_state
+
 
 
 @view_action('main', 'moderator_actions', title=_(u"Moderator actions"), permission = MODERATE_MEETING)
@@ -26,24 +28,14 @@ def moderator_actions(context, request, va, **kw):
     return render('templates/cogwheel/moderator_actions.pt', response, request = request)
 
 
-
 @view_action('actionbar_main', 'voteit_wf',
              title = _("Workflow"),
              priority = 5,
-             interface = IWorkflowAware)
+             interface = IWorkflowAware,
+             renderer = 'voteit.core:views/components/templates/workflow.pt')
 def wf_menu(context, request, va, **kw):
-    tstring = _
-    response = dict(
-        section_title = va.title,
-        #api = api,
-        state_id  = context.get_workflow_state(),
-        state_title = tstring(context.current_state_title(request)), #Picked up by translation mechanism in zcml
-        states = context.get_available_workflow_states(request),
-        context = context,
-        tstring = tstring,
-        #state_change_url = "%sstate?state=" % api.resource_url(context, request),
-    )
-    return render('templates/workflow.pt', response, request = request)
+    return meta_state(context, request, va, **kw)
+
 
 #     if not IContextACL.providedBy(context):
 #         return

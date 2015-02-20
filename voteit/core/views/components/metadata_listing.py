@@ -1,4 +1,4 @@
-from betahaus.viewcomponent import view_action
+from betahaus.viewcomponent import view_action, render_view_action
 from betahaus.viewcomponent.interfaces import IViewGroup
 from pyramid.renderers import render
 from pyramid.traversal import find_resource
@@ -25,17 +25,37 @@ from voteit.core.security import DELETE
 #     response = {'view_actions': util.values(), 'va_kwargs': kw,}
 #     return render('templates/metadata/metadata_listing.pt', response, request = request)
 
-@view_action('metadata_listing', 'state', permission=VIEW, interface = IWorkflowAware)
+@view_action('metadata_listing', 'state',
+             permission = VIEW,
+             interface = IWorkflowAware,
+             renderer = "voteit.core:views/components/templates/inline_workflow.pt")
 def meta_state(context, request, va, **kw):
-    state_id = context.get_workflow_state()
-    state_info = context.workflow.state_info(None, request)
-    translated_state_title = state_id
-    for info in state_info:
-        if info['name'] == state_id:
-            ts = _
-            translated_state_title = request.localizer.translate(ts(info['title']))
-            break
-    return '<span class="%s icon iconpadding">%s</span>' % (state_id, translated_state_title)
+    """ Note: moderator actions also uses this one.
+    """
+    tstring = _
+    response = dict(
+        section_title = va.title,
+        state_id  = context.get_workflow_state(),
+        state_title = tstring(context.current_state_title(request)), #Picked up by translation mechanism in zcml
+        states = context.get_available_workflow_states(request),
+        context = context,
+        tstring = tstring,
+    )
+    return render(va.kwargs['renderer'], response, request = request)
+# 
+# 
+#     if request.is_moderator:
+#         return render_view_action(context, request, 'actionbar_main', 'voteit_wf', **kw)
+#     else:
+#         state_id = context.get_workflow_state()
+#         state_info = context.workflow.state_info(None, request)
+#         translated_state_title = state_id
+#         for info in state_info:
+#             if info['name'] == state_id:
+#                 ts = _
+#                 translated_state_title = request.localizer.translate(ts(info['title']))
+#                 break
+#         return '<span class="%s icon iconpadding">%s</span>' % (state_id, translated_state_title)
 
 @view_action('metadata_listing', 'time', permission=VIEW)
 def meta_time(context, request, va, **kw):
