@@ -22,8 +22,7 @@ owner = set([security.ROLE_OWNER])
 class AgendaItemTests(unittest.TestCase):
     def setUp(self):
         self.config = testing.setUp()
-        self.config.include('pyramid_zcml')
-        self.config.load_zcml('voteit.core:configure.zcml')
+        self.config.include('voteit.core.testing_helpers.register_workflows')
 
     def tearDown(self):
         testing.tearDown()
@@ -43,9 +42,7 @@ class AgendaItemTests(unittest.TestCase):
     def _make_poll(self):
         from voteit.core.models.poll import Poll
         poll = Poll()
-        
         poll.set_field_value('proposals', set(self._make_proposal().uid))
-        
         return poll
 
     def test_verify_implementation(self):
@@ -71,14 +68,11 @@ class AgendaItemTests(unittest.TestCase):
         """
         request = testing.DummyRequest()
         obj = self._make_obj()
-        
         obj.set_workflow_state(request, 'upcoming')
         obj.set_workflow_state(request, 'ongoing')
-
         obj['poll'] = self._make_poll()
         obj['poll'].set_workflow_state(request, 'upcoming')
         obj['poll'].set_workflow_state(request, 'ongoing')
-
         self.assertRaises(Exception, obj.set_workflow_state, 'closed')
 
     def test_timestamp_added_on_close(self):
@@ -96,15 +90,11 @@ class AgendaItemTests(unittest.TestCase):
             meeting is not ongoing an exception should be raised.
         """
         request = testing.DummyRequest()
-        
         meeting = self._make_meeting()
-        
         obj = self._make_obj()
         meeting['agenda_item'] = obj
-
         obj.set_workflow_state(request, 'upcoming')
         self.assertRaises(Exception, obj.set_workflow_state, 'ongoing')
-        
         meeting.set_workflow_state(request, 'ongoing')
         obj.set_workflow_state(request, 'ongoing')
 
@@ -138,11 +128,10 @@ class AgendaItemPermissionTests(unittest.TestCase):
         self.config = testing.setUp()
         self.config.include('arche.testing')
         self.config.include('voteit.core.models.meeting')
+        self.config.include('voteit.core.models.agenda_item')
         policy = ACLAuthorizationPolicy()
         self.pap = policy.principals_allowed_by_permission
-        # load workflow
-        self.config.include('pyramid_zcml')
-        self.config.load_zcml('voteit.core:configure.zcml')
+        self.config.include('voteit.core.testing_helpers.register_workflows')
 
     def tearDown(self):
         testing.tearDown()
@@ -157,131 +146,66 @@ class AgendaItemPermissionTests(unittest.TestCase):
 
     def test_private(self):
         obj = self._make_obj()
-        
-        #View
         self.assertEqual(self.pap(obj, security.VIEW), admin | moderator)
-
-        #Edit
         self.assertEqual(self.pap(obj, security.EDIT), admin | moderator)
-        
-        #Delete
         self.assertEqual(self.pap(obj, security.DELETE), admin | moderator)
-
-        #Add proposal
         self.assertEqual(self.pap(obj, security.ADD_PROPOSAL), admin | moderator)
-
-        #Add poll
         self.assertEqual(self.pap(obj, security.ADD_POLL), admin | moderator)
-
-        #Add discussion post
         self.assertEqual(self.pap(obj, security.ADD_DISCUSSION_POST), admin | moderator)
-
-        #Change workflow state
         self.assertEqual(self.pap(obj, security.CHANGE_WORKFLOW_STATE), admin | moderator)
 
     def test_ongoing_with_ongoing_meeting(self):
         request = testing.DummyRequest()
         obj = self._make_obj()
-        
         obj.set_workflow_state(request, 'upcoming')
         obj.set_workflow_state(request, 'ongoing')
-        
         meeting = self._make_meeting()
         meeting.set_workflow_state(request, 'upcoming')
         meeting.set_workflow_state(request, 'ongoing')
-        
         meeting['ai'] = obj
-        
-        #View
         self.assertEqual(self.pap(obj, security.VIEW), admin | moderator | viewer )
-
-        #Edit
         self.assertEqual(self.pap(obj, security.EDIT), admin | moderator )
-        
-        #Delete
         self.assertEqual(self.pap(obj, security.DELETE), admin | moderator)
-
-        #Add proposal
         self.assertEqual(self.pap(obj, security.ADD_PROPOSAL), admin | moderator | propose)
-
-        #Add poll
         self.assertEqual(self.pap(obj, security.ADD_POLL), admin | moderator)
-
-        #Add discussion post
         self.assertEqual(self.pap(obj, security.ADD_DISCUSSION_POST), admin | moderator | discuss)
-
-        #Change workflow state
         self.assertEqual(self.pap(obj, security.CHANGE_WORKFLOW_STATE), admin | moderator)
 
     def test_closed_ai_in_closed_meeting(self):
         request = testing.DummyRequest()
         obj = self._make_obj()
-        
         obj.set_workflow_state(request, 'upcoming')
         obj.set_workflow_state(request, 'ongoing')
         obj.set_workflow_state(request, 'closed')
-        
         meeting = self._make_meeting()
         meeting.set_workflow_state(request, 'upcoming')
         meeting.set_workflow_state(request, 'ongoing')
         meeting.set_workflow_state(request, 'closed')
-        
         meeting['ai'] = obj
-        
-        #View
         self.assertEqual(self.pap(obj, security.VIEW), admin | moderator | viewer)
-
-        #Edit
         self.assertEqual(self.pap(obj, security.EDIT), set())
-        
-        #Delete
         self.assertEqual(self.pap(obj, security.DELETE), set())
-
-        #Add proposal
         self.assertEqual(self.pap(obj, security.ADD_PROPOSAL), set())
-
-        #Add poll
         self.assertEqual(self.pap(obj, security.ADD_POLL), set())
-
-        #Add discussion post
         self.assertEqual(self.pap(obj, security.ADD_DISCUSSION_POST), set())
-
-        #Change workflow state
         self.assertEqual(self.pap(obj, security.CHANGE_WORKFLOW_STATE), set())
 
     def test_closed_ai_in_open_meeting(self):
         request = testing.DummyRequest()
         obj = self._make_obj()
-        
         obj.set_workflow_state(request, 'upcoming')
         obj.set_workflow_state(request, 'ongoing')
         obj.set_workflow_state(request, 'closed')
-        
         meeting = self._make_meeting()
         meeting.set_workflow_state(request, 'upcoming')
         meeting.set_workflow_state(request, 'ongoing')
-        
         meeting['ai'] = obj
-        
-        #View
         self.assertEqual(self.pap(obj, security.VIEW), admin | moderator | viewer)
-
-        #Edit
         self.assertEqual(self.pap(obj, security.EDIT), set())
-        
-        #Delete
         self.assertEqual(self.pap(obj, security.DELETE), set())
-
-        #Add proposal
         self.assertEqual(self.pap(obj, security.ADD_PROPOSAL), set())
-
-        #Add poll
         self.assertEqual(self.pap(obj, security.ADD_POLL), set())
-
-        #Add discussion post
         self.assertEqual(self.pap(obj, security.ADD_DISCUSSION_POST), admin | moderator | discuss)
-
-        #Change workflow state
         self.assertEqual(self.pap(obj, security.CHANGE_WORKFLOW_STATE), admin | moderator)
 
     def test_proposal_block(self):

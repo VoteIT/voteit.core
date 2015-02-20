@@ -60,8 +60,10 @@ class DiscussionTests(unittest.TestCase):
 class DiscussionPostPermissionTests(unittest.TestCase):
     def setUp(self):
         self.config = testing.setUp()
+        self.config.include('arche.testing')
         self.config.include('voteit.core.testing_helpers.register_security_policies')
         self.config.include('voteit.core.testing_helpers.register_workflows')
+        self.config.include('voteit.core.models.discussion_post')
 
     def tearDown(self):
         testing.tearDown()

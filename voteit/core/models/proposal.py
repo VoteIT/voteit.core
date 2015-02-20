@@ -1,10 +1,9 @@
 import re
 
 from BTrees.OOBTree import OOBTree
-from zope.interface import implementer
-from pyramid.security import Allow
-from pyramid.security import DENY_ALL
+from arche.security import get_acl_registry
 from pyramid.traversal import find_interface
+from zope.interface import implementer
 
 from voteit.core import VoteITMF as _
 from voteit.core import security
@@ -17,49 +16,6 @@ from voteit.core.models.date_time_util import utcnow
 from voteit.core.models.workflow_aware import WorkflowAware
 
 
-_PUBLISHED_MODERATOR_PERMS = (security.VIEW,
-                              security.EDIT,
-                              security.DELETE,
-                              security.RETRACT,
-                              security.MODERATE_MEETING,)
-_LOCKED_MODERATOR_PERMS = (security.VIEW,
-                           security.EDIT,
-                           security.DELETE,
-                           security.MODERATE_MEETING, )
-
-ACL = {}
-ACL['published'] = [(Allow, security.ROLE_ADMIN, _PUBLISHED_MODERATOR_PERMS),
-                    (Allow, security.ROLE_MODERATOR, _PUBLISHED_MODERATOR_PERMS),
-                    (Allow, security.ROLE_OWNER, (security.RETRACT, )),
-                    (Allow, security.ROLE_PROPOSE, (security.VIEW,)),
-                    (Allow, security.ROLE_DISCUSS, (security.VIEW,)),
-                    (Allow, security.ROLE_VOTER, (security.VIEW,)),
-                    (Allow, security.ROLE_VIEWER, (security.VIEW,)),
-                    DENY_ALL,
-                ]
-ACL['locked'] = [(Allow, security.ROLE_ADMIN, _LOCKED_MODERATOR_PERMS),
-                 (Allow, security.ROLE_MODERATOR, _LOCKED_MODERATOR_PERMS),
-                 (Allow, security.ROLE_PROPOSE, (security.VIEW,)),
-                 (Allow, security.ROLE_DISCUSS, (security.VIEW,)),
-                 (Allow, security.ROLE_VOTER, (security.VIEW,)),
-                 (Allow, security.ROLE_VIEWER, (security.VIEW,)),
-                 DENY_ALL,
-                ]
-ACL['closed'] = [(Allow, security.ROLE_ADMIN, security.VIEW),
-                 (Allow, security.ROLE_MODERATOR, security.VIEW),
-                 (Allow, security.ROLE_PROPOSE, (security.VIEW,)),
-                 (Allow, security.ROLE_DISCUSS, (security.VIEW,)),
-                 (Allow, security.ROLE_VOTER, (security.VIEW,)),
-                 (Allow, security.ROLE_VIEWER, security.VIEW),
-                 DENY_ALL,
-                ]
-ACL['private'] = [(Allow, security.ROLE_ADMIN, _PUBLISHED_MODERATOR_PERMS),
-                  (Allow, security.ROLE_MODERATOR, _PUBLISHED_MODERATOR_PERMS),
-                  DENY_ALL,
-                  ]
-
-
-#@content_factory('Proposal', title=_(u"Proposal"))
 @implementer(IProposal, ICatalogMetadataEnabled)
 class Proposal(BaseContent, WorkflowAware):
     """ Proposal content type.
@@ -68,33 +24,31 @@ class Proposal(BaseContent, WorkflowAware):
     """
     type_name = 'Proposal'
     type_title = _(u"Proposal")
-    #allowed_contexts = ('AgendaItem',)
     add_permission = security.ADD_PROPOSAL
-#    schemas = {'add': 'ProposalSchema',
-#               'edit': 'ProposalSchema'}
     custom_mutators = {'title': '_set_title'}
 
     @property
     def __acl__(self):
         ai = find_interface(self, IAgendaItem)
         ai_state = ai.get_workflow_state()
+        acl = get_acl_registry()
         #If ai is private, use private
         if ai_state == 'private':
-            return ACL['private']
-        state = self.get_workflow_state()
-        if state == 'published':
-            return ACL['published']
-        #Check if AI is open.
+            return acl.get_acl('Proposal:private')
         if ai_state == 'closed':
-            return ACL['closed']
-        return ACL['locked']
+            return acl.get_acl('Proposal:closed')
+        state = self.get_workflow_state()
+        acl_name = "Proposal:%s" % state
+        if acl_name in acl:
+            return acl.get_acl(acl_name)
+        return acl.get_acl('Proposal:locked')
 
     def _get_title(self):
         return self.get_field_value('title', u"")
-    
+
     def _set_title(self, value, key=None):
         self.field_storage['title'] = value
-    
+
     title = property(_get_title, _set_title)
 
     @property
@@ -143,4 +97,29 @@ class Proposal(BaseContent, WorkflowAware):
 
 def includeme(config):
     config.add_content_factory(Proposal, addable_to = 'AgendaItem')
-    
+    _PUBLISHED_MODERATOR_PERMS = (security.VIEW,
+                                  security.EDIT,
+                                  security.DELETE,
+                                  security.RETRACT,
+                                  security.MODERATE_MEETING,)
+    _LOCKED_MODERATOR_PERMS = (security.VIEW,
+                               security.EDIT,
+                               security.DELETE,
+                               security.MODERATE_MEETING, )
+    aclreg = config.registry.acl
+    published = aclreg.new_acl('Proposal:published')
+    published.add(security.ROLE_ADMIN, _PUBLISHED_MODERATOR_PERMS)
+    published.add(security.ROLE_MODERATOR, _PUBLISHED_MODERATOR_PERMS)
+    published.add(security.ROLE_OWNER, security.RETRACT)
+    published.add(security.ROLE_VIEWER, security.VIEW)
+    locked = aclreg.new_acl('Proposal:locked')
+    locked.add(security.ROLE_ADMIN, _LOCKED_MODERATOR_PERMS)
+    locked.add(security.ROLE_MODERATOR, _LOCKED_MODERATOR_PERMS)
+    locked.add(security.ROLE_VIEWER, security.VIEW)
+    closed = aclreg.new_acl('Proposal:closed')
+    closed.add(security.ROLE_ADMIN, security.VIEW)
+    closed.add(security.ROLE_MODERATOR, security.VIEW)
+    closed.add(security.ROLE_VIEWER, security.VIEW)
+    private = aclreg.new_acl('Proposal:private', description ="When Agenda Item is private")
+    private.add(security.ROLE_ADMIN, _PUBLISHED_MODERATOR_PERMS)
+    private.add(security.ROLE_MODERATOR, _PUBLISHED_MODERATOR_PERMS)

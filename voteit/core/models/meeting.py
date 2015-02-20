@@ -1,10 +1,8 @@
 from BTrees.OOBTree import OOBTree
-from zope.interface import implementer
-from pyramid.security import Allow
-from pyramid.security import DENY_ALL
-from pyramid.traversal import find_root
-from pyramid.httpexceptions import HTTPForbidden
 from arche.security import get_acl_registry
+from pyramid.httpexceptions import HTTPForbidden
+from pyramid.traversal import find_root
+from zope.interface import implementer
 
 from voteit.core import VoteITMF as _
 from voteit.core import security
@@ -16,15 +14,7 @@ from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.workflow_aware import WorkflowAware
 from voteit.core.models.security_aware import SecurityAware
 
-_MODERATOR_DEFAULTS = (security.VIEW,
-                       security.EDIT,
-                       security.MANAGE_GROUPS,
-                       security.MODERATE_MEETING,
-                       security.DELETE,
-                       security.CHANGE_WORKFLOW_STATE, )
 
-
-#@content_factory('Meeting', title=_(u"Meeting"))
 @implementer(IMeeting, ICatalogMetadataEnabled)
 class Meeting(BaseContent, SecurityAware, WorkflowAware):
     """ Meeting content type.
@@ -90,10 +80,11 @@ class Meeting(BaseContent, SecurityAware, WorkflowAware):
 
     @property
     def invite_tickets(self):
-        storage = getattr(self, '__invite_tickets__', None)
-        if storage is None:
-            storage = self.__invite_tickets__ =  OOBTree()
-        return storage
+        try:
+            return self.__invite_tickets__
+        except AttributeError:
+            self.__invite_tickets__ = OOBTree()
+            return self.__invite_tickets__
 
     def get_ticket_names(self, previous_invites = 0):
         assert isinstance(previous_invites, int)
@@ -133,45 +124,29 @@ def closing_meeting_callback(context, info):
 
 def includeme(config):
     config.add_content_factory(Meeting, addable_to = 'Root')
-
+    _MODERATOR_DEFAULTS = (security.VIEW,
+                           security.EDIT,
+                           security.MANAGE_GROUPS,
+                           security.MODERATE_MEETING,
+                           security.DELETE,
+                           security.CHANGE_WORKFLOW_STATE, )
     aclreg = config.registry.acl
-    
-    #Default ACL entry for meetings
     default_acl = aclreg.new_acl('Meeting:default')
-    #Admin
     default_acl.add(security.ROLE_ADMIN, security.REGULAR_ADD_PERMISSIONS)
     default_acl.add(security.ROLE_ADMIN, security.MANAGE_SERVER)
     default_acl.add(security.ROLE_ADMIN, _MODERATOR_DEFAULTS)
-    #Moderator
     default_acl.add(security.ROLE_MODERATOR, security.REGULAR_ADD_PERMISSIONS)
     default_acl.add(security.ROLE_MODERATOR, _MODERATOR_DEFAULTS)
-    #Discuss
-    default_acl.add(security.ROLE_DISCUSS, security.ADD_DISCUSSION_POST)    
-    #Propose
+    default_acl.add(security.ROLE_DISCUSS, security.ADD_DISCUSSION_POST)
     default_acl.add(security.ROLE_PROPOSE, security.ADD_PROPOSAL)
-    #Viewer
     default_acl.add(security.ROLE_VIEWER, security.VIEW)
-
-    #ACL for closed meetings
-    default_acl = aclreg.new_acl('Meeting:closed')
-    default_acl.add(security.ROLE_ADMIN, (security.VIEW, security.MODERATE_MEETING, security.MANAGE_GROUPS, security.DELETE, security.CHANGE_WORKFLOW_STATE))
-    default_acl.add(security.ROLE_MODERATOR, (security.VIEW, security.MODERATE_MEETING, security.MANAGE_GROUPS,))
-    default_acl.add(security.ROLE_VIEWER, security.VIEW)
-
-# ACL = {}
-# ACL['default'] = [(Allow, security.ROLE_ADMIN, security.REGULAR_ADD_PERMISSIONS),
-#                   (Allow, security.ROLE_ADMIN, security.MANAGE_SERVER),
-#                   (Allow, security.ROLE_ADMIN, _MODERATOR_DEFAULTS),
-#                   (Allow, security.ROLE_MODERATOR, security.REGULAR_ADD_PERMISSIONS),
-#                   (Allow, security.ROLE_MODERATOR, _MODERATOR_DEFAULTS),
-#                   (Allow, security.ROLE_DISCUSS, (security.ADD_DISCUSSION_POST, )),
-#                   (Allow, security.ROLE_PROPOSE, (security.ADD_PROPOSAL, )),
-#                   (Allow, security.ROLE_VIEWER, (security.VIEW,)),
-#                   DENY_ALL,
-#                    ]
-# 
-# ACL['closed'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, security.MODERATE_MEETING, security.MANAGE_GROUPS, security.DELETE, security.CHANGE_WORKFLOW_STATE)),
-#                  (Allow, security.ROLE_MODERATOR, (security.VIEW, security.MODERATE_MEETING, security.MANAGE_GROUPS, )),
-#                  (Allow, security.ROLE_VIEWER, (security.VIEW, )),
-#                  DENY_ALL,
-#                 ]
+    closed_acl = aclreg.new_acl('Meeting:closed')
+    closed_acl.add(security.ROLE_ADMIN, (security.VIEW,
+                                         security.MODERATE_MEETING,
+                                         security.MANAGE_GROUPS,
+                                         security.DELETE,
+                                         security.CHANGE_WORKFLOW_STATE))
+    closed_acl.add(security.ROLE_MODERATOR, (security.VIEW,
+                                             security.MODERATE_MEETING,
+                                             security.MANAGE_GROUPS,))
+    closed_acl.add(security.ROLE_VIEWER, security.VIEW)

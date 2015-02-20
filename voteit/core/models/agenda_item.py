@@ -1,6 +1,5 @@
+from arche.security import get_acl_registry
 from pyramid.httpexceptions import HTTPForbidden
-from pyramid.security import Allow
-from pyramid.security import DENY_ALL
 from pyramid.security import Deny
 from pyramid.security import Everyone
 from pyramid.threadlocal import get_current_request
@@ -19,38 +18,6 @@ from voteit.core.models.interfaces import IProposal
 from voteit.core.models.workflow_aware import WorkflowAware
 
 
-_PRIV_MOD_PERMS = (security.VIEW,
-                   security.EDIT,
-                   security.DELETE,
-                   security.MODERATE_MEETING,
-                   security.CHANGE_WORKFLOW_STATE, )
-
-_CLOSED_AI_MOD_PERMS = (security.VIEW,
-                        security.CHANGE_WORKFLOW_STATE,
-                        security.ADD_DISCUSSION_POST,
-                        security.MODERATE_MEETING, )
-
-
-ACL = {}
-ACL['private'] = [(Allow, security.ROLE_ADMIN, security.REGULAR_ADD_PERMISSIONS),
-                  (Allow, security.ROLE_ADMIN, _PRIV_MOD_PERMS),
-                  (Allow, security.ROLE_MODERATOR, security.REGULAR_ADD_PERMISSIONS),
-                  (Allow, security.ROLE_MODERATOR, _PRIV_MOD_PERMS),
-                  DENY_ALL,
-                ]
-ACL['closed_ai'] = [(Allow, security.ROLE_ADMIN, _CLOSED_AI_MOD_PERMS),
-                    (Allow, security.ROLE_MODERATOR, _CLOSED_AI_MOD_PERMS),
-                    (Allow, security.ROLE_DISCUSS, (security.ADD_DISCUSSION_POST, )),
-                    (Allow, security.ROLE_VIEWER, (security.VIEW, )),
-                    DENY_ALL,
-                   ]
-ACL['closed_meeting'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, )),
-                         (Allow, security.ROLE_MODERATOR, (security.VIEW, )),
-                         (Allow, security.ROLE_VIEWER, (security.VIEW, )),
-                         DENY_ALL,
-                        ]
-
-
 @implementer(IAgendaItem, ICatalogMetadataEnabled)
 class AgendaItem(BaseContent, WorkflowAware):
     """ Agenda Item content type.
@@ -66,18 +33,17 @@ class AgendaItem(BaseContent, WorkflowAware):
 
     @property
     def __acl__(self):
+        acl = get_acl_registry()
         state = self.get_workflow_state()
         if state == 'closed':
             #Check if the meeting is closed, if not discussion should be allowed +
             #it should be allowed to change the workflow back
             if self.__parent__.get_workflow_state() == 'closed':
-                return ACL['closed_meeting']
-            return ACL['closed_ai']
+                return acl.get_acl('AgendaItem:closed_meeting')
+            return acl.get_acl('AgendaItem:closed_ai')
         if state == 'private':
-            return ACL['private']
+            return acl.get_acl('AgendaItem:private')
         perms = []
-        #FIXME: This is a pretty ugly hack. Rather, the permission to allow discussions or proposals
-        #should be removed. This also has the effect that admins can't add them
         if self.get_field_value('proposal_block', False) == True:
             perms.append((Deny, Everyone, security.ADD_PROPOSAL))
         if self.get_field_value('discussion_block', False) == True:
@@ -132,7 +98,6 @@ def set_initial_order(obj, event):
     """ Subscriber to set the initial order of the agenda item """
     meeting = find_interface(obj, IMeeting)
     assert meeting
-    
     order = 0
     for ai in meeting.values():
         if IAgendaItem.providedBy(ai):
@@ -145,3 +110,27 @@ def set_initial_order(obj, event):
 def includeme(config):
     config.add_content_factory(AgendaItem, addable_to = 'Meeting')
     config.add_subscriber(set_initial_order, [IAgendaItem, IObjectAddedEvent])
+    _PRIV_MOD_PERMS = (security.VIEW,
+                       security.EDIT,
+                       security.DELETE,
+                       security.MODERATE_MEETING,
+                       security.CHANGE_WORKFLOW_STATE, )
+    _CLOSED_AI_MOD_PERMS = (security.VIEW,
+                            security.CHANGE_WORKFLOW_STATE,
+                            security.ADD_DISCUSSION_POST,
+                            security.MODERATE_MEETING, )
+    aclreg = config.registry.acl
+    private = aclreg.new_acl('AgendaItem:private')
+    private.add(security.ROLE_ADMIN, security.REGULAR_ADD_PERMISSIONS)
+    private.add(security.ROLE_ADMIN, _PRIV_MOD_PERMS)
+    private.add(security.ROLE_MODERATOR, security.REGULAR_ADD_PERMISSIONS)
+    private.add(security.ROLE_MODERATOR, _PRIV_MOD_PERMS)
+    closed_ai = aclreg.new_acl('AgendaItem:closed_ai')
+    closed_ai.add(security.ROLE_ADMIN, _CLOSED_AI_MOD_PERMS)
+    closed_ai.add(security.ROLE_MODERATOR, _CLOSED_AI_MOD_PERMS)
+    closed_ai.add(security.ROLE_DISCUSS, security.ADD_DISCUSSION_POST)
+    closed_ai.add(security.ROLE_VIEWER, security.VIEW)
+    closed_meeting = aclreg.new_acl('AgendaItem:closed_meeting')
+    closed_meeting.add(security.ROLE_ADMIN, security.VIEW)
+    closed_meeting.add(security.ROLE_MODERATOR, security.VIEW)
+    closed_meeting.add(security.ROLE_VIEWER, security.VIEW)
