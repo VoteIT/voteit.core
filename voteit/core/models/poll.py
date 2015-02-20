@@ -347,23 +347,19 @@ def includeme(config):
     private = aclreg.new_acl('Poll:private')
     private.add(security.ROLE_ADMIN, _UPCOMING_PERMS)
     private.add(security.ROLE_MODERATOR, _UPCOMING_PERMS)
-
     upcoming = aclreg.new_acl('Poll:upcoming')
     upcoming.add(security.ROLE_ADMIN, _UPCOMING_PERMS)
     upcoming.add(security.ROLE_MODERATOR, _UPCOMING_PERMS)
     upcoming.add(security.ROLE_VIEWER, security.VIEW)
-
     ongoing = aclreg.new_acl('Poll:ongoing')
     ongoing.add(security.ROLE_ADMIN, _ONGOING_PERMS)
     ongoing.add(security.ROLE_MODERATOR, _ONGOING_PERMS)
     ongoing.add(security.ROLE_VOTER, security.ADD_VOTE)
     ongoing.add(security.ROLE_VIEWER, security.VIEW)
-
     closed = aclreg.new_acl('Poll:closed')
-    closed.add(security.ROLE_ADMIN, [security.VIEW, security.DELETE])
-    closed.add(security.ROLE_MODERATOR, [security.VIEW, security.DELETE])
+    closed.add(security.ROLE_ADMIN, [security.VIEW, security.DELETE, security.MODERATE_MEETING])
+    closed.add(security.ROLE_MODERATOR, [security.VIEW, security.DELETE, security.MODERATE_MEETING])
     closed.add(security.ROLE_VIEWER, security.VIEW)
-
     canceled = aclreg.new_acl('Poll:canceled')
     canceled.add(security.ROLE_ADMIN, _ONGOING_PERMS)
     canceled.add(security.ROLE_MODERATOR, _ONGOING_PERMS)
