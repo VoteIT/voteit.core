@@ -99,25 +99,20 @@ def generic_root_menu_link(context, request, va, **kw):
 @view_action('participants_menu', 'participant_list', title = _(u"Participant list"), link = "participants")
 def generic_menu_link(context, request, va, **kw):
     """ This is for simple menu items for the meeting root """
-    api = kw['api']
-    url = "%s%s" % (api.meeting_url, va.kwargs['link'])
-    return """<li><a href="%s">%s</a></li>""" % (url, api.translate(va.title))
+    url = request.resource_url(request.meeting, va.kwargs['link'])
+    return """<li class="list-group-item"><a href="%s">%s</a></li>""" % (url, request.localizer.translate(va.title))
 
 @view_action('settings_menu', 'configure_access_policy', title = _(u"Configure selected access policy"),
              link = "configure_access_policy", permission = MODERATE_MEETING)
 def configure_access_policy_menu_link(context, request, va, **kw):
     """ Only show this if it has any settings to be configured """
-    api = kw['api']
-    if not api.meeting:
-        return u""
-    access_policy_name = api.meeting.get_field_value('access_policy', None)
+    access_policy_name = request.meeting.get_field_value('access_policy', None)
     if not access_policy_name:
-        return u""
-    ap = request.registry.queryAdapter(api.meeting, IAccessPolicy, name = access_policy_name)
+        return
+    ap = request.registry.queryAdapter(request.meeting, IAccessPolicy, name = access_policy_name)
     if ap and ap.config_schema():
-        url = "%s%s" % (api.meeting_url, va.kwargs['link'])
-        return """<li><a href="%s">%s</a></li>""" % (url, api.translate(va.title))
-    return u""
+        url = request.resource_url(request.meeting, va.kwargs['link'])
+        return """<li class="list-group-item"><a href="%s">%s</a></li>""" % (url, api.translate(va.title))
 
 
 class MeetingActionsMenuBody(BaseView):

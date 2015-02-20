@@ -1,0 +1,15 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      metal:use-macro="view.macro('arche:templates/base_view.pt', 'arche:templates/inline.pt')"
+  	  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+	    i18n:domain="voteit.core">
+<body>
+<tal:main metal:fill-slot="main-content">
+  <h1>${context.title}</h1>
+  <p class="description lead"
+       tal:define="description context.description|None"
+       tal:condition="description"
+       tal:content="structure description">Description text</p>
+</tal:main>
+</body>
+</html>

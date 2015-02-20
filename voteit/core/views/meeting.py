@@ -2,17 +2,20 @@ from betahaus.pyracont.factories import createSchema
 from deform import Form
 from deform.exception import ValidationFailure
 from pyramid.decorator import reify
-from pyramid.httpexceptions import HTTPFound, HTTPForbidden
+from pyramid.httpexceptions import HTTPFound
+from pyramid.httpexceptions import HTTPForbidden
 from pyramid.security import NO_PERMISSION_REQUIRED
 from pyramid.security import has_permission
 from pyramid.traversal import resource_path
 from pyramid.view import view_config
+from pyramid.view import view_defaults
 from repoze.catalog.query import Eq
 from zope.interface.interfaces import ComponentLookupError
+from arche.views.base import BaseView
 
 from voteit.core import security
 from voteit.core import VoteITMF as _
-from voteit.core.views.base_view import BaseView
+#from voteit.core.views.base_view import BaseView
 from voteit.core.models.interfaces import IAccessPolicy
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.schemas import add_csrf_token, button_request_access
@@ -20,19 +23,19 @@ from voteit.core.models.schemas import button_save
 from voteit.core.models.schemas import button_cancel
 from voteit.core.views.base_edit import DefaultEditForm
 
-
+@view_defaults(context = IMeeting, permission = security.VIEW)
 class MeetingView(BaseView):
     
-#    @view_config(context=IMeeting, renderer="templates/base_view.pt", permission = NO_PERMISSION_REQUIRED)
+    @view_config(renderer="voteit.core:templates/meeting.pt", permission = NO_PERMISSION_REQUIRED)
     def meeting_view(self):
         """ Meeting view behaves a bit differently than regular views since
             it should allow users to request access if unauthorized is raised.
         """
-        if not has_permission(security.VIEW, self.context, self.request):
+        if not self.request.has_permission(security.VIEW, self.context):
             #We delegate permission checks to the request_meeting_access part.
             url = self.request.resource_url(self.context, 'request_access')
             return HTTPFound(location = url)
-        return self.response
+        return {}
 
     @view_config(name="participants_emails", context=IMeeting, renderer="templates/email_list.pt", permission=security.MODERATE_MEETING)
     def participants_emails(self):
