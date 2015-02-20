@@ -23,8 +23,8 @@
     <a href="${request.resource_url(obj)}">
       ${obj.title}
     </a>
-    
-    <tal:meta replace="structure view.render_view_group('metadata_listing', obj)"></tal:meta>
+    <tal:cog condition="request.is_moderator" replace="structure view.render_template('voteit.core:views/templates/snippets/cogwheel.pt', context = obj)" />
+    <tal:meta replace="structure view.render_view_group('metadata_listing', obj)" />
   </li>
 </tal:iterate>
 </tal:main>

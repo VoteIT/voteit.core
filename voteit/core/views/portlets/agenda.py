@@ -23,6 +23,7 @@ class AgendaPortlet(PortletType):
             response = {'title': self.title,
                         'portlet': self.portlet,
                         'meeting': meeting,
+                        'view': view,
                         'data_url': request.resource_url(meeting, '__agenda_items__.json')}
             return render("voteit.core:views/templates/portlets/agenda.pt",
                           response,

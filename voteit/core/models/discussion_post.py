@@ -19,19 +19,19 @@ from voteit.core.models.date_time_util import utcnow
 
 
 ACL =  {}
-ACL['open'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, security.DELETE, security.EDIT,)),
-               (Allow, security.ROLE_MODERATOR, (security.VIEW, security.DELETE, security.EDIT,)),
+ACL['open'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, security.DELETE, security.EDIT, security.MODERATE_MEETING)),
+               (Allow, security.ROLE_MODERATOR, (security.VIEW, security.DELETE, security.EDIT, security.MODERATE_MEETING)),
                (Allow, security.ROLE_OWNER, (security.DELETE, )),
                (Allow, security.ROLE_VIEWER, (security.VIEW,)),
                DENY_ALL,
                ]
-ACL['closed'] = [(Allow, security.ROLE_ADMIN, (security.VIEW,)),
-                 (Allow, security.ROLE_MODERATOR, (security.VIEW,)),
+ACL['closed'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, security.MODERATE_MEETING)),
+                 (Allow, security.ROLE_MODERATOR, (security.VIEW, security.MODERATE_MEETING)),
                  (Allow, security.ROLE_VIEWER, (security.VIEW,)),
                  DENY_ALL,
                 ]
-ACL['private'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, security.DELETE, security.EDIT,)),
-                  (Allow, security.ROLE_MODERATOR, (security.VIEW, security.DELETE, security.EDIT,)),
+ACL['private'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, security.DELETE, security.EDIT, security.MODERATE_MEETING)),
+                  (Allow, security.ROLE_MODERATOR, (security.VIEW, security.DELETE, security.EDIT, security.MODERATE_MEETING)),
                   DENY_ALL,
                   ]
 

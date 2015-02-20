@@ -1,0 +1,16 @@
+<tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core">
+  <div class="pull-right btn-group"
+    tal:define="url request.resource_url(context, '__cogwheel_menu__')">
+    <button type="button"
+      class="btn btn-primary dropdown-toggle cogwheel"
+      data-dropdown-content="${url}"
+      aria-expanded="false"
+      data-toggle="dropdown"
+      onclick="voteit.load_dropdown('${url}')">
+      <span class="glyphicon glyphicon-cog"></span>
+    </button>
+    <ul class="dropdown-menu" role="menu">
+      <li i18n:translate=""><a href="#">Loading...</a></li>
+    </ul>
+  </div>
+</tal:main>

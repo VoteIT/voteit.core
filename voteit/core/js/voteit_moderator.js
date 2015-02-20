@@ -1,73 +1,33 @@
+if(typeof(voteit) == "undefined"){
+  voteit = {};
+}
 
-/* Cogwheel menus */
-$('.cogwheel a').live('hover', function(event) {
-    /* stop form using default action 
-    IE might throw an error calling preventDefault(), so use a try/catch block. */
-    try { event.preventDefault(); } catch(e) {}
-    var q_content = { text: $(this).parent().find('.menu_body').clone() };
-    $(this).qtip({
-        overwrite: false, // Make sure the tooltip won't be overridden once created
-        content: q_content,
-        show: {
-            event: event.type, // Use the same show event as the one that triggered the event handler
-            ready: true, // Show the tooltip as soon as it's bound, vital so it shows up the first time you hover!
-            effect: false,
-            solo: true,
-        },
-        hide: {
-            event: "mouseleave",
-            fixed: true,
-            effect: false,
-            delay: 100,
-        },
-        position: {
-            viewport: $(window),
-            at: "right center",
-            my: "left center",
-            adjust: {
-                method: 'flip',
-            },
-            effect: false
-        },
-        style: {
-            classes: "cogwheel_menu",
-            tip: false,
-            def: false
-        },
-    }, event);
-});
+/* Load a dropdown menu
+ * 
+ * Must follow bootstraps structure of dropdown menus + have the attr data-dropdown-content=(url)
+ * The url of data-dropdown-content must be passed to the load_dropdown function
+ * 
+ * Example:
+<button type="button"
+    class="btn btn-primary dropdown-toggle cogwheel"
+    data-dropdown-content="http://someurl.com"
+    aria-expanded="false"
+    data-toggle="dropdown"
+    onclick="voteit.load_dropdown('http://someurl.com')">
+    <span class="glyphicon glyphicon-cog"></span>
+</button>
+<ul class="dropdown-menu" role="menu">
+  <li><a href="#">Loading...</a></li>
+</ul>
+ */
 
-
-/* Notify about proposals when deleting a poll */
-$('.menu_body.Poll a.delete').live('click', function(event) {
-    var id = $(this).parents('.menu_body').attr('id').replace('action_menu_', '');
-    
-    var poll = $.find('#'+id+'.notify_delete');
-    if(poll.length > 0) {
-    
-        /* stops normal events function 
-        IE might throw an error calling preventDefault(), so use a try/catch block. */
-        try { event.preventDefault(); } catch(e) {}
-        
-        var dialog = $('<div class="dialog confirm">' + voteit.translation['delete_poll_notification_text'] + '</div>');
-
-        $(dialog).dialog({
-            autoOpen: false,
-            resizable: false,
-            draggable: true,
-            closeOnEscape: true,
-            width: 400,
-            minHeight: 120,
-            maxHeight: 200,
-            buttons: [{
-                text: voteit.translation['ok'],
-                click: function() { $(this).dialog("close"); }
-            }],
-            title: voteit.translation['delete_poll_notification_title'],
-            closeText: voteit.translation['close'],
-            modal: true
-        });
-        
-        $(dialog).dialog('open');
-    }
-});
+function load_dropdown(url) {
+  var request = arche.do_request(url);
+  request.done(function(response) {
+    var initiator = $('[data-dropdown-content="' + url + '"');
+    var menu = initiator.next();
+    menu.html(response);
+    initiator.prop( "onclick", null);
+  })
+}
+voteit.load_dropdown = load_dropdown;

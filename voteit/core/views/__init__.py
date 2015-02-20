@@ -1,6 +1,7 @@
 from pyramid.traversal import find_interface
 
 from voteit.core.models.interfaces import IMeeting
+from voteit.core.security import MODERATE_MEETING
 
 
 def creators_info(request, creators, portrait = True):
@@ -24,9 +25,13 @@ def get_meeting(request):
 def get_userinfo_url(request, userid):
     return request.resource_url(request.meeting, '_userinfo', query = {'userid': userid})
 
+def is_moderator(request):
+    return request.has_permission(MODERATE_MEETING)
+
 def includeme(config):
-    config.include('.portlets')
     config.include('.agenda_item')
+    config.include('.cogwheel')
+    config.include('.portlets')
     config.scan(__name__)
 
     #Hook creators info
@@ -35,3 +40,5 @@ def includeme(config):
     config.add_request_method(callable = get_meeting, name = 'meeting', reify = True)
     #Userinfo URL
     config.add_request_method(callable = get_userinfo_url, name = 'get_userinfo_url')
+    #Is moderator
+    config.add_request_method(callable = is_moderator, name = 'is_moderator', reify = True)

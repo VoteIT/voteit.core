@@ -1,6 +1,8 @@
 # """ Fanstatic lib"""
 from arche.fanstatic_lib import common_js
 from arche.fanstatic_lib import pure_js
+from arche.interfaces import IBaseView
+from arche.interfaces import IViewInitializedEvent
 from fanstatic import Group
 from fanstatic import Library
 from fanstatic import Resource
@@ -76,7 +78,7 @@ data_loader = Resource(voteit_core_jslib, 'data_loader.js', depends = (jquery, p
 # voteit_deform = Group((_voteit_deform_js, _voteit_deform_css))
 # voteit_participants = Resource(voteit_core_jslib, 'voteit_participants.js', bottom=True, depends=(voteit_popups_js, jquery_deform,))
 # voteit_participants_edit = Resource(voteit_core_jslib, 'voteit_participants_edit.js', bottom=True, depends=(voteit_participants,))
-# voteit_moderator_js = Resource(voteit_core_jslib, 'voteit_moderator.js', bottom=True, depends=(voteit_common_js,))
+voteit_moderator_js = Resource(voteit_core_jslib, 'voteit_moderator.js', bottom=True)
 # voteit_poll_js = Resource(voteit_core_jslib, 'voteit_poll.js', bottom=True, depends=(voteit_common_js,))
 # voteit_manage_tickets_js = Resource(voteit_core_jslib, 'voteit_manage_tickets.js', bottom=True, depends=(voteit_common_js, tablesorter))
 # voteit_send_invitations = Resource(voteit_core_jslib, 'voteit_send_invitations.js', bottom = True, depends = (voteit_common_js,))
@@ -132,3 +134,12 @@ data_loader = Resource(voteit_core_jslib, 'data_loader.js', depends = (jquery, p
 #     ('star_rating', star_rating, is_agenda_item), #Resources loaded with ajax, so this needs to be loaded in advance.
 #     ('voteit_poll_js', voteit_poll_js, is_votable_context), #Resources loaded with ajax, so this needs to be loaded in advance.
 # )
+
+
+def include_voteit_resources(view, event):
+    if view.request.is_moderator:
+        voteit_moderator_js.need()
+
+
+def includeme(config):
+    config.add_subscriber(include_voteit_resources, [IBaseView, IViewInitializedEvent])

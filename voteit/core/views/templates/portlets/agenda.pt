@@ -13,16 +13,11 @@
     <ul class="list-group">
       <li class="list-group-item">
         <a class="ai-link" href="${request.resource_url(meeting)}">
-        
           <div class="ai-title"></div>
           <div class="info">
             P: <span class="proposal_count"></span>
             D: <span class="discussion_count"></span>
           </div>
-          
-        </a>
-        <a tal:condition="False" href="#" class="btn btn-sm btn-default pull-right">
-          <span class="glyphicon glyphicon-cog"></span>
         </a>
       </li>
     </ul>
