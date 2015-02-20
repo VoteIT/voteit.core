@@ -23,6 +23,7 @@ from voteit.core.models.schemas import button_save
 from voteit.core.models.schemas import button_cancel
 from voteit.core.views.base_edit import DefaultEditForm
 
+
 @view_defaults(context = IMeeting, permission = security.VIEW)
 class MeetingView(BaseView):
     
@@ -37,10 +38,12 @@ class MeetingView(BaseView):
             return HTTPFound(location = url)
         return {}
 
-    @view_config(name="participants_emails", context=IMeeting, renderer="templates/email_list.pt", permission=security.MODERATE_MEETING)
+    @view_config(name = "participants_emails",
+                 renderer = "voteit.core:templates/participants_emails.pt",
+                 permission = security.MODERATE_MEETING)
     def participants_emails(self):
         """ List all participants emails in this meeting. """
-        users = self.api.root.users
+        users = self.request.root.users
         results = []
         for userid in security.find_authorized_userids(self.context, (security.VIEW,)):
             user = users.get(userid, None)
@@ -48,9 +51,7 @@ class MeetingView(BaseView):
                 results.append(user)
         def _sorter(obj):
             return obj.get_field_value('email')
-        self.response['users'] = tuple(sorted(results, key = _sorter))
-        self.response['title'] = _(u"Email addresses of participants")
-        return self.response
+        return {'users': tuple(sorted(results, key = _sorter))}
 
     @view_config(name="manage_layout", context=IMeeting, renderer="templates/base_edit.pt", permission=security.EDIT)
     def manage_layout(self):

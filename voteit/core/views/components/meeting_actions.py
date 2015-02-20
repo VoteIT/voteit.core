@@ -88,7 +88,7 @@ def generic_root_menu_link(context, request, va, **kw):
              link = "presentation", permission = MODERATE_MEETING)
 @view_action('meeting', 'logs', title = _(u"Meeting actions log"), link = "logs", permission = MODERATE_MEETING)
 @view_action('meeting', 'minutes', title = _(u"Minutes"), link = "minutes")
-@view_action('participants_menu', 'participants_emails', title = _(u"Participants email addresses"),
+@view_action('settings_menu', 'participants_emails', title = _(u"Participants email addresses"),
              link = "participants_emails", permission = MODERATE_MEETING)
 @view_action('participants_menu', 'manage_tickets', title = _(u"Manage invites"),
              link = "manage_tickets", permission = MANAGE_GROUPS)

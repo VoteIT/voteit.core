@@ -1,0 +1,22 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      metal:use-macro="view.macro('arche:templates/base_view.pt', 'arche:templates/inline.pt')"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="voteit.core">
+<body>
+<tal:main metal:fill-slot="main-content">
+  <h1 i18n:translate="">Participants emails</h1>
+
+  <table class="table">
+    <tbody>
+      <tr tal:repeat="user users">
+        <td tal:content="user.get_field_value('email')">Email</td>
+      </tr>
+    </tbody>
+  </table>
+  
+  <a class="btn btn-primary" href="${request.resource_url(context)}" i18n:translate="">Back</a>
+
+</tal:main>
+</body>
+</html>
