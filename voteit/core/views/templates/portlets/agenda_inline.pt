@@ -1,0 +1,24 @@
+<tal:main xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="voteit.core">
+  <div class="panel panel-default" tal:repeat="state states">
+    <div class="panel-heading">
+      <h4 class="panel-title">${state}</h4>
+    </div>
+    <ul class="list-group">
+      <li class="list-group-item" tal:repeat="brain view.get_ais(state)">
+        <tal:cog condition="request.is_moderator"
+          replace="structure view.render_template('voteit.core:views/templates/snippets/cogwheel.pt', url = request.resource_url(meeting, brain['__name__'], '__cogwheel_menu__'))" />
+        <a href="${request.resource_url(meeting, brain['__name__'])}">
+          <span>${brain['title']}</span>
+          <span class="clearfix">
+            P: <span>${brain['proposal_count']}</span>
+            D: <span>${brain['discussion_count']}</span>
+          </span>
+        </a>
+      </li>
+    </ul>
+  </div>
+</tal:main>

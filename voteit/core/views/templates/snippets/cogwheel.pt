@@ -1,6 +1,6 @@
 <tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core">
   <div class="pull-right btn-group"
-    tal:define="url request.resource_url(context, '__cogwheel_menu__')">
+    tal:define="url url|request.resource_url(context, '__cogwheel_menu__')">
     <button type="button"
       class="btn btn-primary dropdown-toggle cogwheel"
       data-dropdown-content="${url}"
