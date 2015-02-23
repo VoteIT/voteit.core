@@ -55,15 +55,30 @@ def deferred_current_user_mail(node, kw):
     if view.profile:
         return view.profile.get_field_value('email')
 
-def title_node():
-    return colander.SchemaNode(colander.String(),
-                                title = _(u"Title"),
-                                description = _(u"meeting_title_description",
-                                                default=u"Set a title for the meeting that separates it from previous meetings"),
-                                validator=html_string_validator,)
-def description_node():
-    return colander.SchemaNode(
-        colander.String(),
+@colander.deferred
+def _deferred_current_fullname(node, kw):
+    view = kw['view']
+    if view.profile:
+        return view.profile.title
+
+
+class EditMeetingSchema(colander.Schema):
+    title = colander.SchemaNode(colander.String(),
+        title = _(u"Title"),
+        description = _(u"meeting_title_description",
+                        default=u"Set a title for the meeting that separates it from previous meetings"),
+        validator=html_string_validator,)
+    meeting_mail_name = colander.SchemaNode(colander.String(),
+        title = _(u"Name of the contact person for this meeting"),
+        default = _deferred_current_fullname,
+        validator = colander.Regex(regex=NAME_PATTERN,
+                                   msg=_(u"name_pattern_error",
+                                         default = u"Must be at least 3 chars + only alphanumeric characters allowed")),)
+    meeting_mail_address = colander.SchemaNode(colander.String(),
+        title = _(u"Contact email for this site"),
+        default = deferred_current_user_mail,
+        validator = colander.All(colander.Email(msg = _(u"Invalid email address.")), html_string_validator,),)
+    description = colander.SchemaNode(colander.String(),
         title = _(u"Participants description"),
         description = _(u"meeting_description_description",
                         default=u"This is only visible to participants, so don't put information on how to register here. "
@@ -72,9 +87,7 @@ def description_node():
         missing = u"",
         widget=deform.widget.RichTextWidget(options = (('theme', 'advanced'),)),
         validator=richtext_validator,)
-
-def public_description_node():
-    return colander.SchemaNode(
+    public_description = colander.SchemaNode(
         colander.String(),
         title = _(u"Public presentation"),
         description = _(u"meeting_public_description_description",
@@ -83,56 +96,17 @@ def public_description_node():
         missing = u"",
         widget=deform.widget.RichTextWidget(options = (('theme', 'advanced'),)),
         validator=richtext_validator,)
-
-@colander.deferred
-def _deferred_current_fullname(node, kw):
-    view = kw['view']
-    if view.profile:
-        return view.profile.title
-
-def meeting_mail_name_node():
-    return colander.SchemaNode(colander.String(),
-                               title = _(u"Name of the contact person for this meeting"),
-                               default = _deferred_current_fullname,
-                               validator = colander.Regex(regex=NAME_PATTERN,
-                                                          msg=_(u"name_pattern_error",
-                                                                default = u"Must be at least 3 chars + only alphanumeric characters allowed")),)
-
-def meeting_mail_address_node():
-    return colander.SchemaNode(colander.String(),
-                               title = _(u"Contact email for this site"),
-                               default = deferred_current_user_mail,
-                               validator = colander.All(colander.Email(msg = _(u"Invalid email address.")), html_string_validator,),)
-
-def access_policy_node():
-    return colander.SchemaNode(colander.String(),
-                               title = _(u"Meeting access policy"),
-                               widget = deferred_access_policy_widget,
-                               default = "invite_only",)
-
-def mention_notification_setting_node():
-    return colander.SchemaNode(colander.Bool(),
-                               title = _(u"Send mail to mentioned users."),
-                               default = True,
-                               missing = True)
-
-def poll_notification_setting_node():
-    return colander.SchemaNode(colander.Bool(),
-                               title = _(u"Send mail to voters when a poll starts."),
-                               default = True,
-                               missing = True)
+    mention_notification_setting = colander.SchemaNode(colander.Bool(),
+        title = _(u"Send mail to mentioned users."),
+        default = True,
+        missing = True)
+    poll_notification_setting = colander.SchemaNode(colander.Bool(),
+        title = _(u"Send mail to voters when a poll starts."),
+        default = True,
+        missing = True)
 
 
-@schema_factory('AddMeetingSchema', title = _(u"Add meeting"))
-class AddMeetingSchema(colander.MappingSchema):
-    title = title_node()
-    meeting_mail_name = meeting_mail_name_node()
-    meeting_mail_address = meeting_mail_address_node()
-    description = description_node()
-    public_description = public_description_node()
-    access_policy = access_policy_node()
-    mention_notification_setting = mention_notification_setting_node()
-    poll_notification_setting = poll_notification_setting_node()
+class AddMeetingSchema(EditMeetingSchema):
     copy_users_and_perms = colander.SchemaNode(colander.String(),
                                                title = _(u"Copy users and permissions from a previous meeting."),
                                                description = _(u"You can only pick meeting where you've been a moderator."),
@@ -141,44 +115,14 @@ class AddMeetingSchema(colander.MappingSchema):
                                                missing = u"")
 
 
-@schema_factory('EditMeetingSchema', title = _(u"Edit meeting"))
-class EditMeetingSchema(colander.MappingSchema):
-    title = title_node()
-    description = description_node()
-    public_description = public_description_node()
-    meeting_mail_name = meeting_mail_name_node()
-    meeting_mail_address = meeting_mail_address_node()
+class AccessPolicyMeetingSchema(colander.MappingSchema):
+    access_policy = colander.SchemaNode(colander.String(),
+        title = _(u"Meeting access policy"),
+        widget = deferred_access_policy_widget,
+        default = "invite_only",)
 
 
-@schema_factory('PresentationMeetingSchema',
-                title = _(u"Presentation"),
-                description = _(u"presentation_meeting_schema_main_description",
-                                default = u"Edit the first page of the meeting into an informative and pleasant page for your users. "
-                                    "You can for instance place your logo here. The time table can be presented in a table and updated as you go along. "
-                                    "It's also advised to add links to the manual and to meeting documents."))
-class PresentationMeetingSchema(colander.MappingSchema):
-    title = title_node()
-    description = description_node()
-    public_description = public_description_node()
-
-
-@schema_factory('MailSettingsMeetingSchema', title = _(u"Mail settings"))
-class MailSettingsMeetingSchema(colander.MappingSchema):
-    meeting_mail_name = meeting_mail_name_node()
-    meeting_mail_address = meeting_mail_address_node()
-    mention_notification_setting = mention_notification_setting_node()
-    poll_notification_setting = poll_notification_setting_node()
-
-
-@schema_factory('AccessPolicyMeetingSchema', title = _(u"Access policy"))
-class AccessPolicyeMeetingSchema(colander.MappingSchema):
-    access_policy = access_policy_node()
-
-
-@schema_factory('MeetingPollSettingsSchema', title = _(u"Poll settings"),
-                description = _(u"meeting_poll_settings_main_description",
-                                default = u"Settings for the whole meeting."))
-class MeetingPollSettingsSchema(colander.MappingSchema):
+class MeetingPollSettingsSchema(colander.Schema):
     poll_plugins = colander.SchemaNode(colander.Set(),
                                        title = _(u"mps_poll_plugins_title",
                                                  default = u"Available poll methods within this meeting"),
@@ -208,3 +152,7 @@ class AgendaItemProposalsPortletSchema(colander.Schema):
 def includeme(config):
     config.add_content_schema('Meeting', AddMeetingSchema, 'add')
     config.add_content_schema('Meeting', EditMeetingSchema, 'edit')
+    config.add_content_schema('Meeting', MeetingPollSettingsSchema, 'meeting_poll_settings')
+    config.add_content_schema('Meeting', AccessPolicyMeetingSchema, 'access_policy')
+    
+    config.scan()

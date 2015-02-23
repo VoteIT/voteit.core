@@ -446,9 +446,6 @@ class IInviteTicket(Interface):
     def claim(request):
         """ Handle claim of this ticket. Set permissions for meeting and
             set the ticket as closed.
-
-            Called by ticket form - see:
-            :func:`voteit.core.views.meeting.MeetingView.claim_ticket`
         """
 
 

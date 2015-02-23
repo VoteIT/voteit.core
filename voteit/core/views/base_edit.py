@@ -42,6 +42,17 @@ class BaseEdit(object):
         self.api.include_needed(context, request, self)
 
 
+class ArcheFormCompat(object):
+
+    def appstruct(self):
+        return self.context.get_field_appstruct(self.schema)
+
+    def save_success(self, appstruct):
+        self.flash_messages.add(self.default_success)
+        self.context.set_field_appstruct(appstruct)
+        return HTTPFound(location = self.request.resource_url(self.context))
+
+
 class BaseForm(BaseEdit, FormView):
     """ This version work with pyramid_deform.
     """

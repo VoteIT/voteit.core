@@ -34,11 +34,6 @@ class ImmediateAP(AccessPolicy):
     def config_schema(self):
         return createSchema('ImmediateAPConfigSchema')
 
-    def handle_config_success(self, view, appstruct):
-        self.context.set_field_appstruct(appstruct)
-        view.api.flash_messages.add(view.default_success)
-        return HTTPFound(location = view.api.meeting_url)
-
 
 @schema_factory('ImmediateAPConfigSchema', title = _("Configure immediate access policy"))
 class ImmediateAPConfigSchema(colander.Schema):
@@ -54,3 +49,4 @@ class ImmediateAPConfigSchema(colander.Schema):
 
 def includeme(config):
     config.registry.registerAdapter(ImmediateAP, name = ImmediateAP.name)
+    config.scan()

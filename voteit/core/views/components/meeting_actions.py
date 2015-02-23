@@ -78,14 +78,8 @@ def generic_root_menu_link(context, request, va, **kw):
              link = "meeting_poll_settings", permission = MODERATE_MEETING)
 @view_action('settings_menu', 'agenda_templates', title = _(u"Agenda Templates"),
              link = "agenda_templates", permission = MODERATE_MEETING)
-@view_action('settings_menu', 'manage_layout', title = _(u"Layout and widgets"),
-             link = "manage_layout", permission = MODERATE_MEETING)
 @view_action('settings_menu', 'access_policy', title = _(u"Access policy"),
              link = "access_policy", permission = MODERATE_MEETING)
-@view_action('settings_menu', 'mail_settings', title = _(u"Mail settings"),
-             link = "mail_settings", permission = MODERATE_MEETING)
-@view_action('settings_menu', 'presentation', title = _(u"Presentation"),
-             link = "presentation", permission = MODERATE_MEETING)
 @view_action('meeting', 'logs', title = _(u"Meeting actions log"), link = "logs", permission = MODERATE_MEETING)
 @view_action('meeting', 'minutes', title = _(u"Minutes"), link = "minutes")
 @view_action('settings_menu', 'participants_emails', title = _(u"Participants email addresses"),
@@ -112,7 +106,7 @@ def configure_access_policy_menu_link(context, request, va, **kw):
     ap = request.registry.queryAdapter(request.meeting, IAccessPolicy, name = access_policy_name)
     if ap and ap.config_schema():
         url = request.resource_url(request.meeting, va.kwargs['link'])
-        return """<li class="list-group-item"><a href="%s">%s</a></li>""" % (url, api.translate(va.title))
+        return """<li class="list-group-item"><a href="%s">%s</a></li>""" % (url, request.localizer.translate(va.title))
 
 
 class MeetingActionsMenuBody(BaseView):

@@ -1,32 +1,30 @@
+from arche.views.base import BaseView
+from arche.views.base import DefaultEditForm
 from betahaus.pyracont.factories import createSchema
-from deform import Form
-from deform.exception import ValidationFailure
 from pyramid.decorator import reify
-from pyramid.httpexceptions import HTTPFound
 from pyramid.httpexceptions import HTTPForbidden
+from pyramid.httpexceptions import HTTPFound
 from pyramid.security import NO_PERMISSION_REQUIRED
-from pyramid.security import has_permission
 from pyramid.traversal import resource_path
 from pyramid.view import view_config
 from pyramid.view import view_defaults
 from repoze.catalog.query import Eq
 from zope.interface.interfaces import ComponentLookupError
-from arche.views.base import BaseView
 
 from voteit.core import security
 from voteit.core import VoteITMF as _
 #from voteit.core.views.base_view import BaseView
 from voteit.core.models.interfaces import IAccessPolicy
 from voteit.core.models.interfaces import IMeeting
-from voteit.core.models.schemas import add_csrf_token, button_request_access
-from voteit.core.models.schemas import button_save
+from voteit.core.models.schemas import button_request_access
 from voteit.core.models.schemas import button_cancel
-from voteit.core.views.base_edit import DefaultEditForm
+from voteit.core.views.base_edit import ArcheFormCompat
+#from voteit.core.views.base_edit import DefaultEditForm
 
 
 @view_defaults(context = IMeeting, permission = security.VIEW)
 class MeetingView(BaseView):
-    
+
     @view_config(renderer="voteit.core:templates/meeting.pt", permission = NO_PERMISSION_REQUIRED)
     def meeting_view(self):
         """ Meeting view behaves a bit differently than regular views since
@@ -53,100 +51,23 @@ class MeetingView(BaseView):
             return obj.get_field_value('email')
         return {'users': tuple(sorted(results, key = _sorter))}
 
-    @view_config(name="manage_layout", context=IMeeting, renderer="templates/base_edit.pt", permission=security.EDIT)
-    def manage_layout(self):
-        """ Manage layout
-        """
-        self.response['title'] = _(u"Layout")
-
-        schema = createSchema('LayoutSchema')
-        add_csrf_token(self.context, self.request, schema)
-        schema = schema.bind(context=self.context, request=self.request, api=self.api)
-            
-        form = Form(schema, buttons=(button_save, button_cancel,))
-        self.api.register_form_resources(form)
-
-        post = self.request.POST
-
-        if 'save' in post:
-            controls = post.items()
-            try:
-                appstruct = form.validate(controls)
-            except ValidationFailure, e:
-                self.response['form'] = e.render()
-                return self.response
-            self.context.set_field_appstruct(appstruct)
-            url = self.request.resource_url(self.context)
-            return HTTPFound(location=url)
-
-        if 'cancel' in post:
-            self.api.flash_messages.add(_(u"Canceled"))
-
-            url = self.request.resource_url(self.context)
-            return HTTPFound(location=url)
-
-        #No action - Render form
-        appstruct = self.context.get_field_appstruct(schema)
-        self.response['form'] = form.render(appstruct)
-        return self.response
-
-    @view_config(context=IMeeting, name="presentation", renderer="templates/base_edit.pt", permission=security.MODERATE_MEETING)
-    def presentation(self):
-        schema = createSchema("PresentationMeetingSchema")
-        add_csrf_token(self.context, self.request, schema)
-        schema = schema.bind(context=self.context, request=self.request, api = self.api)
-        return self.form(schema)
-
-    def form(self, schema):
-        #This will be removed soon!
-        form = Form(schema, buttons=(button_save, button_cancel))
-        self.api.register_form_resources(form)
-        post = self.request.POST
-        if 'save' in post:
-            controls = post.items()
-            try:
-                appstruct = form.validate(controls)
-            except ValidationFailure, e:
-                self.response['form'] = e.render()
-                return self.response
-
-            updated = self.context.set_field_appstruct(appstruct)
-            if updated:
-                self.api.flash_messages.add(_(u"Successfully updated"))
-            else:
-                self.api.flash_messages.add(_(u"Nothing updated"))                
-            url = self.request.resource_url(self.context)
-            return HTTPFound(location=url)
-
-        if 'cancel' in post:
-            self.api.flash_messages.add(_(u"Canceled"))
-            url = self.request.resource_url(self.context)
-            return HTTPFound(location=url)
-
-        #No action - Render form
-        appstruct = self.context.get_field_appstruct(schema)
-        self.response['form'] = form.render(appstruct)
-        return self.response
-
     @view_config(context = IMeeting, name = "minutes", renderer = "templates/minutes.pt", permission = security.VIEW)
     def minutes(self):
         """ Show an overview of the meeting activities. Should work as a template for minutes. """
 
-        if self.api.meeting.get_workflow_state() != 'closed':
+        if self.request.meeting.get_workflow_state() != 'closed':
             msg = _(u"meeting_not_closed_minutes_incomplete_notice",
                     default = u"This meeting hasn't closed yet so these minutes won't be complete")
-            self.api.flash_messages.add(msg)
+            self.flash_messages.add(msg)
         #Add agenda item objects to response
-        agenda_items = []
         query = dict(
             context = self.context,
             content_type = "AgendaItem",
             workflow_state = ('upcoming', 'ongoing', 'closed'),
             sort_index = "order",
         )
-        for docid in self.api.search_catalog(**query)[1]:
-            agenda_items.append(self.api.resolve_catalog_docid(docid))
-
+        docids = self.catalog_search(**query)[1]
+        agenda_items = tuple(self.resolve_docids(docids))
         self.response['agenda_items'] = agenda_items
         return self.response
 
@@ -155,7 +76,7 @@ class MeetingView(BaseView):
 def reload_data_json(context, request):
     """ A json list of things interesting for an eventual update of agenda items view or poll menu.
         See reload_meeting_data in voteit_common.js
-    
+
         Note: This is not a smart way of doing this, so MAKE SURE this executes fast!
         This will be replaced when proper websockets are in place.
     """
@@ -184,23 +105,12 @@ def reload_data_json(context, request):
 
 
 @view_config(context = IMeeting,
-             name = "mail_settings",
-             renderer = "voteit.core:views/templates/base_edit.pt",
-             permission = security.MODERATE_MEETING)
-class MailSettingsForm(DefaultEditForm):
-
-    def get_schema(self):
-        return createSchema("MailSettingsMeetingSchema")
-
-
-@view_config(context = IMeeting,
              name = "access_policy",
-             renderer = "voteit.core:views/templates/base_edit.pt",
+             renderer = "arche:templates/form.pt",
              permission = security.MODERATE_MEETING)
-class AccessPolicyForm(DefaultEditForm):
+class AccessPolicyForm(ArcheFormCompat, DefaultEditForm):
 
-    def get_schema(self):
-        return createSchema("AccessPolicyMeetingSchema")
+    schema_name = 'access_policy'
 
     def save_success(self, appstruct):
         response = super(AccessPolicyForm, self).save_success(appstruct)
@@ -208,7 +118,7 @@ class AccessPolicyForm(DefaultEditForm):
                                                 IAccessPolicy,
                                                 name = self.context.get_field_value('access_policy', ''))
         if ap and ap.config_schema():
-            self.api.flash_messages.add(_(u"Review access policy configuration"))
+            self.flash_messages.add(_(u"Review access policy configuration"))
             url = self.request.resource_url(self.context, 'configure_access_policy')
             return HTTPFound(location = url)
         return response
@@ -216,24 +126,24 @@ class AccessPolicyForm(DefaultEditForm):
 
 @view_config(context = IMeeting,
              name = "meeting_poll_settings",
-             renderer = "voteit.core:views/templates/base_edit.pt",
+             renderer = "arche:templates/form.pt",
              permission = security.MODERATE_MEETING)
-class MeetingPollSettingsForm(DefaultEditForm):
+class MeetingPollSettingsForm(ArcheFormCompat, DefaultEditForm):
 
-    def get_schema(self):
-        return createSchema("MeetingPollSettingsSchema")
+    schema_name = 'meeting_poll_settings'
 
 
 @view_config(context = IMeeting,
              name = "request_access",
-             renderer = "voteit.core:views/templates/request_meeting_access.pt",
+             renderer = "voteit.core:templates/request_meeting_access.pt",
              permission = NO_PERMISSION_REQUIRED)
-class RequestAccessForm(DefaultEditForm):
+class RequestAccessForm(ArcheFormCompat, DefaultEditForm):
     """ This page appears when a user clicked on a link to a meeting where the user in question
         don't have access.
         This is controled via access policies. See IAccessPolicy
     """
     buttons = (button_request_access, button_cancel,)
+    title = ""
 
     def appstruct(self):
         return {}
@@ -258,14 +168,13 @@ class RequestAccessForm(DefaultEditForm):
             raise HTTPForbidden(err_msg)
 
     def __call__(self):
-        if self.api.context_has_permission(security.VIEW, self.context):
+        if self.request.has_permission(security.VIEW):
             return HTTPFound(location = self.request.resource_url(self.context))
-        if not self.api.userid:
-            msg = _('request_access_view_login_register',
-                    default=u"You need to login or register before you can use any meetings.")
-            self.api.flash_messages.add(msg, type='info')
+        if not self.request.authenticated_userid:
+            msg = _("You need to login or register.")
+            self.flash_messages.add(msg, type='info', auto_destruct = False)
             came_from = self.request.resource_url(self.context, 'request_access')
-            url = self.request.resource_url(self.api.root, query={'came_from': came_from})
+            url = self.request.resource_url(self.root, query={'came_from': came_from})
             return HTTPFound(location = url)
         if self.access_policy.view is not None:
             #Redirect to access policy custom view
@@ -278,32 +187,25 @@ class RequestAccessForm(DefaultEditForm):
 
 @view_config(context = IMeeting,
              name = "configure_access_policy",
-             renderer = "voteit.core:views/templates/base_edit.pt",
+             renderer = "arche:templates/form.pt",
              permission = security.MODERATE_MEETING)
-class ConfigureAccessPolicyForm(DefaultEditForm):
-
-    def get_schema(self):
-        schema = self.access_policy.config_schema()
-        if schema is None:
-            raise HTTPForbidden(_("No configuration for this access policy type."))
-        return schema
+class ConfigureAccessPolicyForm(ArcheFormCompat, DefaultEditForm):
 
     @reify
     def access_policy(self):
         access_policy_name = self.context.get_field_value('access_policy', '')
-        return self.request.registry.queryAdapter(self.context, IAccessPolicy, name = access_policy_name)
-
-    def __call__(self):
-        if not self.access_policy:
+        try:
+            return self.request.registry.getAdapter(self.context, IAccessPolicy, name = access_policy_name)
+        except ComponentLookupError:
             err_msg = _(u"access_policy_not_found_moderator",
                         default = u"""Can't find an access policy with the id '${policy}'.
                                     This might mean that the registered access policy type for this meeting doesn't exist.
                                     Please change access policy.""",
                         mapping = {'policy': self.context.get_field_value('access_policy', '')})
-            self.api.flash_messages.add(err_msg, type="error")
-            url = self.request.resource_url(self.api.meeting, 'access_policy')
-            raise HTTPFound(location=url)
-        return super(ConfigureAccessPolicyForm, self).__call__()
+            raise HTTPForbidden(self.request.localizer.translate(err_msg))
+
+    def get_schema(self):
+        return self.access_policy.config_schema()
 
     def save_success(self, appstruct):
         return self.access_policy.handle_config_success(self, appstruct)
