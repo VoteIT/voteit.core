@@ -18,16 +18,16 @@ MODERATOR_SECTIONS = ('ongoing', 'upcoming', 'closed', 'private',)
 REGULAR_SECTIONS = ('ongoing', 'upcoming', 'closed',)
 
 
-@view_action('main', 'meeting_actions', permission=VIEW)
-def meeting_actions(context, request, va, **kw):
-    """ This is the main renderer for meeting actions.
-        The structure of the menu. it will call all view components
-        in the group meeting_actions.
-        In turn, some of those will call other groups.
-    """
-    api = kw['api']
-    context = api.meeting and api.meeting or api.root
-    return """<ul id="meeting-actions-menu" class="actions-menu">%s</ul>""" % api.render_view_group(context, request, 'meeting_actions')
+# @view_action('main', 'meeting_actions', permission=VIEW)
+# def meeting_actions(context, request, va, **kw):
+#     """ This is the main renderer for meeting actions.
+#         The structure of the menu. it will call all view components
+#         in the group meeting_actions.
+#         In turn, some of those will call other groups.
+#     """
+#     api = kw['api']
+#     context = api.meeting and api.meeting or api.root
+#     return """<ul id="meeting-actions-menu" class="actions-menu">%s</ul>""" % api.render_view_group(context, request, 'meeting_actions')
 
 @view_action('meeting_actions', 'polls', title = _(u"Polls"), permission=VIEW)
 def polls_menu(context, request, va, **kw):

@@ -3,15 +3,12 @@
       xmlns:tal="http://xml.zope.org/namespaces/tal"
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
       i18n:domain="voteit.core">
-<div class="panel panel-primary portlet">
+<div class="panel panel-primary portlet ${portlet_cls}">
   <div class="panel-heading">
-    <h4 class="panel-title" i18n:translate="">Settings</h4>
+    <h4 class="panel-title">${title}</h4>
   </div>
-  <ul class="list-group" tal:content="structure settings_content">
+  <ul class="list-group" tal:content="structure menu_content">
     <li class="list-group-item">Settings will be rendered here</li>
   </ul>
-  <div class="panel-footer">
-    blabla
-  </div>
 </div>
 </tal:main>

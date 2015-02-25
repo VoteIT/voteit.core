@@ -20,14 +20,53 @@ class MeetingSettingsPortlet(PortletType):
 
     def render(self, context, request, view, **kwargs):
         if request.is_moderator and IMeeting.providedBy(context):
-            response = {'title': self.title,
+            response = {'title': _("Settings"),
                         'portlet': self.portlet,
-                        'settings_content': render_view_group(context, request, 'settings_menu', view = view),
+                        'portlet_cls': "portlet-%s" % self.name,
+                        'menu_content': render_view_group(context, request, 'settings_menu', view = view),
                         'view': view,}
-            return render("voteit.core:templates/portlets/meeting_settings.pt",
+            return render("voteit.core:templates/portlets/meeting_actions.pt",
+                          response,
+                          request = request)
+
+
+class MeetingMenuPortlet(PortletType):
+    """ Various meeting related actions. """
+
+    name = "meeting_various"
+    schema_factory = None
+    title = _("Meeting various menu")
+
+    def render(self, context, request, view, **kwargs):
+        if IMeeting.providedBy(context):
+            response = {'title': _("Meeting"),
+                        'portlet': self.portlet,
+                        'portlet_cls': "portlet-%s" % self.name,
+                        'menu_content': render_view_group(context, request, 'meeting', view = view),
+                        'view': view,}
+            return render("voteit.core:templates/portlets/meeting_actions.pt",
+                          response,
+                          request = request)
+
+
+class ParticipantsPortlet(PortletType):
+    name = "meeting_participants"
+    schema_factory = None
+    title = _("Meeting participants")
+
+    def render(self, context, request, view, **kwargs):
+        if IMeeting.providedBy(context):
+            response = {'title': _("Participants"),
+                        'portlet': self.portlet,
+                        'portlet_cls': "portlet-%s" % self.name,
+                        'menu_content': render_view_group(context, request, 'participants_menu', view = view),
+                        'view': view,}
+            return render("voteit.core:templates/portlets/meeting_actions.pt",
                           response,
                           request = request)
 
 
 def includeme(config):
     config.add_portlet(MeetingSettingsPortlet)
+    config.add_portlet(MeetingMenuPortlet)
+    config.add_portlet(ParticipantsPortlet)
