@@ -1,0 +1,29 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      metal:use-macro="view.macro('arche:templates/master.pt')"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="voteit.core">
+<body>
+<tal:main metal:fill-slot="content">
+
+  <h1 i18n:translate="">Login or register to gain access</h1>
+
+  <p i18n:translate="login_or_register_to_use_ticket_help">
+      You've recieved an invitation for the meeting
+      <span tal:content="context.title" i18n:name="meeting_title">Meeting title</span>.
+
+      You need to be logged in to use the invitation.
+  </p>
+
+  <h4 i18n:translate="">If you already have an account:</h4>
+  <p><a class="btn btn-primary" href="${request.resource_url(view.root, 'login')}" i18n:translate="">Login</a></p>
+  
+  
+  <h4 i18n:translate="">If you do not have an account:</h4>
+  <p i18n:translate="">You need to register a new account by using the button below.</p>
+  <a href="${request.resource_url(view.root, 'register')}"
+     class="btn btn-primary" i18n:translate="">Register</a>
+
+</tal:main>
+</body>
+</html>

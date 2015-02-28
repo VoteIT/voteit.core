@@ -1,0 +1,76 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      metal:use-macro="view.macro('arche:templates/base_view.pt', 'arche:templates/inline.pt')"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="voteit.core">
+<body>
+<tal:main metal:fill-slot="main-content">
+
+<h1 i18n:translate="">Send meeting tickets</h1>
+
+  <tal:nothing_to_do condition="not emails|True">
+      <div i18n:translate="">Doesn't seem to be anything to do...</div>
+      <a class="btn btn-primary" href="${request.resource_url(context)}" i18n:translate="">Back</a>
+  </tal:nothing_to_do>
+  
+  <tal:sender condition="emails|False">
+      <div id="status" i18n:translate="">Sending emails. In case something goes wrong, you may reload this page and try again.</div>
+      <form id="send_invitations_form" action="${request.resource_url(request.meeting, 'send_tickets')}" method="post">
+          <button name="send" type="submit" value="send" class="btn btn-primary">
+              <span i18n:translate="">Send</span>
+          </button>
+      </form>
+      <table class="table">
+        <thead>
+            <tr>
+                <th i18n:translate="">Total</th>
+                <th i18n:translate="">Remaining</th>
+                <th colspan="2" i18n:translate="">Completed</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>${len(emails)}</td>
+                <td><span id="tickets_to_send">${len(emails)}</span></td>
+                <td><span id="completed_percentage">0</span>%</td>
+                <td style="width: 400px;">
+                    <div id="completed_percentage_bar"
+                         style="float: left; background-color: green; height: 15px; width: 1px;"><!-- --></div>
+                    <div style="float: left; background-color: black; height: 1px; width: 100%;"><!-- --></div>
+                </td>
+            </tr>
+        </tbody>
+      </table>
+  </tal:sender>
+  <script type="text/javascript" tal:condition="emails|False">
+    function update_progress(remaining, tickets_to_send) {
+        $('#tickets_to_send').text(remaining);
+        var percentage_complete = Math.floor(100 - (remaining / tickets_to_send) * 100);
+        $('#completed_percentage').text(percentage_complete);
+        $('#completed_percentage_bar').width(String(percentage_complete) + '%');
+    }
+    function send_tickets() {
+      var form = $('#send_invitations_form');
+      var url = form.attr('action');
+      var tickets_to_send = parseInt($('#tickets_to_send').text());
+      var request = arche.do_request(url, {data: form.serialize()});
+      request.done(function(data) {
+          update_progress(data['remaining'], tickets_to_send);
+          if (data['remaining'] > 0) {
+              setTimeout(send_tickets, 100);
+          } else {
+              arche.create_flash_message('<tal:ts i18n:translate="">Completed successfully</tal:ts>');
+          }
+      });
+      request.fail(function(jqXHR) {
+          setTimeout(send_tickets, 3000);
+      });
+    }
+    $(document).ready(function() { 
+      send_tickets();
+    });
+  </script>
+
+</tal:main>
+</body>
+</html>

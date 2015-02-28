@@ -8,6 +8,7 @@ def includeme(config):
     config.include('.discussion_post')
     config.include('.fanstatic_resources')
     config.include('.flash_messages')
+    config.include('.invite_ticket')
     config.include('.js_util')
     config.include('.logs')
     config.include('.meeting')

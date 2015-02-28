@@ -6,9 +6,7 @@ from repoze.folder import Folder
 from persistent.list import PersistentList
 from zope.interface import implementer
 from pyramid.traversal import find_interface
-from pyramid.exceptions import Forbidden
-from pyramid.security import authenticated_userid
-from betahaus.pyracont.decorators import content_factory
+from pyramid.exceptions import HTTPForbidden
 from betahaus.viewcomponent import render_view_action
 
 from voteit.core import VoteITMF as _
@@ -28,7 +26,6 @@ SELECTABLE_ROLES = (security.ROLE_MODERATOR,
                     )
 
 
-#@content_factory('InviteTicket', title=_(u"Invite ticket"))
 @implementer(IInviteTicket)
 class InviteTicket(Folder, WorkflowAware):
     """ Invite ticket. Send these to give access to new users.
@@ -39,7 +36,11 @@ class InviteTicket(Folder, WorkflowAware):
 #    allowed_contexts = () #Not addable through regular forms
 #    add_permission = None
     #No schemas
-    
+
+    @property
+    def content_type(self):
+        return self.type_name #b/c
+
     def __init__(self, email, roles, message = u"", sent_by = None):
         self.email = email.lower()
         for role in roles:
@@ -69,13 +70,13 @@ class InviteTicket(Folder, WorkflowAware):
     def claim(self, request):
         #Is the ticket open?
         if self.get_workflow_state() != 'open':
-            raise Forbidden("Access already granted with this ticket")
+            raise HTTPForbidden("Access already granted with this ticket")
         #Find required resources and do some basic validation
         meeting = find_interface(self, IMeeting)
         assert meeting
-        userid = authenticated_userid(request)
+        userid = request.authenticated_userid
         if userid is None:
-            raise Forbidden("You can't claim a ticket unless you're authenticated.")
+            raise HTTPForbidden("You can't claim a ticket unless you're authenticated.")
         meeting.add_groups(userid, self.roles)
         self.claimed_by = userid
         self.set_workflow_state(request, 'closed')

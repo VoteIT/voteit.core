@@ -13,13 +13,11 @@ from zope.interface.interfaces import ComponentLookupError
 
 from voteit.core import security
 from voteit.core import VoteITMF as _
-#from voteit.core.views.base_view import BaseView
 from voteit.core.models.interfaces import IAccessPolicy
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.schemas import button_request_access
 from voteit.core.models.schemas import button_cancel
 from voteit.core.views.base_edit import ArcheFormCompat
-#from voteit.core.views.base_edit import DefaultEditForm
 
 
 @view_defaults(context = IMeeting, permission = security.VIEW)

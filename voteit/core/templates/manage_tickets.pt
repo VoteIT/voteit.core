@@ -1,0 +1,83 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      metal:use-macro="view.macro('arche:templates/master.pt')"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="voteit.core">
+<body>
+<tal:main metal:fill-slot="content">
+
+  <h1 i18n:translate="">Manage invitations</h1>
+  <h4 i18n:translate="total_tickets_header">
+      <span i18n:name="open" tal:replace="len(invite_tickets) - closed_count">3</span>
+      open ticket(s) and <span i18n:name="closed" tal:replace="closed_count">3</span> closed.
+  </h4>
+
+  <div tal:condition="never_invited">
+    <p i18n:translate="never_invited_warning">Warning! There are
+        <tal:count tal:replace="len(never_invited)" i18n:name="count">5</tal:count>
+        tickets where no email were sent to the address it was intended for.
+        It's a good idea to send these!</p>
+  </div>
+
+  <form name="tickets_table" method="POST">
+    <table class="table table-striped" id="tickets_table">
+      <thead>
+          <tr>
+              <td colspan="2">
+                  <span i18n:translate="">Email contains:</span><br/> <input type="text" name="search_email" id="search_email" size="20" />
+              </td>
+              <td colspan="6"></td>
+          </tr>
+          <tr>
+              <th><input type="checkbox" name="select_all" /></th>
+              <th>
+                  <tal:ts i18n:translate="">Email</tal:ts>
+                  <span class="selection_email"></span>
+              </th>
+              <th i18n:translate="">Claimed by</th>
+              <th i18n:translate="">Used</th>
+              <th i18n:translate="">Sent by</th>
+              <th i18n:translate="">Last invite</th>
+              <th i18n:translate="">Times sent</th>
+              <th i18n:translate="">Permissions</th>
+          </tr>
+      </thead>
+      <tbody>
+          <tr tal:repeat="ticket invite_tickets">
+              <td><input type="checkbox" value="${ticket.email}" name="email" /></td>
+              <td class="email">${ticket.email}</td>
+              <td class="claimed_by">
+                  ${ticket.claimed_by}
+              </td>
+              <td class="closed">${ticket.closed and request.dt_handler.format_relative(ticket.closed) or ''}</td>
+              <td class="sent_by">
+                  ${ticket.sent_by}
+              </td>
+              <td class="last_invite">
+                  <span tal:condition="ticket.sent_dates">${request.dt_handler.format_relative(ticket.sent_dates[-1])}</span>
+                  <span tal:condition="not ticket.sent_dates">Unsent!</span>
+              </td>
+              <td class="times_sent">${len(ticket.sent_dates)}</td>
+              <td class="roles meta">
+                  <tal:iterate repeat="role ticket.roles">
+                      <div>${roles_dict[role]}</div>
+                  </tal:iterate>
+              </td>
+          </tr>
+      </tbody>
+    </table>
+  
+    <div class="form-group">
+      <label class="control-label" for="resend_message" i18n:translate="">Message to any participants you resend tickets to</label>
+      <textarea class="form-control" id="resend_message" name="message" rows="5" cols="40"></textarea>
+    </div>
+    <div i18n:translate="">If you've marked any closed tickets, they won't receive a reinvite.</div>
+    <h4 i18n:translate="">With <span id="selected_count" i18n:name="count">0</span> selected</h4>
+    <input class="btn btn-primary" type="submit" name="resend" value="Resend invitation" i18n:attributes="value" />
+    <input class="btn btn-danger" type="submit" name="remove" value="Remove" i18n:attributes="value" />
+  </form>
+
+
+</tal:main>
+</body>
+</html>

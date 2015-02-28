@@ -27,9 +27,9 @@ class ImmediateAP(AccessPolicy):
     def handle_success(self, view, appstruct):
         rolesdict = dict(security.STANDARD_ROLES)
         roles = self.context.get_field_value('immediate_access_grant_roles')
-        self.context.add_groups(view.api.userid, roles)
-        view.api.flash_messages.add(_("Access granted - welcome!"))
-        return HTTPFound(location = view.api.meeting_url)
+        self.context.add_groups(view.request.authenticated_userid, roles)
+        view.flash_messages.add(_("Access granted - welcome!"))
+        return HTTPFound(location = view.request.resource_url(self.context))
 
     def config_schema(self):
         return createSchema('ImmediateAPConfigSchema')
