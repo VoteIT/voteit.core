@@ -49,7 +49,7 @@ class MeetingView(BaseView):
             return obj.get_field_value('email')
         return {'users': tuple(sorted(results, key = _sorter))}
 
-    @view_config(context = IMeeting, name = "minutes", renderer = "templates/minutes.pt", permission = security.VIEW)
+    @view_config(name = "minutes", renderer = "voteit.core:templates/minutes.pt", permission = security.VIEW)
     def minutes(self):
         """ Show an overview of the meeting activities. Should work as a template for minutes. """
 
@@ -59,15 +59,12 @@ class MeetingView(BaseView):
             self.flash_messages.add(msg)
         #Add agenda item objects to response
         query = dict(
-            context = self.context,
-            content_type = "AgendaItem",
+            path = resource_path(self.context),
+            type_name = "AgendaItem",
             workflow_state = ('upcoming', 'ongoing', 'closed'),
             sort_index = "order",
         )
-        docids = self.catalog_search(**query)[1]
-        agenda_items = tuple(self.resolve_docids(docids))
-        self.response['agenda_items'] = agenda_items
-        return self.response
+        return {'agenda_items': self.catalog_search(resolve = True, **query)}
 
 
 @view_config(name = "reload_data.json", context = IMeeting, permission = security.VIEW, renderer = 'json')

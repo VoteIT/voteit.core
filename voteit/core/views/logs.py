@@ -18,5 +18,5 @@ class LogsView(BaseView):
     def logs_view(self):
         log_handler = self.request.registry.getAdapter(self.context, ILogHandler)
         self.response['entries'] = log_handler.log_storage.values()
-        self.response['dt_format'] = self.api.dt_util.dt_format
+        self.response['dt_format'] = self.request.dt_handler.format_relative
         return self.response

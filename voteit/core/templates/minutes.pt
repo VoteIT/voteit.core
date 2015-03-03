@@ -1,0 +1,54 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      metal:use-macro="view.macro('arche:templates/master.pt')"
+  	  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+  	  i18n:domain="voteit.core">
+<body>
+
+<tal:main metal:fill-slot="content">
+
+    <div><span i18n:translate="">Meeting opened</span>: ${request.dt_handler.format_relative(context.start_time)|string:-}</div>
+
+    <div><span i18n:translate="">Meeting closed</span>: ${request.dt_handler.format_relative(context.end_time)|string:-}</div>
+
+    <h3 i18n:translate="">Participants</h3>
+    <div><a href="${request.resource_url(context, 'participants')}" i18n:translate="">View participants list</a></div>
+
+    <h2 i18n:translate="">Agenda items</h2>
+    <tal:iterate repeat="ai agenda_items">
+        <h3><a href="${request.resource_url(ai)}">${ai.title}</a></h3>
+        <div><span i18n:translate="">Agenda item was opened at</span>: ${request.dt_handler.format_relative(ai.start_time)|string:-}</div>
+
+        <div><span i18n:translate="">Agenda item was closed at</span>: ${request.dt_handler.format_relative(ai.end_time)|string:-}</div>
+
+    <h4 i18n:translate="">Approved proposals:</h4>
+        <tal:iterate repeat="prop ai.get_content(content_type = 'Proposal', states = 'approved')">
+            <ul>
+                <li><div class="iconpadding icon approved">
+                    <span tal:replace="structure request.creators_info(prop.creators, portrait = False)">userinfo</span>
+                    ${prop.title}
+                </div></li>
+            </ul>
+        </tal:iterate>
+
+    <h4 i18n:translate="">Denied proposals:</h4>
+        <tal:iterate repeat="prop ai.get_content(content_type = 'Proposal', states = 'denied')">
+            <ul>
+                <li><div class="iconpadding icon denied">
+                    <span tal:replace="structure request.creators_info(prop.creators, portrait = False)">userinfo</span>
+                    ${prop.title}
+                </div></li>
+            </ul>
+        </tal:iterate>
+        <hr />
+    </tal:iterate>
+
+    <br/>
+    <a class="btn btn-primary"
+       href="${request.resource_url(context)}">
+        <span i18n:translate="">Back</span>
+    </a><br/>
+
+</tal:main>
+</body>
+</html>

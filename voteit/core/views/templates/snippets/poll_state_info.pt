@@ -9,7 +9,7 @@
         </span>
     </div>
     <div tal:condition="wf_state not in ('ongoing', )" class="iconpadding icon time start" 
-         tal:define="start_time api.dt_util.dt_format(poll.start_time)">
+         tal:define="start_time request.dt_handler.format_relative(poll.start_time)">
         <span tal:condition="wf_state in ('private', 'upcoming', )"
             i18n:translate="">
             The poll starts <span tal:replace="start_time" i18n:name="start_time" />
@@ -20,7 +20,7 @@
         </span>
     </div>
     <div class="iconpadding icon time end"
-         tal:define="end_time api.dt_util.dt_format(poll.end_time)">
+         tal:define="end_time request.dt_handler.format_relative(poll.end_time)">
         <span tal:condition="wf_state in ('private', 'upcoming', 'ongoing', )"
               i18n:translate="">
               The poll closes <span tal:replace="end_time" i18n:name="end_time" />

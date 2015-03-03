@@ -57,7 +57,7 @@ class ParticipantsView(BaseView):
             user = users.get(userid, None)
             if user:
                 results[userid] = dict(
-                    userinfo = self.api.get_creators_info((userid,), portrait = False),
+                    userinfo = self.request.creators_info((userid,), portrait = False),
                     email = user.get_field_value('email', u""),
                     #Make sure context is meeting here!
                     roles = self.context.get_groups(userid)

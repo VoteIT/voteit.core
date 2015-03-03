@@ -27,7 +27,7 @@
                 </a></h5>
 
                 <div class="meta">
-                    <tal:creators tal:replace="structure api.get_creators_info(brain['creators'], portrait = False)">Creators</tal:creators>
+                    <tal:creators tal:replace="structure request.creators_info(brain['creators'], portrait = False)">Creators</tal:creators>
                     <span class="hyphen">&#45;</span>
                     <tal:wf condition="state_id|False">
                         <span class="${state_id} icon iconpadding">${state_id}</span>

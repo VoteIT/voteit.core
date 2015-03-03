@@ -53,7 +53,7 @@
 
 	<div class="poll_footer">
         <div class="iconpadding icon time start" 
-             tal:define="start_time api.dt_util.dt_format(context.start_time)">
+             tal:define="start_time request.dt_handler.format_relative(context.start_time)">
             <span tal:condition="wf_state in ('private', 'upcoming', )"
                   i18n:translate="">Starts</span>
             <span tal:condition="wf_state in ('ongoing', 'closed', 'canceled')"
@@ -61,7 +61,7 @@
             <span tal:replace="start_time">1970-10-10</span>
         </div>
         <div class="iconpadding icon time end"
-             tal:define="end_time api.dt_util.dt_format(context.end_time)">
+             tal:define="end_time request.dt_handler.format_relative(context.end_time)">
             <span tal:condition="wf_state in ('private', 'upcoming', 'ongoing', )"
                   i18n:translate="">Closes</span>
             <span tal:condition="wf_state in ('closed', 'canceled')"
