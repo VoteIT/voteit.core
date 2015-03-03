@@ -146,9 +146,8 @@ class PollVoteForm(DefaultEditForm):
     def readonly(self):
         return not self.can_vote
 
-    def __call__(self):
-        self.schema = self.poll_plugin.get_vote_schema(self.request, None)
-        return super(PollVoteForm, self).__call__()
+    def get_schema(self):
+        return self.poll_plugin.get_vote_schema(self.request, None)
 
     def appstruct(self):
         if self.request.authenticated_userid in self.context:
@@ -182,7 +181,7 @@ class PollVoteForm(DefaultEditForm):
     def _remove_modal_response(self, *args):
         return Response(render("arche:templates/deform/destroy_modal.pt", {}, request = self.request))
 
-    cancel_success = _remove_modal_response
+    cancel_success = cancel_failure = _remove_modal_response
 
     def show(self, form):
         appstruct = self.appstruct()

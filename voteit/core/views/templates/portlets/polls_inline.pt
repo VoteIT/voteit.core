@@ -12,7 +12,7 @@
     -->
     <a tal:condition="can_vote or has_voted"
       class="btn btn-primary"
-      href="javascript:arche.create_modal('#${obj.uid}')"
+      href="javascript:arche.create_modal('${obj.uid}')"
       id="${obj.uid}"
       data-modal-target="${request.resource_url(obj, '__vote__', query = {'modal': obj.uid})}">
       <span tal:condition="can_vote and not has_voted" i18n:translate="add_vote_button">Vote</span>
