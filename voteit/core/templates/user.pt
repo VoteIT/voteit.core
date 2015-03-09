@@ -1,0 +1,35 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      metal:use-macro="view.macro('arche:templates/base_view.pt', 'arche:templates/inline.pt')"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="voteit.core">
+<body>
+<tal:main metal:fill-slot="main-content">
+  <div class="row">
+    <div class="col-sm-6" tal:content="structure userinfo"></div>
+    <div class="col-sm-6" tal:define="can_edit request.has_permission('perm:Edit')">
+      <a href="${request.resource_url(context, 'edit')}"
+        tal:condition="can_edit"
+        class="btn btn-primary"
+        i18n:translate="">Change profile</a>
+      <a href="${request.resource_url(context, 'change_password')}"
+        tal:condition="can_edit"
+        class="btn btn-primary"
+        i18n:translate="">Change password</a>
+      <div tal:condition="can_edit">
+      FIXME: Profile image
+          <div tal:content="structure context.get_image_plugin(request).description|'Broken image plugin'" /><br/>
+          <div i18n:translate="edit_profile_image_help">
+              If you'd like to change where your profile image is taken from, click 'change profile'.
+              Only valid sources will show up there, so you might need to connect your profile to
+              other sources to get those options. (Like Facebook or Twitter) Any valid connection options
+              should be listed below.
+          </div>
+      </div>
+      connectionforms: FIXME!
+      <div tal:replace="structure api.render_view_group(api.root, request, 'connect_forms')|''">Connect forms</div>
+    </div>
+  </div>
+</tal:main>
+</body>
+</html>

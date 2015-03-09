@@ -1,6 +1,7 @@
 from arche.views.base import BaseView
 from arche.views.base import DefaultEditForm
 from betahaus.pyracont.factories import createSchema
+from betahaus.viewcomponent import render_view_group
 from pyramid.decorator import reify
 from pyramid.httpexceptions import HTTPForbidden
 from pyramid.httpexceptions import HTTPFound
@@ -65,6 +66,28 @@ class MeetingView(BaseView):
             sort_index = "order",
         )
         return {'agenda_items': self.catalog_search(resolve = True, **query)}
+
+    @view_config(name = '__userinfo__', permission = security.VIEW, renderer = "arche:templates/content/basic.pt")
+    def userinfo(self):
+        """ Special view to allow other meeting participants to see information about a user
+            who's in the same meeting as them.
+            Normally called via AJAX and included in a popup or similar, but also a part of the
+            users profile page.
+            
+            Note that a user might have participated within a meeting, and after that lost their
+            permission. This view has to at least display the username of that person.
+        """
+        try:
+            info_userid = self.request.subpath[0]
+        except IndexError:
+            info_userid = None
+        if not info_userid in security.find_authorized_userids(self.context, (security.VIEW,)):
+            msg = _(u"userid_not_registered_within_meeting_error",
+                    default = u"Couldn't find any user with userid '${info_userid}' within this meeting.",
+                    mapping = {'info_userid': info_userid})
+            raise HTTPForbidden( self.request.localizer.translate(msg) )
+        user = self.request.root['users'].get(info_userid)
+        return {'contents': render_view_group(user, self.request, 'user_info', view = self)}
 
 
 @view_config(name = "reload_data.json", context = IMeeting, permission = security.VIEW, renderer = 'json')

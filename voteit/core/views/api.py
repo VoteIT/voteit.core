@@ -218,8 +218,9 @@ class APIView(object):
         """ Return template for a set of creators.
             The content of creators should be userids.
         """
-        return self.render_single_view_component(self.context, self.request, 'main', 'creators_info',
-                                                 creators = creators, portrait = portrait)
+        return self.request.creators_info(creators, portrait = portrait)
+        #return self.render_single_view_component(self.context, self.request, 'main', 'creators_info',
+        #                                         creators = creators, portrait = portrait)
 
     def context_has_permission(self, permission, context):
         """ Special permission check that is agnostic of the request.context attribute.

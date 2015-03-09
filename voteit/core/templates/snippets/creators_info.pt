@@ -1,0 +1,21 @@
+<tal:main xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="voteit.core">
+<tal:iter repeat="user users">
+  <a tabindex="0"
+    class="inlineinfo"
+    role="button"
+    data-toggle="popover"
+    data-trigger="click focus"
+    data-external-popover-loaded="false"
+    data-placement="bottom"
+    title="${user.title}"
+    href="${request.get_userinfo_url(user.userid)}">
+    <img tal:condition="portrait" tal:replace="structure user.get_image_tag(request = request)" />
+    ${user.title}
+    (${user.userid})
+  </a>
+</tal:iter>
+</tal:main>

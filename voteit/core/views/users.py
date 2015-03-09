@@ -1,10 +1,13 @@
 from __future__ import unicode_literals
 
 from pyramid.view import view_config
+from pyramid.view import view_defaults
 from pyramid.response import Response
 from pyramid.httpexceptions import HTTPFound
 from pyramid.security import NO_PERMISSION_REQUIRED
 from betahaus.pyracont.factories import createSchema
+from arche.views.base import BaseView
+from betahaus.viewcomponent import render_view_group
 
 from voteit.core import VoteITMF as _
 from voteit.core.models.interfaces import IMeeting
@@ -21,7 +24,7 @@ from voteit.core.security import MANAGE_SERVER
 from voteit.core.security import VIEW
 from voteit.core.security import find_authorized_userids
 from voteit.core.views.base_edit import BaseForm
-from voteit.core.views.base_view import BaseView
+#from voteit.core.views.base_view import BaseView
 
 
 DEFAULT_TEMPLATE = "voteit.core:views/templates/base_edit.pt"
@@ -111,6 +114,14 @@ class TokenChangePasswordForm(BaseForm):
         return HTTPFound(location = self.request.resource_url(self.api.root, 'login'))
 
 
+@view_defaults(context = IUser, permission = VIEW)
+class UserView(BaseView):
+
+    @view_config(renderer = "voteit.core:templates/user.pt")
+    def profile(self):
+        return {'userinfo': render_view_group(self.context, self.request, 'user_info', view = self)}
+
+
 @view_config(context = IUser,
              name = "manage_connections",
              renderer = DEFAULT_TEMPLATE,
@@ -135,43 +146,3 @@ class ManageConnectedProfilesForm(BaseForm):
         else:
             self.api.flash_messages.add(_(u"Nothing updated"))
         return HTTPFound(location = self.request.resource_url(self.context))
-
-
-class UsersView(BaseView):
-    """ Any regular view action without forms. """
-
-  #  @view_config(context=IUser, renderer='templates/user.pt', permission=VIEW)
-    def profile_view(self):
-        return self.response
-
-    @view_config(context=IUsers, renderer='templates/list_users.pt', permission=VIEW)
-    def list_users(self):
-        self.response['users'] = self.context.get_content(content_type = 'User', sort_on = 'userid')
-        return self.response
-
-    @view_config(context=IMeeting, name="_userinfo", permission=VIEW, xhr=True)
-    def user_info_ajax_wrapper(self):
-        return Response(self.user_info())
-
-    @view_config(context=IMeeting, name="_userinfo", permission=VIEW, xhr=False, renderer="templates/simple_view.pt")
-    def user_info_fallback(self):
-        self.response['content'] = self.user_info()
-        return self.response
-
-    def user_info(self):
-        """ Special view to allow other meeting participants to see information about a user
-            who's in the same meeting as them.
-            Normally called via AJAX and included in a popup or similar, but also a part of the
-            users profile page.
-            
-            Note that a user might have participated within a meeting, and after that lost their
-            permission. This view has to at least display the username of that person.
-        """
-        info_userid = self.request.GET['userid']
-        if not info_userid in find_authorized_userids(self.context, (VIEW,)):
-            msg = _(u"userid_not_registered_within_meeting_error",
-                    default = u"Couldn't find any user with userid '${info_userid}' within this meeting.",
-                    mapping = {'info_userid': info_userid})
-            return self.api.translate(msg)
-        user = self.api.get_user(info_userid)
-        return self.api.render_view_group(user, self.request, 'user_info', api = self.api)
