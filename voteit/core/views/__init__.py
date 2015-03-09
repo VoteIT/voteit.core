@@ -51,7 +51,6 @@ def is_moderator(request):
 def includeme(config):
     config.include('.agenda_item')
     config.include('.cogwheel')
-    config.include('.portlets')
     config.scan(__name__)
 
     #Hook creators info

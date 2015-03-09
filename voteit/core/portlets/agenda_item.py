@@ -51,7 +51,7 @@ class ListingPortlet(PortletType):
 class ProposalsPortlet(ListingPortlet):
     name = "ai_proposals"
     title = _("Agenda Item: Proposals listing")
-    template = "voteit.core:views/templates/portlets/proposals.pt"
+    template = "voteit.core:templates/portlets/proposals.pt"
     view_name = '__ai_proposals__'
     schema_factory = AgendaItemProposalsPortletSchema
 
@@ -59,14 +59,14 @@ class ProposalsPortlet(ListingPortlet):
 class DiscussionsPortlet(ListingPortlet):
     name = "ai_discussions"
     title = _("Agenda Item: Discussions listing")
-    template = "voteit.core:views/templates/portlets/discussions.pt"
+    template = "voteit.core:templates/portlets/discussions.pt"
     view_name = '__ai_discussions__'
 
 
 class PollsPortlet(ListingPortlet):
     name = "ai_polls"
     title = _("Agenda Item: Polls listing")
-    template = "voteit.core:views/templates/portlets/polls.pt"
+    template = "voteit.core:templates/portlets/polls.pt"
     view_name = '__ai_polls__'
 #    schema_factory = FIXME: Schema for listing
 
@@ -141,13 +141,13 @@ class StrippedInlineAddForm(DefaultAddForm):
 
 
 class ProposalAddForm(StrippedInlineAddForm):
-    response_template = 'voteit.core:views/templates/portlets/inline_dummy_proposal_button.pt'
+    response_template = 'voteit.core:templates/portlets/inline_dummy_proposal_button.pt'
     formid = 'proposal_inline_add'
     update_selector = '#ai-proposals'
 
 
 class DiscussionAddForm(StrippedInlineAddForm):
-    response_template = 'voteit.core:views/templates/portlets/inline_dummy_form.pt'
+    response_template = 'voteit.core:templates/portlets/inline_dummy_form.pt'
     formid = 'discussion_inline_add'
     update_selector = '#ai-discussions'
 
@@ -173,14 +173,14 @@ def includeme(config):
                     name = '__ai_proposals__',
                     context = IAgendaItem,
                     permission = security.VIEW,
-                    renderer = 'voteit.core:views/templates/portlets/proposals_inline.pt')
+                    renderer = 'voteit.core:templates/portlets/proposals_inline.pt')
     config.add_view(DiscussionsInline,
                     name = '__ai_discussions__',
                     context = IAgendaItem,
                     permission = security.VIEW,
-                    renderer = 'voteit.core:views/templates/portlets/discussions_inline.pt')
+                    renderer = 'voteit.core:templates/portlets/discussions_inline.pt')
     config.add_view(PollsInline,
                     name = '__ai_polls__',
                     context = IAgendaItem,
                     permission = security.VIEW,
-                    renderer = 'voteit.core:views/templates/portlets/polls_inline.pt')
+                    renderer = 'voteit.core:templates/portlets/polls_inline.pt')

@@ -3,10 +3,10 @@
       xmlns:tal="http://xml.zope.org/namespaces/tal"
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
       i18n:domain="voteit.core">
-<div id="ai-polls">
+<div id="ai-discussions">
   <div class="panel panel-primary portlet">
     <div class="panel-heading">
-      <h4 class="panel-title" i18n:translate="">Polls</h4>
+      <h4 class="panel-title" i18n:translate="">Discussions</h4>
     </div>
     <ul class="list-group" data-load-target="${load_url}">
       <li class="list-group-item">
@@ -15,9 +15,7 @@
       </li>
     </ul>
     <div class="panel-footer">
-    <!-- 
-      <div tal:replace="structure view.render_template('voteit.core:views/templates/portlets/inline_dummy_form.pt')"></div>
-       -->
+      <div tal:replace="structure view.render_template('voteit.core:templates/portlets/inline_dummy_form.pt')"></div>
     </div>
   </div>
 </div>

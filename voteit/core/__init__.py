@@ -90,6 +90,8 @@ def required_components(config):
     config.include('voteit.core.models')
     #Include schemas
     config.include('voteit.core.schemas')
+    #Portlets
+    config.include('voteit.core.portlets')
     #Other component includes
     config.include('voteit.core.fanstaticlib')
     config.include('voteit.core.js_translations')

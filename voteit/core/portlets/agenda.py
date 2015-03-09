@@ -25,7 +25,7 @@ class AgendaPortlet(PortletType):
                         'portlet': self.portlet,
                         'view': view,
                         'load_url': request.resource_url(meeting, '__agenda_items__')}
-            return render("voteit.core:views/templates/portlets/agenda.pt",
+            return render("voteit.core:templates/portlets/agenda.pt",
                           response,
                           request = request)
 
@@ -73,5 +73,5 @@ def includeme(config):
     config.add_view(AgendaInlineView,
                     name = '__agenda_items__',
                     context = IMeeting,
-                    renderer = 'voteit.core:views/templates/portlets/agenda_inline.pt')
+                    renderer = 'voteit.core:templates/portlets/agenda_inline.pt')
     config.add_portlet(AgendaPortlet)
