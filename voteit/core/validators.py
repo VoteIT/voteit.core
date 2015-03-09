@@ -26,14 +26,14 @@ AT_USERID_PATTERN = re.compile(r'(\A|\s)@('+USERID_REGEXP+r')')
 NEW_USERID_PATTERN = re.compile(r'^'+USERID_REGEXP+r'$')
 
 
-def password_validation(node, value):
-    """ check that password is
-        - at least 6 chars and at most 100.
-    """
-    if len(value) < 6:
-        raise colander.Invalid(node, _(u"Too short. At least 6 chars required."))
-    if len(value) > 100:
-        raise colander.Invalid(node, _(u"Less than 100 chars please."))
+# def password_validation(node, value):
+#     """ check that password is
+#         - at least 6 chars and at most 100.
+#     """
+#     if len(value) < 6:
+#         raise colander.Invalid(node, _(u"Too short. At least 6 chars required."))
+#     if len(value) > 100:
+#         raise colander.Invalid(node, _(u"Less than 100 chars please."))
 
 
 def html_string_validator(node, value):
@@ -57,7 +57,6 @@ def multiple_email_validator(node, value):
     """
         checks that each line of value is a correct email
     """
-
     validator = colander.Email()
     invalid = []
     for email in value.splitlines():
@@ -65,7 +64,6 @@ def multiple_email_validator(node, value):
             validator(node, email)
         except colander.Invalid:
             invalid.append(email)
-            
     if invalid:
         emails = ", ".join(invalid)
         raise colander.Invalid(node, _(u"The following adresses is invalid: ${emails}", mapping={'emails': emails}))
@@ -106,83 +104,83 @@ def deferred_at_enabled_text(node, kw):
     return AtEnabledTextArea(context)
 
 
-class NewUniqueUserID(object):
-    """ Check if UserID is unique globally in the site and that UserID conforms to correct standard. """
-    
-    def __init__(self, context):
-        self.context = context
-
-    def __call__(self, node, value):
-        if not NEW_USERID_PATTERN.match(value):
-            msg = _('userid_char_error',
-                    default=u"UserID must be 3-30 chars, start with lowercase a-z and only contain lowercase a-z, numbers, minus and underscore.")
-            raise colander.Invalid(node, msg)
+# class NewUniqueUserID(object):
+#     """ Check if UserID is unique globally in the site and that UserID conforms to correct standard. """
+#     
+#     def __init__(self, context):
+#         self.context = context
+# 
+#     def __call__(self, node, value):
+#         if not NEW_USERID_PATTERN.match(value):
+#             msg = _('userid_char_error',
+#                     default=u"UserID must be 3-30 chars, start with lowercase a-z and only contain lowercase a-z, numbers, minus and underscore.")
+#             raise colander.Invalid(node, msg)
+#         
+#         root = find_root(self.context)
+#         if value in root.users:
+#             msg = _('already_registered_error',
+#                     default=u"UserID already registered. If it was registered by you, try to retrieve your password.")
+#             raise colander.Invalid(node, msg)
         
-        root = find_root(self.context)
-        if value in root.users:
-            msg = _('already_registered_error',
-                    default=u"UserID already registered. If it was registered by you, try to retrieve your password.")
-            raise colander.Invalid(node, msg)
-        
 
-@colander.deferred
-def deferred_new_userid_validator(node, kw):
-    context = kw['context']
-    return NewUniqueUserID(context)
-
-
-class UniqueEmail(object):
-    """ Check that email address is valid and unique.
-        If context is a User, it's okay to set the same email address.
-        (Otherwise it wouldn't be possible to submit the form with our own address :)
-    """
-    def __init__(self, context):
-        self.context = context
-
-    def __call__(self, node, value):
-        value = value.lower() #Make sure it'slowercase
-        default_email_validator = colander.Email(msg=_(u"Invalid email address."))
-        default_email_validator(node, value)
-        #context can be IUser or IUsers
-        users = find_root(self.context).users
-        #User with email exists?
-        match = users.get_user_by_email(value)
-        if match and self.context != match:
-            #Something was found, and it isn't this context - I.e. some other user
-            msg = _(u"email_not_unique_error",
-                    default=u"Another user has already registered with that email address. If you've lost your password, request a new one instead.")
-            raise colander.Invalid(node, 
-                                   msg)
-
-
-@colander.deferred
-def deferred_unique_email_validator(node, kw):
-    context = kw['context']
-    return UniqueEmail(context)
-
-
-class CheckPasswordToken(object):
-    def __init__(self, context):
-        assert IUser.providedBy(context)
-        self.context = context
-    
-    def __call__(self, node, value):
-        token = self.context.get_token()
-        msg = _(u"check_password_token_error",
-                default="Password token doesn't match. Won't allow password change.")
-        exc = colander.Invalid(node, msg)
-        if token is None:
-            raise exc
-        try:
-            token.validate(value)
-        except TokenValidationError:
-            raise exc
+# @colander.deferred
+# def deferred_new_userid_validator(node, kw):
+#     context = kw['context']
+#     return NewUniqueUserID(context)
+# 
+# 
+# class UniqueEmail(object):
+#     """ Check that email address is valid and unique.
+#         If context is a User, it's okay to set the same email address.
+#         (Otherwise it wouldn't be possible to submit the form with our own address :)
+#     """
+#     def __init__(self, context):
+#         self.context = context
+# 
+#     def __call__(self, node, value):
+#         value = value.lower() #Make sure it'slowercase
+#         default_email_validator = colander.Email(msg=_(u"Invalid email address."))
+#         default_email_validator(node, value)
+#         #context can be IUser or IUsers
+#         users = find_root(self.context).users
+#         #User with email exists?
+#         match = users.get_user_by_email(value)
+#         if match and self.context != match:
+#             #Something was found, and it isn't this context - I.e. some other user
+#             msg = _(u"email_not_unique_error",
+#                     default=u"Another user has already registered with that email address. If you've lost your password, request a new one instead.")
+#             raise colander.Invalid(node, 
+#                                    msg)
+# 
+# 
+# @colander.deferred
+# def deferred_unique_email_validator(node, kw):
+#     context = kw['context']
+#     return UniqueEmail(context)
+# 
+# 
+# class CheckPasswordToken(object):
+#     def __init__(self, context):
+#         assert IUser.providedBy(context)
+#         self.context = context
+#     
+#     def __call__(self, node, value):
+#         token = self.context.get_token()
+#         msg = _(u"check_password_token_error",
+#                 default="Password token doesn't match. Won't allow password change.")
+#         exc = colander.Invalid(node, msg)
+#         if token is None:
+#             raise exc
+#         try:
+#             token.validate(value)
+#         except TokenValidationError:
+#             raise exc
 
 
-@colander.deferred
-def deferred_password_token_validator(node, kw):
-    context = kw['context']
-    return CheckPasswordToken(context)
+# @colander.deferred
+# def deferred_password_token_validator(node, kw):
+#     context = kw['context']
+#     return CheckPasswordToken(context)
 
 
 class TokenFormValidator(object):
@@ -210,69 +208,48 @@ def deferred_token_form_validator(form, kw):
     return TokenFormValidator(context)
 
 
-@colander.deferred
-def deferred_existing_userid_validator(node, kw):
-    context = kw['context']
-    return GlobalExistingUserId(context)
-
-
-class GlobalExistingUserId(object):
-    def __init__(self, context):
-        self.context = context
-    
-    def __call__(self, node, value):
-        root = find_root(self.context)
-        userids = tuple(root.users.keys())
-        if value not in userids:
-            msg = _(u"globally_existing_userid_validation_error",
-                    default=u"UserID not found")
-            raise colander.Invalid(node, 
-                                   msg)
-
-
-@colander.deferred
-def deferred_existing_userid_or_email_validator(node, kw):
-    context = kw['context']
-    return ExistingUserIdOrEmail(context)
-
-
-class ExistingUserIdOrEmail(object):
-    def __init__(self, context):
-        self.context = context
-    
-    def __call__(self, node, value):
-        if '@' in value:
-            #assume email
-            root = find_root(self.context)
-            user = root['users'].get_user_by_email(value)
-            if not IUser.providedBy(user):
-                msg = _(u"email_to_user_validation_error",
-                        default=u"I couldn't find any user with this email.")
-                raise colander.Invalid(node, msg)
-        else:
-            userid_validator = GlobalExistingUserId(self.context)
-            userid_validator(node, value)
-
-
-@colander.deferred
-def deferred_current_password_validator(node, kw):
-    context = kw['context']
-    return CurrentPasswordValidator(context)
-
-
-class CurrentPasswordValidator(object):
-    """ Check that current password matches. Used for sensitive operations
-        when logged in to make sure that no one else changes the password for instance.
-    """
-    
-    def __init__(self, context):
-        assert IUser.providedBy(context) # pragma : no cover
-        self.context = context
-    
-    def __call__(self, node, value):
-        pw_field = self.context.get_custom_field('password')
-        if not pw_field.check_input(value):
-            raise colander.Invalid(node, _(u"Current password didn't match"))
+# @colander.deferred
+# def deferred_existing_userid_validator(node, kw):
+#     context = kw['context']
+#     return GlobalExistingUserId(context)
+# 
+# 
+# class GlobalExistingUserId(object):
+#     def __init__(self, context):
+#         self.context = context
+#     
+#     def __call__(self, node, value):
+#         root = find_root(self.context)
+#         userids = tuple(root.users.keys())
+#         if value not in userids:
+#             msg = _(u"globally_existing_userid_validation_error",
+#                     default=u"UserID not found")
+#             raise colander.Invalid(node, 
+#                                    msg)
+# 
+# 
+# @colander.deferred
+# def deferred_existing_userid_or_email_validator(node, kw):
+#     context = kw['context']
+#     return ExistingUserIdOrEmail(context)
+# 
+# 
+# class ExistingUserIdOrEmail(object):
+#     def __init__(self, context):
+#         self.context = context
+#     
+#     def __call__(self, node, value):
+#         if '@' in value:
+#             #assume email
+#             root = find_root(self.context)
+#             user = root['users'].get_user_by_email(value)
+#             if not IUser.providedBy(user):
+#                 msg = _(u"email_to_user_validation_error",
+#                         default=u"I couldn't find any user with this email.")
+#                 raise colander.Invalid(node, msg)
+#         else:
+#             userid_validator = GlobalExistingUserId(self.context)
+#             userid_validator(node, value)
 
 
 def richtext_validator(node, value):
@@ -289,57 +266,57 @@ def richtext_validator(node, value):
         raise colander.Invalid(node, _(u"Contains forbidden HTML tags."))
 
 
-@colander.deferred
-def deferred_context_roles_validator(node, kw):
-    context = kw['context']
-    request = kw['request']
-    return ContextRolesValidator(context, request)
+# @colander.deferred
+# def deferred_context_roles_validator(node, kw):
+#     context = kw['context']
+#     request = kw['request']
+#     return ContextRolesValidator(context, request)
+# 
+# 
+# class ContextRolesValidator(object):
+#     """ Check that the roles a user tries to assign is allowed in this context.
+#     """
+#     
+#     def __init__(self, context, request):
+#         self.context = context
+#         self.request = request
+#     
+#     def __call__(self, node, value):
+#         if not has_permission(MANAGE_GROUPS, self.context, self.request):
+#             raise colander.Invalid(node, _(u"You can't change groups in this context"))
+#         roles = []
+#         if ISiteRoot.providedBy(self.context):
+#             roles.extend([x[0] for x in ROOT_ROLES])
+#         elif IMeeting.providedBy(self.context):
+#             roles.extend([x[0] for x in MEETING_ROLES])
+#         for v in value:
+#             if v not in roles:
+#                 raise colander.Invalid(node, _(u"wrong_context_for_roles_error",
+#                                                default = u"Group ${group} can't be assigned in this context",
+#                                                mapping = {'group': v}))
 
 
-class ContextRolesValidator(object):
-    """ Check that the roles a user tries to assign is allowed in this context.
-    """
-    
-    def __init__(self, context, request):
-        self.context = context
-        self.request = request
-    
-    def __call__(self, node, value):
-        if not has_permission(MANAGE_GROUPS, self.context, self.request):
-            raise colander.Invalid(node, _(u"You can't change groups in this context"))
-        roles = []
-        if ISiteRoot.providedBy(self.context):
-            roles.extend([x[0] for x in ROOT_ROLES])
-        elif IMeeting.providedBy(self.context):
-            roles.extend([x[0] for x in MEETING_ROLES])
-        for v in value:
-            if v not in roles:
-                raise colander.Invalid(node, _(u"wrong_context_for_roles_error",
-                                               default = u"Group ${group} can't be assigned in this context",
-                                               mapping = {'group': v}))
+# @colander.deferred
+# def deferred_check_context_unique_name(node, kw):
+#     """ Check that a name isn't used within context, or that it's a view within this context.
+#     """
+#     context = kw['context']
+#     request = kw['request']
+#     return ContextUniqueNameValidator(context, request)
 
 
-@colander.deferred
-def deferred_check_context_unique_name(node, kw):
-    """ Check that a name isn't used within context, or that it's a view within this context.
-    """
-    context = kw['context']
-    request = kw['request']
-    return ContextUniqueNameValidator(context, request)
-
-
-class ContextUniqueNameValidator(object):
-    """ Make sure that a name in a context doesn't exist, or is a view.
-    """
-    def __init__(self, context, request):
-        self.context = context
-        self.request = request
-    
-    def __call__(self, node, value):
-        if not check_unique_name(self.context, self.request, value):
-            raise colander.Invalid(node, _(u"not_unique_name_within_context",
-                                            default = u"Something with the name '${value}' already exists within this context. Pick another name!",
-                                            mapping = {'value': value}))
+# class ContextUniqueNameValidator(object):
+#     """ Make sure that a name in a context doesn't exist, or is a view.
+#     """
+#     def __init__(self, context, request):
+#         self.context = context
+#         self.request = request
+#     
+#     def __call__(self, node, value):
+#         if not check_unique_name(self.context, self.request, value):
+#             raise colander.Invalid(node, _(u"not_unique_name_within_context",
+#                                             default = u"Something with the name '${value}' already exists within this context. Pick another name!",
+#                                             mapping = {'value': value}))
 
 
 class NotOnlyDefaultTextValidator(object):
@@ -364,39 +341,39 @@ class NotOnlyDefaultTextValidator(object):
                                            default=u"Only the default content is not valid",))
 
 
-class LoginPasswordValidator(object):
-    """ Make sure a user exist and check that users password. This is a validator for a form,
-        since it checks the field userid and password.
-        
-        Displaying information about bad password or userid might not be a good idea, so we won't do that now.
-    """
-    def __init__(self, context):
-        assert ISiteRoot.providedBy(context)
-        self.context = context
-    
-    def __call__(self, form, value):
-        password = value['password']
-        userid = value['userid'] #Might be an email address!
-        exc = colander.Invalid(form, u"Login invalid") #Raised if trouble
-        exc['userid'] = _(u"Use either email address or userid to login.")
-        exc['password'] = _(u"Password is case sensitive.")
-        #First, retrieve user object
-        if u'@' in userid:
-            user = self.context.users.get_user_by_email(userid)
-        else:
-            user = self.context.users.get(userid)
-        if user is None:
-            raise exc
-        #Validate password
-        pw_field = user.get_custom_field('password')
-        if not pw_field.check_input(password):
-            raise exc
-
-@colander.deferred
-def deferred_login_password_validator(form, kw):
-    context = kw['context']
-    root = find_root(context)
-    return LoginPasswordValidator(root)
+# class LoginPasswordValidator(object):
+#     """ Make sure a user exist and check that users password. This is a validator for a form,
+#         since it checks the field userid and password.
+#         
+#         Displaying information about bad password or userid might not be a good idea, so we won't do that now.
+#     """
+#     def __init__(self, context):
+#         assert ISiteRoot.providedBy(context)
+#         self.context = context
+#     
+#     def __call__(self, form, value):
+#         password = value['password']
+#         userid = value['userid'] #Might be an email address!
+#         exc = colander.Invalid(form, u"Login invalid") #Raised if trouble
+#         exc['userid'] = _(u"Use either email address or userid to login.")
+#         exc['password'] = _(u"Password is case sensitive.")
+#         #First, retrieve user object
+#         if u'@' in userid:
+#             user = self.context.users.get_user_by_email(userid)
+#         else:
+#             user = self.context.users.get(userid)
+#         if user is None:
+#             raise exc
+#         #Validate password
+#         pw_field = user.get_custom_field('password')
+#         if not pw_field.check_input(password):
+#             raise exc
+# 
+# @colander.deferred
+# def deferred_login_password_validator(form, kw):
+#     context = kw['context']
+#     root = find_root(context)
+#     return LoginPasswordValidator(root)
 
 
 class CSRFTokenValidator(object):
