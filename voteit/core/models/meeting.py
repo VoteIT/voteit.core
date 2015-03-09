@@ -23,6 +23,7 @@ class Meeting(BaseContent, SecurityAware, WorkflowAware):
     """
     type_name = 'Meeting'
     type_title = _(u"Meeting")
+    nav_visible = False
     add_permission = security.ADD_MEETING
     #FIXME: Property schema should return different add schema when user is not an admin.
     #Ie captcha

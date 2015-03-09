@@ -20,6 +20,7 @@ class Users(BaseContent, ArcheUsers):
     """ Container for all user objects """
     type_name = 'Users'
     type_title = _("Users")
+    nav_visible = False
 
     __acl__ = [(Allow, security.ROLE_ADMIN, (security.EDIT, security.VIEW, security.ADD_USER, security.MANAGE_SERVER, security.PERM_MANAGE_USERS)),
                DENY_ALL]
