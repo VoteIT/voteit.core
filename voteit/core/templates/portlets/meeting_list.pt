@@ -1,0 +1,42 @@
+<tal:main xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="voteit.core">
+<div id="meetings-portlet" class="portlet">
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <h4 i18n:translate="">Meetings</h4>
+    </div>
+  </div>
+  <div class="panel-group" id="panel-meetinglist" role="tablist" aria-multiselectable="true">
+    <tal:iterate repeat="state ('ongoing', 'upcoming', 'closed')">
+    <div class="panel panel-default">
+      <div class="panel-heading" role="tab" id="panel-meetinglist-heading-${state}">
+        <h4 class="panel-title">
+          <a data-toggle="collapse" data-parent="#panel-meetinglist"
+            href="#panel-meetinglist-state-${state}"
+            aria-expanded="${repeat.state.start and 'true' or 'false'}"
+            aria-controls="panel-meetinglist-state-${state}">
+            ${state}
+          </a>
+        </h4>
+      </div>
+      <div id="panel-meetinglist-state-${state}" class="panel-collapse collapse ${repeat.state.start and 'in' or None}" role="tabpanel" aria-labelledby="panel-meetinglist-heading-${state}">
+        <ul class="list-group">
+          <li class="list-group-item" tal:repeat="obj get_meetings(request, state = state)">
+            <a href="${request.resource_url(obj)}">
+              <span>${obj.title}</span>
+              <span class="clearfix">
+                <tal:ts i18n:translate="">Started</tal:ts>: ${request.dt_handler.format_dt(obj.start_time, parts = 'd')|''}
+              </span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    </tal:iterate>
+
+  </div>
+</div>
+</tal:main>

@@ -104,6 +104,11 @@ class EditMeetingSchema(colander.Schema):
         title = _(u"Send mail to voters when a poll starts."),
         default = True,
         missing = True)
+    hide_meeting = colander.SchemaNode(colander.Bool(),
+        title = _(u"Hide meeting from listings"),
+        description = _("Users won't be able to find it unless they have a link to it."),
+        default = False,
+        missing = False)
 
 
 class AddMeetingSchema(EditMeetingSchema):
