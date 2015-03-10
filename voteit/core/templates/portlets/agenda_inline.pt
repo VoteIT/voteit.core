@@ -14,8 +14,10 @@
         <a href="${request.resource_url(meeting, brain['__name__'])}">
           <span>${brain['title']}</span>
           <span class="clearfix">
-            P: <span>${brain['proposal_count']}</span>
-            D: <span>${brain['discussion_count']}</span>
+            <span class="glyphicon glyphicon-exclamation-sign"></span>
+            <span>${brain['proposal_count']}</span>
+            <span class="glyphicon glyphicon-comment"></span>
+            <span>${brain['discussion_count']}</span>
           </span>
         </a>
       </li>

@@ -6,7 +6,10 @@
 <div id="ai-proposals">
   <div class="panel panel-primary portlet">
     <div class="panel-heading">
-      <h4 class="panel-title" i18n:translate="">Proposals</h4>
+      <h4 class="panel-title">
+        <span class="glyphicon glyphicon-exclamation-sign"></span>
+        <span i18n:translate="">Proposals</span>
+      </h4>
     </div>
     <ul class="list-group" data-load-target="${load_url}">
       <li class="list-group-item">Loading...</li>

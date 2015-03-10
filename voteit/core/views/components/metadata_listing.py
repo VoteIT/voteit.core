@@ -28,7 +28,7 @@ from voteit.core.security import DELETE
 @view_action('metadata_listing', 'state',
              permission = VIEW,
              interface = IWorkflowAware,
-             renderer = "voteit.core:views/components/templates/inline_workflow.pt")
+             renderer = "voteit.core:templates/snippets/inline_workflow.pt")
 def meta_state(context, request, va, **kw):
     """ Note: moderator actions also uses this one.
     """
@@ -66,6 +66,8 @@ def meta_time(context, request, va, **kw):
 
 @view_action('metadata_listing', 'retract', permission=VIEW, interface = IWorkflowAware)
 def meta_retract(context, request, va, **kw):
+    if request.is_moderator:
+        return
     if context.get_workflow_state() != 'published':
         return
     if not request.authenticated_userid in context.creators:

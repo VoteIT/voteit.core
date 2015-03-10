@@ -6,7 +6,10 @@
 <div id="ai-polls">
   <div class="panel panel-primary portlet">
     <div class="panel-heading">
-      <h4 class="panel-title" i18n:translate="">Polls</h4>
+      <h4 class="panel-title">
+        <span class="glyphicon glyphicon-check"></span>
+        <span i18n:translate="">Polls</span>
+      </h4>
     </div>
     <ul class="list-group" data-load-target="${load_url}">
       <li class="list-group-item">
