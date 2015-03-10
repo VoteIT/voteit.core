@@ -191,3 +191,6 @@ def get_sha_password(value, hashed = None):
     if isinstance(value, unicode):
         value = value.encode('UTF-8')
     return 'SHA1:' + sha1(value).hexdigest()
+
+def includeme(config):
+    config.register_roles(ROLE_MODERATOR, ROLE_DISCUSS, ROLE_PROPOSE, ROLE_VOTER)
