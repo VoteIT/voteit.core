@@ -1,5 +1,10 @@
 from calendar import timegm
 
+from arche.interfaces import ICataloger
+from arche.interfaces import IObjectAddedEvent
+from arche.interfaces import IObjectWillBeRemovedEvent
+from arche.models.catalog import Metadata
+from betahaus.pyracont.interfaces import IBaseFolder
 from pyramid.events import subscriber
 from pyramid.security import principals_allowed_by_permission
 from pyramid.traversal import find_interface
@@ -8,14 +13,11 @@ from pyramid.traversal import find_root
 from pyramid.traversal import resource_path
 from repoze.catalog.indexes.field import CatalogFieldIndex
 from repoze.catalog.indexes.keyword import CatalogKeywordIndex
-from arche.interfaces import IObjectAddedEvent
-from arche.interfaces import IObjectWillBeRemovedEvent
 from zope.component import adapter
 from zope.component import getAdapter
 from zope.component import queryAdapter
 from zope.component.interfaces import ComponentLookupError
 from zope.interface import implementer
-from arche.models.catalog import Metadata
 
 from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import ICatalogMetadata
@@ -35,8 +37,6 @@ from voteit.core.interfaces import IObjectUpdatedEvent
 from voteit.core.models.interfaces import IBaseContent
 from voteit.core.models.interfaces import ISiteRoot
 from voteit.core.models.interfaces import IAgendaItem
-from arche.interfaces import ICataloger
-from betahaus.pyracont.interfaces import IBaseFolder
 
 
 SEARCHABLE_TEXT_INDEXES = ('title',
