@@ -5,3 +5,5 @@
 .tmp*
 .coverage
 .noseids
+.sass-cache
+*.css.map

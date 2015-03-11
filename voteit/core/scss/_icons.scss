@@ -1,0 +1,12 @@
+/*Icons - match to wf states*/
+.glyphicon-approved      { &:before { content: "\e013"; } } /*ok*/
+.glyphicon-denied        { &:before { content: "\e014"; } } /*remove*/
+.glyphicon-voting        { &:before { content: "\e033"; } } /*lock*/
+.glyphicon-unhandled     { &:before { content: "\e085"; } } /*question-sign*/
+.glyphicon-private       { &:before { content: "\e106"; } } /*eye-close*/
+.glyphicon-ongoing       { &:before { content: "\e072"; } } /*play*/
+.glyphicon-published     { &:before { content: "\e022"; } } /*file*/
+.glyphicon-upcoming      { &:before { content: "\e073"; } } /*pause*/
+.glyphicon-canceled      { &:before { content: "\e090"; } } /*ban-circle*/
+.glyphicon-closed        { &:before { content: "\e013"; } } /*ok*/
+.glyphicon-retracted     { &:before { content: "\e090"; } } /*ban-circle*/

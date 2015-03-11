@@ -3,12 +3,14 @@ from arche.fanstatic_lib import common_js
 from arche.fanstatic_lib import pure_js
 from arche.interfaces import IBaseView
 from arche.interfaces import IViewInitializedEvent
+from arche.fanstatic_lib import main_css
 from fanstatic import Group
 from fanstatic import Library
 from fanstatic import Resource
 from js.jquery import jquery
 from pkg_resources import resource_filename
-
+from deform_autoneed import resource_registry
+from js.bootstrap import bootstrap_css
 
 from js.jquery_tablesorter import tablesorter
 # 
@@ -19,6 +21,8 @@ voteit_core_csslib = Library('voteit_css', 'css')
 
 data_loader = Resource(voteit_core_jslib, 'data_loader.js', depends = (jquery, pure_js, common_js))
 
+#voteit_bootstrap = Resource(voteit_core_csslib, 'voteit_bootstrap.css')
+voteit_main_css = Resource(voteit_core_csslib, 'main.css', depends=(bootstrap_css, main_css))
 
 # 
 # #CSS and JS
@@ -135,9 +139,11 @@ voteit_manage_tickets_js = Resource(voteit_core_jslib, 'voteit_manage_tickets.js
 
 
 def include_voteit_resources(view, event):
+    voteit_main_css.need()
     if view.request.is_moderator:
         voteit_moderator_js.need()
 
 
 def includeme(config):
     config.add_subscriber(include_voteit_resources, [IBaseView, IViewInitializedEvent])
+    #resource_registry.replace_resource(bootstrap_css, voteit_bootstrap)

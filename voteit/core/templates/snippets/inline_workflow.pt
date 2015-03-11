@@ -23,7 +23,7 @@
       <ul class="dropdown-menu" role="menu">
         <li tal:repeat="state states">
           <a href="${request.resource_url(context, 'state', query = {'state': state.name})}">            
-            <span class="glyphicon glyphicon-${state.name}"></span>
+            <span class="glyphicon glyphicon-${state.name} text-${state.name}"></span>
             <span tal:content="tstring(state.title)">Title</span>
           </a>
         </li>

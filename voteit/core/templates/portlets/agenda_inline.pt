@@ -5,7 +5,10 @@
       i18n:domain="voteit.core">
   <div class="panel panel-default" tal:repeat="state states">
     <div class="panel-heading">
-      <h4 class="panel-title">${state}</h4>
+      <h4 class="panel-title">
+        <span class="glyphicon glyphicon-${state}"></span>
+        ${state_titles[state]}
+      </h4>
     </div>
     <ul class="list-group">
       <li class="list-group-item" tal:repeat="brain view.get_ais(state)">
