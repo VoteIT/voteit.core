@@ -93,6 +93,9 @@
        $('#' + oid).ajaxForm($.extend(options, extra_options));
      }
    );
+   //Callbacks should be initializer every time this is inline loaded
+   deform.processCallbacks();
+   deform.focusFirstInput();
   </script>
 
 </form>
