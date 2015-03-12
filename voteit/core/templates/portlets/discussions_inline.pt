@@ -6,7 +6,7 @@
 <tal:iterate repeat="obj contents">
   <div class="list-group-item">
     <tal:creator replace="structure request.creators_info(obj.creators)"></tal:creator>
-    <span tal:content="structure request.transform_text(obj.title)">
+    <span tal:content="structure request.transform_text(obj.text)">
       Text here
     </span>
     <tal:cog condition="request.is_moderator" replace="structure view.render_template('voteit.core:views/templates/snippets/cogwheel.pt', context = obj)" />

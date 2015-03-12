@@ -114,12 +114,12 @@ class StripAndTruncateTests(unittest.TestCase):
     def test_strip_and_truncate(self):
         text = "Lorem ipsum dolor"
         truncated = self._fut(text, 10)
-        self.assertEqual(truncated, 'Lorem ipsum<span class="trunc">&ellip;</span>') 
+        self.assertEqual(truncated, 'Lorem ipsum<span class="trunc">&hellip;</span>')
 
     def test_strip_and_truncate_dont_touch(self):
         text = "Lorem ipsum dolor"
         truncated = self._fut(text, 20)
-        self.assertEqual(truncated, 'Lorem ipsum dolor') 
+        self.assertEqual(truncated, 'Lorem ipsum dolor')
 
 
 # _DUMMY_URL_MESSAGE = u"""Website: www.betahaus.net,

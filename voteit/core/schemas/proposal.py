@@ -30,14 +30,14 @@ def deferred_proposal_text_validator(node, kw):
     return NotOnlyDefaultTextValidator(context, request, deferred_default_proposal_text)
 
 
-
 class ProposalSchema(colander.MappingSchema):
-    title = colander.SchemaNode(colander.String(),
+    text = colander.SchemaNode(colander.String(),
                                 title = _(u"Proposal"),
                                 validator = deferred_proposal_text_validator,
                                 default = deferred_default_proposal_text,
                                 oid = random_oid,
                                 widget = deform.widget.TextAreaWidget(rows=3),)
+    #FIXME: Does this even work?
     tags = colander.SchemaNode(colander.String(),
                                title = _(u"Tags"),
                                default = deferred_default_tags,

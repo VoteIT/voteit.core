@@ -8,6 +8,7 @@ from zope.interface import implementer
 from voteit.core import VoteITMF as _
 from voteit.core import security
 from voteit.core.helpers import TAG_PATTERN
+from voteit.core.helpers import strip_and_truncate
 from voteit.core.models.base_content import BaseContent
 from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IProposal
@@ -25,7 +26,7 @@ class Proposal(BaseContent, WorkflowAware):
     type_name = 'Proposal'
     type_title = _(u"Proposal")
     add_permission = security.ADD_PROPOSAL
-    custom_mutators = {'title': '_set_title'}
+    #custom_mutators = {'title': '_set_title'}
 
     @property
     def __acl__(self):
@@ -43,13 +44,27 @@ class Proposal(BaseContent, WorkflowAware):
             return acl.get_acl(acl_name)
         return acl.get_acl('Proposal:locked')
 
-    def _get_title(self):
-        return self.get_field_value('title', u"")
+    @property
+    def title(self):
+        return strip_and_truncate(self.text, limit = 100, symbol = '')
+    @title.setter
+    def title(self, value):
+        raise NotImplementedError("Tried to set title on Proposal")
 
-    def _set_title(self, value, key=None):
-        self.field_storage['title'] = value
+    @property
+    def text(self):
+        return self.get_field_value('text', '')
+    @text.setter
+    def text(self, value):
+        self.set_field_value('text', value)
 
-    title = property(_get_title, _set_title)
+#     def _get_title(self):
+#         return self.get_field_value('title', u"")
+# 
+#     def _set_title(self, value, key=None):
+#         self.field_storage['title'] = value
+# 
+#     title = property(_get_title, _set_title)
 
     @property
     def mentioned(self):

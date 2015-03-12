@@ -8,6 +8,7 @@ from zope.interface import implementer
 
 from voteit.core import VoteITMF as _
 from voteit.core import security
+from voteit.core.helpers import strip_and_truncate
 from voteit.core.helpers import TAG_PATTERN
 from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import ICatalogMetadataEnabled
@@ -26,10 +27,10 @@ class DiscussionPost(BaseContent):
     type_name = 'DiscussionPost'
     type_title = _("Discussion Post")
     add_permission = security.ADD_DISCUSSION_POST
-    custom_mutators = {'text': '_set_text',
-                       'title': '_set_title',}
-    custom_accessors = {'title': '_get_title',
-                        'mentioned': '_get_mentioned'}
+#     custom_mutators = {'text': '_set_text',
+#                        'title': '_set_title',}
+#     custom_accessors = {'title': '_get_title',
+#                         'mentioned': '_get_mentioned'}
 
     @property
     def __acl__(self):
@@ -44,19 +45,33 @@ class DiscussionPost(BaseContent):
             return acl.get_acl('DiscussionPost:private')
         return acl.get_acl('DiscussionPost:open')
 
+    @property
+    def title(self):
+        return strip_and_truncate(self.text, limit = 100, symbol = '')
+    @title.setter
+    def title(self, value):
+        raise NotImplementedError("Tried to set title on DiscussionPost")
+
+    @property
+    def text(self):
+        return self.get_field_value('text', '')
+    @text.setter
+    def text(self, value):
+        self.set_field_value('text', value)
+
     #Override title, it will be used to generate a name for this content. (Like an id)
-    def _get_title(self, key = None, default = u""):
-        return self.get_field_value('text', default = default)
-
-    def _set_title(self, value, key = None):
-        """ Override set tilte for this content type."""
-        #This has to do with b/c
-        self._set_text(value, key = key)
-
-    title = property(_get_title, _set_title)
-
-    def _set_text(self, value, key = None):
-        self.field_storage['text'] = value
+#     def _get_title(self, key = None, default = u""):
+#         return self.get_field_value('text', default = default)
+# 
+#     def _set_title(self, value, key = None):
+#         """ Override set tilte for this content type."""
+#         #This has to do with b/c
+#         self._set_text(value, key = key)
+# 
+#     title = property(_get_title, _set_title)
+# 
+#     def _set_text(self, value, key = None):
+#         self.field_storage['text'] = value
 
     @property
     def mentioned(self):

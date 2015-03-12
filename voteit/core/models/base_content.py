@@ -29,8 +29,6 @@ class BaseContent(BaseFolder, BaseMixin, LocalRolesMixin):
         This also contains compatibility fixes between Arche and old VoteIT code.
     """
     add_permission = None
-#    allowed_contexts = ()
-    schemas = {}
     default_view = u"view"
     nav_visible = True
     listing_visible = True

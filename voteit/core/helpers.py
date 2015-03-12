@@ -74,7 +74,7 @@ def tags2links(text):
         return u"""%s<a href="%s" class="tag">#%s</a>""" % (pre, url, tag)
     return re.sub(TAG_PATTERN, handle_match, text)
 
-def strip_and_truncate(text, limit=200):
+def strip_and_truncate(text, limit=200, symbol = '<span class="trunc">&hellip;</span>'):
     try:
         text = sanitize(text)
     except Exception, e:
@@ -85,12 +85,10 @@ def strip_and_truncate(text, limit=200):
     pool = text
     while pool and len(out) < limit:
         word, pool = pool.partition(' ')[0::2]
-        print pool
-        #print word, pool
         out += word + ' '
-    out = unicode(nl2br(out.strip()))
+    out = out.strip()
     if pool:
-        out += '<span class="trunc">&ellip;</span>'
+        out += symbol
     return  out
 
 #     if len(text) > limit:
