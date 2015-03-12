@@ -1,33 +1,8 @@
 from pyramid import testing
-from pyramid.authentication import AuthTktAuthenticationPolicy
-from pyramid.authorization import ACLAuthorizationPolicy
-from pyramid_mailer.interfaces import IMailer
-from pyramid_zodbconn import db_from_uri
 from transaction import commit
 
 from voteit.core.bootstrap import bootstrap_voteit
 from voteit.core.security import ROLE_VOTER
-
-
-class PrintingMailer(object):
-    """
-    Dummy mailing instance. Simply prints all messages directly instead of handling them.
-    Good for avoiding mailing users when you want to test things locally.
-    """
-
-    def send(self, message):    
-        """
-        Send, but really print content of message
-        """
-        
-        print "From: %s " % message.sender
-        print "Subject: %s" % message.subject
-        print "To: %s" % ", ".join(message.recipients)
-        print "======================================"
-        print message.html
-        print message.body
-
-    send_to_queue = send_immediately = send
 
 
 def create_full_app_config():
@@ -41,7 +16,6 @@ def create_full_app_config():
     config.include(required_components)
     config.hook_zca()
     return config
-
 
 def full_app_settings():
     """ Settings suitable for testing. It will use a database with memory storage
@@ -67,13 +41,8 @@ def full_app_settings():
         "cache_ttl_seconds": "3600"
     }
 
-
 def printing_mailer(config):
-    """ Include this to use the printing mailer."""
-    print "\nWARNING! Using printing mailer - no mail will be sent!\n"
-    mailer = PrintingMailer()
-    config.registry.registerUtility(mailer, IMailer)
-
+    config.include('arche.testing.printing_mailer')
 
 def dummy_zodb_root(config):
     """ Returns a bootstrapped root object that has been attached to
@@ -91,7 +60,6 @@ def dummy_zodb_root(config):
     commit()
     return zodb_root['app_root']
 
-
 def bootstrap_and_fixture(config):
     config.include('pyramid_zcml')
     config.include('arche.testing')
@@ -106,17 +74,10 @@ def bootstrap_and_fixture(config):
 
 def register_security_policies(config):
     config.include('arche.testing.setup_security')
-#     from voteit.core.security import groupfinder
-#     authn_policy = AuthTktAuthenticationPolicy(secret='secret',
-#                                                callback=groupfinder)
-#     authz_policy = ACLAuthorizationPolicy()
-#     config.setup_registry(authorization_policy=authz_policy, authentication_policy=authn_policy)
-
 
 def register_workflows(config):
     config.include('pyramid_zcml')
     config.load_zcml('voteit.core:configure.zcml')
-
 
 def register_catalog(config):
     """ Register minimal components needed to enable the catalog in testing. """
@@ -126,8 +87,6 @@ def register_catalog(config):
     config.scan('voteit.core.subscribers.catalog')
     #Without order, sorting in that index will remove content rather than show it. Very weird.
     config.scan('voteit.core.subscribers.agenda_item')
-    
-
 
 def active_poll_fixture(config):
     """ This method sets up a site the way it will be when a poll is ready to start
@@ -160,5 +119,4 @@ def active_poll_fixture(config):
     poll = ai['poll']
     poll.set_field_value('proposals', set([ai['prop1'].uid, ai['prop2'].uid]))
     poll.set_workflow_state(request, 'upcoming')
-    #register_security_policies(config)
     return root

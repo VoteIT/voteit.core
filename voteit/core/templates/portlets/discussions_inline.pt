@@ -4,11 +4,13 @@
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
       i18n:domain="voteit.core">
 <tal:iterate repeat="obj contents">
-  <li class="list-group-item">
+  <div class="list-group-item">
     <tal:creator replace="structure request.creators_info(obj.creators)"></tal:creator>
-    ${obj.title}
+    <span tal:content="structure request.transform_text(obj.title)">
+      Text here
+    </span>
     <tal:cog condition="request.is_moderator" replace="structure view.render_template('voteit.core:views/templates/snippets/cogwheel.pt', context = obj)" />
     <tal:meta replace="structure view.render_view_group('metadata_listing', obj)" />
-  </li>
+  </div>
 </tal:iterate>
 </tal:main>

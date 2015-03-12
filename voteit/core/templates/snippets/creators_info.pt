@@ -4,6 +4,7 @@
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
       i18n:domain="voteit.core">
 <tal:iter repeat="user users">
+  <tal:def define="userid lookup and user.userid or user">
   <a tabindex="0"
     class="inlineinfo"
     role="button"
@@ -11,11 +12,14 @@
     data-trigger="click focus"
     data-external-popover-loaded="false"
     data-placement="bottom"
-    title="${user.title}"
-    href="${request.get_userinfo_url(user.userid)}">
+    title="${lookup and user.title or userid|''}"
+    href="${request.get_userinfo_url(userid)}">
     <img tal:condition="portrait" tal:replace="structure user.get_image_tag(request = request)" />
-    ${user.title}
-    (${user.userid})
+    <tal:lookup condition="lookup">
+      ${user.title} (${userid})
+    </tal:lookup>
+    <tal:no_lookup condition="not lookup">${at and '@' or None}${userid}</tal:no_lookup>
   </a>
+  </tal:def>
 </tal:iter>
 </tal:main>

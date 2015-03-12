@@ -3,16 +3,23 @@
 import unittest
 
 from pyramid import testing
-from pyramid.i18n import TranslationString
 
 from voteit.core.testing_helpers import bootstrap_and_fixture
-from voteit.core.testing_helpers import active_poll_fixture
+
+
+def _mock_helpers(request, helper, name):
+    """ Register as a request method, they won't be active otherwise."""
+    def _mock_request_method(*args, **kwargs):
+        return helper(request, *args, **kwargs)
+    setattr(request, name, _mock_request_method)
 
 
 class AtUseridLinkTests(unittest.TestCase):
     
     def setUp(self):
-        self.config = testing.setUp(request = testing.DummyRequest())
+        self.config = testing.setUp()
+        self.config.include('pyramid_chameleon')
+        self.config.commit()
 
     def tearDown(self):
         testing.tearDown()
@@ -23,63 +30,27 @@ class AtUseridLinkTests(unittest.TestCase):
         return at_userid_link
         
     def _fixture(self):
-        from voteit.core.models.agenda_item import AgendaItem
         from voteit.core.models.meeting import Meeting
-        from voteit.core.models.proposal import Proposal
+        from voteit.core.helpers import creators_info
+        from voteit.core.helpers import get_userinfo_url
         root = bootstrap_and_fixture(self.config)
-        root['m'] = meeting = Meeting()
-        meeting['ai'] = ai = AgendaItem()
-        return ai
-
-    def test_function(self):
-        from voteit.core.interfaces import IWorkflowStateChange
-        value = self._fut('@admin', self._fixture())
-        self.assertIn('/m/_userinfo?userid=admin', value)
-
-
-class GenerateSlugTests(unittest.TestCase):
-    
-    def setUp(self):
+        root['m'] = Meeting()
         request = testing.DummyRequest()
-        self.config = testing.setUp(request = request)
+        request.meeting = root['m']
+        _mock_helpers(request, creators_info, 'creators_info')
+        _mock_helpers(request, get_userinfo_url, 'get_userinfo_url')
+        return request
 
-    def tearDown(self):
-        testing.tearDown()
-    
-    @property
-    def _fut(self):
-        from voteit.core.helpers import generate_slug
-        return generate_slug
-        
-    def _fixture(self):
-        from voteit.core.models.agenda_item import AgendaItem
-        from voteit.core.models.meeting import Meeting
-        from voteit.core.models.proposal import Proposal
-        root = bootstrap_and_fixture(self.config)
-        root['m'] = meeting = Meeting()
-        meeting['ai'] = ai = AgendaItem()
-        return ai
+    def test_single(self):
+        request = self._fixture()
+        value = self._fut(request, '@admin')
+        self.assertIn('href="http://example.com/m/__userinfo__/admin', value)
 
-    def test_unique(self):
-        context = self._fixture()
-        value = self._fut(context, u'o1')
-        self.assertIn(u'o1', value)
-        
-    def test_same(self):
-        context = self._fixture()
-        from voteit.core.models.proposal import Proposal 
-        context['o1'] = Proposal()
-        value = self._fut(context, u'o1')
-        self.assertIn(u'o1-1', value)
-        
-    def test_cant_find_unique(self):
-        context = self._fixture()
-        from voteit.core.models.proposal import Proposal
-        context[u'o1'] = Proposal()
-        for i in range(1, 101):
-            context[u'o1-%s' % i] = Proposal()
-        self.assertRaises(KeyError, self._fut, context, u'o1')
-        
+    def test_dont_convert_if_char_in_front(self):
+        request = self._fixture()
+        value = self._fut(request, '..@admin')
+        self.assertNotIn('href="http://example.com/m/__userinfo__/admin', value)
+
 
 class Tags2linksTests(unittest.TestCase):
     
@@ -125,6 +96,7 @@ class Tags2linksTests(unittest.TestCase):
         value = self._fut(u'this#that?')
         self.assertEqual(u'this#that?', value)
 
+
 class StripAndTruncateTests(unittest.TestCase):
     
     def setUp(self):
@@ -144,56 +116,99 @@ class StripAndTruncateTests(unittest.TestCase):
         self.assertEqual(truncated, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris at enim nec nunc facilisis semper. S&lt;...&gt;') 
 
 
-class SendEmailTests(unittest.TestCase):
-    
+_DUMMY_URL_MESSAGE = u"""Website: www.betahaus.net,
+could be written as http://www.betahaus.net"""
+_DUMMY_URL_EXPECTED_RESULT = u"""Website: <a href="http://www.betahaus.net">www.betahaus.net</a>,<br />
+could be written as <a href="http://www.betahaus.net">http://www.betahaus.net</a>"""
+
+
+_DUMMY_TAG_MESSAGE = u"""#test"""
+_DUMMY_TAG_EXPECTED_RESULT = u"""<a href="?tag=test" class="tag">#test</a>"""
+
+
+class TestTransformText(unittest.TestCase):
     def setUp(self):
-        request = testing.DummyRequest()
-        self.config = testing.setUp(request = request)
-        #self.config.registry.settings['']
-        self.config.include('pyramid_mailer.testing')
+        self.config = testing.setUp()
 
     def tearDown(self):
         testing.tearDown()
-
+    
     @property
     def _fut(self):
-        from voteit.core.helpers import send_email
-        return send_email
+        from voteit.core.helpers import transform_text
+        return transform_text
 
-    def test_convert_html(self):
-        html = "<p>Hello!</p>"
-        msg = self._fut(subject = 'subject', recipients = 'john@doe.com', html = html)
-        self.assertEqual(msg.body, u"Hello!")
 
-    def test_recipients_always_tuple(self):
-        html = "<p>Hello!</p>"
-        msg = self._fut(subject = 'subject', recipients = 'john@doe.com', html = html)
-        self.assertEqual(msg.recipients, ('john@doe.com',))
+#     
+#     def _context(self):
+#         register_catalog(self.config)
+#         self.config.testing_securitypolicy('admin', permissive = True)
+#         root = bootstrap_and_fixture(self.config)
+#         from voteit.core.models.meeting import Meeting
+#         from voteit.core.models.agenda_item import AgendaItem
+#         from voteit.core.models.discussion_post import DiscussionPost
+#         root['m'] = Meeting()
+#         ai = root['m']['ai'] = AgendaItem()
+#         ai['d1'] = dp = DiscussionPost()
+#         return dp
 
-    def test_subject_translated(self):
-        self.config.add_translation_dirs('voteit.core:locale/')
-        self.config.registry.settings['default_locale_name'] = 'sv'
-        html = "<p>Hello!</p>"
-        subject = TranslationString(u'Reply', domain = 'voteit.core')
-        msg = self._fut(subject = subject, recipients = 'john@doe.com', html = html)
-        self.assertEqual(msg.subject, u'Svara')
-
-    def test_plaintext_not_created_if_specified(self):
-        html = "<p>Hello!</p>"
-        plaintext = "Other stuff"
-        msg = self._fut(subject = 'subject', recipients = 'john@doe.com', html = html, plaintext = plaintext)
-        self.assertEqual(msg.body, plaintext)
-
-    def test_plaintext_not_created_if_false(self):
-        html = "<p>Hello!</p>"
-        plaintext = ""
-        msg = self._fut(subject = 'subject', recipients = 'john@doe.com', html = html, plaintext = plaintext)
-        self.assertEqual(msg.body, None)
-
-#FIXME: Current implementation of testing mailer behaves diffrently from the real one. Follow up!
-#    def test_default_sender_included(self):
-#        self.config.registry.settings['mail.default_sender'] = "VoteIT noreply <noreply@mailer.voteit.se>"
-#        html = "<p>Hello!</p>"
-#        msg = self._fut(subject = 'subject', recipients = 'john@doe.com', html = html)
-#        self.assertEqual(msg.sender, u"")
-
+#     def test_autolinking(self):
+#         context = self._context()
+#         request = testing.DummyRequest()
+#         obj = self._cut(context, request)
+#         context.set_field_value('text', _DUMMY_URL_MESSAGE)
+#         self.maxDiff = None
+#         self.assertEqual(unicode(obj.transform(context.get_field_value('text'))), _DUMMY_URL_EXPECTED_RESULT)
+# 
+#     def test_autolinking_several_runs(self):
+#         context = self._context()
+#         request = testing.DummyRequest()
+#         obj = self._cut(context, request)
+#         context.set_field_value('text', _DUMMY_URL_MESSAGE)
+#         first_run = obj.transform(context.get_field_value('text'))
+#         context.set_field_value('text', first_run)
+#         self.maxDiff = None
+#         self.assertEqual(unicode(obj.transform(context.get_field_value('text'))), _DUMMY_URL_EXPECTED_RESULT)
+# 
+#     def test_tags(self):
+#         context = self._context()
+#         request = testing.DummyRequest()
+#         obj = self._cut(context, request)
+#         context.set_field_value('text', _DUMMY_TAG_MESSAGE)
+#         self.maxDiff = None
+#         self.assertEqual(unicode(obj.transform(context.get_field_value('text'))), _DUMMY_TAG_EXPECTED_RESULT)
+# 
+#     def test_tags_several_runs(self):
+#         context = self._context()
+#         request = testing.DummyRequest()
+#         obj = self._cut(context, request)
+#         context.set_field_value('text', _DUMMY_TAG_MESSAGE)
+#         first_run = obj.transform(context.get_field_value('text'))
+#         context.set_field_value('text', first_run)
+#         self.maxDiff = None
+#         self.assertEqual(unicode(obj.transform(context.get_field_value('text'))), _DUMMY_TAG_EXPECTED_RESULT)
+#         
+#     def test_all_together(self):
+#         context = self._context()
+#         request = testing.DummyRequest()
+#         obj = self._cut(context, request)
+#         context.set_field_value('text', _DUMMY_URL_MESSAGE+"\n"+_DUMMY_MENTION_MESSAGE+"\n"+_DUMMY_TAG_MESSAGE)
+#         self.maxDiff = None
+#         self.assertEqual(unicode(obj.transform(context.get_field_value('text'))), _DUMMY_URL_EXPECTED_RESULT+"<br />\n"+_DUMMY_MENTION_EXPECTED_RESULT+"<br />\n"+_DUMMY_TAG_EXPECTED_RESULT)
+#         
+#     def test_all_togetherseveral_runs(self):
+#         context = self._context()
+#         request = testing.DummyRequest()
+#         obj = self._cut(context, request)
+#         context.set_field_value('text', _DUMMY_URL_MESSAGE+"\n"+_DUMMY_MENTION_MESSAGE+"\n"+_DUMMY_TAG_MESSAGE)
+#         first_run = obj.transform(context.get_field_value('text'))
+#         context.set_field_value('text', first_run)
+#         self.maxDiff = None
+#         self.assertEqual(unicode(obj.transform(context.get_field_value('text'))), _DUMMY_URL_EXPECTED_RESULT+"<br />\n"+_DUMMY_MENTION_EXPECTED_RESULT+"<br />\n"+_DUMMY_TAG_EXPECTED_RESULT)
+#         
+#     def test_nonascii(self):
+#         context = self._context()
+#         request = testing.DummyRequest()
+#         obj = self._cut(context, request)
+#         context.set_field_value('text', u'ÅÄÖåäö')
+#         self.assertEqual(obj.transform(context.get_field_value('text')), u'ÅÄÖåäö')

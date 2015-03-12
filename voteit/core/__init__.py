@@ -88,6 +88,8 @@ def required_components(config):
     config.include('arche') #Must be included first to adjust settings for other packages!
     #Security
     config.include('voteit.core.security')
+    #Helpers
+    config.include('voteit.core.helpers')
     #Content type includes
     config.include('voteit.core.models')
     #Include schemas

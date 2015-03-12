@@ -11,9 +11,9 @@
         <span i18n:translate="">Proposals</span>
       </h4>
     </div>
-    <ul class="list-group" data-load-target="${load_url}">
-      <li class="list-group-item">Loading...</li>
-    </ul>
+    <div class="list-group" data-load-target="${load_url}">
+      <div class="list-group-item">Loading...</div>
+    </div>
     <div class="panel-footer">
       <div tal:replace="structure view.render_template('voteit.core:templates/portlets/inline_dummy_proposal_button.pt')"></div>
     </div>
