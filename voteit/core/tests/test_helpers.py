@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 
 import unittest
 
@@ -68,20 +69,20 @@ class Tags2linksTests(unittest.TestCase):
 
     def test_simple(self):
         value = self._fut("#hello world!")
-        self.assertEqual(u'<a href="?tag=hello" class="tag">#hello</a> world!', value)
+        self.assertEqual('<a href="?tag=hello" class="tag">#hello</a> world!', value)
 
     def test_non_ascii(self):
-        value = self._fut(u'#åäöÅÄÖ')
-        self.assertIn(u'?tag=%C3%A5%C3%A4%C3%B6%C3%85%C3%84%C3%96', value)
+        value = self._fut('#åäöÅÄÖ')
+        self.assertIn('?tag=%C3%A5%C3%A4%C3%B6%C3%85%C3%84%C3%96', value)
 
     def test_several_tags_and_br(self):
         value = self._fut(u"Men #hörni, visst vore det väl trevligt med en #öl?")
-        self.assertIn(u'Men <a href="?tag=h%C3%B6rni" class="tag">#h\xf6rni</a>,', value)
-        self.assertIn(u'en <a href="?tag=%C3%B6l" class="tag">#\xf6l</a>?', value)
+        self.assertIn('Men <a href="?tag=h%C3%B6rni" class="tag">#h\xf6rni</a>,', value)
+        self.assertIn('en <a href="?tag=%C3%B6l" class="tag">#\xf6l</a>?', value)
 
     def test_existing_tags_not_touched(self):
-        value = self._fut(u'<a>#tag</a>')
-        self.assertEqual(u'<a>#tag</a>', value)
+        value = self._fut('<a>#tag</a>')
+        self.assertEqual('<a>#tag</a>', value)
 
     def test_several_tags_twice(self):
         first = self._fut(u"Men #hörni, visst vore det väl trevligt med en #öl?")
@@ -89,12 +90,12 @@ class Tags2linksTests(unittest.TestCase):
         self.assertEqual(first, second)
 
     def test_text_before_tag_negates_conversion(self):
-        value = self._fut(u'this#that?')
-        self.assertEqual(u'this#that?', value)
+        value = self._fut('this#that?')
+        self.assertEqual('this#that?', value)
 
     def test_html_entities(self):
-        value = self._fut(u'this#that?')
-        self.assertEqual(u'this#that?', value)
+        value = self._fut('this#that?')
+        self.assertEqual('this#that?', value)
 
 
 class StripAndTruncateTests(unittest.TestCase):
@@ -111,19 +112,24 @@ class StripAndTruncateTests(unittest.TestCase):
         return strip_and_truncate
 
     def test_strip_and_truncate(self):
-        text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris at enim nec nunc facilisis semper. Sed vel magna sit amet augue aliquet rhoncus metus."
-        truncated = self._fut(text, 100)
-        self.assertEqual(truncated, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris at enim nec nunc facilisis semper. S&lt;...&gt;') 
+        text = "Lorem ipsum dolor"
+        truncated = self._fut(text, 10)
+        self.assertEqual(truncated, 'Lorem ipsum<span class="trunc">&ellip;</span>') 
+
+    def test_strip_and_truncate_dont_touch(self):
+        text = "Lorem ipsum dolor"
+        truncated = self._fut(text, 20)
+        self.assertEqual(truncated, 'Lorem ipsum dolor') 
 
 
-_DUMMY_URL_MESSAGE = u"""Website: www.betahaus.net,
-could be written as http://www.betahaus.net"""
-_DUMMY_URL_EXPECTED_RESULT = u"""Website: <a href="http://www.betahaus.net">www.betahaus.net</a>,<br />
-could be written as <a href="http://www.betahaus.net">http://www.betahaus.net</a>"""
+# _DUMMY_URL_MESSAGE = u"""Website: www.betahaus.net,
+# could be written as http://www.betahaus.net"""
+# _DUMMY_URL_EXPECTED_RESULT = u"""Website: <a href="http://www.betahaus.net">www.betahaus.net</a>,<br />
+# could be written as <a href="http://www.betahaus.net">http://www.betahaus.net</a>"""
 
 
-_DUMMY_TAG_MESSAGE = u"""#test"""
-_DUMMY_TAG_EXPECTED_RESULT = u"""<a href="?tag=test" class="tag">#test</a>"""
+# _DUMMY_TAG_MESSAGE = u"""#test"""
+# _DUMMY_TAG_EXPECTED_RESULT = u"""<a href="?tag=test" class="tag">#test</a>"""
 
 
 class TestTransformText(unittest.TestCase):
@@ -210,5 +216,5 @@ class TestTransformText(unittest.TestCase):
 #         context = self._context()
 #         request = testing.DummyRequest()
 #         obj = self._cut(context, request)
-#         context.set_field_value('text', u'ÅÄÖåäö')
-#         self.assertEqual(obj.transform(context.get_field_value('text')), u'ÅÄÖåäö')
+#         context.set_field_value('text', 'ÅÄÖåäö')
+#         self.assertEqual(obj.transform(context.get_field_value('text')), 'ÅÄÖåäö')

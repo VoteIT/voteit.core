@@ -8,7 +8,7 @@ from pyramid.i18n import get_localizer
 from pyramid.renderers import render
 from pyramid.threadlocal import get_current_request
 from pyramid.traversal import find_interface
-from pyramid.traversal import find_root
+#from pyramid.traversal import find_root
 from pyramid_mailer import get_mailer
 from pyramid_mailer.message import Message
 from repoze.workflow import get_workflow
@@ -79,11 +79,23 @@ def strip_and_truncate(text, limit=200):
         text = sanitize(text)
     except Exception, e:
         #FIXME: Logg unrecoverable error
-        #This is a bad exception that should never happen, if we translate it it will be hard to search in the source code
+        #This is a bad exception that should never happen
         return u"Unrecoverable error: could not truncate text"
-    if len(text) > limit:
-        text = u"%s<...>" % nl2br(text[:limit])
-    return nl2br(text)
+    out = ""
+    pool = text
+    while pool and len(out) < limit:
+        word, pool = pool.partition(' ')[0::2]
+        print pool
+        #print word, pool
+        out += word + ' '
+    out = unicode(nl2br(out.strip()))
+    if pool:
+        out += '<span class="trunc">&ellip;</span>'
+    return  out
+
+#     if len(text) > limit:
+#         text = u"%s<...>" % nl2br(text[:limit])
+#     return nl2br(text)
 
 def move_object(obj, new_parent):
     """ Move an object to a new location. """
