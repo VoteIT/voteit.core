@@ -1,0 +1,16 @@
+<div xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+  i18n:domain="voteit.core">
+  <a tal:condition="not remove_parent|True"
+    data-clickable-target=""
+    href="${request.resource_url(context, 'add', query = {'content_type': 'Proposal', 'tag': request.GET.getall('tag')})}"
+    class="btn btn-primary"
+    i18n:translate="">Add Proposal</a>
+  <script type="text/javascript" tal:condition="remove_parent|False">
+    $('[data-reply]').remove();
+  </script>
+  <script type="text/javascript" tal:condition="update_selector|False">
+    $("${update_selector} [data-load-target]").each(function() {
+      voteit.load_target(this);  
+    });
+  </script>
+</div>

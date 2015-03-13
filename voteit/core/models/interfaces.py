@@ -277,12 +277,10 @@ class IDiscussionPost(IBaseFolder):
         All users who've been mentioned within this discussion post.
         This is to make sure several notifications aren't set when anything is updated.
         It's a key/value storage with userid as key and a datetime as value. """)
+    tags = Attribute(""" Return all used tags within this discussion post. """)
 
     def add_mention(userid):
         """ Set a userid as mentioned. """
-
-    def get_tags(default = ()):
-        """ Return all used tags within this discussion post. """
 
 
 class IProposal(IBaseFolder):
@@ -322,12 +320,12 @@ class IProposal(IBaseFolder):
         This is to make sure several notifications aren't set when anything is updated.
         It's a key/value storage with userid as key and a datetime as value. """)
 
+    tags = Attribute("""
+        Return all used tags within this proposal. The automatically set id (hashtag) for this
+        proposal will also be returned. """)
+
     def add_mention(userid):
         """ Set a userid as mentioned. """
-
-    def get_tags(default = ()):
-        """ Return all used tags within this proposal. The automatically set id (hashtag) for this
-            proposal will also be returned. """
 
 
 class IPoll(IBaseFolder):

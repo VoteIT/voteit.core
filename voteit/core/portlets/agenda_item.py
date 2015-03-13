@@ -122,6 +122,11 @@ class StrippedInlineAddForm(DefaultAddForm):
     response_template = ""
     update_selector = ""
 
+    @property
+    def reply_to(self):
+        """ If this form is in reply to something. """
+        return self.request.GET.get('reply-to', False)
+
     def before(self, form):
         super(StrippedInlineAddForm, self).before(form)
         form.widget.template = 'voteit_form_inline'
@@ -137,20 +142,25 @@ class StrippedInlineAddForm(DefaultAddForm):
         self.context[name] = obj
         return self._response(update_selector = self.update_selector)
 
-    cancel_success = cancel_failure = _response
+    def cancel(self, *args):
+        remove_parent = ''
+        if self.reply_to:
+            remove_parent = '[data-reply]'
+        return self._response(remove_parent = remove_parent)
+
+    cancel_success = cancel_failure = cancel
 
 
 class ProposalAddForm(StrippedInlineAddForm):
-    response_template = 'voteit.core:templates/portlets/inline_dummy_proposal_button.pt'
+    response_template = 'voteit.core:templates/portlets/inline_add_button_disc.pt'
     formid = 'proposal_inline_add'
     update_selector = '#ai-proposals'
 
 
 class DiscussionAddForm(StrippedInlineAddForm):
-    response_template = 'voteit.core:templates/portlets/inline_dummy_form.pt'
+    response_template = 'voteit.core:templates/portlets/inline_add_button_prop.pt'
     formid = 'discussion_inline_add'
     update_selector = '#ai-discussions'
-
 
 def includeme(config):
     config.add_portlet_slot('agenda_item', title = _("Agenda Item portlets"), layout = 'vertical')
@@ -161,13 +171,13 @@ def includeme(config):
                     context = IAgendaItem,
                     name = 'add',
                     request_param = "content_type=Proposal",
-                    permission = security.ADD_AGENDA_ITEM,
+                    permission = security.ADD_PROPOSAL,
                     renderer = 'arche:templates/form.pt')
     config.add_view(DiscussionAddForm,
                     context = IAgendaItem,
                     name = 'add',
                     request_param = "content_type=DiscussionPost",
-                    permission = security.ADD_AGENDA_ITEM,
+                    permission = security.ADD_DISCUSSION_POST,
                     renderer = 'arche:templates/form.pt')
     config.add_view(ProposalsInline,
                     name = '__ai_proposals__',

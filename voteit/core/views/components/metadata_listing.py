@@ -79,41 +79,38 @@ def meta_retract(context, request, va, **kw):
     url = request.resource_url(context, 'state', query = {'state': 'retracted'})
     return '<a class="retract confirm-retract" href="%s">%s</a>' % (url, request.localizer.translate(_(u'Retract')))
 
-@view_action('metadata_listing', 'user_tags', permission=VIEW)
-def meta_user_tags(context, request, va, **kw):
-    return
-    brain = kw['brain']
-    api = kw['api']
-    del kw['brain'] #So we don't pass it along as well, causing an argument conflict
-    return api.render_view_group(brain, request, 'user_tags', **kw)
+# @view_action('metadata_listing', 'user_tags', permission=VIEW)
+# def meta_user_tags(context, request, va, **kw):
+#     brain = kw['brain']
+#     api = kw['api']
+#     del kw['brain'] #So we don't pass it along as well, causing an argument conflict
+#     return api.render_view_group(brain, request, 'user_tags', **kw)
 
-@view_action('metadata_listing', 'answer', permission=VIEW)
-def meta_answer(context, request, va, **kw):
-    """ Create a reply link. Replies are always discussion posts. Brain here is a metadata object
-        of the content that's being replied to.
+@view_action('metadata_listing', 'reply',
+             title = _("Reply"),
+             interface = IDiscussionPost,
+             ai_perm = ADD_DISCUSSION_POST)
+@view_action('metadata_listing', 'counterproposal',
+             title = _("Counterproposal"),
+             interface = IProposal,
+             ai_perm = ADD_PROPOSAL)
+def meta_reply(context, request, va, **kw):
+    """ Create a reply link.
     """
-    return
-    api = kw['api']
-    brain = kw['brain']
-    #Check add permission
-    ai = find_interface(context, IAgendaItem)
-    if not api.context_has_permission(ADD_DISCUSSION_POST, ai):
-        return u""
-    if brain['content_type'] == 'Proposal':
-        label = _(u'Comment')
-    else:
-        label = _(u'Reply')
-    return '<a class="answer" href="%s%s/answer">%s</a>'  %\
-        (request.application_url, brain['path'], api.translate(label))
-
-@view_action('metadata_listing', 'edit', title = _(u"Edit"))
-def edit_action(context, request, va, **kw):
-    return
-    api = kw['api']
-    if api.show_moderator_actions:
-        brain = kw['brain']
-        return '<a href="%s%s/edit">%s</a>'  %\
-            (request.application_url, brain['path'], api.translate(va.title))
+    if not request.has_permission(va.kwargs['ai_perm'], request.agenda_item):
+        return
+    query = {'content_type': context.type_name,
+             'tag': request.GET.getall('tag'),
+             'reply-to': context.uid}
+    data = {'class': 'btn btn-xs btn-primary',
+            'role': 'button',
+            'data-reply-to': context.uid,
+            'title': '',
+            'href': request.resource_url(request.agenda_item, 'add', query = query),
+            }
+    out = """<a %s>%s</a>""" % (" ".join(['%s="%s"' % (k, v) for (k, v) in data.items()]),
+                                request.localizer.translate(va.title))
+    return out
 
 @view_action('metadata_listing', 'tag', permission=VIEW, interface = IProposal)
 def meta_tag(context, request, va, **kw):
@@ -122,6 +119,9 @@ def meta_tag(context, request, va, **kw):
            'href="?tag=%s" ' \
            '>#%s</a> </span>' % (aid, aid)
 
-@view_action('metadata_listing', 'delete', permission = DELETE,interface = IDiscussionPost)
+@view_action('metadata_listing', 'delete', permission = DELETE, interface = IDiscussionPost)
 def meta_delete(context, request, va, **kw):
-    return u'<span><a class="delete" href="%s">%s</a></span>' % (request.resource_url(context, 'delete'), request.localizer.translate(_("Delete")))
+    if not request.is_moderator:
+        return u'<a class="btn btn-warning btn-xs" href="%s">%s %s</a>' % (request.resource_url(context, 'delete'),
+                                                                           '<span class="glyphicon glyphicon-remove"></span>',
+                                                                           request.localizer.translate(_("Delete")))

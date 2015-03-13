@@ -9,6 +9,7 @@ from voteit.core import VoteITMF as _
 from voteit.core import security
 from voteit.core.helpers import TAG_PATTERN
 from voteit.core.helpers import strip_and_truncate
+from voteit.core.helpers import tags_from_text
 from voteit.core.models.base_content import BaseContent
 from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IProposal
@@ -77,20 +78,13 @@ class Proposal(BaseContent, WorkflowAware):
     def add_mention(self, userid):
         self.mentioned[userid] = utcnow()
 
-    def get_tags(self, default = ()):
-        tags = []
-        for matchobj in re.finditer(TAG_PATTERN, self.title):
-            tag = matchobj.group('tag').lower()
-            if tag not in tags:
-                tags.append(tag)
+    @property
+    def tags(self): #arche compat
+        tags = tags_from_text(self.text)
         aid = self.get_field_value('aid', None)
         if aid is not None and aid not in tags:
             tags.append(aid)
-        return tags and tags or default
-
-    @property
-    def tags(self): #arche compat
-        return self.get_tags()
+        return tags
     @tags.setter
     def tags(self, value):
         print "Tags shouldn't be set like this"

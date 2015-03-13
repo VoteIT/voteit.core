@@ -4,7 +4,7 @@ import deform
 from voteit.core import VoteITMF as _
 from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.schemas.common import deferred_default_hashtag_text
-from voteit.core.schemas.common import deferred_default_tags
+#from voteit.core.schemas.common import deferred_default_tags
 from voteit.core.schemas.common import random_oid
 from voteit.core.validators import NotOnlyDefaultTextValidator
 
@@ -38,12 +38,12 @@ class ProposalSchema(colander.MappingSchema):
                                 oid = random_oid,
                                 widget = deform.widget.TextAreaWidget(rows=3),)
     #FIXME: Does this even work?
-    tags = colander.SchemaNode(colander.String(),
-                               title = _(u"Tags"),
-                               default = deferred_default_tags,
-                               oid = random_oid,
-                               widget = deform.widget.HiddenWidget(),
-                               missing = u'')
+#     tags = colander.SchemaNode(colander.String(),
+#                                title = _(u"Tags"),
+#                                default = deferred_default_tags,
+#                                oid = random_oid,
+#                                widget = deform.widget.HiddenWidget(),
+#                                missing = u'')
 
 def includeme(config):
     config.add_content_schema('Proposal', ProposalSchema, ('add', 'edit'))

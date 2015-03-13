@@ -32,20 +32,7 @@ class DiscussionTests(unittest.TestCase):
 
     def test_verify_obj(self):
         self.assertTrue(verifyObject(IDiscussionPost, self._cut()))
-        
-    def test_title_tags(self):
-        obj = self._cut()
-        obj.title = '#Quisque #aliquam,#ante in #tincidunt #aliquam. #Risus neque#eleifend #nunc'
-        tags = obj.get_tags()
-        self.assertIn('quisque', tags)
-        self.assertIn('aliquam', tags)
-        self.assertIn('ante', tags)
-        self.assertIn('tincidunt', tags)
-        self.assertIn('aliquam', tags)
-        self.assertIn('risus', tags)
-        self.assertIn('nunc', tags)
-        self.assertNotIn('eleifend', tags)
-        
+
     def test_mentioned(self):
         obj = self._cut()
         obj.mentioned['dummy'] = 'now'

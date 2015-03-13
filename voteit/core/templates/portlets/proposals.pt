@@ -15,7 +15,7 @@
       <div class="list-group-item">Loading...</div>
     </div>
     <div class="panel-footer">
-      <div tal:replace="structure view.render_template('voteit.core:templates/portlets/inline_dummy_proposal_button.pt')"></div>
+      <div tal:replace="structure view.render_template('voteit.core:templates/portlets/inline_add_button_prop.pt')"></div>
     </div>
   </div>
 </div>

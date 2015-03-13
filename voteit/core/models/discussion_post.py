@@ -10,6 +10,7 @@ from voteit.core import VoteITMF as _
 from voteit.core import security
 from voteit.core.helpers import strip_and_truncate
 from voteit.core.helpers import TAG_PATTERN
+from voteit.core.helpers import tags_from_text
 from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import ICatalogMetadataEnabled
 from voteit.core.models.interfaces import IDiscussionPost
@@ -84,13 +85,12 @@ class DiscussionPost(BaseContent):
     def add_mention(self, userid):
         self.mentioned[userid] = utcnow()
 
-    def get_tags(self, default = ()):
-        tags = []
-        for matchobj in re.finditer(TAG_PATTERN, self.get_field_value('text', '')):
-            tag = matchobj.group('tag').lower()
-            if tag not in tags:
-                tags.append(tag)
-        return tags and tags or default
+    @property
+    def tags(self): #arche compat
+        return tags_from_text(self.text)
+    @tags.setter
+    def tags(self, value):
+        print "Tags shouldn't be set like this"
 
 
 def includeme(config):

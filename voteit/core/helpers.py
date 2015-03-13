@@ -18,9 +18,9 @@ from webhelpers.html.render import sanitize
 from webhelpers.html.tools import auto_link
 from arche.utils import generate_slug #API
 
+from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.security import MODERATE_MEETING
-from voteit.core.models.interfaces import IMeeting
 
 
 ajax_options = """
@@ -170,6 +170,9 @@ def creators_info(request, creators, portrait = True, lookup = True, at = False)
 def get_meeting(request):
     return find_interface(request.context, IMeeting)
 
+def get_ai(request):
+    return find_interface(request.context, IAgendaItem)
+
 def get_userinfo_url(request, userid):
     return request.resource_url(request.meeting, '__userinfo__', userid)
 
@@ -183,12 +186,21 @@ def get_wf_state_titles(request, iface, type_name):
         results[sinfo['name']] = request.localizer.translate(sinfo['title'], domain = 'voteit.core')
     return results
 
+def tags_from_text(text):
+    tags = []
+    for matchobj in re.finditer(TAG_PATTERN, text):
+        tag = matchobj.group('tag').lower()
+        if tag not in tags:
+            tags.append(tag)
+    return tags
+
 def includeme(config):
     config.add_request_method(callable = transform_text, name = 'transform_text')
     #Hook creators info
     config.add_request_method(callable = creators_info, name = 'creators_info')
-    #Hook meeting
+    #Hook meeting & agenda item
     config.add_request_method(callable = get_meeting, name = 'meeting', reify = True)
+    config.add_request_method(callable = get_ai, name = 'agenda_item', reify = True)
     #Userinfo URL
     config.add_request_method(callable = get_userinfo_url, name = 'get_userinfo_url')
     #Is moderator

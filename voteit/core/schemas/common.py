@@ -6,6 +6,7 @@ from betahaus.pyracont.decorators import schema_factory
 from pyramid.testing import DummyRequest
 from pyramid.traversal import find_root
 from pyramid.traversal import resource_path
+from pyramid.traversal import find_resource
 import colander
 import deform
 
@@ -61,15 +62,6 @@ def deferred_default_user_email(node, kw):
     return u''
 
 @colander.deferred
-def deferred_default_tags(node, kw):
-    #FIXME: Missing tests
-    context = kw['context']
-    if not hasattr(context, 'get_tags'):
-        return u""
-    tags = context.get_tags()
-    return tags and u" ".join(tags) or u""
-
-@colander.deferred
 def deferred_default_hashtag_text(node, kw):
     """ If this is a reply to something else, the default value will
         contain the userid of the original poster + any hashtags used.
@@ -77,26 +69,21 @@ def deferred_default_hashtag_text(node, kw):
     context = kw['context']
     request = kw['request']
     output = u""
-    request_tag = request.GET.get('tag', None)
-    if request_tag:
-        if not HASHTAG_PATTERN.match(request_tag):
-            request_tag = None #Blank it, since it's invalid!
-    if IAgendaItem.providedBy(context):
-        #This is a first post - don't add any hashtags or similar,
-        #unless they're part of query string
-        if request_tag:
-            output += u"#%s" % request_tag
-        return output
-    # get creator of answered object
-    creators = context.get_field_value('creators')
-    if creators:
-        output += u"@%s: " % creators[0]
-    # get tags and make a string of them
-    tags = list(context.get_tags([]))
-    if request_tag and request_tag not in tags:
-        tags.append(request_tag)
-    for tag in tags:
-        output += u" #%s" % tag
+    tags = []
+    for rtag in request.GET.getall('tag'):
+        if HASHTAG_PATTERN.match(rtag):
+            tags.append(rtag)
+    reply_to = request.GET.get('reply-to', None)
+    if reply_to:
+        for docid in request.root.catalog.search(uid = reply_to)[1]:
+            path = request.root.document_map.address_for_docid(docid)
+            obj = find_resource(request.root, path)
+            if obj.type_name == 'DiscussionPost':
+                output += "".join(["@%s: " % x for x in obj.creators])
+            for tag in obj.tags:
+                if tag not in tags:
+                    tags.append(tag)
+    output += " ".join(["#%s" % x for x in tags])
     return output
 
 def strip_whitespace(value):

@@ -30,8 +30,8 @@ class ProposalTests(unittest.TestCase):
         
     def test_get_tags(self):
         obj = self._cut()
-        obj.title = '#Quisque #aliquam,#ante in #tincidunt #aliquam. #Risus neque#eleifend #nunc'
-        tags = obj.get_tags()
+        obj.text = '#Quisque #aliquam,#ante in #tincidunt #aliquam. #Risus neque#eleifend #nunc'
+        tags = obj.tags
         self.assertIn('quisque', tags)
         self.assertIn('aliquam', tags)
         self.assertIn('ante', tags)
@@ -44,7 +44,7 @@ class ProposalTests(unittest.TestCase):
     def test_aid_tag(self):
         obj = self._cut()
         obj.set_field_value('aid', "dummyuser-1")
-        self.assertIn('dummyuser-1', obj.get_tags())
+        self.assertIn('dummyuser-1', obj.tags)
         
     def test_mentioned(self):
         obj = self._cut()
