@@ -91,7 +91,7 @@ def block_specific_perm_action(context, request, va, **kw):
     enabled = context.get_field_value(setting, False)
     if va.kwargs['enable'] == enabled:
         return
-    url = request.resource_url(context, '_toggle_block', query = {setting: int(bool(enabled))})
+    url = request.resource_url(context, '_toggle_block', query = {setting: int(va.kwargs['enable'])})
     return """<li><a href="%s">%s</a></li>""" % (url, request.localizer.translate(va.title))
 
 #@view_action('context_actions', 'manage_agenda_items',

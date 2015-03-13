@@ -1,10 +1,16 @@
 <div xmlns:i18n="http://xml.zope.org/namespaces/i18n"
-  i18n:domain="voteit.core">
-  <a tal:condition="not remove_parent|True"
-    data-clickable-target=""
-    href="${request.resource_url(context, 'add', query = {'content_type': 'Proposal', 'tag': request.GET.getall('tag')})}"
-    class="btn btn-primary"
-    i18n:translate="">Add Proposal</a>
+  i18n:domain="voteit.core"
+  tal:define="can_add request.has_permission('Add Proposal', request.agenda_item)">
+  <div tal:condition="not remove_parent|True">
+    <a tal:condition="can_add"
+      data-clickable-target=""
+      href="${request.resource_url(context, 'add', query = {'content_type': 'Proposal', 'tag': request.GET.getall('tag')})}"
+      class="btn btn-primary"
+      i18n:translate="">Add Proposal</a>
+    <tal:cant_add condition="not can_add">
+      <span i18n:translate="">You lack the required permission</span>
+    </tal:cant_add>
+  </div>
   <script type="text/javascript" tal:condition="remove_parent|False">
     $('[data-reply]').remove();
   </script>

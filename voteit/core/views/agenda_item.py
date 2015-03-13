@@ -5,6 +5,7 @@ from arche.views.base import BaseView
 #from pyramid.traversal import find_interface
 #from pyramid.traversal import resource_path
 #from pyramid.view import view_config
+from pyramid.httpexceptions import HTTPFound
 
 from voteit.core import VoteITMF as _
 #from voteit.core.helpers import ajax_options
@@ -14,7 +15,7 @@ from voteit.core.models.interfaces import IAgendaItem
 #from voteit.core.models.interfaces import IProposal
 #from voteit.core.models.schemas import button_add
 #from voteit.core.security import MODERATE_MEETING
-from voteit.core.security import VIEW
+from voteit.core import security
 #from voteit.core.views.base_view import BaseView
 
 
@@ -24,11 +25,35 @@ class AgendaItemView(BaseView):
         return {}
 
 
+class AIToggleBlockView(BaseView):
+
+   def __call__(self):
+       """ Toggle wether discussion or proposals are allowed. """
+       discussion_block = self.request.GET.get('discussion_block', None)
+       proposal_block = self.request.GET.get('proposal_block', None)
+       if discussion_block is not None:
+           val = bool(int(discussion_block))
+           self.context.set_field_value('discussion_block', val)
+       if proposal_block is not None:
+           val = bool(int(proposal_block))
+           self.context.set_field_value('proposal_block', val)
+       self.flash_messages.add(_(u"Status changed - note that workflow state also matters."))
+       url = self.request.resource_url(self.context)
+       if self.request.referer:
+           url = self.request.referer
+        #FIXME: This should be done via javascript instead
+       return HTTPFound(location=url)
+
+
 def includeme(config):
     config.add_view(AgendaItemView,
                     context = IAgendaItem,
                     renderer = "voteit.core:templates/agenda_item.pt",
-                    permission = VIEW)
+                    permission = security.VIEW)
+    config.add_view(AIToggleBlockView,
+                    context = IAgendaItem,
+                    name = "_toggle_block",
+                    permission = security.MODERATE_MEETING)
 
 
 # def inline_add_form(api, content_type, bind_data):
@@ -158,22 +183,7 @@ def includeme(config):
 #         url = self.request.resource_url(self.context, query=self.request.GET, anchor="discussions")
 #         return HTTPFound(location=url)
 # 
-#  #   @view_config(context = IAgendaItem, name = "_toggle_block", permission = MODERATE_MEETING)
-#     def toggle_block(self):
-#         """ Toggle wether discussion or proposals are allowed. """
-#         discussion_block = self.request.GET.get('discussion_block', None)
-#         proposal_block = self.request.GET.get('proposal_block', None)
-#         if discussion_block is not None:
-#             val = bool(int(discussion_block))
-#             self.context.set_field_value('discussion_block', val)
-#         if proposal_block is not None:
-#             val = bool(int(proposal_block))
-#             self.context.set_field_value('proposal_block', val)
-#         self.api.flash_messages.add(_(u"Status changed - note that workflow state also matters."))
-#         url = self.request.resource_url(self.context)
-#         if self.request.referer:
-#             url = self.request.referer
-#         return HTTPFound(location=url)
+
 # 
 #    # @view_config(context=IDiscussionPost, name="answer", permission=VIEW, renderer='templates/base_edit.pt')
 #    # @view_config(context=IProposal, name="answer", permission=VIEW, renderer='templates/base_edit.pt')
