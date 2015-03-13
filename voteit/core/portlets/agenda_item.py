@@ -112,7 +112,7 @@ class PollsInline(BaseView):
             'type_name': 'Poll',
             'sort_index': 'created',}
         response = {}
-        response['contents'] = self.catalog_search(resolve = True, **query)
+        response['contents'] = tuple(self.catalog_search(resolve = True, **query))
         response['vote_perm'] = security.ADD_VOTE
         return response
 
@@ -161,6 +161,7 @@ class DiscussionAddForm(StrippedInlineAddForm):
     response_template = 'voteit.core:templates/portlets/inline_add_button_prop.pt'
     formid = 'discussion_inline_add'
     update_selector = '#ai-discussions'
+
 
 def includeme(config):
     config.add_portlet_slot('agenda_item', title = _("Agenda Item portlets"), layout = 'vertical')

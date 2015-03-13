@@ -5,12 +5,21 @@
       i18n:domain="voteit.core">
 <tal:iterate repeat="obj contents">
   <div class="list-group-item">
-    <tal:creator replace="structure request.creators_info(obj.creators)"></tal:creator>
-    <span tal:content="structure request.transform_text(obj.text)">
-      Text here
-    </span>
-    <tal:cog condition="request.is_moderator" replace="structure view.render_template('voteit.core:views/templates/snippets/cogwheel.pt', context = obj)" />
-    <tal:meta replace="structure view.render_view_group('metadata_listing', obj)" />
+    <div class="text">
+      <tal:cog condition="request.is_moderator" replace="structure view.render_template('voteit.core:views/templates/snippets/cogwheel.pt', context = obj)" />
+      <tal:creator replace="structure request.creators_info(obj.creators)"></tal:creator>
+      <span tal:content="structure request.transform_text(obj.text)">
+        Text here
+      </span>
+    </div>
+    <div class="clearfix"></div>
+    <div class="metadata text-right">
+      <span class="glyphicon glyphicon-time"></span>
+      ${request.dt_handler.format_relative(obj.created)}
+    </div>
+    <div class="metadata">
+      <tal:meta replace="structure view.render_view_group('metadata_listing', obj)"></tal:meta>
+    </div>
   </div>
 </tal:iterate>
 </tal:main>

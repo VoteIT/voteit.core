@@ -270,5 +270,20 @@ $brand-danger:          #d9534f !default;
   content: "\e090"; }
 
 /*ban-circle*/
+.profile-pic {
+  float: left;
+  margin-right: 10px; }
+
+.metadata {
+  padding: 5px 0; }
+
+.text {
+  padding: 5px 0; }
+
+.cogwheel {
+  margin-left: 5px; }
+
+.primary-tag {
+  font-weight: bold; }
 
 /*# sourceMappingURL=main.css.map */

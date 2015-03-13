@@ -4,12 +4,10 @@
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
       i18n:domain="voteit.core">
 <tal:iterate repeat="obj contents">
-  <li class="list-group-item"
+  <div class="list-group-item"
       tal:define="can_vote request.has_permission(vote_perm, obj);
                   has_voted request.authenticated_userid in obj">
-    <!-- 
-    <tal:creator replace="structure request.creators_info(obj.creators)"></tal:creator>
-    -->
+    <tal:cog condition="request.is_moderator" replace="structure view.render_template('voteit.core:views/templates/snippets/cogwheel.pt', context = obj)" />
     <a tal:condition="can_vote or has_voted"
       data-open-modal
       class="btn btn-primary"
@@ -19,11 +17,29 @@
       <span tal:condition="not can_vote" i18n:translate="">View vote</span>
     </a>
     
-    <a href="${request.resource_url(obj)}">
       ${obj.title}
+      <!-- 
+    <a href="${request.resource_url(obj)}">
     </a>
-    <tal:cog condition="request.is_moderator" replace="structure view.render_template('voteit.core:views/templates/snippets/cogwheel.pt', context = obj)" />
-    <tal:meta replace="structure view.render_view_group('metadata_listing', obj)" />
-  </li>
+     -->
+    <div class="metadata row">
+      <div class="col-sm-8">
+        <span>Participating proposals:</span>
+        ${len(obj.proposals)}
+      </div>
+      <div class="text-right col-sm-4">
+        ${request.dt_handler.format_relative(obj.start_time)|'-'}<br/>
+        ${request.dt_handler.format_relative(obj.end_time)|'-'}
+      </div>
+    </div>
+    <div class="metadata">
+      <tal:meta replace="structure view.render_view_group('metadata_listing', obj)"></tal:meta>
+    </div>
+  </div>
 </tal:iterate>
+<tal:no_polls condition="not contents">
+  <div class="list-group-item">
+    <span i18n:translate="">No polls yet</span>
+  </div>
+</tal:no_polls>
 </tal:main>

@@ -3,24 +3,24 @@
       xmlns:tal="http://xml.zope.org/namespaces/tal"
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
       i18n:domain="voteit.core">
-<div id="ai-polls">
-  <div class="panel panel-primary portlet">
-    <div class="panel-heading">
-      <h4 class="panel-title">
+<div id="ai-polls" class="col-sm-12">
+  <div class="list-group">
+    <div class="list-group-item">
+      <h3>
         <span class="glyphicon glyphicon-check"></span>
         <span i18n:translate="">Polls</span>
-      </h4>
+      </h3>
     </div>
-    <ul class="list-group" data-load-target="${load_url}">
-      <li class="list-group-item">
+    <div data-load-target="${load_url}">
+      <div class="list-group-item">
         <span class="glyphicon glyphicon-refresh rotate-me"></span>
         Loading...
-      </li>
-    </ul>
-    <div class="panel-footer">
-    <!-- 
-      <div tal:replace="structure view.render_template('voteit.core:templates/portlets/inline_dummy_form.pt')"></div>
-       -->
+      </div>
+    </div>
+    <div class="well" tal:condition="request.is_moderator and request.has_permission('Add Poll')">
+      <a href="${request.resource_url(context, 'add', query = {'content_type': 'Poll'})}"
+        class="btn btn-primary"
+        i18n:translate="">Add Poll</a>
     </div>
   </div>
 </div>

@@ -15,20 +15,11 @@ from voteit.core.security import ADD_DISCUSSION_POST
 from voteit.core.security import DELETE
 
 
-# @view_action('main', 'metadata_listing', permission=VIEW)
-# def metadata_listing(context, request, va, **kw):
-#     """ This is the main renderer for post meta.
-#         It will call all view components in the group metadata_listing.
-#         In turn, some of those will call other groups.
-#     """
-#     util = request.registry.getUtility(IViewGroup, name='metadata_listing')
-#     response = {'view_actions': util.values(), 'va_kwargs': kw,}
-#     return render('templates/metadata/metadata_listing.pt', response, request = request)
-
 @view_action('metadata_listing', 'state',
              permission = VIEW,
              interface = IWorkflowAware,
-             renderer = "voteit.core:templates/snippets/inline_workflow.pt")
+             renderer = "voteit.core:templates/snippets/inline_workflow.pt",
+             priority = 10)
 def meta_state(context, request, va, **kw):
     """ Note: moderator actions also uses this one.
     """
@@ -57,13 +48,6 @@ def meta_state(context, request, va, **kw):
 #                 break
 #         return '<span class="%s icon iconpadding">%s</span>' % (state_id, translated_state_title)
 
-@view_action('metadata_listing', 'time', permission=VIEW)
-def meta_time(context, request, va, **kw):
-    #api = kw['api']
-    #brain = kw['brain']
-    #return '<span class="time">%s</span>' % api.translate(api.dt_util.relative_time_format(brain['created']))
-    return '<span class="time">%s</span>' % request.localizer.translate(request.dt_handler.format_relative(context.created))
-
 @view_action('metadata_listing', 'retract', permission=VIEW, interface = IWorkflowAware)
 def meta_retract(context, request, va, **kw):
     if request.is_moderator:
@@ -77,7 +61,7 @@ def meta_retract(context, request, va, **kw):
     if not request.has_permission(ADD_PROPOSAL, ai) and request.has_permission(RETRACT, context):
         return
     url = request.resource_url(context, 'state', query = {'state': 'retracted'})
-    return '<a class="retract confirm-retract" href="%s">%s</a>' % (url, request.localizer.translate(_(u'Retract')))
+    return '<a class="btn btn-warning btn-xs" href="%s">%s</a>' % (url, request.localizer.translate(_(u'Retract')))
 
 # @view_action('metadata_listing', 'user_tags', permission=VIEW)
 # def meta_user_tags(context, request, va, **kw):
@@ -111,13 +95,6 @@ def meta_reply(context, request, va, **kw):
     out = """<a %s>%s</a>""" % (" ".join(['%s="%s"' % (k, v) for (k, v) in data.items()]),
                                 request.localizer.translate(va.title))
     return out
-
-@view_action('metadata_listing', 'tag', permission=VIEW, interface = IProposal)
-def meta_tag(context, request, va, **kw):
-    aid = context.aid
-    return '<span><a class="tag" ' \
-           'href="?tag=%s" ' \
-           '>#%s</a> </span>' % (aid, aid)
 
 @view_action('metadata_listing', 'delete', permission = DELETE, interface = IDiscussionPost)
 def meta_delete(context, request, va, **kw):

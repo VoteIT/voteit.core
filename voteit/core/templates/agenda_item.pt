@@ -22,10 +22,9 @@
          tal:content="structure body">Body text</div>
     <div class="clearfix"><!-- --></div>
 
-    <div class="portlets-ai">
+    <div class="portlets-ai row">
         <tal:portlets repeat="portlet view.render_portlet_slot('agenda_item')">
             <tal:portlet replace="structure portlet" />
-            <div class="clearfix"><!-- --></div>
         </tal:portlets>
     </div>
 

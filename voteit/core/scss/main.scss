@@ -2,3 +2,20 @@
 @import "_mixins";
 @import "_state_colors";
 @import "_icons";
+
+.profile-pic {
+  float: left;
+  margin-right: 10px;
+}
+.metadata {
+  padding: 5px 0;
+}
+.text {
+  padding: 5px 0;
+}
+.cogwheel {
+  margin-left: 5px;
+}
+.primary-tag {
+  font-weight: bold;
+}

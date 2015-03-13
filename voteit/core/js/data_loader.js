@@ -52,8 +52,8 @@ function reply_to(event) {
   var url = elem.attr('href');
   var request = arche.do_request(url);
   request.done(function(response) {
-    var target = elem.parent('.list-group-item');
-    target.after('<div class="panel-footer" data-reply>' + response + '</div>');
+    var target = elem.parents('.list-group-item');
+    target.after('<div class="well" data-reply>' + response + '</div>');
     $('[data-reply]').hide().slideDown();
   });
   request.fail(arche.flash_error);
