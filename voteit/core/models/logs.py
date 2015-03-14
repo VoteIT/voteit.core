@@ -11,6 +11,7 @@ from voteit.core.models.interfaces import IBaseContent
 from voteit.core.models.interfaces import ILogEntry
 from voteit.core.models.interfaces import ILogHandler
 
+#DEPRECATED - keep for b/c
 
 class LogHandler(object):
     """ An adapter for :mod:`voteit.core.models.interfaces.IBaseContent`
@@ -48,9 +49,10 @@ class LogHandler(object):
         raise KeyError("Couln't find a free key for logging handler after 10 retries.") #pragma : no cover
 
 
-@content_factory('LogEntry', title=_(u"Log entry"))
+#DEPRECATED - keep for b/c
+
+
 class LogEntry(Persistent):
-    """ See :mod:`voteit.core.models.interfaces.ILogEntry`. """
     implements(ILogEntry)
 
     def __init__(self, context_uid, message, tags=(), userid=None, scripted=None):
@@ -62,11 +64,11 @@ class LogEntry(Persistent):
         self.scripted = scripted
 
 
-def includeme(config):
-    """ Include to activate log components.
-        like: config.include('voteit.core.models.logs')
-    """
-    #Register LogHandler adapter
-    config.registry.registerAdapter(LogHandler, (IBaseContent,), ILogHandler)
+# def includeme(config):
+#     """ Include to activate log components.
+#         like: config.include('voteit.core.models.logs')
+#     """
+#     #Register LogHandler adapter
+#     config.registry.registerAdapter(LogHandler, (IBaseContent,), ILogHandler)
 
         

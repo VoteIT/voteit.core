@@ -1,7 +1,5 @@
 from __future__ import unicode_literals
-import re
 
-from BTrees.OOBTree import OOBTree
 from arche.security import get_acl_registry
 from pyramid.traversal import find_interface
 from zope.interface import implementer
@@ -9,14 +7,12 @@ from zope.interface import implementer
 from voteit.core import VoteITMF as _
 from voteit.core import security
 from voteit.core.helpers import strip_and_truncate
-from voteit.core.helpers import TAG_PATTERN
 from voteit.core.helpers import tags_from_text
 from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import ICatalogMetadataEnabled
 from voteit.core.models.interfaces import IDiscussionPost
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.base_content import BaseContent
-from voteit.core.models.date_time_util import utcnow
 
 
 @implementer(IDiscussionPost, ICatalogMetadataEnabled)
@@ -73,17 +69,6 @@ class DiscussionPost(BaseContent):
 # 
 #     def _set_text(self, value, key = None):
 #         self.field_storage['text'] = value
-
-    @property
-    def mentioned(self):
-        try:
-            return self.__mentioned__
-        except AttributeError:
-            self.__mentioned__ = OOBTree()
-            return self.__mentioned__
-
-    def add_mention(self, userid):
-        self.mentioned[userid] = utcnow()
 
     @property
     def tags(self): #arche compat

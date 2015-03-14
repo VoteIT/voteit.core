@@ -412,7 +412,7 @@ class IVote(Interface):
 
 
 class ILogEntry(Interface):
-    """ A persistent log entry. """
+    """ DEPRECATED: A persistent log entry. """
 
     created = Attribute("When it was created, in UTC time.")
     context_uid = Attribute("UID of the context that triggered this log entry.")
@@ -639,7 +639,7 @@ class IPollPlugin(Interface):
 
 
 class ILogHandler(Interface):
-    """ An adapter that handle logging. """
+    """ DEPRECATED: An adapter that handle logging. """
     log_storage = Attribute("Storage for logs.")
 
     def __init__(context):
@@ -732,6 +732,9 @@ class IProfileImage(Interface):
         """ Checks if this adapter is usable with this user
         """
 
+
+class IMentioned(Interface):
+    pass
 
 class IAccessPolicy(Interface):
     """ Adapts a meeting to handle an access policy. They're methods for granting

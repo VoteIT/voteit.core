@@ -7,6 +7,7 @@ from pyramid.interfaces import IAuthorizationPolicy
 from pyramid.security import Authenticated
 from pyramid.security import Everyone
 from pyramid.threadlocal import get_current_request
+from pyramid.threadlocal import get_current_registry
 from pyramid.traversal import find_root
 from zope.component import getUtility
 from zope.component.event import objectEventNotify
@@ -132,7 +133,8 @@ def find_authorized_userids(context, permissions):
         
         Warning: This method will of course consume CPU. Use it where appropriate.
     """
-    authz_pol = getUtility(IAuthorizationPolicy)
+    registry = get_current_registry()
+    authz_pol = registry.getUtility(IAuthorizationPolicy)
     root = find_root(context)
     allowed_userids = set()
     

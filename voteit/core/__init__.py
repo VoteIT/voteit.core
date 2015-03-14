@@ -86,21 +86,20 @@ def required_components(config):
     cache_max_age = int(config.registry.settings.get('arche.cache_max_age', 60*60*24))
     config.add_static_view('static', 'arche:static', cache_max_age = cache_max_age)
     config.include('arche') #Must be included first to adjust settings for other packages!
-    #Security
-    config.include('voteit.core.security')
-    #Helpers
-    config.include('voteit.core.helpers')
-    #Content type includes
+    
+    #Include all major components
     config.include('voteit.core.models')
-    #Include schemas
-    config.include('voteit.core.schemas')
-    #Portlets
-    config.include('voteit.core.portlets')
-    #Other component includes
     config.include('voteit.core.fanstaticlib')
+    config.include('voteit.core.security')
+    config.include('voteit.core.subscribers')
+    config.include('voteit.core.views')
+    config.include('voteit.core.schemas')
+    #Plugins and minor dependent components
+    config.include('voteit.core.helpers')
     config.include('voteit.core.js_translations')
     config.include('voteit.core.plugins.immediate_ap')
     config.include('voteit.core.plugins.invite_only_ap')
+    config.include('voteit.core.portlets')
     #For password storage
     #config.scan('betahaus.pyracont.fields.password')
 
@@ -108,9 +107,8 @@ def required_components(config):
     #config.add_static_view('static', '%s:static' % PROJECTNAME, cache_max_age = cache_ttl_seconds)
     #config.add_static_view('deform', 'deform:static', cache_max_age = cache_ttl_seconds)
     config.add_translation_dirs('%s:locale/' % PROJECTNAME,)
-    #config.scan(PROJECTNAME)
-    config.include('voteit.core.views')
-    config.scan('voteit.core.subscribers.post_config_addons')
+    #Include all subcomponents
+    #config.scan('voteit.core.subscribers.post_config_addons')
     config.include(adjust_default_view_component_order)
     from voteit.core.security import VIEW
     config.set_default_permission(VIEW)    

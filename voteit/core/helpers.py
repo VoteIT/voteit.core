@@ -194,6 +194,15 @@ def tags_from_text(text):
             tags.append(tag)
     return tags
 
+def get_at_userids(text):
+    results = set()
+    for matchobj in re.finditer(AT_PATTERN, text):
+        userid = matchobj.group(2)
+        #Force lowercase userid
+        userid = userid.lower()
+        results.add(userid)
+    return results
+
 def includeme(config):
     config.add_request_method(callable = transform_text, name = 'transform_text')
     #Hook creators info

@@ -9,3 +9,4 @@ def includeme(config):
     config.include('.poll')
     config.include('.proposal')
     config.include('.user')
+    config.scan(__name__)

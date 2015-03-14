@@ -1,20 +1,15 @@
-import re
-
-from BTrees.OOBTree import OOBTree
 from arche.security import get_acl_registry
 from pyramid.traversal import find_interface
 from zope.interface import implementer
 
 from voteit.core import VoteITMF as _
 from voteit.core import security
-from voteit.core.helpers import TAG_PATTERN
 from voteit.core.helpers import strip_and_truncate
 from voteit.core.helpers import tags_from_text
 from voteit.core.models.base_content import BaseContent
 from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IProposal
 from voteit.core.models.interfaces import ICatalogMetadataEnabled
-from voteit.core.models.date_time_util import utcnow
 from voteit.core.models.workflow_aware import WorkflowAware
 
 
@@ -66,17 +61,6 @@ class Proposal(BaseContent, WorkflowAware):
 #         self.field_storage['title'] = value
 # 
 #     title = property(_get_title, _set_title)
-
-    @property
-    def mentioned(self):
-        try:
-            return self.__mentioned__
-        except AttributeError:
-            self.__mentioned__ = OOBTree()
-            return self.__mentioned__
-
-    def add_mention(self, userid):
-        self.mentioned[userid] = utcnow()
 
     @property
     def tags(self): #arche compat

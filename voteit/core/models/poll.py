@@ -10,7 +10,7 @@ from pyramid.traversal import find_root
 from repoze.workflow.workflow import WorkflowError
 from zope.interface import implementer
 
-from voteit.core import VoteITMF as _
+from voteit.core import _
 from voteit.core import security
 from voteit.core.models.base_content import BaseContent
 from voteit.core.models.date_time_util import utcnow
@@ -195,6 +195,7 @@ class Poll(BaseContent, WorkflowAware):
 
     def render_poll_result(self, request, api, complete=True):
         """ Render poll result. Calls plugin to calculate result.
+            FIXME: Remove this
         """
         try:
             poll_plugin = self.get_poll_plugin()
@@ -324,10 +325,9 @@ def email_voters_about_ongoing_poll(poll, request=None):
     body_html = render('../views/templates/email/ongoing_poll_notification.pt', response, request=request)
     #Since subject won't be part of a renderer, we need to translate it manually
     #Keep the _ -syntax otherwise Babel/lingua won't pick up the string
-
     subject = _(u"VoteIT: Open poll")
     for email in email_addresses:
-        send_email(subject, [email], body_html, request = request)
+        send_email(request, subject, [email], body_html)
 
 
 def includeme(config):

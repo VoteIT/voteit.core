@@ -80,7 +80,9 @@ def register_workflows(config):
     config.load_zcml('voteit.core:configure.zcml')
 
 def register_catalog(config):
-    """ Register minimal components needed to enable the catalog in testing. """
+    """ Register minimal components needed to enable the catalog in testing.
+        Include arche components first.
+    """
     config.include('voteit.core.models.catalog')
     config.include('voteit.core.models.unread')
     config.include('voteit.core.models.user_tags')
