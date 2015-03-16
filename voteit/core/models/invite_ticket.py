@@ -2,12 +2,14 @@ import string
 from random import choice
 from uuid import uuid4
 
-from repoze.folder import Folder
-from persistent.list import PersistentList
-from zope.interface import implementer
-from pyramid.traversal import find_interface
-from pyramid.exceptions import HTTPForbidden
+from arche.utils import send_email
 from betahaus.viewcomponent import render_view_action
+from persistent.list import PersistentList
+from pyramid.exceptions import HTTPForbidden
+from pyramid.traversal import find_interface
+from repoze.folder import Folder
+from zope.interface import implementer
+from six import string_types
 
 from voteit.core import VoteITMF as _
 from voteit.core import security
@@ -15,7 +17,6 @@ from voteit.core.models.interfaces import IInviteTicket
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.workflow_aware import WorkflowAware
 from voteit.core.models.date_time_util import utcnow
-from voteit.core.helpers import send_email
 
 
 SELECTABLE_ROLES = (security.ROLE_MODERATOR,
@@ -47,7 +48,7 @@ class InviteTicket(Folder, WorkflowAware):
             if role not in SELECTABLE_ROLES:
                 raise ValueError("InviteTicket got '%s' as a role, and that isn't selectable." % role)
         self.roles = roles
-        assert isinstance(message, basestring)
+        assert isinstance(message, string_types)
         self.message = message
         self.created = utcnow()
         self.closed = None
@@ -64,7 +65,7 @@ class InviteTicket(Folder, WorkflowAware):
         meeting = find_interface(self, IMeeting)
         html = render_view_action(self, request, 'email', 'invite_ticket', message = message)
         subject = _(u"Invitation to ${meeting_title}", mapping = {'meeting_title': meeting.title})
-        if send_email(subject = subject, recipients = self.email, html = html, request = request, send_immediately = True):
+        if send_email(request, subject = subject, recipients = self.email, html = html, send_immediately = True):
             self.sent_dates.append(utcnow())
 
     def claim(self, request):

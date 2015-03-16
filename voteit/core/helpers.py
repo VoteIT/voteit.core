@@ -2,17 +2,9 @@ import re
 from copy import deepcopy
 from urllib import urlencode
 
-from html2text import HTML2Text
-from pyramid.i18n import TranslationString
-from pyramid.i18n import get_localizer
 from pyramid.renderers import render
-from pyramid.threadlocal import get_current_request
 from pyramid.traversal import find_interface
-#from pyramid.traversal import find_root
-from pyramid_mailer import get_mailer
-from pyramid_mailer.message import Message
 from repoze.workflow import get_workflow
-#from webhelpers.html import HTML
 from webhelpers.html.converters import nl2br
 from webhelpers.html.render import sanitize
 from webhelpers.html.tools import auto_link
@@ -105,44 +97,6 @@ def move_object(obj, new_parent):
     del old_parent[name]
     new_parent[name] = new_obj
     return new_obj
-
-def send_email(subject, recipients, html, sender = None, plaintext = None, request = None, send_immediately = False, **kw):
-    """ Send an email to users. This also checks the required settings and translates
-        the subject.
-        
-        returns the message object sent, or None
-    """ #FIXME: Docs
-    print "This function shouldn't be used - move to arches mailer"
-    if request is None:
-        request = get_current_request()
-    localizer = get_localizer(request)
-    if isinstance(subject, TranslationString):
-        subject = localizer.translate(subject)
-    if isinstance(recipients, basestring):
-        recipients = (recipients,)
-    if plaintext is None:
-        html2text = HTML2Text()
-        html2text.ignore_links = True
-        html2text.ignore_images = True
-        html2text.body_width = 0
-        plaintext = html2text.handle(html).strip()
-    if not plaintext:
-        plaintext = None #In case it was an empty string
-    #It seems okay to leave sender blank since it's part of the default configuration
-    msg = Message(subject = subject,
-                  recipients = recipients,
-                  sender = sender,
-                  body = plaintext,
-                  html = html,
-                  **kw)
-    mailer = get_mailer(request)
-    #Note that messages are sent during the transaction process. See pyramid_mailer docs
-    if send_immediately:
-        mailer.send_immediately(msg)
-    else:
-        mailer.send(msg)
-    return msg
-    #FIXME: Add logger
 
 def transform_text(request, text):
     text = sanitize(text)
