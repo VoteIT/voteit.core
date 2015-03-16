@@ -12,22 +12,6 @@ from voteit.core.models.interfaces import IWorkflowAware
 from voteit.core.views.components.metadata_listing import meta_state
 
 
-
-@view_action('main', 'moderator_actions', title=_(u"Moderator actions"), permission = MODERATE_MEETING)
-def moderator_actions(context, request, va, **kw):
-    """ A.k.a. the cogwheel menu. This view action will render the
-        required HTML, while anything in the view group 'moderator_actions'
-        will be contained as menu sections. The sections in turn will contain
-        menu alternatives.
-    """
-    api = kw['api']
-    response = dict(
-        context = context,
-        menu_content = api.render_view_group(context, request, 'moderator_actions_section', **kw),
-    )
-    return render('templates/cogwheel/moderator_actions.pt', response, request = request)
-
-
 @view_action('actionbar_main', 'voteit_wf',
              title = _("Workflow"),
              priority = 5,
