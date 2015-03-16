@@ -32,9 +32,10 @@ class InviteTicketTests(unittest.TestCase):
 
     def test_send_message_sent(self):
         self.config.include('pyramid_chameleon')
-        self.config.scan('voteit.core.views.components.email')
         self.config.include('pyramid_mailer.testing')
-        self.config.scan('voteit.core.models.invite_ticket')
+        self.config.include('arche.testing')
+        self.config.scan('voteit.core.views.components.email')
+        self.config.include('voteit.core.models.invite_ticket')
         meeting = _fixture(self.config)['m']
         request = testing.DummyRequest()
         obj = meeting.add_invite_ticket('me@home.com', [security.ROLE_MODERATOR, security.ROLE_DISCUSS], sent_by = 'admin')
@@ -46,8 +47,9 @@ class InviteTicketTests(unittest.TestCase):
         self.assertEqual(len(obj.sent_dates), 1)
         
     def test_claim_ticket(self):
+        self.config.include('arche.testing')
         self.config.scan('voteit.core.views.components.email')
-        self.config.scan('voteit.core.models.invite_ticket')
+        self.config.include('voteit.core.models.invite_ticket')
         meeting = _fixture(self.config)['m']
         self.config.testing_securitypolicy(userid='some_user',
                                            permissive=True)
@@ -60,8 +62,9 @@ class InviteTicketTests(unittest.TestCase):
         self.assertEqual(meeting.get_groups('some_user'), (security.ROLE_MODERATOR, security.ROLE_DISCUSS, security.ROLE_VIEWER))
 
     def test_claim_closed(self):
+        self.config.include('arche.testing')
         self.config.scan('voteit.core.views.components.email')
-        self.config.scan('voteit.core.models.invite_ticket')
+        self.config.include('voteit.core.models.invite_ticket')
         meeting = _fixture(self.config)['m']
         self.config.testing_securitypolicy(userid='some_user',
                                            permissive=True)
@@ -72,8 +75,9 @@ class InviteTicketTests(unittest.TestCase):
         self.assertRaises(Forbidden, obj.claim, request)
 
     def test_claim_unathenticated(self):
+        self.config.include('arche.testing')
         self.config.scan('voteit.core.views.components.email')
-        self.config.scan('voteit.core.models.invite_ticket')
+        self.config.include('voteit.core.models.invite_ticket')
         meeting = _fixture(self.config)['m']
         request = testing.DummyRequest()
         obj = meeting.add_invite_ticket('this@email.com', [security.ROLE_PROPOSE])

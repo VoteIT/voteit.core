@@ -15,8 +15,10 @@ class FlashMessages(object):
     def add(self, msg, type='info', close_button=True):
         """ Delegate to arches flash messages."""
         fm = self.request.registry.queryAdapter(self.request, AIFM)
-        if fm:
-            fm.add(msg, type = type, dismissable = close_button)
+        if not fm:
+            from arche.models.flash_messages import FlashMessages
+            fm = FlashMessages(self.request)
+        fm.add(msg, type = type, dismissable = close_button)
         #flash = {'msg':msg, 'type':type, 'close_button':close_button}
         #self.request.session.flash(flash)
 

@@ -2,7 +2,10 @@ from zope.interface import Attribute
 from zope.interface import Interface
 
 from betahaus.pyracont.interfaces import IBaseFolder
-from arche.interfaces import IBase, IContent, IIndexedContent
+from arche.interfaces import IBase
+from arche.interfaces import IContent
+from arche.interfaces import IIndexedContent
+from arche.interfaces import IUser as IArcheUser
 
 
 #Content type interfaces
@@ -181,15 +184,16 @@ class IUsers(IBaseFolder):
         """
 
 
-class IUser(IBaseFolder):
+class IUser(IBaseFolder, IArcheUser):
     """ Content type for a user. Usable as a profile page. """
-    
+
+    def __init__(**kw):
+        pass
+
     userid = Attribute("The userid is always the same as __name__, meaning "
                        "that the name of the stored object must be the userid. "
                        "This enables you to do get(<userid>) on a Users folder, "
                        "and it makes it easy to check that each username is only used once.")
-
-    auth_domains = Attribute("Contains domain information on different authentication systems.")
 
     def get_image_plugin(request):
         """ Get the currently selected plugin (adapter) that this user has selected for
@@ -203,34 +207,6 @@ class IUser(IBaseFolder):
             Appends class 'profile-pic' to tag if class isn't part of keywords.
             Will currently return gravatar url if nothing is selected, and not render an image if
             something goes wrong. (Like a broken plugin)
-        """
-
-    def get_password():
-        """ Get password hash.
-        """
-    
-    def set_password(value):
-        """ Set password for user.
-            value is the unencrypted password, it will be stored as a SHA1-hash.
-        """
-
-    def new_request_password_token(request):
-        """ Create a new password request token. Used for resetting a users password.
-            It will email the link to reset password to that user.
-        """
-
-    def get_token():
-        """ Return password request token, or None.
-        """
-
-    def remove_password_token():
-        """ Remove password token. """
-
-    def get_token():
-        """ Get password token, or None. """
-
-    def send_mention_notification(context, request):
-        """ Sends an email when the user is mentioned in a proposal or a discussion post
         """
 
 
@@ -272,15 +248,7 @@ class IMeeting(IBaseFolder):
 class IDiscussionPost(IBaseFolder):
     """ A discussion post.
     """
-
-    mentioned = Attribute("""
-        All users who've been mentioned within this discussion post.
-        This is to make sure several notifications aren't set when anything is updated.
-        It's a key/value storage with userid as key and a datetime as value. """)
     tags = Attribute(""" Return all used tags within this discussion post. """)
-
-    def add_mention(userid):
-        """ Set a userid as mentioned. """
 
 
 class IProposal(IBaseFolder):
@@ -315,17 +283,10 @@ class IProposal(IBaseFolder):
         (This is simply to help editing things to avoid mistakes.) After that, the proposals will be locked
         without any option to alter them. In that case, the ACL table 'closed' is used.
     """
-    mentioned = Attribute("""
-        All users who've been mentioned within this discussion post.
-        This is to make sure several notifications aren't set when anything is updated.
-        It's a key/value storage with userid as key and a datetime as value. """)
 
     tags = Attribute("""
         Return all used tags within this proposal. The automatically set id (hashtag) for this
         proposal will also be returned. """)
-
-    def add_mention(userid):
-        """ Set a userid as mentioned. """
 
 
 class IPoll(IBaseFolder):
@@ -496,9 +457,6 @@ class ISecurityAware(Interface):
             The special group "role:Owner" is never inherited.
         """
 
-    def check_groups(groups):
-        """ Check dependencies and group names. """
-
     def add_groups(principal, groups, event = True):
         """ Add groups for a principal in this context.
             If event is True, an IObjectUpdatedEvent will be sent.
@@ -524,9 +482,6 @@ class ISecurityAware(Interface):
             Warning! This method will also clear any settings for users not present in value!
             This method will send an IObjectUpdatedEvent.
         """
-
-    def list_all_groups():
-        """ Returns a set of all groups in this context. """
 
 
 #Adapters

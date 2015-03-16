@@ -40,13 +40,12 @@ class User(ArcheUser, BaseContent):
     type_title = _(u"User")
 #    allowed_contexts = ('Users',)
 #    add_permission = security.ADD_USER
-    custom_mutators = {'title':'_set_title'}
-    schemas = {'add': 'AddUserSchema', 'edit': 'EditUserSchema'}
 
     __acl__ = [(Allow, security.ROLE_ADMIN, (security.EDIT, security.VIEW, security.CHANGE_PASSWORD, security.MANAGE_SERVER, security.DELETE)),
                (Allow, security.ROLE_OWNER, (security.EDIT, security.VIEW, security.CHANGE_PASSWORD,)),
                DENY_ALL]
 
+    #FIXME: Review
     @property
     def auth_domains(self):
         try:
@@ -94,17 +93,6 @@ class User(ArcheUser, BaseContent):
 #         self.set_field_value('password', value)
 # 
 #     password = property(get_password, set_password)
-
-    #Override title for users
-    def _set_title(self, value, key=None):
-        #Not used for user content type
-        pass
-
-    def _get_title(self):
-        out = "%s %s" % ( self.get_field_value('first_name', ''), self.get_field_value('last_name', '') )
-        return out.strip()
-
-    title = property(_get_title, _set_title)
 
     @property
     def first_name(self):

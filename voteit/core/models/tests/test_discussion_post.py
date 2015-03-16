@@ -33,16 +33,6 @@ class DiscussionTests(unittest.TestCase):
     def test_verify_obj(self):
         self.assertTrue(verifyObject(IDiscussionPost, self._cut()))
 
-    def test_mentioned(self):
-        obj = self._cut()
-        obj.mentioned['dummy'] = 'now'
-        self.assertIn('dummy', obj.mentioned)
-        
-    def test_add_mention(self):
-        obj = self._cut()
-        obj.add_mention('dummy')
-        self.assertIn('dummy', obj.mentioned)
-
 
 class DiscussionPostPermissionTests(unittest.TestCase):
     def setUp(self):

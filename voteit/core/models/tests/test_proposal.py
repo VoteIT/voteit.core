@@ -45,16 +45,6 @@ class ProposalTests(unittest.TestCase):
         obj = self._cut()
         obj.set_field_value('aid', "dummyuser-1")
         self.assertIn('dummyuser-1', obj.tags)
-        
-    def test_mentioned(self):
-        obj = self._cut()
-        obj.mentioned['dummy'] = 'now'
-        self.assertIn('dummy', obj.mentioned)
-        
-    def test_add_mention(self):
-        obj = self._cut()
-        obj.add_mention('dummy')
-        self.assertIn('dummy', obj.mentioned)
 
 
 admin = set([security.ROLE_ADMIN])

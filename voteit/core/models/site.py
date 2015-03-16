@@ -51,5 +51,9 @@ class SiteRoot(BaseContent, SecurityAware, Root):
     def users(self):
         return self['users']
 
+    @property
+    def allow_add_meeting(self):
+        return self.get_field_value('allow_add_meeting', False)
+
 def includeme(config):
     config.add_content_factory(SiteRoot, addable_in = ('Meeting',))

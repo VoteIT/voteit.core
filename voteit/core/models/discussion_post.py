@@ -24,10 +24,6 @@ class DiscussionPost(BaseContent):
     type_name = 'DiscussionPost'
     type_title = _("Discussion Post")
     add_permission = security.ADD_DISCUSSION_POST
-#     custom_mutators = {'text': '_set_text',
-#                        'title': '_set_title',}
-#     custom_accessors = {'title': '_get_title',
-#                         'mentioned': '_get_mentioned'}
 
     @property
     def __acl__(self):
@@ -55,20 +51,6 @@ class DiscussionPost(BaseContent):
     @text.setter
     def text(self, value):
         self.set_field_value('text', value)
-
-    #Override title, it will be used to generate a name for this content. (Like an id)
-#     def _get_title(self, key = None, default = u""):
-#         return self.get_field_value('text', default = default)
-# 
-#     def _set_title(self, value, key = None):
-#         """ Override set tilte for this content type."""
-#         #This has to do with b/c
-#         self._set_text(value, key = key)
-# 
-#     title = property(_get_title, _set_title)
-# 
-#     def _set_text(self, value, key = None):
-#         self.field_storage['text'] = value
 
     @property
     def tags(self): #arche compat

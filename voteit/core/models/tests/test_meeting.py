@@ -93,7 +93,7 @@ class MeetingTests(unittest.TestCase):
         m1.add_groups('second', ['role:A', 'role:C'])
         root['m2'] = m2 = self._cut()
         m2.copy_users_and_perms('m1')
-        self.assertEqual(m2.get_groups('second'), frozenset(['role:A', 'role:C']))
+        self.assertEqual(frozenset(m2.get_groups('second')), frozenset(['role:A', 'role:C']))
 
     def test_get_ticket_names(self):
         self.config.include('arche')

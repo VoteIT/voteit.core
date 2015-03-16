@@ -73,7 +73,7 @@ def bootstrap_and_fixture(config):
     return bootstrap_voteit(echo=False)
 
 def register_security_policies(config):
-    config.include('arche.testing.setup_security')
+    config.include('arche.testing.setup_auth')
 
 def register_workflows(config):
     config.include('pyramid_zcml')

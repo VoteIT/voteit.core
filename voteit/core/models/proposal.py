@@ -54,14 +54,6 @@ class Proposal(BaseContent, WorkflowAware):
     def text(self, value):
         self.set_field_value('text', value)
 
-#     def _get_title(self):
-#         return self.get_field_value('title', u"")
-# 
-#     def _set_title(self, value, key=None):
-#         self.field_storage['title'] = value
-# 
-#     title = property(_get_title, _set_title)
-
     @property
     def tags(self): #arche compat
         tags = tags_from_text(self.text)
