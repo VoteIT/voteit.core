@@ -5,18 +5,8 @@ from pyramid.traversal import find_root
 
 from voteit.core.models.interfaces import IInviteTicket
 from voteit.core.models.interfaces import IMeeting
-from voteit.core.models.interfaces import IUser
 from voteit.core.security import MEETING_ROLES
 
-
-@view_action('email', 'request_password', interface = IUser)
-def request_password_body(context, request, va, **kw):
-    """ Body for request password email """
-    response = dict(
-        pw_link = kw['pw_link'],
-        context = context,
-    )
-    return render('../templates/email/request_password.pt', response, request = request)
 
 @view_action('email', 'invite_ticket', interface = IInviteTicket)
 def invite_ticket(context, request, va, **kw):
