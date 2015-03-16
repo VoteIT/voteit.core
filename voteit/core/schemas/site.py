@@ -43,21 +43,21 @@ class SiteRootSchema(colander.MappingSchema):
            validator = colander.Email(),) 
 
 
-@schema_factory('LayoutSiteRootSchema', title = _(u"Layout"),
-                description = _(u"layout_site_root_schema_description",
-                                default = u"Global layout settings"))
-class LayoutSiteRootSchema(colander.Schema):
-    default_logo_url = colander.SchemaNode(colander.String(),
-                                           title = _(u"URL to a default logo used in meetings and in the site root."),
-                                           description = _(u"logo_description_text",
-                                                           default = u"It will be shown to the left of the header. "
-                                                           u"Dimensions should be no more than the text height. "
-                                                           u"If you use the wrong dimensions, you may break the layout."),
-                                           missing = u"")
-    custom_css = colander.SchemaNode(colander.String(),
-                                     title = _(u"Custom CSS code to inject in each page."),
-                                     description = _(u"custom_css_code_descrption",
-                                                     default = u"Use this for small customisation. "
-                                                               u"Note that you may break the site horribly if you tinker with this!"),
-                                     missing = u"",
-                                     widget = deform.widget.TextAreaWidget(cols = 80, rows = 20))
+# @schema_factory('LayoutSiteRootSchema', title = _(u"Layout"),
+#                 description = _(u"layout_site_root_schema_description",
+#                                 default = u"Global layout settings"))
+# class LayoutSiteRootSchema(colander.Schema):
+#     default_logo_url = colander.SchemaNode(colander.String(),
+#                                            title = _(u"URL to a default logo used in meetings and in the site root."),
+#                                            description = _(u"logo_description_text",
+#                                                            default = u"It will be shown to the left of the header. "
+#                                                            u"Dimensions should be no more than the text height. "
+#                                                            u"If you use the wrong dimensions, you may break the layout."),
+#                                            missing = u"")
+#     custom_css = colander.SchemaNode(colander.String(),
+#                                      title = _(u"Custom CSS code to inject in each page."),
+#                                      description = _(u"custom_css_code_descrption",
+#                                                      default = u"Use this for small customisation. "
+#                                                                u"Note that you may break the site horribly if you tinker with this!"),
+#                                      missing = u"",
+#                                      widget = deform.widget.TextAreaWidget(cols = 80, rows = 20))

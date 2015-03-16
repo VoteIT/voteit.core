@@ -1,39 +1,20 @@
 import re
 
 from BeautifulSoup import BeautifulSoup
-from betahaus.pyracont import check_unique_name
-from pyramid.security import has_permission
 from pyramid.traversal import find_interface
-from pyramid.traversal import find_root
 from translationstring import TranslationString
 from webhelpers.html.tools import strip_tags
 import colander
 
 from voteit.core import VoteITMF as _
-from voteit.core.exceptions import TokenValidationError
 from voteit.core.models.interfaces import IMeeting
-from voteit.core.models.interfaces import ISiteRoot
-from voteit.core.models.interfaces import IUser
 from voteit.core.models.user import USERID_REGEXP
-from voteit.core.security import MANAGE_GROUPS
-from voteit.core.security import MEETING_ROLES
-from voteit.core.security import ROOT_ROLES
 from voteit.core.security import VIEW
 from voteit.core.security import find_authorized_userids
 
 
 AT_USERID_PATTERN = re.compile(r'(\A|\s)@('+USERID_REGEXP+r')')
 NEW_USERID_PATTERN = re.compile(r'^'+USERID_REGEXP+r'$')
-
-
-# def password_validation(node, value):
-#     """ check that password is
-#         - at least 6 chars and at most 100.
-#     """
-#     if len(value) < 6:
-#         raise colander.Invalid(node, _(u"Too short. At least 6 chars required."))
-#     if len(value) > 100:
-#         raise colander.Invalid(node, _(u"Less than 100 chars please."))
 
 
 def html_string_validator(node, value):
