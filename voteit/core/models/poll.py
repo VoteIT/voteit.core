@@ -1,5 +1,6 @@
 from BTrees.OIBTree import OIBTree
 from arche.security import get_acl_registry
+from arche.utils import get_flash_messages
 from arche.utils import send_email
 from pyramid.httpexceptions import HTTPForbidden
 from pyramid.renderers import render
@@ -161,8 +162,7 @@ class Poll(BaseContent, WorkflowAware):
         if request is None:
             request = get_current_request()
         locale = request.localizer
-        fm = IFlashMessages(request)
-
+        fm = get_flash_messages(request)
         for (uid, state) in uid_states.items():
             if uid not in self.proposal_uids:
                 raise ValueError("The poll plugins close() method returned a uid that doesn't exist in this poll.")

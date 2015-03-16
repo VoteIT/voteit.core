@@ -1,21 +1,21 @@
-import re
-
-from pyramid.traversal import resource_path
-from repoze.catalog.query import Any
-from repoze.catalog.query import Contains
-from repoze.catalog.query import Eq
-
-from voteit.core.models.catalog import resolve_catalog_docid
-from voteit.core.models.catalog import index_object
-from voteit.core.models.catalog import unindex_object
-from voteit.core.models.catalog import update_indexes
-from voteit.core.models.unread import Unread
-from voteit.core.models.user_tags import UserTags
-from voteit.core.security import ROLE_OWNER
-from voteit.core.scripts.catalog import find_all_base_content
 
 
 def evolve(root):
+    import re
+    
+    from pyramid.traversal import resource_path
+    from repoze.catalog.query import Any
+    from repoze.catalog.query import Contains
+    from repoze.catalog.query import Eq
+    
+    from voteit.core.models.catalog import resolve_catalog_docid
+    from voteit.core.models.catalog import index_object
+    from voteit.core.models.catalog import unindex_object
+    from voteit.core.models.catalog import update_indexes
+    from voteit.core.models.unread import Unread
+    from voteit.core.models.user_tags import UserTags
+    from voteit.core.security import ROLE_OWNER
+    from voteit.core.scripts.catalog import find_all_base_content
 
     print "initial reindex of catalog to make sure everything is up to date"
     clear_and_reindex(root)

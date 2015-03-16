@@ -63,16 +63,16 @@ class MPIntegrationTests(unittest.TestCase):
         self.request = testing.DummyRequest()
         self.config = testing.setUp(request=self.request)
         self.config.testing_securitypolicy(userid='admin')
+        self.config.include('arche.testing')
+        self.config.include('arche.models.catalog')
         #Enable workflows
-        self.config.include('pyramid_zcml')
-        self.config.load_zcml('voteit.core:configure.zcml')
+        self.config.include('voteit.core.testing_helpers.register_workflows')
         #Register poll plugin
         self.config.include('voteit.core.plugins.majority_poll')
         # Adding catalog
         self.config.include('voteit.core.models.catalog')
         self.config.include('voteit.core.models.unread')
         self.config.include('voteit.core.models.user_tags')
-        self.config.scan('voteit.core.subscribers.catalog')
         #Add root
         from voteit.core.models.site import SiteRoot
         root = SiteRoot()
@@ -97,12 +97,10 @@ class MPIntegrationTests(unittest.TestCase):
         self.poll.set_field_value('poll_plugin', MajorityPollPlugin.name)
         #Add proposals
         from voteit.core.models.proposal import Proposal
-        p1 = Proposal()
-        p1.title = 'p1'
+        p1 = Proposal(text = 'p1')
         p1.uid = 'p1uid' #To make it simpler to test against
         ai['p1'] = p1
-        p2 = Proposal()
-        p2.title = 'p2'
+        p2 = Proposal(text = 'p2')
         p2.uid = 'p2uid' #To make it simpler to test against
         ai['p2'] = p2
         #Select proposals for this poll
@@ -143,7 +141,6 @@ class MPIntegrationTests(unittest.TestCase):
         self.poll.set_workflow_state(request, 'closed')
 
     def test_poll_result_created(self):
-    
         self._add_votes()
         self._close_poll()
 
@@ -160,7 +157,6 @@ class MPIntegrationTests(unittest.TestCase):
         self.config.scan('voteit.core.models.proposal')
         self.config.scan('voteit.core.views.components.main')
         self.config.scan('voteit.core.views.components.moderator_actions')
-        self.config.scan('voteit.core.views.components.creators_info')
         self.config.scan('voteit.core.views.components.proposals')
         self.config.scan('voteit.core.views.components.user_tags')
         self.config.scan('voteit.core.views.components.metadata_listing')
