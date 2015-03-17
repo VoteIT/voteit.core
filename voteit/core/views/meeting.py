@@ -1,6 +1,5 @@
 from arche.views.base import BaseView
 from arche.views.base import DefaultEditForm
-from betahaus.pyracont.factories import createSchema
 from betahaus.viewcomponent import render_view_group
 from pyramid.decorator import reify
 from pyramid.httpexceptions import HTTPForbidden
@@ -36,7 +35,7 @@ class MeetingView(BaseView):
         return {}
 
     @view_config(name = "participants_emails",
-                 renderer = "voteit.core:templates/participants_emails.pt",
+                 renderer = "voteit.core:templates/users_emails.pt",
                  permission = security.MODERATE_MEETING)
     def participants_emails(self):
         """ List all participants emails in this meeting. """
@@ -47,8 +46,8 @@ class MeetingView(BaseView):
             if user:
                 results.append(user)
         def _sorter(obj):
-            return obj.get_field_value('email')
-        return {'users': tuple(sorted(results, key = _sorter))}
+            return obj.email
+        return {'users': tuple(sorted(results, key = _sorter)), 'title': _("Participants emails")}
 
     @view_config(name = "minutes", renderer = "voteit.core:templates/minutes.pt", permission = security.VIEW)
     def minutes(self):
