@@ -20,7 +20,6 @@ class AtUseridLinkTests(unittest.TestCase):
     def setUp(self):
         self.config = testing.setUp()
         self.config.include('pyramid_chameleon')
-        self.config.commit()
 
     def tearDown(self):
         testing.tearDown()
