@@ -10,6 +10,7 @@ function load_target(target) {
   request.done(function(data, status, xhr) {
     request.target.html(data);
   });
+  request.fail(arche.flash_error);
   return request
 }
 voteit.load_target = load_target;
