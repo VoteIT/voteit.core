@@ -2,6 +2,7 @@
     They can be rearranged or disabled by changing them within the meeting context.
 """
 from __future__ import unicode_literals
+from decimal import Decimal
 
 from arche.portlets import PortletType
 from arche.utils import generate_slug
@@ -122,6 +123,27 @@ class PollsInline(BaseView):
         for prop in poll.get_proposal_objects():
             text += "#%s " % prop.aid
         return tags2links(text)
+
+    def get_voted_estimate(self, poll):
+        """ Returns an approx guess without doing expensive calculations.
+            This method should rely on other things later on.
+            
+            Should only be called during ongoing or closed polls.
+        """
+        response = {'added': len(poll), 'total': 0}
+        wf_state = poll.get_workflow_state()
+        if wf_state == 'ongoing':
+            response['total'] = len(poll.voters_mark_ongoing)
+        elif wf_state == 'closed':
+            response['total'] = len(poll.voters_mark_closed)
+        if response['total'] != 0:
+            try:
+                response['percentage'] = int(round(100 * Decimal(response['added']) / Decimal(response['total']), 0))
+            except ZeroDivisionError:
+                response['percentage'] = 0
+        else:
+            response['percentage'] = 0
+        return response
 
 
 class StrippedInlineAddForm(DefaultAddForm):

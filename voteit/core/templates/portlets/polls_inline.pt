@@ -7,7 +7,8 @@
   <div class="list-group-item"
       tal:define="can_vote request.has_permission(vote_perm, obj);
                   has_voted request.authenticated_userid in obj;
-                  poll_plugin obj.get_poll_plugin()|False">
+                  poll_plugin obj.get_poll_plugin()|False;
+                  wf_state obj.get_workflow_state();">
     <tal:cog condition="request.is_moderator" replace="structure view.render_template('voteit.core:views/templates/snippets/cogwheel.pt', context = obj)" />
 
     <tal:broken_plugin condition="not poll_plugin">
@@ -29,7 +30,7 @@
           ${poll_plugin.title}
         </a>
 
-        <a tal:condition="obj.get_workflow_state() == 'closed'" class="btn btn-default btn-xs" href="${request.resource_url(obj, 'poll_raw_data.txt')}">
+        <a tal:condition="wf_state == 'closed'" class="btn btn-default btn-xs" href="${request.resource_url(obj, 'poll_raw_data.txt')}">
           <span class="glyphicon glyphicon-save"></span>
           <span i18n:translate="">Ballot data</span>
         </a>
@@ -53,12 +54,41 @@
 
     <div class="metadata row">
       <div class="col-sm-8">
-        <span>Participating proposals: ${len(obj.proposals)}</span>
+        <tal:ts i18n:translate="">Participating proposals</tal:ts>: ${len(obj.proposals)}
         <span tal:content="structure view.get_proposal_tag_links(obj)"></span>
       </div>
       <div class="text-right col-sm-4">
-        ${request.dt_handler.format_relative(obj.start_time)|'-'}<br/>
-        ${request.dt_handler.format_relative(obj.end_time)|'-'}
+        <tal:poll_progress condition="wf_state in ('ongoing', 'closed')">
+        <div tal:define="poll_est view.get_voted_estimate(obj)">
+          <span class="glyphicon glyphicon-user"></span>
+          ${poll_est['percentage']}%
+          (${poll_est['added']} / ${poll_est['total']})
+          <div class="progress">
+            <div class="progress-bar progress-bar-success"
+              role="progressbar"
+              aria-valuenow="${poll_est['percentage']}"
+              aria-valuemin="0"
+              aria-valuemax="100"
+              style="width: ${poll_est['percentage']}%">
+            </div>
+          </div>
+        </div>
+        </tal:poll_progress>
+        <tal:def define="is_started wf_state not in ('upcoming', 'private');
+                         is_closed wf_state in ('closed', 'canceled');">
+        <div>
+          <span class="glyphicon glyphicon-time"></span>
+        
+          <span tal:condition="not is_started" i18n:translate="">Starts</span>
+          <span tal:condition="is_started" i18n:translate="">Started</span>
+          ${request.dt_handler.format_relative(obj.start_time)|'-'}
+        </div>
+        <div>
+          <span tal:condition="not is_closed" i18n:translate="">Closes</span>
+          <span tal:condition="is_closed" i18n:translate="">Closed</span>
+          ${request.dt_handler.format_relative(obj.end_time)|'-'}
+        </div>
+        </tal:def>
       </div>
     </div>
     <div class="metadata">
