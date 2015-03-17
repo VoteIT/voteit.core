@@ -19,7 +19,6 @@ def user_basic_profile(context, request, va, **kw):
 
 @view_action('user_info', 'latest_meeting_entries', interface = IUser)
 def user_latest_meeting_entries(context, request, va, **kw):
-    #api = kw['api']
     view = kw['view']
     query = {}
     #context is the user profile, but if within a meeting it's importat to preform a check
@@ -39,6 +38,5 @@ def user_latest_meeting_entries(context, request, va, **kw):
     response = dict(
         last_entries = view.catalog_search(resolve = True, **query),
         context = context,
-        truncate = strip_and_truncate,
     )
     return render('voteit.core:templates/snippets/user_latest_meeting_entries.pt', response, request = request)
