@@ -33,29 +33,29 @@ class PollView(BaseEdit):
                 mapping = {'name': context.poll_plugin_name})
         self.api.flash_messages.add(msg, type = 'error')
 
-    @view_config(name = 'modal_poll', context = IPoll, permission = security.VIEW, xhr = True) #
-    def poll_view(self):
-        """ This is the modal window that opens when you click for instance the vote button
-            It will also call the view that renders the actual poll form.
-        """
-        poll_plugin = self.query_poll_plugin(self.context)
-        if not poll_plugin:
-            return HTTPForbidden()
-        self.response['poll_plugin'] = poll_plugin
-        self.response['wf_state'] = self.context.get_workflow_state()
-        self.response['can_vote'] = self.api.context_has_permission(security.ADD_VOTE, self.context)
-        self.response['has_voted'] = self.api.userid in self.context
-        vote_form = PollVoteForm(self.context, self.request)
-        self.response['form'] = render('templates/ajax_edit.pt', vote_form(), request = self.request)
-        result = render('templates/poll_form.pt', self.response, request = self.request)
-        if self.request.is_xhr == True:
-            result = Response(result)
-        return result
+#     @view_config(name = 'modal_poll', context = IPoll, permission = security.VIEW, xhr = True) #
+#     def poll_view(self):
+#         """ This is the modal window that opens when you click for instance the vote button
+#             It will also call the view that renders the actual poll form.
+#         """
+#         poll_plugin = self.query_poll_plugin(self.context)
+#         if not poll_plugin:
+#             return HTTPForbidden()
+#         self.response['poll_plugin'] = poll_plugin
+#         self.response['wf_state'] = self.context.get_workflow_state()
+#         self.response['can_vote'] = self.api.context_has_permission(security.ADD_VOTE, self.context)
+#         self.response['has_voted'] = self.api.userid in self.context
+#         vote_form = PollVoteForm(self.context, self.request)
+#         self.response['form'] = render('templates/ajax_edit.pt', vote_form(), request = self.request)
+#         result = render('templates/poll_form.pt', self.response, request = self.request)
+#         if self.request.is_xhr == True:
+#             result = Response(result)
+#         return result
 
-    @view_config(context = IPoll, permission = security.VIEW, renderer = "templates/poll_single.pt")
-    def poll_full_window(self):
-        self.response['form'] = self.poll_view()
-        return self.response
+#     @view_config(context = IPoll, permission = security.VIEW, renderer = "templates/poll_single.pt")
+#     def poll_full_window(self):
+#         self.response['form'] = self.poll_view()
+#         return self.response
 
     @view_config(context=IPoll, name="poll_raw_data", permission=security.VIEW)
     def poll_raw_data(self):
@@ -104,8 +104,6 @@ class PollConfigForm(DefaultEditForm):
         return HTTPFound(location = url)
 
 
-@view_config(name="_poll_form", context = IPoll, renderer="templates/ajax_edit.pt", permission=security.VIEW, xhr=True)
-@view_config(name="_poll_form", context = IPoll, renderer="templates/poll_single.pt", permission=security.VIEW, xhr=False)
 @view_config(name = "__vote__",
              context = IPoll,
              renderer = "arche:templates/form.pt",

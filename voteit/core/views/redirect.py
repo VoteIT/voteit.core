@@ -1,21 +1,23 @@
 #from pyramid.traversal import find_interface
 #from pyramid.traversal import find_root
 #from pyramid.traversal import resource_path
-from pyramid.view import view_config
 from pyramid.httpexceptions import HTTPFound
-#from pyramid.exceptions import NotFound
+from pyramid.security import NO_PERMISSION_REQUIRED
+from pyramid.view import view_config
 
 #from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IDiscussionPost
 from voteit.core.models.interfaces import IProposal
-from voteit.core.security import VIEW
+from voteit.core.models.interfaces import IPoll
 
 
-@view_config(context = IDiscussionPost, permission = VIEW)
-@view_config(context = IProposal, permission = VIEW)
+@view_config(context = IDiscussionPost, permission = NO_PERMISSION_REQUIRED)
+@view_config(context = IPoll, permission = NO_PERMISSION_REQUIRED)
+@view_config(context = IProposal, permission = NO_PERMISSION_REQUIRED)
 def redirect_temp(request):
     """ Temporary fix until proper redirect with anchors is in place. """
-    return HTTPFound(location = request.resource_url(request.agenda_item))
+    ai = request.agenda_item
+    return HTTPFound(location = request.resource_url(ai, anchor = ai.uid))
 
 
 # @view_config(context=IDiscussionPost)
