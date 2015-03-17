@@ -6,26 +6,48 @@
 <tal:iterate repeat="obj contents">
   <div class="list-group-item"
       tal:define="can_vote request.has_permission(vote_perm, obj);
-                  has_voted request.authenticated_userid in obj">
+                  has_voted request.authenticated_userid in obj;
+                  poll_plugin obj.get_poll_plugin()|False">
     <tal:cog condition="request.is_moderator" replace="structure view.render_template('voteit.core:views/templates/snippets/cogwheel.pt', context = obj)" />
-    <a tal:condition="can_vote or has_voted"
-      data-open-modal
-      class="btn btn-primary"
-      href="${request.resource_url(obj, '__vote__')}">
-      <span tal:condition="can_vote and not has_voted" i18n:translate="add_vote_button">Vote</span>
-      <span tal:condition="can_vote and has_voted" i18n:translate="">Change vote</span>
-      <span tal:condition="not can_vote" i18n:translate="">View vote</span>
-    </a>
-    
-      ${obj.title}
-      <!-- 
-    <a href="${request.resource_url(obj)}">
-    </a>
-     -->
+
+    <tal:broken_plugin condition="not poll_plugin">
+      <div class="alert alert-danger" role="alert"
+        i18n:translate="broken_poll_notice">The method
+        '<tal:ts i18n:name="poll_method" tal:content="obj.poll_plugin"></tal:ts>'
+        that this poll uses i missing from this system.
+        This poll won't work unless it's restored or changed.</div>
+    </tal:broken_plugin>
+
+    <h4>${obj.title}</h4>
+    <tal:poll_plugin condition="poll_plugin" tal:define="poll_method_info 'poll_method_info_%s' % obj.uid">
+      <p>
+        <a class="" data-toggle="collapse" href="#${poll_method_info}" aria-expanded="false" aria-controls="${poll_method_info}">
+          <span class="glyphicon glyphicon-info-sign"></span>
+          ${poll_plugin.title}
+        </a>
+      </p>
+      
+      <div class="collapse" id="${poll_method_info}">
+        <div class="well">
+          ${poll_plugin.description}
+        </div>
+      </div>
+
+      <a tal:condition="can_vote or has_voted"
+        data-open-modal
+        class="btn btn-primary"
+        href="${request.resource_url(obj, '__vote__')}">
+        <span tal:condition="can_vote and not has_voted" i18n:translate="add_vote_button">Vote</span>
+        <span tal:condition="can_vote and has_voted" i18n:translate="">Change vote</span>
+        <span tal:condition="not can_vote" i18n:translate="">View vote</span>
+      </a>
+    </tal:poll_plugin>
+
+
     <div class="metadata row">
       <div class="col-sm-8">
-        <span>Participating proposals:</span>
-        ${len(obj.proposals)}
+        <span>Participating proposals: ${len(obj.proposals)}</span>
+        <span tal:content="structure view.get_proposal_tag_links(obj)"></span>
       </div>
       <div class="text-right col-sm-4">
         ${request.dt_handler.format_relative(obj.start_time)|'-'}<br/>

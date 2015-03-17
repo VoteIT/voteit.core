@@ -12,7 +12,6 @@ import deform
 
 from voteit.core import VoteITMF as _
 from voteit.core.models.interfaces import IAgendaItem
-from voteit.core.models.interfaces import IDateTimeUtil
 from voteit.core.validators import deferred_csrf_token_validator
 
 
@@ -28,20 +27,15 @@ def random_oid(*args):
     """
     return str(uuid4())
 
-
 @colander.deferred
 def deferred_default_start_time(node, kw):
     request = kw['request']
-    dt_util = request.registry.getUtility(IDateTimeUtil)
-    return dt_util.localnow()
-
+    return request.dt_handler.localnow()
 
 @colander.deferred
 def deferred_default_end_time(node, kw):
     request = kw['request']
-    dt_util = request.registry.getUtility(IDateTimeUtil)
-    return dt_util.localnow() + timedelta(hours=24)
-
+    return request.dt_handler.localnow() + timedelta(hours=24)
 
 @colander.deferred
 def deferred_default_user_fullname(node, kw):

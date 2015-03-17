@@ -115,27 +115,28 @@ class PollSchema(colander.MappingSchema):
                                                     default=u"Only proposals in the state 'published' can be selected"),
                                     missing=set(),
                                     widget=proposal_choices_widget,)
-    start_time = colander.SchemaNode(
-         TZDateTime(),
-         title = _(u"Start time of this poll."),
-         description = _(u"You need to open it yourself."),
-         widget=deform.widget.DateTimeInputWidget(options={'dateFormat': 'yy-mm-dd',
-                                                           'timeFormat': 'hh:mm',
-                                                           'separator': ' '}),
-         default = deferred_default_start_time,
-         missing = colander.null,
-    )
-    end_time = colander.SchemaNode(
-         TZDateTime(),
-         title = _(u"End time of this poll."),
-         description = _(u"poll_end_time_description",
-                         default = u"You need to close it yourself. A good default value is one day later."),
-         widget=deform.widget.DateTimeInputWidget(options={'dateFormat': 'yy-mm-dd',
-                                                           'timeFormat': 'hh:mm',
-                                                           'separator': ' '}),
-         default = deferred_default_end_time,
-         missing = colander.null,
-    )
+#FIXME: TZ aware field
+#     start_time = colander.SchemaNode(
+#          TZDateTime(),
+#          title = _(u"Start time of this poll."),
+#          description = _(u"You need to open it yourself."),
+#          widget=deform.widget.DateTimeInputWidget(options={'dateFormat': 'yy-mm-dd',
+#                                                            'timeFormat': 'hh:mm',
+#                                                            'separator': ' '}),
+#          default = deferred_default_start_time,
+#          missing = colander.null,
+#     )
+#     end_time = colander.SchemaNode(
+#          TZDateTime(),
+#          title = _(u"End time of this poll."),
+#          description = _(u"poll_end_time_description",
+#                          default = u"You need to close it yourself. A good default value is one day later."),
+#          widget=deform.widget.DateTimeInputWidget(options={'dateFormat': 'yy-mm-dd',
+#                                                            'timeFormat': 'hh:mm',
+#                                                            'separator': ' '}),
+#          default = deferred_default_end_time,
+#          missing = colander.null,
+#     )
 
 
 #@schema_factory('AddPollSchema', title = _(u"Add poll"),

@@ -121,6 +121,7 @@ class Poll(BaseContent, WorkflowAware):
         return reg.getAdapter(self, name = self.poll_plugin_name, interface = IPollPlugin)
 
     def get_proposal_objects(self):
+        #FIXME: Search through catalog instead
         agenda_item = find_interface(self, IAgendaItem)
         if agenda_item is None:
             raise ValueError("Can't find any agenda item in the polls lineage")

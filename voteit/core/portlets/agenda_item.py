@@ -20,6 +20,7 @@ from voteit.core import _
 from voteit.core import security
 from voteit.core.fanstaticlib import data_loader
 from voteit.core.models.interfaces import IAgendaItem
+from voteit.core.helpers import tags2links
 #from voteit.core.models.interfaces import IProposal
 #from voteit.core.models.interfaces import IDiscussionPost
 from voteit.core.schemas.meeting import AgendaItemProposalsPortletSchema
@@ -115,6 +116,12 @@ class PollsInline(BaseView):
         response['contents'] = tuple(self.catalog_search(resolve = True, **query))
         response['vote_perm'] = security.ADD_VOTE
         return response
+
+    def get_proposal_tag_links(self, poll):
+        text = ""
+        for prop in poll.get_proposal_objects():
+            text += "#%s " % prop.aid
+        return tags2links(text)
 
 
 class StrippedInlineAddForm(DefaultAddForm):
