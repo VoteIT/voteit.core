@@ -19,14 +19,22 @@
     </tal:broken_plugin>
 
     <h4>${obj.title}</h4>
+
+    <div tal:content="structure obj.description">Description</div>
+
     <tal:poll_plugin condition="poll_plugin" tal:define="poll_method_info 'poll_method_info_%s' % obj.uid">
       <p>
-        <a class="" data-toggle="collapse" href="#${poll_method_info}" aria-expanded="false" aria-controls="${poll_method_info}">
+        <a class="btn btn-default btn-xs" data-toggle="collapse" href="#${poll_method_info}" aria-expanded="false" aria-controls="${poll_method_info}">
           <span class="glyphicon glyphicon-info-sign"></span>
           ${poll_plugin.title}
         </a>
+
+        <a tal:condition="obj.get_workflow_state() == 'closed'" class="btn btn-default btn-xs" href="${request.resource_url(obj, 'poll_raw_data.txt')}">
+          <span class="glyphicon glyphicon-save"></span>
+          <span i18n:translate="">Ballot data</span>
+        </a>
       </p>
-      
+
       <div class="collapse" id="${poll_method_info}">
         <div class="well">
           ${poll_plugin.description}
@@ -42,7 +50,6 @@
         <span tal:condition="not can_vote" i18n:translate="">View vote</span>
       </a>
     </tal:poll_plugin>
-
 
     <div class="metadata row">
       <div class="col-sm-8">
