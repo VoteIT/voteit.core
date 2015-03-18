@@ -50,6 +50,12 @@
         <span tal:condition="can_vote and has_voted" i18n:translate="">Change vote</span>
         <span tal:condition="not can_vote" i18n:translate="">View vote</span>
       </a>
+      <a tal:condition="wf_state == 'closed'"
+        data-open-modal
+        class="btn btn-primary"
+        href="${request.resource_url(obj, '__show_results__')}">
+        <span i18n:translate="">Show results</span>
+      </a>
     </tal:poll_plugin>
 
     <div class="metadata row">

@@ -21,7 +21,7 @@ class PollPlugin(object):
     def __init__(self, context):
         self.context = context
 
-    def get_vote_schema(self, request=None, api=None):
+    def get_vote_schema(self):
         """ Return the schema of how a vote should be structured.
             This is used to render a voting form.
         """
@@ -44,7 +44,7 @@ class PollPlugin(object):
         """
         raise NotImplementedError("Must be provided by subclass") # pragma : no cover
 
-    def render_result(self, request, api, complete=True):
+    def render_result(self, view):
         """ Return rendered html with result display. Called by the poll view
             when the poll has finished.
         """

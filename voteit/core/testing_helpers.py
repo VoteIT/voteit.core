@@ -122,3 +122,9 @@ def active_poll_fixture(config):
     poll.set_field_value('proposals', set([ai['prop1'].uid, ai['prop2'].uid]))
     poll.set_workflow_state(request, 'upcoming')
     return root
+
+def attach_request_method(request, helper, name):
+    """ Register as a request method, they won't be active otherwise. Only for testing!"""
+    def _wrap_request_method(*args, **kwargs):
+        return helper(request, *args, **kwargs)
+    setattr(request, name, _wrap_request_method)

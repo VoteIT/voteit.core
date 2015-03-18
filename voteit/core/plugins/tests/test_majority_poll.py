@@ -1,14 +1,18 @@
 import unittest
 
 from pyramid import testing
-from pyramid.traversal import find_interface
+from pyramid.traversal import find_interface, find_root
 from zope.interface.verify import verifyObject
 import colander
 
 from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IMeeting
+from voteit.core.models.interfaces import IPollPlugin
+from voteit.core.testing_helpers import attach_request_method
+from voteit.core.helpers import creators_info
+from voteit.core.helpers import get_userinfo_url
 
-    
+
 class MPUnitTests(unittest.TestCase):
     
     def setUp(self):
@@ -28,19 +32,13 @@ class MPUnitTests(unittest.TestCase):
         return MajorityPollPlugin( ai['poll'] )
 
     def test_verify_implementation(self):
-        from voteit.core.models.interfaces import IPollPlugin
         obj = self._make_obj()
         self.assertTrue(verifyObject(IPollPlugin, obj))
 
     def test_get_vote_schema(self):
-        #Enable workflows
-        self.config.include('pyramid_zcml')
-        self.config.load_zcml('voteit.core:configure.zcml')
+        self.config.include('voteit.core.testing_helpers.register_workflows')
         obj = self._make_obj()
-        request = testing.DummyRequest()
-        from voteit.core.views.api import APIView
-        api = APIView(self.poll, request)
-        self.assertTrue(obj.get_vote_schema(request, api), colander.Schema)
+        self.assertIsInstance(obj.get_vote_schema(), colander.Schema)
     
     def test_render_raw_data(self):
         """ Test that render_raw_data returns a Response
@@ -48,7 +46,6 @@ class MPUnitTests(unittest.TestCase):
         obj = self._make_obj()
         obj.context.ballots = "Hello world"
         result = obj.render_raw_data()
-        
         from pyramid.response import Response
         self.assertTrue(isinstance(result, Response))
         self.assertTrue(result.body, "Hello world")
@@ -70,12 +67,12 @@ class MPIntegrationTests(unittest.TestCase):
         #Register poll plugin
         self.config.include('voteit.core.plugins.majority_poll')
         # Adding catalog
-        self.config.include('voteit.core.models.catalog')
+        #self.config.include('voteit.core.models.catalog')
         self.config.include('voteit.core.models.unread')
         self.config.include('voteit.core.models.user_tags')
         #Add root
         from voteit.core.models.site import SiteRoot
-        root = SiteRoot()
+        self.root = root = SiteRoot()
         #Add users
         from voteit.core.models.users import Users
         root['users'] = users = Users()
@@ -83,7 +80,7 @@ class MPIntegrationTests(unittest.TestCase):
         users['admin'] = User()
         #Add meeting
         from voteit.core.models.meeting import Meeting
-        root['m'] = m = Meeting()
+        root['m'] = self.meeting = m = Meeting()
         #Add agenda item - needed for lookups
         from voteit.core.models.agenda_item import AgendaItem
         m['ai'] = ai = AgendaItem()
@@ -97,10 +94,10 @@ class MPIntegrationTests(unittest.TestCase):
         self.poll.set_field_value('poll_plugin', MajorityPollPlugin.name)
         #Add proposals
         from voteit.core.models.proposal import Proposal
-        p1 = Proposal(text = 'p1')
+        p1 = Proposal(text = 'p1', creators = ['admin'], aid = 'one')
         p1.uid = 'p1uid' #To make it simpler to test against
         ai['p1'] = p1
-        p2 = Proposal(text = 'p2')
+        p2 = Proposal(text = 'p2', creators = ['admin'], aid = 'two')
         p2.uid = 'p2uid' #To make it simpler to test against
         ai['p2'] = p2
         #Select proposals for this poll
@@ -154,21 +151,17 @@ class MPIntegrationTests(unittest.TestCase):
 
     def test_render_result(self):
         self.config.include('pyramid_chameleon')
-        self.config.scan('voteit.core.models.proposal')
-        self.config.scan('voteit.core.views.components.main')
-        self.config.scan('voteit.core.views.components.moderator_actions')
-        self.config.scan('voteit.core.views.components.proposals')
-        self.config.scan('voteit.core.views.components.user_tags')
-        self.config.scan('voteit.core.views.components.metadata_listing')
-        self.config.registry.settings['default_timezone_name'] = "Europe/Stockholm"
-        self.config.include('voteit.core.models.date_time_util')
-        
+        attach_request_method(self.request, creators_info, 'creators_info')
+        attach_request_method(self.request, get_userinfo_url, 'get_userinfo_url')
+        self.request.root = self.root
+        self.request.meeting = self.meeting
+        from voteit.core.views.poll import PollResultsView
         self._add_votes()
         self._close_poll()
         plugin = self.poll.get_poll_plugin()
         request = self.request
-        ai = find_interface(self.poll, IAgendaItem)
-        request.context = ai
-        from voteit.core.views.api import APIView
-        api = APIView(ai, request)
-        self.assertTrue('p2uid' in plugin.render_result(request, api))
+        request.context = self.poll
+        view = PollResultsView(self.poll, request)
+        response = view()
+        self.assertEqual(response.status, '200 OK')
+        self.assertIn('#one', response.body)

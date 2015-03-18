@@ -22,7 +22,7 @@ from voteit.core.models.schemas import button_vote
 @view_config(context = IPoll,
              name = "poll_raw_data.txt",
              permission = security.VIEW)
-class PollView(BaseView):
+class PollRawdataView(BaseView):
     """ View for all ballots. See intefaces.IPollPlugin.render_raw_data
     """
 
@@ -34,6 +34,21 @@ class PollView(BaseView):
         if self.context.get_workflow_state() != 'closed':
             raise HTTPForbidden(_("This poll is still open"))
         return poll_plugin.render_raw_data()
+
+
+@view_config(context = IPoll,
+             name = "__show_results__",
+             permission = security.VIEW)
+class PollResultsView(BaseView):
+
+    def __call__(self):
+        try:
+            poll_plugin = self.context.get_poll_plugin()
+        except ComponentLookupError:
+            raise HTTPForbidden(_("Poll plugin %r not found" % self.context.poll_plugin))
+        if self.context.get_workflow_state() != 'closed':
+            raise HTTPForbidden(_("This poll is still open"))
+        return Response(poll_plugin.render_result(self))
 
 
 @view_config(context = IPoll,
@@ -110,7 +125,7 @@ class PollVoteForm(DefaultEditForm):
         return not self.can_vote
 
     def get_schema(self):
-        return self.poll_plugin.get_vote_schema(self.request, None)
+        return self.poll_plugin.get_vote_schema()
 
     def appstruct(self):
         if self.request.authenticated_userid in self.context:

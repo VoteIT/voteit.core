@@ -550,7 +550,7 @@ class IPollPlugin(Interface):
     description = Attribute("Readable description that will appear when poll is displayed.")
 
 
-    def get_vote_schema(request=None, api=None):
+    def get_vote_schema():
         """ Return the schema of how a vote should be structured.
             This is used to render a voting form.
         """
@@ -568,7 +568,7 @@ class IPollPlugin(Interface):
         """ Handle closing of the poll.
         """
 
-    def render_result(request, api, complete=True):
+    def render_result(view):
         """ Return rendered html with result display. Called by the poll view
             when the poll has finished.
         """
