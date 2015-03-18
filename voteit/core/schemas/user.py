@@ -19,8 +19,7 @@ from voteit.core.validators import html_string_validator
 def profile_image_plugin_choices_widget(node, kw):
     context = kw['context']
     request = kw['request']
-    view = kw['view']
-    user = view.profile
+    user = request.profile
     plugin_choices = set()
     for (name, adapter) in request.registry.getAdapters((user,), IProfileImage):
         if adapter.is_valid_for_user():

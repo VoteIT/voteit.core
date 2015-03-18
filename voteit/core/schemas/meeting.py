@@ -51,15 +51,15 @@ def deferred_copy_perms_widget(node, kw):
 
 @colander.deferred
 def deferred_current_user_mail(node, kw):
-    view = kw['view']
-    if view.profile:
-        return view.profile.get_field_value('email')
+    request = kw['request']
+    if request.profile:
+        return request.profile.email
 
 @colander.deferred
 def _deferred_current_fullname(node, kw):
-    view = kw['view']
-    if view.profile:
-        return view.profile.title
+    request = kw['request']
+    if request.profile:
+        return request.profile.title
 
 
 class EditMeetingSchema(colander.Schema):

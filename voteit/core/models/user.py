@@ -38,8 +38,7 @@ class User(ArcheUser, BaseContent):
     """
     type_name = 'User'
     type_title = _(u"User")
-#    allowed_contexts = ('Users',)
-#    add_permission = security.ADD_USER
+    add_permission = security.ADD_USER
 
     __acl__ = [(Allow, security.ROLE_ADMIN, (security.EDIT, security.VIEW, security.CHANGE_PASSWORD, security.MANAGE_SERVER, security.DELETE)),
                (Allow, security.ROLE_OWNER, (security.EDIT, security.VIEW, security.CHANGE_PASSWORD,)),
@@ -53,6 +52,14 @@ class User(ArcheUser, BaseContent):
         except AttributeError:
             self.__auth_domains__ = OOBTree()
             return self.__auth_domains__
+
+    @property
+    def profile_image_plugin(self):
+        #Arche compat
+        return self.get_field_value('profile_image_plugin', '')
+    @profile_image_plugin.setter
+    def profile_image_plugin(self, value):
+        self.set_field_value('profile_image_plugin', value)
 
     def get_image_plugin(self, request):
         name = self.get_field_value('profile_image_plugin', None)
@@ -117,7 +124,15 @@ class User(ArcheUser, BaseContent):
     @email.setter
     def email(self, value):
         self.set_field_value('email', value)
-            
+
+    @property
+    def about_me(self):
+        #Arche compat
+        return self.get_field_value('about_me', '')
+    @about_me.setter
+    def about_me(self, value):
+        self.set_field_value('about_me', value)
+
     def send_mention_notification(self, context, request):
         """ Sends an email when the user is mentioned in a proposal or a discussion post
         """
