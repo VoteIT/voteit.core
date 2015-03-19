@@ -1,4 +1,4 @@
-#from betahaus.pyracont.decorators import schema_factory
+from arche.schemas import LocalDateTime
 from pyramid.traversal import find_interface
 import colander
 import deform
@@ -12,9 +12,9 @@ from voteit.core.models.interfaces import IPollPlugin
 from voteit.core.models.interfaces import IProposal
 from voteit.core.schemas.common import deferred_default_end_time
 from voteit.core.schemas.common import deferred_default_start_time
-from voteit.core.schemas.tzdatetime import TZDateTime
 from voteit.core.validators import html_string_validator
 from voteit.core.validators import richtext_validator
+
 
 @colander.deferred
 def poll_plugin_choices_widget(node, kw):
@@ -115,32 +115,23 @@ class PollSchema(colander.MappingSchema):
                                                     default=u"Only proposals in the state 'published' can be selected"),
                                     missing=set(),
                                     widget=proposal_choices_widget,)
-#FIXME: TZ aware field
-#     start_time = colander.SchemaNode(
-#          TZDateTime(),
-#          title = _(u"Start time of this poll."),
-#          description = _(u"You need to open it yourself."),
-#          widget=deform.widget.DateTimeInputWidget(options={'dateFormat': 'yy-mm-dd',
-#                                                            'timeFormat': 'hh:mm',
-#                                                            'separator': ' '}),
-#          default = deferred_default_start_time,
-#          missing = colander.null,
-#     )
-#     end_time = colander.SchemaNode(
-#          TZDateTime(),
-#          title = _(u"End time of this poll."),
-#          description = _(u"poll_end_time_description",
-#                          default = u"You need to close it yourself. A good default value is one day later."),
-#          widget=deform.widget.DateTimeInputWidget(options={'dateFormat': 'yy-mm-dd',
-#                                                            'timeFormat': 'hh:mm',
-#                                                            'separator': ' '}),
-#          default = deferred_default_end_time,
-#          missing = colander.null,
-#     )
+    start_time = colander.SchemaNode(
+         LocalDateTime(),
+         title = _(u"Start time of this poll."),
+         description = _(u"You need to open it yourself."),
+         default = deferred_default_start_time,
+         missing = colander.null,
+    )
+    end_time = colander.SchemaNode(
+         LocalDateTime(),
+         title = _(u"End time of this poll."),
+         description = _(u"poll_end_time_description",
+                         default = u"You need to close it yourself. A good default value is one day later."),
+         default = deferred_default_end_time,
+         missing = colander.null,
+    )
 
 
-#@schema_factory('AddPollSchema', title = _(u"Add poll"),
-#                description = _(u"Use this form to add a poll"))
 class AddPollSchema(PollSchema):
     add_reject_proposal = colander.SchemaNode(colander.Boolean(),
                                           title = _(u"Reject proposal"),
