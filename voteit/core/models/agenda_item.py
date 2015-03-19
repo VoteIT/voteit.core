@@ -26,10 +26,8 @@ class AgendaItem(BaseContent, WorkflowAware):
     """
     type_name = 'AgendaItem'
     type_title = _("Agenda item")
-    #allowed_contexts = ('Meeting',)
     add_permission = security.ADD_AGENDA_ITEM
     custom_mutators = {'proposal_block': '_set_proposal_block', 'discussion_block': '_set_discussion_block'}
-#    schemas = {'edit': 'EditAgendaItemSchema', 'add': 'AddAgendaItemSchema'}
 
     @property
     def __acl__(self):
@@ -50,6 +48,20 @@ class AgendaItem(BaseContent, WorkflowAware):
             perms.append((Deny, Everyone, security.ADD_DISCUSSION_POST))
         perms.extend(self.__parent__.__acl__)
         return perms
+
+    @property
+    def proposal_block(self): #Arche compat
+        return self.get_field_value('proposal_block', False)
+    @proposal_block.setter
+    def proposal_block(self, value):
+        self._set_proposal_block(value)
+
+    @property
+    def discussion_block(self): #Arche compat
+        return self.get_field_value('discussion_block', False)
+    @discussion_block.setter
+    def discussion_block(self, value):
+        self._set_discussion_block(value)
 
     def _set_proposal_block(self, value, key=None):
         isinstance(value, bool)

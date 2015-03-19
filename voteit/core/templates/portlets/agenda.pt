@@ -4,11 +4,10 @@
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
       i18n:domain="voteit.core">
 <div id="agenda-item-portlet" class="portlet">
-  <div class="panel panel-primary">
-    <div class="panel-heading">
-      <h4 i18n:translate="">Agenda</h4>
-    </div>
+  <div class="pull-right" tal:condition="request.is_moderator">
+    <a class="btn btn-primary btn-sm" href="${request.resource_url(request.meeting, 'manage_agenda')}" i18n:translate="">Manage</a>
   </div>
+  <h2 i18n:translate="">Agenda</h2>
   <div data-load-target="${load_url}">
       <span class="glyphicon glyphicon-refresh rotate-me"></span>
       Loading...
