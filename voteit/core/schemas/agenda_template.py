@@ -1,6 +1,5 @@
 from __future__ import unicode_literals
 
-from betahaus.pyracont.decorators import schema_factory
 import colander
 import deform
 
@@ -13,8 +12,6 @@ class AgendaItemSequenceSchema(colander.SequenceSchema):
     agenda_item = AgendaItemSchema(title=_(u'Agenda item'))
 
 
-# @schema_factory('AgendaTemplateSchema',
-#                 title = _(u"Agenda template"))
 class AgendaTemplateSchema(colander.Schema):
     title = colander.SchemaNode(
         colander.String(),

@@ -4,7 +4,7 @@ from zope.interface import implementer
 from pyramid.security import Allow
 from pyramid.security import DENY_ALL
 
-from voteit.core import VoteITMF as _
+from voteit.core import _
 from voteit.core import security
 from voteit.core.helpers import generate_slug
 from voteit.core.models.arche_compat import createContent
@@ -12,7 +12,6 @@ from voteit.core.models.base_content import BaseContent
 from voteit.core.models.interfaces import IAgendaTemplate
 
 
-#@content_factory('AgendaTemplate', title=_(u"Agenda template"))
 @implementer(IAgendaTemplate)
 class AgendaTemplate(BaseContent):
     """ Agenda template content type.
