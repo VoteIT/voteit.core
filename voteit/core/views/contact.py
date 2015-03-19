@@ -20,6 +20,9 @@
 # from voteit.core.security import find_role_userids
 # from voteit.core.views.base_edit import BaseForm
 # 
+
+
+# FIXME: REFACTOR THIS
 # 
 # @view_config(name = 'contact',
 #              context = IMeeting,

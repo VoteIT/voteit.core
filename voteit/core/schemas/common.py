@@ -2,17 +2,13 @@ from datetime import timedelta
 from uuid import uuid4
 import re
 
-from betahaus.pyracont.decorators import schema_factory
 from pyramid.testing import DummyRequest
 from pyramid.traversal import find_root
-from pyramid.traversal import resource_path
 from pyramid.traversal import find_resource
 import colander
 import deform
 
-from voteit.core import VoteITMF as _
-from voteit.core.models.interfaces import IAgendaItem
-from voteit.core.validators import deferred_csrf_token_validator
+from voteit.core import _
 
 
 NAME_PATTERN = re.compile(r'^[\w\s]{3,100}$', flags=re.UNICODE)
@@ -91,25 +87,6 @@ def strip_and_lowercase(value):
     if not isinstance(value, basestring):
         return value
     return "\n".join([x.strip().lower() for x in value.splitlines()])
-
-def add_csrf_token(context, request, schema):
-    """ Append csrf-token to schema, if it isn't added by a testing script. """
-    #Make sure this is not a blank testing request
-    if isinstance(request, DummyRequest) and request.session.get_csrf_token() == 'csrft':
-        return
-    schema.add(colander.SchemaNode(
-                   colander.String(),
-                   name="csrf_token",
-                   widget = deform.widget.HiddenWidget(),
-                   default = deferred_default_csrf_token,
-                   validator = deferred_csrf_token_validator,
-                   )
-               )
-
-@colander.deferred
-def deferred_default_csrf_token(node, kw):
-    request = kw['request']
-    return request.session.get_csrf_token()
 
 @colander.deferred
 def deferred_autocompleting_userid_widget(node, kw):

@@ -1,7 +1,6 @@
 from betahaus.viewcomponent import view_action
 from pyramid.renderers import render
 from pyramid.traversal import resource_path
-from pyramid.view import view_config
 from repoze.catalog.query import Eq
 
 from voteit.core.security import MANAGE_SERVER
@@ -9,9 +8,7 @@ from voteit.core.security import MODERATE_MEETING
 from voteit.core.security import VIEW
 from voteit.core.security import MANAGE_GROUPS
 from voteit.core import VoteITMF as _
-from voteit.core.views.base_view import BaseView
 from voteit.core.models.interfaces import IAccessPolicy
-from voteit.core.models.interfaces import IMeeting
 
 
 MODERATOR_SECTIONS = ('ongoing', 'upcoming', 'closed', 'private',)
@@ -109,22 +106,22 @@ def configure_access_policy_menu_link(context, request, va, **kw):
         return """<li class="list-group-item"><a href="%s">%s</a></li>""" % (url, request.localizer.translate(va.title))
 
 
-class MeetingActionsMenuBody(BaseView):
-    
-    @view_config(name="meeting_poll_menu", context=IMeeting, renderer="templates/polls/polls_menu_body.pt", permission=VIEW)
-    def meeting_poll_menu(self):
-        if self.api.show_moderator_actions:
-            sections = MODERATOR_SECTIONS
-        else:
-            sections = REGULAR_SECTIONS
-        meeting_path = resource_path(self.api.meeting)
-        results = {}
-        for section in sections:
-            #Note, as long as we don't query for private wf state, we don't have to check perms
-            num, docids = self.api.search_catalog(content_type = 'Poll',
-                                                  path = meeting_path,
-                                                  workflow_state = section)
-            results[section] = [self.api.resolve_catalog_docid(x) for x in docids]
-        self.response['sections'] = sections
-        self.response['results'] = results
-        return self.response
+# class MeetingActionsMenuBody(BaseView):
+#     
+#     @view_config(name="meeting_poll_menu", context=IMeeting, renderer="templates/polls/polls_menu_body.pt", permission=VIEW)
+#     def meeting_poll_menu(self):
+#         if self.api.show_moderator_actions:
+#             sections = MODERATOR_SECTIONS
+#         else:
+#             sections = REGULAR_SECTIONS
+#         meeting_path = resource_path(self.api.meeting)
+#         results = {}
+#         for section in sections:
+#             #Note, as long as we don't query for private wf state, we don't have to check perms
+#             num, docids = self.api.search_catalog(content_type = 'Poll',
+#                                                   path = meeting_path,
+#                                                   workflow_state = section)
+#             results[section] = [self.api.resolve_catalog_docid(x) for x in docids]
+#         self.response['sections'] = sections
+#         self.response['results'] = results
+#         return self.response

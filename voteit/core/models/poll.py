@@ -194,19 +194,6 @@ class Poll(BaseContent, WorkflowAware):
                 default=u"Poll closed. Proposals might have been adjusted as approved or denied depending on outcome of the poll.")
         fm.add(msg)
 
-    def render_poll_result(self, request, api, complete=True):
-        """ Render poll result. Calls plugin to calculate result.
-            FIXME: Remove this
-        """
-        try:
-            poll_plugin = self.get_poll_plugin()
-            return poll_plugin.render_result(request, api, complete)
-        except Exception, exc: # pragma : no cover
-            if request.registry.settings.get('pyramid.debug_templates', False):
-                raise exc
-            return _(u"broken_plugin_error",
-                     default = u"Broken poll plugin. Can't display result. Turn on debug_templates to see the error.")
-
     def get_proposal_by_uid(self, uid):
         for prop in self.get_proposal_objects():
             if prop.uid == uid:

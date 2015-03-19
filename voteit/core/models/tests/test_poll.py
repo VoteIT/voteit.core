@@ -280,23 +280,6 @@ class PollTests(unittest.TestCase):
         request = testing.DummyRequest()
         self.assertRaises(HTTPForbidden, poll.set_workflow_state, request, 'ongoing')
 
-    def test_render_poll_result(self):
-        #note: This shouldn't test the template since that's covered by each plugin
-        request = testing.DummyRequest()
-        poll = self._cut()
-        _marker = object()
-
-        from voteit.core.views.api import APIView
-        api = APIView(poll, request)
-
-        class _MockPollPlugin(PollPlugin):
-            def render_result(self, request, api, complete=True):
-                return _marker
-
-        self.config.registry.registerAdapter(_MockPollPlugin, (IPoll,), IPollPlugin, 'mock_poll_plugin')
-        poll.set_field_value('poll_plugin', 'mock_poll_plugin')
-        self.assertEqual(poll.render_poll_result(request, api), _marker)
-
     def test_get_proposal_by_uid(self):
         agenda_item = self._agenda_item_with_proposals_fixture()
         uid = agenda_item['prop1'].uid

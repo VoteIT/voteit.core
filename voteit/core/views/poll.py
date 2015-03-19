@@ -1,6 +1,6 @@
 from arche.utils import generate_slug
-from arche.views.base import DefaultAddForm
 from arche.views.base import BaseView
+from arche.views.base import DefaultAddForm
 from arche.views.base import DefaultEditForm
 from pyramid.httpexceptions import HTTPForbidden
 from pyramid.httpexceptions import HTTPFound
@@ -8,6 +8,7 @@ from pyramid.renderers import render
 from pyramid.response import Response
 from pyramid.view import view_config
 from zope.interface.interfaces import ComponentLookupError
+import deform
 
 from voteit.core import VoteITMF as _
 from voteit.core import security
@@ -16,7 +17,6 @@ from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IPollPlugin
 from voteit.core.models.interfaces import IVote
-from voteit.core.models.schemas import button_vote
 
 
 @view_config(context = IPoll,
@@ -105,7 +105,7 @@ class PollVoteForm(DefaultEditForm):
     def buttons(self):
         buttons = [self.button_cancel]
         if self.can_vote:
-            buttons.insert(0, button_vote)
+            buttons.insert(0, deform.Button('vote', _(u"add_vote_button", default=u"Vote")))
         return buttons
 
     @property

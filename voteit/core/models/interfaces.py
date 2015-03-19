@@ -320,10 +320,6 @@ class IPoll(IBaseFolder):
         """ Returns userids of all who've voted in this poll.
         """
 
-    def render_poll_result(request, api, complete):
-        """ Render poll result. Delegates this to plugin.
-        """
-
     def close_poll():
         """ Close the poll, calculate and store the result.
         """
@@ -350,6 +346,8 @@ class IPoll(IBaseFolder):
     def get_proposal_by_uid(uid):
         """ Return a proposal by its uid. Raises KeyError if it isn't found, since
             it shouldn't be used with uids that don't exist.
+            
+            This method will probably be removed in the future and replaced by a catalog search.
         """
 
 

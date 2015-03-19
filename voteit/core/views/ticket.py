@@ -1,23 +1,20 @@
-import deform
+from arche.views.base import BaseForm
+from arche.views.base import BaseView
+from arche.views.base import button_add
+from arche.views.base import button_cancel
+from betahaus.pyracont.factories import createSchema
+from pyramid.httpexceptions import HTTPForbidden
+from pyramid.httpexceptions import HTTPFound
 from pyramid.security import NO_PERMISSION_REQUIRED
 from pyramid.view import view_config
 from pyramid.view import view_defaults
-from pyramid.httpexceptions import HTTPFound
-from pyramid.httpexceptions import HTTPForbidden
-from betahaus.pyracont.factories import createSchema
-from arche.views.base import BaseForm
-from arche.views.base import BaseView
+import deform
 
+from voteit.core import _
 from voteit.core import security
-from voteit.core import VoteITMF as _
-from voteit.core.models.interfaces import IMeeting
-from voteit.core.models.schemas import add_csrf_token
-from voteit.core.models.schemas import button_add
-from voteit.core.models.schemas import button_cancel
-from voteit.core.models.schemas import button_resend
-from voteit.core.models.schemas import button_delete
-from voteit.core.validators import deferred_token_form_validator
 from voteit.core.fanstaticlib import voteit_manage_tickets_js
+from voteit.core.models.interfaces import IMeeting
+from voteit.core.validators import deferred_token_form_validator
 
 
 @view_defaults(context = IMeeting)
@@ -41,7 +38,7 @@ class TicketView(BaseView):
             raise HTTPForbidden("Direct access to this view for unauthorized users not allowed.")
         schema = createSchema('ClaimTicketSchema', validator = deferred_token_form_validator)
         schema = schema.bind(context=self.context, request=self.request)
-        form = deform.Form(schema, buttons=(button_add, button_cancel))
+        form = deform.Form(schema, buttons = (button_add, button_cancel,))
         if self.request.GET.get('claim'):
             controls = self.request.params.items()
             try:

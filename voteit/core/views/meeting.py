@@ -10,13 +10,12 @@ from pyramid.view import view_config
 from pyramid.view import view_defaults
 from repoze.catalog.query import Eq
 from zope.interface.interfaces import ComponentLookupError
+import deform
 
 from voteit.core import security
 from voteit.core import VoteITMF as _
 from voteit.core.models.interfaces import IAccessPolicy
 from voteit.core.models.interfaces import IMeeting
-from voteit.core.models.schemas import button_request_access
-from voteit.core.models.schemas import button_cancel
 from voteit.core.views.base_edit import ArcheFormCompat
 
 
@@ -159,8 +158,11 @@ class RequestAccessForm(ArcheFormCompat, DefaultEditForm):
         don't have access.
         This is controled via access policies. See IAccessPolicy
     """
-    buttons = (button_request_access, button_cancel,)
     title = ""
+
+    @property
+    def buttons(self):
+        return (deform.Button('request_access', _(u"Request access")), self.button_cancel,)
 
     def appstruct(self):
         return {}

@@ -226,10 +226,8 @@ class NotOnlyDefaultTextValidatorTests(TestCase):
         return NotOnlyDefaultTextValidator
 
     def _mk_one(self, context = testing.DummyModel(), default_deferred = _dummy_default_deferred):
-        from voteit.core.views.api import APIView
         request = testing.DummyRequest()
-        api = APIView(context, request)
-        return self._cut(context, api, default_deferred)
+        return self._cut(context, request, default_deferred)
 
 #FIXME: Make a test with translations as well? Right now we're only testing EN
 
