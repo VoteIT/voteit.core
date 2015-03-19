@@ -35,6 +35,9 @@ class BaseContent(BaseFolder, BaseMixin, LocalRolesMixin):
     search_visible = True
 
     def __init__(self, data=None, **kwargs):
+        if 'creator' in kwargs and 'creators' not in kwargs:
+            #Arche compat hack
+            kwargs['creators'] = kwargs.pop('creator')
         if 'creators' not in kwargs:
             request = get_current_request()
             if request is None:

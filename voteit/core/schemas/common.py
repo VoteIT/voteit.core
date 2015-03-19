@@ -2,9 +2,9 @@ from datetime import timedelta
 from uuid import uuid4
 import re
 
-from pyramid.testing import DummyRequest
-from pyramid.traversal import find_root
 from pyramid.traversal import find_resource
+from pyramid.traversal import find_root
+from six import string_types
 import colander
 import deform
 
@@ -36,27 +36,24 @@ def deferred_default_end_time(node, kw):
 @colander.deferred
 def deferred_default_user_fullname(node, kw):
     """ Return users fullname, if the user exist. """
-    api = kw['api']
-    user = api.get_user(api.userid)
-    if user:
-        return user.title
-    return u''
+    request = kw['request']
+    if request.profile:
+        return request.profile.title
+    return ''
 
 @colander.deferred
 def deferred_default_user_email(node, kw):
     """ Return users email, if the user exist. """
-    api = kw['api']
-    user = api.get_user(api.userid)
-    if user:
-        return user.get_field_value('email')
-    return u''
+    request = kw['request']
+    if request.profile:
+        return request.profile.email
+    return ''
 
 @colander.deferred
 def deferred_default_hashtag_text(node, kw):
     """ If this is a reply to something else, the default value will
         contain the userid of the original poster + any hashtags used.
     """
-    context = kw['context']
     request = kw['request']
     output = u""
     tags = []
@@ -78,7 +75,7 @@ def deferred_default_hashtag_text(node, kw):
 
 def strip_whitespace(value):
     """ Used as preparer - strips whitespace from the end of rows. """
-    if not isinstance(value, basestring):
+    if not isinstance(value, string_types):
         return value
     return "\n".join([x.strip() for x in value.splitlines()])
 
