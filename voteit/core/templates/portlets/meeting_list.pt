@@ -28,7 +28,14 @@
             <a href="${request.resource_url(obj)}">
               <span>${obj.title}</span>
               <span class="clearfix">
-                <tal:ts i18n:translate="">Started</tal:ts>: ${request.dt_handler.format_dt(obj.start_time, parts = 'd')|''}
+                <tal:started condition="state == 'ongoing'" i18n:translate="">
+                  Started:
+                  <tal:date i18n:name="date" content="request.dt_handler.format_dt(obj.start_time, parts = 'd')|''" />
+                </tal:started>
+                <tal:started condition="state == 'closed'" i18n:translate="">
+                  Closed:
+                  <tal:date i18n:name="date" content="request.dt_handler.format_dt(obj.end_time, parts = 'd')|''" />
+                </tal:started>
               </span>
             </a>
           </li>
