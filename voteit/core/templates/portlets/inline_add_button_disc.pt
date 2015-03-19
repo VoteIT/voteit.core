@@ -5,8 +5,10 @@
     <a tal:condition="can_add"
       data-clickable-target=""
       href="${request.resource_url(context, 'add', query = {'content_type': 'DiscussionPost', 'tag': request.GET.getall('tag')})}"
-      class="btn btn-primary"
-      i18n:translate="">Add Discussion post</a>
+      class="btn btn-primary">
+      <span data-actionmarker="glyphicon glyphicon-refresh rotate-me"></span>
+      <span i18n:translate="">Add Discussion post</span>
+    </a>
     <tal:cant_add condition="not can_add">
       <span i18n:translate="">You lack the required permission</span>
     </tal:cant_add>

@@ -36,12 +36,17 @@ voteit.external_popover_from_event = external_popover_from_event;
 function load_and_replace(event) {
   event.preventDefault();
   var elem = $(event.currentTarget);
+  arche.actionmarker_feedback(elem, true);
   var url = elem.attr('href');
   var request = arche.do_request(url);
+  
   request.done(function(response) {
     elem.parent().html(response);
   });
   request.fail(arche.flash_error);
+  request.always(function() {
+    arche.actionmarker_feedback(elem, false);
+  })
 }
 voteit.load_and_replace = load_and_replace;
 

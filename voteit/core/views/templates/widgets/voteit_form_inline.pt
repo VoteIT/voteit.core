@@ -59,6 +59,7 @@
                       class="btn ${btn_disposition} ${button.css_class}"
                       value="${button.value}">
                   <i tal:condition="btn_icon" class="${btn_icon}"> </i>
+                  <span data-actionmarker="glyphicon glyphicon-refresh rotate-me"></span>
                   ${button.title}
                 </button>
               </tal:loop>
@@ -76,6 +77,11 @@
          success: function() {
            deform.processCallbacks();
            deform.focusFirstInput(target);
+         },
+         beforeSubmit: function(arr, $form, options) {
+           $form.find('[name="' + $(arr[arr.length-1]).attr('name') + '"]').each(function() {
+             arche.actionmarker_feedback($(this), true);
+           })
          },
          beforeSerialize: function() { 
            // See http://bit.ly/1agBs9Z (hack to fix tinymce-related ajax bug)
