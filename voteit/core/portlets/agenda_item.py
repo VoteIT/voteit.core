@@ -181,13 +181,13 @@ class StrippedInlineAddForm(DefaultAddForm):
 
 
 class ProposalAddForm(StrippedInlineAddForm):
-    response_template = 'voteit.core:templates/portlets/inline_add_button_disc.pt'
+    response_template = 'voteit.core:templates/portlets/inline_add_button_prop.pt'
     formid = 'proposal_inline_add'
     update_selector = '#ai-proposals'
 
 
 class DiscussionAddForm(StrippedInlineAddForm):
-    response_template = 'voteit.core:templates/portlets/inline_add_button_prop.pt'
+    response_template = 'voteit.core:templates/portlets/inline_add_button_disc.pt'
     formid = 'discussion_inline_add'
     update_selector = '#ai-discussions'
 
