@@ -69,7 +69,6 @@ def bootstrap_and_fixture(config):
     config.include('voteit.core.models.user')
     config.include('voteit.core.models.users')
     config.include('voteit.core.models.fanstatic_resources')
-    #config.scan('betahaus.pyracont.fields.password')
     return bootstrap_voteit(echo=False)
 
 def register_security_policies(config):
@@ -83,12 +82,10 @@ def register_catalog(config):
     """ Register minimal components needed to enable the catalog in testing.
         Include arche components first.
     """
+    config.include('arche.models.catalog')
     config.include('voteit.core.models.catalog')
     config.include('voteit.core.models.unread')
     config.include('voteit.core.models.user_tags')
-    config.scan('voteit.core.subscribers.catalog')
-    #Without order, sorting in that index will remove content rather than show it. Very weird.
-    config.scan('voteit.core.subscribers.agenda_item')
 
 def active_poll_fixture(config):
     """ This method sets up a site the way it will be when a poll is ready to start
