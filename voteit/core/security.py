@@ -159,7 +159,6 @@ def context_effective_principals(context, userid):
     
     effective_principals.append(Authenticated)
     effective_principals.append(userid)
-
     request = get_current_request()
     with authz_context(context, request):
         effective_principals.extend(groupfinder(userid, request))

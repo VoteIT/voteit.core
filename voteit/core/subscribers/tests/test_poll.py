@@ -69,18 +69,21 @@ class PollTests(unittest.TestCase):
         self.assertEqual(ai['prop2'].get_workflow_state(), 'published')
 
     def test_ongoing_saves_voters(self):
+        self.config.include('arche.testing')
+        self.config.include('voteit.core.models.meeting')
         root = _voters_fixture(self.config)
         self.config.include('arche.testing.setup_auth')
         self.config.scan('voteit.core.subscribers.poll')
+        self.config.include('voteit.core.security')
         poll = root['meeting']['ai']['poll']
-        #Probably need to rewqrite these tests and fix the security functions
-        raise Exception()
         security.unrestricted_wf_transition_to(poll, 'ongoing')
         self.assertEqual(poll.get_field_value('voters_mark_ongoing'), frozenset(['alice', 'ben', 'celine', 'admin']))
 
     def test_closed_saves_voters(self):
         self.config.include('voteit.core.plugins.majority_poll')
         root = _voters_fixture(self.config)
+        self.config.include('arche.testing.setup_auth')
+        self.config.include('voteit.core.security')
         root['meeting'].del_groups('admin', [security.ROLE_VOTER])
         poll = root['meeting']['ai']['poll']
         poll.set_field_value('poll_plugin', 'majority_poll')
