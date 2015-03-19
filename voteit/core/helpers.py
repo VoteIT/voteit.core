@@ -63,7 +63,7 @@ def tags2links(text):
         tag = matched_dict['tag']
         pre = matched_dict['pre']
         url = u"?%s" % urlencode({'tag': tag.encode('utf-8')})
-        return u"""%s<a href="%s" class="tag">#%s</a>""" % (pre, url, tag)
+        return u"""%(pre)s<a href="%(url)s" data-set-tag-filter="%(tag)s" class="tag">#%(tag)s</a>""" % {'pre': pre, 'url': url, 'tag': tag}
     return re.sub(TAG_PATTERN, handle_match, text)
 
 def strip_and_truncate(text, limit=200, symbol = '<span class="trunc">&hellip;</span>'):

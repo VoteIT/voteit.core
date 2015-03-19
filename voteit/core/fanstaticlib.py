@@ -20,6 +20,7 @@ voteit_core_jslib = Library('voteit_js', 'js')
 voteit_core_csslib = Library('voteit_css', 'css')
 
 data_loader = Resource(voteit_core_jslib, 'data_loader.js', depends = (jquery, pure_js, common_js))
+agenda_item_js = Resource(voteit_core_jslib, 'agenda_item.js', depends = (jquery, common_js, data_loader))
 
 #voteit_bootstrap = Resource(voteit_core_csslib, 'voteit_bootstrap.css')
 voteit_main_css = Resource(voteit_core_csslib, 'main.css', depends=(bootstrap_css, main_css))

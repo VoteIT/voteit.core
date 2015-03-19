@@ -16,12 +16,14 @@ from voteit.core.models.interfaces import IAgendaItem
 #from voteit.core.models.schemas import button_add
 #from voteit.core.security import MODERATE_MEETING
 from voteit.core import security
+from voteit.core.fanstaticlib import agenda_item_js
 #from voteit.core.views.base_view import BaseView
 
 
 class AgendaItemView(BaseView):
 
     def __call__(self):
+        agenda_item_js.need()
         return {}
 
 
