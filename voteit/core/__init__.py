@@ -1,12 +1,11 @@
 import logging
 
+from arche import root_factory
 from pyramid.authentication import AuthTktAuthenticationPolicy
 from pyramid.authorization import ACLAuthorizationPolicy
 from pyramid.config import Configurator
 from pyramid.i18n import TranslationStringFactory
-from pyramid.session import UnencryptedCookieSessionFactoryConfig
 from pyramid_zodbconn import get_connection
-from arche import root_factory
 
 
 log = logging.getLogger(__name__)
@@ -16,8 +15,6 @@ log = logging.getLogger(__name__)
 PROJECTNAME = 'voteit.core'
 _ = VoteITMF = TranslationStringFactory(PROJECTNAME)
 DEFAULT_SETTINGS = {
-    'default_locale_name': 'en',
-    'default_timezone_name': 'UTC',
     'voteit.gravatar_default': 'mm',
     'voteit.default_profile_picture': '/static/images/default_user.png',
     'pyramid_deform.template_search_path': 'voteit.core:views/templates/widgets arche:templates/deform',
@@ -36,7 +33,7 @@ def main(global_config, **settings):
 
 def default_configurator(settings):
     from arche.security import groupfinder
-    #from voteit.core.security import groupfinder
+    from arche import read_salt
     authn_policy = AuthTktAuthenticationPolicy(hashalg='sha512',
                                                secret = read_salt(settings),
                                                callback = groupfinder)
@@ -45,33 +42,6 @@ def default_configurator(settings):
                         authentication_policy=authn_policy,
                         authorization_policy=authz_policy,
                         root_factory=root_factory,)
-
-def read_salt(settings):
-    """ Read salt file or create a new one if salt_file is specified in the settings. """
-    from uuid import uuid4
-    from os.path import isfile
-    filename = settings.get('salt_file', None)
-    if filename is None:
-        print "\nUsing random salt which means that all users must reauthenticate on restart."
-        print "Please specify a salt file by adding the parameter:\n"
-        print "salt_file = <path to file>\n"
-        print "in paster ini config and add the salt as the sole contents of the file.\n"
-        return str(uuid4())
-    if not isfile(filename):
-        print "\nCan't find salt file specified in paster ini. Trying to create one..."
-        f = open(filename, 'w')
-        salt = str(uuid4())
-        f.write(salt)
-        f.close()
-        print "Wrote new salt in: %s" % filename
-        return salt
-    else:
-        f = open(filename, 'r')
-        salt = f.read()
-        if not salt:
-            raise ValueError("Salt file is empty - it needs to contain at least some text. File: %s" % filename)
-        f.close()
-        return salt
 
 def required_components(config):
     config.include(check_required_settings)
@@ -109,13 +79,10 @@ def required_components(config):
     config.add_translation_dirs('%s:locale/' % PROJECTNAME,)
     #Include all subcomponents
     #config.scan('voteit.core.subscribers.post_config_addons')
-    config.include(adjust_default_view_component_order)
     from voteit.core.security import VIEW
     config.set_default_permission(VIEW)    
     config.include(register_plugins)
-    config.include(register_dynamic_fanstatic_resources)
     config.include(check_required_components)
-    config.include(adjust_view_component_order)
 
 def register_plugins(config):
     """ Register any plugins specified in paster .init file.
@@ -187,35 +154,6 @@ def check_required_components(config):
 #         manager.set_db_version(VERSION)
 #         manager.transaction.commit()
 #         return zodb_root['app_root']
-
-def adjust_view_component_order(config):
-    """ Set the default order of view components. """
-    return
-#     from betahaus.viewcomponent.interfaces import IViewGroup
-#     prefix = "vieworder."
-#     lprefix = len(prefix)
-#     for (k, v) in config.registry.settings.items():
-#         if k.startswith(prefix):
-#             name = k[lprefix:]
-#             util = config.registry.getUtility(IViewGroup, name = name)
-#             util.order = v.strip().splitlines()
-
-def adjust_default_view_component_order(config):
-    """ Adjust component order if something is specified in the paster.ini file. """
-    return
-#     from betahaus.viewcomponent.interfaces import IViewGroup
-#     from voteit.core.view_component_order import DEFAULT_VC_ORDER
-#     for (name, items) in DEFAULT_VC_ORDER:
-#         util = config.registry.getUtility(IViewGroup, name = name)
-#         util.order = items
-
-def register_dynamic_fanstatic_resources(config):
-    return
-#     from voteit.core.models.interfaces import IFanstaticResources
-#     from voteit.core.fanstaticlib import DEFAULT_FANSTATIC_RESOURCES
-#     util = config.registry.getUtility(IFanstaticResources)
-#     for res in DEFAULT_FANSTATIC_RESOURCES:
-#         util.add(*res)
 
 def includeme(config):
     """ Called when voteit.core is used as a component of another application.
