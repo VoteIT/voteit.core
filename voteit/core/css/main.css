@@ -286,4 +286,9 @@ $brand-danger:          #d9534f !default;
 .primary-tag {
   font-weight: bold; }
 
+.list-group-item.active a {
+  color: #fff; }
+  .list-group-item.active a:hover {
+    color: #fff; }
+
 /*# sourceMappingURL=main.css.map */

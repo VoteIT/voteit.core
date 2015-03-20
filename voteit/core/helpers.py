@@ -12,7 +12,7 @@ from arche.utils import generate_slug #API
 
 from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IMeeting
-from voteit.core.security import MODERATE_MEETING
+from voteit.core import security
 
 
 ajax_options = """
@@ -131,7 +131,7 @@ def get_userinfo_url(request, userid):
     return request.resource_url(request.meeting, '__userinfo__', userid)
 
 def is_moderator(request):
-    return request.has_permission(MODERATE_MEETING, request.meeting)
+    return request.has_permission(security.MODERATE_MEETING, request.meeting)
 
 def get_wf_state_titles(request, iface, type_name):
     wf = get_workflow(iface, type_name)
@@ -156,6 +156,12 @@ def get_at_userids(text):
         userid = userid.lower()
         results.add(userid)
     return results
+
+def get_meeting_participants(meeting):
+    """ Return all userids who're part of this meeting.
+        This should be cached later on.
+    """
+    return security.find_authorized_userids(meeting, [security.VIEW])
 
 def includeme(config):
     config.add_request_method(callable = transform_text, name = 'transform_text')

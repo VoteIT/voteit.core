@@ -9,7 +9,6 @@ from pyramid.security import Everyone
 from pyramid.threadlocal import get_current_request
 from pyramid.threadlocal import get_current_registry
 from pyramid.traversal import find_root
-from zope.component import getUtility
 from zope.component.event import objectEventNotify
 
 from voteit.core.events import WorkflowStateChange
@@ -137,7 +136,6 @@ def find_authorized_userids(context, permissions):
     authz_pol = registry.getUtility(IAuthorizationPolicy)
     root = find_root(context)
     allowed_userids = set()
-    
     for userid in root.users.keys():
         principals = context_effective_principals(context, userid)
         res = [authz_pol.permits(context, principals, perm) for perm in permissions]

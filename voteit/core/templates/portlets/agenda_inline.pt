@@ -9,21 +9,28 @@
         <span class="glyphicon glyphicon-${state}"></span>
         ${state_titles[state]}
       </h4>
-    </div>
+    </div>    
+    
     <ul class="list-group">
-      <li class="list-group-item" tal:repeat="brain view.get_ais(state)">
-        <tal:cog condition="request.is_moderator"
-          replace="structure view.render_template('voteit.core:views/templates/snippets/cogwheel.pt', url = request.resource_url(meeting, brain['__name__'], '__cogwheel_menu__'))" />
-        <a href="${request.resource_url(meeting, brain['__name__'])}">
-          <span>${brain['title']}</span>
-          <span class="clearfix">
-            <span class="glyphicon glyphicon-exclamation-sign"></span>
-            <span>${brain['proposal_count']}</span>
-            <span class="glyphicon glyphicon-comment"></span>
-            <span>${brain['discussion_count']}</span>
-          </span>
-        </a>
+      <tal:iterate tal:repeat="meta view.get_ais(state)">
+      <tal:def define="context_path '%s/%s' % (meeting_path, meta['__name__'])">
+      <li class="list-group-item ${view.in_current_context(context_path) and 'active' or None}">
+          <tal:cog condition="request.is_moderator"
+            replace="structure view.render_template('voteit.core:views/templates/snippets/cogwheel.pt', url =  '%s/__cogwheel_menu__' % context_path)" />
+          <a href="${context_path}">
+            <span>${meta['title']}</span>
+            <span class="clearfix">
+              <span class="glyphicon glyphicon-exclamation-sign"></span>
+              <span>${meta['proposal_count']}</span>
+              <span tal:condition="meta['unread_proposal']" class="badge">${meta['unread_proposal']}</span>
+              <span class="glyphicon glyphicon-comment"></span>
+              <span>${meta['discussion_count']}</span>
+              <span tal:condition="meta['unread_discussionpost']" class="badge">${meta['unread_discussionpost']}</span>
+            </span>
+          </a>
       </li>
+      </tal:def>
+      </tal:iterate>
     </ul>
   </div>
 </tal:main>
