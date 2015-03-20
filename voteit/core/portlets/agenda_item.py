@@ -87,7 +87,9 @@ class ProposalsInline(BaseView):
             #This is a safegard against user errors
             query &= Any('tags', (tag, ))
         response = {}
-        response['contents'] = self.catalog_query(query, resolve = True, sort_index = 'created')
+        response['docids'] = tuple(self.catalog_query(query, sort_index = 'created'))
+        response['unread_docids'] = tuple(self.catalog_query(query & Eq('unread', self.request.authenticated_userid), sort_index = 'created'))
+        response['contents'] = self.resolve_docids(response['docids'])
         return response
 
 
@@ -102,7 +104,9 @@ class DiscussionsInline(BaseView):
         if tag:
             query['tags'] = tag
         response = {}
-        response['contents'] = self.catalog_search(resolve = True, **query)
+        response['docids'] = tuple(self.catalog_search(**query))
+        response['unread_docids'] = tuple(self.catalog_search(unread = self.request.authenticated_userid, **query))
+        response['contents'] = self.resolve_docids(response['docids'])
         return response
 
 

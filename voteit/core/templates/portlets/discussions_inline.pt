@@ -3,8 +3,10 @@
       xmlns:tal="http://xml.zope.org/namespaces/tal"
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
       i18n:domain="voteit.core">
-<tal:iterate repeat="obj contents">
-  <div class="list-group-item">
+<tal:iterate repeat="docid docids">
+  <tal:def define="obj contents.next();
+                   is_unread docid in unread_docids;">
+  <div class="list-group-item" data-uid="${obj.uid}" data-unread="${is_unread and 'true' or 'false'}">
     <div class="text">
       <tal:cog condition="request.is_moderator" replace="structure view.render_template('voteit.core:views/templates/snippets/cogwheel.pt', context = obj)" />
       <tal:creator replace="structure request.creators_info(obj.creators)"></tal:creator>
@@ -21,5 +23,9 @@
       <tal:meta replace="structure view.render_view_group('metadata_listing', obj)"></tal:meta>
     </div>
   </div>
+  </tal:def>
 </tal:iterate>
+<script type="text/javascript">
+  voteit.unread_notify("${request.resource_url(context, '_mark_read')}");
+</script>
 </tal:main>
