@@ -4,6 +4,7 @@ from pyramid import testing
 from pyramid.session import UnencryptedCookieSessionFactoryConfig
 from zope.interface.verify import verifyClass
 from zope.interface.verify import verifyObject
+import transaction
 
 from voteit.core.models.interfaces import IFlashMessages
 
@@ -35,10 +36,11 @@ class FlashMessagesTests(unittest.TestCase):
     def test_add(self):
         request = self._dummy_request()
         obj = self._cut(request)
+        transaction.begin()
         obj.add("Message")
-        res = [x for x in request.session.pop_flash()]
+        transaction.commit()
+        res = tuple(request.session.pop_flash())
         self.assertEqual(len(res), 1)
-        self.assertEqual(res[0]['msg'], "Message")
 
     def test_get_messages(self):
         request = self._dummy_request()

@@ -68,7 +68,7 @@ class Tags2linksTests(unittest.TestCase):
 
     def test_simple(self):
         value = self._fut("#hello world!")
-        self.assertEqual('<a href="?tag=hello" class="tag">#hello</a> world!', value)
+        self.assertIn('href="?tag=hello"', value)
 
     def test_non_ascii(self):
         value = self._fut('#åäöÅÄÖ')
@@ -76,8 +76,8 @@ class Tags2linksTests(unittest.TestCase):
 
     def test_several_tags_and_br(self):
         value = self._fut(u"Men #hörni, visst vore det väl trevligt med en #öl?")
-        self.assertIn('Men <a href="?tag=h%C3%B6rni" class="tag">#h\xf6rni</a>,', value)
-        self.assertIn('en <a href="?tag=%C3%B6l" class="tag">#\xf6l</a>?', value)
+        self.assertIn('href="?tag=h%C3%B6rni"', value)
+        self.assertIn('href="?tag=%C3%B6l" ', value)
 
     def test_existing_tags_not_touched(self):
         value = self._fut('<a>#tag</a>')
