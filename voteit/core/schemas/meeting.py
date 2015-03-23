@@ -1,16 +1,13 @@
 # -*- coding: utf-8 -*-
-
 import colander
 import deform
-from betahaus.pyracont.decorators import schema_factory
 from repoze.workflow import get_workflow
 
 from voteit.core import VoteITMF as _
 from voteit.core import security 
-from voteit.core.models.arche_compat import createContent
-from voteit.core.models.interfaces import IAccessPolicy, IProposal
+from voteit.core.models.interfaces import IAccessPolicy
 from voteit.core.models.interfaces import IPollPlugin
-from voteit.core.models.meeting import Meeting
+from voteit.core.models.interfaces import IProposal
 from voteit.core.schemas.common import NAME_PATTERN
 from voteit.core.validators import html_string_validator
 from voteit.core.validators import richtext_validator
@@ -19,25 +16,16 @@ from voteit.core.validators import richtext_validator
 @colander.deferred
 def poll_plugins_choices_widget(node, kw):
     request = kw['request']
-    #Add all selectable plugins to schema. This chooses the poll method to use
-    plugin_choices = set()
-    #FIXME: The new object should probably be sent to construct schema
-    #for now, we can fake this
-    fake_poll = createContent('Poll')
-    for (name, plugin) in request.registry.getAdapters([fake_poll], IPollPlugin):
-        plugin_choices.add((name, plugin.title))
-    return deform.widget.CheckboxChoiceWidget(values=plugin_choices)
+    plugin_choices = [(x.name, x.factory.title) for x in request.registry.registeredAdapters() if x.provided == IPollPlugin]
+    return deform.widget.CheckboxChoiceWidget(values = plugin_choices)
 
 @colander.deferred
 def deferred_access_policy_widget(node, kw):
     request = kw['request']
-    choices = []
-    for (name, plugin) in request.registry.getAdapters([_dummy_meeting], IAccessPolicy):
-        choices.append((name, plugin))
+    choices = [(x.name, x.factory) for x in request.registry.registeredAdapters() if x.provided == IAccessPolicy]
     return deform.widget.RadioChoiceWidget(values = choices,
                                            template = "object_radio_choice",
                                            readonly_template = "readonly/object_radio_choice")
-
 
 @colander.deferred
 def deferred_copy_perms_widget(node, kw):
@@ -138,20 +126,6 @@ class MeetingPollSettingsSchema(colander.Schema):
                                        missing=set(),
                                        widget = poll_plugins_choices_widget,)
 
-_dummy_meeting = Meeting()
-
-
-@colander.deferred
-def poll_plugins_choices_widget(node, kw):
-    request = kw['request']
-    #Add all selectable plugins to schema. This chooses the poll method to use
-    plugin_choices = set()
-    #FIXME: The new object should probably be sent to construct schema
-    #for now, we can fake this
-    fake_poll = createContent('Poll')
-    for (name, plugin) in request.registry.getAdapters([fake_poll], IPollPlugin):
-        plugin_choices.add((name, plugin.title))
-    return deform.widget.CheckboxChoiceWidget(values=plugin_choices)
 
 @colander.deferred
 def hide_proposal_states_widget(node, kw):
@@ -180,5 +154,3 @@ def includeme(config):
     config.add_content_schema('Meeting', EditMeetingSchema, 'edit')
     config.add_content_schema('Meeting', MeetingPollSettingsSchema, 'meeting_poll_settings')
     config.add_content_schema('Meeting', AccessPolicyMeetingSchema, 'access_policy')
-    
-    config.scan()
