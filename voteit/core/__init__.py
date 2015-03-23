@@ -18,7 +18,8 @@ DEFAULT_SETTINGS = {
     'voteit.gravatar_default': 'mm',
     'voteit.default_profile_picture': '/static/images/default_user.png',
     'pyramid_deform.template_search_path': 'voteit.core:views/templates/widgets arche:templates/deform',
-    'arche.hash_method': 'voteit.core.security.get_sha_password'
+    'arche.hash_method': 'voteit.core.security.get_sha_password',
+    'arche.favicon': 'voteit.core:static/favicon.ico',
 }
 
 def main(global_config, **settings):
@@ -70,19 +71,16 @@ def required_components(config):
     config.include('voteit.core.plugins.immediate_ap')
     config.include('voteit.core.plugins.invite_only_ap')
     config.include('voteit.core.portlets')
-    #For password storage
-    #config.scan('betahaus.pyracont.fields.password')
 
-    cache_ttl_seconds = int(config.registry.settings.get('cache_ttl_seconds', 7200))
-    #config.add_static_view('static', '%s:static' % PROJECTNAME, cache_max_age = cache_ttl_seconds)
-    #config.add_static_view('deform', 'deform:static', cache_max_age = cache_ttl_seconds)
+    config.add_static_view('voteit_core_static', '%s:static' % PROJECTNAME, cache_max_age = cache_max_age)
     config.add_translation_dirs('%s:locale/' % PROJECTNAME,)
     #Include all subcomponents
-    #config.scan('voteit.core.subscribers.post_config_addons')
     from voteit.core.security import VIEW
     config.set_default_permission(VIEW)    
     config.include(register_plugins)
     config.include(check_required_components)
+    config.override_asset(to_override='arche:templates/',
+                          override_with='voteit.core:templates/overrides/')
 
 def register_plugins(config):
     """ Register any plugins specified in paster .init file.

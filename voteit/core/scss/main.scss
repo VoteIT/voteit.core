@@ -2,6 +2,7 @@
 @import "_mixins";
 @import "_state_colors";
 @import "_icons";
+@import "_navbar";
 
 .profile-pic {
   float: left;
@@ -26,4 +27,7 @@
       color: #fff;
     }
   }
+}
+.navbar-brand img.voteitlogo {
+  margin-top: -5px;
 }

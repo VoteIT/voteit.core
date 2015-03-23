@@ -23,3 +23,35 @@ $brand-closed:          #000;
 $brand-retracted:       $brand-default;
 $brand-canceled:        $brand-default;
 $brand-unhandled:       $brand-default;
+
+
+// Colours
+$voteit_dark_blue: #0a243d;
+
+// Other various TB
+$grid-float-breakpoint-max: 768px;
+
+// VoteIT navbar taken from Inverse navbar
+// Reset voteit navbar basics
+$navbar-voteit-color:                      #fff;
+$navbar-voteit-bg:                         $voteit_dark_blue !default;
+$navbar-voteit-border:                     darken($navbar-voteit-bg, 10%) !default;
+
+// VoteIT navbar links
+$navbar-voteit-link-color:                 $navbar-voteit-color;
+$navbar-voteit-link-hover-color:           #fff !default;
+$navbar-voteit-link-hover-bg:              transparent !default;
+$navbar-voteit-link-active-color:          $navbar-voteit-link-hover-color !default;
+$navbar-voteit-link-active-bg:             lighten($navbar-voteit-bg, 5%) !default;
+$navbar-voteit-link-disabled-color:        #444 !default;
+$navbar-voteit-link-disabled-bg:           transparent !default;
+
+// VoteIT navbar brand label
+$navbar-voteit-brand-color:                $navbar-voteit-link-color !default;
+$navbar-voteit-brand-hover-color:          #fff !default;
+$navbar-voteit-brand-hover-bg:             transparent !default;
+
+// VoteIT navbar toggle
+$navbar-voteit-toggle-hover-bg:            $navbar-voteit-link-active-bg !default;
+$navbar-voteit-toggle-icon-bar-bg:         #fff !default;
+$navbar-voteit-toggle-border-color:        $navbar-voteit-link-active-bg !default;
