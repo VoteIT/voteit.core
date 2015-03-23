@@ -77,11 +77,18 @@ class MeetingListingPortlet(PortletType):
                         'portlet': self.portlet,
                         'portlet_cls': "portlet-%s" % self.name,
                         'view': view,
+                        'item_count_for': self.item_count_for,
                         'get_meetings': _get_meetings}
             return render("voteit.core:templates/portlets/meeting_list.pt",
                           response,
                           request = request)
 
+    def item_count_for(self, request, context, type_name, unread = False):
+        query = {'path': resource_path(context),
+                 'type_name': type_name}
+        if unread:
+            query['unread'] = request.authenticated_userid
+        return request.root.catalog.search(**query)[0].total
 
 def _get_meetings(request, state = 'ongoing', sort_index = 'sortable_title'):
     root = request.root
@@ -94,6 +101,7 @@ def _get_meetings(request, state = 'ongoing', sort_index = 'sortable_title'):
        if request.has_permission(VIEW, obj):
            results.append(obj)
     return results
+
 
 def includeme(config):
     config.add_portlet(MeetingSettingsPortlet)

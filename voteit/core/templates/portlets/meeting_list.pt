@@ -27,6 +27,7 @@
           <li class="list-group-item" tal:repeat="obj get_meetings(request, state = state)">
             <a href="${request.resource_url(obj)}">
               <span>${obj.title}</span>
+
               <span class="clearfix">
                 <tal:started condition="state == 'ongoing'" i18n:translate="">
                   Started:
@@ -36,6 +37,19 @@
                   Closed:
                   <tal:date i18n:name="date" content="request.dt_handler.format_dt(obj.end_time, parts = 'd')|''" />
                 </tal:started>
+              </span>
+
+              <span class="clearfix">
+                <span class="glyphicon glyphicon-exclamation-sign"></span>
+                <span>${item_count_for(request, obj, 'Proposal')}</span>
+                <span tal:define="unread_prop item_count_for(request, obj, 'Proposal', unread = True)"
+                  tal:condition="unread_prop"
+                  class="badge">${unread_prop}</span>
+                <span class="glyphicon glyphicon-comment"></span>
+                <span>${item_count_for(request, obj, 'DiscussionPost')}</span>
+                <span tal:define="unread_disc item_count_for(request, obj, 'DiscussionPost', unread = True)"
+                  tal:condition="unread_disc"
+                  class="badge">${unread_disc}</span>
               </span>
             </a>
           </li>
