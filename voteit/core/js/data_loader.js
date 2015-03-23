@@ -39,9 +39,12 @@ function load_and_replace(event) {
   arche.actionmarker_feedback(elem, true);
   var url = elem.attr('href');
   var request = arche.do_request(url);
-  
+  var target = $(elem.data('replace-parent'))
+  if (target.length != 1) {
+    target = elem.parent();
+  }
   request.done(function(response) {
-    elem.parent().html(response);
+    target.html(response);
   });
   request.fail(arche.flash_error);
   request.always(function() {

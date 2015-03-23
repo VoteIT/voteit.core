@@ -3,11 +3,12 @@
 import colander
 import deform
 from betahaus.pyracont.decorators import schema_factory
+from repoze.workflow import get_workflow
 
 from voteit.core import VoteITMF as _
 from voteit.core import security 
 from voteit.core.models.arche_compat import createContent
-from voteit.core.models.interfaces import IAccessPolicy
+from voteit.core.models.interfaces import IAccessPolicy, IProposal
 from voteit.core.models.interfaces import IPollPlugin
 from voteit.core.models.meeting import Meeting
 from voteit.core.schemas.common import NAME_PATTERN
@@ -140,18 +141,38 @@ class MeetingPollSettingsSchema(colander.Schema):
 _dummy_meeting = Meeting()
 
 
+@colander.deferred
+def poll_plugins_choices_widget(node, kw):
+    request = kw['request']
+    #Add all selectable plugins to schema. This chooses the poll method to use
+    plugin_choices = set()
+    #FIXME: The new object should probably be sent to construct schema
+    #for now, we can fake this
+    fake_poll = createContent('Poll')
+    for (name, plugin) in request.registry.getAdapters([fake_poll], IPollPlugin):
+        plugin_choices.add((name, plugin.title))
+    return deform.widget.CheckboxChoiceWidget(values=plugin_choices)
+
+@colander.deferred
+def hide_proposal_states_widget(node, kw):
+    request = kw['request']
+    wf = get_workflow(IProposal, 'Proposal')
+    state_values = []
+    
+    for info in wf._state_info(IProposal): #Public API goes through permission checker
+        item = [info['name']]
+        item.append(info['title'])
+        state_values.append(item)
+    return deform.widget.CheckboxChoiceWidget(values = state_values)
+
+
 class AgendaItemProposalsPortletSchema(colander.Schema):
-    hide_retracted = colander.SchemaNode(colander.Boolean(),
-                                   title = _(u"Hide retracted proposals"),
-                                   description = _(u"meeting_hide_retracted_description",
-                                                   default=u"You can still access hidden proposals "
-                                                      u"by using a collapsible link below the regular proposals."),)
-    hide_unhandled_proposals = colander.SchemaNode(colander.Boolean(),
-        title = _(u"Hide unhandled proposals"),
-        description = _(u"meeting_hide_unhandled_description",
-                        default=u"In the same fashion as retracted proposals."),
-        default = True,
-        missing = True)
+    hide_proposal_states = colander.SchemaNode(colander.Set(),
+                                               title = _("Hide"),
+                                               description = _("desc"),
+                                               widget = hide_proposal_states_widget,
+                                               default = ('retracted', 'denied', 'unhandled'),
+                                               )
 
 
 def includeme(config):

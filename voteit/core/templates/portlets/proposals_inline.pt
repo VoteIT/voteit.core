@@ -32,6 +32,17 @@
   </div>
   </tal:def>
 </tal:iterate>
+<div id="proposals_load_more" tal:condition="hidden_count">
+  <div class="list-group-item">
+    <a class="btn btn-primary"
+      href="${load_hidden_url}"
+      data-replace-parent="#proposals_load_more"
+      data-clickable-target
+      i18n:translate="">
+      <span data-actionmarker="glyphicon glyphicon-refresh rotate-me"></span>
+      Load <tal:ts tal:content="hidden_count" i18n:name="num"></tal:ts> hidden</a>
+  </div>
+</div>
 <script type="text/javascript">
   voteit.unread_notify("${request.resource_url(context, '_mark_read')}");
 </script>

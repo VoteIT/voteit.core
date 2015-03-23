@@ -3,6 +3,7 @@
 """
 from __future__ import unicode_literals
 from decimal import Decimal
+from copy import copy
 
 from arche.portlets import PortletType
 from arche.utils import generate_slug
@@ -28,6 +29,7 @@ from voteit.core.schemas.meeting import AgendaItemProposalsPortletSchema
 
 #FIXME: Loading required resources for inline forms is still a problem.
 
+
 class ListingPortlet(PortletType):
     schema_factory = None
 
@@ -39,12 +41,6 @@ class ListingPortlet(PortletType):
             tag = request.GET.get('tag', None)
             if tag:
                 query['tag'] = tag
-            hide = []
-            if self.portlet.settings.get('hide_retracted', False):
-                hide.append('retracted')
-            if self.portlet.settings.get('hide_unhandled_proposals', False):
-                hide.append('unhandled')
-            query['hide'] = hide
             url = request.resource_url(context, self.view_name, query = query)
             response = {'portlet': self.portlet, 'view': view, 'load_url': url}
             return render(self.template, response, request = request)
@@ -56,6 +52,19 @@ class ProposalsPortlet(ListingPortlet):
     template = "voteit.core:templates/portlets/proposals.pt"
     view_name = '__ai_proposals__'
     schema_factory = AgendaItemProposalsPortletSchema
+
+    def render(self, context, request, view, **kwargs):
+        if IAgendaItem.providedBy(context):
+            data_loader.need()
+            need_lib('deform')
+            query = {}
+            tags = request.GET.getall('tag')
+            if tags:
+                query['tag'] = tags
+            query['hide'] = tuple(self.portlet.settings.get('hide_proposal_states', ()))
+            url = request.resource_url(context, self.view_name, query = query)
+            response = {'portlet': self.portlet, 'view': view, 'load_url': url}
+            return render(self.template, response, request = request)
 
 
 class DiscussionsPortlet(ListingPortlet):
@@ -76,20 +85,34 @@ class PollsPortlet(ListingPortlet):
 class ProposalsInline(BaseView):
     
     def __call__(self):
+        response = {}
         query = Eq('path', resource_path(self.context)) &\
                 Eq('type_name', 'Proposal')
+        tags = self.request.GET.getall('tag')
+        if tags:
+            query &= Any('tags', tags)
         hide = self.request.GET.getall('hide')
-        if hide:
-            query &= NotAny('workflow_state', hide)
-        tag = self.request.GET.get('tag', None)
-        if tag:
-            #Only apply tag limit for things that aren't polls.
-            #This is a safegard against user errors
-            query &= Any('tags', (tag, ))
-        response = {}
+        load_hidden = self.request.GET.get('load_hidden', False)
+        if load_hidden:
+            #Only load data previously hidden
+            if hide:
+                query &= Any('workflow_state', hide)
+        else:
+            invert_hidden = copy(query)
+            #Normal operation, keep count of hidden
+            if hide:
+                invert_hidden &= Any('workflow_state', hide)
+                query &= NotAny('workflow_state', hide)
+        
         response['docids'] = tuple(self.catalog_query(query, sort_index = 'created'))
         response['unread_docids'] = tuple(self.catalog_query(query & Eq('unread', self.request.authenticated_userid), sort_index = 'created'))
-        response['contents'] = self.resolve_docids(response['docids'])
+        response['contents'] = self.resolve_docids(response['docids']) #A generator
+        if not load_hidden:
+            response['hidden_count'] = self.request.root.catalog.query(invert_hidden)[0].total
+            get_query = {'tag': tags, 'load_hidden': 1, 'hide': hide}
+            response['load_hidden_url'] = self.request.resource_url(self.context, self.request.view_name, query = get_query)
+        else:
+            response['hidden_count'] = False
         return response
 
 
@@ -100,9 +123,9 @@ class DiscussionsInline(BaseView):
             'path': resource_path(self.context),
             'type_name': 'DiscussionPost',
             'sort_index': 'created'}
-        tag = self.request.GET.get('tag', None)
-        if tag:
-            query['tags'] = tag
+        tags = self.request.GET.getall('tag')
+        if tags:
+            query['tags'] = tags
         response = {}
         response['docids'] = tuple(self.catalog_search(**query))
         response['unread_docids'] = tuple(self.catalog_search(unread = self.request.authenticated_userid, **query))
