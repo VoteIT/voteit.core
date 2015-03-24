@@ -17,10 +17,13 @@
 <tal:iterate repeat="docid batch">
   <tal:def define="obj contents.next();
                    is_unread docid in unread">
-  <div class="list-group-item" data-uid="${obj.uid}" data-unread="${is_unread and 'true' or 'false'}">
+  <div class="list-group-item ${is_unread and 'list-group-item-unread' or None}"
+    data-uid="${obj.uid}"
+    data-unread="${is_unread and 'true' or 'false'}">
     <div class="text">
-      <tal:cog condition="request.is_moderator" replace="structure view.render_template('voteit.core:views/templates/snippets/cogwheel.pt', context = obj)" />
-      <tal:creator replace="structure request.creators_info(obj.creators)"></tal:creator>
+      <tal:cog condition="request.is_moderator"
+        replace="structure view.render_template('voteit.core:views/templates/snippets/cogwheel.pt', context = obj)" />
+      <tal:creator replace="structure request.creators_info(obj.creators)" />
       <span tal:content="structure request.transform_text(obj.text)">
         Text here
       </span>

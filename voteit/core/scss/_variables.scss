@@ -24,9 +24,12 @@ $brand-retracted:       $brand-default;
 $brand-canceled:        $brand-default;
 $brand-unhandled:       $brand-default;
 
+$voteit-unread-bar-size: 2px;
 
 // Colours
-$voteit_dark_blue: #0a243d;
+$voteit-dark-blue: #0a243d;
+$voteit-unread: $brand-primary;
+
 
 // Other various TB
 $grid-float-breakpoint-max: 768px;
@@ -34,7 +37,7 @@ $grid-float-breakpoint-max: 768px;
 // VoteIT navbar taken from Inverse navbar
 // Reset voteit navbar basics
 $navbar-voteit-color:                      #fff;
-$navbar-voteit-bg:                         $voteit_dark_blue !default;
+$navbar-voteit-bg:                         $voteit-dark-blue !default;
 $navbar-voteit-border:                     darken($navbar-voteit-bg, 10%) !default;
 
 // VoteIT navbar links

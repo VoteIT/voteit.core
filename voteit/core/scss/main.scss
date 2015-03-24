@@ -21,7 +21,7 @@
   font-weight: bold;
 }
 .list-group-item.active {
-  a {
+  >a {
     color: #fff;
     &:hover {
       color: #fff;
@@ -30,4 +30,9 @@
 }
 .navbar-brand img.voteitlogo {
   margin-top: -5px;
+}
+.panel .list-group .list-group-item-unread,
+.list-group .list-group-item-unread {
+  border-left-width: $voteit-unread-bar-size;
+  border-left-color:  $voteit-unread;
 }

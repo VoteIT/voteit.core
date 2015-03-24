@@ -346,12 +346,17 @@ $brand-danger:          #d9534f !default;
 .primary-tag {
   font-weight: bold; }
 
-.list-group-item.active a {
+.list-group-item.active > a {
   color: #fff; }
-  .list-group-item.active a:hover {
+  .list-group-item.active > a:hover {
     color: #fff; }
 
 .navbar-brand img.voteitlogo {
   margin-top: -5px; }
+
+.panel .list-group .list-group-item-unread,
+.list-group .list-group-item-unread {
+  border-left-width: 2px;
+  border-left-color: #337ab7; }
 
 /*# sourceMappingURL=main.css.map */
