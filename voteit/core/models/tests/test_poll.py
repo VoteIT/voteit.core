@@ -103,7 +103,7 @@ class PollTests(unittest.TestCase):
         settings = {'this': 1, 'other': 2}
         obj = self._cut()
         obj.poll_settings = settings
-        self.assertEqual(obj.poll_settings, settings)
+        self.assertEqual(dict(obj.poll_settings), settings)
 
     def test_poll_settings_property_bad_type(self):
         settings = "Hello!"

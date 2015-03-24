@@ -1,4 +1,5 @@
 from BTrees.OIBTree import OIBTree
+from BTrees.OOBTree import OOBTree
 from arche.security import get_acl_registry
 from arche.utils import get_flash_messages
 from arche.utils import send_email
@@ -38,7 +39,6 @@ class Poll(BaseContent, WorkflowAware):
     add_permission = security.ADD_POLL
     _poll_result = None
     _ballots = None
-    _poll_settings = None
 
     @property
     def __acl__(self):
@@ -81,15 +81,16 @@ class Poll(BaseContent, WorkflowAware):
 
     proposal_uids = proposals #b/c
 
-    def _get_poll_settings(self):
-        return getattr(self, '_poll_settings', {})
-
-    def _set_poll_settings(self, value):
-        if not isinstance(value, dict):
-            raise TypeError("poll_settings attribute should be a dict")
-        self._poll_settings = value
-
-    poll_settings = property(_get_poll_settings, _set_poll_settings)
+    @property
+    def poll_settings(self):
+        try:
+            return self._poll_settings
+        except AttributeError:
+            self._poll_settings = OOBTree()
+            return self._poll_settings
+    @poll_settings.setter
+    def poll_settings(self, value):
+        self._poll_settings = OOBTree(value)
 
     def _get_ballots(self):
         return getattr(self, '_ballots', None)
