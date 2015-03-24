@@ -39,12 +39,12 @@ function load_and_replace(event) {
   arche.actionmarker_feedback(elem, true);
   var url = elem.attr('href');
   var request = arche.do_request(url);
-  var target = $(elem.data('replace-parent'))
+  var target = $(elem.data('replace-target'))
   if (target.length != 1) {
-    target = elem.parent();
+    target = elem;
   }
   request.done(function(response) {
-    target.html(response);
+    target.replaceWith(response);
   });
   request.fail(arche.flash_error);
   request.always(function() {

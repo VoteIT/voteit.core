@@ -36,7 +36,7 @@
   <div class="list-group-item">
     <a class="btn btn-primary"
       href="${load_hidden_url}"
-      data-replace-parent="#proposals_load_more"
+      data-replace-target="#proposals_load_more"
       data-clickable-target
       i18n:translate="">
       <span data-actionmarker="glyphicon glyphicon-refresh rotate-me"></span>
