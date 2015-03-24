@@ -3,9 +3,20 @@
       xmlns:tal="http://xml.zope.org/namespaces/tal"
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
       i18n:domain="voteit.core">
-<tal:iterate repeat="docid docids">
+<div id="discussions_load_previous" tal:condition="previous">
+  <div class="list-group-item">
+    <a class="btn btn-primary"
+      href="${load_previous_url}"
+      data-replace-target="#discussions_load_previous"
+      data-clickable-target
+      i18n:translate="">
+      <span data-actionmarker="glyphicon glyphicon-refresh rotate-me"></span>
+      Load <tal:ts tal:content="len(previous)" i18n:name="num"></tal:ts> previous</a>
+  </div>
+</div>
+<tal:iterate repeat="docid batch">
   <tal:def define="obj contents.next();
-                   is_unread docid in unread_docids;">
+                   is_unread docid in unread">
   <div class="list-group-item" data-uid="${obj.uid}" data-unread="${is_unread and 'true' or 'false'}">
     <div class="text">
       <tal:cog condition="request.is_moderator" replace="structure view.render_template('voteit.core:views/templates/snippets/cogwheel.pt', context = obj)" />
@@ -25,6 +36,18 @@
   </div>
   </tal:def>
 </tal:iterate>
+<!--  Should reappear when new discussion entries have appeared -->
+<div id="discussions_load_next" tal:condition="over_limit">
+  <div class="list-group-item">
+    <a class="btn btn-primary"
+      href="${load_next_url}"
+      data-replace-target="#discussions_load_next"
+      data-clickable-target>
+      <span data-actionmarker="glyphicon glyphicon-refresh rotate-me"></span>
+      <span i18n:translate="">Load more</span>
+    </a>
+  </div>
+</div>
 <script type="text/javascript">
   voteit.unread_notify("${request.resource_url(context, '_mark_read')}");
 </script>

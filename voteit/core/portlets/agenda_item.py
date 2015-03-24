@@ -12,17 +12,14 @@ from arche.views.base import DefaultAddForm
 from deform_autoneed import need_lib
 from pyramid.renderers import render
 from pyramid.response import Response
-#from pyramid.traversal import find_interface
-#from pyramid.traversal import find_root
 from pyramid.traversal import resource_path
 from repoze.catalog.query import Eq, NotAny, Any
-#import colander
 
 from voteit.core import _
 from voteit.core import security
 from voteit.core.fanstaticlib import data_loader
 from voteit.core.models.interfaces import IAgendaItem
-from voteit.core.helpers import tags2links
+from voteit.core.helpers import tags2links, get_docids_to_show
 #from voteit.core.models.interfaces import IProposal
 #from voteit.core.models.interfaces import IDiscussionPost
 from voteit.core.schemas.meeting import AgendaItemProposalsPortletSchema
@@ -79,7 +76,6 @@ class PollsPortlet(ListingPortlet):
     title = _("Agenda Item: Polls listing")
     template = "voteit.core:templates/portlets/polls.pt"
     view_name = '__ai_polls__'
-#    schema_factory = FIXME: Schema for listing
 
 
 class ProposalsInline(BaseView):
@@ -119,18 +115,78 @@ class ProposalsInline(BaseView):
 class DiscussionsInline(BaseView):
     
     def __call__(self):
-        query = {
-            'path': resource_path(self.context),
-            'type_name': 'DiscussionPost',
-            'sort_index': 'created'}
-        tags = self.request.GET.getall('tag')
-        if tags:
-            query['tags'] = tags
-        response = {}
-        response['docids'] = tuple(self.catalog_search(**query))
-        response['unread_docids'] = tuple(self.catalog_search(unread = self.request.authenticated_userid, **query))
-        response['contents'] = self.resolve_docids(response['docids'])
+        """ Loading procedure of discussion posts:
+            If nothing specific is set, limit loading to the next 5 unread.
+            If there aren't 5 unread, fetch the 5 last posts.
+            If there are more unread than 5, create a link to load more.
+            
+        """
+        query = {}
+        query['tags'] = self.request.GET.getall('tag')
+        query['limit'] = 5
+        if self.request.GET.get('previous', False):
+            query['limit'] = 0
+            query['end_before'] = int(self.request.GET.get('end_before'))
+        if self.request.GET.get('next', False):
+            query['start_after'] = int(self.request.GET.get('start_after'))
+        response = get_docids_to_show(self.context, self.request, 'DiscussionPost', **query)
+        response['contents'] = self.resolve_docids(response['batch']) #Generator
+        if response['previous'] and response['batch']:
+            end_before = response['batch'][0]
+            response['load_previous_url'] = self.request.resource_url(self.context, '__ai_discussions__',
+                                                                      query = {'tag': query['tags'],
+                                                                               'previous': 1,
+                                                                               'end_before': end_before})
+        if response['over_limit'] and response['batch']:
+            start_after = response['batch'][-1]
+            response['load_next_url'] = self.request.resource_url(self.context, '__ai_discussions__',
+                                                                  query = {'tag': query['tags'],
+                                                                           'next': 1,
+                                                                           'start_after': start_after})
         return response
+
+#         
+#         last_shown_docid = None #FIXME
+#         query = "path == '%s' and type_name == 'DiscussionPost'" % resource_path(self.context)
+#         tags = self.request.GET.getall('tag')
+#         if tags:
+#             query += " and tags in any(%s)" % tags
+#         unread_query = "unread == '%s' and %s" % (self.request.authenticated_userid, query)
+#         query += " and unread != '%s'" % self.request.authenticated_userid
+#         showing_docids = []
+#         over_limit_unread = []
+#         previous = []
+#         limit = 5 #Set another way?
+#         #Fetch <limit> number of docids and insert them in shown_docids
+#         #If there are more unread, add them to over_limit_unread
+#         unread_docids = list(self.catalog_query(unread_query, sort_index = 'created'))
+#         docids_pool = list(self.catalog_query(query, sort_index = 'created'))
+        
+            
+        
+#         
+#         for docid in unread_docids:
+#             if len(showing_docids) < limit:
+#                 showing_docids.append(docid)
+#             else:
+#                 over_limit_unread.append(docid)
+#         #If there aren't enough shown docids, walk through them in reverse order.
+#         query += " and unread != '%s'" % self.request.authenticated_userid
+#         pool = self.catalog_query(query, sort_index = 'created', reverse = True)
+#         for docid in pool:
+#             if len(showing_docids) < limit:
+#                 showing_docids.insert(0, docid)
+#             else:
+#                 previous.append(docid)
+#         response = {}
+#         response['unread_docids'] = unread_docids
+#         response['docids'] = showing_docids
+#         response['contents'] = self.resolve_docids(showing_docids)
+#         response['over_limit_unread'] = over_limit_unread
+#         response['previous'] = previous
+#         return response
+
+    
 
 
 class PollsInline(BaseView):

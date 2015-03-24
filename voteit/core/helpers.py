@@ -4,6 +4,7 @@ from urllib import urlencode
 
 from pyramid.renderers import render
 from pyramid.traversal import find_interface
+from pyramid.traversal import resource_path
 from repoze.workflow import get_workflow
 from webhelpers.html.converters import nl2br
 from webhelpers.html.render import sanitize
@@ -162,6 +163,61 @@ def get_meeting_participants(meeting):
         This should be cached later on.
     """
     return security.find_authorized_userids(meeting, [security.VIEW])
+
+def get_docids_to_show(context, request, type_name, tags = (), limit = 5, start_after = None, end_before = None):
+    """ Helper method to fetch docids that would be a resonable batch to show.
+        This is mostly to allow agenda views to load fast.
+
+        - Fetch batch from the first unread docid so there will be no items
+            skipped in case they were read from a tag view.
+        - If batch contains less items than limit, insert items from previous.
+        - start_after - remove everything before this docid and the value specified.
+        - end_before - remove this value and everything after it.
+        
+        Result example:
+        {'batch': [4, 5, 6], 'previous': [1, 2, 3], 'over_limit': [7, 8, 9], 'unread': [4, 5, 6, 7, 8, 9]}
+    """
+    query = "path == '%s' and type_name == '%s'" % (resource_path(context), type_name)
+    if tags:
+        query += " and tags in any(%s)" % list(tags)
+    unread_query = "unread == '%s' and %s" % (request.authenticated_userid, query)
+    catalog_query = request.root.catalog.query
+    unread_docids = list(catalog_query(unread_query, sort_index = 'created')[1])
+    docids_pool = list(catalog_query(query, sort_index = 'created')[1])
+    if start_after and start_after in docids_pool:
+        i = docids_pool.index(start_after)
+        for docid in docids_pool[:i+1]:
+            if docid in unread_docids:
+                unread_docids.remove(docid)
+        docids_pool[0:i+1] = []
+    if end_before and end_before in docids_pool:
+        i = docids_pool.index(end_before)
+        for docid in docids_pool[i:]:
+            if docid in unread_docids:
+                unread_docids.remove(docid)
+        docids_pool[i:] = []
+    if limit:
+        if unread_docids:
+            first_pos = docids_pool.index(unread_docids[0])
+            batch = docids_pool[first_pos:first_pos+limit]
+            over_limit = docids_pool[first_pos+limit:]
+            previous = docids_pool[:first_pos]
+            #Fill batch from last item of previous if batch is too small
+            while previous and len(batch) < limit:
+                batch.insert(0, previous.pop(-1))
+        else:
+            batch = docids_pool[-limit:]
+            previous = docids_pool[:-limit]
+            over_limit = []
+        return {'batch': batch,
+                'previous': previous,
+                'over_limit': over_limit,
+                'unread': unread_docids}
+    #no limit
+    return {'batch': docids_pool,
+            'previous': [],
+            'over_limit': [],
+            'unread': unread_docids}
 
 def includeme(config):
     config.add_request_method(callable = transform_text, name = 'transform_text')

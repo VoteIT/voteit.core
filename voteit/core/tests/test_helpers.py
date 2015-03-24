@@ -6,6 +6,8 @@ import unittest
 from pyramid import testing
 
 from voteit.core.testing_helpers import bootstrap_and_fixture
+from voteit.core.bootstrap import bootstrap_voteit
+from voteit.core.models.interfaces import IUnread
 
 
 def _mock_helpers(request, helper, name):
@@ -217,3 +219,184 @@ class TestTransformText(unittest.TestCase):
 #         obj = self._cut(context, request)
 #         context.set_field_value('text', 'ÅÄÖåäö')
 #         self.assertEqual(obj.transform(context.get_field_value('text')), 'ÅÄÖåäö')
+
+
+
+class TestGetDocidsToShow(unittest.TestCase):
+
+    def setUp(self):
+        self.config = testing.setUp(request = testing.DummyRequest())
+        self.config.testing_securitypolicy('admin', permissive = True)
+        self.config.include('arche.testing')
+        self.config.include('arche.models.catalog')
+        self.config.include('voteit.core.models.catalog')
+        self.config.include('voteit.core.models.unread')
+        self.config.include('voteit.core.models.user_tags')
+        self.config.include('voteit.core.models.discussion_post')
+        self.config.include('voteit.core.models.site')
+        self.config.include('voteit.core.models.users')
+        self.config.include('voteit.core.models.user')
+        self.config.include('voteit.core.testing_helpers.register_workflows')
+
+    def tearDown(self):
+        testing.tearDown()
+
+    @property
+    def _fut(self):
+        from voteit.core.helpers import get_docids_to_show
+        return get_docids_to_show
+
+    def _fixture(self, num = 10):
+        root = bootstrap_voteit(echo = False)
+        from voteit.core.models.meeting import Meeting
+        from voteit.core.models.discussion_post import DiscussionPost
+        root['m'] = m = Meeting()
+        for i in range(num):
+            m['d%s' % i] = DiscussionPost()
+        return root
+
+    def _docid_structure(self, root, num = 10):
+        res = []
+        for i in range(num):
+            res.append(root.document_map.docid_for_address("/m/d%s" % i))
+        return res
+
+    def _mark_read(self, root, items):
+        for i in items:
+            IUnread(root['m']['d%s' % i]).mark_as_read('admin')
+
+    def _set_tag(self, root, items, tag = '#one'):
+        for i in items:
+            #To enable subscribers
+            root['m']['d%s' % i].set_field_appstruct({'text': tag})
+
+    def test_fixture(self):
+        #Since it's kind of complex
+        root = self._fixture(1)
+        query = "unread == 'admin'"
+        self.assertEqual(root.catalog.query(query)[0].total, 1)
+        self.assertEqual(len(self._docid_structure(root, 1)), 1)
+
+    def test_only_unread(self):
+        root = self._fixture(6)
+        request = testing.DummyRequest()
+        request.root = root
+        result = self._fut(root, request, 'DiscussionPost', limit = 3)
+        docids = self._docid_structure(root)
+        expected_batch = docids[0:3]
+        expected_over = docids[3:6]
+        self.assertEqual(expected_batch, result['batch'])
+        self.assertEqual(expected_over, result['over_limit'])
+
+    def test_too_many_unread(self):
+        root = self._fixture(6)
+        request = testing.DummyRequest()
+        request.root = root
+        self._mark_read(root, [0, 1])
+        result = self._fut(root, request, 'DiscussionPost', limit = 2)
+        docids = self._docid_structure(root, 6)
+        expected_previous = docids[0:2]
+        expected_batch = docids[2:4]
+        expected_over = docids[4:6]
+        expected_unread = docids[2:6]
+        self.assertEqual(expected_previous, result['previous'])
+        self.assertEqual(expected_batch, result['batch'])
+        self.assertEqual(expected_over, result['over_limit'])
+        self.assertEqual(expected_unread, result['unread'])
+
+    def test_all_read(self):
+        root = self._fixture(3)
+        request = testing.DummyRequest()
+        request.root = root
+        self._mark_read(root, range(3))
+        result = self._fut(root, request, 'DiscussionPost', limit = 2)
+        docids = self._docid_structure(root)
+        expected_previous = docids[0:1]
+        expected_batch = docids[1:3]
+        self.assertEqual(expected_previous, result['previous'])
+        self.assertEqual(expected_batch, result['batch'])
+        self.assertEqual([], result['over_limit'])
+
+    def test_2_unread_fill_from_read(self):
+        root = self._fixture()
+        request = testing.DummyRequest()
+        request.root = root
+        self._mark_read(root, range(8))
+        result = self._fut(root, request, 'DiscussionPost')
+        docids = self._docid_structure(root)
+        expected_previous = docids[0:5]
+        expected_batch = docids[5:10]
+        self.assertEqual(expected_batch, result['batch'])
+        self.assertEqual(expected_previous, result['previous'])
+        self.assertEqual([], result['over_limit'])
+
+    def test_unread_gaps_dont_matter(self):
+        root = self._fixture(6)
+        request = testing.DummyRequest()
+        request.root = root
+        self._mark_read(root, [0, 2, 4])
+        result = self._fut(root, request, 'DiscussionPost', limit = 4)
+        docids = self._docid_structure(root, 6)
+        expected_previous = docids[0:1]
+        expected_batch = docids[1:5]
+        expected_over = docids[5:6]
+        expected_unread = [docids[1], docids[3], docids[5]]
+        self.assertEqual(expected_batch, result['batch'])
+        self.assertEqual(expected_previous, result['previous'])
+        self.assertEqual(expected_over, result['over_limit'])
+        self.assertEqual(expected_unread, result['unread'])
+
+    def test_tags_matter(self):
+        root = self._fixture()
+        request = testing.DummyRequest()
+        request.root = root
+        self._mark_read(root, range(2))
+        self._set_tag(root, range(6))
+        result = self._fut(root, request, 'DiscussionPost', tags = ('one',), limit = 3)
+        docids = self._docid_structure(root)
+        expected_previous = docids[0:2]
+        expected_batch = docids[2:5]
+        expected_over = docids[5:6]
+        self.assertEqual(expected_batch, result['batch'])
+        self.assertEqual(expected_previous, result['previous'])
+        self.assertEqual(expected_over, result['over_limit'])
+
+    def test_disabled_limit_reads_all(self):
+        root = self._fixture(5)
+        request = testing.DummyRequest()
+        request.root = root
+        result = self._fut(root, request, 'DiscussionPost', limit = 0)
+        docids = self._docid_structure(root, 5)
+        self.assertEqual(docids, result['batch'])
+        self.assertEqual([], result['previous'])
+        self.assertEqual([], result['over_limit'])
+
+    def test_start_after(self):
+        root = self._fixture(5)
+        request = testing.DummyRequest()
+        request.root = root
+        docids = self._docid_structure(root, 5)
+        result = self._fut(root, request, 'DiscussionPost', limit = 5, start_after = docids[2])
+        self.assertEqual(docids[3:], result['batch'])
+        self.assertEqual([], result['previous'])
+        self.assertEqual([], result['over_limit'])
+
+    def test_end_before(self):
+        root = self._fixture(5)
+        request = testing.DummyRequest()
+        request.root = root
+        docids = self._docid_structure(root, 5)
+        result = self._fut(root, request, 'DiscussionPost', limit = 5, end_before = docids[2])
+        self.assertEqual(docids[:2], result['batch'])
+        self.assertEqual([], result['previous'])
+        self.assertEqual([], result['over_limit'])
+
+    def test_start_and_end(self):
+        root = self._fixture(5)
+        request = testing.DummyRequest()
+        request.root = root
+        docids = self._docid_structure(root, 5)
+        result = self._fut(root, request, 'DiscussionPost', limit = 5, start_after = docids[1], end_before = docids[3])
+        self.assertEqual([docids[2]], result['batch'])
+        self.assertEqual([], result['previous'])
+        self.assertEqual([], result['over_limit'])
