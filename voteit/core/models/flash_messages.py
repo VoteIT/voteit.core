@@ -1,6 +1,7 @@
+from arche.interfaces import IFlashMessages as AIFM
 from pyramid.interfaces import IRequest
 from zope.interface import implementer
-from arche.interfaces import IFlashMessages as AIFM
+
 from voteit.core.models.interfaces import IFlashMessages
 
 
@@ -18,7 +19,7 @@ class FlashMessages(object):
         if not fm:
             from arche.models.flash_messages import FlashMessages
             fm = FlashMessages(self.request)
-        fm.add(msg, type = type, dismissable = close_button)
+        fm.add(msg, type = type)
         #flash = {'msg':msg, 'type':type, 'close_button':close_button}
         #self.request.session.flash(flash)
 
