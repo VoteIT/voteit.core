@@ -22,6 +22,11 @@ $brand-danger:          #d9534f !default;
     color: #5cb85c;
     background-color: #fff; }
 
+.label-approved {
+  background-color: #5cb85c; }
+  .label-approved[href]:hover, .label-approved[href]:focus {
+    background-color: #449d44; }
+
 .text-approved {
   color: #5cb85c; }
 
@@ -61,6 +66,11 @@ $brand-danger:          #d9534f !default;
   .btn-denied .badge {
     color: #d9534f;
     background-color: #fff; }
+
+.label-denied {
+  background-color: #d9534f; }
+  .label-denied[href]:hover, .label-denied[href]:focus {
+    background-color: #c9302c; }
 
 .text-denied {
   color: #d9534f; }

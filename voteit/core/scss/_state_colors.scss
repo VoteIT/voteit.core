@@ -1,8 +1,12 @@
 // For workflow state colouring
 @import "bootstrap/mixins/_buttons";
+@import "bootstrap/mixins/_labels";
 
 .btn-approved {
   @include button-variant(#fff, $brand-approved, darken($brand-approved, 5%));
+}
+.label-approved {
+  @include label-variant($brand-approved);
 }
 .text-approved {
   color: $brand-approved;
@@ -17,6 +21,9 @@
 
 .btn-denied {
   @include button-variant(#fff, $brand-denied, darken($brand-denied, 5%));
+}
+.label-denied {
+  @include label-variant($brand-denied);
 }
 .text-denied {
   color: $brand-denied;
