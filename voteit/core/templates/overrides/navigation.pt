@@ -3,7 +3,7 @@
       xmlns:tal="http://xml.zope.org/namespaces/tal"
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
       i18n:domain="Arche">
-<nav class="navbar navbar-static-top navbar-voteit" role="navigation">
+<nav class="navbar navbar-fixed-top navbar-voteit" role="navigation">
   <div class="container">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapsible">
@@ -28,5 +28,8 @@
       </ul>
     </div><!--/.nav-collapse -->
   </div><!-- /.container-->
+  <div class="container" id="messages">
+    <div class="float-below" data-flash-slot="voteit-main"></div>
+  </div>
 </nav>
 </tal:main>

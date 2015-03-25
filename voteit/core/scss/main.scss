@@ -1,9 +1,14 @@
 @import "_variables";
+
 @import "_mixins";
 @import "_state_colors";
 @import "_icons";
 @import "_navbar";
 
+
+body {
+  padding-top:  70px;
+}
 .profile-pic {
   float: left;
   margin-right: 10px;
@@ -35,4 +40,20 @@
 .list-group .list-group-item-unread {
   border-left-width: $voteit-unread-bar-size;
   border-left-color:  $voteit-unread;
+}
+
+#messages {
+  position: relative;
+}
+.float-below {
+  position: absolute;
+  top: 1px;
+  right: 15px;
+  left: 15px;
+  background: #fff;
+}
+.float-below .alert {
+  padding: 5px 35px 5px 15px;
+  margin-bottom: 5px;
+  margin-top: 5px;
 }

@@ -340,6 +340,9 @@ $brand-danger:          #d9534f !default;
     .navbar-voteit .btn-link[disabled]:hover, .navbar-voteit .btn-link[disabled]:focus, fieldset[disabled] .navbar-voteit .btn-link:hover, fieldset[disabled] .navbar-voteit .btn-link:focus {
       color: #444; }
 
+body {
+  padding-top: 70px; }
+
 .profile-pic {
   float: left;
   margin-right: 10px; }
@@ -368,5 +371,20 @@ $brand-danger:          #d9534f !default;
 .list-group .list-group-item-unread {
   border-left-width: 2px;
   border-left-color: #337ab7; }
+
+#messages {
+  position: relative; }
+
+.float-below {
+  position: absolute;
+  top: 1px;
+  right: 15px;
+  left: 15px;
+  background: #fff; }
+
+.float-below .alert {
+  padding: 5px 35px 5px 15px;
+  margin-bottom: 5px;
+  margin-top: 5px; }
 
 /*# sourceMappingURL=main.css.map */
