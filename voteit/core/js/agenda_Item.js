@@ -1,4 +1,8 @@
 
+voteit.unread_notify_timer = null;
+voteit.unread_notify_interval = 6000;
+voteit.unread_notify_url = null;
+
 
 function set_tag_filter(event) {
   event.preventDefault();
