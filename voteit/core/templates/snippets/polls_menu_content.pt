@@ -1,0 +1,25 @@
+<tal:main xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="voteit.core">
+<tal:state repeat="struct polls_structure">
+  <li role="presentation" class="dropdown-header">
+    <span class="glyphicon glyphicon-${struct['state']} text-${struct['state']}"></span>
+    ${state_titles[struct['state']]}
+  </li>
+  <li role="presentation" tal:repeat="obj struct['polls']">
+    <a role="menuitem" tabindex="-1" href="${request.resource_url(obj)}">
+      <tal:ongoing condition="struct['state'] == 'ongoing'">
+        <tal:def define="can_vote request.has_permission(vote_perm, obj);
+                         should_vote request.authenticated_userid not in obj;">
+        <span tal:condition="can_vote and should_vote" class="votemarker votemarker-active glyphicon glyphicon-star"></span>
+        <span tal:condition="can_vote and not should_vote" class="votemarker glyphicon glyphicon-ok-circle"></span>
+        </tal:def>
+      </tal:ongoing>
+      ${obj.title}
+    </a>
+  </li>
+  <li role="presentation" class="divider" tal:condition="not repeat['struct'].end"></li>
+</tal:state>
+</tal:main>

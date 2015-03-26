@@ -387,4 +387,10 @@ body {
   margin-bottom: 5px;
   margin-top: 5px; }
 
+.polls-menu .votemarker {
+  color: #ccc;
+  font-size: 75%; }
+.polls-menu .votemarker-active {
+  color: #5cb85c; }
+
 /*# sourceMappingURL=main.css.map */

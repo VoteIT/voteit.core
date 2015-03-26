@@ -219,7 +219,30 @@ def get_docids_to_show(context, request, type_name, tags = (), limit = 5, start_
             'over_limit': [],
             'unread': unread_docids}
 
+def get_polls_struct(meeting, request, limit = 5):
+    """ Return a dict with polls sorted according to workflow states and some metadata about the result."""
+    states = ['ongoing', 'upcoming', 'closed']
+    state_query = {'ongoing': {'sort_index': 'start_time', 'reverse': True},
+                   'upcoming': {'sort_index': 'created', 'limit': limit},
+                   'closed': {'sort_index': 'end_time', 'reverse': True, 'limit': limit},
+                   'private': {'sort_index': 'created', 'limit': limit}}
+    if request.is_moderator:
+        states.append('private')
+    query = "type_name == 'Poll' and path == '%s'" % resource_path(meeting)
+    results = []
+    for state in states:
+        squery = "%s and workflow_state == '%s'" % (query, state)
+        #Note: Sorted items
+        res, docids = request.root.catalog.query(squery, **state_query[state])
+        result = {}
+        result['over_limit'] = res.total - res.real
+        result['polls'] = request.resolve_docids(docids)
+        result['state'] = state
+        results.append(result)
+    return results
+
 def includeme(config):
+    #FIXME: What's a good test for request methods? They aren't included during the regular testing runs.
     config.add_request_method(callable = transform_text, name = 'transform_text')
     #Hook creators info
     config.add_request_method(callable = creators_info, name = 'creators_info')

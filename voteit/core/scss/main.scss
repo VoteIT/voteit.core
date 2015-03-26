@@ -57,3 +57,13 @@ body {
   margin-bottom: 5px;
   margin-top: 5px;
 }
+
+.polls-menu {
+  .votemarker {
+    color: $brand-default;
+    font-size: 75%;
+  }
+  .votemarker-active {
+    color: $brand-success;
+  }
+}

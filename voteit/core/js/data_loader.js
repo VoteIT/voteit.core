@@ -73,6 +73,38 @@ function reply_to(event) {
 }
 voteit.reply_to = reply_to;
 
+function load_polls_menu(event) {
+  // Remember that the menu could be closed via a click too.
+  var elem = $(event.currentTarget);
+  if (elem.data('menu-loaded') == true) return;
+  voteit.reset_polls_menu();
+  var menu_target = $('[data-polls-menu-target]');
+  arche.actionmarker_feedback(menu_target, true);
+  var url = elem.data('polls-menu');
+  console.log(url);
+  var request = arche.do_request(url);
+  request.done(function(response) {
+    menu_target.html(response);
+    elem.data('menu-loaded', true)
+  });
+  request.fail(function(jqxhr) {
+    arche.flash_error(jqxhr);
+    arche.actionmarker_feedback(menu_target, false);
+  });
+}
+voteit.load_polls_menu = load_polls_menu;
+
+function reset_polls_menu() {
+  var out = '<li role="presentation" class="disabled">';
+  out += '<a role="menuitem" tabindex="-1" href="#">';
+  out += '<span data-actionmarker="glyphicon glyphicon-refresh rotate-me"></span>';
+  out += $('[data-polls-menu-target]').data('placeholder');
+  out += '</a></li>';
+  $('[data-menu-loaded]').data('menu-loaded', false);
+  $('[data-polls-menu-target]').html(out);
+}
+voteit.reset_polls_menu = reset_polls_menu;
+
 $(document).ready(function () {
   $("[data-load-target]").each(function() {
     voteit.load_target(this);
@@ -80,6 +112,6 @@ $(document).ready(function () {
 
   $('body').on('click', '[data-clickable-target]', voteit.load_and_replace);
   $('body').on('click', '[data-reply-to]', voteit.reply_to);
-  
+  $('body').on('click', '[data-polls-menu]', voteit.load_polls_menu);
   $('body').on('click', '[data-external-popover-loaded="false"]', voteit.external_popover_from_event);
 });

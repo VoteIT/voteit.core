@@ -4,9 +4,7 @@ from pyramid.renderers import render
 from voteit.core import VoteITMF as _
 from voteit.core.security import DELETE
 from voteit.core.security import EDIT
-from voteit.core.security import MODERATE_MEETING
 from voteit.core.models.interfaces import IAgendaItem
-from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IWorkflowAware
 from voteit.core.views.components.metadata_listing import meta_state
@@ -19,17 +17,6 @@ from voteit.core.views.components.metadata_listing import meta_state
              renderer = 'voteit.core:views/components/templates/workflow.pt')
 def wf_menu(context, request, va, **kw):
     return meta_state(context, request, va, **kw)
-
-
-#     if not IContextACL.providedBy(context):
-#         return
-#     wf = get_context_wf(context)
-#     if wf:
-#         view = kw['view']
-#         transitions = tuple(wf.get_transitions(request))
-#         if transitions or request.has_permission(security.PERM_EDIT, context):
-#             return view.render_template('arche:templates/menus/workflow.pt', wf = wf, transitions = transitions)
-
 
 @view_action('moderator_actions_section', 'context_actions',
              title = _(u"Actions here"), contained_section = 'context_actions')

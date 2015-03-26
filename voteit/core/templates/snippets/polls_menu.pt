@@ -1,0 +1,19 @@
+<tal:main xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="voteit.core">
+<li class="dropdown polls-menu">
+  <a href="#" class="dropdown-toggle"
+    data-toggle="dropdown"
+    aria-expanded="false"
+    data-menu-loaded="false"
+    data-polls-menu="${request.resource_url(request.meeting, '__polls_menu_content__')}">
+    <span class="glyphicon glyphicon-check"></span>
+    <span i18n:translate="">Polls</span>
+    <span class="badge" data-important-polls></span>
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" data-placeholder="Loading..." i18n:attributes="data-placeholder;" data-polls-menu-target></ul>
+</li>
+</tal:main>

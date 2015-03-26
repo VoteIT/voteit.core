@@ -4,17 +4,12 @@ from __future__ import unicode_literals
 import unittest
 
 from pyramid import testing
+from arche.utils import resolve_docids
 
-from voteit.core.testing_helpers import bootstrap_and_fixture
 from voteit.core.bootstrap import bootstrap_voteit
 from voteit.core.models.interfaces import IUnread
-
-
-def _mock_helpers(request, helper, name):
-    """ Register as a request method, they won't be active otherwise."""
-    def _mock_request_method(*args, **kwargs):
-        return helper(request, *args, **kwargs)
-    setattr(request, name, _mock_request_method)
+from voteit.core.testing_helpers import attach_request_method
+from voteit.core.testing_helpers import bootstrap_and_fixture
 
 
 class AtUseridLinkTests(unittest.TestCase):
@@ -39,8 +34,8 @@ class AtUseridLinkTests(unittest.TestCase):
         root['m'] = Meeting()
         request = testing.DummyRequest()
         request.meeting = root['m']
-        _mock_helpers(request, creators_info, 'creators_info')
-        _mock_helpers(request, get_userinfo_url, 'get_userinfo_url')
+        attach_request_method(request, creators_info, 'creators_info')
+        attach_request_method(request, get_userinfo_url, 'get_userinfo_url')
         return request
 
     def test_single(self):
@@ -400,3 +395,58 @@ class TestGetDocidsToShow(unittest.TestCase):
         self.assertEqual([docids[2]], result['batch'])
         self.assertEqual([], result['previous'])
         self.assertEqual([], result['over_limit'])
+
+
+class TestGetDocidsToShow(unittest.TestCase):
+
+    def setUp(self):
+        self.config = testing.setUp(request = testing.DummyRequest())
+        self.config.testing_securitypolicy('admin', permissive = True)
+        self.config.include('arche.testing')
+        self.config.include('arche.models.catalog')
+        self.config.include('voteit.core.models.catalog')
+        self.config.include('voteit.core.models.unread')
+        self.config.include('voteit.core.models.user_tags')
+        self.config.include('voteit.core.models.discussion_post')
+        self.config.include('voteit.core.models.site')
+        self.config.include('voteit.core.models.users')
+        self.config.include('voteit.core.models.user')
+        self.config.include('voteit.core.testing_helpers.register_workflows')
+
+    def tearDown(self):
+        testing.tearDown()
+
+    @property
+    def _fut(self):
+        from voteit.core.helpers import get_polls_struct
+        return get_polls_struct
+
+    def _fixture(self):
+        root = bootstrap_voteit(echo = False)
+        from voteit.core.models.meeting import Meeting
+        from voteit.core.models.poll import Poll
+        root['m'] = m = Meeting()
+        m['p1'] = Poll(title = 'Hello from one')
+        m['p2'] = Poll(title = 'Hello from two')
+        m['p3'] = Poll(title = 'Hello from three')
+        request = testing.DummyRequest()
+        request.root = root
+        request.meeting = m
+        request.is_moderator = False
+        attach_request_method(request, resolve_docids, 'resolve_docids')
+        return m, request
+
+    def test_states_in_result(self):
+        meeting, request = self._fixture()
+        res = self._fut(meeting, request)
+        self.assertEqual(len(res), 3)
+        request.is_moderator = True
+        res = self._fut(meeting, request)
+        self.assertEqual(len(res), 4)
+
+    def test_results_respect_limit(self):
+        meeting, request = self._fixture()
+        request.is_moderator = True
+        res = self._fut(meeting, request, limit = 2)
+        self.assertEqual(len(tuple(res[3]['polls'])), 2)
+        self.assertEqual(res[3]['over_limit'], 1)
