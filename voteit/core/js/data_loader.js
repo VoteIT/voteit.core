@@ -1,6 +1,3 @@
-if(typeof(voteit) == "undefined"){
-    voteit = {};
-}
 
 function load_target(target) {
   var target = $(target);
@@ -81,7 +78,6 @@ function load_polls_menu(event) {
   var menu_target = $('[data-polls-menu-target]');
   arche.actionmarker_feedback(menu_target, true);
   var url = elem.data('polls-menu');
-  console.log(url);
   var request = arche.do_request(url);
   request.done(function(response) {
     menu_target.html(response);
@@ -109,7 +105,7 @@ $(document).ready(function () {
   $("[data-load-target]").each(function() {
     voteit.load_target(this);
   });
-
+  $('#polls-menu').on('hidden.bs.dropdown', voteit.reset_polls_menu);
   $('body').on('click', '[data-clickable-target]', voteit.load_and_replace);
   $('body').on('click', '[data-reply-to]', voteit.reply_to);
   $('body').on('click', '[data-polls-menu]', voteit.load_polls_menu);

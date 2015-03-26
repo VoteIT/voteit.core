@@ -9,16 +9,21 @@
     ${state_titles[struct['state']]}
   </li>
   <li role="presentation" tal:repeat="obj struct['polls']">
-    <a role="menuitem" tabindex="-1" href="${request.resource_url(obj)}">
-      <tal:ongoing condition="struct['state'] == 'ongoing'">
-        <tal:def define="can_vote request.has_permission(vote_perm, obj);
-                         should_vote request.authenticated_userid not in obj;">
+    <tal:ongoing condition="struct['state'] == 'ongoing'">
+    <tal:def define="can_vote request.has_permission(vote_perm, obj);
+                     should_vote request.authenticated_userid not in obj;">
+      <a role="menuitem" tabindex="-1" href="${request.resource_url(obj, '__vote__')}" data-open-modal>
         <span tal:condition="can_vote and should_vote" class="votemarker votemarker-active glyphicon glyphicon-star"></span>
         <span tal:condition="can_vote and not should_vote" class="votemarker glyphicon glyphicon-ok-circle"></span>
-        </tal:def>
-      </tal:ongoing>
-      ${obj.title}
-    </a>
+        ${obj.title}
+      </a>
+    </tal:def>
+    </tal:ongoing>
+    <tal:other condition="struct['state'] != 'ongoing'">
+      <a role="menuitem" tabindex="-1" href="${request.resource_url(obj)}">
+        ${obj.title}
+      </a>
+    </tal:other>
   </li>
   <li role="presentation" class="divider" tal:condition="not repeat['struct'].end"></li>
 </tal:state>

@@ -1,10 +1,4 @@
-if(typeof(voteit) == "undefined"){
-    voteit = {};
-}
-voteit.unread_notify_timer = null;
-voteit.unread_notify_interval = 6000;
-voteit.unread_notify_url = null;
-arche.flash_slot_order = ['modal', 'voteit-main', 'main'];
+
 
 function set_tag_filter(event) {
   event.preventDefault();

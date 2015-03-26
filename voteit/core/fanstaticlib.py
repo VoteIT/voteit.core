@@ -1,26 +1,27 @@
 # """ Fanstatic lib"""
 from arche.fanstatic_lib import common_js
+from arche.fanstatic_lib import main_css
 from arche.fanstatic_lib import pure_js
 from arche.interfaces import IBaseView
 from arche.interfaces import IViewInitializedEvent
-from arche.fanstatic_lib import main_css
+from deform_autoneed import need_lib
 from fanstatic import Group
 from fanstatic import Library
 from fanstatic import Resource
-from js.jquery import jquery
-from pkg_resources import resource_filename
-from deform_autoneed import resource_registry
 from js.bootstrap import bootstrap_css
-
+from js.jquery import jquery
 from js.jquery_tablesorter import tablesorter
-# 
+from pkg_resources import resource_filename
+
 # #Libs
 deformlib = Library('deform', resource_filename('deform', 'static'))
 voteit_core_jslib = Library('voteit_js', 'js')
 voteit_core_csslib = Library('voteit_css', 'css')
 
-data_loader = Resource(voteit_core_jslib, 'data_loader.js', depends = (jquery, pure_js, common_js))
-agenda_item_js = Resource(voteit_core_jslib, 'agenda_item.js', depends = (jquery, common_js, data_loader))
+base_js = Resource(voteit_core_jslib, 'base.js', depends = (common_js, jquery))
+data_loader = Resource(voteit_core_jslib, 'data_loader.js', depends = (base_js, pure_js,))
+agenda_item_js = Resource(voteit_core_jslib, 'agenda_item.js', depends = (base_js, data_loader))
+watcher_js = Resource(voteit_core_jslib, 'watcher.js', depends = (data_loader,))
 
 #voteit_bootstrap = Resource(voteit_core_csslib, 'voteit_bootstrap.css')
 voteit_main_css = Resource(voteit_core_csslib, 'main.css', depends=(bootstrap_css, main_css))
@@ -141,6 +142,8 @@ voteit_manage_tickets_js = Resource(voteit_core_jslib, 'voteit_manage_tickets.js
 
 def include_voteit_resources(view, event):
     voteit_main_css.need()
+    watcher_js.need()
+    need_lib('deform') #As a minimum this should be included, but it really depends on poll methods.
     if view.request.is_moderator:
         voteit_moderator_js.need()
 

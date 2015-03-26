@@ -3,7 +3,7 @@
       xmlns:tal="http://xml.zope.org/namespaces/tal"
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
       i18n:domain="voteit.core">
-<li class="dropdown polls-menu">
+<li class="dropdown" id="polls-menu">
   <a href="#" class="dropdown-toggle"
     data-toggle="dropdown"
     aria-expanded="false"
@@ -16,4 +16,25 @@
   </a>
   <ul class="dropdown-menu" data-placeholder="Loading..." i18n:attributes="data-placeholder;" data-polls-menu-target></ul>
 </li>
+<script type="text/javascript">
+$(document).ready(function() {
+  if (typeof(voteit.watcher == 'undefined')) {
+    voteit.watcher = new Watcher("${request.resource_url(request.meeting, 'watcher_data.json')}");
+  };
+  
+  function unvoted_counter(response) {
+    if (typeof(response['unvoted_polls']) !== 'undefined') {
+      if (response['unvoted_polls'] > 0) {
+        $('[data-important-polls]').html(response['unvoted_polls']);
+      } else {
+        $('[data-important-polls]').html();
+      };
+    };
+  };
+
+  voteit.watcher.add_response_callback(unvoted_counter);
+  voteit.watcher.fetch_data();
+
+});
+</script>
 </tal:main>

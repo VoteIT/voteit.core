@@ -236,6 +236,7 @@ def get_polls_struct(meeting, request, limit = 5):
         res, docids = request.root.catalog.query(squery, **state_query[state])
         result = {}
         result['over_limit'] = res.total - res.real
+        result['docids'] = docids #To allow caching or skip resolving polls
         result['polls'] = request.resolve_docids(docids)
         result['state'] = state
         results.append(result)

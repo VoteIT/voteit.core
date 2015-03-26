@@ -9,7 +9,6 @@ from arche.portlets import PortletType
 from arche.utils import generate_slug
 from arche.views.base import BaseView
 from arche.views.base import DefaultAddForm
-from deform_autoneed import need_lib
 from pyramid.renderers import render
 from pyramid.response import Response
 from pyramid.traversal import resource_path
@@ -18,10 +17,9 @@ from repoze.catalog.query import Eq, NotAny, Any
 from voteit.core import _
 from voteit.core import security
 from voteit.core.fanstaticlib import data_loader
+from voteit.core.helpers import get_docids_to_show
+from voteit.core.helpers import tags2links
 from voteit.core.models.interfaces import IAgendaItem
-from voteit.core.helpers import tags2links, get_docids_to_show
-#from voteit.core.models.interfaces import IProposal
-#from voteit.core.models.interfaces import IDiscussionPost
 from voteit.core.schemas.meeting import AgendaItemProposalsPortletSchema
 
 #FIXME: Loading required resources for inline forms is still a problem.
@@ -32,8 +30,6 @@ class ListingPortlet(PortletType):
 
     def render(self, context, request, view, **kwargs):
         if IAgendaItem.providedBy(context):
-            data_loader.need()
-            need_lib('deform')
             query = {}
             tag = request.GET.get('tag', None)
             if tag:
@@ -53,7 +49,6 @@ class ProposalsPortlet(ListingPortlet):
     def render(self, context, request, view, **kwargs):
         if IAgendaItem.providedBy(context):
             data_loader.need()
-            need_lib('deform')
             query = {}
             tags = request.GET.getall('tag')
             if tags:
