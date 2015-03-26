@@ -1,7 +1,5 @@
 from betahaus.viewcomponent import view_action
 from pyramid.renderers import render
-from pyramid.traversal import resource_path
-from repoze.catalog.query import Eq
 
 from voteit.core.security import MANAGE_SERVER
 from voteit.core.security import MODERATE_MEETING
@@ -14,30 +12,6 @@ from voteit.core.models.interfaces import IAccessPolicy
 MODERATOR_SECTIONS = ('ongoing', 'upcoming', 'closed', 'private',)
 REGULAR_SECTIONS = ('ongoing', 'upcoming', 'closed',)
 
-
-# @view_action('main', 'meeting_actions', permission=VIEW)
-# def meeting_actions(context, request, va, **kw):
-#     """ This is the main renderer for meeting actions.
-#         The structure of the menu. it will call all view components
-#         in the group meeting_actions.
-#         In turn, some of those will call other groups.
-#     """
-#     api = kw['api']
-#     context = api.meeting and api.meeting or api.root
-#     return """<ul id="meeting-actions-menu" class="actions-menu">%s</ul>""" % api.render_view_group(context, request, 'meeting_actions')
-
-@view_action('meeting_actions', 'polls', title = _(u"Polls"), permission=VIEW)
-def polls_menu(context, request, va, **kw):
-    api = kw['api']
-    if api.meeting is None:
-        return ''
-    query = Eq('content_type', 'Poll' ) & Eq('path', resource_path(api.meeting)) & Eq('workflow_state', 'ongoing')
-    response = {}
-    response['api'] = api
-    response['menu_title'] = va.title
-    response['open_polls'] = bool(api.root.catalog.query(query)[0])
-    response['url'] = request.resource_url(api.meeting, 'meeting_poll_menu')
-    return render('templates/polls/polls_menu.pt', response, request = request)
 
 @view_action('meeting_actions', 'admin_menu', title = _(u"Admin menu"), permission = MANAGE_SERVER,
              menu_css_cls = 'admin_menu')
@@ -104,24 +78,3 @@ def configure_access_policy_menu_link(context, request, va, **kw):
     if ap and ap.config_schema():
         url = request.resource_url(request.meeting, va.kwargs['link'])
         return """<li class="list-group-item"><a href="%s">%s</a></li>""" % (url, request.localizer.translate(va.title))
-
-
-# class MeetingActionsMenuBody(BaseView):
-#     
-#     @view_config(name="meeting_poll_menu", context=IMeeting, renderer="templates/polls/polls_menu_body.pt", permission=VIEW)
-#     def meeting_poll_menu(self):
-#         if self.api.show_moderator_actions:
-#             sections = MODERATOR_SECTIONS
-#         else:
-#             sections = REGULAR_SECTIONS
-#         meeting_path = resource_path(self.api.meeting)
-#         results = {}
-#         for section in sections:
-#             #Note, as long as we don't query for private wf state, we don't have to check perms
-#             num, docids = self.api.search_catalog(content_type = 'Poll',
-#                                                   path = meeting_path,
-#                                                   workflow_state = section)
-#             results[section] = [self.api.resolve_catalog_docid(x) for x in docids]
-#         self.response['sections'] = sections
-#         self.response['results'] = results
-#         return self.response
