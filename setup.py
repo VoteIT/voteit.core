@@ -24,9 +24,7 @@ install_requires = (
     'deform',
     'fanstatic',
     'html2text',
-    'httpagentparser',
     'js.jquery_tablesorter',
-    'lingua',
     'repoze.catalog',
     'repoze.evolution',
     'repoze.folder',
@@ -78,11 +76,4 @@ setup(name='voteit.core',
       voteit_core_csslib = voteit.core.fanstaticlib:voteit_core_csslib
       voteit_core_jslib = voteit.core.fanstaticlib:voteit_core_jslib
       deformlib = voteit.core.fanstaticlib:deformlib
-      """,
-      message_extractors = { '.': [
-              ('**.py',   'lingua_python', None ),
-              ('**.pt',   'lingua_xml', None ),
-              #The ZCML extractor seems broken in lingua, but since it's ZCML is XML this works. /robinharms
-              ('**.zcml',   'lingua_xml', None ),
-              ]},
-      )
+      """,)
