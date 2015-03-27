@@ -18,8 +18,7 @@ NEW_USERID_PATTERN = re.compile(r'^'+USERID_REGEXP+r'$')
 
 
 def html_string_validator(node, value):
-    """
-        checks that input doesn't contain html tags
+    """ Checks that input doesn't contain html tags
     """
     # removes tags and new lines and replaces <br> with newlines
     svalue = strip_tags(value)
@@ -29,7 +28,7 @@ def html_string_validator(node, value):
     # removes duplicated whitespaces
     svalue = ' '.join(svalue.split())
     value = ' '.join(value.split())
-    # if the original value and the stript value is not the same rais exception
+    # if the original value and the stripped value is not the same raise exception
     if not svalue == value:
         raise colander.Invalid(node, _(u"HTML is not allowed."))
 
@@ -169,7 +168,6 @@ class NotOnlyDefaultTextValidator(object):
         default = self.default_deferred(node, {'context': self.context, 'request': self.request})
         if isinstance(default, TranslationString):
             default = self.request.localizer.translate(default)
-            #default = self.api.translate(default)
         if value.strip() == default.strip():
             raise colander.Invalid(node, _(u"only_default_text_validator_error",
                                            default=u"Only the default content is not valid",))
