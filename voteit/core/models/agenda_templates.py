@@ -16,7 +16,9 @@ class AgendaTemplates(BaseContent):
     """
     type_name = 'AgendaTemplates'
     type_title = _(u"Agenda templates")
-    #allowed_contexts = ()
+    nav_visible = False
+    listing_visible = False
+    search_visible = False
 
     __acl__ = [(Allow, security.ROLE_ADMIN, (security.EDIT, security.VIEW,
                                              security.MANAGE_SERVER, security.ADD_AGENDA_TEMPLATE, )),
