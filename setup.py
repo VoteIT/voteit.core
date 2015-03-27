@@ -12,6 +12,7 @@ install_requires = (
     'BeautifulSoup', #FIXME?
     'ZODB3',
     'betahaus.viewcomponent',
+    'betahaus.pyracont >= 0.3b', #Needed for migrations
     'colander',
     'deform',
     'fanstatic',
