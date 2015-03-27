@@ -52,10 +52,6 @@ class SiteRootPermissionTests(unittest.TestCase):
         obj = self._cut()
         self.assertEqual(self.pap(obj, security.ADD_MEETING), admin | meeting_creator)
 
-    def test_add_meeting_perm_allow_authenticated(self):
-        obj = self._cut(allow_add_meeting = True)
-        self.assertEqual(self.pap(obj, security.ADD_MEETING), admin | meeting_creator | authenticated)
-
     def test_view(self):
         obj = self._cut()
         self.assertEqual(self.pap(obj, security.VIEW), admin | everyone)

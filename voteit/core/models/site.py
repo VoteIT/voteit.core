@@ -5,7 +5,6 @@ from voteit.core import VoteITMF as _
 from voteit.core import security
 from voteit.core.models.interfaces import ISiteRoot
 from voteit.core.models.base_content import BaseContent
-#from voteit.core.models.catalog import update_indexes
 from voteit.core.models.security_aware import SecurityAware
 
 
@@ -41,9 +40,6 @@ class SiteRoot(BaseContent, SecurityAware, Root):
     def users(self):
         return self['users']
 
-    @property
-    def allow_add_meeting(self):
-        return self.get_field_value('allow_add_meeting', False)
 
 def includeme(config):
     config.add_content_factory(SiteRoot, addable_in = ('Meeting',))
