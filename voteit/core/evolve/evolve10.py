@@ -9,7 +9,10 @@ def evolve(root):
         Also add portlets to all meetings.
     """
     from arche.utils import find_all_db_objects
-    from voteit.core.models.meeting import add_default_portlets
+    from voteit.core.models.meeting import add_default_portlets_meeting
+    from voteit.core.models.site import add_default_portlets_site
+
+    add_default_portlets_site(root)
 
     for obj in find_all_db_objects(root):
         if IProposal.providedBy(obj):
@@ -18,4 +21,4 @@ def evolve(root):
             except KeyError:
                 pass
         elif IMeeting.providedBy(obj):
-            add_default_portlets(obj)
+            add_default_portlets_meeting(obj)

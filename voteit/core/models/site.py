@@ -1,12 +1,14 @@
 from arche.api import Root
+from arche.interfaces import IObjectAddedEvent
+from arche.portlets import get_portlet_manager
 from zope.interface.declarations import implementer
+
 
 from voteit.core import VoteITMF as _
 from voteit.core import security
 from voteit.core.models.interfaces import ISiteRoot
 from voteit.core.models.base_content import BaseContent
 from voteit.core.models.security_aware import SecurityAware
-
 
 _DEFAULT_ACL = ((security.Allow, security.ROLE_ADMIN, security.ALL_PERMISSIONS),
                 (security.Allow, security.ROLE_MEETING_CREATOR, security.ADD_MEETING),
@@ -41,5 +43,14 @@ class SiteRoot(BaseContent, SecurityAware, Root):
         return self['users']
 
 
+def add_default_portlets_site(root):
+    manager = get_portlet_manager(root)
+    if manager is not None:
+        meeting_list = manager.add('right', 'meeting_list')
+
+def _add_portlets_site_subscriber(root, event):
+    add_default_portlets_site(root)
+
 def includeme(config):
     config.add_content_factory(SiteRoot, addable_in = ('Meeting',))
+    config.add_subscriber(_add_portlets_site_subscriber, [ISiteRoot, IObjectAddedEvent])

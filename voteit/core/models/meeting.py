@@ -145,17 +145,17 @@ def closing_meeting_callback(context, info):
                     default = u"This meeting still has ongoing or upcoming Agenda items in it. You can't close it until they're closed.")
         raise HTTPForbidden(err_msg)
 
-def add_default_portlets(meeting):
+def add_default_portlets_meeting(meeting):
     manager = get_portlet_manager(meeting)
-    if manager: #Might not be loaded during tests
+    if manager is not None:
         ai_polls = manager.add('agenda_item', 'ai_polls')
         ai_proposals = manager.add('agenda_item', 'ai_proposals')
         ai_proposals.settings = {'hide_proposal_states': ('retracted', 'denied', 'unhandled')}
         ai_discussions = manager.add('agenda_item', 'ai_discussions')
         agenda = manager.add('left', 'agenda')
 
-def _add_portlets_subscriber(meeting, event):
-    add_default_portlets(meeting)
+def _add_portlets_meeting_subscriber(meeting, event):
+    add_default_portlets_meeting(meeting)
 
 def includeme(config):
     config.add_content_factory(Meeting, addable_to = 'Root')
@@ -185,4 +185,4 @@ def includeme(config):
                                              security.MODERATE_MEETING,
                                              security.MANAGE_GROUPS,))
     closed_acl.add(security.ROLE_VIEWER, security.VIEW)
-    config.add_subscriber(_add_portlets_subscriber, [IMeeting, IObjectAddedEvent])
+    config.add_subscriber(_add_portlets_meeting_subscriber, [IMeeting, IObjectAddedEvent])
