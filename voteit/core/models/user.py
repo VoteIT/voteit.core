@@ -12,13 +12,13 @@ from pyramid.threadlocal import get_current_request
 from pyramid.traversal import find_interface
 from pyramid_mailer import get_mailer
 from pyramid_mailer.message import Message
+from arche.utils import utcnow
 from zope.interface import implementer
 
 from voteit.core import VoteITMF as _
 from voteit.core import security
 from voteit.core.exceptions import TokenValidationError
 from voteit.core.models.base_content import BaseContent
-from voteit.core.models.date_time_util import utcnow
 from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import IProfileImage

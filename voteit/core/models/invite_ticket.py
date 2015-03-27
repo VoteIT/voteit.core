@@ -3,6 +3,7 @@ from random import choice
 from uuid import uuid4
 
 from arche.utils import send_email
+from arche.utils import utcnow
 from betahaus.viewcomponent import render_view_action
 from persistent.list import PersistentList
 from pyramid.exceptions import HTTPForbidden
@@ -16,7 +17,6 @@ from voteit.core import security
 from voteit.core.models.interfaces import IInviteTicket
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.workflow_aware import WorkflowAware
-from voteit.core.models.date_time_util import utcnow
 
 
 SELECTABLE_ROLES = (security.ROLE_MODERATOR,

@@ -55,9 +55,6 @@ class UserLatestMeetingEntries(unittest.TestCase):
         from voteit.core.models.proposal import Proposal
         from voteit.core.models.discussion_post import DiscussionPost
         settings = self.config.registry.settings
-        #settings['default_locale_name'] = 'sv'
-        #settings['default_timezone_name'] = 'Europe/Stockholm'
-        #self.config.include('voteit.core.models.date_time_util')
         root['m']['p1'] = Proposal(text = u"Prop p1", creators = ['admin'])
         root['m']['d1'] = DiscussionPost(text = "Disc d1", creators = ['admin'])
         root['m2'] = Meeting()

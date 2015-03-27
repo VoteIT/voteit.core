@@ -3,6 +3,7 @@ from BTrees.OOBTree import OOBTree
 from arche.security import get_acl_registry
 from arche.utils import get_flash_messages
 from arche.utils import send_email
+from arche.utils import utcnow
 from pyramid.httpexceptions import HTTPForbidden
 from pyramid.renderers import render
 from pyramid.threadlocal import get_current_registry
@@ -15,7 +16,6 @@ from zope.interface import implementer
 from voteit.core import _
 from voteit.core import security
 from voteit.core.models.base_content import BaseContent
-from voteit.core.models.date_time_util import utcnow
 from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IFlashMessages
 from voteit.core.models.interfaces import IMeeting

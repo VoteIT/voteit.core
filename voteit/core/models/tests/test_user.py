@@ -1,5 +1,4 @@
 import unittest
-from datetime import timedelta
 
 from zope.interface.verify import verifyObject
 from pyramid import testing
@@ -7,8 +6,6 @@ from pyramid_mailer import get_mailer
 from pyramid.security import principals_allowed_by_permission
 
 from voteit.core import security
-from voteit.core.models.date_time_util import utcnow
-from voteit.core.exceptions import TokenValidationError
 from voteit.core.testing_helpers import register_security_policies
 from voteit.core.models.interfaces import IProfileImage
 from voteit.core.models.interfaces import IUser
