@@ -16,6 +16,7 @@ from voteit.core.models.interfaces import IMeeting
 from voteit.core.security import VIEW
 from voteit.core import _
 
+#FIXME: This should probably be menus after all
 
 class MeetingSettingsPortlet(PortletType):
     name = "meeting_settings"
