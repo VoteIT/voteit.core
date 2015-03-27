@@ -1,13 +1,4 @@
 from arche.api import Root
-from betahaus.pyracont.decorators import content_factory
-from pyramid.security import ALL_PERMISSIONS
-from pyramid.security import Allow
-from pyramid.security import Authenticated
-from pyramid.security import DENY_ALL
-from pyramid.security import Everyone
-from repoze.catalog.catalog import Catalog
-from repoze.catalog.document import DocumentMap
-from zope.interface import implements
 from zope.interface.declarations import implementer
 
 from voteit.core import VoteITMF as _
@@ -18,13 +9,12 @@ from voteit.core.models.base_content import BaseContent
 from voteit.core.models.security_aware import SecurityAware
 
 
-_DEFAULT_ACL = ((Allow, security.ROLE_ADMIN, ALL_PERMISSIONS),
-                (Allow, security.ROLE_MEETING_CREATOR, security.ADD_MEETING),
-                (Allow, Everyone, security.VIEW),
-                DENY_ALL)
+_DEFAULT_ACL = ((security.Allow, security.ROLE_ADMIN, security.ALL_PERMISSIONS),
+                (security.Allow, security.ROLE_MEETING_CREATOR, security.ADD_MEETING),
+                (security.Allow, security.Everyone, security.VIEW),
+                security.DENY_ALL)
 
 
-#@content_factory('SiteRoot', title=_(u"Site root"))
 @implementer(ISiteRoot)
 class SiteRoot(BaseContent, SecurityAware, Root):
     """ Site root content type - there's only one of these.
@@ -38,8 +28,8 @@ class SiteRoot(BaseContent, SecurityAware, Root):
     @property
     def __acl__(self):
         acl = []
-        if self.get_field_value('allow_add_meeting', False):
-            acl.append((Allow, Authenticated, (security.ADD_MEETING, )))
+        if self.allow_self_registration:
+            acl.append((security.Allow, security.Everyone, security.REGISTER))
         acl.extend(_DEFAULT_ACL)
         return acl
 

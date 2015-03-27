@@ -4,12 +4,16 @@ from arche import security as arche_sec
 from arche.security import authz_context
 from arche.security import groupfinder
 from pyramid.interfaces import IAuthorizationPolicy
+from pyramid.security import ALL_PERMISSIONS
+from pyramid.security import Allow
 from pyramid.security import Authenticated
+from pyramid.security import DENY_ALL
 from pyramid.security import Everyone
-from pyramid.threadlocal import get_current_request
 from pyramid.threadlocal import get_current_registry
+from pyramid.threadlocal import get_current_request
 from pyramid.traversal import find_root
 from zope.component.event import objectEventNotify
+
 
 from voteit.core.events import WorkflowStateChange
 from voteit.core import VoteITMF as _
@@ -63,6 +67,7 @@ MANAGE_GROUPS = arche_sec.PERM_MANAGE_USERS
 MANAGE_SERVER = arche_sec.PERM_MANAGE_SYSTEM
 MODERATE_MEETING = 'Moderate Meeting'
 REQUEST_MEETING_ACCESS = 'Request Meeting Access'
+REGISTER = arche_sec.PERM_REGISTER
 
 PERM_MANAGE_USERS = arche_sec.PERM_MANAGE_USERS
 
