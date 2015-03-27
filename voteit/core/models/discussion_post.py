@@ -9,13 +9,12 @@ from voteit.core import security
 from voteit.core.helpers import strip_and_truncate
 from voteit.core.helpers import tags_from_text
 from voteit.core.models.interfaces import IAgendaItem
-from voteit.core.models.interfaces import ICatalogMetadataEnabled
 from voteit.core.models.interfaces import IDiscussionPost
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.base_content import BaseContent
 
 
-@implementer(IDiscussionPost, ICatalogMetadataEnabled)
+@implementer(IDiscussionPost)
 class DiscussionPost(BaseContent):
     """ Discussion Post content type.
         See :mod:`voteit.core.models.interfaces.IDiscussionPost`.

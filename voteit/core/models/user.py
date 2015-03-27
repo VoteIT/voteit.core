@@ -20,7 +20,6 @@ from voteit.core.exceptions import TokenValidationError
 from voteit.core.models.base_content import BaseContent
 from voteit.core.models.date_time_util import utcnow
 from voteit.core.models.interfaces import IAgendaItem
-from voteit.core.models.interfaces import ICatalogMetadataEnabled
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import IProfileImage
 from voteit.core.models.interfaces import IUser
@@ -30,7 +29,7 @@ USERID_REGEXP = r"[a-z]{1}[a-z0-9-_]{2,30}"
 log = logging.getLogger(__name__)
 
 
-@implementer(IUser, ICatalogMetadataEnabled)
+@implementer(IUser)
 class User(ArcheUser, BaseContent):
     """ User content type.
         See :mod:`voteit.core.models.interfaces.IUser`.

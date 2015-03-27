@@ -17,7 +17,6 @@ from voteit.core import security
 from voteit.core.models.base_content import BaseContent
 from voteit.core.models.date_time_util import utcnow
 from voteit.core.models.interfaces import IAgendaItem
-from voteit.core.models.interfaces import ICatalogMetadataEnabled
 from voteit.core.models.interfaces import IFlashMessages
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import IPoll
@@ -26,7 +25,7 @@ from voteit.core.models.interfaces import IVote
 from voteit.core.models.workflow_aware import WorkflowAware
 
 
-@implementer(IPoll, ICatalogMetadataEnabled)
+@implementer(IPoll)
 class Poll(BaseContent, WorkflowAware):
     """ Poll content type.
         See :mod:`voteit.core.models.interfaces.IPoll`.

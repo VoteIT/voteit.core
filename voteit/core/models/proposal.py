@@ -9,11 +9,10 @@ from voteit.core.helpers import tags_from_text
 from voteit.core.models.base_content import BaseContent
 from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IProposal
-from voteit.core.models.interfaces import ICatalogMetadataEnabled
 from voteit.core.models.workflow_aware import WorkflowAware
 
 
-@implementer(IProposal, ICatalogMetadataEnabled)
+@implementer(IProposal)
 class Proposal(BaseContent, WorkflowAware):
     """ Proposal content type.
         See :mod:`voteit.core.models.interfaces.IProposal`.

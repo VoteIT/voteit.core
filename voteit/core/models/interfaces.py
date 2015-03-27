@@ -548,23 +548,6 @@ class ILogHandler(Interface):
         """
 
 
-class ICatalogMetadata(Interface):
-    """ An adapter to fetch metadata for the catalog.
-        it adapts voteit.core.models.interfaces.ICatalogMetadataEnabled
-        which is just a marker interface.
-    """
-    special_indexes = Attribute("A dict of iface:method name that should be run to extend the metadata for a specific iface.")
-    
-    def __init__(context):
-        """ Object to adapt """
-        
-    def __call__():
-        """ Return metadata for adapted object. """
-    
-    def get_agenda_item_specific(results):
-        """ Update results with agenda item specific metadata. """
-
-
 class IUnread(Interface):
     """ Adapter that provides unread functionality to an object.
         This means that all users who have access to the adapted object
@@ -771,11 +754,3 @@ class IFanstaticResources(Interface):
             should be included in the order set in the order attribute.
             Returns keys of included resources.
         """
-
-
-#Marker interfaces
-class ICatalogMetadataEnabled(Interface):
-    """ Marker interface for IBaseContent that should have metadata.
-        The interface itself doesn't do anything, but the ICatalogMetadata
-        adapter is registered for it.
-    """

@@ -11,13 +11,12 @@ from voteit.core import security
 from voteit.core.models.arche_compat import createContent
 from voteit.core.models.base_content import BaseContent
 from voteit.core.models.interfaces import IAgendaItem
-from voteit.core.models.interfaces import ICatalogMetadataEnabled
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.workflow_aware import WorkflowAware
 from voteit.core.models.security_aware import SecurityAware
 
 
-@implementer(IMeeting, ICatalogMetadataEnabled)
+@implementer(IMeeting)
 class Meeting(BaseContent, SecurityAware, WorkflowAware):
     """ Meeting content type.
         See :mod:`voteit.core.models.interfaces.IMeeting`.
