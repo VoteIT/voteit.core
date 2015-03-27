@@ -7,8 +7,8 @@ from voteit.core.security import VIEW
 
 
 @view_action('nav_right', 'polls',
-             title = _("Workflow"),
-             priority = 5,
+             title = _("Polls"),
+             priority = 3,
              containment = IMeeting,
              permission = VIEW,
              renderer = 'voteit.core:templates/snippets/polls_menu.pt')

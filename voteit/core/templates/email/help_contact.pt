@@ -19,8 +19,7 @@
 
 <tal:meeting condition="meeting">
 <h5 i18n:translate="">Click the link to get to the VoteIT meeting:</h5>
-<a tal:attributes="href api.resource_url(meeting, api.request)"
-   tal:content="api.resource_url(meeting, api.request)">link</a>
+<a href="${request.resource_url(meeting)}">${request.resource_url(meeting)}</a>
 </tal:meeting>
 
 </body>

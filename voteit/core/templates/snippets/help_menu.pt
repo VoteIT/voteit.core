@@ -1,0 +1,19 @@
+<tal:main xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="voteit.core">
+<li class="dropdown" id="help-menu" tal:condition="menu_html">
+  <a href="#" class="dropdown-toggle"
+    data-toggle="dropdown"
+    aria-expanded="false">
+    <span class="glyphicon glyphicon-question-sign"></span>
+    <span i18n:translate="">Help</span>
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu">
+    ${structure: menu_html}
+  </ul>
+</li>
+
+</tal:main>
