@@ -11,13 +11,12 @@ install_requires = (
     'Arche',
     'BeautifulSoup', #FIXME?
     'ZODB3',
-    'betahaus.pyracont>=0.2b',
     'betahaus.viewcomponent',
     'colander',
     'deform',
     'fanstatic',
     'html2text',
-    'js.jquery_tablesorter',
+    'js.jquery_tablesorter', #FIXME?
     'pyramid',
     'pyramid_beaker',
     'pyramid_chameleon',

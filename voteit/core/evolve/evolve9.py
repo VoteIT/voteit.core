@@ -3,8 +3,11 @@ def evolve(root):
     """ Evolve db to work with Arche instead. Removes anything that's a duplicate.
     """
     from arche.utils import find_all_db_objects
-    #FIXME: Add portlets here too
-
+    try:
+        import betahaus.pyracont #test
+    except ImportError:
+        print "IMPORTANT! password fields needed to make this migration. Install betahaus.pyracont"
+        raise
     #Loop through all user objects
     _marker = object()
     for user in root.users.values():

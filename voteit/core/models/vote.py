@@ -1,8 +1,6 @@
 from __future__ import unicode_literals
 
-#from zope.interface import implementsOnly
 from pyramid.traversal import find_interface
-#from betahaus.pyracont.decorators import content_factory
 from zope.component.event import objectEventNotify
 from zope.interface import implementer_only
 from arche.interfaces import ILocalRoles
@@ -16,7 +14,6 @@ from voteit.core.models.interfaces import IVote
 from voteit.core.events import ObjectUpdatedEvent
 
 
-#@content_factory('Vote', title=_(u"Vote"))
 @implementer_only(IVote, ILocalRoles) #This blanks out other interfaces!
 class Vote(BaseContent):
     """ Vote content type.

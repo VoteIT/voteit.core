@@ -1,6 +1,5 @@
 import colander
 import deform
-from betahaus.pyracont.decorators import schema_factory
 
 from voteit.core.validators import html_string_validator
 from voteit.core.schemas.common import deferred_default_user_fullname
@@ -16,9 +15,9 @@ def deferred_meeting_title(node, kw):
     return u""
 
 
-@schema_factory('ContactSchema', title=_("Contact moderator"),
-                description = _(u"contact_schema_main_description",
-                                default = u"Send a message to the meeting moderators"))
+#@schema_factory('ContactSchema', title=_("Contact moderator"),
+#                description = _(u"contact_schema_main_description",
+#                                default = u"Send a message to the meeting moderators"))
 class ContactSchema(colander.MappingSchema):
     name = colander.SchemaNode(colander.String(),
                                title = _(u"Name"),
@@ -43,7 +42,7 @@ class ContactSchema(colander.MappingSchema):
                                   validator = html_string_validator,)
 
 
-@schema_factory('SupportSchema', title=_("Support"))
+#@schema_factory('SupportSchema', title=_("Support"))
 class SupportSchema(colander.Schema):
     """ Support contact form schema. """
     name = colander.SchemaNode(colander.String(),

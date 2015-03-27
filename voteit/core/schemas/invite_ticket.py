@@ -1,16 +1,16 @@
 import colander
 import deform
-from betahaus.pyracont.decorators import schema_factory
 
 from voteit.core.validators import html_string_validator
 from voteit.core.validators import multiple_email_validator
 from voteit.core.schemas.common import strip_and_lowercase
 from voteit.core import security
 from voteit.core import VoteITMF as _
+from voteit.core.validators import deferred_token_form_validator
 
 
-@schema_factory('ClaimTicketSchema')
 class ClaimTicketSchema(colander.Schema):
+    validator = deferred_token_form_validator
     email = colander.SchemaNode(colander.String(),
                                 title = _(u"Email address your invitation was sent to."),
                                 validator = colander.Email(msg = _(u"Invalid email address.")),)
@@ -53,3 +53,4 @@ class AddTicketsSchema(colander.Schema):
 
 def includeme(config):
     config.add_content_schema('Meeting', AddTicketsSchema, 'add_tickets')
+    config.add_content_schema('Meeting', ClaimTicketSchema, 'claim_ticket')

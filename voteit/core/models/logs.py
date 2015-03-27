@@ -2,7 +2,6 @@ from zope.component import adapts
 from zope.interface import implements
 from persistent import Persistent
 from BTrees.LOBTree import LOBTree
-from betahaus.pyracont.decorators import content_factory
 
 from voteit.core import VoteITMF as _
 from voteit.core.models.arche_compat import createContent

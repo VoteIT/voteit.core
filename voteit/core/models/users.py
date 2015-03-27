@@ -1,7 +1,6 @@
 from __future__ import unicode_literals
 
 from arche.api import Users as ArcheUsers
-from betahaus.pyracont.decorators import content_factory
 from pyramid.security import Allow
 from pyramid.security import DENY_ALL
 from zope.interface import implementer
@@ -9,12 +8,9 @@ from zope.interface import implementer
 from voteit.core import VoteITMF as _
 from voteit.core import security
 from voteit.core.models.base_content import BaseContent
-from voteit.core.models.interfaces import IUser
 from voteit.core.models.interfaces import IUsers
-from voteit.core.validators import NEW_USERID_PATTERN
 
 
-#@content_factory('Users', title=_(u"Users"))
 @implementer(IUsers)
 class Users(BaseContent, ArcheUsers):
     """ Container for all user objects """
@@ -24,7 +20,7 @@ class Users(BaseContent, ArcheUsers):
 
     __acl__ = [(Allow, security.ROLE_ADMIN, (security.EDIT, security.VIEW, security.ADD_USER, security.MANAGE_SERVER, security.PERM_MANAGE_USERS)),
                DENY_ALL]
-    
+
 #     def add(self, name, *args, **kvargs):
 #         if not NEW_USERID_PATTERN.match(name):
 #             raise ValueError('name must start with lowercase a-z and only contain lowercase a-z, numbers, minus and underscore')

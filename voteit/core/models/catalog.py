@@ -4,7 +4,6 @@ from arche.interfaces import ICataloger
 from arche.interfaces import IObjectAddedEvent
 from arche.interfaces import IObjectWillBeRemovedEvent
 from arche.models.catalog import Metadata
-from betahaus.pyracont.interfaces import IBaseFolder
 from pyramid.events import subscriber
 from pyramid.security import principals_allowed_by_permission
 from pyramid.traversal import find_interface
@@ -17,15 +16,15 @@ from zope.component import adapter
 from zope.component import getAdapter
 from zope.component import queryAdapter
 from zope.component.interfaces import ComponentLookupError
-from zope.interface import implementer
+#from zope.interface import implementer
 
 from voteit.core.models.interfaces import IAgendaItem
-from voteit.core.models.interfaces import ICatalogMetadata
-from voteit.core.models.interfaces import ICatalogMetadataEnabled
+#from voteit.core.models.interfaces import ICatalogMetadata
+#from voteit.core.models.interfaces import ICatalogMetadataEnabled
 from voteit.core.models.interfaces import IDiscussionPost
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import IProposal
-from voteit.core.models.interfaces import ISecurityAware
+#from voteit.core.models.interfaces import ISecurityAware
 from voteit.core.models.interfaces import IUnread
 from voteit.core.models.interfaces import IUserTags
 from voteit.core.models.interfaces import IWorkflowAware
@@ -33,14 +32,15 @@ from voteit.core.security import NEVER_EVER_PRINCIPAL
 from voteit.core.security import VIEW
 from voteit.core.security import find_authorized_userids
 from voteit.core.interfaces import IWorkflowStateChange
-from voteit.core.interfaces import IObjectUpdatedEvent
+#from voteit.core.interfaces import IObjectUpdatedEvent
 from voteit.core.models.interfaces import IBaseContent
 from voteit.core.models.interfaces import ISiteRoot
-from voteit.core.models.interfaces import IAgendaItem
 
 
+#FIXME: This should be fetched from arches searchable text instead
 SEARCHABLE_TEXT_INDEXES = ('title',
                            'description',
+                           'text',
                            'aid')
 
 
@@ -327,7 +327,7 @@ def get_view_meeting_userids(object, default):
 
 def get_start_time(object, default):
     """ UNIX timestamp from start_time. """
-    if IBaseFolder.providedBy(object):
+    if IBaseContent.providedBy(object):
         value = object.get_field_value('start_time', default)
         if value and value != default:
             return timegm(value.timetuple())
@@ -335,7 +335,7 @@ def get_start_time(object, default):
 
 def get_end_time(object, default):
     """ UNIX timestamp from end_time. """
-    if IBaseFolder.providedBy(object):
+    if IBaseContent.providedBy(object):
         value = object.get_field_value('end_time', default)
         if value and value != default:
             return timegm(value.timetuple())
@@ -367,7 +367,7 @@ def get_like_userids(object, default):
 
 def get_order(object, default):
     """ Return order, if object has that field. """
-    if IBaseFolder.providedBy(object):
+    if IBaseContent.providedBy(object):
         return object.get_field_value('order', default)
     return default
 

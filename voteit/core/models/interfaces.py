@@ -1,7 +1,6 @@
 from zope.interface import Attribute
 from zope.interface import Interface
 
-from betahaus.pyracont.interfaces import IBaseFolder
 from arche.interfaces import IBase
 from arche.interfaces import IContent
 from arche.interfaces import IIndexedContent
@@ -9,7 +8,7 @@ from arche.interfaces import IUser as IArcheUser
 
 
 #Content type interfaces
-class IBaseContent(IBaseFolder, IBase, IContent, IIndexedContent):
+class IBaseContent(IBase, IContent, IIndexedContent):
     """ Base content type that stores values in non-attributes to avoid
         collisions between regular attributes and fields.
         It expects validation to be done on the form level.
@@ -27,9 +26,6 @@ class IBaseContent(IBaseFolder, IBase, IContent, IIndexedContent):
     
     content_type = Attribute("""
         Content type, internal name. It's not displayed anywhere.""")
-    
-    allowed_contexts = Attribute("""
-        List of which contexts this content is allowed in. Should correspond to content_type.""")
 
     created = Attribute(
         """A TZ-aware datetime.datetime of when this was created in UTC time.""")
@@ -42,51 +38,6 @@ class IBaseContent(IBaseFolder, IBase, IContent, IIndexedContent):
         so when writing functions to export or import content, you might want to
         check that this is really set to something else.""")
 
-    schemas = Attribute(
-        """ Dict that contains a mapping for action -> schema factory name.
-            Example:{'edit':'site_root_edit_schema'}.""")
-
-    custom_accessors = Attribute(
-        """ Dict of custom accessors to use. The key is which field to override,
-            value should be a string which represent a callable on this class, or a callable method.
-            The accessor method must accept default and key as kwarg.
-            Example:
-            
-            .. code-block:: python
-            
-               class Person(BaseContent):
-                   custom_accessors = {'title': 'get_title'}
-                   
-                   def get_title(key=None, default=''):
-                       return "Something else!"
-            
-            When get_field_value('title') is run, "Something else!" will be returned instead.
-                """)
-
-    custom_mutators = Attribute(
-        """ Same as custon accessor, but the callable must accept a value.
-            Method must also accept key as kwarg.
-            
-            Example:
-            
-            .. code-block:: python
-            
-               class Person(BaseContent):
-                   custom_mutator = {'title': 'set_title'}
-                   
-                   def set_title(value, key=None):
-                       assert isinstance(value, basestring)
-                       #<etc...>
-            """)
-
-    custom_fields = Attribute(
-        """ A dict of fields consisting of key (field name) and field factory name.
-            A field type must be registered with that factory name.
-            Example: {'wiki_text':'VersioningField'} if your register a field factory
-            with the name 'VersioningField'.
-            
-            See documentation in betahaus.pyracont for more info.""")
-
     field_storage = Attribute(
         """ An OOBTree storage for field values. The point of exposing this
             is to enable bypass of custom mutators or accessors.""")
@@ -97,12 +48,6 @@ class IBaseContent(IBaseFolder, IBase, IContent, IIndexedContent):
             creators is required in kwargs, this class will try to extract it from
             current request if it isn't present.
             Also, owner role will be set for the first entry in the creators-tuple.
-        """
-
-    def suggest_name(parent):
-        """ Suggest a name if this content would be added to parent.
-            By default it looks in the title field, and transforms
-            the first 20 chars to something usable as title.
         """
 
     def mark_modified():
@@ -141,11 +86,6 @@ class IBaseContent(IBaseFolder, IBase, IContent, IIndexedContent):
             This equals running set_field_value for each key/value pair in a dict.
         """
 
-    def get_custom_field(key):
-        """ Return custom field. Create it if it doesn't exist.
-            Will only work if key:field_type is specified in custom_fields attribute.
-        """
-
     def get_content(content_type=None, iface=None, states=None, sort_on=None, sort_reverse=False):
         """ Returns contained items within this folder. Keywords are usually conditions.
             They're treated as 'AND'. Note that this is an expensive method to run, if you
@@ -168,14 +108,14 @@ class IBaseContent(IBaseFolder, IBase, IContent, IIndexedContent):
         """
 
 
-class ISiteRoot(IBaseFolder):
+class ISiteRoot(IBaseContent):
     """ Singleton that is used as the site root.
         When added, it will also create a caching catalog with the
         attribute catalog."""
     users = Attribute("Access to the users folder. Same as self['users']")
     
 
-class IUsers(IBaseFolder):
+class IUsers(IBaseContent):
     """ Contains all users. """
     
     def get_user_by_email(email):
@@ -184,7 +124,7 @@ class IUsers(IBaseFolder):
         """
 
 
-class IUser(IBaseFolder, IArcheUser):
+class IUser(IBaseContent, IArcheUser):
     """ Content type for a user. Usable as a profile page. """
 
     def __init__(**kw):
@@ -210,7 +150,7 @@ class IUser(IBaseFolder, IArcheUser):
         """
 
 
-class IAgendaItem(IBaseFolder):
+class IAgendaItem(IBaseContent):
     """ Agenda item content """
     start_time = Attribute("""
         Return start time, if set. The value will be set by a subscriber when
@@ -224,7 +164,7 @@ class IAgendaItem(IBaseFolder):
     """)
 
 
-class IMeeting(IBaseFolder):
+class IMeeting(IBaseContent):
     """ Meeting content type """
     start_time = Attribute("Start time for meeting")
     end_time = Attribute("End time for meeting")
@@ -245,13 +185,13 @@ class IMeeting(IBaseFolder):
         """
 
 
-class IDiscussionPost(IBaseFolder):
+class IDiscussionPost(IBaseContent):
     """ A discussion post.
     """
     tags = Attribute(""" Return all used tags within this discussion post. """)
 
 
-class IProposal(IBaseFolder):
+class IProposal(IBaseContent):
     """ Proposal content type
     
         Workflow states for proposals
@@ -289,7 +229,7 @@ class IProposal(IBaseFolder):
         proposal will also be returned. """)
 
 
-class IPoll(IBaseFolder):
+class IPoll(IBaseContent):
     """ Poll content type.
         Note that the actual poll method isn't decided by the poll
         content type. It calls a poll plugin to get that.

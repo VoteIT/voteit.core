@@ -2,8 +2,6 @@ from __future__ import unicode_literals
 
 import colander
 import deform
-from betahaus.pyracont.decorators import schema_factory
-from betahaus.pyracont.factories import createSchema
 from pyramid.httpexceptions import HTTPFound
 
 from voteit.core.models.access_policy import AccessPolicy
@@ -32,11 +30,11 @@ class ImmediateAP(AccessPolicy):
         return HTTPFound(location = view.request.resource_url(self.context))
 
     def config_schema(self):
-        return createSchema('ImmediateAPConfigSchema')
+        return ImmediateAPConfigSchema()
 
 
-@schema_factory('ImmediateAPConfigSchema', title = _("Configure immediate access policy"))
 class ImmediateAPConfigSchema(colander.Schema):
+    title = _("Configure immediate access policy")
     immediate_access_grant_roles = colander.SchemaNode(
         colander.Set(),
         title = _("Roles"),
@@ -49,4 +47,3 @@ class ImmediateAPConfigSchema(colander.Schema):
 
 def includeme(config):
     config.registry.registerAdapter(ImmediateAP, name = ImmediateAP.name)
-    config.scan()
