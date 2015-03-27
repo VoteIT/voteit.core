@@ -1,14 +1,8 @@
+/* Depends on base */
 
 voteit.unread_notify_timer = null;
 voteit.unread_notify_interval = 6000;
 voteit.unread_notify_url = null;
-
-
-function set_tag_filter(event) {
-  event.preventDefault();
-//  console.log(event.target);
-}
-voteit.set_tag_filter = set_tag_filter;
 
 function unread_notify(url) {
   if (typeof(url) !== 'undefined') voteit.unread_notify_url = url;
@@ -45,10 +39,6 @@ function unread_notify(url) {
   }
 }
 voteit.unread_notify = unread_notify;
-
-$(document).ready(function() {
-//  $('body').on('click', '[data-set-tag-filter]', voteit.set_tag_filter);
-});
 
 $(window).on("blur focus", function(e) {
   var prevType = $(this).data("prevType");
