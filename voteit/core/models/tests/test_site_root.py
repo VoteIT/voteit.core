@@ -37,6 +37,8 @@ class SiteRootPermissionTests(unittest.TestCase):
 
     def setUp(self):
         self.config = testing.setUp()
+        self.config.include('arche.testing')
+        self.config.include('voteit.core.models.site')
         policy = ACLAuthorizationPolicy()
         self.pap = policy.principals_allowed_by_permission
 

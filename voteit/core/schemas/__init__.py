@@ -8,5 +8,6 @@ def includeme(config):
     config.include('.meeting')
     config.include('.poll')
     config.include('.proposal')
+    config.include('.site')
     config.include('.user')
     config.scan(__name__)
