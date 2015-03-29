@@ -6,16 +6,11 @@ from voteit.core.validators import html_string_validator
 from voteit.core.validators import richtext_validator
 
 
-# @schema_factory('AddAgendaItemSchema', title = _(u"Add agenda item"),
-#                 provides = IAgendaItemSchema)
-# @schema_factory('EditAgendaItemSchema', title = _(u"Edit agenda item"),
-#                 provides = IAgendaItemSchema)
 class AgendaItemSchema(colander.MappingSchema):
     title = colander.SchemaNode(colander.String(),
         title = _(u"Title"),
         description = _(u"Avoid a title with more than 20 characters"),
-        validator=html_string_validator,
-    )
+        validator=html_string_validator,)
     description = colander.SchemaNode(
         colander.String(),
         title = _(u"Description"),
@@ -26,11 +21,8 @@ class AgendaItemSchema(colander.MappingSchema):
                             u"to quickly see which page they're on."),
         missing = u"",
         widget=deform.widget.RichTextWidget(options = (('theme', 'advanced'),)),
-        validator=richtext_validator,
-    )
-
+        validator=richtext_validator,)
 
 
 def includeme(config):
-    config.add_content_schema('AgendaItem', AgendaItemSchema, 'add')
-    config.add_content_schema('AgendaItem', AgendaItemSchema, 'edit')
+    config.add_content_schema('AgendaItem', AgendaItemSchema, ('add', 'edit'))
