@@ -10,7 +10,10 @@
       <span i18n:translate="">Add Discussion post</span>
     </a>
     <tal:cant_add condition="not can_add">
-      <span i18n:translate="">You lack the required permission</span>
+      <span tal:condition="not context.proposal_block"
+        i18n:translate="lack_add_perm">You lack the required permission to add.</span>
+      <span tal:condition="context.proposal_block"
+        i18n:translate="">The moderator has locked the ability to add more discussion posts.</span>
     </tal:cant_add>
   </div>
   <script type="text/javascript" tal:condition="remove_parent|False">
