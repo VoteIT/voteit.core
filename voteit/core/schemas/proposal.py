@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 import colander
 import deform
 
@@ -31,6 +33,10 @@ def deferred_proposal_text_validator(node, kw):
 class ProposalSchema(colander.MappingSchema):
     text = colander.SchemaNode(colander.String(),
                                 title = _(u"Proposal"),
+                                description = _("proposal_text_description",
+                                                default = "A proposal is a statement the meeting can approve or deny. "
+                                    "You may use an at sign to reference a user (ex: 'hello @jane') or a hashtag (ex: '#budget') "
+                                    "to reference or create a tag. All proposals automatically get their own tag."),
                                 validator = deferred_proposal_text_validator,
                                 default = deferred_default_proposal_text,
                                 oid = random_oid,

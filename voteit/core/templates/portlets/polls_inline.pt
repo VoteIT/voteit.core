@@ -9,7 +9,7 @@
                   has_voted request.authenticated_userid in obj;
                   poll_plugin obj.get_poll_plugin()|False;
                   wf_state obj.get_workflow_state();">
-    <tal:cog condition="request.is_moderator" replace="structure view.render_template('voteit.core:views/templates/snippets/cogwheel.pt', context = obj)" />
+    <tal:cog condition="request.is_moderator" replace="structure view.render_template('voteit.core:templates/snippets/cogwheel.pt', context = obj)" />
 
     <tal:broken_plugin condition="not poll_plugin">
       <div class="alert alert-danger" role="alert"

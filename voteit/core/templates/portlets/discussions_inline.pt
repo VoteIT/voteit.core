@@ -22,7 +22,7 @@
     data-unread="${is_unread and 'true' or 'false'}">
     <div class="text">
       <tal:cog condition="request.is_moderator"
-        replace="structure view.render_template('voteit.core:views/templates/snippets/cogwheel.pt', context = obj)" />
+        replace="structure view.render_template('voteit.core:templates/snippets/cogwheel.pt', context = obj)" />
       <tal:creator replace="structure request.creators_info(obj.creators)" />
       <span tal:content="structure request.transform_text(obj.text)">
         Text here
