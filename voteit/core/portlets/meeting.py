@@ -79,6 +79,7 @@ class MeetingListingPortlet(PortletType):
                         'portlet_cls': "portlet-%s" % self.name,
                         'view': view,
                         'item_count_for': self.item_count_for,
+                        'state_titles': request.get_wf_state_titles(IMeeting, 'Meeting'),
                         'get_meetings': _get_meetings}
             return render("voteit.core:templates/portlets/meeting_list.pt",
                           response,
