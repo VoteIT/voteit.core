@@ -1,4 +1,5 @@
 from arche.populators import Populator
+from arche.portlets import get_portlet_manager
 
 from voteit.core import _
 from voteit.core.models.arche_compat import createContent
@@ -16,6 +17,10 @@ class VoteITPopulator(Populator):
             <a href="https://github.com/VoteIT">Source code and bugtracker</a>"""
         #Add users folder
         self.context['agenda_templates'] = createContent('AgendaTemplates', title = _(u"Agenda templates"), creators = ['admin'])
+        #Add nav portlet
+        manager = get_portlet_manager(self.context)
+        meeting_list = manager.add('right', 'meeting_list')
+
 
 def includeme(config):
     config.add_populator(VoteITPopulator)

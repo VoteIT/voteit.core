@@ -1,6 +1,4 @@
 from arche.api import Root
-from arche.interfaces import IObjectAddedEvent
-from arche.portlets import get_portlet_manager
 from arche.security import get_acl_registry
 from zope.interface.declarations import implementer
 
@@ -65,17 +63,8 @@ class SiteRoot(BaseContent, SecurityAware, Root):
         return self.set_field_value('site_title', value)
 
 
-def add_default_portlets_site(root):
-    manager = get_portlet_manager(root)
-    if manager is not None:
-        meeting_list = manager.add('right', 'meeting_list')
-
-def _add_portlets_site_subscriber(root, event):
-    add_default_portlets_site(root)
-
 def includeme(config):
     config.add_content_factory(SiteRoot, addable_in = ('Meeting',))
-    config.add_subscriber(_add_portlets_site_subscriber, [ISiteRoot, IObjectAddedEvent])
     #Setup root acl
     aclreg = config.registry.acl
     root_acl = aclreg.new_acl('Root:default')
