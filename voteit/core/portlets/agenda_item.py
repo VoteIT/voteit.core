@@ -140,49 +140,6 @@ class DiscussionsInline(BaseView):
                                                                            'start_after': start_after})
         return response
 
-#         
-#         last_shown_docid = None #FIXME
-#         query = "path == '%s' and type_name == 'DiscussionPost'" % resource_path(self.context)
-#         tags = self.request.GET.getall('tag')
-#         if tags:
-#             query += " and tags in any(%s)" % tags
-#         unread_query = "unread == '%s' and %s" % (self.request.authenticated_userid, query)
-#         query += " and unread != '%s'" % self.request.authenticated_userid
-#         showing_docids = []
-#         over_limit_unread = []
-#         previous = []
-#         limit = 5 #Set another way?
-#         #Fetch <limit> number of docids and insert them in shown_docids
-#         #If there are more unread, add them to over_limit_unread
-#         unread_docids = list(self.catalog_query(unread_query, sort_index = 'created'))
-#         docids_pool = list(self.catalog_query(query, sort_index = 'created'))
-        
-            
-        
-#         
-#         for docid in unread_docids:
-#             if len(showing_docids) < limit:
-#                 showing_docids.append(docid)
-#             else:
-#                 over_limit_unread.append(docid)
-#         #If there aren't enough shown docids, walk through them in reverse order.
-#         query += " and unread != '%s'" % self.request.authenticated_userid
-#         pool = self.catalog_query(query, sort_index = 'created', reverse = True)
-#         for docid in pool:
-#             if len(showing_docids) < limit:
-#                 showing_docids.insert(0, docid)
-#             else:
-#                 previous.append(docid)
-#         response = {}
-#         response['unread_docids'] = unread_docids
-#         response['docids'] = showing_docids
-#         response['contents'] = self.resolve_docids(showing_docids)
-#         response['over_limit_unread'] = over_limit_unread
-#         response['previous'] = previous
-#         return response
-
-    
-
 
 class PollsInline(BaseView):
     
