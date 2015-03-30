@@ -41,6 +41,8 @@ class MajorityPollPlugin(PollPlugin):
             proposal_title = _("You can't change your vote now.")
 
         class Schema(colander.Schema):
+            widget = deform.widget.FormWidget(template = 'form_modal',
+                                              readonly_template = 'readonly/form_modal')
             proposal = colander.SchemaNode(
                             colander.String(),
                             validator=colander.OneOf([x[0] for x in choices]),
