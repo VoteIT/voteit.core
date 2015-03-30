@@ -132,7 +132,12 @@ def get_userinfo_url(request, userid):
     return request.resource_url(request.meeting, '__userinfo__', userid)
 
 def is_moderator(request):
-    return request.has_permission(security.MODERATE_MEETING, request.meeting)
+    """ Request method to determine if someone is a moderator. Also true for admins in the root.
+    """
+    if request.meeting:
+        return request.has_permission(security.MODERATE_MEETING, request.meeting)
+    else:
+        return request.has_permission(security.MANAGE_SERVER, request.root)
 
 def get_wf_state_titles(request, iface, type_name):
     wf = get_workflow(iface, type_name)
