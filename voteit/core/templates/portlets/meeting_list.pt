@@ -4,11 +4,9 @@
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
       i18n:domain="voteit.core">
 <div id="meetings-portlet" class="portlet">
-  <div class="panel panel-primary">
-    <div class="panel-heading">
-      <h4 i18n:translate="">Meetings</h4>
-    </div>
-  </div>
+
+  <h2 i18n:translate="">Meetings</h2>
+
   <div class="panel-group" id="panel-meetinglist" role="tablist" aria-multiselectable="true">
     <tal:iterate repeat="state ('ongoing', 'upcoming', 'closed')">
     <div class="panel panel-default">
