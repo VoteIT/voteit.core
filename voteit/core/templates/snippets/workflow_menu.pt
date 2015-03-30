@@ -6,6 +6,7 @@
   <li tal:condition="not states|True"><p class="navbar-text">${state_title}</p></li>
   <li class="dropdown" tal:condition="states|False">
     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+      <span class="glyphicon glyphicon-${state_id} text-${state_id}"></span>
       ${state_title}
       <span class="caret"></span>
     </a>
@@ -14,6 +15,7 @@
         <tal:iterate repeat="state states">
           <li>
             <a href="${request.resource_url(context, 'state', query = {'state': state.name})}">
+              <span class="glyphicon glyphicon-${state.name} text-${state.name}"></span>
               <span tal:content="tstring(state.title)">Title</span>
             </a>
         </li>

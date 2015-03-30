@@ -14,7 +14,7 @@ from voteit.core.views.components.metadata_listing import meta_state
              title = _("Workflow"),
              priority = 5,
              interface = IWorkflowAware,
-             renderer = 'voteit.core:views/components/templates/workflow.pt')
+             renderer = 'voteit.core:templates/snippets/workflow_menu.pt')
 def wf_menu(context, request, va, **kw):
     return meta_state(context, request, va, **kw)
 
