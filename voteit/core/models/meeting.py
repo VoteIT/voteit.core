@@ -27,9 +27,7 @@ class Meeting(BaseContent, SecurityAware, WorkflowAware):
     nav_visible = False
     add_permission = security.ADD_MEETING
     hide_meeting = False #Unless it's been set, don't show meeting
-    #FIXME: Property schema should return different add schema when user is not an admin.
-    #Ie captcha
-    #schemas = {'add': 'AddMeetingSchema', 'edit': 'EditMeetingSchema'}
+    nav_title = ""
     custom_mutators = {'copy_perms_and_users': 'copy_perms_and_users'}
 
     def __init__(self, data=None, **kwargs):

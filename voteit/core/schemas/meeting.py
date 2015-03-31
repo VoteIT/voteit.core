@@ -88,25 +88,34 @@ class EditMeetingSchema(colander.Schema):
     mention_notification_setting = colander.SchemaNode(colander.Bool(),
         title = _(u"Send mail to mentioned users."),
         default = True,
-        missing = True)
+        missing = True,
+        tab = 'advanced',)
     poll_notification_setting = colander.SchemaNode(colander.Bool(),
         title = _(u"Send mail to voters when a poll starts."),
         default = True,
-        missing = True)
+        missing = True,
+        tab = 'advanced',)
     hide_meeting = colander.SchemaNode(colander.Bool(),
         title = _(u"Hide meeting from listings"),
         description = _("Users won't be able to find it unless they have a link to it."),
+        tab = 'advanced',
         default = False,
         missing = False)
+    nav_title = colander.SchemaNode(colander.String(),
+         title = _(u"Navigation bar title"),
+         description = _("In case you want another title in the navigation bar"),
+         missing = "",
+         tab = 'advanced')
 
 
 class AddMeetingSchema(EditMeetingSchema):
     copy_users_and_perms = colander.SchemaNode(colander.String(),
-                                               title = _(u"Copy users and permissions from a previous meeting."),
-                                               description = _(u"You can only pick meeting where you've been a moderator."),
+                                               title = _("Copy users and permissions from a previous meeting."),
+                                               description = _("You can only pick meeting where you've been a moderator."),
                                                widget = deferred_copy_perms_widget,
-                                               default = u"",
-                                               missing = u"")
+                                               default = "",
+                                               missing = "",
+                                               tab = 'advanced')
 
 
 class AccessPolicyMeetingSchema(colander.MappingSchema):

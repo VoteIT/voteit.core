@@ -16,6 +16,11 @@
           <img height="31" width="85" class="voteitlogo"
               src="${request.static_url('voteit.core:static/images/logo.png')}" />
       </a>
+      <a tal:condition="request.meeting"
+        class="navbar-brand"
+        href="${request.resource_url(request.meeting)}">
+        ${request.meeting.nav_title and request.meeting.nav_title or request.meeting.title}
+      </a>
     </div>
     <div class="collapse navbar-collapse" id="navbar-collapsible">
       <ul class="nav navbar-nav">
