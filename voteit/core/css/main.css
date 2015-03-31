@@ -340,6 +340,37 @@ $brand-danger:          #d9534f !default;
     .navbar-voteit .btn-link[disabled]:hover, .navbar-voteit .btn-link[disabled]:focus, fieldset[disabled] .navbar-voteit .btn-link:hover, fieldset[disabled] .navbar-voteit .btn-link:focus {
       color: #444; }
 
+/*
+$brand-primary:         darken(#428bca, 6.5%) !default; // #337ab7
+$brand-success:         #5cb85c !default;
+$brand-info:            #5bc0de !default;
+$brand-warning:         #f0ad4e !default;
+$brand-danger:          #d9534f !default;
+*/
+.portlet-collapse {
+  overflow-x: visible;
+  -webkit-overflow-scrolling: touch; }
+  .portlet-collapse:before, .portlet-collapse:after {
+    content: " ";
+    display: table; }
+  .portlet-collapse:after {
+    clear: both; }
+  .portlet-collapse.in {
+    overflow-y: auto; }
+  @media (min-width: 768px) {
+    .portlet-collapse {
+      width: auto;
+      border-top: 0;
+      box-shadow: none; }
+      .portlet-collapse.collapse {
+        display: block !important;
+        visibility: visible !important;
+        height: auto !important;
+        padding-bottom: 0;
+        overflow: visible !important; }
+      .portlet-collapse.in {
+        overflow-y: visible; } }
+
 body {
   padding-top: 70px; }
 

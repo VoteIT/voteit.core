@@ -19,7 +19,7 @@
               aria-controls="panel-meetinglist-state-${state}">
               <span class="glyphicon glyphicon-collapse-toggle"></span>
               ${state_titles[state]|state}
-              <span class="badge">${len(meetings)}</span>
+              <span class="badge pull-right">${len(meetings)}</span>
             </a>
           </h4>
         </div>

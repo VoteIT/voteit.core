@@ -2,7 +2,7 @@
   <div class="pull-right btn-group"
     tal:define="url url|request.resource_url(context, '__cogwheel_menu__')">
     <button type="button"
-      class="btn btn-primary dropdown-toggle cogwheel"
+      class="btn btn-default btn-sm dropdown-toggle cogwheel"
       data-dropdown-content="${url}"
       aria-expanded="false"
       data-toggle="dropdown"

@@ -4,13 +4,33 @@
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
       i18n:domain="voteit.core">
 <div id="agenda-item-portlet" class="portlet">
-  <div class="pull-right" tal:condition="request.is_moderator">
-    <a class="btn btn-primary btn-sm" href="${request.resource_url(request.meeting, 'manage_agenda')}" i18n:translate="">Manage</a>
-  </div>
-  <h2 i18n:translate="">Agenda</h2>
-  <div data-load-target="${load_url}">
-      <span class="glyphicon glyphicon-refresh rotate-me"></span>
-      Loading...
+
+  <h3 class="hidden-xs">
+    <span class="glyphicon glyphicon-list-alt"></span>
+    <span i18n:translate="">Agenda</span>
+  </h3>
+  <a href="#" class="collapsed btn-default btn visible-xs" data-toggle="collapse" data-target="#ai-portlet-nav-collapsible">
+    <span class="glyphicon glyphicon-collapse-toggle"></span>
+    <span i18n:translate="">Agenda</span>
+    <span class="glyphicon glyphicon-list-alt"></span>
+  </a>
+  <div class="clearfix"></div>
+  <div class="collapse portlet-collapse" id="ai-portlet-nav-collapsible">
+    <div class="row" tal:condition="request.is_moderator">
+      <div class="col-sm-6">
+        <a class="btn btn-default btn-block btn-sm"
+          href="${request.resource_url(request.meeting, 'add', query = {'content_type': 'AgendaItem'})}" i18n:translate="">Add</a>
+      </div>
+      <div class="col-sm-6">
+        <a class="btn btn-default btn-block btn-sm"
+          href="${request.resource_url(request.meeting, 'manage_agenda')}" i18n:translate="">Manage</a>
+      </div>
+      <p>&nbsp;</p>
+    </div>
+    <div data-load-target="${load_url}">
+        <span class="glyphicon glyphicon-refresh rotate-me"></span>
+        Loading...
+    </div>
   </div>
 </div>
 </tal:main>

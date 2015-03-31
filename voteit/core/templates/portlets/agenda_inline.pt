@@ -3,16 +3,18 @@
       xmlns:tal="http://xml.zope.org/namespaces/tal"
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
       i18n:domain="voteit.core">
-  <div class="panel panel-default" tal:repeat="state states">
+<tal:iterate repeat="state states">
+  <div class="panel panel-default" tal:define="ai_metas view.get_ais(state)">
     <div class="panel-heading">
       <h4 class="panel-title">
         <span class="glyphicon glyphicon-${state}"></span>
         ${state_titles[state]}
+        <span class="badge pull-right">${len(ai_metas)}</span>
       </h4>
     </div>    
     
     <ul class="list-group">
-      <tal:iterate tal:repeat="meta view.get_ais(state)">
+      <tal:iterate tal:repeat="meta ai_metas">
       <tal:def define="context_path '%s/%s' % (meeting_path, meta['__name__']);
                        is_current view.in_current_context(context_path);
                        context_unread not is_current and (meta['unread_proposal'] or meta['unread_discussionpost']);">
@@ -35,4 +37,5 @@
       </tal:iterate>
     </ul>
   </div>
+</tal:iterate>
 </tal:main>
