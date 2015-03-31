@@ -17,7 +17,7 @@ _ = VoteITMF = TranslationStringFactory(PROJECTNAME)
 DEFAULT_SETTINGS = {
     'voteit.gravatar_default': 'mm',
     'voteit.default_profile_picture': '/static/images/default_user.png',
-    'pyramid_deform.template_search_path': 'voteit.core:views/templates/widgets arche:templates/deform',
+    'pyramid_deform.template_search_path': 'voteit.core:templates/widgets arche:templates/deform',
     'arche.hash_method': 'voteit.core.security.get_sha_password',
     'arche.favicon': 'voteit.core:static/favicon.ico',
     'arche.actionbar': 'voteit.core.views.render_actionbar',
