@@ -21,6 +21,7 @@ from voteit.core.models.interfaces import IFlashMessages
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IPollPlugin
+from voteit.core.models.interfaces import IProposal
 from voteit.core.models.interfaces import IVote
 from voteit.core.models.workflow_aware import WorkflowAware
 
@@ -162,37 +163,31 @@ class Poll(BaseContent, WorkflowAware):
         assert isinstance(uid_states, dict)
         if request is None:
             request = get_current_request()
-        locale = request.localizer
-        fm = get_flash_messages(request)
+        changed = []
+        change_error = []
         for (uid, state) in uid_states.items():
             if uid not in self.proposal_uids:
                 raise ValueError("The poll plugins close() method returned a uid that doesn't exist in this poll.")
             proposal = self.get_proposal_by_uid(uid)
             #Adjust state?
             prop_wf_state = proposal.get_workflow_state()
-            #Message strings can't contain other message strings, so we'll translate the state first
-            translated_state = locale.translate(_(state.title()))
-            if prop_wf_state == state:
-                msg = _('change_prop_state_already_that_state_error',
-                        default=u"Proposal '${name}' already in state ${state}",
-                        mapping={'name':proposal.__name__, 'state':translated_state})
-                fm.add(msg)
-            else:
+            if prop_wf_state != state:
                 try:
                     proposal.set_workflow_state(request, state)
-                    msg = _('prop_state_changed_notice',
-                            default=u"Proposal '${name}' set as ${state}",
-                            mapping={'name':proposal.__name__, 'state':translated_state})
-                    fm.add(msg)
+                    changed.append(proposal)
                 except WorkflowError:
-                    msg = _('prop_state_change_error',
-                            default=u"Proposal with id '${name}' couldn't be set as ${state}. You should do this manually.",
-                            mapping={'name':proposal.__name__, 'state':translated_state})
-                    fm.add(msg, type='error')
-
+                    change_error.append(proposal)
+        fm = get_flash_messages(request)
         msg = _('poll_closed_info',
-                default=u"Poll closed. Proposals might have been adjusted as approved or denied depending on outcome of the poll.")
+                default = "Poll has now closed. ${num} proposal(s) are now set in another state due to the outcome of the poll.",
+                mapping = {'num': len(changed)})
         fm.add(msg)
+        if change_error:
+            msg = _('poll_closed_proposal_wf_change_error',
+                    default = "Couldn't adjust the state of the following proposal(s): '${props}'. "
+                    "You may wish to review them manually.",
+                    mapping = {'props': "', '".join(prop.aid for prop in change_error)})
+            fm.add(msg, type = 'danger')
 
     def get_proposal_by_uid(self, uid):
         for prop in self.get_proposal_objects():
