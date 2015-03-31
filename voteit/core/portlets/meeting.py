@@ -3,69 +3,13 @@ from __future__ import unicode_literals
 from arche.interfaces import IRoot
 from arche.interfaces import IUser
 from arche.portlets import PortletType
-from arche.views.base import BaseView
-from betahaus.viewcomponent import render_view_group
 from pyramid.renderers import render
-from pyramid.traversal import find_interface
-from pyramid.traversal import find_root
 from pyramid.traversal import resource_path
 from pyramid.traversal import find_resource
-import colander
 
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.security import VIEW
 from voteit.core import _
-
-#FIXME: This should probably be menus after all
-
-class MeetingSettingsPortlet(PortletType):
-    name = "meeting_settings"
-    title = _("Meeting settings")
-
-    def render(self, context, request, view, **kwargs):
-        if request.is_moderator and IMeeting.providedBy(context):
-            response = {'title': _("Settings"),
-                        'portlet': self.portlet,
-                        'portlet_cls': "portlet-%s" % self.name,
-                        'menu_content': render_view_group(context, request, 'settings_menu', view = view),
-                        'view': view,}
-            return render("voteit.core:templates/portlets/meeting_actions.pt",
-                          response,
-                          request = request)
-
-
-class MeetingMenuPortlet(PortletType):
-    """ Various meeting related actions. """
-
-    name = "meeting_various"
-    title = _("Meeting various menu")
-
-    def render(self, context, request, view, **kwargs):
-        if IMeeting.providedBy(context):
-            response = {'title': _("Meeting"),
-                        'portlet': self.portlet,
-                        'portlet_cls': "portlet-%s" % self.name,
-                        'menu_content': render_view_group(context, request, 'meeting', view = view),
-                        'view': view,}
-            return render("voteit.core:templates/portlets/meeting_actions.pt",
-                          response,
-                          request = request)
-
-
-class ParticipantsPortlet(PortletType):
-    name = "meeting_participants"
-    title = _("Meeting participants")
-
-    def render(self, context, request, view, **kwargs):
-        if IMeeting.providedBy(context):
-            response = {'title': _("Participants"),
-                        'portlet': self.portlet,
-                        'portlet_cls': "portlet-%s" % self.name,
-                        'menu_content': render_view_group(context, request, 'participants_menu', view = view),
-                        'view': view,}
-            return render("voteit.core:templates/portlets/meeting_actions.pt",
-                          response,
-                          request = request)
 
 
 class MeetingListingPortlet(PortletType):
@@ -98,16 +42,12 @@ def _get_meetings(request, state = 'ongoing', sort_index = 'sortable_title'):
     for docid in root.catalog.search(type_name = 'Meeting',
                                      workflow_state = state,
                                      sort_index = sort_index)[1]:
-       path = root.document_map.address_for_docid(docid)
-       obj = find_resource(root, path)
-       if request.has_permission(VIEW, obj):
-           results.append(obj)
+        path = root.document_map.address_for_docid(docid)
+        obj = find_resource(root, path)
+        if request.has_permission(VIEW, obj):
+            results.append(obj)
     return results
 
 
 def includeme(config):
-    config.add_portlet(MeetingSettingsPortlet)
-    config.add_portlet(MeetingMenuPortlet)
-    config.add_portlet(ParticipantsPortlet)
     config.add_portlet(MeetingListingPortlet)
-

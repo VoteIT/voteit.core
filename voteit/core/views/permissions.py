@@ -4,7 +4,7 @@
 # from pyramid.url import resource_url
 # from pyramid.view import view_config
 # from pyramid.httpexceptions import HTTPFound
-# 
+
 # from voteit.core import VoteITMF as _
 # from voteit.core.views.base_view import BaseView
 # from voteit.core.models.interfaces import IMeeting
@@ -14,7 +14,29 @@
 # from voteit.core.models.schemas import button_cancel
 # from voteit.core import security
 # 
-# 
+from arche import _ as arche_mf
+from arche.interfaces import ILocalRoles
+from arche.security import PERM_MANAGE_USERS
+from arche.views.actions import actionbar_main_generic
+from betahaus.viewcomponent.decorators import view_action
+
+
+@view_action('actionbar_main', 'permissions',
+             title = arche_mf("Permissions"),
+             view_name = 'permissions',
+             permission = PERM_MANAGE_USERS, #Same perm as Arche
+             priority = 40)
+def permissions_action(context, request, va, **kw):
+    """ Override regular permission button in the action bar. It shouldn't be used within meetings.
+    """
+    if not request.meeting and ILocalRoles.providedBy(context):
+        return actionbar_main_generic(context, request, va, **kw)
+
+#Should we block perms for all contexts within a meeting?
+
+#FIXME: Proper permissions view
+
+
 # class PermissionsView(BaseView):
 #     """ View for setting permissions """
 # 
