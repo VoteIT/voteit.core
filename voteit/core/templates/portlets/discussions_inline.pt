@@ -5,13 +5,13 @@
       i18n:domain="voteit.core">
 <div id="discussions_load_previous" tal:condition="previous">
   <div class="list-group-item">
-    <a class="btn btn-primary"
-      href="${load_previous_url}"
+    <a href="${load_previous_url}"
       data-replace-target="#discussions_load_previous"
-      data-clickable-target
-      i18n:translate="">
+      data-clickable-target>
+      <span class="glyphicon glyphicon-arrow-up"></span>
+      <span i18n:translate="">Show <tal:ts content="len(previous)" i18n:name="num" /> previous</span>
       <span data-actionmarker="glyphicon glyphicon-refresh rotate-me"></span>
-      Load <tal:ts tal:content="len(previous)" i18n:name="num"></tal:ts> previous</a>
+    </a>
   </div>
 </div>
 <tal:iterate repeat="docid batch">
@@ -29,7 +29,7 @@
       </span>
     </div>
     <div class="clearfix"></div>
-    <div class="metadata text-right">
+    <div class="metadata text-right text-muted">
       <span class="glyphicon glyphicon-time"></span>
       ${request.dt_handler.format_relative(obj.created)}
     </div>
@@ -42,12 +42,12 @@
 <!--  Should reappear when new discussion entries have appeared -->
 <div id="discussions_load_next" tal:condition="over_limit">
   <div class="list-group-item">
-    <a class="btn btn-primary"
-      href="${load_next_url}"
+    <a href="${load_next_url}"
       data-replace-target="#discussions_load_next"
       data-clickable-target>
+      <span class="glyphicon glyphicon-arrow-down"></span>
+      <span i18n:translate="">Show more</span>
       <span data-actionmarker="glyphicon glyphicon-refresh rotate-me"></span>
-      <span i18n:translate="">Load more</span>
     </a>
   </div>
 </div>

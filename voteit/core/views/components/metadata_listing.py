@@ -1,18 +1,17 @@
-from betahaus.viewcomponent import view_action, render_view_action
-from betahaus.viewcomponent.interfaces import IViewGroup
+from betahaus.viewcomponent import view_action
 from pyramid.renderers import render
-from pyramid.traversal import find_resource
 from pyramid.traversal import find_interface
 
-from voteit.core import VoteITMF as _
-from voteit.core.models.interfaces import IAgendaItem, IProposal,\
-    IDiscussionPost
+from voteit.core import _
+from voteit.core.models.interfaces import IAgendaItem
+from voteit.core.models.interfaces import IDiscussionPost
+from voteit.core.models.interfaces import IProposal
 from voteit.core.models.interfaces import IWorkflowAware
+from voteit.core.security import ADD_DISCUSSION_POST
+from voteit.core.security import ADD_PROPOSAL
+from voteit.core.security import DELETE
 from voteit.core.security import RETRACT 
 from voteit.core.security import VIEW
-from voteit.core.security import ADD_PROPOSAL
-from voteit.core.security import ADD_DISCUSSION_POST
-from voteit.core.security import DELETE
 
 
 @view_action('metadata_listing', 'state',
@@ -33,20 +32,6 @@ def meta_state(context, request, va, **kw):
         tstring = tstring,
     )
     return render(va.kwargs['renderer'], response, request = request)
-# 
-# 
-#     if request.is_moderator:
-#         return render_view_action(context, request, 'actionbar_main', 'voteit_wf', **kw)
-#     else:
-#         state_id = context.get_workflow_state()
-#         state_info = context.workflow.state_info(None, request)
-#         translated_state_title = state_id
-#         for info in state_info:
-#             if info['name'] == state_id:
-#                 ts = _
-#                 translated_state_title = request.localizer.translate(ts(info['title']))
-#                 break
-#         return '<span class="%s icon iconpadding">%s</span>' % (state_id, translated_state_title)
 
 @view_action('metadata_listing', 'retract', permission=VIEW, interface = IWorkflowAware)
 def meta_retract(context, request, va, **kw):
@@ -61,7 +46,8 @@ def meta_retract(context, request, va, **kw):
     if not request.has_permission(ADD_PROPOSAL, ai) and request.has_permission(RETRACT, context):
         return
     url = request.resource_url(context, 'state', query = {'state': 'retracted'})
-    return '<a class="btn btn-warning btn-xs" href="%s">%s</a>' % (url, request.localizer.translate(_(u'Retract')))
+    return '<button type="button" class="btn btn-default btn-xs" href="%s"><span class="text-warning">%s</span></button> ' % \
+        (url, request.localizer.translate(_(u'Retract')))
 
 # @view_action('metadata_listing', 'user_tags', permission=VIEW)
 # def meta_user_tags(context, request, va, **kw):
@@ -86,19 +72,21 @@ def meta_reply(context, request, va, **kw):
     query = {'content_type': context.type_name,
              'tag': request.GET.getall('tag'),
              'reply-to': context.uid}
-    data = {'class': 'btn btn-xs btn-primary',
-            'role': 'button',
+    data = {'role': 'button',
+            'class': 'btn btn-default btn-xs',
             'data-reply-to': context.uid,
             'title': '',
             'href': request.resource_url(request.agenda_item, 'add', query = query),
             }
-    out = """<a %s>%s</a>""" % (" ".join(['%s="%s"' % (k, v) for (k, v) in data.items()]),
-                                request.localizer.translate(va.title))
+    out = """<a %s><span class="text-primary">%s</span></a> """ % \
+        (" ".join(['%s="%s"' % (k, v) for (k, v) in data.items()]),
+         request.localizer.translate(va.title))
     return out
 
 @view_action('metadata_listing', 'delete', permission = DELETE, interface = IDiscussionPost)
 def meta_delete(context, request, va, **kw):
     if not request.is_moderator:
-        return u'<a class="btn btn-warning btn-xs" href="%s">%s %s</a>' % (request.resource_url(context, 'delete'),
-                                                                           '<span class="glyphicon glyphicon-remove"></span>',
-                                                                           request.localizer.translate(_("Delete")))
+        return u'<a href="%s" class="btn btn-default btn-xs"><span class="text-danger">%s %s</span></a> ' % \
+            (request.resource_url(context, 'delete'),
+             '<span class="glyphicon glyphicon-remove"></span>',
+             request.localizer.translate(_("Delete")))

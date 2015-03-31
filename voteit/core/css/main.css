@@ -387,9 +387,6 @@ body {
 .cogwheel {
   margin-left: 5px; }
 
-.primary-tag {
-  font-weight: bold; }
-
 .list-group-item.active > a {
   color: #fff; }
   .list-group-item.active > a:hover {
