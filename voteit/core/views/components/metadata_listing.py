@@ -46,7 +46,7 @@ def meta_retract(context, request, va, **kw):
     if not request.has_permission(ADD_PROPOSAL, ai) and request.has_permission(RETRACT, context):
         return
     url = request.resource_url(context, 'state', query = {'state': 'retracted'})
-    return '<button type="button" class="btn btn-default btn-xs" href="%s"><span class="text-warning">%s</span></button> ' % \
+    return '<a role="button" class="btn btn-default btn-xs" href="%s"><span class="text-warning">%s</span></a> ' % \
         (url, request.localizer.translate(_(u'Retract')))
 
 # @view_action('metadata_listing', 'user_tags', permission=VIEW)
@@ -86,7 +86,7 @@ def meta_reply(context, request, va, **kw):
 @view_action('metadata_listing', 'delete', permission = DELETE, interface = IDiscussionPost)
 def meta_delete(context, request, va, **kw):
     if not request.is_moderator:
-        return u'<a href="%s" class="btn btn-default btn-xs"><span class="text-danger">%s %s</span></a> ' % \
+        return u'<a href="%s" role="button" class="btn btn-default btn-xs"><span class="text-danger">%s %s</span></a> ' % \
             (request.resource_url(context, 'delete'),
              '<span class="glyphicon glyphicon-remove"></span>',
              request.localizer.translate(_("Delete")))
