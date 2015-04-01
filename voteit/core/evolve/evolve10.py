@@ -10,9 +10,11 @@ def evolve(root):
     """
     from arche.utils import find_all_db_objects
     from voteit.core.models.meeting import add_default_portlets_meeting
-    from voteit.core.models.site import add_default_portlets_site
+    from arche.portlets import get_portlet_manager
 
-    add_default_portlets_site(root)
+
+    manager = get_portlet_manager(root)
+    manager.add('right', 'meeting_list')
 
     for obj in find_all_db_objects(root):
         if IProposal.providedBy(obj):
