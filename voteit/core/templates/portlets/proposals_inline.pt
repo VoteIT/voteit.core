@@ -38,11 +38,11 @@
   <div class="list-group-item">
     <a href="${load_hidden_url}"
       data-replace-target="#proposals_load_more"
-      data-clickable-target
-      i18n:translate="">
+      data-clickable-target>
       <span class="glyphicon glyphicon-arrow-down"></span>
-      Show <tal:ts tal:content="hidden_count" i18n:name="num"></tal:ts> hidden</a>
+      <span i18n:translate="">Show <tal:ts tal:content="hidden_count" i18n:name="num" /> hidden</span>
       <span data-actionmarker="glyphicon glyphicon-refresh rotate-me"></span>
+    </a>
   </div>
 </div>
 <script type="text/javascript">

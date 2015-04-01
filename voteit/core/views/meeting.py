@@ -170,7 +170,9 @@ class RequestAccessForm(ArcheFormCompat, DefaultEditForm):
     def get_schema(self):
         schema = self.access_policy.schema()
         if schema is None:
-            raise HTTPForbidden(_("You need to contact the moderator to get access to this meeting."))
+            raise HTTPForbidden(_("forbidden_on_closed_meetings",
+                                  default = "You need to contact the moderator "
+                                  "to get access to this meeting."))
         return schema
 
     @reify

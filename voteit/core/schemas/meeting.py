@@ -106,7 +106,8 @@ class EditMeetingSchema(colander.Schema):
         tab = 'advanced',)
     hide_meeting = colander.SchemaNode(colander.Bool(),
         title = _("Hide meeting from listings"),
-        description = _("Users won't be able to find it unless they have a link to it."),
+        description = _("hide_meeting_description",
+                        default = "Users won't be able to find it unless they have a link to it."),
         tab = 'advanced',
         default = False,
         missing = False)
@@ -161,7 +162,10 @@ def hide_proposal_states_widget(node, kw):
 class AgendaItemProposalsPortletSchema(colander.Schema):
     hide_proposal_states = colander.SchemaNode(colander.Set(),
                                                title = _("Hide"),
-                                               description = _("desc"),
+                                               description = _("hide_proposal_states_description",
+                                                               default = "Proposals in these states will be hidden by "
+                                                               "default but can be shown by pressing "
+                                                               "the link below the other proposals."),
                                                widget = hide_proposal_states_widget,
                                                default = ('retracted', 'denied', 'unhandled'),)
 

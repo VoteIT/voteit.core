@@ -40,7 +40,7 @@
     <span class="glyphicon glyphicon-warning-sign"></span>
     <strong i18n:translate="">Note!</strong>
     <span i18n:translate="majority_poll_too_many_proposals_warning">Majority polls aren't ment to handle more than 2 proposals.
-      If the winner didn't receive at least <strong>51%</strong>
+      If the winner didn't receive at least <strong i18n:name="51per">51%</strong>
       of the votes, you should consider using another poll method (like Schulze).
       Consult the manual for more information.
     </span>

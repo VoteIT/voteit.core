@@ -41,7 +41,7 @@ class ListingPortlet(PortletType):
 
 class ProposalsPortlet(ListingPortlet):
     name = "ai_proposals"
-    title = _("Agenda Item: Proposals listing")
+    title = _("Proposals")
     template = "voteit.core:templates/portlets/proposals.pt"
     view_name = '__ai_proposals__'
     schema_factory = AgendaItemProposalsPortletSchema
@@ -61,14 +61,14 @@ class ProposalsPortlet(ListingPortlet):
 
 class DiscussionsPortlet(ListingPortlet):
     name = "ai_discussions"
-    title = _("Agenda Item: Discussions listing")
+    title = _("Discussion")
     template = "voteit.core:templates/portlets/discussions.pt"
     view_name = '__ai_discussions__'
 
 
 class PollsPortlet(ListingPortlet):
     name = "ai_polls"
-    title = _("Agenda Item: Polls listing")
+    title = _("Polls")
     template = "voteit.core:templates/portlets/polls.pt"
     view_name = '__ai_polls__'
 

@@ -10,7 +10,7 @@
       <span class="glyphicon glyphicon-cog"></span>
     </button>
     <ul class="dropdown-menu" role="menu">
-      <li i18n:translate=""><a href="#">Loading...</a></li>
+      <li><a href="#" i18n:translate="">Loading...</a></li>
     </ul>
   </div>
 </tal:main>

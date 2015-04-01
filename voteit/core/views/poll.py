@@ -154,7 +154,9 @@ class PollVoteForm(DefaultEditForm):
             vote.set_vote_data(appstruct, notify = False)
             #To fire events after set_vote_data is done
             self.context[userid] = vote
-            success_msg = _("Your vote has been added. If you wish to change it, you may do so as long as the poll is open.")
+            success_msg = _("vote_success_msg",
+                            default = "Your vote has been added. If you wish to change it, "
+                            "you may do so as long as the poll is open.")
         self.flash_messages.add(success_msg)
         return self._remove_modal_response()
 
