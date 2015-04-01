@@ -1,3 +1,53 @@
+from arche.security import groupfinder
+from arche.views.base import BaseView
+from pyramid.view import view_config
+from pyramid.view import view_defaults
+
+from voteit.core import security
+from voteit.core.fanstaticlib import participants_js
+from voteit.core.helpers import get_meeting_participants
+from voteit.core.models.interfaces import IMeeting
+
+_VIEW_ROLES = (('role_view', security.ROLE_VIEWER),
+               ('role_discuss', security.ROLE_DISCUSS),
+               ('role_propose', security.ROLE_PROPOSE),
+               ('role_vote', security.ROLE_VOTER),
+               ('role_moderate', security.ROLE_MODERATOR),
+               ('role_admin', security.ROLE_ADMIN),)
+
+
+@view_defaults(context = IMeeting, permission = security.VIEW)
+class ParticipantsView(BaseView):
+
+    @view_config(name = 'participants', renderer = 'voteit.core:templates/participants.pt')
+    def main(self):
+        participants_js.need()
+        response = {}
+        #This might be slow in its current form. Make get_meeting_participants smarter
+        response['participants_count'] = len(get_meeting_participants(self.context))
+        response['view_roles'] = _VIEW_ROLES
+        return response
+
+    @view_config(name = 'participants.json', renderer = 'json')
+    def json_data(self):
+        users = self.root['users']
+        results = []
+        for userid in get_meeting_participants(self.context):
+            user = users[userid]
+            uroles = groupfinder(userid, self.request)
+            userdata = {'first_name': user.first_name,
+                        'last_name': user.last_name,
+                        'userid': user.userid,
+                        }
+            if self.request.is_moderator:
+                userdata['email'] = user.email
+
+            for (name, role) in _VIEW_ROLES:
+                userdata[name] = role in uroles
+            results.append(userdata)
+        return {'results': results, 'moderator': bool(self.request.is_moderator)}
+
+
 # from deform import Form
 # from pyramid.view import view_config
 # from pyramid.response import Response

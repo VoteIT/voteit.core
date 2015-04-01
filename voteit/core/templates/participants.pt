@@ -1,0 +1,56 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      metal:use-macro="view.macro('arche:templates/master.pt')"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="voteit.core">
+<body>
+<tal:main metal:fill-slot="content">
+
+  <h1 i18n:translate=""><tal:ts i18n:name="num" content="participants_count" /> participants</h1>
+
+  <table class="table table-striped" id="participants">
+    <thead>
+      <tr>
+        <th i18n:translate="">First name</th>
+        <th i18n:translate="">Last name</th>
+        <th i18n:translate="">UserID</th>
+        <th tal:condition="request.is_moderator" i18n:translate="">Email</th>
+        <tal:iterate repeat="(name, role) view_roles">
+          <th>${role.title}</th>
+        </tal:iterate>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="first_name"></td>
+        <td class="last_name"></td>
+        <td>
+          <a tabindex="0"
+            class="inlineinfo userid"
+            role="button"
+            data-toggle="popover"
+            data-trigger="click focus"
+            data-external-popover-loaded="false"
+            data-placement="bottom"
+            href="${request.resource_url(request.meeting, '__userinfo__')}/"></a>
+        </td>
+        <td tal:condition="request.is_moderator">
+          <a href="mailto:" class="email"></a>
+        </td>
+        <tal:iterate repeat="(name, role) view_roles">
+          <td class="${name}">
+            <span class="glyphicon glyphicon-"></span>
+          </td>
+        </tal:iterate>
+      </tr>
+    </tbody>
+  </table>
+
+  <div data-loading-placeholder>
+    <span class="glyphicon glyphicon-refresh rotate-me"></span>
+    <span i18n:translate="">Loading data...</span>
+  </div>
+
+</tal:main>
+</body>
+</html>
