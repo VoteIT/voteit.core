@@ -49,12 +49,25 @@ class Meeting(BaseContent, SecurityAware, WorkflowAware):
         return acl.get_acl('Meeting:default')
 
     @property
+    def body(self): #arche compat
+        return self.get_field_value('body', '')
+    @body.setter
+    def body(self, value):
+        self.set_field_value('body', value)
+
+    @property
     def start_time(self):
         return self.get_field_value('start_time')
+    @start_time.setter
+    def start_time(self, value):
+        return self.set_field_value('start_time', value)
 
     @property
     def end_time(self):
         return self.get_field_value('end_time')
+    @end_time.setter
+    def end_time(self, value):
+        return self.set_field_value('end_time', value)
 
     @property
     def meeting_mail_name(self): #arche compat

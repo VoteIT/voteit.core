@@ -2,6 +2,7 @@ import re
 from copy import deepcopy
 from urllib import urlencode
 
+from arche.utils import generate_slug #API
 from pyramid.renderers import render
 from pyramid.traversal import find_interface
 from pyramid.traversal import resource_path
@@ -9,7 +10,6 @@ from repoze.workflow import get_workflow
 from webhelpers.html.converters import nl2br
 from webhelpers.html.render import sanitize
 from webhelpers.html.tools import auto_link
-from arche.utils import generate_slug #API
 
 from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IMeeting

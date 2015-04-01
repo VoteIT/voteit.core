@@ -10,6 +10,7 @@
        tal:define="description context.description|None"
        tal:condition="description"
        tal:content="structure description">Description text</p>
+  <div class="body" tal:content="structure context.body">Body</div>
 </tal:main>
 </body>
 </html>

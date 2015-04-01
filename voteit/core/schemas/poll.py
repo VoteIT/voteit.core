@@ -63,12 +63,12 @@ class PollSchema(colander.MappingSchema):
                                 title = _(u"Title"),
                                 validator = html_string_validator,)
     description = colander.SchemaNode(colander.String(),
-                                      title = _(u"Description"),
-                                      missing = u"",
+                                      title = _("Description"),
+                                      missing = "",
                                       description = _(u"poll_description_description",
                                                       default=u"Explain your choice of poll method and your plan for the different polls in the agenda item."),
-                                      widget=deform.widget.RichTextWidget(), 
-                                      validator = richtext_validator,)
+                                      widget = deform.widget.TextAreaWidget(rows=5, cols=40), 
+                                      validator = html_string_validator,)
     poll_plugin = colander.SchemaNode(colander.String(),
                                       title = _(u"Poll method to use"),
                                       description = _(u"poll_poll_plugin_description",

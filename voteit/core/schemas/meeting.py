@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 import colander
 import deform
 from repoze.workflow import get_workflow
@@ -32,7 +34,7 @@ def deferred_copy_perms_widget(node, kw):
     context = kw['context']
     request = kw['request']
     view = kw['view']
-    choices = [('', _(u"<Don't copy>"))]
+    choices = [('', _("<Don't copy>"))]
     for meeting in view.root.get_content(content_type = 'Meeting'):
         if request.has_permission(security.MODERATE_MEETING, meeting):
             choices.append((meeting.__name__, "%s (%s)" % (meeting.title, meeting.__name__)))
@@ -53,56 +55,63 @@ def _deferred_current_fullname(node, kw):
 
 class EditMeetingSchema(colander.Schema):
     title = colander.SchemaNode(colander.String(),
-        title = _(u"Title"),
-        description = _(u"meeting_title_description",
-                        default=u"Set a title for the meeting that separates it from previous meetings"),
-        validator=html_string_validator,)
+        title = _("Title"),
+        description = _("meeting_title_description",
+                        default="Set a title for the meeting that separates it from previous meetings"),
+        validator = html_string_validator,)
     meeting_mail_name = colander.SchemaNode(colander.String(),
-        title = _(u"Name of the contact person for this meeting"),
+        title = _("Name of the contact person for this meeting"),
         default = _deferred_current_fullname,
-        validator = colander.Regex(regex=NAME_PATTERN,
-                                   msg=_(u"name_pattern_error",
-                                         default = u"Must be at least 3 chars + only alphanumeric characters allowed")),)
+        validator = colander.Regex(regex = NAME_PATTERN,
+                                   msg = _("name_pattern_error",
+                                         default = "Must be at least 3 chars + only alphanumeric characters allowed")),)
     meeting_mail_address = colander.SchemaNode(colander.String(),
-        title = _(u"Contact email for this site"),
+        title = _("Contact email for this site"),
         default = deferred_current_user_mail,
-        validator = colander.All(colander.Email(msg = _(u"Invalid email address.")), html_string_validator,),)
+        validator = colander.All(colander.Email(msg = _("Invalid email address.")), html_string_validator,),)
     description = colander.SchemaNode(colander.String(),
-        title = _(u"Participants description"),
-        description = _(u"meeting_description_description",
-                        default=u"This is only visible to participants, so don't put information on how to register here. "
-                            u"Displayed on the first page of the meeting. You can include things "
-                            u"like information about the meeting, how to contact the moderator and your logo."),
-        missing = u"",
-        widget=deform.widget.RichTextWidget(options = (('theme', 'advanced'),)),
-        validator=richtext_validator,)
+        title = _("Short description"),
+        description = _("short_description_text",
+                        default = "Shows up in search results and similar. One sentence is enough. "
+                        "You don't need to add it if you don't want to."),
+        missing = "",
+        validator = html_string_validator)
+    body = colander.SchemaNode(colander.String(),
+        title = _("Participants description"),
+        description = _("meeting_description_description",
+                        default="This is only visible to participants, so don't put information on how to register here. "
+                            "Displayed on the first page of the meeting. You can include things "
+                            "like information about the meeting, how to contact the moderator and your logo."),
+        missing = "",
+        widget = deform.widget.RichTextWidget(options = (('theme', 'advanced'),)),
+        validator = richtext_validator,)
     public_description = colander.SchemaNode(
         colander.String(),
-        title = _(u"Public presentation"),
-        description = _(u"meeting_public_description_description",
-                        default=u"The public description is visible on the request access "
-                            u"page and to not yet logged in visitors."),
-        missing = u"",
-        widget=deform.widget.RichTextWidget(options = (('theme', 'advanced'),)),
-        validator=richtext_validator,)
+        title = _("Public presentation"),
+        description = _("meeting_public_description_description",
+                        default="The public description is visible on the request access "
+                            "page and to not yet logged in visitors."),
+        missing = "",
+        widget = deform.widget.RichTextWidget(options = (('theme', 'advanced'),)),
+        validator = richtext_validator,)
     mention_notification_setting = colander.SchemaNode(colander.Bool(),
-        title = _(u"Send mail to mentioned users."),
+        title = _("Send mail to mentioned users."),
         default = True,
         missing = True,
         tab = 'advanced',)
     poll_notification_setting = colander.SchemaNode(colander.Bool(),
-        title = _(u"Send mail to voters when a poll starts."),
+        title = _("Send mail to voters when a poll starts."),
         default = True,
         missing = True,
         tab = 'advanced',)
     hide_meeting = colander.SchemaNode(colander.Bool(),
-        title = _(u"Hide meeting from listings"),
+        title = _("Hide meeting from listings"),
         description = _("Users won't be able to find it unless they have a link to it."),
         tab = 'advanced',
         default = False,
         missing = False)
     nav_title = colander.SchemaNode(colander.String(),
-         title = _(u"Navigation bar title"),
+         title = _("Navigation bar title"),
          description = _("In case you want another title in the navigation bar"),
          missing = "",
          tab = 'advanced')
@@ -120,18 +129,18 @@ class AddMeetingSchema(EditMeetingSchema):
 
 class AccessPolicyMeetingSchema(colander.MappingSchema):
     access_policy = colander.SchemaNode(colander.String(),
-        title = _(u"Meeting access policy"),
+        title = _("Meeting access policy"),
         widget = deferred_access_policy_widget,
         default = "invite_only",)
 
 
 class MeetingPollSettingsSchema(colander.Schema):
     poll_plugins = colander.SchemaNode(colander.Set(),
-                                       title = _(u"mps_poll_plugins_title",
-                                                 default = u"Available poll methods within this meeting"),
-                                       description = _(u"mps_poll_plugins_description",
-                                                       default=u"Only poll methods selected here will be available withing the meeting. "
-                                                               u"If nothing is selected, only the servers default poll method will be available."),
+                                       title = _("mps_poll_plugins_title",
+                                                 default = "Available poll methods within this meeting"),
+                                       description = _("mps_poll_plugins_description",
+                                                       default="Only poll methods selected here will be available withing the meeting. "
+                                                               "If nothing is selected, only the servers default poll method will be available."),
                                        missing=set(),
                                        widget = poll_plugins_choices_widget,)
 
@@ -154,8 +163,7 @@ class AgendaItemProposalsPortletSchema(colander.Schema):
                                                title = _("Hide"),
                                                description = _("desc"),
                                                widget = hide_proposal_states_widget,
-                                               default = ('retracted', 'denied', 'unhandled'),
-                                               )
+                                               default = ('retracted', 'denied', 'unhandled'),)
 
 
 def includeme(config):

@@ -16,7 +16,6 @@ from zope.interface import implementer
 from voteit.core.events import ObjectUpdatedEvent
 from voteit.core.models.interfaces import IBaseContent
 from voteit.core.security import ROLE_OWNER
-from voteit.core.models.catalog import SEARCHABLE_TEXT_INDEXES
 
 #FIXME: This should be changable some way.
 #Things that should never be saved
@@ -109,12 +108,12 @@ class BaseContent(Folder, BaseMixin, LocalRolesMixin):
             self.set_field_value(k, v)
             updated.add(k)
         if updated:
+            updated.add('searchable_text') #Just to make sure
+            updated.add('allowed_to_view')
             if mark_modified and 'modified' not in values:
                 #Don't update if modified is set, since it will override the value we're trying to set.
                 self.mark_modified()
                 updated.add('modified')
-            if [x for x in updated if x in SEARCHABLE_TEXT_INDEXES]:
-                updated.add('searchable_text')
             if 'tags' not in updated:
                 #Hack to fix text
                 updated.add('tags')

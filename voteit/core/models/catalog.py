@@ -16,6 +16,7 @@ from zope.component import adapter
 from zope.component import getAdapter
 from zope.component import queryAdapter
 from zope.component.interfaces import ComponentLookupError
+from webhelpers.html.render import sanitize
 
 from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IDiscussionPost
@@ -32,12 +33,6 @@ from voteit.core.models.interfaces import IBaseContent
 from voteit.core.models.interfaces import ISiteRoot
 
 
-#FIXME: This should be fetched from arches searchable text instead
-SEARCHABLE_TEXT_INDEXES = ('title',
-                           'description',
-                           'text',
-                           'aid')
-
 def resolve_catalog_docid(catalog, root, docid):
     """ Takes a catalog docid and returns object that was indexed.
         This method should only be used when it's really necessary to have the object,
@@ -49,12 +44,13 @@ def resolve_catalog_docid(catalog, root, docid):
         return ValueError("Nothing found in catalog with docid '%s'" % docid) # pragma : no cover
     return find_resource(root, path)
 
-def metadata_for_query(catalog, **kwargs):
+def metadata_for_query(root, **kwargs):
     """ Get metadata objects and return them. Shorthand for looking up
         metadata from a query result.
     """
-    num, docids = catalog.search(**kwargs)
-    metadata = [catalog.document_map.get_metadata(x) for x in docids]
+    #FIXME: Is this deprecated?
+    num, docids = root.catalog.search(**kwargs)
+    metadata = [root.document_map.get_metadata(x) for x in docids]
     return tuple(metadata)
 
 def get_aid(obj, default):
@@ -141,6 +137,16 @@ def get_order(obj, default):
         return obj.get_field_value('order', default)
     return default
 
+def get_searchable_prop_or_disc(context, default):
+    if IProposal.providedBy(context) or IDiscussionPost.providedBy(context):
+        return context.text
+    return default
+
+def get_searchable_meeting(context, default):
+    if IMeeting.providedBy(context):
+        return sanitize(context.body)
+    return default
+
 @subscriber([IBaseContent, IObjectWillBeRemovedEvent])
 @subscriber([IBaseContent, IObjectAddedEvent])
 def update_if_ai_parent(obj, event):
@@ -193,6 +199,9 @@ class DiscussionCountMetadata(_CountMetadata, Metadata):
 def includeme(config):
     """ Register metadata adapter. """
     config.add_searchable_text_index('aid')
+
+    config.add_searchable_text_discriminator(get_searchable_prop_or_disc)
+    config.add_searchable_text_discriminator(get_searchable_meeting)
 
     indexes = {
         'aid': CatalogFieldIndex(get_aid),

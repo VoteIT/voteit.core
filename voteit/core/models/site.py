@@ -37,6 +37,13 @@ class SiteRoot(BaseContent, SecurityAware, Root):
         Root.__init__(self, data = data, **kwargs)
 
     @property
+    def body(self): #arche compat
+        return self.get_field_value('body', '')
+    @body.setter
+    def body(self, value):
+        return self.set_field_value('body', value)
+
+    @property
     def users(self):
         return self['users']
 
