@@ -142,11 +142,6 @@ def get_searchable_prop_or_disc(context, default):
         return context.text
     return default
 
-def get_searchable_meeting(context, default):
-    if IMeeting.providedBy(context):
-        return sanitize(context.body)
-    return default
-
 @subscriber([IBaseContent, IObjectWillBeRemovedEvent])
 @subscriber([IBaseContent, IObjectAddedEvent])
 def update_if_ai_parent(obj, event):
@@ -201,7 +196,6 @@ def includeme(config):
     config.add_searchable_text_index('aid')
 
     config.add_searchable_text_discriminator(get_searchable_prop_or_disc)
-    config.add_searchable_text_discriminator(get_searchable_meeting)
 
     indexes = {
         'aid': CatalogFieldIndex(get_aid),
