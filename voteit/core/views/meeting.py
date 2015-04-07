@@ -1,3 +1,4 @@
+from arche.events import SchemaCreatedEvent
 from arche.views.base import BaseView
 from arche.views.base import DefaultEditForm
 from betahaus.viewcomponent import render_view_group
@@ -9,6 +10,7 @@ from pyramid.traversal import resource_path
 from pyramid.view import view_config
 from pyramid.view import view_defaults
 from repoze.catalog.query import Eq
+from zope.component.event import objectEventNotify
 from zope.interface.interfaces import ComponentLookupError
 import deform
 
@@ -173,6 +175,7 @@ class RequestAccessForm(ArcheFormCompat, DefaultEditForm):
             raise HTTPForbidden(_("forbidden_on_closed_meetings",
                                   default = "You need to contact the moderator "
                                   "to get access to this meeting."))
+        objectEventNotify(SchemaCreatedEvent(schema))
         return schema
 
     @reify
