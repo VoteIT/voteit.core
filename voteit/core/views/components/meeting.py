@@ -1,4 +1,4 @@
-from betahaus.viewcomponent.decorators import view_action
+from betahaus.viewcomponent import view_action
 from pyramid.renderers import render
 
 from voteit.core.models.interfaces import IMeeting
@@ -14,7 +14,9 @@ from voteit.core.models.interfaces import IAccessPolicy
              permission = VIEW,
              renderer = 'voteit.core:templates/snippets/meeting_menu.pt')
 def meeting_menu(context, request, va, **kw):
+    view = kw['view']
     ap = request.registry.queryAdapter(request.meeting, IAccessPolicy, name = request.meeting.access_policy)        
     response = {}
     response['ap_configurable'] = bool(ap is not None and ap.config_schema())
+    response['view'] = view
     return render(va.kwargs['renderer'], response, request = request)
