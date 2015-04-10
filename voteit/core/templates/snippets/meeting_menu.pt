@@ -37,7 +37,7 @@
           i18n:translate="">Participants email addresses</a>
       </li>
     </tal:moderator>
-    ${structure: view.render_view_group('participants_menu', spacer = " ")|''}
+    ${structure: participants_menu}
 
     <li role="presentation" class="divider"></li>
 
@@ -49,7 +49,7 @@
         href="${request.resource_url(request.meeting, 'minutes')}"
         i18n:translate="">Minutes</a>
     </li>
-    ${structure: view.render_view_group('meeting', spacer = " ")|''}
+    ${structure: meeting_menu}
 
     <tal:moderator condition="request.is_moderator">
       <li role="presentation" class="divider"></li>
@@ -74,7 +74,7 @@
           i18n:translate="">Configure selected access policy</a>
       </li>
     </tal:moderator>
-    ${structure: view.render_view_group('settings_menu', spacer = " ")|''}
+    ${structure: settings_menu}
   </ul>
 </li>
 </tal:main>
