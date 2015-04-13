@@ -6,10 +6,10 @@
 <div id="ai-polls" class="col-sm-12">
   <div class="list-group">
     <div class="list-group-item">
-      <h3>
+      <h4>
         <span class="glyphicon glyphicon-check"></span>
         <span i18n:translate="">Polls</span>
-      </h3>
+      </h4>
     </div>
     <div data-load-target="${load_url}">
       <div class="list-group-item">

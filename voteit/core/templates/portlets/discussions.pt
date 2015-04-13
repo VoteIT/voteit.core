@@ -6,10 +6,10 @@
 <div id="ai-discussions" class="col-sm-6">
   <div class="list-group">
     <div class="list-group-item">
-      <h3>
+      <h4>
         <span class="glyphicon glyphicon-comment"></span>
         <span i18n:translate="">Discussion</span>
-      </h3>
+      </h4>
     </div>
     <div data-load-target="${load_url}">
       <div class="list-group-item">
