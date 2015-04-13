@@ -21,7 +21,7 @@ def meeting_menu(context, request, va, **kw):
     response = {}
     response['ap_configurable'] = bool(ap is not None and ap.config_schema())
     response['view'] = view
-    for name in ('meeting_menu', 'participants_menu', 'settings_menu'):
+    for name in ('meeting_menu', 'participants_menu', 'settings_menu', 'meeting'):
         if request.registry.queryUtility(IViewGroup, name):
             response[name] = render_view_group(context, request, name, spacer = " ")
         else:

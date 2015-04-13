@@ -51,8 +51,8 @@
     </li>
     ${structure: meeting_menu}
 
+    <li role="presentation" class="divider"></li>
     <tal:moderator condition="request.is_moderator">
-      <li role="presentation" class="divider"></li>
       <li role="presentation" class="dropdown-header">
         <span class="glyphicon glyphicon-cog"></span>
         <span i18n:translate="">Settings</span>
@@ -75,6 +75,10 @@
       </li>
     </tal:moderator>
     ${structure: settings_menu}
+
+    <li role="presentation" class="divider"></li>
+    <!-- Generic menu structures that should go here too -->
+    ${structure: meeting}
   </ul>
 </li>
 </tal:main>
