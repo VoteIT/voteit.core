@@ -24,7 +24,8 @@ unread_js = Resource(voteit_core_jslib, 'unread.js', depends = (base_js, data_lo
 watcher_js = Resource(voteit_core_jslib, 'watcher.js', depends = (data_loader,))
 
 #voteit_bootstrap = Resource(voteit_core_csslib, 'voteit_bootstrap.css')
-voteit_main_css = Resource(voteit_core_csslib, 'main.css', depends=(bootstrap_css, main_css))
+#Warning, bundling causes this resource to fail. It has something to do with the css-map. (Probably not an accessible directory)
+voteit_main_css = Resource(voteit_core_csslib, 'main.css', depends=(bootstrap_css, main_css), dont_bundle = True)
 
 participants_js = Resource(voteit_core_jslib, 'participants.js', depends = (base_js, pure_js))
 
