@@ -11,18 +11,17 @@
 		state_attr="state"
 		initial_state="private"
 		content_types="voteit.core.models.interfaces.IPoll"
-        permission_checker="pyramid.security.has_permission"
-	>
+    permission_checker="pyramid.security.has_permission">
 
 		<state name="private">
 			<key name="title" value="Private" i18n:attributes="value" />
 			<key name="description" value=""/>
 		</state>
 
-        <state name="upcoming">
-            <key name="title" value="Upcoming" i18n:attributes="value" />
-            <key name="description" value=""/>
-        </state>
+    <state name="upcoming">
+        <key name="title" value="Upcoming" i18n:attributes="value" />
+        <key name="description" value=""/>
+    </state>
 
 		<state name="ongoing">
 			<key name="title" value="Ongoing" i18n:attributes="value" />
@@ -44,7 +43,7 @@
 			from_state="private"
 			to_state="upcoming"
 			permission="Change Workflow State"
-            callback="voteit.core.models.poll.upcoming_poll_callback"
+      callback="voteit.core.models.poll.upcoming_poll_callback"
 		/>
 		
 		<transition
@@ -52,15 +51,15 @@
 			from_state="upcoming"
 			to_state="private"
 			permission="Change Workflow State"
-		/>
+		  />
 		
-        <transition
-            name="upcoming_to_ongoing"
-            from_state="upcoming"
-            to_state="ongoing"
-            permission="Change Workflow State"
+  <transition
+      name="upcoming_to_ongoing"
+      from_state="upcoming"
+      to_state="ongoing"
+      permission="Change Workflow State"
 			callback="voteit.core.models.poll.ongoing_poll_callback"
-        />
+      />
 
 		<transition
 			name="ongoing_to_closed"
@@ -68,21 +67,21 @@
 			to_state="closed"
 			permission="Change Workflow State"
 			callback="voteit.core.models.poll.closing_poll_callback"
-		/>
+		  />
 
-        <transition
-            name="ongoing_to_canceled"
-            from_state="ongoing"
-            to_state="canceled"
-            permission="Change Workflow State"
+    <transition
+        name="ongoing_to_canceled"
+        from_state="ongoing"
+        to_state="canceled"
+        permission="Change Workflow State"
         />
 
-        <transition
-            name="canceled_to_closed"
-            from_state="canceled"
-            to_state="closed"
-            permission="Change Workflow State"
-            callback="voteit.core.models.poll.closing_poll_callback"
+    <transition
+        name="canceled_to_closed"
+        from_state="canceled"
+        to_state="closed"
+        permission="Change Workflow State"
+        callback="voteit.core.models.poll.closing_poll_callback"
         />
 
 	</workflow>

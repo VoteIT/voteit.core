@@ -14,7 +14,7 @@ from webhelpers.html.tools import auto_link
 from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IMeeting
 from voteit.core import security
-
+from voteit.core import _
 
 ajax_options = """
 {success: voteit_deform_success,
@@ -142,8 +142,9 @@ def is_moderator(request):
 def get_wf_state_titles(request, iface, type_name):
     wf = get_workflow(iface, type_name)
     results = {}
+    tstring = _
     for sinfo in wf.state_info(None, request):
-        results[sinfo['name']] = request.localizer.translate(sinfo['title'], domain = 'voteit.core')
+        results[sinfo['name']] = request.localizer.translate(tstring(sinfo['title']))
     return results
 
 def tags_from_text(text):
