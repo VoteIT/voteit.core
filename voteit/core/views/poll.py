@@ -184,7 +184,7 @@ class AddPollForm(DefaultAddForm):
         reject_proposal_title = appstruct.pop('reject_proposal_title', None)
 
         if add_reject_proposal:
-            reject_proposal = createContent('Proposal', title = reject_proposal_title)
+            reject_proposal = createContent('Proposal', text = reject_proposal_title)
             name = generate_slug(self.context, reject_proposal_title)
             #name = reject_proposal.suggest_name(self.context)
             self.context[name] = reject_proposal
