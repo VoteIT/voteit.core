@@ -27,7 +27,7 @@ $(document).ready(function() {
       if (response['unvoted_polls'] > 0) {
         $('[data-important-polls]').html(response['unvoted_polls']);
       } else {
-        $('[data-important-polls]').html();
+        $('[data-important-polls]').html('');
       };
     };
   };
