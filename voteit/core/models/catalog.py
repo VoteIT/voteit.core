@@ -191,6 +191,11 @@ class DiscussionCountMetadata(_CountMetadata, Metadata):
     type_counter = 'DiscussionPost'
 
 
+class PollCountMetadata(_CountMetadata, Metadata):
+    name = 'poll_count'
+    type_counter = 'Poll'
+
+
 def includeme(config):
     """ Register metadata adapter. """
     config.add_searchable_text_index('aid')
@@ -216,3 +221,4 @@ def includeme(config):
     config.create_metadata_field('__name__', '__name__')
     config.add_metadata_field(ProposalCountMetadata)
     config.add_metadata_field(DiscussionCountMetadata)
+    config.add_metadata_field(PollCountMetadata)

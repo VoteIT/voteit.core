@@ -11,7 +11,7 @@
         ${state_titles[state]}
         <span class="badge pull-right">${len(ai_metas)}</span>
       </h4>
-    </div>    
+    </div>
     <ul class="list-group">
       <tal:iterate tal:repeat="meta ai_metas">
       <tal:def define="context_path '%s/%s' % (meeting_path, meta['__name__']);
@@ -29,6 +29,8 @@
               <span class="glyphicon glyphicon-comment"></span>
               <span>${meta['discussion_count']}</span>
               <span tal:condition="not is_current and meta['unread_discussionpost']" class="badge">${meta['unread_discussionpost']}</span>
+              <span class="glyphicon glyphicon-check"></span>
+              <span>${meta['poll_count']}</span>
             </span>
           </a>
       </li>
