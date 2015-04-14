@@ -153,11 +153,11 @@ class PollsInline(BaseView):
         response['vote_perm'] = security.ADD_VOTE
         return response
 
-    def get_proposal_tag_links(self, poll):
-        text = ""
+    def get_poll_filter_url(self, poll):
+        tags = set()
         for prop in poll.get_proposal_objects():
-            text += "#%s " % prop.aid
-        return tags2links(text)
+            tags.add(prop.aid)
+        return self.request.resource_url(self.context, query = {'tag': tags})
 
     def get_voted_estimate(self, poll):
         """ Returns an approx guess without doing expensive calculations.

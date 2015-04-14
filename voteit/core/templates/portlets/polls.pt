@@ -17,11 +17,6 @@
         Loading...
       </div>
     </div>
-    <div class="well" tal:condition="request.is_moderator and request.has_permission('Add Poll')">
-      <a href="${request.resource_url(context, 'add', query = {'content_type': 'Poll'})}"
-        class="btn btn-primary"
-        i18n:translate="">Add Poll</a>
-    </div>
   </div>
 </div>
 </tal:main>
