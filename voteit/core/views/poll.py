@@ -100,6 +100,10 @@ class PollVoteForm(DefaultEditForm):
           function () {
             voteit.load_target("#ai-polls [data-load-target]");
             voteit.watcher.fetch_data();
+          },
+        error:
+          function (jqxhr) {
+            arche.flash_error(jqxhr);
           }
         }
     """
