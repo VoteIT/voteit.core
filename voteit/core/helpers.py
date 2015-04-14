@@ -247,6 +247,16 @@ def get_polls_struct(meeting, request, limit = 5):
         results.append(result)
     return results
 
+def current_tags(request, prepend = '#', separator = ', '):
+    return separator.join(["%s%s" % (prepend, x) for x in request.GET.getall('tag')])
+
+def clear_tags_url(request, context, *args, **kw):
+    clear_tag_query = request.GET.copy()
+    if 'tag' in clear_tag_query:
+        del clear_tag_query['tag']
+    clear_tag_query.update(kw)
+    return request.resource_url(context, *args, query = clear_tag_query)
+
 def includeme(config):
     #FIXME: What's a good test for request methods? They aren't included during the regular testing runs.
     config.add_request_method(callable = transform_text, name = 'transform_text')
@@ -261,3 +271,5 @@ def includeme(config):
     config.add_request_method(callable = is_moderator, name = 'is_moderator', reify = True)
     #State titles
     config.add_request_method(callable = get_wf_state_titles, name = 'get_wf_state_titles')
+    config.add_request_method(callable = current_tags)
+    config.add_request_method(callable = clear_tags_url)

@@ -282,7 +282,8 @@ $brand-danger:          #d9534f !default;
 /*ban-circle*/
 .navbar-voteit {
   background-color: #0a243d;
-  border-color: #030a11; }
+  border-color: #030a11;
+  border-bottom: 0; }
   .navbar-voteit .navbar-brand {
     color: #fff; }
     .navbar-voteit .navbar-brand:hover, .navbar-voteit .navbar-brand:focus {
@@ -372,7 +373,7 @@ $brand-danger:          #d9534f !default;
         overflow-y: visible; } }
 
 body {
-  padding-top: 70px; }
+  padding-top: 90px; }
 
 .profile-pic {
   float: left;
@@ -399,6 +400,12 @@ body {
 .list-group .list-group-item-unread {
   border-left-width: 2px;
   border-left-color: #337ab7; }
+
+#tag-notification {
+  padding: 5px;
+  color: #8a6d3b;
+  background: #fcf8e3;
+  border-bottom: #faebcc 1px solid; }
 
 #messages {
   position: relative; }

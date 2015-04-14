@@ -8,7 +8,7 @@
 
 
 body {
-  padding-top:  70px;
+  padding-top:  90px;
 }
 .profile-pic {
   float: left;
@@ -40,6 +40,13 @@ body {
   border-left-color:  $voteit-unread;
 }
 
+#tag-notification {
+  padding: 5px;
+  color: $alert-warning-text;
+  background: $alert-warning-bg;
+  border-bottom: $alert-warning-border 1px solid;
+  
+}
 #messages {
   position: relative;
 }
