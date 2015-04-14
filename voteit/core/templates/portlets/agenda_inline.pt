@@ -12,7 +12,6 @@
         <span class="badge pull-right">${len(ai_metas)}</span>
       </h4>
     </div>    
-    
     <ul class="list-group">
       <tal:iterate tal:repeat="meta ai_metas">
       <tal:def define="context_path '%s/%s' % (meeting_path, meta['__name__']);

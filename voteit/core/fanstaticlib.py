@@ -86,7 +86,7 @@ participants_js = Resource(voteit_core_jslib, 'participants.js', depends = (base
 # voteit_deform = Group((_voteit_deform_js, _voteit_deform_css))
 # voteit_participants = Resource(voteit_core_jslib, 'voteit_participants.js', bottom=True, depends=(voteit_popups_js, jquery_deform,))
 # voteit_participants_edit = Resource(voteit_core_jslib, 'voteit_participants_edit.js', bottom=True, depends=(voteit_participants,))
-voteit_moderator_js = Resource(voteit_core_jslib, 'voteit_moderator.js', bottom = True)
+voteit_moderator_js = Resource(voteit_core_jslib, 'voteit_moderator.js', bottom = True, depends = (data_loader,))
 # voteit_poll_js = Resource(voteit_core_jslib, 'voteit_poll.js', bottom=True, depends=(voteit_common_js,))
 voteit_manage_tickets_js = Resource(voteit_core_jslib, 'voteit_manage_tickets.js', bottom = True, depends=(tablesorter,))
 # 

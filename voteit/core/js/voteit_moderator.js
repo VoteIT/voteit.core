@@ -1,33 +1,24 @@
 if(typeof(voteit) == "undefined"){
   voteit = {};
 }
-
-/* Load a dropdown menu
- * 
- * Must follow bootstraps structure of dropdown menus + have the attr data-dropdown-content=(url)
- * The url of data-dropdown-content must be passed to the load_dropdown function
- * 
- * Example:
-<button type="button"
-    class="btn btn-primary dropdown-toggle cogwheel"
-    data-dropdown-content="http://someurl.com"
-    aria-expanded="false"
-    data-toggle="dropdown"
-    onclick="voteit.load_dropdown('http://someurl.com')">
-    <span class="glyphicon glyphicon-cog"></span>
-</button>
-<ul class="dropdown-menu" role="menu">
-  <li><a href="#">Loading...</a></li>
-</ul>
- */
-
-function load_dropdown(url) {
+/* attached to the template cogwheel.pt */
+function load_cog_menu(event) {
+  event.preventDefault();
+  var elem = $(event.currentTarget);
+  arche.actionmarker_feedback(elem, true);
+  var url = elem.attr('href');
   var request = arche.do_request(url);
+  var target = elem.siblings('.dropdown-menu');
   request.done(function(response) {
-    var initiator = $('[data-dropdown-content="' + url + '"');
-    var menu = initiator.next();
-    menu.html(response);
-    initiator.prop( "onclick", null);
+    target.html(response);
+  });
+  request.fail(arche.flash_error);
+  request.always(function() {
+    arche.actionmarker_feedback(elem, false);
   })
 }
-voteit.load_dropdown = load_dropdown;
+voteit.load_cog_menu = load_cog_menu;
+
+$(document).ready(function() {
+  $('body').on('click', '[data-cogwheel-menu]', voteit.load_cog_menu);
+});

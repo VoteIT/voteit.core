@@ -1,14 +1,13 @@
 <tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core">
   <div class="pull-right btn-group"
-    tal:define="url url|request.resource_url(context, '__cogwheel_menu__')">
-    <button type="button"
-      class="btn btn-default btn-sm dropdown-toggle cogwheel"
-      data-dropdown-content="${url}"
+    tal:define="url url|request.resource_url(context, '__cogwheel_menu__');">
+    <a class="btn btn-default btn-sm dropdown-toggle cogwheel"
+      data-cogwheel-menu
       aria-expanded="false"
       data-toggle="dropdown"
-      onclick="voteit.load_dropdown('${url}')">
-      <span class="glyphicon glyphicon-cog"></span>
-    </button>
+      href="${url}">
+      <span data-actionmarker="rotate-me" class="glyphicon glyphicon-cog"></span>
+    </a>
     <ul class="dropdown-menu" role="menu">
       <li><a href="#" i18n:translate="">Loading...</a></li>
     </ul>
