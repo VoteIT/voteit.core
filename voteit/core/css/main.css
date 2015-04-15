@@ -314,7 +314,7 @@ $brand-danger:          #d9534f !default;
   .navbar-voteit .navbar-nav > .open > a, .navbar-voteit .navbar-nav > .open > a:hover, .navbar-voteit .navbar-nav > .open > a:focus {
     background-color: #0e3153;
     color: #fff; }
-  @media (max-width: 768px) {
+  @media (max-width: 767px) {
     .navbar-voteit .navbar-nav .open .dropdown-menu > .dropdown-header {
       border-color: #030a11; }
     .navbar-voteit .navbar-nav .open .dropdown-menu .divider {
