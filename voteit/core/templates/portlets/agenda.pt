@@ -3,7 +3,7 @@
       xmlns:tal="http://xml.zope.org/namespaces/tal"
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
       i18n:domain="voteit.core">
-<div id="agenda-item-portlet" class="portlet">
+<div id="agenda-item-portlet" class="portlet hidden-print">
 
   <h3 class="hidden-xs">
     <span class="glyphicon glyphicon-list-alt"></span>
