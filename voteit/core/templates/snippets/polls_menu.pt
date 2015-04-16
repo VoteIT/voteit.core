@@ -18,8 +18,12 @@
 </li>
 <script type="text/javascript">
 $(document).ready(function() {
-  if (typeof(voteit.watcher == 'undefined')) {
+  if (typeof voteit.watcher === 'undefined') {
     voteit.watcher = new Watcher("${request.resource_url(request.meeting, 'watcher_data.json')}");
+  } else {
+    if (typeof voteit.watcher.action_url === 'undefined') {
+      voteit.watcher.action_url = "${request.resource_url(request.meeting, 'watcher_data.json')}";
+    }
   };
   
   function unvoted_counter(response) {
