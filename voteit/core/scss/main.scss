@@ -5,6 +5,7 @@
 @import "_icons";
 @import "_navbar";
 @import "_portlets";
+@import "_msg_bar";
 
 
 body {
@@ -41,29 +42,6 @@ body .btn-group-portlet > .item-unread {
   border-left-width: $voteit-unread-bar-size;
   border-left-color: $voteit-unread;
 }
-
-#tag-notification {
-  padding: 5px;
-  color: $alert-warning-text;
-  background: $alert-warning-bg;
-  border-bottom: $alert-warning-border 1px solid;
-}
-#messages {
-  position: relative;
-}
-.float-below {
-  position: absolute;
-  top: 1px;
-  right: 15px;
-  left: 15px;
-  background: #fff;
-}
-.float-below .alert {
-  padding: 5px 35px 5px 15px;
-  margin-bottom: 5px;
-  margin-top: 5px;
-}
-
 #polls-menu {
   .votemarker {
     color: $brand-default;

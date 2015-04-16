@@ -372,6 +372,37 @@ $brand-danger:          #d9534f !default;
       .portlet-collapse.in {
         overflow-y: visible; } }
 
+/*
+$brand-primary:         darken(#428bca, 6.5%) !default; // #337ab7
+$brand-success:         #5cb85c !default;
+$brand-info:            #5bc0de !default;
+$brand-warning:         #f0ad4e !default;
+$brand-danger:          #d9534f !default;
+*/
+.msg-bar {
+  padding-right: 0px;
+  padding-left: 0px; }
+  .msg-bar > .alert {
+    padding: 5px;
+    margin: 0;
+    border-radius: 0;
+    text-align: center; }
+  .msg-bar > .alert-dismissable > .close {
+    position: inherit; }
+
+.container-float-below {
+  position: relative; }
+  .container-float-below > .float-below {
+    position: absolute;
+    top: 1px;
+    right: 15px;
+    left: 15px;
+    background: #fff; }
+    .container-float-below > .float-below > .alert {
+      padding: 5px 35px 5px 15px;
+      margin-bottom: 5px;
+      margin-top: 5px; }
+
 body {
   padding-top: 90px; }
 
@@ -402,27 +433,6 @@ body .btn-group-portlet > .item-unread {
   border-left-style: solid;
   border-left-width: 2px;
   border-left-color: #337ab7; }
-
-#tag-notification {
-  padding: 5px;
-  color: #8a6d3b;
-  background: #fcf8e3;
-  border-bottom: #faebcc 1px solid; }
-
-#messages {
-  position: relative; }
-
-.float-below {
-  position: absolute;
-  top: 1px;
-  right: 15px;
-  left: 15px;
-  background: #fff; }
-
-.float-below .alert {
-  padding: 5px 35px 5px 15px;
-  margin-bottom: 5px;
-  margin-top: 5px; }
 
 #polls-menu .votemarker {
   color: #ccc;
