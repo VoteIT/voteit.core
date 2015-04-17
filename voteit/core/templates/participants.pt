@@ -39,7 +39,15 @@
         </td>
         <tal:iterate repeat="(name, role) view_roles">
           <td class="${name}">
-            <span class="glyphicon glyphicon-"></span>
+            <a tal:omit-tag="not request.is_moderator or role == 'role:Administrator'"
+              data-permission-toggle
+              data-role="${name}"
+              data-enabled=""
+              data-userid=""
+              href="${request.resource_url(context, '_toggle_participant_role')}"
+              class="btn btn-default">
+              <span data-perm-marker></span>
+            </a>
           </td>
         </tal:iterate>
       </tr>
