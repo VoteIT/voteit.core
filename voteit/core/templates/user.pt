@@ -6,25 +6,25 @@
 <body>
 <tal:main metal:fill-slot="main-content">
   <div class="row">
-    <div class="col-sm-6" tal:content="structure userinfo"></div>
+    <div class="col-sm-6">
+      ${structure: userinfo}
+    </div>
     <div class="col-sm-6" tal:define="can_edit request.has_permission('perm:Edit')">
-      <a href="${request.resource_url(context, 'edit')}"
-        tal:condition="can_edit"
-        class="btn btn-primary"
-        i18n:translate="">Change profile</a>
-      <a href="${request.resource_url(context, 'change_password')}"
-        tal:condition="can_edit"
-        class="btn btn-primary"
-        i18n:translate="">Change password</a>
-      <div tal:condition="can_edit">
-        <div tal:content="structure context.get_image_plugin(request).description|'Broken image plugin'" /><br/>
-        <div i18n:translate="edit_profile_image_help">
-            If you'd like to change where your profile image is taken from, click 'change profile'.
-            Only valid sources will show up there, so you might need to connect your profile to
-            other sources to get those options. (Like Facebook or Twitter) Any valid connection options
-            should be listed below.
+      <p>
+        <div class="btn-group">
+          <a href="${request.resource_url(context, 'edit')}"
+            tal:condition="can_edit"
+            class="btn btn-default"
+            i18n:translate="">Change profile</a>
+          <a href="${request.resource_url(context, 'change_password')}"
+            tal:condition="can_edit"
+            class="btn btn-default"
+            i18n:translate="">Change password</a>
         </div>
-      </div>
+      </p>
+      <p tal:condition="can_edit">
+        <div tal:content="structure context.get_image_plugin(request).description|'Broken image plugin'" /><br/>
+      </p>
     </div>
   </div>
 </tal:main>
