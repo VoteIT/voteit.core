@@ -50,6 +50,11 @@ body .btn-group-portlet > .item-unread {
   .votemarker-active {
     color: $brand-success;
   }
+  &.attention {
+    > .dropdown-toggle > .glyphicon-star {
+      color: $brand-star-shine;
+    }
+  }
 }
 
 .btn-group-portlet {

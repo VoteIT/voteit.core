@@ -439,6 +439,8 @@ body .btn-group-portlet > .item-unread {
   font-size: 75%; }
 #polls-menu .votemarker-active {
   color: #5cb85c; }
+#polls-menu.attention > .dropdown-toggle > .glyphicon-star {
+  color: #f0ad4e; }
 
 .btn-group-portlet {
   width: 100%; }

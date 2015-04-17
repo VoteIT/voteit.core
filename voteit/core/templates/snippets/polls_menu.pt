@@ -30,8 +30,10 @@ $(document).ready(function() {
     if (typeof(response['unvoted_polls']) !== 'undefined') {
       if (response['unvoted_polls'] > 0) {
         $('[data-important-polls]').html(response['unvoted_polls']);
+        $('#polls-menu').addClass('attention');
       } else {
         $('[data-important-polls]').html('');
+        $('#polls-menu').removeClass('attention');
       };
     };
   };
