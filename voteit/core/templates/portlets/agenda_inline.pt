@@ -34,7 +34,7 @@
               <span tal:condition="not is_current and meta['unread_discussionpost']" class="badge">${meta['unread_discussionpost']}</span>
             </span>
             <span class="col-sm-4">
-              <span class="glyphicon glyphicon-check"></span>
+              <span class="glyphicon glyphicon-star"></span>
               <span>${meta['poll_count']}</span>
             </span>
           </span>

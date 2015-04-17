@@ -9,7 +9,7 @@
     aria-expanded="false"
     data-menu-loaded="false"
     data-polls-menu="${request.resource_url(request.meeting, '__polls_menu_content__')}">
-    <span class="glyphicon glyphicon-check"></span>
+    <span class="glyphicon glyphicon-star"></span>
     <span i18n:translate="">Polls</span>
     <span class="badge" data-important-polls></span>
     <span class="caret"></span>

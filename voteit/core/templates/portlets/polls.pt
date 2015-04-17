@@ -7,7 +7,7 @@
   <div class="list-group">
     <div class="list-group-item">
       <h4>
-        <span class="glyphicon glyphicon-check"></span>
+        <span class="glyphicon glyphicon-star"></span>
         <span i18n:translate="">Polls</span>
       </h4>
     </div>
