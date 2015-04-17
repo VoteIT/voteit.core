@@ -8,6 +8,7 @@ from voteit.core import security
 from voteit.core.fanstaticlib import participants_js
 from voteit.core.helpers import get_meeting_participants
 from voteit.core.models.interfaces import IMeeting
+from voteit.core.security import MODERATE_MEETING
 
 _VIEW_ROLES = (('role_view', security.ROLE_VIEWER),
                ('role_discuss', security.ROLE_DISCUSS),
@@ -54,6 +55,7 @@ class ParticipantsView(BaseView):
 
     @view_config(name = '_toggle_participant_role',
                  renderer = 'json',
+                 permission = MODERATE_MEETING,
                  xhr = True)
     def toggle_participant_role(self):
         userid = self.request.POST.get('userid', '')
