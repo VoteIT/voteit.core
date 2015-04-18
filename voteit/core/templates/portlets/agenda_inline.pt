@@ -22,22 +22,22 @@
         <a href="${context_path}"
           class="btn btn-default btn-block ${is_current and 'active' or None} ${context_unread and 'item-unread' or None}">
           <span class="btn-title">${meta['title']}</span>
-          <span class="row text-left">
-            <span class="col-sm-4">
+          <div class="row text-left">
+            <div class="col-sm-4">
               <span class="glyphicon glyphicon-exclamation-sign"></span>
               <span>${meta['proposal_count']}</span>
               <span tal:condition="not is_current and meta['unread_proposal']" class="badge">${meta['unread_proposal']}</span>
-            </span>
-            <span class="col-sm-4">
+            </div>
+            <div class="col-sm-4">
               <span class="glyphicon glyphicon-comment"></span>
               <span>${meta['discussion_count']}</span>
               <span tal:condition="not is_current and meta['unread_discussionpost']" class="badge">${meta['unread_discussionpost']}</span>
-            </span>
-            <span class="col-sm-4">
+            </div>
+            <div class="col-sm-4">
               <span class="glyphicon glyphicon-star"></span>
               <span>${meta['poll_count']}</span>
-            </span>
-          </span>
+            </div>
+          </div>
         </a>
       </tal:def>
       </tal:iterate>
