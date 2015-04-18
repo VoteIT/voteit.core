@@ -40,9 +40,10 @@ class ParticipantsView(BaseView):
     def json_data(self):
         users = self.root['users']
         results = []
-        for userid in get_meeting_participants(self.context):
-            user = users[userid]
-            uroles = groupfinder(userid, self.request)
+        userids = get_meeting_participants(self.context)
+        query = "userid in any(%s)" % list(userids)
+        for user in self.catalog_query(query, resolve = True, perm = None, sort_index = 'sortable_title'):
+            uroles = groupfinder(user.userid, self.request)
             userdata = {'first_name': user.first_name,
                         'last_name': user.last_name,
                         'userid': user.userid,}
