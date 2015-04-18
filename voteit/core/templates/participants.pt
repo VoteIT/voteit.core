@@ -16,7 +16,17 @@
         <th i18n:translate="">UserID</th>
         <th tal:condition="request.is_moderator" i18n:translate="">Email</th>
         <tal:iterate repeat="(name, role) view_roles">
-          <th>${role.title}</th>
+          <th>
+            ${role.title}
+          </th>
+        </tal:iterate>
+      </tr>
+      <tr>
+        <th colspan="4"></th>
+        <tal:iterate repeat="(name, role) view_roles">
+          <th>
+            <span data-role-count="${name}" class="badge"></span>
+          </th>
         </tal:iterate>
       </tr>
     </thead>

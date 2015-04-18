@@ -42,6 +42,9 @@ class ParticipantsView(BaseView):
         results = []
         userids = get_meeting_participants(self.context)
         query = "userid in any(%s)" % list(userids)
+        role_count = {}
+        for key in dict(_VIEW_ROLES).keys():
+            role_count[key] = 0
         for user in self.catalog_query(query, resolve = True, perm = None, sort_index = 'sortable_title'):
             uroles = groupfinder(user.userid, self.request)
             userdata = {'first_name': user.first_name,
@@ -51,8 +54,12 @@ class ParticipantsView(BaseView):
                 userdata['email'] = user.email
             for (name, role) in _VIEW_ROLES:
                 userdata[name] = role in uroles
+                if role in uroles:
+                   role_count[name] += 1
             results.append(userdata)
-        return {'results': results, 'moderator': bool(self.request.is_moderator)}
+        return {'results': results,
+                'moderator': bool(self.request.is_moderator),
+                'role_count': role_count}
 
     @view_config(name = '_toggle_participant_role',
                  renderer = 'json',
