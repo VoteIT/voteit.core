@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2015-04-14 18:04+0200\n"
-"PO-Revision-Date: 2015-04-14 18:05+0100\n"
+"POT-Creation-Date: 2015-04-18 14:50+0200\n"
+"PO-Revision-Date: 2015-04-18 14:51+0100\n"
 "Last-Translator: Robin Harms Oredsson <robin@betahaus.net>\n"
 "Language-Team: sv <LL@li.org>\n"
 "Language: sv\n"
@@ -516,7 +516,6 @@ msgstr ""
 
 #: voteit/core/portlets/agenda.py:19
 #: voteit/core/templates/portlets/agenda.pt:10
-#: voteit/core/templates/portlets/agenda.pt:14
 #: voteit/core/views/templates/agenda_template.pt:29
 msgid "Agenda"
 msgstr "Dagordning"
@@ -616,7 +615,7 @@ msgstr "Lämna fältet tomt om du vill vara anonym"
 #: voteit/core/schemas/contact.py:30 voteit/core/schemas/contact.py:53
 #: voteit/core/templates/manage_tickets.pt:34
 #: voteit/core/templates/participants.pt:17
-#: voteit/core/templates/snippets/user_basic_info.pt:8
+#: voteit/core/templates/snippets/user_basic_info.pt:9
 #: voteit/core/views/templates/_participants.pt:34
 msgid "Email"
 msgstr "Epost"
@@ -1043,7 +1042,6 @@ msgstr "Tillbaka till möte"
 
 #: voteit/core/templates/manage_agenda.pt:27
 #: voteit/core/templates/manage_agenda.pt:42
-#: voteit/core/templates/snippets/user_basic_info.pt:20
 #: voteit/core/views/components/moderator_actions.py:33
 #: voteit/core/views/templates/agenda_template.pt:15
 #: voteit/core/views/templates/agenda_templates.pt:52
@@ -1209,7 +1207,7 @@ msgstr "Efternamn"
 msgid "UserID"
 msgstr "Användarnamn"
 
-#: voteit/core/templates/participants.pt:51
+#: voteit/core/templates/participants.pt:70
 msgid "Loading data..."
 msgstr "Laddar data…"
 
@@ -1308,26 +1306,13 @@ msgstr "Då behöver du registrera dig genom att klicka på knappen nedan."
 msgid "Register"
 msgstr "Registrera"
 
-#: voteit/core/templates/user.pt:14
+#: voteit/core/templates/user.pt:18
 msgid "Change profile"
 msgstr "Ändra profil"
 
-#: voteit/core/templates/user.pt:18
+#: voteit/core/templates/user.pt:22
 msgid "Change password"
 msgstr "Ändra lösenord"
-
-#. Default: If you'd like to change where your profile image is taken from,
-#. click 'change profile'. Only valid sources will show up there, so you might
-#. need to connect your profile to other sources to get those options. (Like
-#. Facebook or Twitter) Any valid connection options should be listed below.
-#: voteit/core/templates/user.pt:21
-msgid "edit_profile_image_help"
-msgstr ""
-"Om du vill ändra varifrån din profilbild hämtas, klicka 'ändra profil'. Bara "
-"giltiga källor kommer synas där, så du kan behöva ansluta din profil till "
-"andra källor för att göra dem tillgängliga. (T.ex. Facebook eller Twitter) "
-"Om det finns möjlighet att koppla din profil till andra källor så bör de "
-"listas nedan."
 
 #: voteit/core/templates/email/help_contact.pt:12
 msgid "From"
@@ -1337,12 +1322,16 @@ msgstr "Från"
 msgid "Click the link to get to the VoteIT meeting:"
 msgstr "Klicka länken för att komma till VoteIT-mötet"
 
-#: voteit/core/templates/portlets/agenda.pt:22
+#: voteit/core/templates/portlets/agenda.pt:15
+msgid "Agenda / Navigation"
+msgstr "Dagordning / Navigation"
+
+#: voteit/core/templates/portlets/agenda.pt:23
 #: voteit/core/views/components/templates/sidebars/navigation_head.pt:12
 msgid "Add"
 msgstr "Lägg till"
 
-#: voteit/core/templates/portlets/agenda.pt:26
+#: voteit/core/templates/portlets/agenda.pt:27
 msgid "Manage"
 msgstr "Hantera"
 
@@ -1491,11 +1480,11 @@ msgstr "Accesspolicy"
 msgid "Configure selected access policy"
 msgstr "Inställningar för vald accesspolicy"
 
-#: voteit/core/templates/snippets/user_basic_info.pt:12
+#: voteit/core/templates/snippets/user_basic_info.pt:13
 msgid "About"
 msgstr "Om"
 
-#: voteit/core/templates/snippets/user_basic_info.pt:17
+#: voteit/core/templates/snippets/user_basic_info.pt:18
 msgid "You haven't entered anything yet!"
 msgstr "Du har inte skrivit något än!"
 
@@ -1964,6 +1953,14 @@ msgstr "personer"
 #: voteit/core/views/templates/snippets/user_tag.pt:20
 msgid "more_in_likes"
 msgstr "till"
+
+#~ msgid "edit_profile_image_help"
+#~ msgstr ""
+#~ "Om du vill ändra varifrån din profilbild hämtas, klicka 'ändra profil'. "
+#~ "Bara giltiga källor kommer synas där, så du kan behöva ansluta din profil "
+#~ "till andra källor för att göra dem tillgängliga. (T.ex. Facebook eller "
+#~ "Twitter) Om det finns möjlighet att koppla din profil till andra källor "
+#~ "så bör de listas nedan."
 
 #~ msgid "Too short. At least 6 chars required."
 #~ msgstr "För kort. Minst 6 tecken krävs."

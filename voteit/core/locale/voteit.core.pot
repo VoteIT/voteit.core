@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE 1.0\n"
-"POT-Creation-Date: 2015-04-14 18:04+0200\n"
+"POT-Creation-Date: 2015-04-18 14:50+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -475,7 +475,6 @@ msgstr ""
 
 #: ././voteit/core/portlets/agenda.py:19
 #: ././voteit/core/templates/portlets/agenda.pt:10
-#: ././voteit/core/templates/portlets/agenda.pt:14
 #: ././voteit/core/views/templates/agenda_template.pt:29
 msgid "Agenda"
 msgstr ""
@@ -574,7 +573,7 @@ msgstr ""
 #: ././voteit/core/schemas/contact.py:30 ././voteit/core/schemas/contact.py:53
 #: ././voteit/core/templates/manage_tickets.pt:34
 #: ././voteit/core/templates/participants.pt:17
-#: ././voteit/core/templates/snippets/user_basic_info.pt:8
+#: ././voteit/core/templates/snippets/user_basic_info.pt:9
 #: ././voteit/core/views/templates/_participants.pt:34
 msgid "Email"
 msgstr ""
@@ -956,7 +955,6 @@ msgstr ""
 
 #: ././voteit/core/templates/manage_agenda.pt:27
 #: ././voteit/core/templates/manage_agenda.pt:42
-#: ././voteit/core/templates/snippets/user_basic_info.pt:20
 #: ././voteit/core/views/components/moderator_actions.py:33
 #: ././voteit/core/views/templates/agenda_template.pt:15
 #: ././voteit/core/views/templates/agenda_templates.pt:52
@@ -1118,7 +1116,7 @@ msgstr ""
 msgid "UserID"
 msgstr ""
 
-#: ././voteit/core/templates/participants.pt:51
+#: ././voteit/core/templates/participants.pt:70
 msgid "Loading data..."
 msgstr ""
 
@@ -1211,20 +1209,12 @@ msgstr ""
 msgid "Register"
 msgstr ""
 
-#: ././voteit/core/templates/user.pt:14
+#: ././voteit/core/templates/user.pt:18
 msgid "Change profile"
 msgstr ""
 
-#: ././voteit/core/templates/user.pt:18
+#: ././voteit/core/templates/user.pt:22
 msgid "Change password"
-msgstr ""
-
-#. Default: If you'd like to change where your profile image is taken from,
-#. click 'change profile'. Only valid sources will show up there, so you might
-#. need to connect your profile to other sources to get those options. (Like
-#. Facebook or Twitter) Any valid connection options should be listed below.
-#: ././voteit/core/templates/user.pt:21
-msgid "edit_profile_image_help"
 msgstr ""
 
 #: ././voteit/core/templates/email/help_contact.pt:12
@@ -1235,12 +1225,16 @@ msgstr ""
 msgid "Click the link to get to the VoteIT meeting:"
 msgstr ""
 
-#: ././voteit/core/templates/portlets/agenda.pt:22
+#: ././voteit/core/templates/portlets/agenda.pt:15
+msgid "Agenda / Navigation"
+msgstr ""
+
+#: ././voteit/core/templates/portlets/agenda.pt:23
 #: ././voteit/core/views/components/templates/sidebars/navigation_head.pt:12
 msgid "Add"
 msgstr ""
 
-#: ././voteit/core/templates/portlets/agenda.pt:26
+#: ././voteit/core/templates/portlets/agenda.pt:27
 msgid "Manage"
 msgstr ""
 
@@ -1387,11 +1381,11 @@ msgstr ""
 msgid "Configure selected access policy"
 msgstr ""
 
-#: ././voteit/core/templates/snippets/user_basic_info.pt:12
+#: ././voteit/core/templates/snippets/user_basic_info.pt:13
 msgid "About"
 msgstr ""
 
-#: ././voteit/core/templates/snippets/user_basic_info.pt:17
+#: ././voteit/core/templates/snippets/user_basic_info.pt:18
 msgid "You haven't entered anything yet!"
 msgstr ""
 
