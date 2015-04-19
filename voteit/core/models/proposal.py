@@ -21,7 +21,7 @@ class Proposal(BaseContent, WorkflowAware):
     type_name = 'Proposal'
     type_title = _(u"Proposal")
     add_permission = security.ADD_PROPOSAL
-    #custom_mutators = {'title': '_set_title'}
+    css_icon = 'glyphicon glyphicon-exclamation-sign'
 
     @property
     def __acl__(self):

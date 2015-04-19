@@ -34,9 +34,8 @@ class InviteTicket(Folder, WorkflowAware):
         All methods are documented in the interface of this class.
     """
     type_name = 'InviteTicket'
-#    allowed_contexts = () #Not addable through regular forms
-#    add_permission = None
-    #No schemas
+    add_permission = None
+    css_icon = 'glyphicon glyphicon-send'
 
     @property
     def content_type(self):

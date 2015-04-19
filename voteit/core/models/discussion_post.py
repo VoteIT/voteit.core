@@ -23,6 +23,7 @@ class DiscussionPost(BaseContent):
     type_name = 'DiscussionPost'
     type_title = _("Discussion Post")
     add_permission = security.ADD_DISCUSSION_POST
+    css_icon = 'glyphicon glyphicon-comment'
 
     @property
     def __acl__(self):

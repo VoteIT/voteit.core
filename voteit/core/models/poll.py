@@ -39,6 +39,7 @@ class Poll(BaseContent, WorkflowAware):
     add_permission = security.ADD_POLL
     _poll_result = None
     _ballots = None
+    css_icon = 'glyphicon glyphicon-star'
 
     @property
     def __acl__(self):
