@@ -39,8 +39,15 @@ class User(ArcheUser, BaseContent):
     type_title = _(u"User")
     add_permission = security.ADD_USER
 
-    __acl__ = [(Allow, security.ROLE_ADMIN, (security.EDIT, security.VIEW, security.CHANGE_PASSWORD, security.MANAGE_SERVER, security.DELETE)),
-               (Allow, security.ROLE_OWNER, (security.EDIT, security.VIEW, security.CHANGE_PASSWORD,)),
+    __acl__ = [(Allow, security.ROLE_ADMIN, (security.EDIT,
+                                             security.VIEW,
+                                             security.PERM_MANAGE_USERS,
+                                             security.CHANGE_PASSWORD,
+                                             security.MANAGE_SERVER,
+                                             security.DELETE)),
+               (Allow, security.ROLE_OWNER, (security.EDIT,
+                                             security.VIEW,
+                                             security.CHANGE_PASSWORD,)),
                DENY_ALL]
 
     #FIXME: Review
