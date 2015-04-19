@@ -12,6 +12,9 @@
       open ticket(s) and <span i18n:name="closed" tal:replace="closed_count">3</span> closed.
   </h4>
 
+  ${structure: view.render_template('voteit.core:templates/snippets/participants_tabs.pt')}
+
+
   <div tal:condition="never_invited">
     <p i18n:translate="never_invited_warning">Warning! There are
         <tal:count tal:replace="len(never_invited)" i18n:name="count">5</tal:count>

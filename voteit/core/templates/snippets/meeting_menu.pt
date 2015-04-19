@@ -31,11 +31,6 @@
           href="${request.resource_url(request.meeting, 'manage_tickets')}"
           i18n:translate="">Manage invites</a>
       </li>
-      <li role="presentation">
-        <a role="menuitem" tabindex="-1"
-          href="${request.resource_url(request.meeting, 'participants_emails')}"
-          i18n:translate="">Participants email addresses</a>
-      </li>
     </tal:moderator>
     ${structure: participants_menu}
 

@@ -5,7 +5,10 @@
       i18n:domain="voteit.core">
 <body>
 <tal:main metal:fill-slot="content">
+
   <h1>${title}</h1>
+
+  ${structure: view.render_template('voteit.core:templates/snippets/participants_tabs.pt')}
 
   <table class="table trable-striped">
     <tbody>
