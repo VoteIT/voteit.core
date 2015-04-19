@@ -2,6 +2,7 @@ from datetime import timedelta
 from uuid import uuid4
 import re
 
+from arche.widgets import deferred_autocompleting_userid_widget #b/c
 from pyramid.traversal import find_resource
 from pyramid.traversal import find_root
 from six import string_types
@@ -84,13 +85,3 @@ def strip_and_lowercase(value):
     if not isinstance(value, basestring):
         return value
     return "\n".join([x.strip().lower() for x in value.splitlines()])
-
-@colander.deferred
-def deferred_autocompleting_userid_widget(node, kw):
-    context = kw['context']
-    root = find_root(context)
-    choices = tuple(root.users.keys())
-    return deform.widget.AutocompleteInputWidget(
-        size=15,
-        values = choices,
-        min_length=1)
