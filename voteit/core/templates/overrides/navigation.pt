@@ -2,12 +2,12 @@
       xmlns:metal="http://xml.zope.org/namespaces/metal"
       xmlns:tal="http://xml.zope.org/namespaces/tal"
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
-      i18n:domain="Arche">
+      i18n:domain="voteit.core">
 <nav class="navbar navbar-fixed-top navbar-voteit" role="navigation">
   <div class="container">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapsible">
-        <span class="sr-only" i18n:translate="">Toggle navigation</span>
+        <span class="sr-only" i18n:translate="">Navigation</span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
@@ -37,7 +37,7 @@
     <div tal:define="tags request.current_tags()" tal:condition="tags" role="alert" class="alert alert-dismissable alert-warning">
       <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
       <span class="glyphicon glyphicon-filter"></span>
-      <span>Only showing ${tags}</span>
+      <span i18n:translate="">Only showing <tal:ts content="tags" i18n:name="tags"/></span>
       <a href="${request.clear_tags_url(context)}" class="btn btn-default btn-xs" i18n:translate="">Show all</a>
     </div>
   </div>
