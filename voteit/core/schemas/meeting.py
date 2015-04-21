@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from arche.schemas import userid_hinder_widget
+from arche.validators import existing_userids
+from repoze.workflow import get_workflow
 import colander
 import deform
-from repoze.workflow import get_workflow
 
 from voteit.core import VoteITMF as _
 from voteit.core import security 
@@ -170,8 +172,32 @@ class AgendaItemProposalsPortletSchema(colander.Schema):
                                                default = ('retracted', 'denied', 'unhandled'),)
 
 
+class _ContainsOnlyAndNotEmpty(colander.ContainsOnly):
+
+    def __call__(self, node, value):
+        if len(value) == 0:
+            raise colander.Invalid(node, _("Must select at least one"))
+        return super(_ContainsOnlyAndNotEmpty, self).__call__(node, value)
+
+
+class AddExistingUserSchema(colander.Schema):
+    userid = colander.SchemaNode(colander.String(),
+                                 title = _("UserID"),
+                                 widget = userid_hinder_widget,
+                                 validator = existing_userids)
+    roles = colander.SchemaNode(colander.Set(),
+                                title = _("Roles"),
+                                default = set([security.ROLE_VIEWER,
+                                               security.ROLE_DISCUSS,
+                                               security.ROLE_PROPOSE,
+                                               security.ROLE_VOTER]),
+                                validator = _ContainsOnlyAndNotEmpty(dict(security.MEETING_ROLES).keys()),
+                                widget = deform.widget.CheckboxChoiceWidget(values = security.MEETING_ROLES))
+
+
 def includeme(config):
     config.add_content_schema('Meeting', AddMeetingSchema, 'add')
     config.add_content_schema('Meeting', EditMeetingSchema, 'edit')
     config.add_content_schema('Meeting', MeetingPollSettingsSchema, 'meeting_poll_settings')
     config.add_content_schema('Meeting', AccessPolicyMeetingSchema, 'access_policy')
+    config.add_content_schema('Meeting', AddExistingUserSchema, 'add_existing_user')

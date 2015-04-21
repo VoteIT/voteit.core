@@ -11,6 +11,9 @@
   <a href="${request.resource_url(context, 'add_tickets')}"
   class="btn btn-default ${request.view_name == 'add_tickets' and 'active' or None}"
   i18n:translate="">Invite</a>
+  <a href="${request.resource_url(context, 'add_userid')}"
+  class="btn btn-default ${request.view_name == 'add_userid' and 'active' or None}"
+  i18n:translate="">Add existing</a>
   <a href="${request.resource_url(context, 'manage_tickets')}"
   class="btn btn-default ${request.view_name == 'manage_tickets' and 'active' or None}"
   i18n:translate="">Manage invitations</a>
