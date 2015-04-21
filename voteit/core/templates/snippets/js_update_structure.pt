@@ -1,0 +1,18 @@
+<tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core">
+<span data-js-struct-response>
+<script type="text/javascript">
+  <tal:popover condition="hide_popover|False">
+  $('${hide_popover}').popover('hide');
+  </tal:popover>
+  <tal:load_target condition="load_target|False">
+  var response = voteit.load_target('${load_target}');
+    <tal:scroll_to condition="scroll_to|False">
+    response.done(function() {
+      $('html, body').animate({scrollTop: $('${scroll_to}').offset().top -200}, 1000);
+    })
+    </tal:scroll_to>
+  </tal:load_target>
+  $('[data-js-struct-response]').remove();
+</script>
+</span>
+</tal:main>

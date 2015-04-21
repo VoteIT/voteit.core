@@ -60,24 +60,26 @@ def meta_retract(context, request, va, **kw):
              title = _("Reply"),
              interface = IDiscussionPost,
              ai_perm = ADD_DISCUSSION_POST)
-@view_action('metadata_listing', 'counterproposal',
-             title = _("Counterproposal"),
+@view_action('metadata_listing', 'comment',
+             title = _("Comment"),
              interface = IProposal,
-             ai_perm = ADD_PROPOSAL)
-def meta_reply(context, request, va, **kw):
-    """ Create a reply link.
+             ai_perm = ADD_DISCUSSION_POST)
+def meta_comment(context, request, va, **kw):
+    """ Create a comment link
     """
     if not request.has_permission(va.kwargs['ai_perm'], request.agenda_item):
         return
-    query = {'content_type': context.type_name,
+    query = {'content_type': 'DiscussionPost',
              'tag': request.GET.getall('tag'),
              'reply-to': context.uid}
     data = {'role': 'button',
             'class': 'btn btn-default btn-xs',
+            #'data-reply-to': context.uid,
+            'data-external-popover-loaded': 'false',
             'data-reply-to': context.uid,
+            'data-placement': 'bottom',
             'title': '',
-            'href': request.resource_url(request.agenda_item, 'add', query = query),
-            }
+            'href': request.resource_url(request.agenda_item, 'add', query = query),}
     out = """<a %s><span class="text-primary">%s</span></a> """ % \
         (" ".join(['%s="%s"' % (k, v) for (k, v) in data.items()]),
          request.localizer.translate(va.title))

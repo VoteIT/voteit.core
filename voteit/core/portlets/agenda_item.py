@@ -18,7 +18,6 @@ from voteit.core import _
 from voteit.core import security
 from voteit.core.fanstaticlib import data_loader
 from voteit.core.helpers import get_docids_to_show
-from voteit.core.helpers import tags2links
 from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.schemas.meeting import AgendaItemProposalsPortletSchema
 
@@ -74,7 +73,7 @@ class PollsPortlet(ListingPortlet):
 
 
 class ProposalsInline(BaseView):
-    
+
     def __call__(self):
         response = {}
         query = Eq('path', resource_path(self.context)) &\
@@ -108,13 +107,12 @@ class ProposalsInline(BaseView):
 
 
 class DiscussionsInline(BaseView):
-    
+
     def __call__(self):
         """ Loading procedure of discussion posts:
             If nothing specific is set, limit loading to the next 5 unread.
             If there aren't 5 unread, fetch the 5 last posts.
             If there are more unread than 5, create a link to load more.
-            
         """
         query = {}
         query['tags'] = self.request.GET.getall('tag')
@@ -186,11 +184,6 @@ class StrippedInlineAddForm(DefaultAddForm):
     response_template = ""
     update_selector = ""
 
-    @property
-    def reply_to(self):
-        """ If this form is in reply to something. """
-        return self.request.GET.get('reply-to', False)
-
     def before(self, form):
         super(StrippedInlineAddForm, self).before(form)
         form.widget.template = 'voteit_form_inline'
@@ -207,10 +200,7 @@ class StrippedInlineAddForm(DefaultAddForm):
         return self._response(update_selector = self.update_selector)
 
     def cancel(self, *args):
-        remove_parent = ''
-        if self.reply_to:
-            remove_parent = '[data-reply]'
-        return self._response(remove_parent = remove_parent)
+        return self._response()
 
     cancel_success = cancel_failure = cancel
 
@@ -223,9 +213,44 @@ class ProposalAddForm(StrippedInlineAddForm):
 
 class DiscussionAddForm(StrippedInlineAddForm):
     response_template = 'voteit.core:templates/portlets/inline_add_button_disc.pt'
-    formid = 'discussion_inline_add'
+    update_structure_tpl = 'voteit.core:templates/snippets/js_update_structure.pt'
     update_selector = '#ai-discussions'
 
+    @property
+    def formid(self):
+        if self.reply_to:
+            return "discussion_add_reply_to_%s" % self.reply_to
+        return "discussion_inline_add"
+
+    @property
+    def reply_to(self):
+        return self.request.GET.get('reply-to')
+
+    @property
+    def form_options(self):
+        options = dict(super(DiscussionAddForm, self).form_options)
+        if self.reply_to:
+            options.update({'css_class': 'deform discussion-reply-to'})
+        return options
+
+    def save_success(self, appstruct):
+        factory = self.get_content_factory(self.type_name)
+        obj = factory(**appstruct)
+        name = generate_slug(self.context, obj.uid)
+        self.context[name] = obj
+        if not self.reply_to:
+            return self._response(update_selector = self.update_selector)
+        return Response(self.render_template(self.update_structure_tpl,
+                                             hide_popover = '[data-reply-to="%s"]' % self.reply_to,
+                                             scroll_to = '#ai-discussions .list-group-item:last',
+                                             load_target = "%s [data-load-target]" % self.update_selector))
+
+    def cancel(self, *args):
+        if not self.reply_to:
+            return self._response()
+        return Response(self.render_template(self.update_structure_tpl,
+                                             hide_popover = '[data-reply-to="%s"]' % self.reply_to))
+    cancel_success = cancel_failure = cancel
 
 def includeme(config):
     config.add_portlet_slot('agenda_item', title = _("Agenda Item portlets"), layout = 'vertical')

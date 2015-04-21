@@ -32,38 +32,38 @@
     <input type="hidden" name="_charset_" />
     <input type="hidden" name="__formid__" value="${formid}"/>
 
-            <h3 tal:condition="field.heading|False" tal:content="field.heading"></h3>
+    <h3 tal:condition="field.heading|False" tal:content="field.heading"></h3>
 
-            <div class="alert alert-danger" tal:condition="field.error">
-              <div class="errorMsgLbl" i18n:translate=""
-                >There was a problem with your submission</div>
-              <p class="errorMsg">${field.errormsg}</p>
-            </div>
+    <div class="alert alert-danger" tal:condition="field.error">
+      <div class="errorMsgLbl" i18n:translate=""
+        >There was a problem with your submission</div>
+      <p class="errorMsg">${field.errormsg}</p>
+    </div>
 
-            <div class="section first" tal:condition="description"
-              tal:content="structure description"></div>
+    <div class="section first" tal:condition="description"
+      tal:content="structure description"></div>
 
-            <tal:fields repeat="child field">
-              <tal:field replace="structure child.render_template(item_template)" />
-            </tal:fields>
+    <tal:fields repeat="child field">
+      <tal:field replace="structure child.render_template(item_template)" />
+    </tal:fields>
 
-            <div class="form-group">
-              <tal:loop tal:repeat="button buttons">
-                <button
-                      tal:define="btn_disposition repeat.button.start and 'btn-primary' or 'btn-default';
-                      btn_icon button.icon|None"
-                      tal:attributes="disabled button.disabled if button.disabled else None"
-                      id="${formid+button.name}"
-                      name="${button.name}"
-                      type="${button.type}"
-                      class="btn ${btn_disposition} ${button.css_class}"
-                      value="${button.value}">
-                  <i tal:condition="btn_icon" class="${btn_icon}"> </i>
-                  <span data-actionmarker="glyphicon glyphicon-refresh rotate-me"></span>
-                  ${button.title}
-                </button>
-              </tal:loop>
-            </div>
+    <div class="form-group">
+      <tal:loop tal:repeat="button buttons">
+        <button
+              tal:define="btn_disposition repeat.button.start and 'btn-primary' or 'btn-default';
+              btn_icon button.icon|None"
+              tal:attributes="disabled button.disabled if button.disabled else None"
+              id="${formid+button.name}"
+              name="${button.name}"
+              type="${button.type}"
+              class="btn ${btn_disposition} ${button.css_class}"
+              value="${button.value}">
+          <i tal:condition="btn_icon" class="${btn_icon}"> </i>
+          <span data-actionmarker="glyphicon glyphicon-refresh rotate-me"></span>
+          ${button.title}
+        </button>
+      </tal:loop>
+    </div>
   </fieldset>
 
   <script type="text/javascript" tal:condition="use_ajax">

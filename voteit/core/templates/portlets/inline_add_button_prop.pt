@@ -1,7 +1,6 @@
-<div xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+<tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n"
   i18n:domain="voteit.core"
   tal:define="can_add request.has_permission('Add Proposal', request.agenda_item)">
-  <div tal:condition="not remove_parent|True">
     <a tal:condition="can_add"
       data-clickable-target=""
       href="${request.resource_url(context, 'add', query = {'content_type': 'Proposal', 'tag': request.GET.getall('tag')})}"
@@ -15,13 +14,9 @@
       <span tal:condition="context.proposal_block"
         i18n:translate="">The moderator has locked the ability to add more proposals.</span>
     </tal:cant_add>
-  </div>
-  <script type="text/javascript" tal:condition="remove_parent|False">
-    $('[data-reply]').remove();
-  </script>
   <script type="text/javascript" tal:condition="update_selector|False">
     $("${update_selector} [data-load-target]").each(function() {
       voteit.load_target(this);  
     });
   </script>
-</div>
+</tal:main>

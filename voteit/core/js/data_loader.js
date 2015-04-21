@@ -50,26 +50,6 @@ function load_and_replace(event) {
 }
 voteit.load_and_replace = load_and_replace;
 
-function reply_to(event) {
-  event.preventDefault();
-  //FIXME: Warn??
-  $('[data-reply]').remove();
-  var elem = $(event.currentTarget);
-  var url = elem.attr('href');
-  var request = arche.do_request(url);
-  request.done(function(response) {
-    var target = elem.parents('.list-group-item');
-    target.after('<div class="well" data-reply>' + response + '</div>');
-    $('[data-reply]').hide().slideDown();
-  });
-  request.fail(arche.flash_error);
-
-  //$('html, body').animate({
-  //  scrollTop: btn.offset().top
-  //}, 1000);
-}
-voteit.reply_to = reply_to;
-
 function load_polls_menu(event) {
   // Remember that the menu could be closed via a click too.
   var elem = $(event.currentTarget);
@@ -107,7 +87,6 @@ $(document).ready(function () {
   });
   $('#polls-menu').on('hidden.bs.dropdown', voteit.reset_polls_menu);
   $('body').on('click', '[data-clickable-target]', voteit.load_and_replace);
-  $('body').on('click', '[data-reply-to]', voteit.reply_to);
   $('body').on('click', '[data-polls-menu]', voteit.load_polls_menu);
   $('body').on('click', '[data-external-popover-loaded="false"]', voteit.external_popover_from_event);
 });
