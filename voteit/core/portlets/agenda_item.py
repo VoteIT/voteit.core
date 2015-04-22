@@ -30,9 +30,9 @@ class ListingPortlet(PortletType):
     def render(self, context, request, view, **kwargs):
         if IAgendaItem.providedBy(context):
             query = {}
-            tag = request.GET.get('tag', None)
-            if tag:
-                query['tag'] = tag
+            tags = request.GET.getall('tag')
+            if tags:
+                query['tag'] = [x.lower() for x in tags]
             url = request.resource_url(context, self.view_name, query = query)
             response = {'portlet': self.portlet, 'view': view, 'load_url': url}
             return render(self.template, response, request = request)
@@ -51,7 +51,7 @@ class ProposalsPortlet(ListingPortlet):
             query = {}
             tags = request.GET.getall('tag')
             if tags:
-                query['tag'] = tags
+                query['tag'] = [x.lower() for x in tags]
             query['hide'] = tuple(self.portlet.settings.get('hide_proposal_states', ()))
             url = request.resource_url(context, self.view_name, query = query)
             response = {'portlet': self.portlet, 'view': view, 'load_url': url}
@@ -80,6 +80,7 @@ class ProposalsInline(BaseView):
                 Eq('type_name', 'Proposal')
         tags = self.request.GET.getall('tag')
         if tags:
+            tags = [x.lower() for x in tags]
             query &= Any('tags', tags)
         hide = self.request.GET.getall('hide')
         load_hidden = self.request.GET.get('load_hidden', False)
@@ -115,7 +116,7 @@ class DiscussionsInline(BaseView):
             If there are more unread than 5, create a link to load more.
         """
         query = {}
-        query['tags'] = self.request.GET.getall('tag')
+        query['tags'] = [x.lower() for x in self.request.GET.getall('tag')]
         query['limit'] = 5
         if self.request.GET.get('previous', False):
             query['limit'] = 0
