@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2015-04-18 14:50+0200\n"
-"PO-Revision-Date: 2015-04-18 14:51+0100\n"
+"POT-Creation-Date: 2015-04-22 10:15+0200\n"
+"PO-Revision-Date: 2015-04-22 10:17+0100\n"
 "Last-Translator: Robin Harms Oredsson <robin@betahaus.net>\n"
 "Language-Team: sv <LL@li.org>\n"
 "Language: sv\n"
@@ -117,6 +117,7 @@ msgid "Reply"
 msgstr "Svara"
 
 #: voteit/core/js_translations.py:30
+#: voteit/core/views/components/metadata_listing.py:64
 msgid "Comment"
 msgstr "Kommentera"
 
@@ -258,7 +259,7 @@ msgstr "Dagordningspunkt"
 
 #. Default: You can't close an agenda item that has ongoing polls in it. Close
 #. the polls first!
-#: voteit/core/models/agenda_item.py:93
+#: voteit/core/models/agenda_item.py:94
 msgid "error_polls_not_closed_cant_close_ai"
 msgstr ""
 "Du kan inte stänga en dagordningspunkt med pågående omröstningar. Stäng "
@@ -266,7 +267,7 @@ msgstr ""
 
 #. Default: You can't set an agenda item to ongoing if the meeting is not
 #. ongoing.
-#: voteit/core/models/agenda_item.py:104
+#: voteit/core/models/agenda_item.py:105
 msgid "error_ai_cannot_be_ongoing_in_not_ongoing_meeting"
 msgstr ""
 "Du kan inte sätta en dagordningspunkt i pågående om mötet inte är pågående."
@@ -279,7 +280,7 @@ msgstr "Standarddagordning"
 msgid "Discussion Post"
 msgstr "Diskussionsinlägg"
 
-#: voteit/core/models/invite_ticket.py:67
+#: voteit/core/models/invite_ticket.py:66
 #, python-format
 msgid "Invitation to ${meeting_title}"
 msgstr "Inbjudan till ${meeting_title}"
@@ -298,13 +299,13 @@ msgstr ""
 "Detta möte har ännu pågående dagordningspunkter. Du kan inte stänga mötet "
 "förrän dagordningspunkterna är avslutade."
 
-#: voteit/core/models/poll.py:311
+#: voteit/core/models/poll.py:312
 msgid "VoteIT: Open poll"
 msgstr "VoteIT: Pågående omröstning"
 
 #. Default: Poll has now closed. ${num} proposal(s) are now set in another
 #. state due to the outcome of the poll.
-#: voteit/core/models/poll.py:181
+#: voteit/core/models/poll.py:182
 msgid "poll_closed_info"
 msgstr ""
 "Omröstningen har nu stängt. ${num} förslag har nu satts i ett annat "
@@ -312,14 +313,14 @@ msgstr ""
 
 #. Default: Setting poll in upcoming state. It's now visible for meeting
 #. participants.
-#: voteit/core/models/poll.py:254
+#: voteit/core/models/poll.py:255
 msgid "poll_upcoming_state_notice"
 msgstr ""
 "Omröstning är nu i tillståndet 'kommande'. Den är nu synlig för "
 "mötesdeltagare."
 
 #. Default: You can't set a poll to ongoing if the agenda item is not ongoing.
-#: voteit/core/models/poll.py:264
+#: voteit/core/models/poll.py:265
 msgid "error_poll_cant_be_ongoing_unless_ai_is"
 msgstr ""
 "Du kan inte göra en omröstning till pågående om dagordningspunkten inte är "
@@ -327,7 +328,7 @@ msgstr ""
 
 #. Default: A poll with no proposal can not be set to ongoing. Click link to
 #. edit: ${tag}
-#: voteit/core/models/poll.py:270
+#: voteit/core/models/poll.py:271
 msgid "error_no_proposals_in_poll"
 msgstr ""
 "En omröstning utan förslagn kan inte göras till pågående. Klicka på länken "
@@ -335,7 +336,7 @@ msgstr ""
 
 #. Default: Couldn't adjust the state of the following proposal(s): '${props}'.
 #. You may wish to review them manually.
-#: voteit/core/models/poll.py:186
+#: voteit/core/models/poll.py:187
 msgid "poll_closed_proposal_wf_change_error"
 msgstr ""
 "Kunde inte justera tillstånd för förljande förslag: '${props}'. Du bör kolla "
@@ -344,18 +345,18 @@ msgstr ""
 #. Default: Setting ${count} ${prop_form} as 'locked for vote'. They can no
 #. longer be edited or retracted by normal users. All proposals participating
 #. in an ongoing poll should be locked.
-#: voteit/core/models/poll.py:238
+#: voteit/core/models/poll.py:239
 msgid "poll_proposals_locked_notice"
 msgstr ""
 "Sätter ${count} ${prop_form} som 'låst för omröstning'. De kan inte längre "
 "ändras eller dras tillbaka av icke moderatorer. Alla förslag som deltar i en "
 "omröstning bör vara låsta."
 
-#: voteit/core/models/poll.py:235
+#: voteit/core/models/poll.py:236
 msgid "proposal"
 msgstr "förslag"
 
-#: voteit/core/models/poll.py:236
+#: voteit/core/models/poll.py:237
 msgid "proposals"
 msgstr "förslag"
 
@@ -373,13 +374,13 @@ msgstr "Användare"
 
 #. Default: You have been mentioned in ${meeting} on ${agenda_item}. Click the
 #. following link to go there, ${link}.
-#: voteit/core/models/user.py:147
+#: voteit/core/models/user.py:154
 msgid "mentioned_notification"
 msgstr ""
 "Du har nämnts i mötet ${meeting} under punkten ${agenda_item}. Klicka på "
 "följande länk för att gå dit: ${link}."
 
-#: voteit/core/models/user.py:153
+#: voteit/core/models/user.py:160
 msgid "You have been mentioned in VoteIT"
 msgstr "Du har blivit nämnd i VoteIT"
 
@@ -427,7 +428,7 @@ msgid "Access granted - welcome!"
 msgstr "Du har fått tillgång till mötet - välkommen!"
 
 #: voteit/core/plugins/immediate_ap.py:40
-#: voteit/core/schemas/invite_ticket.py:26
+#: voteit/core/schemas/invite_ticket.py:26 voteit/core/schemas/meeting.py:189
 msgid "Roles"
 msgstr "Roller"
 
@@ -520,24 +521,24 @@ msgstr ""
 msgid "Agenda"
 msgstr "Dagordning"
 
-#: voteit/core/portlets/agenda_item.py:44 voteit/core/schemas/poll.py:81
+#: voteit/core/portlets/agenda_item.py:43 voteit/core/schemas/poll.py:81
 #: voteit/core/templates/portlets/proposals.pt:11
 msgid "Proposals"
 msgstr "Förslag"
 
-#: voteit/core/portlets/agenda_item.py:64
+#: voteit/core/portlets/agenda_item.py:63
 #: voteit/core/templates/portlets/discussions.pt:11
 msgid "Discussion"
 msgstr "Diskussion"
 
-#: voteit/core/portlets/agenda_item.py:71
+#: voteit/core/portlets/agenda_item.py:70
 #: voteit/core/templates/portlets/polls.pt:11
 #: voteit/core/templates/snippets/polls_menu.pt:13
 #: voteit/core/views/components/polls.py:10
 msgid "Polls"
 msgstr "Omröstningar"
 
-#: voteit/core/portlets/agenda_item.py:231
+#: voteit/core/portlets/agenda_item.py:257
 msgid "Agenda Item portlets"
 msgstr "Dagordningsportlets"
 
@@ -550,7 +551,7 @@ msgstr "Möten"
 msgid "Meetings"
 msgstr "Möten"
 
-#: voteit/core/schemas/agenda_item.py:11 voteit/core/schemas/meeting.py:58
+#: voteit/core/schemas/agenda_item.py:11 voteit/core/schemas/meeting.py:60
 #: voteit/core/schemas/poll.py:63
 msgid "Title"
 msgstr "Titel"
@@ -613,8 +614,8 @@ msgid "contact_schema_name_description"
 msgstr "Lämna fältet tomt om du vill vara anonym"
 
 #: voteit/core/schemas/contact.py:30 voteit/core/schemas/contact.py:53
-#: voteit/core/templates/manage_tickets.pt:34
-#: voteit/core/templates/participants.pt:17
+#: voteit/core/templates/manage_tickets.pt:37
+#: voteit/core/templates/participants.pt:19
 #: voteit/core/templates/snippets/user_basic_info.pt:9
 #: voteit/core/views/templates/_participants.pt:34
 msgid "Email"
@@ -720,42 +721,42 @@ msgstr ""
 "Eposten kommer innehålla instruktioner om tillgång till mötet, så fokusera "
 "på sådant som kan vara specifikt för era deltagare."
 
-#: voteit/core/schemas/invite_ticket.py:16 voteit/core/schemas/meeting.py:71
+#: voteit/core/schemas/invite_ticket.py:16 voteit/core/schemas/meeting.py:73
 msgid "Invalid email address."
 msgstr "Ogiltig epostadress"
 
-#: voteit/core/schemas/meeting.py:37
+#: voteit/core/schemas/meeting.py:39
 msgid "<Don't copy>"
 msgstr "<Kopiera inte>"
 
 #. Default: Set a title for the meeting that separates it from previous
 #. meetings
-#: voteit/core/schemas/meeting.py:59
+#: voteit/core/schemas/meeting.py:61
 msgid "meeting_title_description"
 msgstr ""
 "Ange en titel för mötet som särskiljer det från föreningens andra möten"
 
-#: voteit/core/schemas/meeting.py:63
+#: voteit/core/schemas/meeting.py:65
 msgid "Name of the contact person for this meeting"
 msgstr "Namnet på kontaktpersonen för mötet"
 
-#: voteit/core/schemas/meeting.py:69
+#: voteit/core/schemas/meeting.py:71
 msgid "Contact email for this site"
 msgstr "Kontaktepost för denna sida"
 
-#: voteit/core/schemas/meeting.py:73
+#: voteit/core/schemas/meeting.py:75
 msgid "Short description"
 msgstr "Kort beskrivning"
 
 #. Default: Shows up in search results and similar. One sentence is enough. You
 #. don't need to add it if you don't want to.
-#: voteit/core/schemas/meeting.py:74
+#: voteit/core/schemas/meeting.py:76
 msgid "short_description_text"
 msgstr ""
 "Visas i sökresultat och liknande. En mening räcker. Du behöver inte lägga "
 "till en om du inte vill."
 
-#: voteit/core/schemas/meeting.py:80
+#: voteit/core/schemas/meeting.py:82
 msgid "Participants description"
 msgstr "Deltagarbeskrivning"
 
@@ -763,92 +764,100 @@ msgstr "Deltagarbeskrivning"
 #. how to register here. Displayed on the first page of the meeting. You can
 #. include things like information about the meeting, how to contact the
 #. moderator and your logo.
-#: voteit/core/schemas/meeting.py:81
+#: voteit/core/schemas/meeting.py:83
 msgid "meeting_description_description"
 msgstr ""
 "Denna beskrivning är bara synlig för deltagare, så skriv inget här om "
 "registreringsprocess. Visas på mötets förstasida. Du kan inkludera saker om "
 "mötet, hur moderatorerna kontaktas och logga."
 
-#: voteit/core/schemas/meeting.py:90
+#: voteit/core/schemas/meeting.py:92
 msgid "Public presentation"
 msgstr "Öppen mötespresentation"
 
 #. Default: The public description is visible on the request access page and to
 #. not yet logged in visitors.
-#: voteit/core/schemas/meeting.py:91
+#: voteit/core/schemas/meeting.py:93
 msgid "meeting_public_description_description"
 msgstr ""
 "Den öppna mötespresentationen är synlig för alla som vill begära tillträde "
 "till mötet och för deltagare som ännu inte använt sin inbjudan."
 
-#: voteit/core/schemas/meeting.py:98
+#: voteit/core/schemas/meeting.py:100
 msgid "Send mail to mentioned users."
 msgstr "Skicka epost till användare som omnämns."
 
-#: voteit/core/schemas/meeting.py:103
+#: voteit/core/schemas/meeting.py:105
 msgid "Send mail to voters when a poll starts."
 msgstr "Skicka epost till röstberättigade när en omröstning startar."
 
-#: voteit/core/schemas/meeting.py:108
+#: voteit/core/schemas/meeting.py:110
 msgid "Hide meeting from listings"
 msgstr "Göm mötet från listor"
 
 #. Default: Users won't be able to find it unless they have a link to it.
-#: voteit/core/schemas/meeting.py:109
+#: voteit/core/schemas/meeting.py:111
 msgid "hide_meeting_description"
 msgstr ""
 "Användare kommer inte kunna hitta mötet om de inte har en direkt länk till "
 "det."
 
-#: voteit/core/schemas/meeting.py:115
+#: voteit/core/schemas/meeting.py:117
 msgid "Navigation bar title"
 msgstr "Titel i navigationsfältet"
 
-#: voteit/core/schemas/meeting.py:116
+#: voteit/core/schemas/meeting.py:118
 msgid "In case you want another title in the navigation bar"
 msgstr "Om du vill ha en annan än mötets"
 
-#: voteit/core/schemas/meeting.py:123
+#: voteit/core/schemas/meeting.py:125
 msgid "Copy users and permissions from a previous meeting."
 msgstr "Kopiera användare och rättigheter från ett föregående möte."
 
-#: voteit/core/schemas/meeting.py:124
+#: voteit/core/schemas/meeting.py:126
 msgid "You can only pick meeting where you've been a moderator."
 msgstr "Du kan bara välja ett möte där du har varit moderator."
 
-#: voteit/core/schemas/meeting.py:133
+#: voteit/core/schemas/meeting.py:135
 msgid "Meeting access policy"
 msgstr "Mötestillgångspolicy"
 
 #. Default: Available poll methods within this meeting
-#: voteit/core/schemas/meeting.py:140
+#: voteit/core/schemas/meeting.py:142
 msgid "mps_poll_plugins_title"
 msgstr "Tillgängliga omröstningsmetoder inom mötet"
 
 #. Default: Only poll methods selected here will be available withing the
 #. meeting. If nothing is selected, only the servers default poll method will
 #. be available.
-#: voteit/core/schemas/meeting.py:142
+#: voteit/core/schemas/meeting.py:144
 msgid "mps_poll_plugins_description"
 msgstr ""
 "Bara omröstningsmetoder valda här kommer att vara tillgängliga i mötet. Om "
 "inget är valt så kommer baraserverns standardmetod finnas tillgänglig."
 
-#: voteit/core/schemas/meeting.py:164
+#: voteit/core/schemas/meeting.py:166
 msgid "Hide"
 msgstr "Göm"
 
 #. Default: Proposals in these states will be hidden by default but can be
 #. shown by pressing the link below the other proposals.
-#: voteit/core/schemas/meeting.py:165
+#: voteit/core/schemas/meeting.py:167
 msgid "hide_proposal_states_description"
 msgstr ""
 "Förslag i markerade tillstånd kommer gömmas som standard men kan visas genom "
 "att klicka på länken under de andra förslagen."
 
+#: voteit/core/schemas/meeting.py:185 voteit/core/templates/participants.pt:18
+msgid "UserID"
+msgstr "Användarnamn"
+
+#: voteit/core/schemas/meeting.py:179
+msgid "Must select at least one"
+msgstr "Måste välja minst en"
+
 #. Default: Must be at least 3 chars + only alphanumeric characters allowed
-#: voteit/core/schemas/meeting.py:66
+#: voteit/core/schemas/meeting.py:68
 msgid "name_pattern_error"
 msgstr "Måste vara minst 3 tecken som är alfanumeriska"
 
@@ -1058,7 +1067,7 @@ msgstr "Tillåt diskussion"
 
 #: voteit/core/templates/manage_agenda.pt:30
 #: voteit/core/templates/manage_agenda.pt:74
-#: voteit/core/views/components/metadata_listing.py:92
+#: voteit/core/views/components/metadata_listing.py:94
 #: voteit/core/views/components/moderator_actions.py:34
 #: voteit/core/views/templates/agenda_template.pt:21
 #: voteit/core/views/templates/agenda_templates.pt:60
@@ -1082,6 +1091,7 @@ msgid "Cancel"
 msgstr "Avbryt"
 
 #: voteit/core/templates/manage_tickets.pt:9
+#: voteit/core/templates/snippets/participants_tabs.pt:19
 msgid "Manage invitations"
 msgstr "Hantera inbjudningar"
 
@@ -1092,59 +1102,59 @@ msgstr "${open} öppna inbjudning(ar) och ${closed} stängd(a)."
 
 #. Default: Warning! There are ${count} tickets where no email were sent to the
 #. address it was intended for. It's a good idea to send these!
-#: voteit/core/templates/manage_tickets.pt:16
+#: voteit/core/templates/manage_tickets.pt:19
 msgid "never_invited_warning"
 msgstr ""
 "Varning! Det finns ${count} inbjudningar som inte epostats till adressen de "
 "var ämnade för. Det är en bra ide att skicka dem!"
 
-#: voteit/core/templates/manage_tickets.pt:27
+#: voteit/core/templates/manage_tickets.pt:30
 msgid "Email contains:"
 msgstr "Epost innehåller:"
 
-#: voteit/core/templates/manage_tickets.pt:37
+#: voteit/core/templates/manage_tickets.pt:40
 msgid "Claimed by"
 msgstr "Använd av"
 
-#: voteit/core/templates/manage_tickets.pt:38
+#: voteit/core/templates/manage_tickets.pt:41
 msgid "Used"
 msgstr "Använd"
 
-#: voteit/core/templates/manage_tickets.pt:39
+#: voteit/core/templates/manage_tickets.pt:42
 msgid "Sent by"
 msgstr "Skickad av"
 
-#: voteit/core/templates/manage_tickets.pt:40
+#: voteit/core/templates/manage_tickets.pt:43
 msgid "Last invite"
 msgstr "Sista inbjudan"
 
-#: voteit/core/templates/manage_tickets.pt:41
+#: voteit/core/templates/manage_tickets.pt:44
 msgid "Times sent"
 msgstr "Gånger skickad"
 
-#: voteit/core/templates/manage_tickets.pt:42
+#: voteit/core/templates/manage_tickets.pt:45
 msgid "Permissions"
 msgstr "Rättigheter"
 
-#: voteit/core/templates/manage_tickets.pt:71
+#: voteit/core/templates/manage_tickets.pt:74
 msgid "Message to any participants you resend tickets to"
 msgstr "Meddelande till deltagare du skickar om inbjudningar till"
 
-#: voteit/core/templates/manage_tickets.pt:74
+#: voteit/core/templates/manage_tickets.pt:77
 msgid "If you've marked any closed tickets, they won't receive a reinvite."
 msgstr ""
 "Om några av de markerade är stängda biljetter så kommer de inte att skickas "
 "om."
 
-#: voteit/core/templates/manage_tickets.pt:75
+#: voteit/core/templates/manage_tickets.pt:78
 msgid "With ${count} selected"
 msgstr "Med ${count} valda"
 
-#: voteit/core/templates/manage_tickets.pt:76
+#: voteit/core/templates/manage_tickets.pt:79
 msgid "Resend invitation"
 msgstr "Skicka om inbjudan"
 
-#: voteit/core/templates/manage_tickets.pt:77
+#: voteit/core/templates/manage_tickets.pt:80
 msgid "Remove"
 msgstr "Ta bort"
 
@@ -1158,6 +1168,7 @@ msgstr "Mötet stängt"
 
 #: voteit/core/templates/minutes.pt:14
 #: voteit/core/templates/snippets/meeting_menu.pt:16
+#: voteit/core/templates/snippets/participants_tabs.pt:10
 #: voteit/core/views/templates/_participants.pt:19
 msgid "Participants"
 msgstr "Deltagare"
@@ -1184,7 +1195,7 @@ msgstr "Avslagna förslag"
 
 #: voteit/core/templates/minutes.pt:49
 #: voteit/core/templates/send_tickets.pt:13
-#: voteit/core/templates/users_emails.pt:18
+#: voteit/core/templates/users_emails.pt:21
 #: voteit/core/views/templates/_participants.pt:21
 #: voteit/core/views/templates/_participants.pt:123
 #: voteit/core/views/templates/agenda_template.pt:41
@@ -1195,19 +1206,15 @@ msgstr "Tillbaka"
 msgid "${num} participants"
 msgstr "${num} deltagare"
 
-#: voteit/core/templates/participants.pt:14
+#: voteit/core/templates/participants.pt:16
 msgid "First name"
 msgstr "Förnamn"
 
-#: voteit/core/templates/participants.pt:15
+#: voteit/core/templates/participants.pt:17
 msgid "Last name"
 msgstr "Efternamn"
 
-#: voteit/core/templates/participants.pt:16
-msgid "UserID"
-msgstr "Användarnamn"
-
-#: voteit/core/templates/participants.pt:70
+#: voteit/core/templates/participants.pt:72
 msgid "Loading data..."
 msgstr "Laddar data…"
 
@@ -1322,6 +1329,18 @@ msgstr "Från"
 msgid "Click the link to get to the VoteIT meeting:"
 msgstr "Klicka länken för att komma till VoteIT-mötet"
 
+#: voteit/core/templates/overrides/navigation.pt:10
+msgid "Navigation"
+msgstr "Navigation"
+
+#: voteit/core/templates/overrides/navigation.pt:40
+msgid "Only showing ${tags}"
+msgstr "Visar bara ${tags}"
+
+#: voteit/core/templates/overrides/navigation.pt:41
+msgid "Show all"
+msgstr "Visa alla"
+
 #: voteit/core/templates/portlets/agenda.pt:15
 msgid "Agenda / Navigation"
 msgstr "Dagordning / Navigation"
@@ -1343,25 +1362,25 @@ msgstr "Visa ${num} föregående"
 msgid "Show more"
 msgstr "Visa mer"
 
-#: voteit/core/templates/portlets/inline_add_button_disc.pt:10
+#: voteit/core/templates/portlets/inline_add_button_disc.pt:9
 msgid "New entry"
 msgstr "Nytt inlägg"
 
 #. Default: You lack the required permission to add.
-#: voteit/core/templates/portlets/inline_add_button_disc.pt:14
-#: voteit/core/templates/portlets/inline_add_button_prop.pt:14
+#: voteit/core/templates/portlets/inline_add_button_disc.pt:13
+#: voteit/core/templates/portlets/inline_add_button_prop.pt:13
 msgid "lack_add_perm"
 msgstr "Du saknar rättigheten att lägga till."
 
-#: voteit/core/templates/portlets/inline_add_button_disc.pt:16
+#: voteit/core/templates/portlets/inline_add_button_disc.pt:15
 msgid "The moderator has locked the ability to add more discussion posts."
 msgstr "Moderatorn har låst möjligheten att lägga till fler diskussionsposter."
 
-#: voteit/core/templates/portlets/inline_add_button_prop.pt:10
+#: voteit/core/templates/portlets/inline_add_button_prop.pt:9
 msgid "Add Proposal"
 msgstr "Lägg till ett förslag"
 
-#: voteit/core/templates/portlets/inline_add_button_prop.pt:16
+#: voteit/core/templates/portlets/inline_add_button_prop.pt:15
 msgid "The moderator has locked the ability to add more proposals."
 msgstr "Moderatorn har låst möjligheten att lägga till fler förslag."
 
@@ -1450,35 +1469,43 @@ msgstr "Bjud in deltagare"
 msgid "Manage invites"
 msgstr "Hantera inbjudningar"
 
-#: voteit/core/templates/snippets/meeting_menu.pt:37
-msgid "Participants email addresses"
-msgstr "Deltagarnas epostadresser"
-
-#: voteit/core/templates/snippets/meeting_menu.pt:45
+#: voteit/core/templates/snippets/meeting_menu.pt:40
 msgid "Meeting functions"
 msgstr "Mötesfunktioner"
 
-#: voteit/core/templates/snippets/meeting_menu.pt:50
+#: voteit/core/templates/snippets/meeting_menu.pt:45
 msgid "Minutes"
 msgstr "Protokoll"
 
-#: voteit/core/templates/snippets/meeting_menu.pt:58
+#: voteit/core/templates/snippets/meeting_menu.pt:53
 msgid "Settings"
 msgstr "Inställningar"
 
-#: voteit/core/templates/snippets/meeting_menu.pt:64
+#: voteit/core/templates/snippets/meeting_menu.pt:59
 #: voteit/core/views/components/moderator_actions.py:42
 #: voteit/core/views/components/moderator_actions.py:50
 msgid "Poll settings"
 msgstr "Inställningar för omröstning"
 
-#: voteit/core/templates/snippets/meeting_menu.pt:69
+#: voteit/core/templates/snippets/meeting_menu.pt:64
 msgid "Access policy"
 msgstr "Accesspolicy"
 
-#: voteit/core/templates/snippets/meeting_menu.pt:74
+#: voteit/core/templates/snippets/meeting_menu.pt:69
 msgid "Configure selected access policy"
 msgstr "Inställningar för vald accesspolicy"
+
+#: voteit/core/templates/snippets/participants_tabs.pt:13
+msgid "Invite"
+msgstr "Bjud in"
+
+#: voteit/core/templates/snippets/participants_tabs.pt:16
+msgid "Add existing"
+msgstr "Lägg till existerande"
+
+#: voteit/core/templates/snippets/participants_tabs.pt:22
+msgid "Emails"
+msgstr "Epost"
 
 #: voteit/core/templates/snippets/user_basic_info.pt:13
 msgid "About"
@@ -1576,6 +1603,21 @@ msgstr ""
 #: voteit/core/views/moderators_emails.py:30
 msgid "Email addresses of moderators with upcoming or ongoing meetings"
 msgstr "Epostadresser för moderatorer med pågående eller kommande möten"
+
+#: voteit/core/views/permissions.py:35
+msgid "Add existing user to meeting"
+msgstr "Lägg till en existerande användare till detta möte"
+
+#. Default: User was already a part of this meeting, but these new roles were
+#. added: ${roles}
+#: voteit/core/views/permissions.py:53
+msgid "new_roles_appended_notice"
+msgstr ""
+"Användaren var redan en del av mötet, men nya roller las till: ${roles}"
+
+#: voteit/core/views/permissions.py:59
+msgid "No new roles added - user already had all of them."
+msgstr "Inga nya roller tillagda - användaren hade redan alla."
 
 #. Default: The poll is created in private state, to show it the participants
 #. you have to change the state to upcoming.
@@ -1702,10 +1744,6 @@ msgstr "VoteIT Manual"
 #: voteit/core/views/components/help_actions.py:34
 msgid "Lost your password?"
 msgstr "Tappat ditt lösenord?"
-
-#: voteit/core/views/components/metadata_listing.py:64
-msgid "Counterproposal"
-msgstr "Motförslag"
 
 #: voteit/core/views/components/metadata_listing.py:50
 msgid "Retract"
@@ -1954,6 +1992,12 @@ msgstr "personer"
 msgid "more_in_likes"
 msgstr "till"
 
+#~ msgid "Participants email addresses"
+#~ msgstr "Deltagarnas epostadresser"
+
+#~ msgid "Counterproposal"
+#~ msgstr "Motförslag"
+
 #~ msgid "edit_profile_image_help"
 #~ msgstr ""
 #~ "Om du vill ändra varifrån din profilbild hämtas, klicka 'ändra profil'. "
@@ -2026,9 +2070,6 @@ msgstr "till"
 
 #~ msgid "${diff} hours ago"
 #~ msgstr "${diff} timmar sedan"
-
-#~ msgid "Invite ticket"
-#~ msgstr "Inbjudningsbiljett"
 
 #~ msgid "change_prop_state_already_that_state_error"
 #~ msgstr "Förslag '${name}' är redan i tillståndet ${state}"
@@ -2191,9 +2232,6 @@ msgstr "till"
 #~ "Om du tar bort ett användarnamn så kommer deras rättigheter att rensas. "
 #~ "Rättigheten 'Visa' kommer läggas till automatiskt om den krävs för en "
 #~ "högre rättighet - t.ex. 'Rösta'. Rättigheter beror också på mötets status."
-
-#~ msgid "add_existing_user_to_meeting"
-#~ msgstr "Lägg till en existerande användare till detta möte"
 
 #~ msgid "single_permission_schema_userid_description"
 #~ msgstr ""
@@ -2473,10 +2511,6 @@ msgstr "till"
 #~ msgid "no_propose_meeting_closed"
 #~ msgstr "Mötet är stängt, du kan inte lägga till ett förslag här."
 
-#~ msgid "no_propose_perm_notice"
-#~ msgstr ""
-#~ "Du har inte tillräckliga rättigheter för att lägga till ett förslag här"
-
 #~ msgid "no_discuss_meeting_closed"
 #~ msgstr "Mötet är stängt, du kan inte lägga till ett diskussionsinlägg här."
 
@@ -2535,9 +2569,6 @@ msgstr "till"
 #~ msgid "Order"
 #~ msgstr "Sortera"
 
-#~ msgid "Add existing user"
-#~ msgstr "Lägg till existerande användare"
-
 #~ msgid "Moderator menu"
 #~ msgstr "Moderatorsmeny"
 
@@ -2577,9 +2608,6 @@ msgstr "till"
 
 #~ msgid "Recover password"
 #~ msgstr "Återställ lösenord"
-
-#~ msgid "Show all posts"
-#~ msgstr "Visa alla inlägg"
 
 #~ msgid "Show the last 5 posts"
 #~ msgstr "Visa 5 senaste inläggen"

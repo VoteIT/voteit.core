@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE 1.0\n"
-"POT-Creation-Date: 2015-04-18 14:50+0200\n"
+"POT-Creation-Date: 2015-04-22 10:15+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -113,6 +113,7 @@ msgid "Reply"
 msgstr ""
 
 #: ././voteit/core/js_translations.py:30
+#: ././voteit/core/views/components/metadata_listing.py:64
 msgid "Comment"
 msgstr ""
 
@@ -250,13 +251,13 @@ msgstr ""
 
 #. Default: You can't close an agenda item that has ongoing polls in it. Close
 #. the polls first!
-#: ././voteit/core/models/agenda_item.py:93
+#: ././voteit/core/models/agenda_item.py:94
 msgid "error_polls_not_closed_cant_close_ai"
 msgstr ""
 
 #. Default: You can't set an agenda item to ongoing if the meeting is not
 #. ongoing.
-#: ././voteit/core/models/agenda_item.py:104
+#: ././voteit/core/models/agenda_item.py:105
 msgid "error_ai_cannot_be_ongoing_in_not_ongoing_meeting"
 msgstr ""
 
@@ -268,7 +269,7 @@ msgstr ""
 msgid "Discussion Post"
 msgstr ""
 
-#: ././voteit/core/models/invite_ticket.py:67
+#: ././voteit/core/models/invite_ticket.py:66
 #, python-format
 msgid "Invitation to ${meeting_title}"
 msgstr ""
@@ -285,51 +286,51 @@ msgstr ""
 msgid "error_cant_close_meeting_with_ongoing_ais"
 msgstr ""
 
-#: ././voteit/core/models/poll.py:311
+#: ././voteit/core/models/poll.py:312
 msgid "VoteIT: Open poll"
 msgstr ""
 
 #. Default: Poll has now closed. ${num} proposal(s) are now set in another
 #. state due to the outcome of the poll.
-#: ././voteit/core/models/poll.py:181
+#: ././voteit/core/models/poll.py:182
 msgid "poll_closed_info"
 msgstr ""
 
 #. Default: Setting poll in upcoming state. It's now visible for meeting
 #. participants.
-#: ././voteit/core/models/poll.py:254
+#: ././voteit/core/models/poll.py:255
 msgid "poll_upcoming_state_notice"
 msgstr ""
 
 #. Default: You can't set a poll to ongoing if the agenda item is not ongoing.
-#: ././voteit/core/models/poll.py:264
+#: ././voteit/core/models/poll.py:265
 msgid "error_poll_cant_be_ongoing_unless_ai_is"
 msgstr ""
 
 #. Default: A poll with no proposal can not be set to ongoing. Click link to
 #. edit: ${tag}
-#: ././voteit/core/models/poll.py:270
+#: ././voteit/core/models/poll.py:271
 msgid "error_no_proposals_in_poll"
 msgstr ""
 
 #. Default: Couldn't adjust the state of the following proposal(s): '${props}'.
 #. You may wish to review them manually.
-#: ././voteit/core/models/poll.py:186
+#: ././voteit/core/models/poll.py:187
 msgid "poll_closed_proposal_wf_change_error"
 msgstr ""
 
 #. Default: Setting ${count} ${prop_form} as 'locked for vote'. They can no
 #. longer be edited or retracted by normal users. All proposals participating
 #. in an ongoing poll should be locked.
-#: ././voteit/core/models/poll.py:238
+#: ././voteit/core/models/poll.py:239
 msgid "poll_proposals_locked_notice"
 msgstr ""
 
-#: ././voteit/core/models/poll.py:235
+#: ././voteit/core/models/poll.py:236
 msgid "proposal"
 msgstr ""
 
-#: ././voteit/core/models/poll.py:236
+#: ././voteit/core/models/poll.py:237
 msgid "proposals"
 msgstr ""
 
@@ -347,11 +348,11 @@ msgstr ""
 
 #. Default: You have been mentioned in ${meeting} on ${agenda_item}. Click the
 #. following link to go there, ${link}.
-#: ././voteit/core/models/user.py:147
+#: ././voteit/core/models/user.py:154
 msgid "mentioned_notification"
 msgstr ""
 
-#: ././voteit/core/models/user.py:153
+#: ././voteit/core/models/user.py:160
 msgid "You have been mentioned in VoteIT"
 msgstr ""
 
@@ -395,6 +396,7 @@ msgstr ""
 
 #: ././voteit/core/plugins/immediate_ap.py:40
 #: ././voteit/core/schemas/invite_ticket.py:26
+#: ././voteit/core/schemas/meeting.py:189
 msgid "Roles"
 msgstr ""
 
@@ -479,25 +481,25 @@ msgstr ""
 msgid "Agenda"
 msgstr ""
 
-#: ././voteit/core/portlets/agenda_item.py:44
+#: ././voteit/core/portlets/agenda_item.py:43
 #: ././voteit/core/schemas/poll.py:81
 #: ././voteit/core/templates/portlets/proposals.pt:11
 msgid "Proposals"
 msgstr ""
 
-#: ././voteit/core/portlets/agenda_item.py:64
+#: ././voteit/core/portlets/agenda_item.py:63
 #: ././voteit/core/templates/portlets/discussions.pt:11
 msgid "Discussion"
 msgstr ""
 
-#: ././voteit/core/portlets/agenda_item.py:71
+#: ././voteit/core/portlets/agenda_item.py:70
 #: ././voteit/core/templates/portlets/polls.pt:11
 #: ././voteit/core/templates/snippets/polls_menu.pt:13
 #: ././voteit/core/views/components/polls.py:10
 msgid "Polls"
 msgstr ""
 
-#: ././voteit/core/portlets/agenda_item.py:231
+#: ././voteit/core/portlets/agenda_item.py:257
 msgid "Agenda Item portlets"
 msgstr ""
 
@@ -511,7 +513,7 @@ msgid "Meetings"
 msgstr ""
 
 #: ././voteit/core/schemas/agenda_item.py:11
-#: ././voteit/core/schemas/meeting.py:58 ././voteit/core/schemas/poll.py:63
+#: ././voteit/core/schemas/meeting.py:60 ././voteit/core/schemas/poll.py:63
 msgid "Title"
 msgstr ""
 
@@ -571,8 +573,8 @@ msgid "contact_schema_name_description"
 msgstr ""
 
 #: ././voteit/core/schemas/contact.py:30 ././voteit/core/schemas/contact.py:53
-#: ././voteit/core/templates/manage_tickets.pt:34
-#: ././voteit/core/templates/participants.pt:17
+#: ././voteit/core/templates/manage_tickets.pt:37
+#: ././voteit/core/templates/participants.pt:19
 #: ././voteit/core/templates/snippets/user_basic_info.pt:9
 #: ././voteit/core/views/templates/_participants.pt:34
 msgid "Email"
@@ -663,39 +665,39 @@ msgid "ticket_message_description"
 msgstr ""
 
 #: ././voteit/core/schemas/invite_ticket.py:16
-#: ././voteit/core/schemas/meeting.py:71
+#: ././voteit/core/schemas/meeting.py:73
 msgid "Invalid email address."
 msgstr ""
 
-#: ././voteit/core/schemas/meeting.py:37
+#: ././voteit/core/schemas/meeting.py:39
 msgid "<Don't copy>"
 msgstr ""
 
 #. Default: Set a title for the meeting that separates it from previous
 #. meetings
-#: ././voteit/core/schemas/meeting.py:59
+#: ././voteit/core/schemas/meeting.py:61
 msgid "meeting_title_description"
 msgstr ""
 
-#: ././voteit/core/schemas/meeting.py:63
+#: ././voteit/core/schemas/meeting.py:65
 msgid "Name of the contact person for this meeting"
 msgstr ""
 
-#: ././voteit/core/schemas/meeting.py:69
+#: ././voteit/core/schemas/meeting.py:71
 msgid "Contact email for this site"
 msgstr ""
 
-#: ././voteit/core/schemas/meeting.py:73
+#: ././voteit/core/schemas/meeting.py:75
 msgid "Short description"
 msgstr ""
 
 #. Default: Shows up in search results and similar. One sentence is enough. You
 #. don't need to add it if you don't want to.
-#: ././voteit/core/schemas/meeting.py:74
+#: ././voteit/core/schemas/meeting.py:76
 msgid "short_description_text"
 msgstr ""
 
-#: ././voteit/core/schemas/meeting.py:80
+#: ././voteit/core/schemas/meeting.py:82
 msgid "Participants description"
 msgstr ""
 
@@ -703,81 +705,90 @@ msgstr ""
 #. how to register here. Displayed on the first page of the meeting. You can
 #. include things like information about the meeting, how to contact the
 #. moderator and your logo.
-#: ././voteit/core/schemas/meeting.py:81
+#: ././voteit/core/schemas/meeting.py:83
 msgid "meeting_description_description"
 msgstr ""
 
-#: ././voteit/core/schemas/meeting.py:90
+#: ././voteit/core/schemas/meeting.py:92
 msgid "Public presentation"
 msgstr ""
 
 #. Default: The public description is visible on the request access page and to
 #. not yet logged in visitors.
-#: ././voteit/core/schemas/meeting.py:91
+#: ././voteit/core/schemas/meeting.py:93
 msgid "meeting_public_description_description"
 msgstr ""
 
-#: ././voteit/core/schemas/meeting.py:98
+#: ././voteit/core/schemas/meeting.py:100
 msgid "Send mail to mentioned users."
 msgstr ""
 
-#: ././voteit/core/schemas/meeting.py:103
+#: ././voteit/core/schemas/meeting.py:105
 msgid "Send mail to voters when a poll starts."
 msgstr ""
 
-#: ././voteit/core/schemas/meeting.py:108
+#: ././voteit/core/schemas/meeting.py:110
 msgid "Hide meeting from listings"
 msgstr ""
 
 #. Default: Users won't be able to find it unless they have a link to it.
-#: ././voteit/core/schemas/meeting.py:109
+#: ././voteit/core/schemas/meeting.py:111
 msgid "hide_meeting_description"
 msgstr ""
 
-#: ././voteit/core/schemas/meeting.py:115
+#: ././voteit/core/schemas/meeting.py:117
 msgid "Navigation bar title"
 msgstr ""
 
-#: ././voteit/core/schemas/meeting.py:116
+#: ././voteit/core/schemas/meeting.py:118
 msgid "In case you want another title in the navigation bar"
 msgstr ""
 
-#: ././voteit/core/schemas/meeting.py:123
+#: ././voteit/core/schemas/meeting.py:125
 msgid "Copy users and permissions from a previous meeting."
 msgstr ""
 
-#: ././voteit/core/schemas/meeting.py:124
+#: ././voteit/core/schemas/meeting.py:126
 msgid "You can only pick meeting where you've been a moderator."
 msgstr ""
 
-#: ././voteit/core/schemas/meeting.py:133
+#: ././voteit/core/schemas/meeting.py:135
 msgid "Meeting access policy"
 msgstr ""
 
 #. Default: Available poll methods within this meeting
-#: ././voteit/core/schemas/meeting.py:140
+#: ././voteit/core/schemas/meeting.py:142
 msgid "mps_poll_plugins_title"
 msgstr ""
 
 #. Default: Only poll methods selected here will be available withing the
 #. meeting. If nothing is selected, only the servers default poll method will
 #. be available.
-#: ././voteit/core/schemas/meeting.py:142
+#: ././voteit/core/schemas/meeting.py:144
 msgid "mps_poll_plugins_description"
 msgstr ""
 
-#: ././voteit/core/schemas/meeting.py:164
+#: ././voteit/core/schemas/meeting.py:166
 msgid "Hide"
 msgstr ""
 
 #. Default: Proposals in these states will be hidden by default but can be
 #. shown by pressing the link below the other proposals.
-#: ././voteit/core/schemas/meeting.py:165
+#: ././voteit/core/schemas/meeting.py:167
 msgid "hide_proposal_states_description"
 msgstr ""
 
+#: ././voteit/core/schemas/meeting.py:185
+#: ././voteit/core/templates/participants.pt:18
+msgid "UserID"
+msgstr ""
+
+#: ././voteit/core/schemas/meeting.py:179
+msgid "Must select at least one"
+msgstr ""
+
 #. Default: Must be at least 3 chars + only alphanumeric characters allowed
-#: ././voteit/core/schemas/meeting.py:66
+#: ././voteit/core/schemas/meeting.py:68
 msgid "name_pattern_error"
 msgstr ""
 
@@ -971,7 +982,7 @@ msgstr ""
 
 #: ././voteit/core/templates/manage_agenda.pt:30
 #: ././voteit/core/templates/manage_agenda.pt:74
-#: ././voteit/core/views/components/metadata_listing.py:92
+#: ././voteit/core/views/components/metadata_listing.py:94
 #: ././voteit/core/views/components/moderator_actions.py:34
 #: ././voteit/core/views/templates/agenda_template.pt:21
 #: ././voteit/core/views/templates/agenda_templates.pt:60
@@ -995,6 +1006,7 @@ msgid "Cancel"
 msgstr ""
 
 #: ././voteit/core/templates/manage_tickets.pt:9
+#: ././voteit/core/templates/snippets/participants_tabs.pt:19
 msgid "Manage invitations"
 msgstr ""
 
@@ -1005,55 +1017,55 @@ msgstr ""
 
 #. Default: Warning! There are ${count} tickets where no email were sent to the
 #. address it was intended for. It's a good idea to send these!
-#: ././voteit/core/templates/manage_tickets.pt:16
+#: ././voteit/core/templates/manage_tickets.pt:19
 msgid "never_invited_warning"
 msgstr ""
 
-#: ././voteit/core/templates/manage_tickets.pt:27
+#: ././voteit/core/templates/manage_tickets.pt:30
 msgid "Email contains:"
 msgstr ""
 
-#: ././voteit/core/templates/manage_tickets.pt:37
+#: ././voteit/core/templates/manage_tickets.pt:40
 msgid "Claimed by"
 msgstr ""
 
-#: ././voteit/core/templates/manage_tickets.pt:38
+#: ././voteit/core/templates/manage_tickets.pt:41
 msgid "Used"
 msgstr ""
 
-#: ././voteit/core/templates/manage_tickets.pt:39
+#: ././voteit/core/templates/manage_tickets.pt:42
 msgid "Sent by"
 msgstr ""
 
-#: ././voteit/core/templates/manage_tickets.pt:40
+#: ././voteit/core/templates/manage_tickets.pt:43
 msgid "Last invite"
 msgstr ""
 
-#: ././voteit/core/templates/manage_tickets.pt:41
+#: ././voteit/core/templates/manage_tickets.pt:44
 msgid "Times sent"
 msgstr ""
 
-#: ././voteit/core/templates/manage_tickets.pt:42
+#: ././voteit/core/templates/manage_tickets.pt:45
 msgid "Permissions"
 msgstr ""
 
-#: ././voteit/core/templates/manage_tickets.pt:71
+#: ././voteit/core/templates/manage_tickets.pt:74
 msgid "Message to any participants you resend tickets to"
 msgstr ""
 
-#: ././voteit/core/templates/manage_tickets.pt:74
+#: ././voteit/core/templates/manage_tickets.pt:77
 msgid "If you've marked any closed tickets, they won't receive a reinvite."
 msgstr ""
 
-#: ././voteit/core/templates/manage_tickets.pt:75
+#: ././voteit/core/templates/manage_tickets.pt:78
 msgid "With ${count} selected"
 msgstr ""
 
-#: ././voteit/core/templates/manage_tickets.pt:76
+#: ././voteit/core/templates/manage_tickets.pt:79
 msgid "Resend invitation"
 msgstr ""
 
-#: ././voteit/core/templates/manage_tickets.pt:77
+#: ././voteit/core/templates/manage_tickets.pt:80
 msgid "Remove"
 msgstr ""
 
@@ -1067,6 +1079,7 @@ msgstr ""
 
 #: ././voteit/core/templates/minutes.pt:14
 #: ././voteit/core/templates/snippets/meeting_menu.pt:16
+#: ././voteit/core/templates/snippets/participants_tabs.pt:10
 #: ././voteit/core/views/templates/_participants.pt:19
 msgid "Participants"
 msgstr ""
@@ -1093,7 +1106,7 @@ msgstr ""
 
 #: ././voteit/core/templates/minutes.pt:49
 #: ././voteit/core/templates/send_tickets.pt:13
-#: ././voteit/core/templates/users_emails.pt:18
+#: ././voteit/core/templates/users_emails.pt:21
 #: ././voteit/core/views/templates/_participants.pt:21
 #: ././voteit/core/views/templates/_participants.pt:123
 #: ././voteit/core/views/templates/agenda_template.pt:41
@@ -1104,19 +1117,15 @@ msgstr ""
 msgid "${num} participants"
 msgstr ""
 
-#: ././voteit/core/templates/participants.pt:14
+#: ././voteit/core/templates/participants.pt:16
 msgid "First name"
 msgstr ""
 
-#: ././voteit/core/templates/participants.pt:15
+#: ././voteit/core/templates/participants.pt:17
 msgid "Last name"
 msgstr ""
 
-#: ././voteit/core/templates/participants.pt:16
-msgid "UserID"
-msgstr ""
-
-#: ././voteit/core/templates/participants.pt:70
+#: ././voteit/core/templates/participants.pt:72
 msgid "Loading data..."
 msgstr ""
 
@@ -1225,6 +1234,18 @@ msgstr ""
 msgid "Click the link to get to the VoteIT meeting:"
 msgstr ""
 
+#: ././voteit/core/templates/overrides/navigation.pt:10
+msgid "Navigation"
+msgstr ""
+
+#: ././voteit/core/templates/overrides/navigation.pt:40
+msgid "Only showing ${tags}"
+msgstr ""
+
+#: ././voteit/core/templates/overrides/navigation.pt:41
+msgid "Show all"
+msgstr ""
+
 #: ././voteit/core/templates/portlets/agenda.pt:15
 msgid "Agenda / Navigation"
 msgstr ""
@@ -1246,25 +1267,25 @@ msgstr ""
 msgid "Show more"
 msgstr ""
 
-#: ././voteit/core/templates/portlets/inline_add_button_disc.pt:10
+#: ././voteit/core/templates/portlets/inline_add_button_disc.pt:9
 msgid "New entry"
 msgstr ""
 
 #. Default: You lack the required permission to add.
-#: ././voteit/core/templates/portlets/inline_add_button_disc.pt:14
-#: ././voteit/core/templates/portlets/inline_add_button_prop.pt:14
+#: ././voteit/core/templates/portlets/inline_add_button_disc.pt:13
+#: ././voteit/core/templates/portlets/inline_add_button_prop.pt:13
 msgid "lack_add_perm"
 msgstr ""
 
-#: ././voteit/core/templates/portlets/inline_add_button_disc.pt:16
+#: ././voteit/core/templates/portlets/inline_add_button_disc.pt:15
 msgid "The moderator has locked the ability to add more discussion posts."
 msgstr ""
 
-#: ././voteit/core/templates/portlets/inline_add_button_prop.pt:10
+#: ././voteit/core/templates/portlets/inline_add_button_prop.pt:9
 msgid "Add Proposal"
 msgstr ""
 
-#: ././voteit/core/templates/portlets/inline_add_button_prop.pt:16
+#: ././voteit/core/templates/portlets/inline_add_button_prop.pt:15
 msgid "The moderator has locked the ability to add more proposals."
 msgstr ""
 
@@ -1351,34 +1372,42 @@ msgstr ""
 msgid "Manage invites"
 msgstr ""
 
-#: ././voteit/core/templates/snippets/meeting_menu.pt:37
-msgid "Participants email addresses"
-msgstr ""
-
-#: ././voteit/core/templates/snippets/meeting_menu.pt:45
+#: ././voteit/core/templates/snippets/meeting_menu.pt:40
 msgid "Meeting functions"
 msgstr ""
 
-#: ././voteit/core/templates/snippets/meeting_menu.pt:50
+#: ././voteit/core/templates/snippets/meeting_menu.pt:45
 msgid "Minutes"
 msgstr ""
 
-#: ././voteit/core/templates/snippets/meeting_menu.pt:58
+#: ././voteit/core/templates/snippets/meeting_menu.pt:53
 msgid "Settings"
 msgstr ""
 
-#: ././voteit/core/templates/snippets/meeting_menu.pt:64
+#: ././voteit/core/templates/snippets/meeting_menu.pt:59
 #: ././voteit/core/views/components/moderator_actions.py:42
 #: ././voteit/core/views/components/moderator_actions.py:50
 msgid "Poll settings"
 msgstr ""
 
-#: ././voteit/core/templates/snippets/meeting_menu.pt:69
+#: ././voteit/core/templates/snippets/meeting_menu.pt:64
 msgid "Access policy"
 msgstr ""
 
-#: ././voteit/core/templates/snippets/meeting_menu.pt:74
+#: ././voteit/core/templates/snippets/meeting_menu.pt:69
 msgid "Configure selected access policy"
+msgstr ""
+
+#: ././voteit/core/templates/snippets/participants_tabs.pt:13
+msgid "Invite"
+msgstr ""
+
+#: ././voteit/core/templates/snippets/participants_tabs.pt:16
+msgid "Add existing"
+msgstr ""
+
+#: ././voteit/core/templates/snippets/participants_tabs.pt:22
+msgid "Emails"
 msgstr ""
 
 #: ././voteit/core/templates/snippets/user_basic_info.pt:13
@@ -1469,6 +1498,20 @@ msgstr ""
 
 #: ././voteit/core/views/moderators_emails.py:30
 msgid "Email addresses of moderators with upcoming or ongoing meetings"
+msgstr ""
+
+#: ././voteit/core/views/permissions.py:35
+msgid "Add existing user to meeting"
+msgstr ""
+
+#. Default: User was already a part of this meeting, but these new roles were
+#. added: ${roles}
+#: ././voteit/core/views/permissions.py:53
+msgid "new_roles_appended_notice"
+msgstr ""
+
+#: ././voteit/core/views/permissions.py:59
+msgid "No new roles added - user already had all of them."
 msgstr ""
 
 #. Default: The poll is created in private state, to show it the participants
@@ -1578,10 +1621,6 @@ msgstr ""
 
 #: ././voteit/core/views/components/help_actions.py:34
 msgid "Lost your password?"
-msgstr ""
-
-#: ././voteit/core/views/components/metadata_listing.py:64
-msgid "Counterproposal"
 msgstr ""
 
 #: ././voteit/core/views/components/metadata_listing.py:50
