@@ -112,6 +112,14 @@ class Meeting(BaseContent, SecurityAware, WorkflowAware):
         self.set_field_value('access_policy', value)
 
     @property
+    def hide_proposal_states(self): #arche compat
+        return self.get_field_value('hide_proposal_states', ('retracted', 'denied', 'unhandled'))
+    @hide_proposal_states.setter
+    def hide_proposal_states(self, value):
+        self.set_field_value('hide_proposal_states', value)
+
+
+    @property
     def invite_tickets(self):
         try:
             return self.__invite_tickets__

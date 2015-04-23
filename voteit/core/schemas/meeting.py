@@ -54,6 +54,18 @@ def _deferred_current_fullname(node, kw):
     if request.profile:
         return request.profile.title
 
+@colander.deferred
+def hide_proposal_states_widget(node, kw):
+    request = kw['request']
+    wf = get_workflow(IProposal, 'Proposal')
+    state_values = []
+    ts = _
+    for info in wf._state_info(IProposal): #Public API goes through permission checker
+        item = [info['name']]
+        item.append(ts(info['title']))
+        state_values.append(item)
+    return deform.widget.CheckboxChoiceWidget(values = state_values)
+
 
 class EditMeetingSchema(colander.Schema):
     title = colander.SchemaNode(colander.String(),
@@ -118,6 +130,16 @@ class EditMeetingSchema(colander.Schema):
          description = _("In case you want another title in the navigation bar"),
          missing = "",
          tab = 'advanced')
+    hide_proposal_states = colander.SchemaNode(colander.Set(),
+                                               title = _("Hide proposal states"),
+                                               description = _("hide_proposal_states_description",
+                                                               default = "Proposals in these states will be hidden by "
+                                                               "default but can be shown by pressing "
+                                                               "the link below the other proposals. They're not "
+                                                               "by any means invisible to participants."),
+                                               tab = 'advanced',
+                                               widget = hide_proposal_states_widget,
+                                               default = ('retracted', 'denied', 'unhandled'),)
 
 
 class AddMeetingSchema(EditMeetingSchema):
@@ -146,30 +168,6 @@ class MeetingPollSettingsSchema(colander.Schema):
                                                                "If nothing is selected, only the servers default poll method will be available."),
                                        missing=set(),
                                        widget = poll_plugins_choices_widget,)
-
-
-@colander.deferred
-def hide_proposal_states_widget(node, kw):
-    request = kw['request']
-    wf = get_workflow(IProposal, 'Proposal')
-    state_values = []
-    
-    for info in wf._state_info(IProposal): #Public API goes through permission checker
-        item = [info['name']]
-        item.append(info['title'])
-        state_values.append(item)
-    return deform.widget.CheckboxChoiceWidget(values = state_values)
-
-
-class AgendaItemProposalsPortletSchema(colander.Schema):
-    hide_proposal_states = colander.SchemaNode(colander.Set(),
-                                               title = _("Hide"),
-                                               description = _("hide_proposal_states_description",
-                                                               default = "Proposals in these states will be hidden by "
-                                                               "default but can be shown by pressing "
-                                                               "the link below the other proposals."),
-                                               widget = hide_proposal_states_widget,
-                                               default = ('retracted', 'denied', 'unhandled'),)
 
 
 class _ContainsOnlyAndNotEmpty(colander.ContainsOnly):

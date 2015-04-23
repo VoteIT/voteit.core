@@ -19,7 +19,6 @@ from voteit.core import security
 from voteit.core.fanstaticlib import data_loader
 from voteit.core.helpers import get_docids_to_show
 from voteit.core.models.interfaces import IAgendaItem
-from voteit.core.schemas.meeting import AgendaItemProposalsPortletSchema
 
 #FIXME: Loading required resources for inline forms is still a problem.
 
@@ -43,7 +42,6 @@ class ProposalsPortlet(ListingPortlet):
     title = _("Proposals")
     template = "voteit.core:templates/portlets/proposals.pt"
     view_name = '__ai_proposals__'
-    schema_factory = AgendaItemProposalsPortletSchema
 
     def render(self, context, request, view, **kwargs):
         if IAgendaItem.providedBy(context):
@@ -52,7 +50,7 @@ class ProposalsPortlet(ListingPortlet):
             tags = request.GET.getall('tag')
             if tags:
                 query['tag'] = [x.lower() for x in tags]
-            query['hide'] = tuple(self.portlet.settings.get('hide_proposal_states', ()))
+            query['hide'] = tuple(request.meeting.hide_proposal_states)
             url = request.resource_url(context, self.view_name, query = query)
             response = {'portlet': self.portlet, 'view': view, 'load_url': url}
             return render(self.template, response, request = request)
