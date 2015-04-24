@@ -26,7 +26,7 @@
             <ul>
                 <li><div class="iconpadding icon approved">
                     <span tal:replace="structure request.creators_info(prop.creators, portrait = False)">userinfo</span>
-                    ${prop.title}
+                    ${prop.text}
                 </div></li>
             </ul>
         </tal:iterate>
@@ -36,7 +36,7 @@
             <ul>
                 <li><div class="iconpadding icon denied">
                     <span tal:replace="structure request.creators_info(prop.creators, portrait = False)">userinfo</span>
-                    ${prop.title}
+                    ${prop.text}
                 </div></li>
             </ul>
         </tal:iterate>
