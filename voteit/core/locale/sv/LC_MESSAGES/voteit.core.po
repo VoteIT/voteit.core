@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2015-04-22 10:15+0200\n"
-"PO-Revision-Date: 2015-04-22 10:17+0100\n"
+"POT-Creation-Date: 2015-04-24 15:37+0200\n"
+"PO-Revision-Date: 2015-04-24 15:37+0100\n"
 "Last-Translator: Robin Harms Oredsson <robin@betahaus.net>\n"
 "Language-Team: sv <LL@li.org>\n"
 "Language: sv\n"
@@ -497,14 +497,13 @@ msgid "Note!"
 msgstr "Notera!"
 
 #. Default: Majority polls aren't ment to handle more than 2 proposals. If the
-#. winner didn't receive at least ${51per} of the votes, you should consider
-#. using another poll method (like Schulze). Consult the manual for more
-#. information.
+#. winner didn't receive at least 51% of the votes, you should consider using
+#. another poll method (like Schulze). Consult the manual for more information.
 #: voteit/core/plugins/templates/majority_poll.pt:42
 msgid "majority_poll_too_many_proposals_warning"
 msgstr ""
 "Majoritetsomröstningar är inte tänkta att hantera fler än 2 förslag. Om "
-"vinnaren inte fick minst ${51per} av rösterna så bör ni använda en annan "
+"vinnaren inte fick minst 51% av rösterna så bör ni använda en annan "
 "omröstningsmetod (som Schulze). Se manualen för mer information."
 
 #. Default: The percentage shows number of votes that favoured that
