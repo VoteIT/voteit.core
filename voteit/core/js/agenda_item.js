@@ -27,6 +27,7 @@ ProposalsHandler.prototype.handle_response = function(response) {
 
 /* DISCUSSION */
 var DiscussionHandler = function (url) {
+  this.previous_fetched = false;
   this.url = url;
   this.tpl = $('[data-template="discussion_post"]').clone();
   $('[data-template="discussion_post"]').remove();
@@ -71,8 +72,28 @@ DiscussionHandler.prototype.handle_response = function(response, insert_before) 
     $('[data-json="load_previous_msg"]').html(response['load_previous_msg']);
   } else {
     $('[data-ai-method="load_previous_url"]').hide();
+    this.previous_fetched = true;
   }
   voteit.ai_filter.apply_filter(response['show_docids']);
+}
+
+DiscussionHandler.prototype.load_previous = function(event) {
+  if (typeof event != 'undefined') event.preventDefault();
+  voteit.ai_filter.reset();
+  var elem = $('[data-ai-method="load_previous_url"]');
+  if (elem.length > 0) {
+    elem.hide()
+    var url = $('[data-ai-method="load_previous_url"]').attr('href');
+    var request = arche.do_request(elem.attr('href'));
+    var that = this;
+    request.done(function(response) {
+      that.handle_response(response, true);
+    });
+    request.fail(function() {
+      elem.show()
+    });
+    return request;
+  }
 }
 
 
@@ -126,6 +147,20 @@ FilterHandler.prototype.handle_filter_update = function(event) {
   if ($(event.currentTarget).data('tag-reset') == true) {
     this.reset();
   }
+  if (typeof voteit.discussion != 'undefined' && voteit.discussion.previous_fetched == false) {
+    var request = voteit.discussion.load_previous();
+    var that = this;
+    if (typeof request != 'undefined') {
+      request.done(function() {
+        that.request_update(url);
+      });
+    }
+  } else {
+    this.request_update(url);
+  }
+}
+
+FilterHandler.prototype.request_update = function(url) {
   var request = arche.do_request(url, {data: {show_hidden: this.show_hidden, tag: this.filter_tags}});
   var that = this;
   request.done(function(response) { that.handle_filter_response(response); });
@@ -134,14 +169,8 @@ FilterHandler.prototype.handle_filter_update = function(event) {
 
 $(document).ready(function() {
   voteit.ai_filter = new FilterHandler();
-
   $('body').on('click', '[data-ai-method="load_previous_url"]', function(event) {
-    event.preventDefault();
-    voteit.ai_filter.reset();
-    $('[data-ai-method="load_previous_url"]').hide()
-    var url = $(event.currentTarget).attr('href');
-    var request = arche.do_request(url);
-    request.done(function(response) { voteit.discussion.handle_response(response, true); });
+    voteit.discussion.load_previous(event);
   });
   $('body').on('click', '[data-ai-method="load_next_url"]', function(event) {
     event.preventDefault();
