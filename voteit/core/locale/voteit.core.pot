@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE 1.0\n"
-"POT-Creation-Date: 2015-04-24 15:37+0200\n"
+"POT-Creation-Date: 2015-04-25 11:24+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -481,7 +481,7 @@ msgid "Agenda"
 msgstr ""
 
 #: ././voteit/core/portlets/agenda_item.py:43
-#: ././voteit/core/schemas/poll.py:81
+#: ././voteit/core/schemas/poll.py:79
 #: ././voteit/core/templates/portlets/proposals.pt:11
 msgid "Proposals"
 msgstr ""
@@ -512,7 +512,7 @@ msgid "Meetings"
 msgstr ""
 
 #: ././voteit/core/schemas/agenda_item.py:11
-#: ././voteit/core/schemas/meeting.py:60 ././voteit/core/schemas/poll.py:63
+#: ././voteit/core/schemas/meeting.py:60 ././voteit/core/schemas/poll.py:61
 msgid "Title"
 msgstr ""
 
@@ -522,7 +522,7 @@ msgstr ""
 
 #: ././voteit/core/schemas/agenda_item.py:16
 #: ././voteit/core/schemas/agenda_template.py:22
-#: ././voteit/core/schemas/poll.py:66
+#: ././voteit/core/schemas/poll.py:64
 msgid "Description"
 msgstr ""
 
@@ -791,64 +791,64 @@ msgstr ""
 msgid "name_pattern_error"
 msgstr ""
 
-#. Default: Reject all proposals
-#: ././voteit/core/schemas/poll.py:56
+#. Default: Reject
+#: ././voteit/core/schemas/poll.py:54
 msgid "reject_proposal_title_default"
 msgstr ""
 
 #. Default: Explain your choice of poll method and your plan for the different
 #. polls in the agenda item.
-#: ././voteit/core/schemas/poll.py:68
+#: ././voteit/core/schemas/poll.py:66
 msgid "poll_description_description"
 msgstr ""
 
-#: ././voteit/core/schemas/poll.py:73
+#: ././voteit/core/schemas/poll.py:71
 msgid "Poll method to use"
 msgstr ""
 
 #. Default: Each poll method should have its own documentation. The standard
 #. ones from VoteITwill be in the manual - check the help menu!
-#: ././voteit/core/schemas/poll.py:74
+#: ././voteit/core/schemas/poll.py:72
 msgid "poll_poll_plugin_description"
 msgstr ""
 
 #. Default: Only proposals in the state 'published' can be selected
-#: ././voteit/core/schemas/poll.py:82
+#: ././voteit/core/schemas/poll.py:80
 msgid "poll_proposals_description"
 msgstr ""
 
-#: ././voteit/core/schemas/poll.py:88
+#: ././voteit/core/schemas/poll.py:86
 msgid "Start time of this poll."
 msgstr ""
 
-#: ././voteit/core/schemas/poll.py:89
+#: ././voteit/core/schemas/poll.py:87
 msgid "You need to open it yourself."
 msgstr ""
 
-#: ././voteit/core/schemas/poll.py:95
+#: ././voteit/core/schemas/poll.py:93
 msgid "End time of this poll."
 msgstr ""
 
 #. Default: You need to close it yourself. A good default value is one day
 #. later.
-#: ././voteit/core/schemas/poll.py:96
+#: ././voteit/core/schemas/poll.py:94
 msgid "poll_end_time_description"
 msgstr ""
 
-#: ././voteit/core/schemas/poll.py:105
+#: ././voteit/core/schemas/poll.py:103
 msgid "Reject proposal"
 msgstr ""
 
 #. Default: Should a 'Reject all proposals' proposal be added to the poll?
-#: ././voteit/core/schemas/poll.py:106
+#: ././voteit/core/schemas/poll.py:104
 msgid "add_reject_proposal_description"
 msgstr ""
 
-#: ././voteit/core/schemas/poll.py:110
+#: ././voteit/core/schemas/poll.py:108
 msgid "Proposal text for 'reject all proposals'"
 msgstr ""
 
-#: ././voteit/core/schemas/poll.py:111
+#: ././voteit/core/schemas/poll.py:109
 msgid "You can customise the proposal text if you want."
 msgstr ""
 
