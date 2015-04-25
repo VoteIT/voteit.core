@@ -12,7 +12,7 @@ function unread_notify(url) {
   if (voteit.unread_notify_url) {
     // Action URL set
     var unread_uids = [];
-    $("[data-unread]").each( function() {
+    $("[data-unread]:visible").each( function() {
       if ($(this).data('unread') === true) unread_uids.push( $(this).data('uid') );
     });
     if (unread_uids.length > 0) {
@@ -31,7 +31,7 @@ function unread_notify(url) {
       });
     } else {
       // Retry later - but since there was nothing to do, be a bit more slow...
-      voteit.unread_notify_timer = setInterval(voteit.unread_notify, voteit.unread_notify_interval + 5000);
+      voteit.unread_notify_timer = setInterval(voteit.unread_notify, voteit.unread_notify_interval);
     }
   } else {
     // No action URL set
@@ -42,7 +42,7 @@ voteit.unread_notify = unread_notify;
 
 $(window).on("blur focus", function(e) {
   var prevType = $(this).data("prevType");
-  if (prevType != e.type) {   //  reduce double fire issues
+  if (prevType != e.type) {   //Reduce 'double fire' issues
     switch (e.type) {
       case "blur":
         voteit.unread_notify_timer = clearInterval(voteit.unread_notify_timer);
