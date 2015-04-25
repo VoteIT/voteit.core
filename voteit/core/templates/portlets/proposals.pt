@@ -11,15 +11,37 @@
         <span i18n:translate="">Proposals</span>
       </h4>
     </div>
-    <div data-load-target="${load_url}">
+    <div data-proposals>
       <div class="list-group-item">
         <span class="glyphicon glyphicon-refresh rotate-me"></span>
         Loading...
       </div>
     </div>
+    <div tal:replace="structure view.render_template('voteit.core:templates/proposal.pt')"></div>
+    <a class="list-group-item"
+      data-show-hidden="true"
+      data-tag-filter href="${request.resource_url(context, 'ai_filter.json')}">
+      <span class="glyphicon glyphicon-eye-open"></span>
+      <span i18n:translate="">Show hidden proposals</span>
+      <span data-filter-active style="display: none;" i18n:translate="">(within tag selection)</span>
+    </a>
+    <a class="list-group-item"
+      style="display: none;"
+      data-show-hidden="false"
+      data-tag-filter href="${request.resource_url(context, 'ai_filter.json')}">
+      <span class="glyphicon glyphicon-eye-close"></span>
+      <span i18n:translate="">Hide proposals</span>
+    </a>
     <div class="well">
       <div tal:replace="structure view.render_template('voteit.core:templates/portlets/inline_add_button_prop.pt')"></div>
     </div>
   </div>
 </div>
+<script type="text/javascript">
+  $(document).ready(function() {
+    voteit.proposals = new ProposalsHandler("${load_url}");
+    voteit.proposals.fetch_data();
+    voteit.unread_notify("${request.resource_url(context, '_mark_read')}");
+  });
+</script>
 </tal:main>

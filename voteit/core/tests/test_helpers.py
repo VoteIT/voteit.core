@@ -63,34 +63,37 @@ class Tags2linksTests(unittest.TestCase):
         from voteit.core.helpers import tags2links
         return tags2links
 
+    def _fixture(self):
+        return testing.DummyModel(), testing.DummyRequest()
+
     def test_simple(self):
-        value = self._fut("#hello world!")
-        self.assertIn('href="?tag=hello"', value)
+        value = self._fut("#hello world!", *self._fixture())
+        self.assertIn('?tag=hello"', value)
 
     def test_non_ascii(self):
-        value = self._fut('#åäöÅÄÖ')
+        value = self._fut('#åäöÅÄÖ', *self._fixture())
         self.assertIn('?tag=%C3%A5%C3%A4%C3%B6%C3%85%C3%84%C3%96', value)
 
     def test_several_tags_and_br(self):
-        value = self._fut(u"Men #hörni, visst vore det väl trevligt med en #öl?")
-        self.assertIn('href="?tag=h%C3%B6rni"', value)
-        self.assertIn('href="?tag=%C3%B6l" ', value)
+        value = self._fut(u"Men #hörni, visst vore det väl trevligt med en #öl?", *self._fixture())
+        self.assertIn('?tag=h%C3%B6rni', value)
+        self.assertIn('?tag=%C3%B6l', value)
 
     def test_existing_tags_not_touched(self):
-        value = self._fut('<a>#tag</a>')
+        value = self._fut('<a>#tag</a>', *self._fixture())
         self.assertEqual('<a>#tag</a>', value)
 
     def test_several_tags_twice(self):
-        first = self._fut(u"Men #hörni, visst vore det väl trevligt med en #öl?")
-        second = self._fut(first)
+        first = self._fut(u"Men #hörni, visst vore det väl trevligt med en #öl?", *self._fixture())
+        second = self._fut(first, *self._fixture())
         self.assertEqual(first, second)
 
     def test_text_before_tag_negates_conversion(self):
-        value = self._fut('this#that?')
+        value = self._fut('this#that?', *self._fixture())
         self.assertEqual('this#that?', value)
 
     def test_html_entities(self):
-        value = self._fut('this#that?')
+        value = self._fut('this#that?', *self._fixture())
         self.assertEqual('this#that?', value)
 
 

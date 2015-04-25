@@ -1,0 +1,36 @@
+<tal:main xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:tal="http://xml.zope.org/namespaces/tal"
+  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+  i18n:domain="voteit.core">
+<div data-template="proposal">
+<div class="list-group-item"
+  data-type-name="Proposal"
+  data-uid=""
+  data-unread="false"
+  data-docid="">
+  <div class="text">
+    <span data-json="cogwheel"></span>
+    <span data-json="creators_info"></span>
+    <span data-json="text"></span>
+  </div>
+  <div class="clearfix"></div>
+  <div class="metadata row">
+    <div class="col-xs-6">
+      <a class="primary-tag" data-json="aid"
+        data-tag-filter
+        href="${request.resource_url(context, 'ai_filter.json', query = {'tag': ''})}">#</a>
+      <span class="text-muted">
+        &mdash;
+        <span class="glyphicon glyphicon-comment"></span>
+        <span data-json="aid-count">0</span>
+      </span>
+    </div>
+    <div class="col-xs-6 text-right text-muted">
+      <span class="glyphicon glyphicon-time"></span>
+      <span data-json="created"></span>
+    </div>
+  </div>
+  <div class="metadata" data-json="metadata"></div>
+</div>
+</div>
+</tal:main>

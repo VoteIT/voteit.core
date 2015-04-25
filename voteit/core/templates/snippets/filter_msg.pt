@@ -1,0 +1,11 @@
+<tal:main xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="voteit.core">
+  <span class="glyphicon glyphicon-filter"></span>
+  <span i18n:translate="">Only showing <tal:ts content="request.current_tags()" i18n:name="tags"/></span>
+  <a data-tag-filter data-tag-reset="true" href="${request.resource_url(context, 'ai_filter.json')}"
+    class="btn btn-default btn-xs"
+    i18n:translate="">Show all</a>
+</tal:main>

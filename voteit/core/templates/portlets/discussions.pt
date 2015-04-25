@@ -11,15 +11,39 @@
         <span i18n:translate="">Discussion</span>
       </h4>
     </div>
-    <div data-load-target="${load_url}">
-      <div class="list-group-item">
+    <a href="#"
+      data-ai-method="load_previous_url"
+      style="display: none;"
+      class="list-group-item">
+      <span class="glyphicon glyphicon-arrow-up"></span>
+      <span data-json="load_previous_msg" i18n:translate="">Show previous</span>
+      <span data-actionmarker="glyphicon glyphicon-refresh rotate-me"></span>
+    </a>
+    <div data-discussion-posts>
+      <div class="list-group-item" data-initial-loadstate>
         <span class="glyphicon glyphicon-refresh rotate-me"></span>
         Loading...
       </div>
     </div>
+    <div tal:replace="structure view.render_template('voteit.core:templates/discussion_post.pt')"></div>
+    <a href="#"
+      style="display: none;"
+      data-ai-method="load_next_url"
+      class="list-group-item">
+      <span class="glyphicon glyphicon-arrow-down"></span>
+      <span data-json="load_next_msg" i18n:translate="">Show more</span>
+      <span data-actionmarker="glyphicon glyphicon-refresh rotate-me"></span>
+    </a>
     <div class="well">
       <div tal:replace="structure view.render_template('voteit.core:templates/portlets/inline_add_button_disc.pt')"></div>
     </div>
   </div>
 </div>
+<script type="text/javascript">
+  $(document).ready(function() {
+    voteit.discussion = new DiscussionHandler("${load_url}");
+    voteit.discussion.fetch_data();
+    voteit.unread_notify("${request.resource_url(context, '_mark_read')}");
+  });
+</script>
 </tal:main>

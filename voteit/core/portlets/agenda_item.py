@@ -16,7 +16,7 @@ from repoze.catalog.query import Eq, NotAny, Any
 
 from voteit.core import _
 from voteit.core import security
-from voteit.core.fanstaticlib import data_loader
+from voteit.core.fanstaticlib import agenda_item_js
 from voteit.core.helpers import get_docids_to_show
 from voteit.core.models.interfaces import IAgendaItem
 
@@ -28,6 +28,7 @@ class ListingPortlet(PortletType):
 
     def render(self, context, request, view, **kwargs):
         if IAgendaItem.providedBy(context):
+            agenda_item_js.need()
             query = {}
             tags = request.GET.getall('tag')
             if tags:
@@ -41,18 +42,20 @@ class ProposalsPortlet(ListingPortlet):
     name = "ai_proposals"
     title = _("Proposals")
     template = "voteit.core:templates/portlets/proposals.pt"
-    view_name = '__ai_proposals__'
+    view_name = 'ai_proposals.json'
 
     def render(self, context, request, view, **kwargs):
         if IAgendaItem.providedBy(context):
-            data_loader.need()
+            agenda_item_js.need()
             query = {}
             tags = request.GET.getall('tag')
             if tags:
                 query['tag'] = [x.lower() for x in tags]
-            query['hide'] = tuple(request.meeting.hide_proposal_states)
             url = request.resource_url(context, self.view_name, query = query)
-            response = {'portlet': self.portlet, 'view': view, 'load_url': url}
+            response = {'portlet':
+                        self.portlet,
+                        'view': view,
+                        'load_url': url}
             return render(self.template, response, request = request)
 
 
@@ -60,7 +63,7 @@ class DiscussionsPortlet(ListingPortlet):
     name = "ai_discussions"
     title = _("Discussion")
     template = "voteit.core:templates/portlets/discussions.pt"
-    view_name = '__ai_discussions__'
+    view_name = 'ai_discussion_posts.json'
 
 
 class PollsPortlet(ListingPortlet):
@@ -70,76 +73,8 @@ class PollsPortlet(ListingPortlet):
     view_name = '__ai_polls__'
 
 
-class ProposalsInline(BaseView):
-
-    def __call__(self):
-        response = {}
-        query = Eq('path', resource_path(self.context)) &\
-                Eq('type_name', 'Proposal')
-        tags = self.request.GET.getall('tag')
-        if tags:
-            tags = [x.lower() for x in tags]
-            query &= Any('tags', tags)
-        hide = self.request.GET.getall('hide')
-        load_hidden = self.request.GET.get('load_hidden', False)
-        if load_hidden:
-            #Only load data previously hidden
-            if hide:
-                query &= Any('workflow_state', hide)
-        else:
-            invert_hidden = copy(query)
-            #Normal operation, keep count of hidden
-            if hide:
-                invert_hidden &= Any('workflow_state', hide)
-                query &= NotAny('workflow_state', hide)
-        
-        response['docids'] = tuple(self.catalog_query(query, sort_index = 'created'))
-        response['unread_docids'] = tuple(self.catalog_query(query & Eq('unread', self.request.authenticated_userid), sort_index = 'created'))
-        response['contents'] = self.resolve_docids(response['docids']) #A generator
-        if not load_hidden:
-            response['hidden_count'] = self.request.root.catalog.query(invert_hidden)[0].total
-            get_query = {'tag': tags, 'load_hidden': 1, 'hide': hide}
-            response['load_hidden_url'] = self.request.resource_url(self.context, self.request.view_name, query = get_query)
-        else:
-            response['hidden_count'] = False
-        return response
-
-
-class DiscussionsInline(BaseView):
-
-    def __call__(self):
-        """ Loading procedure of discussion posts:
-            If nothing specific is set, limit loading to the next 5 unread.
-            If there aren't 5 unread, fetch the 5 last posts.
-            If there are more unread than 5, create a link to load more.
-        """
-        query = {}
-        query['tags'] = [x.lower() for x in self.request.GET.getall('tag')]
-        query['limit'] = 5
-        if self.request.GET.get('previous', False):
-            query['limit'] = 0
-            query['end_before'] = int(self.request.GET.get('end_before'))
-        if self.request.GET.get('next', False):
-            query['start_after'] = int(self.request.GET.get('start_after'))
-        response = get_docids_to_show(self.context, self.request, 'DiscussionPost', **query)
-        response['contents'] = self.resolve_docids(response['batch']) #Generator
-        if response['previous'] and response['batch']:
-            end_before = response['batch'][0]
-            response['load_previous_url'] = self.request.resource_url(self.context, '__ai_discussions__',
-                                                                      query = {'tag': query['tags'],
-                                                                               'previous': 1,
-                                                                               'end_before': end_before})
-        if response['over_limit'] and response['batch']:
-            start_after = response['batch'][-1]
-            response['load_next_url'] = self.request.resource_url(self.context, '__ai_discussions__',
-                                                                  query = {'tag': query['tags'],
-                                                                           'next': 1,
-                                                                           'start_after': start_after})
-        return response
-
-
 class PollsInline(BaseView):
-    
+
     def __call__(self):
         query = {
             'path': resource_path(self.context),
@@ -154,12 +89,12 @@ class PollsInline(BaseView):
         tags = set()
         for prop in poll.get_proposal_objects():
             tags.add(prop.aid)
-        return self.request.resource_url(self.context, query = {'tag': tags})
+        return self.request.resource_url(self.context, 'ai_filter.json', query = {'tag': tags})
 
     def get_voted_estimate(self, poll):
         """ Returns an approx guess without doing expensive calculations.
             This method should rely on other things later on.
-            
+
             Should only be called during ongoing or closed polls.
         """
         response = {'added': len(poll), 'total': 0}
@@ -251,8 +186,9 @@ class DiscussionAddForm(StrippedInlineAddForm):
                                              hide_popover = '[data-reply-to="%s"]' % self.reply_to))
     cancel_success = cancel_failure = cancel
 
+
 def includeme(config):
-    config.add_portlet_slot('agenda_item', title = _("Agenda Item portlets"), layout = 'vertical')
+    config.add_portlet_slot('agenda_item', title = _("Agenda Item portlets"), layout = 'horizontal')
     config.add_portlet(ProposalsPortlet)
     config.add_portlet(DiscussionsPortlet)
     config.add_portlet(PollsPortlet)
@@ -268,16 +204,6 @@ def includeme(config):
                     request_param = "content_type=DiscussionPost",
                     permission = security.ADD_DISCUSSION_POST,
                     renderer = 'arche:templates/form.pt')
-    config.add_view(ProposalsInline,
-                    name = '__ai_proposals__',
-                    context = IAgendaItem,
-                    permission = security.VIEW,
-                    renderer = 'voteit.core:templates/portlets/proposals_inline.pt')
-    config.add_view(DiscussionsInline,
-                    name = '__ai_discussions__',
-                    context = IAgendaItem,
-                    permission = security.VIEW,
-                    renderer = 'voteit.core:templates/portlets/discussions_inline.pt')
     config.add_view(PollsInline,
                     name = '__ai_polls__',
                     context = IAgendaItem,

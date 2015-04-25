@@ -1,0 +1,24 @@
+<tal:main xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:tal="http://xml.zope.org/namespaces/tal"
+  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+  i18n:domain="voteit.core">
+<div data-template="discussion_post">
+  <div class="list-group-item"
+    data-type-name="DiscussionPost"
+    data-unread="false"
+    data-uid=""
+    data-docid="">
+    <div class="text">
+      <span data-json="cogwheel"></span>
+      <span data-json="creators_info"></span>
+      <span data-json="text"></span>
+    </div>
+    <div class="clearfix"></div>
+    <div class="metadata text-right text-muted">
+      <span class="glyphicon glyphicon-time"></span>
+      <span data-json="created"></span>
+    </div>
+    <div class="metadata" data-json="metadata"></div>
+  </div>
+</div>
+</tal:main>

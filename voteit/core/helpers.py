@@ -1,6 +1,5 @@
 import re
 from copy import deepcopy
-from urllib import urlencode
 
 from arche.utils import generate_slug #API
 from pyramid.renderers import render
@@ -40,22 +39,10 @@ def at_userid_link(request, text):
         #Force lowercase userid
         userid = userid.lower()
         return " %s" % request.creators_info([userid], lookup = False, at = True)
-        
-#         if userid in users: 
-#             user = users[userid]
-#     
-#             tag = {}
-#             tag['href'] = request.resource_url(meeting, '_userinfo', query={'userid': userid}).replace(request.application_url, '')
-#             tag['title'] = user.title
-#             tag['class'] = "inlineinfo"
-#             return space + HTML.a('@%s' % userid, **tag)
-#         else:
-#             return space + '@' + userid
-
     return re.sub(AT_PATTERN, handle_match, text)
 
 
-def tags2links(text):
+def tags2links(text, context, request):
     """ Transform #tag to a relative link in this context.
         Not domain name or path will be included - it starts with './'
     """
@@ -63,8 +50,8 @@ def tags2links(text):
         matched_dict = matchobj.groupdict()
         tag = matched_dict['tag']
         pre = matched_dict['pre']
-        url = u"?%s" % urlencode({'tag': tag.encode('utf-8')})
-        return u"""%(pre)s<a href="%(url)s" data-set-tag-filter="%(tag)s" class="tag">#%(tag)s</a>""" % {'pre': pre, 'url': url, 'tag': tag}
+        url = request.resource_url(context, 'ai_filter.json', query = {'tag': tag})
+        return u"""%(pre)s<a href="%(url)s" data-tag-filter class="tag">#%(tag)s</a>""" % {'pre': pre, 'url': url, 'tag': tag}
     return re.sub(TAG_PATTERN, handle_match, text)
 
 def strip_and_truncate(text, limit=200, symbol = '<span class="trunc">&hellip;</span>'):
@@ -99,12 +86,14 @@ def move_object(obj, new_parent):
     new_parent[name] = new_obj
     return new_obj
 
-def transform_text(request, text):
+def transform_text(request, text, context = None):
     text = sanitize(text)
     #text = auto_link(text, link='urls')
     text = auto_link(text)
     text = nl2br(text)
-    text = tags2links(unicode(text))
+    if context is None:
+        context = request.agenda_item
+    text = tags2links(unicode(text), context, request)
     text = at_userid_link(request, text)
     return text
 

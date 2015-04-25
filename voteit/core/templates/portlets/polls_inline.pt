@@ -11,7 +11,8 @@
                   wf_state obj.get_workflow_state();">
     <div class="row">
       <div class="col-sm-6">
-        <tal:cog condition="request.is_moderator" replace="structure view.render_template('voteit.core:templates/snippets/cogwheel.pt', context = obj)" />
+        <tal:cog condition="request.is_moderator"
+          replace="structure view.render_template('voteit.core:templates/snippets/cogwheel.pt', context = obj)" />
         <tal:broken_plugin condition="not poll_plugin">
           <div class="alert alert-danger" role="alert"
             i18n:translate="broken_poll_notice">The method
@@ -22,26 +23,26 @@
         <h4>${obj.title}</h4>
         <div tal:content="structure obj.description">Description</div>
 
-    <tal:working_plugin condition="poll_plugin">
-      <a tal:condition="can_vote or has_voted"
-        data-open-modal
-        class="btn btn-primary"
-        href="${request.resource_url(obj, '__vote__')}">
-        <span data-actionmarker="glyphicon glyphicon-refresh rotate-me"></span>      
-        <span tal:condition="can_vote and not has_voted" i18n:translate="add_vote_button">Vote</span>
-        <span tal:condition="can_vote and has_voted" i18n:translate="">Change vote</span>
-        <span tal:condition="not can_vote" i18n:translate="">View vote</span>
-      </a>
-      <a tal:condition="wf_state == 'closed'"
-        data-open-modal
-        class="btn btn-primary"
-        href="${request.resource_url(obj, '__show_results__')}">
-        <span data-actionmarker="glyphicon glyphicon-refresh rotate-me"></span>
-        <span i18n:translate="">Show results</span>
-      </a>
-    </tal:working_plugin>
-
+        <tal:working_plugin condition="poll_plugin">
+          <a tal:condition="can_vote or has_voted"
+            data-open-modal
+            class="btn btn-primary"
+            href="${request.resource_url(obj, '__vote__')}">
+            <span data-actionmarker="glyphicon glyphicon-refresh rotate-me"></span>
+            <span tal:condition="can_vote and not has_voted" i18n:translate="add_vote_button">Vote</span>
+            <span tal:condition="can_vote and has_voted" i18n:translate="">Change vote</span>
+            <span tal:condition="not can_vote" i18n:translate="">View vote</span>
+          </a>
+          <a tal:condition="wf_state == 'closed'"
+            data-open-modal
+            class="btn btn-primary"
+            href="${request.resource_url(obj, '__show_results__')}">
+            <span data-actionmarker="glyphicon glyphicon-refresh rotate-me"></span>
+            <span i18n:translate="">Show results</span>
+          </a>
+        </tal:working_plugin>
       </div>
+
       <div class="col-sm-6 text-right">
         <tal:poll_progress condition="wf_state in ('ongoing', 'closed')">
         <div tal:define="poll_est view.get_voted_estimate(obj)">
@@ -62,7 +63,6 @@
         <tal:def define="is_started wf_state not in ('upcoming', 'private');
                          is_closed wf_state in ('closed', 'canceled');">
           <span class="glyphicon glyphicon-time"></span>
-        
           <span tal:condition="not is_started" i18n:translate="">Starts</span>
           <span tal:condition="is_started" i18n:translate="">Started</span>
           ${request.dt_handler.format_relative(obj.start_time)|'-'}
@@ -77,16 +77,25 @@
         <tal:meta replace="structure view.render_view_group('metadata_listing', obj)"></tal:meta>
       </div>
       <div class="col-sm-6">
-        <a class="btn btn-default btn-xs" tal:condition="obj.proposals" href="${view.get_poll_filter_url(obj)}">
+        <a class="btn btn-default btn-xs"
+          tal:condition="obj.proposals"
+          data-tag-filter
+          href="${view.get_poll_filter_url(obj)}">
           <span class="glyphicon glyphicon-filter"></span>
           <span i18n:translate="">Filter on poll (<tal:ts i18n:name="num">${len(obj.proposals)}</tal:ts>) </span>
         </a>
         <tal:poll_plugin condition="poll_plugin" tal:define="poll_method_info 'poll_method_info_%s' % obj.uid">
-            <a class="btn btn-default btn-xs" data-toggle="collapse" href="#${poll_method_info}" aria-expanded="false" aria-controls="${poll_method_info}">
+            <a class="btn btn-default btn-xs"
+              data-toggle="collapse"
+              href="#${poll_method_info}"
+              aria-expanded="false"
+              aria-controls="${poll_method_info}">
               <span class="glyphicon glyphicon-info-sign"></span>
               ${poll_plugin.title}
             </a>
-            <a tal:condition="wf_state == 'closed'" class="btn btn-default btn-xs" href="${request.resource_url(obj, 'poll_raw_data.txt')}">
+            <a tal:condition="wf_state == 'closed'"
+              class="btn btn-default btn-xs"
+              href="${request.resource_url(obj, 'poll_raw_data.txt')}">
               <span class="glyphicon glyphicon-save"></span>
               <span i18n:translate="">Ballot data</span>
             </a>

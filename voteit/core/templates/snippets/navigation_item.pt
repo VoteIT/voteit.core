@@ -1,0 +1,28 @@
+<tal:main xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="voteit.core">
+<tal:comment condition="None">
+Use this structure to fill navigation items from json data
+</tal:comment>
+<a data-uid="" class="btn btn-default btn-block">
+  <span class="btn-title"></span>
+  <div class="row text-left">
+    <div class="col-sm-4">
+      <span class="glyphicon glyphicon-exclamation-sign"></span>
+      <span>XX</span>
+      <span class="badge"></span>
+    </div>
+    <div class="col-sm-4">
+      <span class="glyphicon glyphicon-comment"></span>
+      <span>YY</span>
+      <span class="badge"></span>
+    </div>
+    <div class="col-sm-4">
+      <span class="glyphicon glyphicon-star"></span>
+      <span>ZZ</span>
+    </div>
+  </div>
+</a>
+</tal:main>

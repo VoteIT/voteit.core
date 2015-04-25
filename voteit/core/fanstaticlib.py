@@ -22,6 +22,7 @@ base_js = Resource(voteit_core_jslib, 'base.js', depends = (common_js, jquery))
 data_loader = Resource(voteit_core_jslib, 'data_loader.js', depends = (base_js, pure_js,))
 unread_js = Resource(voteit_core_jslib, 'unread.js', depends = (base_js, data_loader))
 watcher_js = Resource(voteit_core_jslib, 'watcher.js', depends = (data_loader,))
+agenda_item_js = Resource(voteit_core_jslib, 'agenda_item.js', depends = (data_loader, pure_js, base_js, watcher_js))
 
 #voteit_bootstrap = Resource(voteit_core_csslib, 'voteit_bootstrap.css')
 #Warning, bundling causes this resource to fail. It has something to do with the css-map. (Probably not an accessible directory)
@@ -29,7 +30,7 @@ voteit_main_css = Resource(voteit_core_csslib, 'main.css', depends=(bootstrap_cs
 
 participants_js = Resource(voteit_core_jslib, 'participants.js', depends = (base_js, pure_js))
 
-# 
+#
 # #CSS and JS
 # #jquery
 # jquery_deform = Resource(deformlib, 'scripts/jquery-1.7.2.min.js')

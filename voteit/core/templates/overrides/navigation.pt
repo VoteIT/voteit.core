@@ -33,14 +33,7 @@
       </ul>
     </div><!--/.nav-collapse -->
   </div><!-- /.container-->
-  <div class="container-fluid msg-bar" data-flash-slot="fixed-msg-bar">
-    <div tal:define="tags request.current_tags()" tal:condition="tags" role="alert" class="alert alert-dismissable alert-warning">
-      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-      <span class="glyphicon glyphicon-filter"></span>
-      <span i18n:translate="">Only showing <tal:ts content="tags" i18n:name="tags"/></span>
-      <a href="${request.clear_tags_url(context)}" class="btn btn-default btn-xs" i18n:translate="">Show all</a>
-    </div>
-  </div>
+  <div class="container-fluid msg-bar" data-flash-slot="fixed-msg-bar"></div>
   <div class="container container-float-below">
     <div class="float-below" data-flash-slot="voteit-main"></div>
   </div>
