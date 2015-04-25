@@ -43,7 +43,8 @@
   $(document).ready(function() {
     voteit.discussion = new DiscussionHandler("${load_url}");
     voteit.discussion.fetch_data();
-    voteit.unread_notify("${request.resource_url(context, '_mark_read')}");
+    voteit.unread.url = "${request.resource_url(context, '_mark_read')}";
+    voteit.unread.notify();
   });
 </script>
 </tal:main>

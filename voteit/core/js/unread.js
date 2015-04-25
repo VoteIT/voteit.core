@@ -1,55 +1,70 @@
 /* Depends on base */
 
-voteit.unread_notify_timer = null;
-voteit.unread_notify_interval = 6000;
-voteit.unread_notify_url = null;
+var UnreadHandler = function() {
+  this.timer = null;
+  this.interval = 6000;
+  this.url = null;
 
-function unread_notify(url) {
-  if (typeof(url) !== 'undefined') voteit.unread_notify_url = url;
-  if (voteit.unread_notify_timer) {
-    voteit.unread_notify_timer = clearInterval(voteit.unread_notify_timer);
+  this.start = function() {
+    this.stop();
+    var that = this;
+    this.timer = setInterval(function() { that.notify(); }, this.interval);
   }
-  if (voteit.unread_notify_url) {
-    // Action URL set
+  this.stop = function() {
+    if (this.timer != null) {
+      this.timer = clearInterval(this.timer);
+    }
+  }
+  this.notify = function() {
+    this.stop();
+    
+    if (!this.url) {
+      this.start();
+      return false;
+    }
+    
     var unread_uids = [];
-    $("[data-unread]:visible").each( function() {
-      if ($(this).data('unread') === true) unread_uids.push( $(this).data('uid') );
+    $("[data-unread]:visible").each( function(i, val) {
+      if ($(val).data('unread') === true) unread_uids.push( $(val).data('uid') );
     });
+    
     if (unread_uids.length > 0) {
       // There's data to send
-      arche.do_request(voteit.unread_notify_url, {method: 'POST', data:{'read_uids': unread_uids}})
-      .always(function() {
-        voteit.unread_notify_timer = setInterval(voteit.unread_notify, voteit.unread_notify_interval);
-      })
-      .done(function(data) {
+      var request = arche.do_request(this.url, {method: 'POST', data:{'read_uids': unread_uids}});
+      var that = this;
+      request.always(function() {
+        that.start();
+      });
+      request.done(function(response) {
         //Remove uids here
-        if ('marked_read' in data) {
-          $(data['marked_read']).each(function() {
+        if ('marked_read' in response) {
+          $(response['marked_read']).each(function() {
             $('[data-uid=' + this + ']').data('unread', false);
-          })
+          });
         }
       });
     } else {
-      // Retry later - but since there was nothing to do, be a bit more slow...
-      voteit.unread_notify_timer = setInterval(voteit.unread_notify, voteit.unread_notify_interval);
+      // There were no unreads - restart
+      this.start();
     }
-  } else {
-    // No action URL set
-    voteit.unread_notify_timer = setInterval(voteit.unread_notify, voteit.unread_notify_interval);
   }
 }
-voteit.unread_notify = unread_notify;
+
+
+$(document).ready(function() {
+  voteit.unread = new UnreadHandler();
+});
+
 
 $(window).on("blur focus", function(e) {
   var prevType = $(this).data("prevType");
   if (prevType != e.type) {   //Reduce 'double fire' issues
     switch (e.type) {
       case "blur":
-        voteit.unread_notify_timer = clearInterval(voteit.unread_notify_timer);
+        if (typeof voteit.unread != 'undefined') voteit.unread.stop();
         break;
       case "focus":
-        voteit.unread_notify_timer = clearInterval(voteit.unread_notify_timer); //Just to make sure
-        voteit.unread_notify_timer = setInterval(voteit.unread_notify, voteit.unread_notify_interval);
+        if (typeof voteit.unread != 'undefined') voteit.unread.start();
         break;
     }
   }

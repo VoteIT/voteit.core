@@ -41,7 +41,8 @@
   $(document).ready(function() {
     voteit.proposals = new ProposalsHandler("${load_url}");
     voteit.proposals.fetch_data();
-    voteit.unread_notify("${request.resource_url(context, '_mark_read')}");
+    voteit.unread.url = "${request.resource_url(context, '_mark_read')}";
+    voteit.unread.notify();
   });
 </script>
 </tal:main>
