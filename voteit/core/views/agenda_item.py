@@ -120,6 +120,9 @@ class AgendaContentsJSON(BaseView):
         query = Eq('path', resource_path(self.context)) & Any('type_name', ['Proposal', 'DiscussionPost'])
         tags = set(self.request.GET.getall('tag'))
         tags.update(self.request.GET.getall('tag[]')) #jQuery bs...
+        if not self.request.is_xhr:
+            url = self.request.resource_url(self.context, query = {'tag': tags})
+            return HTTPFound(location = url)
         if tags:
             tags = [x.lower() for x in tags]
             query &= Any('tags', tags)
