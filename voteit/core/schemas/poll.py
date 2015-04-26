@@ -30,16 +30,14 @@ def proposal_choices_widget(node, kw):
     agenda_item = find_interface(context, IAgendaItem)
     if agenda_item is None:
         Exception("Couldn't find the agenda item from this polls context")
-        
     #Get valid proposals - should be in states 'published' to be selectable
+    #FIXME: Wrong sorting!
     for prop in agenda_item.get_content(iface=IProposal, states='published', sort_on='title'):
-        proposal_choices.add((prop.uid, prop.title, ))
-
+        proposal_choices.add((prop.uid, "#%s | %s" % (prop.aid, prop.title)))
     # get currently chosen proposals
     if IPoll.providedBy(context):
         for prop in context.get_proposal_objects():
             proposal_choices.add((prop.uid, prop.title, ))
-
     proposal_choices = sorted(proposal_choices, key=lambda proposal: proposal[1].lower())
     return deform.widget.CheckboxChoiceWidget(values=proposal_choices)
 
@@ -53,7 +51,7 @@ def deferred_default_poll_method(node, kw):
 def deferred_reject_proposal_title(node, kw):
     """ Translation strings as default values doesn't seem to work, so this method translates it. """
     request = kw['request']
-    msg = _(u"reject_proposal_title_default", default = u"Reject all proposals")
+    msg = _(u"reject_proposal_title_default", default = u"Reject")
     return request.localizer.translate(msg)
 
 
