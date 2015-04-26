@@ -12,6 +12,7 @@
     data-trigger="click focus"
     data-external-popover-loaded="false"
     data-placement="bottom"
+    tal:omit-tag="no_tag|False"
     title="${lookup and user.title or userid|''}"
     href="${request.get_userinfo_url(userid)}">
     <img tal:condition="portrait" tal:replace="structure user.get_image_tag(request = request)" />
