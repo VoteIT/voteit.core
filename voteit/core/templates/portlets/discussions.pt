@@ -19,6 +19,21 @@
       <span data-json="load_previous_msg" i18n:translate="">Show previous</span>
       <span data-actionmarker="glyphicon glyphicon-refresh rotate-me"></span>
     </a>
+    <a href="#"
+      data-ai-method="show_previous"
+      style="display: none;"
+      class="list-group-item">
+      <span class="glyphicon glyphicon-eye-open"></span>
+      <span i18n:translate="">Show previous</span>
+      <span data-filter-active style="display: none;" i18n:translate="">(within tag selection)</span>
+    </a>
+    <a href="#"
+      data-ai-method="hide_previous"
+      style="display: none;"
+      class="list-group-item">
+      <span class="glyphicon glyphicon-eye-close"></span>
+      <span i18n:translate="">Hide previous</span>
+    </a>
     <div data-discussion-posts>
       <div class="list-group-item" data-initial-loadstate>
         <span class="glyphicon glyphicon-refresh rotate-me"></span>
@@ -26,6 +41,21 @@
       </div>
     </div>
     <div tal:replace="structure view.render_template('voteit.core:templates/discussion_post.pt')"></div>
+    <a href="#"
+      data-ai-method="show_previous"
+      style="display: none;"
+      class="list-group-item">
+      <span class="glyphicon glyphicon-eye-open"></span>
+      <span i18n:translate="">Show previous</span>
+      <span data-filter-active style="display: none;" i18n:translate="">(within tag selection)</span>
+    </a>
+    <a href="#"
+      data-ai-method="hide_previous"
+      style="display: none;"
+      class="list-group-item">
+      <span class="glyphicon glyphicon-eye-close"></span>
+      <span i18n:translate="">Hide previous</span>
+    </a>
     <a href="#"
       style="display: none;"
       data-ai-method="load_next_url"

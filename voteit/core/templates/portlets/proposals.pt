@@ -11,6 +11,20 @@
         <span i18n:translate="">Proposals</span>
       </h4>
     </div>
+    <a class="list-group-item"
+      data-show-hidden="true"
+      data-tag-filter href="${request.resource_url(context, 'ai_filter.json')}">
+      <span class="glyphicon glyphicon-eye-open"></span>
+      <span i18n:translate="">Show hidden proposals</span>
+      <span data-filter-active style="display: none;" i18n:translate="">(within tag selection)</span>
+    </a>
+    <a class="list-group-item"
+      style="display: none;"
+      data-show-hidden="false"
+      data-tag-filter href="${request.resource_url(context, 'ai_filter.json')}">
+      <span class="glyphicon glyphicon-eye-close"></span>
+      <span i18n:translate="">Hide proposals</span>
+    </a>
     <div data-proposals>
       <div class="list-group-item">
         <span class="glyphicon glyphicon-refresh rotate-me"></span>
