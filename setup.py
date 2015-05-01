@@ -27,7 +27,6 @@ install_requires = (
     'pyramid_zcml',
     'pyramid_zodbconn',
     'repoze.catalog',
-    'repoze.evolution',
     'repoze.folder',
     'repoze.workflow',
     'webhelpers',
@@ -71,8 +70,6 @@ setup(name='voteit.core',
       entry_points = """\
       [paste.app_factory]
       main = voteit.core:main
-      [console_scripts]
-      evolve = voteit.core.scripts.evolve:main
       [fanstatic.libraries]
       voteit_core_csslib = voteit.core.fanstaticlib:voteit_core_csslib
       voteit_core_jslib = voteit.core.fanstaticlib:voteit_core_jslib
