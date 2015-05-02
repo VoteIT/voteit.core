@@ -97,15 +97,13 @@ ROOT_ROLES = ((ROLE_ADMIN, _(u'Administrator')),
               (ROLE_MEETING_CREATOR, _(u"Meeting creator")),)
 MEETING_ROLES = ((ROLE_MODERATOR, _(u'Moderator')),
                  (ROLE_VIEWER, _(u'View')),
-                 (ROLE_DISCUSS, _(u'Discuss (and view)')),
-                 (ROLE_PROPOSE, _(u'Propose (and view)')),
-                 (ROLE_VOTER, _(u'Voter (and view)')),
-                )
+                 (ROLE_DISCUSS, _(u'Discuss')),
+                 (ROLE_PROPOSE, _(u'Propose')),
+                 (ROLE_VOTER, _(u'Voter')),)
 STANDARD_ROLES = ((ROLE_VIEWER, _(u'View')),
-                  (ROLE_DISCUSS, _(u'Discuss (and view)')),
-                  (ROLE_PROPOSE, _(u'Propose (and view)')),
-                  (ROLE_VOTER, _(u'Voter (and view)')),
-                  )
+                  (ROLE_DISCUSS, _(u'Discuss')),
+                  (ROLE_PROPOSE, _(u'Propose')),
+                  (ROLE_VOTER, _(u'Voter')),)
 
 
 # An empty value tells the catalog to match anything, whereas when

@@ -334,11 +334,6 @@ class IInviteTicket(Interface):
                       "Used in combinaton with an email address to gain entry to a meeting.")
     sent_dates = Attribute("A list of dates when an email was sent. (Each resend gets saved here)")
     claimed_by = Attribute("The userid of the user who claimed (used) this ticket.")
-    
-    def send(request):
-        """ Send an invite or reminder to the email address that's set in
-            the email attribute. Each time will be logged in sent_dates.
-        """
 
     def claim(request):
         """ Handle claim of this ticket. Set permissions for meeting and

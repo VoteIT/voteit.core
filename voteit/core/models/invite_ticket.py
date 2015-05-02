@@ -1,18 +1,19 @@
-import string
 from random import choice
 from uuid import uuid4
+import string
 
 from arche.utils import send_email
 from arche.utils import utcnow
-from betahaus.viewcomponent import render_view_action
 from persistent.list import PersistentList
 from pyramid.exceptions import HTTPForbidden
+from pyramid.renderers import render
 from pyramid.traversal import find_interface
+from pyramid.traversal import find_root
 from repoze.folder import Folder
-from zope.interface import implementer
 from six import string_types
+from zope.interface import implementer
 
-from voteit.core import VoteITMF as _
+from voteit.core import _
 from voteit.core import security
 from voteit.core.models.interfaces import IInviteTicket
 from voteit.core.models.interfaces import IMeeting
@@ -23,8 +24,7 @@ SELECTABLE_ROLES = (security.ROLE_MODERATOR,
                     security.ROLE_DISCUSS,
                     security.ROLE_PROPOSE,
                     security.ROLE_VOTER,
-                    security.ROLE_VIEWER,
-                    )
+                    security.ROLE_VIEWER,)
 
 
 @implementer(IInviteTicket)
@@ -41,14 +41,12 @@ class InviteTicket(Folder, WorkflowAware):
     def content_type(self):
         return self.type_name #b/c
 
-    def __init__(self, email, roles, message = u"", sent_by = None):
+    def __init__(self, email, roles, sent_by = None):
         self.email = email.lower()
         for role in roles:
             if role not in SELECTABLE_ROLES:
                 raise ValueError("InviteTicket got '%s' as a role, and that isn't selectable." % role)
         self.roles = roles
-        assert isinstance(message, string_types)
-        self.message = message
         self.created = utcnow()
         self.closed = None
         self.claimed_by = None
@@ -57,15 +55,6 @@ class InviteTicket(Folder, WorkflowAware):
         self.sent_dates = PersistentList()
         self.uid = unicode(uuid4())
         super(InviteTicket, self).__init__()
-
-    def send(self, request, message = u""):
-        if self.closed: #Just as a precaution
-            return
-        meeting = find_interface(self, IMeeting)
-        html = render_view_action(self, request, 'email', 'invite_ticket', message = message)
-        subject = _(u"Invitation to ${meeting_title}", mapping = {'meeting_title': meeting.title})
-        if send_email(request, subject = subject, recipients = self.email, html = html, send_immediately = True):
-            self.sent_dates.append(utcnow())
 
     def claim(self, request):
         #Is the ticket open?
@@ -82,6 +71,35 @@ class InviteTicket(Folder, WorkflowAware):
         self.set_workflow_state(request, 'closed')
         self.closed = utcnow()
 
+def send_invite_ticket(ticket, request, message = ""):
+    if ticket.closed: #Just as a precaution
+        return
+    meeting = find_interface(ticket, IMeeting)
+    html = render_invite_ticket(ticket, request, message = message)
+    subject = _(u"Invitation to ${meeting_title}", mapping = {'meeting_title': meeting.title})
+    if send_email(request, subject = subject, recipients = ticket.email, html = html, send_immediately = True):
+        ticket.sent_dates.append(utcnow())
+
+def render_invite_ticket(ticket, request, message = "", **kw):
+    """ Render invite ticket email html.
+        Uses ticket as a context.
+    """
+    assert IInviteTicket.providedBy(ticket)
+    #FIXME: Include meeting logo in mail?
+    roles = dict(security.MEETING_ROLES)
+    meeting = find_interface(ticket, IMeeting)
+    root = find_root(meeting)
+    assert IMeeting.providedBy(meeting)
+    response = {}
+    response['access_link'] = request.resource_url(meeting, 'ticket',
+                                                   query = {'email': ticket.email, 'token': ticket.token})
+    response['message'] = message
+    response['meeting'] = meeting
+    response['context'] = ticket
+    response['contact_mail'] = meeting.get_field_value('meeting_mail_address')
+    response['sender_profile'] = root.users.get(ticket.sent_by)
+    response['roles'] = [roles.get(x) for x in ticket.roles]
+    return render('voteit.core:templates/email/invite_ticket_email.pt', response, request = request)
 
 def includeme(config):
     config.add_content_factory(InviteTicket)

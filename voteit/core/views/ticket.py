@@ -14,6 +14,7 @@ from voteit.core import _
 from voteit.core import security
 from voteit.core.fanstaticlib import voteit_manage_tickets_js
 from voteit.core.models.interfaces import IMeeting
+from voteit.core.models.invite_ticket import send_invite_ticket
 
 
 @view_defaults(context = IMeeting)
@@ -114,7 +115,7 @@ class TicketView(BaseView):
                     for email in data['email']:
                         ticket = self.context.invite_tickets[email]
                         if not ticket.closed:
-                            ticket.send(self.request, data['message'][0])
+                            send_invite_ticket(ticket, self.request, data['message'][0])
                             resent += 1
                         else:
                             aborted += 1
@@ -155,7 +156,7 @@ def send_tickets_action(context, request):
     emails = session['send_tickets.emails'][:20]
     message = session['send_tickets.message']
     for email in emails:
-        context.invite_tickets[email].send(request, message)
+        send_invite_ticket(context.invite_tickets[email], request, message = message)
         session['send_tickets.emails'].remove(email)
     if len(session['send_tickets.emails']) == 0:
         del session['send_tickets.emails']

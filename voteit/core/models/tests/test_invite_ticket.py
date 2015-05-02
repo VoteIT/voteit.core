@@ -13,6 +13,7 @@ from voteit.core import security
 
 
 class InviteTicketTests(unittest.TestCase):
+
     def setUp(self):
         self.config = testing.setUp()
 
@@ -29,31 +30,14 @@ class InviteTicketTests(unittest.TestCase):
 
     def test_verify_obj(self):
         self.assertTrue(verifyObject(IInviteTicket, self._cut('me@home.com', [security.ROLE_MODERATOR])))
-
-    def test_send_message_sent(self):
-        self.config.include('pyramid_chameleon')
-        self.config.include('pyramid_mailer.testing')
-        self.config.include('arche.testing')
-        self.config.scan('voteit.core.views.components.email')
-        self.config.include('voteit.core.models.invite_ticket')
-        meeting = _fixture(self.config)['m']
-        request = testing.DummyRequest()
-        obj = meeting.add_invite_ticket('me@home.com', [security.ROLE_MODERATOR, security.ROLE_DISCUSS], sent_by = 'admin')
-        mailer = get_mailer(request)
-        self.assertEqual(len(mailer.outbox), 0)
-        #Send
-        obj.send(request)
-        self.assertEqual(len(mailer.outbox), 1)
-        self.assertEqual(len(obj.sent_dates), 1)
         
     def test_claim_ticket(self):
         self.config.include('arche.testing')
-        self.config.scan('voteit.core.views.components.email')
         self.config.include('voteit.core.models.invite_ticket')
         meeting = _fixture(self.config)['m']
         self.config.testing_securitypolicy(userid='some_user',
                                            permissive=True)
-        obj = meeting.add_invite_ticket('this@email.com', [security.ROLE_MODERATOR, security.ROLE_DISCUSS])
+        obj = meeting.add_invite_ticket('this@email.com', [security.ROLE_MODERATOR, security.ROLE_DISCUSS, security.ROLE_VIEWER])
         request = testing.DummyRequest()
         obj.claim(request)
         self.assertTrue(isinstance(obj.closed, datetime))
@@ -63,7 +47,6 @@ class InviteTicketTests(unittest.TestCase):
 
     def test_claim_closed(self):
         self.config.include('arche.testing')
-        self.config.scan('voteit.core.views.components.email')
         self.config.include('voteit.core.models.invite_ticket')
         meeting = _fixture(self.config)['m']
         self.config.testing_securitypolicy(userid='some_user',
@@ -76,7 +59,6 @@ class InviteTicketTests(unittest.TestCase):
 
     def test_claim_unathenticated(self):
         self.config.include('arche.testing')
-        self.config.scan('voteit.core.views.components.email')
         self.config.include('voteit.core.models.invite_ticket')
         meeting = _fixture(self.config)['m']
         request = testing.DummyRequest()
@@ -90,6 +72,21 @@ class InviteTicketTests(unittest.TestCase):
         obj = self._cut('HELLO@WORLD.com', [security.ROLE_DISCUSS])
         self.assertEqual(obj.email, 'hello@world.com')
 
+    def test_send_invite_ticket(self):
+        self.config.include('pyramid_chameleon')
+        self.config.include('pyramid_mailer.testing')
+        self.config.include('arche.testing')
+        self.config.include('voteit.core.models.invite_ticket')
+        from voteit.core.models.invite_ticket import send_invite_ticket
+        meeting = _fixture(self.config)['m']
+        request = testing.DummyRequest()
+        obj = meeting.add_invite_ticket('me@home.com', [security.ROLE_MODERATOR, security.ROLE_DISCUSS], sent_by = 'admin')
+        mailer = get_mailer(request)
+        self.assertEqual(len(mailer.outbox), 0)
+        #Send
+        send_invite_ticket(obj, request, message = 'Hello world')
+        self.assertEqual(len(mailer.outbox), 1)
+        self.assertEqual(len(obj.sent_dates), 1)
 
 def _fixture(config):
     from voteit.core.models.meeting import Meeting
