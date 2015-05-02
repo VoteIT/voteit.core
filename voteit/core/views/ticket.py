@@ -14,6 +14,7 @@ from voteit.core import _
 from voteit.core import security
 from voteit.core.fanstaticlib import voteit_manage_tickets_js
 from voteit.core.models.interfaces import IMeeting
+from voteit.core.models.invite_ticket import claim_ticket
 from voteit.core.models.invite_ticket import send_invite_ticket
 
 
@@ -52,7 +53,7 @@ class TicketView(BaseView):
                 return HTTPFound(location = url)
             #Everything in order, claim ticket
             ticket = self.context.invite_tickets[appstruct['email']]
-            ticket.claim(self.request)
+            claim_ticket(ticket, self.request, self.request.authenticated_userid)
             self.flash_messages.add(_(u"You've been granted access to the meeting. Welcome!"))
             url = self.request.resource_url(self.context)
             return HTTPFound(location=url)

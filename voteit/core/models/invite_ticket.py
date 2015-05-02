@@ -56,20 +56,25 @@ class InviteTicket(Folder, WorkflowAware):
         self.uid = unicode(uuid4())
         super(InviteTicket, self).__init__()
 
-    def claim(self, request):
-        #Is the ticket open?
-        if self.get_workflow_state() != 'open':
-            raise HTTPForbidden("Access already granted with this ticket")
-        #Find required resources and do some basic validation
-        meeting = find_interface(self, IMeeting)
-        assert meeting
-        userid = request.authenticated_userid
-        if userid is None:
-            raise HTTPForbidden("You can't claim a ticket unless you're authenticated.")
-        meeting.add_groups(userid, self.roles)
-        self.claimed_by = userid
-        self.set_workflow_state(request, 'closed')
-        self.closed = utcnow()
+def claim_ticket(ticket, request, user_identifier):
+     #Is the ticket open?
+    if ticket.get_workflow_state() != 'open':
+        raise HTTPForbidden("Access already granted with this ticket")
+    #Find required resources and do some basic validation
+    meeting = find_interface(ticket, IMeeting)
+    root = find_root(ticket)
+    assert meeting
+    assert root
+    if '@' in user_identifier:
+        user = root['users'].get_user_by_email(user_identifier, None)
+    else:
+        user = root['users'].get(user_identifier, None)
+    if user is None:
+        raise HTTPForbidden("No user could be looked up via: %r" % user_identifier)
+    meeting.add_groups(user.userid, ticket.roles)
+    ticket.claimed_by = user.userid
+    ticket.set_workflow_state(request, 'closed')
+    ticket.closed = utcnow()
 
 def send_invite_ticket(ticket, request, message = ""):
     if ticket.closed: #Just as a precaution

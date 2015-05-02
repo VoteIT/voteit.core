@@ -335,11 +335,6 @@ class IInviteTicket(Interface):
     sent_dates = Attribute("A list of dates when an email was sent. (Each resend gets saved here)")
     claimed_by = Attribute("The userid of the user who claimed (used) this ticket.")
 
-    def claim(request):
-        """ Handle claim of this ticket. Set permissions for meeting and
-            set the ticket as closed.
-        """
-
 
 class IAgendaTemplates(Interface):
     """ Contains all Agenda templates. """
