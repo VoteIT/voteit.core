@@ -1,16 +1,11 @@
-from BTrees.OOBTree import OOBTree
-from pyramid.location import lineage
-from zope.interface import implementer
-from zope.component.event import objectEventNotify
-from pyramid.interfaces import IAuthenticationPolicy
-from pyramid.threadlocal import get_current_registry
-from arche.security import authz_context
-from arche.resources import LocalRolesMixin
 from arche.events import ObjectUpdatedEvent
+from arche.resources import LocalRolesMixin
+from pyramid.location import lineage
+from zope.component.event import objectEventNotify
+from zope.interface import implementer
 
 from voteit.core.models.interfaces import ISecurityAware
 from voteit.core import security
-from voteit.core import VoteITMF as _
 
 
 NON_INHERITED_GROUPS = ('role:Owner',)
@@ -25,42 +20,19 @@ class SecurityAware(LocalRolesMixin):
     """ This is a compatibility-class for arche
     """
 
-#     @property
-#     def _groups(self):
-#         try:
-#             return self.__groups__
-#         except AttributeError:
-#             self.__groups__ = OOBTree()
-#             return self.__groups__
-
     def get_groups(self, principal):
-        return self.local_roles.get(principal)
-        #reg = get_current_registry()
-        #authn_policy = reg.queryUtility(IAuthenticationPolicy)
-        #with authz_context(context, request):
-        #    return authn_policy.effective_principals(request)
-
-    def set_groups(self, principal, groups, event = True):
-        self.local_roles[principal] = groups
-
-    def add_groups(self, principal, groups, event = True):
-        current = set(self.local_roles.get(principal, ()))
-        groups = current | set(groups)
-        self.local_roles[principal] = groups
-
-    def get_groups(self, principal):
-         groups = set()
-         for location in lineage(self):
-             location_groups = location.local_roles
-             try:
-                 if self is location:
-                     groups.update(location_groups[principal])
-                 else:
-                     #FIXME: non inherited groups from Arche
-                     groups.update([x for x in location_groups[principal] if x not in NON_INHERITED_GROUPS])
-             except KeyError:
-                 continue
-         return tuple(groups)
+        groups = set()
+        for location in lineage(self):
+            location_groups = location.local_roles
+            try:
+                if self is location:
+                    groups.update(location_groups[principal])
+                else:
+                    #FIXME: non inherited groups from Arche
+                    groups.update([x for x in location_groups[principal] if x not in NON_INHERITED_GROUPS])
+            except KeyError:
+                continue
+        return tuple(groups)
 
     def check_groups(self, groups):
         self._check_groups(groups)
@@ -78,7 +50,7 @@ class SecurityAware(LocalRolesMixin):
         groups.update(self.get_groups(principal))
         #Delegate check and set to set_groups
         self.set_groups(principal, groups, event = event)
-# 
+
     def del_groups(self, principal, groups, event = True):
         if isinstance(groups, basestring):
             groups = set([groups])
@@ -88,7 +60,7 @@ class SecurityAware(LocalRolesMixin):
         new_groups = current - groups
         #Delegate check and set to set_groups
         self.set_groups(principal, new_groups, event = event)
-# 
+
     def set_groups(self, principal, groups, event = True):
         changed = False
         if not groups:
@@ -102,14 +74,14 @@ class SecurityAware(LocalRolesMixin):
                 changed = True
         if changed and event:
             self._notify()
-# 
+
     def get_security(self):
         userids_and_groups = []
         for userid in self.local_roles.keys():
             userids_and_groups.append({'userid': userid,
                                        'groups': self.get_groups(userid)})
         return tuple(userids_and_groups)
- 
+
     def set_security(self, value, event = True):
         submitted_userids = [x['userid'] for x in value]
         current_userids = self.local_roles.keys()
@@ -120,7 +92,7 @@ class SecurityAware(LocalRolesMixin):
             self.set_groups(item['userid'], item['groups'], event = False)
         if event:
             self._notify()
-# 
+
     def _notify(self):
         #Only update specific index?
         objectEventNotify(ObjectUpdatedEvent(self))
@@ -129,4 +101,3 @@ class SecurityAware(LocalRolesMixin):
         for group in groups:
             if not group.startswith(NAMESPACES):
                 raise ValueError('Groups need to start with either "group:" or "role:"')
-
