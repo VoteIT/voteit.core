@@ -5,11 +5,11 @@ import string
 from arche.utils import send_email
 from arche.utils import utcnow
 from persistent.list import PersistentList
+from persistent import Persistent
 from pyramid.exceptions import HTTPForbidden
 from pyramid.renderers import render
 from pyramid.traversal import find_interface
 from pyramid.traversal import find_root
-from repoze.folder import Folder
 from six import string_types
 from zope.interface import implementer
 
@@ -28,7 +28,7 @@ SELECTABLE_ROLES = (security.ROLE_MODERATOR,
 
 
 @implementer(IInviteTicket)
-class InviteTicket(Folder, WorkflowAware):
+class InviteTicket(Persistent, WorkflowAware):
     """ Invite ticket. Send these to give access to new users.
         See :mod:`voteit.core.models.interfaces.IInviteTicket`.
         All methods are documented in the interface of this class.
