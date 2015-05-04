@@ -134,7 +134,7 @@ class AgendaContentsJSON(BaseView):
         if show_hidden == 'false': #js...
             show_hidden = False
         if not show_hidden:
-            hidden_states = self.request.meeting.hide_proposal_states
+            hidden_states = tuple(self.request.meeting.hide_proposal_states)
             query &= NotAny('workflow_state', hidden_states)
         response = {'show_docids': list(self.catalog_query(query)),
                     'hidden_states': hidden_states,
