@@ -16,6 +16,7 @@ from voteit.core.fanstaticlib import voteit_manage_tickets_js
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.invite_ticket import claim_ticket
 from voteit.core.models.invite_ticket import send_invite_ticket
+from voteit.core.models.invite_ticket import claim_and_send_notification
 
 
 @view_defaults(context = IMeeting)
@@ -150,19 +151,26 @@ class TicketView(BaseView):
     def send_tickets(self):
         return {'emails': self.request.session.get('send_tickets.emails', ())}
 
-
-@view_config(name = "send_tickets", context = IMeeting, renderer = "json", permission = security.MANAGE_GROUPS, xhr = True)
-def send_tickets_action(context, request):
-    session = request.session
-    emails = session['send_tickets.emails'][:20]
-    message = session['send_tickets.message']
-    for email in emails:
-        send_invite_ticket(context.invite_tickets[email], request, message = message)
-        session['send_tickets.emails'].remove(email)
-    if len(session['send_tickets.emails']) == 0:
-        del session['send_tickets.emails']
-        del session['send_tickets.message']
-    return {'sent': len(emails), 'remaining': len(session.get('send_tickets.emails', ()))}
+    @view_config(name = "send_tickets", renderer = "json", permission = security.MANAGE_GROUPS, xhr = True)
+    def send_tickets_action():
+        session = self.request.session
+        emails = session['send_tickets.emails'][:20]
+        message = session['send_tickets.message']
+        _marker = object()
+        for email in emails:
+            ticket = self.context.invite_tickets[email]
+            #Check if email exists and is validated
+            #If it does exist, use the ticket and then notify the user instead
+            user = self.root['users'].get_user_by_email(email, default = _marker, only_validated = True)
+            if user != _marker:
+                claim_and_send_notification(ticket, self.request, message = message)
+            else:
+                send_invite_ticket(ticket, self.request, message = message)
+            session['send_tickets.emails'].remove(email)
+        if len(session['send_tickets.emails']) == 0:
+            del session['send_tickets.emails']
+            del session['send_tickets.message']
+        return {'sent': len(emails), 'remaining': len(session.get('send_tickets.emails', ()))}
 
 
 @view_config(name = "add_tickets",

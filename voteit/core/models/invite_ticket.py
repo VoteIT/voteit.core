@@ -75,6 +75,7 @@ def claim_ticket(ticket, request, user_identifier):
     ticket.claimed_by = user.userid
     ticket.set_workflow_state(request, 'closed')
     ticket.closed = utcnow()
+    return user
 
 def send_invite_ticket(ticket, request, message = ""):
     if ticket.closed: #Just as a precaution
@@ -105,6 +106,35 @@ def render_invite_ticket(ticket, request, message = "", **kw):
     response['sender_profile'] = root.users.get(ticket.sent_by)
     response['roles'] = [roles.get(x) for x in ticket.roles]
     return render('voteit.core:templates/email/invite_ticket_email.pt', response, request = request)
+
+def claim_and_send_notification(ticket, request, message = ""):
+    """ When a ticket was added for a user that already
+        has a validated email address, that ticket should be
+        used right away, and the user notified.
+    """
+    if ticket.closed: #Just as a precaution
+        return
+    user = claim_ticket(ticket, request, ticket.email)
+    meeting = find_interface(ticket, IMeeting)
+    html = render_claimed_ticket_notification(ticket, request, message = message, user = user)
+    subject = _(u"Added to meeting: ${meeting_title}", mapping = {'meeting_title': meeting.title})
+    if send_email(request, subject = subject, recipients = ticket.email, html = html, send_immediately = True):
+        ticket.sent_dates.append(utcnow())
+
+def render_claimed_ticket_notification(ticket, request, message = "", user = None, **kw):
+    assert IInviteTicket.providedBy(ticket)
+    roles = dict(security.MEETING_ROLES)
+    meeting = find_interface(ticket, IMeeting)
+    root = find_root(meeting)
+    assert IMeeting.providedBy(meeting)
+    response = {}
+    response['message'] = message
+    response['meeting'] = meeting
+    response['context'] = ticket
+    response['contact_mail'] = meeting.get_field_value('meeting_mail_address')
+    response['sender_profile'] = root.users.get(ticket.sent_by)
+    response['roles'] = [roles.get(x) for x in ticket.roles]
+    return render('voteit.core:templates/email/claimed_ticket_email.pt', response, request = request)
 
 def includeme(config):
     config.add_content_factory(InviteTicket)
