@@ -152,7 +152,7 @@ class TicketView(BaseView):
         return {'emails': self.request.session.get('send_tickets.emails', ())}
 
     @view_config(name = "send_tickets", renderer = "json", permission = security.MANAGE_GROUPS, xhr = True)
-    def send_tickets_action():
+    def send_tickets_action(self):
         session = self.request.session
         emails = session['send_tickets.emails'][:20]
         message = session['send_tickets.message']
