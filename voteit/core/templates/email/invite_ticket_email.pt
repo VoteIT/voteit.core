@@ -5,21 +5,21 @@
 <body>
 
 <p>
-    <tal:ts i18n:translate="">You've just received a meeting entry ticket to
-    <b i18n:name="meeting_title" tal:content="meeting.title">Meeting title</b>.</tal:ts>
+  <tal:ts i18n:translate="">You've just received a meeting entry ticket to
+  <b i18n:name="meeting_title" tal:content="meeting.title">Meeting title</b>.</tal:ts>
 <tal:sender:profile condition="sender_profile" i18n:translate="">It was sent to you by
-    <b i18n:name="sender_name" tal:content="sender_profile.title">sender name</b>.
+  <b i18n:name="sender_name" tal:content="sender_profile.title">sender name</b>.
 </tal:sender:profile>
 </p>
 
-<tal:message condition="message">
+<tal:message condition=message>
 <h3 i18n:translate="">Message</h3>
 <p>${message}</p>
 </tal:message>
 
 <p><tal:ts i18n:translate="">The link below grant you the following permissions within the meeting:</tal:ts>
 <ul>
-    <li tal:repeat="role roles" tal:content="role">Role</li>
+  <li tal:repeat="role roles" tal:content="role">Role</li>
 </ul>
 </p>
 <p>
@@ -30,7 +30,7 @@
 <h3 i18n:translate="">Contact</h3>
 <p>
 <tal:ts i18n:translate="">The contact person for this meeting is 
-<b i18n:name="contact_person_name" tal:content="meeting.get_field_value('meeting_mail_name')">contact person name</b></tal:ts>
+<b i18n:name="contact_person_name" tal:content="meeting.meeting_mail_name">contact person name</b></tal:ts>
 <tal:mail condition="contact_mail" i18n:translate="">
 and can be reached on <a href="mailto:${contact_mail}" i18n:name="contact_mail" tal:content="contact_mail">jane.doe@voteit.se</a>
 </tal:mail>

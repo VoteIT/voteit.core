@@ -5,6 +5,7 @@ def includeme(config):
     config.include('.agenda_templates')
     config.include('.catalog')
     config.include('.discussion_post')
+    config.include('.evolver')
     config.include('.fanstatic_resources')
     config.include('.flash_messages')
     config.include('.invite_ticket')

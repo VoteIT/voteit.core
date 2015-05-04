@@ -14,6 +14,9 @@ from voteit.core import _
 from voteit.core import security
 from voteit.core.fanstaticlib import voteit_manage_tickets_js
 from voteit.core.models.interfaces import IMeeting
+from voteit.core.models.invite_ticket import claim_ticket
+from voteit.core.models.invite_ticket import send_invite_ticket
+from voteit.core.models.invite_ticket import claim_and_send_notification
 
 
 @view_defaults(context = IMeeting)
@@ -51,7 +54,7 @@ class TicketView(BaseView):
                 return HTTPFound(location = url)
             #Everything in order, claim ticket
             ticket = self.context.invite_tickets[appstruct['email']]
-            ticket.claim(self.request)
+            claim_ticket(ticket, self.request, self.request.authenticated_userid)
             self.flash_messages.add(_(u"You've been granted access to the meeting. Welcome!"))
             url = self.request.resource_url(self.context)
             return HTTPFound(location=url)
@@ -114,7 +117,7 @@ class TicketView(BaseView):
                     for email in data['email']:
                         ticket = self.context.invite_tickets[email]
                         if not ticket.closed:
-                            ticket.send(self.request, data['message'][0])
+                            send_invite_ticket(ticket, self.request, data['message'][0])
                             resent += 1
                         else:
                             aborted += 1
@@ -148,19 +151,26 @@ class TicketView(BaseView):
     def send_tickets(self):
         return {'emails': self.request.session.get('send_tickets.emails', ())}
 
-
-@view_config(name = "send_tickets", context = IMeeting, renderer = "json", permission = security.MANAGE_GROUPS, xhr = True)
-def send_tickets_action(context, request):
-    session = request.session
-    emails = session['send_tickets.emails'][:20]
-    message = session['send_tickets.message']
-    for email in emails:
-        context.invite_tickets[email].send(request, message)
-        session['send_tickets.emails'].remove(email)
-    if len(session['send_tickets.emails']) == 0:
-        del session['send_tickets.emails']
-        del session['send_tickets.message']
-    return {'sent': len(emails), 'remaining': len(session.get('send_tickets.emails', ()))}
+    @view_config(name = "send_tickets", renderer = "json", permission = security.MANAGE_GROUPS, xhr = True)
+    def send_tickets_action():
+        session = self.request.session
+        emails = session['send_tickets.emails'][:20]
+        message = session['send_tickets.message']
+        _marker = object()
+        for email in emails:
+            ticket = self.context.invite_tickets[email]
+            #Check if email exists and is validated
+            #If it does exist, use the ticket and then notify the user instead
+            user = self.root['users'].get_user_by_email(email, default = _marker, only_validated = True)
+            if user != _marker:
+                claim_and_send_notification(ticket, self.request, message = message)
+            else:
+                send_invite_ticket(ticket, self.request, message = message)
+            session['send_tickets.emails'].remove(email)
+        if len(session['send_tickets.emails']) == 0:
+            del session['send_tickets.emails']
+            del session['send_tickets.message']
+        return {'sent': len(emails), 'remaining': len(session.get('send_tickets.emails', ()))}
 
 
 @view_config(name = "add_tickets",
