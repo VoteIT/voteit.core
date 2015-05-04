@@ -53,3 +53,8 @@ def metadata(context, request, va, **kw):
              directives = {'[data-uid]@data-uid': 'obj.uid'})
 def uid(context, request, va, **kw):
     return context.uid
+
+@view_action('proposal_json', 'hidden_wf_state',
+             directives = {'[data-type-name="Proposal"]@data-hidden-wf-state': 'obj.hidden_wf_state'})
+def hidden_wf_state(context, request, va, **kw):
+    return context.get_workflow_state() in request.meeting.hide_proposal_states

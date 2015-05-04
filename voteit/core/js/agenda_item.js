@@ -6,23 +6,38 @@ var ProposalsHandler = function (url) {
   this.tpl = $('[data-template="proposal"]').clone();
   $('[data-template="proposal"]').remove();
   this.base_directive = {'[data-template="proposal"]': {'obj<-contents': {}}};
-}
-ProposalsHandler.prototype.fetch_data = function() {
-  var request = arche.do_request(this.url);
-  var that = this;
-  request.done(function(response) { that.handle_response(response); });
-}
-ProposalsHandler.prototype.handle_response = function(response) {
-  var directive = this.base_directive;
-  directive['[data-template="proposal"]']['obj<-contents'] = response['directives'];
-  directive['[data-template="proposal"]']['obj<-contents']['[data-unread]@class+'] = function(a) {
-    if (a.item['unread'] == true) return ' list-group-item-unread';
-  }
-  directive['[data-template="proposal"]']['obj<-contents']['[data-unread]@data-unread'] = "obj.unread";
 
-  $('[data-proposals]').html(this.tpl.clone());
-  $('[data-proposals]').render(response, directive);
-  voteit.ai_filter.apply_filter(response['show_docids']);
+  this.fetch_data = function(hidden) {
+    var data = {};
+    if (hidden === true) data['hidden'] = 1;
+    data['tag'] = voteit.ai_filter.filter_tags;
+    var request = arche.do_request(this.url, {data: data});
+    var that = this;
+    request.done(function(response) {
+      that.handle_response(response);
+      if (hidden === true) {
+        $('[data-load-hidden-proposals]').hide();
+        $('[data-remove-hidden-proposals]').show();
+      }
+    });
+  }
+
+  this.handle_response = function(response) {
+    var directive = this.base_directive;
+    directive['[data-template="proposal"]']['obj<-contents'] = response['directives'];
+    directive['[data-template="proposal"]']['obj<-contents']['[data-unread]@class+'] = function(a) {
+      if (a.item['unread'] == true) return ' list-group-item-unread';
+    }
+    directive['[data-template="proposal"]']['obj<-contents']['[data-unread]@data-unread'] = "obj.unread";
+    
+    $('[data-proposals] [data-initial-loadstate]').remove();
+    
+    var out = $('<div class="dummy"/>')
+    out.html(this.tpl.clone())  
+    out = out.render(response, directive);
+    $('[data-proposals]').append(out.children());
+    voteit.ai_filter.apply_filter(response['show_docids']);
+  }
 }
 
 /* DISCUSSION */
@@ -112,7 +127,6 @@ DiscussionHandler.prototype.hide_previous = function(event) {
 DiscussionHandler.prototype.show_previous = function(event) {
   if (typeof event != 'undefined') event.preventDefault();
   voteit.ai_filter.apply_filter();
-  //$('[data-type-name="DiscussionPost"]').slideDown();
   $('[data-ai-method="hide_previous"]').show();
   $('[data-ai-method="show_previous"]').hide();
 }
@@ -121,14 +135,31 @@ DiscussionHandler.prototype.show_previous = function(event) {
 /* FILTERING */
 var FilterHandler = function() {
   this.filter_tags = [];
-  this.show_hidden = false;
   this.current_docids = [];
+
+  this.scroll_to = function (selector, offset) {
+    var offset = typeof offset == 'undefined' ? -200 : offset;
+    $('html, body').animate({scrollTop: $(selector).offset().top + offset}, 200);
+  }
+
+  this.get_lowest_selector = function (selectors) {
+    var lowest = 0;
+    var selector = null
+    $.each(selectors, function(i, val) {
+      if ($(val).length > 0) {
+        if ($(val).offset().top > lowest) {
+          lowest = $(val).offset().top;
+          selector = val;
+        }
+      }
+    });
+    if (selector == null) throw "No selector found";
+    return selector;
+  }
 }
 
 FilterHandler.prototype.apply_filter = function(show_docids) {
-  if (typeof show_docids != 'undefined') {
-    this.current_docids = show_docids;
-  }
+  if (typeof show_docids != 'undefined') this.current_docids = show_docids;
   $('[data-type-name]').hide();
   $.each(this.current_docids, function(i, val) {
     $('[data-docid="' + val + '"]').show();
@@ -148,6 +179,7 @@ FilterHandler.prototype.handle_filter_response = function(response) {
   } else {
     this.reset();
   }
+  this.scroll_to(this.get_lowest_selector(['[data-type-name="Proposal"]:visible:last', '[data-type-name="DiscussionPost"]:visible:last']))
 }
 
 FilterHandler.prototype.reset = function() {
@@ -159,40 +191,14 @@ FilterHandler.prototype.reset = function() {
 FilterHandler.prototype.handle_filter_update = function(event) {
   event.preventDefault();
   var url = $(event.currentTarget).attr('href');
-  if ($(event.currentTarget).data('show-hidden') == true) {
-    this.show_hidden = true;
-    $('[data-show-hidden="true"]').hide();
-    $('[data-show-hidden="false"]').show();
-  }
-  if ($(event.currentTarget).data('show-hidden') == false) {
-    this.show_hidden = false;
-    $('[data-show-hidden="true"]').show();
-    $('[data-show-hidden="false"]').hide();
-  }
   if ($(event.currentTarget).data('tag-reset') == true) {
     this.reset();
   }
-  
   this.request_update(url);
-  /* FIXME: Should the filter change and update if other things aren't loaded?
-   * Must require tags to be set too
-   * 
-  if (typeof voteit.discussion != 'undefined' && voteit.discussion.previous_fetched == false) {
-    var request = voteit.discussion.load_previous();
-    var that = this;
-    if (typeof request != 'undefined') {
-      request.done(function() {
-        that.request_update(url);
-      });
-    }
-  } else {
-    this.request_update(url);
-  }
-  */
 }
 
 FilterHandler.prototype.request_update = function(url) {
-  var request = arche.do_request(url, {data: {show_hidden: this.show_hidden, tag: this.filter_tags}});
+  var request = arche.do_request(url, {data: {tag: this.filter_tags}});
   var that = this;
   request.done(function(response) { that.handle_filter_response(response); });
 }
@@ -220,6 +226,18 @@ $(document).ready(function() {
 
   $('body').on('click', '[data-tag-filter]', function(event) {
     voteit.ai_filter.handle_filter_update(event);
+  });
+
+  $('body').on('click', '[data-load-hidden-proposals]', function(event) {
+    event.preventDefault();
+    voteit.proposals.fetch_data(true);
+  });
+  $('body').on('click', '[data-remove-hidden-proposals]', function(event) {
+    event.preventDefault();
+    $('[data-hidden-wf-state="true"]').remove();
+    $('[data-load-hidden-proposals]').show();
+    $('[data-remove-hidden-proposals]').hide();
+    voteit.ai_filter.scroll_to('[data-load-hidden-proposals]');
   });
 
 });

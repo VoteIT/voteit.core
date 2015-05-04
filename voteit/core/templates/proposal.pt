@@ -7,7 +7,8 @@
   data-type-name="Proposal"
   data-uid=""
   data-unread="false"
-  data-docid="">
+  data-docid=""
+  data-hidden-wf-state="">
   <div class="text">
     <span data-json="cogwheel"></span>
     <span data-json="creators_info"></span>

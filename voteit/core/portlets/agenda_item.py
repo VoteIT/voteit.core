@@ -19,6 +19,7 @@ from voteit.core import security
 from voteit.core.fanstaticlib import agenda_item_js
 from voteit.core.helpers import get_docids_to_show
 from voteit.core.models.interfaces import IAgendaItem
+from voteit.core.models.interfaces import IProposal
 
 #FIXME: Loading required resources for inline forms is still a problem.
 
@@ -52,9 +53,12 @@ class ProposalsPortlet(ListingPortlet):
             if tags:
                 query['tag'] = [x.lower() for x in tags]
             url = request.resource_url(context, self.view_name, query = query)
+            ai_state_titles = request.get_wf_state_titles(IProposal, 'Proposal')
+            hidden_state_titles = ", ".join([ai_state_titles.get(x, x) for x in request.meeting.hide_proposal_states])
             response = {'portlet':
                         self.portlet,
                         'view': view,
+                        'hidden_state_titles': hidden_state_titles,
                         'load_url': url}
             return render(self.template, response, request = request)
 

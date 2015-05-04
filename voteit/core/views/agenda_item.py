@@ -57,10 +57,15 @@ class AgendaContentsJSON(BaseView):
 
     @view_config(name = 'ai_proposals.json')
     def proposals_data(self):
+        hidden = bool(self.request.GET.get('hidden', False))
         query = Eq('path', resource_path(self.context)) & Eq('type_name', 'Proposal')
+        if hidden:
+            query &= Any('workflow_state', tuple(self.request.meeting.hide_proposal_states))
+        else:
+            query &= NotAny('workflow_state', tuple(self.request.meeting.hide_proposal_states))
         response = {}
         docids = tuple(self.catalog_query(query, sort_index = 'created'))
-        unread_docids = tuple(self.catalog_query(query & Eq('unread', self.request.authenticated_userid), sort_index = 'created'))
+        unread_docids = tuple(self.catalog_query(query & Eq('unread', self.request.authenticated_userid)))
         response['contents'] = []
         response['directives'] = self.add_directives('proposal_json')
         for docid in docids:
@@ -74,8 +79,6 @@ class AgendaContentsJSON(BaseView):
     @view_config(name = 'ai_discussion_posts.json')
     def discussion_data(self):
         query = {}
-        #FIXME: Visibility of discussion posts
-        #query['tags'] = [x.lower() for x in self.request.GET.getall('tag')]
         query['limit'] = 10
         if self.request.GET.get('previous', False):
             query['limit'] = 0
@@ -93,7 +96,6 @@ class AgendaContentsJSON(BaseView):
                                                      as_type = 'dict',
                                                      empty_val = ''))
             response['contents'].append(result)
-        #response['contents'] = self.resolve_docids(response['batch']) #Generator
         if response['previous'] and response['batch']:
             end_before = response['batch'][0]
             msg = _("Show ${num} previous post(s)",
@@ -129,15 +131,7 @@ class AgendaContentsJSON(BaseView):
             query &= Any('tags', tags)
         else:
             tags = []#sets don't work with json
-        hidden_states = []
-        show_hidden = self.request.GET.get('show_hidden', False)
-        if show_hidden == 'false': #js...
-            show_hidden = False
-        if not show_hidden:
-            hidden_states = tuple(self.request.meeting.hide_proposal_states)
-            query &= NotAny('workflow_state', hidden_states)
         response = {'show_docids': list(self.catalog_query(query)),
-                    'hidden_states': hidden_states,
                     'tags': tags}
         if tags:
             response['filter_msg'] = render('voteit.core:templates/snippets/filter_msg.pt', {}, request = self.request)
