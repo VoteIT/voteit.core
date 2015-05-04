@@ -156,51 +156,52 @@ var FilterHandler = function() {
     if (selector == null) throw "No selector found";
     return selector;
   }
-}
 
-FilterHandler.prototype.apply_filter = function(show_docids) {
-  if (typeof show_docids != 'undefined') this.current_docids = show_docids;
-  $('[data-type-name]').hide();
-  $.each(this.current_docids, function(i, val) {
-    $('[data-docid="' + val + '"]').show();
-  });
-}
-FilterHandler.prototype.handle_filter_response = function(response) {
-  //More stuff here later...
-  this.apply_filter(response['show_docids']);
-  //Good enough test
-  if (JSON.stringify(response['tags']) == JSON.stringify(this.filter_tags)) return false;
-  this.filter_tags = response['tags'];
-  if (response['tags'].length > 0) {
-    $('[data-filter-active]').show();
-    $('#tag-filter-notification').remove();
-    arche.create_flash_message(response['filter_msg'],
-        {id: 'tag-filter-notification', slot: 'fixed-msg-bar', auto_destruct: false, type: 'warning'});      
-  } else {
-    this.reset();
+  this.apply_filter = function(show_docids) {
+    if (typeof show_docids != 'undefined') this.current_docids = show_docids;
+    $('[data-type-name]').hide();
+    $.each(this.current_docids, function(i, val) {
+      $('[data-docid="' + val + '"]').show();
+    });
   }
-  this.scroll_to(this.get_lowest_selector(['[data-type-name="Proposal"]:visible:last', '[data-type-name="DiscussionPost"]:visible:last']))
-}
 
-FilterHandler.prototype.reset = function() {
-  this.filter_tags = [];
-  $('[data-filter-active]').hide();
-  $('#tag-filter-notification').remove();  
-}
-
-FilterHandler.prototype.handle_filter_update = function(event) {
-  event.preventDefault();
-  var url = $(event.currentTarget).attr('href');
-  if ($(event.currentTarget).data('tag-reset') == true) {
-    this.reset();
+  this.handle_filter_response = function(response) {
+    //More stuff here later...
+    this.apply_filter(response['show_docids']);
+    //Good enough test
+    if (JSON.stringify(response['tags']) == JSON.stringify(this.filter_tags)) return false;
+    this.filter_tags = response['tags'];
+    if (response['tags'].length > 0) {
+      $('[data-filter-active]').show();
+      $('#tag-filter-notification').remove();
+      arche.create_flash_message(response['filter_msg'],
+          {id: 'tag-filter-notification', slot: 'fixed-msg-bar', auto_destruct: false, type: 'warning'});      
+    } else {
+      this.reset();
+    }
+    this.scroll_to(this.get_lowest_selector(['[data-type-name="Proposal"]:visible:last', '[data-type-name="DiscussionPost"]:visible:last']))
   }
-  this.request_update(url);
-}
 
-FilterHandler.prototype.request_update = function(url) {
-  var request = arche.do_request(url, {data: {tag: this.filter_tags}});
-  var that = this;
-  request.done(function(response) { that.handle_filter_response(response); });
+  this.reset = function() {
+    this.filter_tags = [];
+    $('[data-filter-active]').hide();
+    $('#tag-filter-notification').remove();  
+  }
+
+  this.handle_filter_update = function(event) {
+    event.preventDefault();
+    var url = $(event.currentTarget).attr('href');
+    if ($(event.currentTarget).data('tag-reset') == true) {
+      this.reset();
+    }
+    this.request_update(url);
+  }
+
+  this.request_update = function(url) {
+    var request = arche.do_request(url, {data: {tag: this.filter_tags}});
+    var that = this;
+    request.done(function(response) { that.handle_filter_response(response); });
+  }
 }
 
 
