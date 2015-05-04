@@ -41,7 +41,7 @@ def aid_count(context, request, va, **kw):
 @view_action('proposal_json', 'created',
              directives = {'[data-json="created"]': 'obj.created'})
 def created(context, request, va, **kw):
-    return request.dt_handler.format_relative(context.created)
+    return request.localizer.translate(request.dt_handler.format_relative(context.created))
 
 @view_action('proposal_json', 'metadata',
              directives = {'[data-json="metadata"]': 'obj.metadata'})
