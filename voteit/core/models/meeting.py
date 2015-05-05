@@ -4,6 +4,7 @@ from arche.portlets import get_portlet_manager
 from arche.security import get_acl_registry
 from pyramid.httpexceptions import HTTPForbidden
 from pyramid.traversal import find_root
+from repoze.folder import unicodify
 from zope.interface import implementer
 
 from voteit.core import VoteITMF as _
@@ -47,6 +48,29 @@ class Meeting(BaseContent, SecurityAware, WorkflowAware):
         if self.get_workflow_state() == 'closed':
             return acl.get_acl('Meeting:closed')
         return acl.get_acl('Meeting:default')
+
+    @property
+    def order(self):
+        if self._order is not None:
+            return list(self._order)
+        return self.data.keys()
+    @order.setter
+    def order(self, value):
+        pool = list(self.data.keys())
+        new_order = []
+        for key in value:
+            new_order.append(key)
+            pool.remove(key)
+        if pool:
+            new_order.extend(pool)
+        self._order = tuple([unicodify(x) for x in new_order])
+        #Resort the agenda items too
+        i = 1
+        for obj in self.values():
+            if not IAgendaItem.providedBy(obj):
+                continue
+            obj.set_field_appstruct({'order': i})
+            i+=1
 
     @property
     def body(self): #arche compat
@@ -117,7 +141,6 @@ class Meeting(BaseContent, SecurityAware, WorkflowAware):
     @hide_proposal_states.setter
     def hide_proposal_states(self, value):
         self.set_field_value('hide_proposal_states', value)
-
 
     @property
     def invite_tickets(self):
