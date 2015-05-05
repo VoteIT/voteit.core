@@ -18,7 +18,7 @@
   <tal:sender:profile condition="sender_profile" i18n:translate="">You were added by
   <b i18n:name="sender_name" tal:content="sender_profile.title">sender name</b>.
   </tal:sender:profile>
-  <tal:ts i18n:translate="">Simply use this email address to login and the meeting will be there.</tal:ts>
+  <tal:ts i18n:translate="">Simply use your email address to login and the meeting will be accessible.</tal:ts>
 </p>
 <p>
   <tal:ts i18n:translate="">

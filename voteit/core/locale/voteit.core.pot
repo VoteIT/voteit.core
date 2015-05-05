@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE 1.0\n"
-"POT-Creation-Date: 2015-04-25 11:24+0200\n"
+"POT-Creation-Date: 2015-05-05 11:02+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -170,17 +170,20 @@ msgstr ""
 msgid "Moderator"
 msgstr ""
 
-#: ././voteit/core/security.py:33
+#: ././voteit/core/security.py:33 ././voteit/core/security.py:100
+#: ././voteit/core/security.py:104
 #: ././voteit/core/views/templates/_participants.pt:40
 msgid "Discuss"
 msgstr ""
 
-#: ././voteit/core/security.py:37
+#: ././voteit/core/security.py:37 ././voteit/core/security.py:101
+#: ././voteit/core/security.py:105
 #: ././voteit/core/views/templates/_participants.pt:44
 msgid "Propose"
 msgstr ""
 
-#: ././voteit/core/security.py:41
+#: ././voteit/core/security.py:41 ././voteit/core/security.py:102
+#: ././voteit/core/security.py:106
 #: ././voteit/core/views/templates/_participants.pt:48
 msgid "Voter"
 msgstr ""
@@ -189,22 +192,10 @@ msgstr ""
 msgid "Meeting creator"
 msgstr ""
 
-#: ././voteit/core/security.py:99 ././voteit/core/security.py:104
+#: ././voteit/core/security.py:99 ././voteit/core/security.py:103
 #: ././voteit/core/views/templates/_participants.pt:36
 #: ././voteit/core/views/templates/agenda_template.pt:12
 msgid "View"
-msgstr ""
-
-#: ././voteit/core/security.py:100 ././voteit/core/security.py:105
-msgid "Discuss (and view)"
-msgstr ""
-
-#: ././voteit/core/security.py:101 ././voteit/core/security.py:106
-msgid "Propose (and view)"
-msgstr ""
-
-#: ././voteit/core/security.py:102 ././voteit/core/security.py:107
-msgid "Voter (and view)"
 msgstr ""
 
 #: ././voteit/core/validators.py:33
@@ -269,9 +260,14 @@ msgstr ""
 msgid "Discussion Post"
 msgstr ""
 
-#: ././voteit/core/models/invite_ticket.py:66
+#: ././voteit/core/models/invite_ticket.py:85
 #, python-format
 msgid "Invitation to ${meeting_title}"
+msgstr ""
+
+#: ././voteit/core/models/invite_ticket.py:120
+#, python-format
+msgid "${meeting_title} is now accessible"
 msgstr ""
 
 #: ././voteit/core/models/meeting.py:26 ././voteit/core/schemas/contact.py:63
@@ -282,7 +278,7 @@ msgstr ""
 
 #. Default: This meeting still has ongoing or upcoming Agenda items in it. You
 #. can't close it until they're closed.
-#: ././voteit/core/models/meeting.py:154
+#: ././voteit/core/models/meeting.py:162
 msgid "error_cant_close_meeting_with_ongoing_ais"
 msgstr ""
 
@@ -396,7 +392,7 @@ msgstr ""
 
 #: ././voteit/core/plugins/immediate_ap.py:40
 #: ././voteit/core/schemas/invite_ticket.py:26
-#: ././voteit/core/schemas/meeting.py:189
+#: ././voteit/core/schemas/meeting.py:187
 msgid "Roles"
 msgstr ""
 
@@ -480,25 +476,25 @@ msgstr ""
 msgid "Agenda"
 msgstr ""
 
-#: ././voteit/core/portlets/agenda_item.py:43
+#: ././voteit/core/portlets/agenda_item.py:42
 #: ././voteit/core/schemas/poll.py:79
 #: ././voteit/core/templates/portlets/proposals.pt:11
 msgid "Proposals"
 msgstr ""
 
-#: ././voteit/core/portlets/agenda_item.py:63
+#: ././voteit/core/portlets/agenda_item.py:61
 #: ././voteit/core/templates/portlets/discussions.pt:11
 msgid "Discussion"
 msgstr ""
 
-#: ././voteit/core/portlets/agenda_item.py:70
+#: ././voteit/core/portlets/agenda_item.py:68
 #: ././voteit/core/templates/portlets/polls.pt:11
 #: ././voteit/core/templates/snippets/polls_menu.pt:13
 #: ././voteit/core/views/components/polls.py:10
 msgid "Polls"
 msgstr ""
 
-#: ././voteit/core/portlets/agenda_item.py:257
+#: ././voteit/core/portlets/agenda_item.py:255
 msgid "Agenda Item portlets"
 msgstr ""
 
@@ -512,7 +508,7 @@ msgid "Meetings"
 msgstr ""
 
 #: ././voteit/core/schemas/agenda_item.py:11
-#: ././voteit/core/schemas/meeting.py:60 ././voteit/core/schemas/poll.py:61
+#: ././voteit/core/schemas/meeting.py:72 ././voteit/core/schemas/poll.py:61
 msgid "Title"
 msgstr ""
 
@@ -590,7 +586,8 @@ msgid "Subject"
 msgstr ""
 
 #: ././voteit/core/schemas/contact.py:40
-#: ././voteit/core/views/components/templates/email/invite_ticket_email.pt:16
+#: ././voteit/core/templates/email/claimed_ticket_email.pt:31
+#: ././voteit/core/templates/email/invite_ticket_email.pt:16
 msgid "Message"
 msgstr ""
 
@@ -664,7 +661,7 @@ msgid "ticket_message_description"
 msgstr ""
 
 #: ././voteit/core/schemas/invite_ticket.py:16
-#: ././voteit/core/schemas/meeting.py:73
+#: ././voteit/core/schemas/meeting.py:85
 msgid "Invalid email address."
 msgstr ""
 
@@ -674,29 +671,29 @@ msgstr ""
 
 #. Default: Set a title for the meeting that separates it from previous
 #. meetings
-#: ././voteit/core/schemas/meeting.py:61
+#: ././voteit/core/schemas/meeting.py:73
 msgid "meeting_title_description"
 msgstr ""
 
-#: ././voteit/core/schemas/meeting.py:65
+#: ././voteit/core/schemas/meeting.py:77
 msgid "Name of the contact person for this meeting"
 msgstr ""
 
-#: ././voteit/core/schemas/meeting.py:71
+#: ././voteit/core/schemas/meeting.py:83
 msgid "Contact email for this site"
 msgstr ""
 
-#: ././voteit/core/schemas/meeting.py:75
+#: ././voteit/core/schemas/meeting.py:87
 msgid "Short description"
 msgstr ""
 
 #. Default: Shows up in search results and similar. One sentence is enough. You
 #. don't need to add it if you don't want to.
-#: ././voteit/core/schemas/meeting.py:76
+#: ././voteit/core/schemas/meeting.py:88
 msgid "short_description_text"
 msgstr ""
 
-#: ././voteit/core/schemas/meeting.py:82
+#: ././voteit/core/schemas/meeting.py:94
 msgid "Participants description"
 msgstr ""
 
@@ -704,90 +701,91 @@ msgstr ""
 #. how to register here. Displayed on the first page of the meeting. You can
 #. include things like information about the meeting, how to contact the
 #. moderator and your logo.
-#: ././voteit/core/schemas/meeting.py:83
+#: ././voteit/core/schemas/meeting.py:95
 msgid "meeting_description_description"
 msgstr ""
 
-#: ././voteit/core/schemas/meeting.py:92
+#: ././voteit/core/schemas/meeting.py:104
 msgid "Public presentation"
 msgstr ""
 
 #. Default: The public description is visible on the request access page and to
 #. not yet logged in visitors.
-#: ././voteit/core/schemas/meeting.py:93
+#: ././voteit/core/schemas/meeting.py:105
 msgid "meeting_public_description_description"
 msgstr ""
 
-#: ././voteit/core/schemas/meeting.py:100
+#: ././voteit/core/schemas/meeting.py:112
 msgid "Send mail to mentioned users."
 msgstr ""
 
-#: ././voteit/core/schemas/meeting.py:105
+#: ././voteit/core/schemas/meeting.py:117
 msgid "Send mail to voters when a poll starts."
 msgstr ""
 
-#: ././voteit/core/schemas/meeting.py:110
+#: ././voteit/core/schemas/meeting.py:122
 msgid "Hide meeting from listings"
 msgstr ""
 
 #. Default: Users won't be able to find it unless they have a link to it.
-#: ././voteit/core/schemas/meeting.py:111
+#: ././voteit/core/schemas/meeting.py:123
 msgid "hide_meeting_description"
 msgstr ""
 
-#: ././voteit/core/schemas/meeting.py:117
+#: ././voteit/core/schemas/meeting.py:129
 msgid "Navigation bar title"
 msgstr ""
 
-#: ././voteit/core/schemas/meeting.py:118
+#: ././voteit/core/schemas/meeting.py:130
 msgid "In case you want another title in the navigation bar"
 msgstr ""
 
-#: ././voteit/core/schemas/meeting.py:125
+#: ././voteit/core/schemas/meeting.py:134
+msgid "Hide proposal states"
+msgstr ""
+
+#. Default: Proposals in these states will be hidden by default but can be
+#. shown by pressing the link below the other proposals. They're not by any
+#. means invisible to participants.
+#: ././voteit/core/schemas/meeting.py:135
+msgid "hide_proposal_states_description"
+msgstr ""
+
+#: ././voteit/core/schemas/meeting.py:147
 msgid "Copy users and permissions from a previous meeting."
 msgstr ""
 
-#: ././voteit/core/schemas/meeting.py:126
+#: ././voteit/core/schemas/meeting.py:148
 msgid "You can only pick meeting where you've been a moderator."
 msgstr ""
 
-#: ././voteit/core/schemas/meeting.py:135
+#: ././voteit/core/schemas/meeting.py:157
 msgid "Meeting access policy"
 msgstr ""
 
 #. Default: Available poll methods within this meeting
-#: ././voteit/core/schemas/meeting.py:142
+#: ././voteit/core/schemas/meeting.py:164
 msgid "mps_poll_plugins_title"
 msgstr ""
 
 #. Default: Only poll methods selected here will be available withing the
 #. meeting. If nothing is selected, only the servers default poll method will
 #. be available.
-#: ././voteit/core/schemas/meeting.py:144
+#: ././voteit/core/schemas/meeting.py:166
 msgid "mps_poll_plugins_description"
 msgstr ""
 
-#: ././voteit/core/schemas/meeting.py:166
-msgid "Hide"
-msgstr ""
-
-#. Default: Proposals in these states will be hidden by default but can be
-#. shown by pressing the link below the other proposals.
-#: ././voteit/core/schemas/meeting.py:167
-msgid "hide_proposal_states_description"
-msgstr ""
-
-#: ././voteit/core/schemas/meeting.py:185
+#: ././voteit/core/schemas/meeting.py:183
 #: ././voteit/core/templates/participants.pt:18
 msgid "UserID"
 msgstr ""
 
-#: ././voteit/core/schemas/meeting.py:179
+#: ././voteit/core/schemas/meeting.py:177
 msgid "Must select at least one"
 msgstr ""
 
 #. Default: Must be at least 3 chars + only alphanumeric characters allowed
-#: ././voteit/core/schemas/meeting.py:68
+#: ././voteit/core/schemas/meeting.py:80
 msgid "name_pattern_error"
 msgstr ""
 
@@ -955,7 +953,6 @@ msgid "Canceled"
 msgstr ""
 
 #: ././voteit/core/templates/manage_agenda.pt:9
-#: ././voteit/core/views/components/templates/sidebars/navigation_head.pt:17
 msgid "Manage agenda"
 msgstr ""
 
@@ -1225,12 +1222,97 @@ msgstr ""
 msgid "Change password"
 msgstr ""
 
+#: ././voteit/core/templates/email/claimed_ticket_email.pt:7
+msgid "Hello ${fullname}"
+msgstr ""
+
+#: ././voteit/core/templates/email/claimed_ticket_email.pt:12
+msgid "You've just been added to the meeting ${meeting_title}."
+msgstr ""
+
+#: ././voteit/core/templates/email/claimed_ticket_email.pt:18
+msgid "You were added by ${sender_name}."
+msgstr ""
+
+#: ././voteit/core/templates/email/claimed_ticket_email.pt:21
+msgid ""
+"Simply use your email address to login and the meeting will be accessible."
+msgstr ""
+
+#: ././voteit/core/templates/email/claimed_ticket_email.pt:24
+msgid "The VoteIT server is located at: ${url}"
+msgstr ""
+
+#: ././voteit/core/templates/email/claimed_ticket_email.pt:35
+msgid "You were given the following permissions:"
+msgstr ""
+
+#: ././voteit/core/templates/email/claimed_ticket_email.pt:41
+#: ././voteit/core/templates/email/invite_ticket_email.pt:30
+msgid "Contact"
+msgstr ""
+
+#: ././voteit/core/templates/email/claimed_ticket_email.pt:43
+#: ././voteit/core/templates/email/invite_ticket_email.pt:32
+msgid "The contact person for this meeting is ${contact_person_name}"
+msgstr ""
+
+#: ././voteit/core/templates/email/claimed_ticket_email.pt:45
+#: ././voteit/core/templates/email/invite_ticket_email.pt:34
+msgid "and can be reached on ${contact_mail}"
+msgstr ""
+
+#: ././voteit/core/templates/email/claimed_ticket_email.pt:51
+#: ././voteit/core/templates/email/invite_ticket_email.pt:38
+msgid "No clue what this is about or you just want to know more?"
+msgstr ""
+
+#: ././voteit/core/templates/email/claimed_ticket_email.pt:53
+#: ././voteit/core/templates/email/invite_ticket_email.pt:40
+msgid ""
+"VoteIT is a meeting system created by a group of Swedish Non-profit NGOs."
+msgstr ""
+
+#: ././voteit/core/templates/email/claimed_ticket_email.pt:56
+#: ././voteit/core/templates/email/invite_ticket_email.pt:43
+msgid "Need the manual?"
+msgstr ""
+
+#: ././voteit/core/templates/email/claimed_ticket_email.pt:58
+#: ././voteit/core/templates/email/invite_ticket_email.pt:45
+msgid "All manuals can be found at:"
+msgstr ""
+
+#. Default: Note that this message doesn't mean that you're subscribed to a
+#. mailing list or similar. You're probably receiving it since you're a member
+#. of an organisaiton.
+#: ././voteit/core/templates/email/claimed_ticket_email.pt:61
+#: ././voteit/core/templates/email/invite_ticket_email.pt:48
+msgid "invitation_no_maillist_notice"
+msgstr ""
+
 #: ././voteit/core/templates/email/help_contact.pt:12
 msgid "From"
 msgstr ""
 
 #: ././voteit/core/templates/email/help_contact.pt:21
 msgid "Click the link to get to the VoteIT meeting:"
+msgstr ""
+
+#: ././voteit/core/templates/email/invite_ticket_email.pt:8
+msgid "You've just received a meeting entry ticket to ${meeting_title}."
+msgstr ""
+
+#: ././voteit/core/templates/email/invite_ticket_email.pt:10
+msgid "It was sent to you by ${sender_name}."
+msgstr ""
+
+#: ././voteit/core/templates/email/invite_ticket_email.pt:20
+msgid "The link below grant you the following permissions within the meeting:"
+msgstr ""
+
+#: ././voteit/core/templates/email/invite_ticket_email.pt:26
+msgid "To access this meeting use the link below:"
 msgstr ""
 
 #: ././voteit/core/templates/overrides/navigation.pt:10
@@ -1250,7 +1332,6 @@ msgid "Agenda / Navigation"
 msgstr ""
 
 #: ././voteit/core/templates/portlets/agenda.pt:23
-#: ././voteit/core/views/components/templates/sidebars/navigation_head.pt:12
 msgid "Add"
 msgstr ""
 
@@ -1362,7 +1443,7 @@ msgid "Participant list"
 msgstr ""
 
 #: ././voteit/core/templates/snippets/meeting_menu.pt:27
-#: ././voteit/core/views/ticket.py:175
+#: ././voteit/core/views/ticket.py:185
 #: ././voteit/core/views/templates/_participants.pt:128
 msgid "Invite participants"
 msgstr ""
@@ -1556,58 +1637,58 @@ msgid "Nothing changed"
 msgstr ""
 
 #. Default: Successfully added ${added} invites
-#: ././voteit/core/views/ticket.py:193
+#: ././voteit/core/views/ticket.py:203
 msgid "added_tickets_text"
 msgstr ""
 
-#: ././voteit/core/views/ticket.py:55
+#: ././voteit/core/views/ticket.py:58
 msgid "You've been granted access to the meeting. Welcome!"
 msgstr ""
 
 #. Default: The ticket link did not contain a token and an email address.
 #. Perhaps you came to this page by mistake?
-#: ././voteit/core/views/ticket.py:82
+#: ././voteit/core/views/ticket.py:85
 msgid "ticket_link_wrong_parameters_error"
 msgstr ""
 
-#: ././voteit/core/views/ticket.py:87
+#: ././voteit/core/views/ticket.py:90
 msgid "You need to login or register to use an inivitation ticket."
 msgstr ""
 
 #. Default: No tickets added - all you specified probably exist already.
 #. (Proccessed ${rejected})
-#: ././voteit/core/views/ticket.py:196
+#: ././voteit/core/views/ticket.py:206
 msgid "no_tickets_added"
 msgstr ""
 
 #. Default: Successfully added ${added} invites but discarded ${rejected} since
 #. they already existed or were already used.
-#: ././voteit/core/views/ticket.py:203
+#: ././voteit/core/views/ticket.py:213
 msgid "added_tickets_text_some_rejected"
 msgstr ""
 
 #. Default: Ticket validation failed. Either the ticket doesn't exist, was
 #. already used or the url used improperly. If you need help, please contact
 #. the moderator that invited you to this meeting.
-#: ././voteit/core/views/ticket.py:46
+#: ././voteit/core/views/ticket.py:49
 msgid "ticket_validation_fail"
 msgstr ""
 
-#: ././voteit/core/views/ticket.py:97
+#: ././voteit/core/views/ticket.py:100
 msgid "Nothing selected - nothing to do!"
 msgstr ""
 
-#: ././voteit/core/views/ticket.py:102
+#: ././voteit/core/views/ticket.py:105
 #, python-format
 msgid "Removed ${count} tickets"
 msgstr ""
 
-#: ././voteit/core/views/ticket.py:122
+#: ././voteit/core/views/ticket.py:125
 #, python-format
 msgid "Resent ${count} successfully"
 msgstr ""
 
-#: ././voteit/core/views/ticket.py:125
+#: ././voteit/core/views/ticket.py:128
 #, python-format
 msgid ""
 "Resent ${count} of ${total}. ${aborted} were not sent since they're already "
@@ -1661,86 +1742,6 @@ msgstr ""
 
 #: ././voteit/core/views/components/user_tags.py:24
 msgid "like this"
-msgstr ""
-
-#: ././voteit/core/views/components/templates/_tag_stats.pt:3
-msgid "Popular subjects"
-msgstr ""
-
-#: ././voteit/core/views/components/templates/email/invite_ticket_email.pt:8
-msgid "You've just received a meeting entry ticket to ${meeting_title}."
-msgstr ""
-
-#: ././voteit/core/views/components/templates/email/invite_ticket_email.pt:10
-msgid "It was sent to you by ${sender_name}."
-msgstr ""
-
-#: ././voteit/core/views/components/templates/email/invite_ticket_email.pt:20
-msgid "The link below grant you the following permissions within the meeting:"
-msgstr ""
-
-#: ././voteit/core/views/components/templates/email/invite_ticket_email.pt:26
-msgid "To access this meeting use the link below:"
-msgstr ""
-
-#: ././voteit/core/views/components/templates/email/invite_ticket_email.pt:30
-msgid "Contact"
-msgstr ""
-
-#: ././voteit/core/views/components/templates/email/invite_ticket_email.pt:32
-msgid "The contact person for this meeting is ${contact_person_name}"
-msgstr ""
-
-#: ././voteit/core/views/components/templates/email/invite_ticket_email.pt:34
-msgid "and can be reached on ${contact_mail}"
-msgstr ""
-
-#: ././voteit/core/views/components/templates/email/invite_ticket_email.pt:38
-msgid "No clue what this is about or you just want to know more?"
-msgstr ""
-
-#: ././voteit/core/views/components/templates/email/invite_ticket_email.pt:40
-msgid ""
-"VoteIT is a meeting system created by a group of Swedish Non-profit NGOs."
-msgstr ""
-
-#: ././voteit/core/views/components/templates/email/invite_ticket_email.pt:43
-msgid "Need the manual?"
-msgstr ""
-
-#: ././voteit/core/views/components/templates/email/invite_ticket_email.pt:45
-msgid "All manuals are here:"
-msgstr ""
-
-#. Default: Note that this message doesn't mean that you're subscribed to a
-#. mailing list or similar. You're probably receiving it since you're a member
-#. of an organisaiton.
-#: ././voteit/core/views/components/templates/email/invite_ticket_email.pt:48
-msgid "invitation_no_maillist_notice"
-msgstr ""
-
-#: ././voteit/core/views/components/templates/proposals/_listing.pt:5
-msgid "Limited to ${tag_name}"
-msgstr ""
-
-#: ././voteit/core/views/components/templates/proposals/_listing.pt:7
-msgid "Show all proposals"
-msgstr ""
-
-#: ././voteit/core/views/components/templates/proposals/_listing.pt:28
-msgid "Proposals updated, click to load"
-msgstr ""
-
-#: ././voteit/core/views/components/templates/proposals/_listing.pt:33
-msgid "Show ${count} hidden proposal(s)"
-msgstr ""
-
-#: ././voteit/core/views/components/templates/sidebars/navigation_section.pt:42
-msgid "(Nothing)"
-msgstr ""
-
-#: ././voteit/core/views/components/templates/sidebars/navigation_section.pt:48
-msgid "(hidden, click above to open)"
 msgstr ""
 
 #: ././voteit/core/views/templates/_agenda_item.pt:13

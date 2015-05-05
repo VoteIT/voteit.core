@@ -117,7 +117,7 @@ def claim_and_send_notification(ticket, request, message = ""):
     user = claim_ticket(ticket, request, ticket.email)
     meeting = find_interface(ticket, IMeeting)
     html = render_claimed_ticket_notification(ticket, request, message = message, user = user)
-    subject = _(u"Added to meeting: ${meeting_title}", mapping = {'meeting_title': meeting.title})
+    subject = _(u"${meeting_title} is now accessible", mapping = {'meeting_title': meeting.title})
     if send_email(request, subject = subject, recipients = ticket.email, html = html, send_immediately = True):
         ticket.sent_dates.append(utcnow())
 
