@@ -12,7 +12,7 @@
         <span class="badge pull-right">${len(ai_metas)}</span>
       </h4>
     </div>
-    <div class=" btn-group-portlet" role="group">
+    <div class="btn-group-portlet" role="group">
       <tal:iterate tal:repeat="meta ai_metas">
       <tal:def define="context_path '%s/%s' % (meeting_path, meta['__name__']);
                        is_current view.in_current_context(context_path);
@@ -23,17 +23,17 @@
           class="btn btn-default btn-block ${is_current and 'active' or None} ${context_unread and 'item-unread' or None}">
           <span class="btn-title">${meta['title']}</span>
           <div class="row text-left">
-            <div class="col-sm-4">
+            <div class="col-xs-4 col-sm-12 col-md-4">
               <span class="glyphicon glyphicon-exclamation-sign"></span>
               <span>${meta['proposal_count']}</span>
               <span tal:condition="not is_current and meta['unread_proposal']" class="badge">${meta['unread_proposal']}</span>
             </div>
-            <div class="col-sm-4">
+            <div class="col-xs-4 col-sm-12 col-md-4">
               <span class="glyphicon glyphicon-comment"></span>
               <span>${meta['discussion_count']}</span>
               <span tal:condition="not is_current and meta['unread_discussionpost']" class="badge">${meta['unread_discussionpost']}</span>
             </div>
-            <div class="col-sm-4">
+            <div class="col-xs-4 col-sm-12 col-md-4">
               <span class="glyphicon glyphicon-star"></span>
               <span>${meta['poll_count']}</span>
             </div>

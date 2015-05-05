@@ -7,57 +7,67 @@
 
   <h2 i18n:translate="">Meetings</h2>
 
-  <div class="panel-group" id="panel-meetinglist" role="tablist" aria-multiselectable="true">
-    <tal:iterate repeat="state ('ongoing', 'upcoming', 'closed')">
-    <tal:def define="meetings get_meetings(request, state = state)">
+  <div class="panel-group" role="tablist">
+    <tal:iterate repeat="state meeting_states">
       <div class="panel panel-default">
         <div class="panel-heading" role="tab" id="panel-meetinglist-heading-${state}">
           <h4 class="panel-title">
-            <a data-toggle="collapse" data-parent="#panel-meetinglist"
+            <a data-toggle="collapse"
+              aria-controls="panel-meetinglist-state-${state}"
               href="#panel-meetinglist-state-${state}"
-              aria-expanded="${repeat.state.start and 'true' or 'false'}"
+              aria-expanded="${collapse[state] and 'false' or 'true'}"
               aria-controls="panel-meetinglist-state-${state}">
               <span class="glyphicon glyphicon-collapse-toggle"></span>
               ${state_titles[state]|state}
-              <span class="badge pull-right">${len(meetings)}</span>
+              <span class="badge pull-right">${len(meetings[state])}</span>
             </a>
           </h4>
         </div>
-        <div id="panel-meetinglist-state-${state}" class="panel-collapse collapse ${repeat.state.start and 'in' or None}" role="tabpanel" aria-labelledby="panel-meetinglist-heading-${state}">
-          <ul class="list-group">
-            <li class="list-group-item" tal:repeat="obj meetings">
-              <a href="${request.resource_url(obj)}">
-                <span>${obj.title}</span>
-  
-                <span class="clearfix">
-                  <tal:started condition="state == 'ongoing'" i18n:translate="">
-                    Started:
-                    <tal:date i18n:name="date" content="request.dt_handler.format_dt(obj.start_time, parts = 'd')|''" />
-                  </tal:started>
-                  <tal:started condition="state == 'closed'" i18n:translate="">
-                    Closed:
-                    <tal:date i18n:name="date" content="request.dt_handler.format_dt(obj.end_time, parts = 'd')|''" />
-                  </tal:started>
-                </span>
-  
-                <span class="clearfix">
+        <div id="panel-meetinglist-state-${state}"
+          class="panel-collapse collapse ${not collapse[state] and 'in' or None}"
+          role="tabpanel" aria-labelledby="panel-meetinglist-heading-${state}">
+          <div class="btn-group-portlet" role="group">
+            <a class="btn btn-default btn-block"
+              tal:repeat="obj meetings.get(state, ())"
+              href="${request.resource_url(obj)}">
+              <span>${obj.title}</span>
+
+              <span class="clearfix">
+                <tal:started condition="state == 'ongoing'" i18n:translate="">
+                  Started:
+                  <tal:date i18n:name="date" content="request.dt_handler.format_dt(obj.start_time, parts = 'd')|''" />
+                </tal:started>
+                <tal:started condition="state == 'closed'" i18n:translate="">
+                  Closed:
+                  <tal:date i18n:name="date" content="request.dt_handler.format_dt(obj.end_time, parts = 'd')|''" />
+                </tal:started>
+              </span>
+
+              <div class="row text-left">
+                <div class="col-xs-4 col-sm-12 col-md-4">
                   <span class="glyphicon glyphicon-exclamation-sign"></span>
                   <span>${item_count_for(request, obj, 'Proposal')}</span>
                   <span tal:define="unread_prop item_count_for(request, obj, 'Proposal', unread = True)"
                     tal:condition="unread_prop"
                     class="badge">${unread_prop}</span>
+                </div>
+                <div class="col-xs-4 col-sm-12 col-md-4">
                   <span class="glyphicon glyphicon-comment"></span>
                   <span>${item_count_for(request, obj, 'DiscussionPost')}</span>
                   <span tal:define="unread_disc item_count_for(request, obj, 'DiscussionPost', unread = True)"
                     tal:condition="unread_disc"
                     class="badge">${unread_disc}</span>
-                </span>
-              </a>
-            </li>
-          </ul>
+                </div>
+                <div class="col-xs-4 col-sm-12 col-md-4">
+                  <span class="glyphicon glyphicon-star"></span>
+                  <span>${item_count_for(request, obj, 'Poll')}</span>
+                </div>
+              </div>
+
+            </a>
+          </div>
         </div>
       </div>
-    </tal:def>
     </tal:iterate>
 
   </div>

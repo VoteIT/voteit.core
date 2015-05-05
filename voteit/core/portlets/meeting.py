@@ -12,19 +12,32 @@ from voteit.core.security import VIEW
 from voteit.core import _
 
 
+_meeting_states = ('ongoing', 'upcoming', 'closed')
+
 class MeetingListingPortlet(PortletType):
     name = "meeting_list"
     title = _("Meeting list")
 
     def render(self, context, request, view, **kwargs):
         if request.authenticated_userid and (IRoot.providedBy(context) or IUser.providedBy(context)):
+            meetings = {}
+            collapse = {}
+            for state in _meeting_states:
+                meetings[state] = _get_meetings(request, state = state)
+                collapse[state] = False
+            if len(meetings['ongoing']) + len(meetings['upcoming']) > 9:
+                collapse['closed'] = True
+            if len(meetings['ongoing']) > 9:
+                collapse['upcoming'] = True
             response = {'title': _("Meetings"),
                         'portlet': self.portlet,
                         'portlet_cls': "portlet-%s" % self.name,
                         'view': view,
+                        'meetings': meetings,
+                        'collapse': collapse,
+                        'meeting_states': _meeting_states,
                         'item_count_for': self.item_count_for,
-                        'state_titles': request.get_wf_state_titles(IMeeting, 'Meeting'),
-                        'get_meetings': _get_meetings}
+                        'state_titles': request.get_wf_state_titles(IMeeting, 'Meeting'),}
             return render("voteit.core:templates/portlets/meeting_list.pt",
                           response,
                           request = request)
