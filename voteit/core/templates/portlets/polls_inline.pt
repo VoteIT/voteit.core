@@ -61,14 +61,19 @@
         </tal:poll_progress>
         <tal:def define="is_started wf_state not in ('upcoming', 'private');
                          is_closed wf_state in ('closed', 'canceled');">
-          <span class="glyphicon glyphicon-time"></span>
-        
-          <span tal:condition="not is_started" i18n:translate="">Starts</span>
-          <span tal:condition="is_started" i18n:translate="">Started</span>
-          ${request.dt_handler.format_relative(obj.start_time)|'-'}
-          <span tal:condition="not is_closed" i18n:translate="">Closes</span>
-          <span tal:condition="is_closed" i18n:translate="">Closed</span>
-          ${request.dt_handler.format_relative(obj.end_time)|'-'}
+          <tal:show condition="obj.start_time or obj.end_time">
+            <span class="glyphicon glyphicon-time"></span>
+            <tal:show_start condition="obj.start_time">
+              <span tal:condition="not is_started" i18n:translate="">Starts</span>
+              <span tal:condition="is_started" i18n:translate="">Started</span>
+              ${request.dt_handler.format_relative(obj.start_time)|'-'}
+            </tal:show_start>
+            <tal:show_end condition="obj.end_time">
+              <span tal:condition="not is_closed" i18n:translate="">Closes</span>
+              <span tal:condition="is_closed" i18n:translate="">Closed</span>
+              ${request.dt_handler.format_relative(obj.end_time)|'-'}
+            </tal:show_end>
+          </tal:show>
         </tal:def>
       </div>
     </div>

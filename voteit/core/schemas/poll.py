@@ -83,18 +83,18 @@ class PollSchema(colander.MappingSchema):
                                     widget = proposal_choices_widget,)
     start_time = colander.SchemaNode(
          LocalDateTime(),
+         tab = 'advanced',
          title = _(u"Start time of this poll."),
          description = _(u"You need to open it yourself."),
-         default = deferred_default_start_time,
-         missing = colander.null,
+         missing = None,
     )
     end_time = colander.SchemaNode(
          LocalDateTime(),
+         tab = 'advanced',
          title = _(u"End time of this poll."),
          description = _(u"poll_end_time_description",
                          default = u"You need to close it yourself. A good default value is one day later."),
-         default = deferred_default_end_time,
-         missing = colander.null,
+         missing = None,
     )
 
 
