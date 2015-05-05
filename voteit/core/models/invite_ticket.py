@@ -134,6 +134,7 @@ def render_claimed_ticket_notification(ticket, request, message = "", user = Non
     response['contact_mail'] = meeting.get_field_value('meeting_mail_address')
     response['sender_profile'] = root.users.get(ticket.sent_by)
     response['roles'] = [roles.get(x) for x in ticket.roles]
+    response['user'] = user
     return render('voteit.core:templates/email/claimed_ticket_email.pt', response, request = request)
 
 def includeme(config):
