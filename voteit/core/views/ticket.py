@@ -1,3 +1,4 @@
+from arche.interfaces import IRegistrationTokens
 from arche.utils import get_content_schemas
 from arche.views.base import BaseForm
 from arche.views.base import BaseView
@@ -38,6 +39,12 @@ class TicketView(BaseView):
         """
         if not self.request.authenticated_userid:
             raise HTTPForbidden("Direct access to this view for unauthorized users not allowed.")
+        email = self.request.GET.get('email', '')
+        ticket = self.context.invite_tickets.get(email, None)
+        if ticket and ticket.closed != None:
+            msg = _("This ticket has already been used.")
+            self.flash_messages.add(msg, type = 'danger', auto_destruct = True, require_commit = False)
+            return HTTPFound(location = self.request.resource_url(self.context))
         schema = get_content_schemas(self.request.registry)['Meeting']['claim_ticket']()
         schema = schema.bind(context = self.context, request = self.request, view = self)
         form = deform.Form(schema, buttons = (button_add, button_cancel,))
@@ -61,7 +68,7 @@ class TicketView(BaseView):
         #No action, render page
         claim_action_query = dict(
             claim = '1',
-            email = self.request.GET.get('email', ''),
+            email = email,
             token = self.request.GET.get('token', ''),
         )
         #FIXME: Use logout button + redirect link to go back to claim ticket
@@ -76,20 +83,52 @@ class TicketView(BaseView):
         """
         email = self.request.GET.get('email', '')
         token = self.request.GET.get('token', '')
+        translate = self.request.localizer.translate
+        claim_url = self.request.resource_url(self.context, 'ticket_claim', query = {'email': email, 'token': token})
         #Authenticated users
         if self.request.authenticated_userid:
             if email and token:
-                url = self.request.resource_url(self.context, 'ticket_claim', query = {'email': email, 'token': token})
+                url = claim_url
             else:
                 url = self.request.resource_url(self.context)
                 msg = _(u"ticket_link_wrong_parameters_error",
                         default = U"The ticket link did not contain a token and an email address. Perhaps you came to this page by mistake?")
                 self.flash_messages.add(msg, type = 'danger')
+            return HTTPFound(location = url)
         #Unauthenticated users
         else:
-            self.flash_messages.add(_("You need to login or register to use an inivitation ticket."))
-            url = self.request.resource_url(self.root, 'login')
-        return HTTPFound(location = url)
+            login_link = '<a href="%s">%s</a>' % (self.request.resource_url(self.root, 'login'),
+                                                  translate(_("login")))
+            register_link = '<a href="%s">%s</a>' % (self.request.resource_url(self.root, 'register'),
+                                                     translate(_("register")))
+            user = self.root['users'].get_user_by_email(email)
+            if user:
+                msg = _("ticket_user_might_exist_text",
+                        default = "To participate in the meeting ${meeting_title}, you need to be logged in. "
+                        "Since ${email} was already registered with us, it seems like you have an account. "
+                        "If not, please ${register_link} first and then click the link in the invitation again.",
+                        mapping = {'register_link': register_link,
+                                   'meeting_title': "<b>%s</b>" % self.context.title,
+                                   'email': "<b>%s</b>" % email})
+                url = self.request.resource_url(self.root, 'login', query = {'came_from': claim_url})
+            else:
+                #Create a registration token to allow bypass regular registration procedure
+                msg = _("ticket_user_probably_dont_exist_text",
+                        default = "To participate in the meeting ${meeting_title} you need to be logged in. "
+                        "We can't find any user with the email address ${email}. "
+                        "Perhaps you need to register first? "
+                        "If you know that you already have an account, simply ${login_link}.",
+                        mapping = {'meeting_title': "<b>%s</b>" % self.context.title,
+                                   'email': "<b>%s</b>" % email,
+                                   'login_link': login_link})
+                factory = self.get_content_factory('Token')
+                token = factory()
+                rtokens = IRegistrationTokens(self.root)
+                rtokens[email] = token
+                #Access will be granted with the ticket upon registraion
+                url = self.request.resource_url(self.root, 'register_finish', query = {'t': token, 'e': email})
+            self.flash_messages.add(msg, auto_destruct = False, require_commit = False)
+            return HTTPFound(location = url)
 
     @view_config(name = "manage_tickets", renderer = "voteit.core:templates/manage_tickets.pt", permission = security.MANAGE_GROUPS)
     def manage_tickets(self):
@@ -180,7 +219,6 @@ class TicketView(BaseView):
 class AddTicketsForm(BaseForm):
     schema_name = 'add_tickets'
     type_name = 'Meeting'
-    #self.response['tabs'] = self.api.render_single_view_component(self.context, self.request, 'tabs', 'manage_tickets')
 
     title = _("Invite participants")
 

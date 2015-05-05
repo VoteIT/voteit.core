@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE 1.0\n"
-"POT-Creation-Date: 2015-05-05 11:02+0200\n"
+"POT-Creation-Date: 2015-05-05 16:59+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -260,12 +260,12 @@ msgstr ""
 msgid "Discussion Post"
 msgstr ""
 
-#: ././voteit/core/models/invite_ticket.py:85
+#: ././voteit/core/models/invite_ticket.py:89
 #, python-format
 msgid "Invitation to ${meeting_title}"
 msgstr ""
 
-#: ././voteit/core/models/invite_ticket.py:120
+#: ././voteit/core/models/invite_ticket.py:124
 #, python-format
 msgid "${meeting_title} is now accessible"
 msgstr ""
@@ -1443,7 +1443,7 @@ msgid "Participant list"
 msgstr ""
 
 #: ././voteit/core/templates/snippets/meeting_menu.pt:27
-#: ././voteit/core/views/ticket.py:185
+#: ././voteit/core/views/ticket.py:223
 #: ././voteit/core/views/templates/_participants.pt:128
 msgid "Invite participants"
 msgstr ""
@@ -1636,59 +1636,83 @@ msgstr ""
 msgid "Nothing changed"
 msgstr ""
 
+#: ././voteit/core/views/ticket.py:45
+msgid "This ticket has already been used."
+msgstr ""
+
 #. Default: Successfully added ${added} invites
-#: ././voteit/core/views/ticket.py:203
+#: ././voteit/core/views/ticket.py:241
 msgid "added_tickets_text"
 msgstr ""
 
-#: ././voteit/core/views/ticket.py:58
+#: ././voteit/core/views/ticket.py:65
 msgid "You've been granted access to the meeting. Welcome!"
 msgstr ""
 
 #. Default: The ticket link did not contain a token and an email address.
 #. Perhaps you came to this page by mistake?
-#: ././voteit/core/views/ticket.py:85
+#: ././voteit/core/views/ticket.py:94
 msgid "ticket_link_wrong_parameters_error"
 msgstr ""
 
-#: ././voteit/core/views/ticket.py:90
-msgid "You need to login or register to use an inivitation ticket."
+#. Default: To participate in the meeting ${meeting_title}, you need to be
+#. logged in. Since ${email} was already registered with us, it seems like you
+#. have an account. If not, please ${register_link} first and then click the
+#. link in the invitation again.
+#: ././voteit/core/views/ticket.py:106
+msgid "ticket_user_might_exist_text"
+msgstr ""
+
+#. Default: To participate in the meeting ${meeting_title} you need to be
+#. logged in. We can't find any user with the email address ${email}. Perhaps
+#. you need to register first? If you know that you already have an account,
+#. simply ${login_link}.
+#: ././voteit/core/views/ticket.py:116
+msgid "ticket_user_probably_dont_exist_text"
 msgstr ""
 
 #. Default: No tickets added - all you specified probably exist already.
 #. (Proccessed ${rejected})
-#: ././voteit/core/views/ticket.py:206
+#: ././voteit/core/views/ticket.py:244
 msgid "no_tickets_added"
 msgstr ""
 
 #. Default: Successfully added ${added} invites but discarded ${rejected} since
 #. they already existed or were already used.
-#: ././voteit/core/views/ticket.py:213
+#: ././voteit/core/views/ticket.py:251
 msgid "added_tickets_text_some_rejected"
 msgstr ""
 
 #. Default: Ticket validation failed. Either the ticket doesn't exist, was
 #. already used or the url used improperly. If you need help, please contact
 #. the moderator that invited you to this meeting.
-#: ././voteit/core/views/ticket.py:49
+#: ././voteit/core/views/ticket.py:56
 msgid "ticket_validation_fail"
 msgstr ""
 
-#: ././voteit/core/views/ticket.py:100
+#: ././voteit/core/views/ticket.py:139
 msgid "Nothing selected - nothing to do!"
 msgstr ""
 
-#: ././voteit/core/views/ticket.py:105
+#: ././voteit/core/views/ticket.py:144
 #, python-format
 msgid "Removed ${count} tickets"
 msgstr ""
 
-#: ././voteit/core/views/ticket.py:125
+#: ././voteit/core/views/ticket.py:101
+msgid "login"
+msgstr ""
+
+#: ././voteit/core/views/ticket.py:103
+msgid "register"
+msgstr ""
+
+#: ././voteit/core/views/ticket.py:164
 #, python-format
 msgid "Resent ${count} successfully"
 msgstr ""
 
-#: ././voteit/core/views/ticket.py:128
+#: ././voteit/core/views/ticket.py:167
 #, python-format
 msgid ""
 "Resent ${count} of ${total}. ${aborted} were not sent since they're already "

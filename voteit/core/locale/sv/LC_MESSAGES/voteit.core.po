@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2015-05-05 11:02+0200\n"
-"PO-Revision-Date: 2015-05-05 11:03+0100\n"
+"POT-Creation-Date: 2015-05-05 16:59+0200\n"
+"PO-Revision-Date: 2015-05-05 16:59+0100\n"
 "Last-Translator: Robin Harms Oredsson <robin@betahaus.net>\n"
 "Language-Team: sv <LL@li.org>\n"
 "Language: sv\n"
@@ -271,12 +271,12 @@ msgstr "Standarddagordning"
 msgid "Discussion Post"
 msgstr "Diskussionsinlägg"
 
-#: voteit/core/models/invite_ticket.py:85
+#: voteit/core/models/invite_ticket.py:89
 #, python-format
 msgid "Invitation to ${meeting_title}"
 msgstr "Inbjudan till ${meeting_title}"
 
-#: voteit/core/models/invite_ticket.py:120
+#: voteit/core/models/invite_ticket.py:124
 #, python-format
 msgid "${meeting_title} is now accessible"
 msgstr "${meeting_title} är nu tillgängligt"
@@ -1545,7 +1545,7 @@ msgid "Participant list"
 msgstr "Deltagarlista"
 
 #: voteit/core/templates/snippets/meeting_menu.pt:27
-#: voteit/core/views/ticket.py:185
+#: voteit/core/views/ticket.py:223
 #: voteit/core/views/templates/_participants.pt:128
 msgid "Invite participants"
 msgstr "Bjud in deltagare"
@@ -1752,30 +1752,54 @@ msgstr "Uppdaterad"
 msgid "Nothing changed"
 msgstr "Inget ändrat"
 
+#: voteit/core/views/ticket.py:45
+msgid "This ticket has already been used."
+msgstr "Biljetten har redan använts."
+
 #. Default: Successfully added ${added} invites
-#: voteit/core/views/ticket.py:203
+#: voteit/core/views/ticket.py:241
 msgid "added_tickets_text"
 msgstr "La till ${added} inbjudningar"
 
-#: voteit/core/views/ticket.py:58
+#: voteit/core/views/ticket.py:65
 msgid "You've been granted access to the meeting. Welcome!"
 msgstr "Du har fått rätt att delta i mötet. Välkommen!"
 
 #. Default: The ticket link did not contain a token and an email address.
 #. Perhaps you came to this page by mistake?
-#: voteit/core/views/ticket.py:85
+#: voteit/core/views/ticket.py:94
 msgid "ticket_link_wrong_parameters_error"
 msgstr ""
 "Inbjudanslänken innehöll inte inbjudningskod och epostadress som de ska. "
 "Hamnade du kanske på denna sida av misstag?"
 
-#: voteit/core/views/ticket.py:90
-msgid "You need to login or register to use an inivitation ticket."
-msgstr "Du behöver logga in eller registrera dig för att använda en inbjudan."
+#. Default: To participate in the meeting ${meeting_title}, you need to be
+#. logged in. Since ${email} was already registered with us, it seems like you
+#. have an account. If not, please ${register_link} first and then click the
+#. link in the invitation again.
+#: voteit/core/views/ticket.py:106
+msgid "ticket_user_might_exist_text"
+msgstr ""
+"För att delta i mötet ${meeting_title} så behöver du vara inloggad. Eftersom "
+"${email} redan är registrerad här, så verkar det som om du har ett konto. Om "
+"inte, vänligen ${register_link} först och klicka sedan på länken i inbjudan "
+"igen."
+
+#. Default: To participate in the meeting ${meeting_title} you need to be
+#. logged in. We can't find any user with the email address ${email}. Perhaps
+#. you need to register first? If you know that you already have an account,
+#. simply ${login_link}.
+#: voteit/core/views/ticket.py:116
+msgid "ticket_user_probably_dont_exist_text"
+msgstr ""
+"För att delta i mötet ${meeting_title} så behöver du vara inloggad. Vi kan "
+"inte hitta någon användare med epostadressen ${email}. Kanske behöver du "
+"registrera dig först? Om du vet att du har ett konto, så kan du bara "
+"${login_link}."
 
 #. Default: No tickets added - all you specified probably exist already.
 #. (Proccessed ${rejected})
-#: voteit/core/views/ticket.py:206
+#: voteit/core/views/ticket.py:244
 msgid "no_tickets_added"
 msgstr ""
 "Inga inbjudningar las till - alla du specificerade finns förmodligen redan. "
@@ -1783,7 +1807,7 @@ msgstr ""
 
 #. Default: Successfully added ${added} invites but discarded ${rejected} since
 #. they already existed or were already used.
-#: voteit/core/views/ticket.py:213
+#: voteit/core/views/ticket.py:251
 msgid "added_tickets_text_some_rejected"
 msgstr ""
 "La till ${added} inbjudningar med hanterade inte ${rejected} eftersom de "
@@ -1792,28 +1816,36 @@ msgstr ""
 #. Default: Ticket validation failed. Either the ticket doesn't exist, was
 #. already used or the url used improperly. If you need help, please contact
 #. the moderator that invited you to this meeting.
-#: voteit/core/views/ticket.py:49
+#: voteit/core/views/ticket.py:56
 msgid "ticket_validation_fail"
 msgstr ""
 "Kontroll av inbjudan misslyckades. Detta kan bero på att inbjudningskoden "
 "inte finns, redan använts eller att du använde webbadressen fel. Om du "
 "behöver hjälp kan du kontakta den som skickade inbjudan."
 
-#: voteit/core/views/ticket.py:100
+#: voteit/core/views/ticket.py:139
 msgid "Nothing selected - nothing to do!"
 msgstr "Inga valda - kan inte göra något!"
 
-#: voteit/core/views/ticket.py:105
+#: voteit/core/views/ticket.py:144
 #, python-format
 msgid "Removed ${count} tickets"
 msgstr "Tog bort ${count} inbjudningar"
 
-#: voteit/core/views/ticket.py:125
+#: voteit/core/views/ticket.py:101
+msgid "login"
+msgstr "logga in"
+
+#: voteit/core/views/ticket.py:103
+msgid "register"
+msgstr "registrera"
+
+#: voteit/core/views/ticket.py:164
 #, python-format
 msgid "Resent ${count} successfully"
 msgstr "Skickade om ${count}"
 
-#: voteit/core/views/ticket.py:128
+#: voteit/core/views/ticket.py:167
 #, python-format
 msgid ""
 "Resent ${count} of ${total}. ${aborted} were not sent since they're already "
@@ -1992,6 +2024,10 @@ msgstr "personer"
 #: voteit/core/views/templates/snippets/user_tag.pt:20
 msgid "more_in_likes"
 msgstr "till"
+
+#~ msgid "You need to login or register to use an inivitation ticket."
+#~ msgstr ""
+#~ "Du behöver logga in eller registrera dig för att använda en inbjudan."
 
 #~ msgid "Discuss (and view)"
 #~ msgstr "Diskutera (och läsa)"
