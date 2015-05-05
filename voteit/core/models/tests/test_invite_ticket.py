@@ -70,6 +70,19 @@ class InviteTicketTests(unittest.TestCase):
         self.assertEqual(obj.get_workflow_state(), 'closed')
         self.assertEqual(meeting.get_groups('some_user'), (security.ROLE_MODERATOR, security.ROLE_DISCUSS, security.ROLE_VIEWER))
 
+    def test_claim_ticket_causes_email_validation(self):
+        from voteit.core.models.invite_ticket import claim_ticket
+        from voteit.core.models.user import User
+        self.config.include('arche.testing')
+        self.config.include('voteit.core.models.invite_ticket')
+        root = _fixture(self.config)
+        meeting = root['m']
+        root['users']['some_user'] = user = User(email = 'this@email.com')
+        obj = meeting.add_invite_ticket('this@email.com', [security.ROLE_MODERATOR, security.ROLE_DISCUSS, security.ROLE_VIEWER])
+        request = testing.DummyRequest()
+        claim_ticket(obj, request, 'some_user')
+        self.assertTrue(user.email_validated)
+
     def test_claim_closed(self):
         from voteit.core.models.invite_ticket import claim_ticket
         self.config.include('arche.testing')

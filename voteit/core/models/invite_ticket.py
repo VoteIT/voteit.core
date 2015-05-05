@@ -75,6 +75,10 @@ def claim_ticket(ticket, request, user_identifier):
     ticket.claimed_by = user.userid
     ticket.set_workflow_state(request, 'closed')
     ticket.closed = utcnow()
+    #If ticket and user profile has the same email, consider that email validated
+    #This will notify and perhaps fetch other tickets as well
+    if user.email == ticket.email:
+        user.email_validated = True
     return user
 
 def send_invite_ticket(ticket, request, message = ""):

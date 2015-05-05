@@ -49,7 +49,7 @@ class TicketView(BaseView):
                 msg = _(u"ticket_validation_fail",
                         default = u"Ticket validation failed. Either the ticket doesn't exist, was already used or the url used improperly. "
                                   u"If you need help, please contact the moderator that invited you to this meeting.")
-                self.flash_messages.add(msg, type = 'danger', auto_destruct = False)
+                self.flash_messages.add(msg, type = 'danger', auto_destruct = False, require_commit = False)
                 url = self.request.resource_url(self.root)
                 return HTTPFound(location = url)
             #Everything in order, claim ticket
