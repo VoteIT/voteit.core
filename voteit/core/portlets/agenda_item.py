@@ -165,7 +165,7 @@ class PollsInline(BaseView):
         response = {'added': len(poll), 'total': 0}
         wf_state = poll.get_workflow_state()
         if wf_state == 'ongoing':
-            response['total'] = len(poll.voters_mark_ongoing)
+            response['total'] = len(tuple(self.request.meeting.local_roles.get_any_local_with(security.ROLE_VOTER)))
         elif wf_state == 'closed':
             response['total'] = len(poll.voters_mark_closed)
         if response['total'] != 0:
