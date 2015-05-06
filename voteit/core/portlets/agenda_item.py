@@ -69,6 +69,15 @@ class PollsPortlet(ListingPortlet):
     template = "voteit.core:templates/portlets/polls.pt"
     view_name = '__ai_polls__'
 
+    def render(self, context, request, view, **kwargs):
+        if IAgendaItem.providedBy(context):
+            query = "type_name == 'Poll' and path == '%s'" % resource_path(context)
+            query += " and workflow_state in any(['ongoing', 'upcoming', 'closed'])"
+            if request.is_moderator or view.catalog_query(query):
+                url = request.resource_url(context, self.view_name)
+                response = {'portlet': self.portlet, 'view': view, 'load_url': url}
+                return render(self.template, response, request = request)
+
 
 class ProposalsInline(BaseView):
 
