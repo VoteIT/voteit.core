@@ -19,7 +19,7 @@ class ClaimTicketSchema(colander.Schema):
                                 title = _(u"claim_ticket_token_title",
                                           default = u"The access token your received in your email."),)
 
-            
+
 class AddTicketsSchema(colander.Schema):
     roles = colander.SchemaNode(
         colander.Set(),
