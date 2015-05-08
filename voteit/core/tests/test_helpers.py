@@ -128,7 +128,14 @@ class StripAndTruncateTests(unittest.TestCase):
 # _DUMMY_TAG_EXPECTED_RESULT = u"""<a href="?tag=test" class="tag">#test</a>"""
 
 
+_TRANSFORMABLE_TEXT = """
+Hello @admin what's cooking?
+Check out http://www.voteit.se
+And discuss under #voteit
+"""
+
 class TestTransformText(unittest.TestCase):
+
     def setUp(self):
         self.config = testing.setUp()
 
@@ -140,81 +147,30 @@ class TestTransformText(unittest.TestCase):
         from voteit.core.helpers import transform_text
         return transform_text
 
+    def _fixture(self):
+        from voteit.core.models.meeting import Meeting
+        from voteit.core.helpers import creators_info
+        from voteit.core.helpers import get_userinfo_url
+        self.config.include('pyramid_chameleon')
+        root = bootstrap_and_fixture(self.config)
+        root['m'] = Meeting()
+        request = testing.DummyRequest()
+        request.meeting = root['m']
+        attach_request_method(request, creators_info, 'creators_info')
+        attach_request_method(request, get_userinfo_url, 'get_userinfo_url')
+        return request
 
-#     
-#     def _context(self):
-#         register_catalog(self.config)
-#         self.config.testing_securitypolicy('admin', permissive = True)
-#         root = bootstrap_and_fixture(self.config)
-#         from voteit.core.models.meeting import Meeting
-#         from voteit.core.models.agenda_item import AgendaItem
-#         from voteit.core.models.discussion_post import DiscussionPost
-#         root['m'] = Meeting()
-#         ai = root['m']['ai'] = AgendaItem()
-#         ai['d1'] = dp = DiscussionPost()
-#         return dp
+    def test_transform_with_html(self):
+        request = self._fixture()
+        out = self._fut(request, _TRANSFORMABLE_TEXT)
+        self.assertIn('href="http://example.com/m/__userinfo__/admin', out)
+        self.assertIn('tag=voteit', out)
 
-#     def test_autolinking(self):
-#         context = self._context()
-#         request = testing.DummyRequest()
-#         obj = self._cut(context, request)
-#         context.set_field_value('text', _DUMMY_URL_MESSAGE)
-#         self.maxDiff = None
-#         self.assertEqual(unicode(obj.transform(context.get_field_value('text'))), _DUMMY_URL_EXPECTED_RESULT)
-# 
-#     def test_autolinking_several_runs(self):
-#         context = self._context()
-#         request = testing.DummyRequest()
-#         obj = self._cut(context, request)
-#         context.set_field_value('text', _DUMMY_URL_MESSAGE)
-#         first_run = obj.transform(context.get_field_value('text'))
-#         context.set_field_value('text', first_run)
-#         self.maxDiff = None
-#         self.assertEqual(unicode(obj.transform(context.get_field_value('text'))), _DUMMY_URL_EXPECTED_RESULT)
-# 
-#     def test_tags(self):
-#         context = self._context()
-#         request = testing.DummyRequest()
-#         obj = self._cut(context, request)
-#         context.set_field_value('text', _DUMMY_TAG_MESSAGE)
-#         self.maxDiff = None
-#         self.assertEqual(unicode(obj.transform(context.get_field_value('text'))), _DUMMY_TAG_EXPECTED_RESULT)
-# 
-#     def test_tags_several_runs(self):
-#         context = self._context()
-#         request = testing.DummyRequest()
-#         obj = self._cut(context, request)
-#         context.set_field_value('text', _DUMMY_TAG_MESSAGE)
-#         first_run = obj.transform(context.get_field_value('text'))
-#         context.set_field_value('text', first_run)
-#         self.maxDiff = None
-#         self.assertEqual(unicode(obj.transform(context.get_field_value('text'))), _DUMMY_TAG_EXPECTED_RESULT)
-#         
-#     def test_all_together(self):
-#         context = self._context()
-#         request = testing.DummyRequest()
-#         obj = self._cut(context, request)
-#         context.set_field_value('text', _DUMMY_URL_MESSAGE+"\n"+_DUMMY_MENTION_MESSAGE+"\n"+_DUMMY_TAG_MESSAGE)
-#         self.maxDiff = None
-#         self.assertEqual(unicode(obj.transform(context.get_field_value('text'))), _DUMMY_URL_EXPECTED_RESULT+"<br />\n"+_DUMMY_MENTION_EXPECTED_RESULT+"<br />\n"+_DUMMY_TAG_EXPECTED_RESULT)
-#         
-#     def test_all_togetherseveral_runs(self):
-#         context = self._context()
-#         request = testing.DummyRequest()
-#         obj = self._cut(context, request)
-#         context.set_field_value('text', _DUMMY_URL_MESSAGE+"\n"+_DUMMY_MENTION_MESSAGE+"\n"+_DUMMY_TAG_MESSAGE)
-#         first_run = obj.transform(context.get_field_value('text'))
-#         context.set_field_value('text', first_run)
-#         self.maxDiff = None
-#         self.assertEqual(unicode(obj.transform(context.get_field_value('text'))), _DUMMY_URL_EXPECTED_RESULT+"<br />\n"+_DUMMY_MENTION_EXPECTED_RESULT+"<br />\n"+_DUMMY_TAG_EXPECTED_RESULT)
-#         
-#     def test_nonascii(self):
-#         context = self._context()
-#         request = testing.DummyRequest()
-#         obj = self._cut(context, request)
-#         context.set_field_value('text', 'ÅÄÖåäö')
-#         self.assertEqual(obj.transform(context.get_field_value('text')), 'ÅÄÖåäö')
-
+    def test_transform_without_html(self):
+        request = self._fixture()
+        out = self._fut(request, _TRANSFORMABLE_TEXT, html = False)
+        self.assertNotIn('href="http://example.com/m/__userinfo__/admin', out)
+        self.assertNotIn('tag=voteit', out)
 
 
 class TestGetDocidsToShow(unittest.TestCase):

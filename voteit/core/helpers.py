@@ -28,8 +28,7 @@ TAG_PATTERN = re.compile(r'(?P<pre>\A|\s|[,.;:!?])#(?P<tag>\w*[\w-]+)', flags=re
 def at_userid_link(request, text):
     """ Transform @userid to a link.
     """
-    #users = find_root(obj).users
-    meeting = request.meeting #find_interface(obj, IMeeting)
+    meeting = request.meeting
     assert meeting
     def handle_match(matchobj):
         # The pattern contains a space so we only find usernames that 
@@ -40,18 +39,6 @@ def at_userid_link(request, text):
         #Force lowercase userid
         userid = userid.lower()
         return " %s" % request.creators_info([userid], lookup = False, at = True)
-        
-#         if userid in users: 
-#             user = users[userid]
-#     
-#             tag = {}
-#             tag['href'] = request.resource_url(meeting, '_userinfo', query={'userid': userid}).replace(request.application_url, '')
-#             tag['title'] = user.title
-#             tag['class'] = "inlineinfo"
-#             return space + HTML.a('@%s' % userid, **tag)
-#         else:
-#             return space + '@' + userid
-
     return re.sub(AT_PATTERN, handle_match, text)
 
 
@@ -99,13 +86,13 @@ def move_object(obj, new_parent):
     new_parent[name] = new_obj
     return new_obj
 
-def transform_text(request, text):
+def transform_text(request, text, html = True):
     text = sanitize(text)
-    #text = auto_link(text, link='urls')
-    text = auto_link(text)
-    text = nl2br(text)
-    text = tags2links(unicode(text))
-    text = at_userid_link(request, text)
+    if html:
+        text = auto_link(text)
+        text = nl2br(text)
+        text = tags2links(unicode(text))
+        text = at_userid_link(request, text)
     return text
 
 def creators_info(request, creators, portrait = True, lookup = True, at = False, no_tag = False):
