@@ -1,0 +1,29 @@
+<tal:main xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="voteit.core">
+<div class="row"
+  tal:define="previous_ai view.previous_ai()|None;
+              next_ai view.next_ai()|None;
+              view_name view_name|'';">
+  <div class="col-xs-6">
+    <a tal:condition="previous_ai"
+      class="btn btn-default btn-sm"
+      href="${request.resource_url(previous_ai, view_name)}"
+      title="${previous_ai.title}">
+      <span class="glyphicon glyphicon-chevron-left"></span>
+      <span i18n:translate="">Previous</span>
+    </a>
+  </div>
+  <div class="col-xs-6 text-right">
+    <a tal:condition="next_ai"
+      class="btn btn-default btn-sm"
+      href="${request.resource_url(next_ai, view_name)}"
+      title="${next_ai.title}">
+      <span i18n:translate="">Next</span>
+      <span class="glyphicon glyphicon-chevron-right"></span>
+    </a>
+  </div>
+</div>
+</tal:main>
