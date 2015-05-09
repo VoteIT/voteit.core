@@ -14,7 +14,6 @@
 
   ${structure: view.render_template('voteit.core:templates/snippets/participants_tabs.pt')}
 
-
   <div tal:condition="never_invited">
     <p i18n:translate="never_invited_warning">Warning! There are
         <tal:count tal:replace="len(never_invited)" i18n:name="count">5</tal:count>
@@ -26,10 +25,21 @@
     <table class="table table-striped" id="tickets_table">
       <thead>
           <tr>
-              <td colspan="2">
-                  <span i18n:translate="">Email contains:</span><br/> <input type="text" name="search_email" id="search_email" size="20" />
+              <td colspan="3">
+                <span i18n:translate="">Email contains:</span> <input type="text" name="search_email" id="search_email" size="20" />
               </td>
-              <td colspan="6"></td>
+              <td colspan="5" id="filter-buttons">
+                
+                <a tal:condition="never_invited"
+                  id="filter-on-unsent"
+                  href="#"
+                  class="btn btn-default btn-sm"
+                  i18n:translate="">Filter on unsent</a>
+                <a id="filter-on-open"
+                  href="#"
+                  class="btn btn-default btn-sm"
+                  i18n:translate="">Filter on open</a>
+              </td>
           </tr>
           <tr>
               <th><input type="checkbox" name="select_all" /></th>
