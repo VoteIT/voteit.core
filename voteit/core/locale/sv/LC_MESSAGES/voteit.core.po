@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2015-05-05 16:59+0200\n"
-"PO-Revision-Date: 2015-05-05 16:59+0100\n"
+"POT-Creation-Date: 2015-05-09 12:02+0200\n"
+"PO-Revision-Date: 2015-05-09 12:02+0100\n"
 "Last-Translator: Robin Harms Oredsson <robin@betahaus.net>\n"
 "Language-Team: sv <LL@li.org>\n"
 "Language: sv\n"
@@ -281,7 +281,7 @@ msgstr "Inbjudan till ${meeting_title}"
 msgid "${meeting_title} is now accessible"
 msgstr "${meeting_title} är nu tillgängligt"
 
-#: voteit/core/models/meeting.py:26 voteit/core/schemas/contact.py:63
+#: voteit/core/models/meeting.py:27 voteit/core/schemas/contact.py:63
 #: voteit/core/templates/snippets/meeting_menu.pt:10
 #: voteit/core/views/components/meeting.py:13
 msgid "Meeting"
@@ -289,7 +289,7 @@ msgstr "Möte"
 
 #. Default: This meeting still has ongoing or upcoming Agenda items in it. You
 #. can't close it until they're closed.
-#: voteit/core/models/meeting.py:162
+#: voteit/core/models/meeting.py:185
 msgid "error_cant_close_meeting_with_ongoing_ais"
 msgstr ""
 "Detta möte har ännu pågående dagordningspunkter. Du kan inte stänga mötet "
@@ -533,15 +533,15 @@ msgstr "Diskussion"
 msgid "Polls"
 msgstr "Omröstningar"
 
-#: voteit/core/portlets/agenda_item.py:255
+#: voteit/core/portlets/agenda_item.py:264
 msgid "Agenda Item portlets"
 msgstr "Dagordningsportlets"
 
-#: voteit/core/portlets/meeting.py:17
+#: voteit/core/portlets/meeting.py:19
 msgid "Meeting list"
 msgstr "Möten"
 
-#: voteit/core/portlets/meeting.py:21
+#: voteit/core/portlets/meeting.py:32
 #: voteit/core/templates/portlets/meeting_list.pt:8
 msgid "Meetings"
 msgstr "Möten"
@@ -609,7 +609,7 @@ msgid "contact_schema_name_description"
 msgstr "Lämna fältet tomt om du vill vara anonym"
 
 #: voteit/core/schemas/contact.py:30 voteit/core/schemas/contact.py:53
-#: voteit/core/templates/manage_tickets.pt:37
+#: voteit/core/templates/manage_tickets.pt:47
 #: voteit/core/templates/participants.pt:19
 #: voteit/core/templates/snippets/user_basic_info.pt:9
 #: voteit/core/views/templates/_participants.pt:34
@@ -886,21 +886,21 @@ msgstr "Läs mer i hjälpen om olika metoder och dess för- och nackdelar."
 msgid "poll_proposals_description"
 msgstr "Endast förslag i tillståndet 'publicerad' kan väljas."
 
-#: voteit/core/schemas/poll.py:86
+#: voteit/core/schemas/poll.py:87
 msgid "Start time of this poll."
 msgstr "Starttid för omröstningen."
 
-#: voteit/core/schemas/poll.py:87
+#: voteit/core/schemas/poll.py:88
 msgid "You need to open it yourself."
 msgstr "Du kommer behöva öppna omröstningen själv."
 
-#: voteit/core/schemas/poll.py:93
+#: voteit/core/schemas/poll.py:94
 msgid "End time of this poll."
 msgstr "Sluttid för omröstningen."
 
 #. Default: You need to close it yourself. A good default value is one day
 #. later.
-#: voteit/core/schemas/poll.py:94
+#: voteit/core/schemas/poll.py:95
 msgid "poll_end_time_description"
 msgstr ""
 "Du måste stänga den själv. Ett bra standardvärde är en dag efter start."
@@ -1005,7 +1005,7 @@ msgid "Ongoing"
 msgstr "Pågående"
 
 #: voteit/core/templates/_translations.pt:11
-#: voteit/core/templates/portlets/polls_inline.pt:70
+#: voteit/core/templates/portlets/polls_inline.pt:73
 msgid "Closed"
 msgstr "Avslutad"
 
@@ -1098,59 +1098,67 @@ msgstr "${open} öppna inbjudning(ar) och ${closed} stängd(a)."
 
 #. Default: Warning! There are ${count} tickets where no email were sent to the
 #. address it was intended for. It's a good idea to send these!
-#: voteit/core/templates/manage_tickets.pt:19
+#: voteit/core/templates/manage_tickets.pt:18
 msgid "never_invited_warning"
 msgstr ""
 "Varning! Det finns ${count} inbjudningar som inte epostats till adressen de "
 "var ämnade för. Det är en bra ide att skicka dem!"
 
-#: voteit/core/templates/manage_tickets.pt:30
+#: voteit/core/templates/manage_tickets.pt:29
 msgid "Email contains:"
 msgstr "Epost innehåller:"
 
-#: voteit/core/templates/manage_tickets.pt:40
+#: voteit/core/templates/manage_tickets.pt:37
+msgid "Filter on unsent"
+msgstr "Filtrera på ej skickade"
+
+#: voteit/core/templates/manage_tickets.pt:41
+msgid "Filter on open"
+msgstr "Filtrera på öppna"
+
+#: voteit/core/templates/manage_tickets.pt:50
 msgid "Claimed by"
 msgstr "Använd av"
 
-#: voteit/core/templates/manage_tickets.pt:41
+#: voteit/core/templates/manage_tickets.pt:51
 msgid "Used"
 msgstr "Använd"
 
-#: voteit/core/templates/manage_tickets.pt:42
+#: voteit/core/templates/manage_tickets.pt:52
 msgid "Sent by"
 msgstr "Skickad av"
 
-#: voteit/core/templates/manage_tickets.pt:43
+#: voteit/core/templates/manage_tickets.pt:53
 msgid "Last invite"
 msgstr "Sista inbjudan"
 
-#: voteit/core/templates/manage_tickets.pt:44
+#: voteit/core/templates/manage_tickets.pt:54
 msgid "Times sent"
 msgstr "Gånger skickad"
 
-#: voteit/core/templates/manage_tickets.pt:45
+#: voteit/core/templates/manage_tickets.pt:55
 msgid "Permissions"
 msgstr "Rättigheter"
 
-#: voteit/core/templates/manage_tickets.pt:74
+#: voteit/core/templates/manage_tickets.pt:84
 msgid "Message to any participants you resend tickets to"
 msgstr "Meddelande till deltagare du skickar om inbjudningar till"
 
-#: voteit/core/templates/manage_tickets.pt:77
+#: voteit/core/templates/manage_tickets.pt:87
 msgid "If you've marked any closed tickets, they won't receive a reinvite."
 msgstr ""
 "Om några av de markerade är stängda biljetter så kommer de inte att skickas "
 "om."
 
-#: voteit/core/templates/manage_tickets.pt:78
+#: voteit/core/templates/manage_tickets.pt:88
 msgid "With ${count} selected"
 msgstr "Med ${count} valda"
 
-#: voteit/core/templates/manage_tickets.pt:79
+#: voteit/core/templates/manage_tickets.pt:89
 msgid "Resend invitation"
 msgstr "Skicka om inbjudan"
 
-#: voteit/core/templates/manage_tickets.pt:80
+#: voteit/core/templates/manage_tickets.pt:90
 msgid "Remove"
 msgstr "Ta bort"
 
@@ -1181,15 +1189,15 @@ msgstr "Dagordningspunkten öppnades"
 msgid "Agenda item was closed at"
 msgstr "Dagordningspunkten stängdes"
 
-#: voteit/core/templates/minutes.pt:24
+#: voteit/core/templates/minutes.pt:28
 msgid "Approved proposals:"
 msgstr "Bifallna förslag"
 
-#: voteit/core/templates/minutes.pt:34
+#: voteit/core/templates/minutes.pt:44
 msgid "Denied proposals:"
 msgstr "Avslagna förslag"
 
-#: voteit/core/templates/minutes.pt:49
+#: voteit/core/templates/minutes.pt:62
 #: voteit/core/templates/send_tickets.pt:13
 #: voteit/core/templates/users_emails.pt:21
 #: voteit/core/views/templates/_participants.pt:21
@@ -1469,11 +1477,11 @@ msgstr "Lägg till ett förslag"
 msgid "The moderator has locked the ability to add more proposals."
 msgstr "Moderatorn har låst möjligheten att lägga till fler förslag."
 
-#: voteit/core/templates/portlets/meeting_list.pt:33
+#: voteit/core/templates/portlets/meeting_list.pt:36
 msgid "Started: ${date}"
 msgstr "Startad: ${date}"
 
-#: voteit/core/templates/portlets/meeting_list.pt:37
+#: voteit/core/templates/portlets/meeting_list.pt:40
 msgid "Closed: ${date}"
 msgstr "Stängd: ${date}"
 
@@ -1503,37 +1511,47 @@ msgstr "Visa röst"
 msgid "Show results"
 msgstr "Visa resultat"
 
-#: voteit/core/templates/portlets/polls_inline.pt:66
+#: voteit/core/templates/portlets/polls_inline.pt:67
 msgid "Starts"
 msgstr "Öppnar"
 
-#: voteit/core/templates/portlets/polls_inline.pt:67
+#: voteit/core/templates/portlets/polls_inline.pt:68
 msgid "Started"
 msgstr "Startad"
 
-#: voteit/core/templates/portlets/polls_inline.pt:69
+#: voteit/core/templates/portlets/polls_inline.pt:72
 msgid "Closes"
 msgstr "Stänger"
 
-#: voteit/core/templates/portlets/polls_inline.pt:82
+#: voteit/core/templates/portlets/polls_inline.pt:87
 msgid "Filter on poll (${num})"
 msgstr "Filtrera på omröstning (${num})"
 
-#: voteit/core/templates/portlets/polls_inline.pt:91
+#: voteit/core/templates/portlets/polls_inline.pt:96
 msgid "Ballot data"
 msgstr "Valurnans data"
 
-#: voteit/core/templates/portlets/polls_inline.pt:105
+#: voteit/core/templates/portlets/polls_inline.pt:110
 msgid "No polls yet"
 msgstr "Inga omröstningar än"
 
-#: voteit/core/templates/portlets/polls_inline.pt:111
+#: voteit/core/templates/portlets/polls_inline.pt:116
 msgid "Add Poll"
 msgstr "Lägg till omröstning"
 
 #: voteit/core/templates/portlets/proposals_inline.pt:43
 msgid "Show ${num} hidden"
 msgstr "Visa ${num} gömd(a)"
+
+#: voteit/core/templates/snippets/ai_previous_next.pt:16
+#: voteit/core/views/templates/_agenda_item.pt:13
+msgid "Previous"
+msgstr "Föregående"
+
+#: voteit/core/templates/snippets/ai_previous_next.pt:24
+#: voteit/core/views/templates/_agenda_item.pt:15
+msgid "Next"
+msgstr "Nästa"
 
 #: voteit/core/templates/snippets/help_menu.pt:11
 #: voteit/core/views/components/help_actions.py:15
@@ -1604,7 +1622,7 @@ msgstr "Du har inte skrivit något än!"
 msgid "Last added"
 msgstr "Senast tillagda"
 
-#: voteit/core/views/agenda_item.py:42
+#: voteit/core/views/agenda_item.py:60
 msgid "Status changed - note that workflow state also matters."
 msgstr "Status ändrad - notera att arbetsflödestillstånd också har betydelse"
 
@@ -1902,14 +1920,6 @@ msgstr "Ta bort ${display_name}"
 #: voteit/core/views/components/user_tags.py:24
 msgid "like this"
 msgstr "gillar detta"
-
-#: voteit/core/views/templates/_agenda_item.pt:13
-msgid "Previous"
-msgstr "Föregående"
-
-#: voteit/core/views/templates/_agenda_item.pt:15
-msgid "Next"
-msgstr "Nästa"
 
 #. Default: Click the icons to change permission. Any permission that's changed
 #. will be listed in bold. When you're done, click save at the bottom. If all

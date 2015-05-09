@@ -39,7 +39,7 @@
 
       <tal:denied condition="denied"
         define="denied ai.get_content(content_type = 'Proposal', states = 'denied', sort_on = 'created')">
-        <h4 i18n:translate="">
+        <h4>
           <span class="glyphicon glyphicon-denied text-danger"></span>
           <tal:ts i18n:translate="">Denied proposals:</tal:ts>
         </h4>

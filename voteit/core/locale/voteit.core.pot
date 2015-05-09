@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE 1.0\n"
-"POT-Creation-Date: 2015-05-05 16:59+0200\n"
+"POT-Creation-Date: 2015-05-09 12:02+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -270,7 +270,7 @@ msgstr ""
 msgid "${meeting_title} is now accessible"
 msgstr ""
 
-#: ././voteit/core/models/meeting.py:26 ././voteit/core/schemas/contact.py:63
+#: ././voteit/core/models/meeting.py:27 ././voteit/core/schemas/contact.py:63
 #: ././voteit/core/templates/snippets/meeting_menu.pt:10
 #: ././voteit/core/views/components/meeting.py:13
 msgid "Meeting"
@@ -278,7 +278,7 @@ msgstr ""
 
 #. Default: This meeting still has ongoing or upcoming Agenda items in it. You
 #. can't close it until they're closed.
-#: ././voteit/core/models/meeting.py:162
+#: ././voteit/core/models/meeting.py:185
 msgid "error_cant_close_meeting_with_ongoing_ais"
 msgstr ""
 
@@ -494,15 +494,15 @@ msgstr ""
 msgid "Polls"
 msgstr ""
 
-#: ././voteit/core/portlets/agenda_item.py:255
+#: ././voteit/core/portlets/agenda_item.py:264
 msgid "Agenda Item portlets"
 msgstr ""
 
-#: ././voteit/core/portlets/meeting.py:17
+#: ././voteit/core/portlets/meeting.py:19
 msgid "Meeting list"
 msgstr ""
 
-#: ././voteit/core/portlets/meeting.py:21
+#: ././voteit/core/portlets/meeting.py:32
 #: ././voteit/core/templates/portlets/meeting_list.pt:8
 msgid "Meetings"
 msgstr ""
@@ -568,7 +568,7 @@ msgid "contact_schema_name_description"
 msgstr ""
 
 #: ././voteit/core/schemas/contact.py:30 ././voteit/core/schemas/contact.py:53
-#: ././voteit/core/templates/manage_tickets.pt:37
+#: ././voteit/core/templates/manage_tickets.pt:47
 #: ././voteit/core/templates/participants.pt:19
 #: ././voteit/core/templates/snippets/user_basic_info.pt:9
 #: ././voteit/core/views/templates/_participants.pt:34
@@ -815,21 +815,21 @@ msgstr ""
 msgid "poll_proposals_description"
 msgstr ""
 
-#: ././voteit/core/schemas/poll.py:86
+#: ././voteit/core/schemas/poll.py:87
 msgid "Start time of this poll."
 msgstr ""
 
-#: ././voteit/core/schemas/poll.py:87
+#: ././voteit/core/schemas/poll.py:88
 msgid "You need to open it yourself."
 msgstr ""
 
-#: ././voteit/core/schemas/poll.py:93
+#: ././voteit/core/schemas/poll.py:94
 msgid "End time of this poll."
 msgstr ""
 
 #. Default: You need to close it yourself. A good default value is one day
 #. later.
-#: ././voteit/core/schemas/poll.py:94
+#: ././voteit/core/schemas/poll.py:95
 msgid "poll_end_time_description"
 msgstr ""
 
@@ -920,7 +920,7 @@ msgid "Ongoing"
 msgstr ""
 
 #: ././voteit/core/templates/_translations.pt:11
-#: ././voteit/core/templates/portlets/polls_inline.pt:70
+#: ././voteit/core/templates/portlets/polls_inline.pt:73
 msgid "Closed"
 msgstr ""
 
@@ -1013,55 +1013,63 @@ msgstr ""
 
 #. Default: Warning! There are ${count} tickets where no email were sent to the
 #. address it was intended for. It's a good idea to send these!
-#: ././voteit/core/templates/manage_tickets.pt:19
+#: ././voteit/core/templates/manage_tickets.pt:18
 msgid "never_invited_warning"
 msgstr ""
 
-#: ././voteit/core/templates/manage_tickets.pt:30
+#: ././voteit/core/templates/manage_tickets.pt:29
 msgid "Email contains:"
 msgstr ""
 
-#: ././voteit/core/templates/manage_tickets.pt:40
-msgid "Claimed by"
+#: ././voteit/core/templates/manage_tickets.pt:37
+msgid "Filter on unsent"
 msgstr ""
 
 #: ././voteit/core/templates/manage_tickets.pt:41
+msgid "Filter on open"
+msgstr ""
+
+#: ././voteit/core/templates/manage_tickets.pt:50
+msgid "Claimed by"
+msgstr ""
+
+#: ././voteit/core/templates/manage_tickets.pt:51
 msgid "Used"
 msgstr ""
 
-#: ././voteit/core/templates/manage_tickets.pt:42
+#: ././voteit/core/templates/manage_tickets.pt:52
 msgid "Sent by"
 msgstr ""
 
-#: ././voteit/core/templates/manage_tickets.pt:43
+#: ././voteit/core/templates/manage_tickets.pt:53
 msgid "Last invite"
 msgstr ""
 
-#: ././voteit/core/templates/manage_tickets.pt:44
+#: ././voteit/core/templates/manage_tickets.pt:54
 msgid "Times sent"
 msgstr ""
 
-#: ././voteit/core/templates/manage_tickets.pt:45
+#: ././voteit/core/templates/manage_tickets.pt:55
 msgid "Permissions"
 msgstr ""
 
-#: ././voteit/core/templates/manage_tickets.pt:74
+#: ././voteit/core/templates/manage_tickets.pt:84
 msgid "Message to any participants you resend tickets to"
 msgstr ""
 
-#: ././voteit/core/templates/manage_tickets.pt:77
+#: ././voteit/core/templates/manage_tickets.pt:87
 msgid "If you've marked any closed tickets, they won't receive a reinvite."
 msgstr ""
 
-#: ././voteit/core/templates/manage_tickets.pt:78
+#: ././voteit/core/templates/manage_tickets.pt:88
 msgid "With ${count} selected"
 msgstr ""
 
-#: ././voteit/core/templates/manage_tickets.pt:79
+#: ././voteit/core/templates/manage_tickets.pt:89
 msgid "Resend invitation"
 msgstr ""
 
-#: ././voteit/core/templates/manage_tickets.pt:80
+#: ././voteit/core/templates/manage_tickets.pt:90
 msgid "Remove"
 msgstr ""
 
@@ -1092,15 +1100,15 @@ msgstr ""
 msgid "Agenda item was closed at"
 msgstr ""
 
-#: ././voteit/core/templates/minutes.pt:24
+#: ././voteit/core/templates/minutes.pt:28
 msgid "Approved proposals:"
 msgstr ""
 
-#: ././voteit/core/templates/minutes.pt:34
+#: ././voteit/core/templates/minutes.pt:44
 msgid "Denied proposals:"
 msgstr ""
 
-#: ././voteit/core/templates/minutes.pt:49
+#: ././voteit/core/templates/minutes.pt:62
 #: ././voteit/core/templates/send_tickets.pt:13
 #: ././voteit/core/templates/users_emails.pt:21
 #: ././voteit/core/views/templates/_participants.pt:21
@@ -1369,11 +1377,11 @@ msgstr ""
 msgid "The moderator has locked the ability to add more proposals."
 msgstr ""
 
-#: ././voteit/core/templates/portlets/meeting_list.pt:33
+#: ././voteit/core/templates/portlets/meeting_list.pt:36
 msgid "Started: ${date}"
 msgstr ""
 
-#: ././voteit/core/templates/portlets/meeting_list.pt:37
+#: ././voteit/core/templates/portlets/meeting_list.pt:40
 msgid "Closed: ${date}"
 msgstr ""
 
@@ -1401,36 +1409,46 @@ msgstr ""
 msgid "Show results"
 msgstr ""
 
-#: ././voteit/core/templates/portlets/polls_inline.pt:66
+#: ././voteit/core/templates/portlets/polls_inline.pt:67
 msgid "Starts"
 msgstr ""
 
-#: ././voteit/core/templates/portlets/polls_inline.pt:67
+#: ././voteit/core/templates/portlets/polls_inline.pt:68
 msgid "Started"
 msgstr ""
 
-#: ././voteit/core/templates/portlets/polls_inline.pt:69
+#: ././voteit/core/templates/portlets/polls_inline.pt:72
 msgid "Closes"
 msgstr ""
 
-#: ././voteit/core/templates/portlets/polls_inline.pt:82
+#: ././voteit/core/templates/portlets/polls_inline.pt:87
 msgid "Filter on poll (${num})"
 msgstr ""
 
-#: ././voteit/core/templates/portlets/polls_inline.pt:91
+#: ././voteit/core/templates/portlets/polls_inline.pt:96
 msgid "Ballot data"
 msgstr ""
 
-#: ././voteit/core/templates/portlets/polls_inline.pt:105
+#: ././voteit/core/templates/portlets/polls_inline.pt:110
 msgid "No polls yet"
 msgstr ""
 
-#: ././voteit/core/templates/portlets/polls_inline.pt:111
+#: ././voteit/core/templates/portlets/polls_inline.pt:116
 msgid "Add Poll"
 msgstr ""
 
 #: ././voteit/core/templates/portlets/proposals_inline.pt:43
 msgid "Show ${num} hidden"
+msgstr ""
+
+#: ././voteit/core/templates/snippets/ai_previous_next.pt:16
+#: ././voteit/core/views/templates/_agenda_item.pt:13
+msgid "Previous"
+msgstr ""
+
+#: ././voteit/core/templates/snippets/ai_previous_next.pt:24
+#: ././voteit/core/views/templates/_agenda_item.pt:15
+msgid "Next"
 msgstr ""
 
 #: ././voteit/core/templates/snippets/help_menu.pt:11
@@ -1502,7 +1520,7 @@ msgstr ""
 msgid "Last added"
 msgstr ""
 
-#: ././voteit/core/views/agenda_item.py:42
+#: ././voteit/core/views/agenda_item.py:60
 msgid "Status changed - note that workflow state also matters."
 msgstr ""
 
@@ -1766,14 +1784,6 @@ msgstr ""
 
 #: ././voteit/core/views/components/user_tags.py:24
 msgid "like this"
-msgstr ""
-
-#: ././voteit/core/views/templates/_agenda_item.pt:13
-msgid "Previous"
-msgstr ""
-
-#: ././voteit/core/views/templates/_agenda_item.pt:15
-msgid "Next"
 msgstr ""
 
 #. Default: Click the icons to change permission. Any permission that's changed
