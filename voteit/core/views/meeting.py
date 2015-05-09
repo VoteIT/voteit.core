@@ -196,7 +196,7 @@ class RequestAccessForm(ArcheFormCompat, DefaultEditForm):
             return HTTPFound(location = self.request.resource_url(self.context))
         if not self.request.authenticated_userid:
             msg = _("You need to login or register.")
-            self.flash_messages.add(msg, type='info', auto_destruct = False)
+            self.flash_messages.add(msg, type='danger', auto_destruct = False)
             came_from = self.request.resource_url(self.context, 'request_access')
             url = self.request.resource_url(self.root, query={'came_from': came_from})
             return HTTPFound(location = url)
