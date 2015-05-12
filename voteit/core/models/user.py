@@ -5,6 +5,7 @@ import logging
 
 from BTrees.OOBTree import OOBTree
 from arche.api import User as ArcheUser
+from arche.utils import utcnow
 from pyramid.i18n import get_localizer
 from pyramid.security import Allow
 from pyramid.security import DENY_ALL
@@ -12,7 +13,6 @@ from pyramid.threadlocal import get_current_request
 from pyramid.traversal import find_interface
 from pyramid_mailer import get_mailer
 from pyramid_mailer.message import Message
-from arche.utils import utcnow
 from zope.interface import implementer
 
 from voteit.core import VoteITMF as _
@@ -96,17 +96,6 @@ class User(ArcheUser, BaseContent):
         tag += ' />'
         return tag
 
-#     #b/c
-#     def get_password(self):
-#         return self.get_field_value('password')
-# 
-#     #b/c
-#     def set_password(self, value):
-#         """ Encrypt a plaintext password. Convenience method for field password for b/c."""
-#         self.set_field_value('password', value)
-# 
-#     password = property(get_password, set_password)
-
     @property
     def first_name(self):
         #Arche compat
@@ -166,8 +155,6 @@ class User(ArcheUser, BaseContent):
 
 def includeme(config):
     config.add_content_factory(User, addable_to = ('Users',))
-
-#@content_factory('RequestPasswordToken')
 
 #Deprecated, clear from db
 class RequestPasswordToken(object):
