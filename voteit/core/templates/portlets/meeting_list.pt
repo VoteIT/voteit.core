@@ -43,7 +43,7 @@
                 </tal:started>
               </span>
 
-              <div class="row text-left">
+              <div class="row text-muted">
                 <div class="col-xs-4 col-sm-12 col-md-4">
                   <span class="glyphicon glyphicon-exclamation-sign"></span>
                   <span>${item_count_for(request, obj, 'Proposal')}</span>

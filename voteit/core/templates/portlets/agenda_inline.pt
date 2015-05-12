@@ -22,7 +22,7 @@
         <a href="${context_path}"
           class="btn btn-default btn-block ${is_current and 'active' or None} ${context_unread and 'item-unread' or None}">
           <span class="btn-title">${meta['title']}</span>
-          <div class="row text-left">
+          <div class="row text-muted">
             <div class="col-xs-4 col-sm-12 col-md-4">
               <span class="glyphicon glyphicon-exclamation-sign"></span>
               <span>${meta['proposal_count']}</span>

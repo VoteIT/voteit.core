@@ -454,7 +454,8 @@ body .btn-group-portlet > .item-unread {
     margin-left: 0;
     border-radius: 0;
     border-right: 0;
-    border-left: 0; }
+    border-left: 0;
+    text-align: left; }
   .btn-group-portlet .btn-title {
     display: block;
     font-size: 110%;
