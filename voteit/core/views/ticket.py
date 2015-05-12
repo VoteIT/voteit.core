@@ -49,9 +49,10 @@ class TicketView(BaseView):
             try:
                 appstruct = form.validate(controls)
             except deform.ValidationFailure, e:
-                msg = _(u"ticket_validation_fail",
-                        default = u"Ticket validation failed. Either the ticket doesn't exist, was already used or the url used improperly. "
-                                  u"If you need help, please contact the moderator that invited you to this meeting.")
+                msg = _("ticket_validation_fail",
+                        default = "Ticket validation failed. Either the "
+                        "ticket doesn't exist, was already used or the url used improperly. "
+                        "If you need help, please contact the moderator that invited you to this meeting.")
                 self.flash_messages.add(msg, type = 'danger', auto_destruct = False, require_commit = False)
                 url = self.request.resource_url(self.root)
                 return HTTPFound(location = url)
@@ -68,7 +69,8 @@ class TicketView(BaseView):
             token = self.request.GET.get('token', ''),
         )
         #FIXME: Use logout button + redirect link to go back to claim ticket
-        return {'claim_action_url': self.request.resource_url(self.context, 'ticket_claim', query = claim_action_query)}
+        return {'claim_action_url': self.request.resource_url(self.context, 'ticket_claim',
+                                                              query = claim_action_query)}
 
     @view_config(name = "ticket", permission = NO_PERMISSION_REQUIRED)
     def ticket_redirect(self):
@@ -77,10 +79,15 @@ class TicketView(BaseView):
             
             Note: Don't validate ticket until user has logged in. At least that makes bruteforcing it a bit harder.
         """
+        if self.context.get_workflow_state() == 'closed':
+            msg = _("This meeting is closed so no invitations can be used now.")
+            self.flash_messages.add(msg, type = 'danger', auto_destruct = False, require_commit = False)
+            return HTTPFound(location = self.request.application_url)
         email = self.request.GET.get('email', '')
         token = self.request.GET.get('token', '')
         translate = self.request.localizer.translate
-        claim_url = self.request.resource_url(self.context, 'ticket_claim', query = {'email': email, 'token': token})
+        claim_url = self.request.resource_url(self.context, 'ticket_claim',
+                                              query = {'email': email, 'token': token})
         #Authenticated users
         if self.request.authenticated_userid:
             if email and token:
@@ -88,7 +95,8 @@ class TicketView(BaseView):
             else:
                 url = self.request.resource_url(self.context)
                 msg = _(u"ticket_link_wrong_parameters_error",
-                        default = U"The ticket link did not contain a token and an email address. Perhaps you came to this page by mistake?")
+                        default = "The ticket link did not contain a token and an email address. "
+                        "Perhaps you came to this page by mistake?")
                 self.flash_messages.add(msg, type = 'danger')
             return HTTPFound(location = url)
         #Unauthenticated users
@@ -126,7 +134,9 @@ class TicketView(BaseView):
             self.flash_messages.add(msg, auto_destruct = False, require_commit = False)
             return HTTPFound(location = url)
 
-    @view_config(name = "manage_tickets", renderer = "voteit.core:templates/manage_tickets.pt", permission = security.MANAGE_GROUPS)
+    @view_config(name = "manage_tickets",
+                 renderer = "voteit.core:templates/manage_tickets.pt",
+                 permission = security.MANAGE_GROUPS)
     def manage_tickets(self):
         """ Handle and review tickets. """
         if self.request.method == 'POST':
@@ -182,11 +192,16 @@ class TicketView(BaseView):
         response['roles_dict'] = dict(security.MEETING_ROLES)
         return response
 
-    @view_config(name = "send_tickets", renderer = "voteit.core:templates/send_tickets.pt", permission = security.MANAGE_GROUPS)
+    @view_config(name = "send_tickets",
+                 renderer = "voteit.core:templates/send_tickets.pt",
+                 permission = security.MANAGE_GROUPS)
     def send_tickets(self):
         return {'emails': self.request.session.get('send_tickets.emails', ())}
 
-    @view_config(name = "send_tickets", renderer = "json", permission = security.MANAGE_GROUPS, xhr = True)
+    @view_config(name = "send_tickets",
+                 renderer = "json",
+                 permission = security.MANAGE_GROUPS,
+                 xhr = True)
     def send_tickets_action(self):
         session = self.request.session
         emails = session['send_tickets.emails'][:20]
@@ -211,7 +226,7 @@ class TicketView(BaseView):
 @view_config(name = "add_tickets",
              context = IMeeting,
              renderer = "arche:templates/form.pt",
-             permission = security.MANAGE_GROUPS)
+             permission = security.ADD_INVITE_TICKET)
 class AddTicketsForm(BaseForm):
     schema_name = 'add_tickets'
     type_name = 'Meeting'
@@ -238,14 +253,16 @@ class AddTicketsForm(BaseForm):
                     mapping={'added': added})
         elif not added:
             msg = _('no_tickets_added',
-                    default = "No tickets added - all you specified probably exist already. (Proccessed ${rejected})",
+                    default = "No tickets added - all you specified probably exist already. "
+                    "(Proccessed ${rejected})",
                     mapping = {'rejected': rejected})
             self.flash_messages.add(msg, type = 'warning', auto_destruct = False)
             url = self.request.resource_url(self.context, 'add_tickets')
             return HTTPFound(location = url)
         else:
             msg = _('added_tickets_text_some_rejected',
-                    default=u"Successfully added ${added} invites but discarded ${rejected} since they already existed or were already used.",
+                    default = "Successfully added ${added} invites but discarded ${rejected} "
+                    "since they already existed or were already used.",
                     mapping={'added': added, 'rejected': rejected})
         self.flash_messages.add(msg)
         self.request.session['send_tickets.emails'] = emails

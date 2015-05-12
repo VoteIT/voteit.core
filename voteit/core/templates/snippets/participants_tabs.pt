@@ -3,12 +3,13 @@
       xmlns:tal="http://xml.zope.org/namespaces/tal"
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
       i18n:domain="voteit.core">
-<p tal:condition="request.is_moderator">
+<p tal:condition="request.is_moderator" tal:define="meeting_closed context.get_workflow_state() == 'closed'">
 <div class="btn-group" role="group">
   <a href="${request.resource_url(context, 'participants')}"
     class="btn btn-default ${request.view_name == 'participants' and 'active' or None}"
     i18n:translate="">Participants</a>
   <a href="${request.resource_url(context, 'add_tickets')}"
+  tal:attributes="disabled meeting_closed and 'disabled' or None"
   class="btn btn-default ${request.view_name == 'add_tickets' and 'active' or None}"
   i18n:translate="">Invite</a>
   <a href="${request.resource_url(context, 'add_userid')}"

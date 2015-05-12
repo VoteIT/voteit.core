@@ -20,6 +20,7 @@ def meeting_menu(context, request, va, **kw):
     ap = request.registry.queryAdapter(request.meeting, IAccessPolicy, name = request.meeting.access_policy)        
     response = {}
     response['ap_configurable'] = bool(ap is not None and ap.config_schema())
+    response['meeting_closed'] = request.meeting.get_workflow_state() == 'closed'
     response['view'] = view
     for name in ('meeting_menu', 'participants_menu', 'settings_menu', 'meeting'):
         if request.registry.queryUtility(IViewGroup, name):

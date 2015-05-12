@@ -21,7 +21,7 @@
         i18n:translate="">Participant list</a>
     </li>
     <tal:moderator condition="request.is_moderator">
-      <li role="presentation">
+      <li role="presentation" tal:condition="not meeting_closed">
         <a role="menuitem" tabindex="-1"
           href="${request.resource_url(request.meeting, 'add_tickets')}"
           i18n:translate="">Invite participants</a>

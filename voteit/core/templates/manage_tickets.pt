@@ -4,7 +4,7 @@
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
       i18n:domain="voteit.core">
 <body>
-<tal:main metal:fill-slot="content">
+<tal:main metal:fill-slot="content" tal:define="meeting_closed context.get_workflow_state() == 'closed'">
 
   <h1 i18n:translate="">Manage invitations</h1>
   <h4 i18n:translate="total_tickets_header">
@@ -80,14 +80,27 @@
       </tbody>
     </table>
   
-    <div class="form-group">
-      <label class="control-label" for="resend_message" i18n:translate="">Message to any participants you resend tickets to</label>
-      <textarea class="form-control" id="resend_message" name="message" rows="5" cols="40"></textarea>
-    </div>
-    <div i18n:translate="">If you've marked any closed tickets, they won't receive a reinvite.</div>
-    <h4 i18n:translate="">With <span id="selected_count" i18n:name="count">0</span> selected</h4>
-    <input class="btn btn-primary" type="submit" name="resend" value="Resend invitation" i18n:attributes="value" />
-    <input class="btn btn-danger" type="submit" name="remove" value="Remove" i18n:attributes="value" />
+    <tal:open_meeting condition="not meeting_closed">
+      <div class="form-group">
+        <label class="control-label" for="resend_message" i18n:translate="">Message to any participants you resend tickets to</label>
+        <textarea class="form-control" id="resend_message" name="message" rows="5" cols="40"></textarea>
+      </div>
+      <div i18n:translate="">If you've marked any closed tickets, they won't receive a reinvite.</div>
+      <h4 i18n:translate="">With <span id="selected_count" i18n:name="count">0</span> selected</h4>
+      <input class="btn btn-primary" type="submit" name="resend" value="Resend invitation" i18n:attributes="value" />
+      <input class="btn btn-danger" type="submit" name="remove" value="Remove" i18n:attributes="value" />
+    </tal:open_meeting>
+    <tal:closed_meeting condition="meeting_closed">
+      <p i18n:translate="closed_meetings_resend_ticket_block">
+        This meeting is closed. You can't send new invitations now.
+        If you need to add permissions to a user, use the form to add
+        currently registered users.
+      </p>
+      <p>
+        <a href="${request.resource_url(context, 'add_userid')}"
+          i18n:translate="">Add existing user</a>
+      </p>
+    </tal:closed_meeting>
   </form>
 
 

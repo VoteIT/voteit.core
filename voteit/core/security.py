@@ -83,6 +83,7 @@ ADD_PROPOSAL = 'Add Proposal'
 ADD_USER = 'Add User'
 ADD_VOTE = 'Add Vote'
 ADD_AGENDA_TEMPLATE = 'Add Agenda Template'
+ADD_INVITE_TICKET = 'Add Invite Ticket'
 
 #All add permissions except vote - used within meetings so some permissions may not apply.
 REGULAR_ADD_PERMISSIONS = (ADD_AGENDA_ITEM,

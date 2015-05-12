@@ -34,7 +34,7 @@ class InviteTicket(Persistent, WorkflowAware):
         All methods are documented in the interface of this class.
     """
     type_name = 'InviteTicket'
-    add_permission = None
+    add_permission = security.ADD_INVITE_TICKET
     css_icon = 'glyphicon glyphicon-send'
 
     @property

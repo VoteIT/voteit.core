@@ -9,6 +9,11 @@
   <h1 i18n:translate=""><tal:ts i18n:name="num" content="participants_count" /> participants</h1>
 
   ${structure: view.render_template('voteit.core:templates/snippets/participants_tabs.pt')}
+  
+  <p tal:condition="request.is_moderator" i18n:translate="meeting_closed">
+    Meeting is closed, so unused tickets won't grant access to the meeting.
+    Access policies will still work though.
+  </p>
 
   <table class="table table-striped" id="participants">
     <thead>
