@@ -24,13 +24,9 @@ from voteit.core.models.invite_ticket import claim_and_send_notification
 class TicketView(BaseView):
     """ View for all things that have to do with meeting invitation tickets. """
 
-    @view_config(name = 'ticket_login', renderer = "voteit.core:templates/ticket_login.pt", permission = NO_PERMISSION_REQUIRED)
-    def ticket_login(self):
-        """ If user is not logged in, display login information.
-        """
-        return {}
-
-    @view_config(name = 'ticket_claim', renderer = "voteit.core:templates/ticket_claim.pt", permission = NO_PERMISSION_REQUIRED)
+    @view_config(name = 'ticket_claim',
+                 renderer = "voteit.core:templates/ticket_claim.pt",
+                 permission = NO_PERMISSION_REQUIRED)
     def ticket_claim(self):
         """ After login or registration, redirect back here, where information about the ticket will be displayed,
             and a confirmation that you want to use the ticket for the current user.
