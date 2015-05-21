@@ -92,13 +92,12 @@ def active_poll_fixture(config):
         with admin as voter.
         You can use this if you want a fixture for your poll plugin tests
     """
-    root = bootstrap_and_fixture(config)
     from voteit.core.models.poll import Poll
     from voteit.core.models.meeting import Meeting
     from voteit.core.security import unrestricted_wf_transition_to
     from voteit.core.models.agenda_item import AgendaItem
     from voteit.core.models.proposal import Proposal
-
+    root = bootstrap_and_fixture(config)
     request = testing.DummyRequest()
     config = testing.setUp(request = request, registry = config.registry)
     config.include('pyramid_mailer.testing')
@@ -108,7 +107,6 @@ def active_poll_fixture(config):
     meeting = root['meeting'] = Meeting()
     meeting.add_groups('admin', [ROLE_VOTER])
     meeting.set_workflow_state(request, 'ongoing')
-    
     ai = meeting['ai'] = AgendaItem()
     ai['prop1'] = Proposal(title = u"Proposal 1")
     ai['prop2'] = Proposal(title = u"Proposal 2")

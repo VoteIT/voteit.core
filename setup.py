@@ -7,7 +7,6 @@ README = open(os.path.join(here, 'README.rst')).read()
 CHANGES = open(os.path.join(here, 'CHANGES.rst')).read()
 
 install_requires = (
-    #'Babel',
     'Arche',
     'BeautifulSoup', #FIXME?
     'ZODB3',
@@ -44,7 +43,7 @@ testing_extras = [
     ]
 
 setup(name='voteit.core',
-      version='0.1dev',
+      version='0.2dev',
       description='Core VoteIT package',
       long_description=README + '\n\n' +  CHANGES,
       classifiers=[
