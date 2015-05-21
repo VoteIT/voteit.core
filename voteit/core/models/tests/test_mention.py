@@ -2,14 +2,17 @@ from unittest import TestCase
 
 from pyramid import testing
 from pyramid_mailer import get_mailer
+from arche.utils import send_email
 
 from voteit.core.testing_helpers import bootstrap_and_fixture
+from voteit.core.testing_helpers import attach_request_method
 
 
 class MentionFunctionalTests(TestCase):
 
     def setUp(self):
         self.request = testing.DummyRequest()
+        attach_request_method(self.request, send_email, 'send_email')
         self.config = testing.setUp(request = self.request)
         self.config.include('voteit.core.models.mention')
         self.config.include('pyramid_mailer.testing')
@@ -21,7 +24,7 @@ class MentionFunctionalTests(TestCase):
         from voteit.core.models.agenda_item import AgendaItem
         from voteit.core.models.meeting import Meeting
         root = bootstrap_and_fixture(self.config)
-        root['users']['admin'].set_field_value('email', 'this@that.com')
+        root['users']['admin'].email = 'this@that.com'
         root['m'] = meeting = Meeting()
         meeting['ai'] = ai = AgendaItem()
         return ai

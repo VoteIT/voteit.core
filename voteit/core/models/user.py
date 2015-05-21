@@ -6,21 +6,15 @@ import logging
 from BTrees.OOBTree import OOBTree
 from arche.api import User as ArcheUser
 from arche.utils import utcnow
-from pyramid.i18n import get_localizer
 from pyramid.security import Allow
 from pyramid.security import DENY_ALL
 from pyramid.threadlocal import get_current_request
-from pyramid.traversal import find_interface
-from pyramid_mailer import get_mailer
-from pyramid_mailer.message import Message
 from zope.interface import implementer
 
 from voteit.core import VoteITMF as _
 from voteit.core import security
 from voteit.core.exceptions import TokenValidationError
 from voteit.core.models.base_content import BaseContent
-from voteit.core.models.interfaces import IAgendaItem
-from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import IProfileImage
 from voteit.core.models.interfaces import IUser
 
@@ -85,7 +79,7 @@ class User(ArcheUser, BaseContent):
             try:
                 url = plugin.url(size, request)
             except Exception, e:
-                log.error('Image plugin %s caused the exception: %s') % (plugin, e)
+                log.error('Image plugin %s caused the exception: %s', plugin, e)
         if not url:
             url = request.registry.settings.get('voteit.default_profile_picture', '')
         tag = '<img src="%(url)s" height="%(size)s" width="%(size)s"' % {'url': url, 'size': size}
@@ -127,30 +121,6 @@ class User(ArcheUser, BaseContent):
     @about_me.setter
     def about_me(self, value):
         self.set_field_value('about_me', value)
-
-    def send_mention_notification(self, context, request):
-        """ Sends an email when the user is mentioned in a proposal or a discussion post
-        """
-        #FIXME: This shouldn't be part of the persistent object.
-        # do not send mail if there is no emailadress
-        if self.get_field_value('email'):
-            locale = get_localizer(request)
-            meeting = find_interface(context, IMeeting)
-            agenda_item = find_interface(context, IAgendaItem)
-            #FIXME: Email should use a proper template
-            url = request.resource_url(context)
-            link = "<a href=\"%s\">%s</a>" % (url, url)
-            body = locale.translate(_('mentioned_notification',
-                                      default = "You have been mentioned in ${meeting} on ${agenda_item}. "
-                                        "Click the following link to go there, ${link}.",
-                                        mapping = {'meeting':meeting.title,
-                                                   'agenda_item': agenda_item.title,
-                                                   'link': link,},))
-            msg = Message(subject=_(u"You have been mentioned in VoteIT"),
-                           recipients=[self.get_field_value('email')],
-                           html=body)
-            mailer = get_mailer(request)
-            mailer.send(msg)
 
 
 def includeme(config):
