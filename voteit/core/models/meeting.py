@@ -205,7 +205,8 @@ def includeme(config):
                            security.MANAGE_GROUPS,
                            security.MODERATE_MEETING,
                            security.DELETE,
-                           security.CHANGE_WORKFLOW_STATE, )
+                           security.CHANGE_WORKFLOW_STATE,
+                           security.ADD_INVITE_TICKET)
     aclreg = config.registry.acl
     default_acl = aclreg.new_acl('Meeting:default')
     default_acl.add(security.ROLE_ADMIN, security.REGULAR_ADD_PERMISSIONS)
