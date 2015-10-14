@@ -58,7 +58,7 @@ def required_components(config):
     cache_max_age = int(config.registry.settings.get('arche.cache_max_age', 60*60*24))
     config.add_static_view('static', 'arche:static', cache_max_age = cache_max_age)
     config.include('arche') #Must be included first to adjust settings for other packages!
-    
+    config.include('arche_usertags')
     #Include all major components
     config.include('voteit.core.models')
     config.include('voteit.core.fanstaticlib')
