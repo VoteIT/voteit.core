@@ -23,7 +23,6 @@ from voteit.core.models.interfaces import IDiscussionPost
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import IProposal
 from voteit.core.models.interfaces import IUnread
-from voteit.core.models.interfaces import IUserTags
 from voteit.core.models.interfaces import IWorkflowAware
 from voteit.core.security import NEVER_EVER_PRINCIPAL
 from voteit.core.security import VIEW
@@ -117,20 +116,6 @@ def get_unread(obj, default):
         return userids
     return default
 
-def get_like_userids(obj, default):
-    """ Returns all userids who 'like' something.
-        We only use like for Discussions and Proposals.
-        Warning! An empty list doesn't update the catalog.
-        If default is returned to an index, it will cause that index to remove index,
-        which is the correct behaviour for the catalog.
-    """
-    if IDiscussionPost.providedBy(obj) or IProposal.providedBy(obj):
-        user_tags = getAdapter(obj, IUserTags)
-        likes = user_tags.userids_for_tag('like')
-        if likes:
-            return likes
-    return default
-
 def get_order(obj, default):
     """ Return order, if object has that field. """
     if IBaseContent.providedBy(obj):
@@ -199,9 +184,7 @@ class PollCountMetadata(_CountMetadata, Metadata):
 def includeme(config):
     """ Register metadata adapter. """
     config.add_searchable_text_index('aid')
-
     config.add_searchable_text_discriminator(get_searchable_prop_or_disc)
-
     indexes = {
         'aid': CatalogFieldIndex(get_aid),
         'aid_int': CatalogFieldIndex(get_aid_int),
@@ -210,13 +193,11 @@ def includeme(config):
         'start_time' : CatalogFieldIndex(get_start_time),
         'end_time' : CatalogFieldIndex(get_end_time),
         'unread': CatalogKeywordIndex(get_unread),
-        'like_userids': CatalogKeywordIndex(get_like_userids),
         'order': CatalogFieldIndex(get_order),
         'workflow_state': CatalogFieldIndex(get_workflow_state),
     }
     config.add_catalog_indexes(__name__, indexes)
     config.scan(__name__)
-
     config.create_metadata_field('title', 'title')
     config.create_metadata_field('__name__', '__name__')
     config.add_metadata_field(ProposalCountMetadata)

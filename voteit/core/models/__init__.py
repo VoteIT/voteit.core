@@ -19,6 +19,5 @@ def includeme(config):
     config.include('.site')
     config.include('.unread')
     config.include('.user')
-    config.include('.user_tags')
     config.include('.users')
     config.include('.vote')

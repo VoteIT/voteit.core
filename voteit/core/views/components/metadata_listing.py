@@ -33,7 +33,10 @@ def meta_state(context, request, va, **kw):
     )
     return render(va.kwargs['renderer'], response, request = request)
 
-@view_action('metadata_listing', 'retract', permission=VIEW, interface = IWorkflowAware)
+@view_action('metadata_listing', 'retract',
+             permission = VIEW,
+             interface = IWorkflowAware,
+             priority = 20)
 def meta_retract(context, request, va, **kw):
     if request.is_moderator:
         return
@@ -49,20 +52,15 @@ def meta_retract(context, request, va, **kw):
     return '<a role="button" class="btn btn-default btn-xs" href="%s"><span class="text-warning">%s</span></a> ' % \
         (url, request.localizer.translate(_(u'Retract')))
 
-# @view_action('metadata_listing', 'user_tags', permission=VIEW)
-# def meta_user_tags(context, request, va, **kw):
-#     brain = kw['brain']
-#     api = kw['api']
-#     del kw['brain'] #So we don't pass it along as well, causing an argument conflict
-#     return api.render_view_group(brain, request, 'user_tags', **kw)
-
 @view_action('metadata_listing', 'reply',
              title = _("Reply"),
              interface = IDiscussionPost,
+             priority = 30,
              ai_perm = ADD_DISCUSSION_POST)
 @view_action('metadata_listing', 'comment',
              title = _("Comment"),
              interface = IProposal,
+             priority = 30,
              ai_perm = ADD_DISCUSSION_POST)
 def meta_comment(context, request, va, **kw):
     """ Create a comment link
@@ -85,7 +83,10 @@ def meta_comment(context, request, va, **kw):
          request.localizer.translate(va.title))
     return out
 
-@view_action('metadata_listing', 'delete', permission = DELETE, interface = IDiscussionPost)
+@view_action('metadata_listing', 'delete',
+             permission = DELETE,
+             interface = IDiscussionPost,
+             priority = 40)
 def meta_delete(context, request, va, **kw):
     if not request.is_moderator:
         return u'<a href="%s" role="button" class="btn btn-default btn-xs"><span class="text-danger">%s %s</span></a> ' % \

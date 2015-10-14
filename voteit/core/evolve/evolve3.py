@@ -1,6 +1,11 @@
 
 
 def evolve(root):
+    #Kept here as documentation. This migration doesn't work anylonger.
+    pass
+
+
+def main(root):
     import re
     
     from pyramid.traversal import resource_path

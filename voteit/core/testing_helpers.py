@@ -85,7 +85,6 @@ def register_catalog(config):
     config.include('arche.models.catalog')
     config.include('voteit.core.models.catalog')
     config.include('voteit.core.models.unread')
-    config.include('voteit.core.models.user_tags')
 
 def active_poll_fixture(config):
     """ This method sets up a site the way it will be when a poll is ready to start

@@ -1,0 +1,17 @@
+<span data-like xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core">
+  <a data-like-btn
+    href="${user_likes and like.remove_url(request) or like.add_url(request)}"
+    role="button"
+    class="btn btn-xs btn-default ${user_likes and 'active' or ''}"> 
+    <span class="text-primary">
+      <span class="glyphicon glyphicon-thumbs-up"></span>
+      <tal:ts i18n:translate="">Like</tal:ts>
+    </span>
+  </a>
+  <a data-open-modal
+    class="btn btn-xs btn-default"
+    href="${request.resource_url(context, '_like_users_popover')}">
+    <span data-like-count>${len(like)}</span>
+    <span class="glyphicon glyphicon-user"></span>
+  </a>
+</span>
