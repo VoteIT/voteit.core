@@ -10,26 +10,18 @@ install_requires = (
     'Arche',
     'BeautifulSoup', #FIXME?
     'ZODB3',
-    'betahaus.viewcomponent',
+    'arche_usertags',
     'betahaus.pyracont >= 0.3b', #Needed for migrations
+    'betahaus.viewcomponent',
     'colander',
     'deform',
     'fanstatic',
     'html2text',
     'js.jquery_tablesorter', #FIXME?
     'pyramid',
-    'pyramid_beaker',
-    'pyramid_chameleon',
-    'pyramid_deform',
-    'pyramid_mailer',
-    'pyramid_tm',
     'pyramid_zcml',
-    'pyramid_zodbconn',
-    'repoze.catalog',
-    'repoze.folder',
     'repoze.workflow',
-    'webhelpers',
-    )
+    'webhelpers',)
 
 docs_extras = [
     'Sphinx',
