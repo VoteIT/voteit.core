@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2015-05-09 12:02+0200\n"
-"PO-Revision-Date: 2015-05-09 12:02+0100\n"
+"POT-Creation-Date: 2015-10-14 13:37+0200\n"
+"PO-Revision-Date: 2015-10-14 13:53+0100\n"
 "Last-Translator: Robin Harms Oredsson <robin@betahaus.net>\n"
 "Language-Team: sv <LL@li.org>\n"
 "Language: sv\n"
@@ -29,7 +29,7 @@ msgstr "VoteIT"
 msgid "Registered users"
 msgstr "Registrerade användare"
 
-#: voteit/core/bootstrap.py:36 voteit/core/security.py:96
+#: voteit/core/bootstrap.py:36 voteit/core/security.py:97
 #: voteit/core/views/templates/_participants.pt:56
 msgid "Administrator"
 msgstr "Administratör"
@@ -112,12 +112,12 @@ msgid "Poll"
 msgstr "Omröstning"
 
 #: voteit/core/js_translations.py:29
-#: voteit/core/views/components/metadata_listing.py:60
+#: voteit/core/views/components/metadata_listing.py:56
 msgid "Reply"
 msgstr "Svara"
 
 #: voteit/core/js_translations.py:30
-#: voteit/core/views/components/metadata_listing.py:64
+#: voteit/core/views/components/metadata_listing.py:61
 msgid "Comment"
 msgstr "Kommentera"
 
@@ -175,30 +175,30 @@ msgstr "Uppdateringen av rättigheter lyckades."
 msgid "permssions_updated_error"
 msgstr "Uppdateringen av rättigheter lyckades inte."
 
-#: voteit/core/security.py:28 voteit/core/security.py:98
+#: voteit/core/security.py:28 voteit/core/security.py:99
 msgid "Moderator"
 msgstr "Moderator"
 
-#: voteit/core/security.py:33 voteit/core/security.py:100
-#: voteit/core/security.py:104 voteit/core/views/templates/_participants.pt:40
+#: voteit/core/security.py:33 voteit/core/security.py:101
+#: voteit/core/security.py:105 voteit/core/views/templates/_participants.pt:40
 msgid "Discuss"
 msgstr "Diskutera"
 
-#: voteit/core/security.py:37 voteit/core/security.py:101
-#: voteit/core/security.py:105 voteit/core/views/templates/_participants.pt:44
+#: voteit/core/security.py:37 voteit/core/security.py:102
+#: voteit/core/security.py:106 voteit/core/views/templates/_participants.pt:44
 msgid "Propose"
 msgstr "Föreslå"
 
-#: voteit/core/security.py:41 voteit/core/security.py:102
-#: voteit/core/security.py:106 voteit/core/views/templates/_participants.pt:48
+#: voteit/core/security.py:41 voteit/core/security.py:103
+#: voteit/core/security.py:107 voteit/core/views/templates/_participants.pt:48
 msgid "Voter"
 msgstr "Rösträtt"
 
-#: voteit/core/security.py:97
+#: voteit/core/security.py:98
 msgid "Meeting creator"
 msgstr "Mötesskapare"
 
-#: voteit/core/security.py:99 voteit/core/security.py:103
+#: voteit/core/security.py:100 voteit/core/security.py:104
 #: voteit/core/views/templates/_participants.pt:36
 #: voteit/core/views/templates/agenda_template.pt:12
 msgid "View"
@@ -295,6 +295,19 @@ msgstr ""
 "Detta möte har ännu pågående dagordningspunkter. Du kan inte stänga mötet "
 "förrän dagordningspunkterna är avslutade."
 
+#: voteit/core/models/mention.py:86
+#, python-format
+msgid "Mentioned in ${meeting_title}"
+msgstr "Nämnd i ${meeting_title}"
+
+#. Default: You have been mentioned in ${meeting} on ${agenda_item}. Click the
+#. following link to go there, ${link}.
+#: voteit/core/models/mention.py:80
+msgid "mentioned_notification"
+msgstr ""
+"Du har nämnts i mötet ${meeting} under punkten ${agenda_item}. Klicka på "
+"följande länk för att gå dit: ${link}."
+
 #: voteit/core/models/poll.py:312
 msgid "VoteIT: Open poll"
 msgstr "VoteIT: Pågående omröstning"
@@ -364,21 +377,9 @@ msgstr "Skapa en VoteIT-instans"
 msgid "Proposal"
 msgstr "Förslag"
 
-#: voteit/core/models/user.py:39
+#: voteit/core/models/user.py:33
 msgid "User"
 msgstr "Användare"
-
-#. Default: You have been mentioned in ${meeting} on ${agenda_item}. Click the
-#. following link to go there, ${link}.
-#: voteit/core/models/user.py:154
-msgid "mentioned_notification"
-msgstr ""
-"Du har nämnts i mötet ${meeting} under punkten ${agenda_item}. Klicka på "
-"följande länk för att gå dit: ${link}."
-
-#: voteit/core/models/user.py:160
-msgid "You have been mentioned in VoteIT"
-msgstr "Du har blivit nämnd i VoteIT"
 
 #: voteit/core/models/users.py:18
 msgid "Users"
@@ -483,6 +484,19 @@ msgstr "Röst"
 #: voteit/core/plugins/majority_poll.py:78
 msgid "vote_plural"
 msgstr "Röster"
+
+#: voteit/core/plugins/templates/like_btn.pt:8
+msgid "Like"
+msgstr "Gilla"
+
+#: voteit/core/plugins/templates/like_users_popover.pt:6
+msgid "Users who like this ${count}"
+msgstr "Användare som gillar detta ${count}"
+
+#. Default: Note that liking something isn't the same thing as voting for it!
+#: voteit/core/plugins/templates/like_users_popover.pt:13
+msgid "like_not_vote_notice"
+msgstr "Notera att gilla någonting inte är samma sak som att rösta för det!"
 
 #: voteit/core/plugins/templates/majority_poll.pt:5
 msgid "Results of ${title}"
@@ -610,7 +624,7 @@ msgstr "Lämna fältet tomt om du vill vara anonym"
 
 #: voteit/core/schemas/contact.py:30 voteit/core/schemas/contact.py:53
 #: voteit/core/templates/manage_tickets.pt:47
-#: voteit/core/templates/participants.pt:19
+#: voteit/core/templates/participants.pt:24
 #: voteit/core/templates/snippets/user_basic_info.pt:9
 #: voteit/core/views/templates/_participants.pt:34
 msgid "Email"
@@ -845,7 +859,7 @@ msgstr ""
 "Bara omröstningsmetoder valda här kommer att vara tillgängliga i mötet. Om "
 "inget är valt så kommer baraserverns standardmetod finnas tillgänglig."
 
-#: voteit/core/schemas/meeting.py:183 voteit/core/templates/participants.pt:18
+#: voteit/core/schemas/meeting.py:183 voteit/core/templates/participants.pt:23
 msgid "UserID"
 msgstr "Användarnamn"
 
@@ -1063,7 +1077,7 @@ msgstr "Tillåt diskussion"
 
 #: voteit/core/templates/manage_agenda.pt:30
 #: voteit/core/templates/manage_agenda.pt:74
-#: voteit/core/views/components/metadata_listing.py:94
+#: voteit/core/views/components/metadata_listing.py:95
 #: voteit/core/views/components/moderator_actions.py:34
 #: voteit/core/views/templates/agenda_template.pt:21
 #: voteit/core/views/templates/agenda_templates.pt:60
@@ -1087,7 +1101,7 @@ msgid "Cancel"
 msgstr "Avbryt"
 
 #: voteit/core/templates/manage_tickets.pt:9
-#: voteit/core/templates/snippets/participants_tabs.pt:19
+#: voteit/core/templates/snippets/participants_tabs.pt:20
 msgid "Manage invitations"
 msgstr "Hantera inbjudningar"
 
@@ -1140,27 +1154,41 @@ msgstr "Gånger skickad"
 msgid "Permissions"
 msgstr "Rättigheter"
 
-#: voteit/core/templates/manage_tickets.pt:84
+#: voteit/core/templates/manage_tickets.pt:85
 msgid "Message to any participants you resend tickets to"
 msgstr "Meddelande till deltagare du skickar om inbjudningar till"
 
-#: voteit/core/templates/manage_tickets.pt:87
+#: voteit/core/templates/manage_tickets.pt:88
 msgid "If you've marked any closed tickets, they won't receive a reinvite."
 msgstr ""
 "Om några av de markerade är stängda biljetter så kommer de inte att skickas "
 "om."
 
-#: voteit/core/templates/manage_tickets.pt:88
+#: voteit/core/templates/manage_tickets.pt:89
 msgid "With ${count} selected"
 msgstr "Med ${count} valda"
 
-#: voteit/core/templates/manage_tickets.pt:89
+#: voteit/core/templates/manage_tickets.pt:90
 msgid "Resend invitation"
 msgstr "Skicka om inbjudan"
 
-#: voteit/core/templates/manage_tickets.pt:90
+#: voteit/core/templates/manage_tickets.pt:91
 msgid "Remove"
 msgstr "Ta bort"
+
+#. Default: This meeting is closed. You can't send new invitations now. If you
+#. need to add permissions to a user, use the form to add currently registered
+#. users.
+#: voteit/core/templates/manage_tickets.pt:94
+msgid "closed_meetings_resend_ticket_block"
+msgstr ""
+"Mötet är stängt. Du kan inte skicka nya inbjudningar nu. Om du behöver lägga "
+"till rättigheter för en användare, använd formuläret för redan registrerade "
+"användare."
+
+#: voteit/core/templates/manage_tickets.pt:101
+msgid "Add existing user"
+msgstr "Lägg till existerande användare"
 
 #: voteit/core/templates/minutes.pt:10
 msgid "Meeting opened"
@@ -1210,15 +1238,23 @@ msgstr "Tillbaka"
 msgid "${num} participants"
 msgstr "${num} deltagare"
 
-#: voteit/core/templates/participants.pt:16
+#. Default: Meeting is closed, so unused tickets won't grant access to the
+#. meeting. Access policies will still work though.
+#: voteit/core/templates/participants.pt:13
+msgid "meeting_closed"
+msgstr ""
+"Mötet är stängt, så oanvända biljetter kommer inte ge tillgång till mötet. "
+"Accesspolicies kommer fortfarande fungera."
+
+#: voteit/core/templates/participants.pt:21
 msgid "First name"
 msgstr "Förnamn"
 
-#: voteit/core/templates/participants.pt:17
+#: voteit/core/templates/participants.pt:22
 msgid "Last name"
 msgstr "Efternamn"
 
-#: voteit/core/templates/participants.pt:72
+#: voteit/core/templates/participants.pt:77
 msgid "Loading data..."
 msgstr "Laddar data…"
 
@@ -1284,38 +1320,6 @@ msgstr "Använd inbjudningskod"
 #: voteit/core/templates/ticket_claim.pt:23
 msgid "Logout"
 msgstr "Logga ut"
-
-#: voteit/core/templates/ticket_login.pt:9
-msgid "Login or register to gain access"
-msgstr "Logga in eller registrera dig för att få tillträde"
-
-#. Default: You've recieved an invitation for the meeting ${meeting_title}. You
-#. need to be logged in to use the invitation.
-#: voteit/core/templates/ticket_login.pt:11
-msgid "login_or_register_to_use_ticket_help"
-msgstr ""
-"Du har mottagit en inbjudan till mötet ${meeting_title}. Du behöver vara "
-"inloggad för att använda din inbjudan."
-
-#: voteit/core/templates/ticket_login.pt:18
-msgid "If you already have an account:"
-msgstr "Om du redan har ett konto:"
-
-#: voteit/core/templates/ticket_login.pt:19
-msgid "Login"
-msgstr "Logga in"
-
-#: voteit/core/templates/ticket_login.pt:22
-msgid "If you do not have an account:"
-msgstr "Om du inte har något konto:"
-
-#: voteit/core/templates/ticket_login.pt:23
-msgid "You need to register a new account by using the button below."
-msgstr "Då behöver du registrera dig genom att klicka på knappen nedan."
-
-#: voteit/core/templates/ticket_login.pt:25
-msgid "Register"
-msgstr "Registrera"
 
 #: voteit/core/templates/user.pt:18
 msgid "Change profile"
@@ -1563,7 +1567,7 @@ msgid "Participant list"
 msgstr "Deltagarlista"
 
 #: voteit/core/templates/snippets/meeting_menu.pt:27
-#: voteit/core/views/ticket.py:223
+#: voteit/core/views/ticket.py:234
 #: voteit/core/views/templates/_participants.pt:128
 msgid "Invite participants"
 msgstr "Bjud in deltagare"
@@ -1598,15 +1602,15 @@ msgstr "Accesspolicy"
 msgid "Configure selected access policy"
 msgstr "Inställningar för vald accesspolicy"
 
-#: voteit/core/templates/snippets/participants_tabs.pt:13
+#: voteit/core/templates/snippets/participants_tabs.pt:14
 msgid "Invite"
 msgstr "Bjud in"
 
-#: voteit/core/templates/snippets/participants_tabs.pt:16
+#: voteit/core/templates/snippets/participants_tabs.pt:17
 msgid "Add existing"
 msgstr "Lägg till existerande"
 
-#: voteit/core/templates/snippets/participants_tabs.pt:22
+#: voteit/core/templates/snippets/participants_tabs.pt:23
 msgid "Emails"
 msgstr "Epost"
 
@@ -1770,22 +1774,26 @@ msgstr "Uppdaterad"
 msgid "Nothing changed"
 msgstr "Inget ändrat"
 
-#: voteit/core/views/ticket.py:45
+#: voteit/core/views/ticket.py:41
 msgid "This ticket has already been used."
 msgstr "Biljetten har redan använts."
 
+#: voteit/core/views/ticket.py:83
+msgid "This meeting is closed so no invitations can be used now."
+msgstr "Mötet är stängt så inbjudningar kan inte användas längre."
+
 #. Default: Successfully added ${added} invites
-#: voteit/core/views/ticket.py:241
+#: voteit/core/views/ticket.py:252
 msgid "added_tickets_text"
 msgstr "La till ${added} inbjudningar"
 
-#: voteit/core/views/ticket.py:65
+#: voteit/core/views/ticket.py:62
 msgid "You've been granted access to the meeting. Welcome!"
 msgstr "Du har fått rätt att delta i mötet. Välkommen!"
 
 #. Default: The ticket link did not contain a token and an email address.
 #. Perhaps you came to this page by mistake?
-#: voteit/core/views/ticket.py:94
+#: voteit/core/views/ticket.py:97
 msgid "ticket_link_wrong_parameters_error"
 msgstr ""
 "Inbjudanslänken innehöll inte inbjudningskod och epostadress som de ska. "
@@ -1795,7 +1803,7 @@ msgstr ""
 #. logged in. Since ${email} was already registered with us, it seems like you
 #. have an account. If not, please ${register_link} first and then click the
 #. link in the invitation again.
-#: voteit/core/views/ticket.py:106
+#: voteit/core/views/ticket.py:110
 msgid "ticket_user_might_exist_text"
 msgstr ""
 "För att delta i mötet ${meeting_title} så behöver du vara inloggad. Eftersom "
@@ -1807,7 +1815,7 @@ msgstr ""
 #. logged in. We can't find any user with the email address ${email}. Perhaps
 #. you need to register first? If you know that you already have an account,
 #. simply ${login_link}.
-#: voteit/core/views/ticket.py:116
+#: voteit/core/views/ticket.py:120
 msgid "ticket_user_probably_dont_exist_text"
 msgstr ""
 "För att delta i mötet ${meeting_title} så behöver du vara inloggad. Vi kan "
@@ -1817,7 +1825,7 @@ msgstr ""
 
 #. Default: No tickets added - all you specified probably exist already.
 #. (Proccessed ${rejected})
-#: voteit/core/views/ticket.py:244
+#: voteit/core/views/ticket.py:255
 msgid "no_tickets_added"
 msgstr ""
 "Inga inbjudningar las till - alla du specificerade finns förmodligen redan. "
@@ -1825,7 +1833,7 @@ msgstr ""
 
 #. Default: Successfully added ${added} invites but discarded ${rejected} since
 #. they already existed or were already used.
-#: voteit/core/views/ticket.py:251
+#: voteit/core/views/ticket.py:263
 msgid "added_tickets_text_some_rejected"
 msgstr ""
 "La till ${added} inbjudningar med hanterade inte ${rejected} eftersom de "
@@ -1834,36 +1842,36 @@ msgstr ""
 #. Default: Ticket validation failed. Either the ticket doesn't exist, was
 #. already used or the url used improperly. If you need help, please contact
 #. the moderator that invited you to this meeting.
-#: voteit/core/views/ticket.py:56
+#: voteit/core/views/ticket.py:52
 msgid "ticket_validation_fail"
 msgstr ""
 "Kontroll av inbjudan misslyckades. Detta kan bero på att inbjudningskoden "
 "inte finns, redan använts eller att du använde webbadressen fel. Om du "
 "behöver hjälp kan du kontakta den som skickade inbjudan."
 
-#: voteit/core/views/ticket.py:139
+#: voteit/core/views/ticket.py:145
 msgid "Nothing selected - nothing to do!"
 msgstr "Inga valda - kan inte göra något!"
 
-#: voteit/core/views/ticket.py:144
+#: voteit/core/views/ticket.py:150
 #, python-format
 msgid "Removed ${count} tickets"
 msgstr "Tog bort ${count} inbjudningar"
 
-#: voteit/core/views/ticket.py:101
+#: voteit/core/views/ticket.py:105
 msgid "login"
 msgstr "logga in"
 
-#: voteit/core/views/ticket.py:103
+#: voteit/core/views/ticket.py:107
 msgid "register"
 msgstr "registrera"
 
-#: voteit/core/views/ticket.py:164
+#: voteit/core/views/ticket.py:170
 #, python-format
 msgid "Resent ${count} successfully"
 msgstr "Skickade om ${count}"
 
-#: voteit/core/views/ticket.py:167
+#: voteit/core/views/ticket.py:173
 #, python-format
 msgid ""
 "Resent ${count} of ${total}. ${aborted} were not sent since they're already "
@@ -1880,7 +1888,7 @@ msgstr "VoteIT Manual"
 msgid "Lost your password?"
 msgstr "Tappat ditt lösenord?"
 
-#: voteit/core/views/components/metadata_listing.py:50
+#: voteit/core/views/components/metadata_listing.py:53
 msgid "Retract"
 msgstr "Dra tillbaka"
 
@@ -1907,19 +1915,6 @@ msgstr "Blockera diskussion"
 #: voteit/core/views/components/moderator_actions.py:58
 msgid "Enable discussion"
 msgstr "Aktivera diskussion"
-
-#: voteit/core/views/components/user_tags.py:15
-msgid "Like"
-msgstr "Gilla"
-
-#: voteit/core/views/components/user_tags.py:28
-#, python-format
-msgid "Remove ${display_name}"
-msgstr "Ta bort ${display_name}"
-
-#: voteit/core/views/components/user_tags.py:24
-msgid "like this"
-msgstr "gillar detta"
 
 #. Default: Click the icons to change permission. Any permission that's changed
 #. will be listed in bold. When you're done, click save at the bottom. If all
@@ -2034,6 +2029,38 @@ msgstr "personer"
 #: voteit/core/views/templates/snippets/user_tag.pt:20
 msgid "more_in_likes"
 msgstr "till"
+
+#~ msgid "You have been mentioned in VoteIT"
+#~ msgstr "Du har blivit nämnd i VoteIT"
+
+#~ msgid "Login or register to gain access"
+#~ msgstr "Logga in eller registrera dig för att få tillträde"
+
+#~ msgid "login_or_register_to_use_ticket_help"
+#~ msgstr ""
+#~ "Du har mottagit en inbjudan till mötet ${meeting_title}. Du behöver vara "
+#~ "inloggad för att använda din inbjudan."
+
+#~ msgid "If you already have an account:"
+#~ msgstr "Om du redan har ett konto:"
+
+#~ msgid "Login"
+#~ msgstr "Logga in"
+
+#~ msgid "If you do not have an account:"
+#~ msgstr "Om du inte har något konto:"
+
+#~ msgid "You need to register a new account by using the button below."
+#~ msgstr "Då behöver du registrera dig genom att klicka på knappen nedan."
+
+#~ msgid "Register"
+#~ msgstr "Registrera"
+
+#~ msgid "Remove ${display_name}"
+#~ msgstr "Ta bort ${display_name}"
+
+#~ msgid "like this"
+#~ msgstr "gillar detta"
 
 #~ msgid "You need to login or register to use an inivitation ticket."
 #~ msgstr ""
@@ -2829,9 +2856,6 @@ msgstr "till"
 
 #~ msgid "Send meeting invitations"
 #~ msgstr "Skicka mötesinbjudningar"
-
-#~ msgid "resent_invites_notice"
-#~ msgstr "Skickar om ${count_emails} inbjudningar"
 
 #~ msgid "deleting_invites_notice"
 #~ msgstr "Raderar ${count_emails} inbjudningar"
