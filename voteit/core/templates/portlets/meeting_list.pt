@@ -30,7 +30,7 @@
             <a class="btn btn-default btn-block"
               tal:repeat="obj meetings.get(state, ())"
               href="${request.resource_url(obj)}">
-              <span>${obj.title}</span>
+              <span class="btn-title">${obj.title}</span>
 
               <span class="clearfix">
                 <tal:started condition="state == 'ongoing'" i18n:translate="">
