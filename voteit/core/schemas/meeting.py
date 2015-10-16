@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from arche.schemas import userid_hinder_widget
 from arche.validators import existing_userids
+from arche.schemas import userid_hinder_widget
 from repoze.workflow import get_workflow
 import colander
 import deform
@@ -126,20 +126,35 @@ class EditMeetingSchema(colander.Schema):
         default = False,
         missing = False)
     nav_title = colander.SchemaNode(colander.String(),
-         title = _("Navigation bar title"),
-         description = _("In case you want another title in the navigation bar"),
-         missing = "",
-         tab = 'advanced')
+        title = _("Navigation bar title"),
+        description = _("In case you want another title in the navigation bar"),
+        missing = "",
+        tab = 'advanced')
     hide_proposal_states = colander.SchemaNode(colander.Set(),
-                                               title = _("Hide proposal states"),
-                                               description = _("hide_proposal_states_description",
-                                                               default = "Proposals in these states will be hidden by "
-                                                               "default but can be shown by pressing "
-                                                               "the link below the other proposals. They're not "
-                                                               "by any means invisible to participants."),
-                                               tab = 'advanced',
-                                               widget = hide_proposal_states_widget,
-                                               default = ('retracted', 'denied', 'unhandled'),)
+        title = _("Hide proposal states"),
+        description = _("hide_proposal_states_description",
+                        default = "Proposals in these states will be hidden by "
+                        "default but can be shown by pressing "
+                        "the link below the other proposals. They're not "
+                        "by any means invisible to participants."),
+        tab = 'advanced',
+        widget = hide_proposal_states_widget,
+        default = ('retracted', 'denied', 'unhandled'),)
+    system_userids = colander.SchemaNode(colander.Sequence(),
+        colander.SchemaNode(colander.String(),
+                            name='not_used',
+                            title = _("UserID"),
+                            widget = userid_hinder_widget,
+                            validator = existing_userids),
+        title = _("System user accounts"),
+        description = _("system_userids_description",
+                        default = "Must be an existing userid. "
+                        "If they're added here, moderators can use them "
+                        "to add proposals in their name. "
+                        "It's good practice to add things like 'propositions', "
+                        "'board' or similar."),
+        tab = 'advanced',
+        missing = ())
 
 
 class AddMeetingSchema(EditMeetingSchema):

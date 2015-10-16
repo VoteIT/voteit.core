@@ -24,7 +24,7 @@ class Meeting(BaseContent, SecurityAware, WorkflowAware):
         All methods are documented in the interface of this class.
     """
     type_name = 'Meeting'
-    type_title = _(u"Meeting")
+    type_title = _("Meeting")
     nav_visible = False
     add_permission = security.ADD_MEETING
     hide_meeting = False #Unless it's been set, don't show meeting
@@ -143,6 +143,13 @@ class Meeting(BaseContent, SecurityAware, WorkflowAware):
         self.set_field_value('hide_proposal_states', value)
 
     @property
+    def system_userids(self):
+        return self.get_field_value('system_userids', ())
+    @system_userids.setter
+    def system_userids(self, value):
+        self.set_field_value('system_userids', tuple(value))
+
+    @property
     def invite_tickets(self):
         try:
             return self.__invite_tickets__
@@ -171,8 +178,6 @@ class Meeting(BaseContent, SecurityAware, WorkflowAware):
     def copy_users_and_perms(self, name, event = True):
         root = find_root(self)
         origin = root[name]
-        #value = origin.get_security()
-        #self.set_security(value, event = event)
         self.local_roles.set_from_appstruct(origin.local_roles)
 
 
@@ -183,7 +188,8 @@ def closing_meeting_callback(context, info):
     #get_content returns a generator. It's "True" even if it's empty
     if tuple(context.get_content(iface=IAgendaItem, states=('ongoing', 'upcoming'))):
         err_msg = _(u"error_cant_close_meeting_with_ongoing_ais",
-                    default = u"This meeting still has ongoing or upcoming Agenda items in it. You can't close it until they're closed.")
+                    default = u"This meeting still has ongoing or upcoming "
+                    "Agenda items in it. You can't close it until they're closed.")
         raise HTTPForbidden(err_msg)
 
 def add_default_portlets_meeting(meeting):
