@@ -34,6 +34,7 @@ class ParticipantsView(BaseView):
         #This might be slow in its current form. Make get_meeting_participants smarter
         response['participants_count'] = len(get_meeting_participants(self.context))
         response['view_roles'] = _VIEW_ROLES
+        response['meeting_closed'] = self.context.get_workflow_state() == 'closed'
         return response
 
     @view_config(name = 'participants.json', renderer = 'json')
