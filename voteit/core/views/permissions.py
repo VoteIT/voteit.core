@@ -45,7 +45,7 @@ class AddExistingUserForm(BaseForm):
         if old_roles:
             new_roles = roles - old_roles
             if new_roles:
-                trans = slef.request.localizer.translate
+                trans = self.request.localizer.translate
                 role_titles = []
                 for role_name in new_roles:
                     role = self.request.registry.roles.get(role_name)
