@@ -82,7 +82,7 @@ def register_catalog(config):
     """ Register minimal components needed to enable the catalog in testing.
         Include arche components first.
     """
-    config.include('arche.models.catalog')
+    config.include('arche.testing.catalog')
     config.include('voteit.core.models.catalog')
     config.include('voteit.core.models.unread')
 
@@ -107,8 +107,8 @@ def active_poll_fixture(config):
     meeting.add_groups('admin', [ROLE_VOTER])
     meeting.set_workflow_state(request, 'ongoing')
     ai = meeting['ai'] = AgendaItem()
-    ai['prop1'] = Proposal(title = u"Proposal 1")
-    ai['prop2'] = Proposal(title = u"Proposal 2")
+    ai['prop1'] = Proposal(text = u"Proposal 1")
+    ai['prop2'] = Proposal(text = u"Proposal 2")
     ai.set_workflow_state(request, 'upcoming')
     ai.set_workflow_state(request, 'ongoing')
     ai['poll'] = Poll(title = 'A poll')
