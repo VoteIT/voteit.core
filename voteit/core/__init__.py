@@ -99,11 +99,13 @@ def check_required_settings(config):
     """ Check that at least the required settings are present in the paster.ini file.
         If not, add sane defaults.
     """
+    from arche import setup_defaults
     settings = config.registry.settings
     for (k, v) in DEFAULT_SETTINGS.items():
         if k not in settings:
             settings[k] = v
-            log.warn("Required value '%s' not found. Adding '%s' as default value." % (k, v))
+            log.warn("Required value '%s' not found. Adding '%s' as default value.", k, v)
+    setup_defaults(config)
 
 def check_required_components(config):
     """ After the process of including components is run, check that something has been included in the required sections.
@@ -116,7 +118,6 @@ def check_required_components(config):
                          IProfileImage: ('voteit.core.plugins.gravatar_profile_image',),
                          IAccessPolicy: (('voteit.core.plugins.immediate_ap'),
                                          ('voteit.core.plugins.invite_only_ap')),}
-    found_adapters = {}
     for adapter_registration in config.registry.registeredAdapters():
         if adapter_registration.provided in need_at_least_one:
             del need_at_least_one[adapter_registration.provided]
@@ -125,34 +126,6 @@ def check_required_components(config):
         for v in vals:
             config.include(v)
             log.info("Including default: '%s'" % v)
-
-# def root_factory(request):
-#     """ Returns root object for each request. See pyramid docs. """
-#     conn = get_connection(request)
-#     return appmaker(conn.root())
-# 
-# def appmaker(zodb_root):
-#     """ This determines the root object for each request. If no site root exists,
-#         this function will run bootstrap_voteit and create one.
-#         Read more about traversal in the Pyramid docs.
-#         
-#         The funny looking try / except here is to bootstrap the site in case it hasn't been bootstrapped.
-#         This is faster than using an if statement.
-#     """
-#     try:
-#         return zodb_root['app_root']
-#     except KeyError:
-#         from voteit.core.bootstrap import bootstrap_voteit
-#         zodb_root['app_root'] = bootstrap_voteit() #Returns a site root
-#         import transaction
-#         transaction.commit()
-#         #Set intitial version of database
-#         from repoze.evolution import ZODBEvolutionManager
-#         from voteit.core.evolve import VERSION
-#         manager = ZODBEvolutionManager(zodb_root['app_root'], evolve_packagename='voteit.core.evolve', sw_version=VERSION)
-#         manager.set_db_version(VERSION)
-#         manager.transaction.commit()
-#         return zodb_root['app_root']
 
 def includeme(config):
     """ Called when voteit.core is used as a component of another application.
