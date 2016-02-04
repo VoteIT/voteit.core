@@ -99,13 +99,11 @@ def check_required_settings(config):
     """ Check that at least the required settings are present in the paster.ini file.
         If not, add sane defaults.
     """
-    from arche import setup_defaults
     settings = config.registry.settings
     for (k, v) in DEFAULT_SETTINGS.items():
         if k not in settings:
             settings[k] = v
             log.warn("Required value '%s' not found. Adding '%s' as default value.", k, v)
-    setup_defaults(config)
 
 def check_required_components(config):
     """ After the process of including components is run, check that something has been included in the required sections.
