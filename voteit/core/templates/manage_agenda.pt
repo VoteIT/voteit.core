@@ -22,7 +22,9 @@
             </td>
           </tr>
           <tr class="thead">
-            <th>&nbsp;</th>
+            <th>
+              <input type="checkbox" data-mselect-for="${state}" />
+            </th>
             <th i18n:translate="">Agenda item</th>
             <th i18n:translate="">Edit</th>
             <th i18n:translate="">Allow proposals</th>
@@ -33,7 +35,7 @@
         <tbody>
           <tal:ais repeat="ai ais[state]">
             <tr>
-              <td><input type="checkbox" name="ais" value="${ai.__name__}"></input></td>
+              <td><input type="checkbox" name="ais" value="${ai.__name__}" data-mselect-name="${state}" /></td>
               <td>
                 <a href="${request.resource_url(ai)}">${ai.title}</a>
               </td>
