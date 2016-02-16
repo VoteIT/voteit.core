@@ -22,10 +22,11 @@ def evolve(root):
 
     for obj in find_all_db_objects(root):
         #Handle groups attribute and transfer to local role
-        for (name, roles) in obj.__groups__.items():
-            new_roles = set(roles)
-            if 'role:Admin' in new_roles:
-                new_roles.remove('role:Admin')
-                new_roles.add('role:Administrator')
-            obj.local_roles[name] = new_roles
-        delattr(obj, '__groups__')
+        if hasattr(obj, '__groups__'):
+            for (name, roles) in obj.__groups__.items():
+                new_roles = set(roles)
+                if 'role:Admin' in new_roles:
+                    new_roles.remove('role:Admin')
+                    new_roles.add('role:Administrator')
+                obj.local_roles[name] = new_roles
+            delattr(obj, '__groups__')
