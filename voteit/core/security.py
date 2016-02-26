@@ -14,7 +14,7 @@ from pyramid.threadlocal import get_current_request
 from pyramid.traversal import find_root
 from zope.component.event import objectEventNotify
 
-
+from voteit.core.models.interfaces import IMeeting
 from voteit.core.events import WorkflowStateChange
 from voteit.core import VoteITMF as _
 
@@ -27,20 +27,24 @@ ROLE_MEETING_CREATOR = 'role:Meeting creator'
 ROLE_MODERATOR = arche_sec.Role('role:Moderator',
                                 title = _("Moderator"),
                                 inheritable = True,
-                                assignable = True)
+                                assignable = True,
+                                required = IMeeting)
 ROLE_VIEWER = arche_sec.ROLE_VIEWER
 ROLE_DISCUSS = arche_sec.Role('role:Discussion',
                               title = _("Discuss"),
                               inheritable = True,
-                              assignable = True)
+                              assignable = True,
+                              required = IMeeting)
 ROLE_PROPOSE = arche_sec.Role('role:Propose',
                               title = _("Propose"),
                               inheritable = True,
-                              assignable = True)
+                              assignable = True,
+                              required = IMeeting)
 ROLE_VOTER = arche_sec.Role('role:Voter',
                             title = _("Voter"),
                             inheritable = True,
-                            assignable = True)
+                            assignable = True,
+                            required = IMeeting)
 ROLE_OWNER = arche_sec.ROLE_OWNER
 
 #Some roles are cumulative - admins are always moderators,
