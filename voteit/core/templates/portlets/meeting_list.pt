@@ -7,6 +7,11 @@
 
   <h2 i18n:translate="">Meetings</h2>
 
+  <p tal:condition="request.has_permission('Add Meeting', view.root)">
+    <a class="btn btn-default btn-block btn-sm"
+      href="${request.resource_url(view.root, 'add', query = {'content_type': 'Meeting'})}" i18n:translate="">Add</a>
+  </p>
+
   <div class="panel-group" role="tablist">
     <tal:iterate repeat="state meeting_states">
       <div class="panel panel-default">

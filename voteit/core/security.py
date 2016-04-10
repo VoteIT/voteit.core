@@ -1,6 +1,7 @@
 from hashlib import sha1
 
 from arche import security as arche_sec
+from arche.interfaces import IRoot
 from arche.security import authz_context
 from arche.security import groupfinder
 from pyramid.interfaces import IAuthorizationPolicy
@@ -23,7 +24,10 @@ from voteit.core import VoteITMF as _
 #to add regular groups and give them roles.
 #ROLE_ADMIN = 'role:Admin'
 ROLE_ADMIN = arche_sec.ROLE_ADMIN
-ROLE_MEETING_CREATOR = 'role:Meeting creator'
+ROLE_MEETING_CREATOR = arche_sec.Role('role:Meeting creator',
+                                      title = _("Meeting creator"),
+                                      assignable = True,
+                                      required = IRoot)
 ROLE_MODERATOR = arche_sec.Role('role:Moderator',
                                 title = _("Moderator"),
                                 inheritable = True,
@@ -200,4 +204,8 @@ def get_sha_password(value, hashed = None):
     return 'SHA1:' + sha1(value).hexdigest()
 
 def includeme(config):
-    config.register_roles(ROLE_MODERATOR, ROLE_DISCUSS, ROLE_PROPOSE, ROLE_VOTER)
+    config.register_roles(ROLE_MEETING_CREATOR,
+                          ROLE_MODERATOR,
+                          ROLE_DISCUSS,
+                          ROLE_PROPOSE,
+                          ROLE_VOTER)
