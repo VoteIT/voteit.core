@@ -111,6 +111,32 @@ class MeetingTests(unittest.TestCase):
         self.failUnless(obj.add_invite_ticket('john@doe.com', [security.ROLE_DISCUSS]))
         self.failIf(obj.add_invite_ticket('john@doe.com', [security.ROLE_DISCUSS]))
 
+    def test_add_default_portlets_meeting(self):
+        from voteit.core.models.meeting import add_default_portlets_meeting
+        from arche.interfaces import IPortletManager
+        self.config.include('arche')
+        self.config.include('voteit.core.portlets')
+        obj = self._cut()
+        add_default_portlets_meeting(obj)
+        manager = IPortletManager(obj)
+        portlet_types = [x.portlet_type for x in manager['agenda_item'].values()]
+        self.assertIn('ai_polls', portlet_types)
+        self.assertIn('ai_proposals', portlet_types)
+        self.assertIn('ai_discussions', portlet_types)
+
+    def test_add_default_portlets_duplicate_no_harm(self):
+        from voteit.core.models.meeting import add_default_portlets_meeting
+        from arche.interfaces import IPortletManager
+        self.config.include('arche')
+        self.config.include('voteit.core.portlets')
+        obj = self._cut()
+        add_default_portlets_meeting(obj)
+        manager = IPortletManager(obj)
+        first_count = len(manager['agenda_item'])
+        add_default_portlets_meeting(obj)
+        second_count = len(manager['agenda_item'])
+        self.assertEqual(first_count, second_count)
+
 
 class MeetingPermissionTests(unittest.TestCase):
     """ Check permissions in different meeting states. """

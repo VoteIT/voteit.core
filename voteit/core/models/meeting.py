@@ -195,11 +195,15 @@ def closing_meeting_callback(context, info):
 def add_default_portlets_meeting(meeting):
     manager = get_portlet_manager(meeting)
     if manager is not None:
-        ai_polls = manager.add('agenda_item', 'ai_polls')
-        ai_proposals = manager.add('agenda_item', 'ai_proposals')
-        ai_proposals.settings = {'hide_proposal_states': ('retracted', 'denied', 'unhandled')}
-        ai_discussions = manager.add('agenda_item', 'ai_discussions')
-        agenda = manager.add('left', 'agenda')
+        if not manager.get_portlets('agenda_item', 'ai_polls'):
+            manager.add('agenda_item', 'ai_polls')
+        if not manager.get_portlets('agenda_item', 'ai_proposals'):
+            ai_proposals = manager.add('agenda_item', 'ai_proposals')
+            ai_proposals.settings = {'hide_proposal_states': ('retracted', 'denied', 'unhandled')}
+        if not manager.get_portlets('agenda_item', 'ai_discussions'):
+            manager.add('agenda_item', 'ai_discussions')
+        if not manager.get_portlets('left', 'agenda'):
+            manager.add('left', 'agenda')
 
 def _add_portlets_meeting_subscriber(meeting, event):
     add_default_portlets_meeting(meeting)
