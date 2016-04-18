@@ -25,6 +25,7 @@
     <tal:working_plugin condition="poll_plugin">
       <a tal:condition="can_vote or has_voted"
         data-open-modal
+        data-modal-dialog-class="modal-lg"
         class="btn btn-primary"
         href="${request.resource_url(obj, '__vote__')}">
         <span data-actionmarker="glyphicon glyphicon-refresh rotate-me"></span>      
