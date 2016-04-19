@@ -144,15 +144,15 @@ class Poll(BaseContent, WorkflowAware):
             userids.add(vote.__name__)
         return frozenset(userids)
 
-    def _calculate_ballots(self):
+    def calculate_ballots(self):
         ballot_counter = Ballots()
         for vote in self.get_all_votes():
             ballot_counter.add(vote.get_vote_data())
-        self.ballots = ballot_counter.result()
+        return ballot_counter.result()
 
     def close_poll(self):
         """ Close the poll. """
-        self._calculate_ballots()
+        self.ballots = self.calculate_ballots()
         poll_plugin = self.get_poll_plugin()
         poll_plugin.handle_close()
         uid_states = poll_plugin.change_states_of()

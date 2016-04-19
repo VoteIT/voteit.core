@@ -238,8 +238,8 @@ class PollTests(unittest.TestCase):
         vote3 = self._make_vote()
         vote3.set_vote_data('other')
         obj['vote3'] = vote3
-        obj._calculate_ballots()
-        self.assertEqual(obj.ballots, (('hello_world', 2), ('other', 1)))
+        ballots = obj.calculate_ballots()
+        self.assertEqual(ballots, (('hello_world', 2), ('other', 1)))
 
     def test_ballots_dict(self):
         obj = self._cut()
@@ -251,8 +251,8 @@ class PollTests(unittest.TestCase):
         obj['vote3'] = self._make_vote(choice1)
         obj['vote4'] = self._make_vote(choice2)
         obj['vote5'] = self._make_vote(choice2)
-        obj._calculate_ballots()
-        self.assertEqual(obj.ballots, (({'apple': 1}, 2), ({'apple': 1, 'potato': 2}, 3)))
+        ballots = obj.calculate_ballots()
+        self.assertEqual(ballots, (({'apple': 1}, 2), ({'apple': 1, 'potato': 2}, 3)))
 
     def test_workflow_state_to_ongoing(self):
         """ When you try to set state to ongoing on poll and 
