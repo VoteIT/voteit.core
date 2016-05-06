@@ -32,7 +32,8 @@ class PollRawdataView(BaseView):
         try:
             poll_plugin = self.context.get_poll_plugin()
         except ComponentLookupError:
-            raise HTTPForbidden(_("Poll plugin %r not found" % self.context.poll_plugin))
+            raise HTTPForbidden(_("Poll plugin ${plugin} not found",
+                                  mapping = {'plugin': self.context.poll_plugin}))
         if self.context.get_workflow_state() != 'closed':
             raise HTTPForbidden(_("This poll is still open"))
         return poll_plugin.render_raw_data()
@@ -47,7 +48,8 @@ class PollResultsView(BaseView):
         try:
             poll_plugin = self.context.get_poll_plugin()
         except ComponentLookupError:
-            raise HTTPForbidden(_("Poll plugin %r not found" % self.context.poll_plugin))
+            raise HTTPForbidden(_("Poll plugin ${plugin} not found",
+                                  mapping = {'plugin': self.context.poll_plugin}))
         if self.context.get_workflow_state() != 'closed':
             raise HTTPForbidden(_("This poll is still open"))
         return Response(poll_plugin.render_result(self))
