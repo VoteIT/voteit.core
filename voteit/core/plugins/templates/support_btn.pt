@@ -6,7 +6,7 @@
     class="btn btn-xs btn-default ${user_supports and 'active' or ''}">
     <span class="text-primary">
       <span class="glyphicon glyphicon-thumbs-up"></span>
-      <tal:ts i18n:translate="">Support</tal:ts>
+      <tal:ts i18n:translate="support_proposal">Support</tal:ts>
     </span>
   </a>
   <a data-open-modal

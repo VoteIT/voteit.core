@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2016-05-07 00:16+0200\n"
-"PO-Revision-Date: 2016-05-07 00:19+0200\n"
+"POT-Creation-Date: 2016-05-07 00:23+0200\n"
+"PO-Revision-Date: 2016-05-07 00:23+0200\n"
 "Last-Translator: Robin Harms Oredsson <robin@betahaus.net>\n"
 "Language-Team: sv <LL@li.org>\n"
 "Language: sv\n"
@@ -524,11 +524,10 @@ msgstr ""
 "Procentsatsen visar antal röster som valde det alternativet, inte utifrån "
 "antalet röstberättigade."
 
+#. Default: Support
 #: voteit/core/plugins/templates/support_btn.pt:9
-#: voteit/core/views/contact.py:108
-#: voteit/core/views/components/help_actions.py:40
-msgid "Support"
-msgstr "Support"
+msgid "support_proposal"
+msgstr "Stöd"
 
 #: voteit/core/plugins/templates/support_users_popover.pt:6
 msgid "Users who supports this ${count}"
@@ -1670,6 +1669,11 @@ msgstr "Meddelandet har skickats till moderator"
 #: voteit/core/views/contact.py:96
 msgid "No support email set for this site. Form won't work!"
 msgstr "Ingen support-epost satt för denna site. Formuläret fungerar inte!"
+
+#: voteit/core/views/contact.py:108
+#: voteit/core/views/components/help_actions.py:40
+msgid "Support"
+msgstr "Support"
 
 #: voteit/core/views/contact.py:111
 msgid "Message sent"

@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE 1.0\n"
-"POT-Creation-Date: 2016-05-07 00:16+0200\n"
+"POT-Creation-Date: 2016-05-07 00:23+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -484,10 +484,9 @@ msgstr ""
 msgid "majority_results_description"
 msgstr ""
 
+#. Default: Support
 #: ././voteit/core/plugins/templates/support_btn.pt:9
-#: ././voteit/core/views/contact.py:108
-#: ././voteit/core/views/components/help_actions.py:40
-msgid "Support"
+msgid "support_proposal"
 msgstr ""
 
 #: ././voteit/core/plugins/templates/support_users_popover.pt:6
@@ -1562,6 +1561,11 @@ msgstr ""
 
 #: ././voteit/core/views/contact.py:96
 msgid "No support email set for this site. Form won't work!"
+msgstr ""
+
+#: ././voteit/core/views/contact.py:108
+#: ././voteit/core/views/components/help_actions.py:40
+msgid "Support"
 msgstr ""
 
 #: ././voteit/core/views/contact.py:111
