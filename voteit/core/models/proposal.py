@@ -96,6 +96,7 @@ def includeme(config):
     published.add(security.ROLE_MODERATOR, _PUBLISHED_MODERATOR_PERMS)
     published.add(security.ROLE_OWNER, security.RETRACT)
     published.add(security.ROLE_VIEWER, security.VIEW)
+    published.add(security.ROLE_VOTER, security.ADD_SUPPORT)
     locked = aclreg.new_acl('Proposal:locked')
     locked.add(security.ROLE_ADMIN, _LOCKED_MODERATOR_PERMS)
     locked.add(security.ROLE_MODERATOR, _LOCKED_MODERATOR_PERMS)

@@ -77,6 +77,7 @@ MODERATE_MEETING = 'Moderate Meeting'
 REQUEST_MEETING_ACCESS = 'Request Meeting Access'
 REGISTER = arche_sec.PERM_REGISTER
 
+
 PERM_MANAGE_USERS = arche_sec.PERM_MANAGE_USERS
 
 #FIXME: We need to separate Edit and workflow permissions for most content types
@@ -92,6 +93,7 @@ ADD_USER = 'Add User'
 ADD_VOTE = 'Add Vote'
 ADD_AGENDA_TEMPLATE = 'Add Agenda Template'
 ADD_INVITE_TICKET = 'Add Invite Ticket'
+ADD_SUPPORT = 'Add support'
 
 #All add permissions except vote - used within meetings so some permissions may not apply.
 REGULAR_ADD_PERMISSIONS = (ADD_AGENDA_ITEM,

@@ -1,5 +1,5 @@
 // Note: Refactor to generic function
-function toggle_like_button(event) {
+function toggle_support_button(event) {
   event.preventDefault();
   var elem = $(event.currentTarget);
   request = arche.do_request(elem.attr('href'));
@@ -10,11 +10,10 @@ function toggle_like_button(event) {
       elem.removeClass('active');
     }
     elem.attr('href', response['toggle_url']);
-    elem.parents('[data-like]').find('[data-like-count]').html(response['total']);
+    elem.parents('[data-support]').find('[data-support-count]').html(response['total']);
   });
   request.fail(arche.flash_error);
 }
-
 $(document).ready(function() {
-  $('body').on('click', '[data-like-btn]', toggle_like_button);
+  $('body').on('click', '[data-support-btn]', toggle_support_button);
 });

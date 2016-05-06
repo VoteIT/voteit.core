@@ -53,7 +53,7 @@ def like_resources(view, event):
     like_js.need()
 
 def includeme(config):
-    config.scan()
+    config.scan(__name__)
     config.add_subscriber(like_resources, [IBaseView, IViewInitializedEvent])
     #Add catalog index
     indexes = {'like_userids': CatalogKeywordIndex(get_like_userids_indexer),}
