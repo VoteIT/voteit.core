@@ -43,7 +43,7 @@ def system_users_in_add_schema(schema, event):
         - The current user is a moderator
         - System users are set on the meeting
     """
-    if event.request.has_permission(MODERATE_MEETING):
+    if event.request.view_name == 'add' and event.request.has_permission(MODERATE_MEETING):
         system_userids = event.request.meeting.system_userids
         if system_userids:
             schema.add(colander.SchemaNode(colander.Set(),
