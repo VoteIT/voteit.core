@@ -94,8 +94,6 @@ def closing_agenda_item_callback(context, info):
         err_msg = _(u"error_polls_not_closed_cant_close_ai",
                     default = u"You can't close an agenda item that has ongoing polls in it. Close the polls first!")
         raise HTTPForbidden(err_msg)
-    for proposal in context.get_content(iface=IProposal, states='published'):
-        proposal.set_workflow_state(request, 'unhandled')
 
 def ongoing_agenda_item_callback(context, info):
     """ Callback for workflow action. An agenda item can't be set as ongoing when meeting is not ongoing

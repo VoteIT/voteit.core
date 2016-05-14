@@ -50,18 +50,6 @@ class AgendaItemTests(unittest.TestCase):
         obj = self._make_obj()
         self.assertTrue(verifyObject(IAgendaItem, obj))
 
-    def test_workflow_closed_state_marks_proposals_unhandled(self):
-        """ Published proposals should be marked as 'unhandled' when
-            an AI closes.
-        """
-        obj = self._make_obj()
-        request = testing.DummyRequest()
-        obj['proposal'] = self._make_proposal() #Should be published as initial state
-        obj.set_workflow_state(request, 'upcoming')
-        obj.set_workflow_state(request, 'ongoing')
-        obj.set_workflow_state(request ,'closed')
-        self.assertEqual(obj['proposal'].get_workflow_state(), u'unhandled')
-
     def test_workflow_closed_state_ongoing_poll_exception(self):
         """ When you try to close an agenda items that has an ongoing
             poll in it, it should raise an exception.
