@@ -9,9 +9,16 @@
       <h4>
         <span class="glyphicon glyphicon-star"></span>
         <span i18n:translate="">Polls</span>
+        <a href="javascript:"
+           class="pull-right"
+           data-reload-target="[data-polls-area]"
+           title="Refresh"
+           i18n:attributes="title;">
+          <span class="glyphicon glyphicon-refresh" data-actionmarker="rotate-me"></span>
+        </a>
       </h4>
     </div>
-    <div data-load-target="${load_url}">
+    <div data-polls-area data-load-target="${load_url}">
       <div class="list-group-item">
         <span class="glyphicon glyphicon-refresh rotate-me"></span>
         Loading...

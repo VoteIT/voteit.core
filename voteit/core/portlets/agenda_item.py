@@ -2,25 +2,32 @@
     They can be rearranged or disabled by changing them within the meeting context.
 """
 from __future__ import unicode_literals
-from decimal import Decimal
+
 from copy import copy
+from decimal import Decimal
 
 from arche.portlets import PortletType
 from arche.utils import generate_slug
 from arche.views.base import BaseView
 from arche.views.base import DefaultAddForm
+from pyramid.httpexceptions import HTTPForbidden
 from pyramid.renderers import render
 from pyramid.response import Response
 from pyramid.traversal import resource_path
 from repoze.catalog.query import Eq, NotAny, Any
+from repoze.workflow import WorkflowError
 
 from voteit.core import _
 from voteit.core import security
 from voteit.core.fanstaticlib import data_loader
 from voteit.core.helpers import get_docids_to_show
 from voteit.core.models.interfaces import IAgendaItem
+from voteit.core.models.interfaces import IPoll
+from voteit.core.models.interfaces import IProposal
+from voteit.core.security import ADD_POLL
 
 #FIXME: Loading required resources for inline forms is still a problem.
+#Fanstatic must fetch required resources on the base view
 
 
 class ListingPortlet(PortletType):
@@ -101,16 +108,36 @@ class ProposalsInline(BaseView):
             if hide:
                 invert_hidden &= Any('workflow_state', hide)
                 query &= NotAny('workflow_state', hide)
-        
         response['docids'] = tuple(self.catalog_query(query, sort_index = 'created'))
-        response['unread_docids'] = tuple(self.catalog_query(query & Eq('unread', self.request.authenticated_userid), sort_index = 'created'))
+        response['unread_docids'] = tuple(self.catalog_query(query & Eq('unread', self.request.authenticated_userid),
+                                                             sort_index = 'created'))
         response['contents'] = self.resolve_docids(response['docids']) #A generator
         if not load_hidden:
             response['hidden_count'] = self.request.root.catalog.query(invert_hidden)[0].total
             get_query = {'tag': tags, 'load_hidden': 1, 'hide': hide}
-            response['load_hidden_url'] = self.request.resource_url(self.context, self.request.view_name, query = get_query)
+            response['load_hidden_url'] = self.request.resource_url(self.context,
+                                                                    self.request.view_name,
+                                                                    query = get_query)
         else:
             response['hidden_count'] = False
+        return response
+
+
+class ProposalsInlineStateChange(BaseView):
+
+    def __call__(self):
+        new_state = self.request.GET.get('state')
+        response = {}
+        response['docids'] = [0] #Not used
+        response['unread_docids'] = ()
+        response['contents'] = iter([self.context])
+        response['hidden_count'] = False
+        response['context'] = self.context.__parent__ #AI
+        #change state
+        try:
+            self.context.set_workflow_state(self.request, new_state)
+        except WorkflowError as exc:
+            raise HTTPForbidden(str(exc))
         return response
 
 
@@ -157,13 +184,14 @@ class PollsInline(BaseView):
         response = {}
         response['contents'] = tuple(self.catalog_search(resolve = True, **query))
         response['vote_perm'] = security.ADD_VOTE
+        response['show_add'] = self.request.is_moderator and self.request.has_permission(ADD_POLL, self.context)
         return response
 
     def get_poll_filter_url(self, poll):
         tags = set()
         for prop in poll.get_proposal_objects():
             tags.add(prop.aid)
-        return self.request.resource_url(self.context, query = {'tag': tags})
+        return self.request.resource_url(poll.__parent__, query = {'tag': tags})
 
     def get_voted_estimate(self, poll):
         """ Returns an approx guess without doing expensive calculations.
@@ -184,6 +212,23 @@ class PollsInline(BaseView):
                 response['percentage'] = 0
         else:
             response['percentage'] = 0
+        return response
+
+
+class PollsInlineStateChange(PollsInline):
+
+    def __call__(self):
+        new_state = self.request.GET.get('state')
+        #change state
+        try:
+            self.context.set_workflow_state(self.request, new_state)
+        except WorkflowError as exc:
+            raise HTTPForbidden(str(exc))
+        response = {}
+        response['contents'] = iter([self.context])
+        response['vote_perm'] = security.ADD_VOTE
+        response['context'] = self.context.__parent__ #AI
+        response['show_add'] = False
         return response
 
 
@@ -282,6 +327,11 @@ def includeme(config):
                     context = IAgendaItem,
                     permission = security.VIEW,
                     renderer = 'voteit.core:templates/portlets/proposals_inline.pt')
+    config.add_view(ProposalsInlineStateChange,
+                    name = '__inline_state_change__',
+                    context = IProposal,
+                    permission = security.VIEW,
+                    renderer = 'voteit.core:templates/portlets/proposals_inline.pt')
     config.add_view(DiscussionsInline,
                     name = '__ai_discussions__',
                     context = IAgendaItem,
@@ -290,5 +340,10 @@ def includeme(config):
     config.add_view(PollsInline,
                     name = '__ai_polls__',
                     context = IAgendaItem,
+                    permission = security.VIEW,
+                    renderer = 'voteit.core:templates/portlets/polls_inline.pt')
+    config.add_view(PollsInlineStateChange,
+                    name = '__inline_state_change__',
+                    context = IPoll,
                     permission = security.VIEW,
                     renderer = 'voteit.core:templates/portlets/polls_inline.pt')

@@ -12,6 +12,19 @@ function load_target(target) {
 }
 voteit.load_target = load_target;
 
+function reload_target(event) {
+  event.preventDefault();
+  var elem = $(event.currentTarget);
+  arche.actionmarker_feedback(elem, true);
+  var request = voteit.load_target(elem.data('reload-target'));
+  request.always(function() {
+    arche.actionmarker_feedback(elem, false);
+    arche.load_flash_messages();
+  });
+}
+voteit.reload_target = reload_target;
+
+
 /* Adds an attribute to regular popover events and initializes them.
  * Fetches content for the popover from an external source (href) */
 function external_popover_from_event(event) {
@@ -46,9 +59,11 @@ function load_and_replace(event) {
   request.fail(arche.flash_error);
   request.always(function() {
     arche.actionmarker_feedback(elem, false);
-  })
+    arche.load_flash_messages();
+  });
 }
 voteit.load_and_replace = load_and_replace;
+
 
 function load_polls_menu(event) {
   // Remember that the menu could be closed via a click too.
@@ -85,6 +100,7 @@ $(document).ready(function () {
   $("[data-load-target]").each(function() {
     voteit.load_target(this);
   });
+  $('body').on('click', '[data-reload-target]', voteit.reload_target);
   $('#polls-menu').on('hidden.bs.dropdown', voteit.reset_polls_menu);
   $('body').on('click', '[data-clickable-target]', voteit.load_and_replace);
   $('body').on('click', '[data-polls-menu]', voteit.load_polls_menu);

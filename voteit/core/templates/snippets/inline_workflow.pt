@@ -22,13 +22,15 @@
       </button>
       <ul class="dropdown-menu" role="menu">
         <li tal:repeat="state states">
-          <a href="${request.resource_url(context, 'state', query = {'state': state.name})}">            
+          <a href="${request.resource_url(context, '__inline_state_change__', query = {'state': state.name})}"
+             data-replace-target='[data-uid="${context.uid}"]'
+             data-clickable-target>
             <span class="glyphicon glyphicon-${state.name} text-${state.name}"></span>
             <span tal:content="tstring(state.title)">Title</span>
+            <span data-actionmarker="glyphicon glyphicon-refresh rotate-me"></span>
           </a>
         </li>
       </ul>
     </div>
   </tal:moderator>
-
 </tal:main>

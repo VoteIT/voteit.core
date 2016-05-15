@@ -5,13 +5,15 @@
       i18n:domain="voteit.core">
 <tal:iterate repeat="obj contents">
   <div class="list-group-item"
+       data-uid="${obj.uid}"
       tal:define="can_vote request.has_permission(vote_perm, obj);
                   has_voted request.authenticated_userid in obj;
                   poll_plugin obj.get_poll_plugin()|False;
                   wf_state obj.get_workflow_state();">
     <div class="row">
       <div class="col-sm-6">
-        <tal:cog condition="request.is_moderator" replace="structure view.render_template('voteit.core:templates/snippets/cogwheel.pt', context = obj)" />
+        <tal:cog condition="request.is_moderator"
+                 replace="structure view.render_template('voteit.core:templates/snippets/cogwheel.pt', context = obj)" />
         <tal:broken_plugin condition="not poll_plugin">
           <div class="alert alert-danger" role="alert"
             i18n:translate="broken_poll_notice">The method
@@ -111,7 +113,7 @@
     <span i18n:translate="">No polls yet</span>
   </div>
 </tal:no_polls>
-<div class="well" tal:condition="request.is_moderator and request.has_permission('Add Poll')">
+<div class="well" tal:condition="show_add">
   <a href="${request.resource_url(context, 'add', query = {'content_type': 'Poll'})}"
     class="btn btn-primary"
     i18n:translate="">Add Poll</a>

@@ -9,9 +9,16 @@
       <h4>
         <span class="glyphicon glyphicon-comment"></span>
         <span i18n:translate="">Discussion</span>
+        <a href="javascript:"
+           class="pull-right"
+           data-reload-target="[data-discussions-area]"
+           title="Refresh"
+           i18n:attributes="title;">
+          <span class="glyphicon glyphicon-refresh" data-actionmarker="rotate-me"></span>
+        </a>
       </h4>
     </div>
-    <div data-load-target="${load_url}">
+    <div data-discussions-area data-load-target="${load_url}">
       <div class="list-group-item">
         <span class="glyphicon glyphicon-refresh rotate-me"></span>
         Loading...
