@@ -1,11 +1,7 @@
 import logging
 
-from arche import root_factory
-from pyramid.authentication import AuthTktAuthenticationPolicy
-from pyramid.authorization import ACLAuthorizationPolicy
-from pyramid.config import Configurator
+from arche import base_config
 from pyramid.i18n import TranslationStringFactory
-from pyramid_zodbconn import get_connection
 
 
 log = logging.getLogger(__name__)
@@ -28,25 +24,13 @@ def main(global_config, **settings):
         If you don't want to start the VoteIT app from this method,
         be sure to include the same things at least.
     """
-    config = default_configurator(settings)
+    check_required_settings(settings)
+    config = base_config(**settings)
     config.include(required_components)
     config.hook_zca()
     return config.make_wsgi_app()
 
-def default_configurator(settings):
-    from arche.security import groupfinder
-    from arche import read_salt
-    authn_policy = AuthTktAuthenticationPolicy(hashalg='sha512',
-                                               secret = read_salt(settings),
-                                               callback = groupfinder)
-    authz_policy = ACLAuthorizationPolicy()
-    return Configurator(settings=settings,
-                        authentication_policy=authn_policy,
-                        authorization_policy=authz_policy,
-                        root_factory=root_factory,)
-
 def required_components(config):
-    config.include(check_required_settings)
     #Other includes
     config.include('pyramid_zodbconn')
     config.include('pyramid_tm')
@@ -95,11 +79,11 @@ def register_plugins(config):
         for plugin in plugins.strip().splitlines():
             config.include(plugin)
 
-def check_required_settings(config):
+def check_required_settings(settings):
     """ Check that at least the required settings are present in the paster.ini file.
         If not, add sane defaults.
+        This function may fire several times
     """
-    settings = config.registry.settings
     for (k, v) in DEFAULT_SETTINGS.items():
         if k not in settings:
             settings[k] = v
@@ -134,4 +118,5 @@ def includeme(config):
         Compare with startup in main.
         Note that you still need to add all the things added in the default_configurator method.
     """
+    check_required_settings(config.registry.settings)
     config.include(required_components)
