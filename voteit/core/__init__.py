@@ -36,7 +36,6 @@ def required_components(config):
     config.include('pyramid_tm')
     config.include('pyramid_chameleon')
     config.include('pyramid_deform')
-    config.include('pyramid_beaker')
     config.include('deform_autoneed')
     #Arche
     cache_max_age = int(config.registry.settings.get('arche.cache_max_age', 60*60*24))
