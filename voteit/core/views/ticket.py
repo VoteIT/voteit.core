@@ -155,6 +155,7 @@ class TicketView(BaseView):
                     #bulk send
                     self.request.session['send_tickets.emails'] = data['email']
                     self.request.session['send_tickets.message'] = data['message'][0]
+                    self.request.session.changed()
                     return HTTPFound(location = self.request.resource_url(self.context, 'send_tickets'))
                 else:
                     resent = 0
@@ -220,6 +221,7 @@ class TicketView(BaseView):
         if len(session['send_tickets.emails']) == 0:
             del session['send_tickets.emails']
             del session['send_tickets.message']
+        session.changed()
         return {'sent': len(emails), 'remaining': len(session.get('send_tickets.emails', ()))}
 
 
