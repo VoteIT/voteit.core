@@ -11,6 +11,11 @@ from voteit.core.models.agenda_item import AgendaItem
 from voteit.core.models.interfaces import IMeeting
 
 
+_BLOCK_VALS = {
+    'default': False,
+    'blocked': True,
+}
+
 @view_config(context = IMeeting, name = "manage_agenda", renderer = "voteit.core:templates/manage_agenda.pt", permission = security.EDIT)
 class ManageAgendaItemsView(BaseView):
 
@@ -21,17 +26,61 @@ class ManageAgendaItemsView(BaseView):
             return HTTPFound(location = url)
         if 'change' in post:
             state_id = self.request.POST['state_id']
+
+            block_proposals = self.request.POST.get('block_proposals', None)
+            block_proposals = _BLOCK_VALS.get(block_proposals, None)
+            block_discussion = self.request.POST.get('block_discussion', None)
+            block_discussion = _BLOCK_VALS.get(block_discussion, None)
+
+
+#            if discussion_block is not None:
+#                val = bool(int(discussion_block))
+#                self.context.set_field_value('discussion_block', val)
+#            if proposal_block is not None:
+#                val = bool(int(proposal_block))
+#                self.context.set_field_value('proposal_block', val)
+
             controls = self.request.POST.items()
+            agenda_items = []
             for (k, v) in controls:
                 if k == 'ais':
-                    ai = self.context[v]
+                    agenda_items.append(self.context[v])
+            output_msg = ""
+            translate = self.request.localizer.translate
+            #WF state change
+            if state_id:
+                states_changed = 0
+                for ai in agenda_items:
                     try:
                         ai.set_workflow_state(self.request, state_id)
+                        states_changed += 1
                     except WorkflowError, e:
                         self.flash_messages.add(_('Unable to change state on ${title}: ${error}',
                                                       mapping={'title': ai.title, 'error': e}),
-                                                    type='error')
-            self.flash_messages.add(_('States updated'))
+                                                    type='danger')
+                if states_changed:
+                    output_msg += translate(_("${num} changed state", mapping={'num': states_changed}))
+                    output_msg += "<br/>"
+            #Block states
+            if block_proposals != None or block_discussion != None:
+                blocked = 0
+                for ai in agenda_items:
+                    blocked += 1
+                    if block_proposals != None:
+                        ai.set_field_value('proposal_block', block_proposals)
+                    if block_discussion != None:
+                        ai.set_field_value('discussion_block', block_discussion)
+                if blocked:
+                    output_msg += translate(
+                        _("Changing block state for ${num} agenda items.",
+                          mapping = {'num': blocked})
+                    )
+
+            if output_msg:
+                self.flash_messages.add(output_msg, type='success')
+            else:
+                self.flash_messages.add(_('Nothing updated'), type='warning')
+            return HTTPFound(location=self.request.resource_url(self.context, 'manage_agenda'))
 
         state_info = _dummy_agenda_item.workflow.state_info(None, self.request)
         tstring = _

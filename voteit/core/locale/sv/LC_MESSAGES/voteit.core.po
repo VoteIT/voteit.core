@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2016-05-07 00:23+0200\n"
-"PO-Revision-Date: 2016-05-07 00:23+0200\n"
+"POT-Creation-Date: 2016-11-10 17:07+0100\n"
+"PO-Revision-Date: 2016-11-10 17:11+0100\n"
 "Last-Translator: Robin Harms Oredsson <robin@betahaus.net>\n"
 "Language-Team: sv <LL@li.org>\n"
 "Language: sv\n"
@@ -258,7 +258,7 @@ msgstr ""
 
 #. Default: You can't set an agenda item to ongoing if the meeting is not
 #. ongoing.
-#: voteit/core/models/agenda_item.py:105
+#: voteit/core/models/agenda_item.py:103
 msgid "error_ai_cannot_be_ongoing_in_not_ongoing_meeting"
 msgstr ""
 "Du kan inte sätta en dagordningspunkt i pågående om mötet inte är pågående."
@@ -539,24 +539,24 @@ msgstr "Användare som stödjer detta ${count}"
 msgid "Agenda"
 msgstr "Dagordning"
 
-#: voteit/core/portlets/agenda_item.py:42 voteit/core/schemas/poll.py:79
+#: voteit/core/portlets/agenda_item.py:49 voteit/core/schemas/poll.py:79
 #: voteit/core/templates/portlets/proposals.pt:11
 msgid "Proposals"
 msgstr "Förslag"
 
-#: voteit/core/portlets/agenda_item.py:61
+#: voteit/core/portlets/agenda_item.py:68
 #: voteit/core/templates/portlets/discussions.pt:11
 msgid "Discussion"
 msgstr "Diskussion"
 
-#: voteit/core/portlets/agenda_item.py:68
+#: voteit/core/portlets/agenda_item.py:75
 #: voteit/core/templates/portlets/polls.pt:11
 #: voteit/core/templates/snippets/polls_menu.pt:13
 #: voteit/core/views/components/polls.py:10
 msgid "Polls"
 msgstr "Omröstningar"
 
-#: voteit/core/portlets/agenda_item.py:264
+#: voteit/core/portlets/agenda_item.py:309
 msgid "Agenda Item portlets"
 msgstr "Dagordningsportlets"
 
@@ -1051,7 +1051,7 @@ msgid "Ongoing"
 msgstr "Pågående"
 
 #: voteit/core/templates/_translations.pt:11
-#: voteit/core/templates/portlets/polls_inline.pt:74
+#: voteit/core/templates/portlets/polls_inline.pt:76
 msgid "Closed"
 msgstr "Avslutad"
 
@@ -1117,18 +1117,53 @@ msgid "Delete"
 msgstr "Radera"
 
 #: voteit/core/templates/manage_agenda.pt:88
+msgid "Change several at once"
+msgstr "Ändra många"
+
+#. Default: Mark the agenda items you wish to apply the options bellow to. You
+#. can select several at once by using the tic-box in the header.
+#: voteit/core/templates/manage_agenda.pt:89
+msgid "manage_agenda_items_many_info"
+msgstr ""
+"Markera dagordningspunkterna du vill använda valen nedan på. Du kan välja "
+"flera på en gång genom att använda kryssrutan i headern på tabellen."
+
+#: voteit/core/templates/manage_agenda.pt:95
 msgid "Change state on marked items to"
 msgstr "Ändra tillstånd på markerade till"
 
-#: voteit/core/templates/manage_agenda.pt:90
+#: voteit/core/templates/manage_agenda.pt:97
 msgid "&lt;select state&gt;"
 msgstr "&lt;välj tillstånd&gt;"
 
-#: voteit/core/templates/manage_agenda.pt:94
-msgid "Change state"
-msgstr "Ändra tillstånd"
+#: voteit/core/templates/manage_agenda.pt:103
+msgid "Adjust proposal block state for all marked"
+msgstr "Ändra blockering av förslag för alla markerade"
 
-#: voteit/core/templates/manage_agenda.pt:95
+#: voteit/core/templates/manage_agenda.pt:105
+#: voteit/core/templates/manage_agenda.pt:113
+msgid "&lt;Leave unchanged&gt;"
+msgstr "&lt;Lämna orörd&gt;"
+
+#: voteit/core/templates/manage_agenda.pt:106
+#: voteit/core/templates/manage_agenda.pt:114
+msgid "Default / Allowed"
+msgstr "Standard / Tillåtet"
+
+#: voteit/core/templates/manage_agenda.pt:107
+#: voteit/core/templates/manage_agenda.pt:115
+msgid "Always blocked"
+msgstr "Alltid blockerad"
+
+#: voteit/core/templates/manage_agenda.pt:111
+msgid "Adjust discussion block state for all marked"
+msgstr "Ändra blockering av diskussion för alla markerade"
+
+#: voteit/core/templates/manage_agenda.pt:120
+msgid "Change"
+msgstr "Hantera"
+
+#: voteit/core/templates/manage_agenda.pt:121
 msgid "Cancel"
 msgstr "Avbryt"
 
@@ -1483,6 +1518,12 @@ msgstr "Lägg till"
 msgid "Manage"
 msgstr "Hantera"
 
+#: voteit/core/templates/portlets/discussions.pt:15
+#: voteit/core/templates/portlets/polls.pt:15
+#: voteit/core/templates/portlets/proposals.pt:15
+msgid "Refresh"
+msgstr "Uppdatera"
+
 #: voteit/core/templates/portlets/discussions_inline.pt:12
 msgid "Show ${num} previous"
 msgstr "Visa ${num} föregående"
@@ -1523,55 +1564,55 @@ msgstr "Stängd: ${date}"
 
 #. Default: The method '${poll_method}' that this poll uses i missing from this
 #. system. This poll won't work unless it's restored or changed.
-#: voteit/core/templates/portlets/polls_inline.pt:17
+#: voteit/core/templates/portlets/polls_inline.pt:19
 msgid "broken_poll_notice"
 msgstr ""
 "Metoden '${poll_method}' som omröstningen använder saknas från systemet. "
 "Omröstningen kommer inte fungera så länge den inte återställs eller ändras."
 
 #. Default: Vote
-#: voteit/core/templates/portlets/polls_inline.pt:32
+#: voteit/core/templates/portlets/polls_inline.pt:34
 #: voteit/core/views/poll.py:117
 msgid "add_vote_button"
 msgstr "Rösta"
 
-#: voteit/core/templates/portlets/polls_inline.pt:33
+#: voteit/core/templates/portlets/polls_inline.pt:35
 msgid "Change vote"
 msgstr "Ändra röst"
 
-#: voteit/core/templates/portlets/polls_inline.pt:34
+#: voteit/core/templates/portlets/polls_inline.pt:36
 msgid "View vote"
 msgstr "Visa röst"
 
-#: voteit/core/templates/portlets/polls_inline.pt:41
+#: voteit/core/templates/portlets/polls_inline.pt:43
 msgid "Show results"
 msgstr "Visa resultat"
 
-#: voteit/core/templates/portlets/polls_inline.pt:68
+#: voteit/core/templates/portlets/polls_inline.pt:70
 msgid "Starts"
 msgstr "Öppnar"
 
-#: voteit/core/templates/portlets/polls_inline.pt:69
+#: voteit/core/templates/portlets/polls_inline.pt:71
 msgid "Started"
 msgstr "Startad"
 
-#: voteit/core/templates/portlets/polls_inline.pt:73
+#: voteit/core/templates/portlets/polls_inline.pt:75
 msgid "Closes"
 msgstr "Stänger"
 
-#: voteit/core/templates/portlets/polls_inline.pt:88
+#: voteit/core/templates/portlets/polls_inline.pt:90
 msgid "Filter on poll (${num})"
 msgstr "Filtrera på omröstning (${num})"
 
-#: voteit/core/templates/portlets/polls_inline.pt:97
+#: voteit/core/templates/portlets/polls_inline.pt:99
 msgid "Ballot data"
 msgstr "Valurnans data"
 
-#: voteit/core/templates/portlets/polls_inline.pt:111
+#: voteit/core/templates/portlets/polls_inline.pt:113
 msgid "No polls yet"
 msgstr "Inga omröstningar än"
 
-#: voteit/core/templates/portlets/polls_inline.pt:117
+#: voteit/core/templates/portlets/polls_inline.pt:119
 msgid "Add Poll"
 msgstr "Lägg till omröstning"
 
@@ -1599,7 +1640,7 @@ msgid "Participant list"
 msgstr "Deltagarlista"
 
 #: voteit/core/templates/snippets/meeting_menu.pt:27
-#: voteit/core/views/ticket.py:234
+#: voteit/core/views/ticket.py:236
 #: voteit/core/views/templates/_participants.pt:128
 msgid "Invite participants"
 msgstr "Bjud in deltagare"
@@ -1679,14 +1720,24 @@ msgstr "Support"
 msgid "Message sent"
 msgstr "Meddelande skickat"
 
-#: voteit/core/views/manage_agenda_items.py:31
+#: voteit/core/views/manage_agenda_items.py:58
 #, python-format
 msgid "Unable to change state on ${title}: ${error}"
 msgstr "Tillståndet på ${title} kan inte ändras: ${error}"
 
-#: voteit/core/views/manage_agenda_items.py:34
-msgid "States updated"
-msgstr "Tillstånd är uppdaterade"
+#: voteit/core/views/manage_agenda_items.py:62
+#, python-format
+msgid "${num} changed state"
+msgstr "${num} ändrade tillstånd"
+
+#: voteit/core/views/manage_agenda_items.py:75
+#, python-format
+msgid "Changing block state for ${num} agenda items."
+msgstr "Ändrar blockeringsstatus för ${num} dagordningspunkt(er)"
+
+#: voteit/core/views/manage_agenda_items.py:82
+msgid "Nothing updated"
+msgstr "Inget uppdaterat"
 
 #: voteit/core/views/meeting.py:51
 msgid "Participants emails"
@@ -1882,12 +1933,12 @@ msgstr "Inga valda - kan inte göra något!"
 msgid "Removed ${count} tickets"
 msgstr "Tog bort ${count} inbjudningar"
 
-#: voteit/core/views/ticket.py:170
+#: voteit/core/views/ticket.py:171
 #, python-format
 msgid "Resent ${count} successfully"
 msgstr "Skickade om ${count}"
 
-#: voteit/core/views/ticket.py:173
+#: voteit/core/views/ticket.py:174
 #, python-format
 msgid ""
 "Resent ${count} of ${total}. ${aborted} were not sent since they're already "
@@ -1897,13 +1948,13 @@ msgstr ""
 "redan använts"
 
 #. Default: Successfully added ${added} invites
-#: voteit/core/views/ticket.py:252
+#: voteit/core/views/ticket.py:254
 msgid "added_tickets_text"
 msgstr "La till ${added} inbjudningar"
 
 #. Default: No tickets added - all you specified probably exist already.
 #. (Proccessed ${rejected})
-#: voteit/core/views/ticket.py:255
+#: voteit/core/views/ticket.py:257
 msgid "no_tickets_added"
 msgstr ""
 "Inga inbjudningar las till - alla du specificerade finns förmodligen redan. "
@@ -1911,7 +1962,7 @@ msgstr ""
 
 #. Default: Successfully added ${added} invites but discarded ${rejected} since
 #. they already existed or were already used.
-#: voteit/core/views/ticket.py:263
+#: voteit/core/views/ticket.py:265
 msgid "added_tickets_text_some_rejected"
 msgstr ""
 "La till ${added} inbjudningar med hanterade inte ${rejected} eftersom de "
@@ -2066,6 +2117,9 @@ msgstr "personer"
 #: voteit/core/views/templates/snippets/user_tag.pt:20
 msgid "more_in_likes"
 msgstr "till"
+
+#~ msgid "States updated"
+#~ msgstr "Tillstånd är uppdaterade"
 
 #~ msgid "You have been mentioned in VoteIT"
 #~ msgstr "Du har blivit nämnd i VoteIT"
@@ -2225,9 +2279,6 @@ msgstr "till"
 #~ msgstr ""
 #~ "Omröstningspluginen är trasig. Kan inte visa resultat.För att se felet, "
 #~ "slå på debug_templates på servern."
-
-#~ msgid "Change"
-#~ msgstr "Hantera"
 
 #~ msgid "Request"
 #~ msgstr "Begär"
@@ -2536,9 +2587,6 @@ msgstr "till"
 #~ msgid "Users and their permissions successfully copied"
 #~ msgstr "Användare och deras rättigheter kopierades"
 
-#~ msgid "Nothing updated"
-#~ msgstr "Inget uppdaterat"
-
 #~ msgid "Deleted"
 #~ msgstr "Raderad"
 
@@ -2690,9 +2738,6 @@ msgstr "till"
 
 #~ msgid "Change workflow state"
 #~ msgstr "Ändra tillstånd"
-
-#~ msgid "Manage agenda items"
-#~ msgstr "Hantera dagordningspunkter"
 
 #~ msgid "Click to go to meeting overview"
 #~ msgstr "Klicka för att gå till mötesöversikt"

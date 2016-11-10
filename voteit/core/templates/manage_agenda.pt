@@ -84,15 +84,42 @@
 
     <div class="row">
       <div class="col-sm-6">
+
+        <h2 i18n:translate="">Change several at once</h2>
+        <p i18n:translate="manage_agenda_items_many_info">
+          Mark the agenda items you wish to apply the options bellow to.
+          You can select several at once by using the tic-box in the header.
+        </p>
+
         <div class="form-group">
           <label for="state_id" i18n:translate="">Change state on marked items to</label><br />
           <select id="state_id" name="state_id" class="form-control">
-            <option value="" i18n:translate="">&lt;select state&gt;</option>
+            <option value="" i18n:translate="">&lt;Leave unchanged&gt;</option>
             <option tal:repeat="state states" value="${state}">${translated_state_title(state)}</option>
           </select>
         </div>
-        <button class="btn btn-primary" type="submit" name="change" i18n:translate="">Change state</button>
-        <button class="btn btn-default" type="submit" name="cancel" i18n:translate="">Cancel</button>
+
+        <div class="form-group">
+          <label for="block_proposals" i18n:translate="">Adjust proposal block state for all marked</label><br />
+          <select id="block_proposals" name="block_proposals" class="form-control">
+            <option value="" i18n:translate="">&lt;Leave unchanged&gt;</option>
+            <option value="default" i18n:translate="">Default / Allowed</option>
+            <option value="blocked" i18n:translate="">Always blocked</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="block_discussion" i18n:translate="">Adjust discussion block state for all marked</label><br />
+          <select id="block_discussion" name="block_discussion" class="form-control">
+            <option value="" i18n:translate="">&lt;Leave unchanged&gt;</option>
+            <option value="default" i18n:translate="">Default / Allowed</option>
+            <option value="blocked" i18n:translate="">Always blocked</option>
+          </select>
+        </div>
+
+        <div class="well">
+          <button class="btn btn-primary" type="submit" name="change" i18n:translate="">Change</button>
+          <button class="btn btn-default" type="submit" name="cancel" i18n:translate="">Cancel</button>
+        </div>
       </div>
     </div>
   </form>
