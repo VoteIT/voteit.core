@@ -114,10 +114,16 @@ def creators_info(request, creators, portrait = True, lookup = True, at = False,
     return render('voteit.core:templates/snippets/creators_info.pt', response, request = request)
 
 def get_meeting(request):
-    return find_interface(request.context, IMeeting)
+    try:
+        return find_interface(request.context, IMeeting)
+    except AttributeError:
+        pass
 
 def get_ai(request):
-    return find_interface(request.context, IAgendaItem)
+    try:
+        return find_interface(request.context, IAgendaItem)
+    except AttributeError:
+        pass
 
 def get_userinfo_url(request, userid):
     return request.resource_url(request.meeting, '__userinfo__', userid)
@@ -125,10 +131,13 @@ def get_userinfo_url(request, userid):
 def is_moderator(request):
     """ Request method to determine if someone is a moderator. Also true for admins in the root.
     """
-    if request.meeting:
-        return request.has_permission(security.MODERATE_MEETING, request.meeting)
-    else:
-        return request.has_permission(security.MANAGE_SERVER, request.root)
+    try:
+        if request.meeting:
+            return request.has_permission(security.MODERATE_MEETING, request.meeting)
+        else:
+            return request.has_permission(security.MANAGE_SERVER, request.root)
+    except AttributeError:
+        pass
 
 def get_wf_state_titles(request, iface, type_name):
     wf = get_workflow(iface, type_name)
