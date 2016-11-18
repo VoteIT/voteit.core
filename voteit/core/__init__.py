@@ -86,7 +86,7 @@ def check_required_settings(settings):
     for (k, v) in DEFAULT_SETTINGS.items():
         if k not in settings:
             settings[k] = v
-            log.warn("Required value '%s' not found. Adding '%s' as default value.", k, v)
+            log.debug("Required value '%s' not found. Adding '%s' as default value.", k, v)
 
 def check_required_components(config):
     """ After the process of including components is run, check that something has been included in the required sections.
