@@ -5,7 +5,7 @@
       i18n:domain="voteit.core">
     <li class="dropdown user-menu">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-            <tal:img replace="structure view.root['users'][request.authenticated_userid].get_image_tag(size = 20)" />
+            <tal:img replace="structure view.root['users'][request.authenticated_userid].get_image_tag(size = 20)|''" />
             <span>${request.authenticated_userid}</span>
             <span class="caret"></span>
         </a>
