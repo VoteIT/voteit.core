@@ -1,53 +1,80 @@
-from pyramid.security import Allow
-from pyramid.security import Authenticated
-from pyramid.security import Everyone
-from pyramid.security import ALL_PERMISSIONS
-from pyramid.security import DENY_ALL
-from zope.interface import implements
-from repoze.catalog.catalog import Catalog
-from repoze.catalog.document import DocumentMap
-from betahaus.pyracont.decorators import content_factory
+from arche.api import Root
+from arche.security import get_acl_registry
+from zope.interface.declarations import implementer
 
 from voteit.core import VoteITMF as _
 from voteit.core import security
 from voteit.core.models.interfaces import ISiteRoot
 from voteit.core.models.base_content import BaseContent
-from voteit.core.models.catalog import update_indexes
+from voteit.core.models.security_aware import SecurityAware
 
 
-_DEFAULT_ACL = ((Allow, security.ROLE_ADMIN, ALL_PERMISSIONS),
-                (Allow, security.ROLE_MEETING_CREATOR, security.ADD_MEETING),
-                (Allow, Everyone, security.VIEW),
-                DENY_ALL)
+#FIXME: SiteRoot objects have used description as a text field for
+#bulk text on the first page. They should be moved over to a new
+#text field instead.
 
 
-@content_factory('SiteRoot', title=_(u"Site root"))
-class SiteRoot(BaseContent):
+@implementer(ISiteRoot)
+class SiteRoot(BaseContent, SecurityAware, Root):
     """ Site root content type - there's only one of these.
         See :mod:`voteit.core.models.interfaces.ISiteRoot`.
         All methods are documented in the interface of this class.
     """
-    implements(ISiteRoot)
-    content_type = 'SiteRoot'
-    display_name = _(u"Site root")
-    allowed_contexts = ()
+    type_name = 'Root' #Arche compat
     schemas = {'edit':'SiteRootSchema'}
 
     @property
     def __acl__(self):
+        aclreg = get_acl_registry()
         acl = []
-        if self.get_field_value('allow_add_meeting', False):
-            acl.append((Allow, Authenticated, (security.ADD_MEETING, )))
-        acl.extend(_DEFAULT_ACL)
+        if self.allow_self_registration:
+            acl.append((security.Allow, security.Everyone, security.REGISTER))
+        acl.extend(aclreg.get_acl('Root:default'))
         return acl
 
-    def __init__(self, data=None, **kwargs):
-        self.catalog = Catalog()
-        self.catalog.__parent__ = self #To make traversal work
-        self.catalog.document_map = DocumentMap()
-        super(SiteRoot, self).__init__(data=data, **kwargs)
-        update_indexes(self.catalog)
+    def __init__(self, data = None, **kwargs):
+        super(SiteRoot, self).__init__(data = data, **kwargs)
+        Root.__init__(self, data = data, **kwargs)
+
+    @property
+    def body(self): #arche compat
+        return self.get_field_value('body', '')
+    @body.setter
+    def body(self, value):
+        return self.set_field_value('body', value)
 
     @property
     def users(self):
         return self['users']
+
+    @property
+    def footer(self): #arche compat
+        return self.get_field_value('footer', '')
+    @footer.setter
+    def footer(self, value):
+        return self.set_field_value('footer', value)
+
+    @property
+    def support_email(self): #compat arche/voteit
+        return self.get_field_value('support_email', '')
+    @support_email.setter
+    def support_email(self, value):
+        return self.set_field_value('support_email', value)
+
+    @property
+    def head_title(self):
+        """ The old voteit value for this is site_title. Arche calls it head_title."""
+        return self.get_field_value('site_title', 'VoteIT')
+    @head_title.setter
+    def head_title(self, value):
+        return self.set_field_value('site_title', value)
+
+
+def includeme(config):
+    config.add_content_factory(SiteRoot, addable_in = ('Meeting',))
+    #Setup root acl
+    aclreg = config.registry.acl
+    root_acl = aclreg.new_acl('Root:default')
+    root_acl.add(security.ROLE_ADMIN, security.ALL_PERMISSIONS)
+    root_acl.add(security.ROLE_MEETING_CREATOR, security.ADD_MEETING)
+    root_acl.add(security.Everyone, security.VIEW)

@@ -1,0 +1,37 @@
+<tal:main xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="voteit.core">
+<div id="agenda-item-portlet" class="portlet hidden-print">
+
+  <h3 class="hidden-xs text-nowrap">
+    <span class="glyphicon glyphicon-list-alt"></span>
+    <span i18n:translate="">Agenda</span>
+  </h3>
+  <p>
+    <a href="#" class="collapsed btn-default btn btn-lg visible-xs" data-toggle="collapse" data-target="#ai-portlet-nav-collapsible">
+      <span class="glyphicon glyphicon-collapse-toggle"></span>
+      <span i18n:translate="">Agenda / Navigation</span>
+      <span class="glyphicon glyphicon-list-alt"></span>
+    </a>
+  </p>
+  <div class="collapse portlet-collapse" id="ai-portlet-nav-collapsible">
+    <div class="row" tal:condition="request.is_moderator">
+      <div class="col-sm-6">
+        <a class="btn btn-default btn-block btn-sm"
+          href="${request.resource_url(request.meeting, 'add', query = {'content_type': 'AgendaItem'})}" i18n:translate="">Add</a>
+      </div>
+      <div class="col-sm-6">
+        <a class="btn btn-default btn-block btn-sm"
+          href="${request.resource_url(request.meeting, 'manage_agenda')}" i18n:translate="">Manage</a>
+      </div>
+      <p>&nbsp;</p>
+    </div>
+    <div data-load-target="${load_url}">
+        <span class="glyphicon glyphicon-refresh rotate-me"></span>
+        Loading...
+    </div>
+  </div>
+</div>
+</tal:main>

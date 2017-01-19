@@ -1,15 +1,14 @@
-from pyramid.threadlocal import get_current_registry
-from pyramid.traversal import find_interface
-
-from voteit.core.models.catalog import resolve_catalog_docid
-from voteit.core.models.catalog import index_object
-from voteit.core.models.catalog import update_indexes
-from voteit.core.models.interfaces import IMeeting
-from voteit.core.models.interfaces import IProposalIds
-from voteit.core.scripts.catalog import find_all_base_content
-
 
 def evolve(root):
+    from pyramid.threadlocal import get_current_registry
+    from pyramid.traversal import find_interface
+    
+    from voteit.core.models.catalog import resolve_catalog_docid
+    from voteit.core.models.catalog import index_object
+    from voteit.core.models.catalog import update_indexes
+    from voteit.core.models.interfaces import IMeeting
+    from voteit.core.models.interfaces import IProposalIds
+    from voteit.core.scripts.catalog import find_all_base_content
 
     print "initial reindex of catalog to make sure everything is up to date"
     clear_and_reindex(root)

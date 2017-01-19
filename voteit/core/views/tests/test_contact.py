@@ -9,8 +9,8 @@ from voteit.core.testing_helpers import bootstrap_and_fixture
 
 def _fixture(config):
     from voteit.core.models.meeting import Meeting
-    config.scan('voteit.core.schemas.contact')
-    config.include('voteit.core.models.flash_messages')
+    config.include('arche.testing')
+    config.include('voteit.core.schemas.contact')
     config.include('pyramid_mailer.testing')
     root = bootstrap_and_fixture(config)
     root['m'] = Meeting()
@@ -19,12 +19,13 @@ def _fixture(config):
 
 class ContactViewTests(unittest.TestCase):
     def setUp(self):
-        self.config = testing.setUp()
+        self.config = testing.setUp(request = testing.DummyRequest())
         self.config.testing_securitypolicy(userid='admin', permissive=True)
- 
+        self.config.include('pyramid_chameleon')
+
     def tearDown(self):
         testing.tearDown()
- 
+
     @property
     def _cut(self):
         from voteit.core.views.contact import ContactView
@@ -32,7 +33,7 @@ class ContactViewTests(unittest.TestCase):
 
     def test_render(self):
         context = _fixture(self.config)
-        request = testing.DummyRequest()
+        request = testing.DummyRequest(root = context, profile = None)
         obj = self._cut(context, request)
         self.assertIn('form', obj())
 
@@ -43,23 +44,25 @@ class ContactViewTests(unittest.TestCase):
                     'email': 'dummy@test.com',
                     'message': 'Lorem ipsum',}
         context = _fixture(self.config)
-        request = testing.DummyRequest(method = 'POST', post = postdata)
+        request = testing.DummyRequest(method = 'POST', post = postdata, profile = None, meeting = None, root = context)
         obj = self._cut(context, request)
         obj.check_csrf = False
         response = obj()
         self.assertEqual(response.location, 'http://example.com/')
         mailer = get_mailer(request)
         self.assertTrue(mailer.outbox)
-
-
+ 
+ 
 class SupportFormTests(unittest.TestCase):
+
     def setUp(self):
         self.config = testing.setUp()
         self.config.testing_securitypolicy(userid='admin', permissive=True)
- 
+        self.config.include('pyramid_chameleon')
+  
     def tearDown(self):
         testing.tearDown()
- 
+
     @property
     def _cut(self):
         from voteit.core.views.contact import SupportForm
@@ -67,14 +70,14 @@ class SupportFormTests(unittest.TestCase):
 
     def test_no_support_email(self):
         context = _fixture(self.config)
-        request = testing.DummyRequest()
+        request = testing.DummyRequest(root = context)
         obj = self._cut(context, request)
         self.assertRaises(HTTPForbidden, obj)
 
     def test_render(self):
         context = _fixture(self.config)
         context.set_field_value('support_email', 'hello@bla.com')
-        request = testing.DummyRequest()
+        request = testing.DummyRequest(root = context, profile = None)
         obj = self._cut(context, request)
         self.assertIn('form', obj())
 
@@ -86,9 +89,8 @@ class SupportFormTests(unittest.TestCase):
                     'message': 'Lorem ipsum',}
         context = _fixture(self.config)
         context.set_field_value('support_email', 'hello@bla.com')
-        request = testing.DummyRequest(method = 'POST', post = postdata)
+        request = testing.DummyRequest(method = 'POST', POST = postdata, root = context, profile = None, meeting = None)
         obj = self._cut(context, request)
-        obj.check_csrf = False
         response = obj()
         self.assertEqual(response.location, 'http://example.com/')
         mailer = get_mailer(request)

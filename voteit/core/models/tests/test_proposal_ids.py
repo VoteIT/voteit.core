@@ -10,6 +10,7 @@ from voteit.core.models.interfaces import IProposalIds
 class UserIDBasedPropsalIdsTests(TestCase):
     def setUp(self):
         self.config = testing.setUp()
+        self.config.include('arche.testing')
 
     def tearDown(self):
         testing.tearDown()

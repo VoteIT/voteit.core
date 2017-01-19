@@ -1,0 +1,79 @@
+<tal:main xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="voteit.core">
+<li class="dropdown" id="meeting-menu">
+  <a href="#" class="dropdown-toggle"
+    data-toggle="dropdown"
+    aria-expanded="false">
+    <span i18n:translate="">Meeting</span>
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu">
+    <li role="presentation" class="dropdown-header">
+      <span class="glyphicon glyphicon-user"></span>
+      <span i18n:translate="">Participants</span>
+    </li>
+    <li role="presentation">
+      <a role="menuitem" tabindex="-1"
+        href="${request.resource_url(request.meeting, 'participants')}"
+        i18n:translate="">Participant list</a>
+    </li>
+    <tal:moderator condition="request.is_moderator">
+      <li role="presentation" tal:condition="not meeting_closed">
+        <a role="menuitem" tabindex="-1"
+          href="${request.resource_url(request.meeting, 'add_tickets')}"
+          i18n:translate="">Invite participants</a>
+      </li>
+      <li role="presentation">
+        <a role="menuitem" tabindex="-1"
+          href="${request.resource_url(request.meeting, 'manage_tickets')}"
+          i18n:translate="">Manage invites</a>
+      </li>
+    </tal:moderator>
+    ${structure: participants_menu}
+
+    <li role="presentation" class="divider"></li>
+
+    <li role="presentation" class="dropdown-header">
+      <span i18n:translate="">Meeting functions</span>
+    </li>
+    <li role="presentation">
+      <a role="menuitem" tabindex="-1"
+        href="${request.resource_url(request.meeting, 'minutes')}"
+        i18n:translate="">Minutes</a>
+    </li>
+    ${structure: meeting_menu}
+
+    <li role="presentation" class="divider"></li>
+    <tal:moderator condition="request.is_moderator">
+      <li role="presentation" class="dropdown-header">
+        <span class="glyphicon glyphicon-cog"></span>
+        <span i18n:translate="">Settings</span>
+      </li>
+
+      <li role="presentation">
+        <a role="menuitem" tabindex="-1"
+          href="${request.resource_url(request.meeting, 'meeting_poll_settings')}"
+          i18n:translate="">Poll settings</a>
+      </li>
+      <li role="presentation">
+        <a role="menuitem" tabindex="-1"
+          href="${request.resource_url(request.meeting, 'access_policy')}"
+          i18n:translate="">Access policy</a>
+      </li>
+      <li role="presentation" tal:condition="ap_configurable">
+        <a role="menuitem" tabindex="-1"
+          href="${request.resource_url(request.meeting, 'configure_access_policy')}"
+          i18n:translate="">Configure selected access policy</a>
+      </li>
+    </tal:moderator>
+    ${structure: settings_menu}
+
+    <li role="presentation" class="divider"></li>
+    <!-- Generic menu structures that should go here too -->
+    ${structure: meeting}
+  </ul>
+</li>
+</tal:main>

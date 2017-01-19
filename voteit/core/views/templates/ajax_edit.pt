@@ -1,5 +1,0 @@
-<tal:main
-    xmlns:i18n="http://xml.zope.org/namespaces/i18n"
-    i18n:domain="voteit.core">
-<div tal:condition="form|False" tal:replace="structure form">Form</div>
-</tal:main>

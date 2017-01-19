@@ -1,0 +1,60 @@
+@import "bootstrap/_variables";
+//FIXME: Wrong order, bootstrap must be imported AFTER this file.
+
+/*
+$brand-primary:         darken(#428bca, 6.5%) !default; // #337ab7
+$brand-success:         #5cb85c !default;
+$brand-info:            #5bc0de !default;
+$brand-warning:         #f0ad4e !default;
+$brand-danger:          #d9534f !default;
+*/
+
+$icon-font-path: "fonts/bootstrap/";
+
+$brand-default:         #ccc;
+
+$brand-approved:        $brand-success;
+$brand-denied:          $brand-danger;
+$brand-published:       $brand-primary;
+$brand-private:         $brand-danger;
+$brand-upcoming:        $brand-warning;
+$brand-voting:          $brand-warning;
+$brand-ongoing:         $brand-success;
+$brand-closed:          #000;
+$brand-retracted:       $brand-default;
+$brand-canceled:        $brand-default;
+$brand-unhandled:       $brand-default;
+$brand-star-shine:      $brand-warning;
+
+
+$voteit-unread-bar-size: 2px;
+
+// Colours
+$voteit-dark-blue: #0a243d;
+$voteit-unread: $brand-primary;
+
+
+// VoteIT navbar taken from Inverse navbar
+// Reset voteit navbar basics
+$navbar-voteit-color:                      #fff;
+$navbar-voteit-bg:                         $voteit-dark-blue !default;
+$navbar-voteit-border:                     darken($navbar-voteit-bg, 10%) !default;
+
+// VoteIT navbar links
+$navbar-voteit-link-color:                 $navbar-voteit-color;
+$navbar-voteit-link-hover-color:           #fff !default;
+$navbar-voteit-link-hover-bg:              transparent !default;
+$navbar-voteit-link-active-color:          $navbar-voteit-link-hover-color !default;
+$navbar-voteit-link-active-bg:             lighten($navbar-voteit-bg, 5%) !default;
+$navbar-voteit-link-disabled-color:        #444 !default;
+$navbar-voteit-link-disabled-bg:           transparent !default;
+
+// VoteIT navbar brand label
+$navbar-voteit-brand-color:                $navbar-voteit-link-color !default;
+$navbar-voteit-brand-hover-color:          #fff !default;
+$navbar-voteit-brand-hover-bg:             transparent !default;
+
+// VoteIT navbar toggle
+$navbar-voteit-toggle-hover-bg:            $navbar-voteit-link-active-bg !default;
+$navbar-voteit-toggle-icon-bar-bg:         #fff !default;
+$navbar-voteit-toggle-border-color:        $navbar-voteit-link-active-bg !default;

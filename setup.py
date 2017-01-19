@@ -7,32 +7,21 @@ README = open(os.path.join(here, 'README.rst')).read()
 CHANGES = open(os.path.join(here, 'CHANGES.rst')).read()
 
 install_requires = (
-    'pyramid',
-    'pyramid_beaker',
-    'pyramid_chameleon',
-    'pyramid_deform',
-    'pyramid_mailer',
-    'pyramid_tm',
-    'pyramid_zcml',
-    'pyramid_zodbconn',
-    'Babel',
-    'BeautifulSoup',
+    'Arche',
+    'BeautifulSoup', #FIXME?
     'ZODB3',
-    'betahaus.pyracont>=0.2b',
+    'arche_usertags',
+    'betahaus.pyracont >= 0.3b', #Needed for migrations
     'betahaus.viewcomponent',
     'colander',
-    'deform==0.9.9',
+    'deform',
     'fanstatic',
     'html2text',
-    'httpagentparser',
-    'js.jquery_tablesorter',
-    'lingua',
-    'repoze.catalog',
-    'repoze.evolution',
-    'repoze.folder',
+    'js.jquery_tablesorter', #FIXME?
+    'pyramid',
+    'pyramid_zcml',
     'repoze.workflow',
-    'webhelpers',
-    )
+    'webhelpers',)
 
 docs_extras = [
     'Sphinx',
@@ -46,7 +35,7 @@ testing_extras = [
     ]
 
 setup(name='voteit.core',
-      version='0.1dev',
+      version='0.2dev',
       description='Core VoteIT package',
       long_description=README + '\n\n' +  CHANGES,
       classifiers=[
@@ -72,19 +61,8 @@ setup(name='voteit.core',
       entry_points = """\
       [paste.app_factory]
       main = voteit.core:main
-      [console_scripts]
-      update_catalog = voteit.core.scripts.catalog:update_catalog
-      evolve = voteit.core.scripts.evolve:main
-      debug_instance = voteit.core.scripts.debug:debug_instance
       [fanstatic.libraries]
       voteit_core_csslib = voteit.core.fanstaticlib:voteit_core_csslib
       voteit_core_jslib = voteit.core.fanstaticlib:voteit_core_jslib
       deformlib = voteit.core.fanstaticlib:deformlib
-      """,
-      message_extractors = { '.': [
-              ('**.py',   'lingua_python', None ),
-              ('**.pt',   'lingua_xml', None ),
-              #The ZCML extractor seems broken in lingua, but since it's ZCML is XML this works. /robinharms
-              ('**.zcml',   'lingua_xml', None ),
-              ]},
-      )
+      """,)

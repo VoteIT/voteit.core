@@ -53,6 +53,7 @@ class BaseContentTests(unittest.TestCase):
         self.config.testing_securitypolicy(userid='mr_tester')
         request = testing.DummyRequest()
         self.config = testing.setUp(registry = self.config.registry, request = request)
+        self.config.include('arche.testing')
         obj = self._cut()
         self.assertEqual(obj.creators, ('mr_tester',))
 

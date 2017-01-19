@@ -1,0 +1,17 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      metal:use-macro="view.macro('arche:templates/master.pt')"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="voteit.core">
+<body>
+<div class="container" metal:fill-slot="content">
+
+  <h1 i18n:translate="">Request access</h1>
+  <div tal:content="structure context.get_field_value('public_description', '')">
+    Public presentation
+  </div>
+  <div metal:define-slot="form" tal:content="structure form">Form</div>
+
+</div>
+</body>
+</html>

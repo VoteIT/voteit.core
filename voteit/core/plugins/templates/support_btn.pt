@@ -1,0 +1,18 @@
+<span data-support xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core">
+  <a data-support-btn
+    tal:condition="show_action"
+    href="${user_supports and support.remove_url(request) or support.add_url(request)}"
+    role="button"
+    class="btn btn-xs btn-default ${user_supports and 'active' or ''}">
+    <span class="text-primary">
+      <span class="glyphicon glyphicon-thumbs-up"></span>
+      <tal:ts i18n:translate="support_proposal">Support</tal:ts>
+    </span>
+  </a>
+  <a data-open-modal
+    class="btn btn-xs btn-default"
+    href="${request.resource_url(context, '_support_users_popover')}">
+    <span data-support-count>${len(support)}</span>
+    <span class="glyphicon glyphicon-user"></span>
+  </a>
+</span>

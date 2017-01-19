@@ -1,0 +1,32 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      metal:use-macro="view.macro('arche:templates/base_view.pt', 'arche:templates/inline.pt')"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="voteit.core">
+<body>
+<tal:main metal:fill-slot="main-content">
+  <div class="row">
+    <div class="col-sm-6">
+      ${structure: userinfo}
+    </div>
+    <div class="col-sm-6" tal:define="can_edit request.has_permission('perm:Edit')">
+      <p>
+        <div class="btn-group">
+          <a href="${request.resource_url(context, 'edit')}"
+            tal:condition="can_edit"
+            class="btn btn-default"
+            i18n:translate="">Change profile</a>
+          <a href="${request.resource_url(context, 'change_password')}"
+            tal:condition="can_edit"
+            class="btn btn-default"
+            i18n:translate="">Change password</a>
+        </div>
+      </p>
+      <p tal:condition="can_edit">
+        <div tal:content="structure context.get_image_plugin(request).description|'Broken image plugin'" /><br/>
+      </p>
+    </div>
+  </div>
+</tal:main>
+</body>
+</html>

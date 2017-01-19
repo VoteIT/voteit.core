@@ -5,6 +5,7 @@ from pyramid.authorization import ACLAuthorizationPolicy
 from pyramid.security import Authenticated
 from pyramid.security import Everyone
 from zope.interface.verify import verifyObject
+
 from voteit.core import security
 
 
@@ -36,6 +37,8 @@ class SiteRootPermissionTests(unittest.TestCase):
 
     def setUp(self):
         self.config = testing.setUp()
+        self.config.include('arche.testing')
+        self.config.include('voteit.core.models.site')
         policy = ACLAuthorizationPolicy()
         self.pap = policy.principals_allowed_by_permission
 
@@ -50,10 +53,6 @@ class SiteRootPermissionTests(unittest.TestCase):
     def test_add_meeting_perm(self):
         obj = self._cut()
         self.assertEqual(self.pap(obj, security.ADD_MEETING), admin | meeting_creator)
-
-    def test_add_meeting_perm_allow_authenticated(self):
-        obj = self._cut(allow_add_meeting = True)
-        self.assertEqual(self.pap(obj, security.ADD_MEETING), admin | meeting_creator | authenticated)
 
     def test_view(self):
         obj = self._cut()

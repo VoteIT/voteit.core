@@ -13,6 +13,7 @@ from voteit.core.models.interfaces import IMeeting
 from voteit.core.testing_helpers import register_workflows
 from voteit.core.testing_helpers import bootstrap_and_fixture
 
+
 admin = set([security.ROLE_ADMIN])
 moderator = set([security.ROLE_MODERATOR])
 authenticated = set([Authenticated])
@@ -47,6 +48,8 @@ class MeetingTests(unittest.TestCase):
         self.assertTrue(verifyObject(IMeeting, self._cut()))
 
     def test_meeting_with_one_creator_sets_creator_as_moderator(self):
+        self.config.include('arche.utils')
+        self.config.include('arche.security')
         obj = self._cut(creators = ['jane'])
         self.assertIn('role:Moderator', obj.get_groups('jane'))
 
@@ -90,11 +93,11 @@ class MeetingTests(unittest.TestCase):
         m1.add_groups('second', ['role:A', 'role:C'])
         root['m2'] = m2 = self._cut()
         m2.copy_users_and_perms('m1')
-        self.assertEqual(m1.get_security(), m2.get_security())
-        self.assertEqual(m2.get_groups('second'), ('role:A', 'role:C'))
+        self.assertEqual(frozenset(m2.get_groups('second')), frozenset(['role:A', 'role:C']))
 
     def test_get_ticket_names(self):
-        self.config.scan('voteit.core.models.invite_ticket')
+        self.config.include('arche')
+        self.config.include('voteit.core.models.invite_ticket')
         obj = self._cut()
         obj.add_invite_ticket('john@doe.com', [security.ROLE_DISCUSS])
         obj.add_invite_ticket('jane@doe.com', [security.ROLE_MODERATOR])
@@ -102,10 +105,37 @@ class MeetingTests(unittest.TestCase):
         self.assertEqual(set(results), set(['john@doe.com', 'jane@doe.com']))
 
     def test_add_invite_ticket_doesnt_touch_existing(self):
-        self.config.scan('voteit.core.models.invite_ticket')
+        self.config.include('arche')
+        self.config.include('voteit.core.models.invite_ticket')
         obj = self._cut()
         self.failUnless(obj.add_invite_ticket('john@doe.com', [security.ROLE_DISCUSS]))
         self.failIf(obj.add_invite_ticket('john@doe.com', [security.ROLE_DISCUSS]))
+
+    def test_add_default_portlets_meeting(self):
+        from voteit.core.models.meeting import add_default_portlets_meeting
+        from arche.interfaces import IPortletManager
+        self.config.include('arche')
+        self.config.include('voteit.core.portlets')
+        obj = self._cut()
+        add_default_portlets_meeting(obj)
+        manager = IPortletManager(obj)
+        portlet_types = [x.portlet_type for x in manager['agenda_item'].values()]
+        self.assertIn('ai_polls', portlet_types)
+        self.assertIn('ai_proposals', portlet_types)
+        self.assertIn('ai_discussions', portlet_types)
+
+    def test_add_default_portlets_duplicate_no_harm(self):
+        from voteit.core.models.meeting import add_default_portlets_meeting
+        from arche.interfaces import IPortletManager
+        self.config.include('arche')
+        self.config.include('voteit.core.portlets')
+        obj = self._cut()
+        add_default_portlets_meeting(obj)
+        manager = IPortletManager(obj)
+        first_count = len(manager['agenda_item'])
+        add_default_portlets_meeting(obj)
+        second_count = len(manager['agenda_item'])
+        self.assertEqual(first_count, second_count)
 
 
 class MeetingPermissionTests(unittest.TestCase):
@@ -118,6 +148,9 @@ class MeetingPermissionTests(unittest.TestCase):
         # load workflow
         self.config.include('pyramid_zcml')
         self.config.load_zcml('voteit.core:configure.zcml')
+        self.config.include('arche.security')
+        self.config.include('arche.utils')
+        self.config.include('voteit.core.models.meeting')
 
     def tearDown(self):
         testing.tearDown()

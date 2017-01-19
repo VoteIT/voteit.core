@@ -1,0 +1,21 @@
+<tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core">
+  <img tal:replace="structure context.get_image_tag(size = 100, request = request)" />
+
+  <h4>
+      <span tal:content="context.title">My fullname</span>
+      <span>(${context.userid})</span>
+  </h4>
+  
+  <h5><span i18n:translate="">Email</span>:</h5>
+  <a tal:condition="context.email" href="mailto:${context.email}">${context.email}</a>
+  <span tal:condition="not context.email">-</span>
+  
+  <h5><span i18n:translate="">About</span>:</h5>
+  <div tal:condition="about_me" tal:content="structure about_me"></div>
+  <div tal:condition="not: about_me">
+    <span tal:condition="context.userid != request.authenticated_userid">-</span>
+    <tal:own condition="context.userid == request.authenticated_userid">
+    <span i18n:translate="">You haven't entered anything yet!</span>
+    </tal:own>
+  </div>
+</tal:main>

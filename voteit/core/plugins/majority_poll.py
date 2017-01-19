@@ -1,4 +1,6 @@
+from __future__ import unicode_literals
 from decimal import Decimal
+from operator import itemgetter
 
 import colander
 import deform
@@ -6,17 +8,16 @@ from pyramid.renderers import render
 from pyramid.response import Response
 
 from voteit.core.models.poll_plugin import PollPlugin
-from voteit.core.models.vote import Vote
-from voteit.core import VoteITMF as _
+from voteit.core import _
 
 
 class MajorityPollPlugin(PollPlugin):
     """ Majority poll plugin. An example of how plugins work. """
     
-    name = u'majority_poll'
-    title = _(u'Majority Poll')
+    name = 'majority_poll'
+    title = _('Majority Poll')
     #FIXME: Description of majority poll
-    description = _(u'Description of majority poll')
+    description = _("Majority poll - don't use this for more than 2 choices!")
     
     def get_settings_schema(self):
         """ Get an instance of the schema used to render a form for editing settings.
@@ -24,42 +25,37 @@ class MajorityPollPlugin(PollPlugin):
         """
         return None
     
-    def get_vote_schema(self, request=None, api=None):
+    def get_vote_schema(self):
         """ Get an instance of the schema that this poll uses.
         """
         proposals = self.context.get_proposal_objects()
-        
         #Choices should be something iterable with the contents [(UID for proposal, Title of proposal), <etc...>, ]
         choices = set()
-        
         for prop in proposals:
-            title = u"#%s - %s" % (prop.get_field_value('aid'), prop.title)
+            title = "#%s - %s" % (prop.get_field_value('aid'), prop.text)
             choices.add((prop.uid, title))
-
         poll_wf_state = self.context.get_workflow_state()
         if poll_wf_state == 'ongoing':
-            proposal_title = _(u"Vote for one")
+            proposal_title = _("Vote for one")
         else:
-            proposal_title = _(u"You can't change your vote now.")
+            proposal_title = _("You can't change your vote now.")
 
         class Schema(colander.Schema):
+            widget = deform.widget.FormWidget(template = 'form_modal',
+                                              readonly_template = 'readonly/form_modal')
             proposal = colander.SchemaNode(
                             colander.String(),
                             validator=colander.OneOf([x[0] for x in choices]),
                             widget=deform.widget.RadioChoiceWidget(values=choices),
                             title=proposal_title,
-                            description=u'',)
-
+                            description='',)
         return Schema()
-
-    def get_vote_class(self):
-        return Vote
 
     def handle_close(self):
         """ Get the calculated result of this ballot.
             We'll update the ballots with percentage and simply return them.
             The result should look something like this:
-            [{'count': 1, 'percentage': '33.33333%', num: 33.33333, ballot': {'proposal': u'af4aa2bc-1ebb-43e1-811b-88ec6ed0e2d1'}}, <etc...>, ]
+            [{'count': 1, 'percentage': '33.33333%', num: 33.33333, ballot': {'proposal': 'af4aa2bc-1ebb-43e1-811b-88ec6ed0e2d1'}}, <etc...>, ]
         """
         ballots = self.context.ballots
         results = []
@@ -68,37 +64,40 @@ class MajorityPollPlugin(PollPlugin):
             for (uid, count) in ballots:
                 result = {}
                 num = Decimal(count) / total_votes
-                result['percentage'] = self._get_percentage(num)
                 result['num'] = num
                 result['uid'] = uid
                 result['count'] = count
                 results.append(result)
-            
-        from operator import itemgetter
-        self.context.poll_result = sorted(results, key=itemgetter('num'), reverse=True)
+        self.context.poll_result = tuple(sorted(results, key = itemgetter('num'), reverse = True))
 
-    def _get_percentage(self, num):
-        return u"%s%%" % (round(num*100, 1))
-        
-    def render_result(self, request, api, complete=True):
+    def render_result(self, view):
         votes = [x['uid']['proposal'] for x in self.context.poll_result]
         novotes = set(self.context.proposal_uids) - set(votes)
-        
-        vote_singular = api.translate(_(u"vote_singular",
-                                        default = u"Vote"))
-        vote_plural = api.translate(_(u"vote_plural",
-                                      default = u"Votes"))
+        translate = view.request.localizer.translate
+        vote_singular = translate(_("vote_singular", default = "Vote"))
+        vote_plural = translate(_("vote_plural", default = "Votes"))
         def _vote_text(count):
-            return api.pluralize(vote_singular, vote_plural, count)
+            return view.request.localizer.pluralize(vote_singular, vote_plural, count)
 
+        results = []
+        #Adjust result layout
+        for res in tuple(self.context.poll_result):
+            results.append({'uid': res['uid']['proposal'],
+                            'count': res['count'],
+                            'num': res['num'],
+                            'perc': int(round(res['num'] * 100, 0))})
+        for uid in novotes:
+            results.append({'uid': uid, 'count': 0, 'num': 0, 'perc': 0})
         response = {}
-        response['api'] = api
-        response['result'] = self.context.poll_result
-        response['novotes'] = novotes
-        response['get_proposal_by_uid'] = self.context.get_proposal_by_uid
-        response['complete'] = complete
+        response['results'] = results
+        #response['novotes'] = novotes
         response['vote_text'] = _vote_text
-        return render('templates/majority_poll.pt', response, request=request)
+        response['total'] = sum([x[1] for x in self.context.ballots])
+        proposals = {}
+        for prop in self.context.get_proposal_objects():
+            proposals[prop.uid] = prop
+        response['proposals'] = proposals
+        return render('templates/majority_poll.pt', response, request = view.request)
 
     def change_states_of(self):
         """ This gets called when a poll has finished.
@@ -106,29 +105,22 @@ class MajorityPollPlugin(PollPlugin):
             Like: {'<uid>':'approved', '<uid>', 'denied'}
         """
         result = {}
-
-        from operator import itemgetter
-        poll_result = sorted(self.context.poll_result, key=itemgetter('num'), reverse=True)
-
+        poll_result = sorted(self.context.poll_result, key = itemgetter('num'), reverse = True)
         # if no result return empty dictionary
         if len(poll_result) == 0:
             return {}
-
         # check if it's result is undesided
         if len(poll_result) > 1:
             if poll_result[0]['num'] == poll_result[1]['num']:
                 return {}
-
         # set first as approved and the rest as denied
         result[poll_result[0]['uid']['proposal']] = 'approved'
         for loser in poll_result[1:]:
             result[loser['uid']['proposal']] = 'denied'
-            
         # set the proposals without votes as denied
         for proposal in self.context.get_proposal_objects():
             if proposal.uid not in result:
                 result[proposal.uid] = 'denied'
-        
         return result
 
     def render_raw_data(self):
@@ -138,6 +130,4 @@ class MajorityPollPlugin(PollPlugin):
 def includeme(config):
     """ Include majority poll as a usable method.
     """
-    from voteit.core.models.interfaces import IPoll
-    from voteit.core.models.interfaces import IPollPlugin
-    config.registry.registerAdapter(MajorityPollPlugin, (IPoll,), IPollPlugin, MajorityPollPlugin.name)
+    config.registry.registerAdapter(MajorityPollPlugin, name = MajorityPollPlugin.name)

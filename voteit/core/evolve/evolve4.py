@@ -1,13 +1,13 @@
-from repoze.catalog.query import Any
-from repoze.catalog.query import Contains
-from repoze.catalog.query import Eq
-from pyramid.traversal import resource_path
-
-from voteit.core.models.catalog import reindex_object
-from voteit.core.models.catalog import resolve_catalog_docid
 
 
 def evolve(root):
+    from repoze.catalog.query import Any
+    from repoze.catalog.query import Contains
+    from repoze.catalog.query import Eq
+    from pyramid.traversal import resource_path
+    
+    from voteit.core.models.catalog import reindex_object
+    from voteit.core.models.catalog import resolve_catalog_docid
     print "Removing absolute urls in profile links"
     catalog = root.catalog
     

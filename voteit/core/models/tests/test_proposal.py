@@ -30,8 +30,8 @@ class ProposalTests(unittest.TestCase):
         
     def test_get_tags(self):
         obj = self._cut()
-        obj.title = '#Quisque #aliquam,#ante in #tincidunt #aliquam. #Risus neque#eleifend #nunc'
-        tags = obj.get_tags()
+        obj.text = '#Quisque #aliquam,#ante in #tincidunt #aliquam. #Risus neque#eleifend #nunc'
+        tags = obj.tags
         self.assertIn('quisque', tags)
         self.assertIn('aliquam', tags)
         self.assertIn('ante', tags)
@@ -44,17 +44,7 @@ class ProposalTests(unittest.TestCase):
     def test_aid_tag(self):
         obj = self._cut()
         obj.set_field_value('aid', "dummyuser-1")
-        self.assertIn('dummyuser-1', obj.get_tags())
-        
-    def test_mentioned(self):
-        obj = self._cut()
-        obj.mentioned['dummy'] = 'now'
-        self.assertIn('dummy', obj.mentioned)
-        
-    def test_add_mention(self):
-        obj = self._cut()
-        obj.add_mention('dummy')
-        self.assertIn('dummy', obj.mentioned)
+        self.assertIn('dummyuser-1', obj.tags)
 
 
 admin = set([security.ROLE_ADMIN])
@@ -76,9 +66,9 @@ class ProposalPermissionTests(unittest.TestCase):
         self.config = testing.setUp()
         policy = ACLAuthorizationPolicy()
         self.pap = policy.principals_allowed_by_permission
-        # load workflow
-        self.config.include('pyramid_zcml')
-        self.config.load_zcml('voteit.core:configure.zcml')
+        self.config.include('voteit.core.testing_helpers.register_workflows')
+        self.config.include('arche.testing')
+        self.config.include('voteit.core.models.proposal')
 
     def tearDown(self):
         testing.tearDown()
@@ -106,7 +96,7 @@ class ProposalPermissionTests(unittest.TestCase):
         ai.set_workflow_state(request, 'upcoming')
         ai.set_workflow_state(request, 'ongoing')
         ai['p'] = obj = self._make_obj()
-        self.assertEqual(self.pap(obj, security.VIEW), admin | moderator | viewer | voter | propose | discuss )
+        self.assertEqual(self.pap(obj, security.VIEW), admin | moderator | viewer )
         self.assertEqual(self.pap(obj, security.EDIT), admin | moderator)
         self.assertEqual(self.pap(obj, security.DELETE), admin | moderator)
         self.assertEqual(self.pap(obj, security.RETRACT), admin | moderator | owner )
@@ -121,7 +111,7 @@ class ProposalPermissionTests(unittest.TestCase):
         ai['prop'] = obj
 
         #View
-        self.assertEqual(self.pap(obj, security.VIEW), admin | moderator | viewer | voter | propose | discuss)
+        self.assertEqual(self.pap(obj, security.VIEW), admin | moderator | viewer )
 
         #Edit
         self.assertEqual(self.pap(obj, security.EDIT), admin | moderator)
@@ -143,7 +133,7 @@ class ProposalPermissionTests(unittest.TestCase):
         ai['prop'] = obj
 
         #View
-        self.assertEqual(self.pap(obj, security.VIEW), admin | moderator | viewer | voter | propose | discuss)
+        self.assertEqual(self.pap(obj, security.VIEW), admin | moderator | viewer )
 
         #Edit
         self.assertEqual(self.pap(obj, security.EDIT), set())
@@ -163,17 +153,9 @@ class ProposalPermissionTests(unittest.TestCase):
         ai.set_workflow_state(request, 'ongoing')
         ai.set_workflow_state(request, 'closed')
         ai['prop'] = obj
-
-        #View
-        self.assertEqual(self.pap(obj, security.VIEW), admin | moderator | viewer | voter | propose | discuss)
-
-        #Edit
+        self.assertEqual(self.pap(obj, security.VIEW), admin | moderator | viewer )
         self.assertEqual(self.pap(obj, security.EDIT), set())
-        
-        #Delete
         self.assertEqual(self.pap(obj, security.DELETE), set())
-
-        #Retract
         self.assertEqual(self.pap(obj, security.RETRACT), set())
 
     def test_approved_in_ongoing_ai(self):
@@ -187,7 +169,7 @@ class ProposalPermissionTests(unittest.TestCase):
         ai['prop'] = obj
 
         #View
-        self.assertEqual(self.pap(obj, security.VIEW), admin | moderator | viewer | voter | propose | discuss)
+        self.assertEqual(self.pap(obj, security.VIEW), admin | moderator | viewer )
 
         #Edit
         self.assertEqual(self.pap(obj, security.EDIT), admin | moderator)
@@ -210,7 +192,7 @@ class ProposalPermissionTests(unittest.TestCase):
         ai['prop'] = obj
 
         #View
-        self.assertEqual(self.pap(obj, security.VIEW), admin | moderator | viewer | voter | propose | discuss)
+        self.assertEqual(self.pap(obj, security.VIEW), admin | moderator | viewer )
 
         #Edit
         self.assertEqual(self.pap(obj, security.EDIT), set())
@@ -229,7 +211,7 @@ class ProposalPermissionTests(unittest.TestCase):
         ai['prop'] = obj
 
         #View
-        self.assertEqual(self.pap(obj, security.VIEW), admin | moderator | viewer | voter | propose | discuss)
+        self.assertEqual(self.pap(obj, security.VIEW), admin | moderator | viewer )
 
         #Edit
         self.assertEqual(self.pap(obj, security.EDIT), admin | moderator)

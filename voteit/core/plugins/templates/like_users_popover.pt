@@ -1,0 +1,15 @@
+<tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core">
+<div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  <h4 class="modal-title">
+    <span class="glyphicon glyphicon-thumbs-up"></span>
+    <tal:ts i18n:translate="">Users who like this <span i18n:name="count">(${len(userids)})</span></tal:ts>
+  </h4>
+</div>
+<div class="modal-body">
+  <span tal:replace="structure request.creators_info(userids, portrait = False)">userinfo</span>
+</div>
+<div class="modal-footer">
+  <p i18n:translate="like_not_vote_notice">Note that liking something isn't the same thing as voting for it!</p>
+</div>
+</tal:main>

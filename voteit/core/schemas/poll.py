@@ -1,47 +1,25 @@
-from betahaus.pyracont.decorators import schema_factory
-from betahaus.pyracont.factories import createContent
+from arche.schemas import LocalDateTime
 from pyramid.traversal import find_interface
 import colander
 import deform
 
 from voteit.core import VoteITMF as _
 from voteit.core.models.interfaces import IAgendaItem
-from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IPollPlugin
 from voteit.core.models.interfaces import IProposal
 from voteit.core.schemas.common import deferred_default_end_time
 from voteit.core.schemas.common import deferred_default_start_time
-from voteit.core.schemas.tzdatetime import TZDateTime
 from voteit.core.validators import html_string_validator
 from voteit.core.validators import richtext_validator
 
 
 @colander.deferred
 def poll_plugin_choices_widget(node, kw):
-    context = kw['context']
     request = kw['request']
-    # get avaible plugins from the meeting
-    meeting = find_interface(context, IMeeting)
-    available_plugins = meeting.get_field_value('poll_plugins', ()) 
-    #Add all selectable plugins to schema. This chooses the poll method to use
-    plugin_choices = set()
-    #FIXME: The new object should probably be sent to construct schema
-    #for now, we can fake this
-    fake_poll = createContent('Poll')
-    # add avaible plugins the the choice set
-    for name in available_plugins:
-        #FIXME: we should probably catch if a plugin is no lnger avaible on the site 
-        plugin = request.registry.queryAdapter(fake_poll, name = name, interface = IPollPlugin)
-        if plugin:
-            plugin_choices.add((name, plugin.title))
-    # if no plugins was set in the meetings add the default plugin if any is set 
-    if not plugin_choices:
-        name = request.registry.settings.get('default_poll_method', None)
-        plugin = request.registry.queryAdapter(fake_poll, name = name, interface = IPollPlugin)
-        if plugin:
-            plugin_choices.add((name, plugin.title))
-    return deform.widget.SelectWidget(values=plugin_choices)
+    values = []
+    values.extend([(x.name, x.factory) for x in request.registry.registeredAdapters() if x.provided == IPollPlugin])
+    return deform.widget.RadioChoiceWidget(values = values, template = "object_radio_choice")
 
 
 @colander.deferred
@@ -52,16 +30,14 @@ def proposal_choices_widget(node, kw):
     agenda_item = find_interface(context, IAgendaItem)
     if agenda_item is None:
         Exception("Couldn't find the agenda item from this polls context")
-        
     #Get valid proposals - should be in states 'published' to be selectable
+    #FIXME: Wrong sorting!
     for prop in agenda_item.get_content(iface=IProposal, states='published', sort_on='title'):
-        proposal_choices.add((prop.uid, prop.title, ))
-
+        proposal_choices.add((prop.uid, "#%s | %s" % (prop.aid, prop.title)))
     # get currently chosen proposals
     if IPoll.providedBy(context):
         for prop in context.get_proposal_objects():
             proposal_choices.add((prop.uid, prop.title, ))
-
     proposal_choices = sorted(proposal_choices, key=lambda proposal: proposal[1].lower())
     return deform.widget.CheckboxChoiceWidget(values=proposal_choices)
 
@@ -74,25 +50,23 @@ def deferred_default_poll_method(node, kw):
 @colander.deferred
 def deferred_reject_proposal_title(node, kw):
     """ Translation strings as default values doesn't seem to work, so this method translates it. """
-    api = kw['api']
-    msg = _(u"reject_proposal_title_default", default = u"Reject all proposals")
-    return api.translate(msg)
+    request = kw['request']
+    msg = _(u"reject_proposal_title_default", default = u"Reject")
+    return request.localizer.translate(msg)
 
 
-@schema_factory('EditPollSchema', title = _(u"Edit poll"),
-                description = _(u"Use this form to edit a poll"))
 class PollSchema(colander.MappingSchema):
+    
     title = colander.SchemaNode(colander.String(),
                                 title = _(u"Title"),
-                                validator=html_string_validator,)
+                                validator = html_string_validator,)
     description = colander.SchemaNode(colander.String(),
-                                      title = _(u"Description"),
-                                      missing=u"",
+                                      title = _("Description"),
+                                      missing = "",
                                       description = _(u"poll_description_description",
                                                       default=u"Explain your choice of poll method and your plan for the different polls in the agenda item."),
-                                      widget=deform.widget.RichTextWidget(), 
-                                      validator=richtext_validator,)
-
+                                      widget = deform.widget.TextAreaWidget(rows=5, cols=40), 
+                                      validator = html_string_validator,)
     poll_plugin = colander.SchemaNode(colander.String(),
                                       title = _(u"Poll method to use"),
                                       description = _(u"poll_poll_plugin_description",
@@ -101,36 +75,29 @@ class PollSchema(colander.MappingSchema):
                                       widget = poll_plugin_choices_widget,
                                       default = deferred_default_poll_method,)
                                       
-    proposals = colander.SchemaNode(deform.Set(allow_empty=True), 
-                                    name="proposals",
+    proposals = colander.SchemaNode(colander.Set(), 
                                     title = _(u"Proposals"),
                                     description = _(u"poll_proposals_description",
                                                     default=u"Only proposals in the state 'published' can be selected"),
-                                    missing=set(),
-                                    widget=proposal_choices_widget,)
+                                    missing = set(),
+                                    widget = proposal_choices_widget,)
     start_time = colander.SchemaNode(
-         TZDateTime(),
+         LocalDateTime(),
+         tab = 'advanced',
          title = _(u"Start time of this poll."),
          description = _(u"You need to open it yourself."),
-         widget=deform.widget.DateTimeInputWidget(options={'dateFormat': 'yy-mm-dd',
-                                                           'timeFormat': 'hh:mm',
-                                                           'separator': ' '}),
-         default = deferred_default_start_time,
+         missing = None,
     )
     end_time = colander.SchemaNode(
-         TZDateTime(),
+         LocalDateTime(),
+         tab = 'advanced',
          title = _(u"End time of this poll."),
          description = _(u"poll_end_time_description",
                          default = u"You need to close it yourself. A good default value is one day later."),
-         widget=deform.widget.DateTimeInputWidget(options={'dateFormat': 'yy-mm-dd',
-                                                           'timeFormat': 'hh:mm',
-                                                           'separator': ' '}),
-         default = deferred_default_end_time,
+         missing = None,
     )
 
 
-@schema_factory('AddPollSchema', title = _(u"Add poll"),
-                description = _(u"Use this form to add a poll"))
 class AddPollSchema(PollSchema):
     add_reject_proposal = colander.SchemaNode(colander.Boolean(),
                                           title = _(u"Reject proposal"),
@@ -141,3 +108,8 @@ class AddPollSchema(PollSchema):
                                                 title = _(u"Proposal text for 'reject all proposals'"),
                                                 description = _(u"You can customise the proposal text if you want."),
                                                 default = deferred_reject_proposal_title)
+
+
+def includeme(config):
+    config.add_content_schema('Poll', AddPollSchema, 'add')
+    config.add_content_schema('Poll', PollSchema, 'edit')

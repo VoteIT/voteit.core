@@ -1,26 +1,50 @@
 <tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core">
-<div tal:condition="result">
-    <tal:iterate repeat="item result">
-        <div>
-            <span tal:replace="item['percentage']">30%</span>
-            (<span tal:replace="item['count']">3</span> ${vote_text(item['count'])})
+<div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  <h4 class="modal-title"
+    i18n:translate="">
+    Results of
+    <tal:ts replace="context.title" i18n:name="title" />
+  </h4>
+</div>
+<div class="modal-body">
+  <div class="list-group" tal:condition="results">
+  <tal:iterate repeat="item results">
+    <div class="list-group-item" tal:define="prop proposals[item['uid']]">
+      <tal:creator replace="structure request.creators_info(prop.creators, portrait = False)" />
+      ${prop.title}
+      <div class="row">
+        <div class="col-sm-4"><strong>#${prop.aid}</strong></div>
+        <div class="col-sm-4">
+          <strong><tal:percentage replace="round(item['num'] * 100, 1)">30</tal:percentage>%</strong>
         </div>
-        <tal:proposal
-            define="brain api.get_metadata_for_query(uid=item['uid']['proposal'])[0]"
-            replace="structure api.render_single_view_component(api.context, api.request, 'proposal', 'block', brain=brain)">
-            Proposal
-        </tal:proposal>
-    </tal:iterate>
-    <tal:iterate repeat="looser novotes">
-        <div>
-        <span>0%</span>
-            (<span>0</span> ${vote_text(0)})
+        <div class="col-sm-4">
+          <span tal:replace="item['count']">3</span> ${vote_text(item['count'])}
         </div>
-        <tal:proposal
-            define="brain api.get_metadata_for_query(uid=looser)[0]"
-            replace="structure api.render_single_view_component(api.context, api.request, 'proposal', 'block', brain=brain)">
-            Proposal
-        </tal:proposal>
-    </tal:iterate>
+      </div>
+      <div class="progress">
+        <div class="progress-bar ${item['perc'] > 50 and 'progress-bar-success' or 'progress-bar-warning'}"
+          role="progressbar"
+          aria-valuenow="${item['perc']}"
+          aria-valuemin="0"
+          aria-valuemax="100"
+          style="width: ${item['perc']}%">
+        </div>
+      </div>
+    </div>
+  </tal:iterate>
+  </div>
+</div>
+<div class="modal-body">
+  <div tal:condition="len(results) > 2" class="alert alert-warning" role="alert">
+    <span class="glyphicon glyphicon-warning-sign"></span>
+    <strong i18n:translate="">Note!</strong>
+    <span i18n:translate="majority_poll_too_many_proposals_warning">Majority polls aren't ment to handle more than 2 proposals.
+      If the winner didn't receive at least 51%
+      of the votes, you should consider using another poll method (like Schulze).
+      Consult the manual for more information.
+    </span>
+  </div>
+  <p i18n:translate="majority_results_description">The percentage shows number of votes that favoured that alternative, not out of the total number of voters.</p>
 </div>
 </tal:main>

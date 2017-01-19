@@ -1,101 +1,64 @@
-from betahaus.pyracont.factories import createSchema
-from deform import Form
-from deform.exception import ValidationFailure
-from pyramid.url import resource_url
-from pyramid.view import view_config
+from arche import _ as arche_mf
+from arche.interfaces import ILocalRoles
+from arche.security import PERM_MANAGE_USERS
+from arche.views.actions import actionbar_main_generic
+from arche.views.base import BaseForm
+from betahaus.viewcomponent.decorators import view_action
 from pyramid.httpexceptions import HTTPFound
+from pyramid.view import view_config
 
-from voteit.core import VoteITMF as _
-from voteit.core.views.base_view import BaseView
-from voteit.core.models.interfaces import IMeeting
-from voteit.core.models.interfaces import ISiteRoot
-from voteit.core.models.schemas import add_csrf_token
-from voteit.core.models.schemas import button_add
-from voteit.core.models.schemas import button_cancel
+from voteit.core import _
 from voteit.core import security
+from voteit.core.models.interfaces import IMeeting
 
 
-class PermissionsView(BaseView):
-    """ View for setting permissions """
+@view_action('actionbar_main', 'permissions',
+             title = arche_mf("Permissions"),
+             view_name = 'permissions',
+             permission = PERM_MANAGE_USERS, #Same perm as Arche
+             priority = 40)
+def permissions_action(context, request, va, **kw):
+    """ Override regular permission button in the action bar. It shouldn't be used within meetings.
+    """
+    if not request.meeting and ILocalRoles.providedBy(context):
+        return actionbar_main_generic(context, request, va, **kw)
 
-    #FIXME: This view is up for refactoring same way as participants
-    #@view_config(context=IMeeting, name="permissions", renderer="templates/base_edit.pt", permission=security.MANAGE_GROUPS)
-    @view_config(context=ISiteRoot, name="permissions", renderer="templates/base_edit.pt", permission=security.MANAGE_GROUPS)
-    def group_form(self):
-        if IMeeting.providedBy(self.context):
-            self.response['title'] = _(u"Edit permissions")
+#Should we block perms for all contexts within a meeting?
+
+#FIXME: Proper permissions view
+
+@view_config(context = IMeeting,
+             permission = security.MODERATE_MEETING,
+             name = "add_userid",
+             renderer = "arche:templates/form.pt")
+class AddExistingUserForm(BaseForm):
+    title = _("Add existing user to meeting")
+    schema_name = 'add_existing_user'
+    type_name = 'Meeting'
+
+    def save_success(self, appstruct):
+        userid = appstruct['userid']
+        roles = appstruct['roles']
+        if roles and security.ROLE_VIEWER not in roles:
+            roles.add(security.ROLE_VIEWER)
+        old_roles = self.context.local_roles.get(userid, set())
+        if old_roles:
+            new_roles = roles - old_roles
+            if new_roles:
+                trans = self.request.localizer.translate
+                role_titles = []
+                for role_name in new_roles:
+                    role = self.request.registry.roles.get(role_name)
+                    role_titles.append(trans(role.title))
+                msg = _("new_roles_appended_notice",
+                        default = "User was already a part of this meeting, "
+                        "but these new roles were added: ${roles}",
+                        mapping = {'roles': ", ".join(role_titles)})
+                self.flash_messages.add(msg, type = 'warning')
+            else:
+                self.flash_messages.add(_("No new roles added - user already had all of them."))
         else:
-            self.response['title'] = _(u"Root permissions")
-        post = self.request.POST
-        if 'cancel' in post:
-            url = resource_url(self.context, self.request)
-            return HTTPFound(location=url)
-
-        schema = createSchema('PermissionsSchema')
-        add_csrf_token(self.context, self.request, schema)
-        schema = schema.bind(context=self.context, request=self.request, api = self.api)
-
-        form = Form(schema, buttons=('save', 'cancel'))
-        self.api.register_form_resources(form)
-
-        if 'save' in post:
-            controls = post.items()
-            try:
-                appstruct = form.validate(controls)
-            except ValidationFailure, e:
-                self.response['form'] = e.render()
-                return self.response
-            
-            #Set permissions
-            self.context.set_security(appstruct['userids_and_groups'])
-            url = resource_url(self.context, self.request)
-            return HTTPFound(location=url)
-
-        userids_and_groups = self.context.get_security()
-        #Update with full name as well
-        for entry in userids_and_groups:
-            userid = entry['userid']
-            user = self.api.get_user(userid)
-            if user is None:
-                continue
-            entry['name'] = "%s %s".strip() % (user.get_field_value('first_name'), user.get_field_value('last_name'))
-
-        #No action - Render edit form
-        appstruct = dict( userids_and_groups = userids_and_groups )
-
-        self.response['form'] = form.render(appstruct=appstruct)
-        return self.response
-    
-    @view_config(context=ISiteRoot, name="add_permission", renderer="templates/base_edit.pt", permission=security.MANAGE_GROUPS)
-    @view_config(context=IMeeting, name="add_permission", renderer="templates/base_edit.pt", permission=security.MANAGE_GROUPS)
-    def add_permission(self):
-        if ISiteRoot.providedBy(self.context):
-            self.response['title'] = _(u"Add permission")
-        post = self.request.POST
-        if 'cancel' in post:
-            url = resource_url(self.context, self.request)
-            return HTTPFound(location=url)
-        schema = createSchema('SinglePermissionSchema')
-        add_csrf_token(self.context, self.request, schema)
-        schema = schema.bind(context=self.context, request=self.request, api = self.api)
-        form = Form(schema, buttons=(button_add, button_cancel))
-        self.api.register_form_resources(form)
-        if IMeeting.providedBy(self.context):
-            self.response['tabs'] = self.api.render_single_view_component(self.context, self.request, 'tabs', 'manage_tickets')
-        if 'add' in post:
-            controls = post.items()
-            try:
-                appstruct = form.validate(controls)
-            except ValidationFailure, e:
-                self.response['form'] = e.render()
-                return self.response
-            
-            #Set permissions
-            self.context.set_groups(appstruct['userid'], appstruct['groups'], event = True)
-            msg = _(u"Added permssion for user ${userid}", mapping={'userid':appstruct['userid']} )
-            self.api.flash_messages.add(msg)
-            url = resource_url(self.context, self.request)
-            return HTTPFound(location=url)
-
-        self.response['form'] = form.render()
-        return self.response
+            #Userid wasn't registered in this meeting
+            self.flash_messages.add(self.default_success, type = "success")
+        self.context.local_roles.add(appstruct['userid'], roles)
+        return HTTPFound(location = self.request.resource_url(self.context, 'participants'))

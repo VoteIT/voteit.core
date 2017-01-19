@@ -38,12 +38,11 @@ class UserIDBasedPropsalIds(ProposalIds):
     """
 
     def add(self, proposal):
-        creators = proposal.get_field_value('creators')
-        if not creators:
+        if not proposal.creator:
             raise ValueError("The object %s doesn't have a creator assigned. Can't generate automatic id." % proposal)
         #By convention, first name in list is main creator.
         #No support for many creators yet but it might be implemented.
-        creator = creators[0]
+        creator = proposal.creator[0]
         aid_int = self.proposal_ids.get(creator, 0) + 1
         aid = "%s-%s" % (creator, aid_int)
         proposal.set_field_appstruct({'aid': aid, 'aid_int': aid_int})

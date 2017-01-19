@@ -1,0 +1,22 @@
+<tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+  i18n:domain="voteit.core"
+  tal:define="can_add request.has_permission('Add Discussion Post', request.agenda_item)">
+  <a tal:condition="can_add"
+    data-clickable-target=""
+    href="${request.resource_url(context, 'add', query = {'content_type': 'DiscussionPost', 'tag': request.GET.getall('tag')})}"
+    class="btn btn-primary">
+    <span data-actionmarker="glyphicon glyphicon-refresh rotate-me"></span>
+    <span i18n:translate="">New entry</span>
+  </a>
+  <tal:cant_add condition="not can_add">
+    <span tal:condition="not context.discussion_block"
+      i18n:translate="lack_add_perm">You lack the required permission to add.</span>
+    <span tal:condition="context.discussion_block"
+      i18n:translate="">The moderator has locked the ability to add more discussion posts.</span>
+  </tal:cant_add>
+  <script type="text/javascript" tal:condition="update_selector|False">
+    $("${update_selector} [data-load-target]").each(function() {
+      voteit.load_target(this);
+    });
+  </script>
+</tal:main>

@@ -1,0 +1,94 @@
+@import "_variables";
+
+@import "_mixins";
+@import "_state_colors";
+@import "_icons";
+@import "_navbar";
+@import "_portlets";
+@import "_msg_bar";
+
+
+body {
+  padding-top:  90px;
+}
+.profile-pic {
+  float: left;
+  margin-right: 10px;
+}
+.metadata {
+  padding: 5px 0;
+}
+.text {
+  padding: 5px 0;
+}
+.cogwheel {
+  margin-left: 5px;
+}
+.body {
+  margin-top: $line-height-computed*2;
+  margin-bottom: $line-height-computed;
+}
+.list-group-item.active {
+  >a {
+    color: #fff;
+    &:hover {
+      color: #fff;
+    }
+  }
+}
+.navbar-brand img.voteitlogo {
+  margin-top: -5px;
+}
+.panel .list-group .list-group-item-unread,
+.list-group .list-group-item-unread,
+body .btn-group-portlet > .item-unread {
+  border-left-style: solid;
+  border-left-width: $voteit-unread-bar-size;
+  border-left-color: $voteit-unread;
+}
+#polls-menu {
+  .votemarker {
+    color: $brand-default;
+    font-size: 75%;
+  }
+  .votemarker-active {
+    color: $brand-success;
+  }
+  &.attention {
+    > .dropdown-toggle > .glyphicon-star {
+      color: $brand-star-shine;
+    }
+  }
+}
+
+.btn-group-portlet {
+  width: 100%;
+  &> .btn {
+    position: relative;
+    display: block;
+    float: none;
+    width: 100%;
+    max-width: 100%;
+    margin-top: -1px;
+    margin-left: 0;
+    border-radius: 0;
+    border-right: 0;
+    border-left: 0;
+    text-align: left;
+  }
+  .btn-title {
+    display: block;
+    font-size: 110%;
+    white-space: normal;
+    margin-bottom: 5px;
+  }
+  .cogwheel {
+    z-index: 999;
+    margin-right: -1px;
+    margin-top: -1px;
+  }
+}
+
+footer {
+    margin-top: $grid-gutter-width;
+}

@@ -1,11 +1,10 @@
 import colander
 import deform
-from betahaus.pyracont.decorators import schema_factory
 
 from voteit.core.validators import html_string_validator
 from voteit.core.schemas.common import deferred_default_user_fullname
 from voteit.core.schemas.common import deferred_default_user_email
-from voteit.core import VoteITMF as _
+from voteit.core import _
 
 
 @colander.deferred
@@ -16,10 +15,10 @@ def deferred_meeting_title(node, kw):
     return u""
 
 
-@schema_factory('ContactSchema', title=_("Contact moderator"),
-                description = _(u"contact_schema_main_description",
-                                default = u"Send a message to the meeting moderators"))
 class ContactSchema(colander.MappingSchema):
+    title = _("Contact moderator")
+    description = _("contact_schema_main_description",
+                    default = u"Send a message to the meeting moderators")
     name = colander.SchemaNode(colander.String(),
                                title = _(u"Name"),
                                description = _(u"contact_schema_name_description",
@@ -43,9 +42,9 @@ class ContactSchema(colander.MappingSchema):
                                   validator = html_string_validator,)
 
 
-@schema_factory('SupportSchema', title=_("Support"))
 class SupportSchema(colander.Schema):
     """ Support contact form schema. """
+    title = _("Support request")
     name = colander.SchemaNode(colander.String(),
                                title = _(u"Name"),
                                default = deferred_default_user_fullname,
@@ -77,3 +76,9 @@ class SupportSchema(colander.Schema):
                                                             u"The more information you send us, the better. We're really bad at reading minds..."),
                                   widget = deform.widget.TextAreaWidget(rows=10, cols=40),
                                   validator = html_string_validator,)
+
+
+def includeme(config):
+    config.add_content_schema('Root', SupportSchema, 'support')
+    config.add_content_schema('Meeting', SupportSchema, 'support')
+    config.add_content_schema('Meeting', ContactSchema, 'contact')

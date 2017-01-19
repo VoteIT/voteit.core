@@ -1,102 +1,77 @@
-import re
+from __future__ import unicode_literals
 
-from BTrees.OOBTree import OOBTree
-from zope.interface import implements
-from pyramid.security import Allow
-from pyramid.security import DENY_ALL
+from arche.security import get_acl_registry
 from pyramid.traversal import find_interface
-from betahaus.pyracont.decorators import content_factory
+from zope.interface import implementer
 
 from voteit.core import VoteITMF as _
 from voteit.core import security
-from voteit.core.helpers import TAG_PATTERN
+from voteit.core.helpers import strip_and_truncate
+from voteit.core.helpers import tags_from_text
 from voteit.core.models.interfaces import IAgendaItem
-from voteit.core.models.interfaces import ICatalogMetadataEnabled
 from voteit.core.models.interfaces import IDiscussionPost
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.base_content import BaseContent
-from voteit.core.models.date_time_util import utcnow
 
 
-ACL =  {}
-ACL['open'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, security.DELETE, security.EDIT,)),
-               (Allow, security.ROLE_MODERATOR, (security.VIEW, security.DELETE, security.EDIT,)),
-               (Allow, security.ROLE_OWNER, (security.DELETE, )),
-               (Allow, security.ROLE_VIEWER, (security.VIEW,)),
-               DENY_ALL,
-               ]
-ACL['closed'] = [(Allow, security.ROLE_ADMIN, (security.VIEW,)),
-                 (Allow, security.ROLE_MODERATOR, (security.VIEW,)),
-                 (Allow, security.ROLE_VIEWER, (security.VIEW,)),
-                 DENY_ALL,
-                ]
-ACL['private'] = [(Allow, security.ROLE_ADMIN, (security.VIEW, security.DELETE, security.EDIT,)),
-                  (Allow, security.ROLE_MODERATOR, (security.VIEW, security.DELETE, security.EDIT,)),
-                  DENY_ALL,
-                  ]
-
-@content_factory('DiscussionPost', title=_(u"Discussion Post"))
+@implementer(IDiscussionPost)
 class DiscussionPost(BaseContent):
     """ Discussion Post content type.
         See :mod:`voteit.core.models.interfaces.IDiscussionPost`.
         All methods are documented in the interface of this class.
     """
-    implements(IDiscussionPost, ICatalogMetadataEnabled)
-    content_type = 'DiscussionPost'
-    display_name = _(u"Discussion Post")
-    allowed_contexts = ('AgendaItem',)
+    type_name = 'DiscussionPost'
+    type_title = _("Discussion Post")
     add_permission = security.ADD_DISCUSSION_POST
-    schemas = {'add': 'DiscussionPostSchema', 'edit': 'DiscussionPostSchema'}
-    custom_mutators = {'text': '_set_text',
-                       'title': '_set_title',
-                       'mentioned': '_set_mentioned'}
-    custom_accessors = {'title': '_get_title',
-                        'mentioned': '_get_mentioned'}
+    css_icon = 'glyphicon glyphicon-comment'
 
     @property
     def __acl__(self):
         meeting = find_interface(self, IMeeting)
+        acl = get_acl_registry()
         if meeting.get_workflow_state() == 'closed':
-            return ACL['closed']
+            return acl.get_acl('DiscussionPost:closed')
         ai = find_interface(self, IAgendaItem)
         ai_state = ai.get_workflow_state()
         #If ai is private, use private
         if ai_state == 'private':
-            return ACL['private']
-        return ACL['open']
+            return acl.get_acl('DiscussionPost:private')
+        return acl.get_acl('DiscussionPost:open')
 
-    #Override title, it will be used to generate a name for this content. (Like an id)
-    def _get_title(self, key = None, default = u""):
-        return self.get_field_value('text', default = default)
+    @property
+    def title(self):
+        return strip_and_truncate(self.text, limit = 100, symbol = '')
+    @title.setter
+    def title(self, value):
+        raise NotImplementedError("Tried to set title on DiscussionPost")
 
-    def _set_title(self, value, key = None):
-        """ Override set tilte for this content type."""
-        #This has to do with b/c
-        self._set_text(value, key = key)
+    @property
+    def text(self):
+        return self.get_field_value('text', '')
+    @text.setter
+    def text(self, value):
+        self.set_field_value('text', value)
 
-    title = property(_get_title, _set_title)
+    @property
+    def tags(self): #arche compat
+        return tags_from_text(self.text)
+    @tags.setter
+    def tags(self, value):
+        print "Tags shouldn't be set like this"
 
-    def _set_text(self, value, key = None):
-        self.field_storage['text'] = value
 
-    def _get_mentioned(self, key = None, default = OOBTree()):
-        mentioned = getattr(self, '__mentioned__', None)
-        if mentioned is None:
-            mentioned = self.__mentioned__ =  OOBTree()
-        return mentioned
-
-    def _set_mentioned(self, value, key = None):
-        self._get_mentioned()['mentioned'] = value
-
-    mentioned = property(_get_mentioned, _set_mentioned)
-    
-    def add_mention(self, userid):
-        self.mentioned[userid] = utcnow()
-
-    def get_tags(self, default = ()):
-        tags = []
-        for matchobj in re.finditer(TAG_PATTERN, self.get_field_value('text', '')):
-            tag = matchobj.group('tag').lower()
-            if tag not in tags:
-                tags.append(tag)
-        return tags and tags or default
+def includeme(config):
+    config.add_content_factory(DiscussionPost, addable_to = 'AgendaItem')
+    aclreg = config.registry.acl
+    acl_open = aclreg.new_acl('DiscussionPost:open')
+    acl_open.add(security.ROLE_ADMIN, (security.VIEW, security.DELETE, security.EDIT, security.MODERATE_MEETING))
+    acl_open.add(security.ROLE_MODERATOR, (security.VIEW, security.DELETE, security.EDIT, security.MODERATE_MEETING))
+    acl_open.add(security.ROLE_OWNER, security.DELETE)
+    acl_open.add(security.ROLE_VIEWER, security.VIEW)
+    acl_closed = aclreg.new_acl('DiscussionPost:closed')
+    acl_closed.add(security.ROLE_ADMIN, (security.VIEW, security.MODERATE_MEETING))
+    acl_closed.add(security.ROLE_MODERATOR, (security.VIEW, security.MODERATE_MEETING))
+    acl_closed.add(security.ROLE_VIEWER, security.VIEW)
+    acl_private = aclreg.new_acl('DiscussionPost:private')
+    acl_private.add(security.ROLE_ADMIN, (security.VIEW, security.DELETE, security.EDIT, security.MODERATE_MEETING))
+    acl_private.add(security.ROLE_MODERATOR, (security.VIEW, security.DELETE, security.EDIT, security.MODERATE_MEETING))

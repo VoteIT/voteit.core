@@ -1,8 +1,0 @@
-<tal:main
-    xmlns:i18n="http://xml.zope.org/namespaces/i18n"
-    i18n:domain="voteit.core">
-<div class="inline_add_form listing_block">
-	<a class="buttonize large proposal_button" href="${url}" i18n:translate="">Add a proposal</a>
-    <div class="clear"><!-- --></div>
-</div>
-</tal:main>

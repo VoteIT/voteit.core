@@ -1,0 +1,32 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      metal:use-macro="view.macro('arche:templates/base_view.pt', 'arche:templates/inline.pt')"
+      i18n:domain="voteit.core">
+<body>
+<div metal:fill-slot="main-content">
+    <img tal:replace="structure view.thumb_tag(context, 'col-2', extra_cls = 'pull-right')" />
+  
+    <div class="page-header">
+      <h1>${context.title}</h1>
+    </div>
+
+    ${structure: view.render_template('voteit.core:templates/snippets/ai_previous_next.pt')}
+
+    <div class="body"
+         tal:define="body context.body|None"
+         tal:condition="body"
+         tal:content="structure body">Body text</div>
+    <div class="clearfix"><!-- --></div>
+
+    <div class="portlets-ai row">
+        <tal:portlets repeat="portlet view.render_portlet_slot('agenda_item')">
+            <tal:portlet replace="structure portlet" />
+        </tal:portlets>
+    </div>
+
+
+</div>
+</body>
+</html>

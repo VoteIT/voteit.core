@@ -1,0 +1,13 @@
+<tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core">
+<div tal:condition="last_entries">
+  <h5><span i18n:translate="">Last added</span>:</h5>
+  <div class="list-group">
+  <tal:iterate repeat="obj last_entries">
+    <div class="list-group-item">
+      <a href="${request.resource_url(obj)}" tal:content="structure obj.title"></a>
+      <div class="text-right text-muted">${request.dt_handler.format_relative(obj.created)}</div>
+    </div>
+  </tal:iterate>
+  </div>
+</div>
+</tal:main>

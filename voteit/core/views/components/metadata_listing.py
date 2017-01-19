@@ -1,122 +1,95 @@
 from betahaus.viewcomponent import view_action
-from betahaus.viewcomponent.interfaces import IViewGroup
 from pyramid.renderers import render
-from pyramid.traversal import find_resource
 from pyramid.traversal import find_interface
 
-from voteit.core import VoteITMF as _
+from voteit.core import _
 from voteit.core.models.interfaces import IAgendaItem
+from voteit.core.models.interfaces import IDiscussionPost
+from voteit.core.models.interfaces import IProposal
 from voteit.core.models.interfaces import IWorkflowAware
-from voteit.core.models.discussion_post import DiscussionPost
-from voteit.core.models.proposal import Proposal
+from voteit.core.security import ADD_DISCUSSION_POST
+from voteit.core.security import ADD_PROPOSAL
+from voteit.core.security import DELETE
 from voteit.core.security import RETRACT 
 from voteit.core.security import VIEW
-from voteit.core.security import ADD_PROPOSAL
-from voteit.core.security import ADD_DISCUSSION_POST
-from voteit.core.security import DELETE
 
 
-@view_action('main', 'metadata_listing', permission=VIEW)
-def metadata_listing(context, request, va, **kw):
-    """ This is the main renderer for post meta.
-        It will call all view components in the group metadata_listing.
-        In turn, some of those will call other groups.
-    """
-    util = request.registry.getUtility(IViewGroup, name='metadata_listing')
-    response = {'view_actions': util.values(), 'va_kwargs': kw,}
-    return render('templates/metadata/metadata_listing.pt', response, request = request)
-
-@view_action('metadata_listing', 'state', permission=VIEW)
+@view_action('metadata_listing', 'state',
+             permission = VIEW,
+             interface = IWorkflowAware,
+             renderer = "voteit.core:templates/snippets/inline_workflow.pt",
+             priority = 10)
 def meta_state(context, request, va, **kw):
-    api = kw['api']
-    brain = kw['brain']
-    obj = find_resource(api.root, brain['path'])
-    if not IWorkflowAware.providedBy(obj):
-        return ''
-    state_id = brain['workflow_state']
-    state_info = _dummy[brain['content_type']].workflow.state_info(None, request)
-    translated_state_title = state_id
-    for info in state_info:
-        if info['name'] == state_id:
-            translated_state_title = api.translate(api.tstring(info['title']))
-    return '<span class="%s icon iconpadding">%s</span>' % (state_id, translated_state_title)
-
-@view_action('metadata_listing', 'time', permission=VIEW)
-def meta_time(context, request, va, **kw):
-    api = kw['api']
-    brain = kw['brain']
-    return '<span class="time">%s</span>' % api.translate(api.dt_util.relative_time_format(brain['created']))
-
-@view_action('metadata_listing', 'retract', permission=VIEW)
-def meta_retract(context, request, va, **kw):
-    api = kw['api']
-    brain = kw['brain']
-    if brain['workflow_state'] != 'published':
-        return ''
-    if not api.userid in brain['creators']:
-        return ''
-    #Now for the 'expensive' stuff
-    obj = find_resource(api.root, brain['path'])
-    ai = find_interface(context, IAgendaItem)
-    if not api.context_has_permission(ADD_PROPOSAL, ai) and api.context_has_permission(RETRACT, obj):
-        return ''
-    return '<a class="retract confirm-retract" ' \
-           'href="%s%s/state?state=retracted" ' \
-           '>%s</a>' % (request.application_url, brain['path'], api.translate(_(u'Retract')))
-
-@view_action('metadata_listing', 'user_tags', permission=VIEW)
-def meta_user_tags(context, request, va, **kw):
-    brain = kw['brain']
-    api = kw['api']
-    del kw['brain'] #So we don't pass it along as well, causing an argument conflict
-    return api.render_view_group(brain, request, 'user_tags', **kw)
-
-@view_action('metadata_listing', 'answer', permission=VIEW)
-def meta_answer(context, request, va, **kw):
-    """ Create a reply link. Replies are always discussion posts. Brain here is a metadata object
-        of the content that's being replied to.
+    """ Note: moderator actions also uses this one.
     """
-    api = kw['api']
-    brain = kw['brain']
-    #Check add permission
+    tstring = _
+    response = dict(
+        section_title = va.title,
+        state_id  = context.get_workflow_state(),
+        state_title = tstring(context.current_state_title(request)), #Picked up by translation mechanism in zcml
+        states = context.get_available_workflow_states(request),
+        context = context,
+        tstring = tstring,
+    )
+    return render(va.kwargs['renderer'], response, request = request)
+
+@view_action('metadata_listing', 'retract',
+             permission = VIEW,
+             interface = IWorkflowAware,
+             priority = 20)
+def meta_retract(context, request, va, **kw):
+    if request.is_moderator:
+        return
+    if context.get_workflow_state() != 'published':
+        return
+    if not request.authenticated_userid in context.creators:
+        return
+    #Now for the 'expensive' stuff
     ai = find_interface(context, IAgendaItem)
-    if not api.context_has_permission(ADD_DISCUSSION_POST, ai):
-        return u""
-    if brain['content_type'] == 'Proposal':
-        label = _(u'Comment')
-    else:
-        label = _(u'Reply')
-    return '<a class="answer" href="%s%s/answer">%s</a>'  %\
-        (request.application_url, brain['path'], api.translate(label))
+    if not request.has_permission(ADD_PROPOSAL, ai) and request.has_permission(RETRACT, context):
+        return
+    url = request.resource_url(context, 'state', query = {'state': 'retracted'})
+    return '<a role="button" class="btn btn-default btn-xs" href="%s"><span class="text-warning">%s</span></a> ' % \
+        (url, request.localizer.translate(_(u'Retract')))
 
-@view_action('metadata_listing', 'edit', title = _(u"Edit"))
-def edit_action(context, request, va, **kw):
-    api = kw['api']
-    if api.show_moderator_actions:
-        brain = kw['brain']
-        return '<a href="%s%s/edit">%s</a>'  %\
-            (request.application_url, brain['path'], api.translate(va.title))
+@view_action('metadata_listing', 'reply',
+             title = _("Reply"),
+             interface = IDiscussionPost,
+             priority = 30,
+             ai_perm = ADD_DISCUSSION_POST)
+@view_action('metadata_listing', 'comment',
+             title = _("Comment"),
+             interface = IProposal,
+             priority = 30,
+             ai_perm = ADD_DISCUSSION_POST)
+def meta_comment(context, request, va, **kw):
+    """ Create a comment link
+    """
+    if not request.has_permission(va.kwargs['ai_perm'], request.agenda_item):
+        return
+    query = {'content_type': 'DiscussionPost',
+             'tag': request.GET.getall('tag'),
+             'reply-to': context.uid}
+    data = {'role': 'button',
+            'class': 'btn btn-default btn-xs',
+            #'data-reply-to': context.uid,
+            'data-external-popover-loaded': 'false',
+            'data-reply-to': context.uid,
+            'data-placement': 'bottom',
+            'title': '',
+            'href': request.resource_url(request.agenda_item, 'add', query = query),}
+    out = """<a %s><span class="text-primary">%s</span></a> """ % \
+        (" ".join(['%s="%s"' % (k, v) for (k, v) in data.items()]),
+         request.localizer.translate(va.title))
+    return out
 
-@view_action('metadata_listing', 'tag', permission=VIEW)
-def meta_tag(context, request, va, **kw):
-    api = kw['api']
-    brain = kw['brain']
-    if not brain['content_type'] == 'Proposal':
-        return u''
-    return '<span><a class="tag" ' \
-           'href="?tag=%s" ' \
-           '>#%s</a> (%s) </span>' % (brain['aid'], brain['aid'], api.get_tag_count(brain['aid']))
-
-@view_action('metadata_listing', 'delete')
+@view_action('metadata_listing', 'delete',
+             permission = DELETE,
+             interface = IDiscussionPost,
+             priority = 40)
 def meta_delete(context, request, va, **kw):
-    api = kw['api']
-    brain = kw['brain']
-    if not brain['content_type'] == 'DiscussionPost' and api.userid not in brain['creators']:
-        return u''
-    obj = find_resource(api.root, brain['path'])
-    if not api.context_has_permission(DELETE, obj):
-        return u''
-    return u'<span><a class="delete" href="%s">%s</a></span>' % (request.resource_url(obj, 'delete'), api.translate(_(u"Delete")))
-
-_dummy = {'Proposal': Proposal(),
-          'DiscussionPost': DiscussionPost()}
+    if not request.is_moderator:
+        return u'<a href="%s" role="button" class="btn btn-default btn-xs"><span class="text-danger">%s %s</span></a> ' % \
+            (request.resource_url(context, 'delete'),
+             '<span class="glyphicon glyphicon-remove"></span>',
+             request.localizer.translate(_("Delete")))

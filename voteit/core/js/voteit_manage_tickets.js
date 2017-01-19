@@ -1,10 +1,10 @@
+//FIXME: This is in dire need of refactoring
+
 $(document).ready(function() {
-    $("table.listing").tablesorter({headers: { 0: { sorter: false}}});
+    $("table.table").tablesorter({headers: { 0: { sorter: false}}});
     $('input[name="select_all"]').change(function(event) {
         var setval = $(this).prop('checked');
-        console.log(setval);
         $('#tickets_table tbody td input[type="checkbox"]:visible').prop('checked', setval);
-        console.log($('#tickets_table tbody td input[type="checkbox"]').length);
         count_selected();
     });
     $('#search_email').bind('keypress keydown keyup', function(e) {
@@ -31,6 +31,43 @@ $(document).ready(function() {
     $('#tickets_table tbody td input[type="checkbox"]').on('click', function(event) {
         count_selected();
     });
+
+    $('#filter-on-unsent').on('click', function(event) {
+      event.preventDefault();
+      $('#search_email').val('');
+      $(this).toggleClass('active');
+      if ($(this).hasClass('active')) {
+        $('#tickets_table tbody tr:visible').each(function(i, val) {
+          if (parseInt($(val).find('.times_sent').html()) == 0) {
+            $(val).show();
+          } else {
+            $(val).hide();
+          }
+        })
+      } else {
+        $('#tickets_table tbody tr').show();
+      }
+      count_selected();
+    });
+
+    $('#filter-on-open').on('click', function(event) {
+      event.preventDefault();
+      $('#search_email').val('');
+      $(this).toggleClass('active');
+      if ($(this).hasClass('active')) {
+        $('#tickets_table tbody tr:visible').each(function(i, val) {
+          if ($(val).find('.closed').html().length == 0) {
+            $(val).show();
+          } else {
+            $(val).hide();
+          }
+        })
+      } else {
+        $('#tickets_table tbody tr').show();
+      }
+      count_selected();
+    });
+
     function count_selected() {
         //What to with invisible?
         var selected_count = $('#tickets_table tbody td input[type="checkbox"]:checked').length;

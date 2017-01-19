@@ -1,16 +1,16 @@
 import colander
 import deform
-from betahaus.pyracont.decorators import schema_factory
 
 from voteit.core.validators import html_string_validator
 from voteit.core.validators import multiple_email_validator
 from voteit.core.schemas.common import strip_and_lowercase
 from voteit.core import security
 from voteit.core import VoteITMF as _
+from voteit.core.validators import deferred_token_form_validator
 
 
-@schema_factory('ClaimTicketSchema')
 class ClaimTicketSchema(colander.Schema):
+    validator = deferred_token_form_validator
     email = colander.SchemaNode(colander.String(),
                                 title = _(u"Email address your invitation was sent to."),
                                 validator = colander.Email(msg = _(u"Invalid email address.")),)
@@ -19,16 +19,12 @@ class ClaimTicketSchema(colander.Schema):
                                 title = _(u"claim_ticket_token_title",
                                           default = u"The access token your received in your email."),)
 
-            
-@schema_factory('AddTicketsSchema',
-                title = _(u"Invite participants"),
-                description = _(u"add_tickets_schema_main_description",
-                                default = u"Send invites to participants with email. If different participants should have different rights you should send invites to one level of rights at a time. Normally users have discuss, propose and vote."))
+
 class AddTicketsSchema(colander.Schema):
     roles = colander.SchemaNode(
-        deform.Set(),
+        colander.Set(),
         title = _(u"Roles"),
-        default = (security.ROLE_DISCUSS, security.ROLE_PROPOSE, security.ROLE_VOTER),
+        default = (security.ROLE_VIEWER, security.ROLE_DISCUSS, security.ROLE_PROPOSE, security.ROLE_VOTER),
         description = _(u"add_tickets_roles_description",
                         default = u"""One user can have more than one role. Note that to be able to propose,
                         discuss and vote you need respective role. This is selected by default. If you want
@@ -53,3 +49,8 @@ class AddTicketsSchema(colander.Schema):
                                   missing = u"",
                                   validator = html_string_validator,
     )
+
+
+def includeme(config):
+    config.add_content_schema('Meeting', AddTicketsSchema, 'add_tickets')
+    config.add_content_schema('Meeting', ClaimTicketSchema, 'claim_ticket')

@@ -1,0 +1,29 @@
+<tal:main xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="voteit.core">
+<div id="ai-polls" class="col-sm-12">
+  <div class="list-group">
+    <div class="list-group-item">
+      <h4>
+        <span class="glyphicon glyphicon-star"></span>
+        <span i18n:translate="">Polls</span>
+        <a href="javascript:"
+           class="pull-right"
+           data-reload-target="[data-polls-area]"
+           title="Refresh"
+           i18n:attributes="title;">
+          <span class="glyphicon glyphicon-refresh" data-actionmarker="rotate-me"></span>
+        </a>
+      </h4>
+    </div>
+    <div data-polls-area data-load-target="${load_url}">
+      <div class="list-group-item">
+        <span class="glyphicon glyphicon-refresh rotate-me"></span>
+        Loading...
+      </div>
+    </div>
+  </div>
+</div>
+</tal:main>

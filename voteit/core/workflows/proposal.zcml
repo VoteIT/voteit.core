@@ -93,40 +93,54 @@
 			permission="Moderate Meeting"
 		/>
 		
-        <transition
-            name="unhandled_to_published"
-            from_state="unhandled"
-            to_state="published"
-            permission="Moderate Meeting"
-        />
+    <transition
+        name="unhandled_to_published"
+        from_state="unhandled"
+        to_state="published"
+        permission="Moderate Meeting"
+    />
 
-        <transition
-            name="denied_to_published"
-            from_state="denied"
-            to_state="published"
-            permission="Moderate Meeting"
-        />
+    <transition
+        name="denied_to_published"
+        from_state="denied"
+        to_state="published"
+        permission="Moderate Meeting"
+    />
 
-        <transition
-            name="approved_to_published"
-            from_state="approved"
-            to_state="published"
-            permission="Moderate Meeting"
-        />
+    <transition
+        name="approved_to_published"
+        from_state="approved"
+        to_state="published"
+        permission="Moderate Meeting"
+    />
 
-        <transition
-            name="retracted_to_published"
-            from_state="retracted"
-            to_state="published"
-            permission="Moderate Meeting"
-        />
+    <transition
+        name="denied_to_approved"
+        from_state="denied"
+        to_state="approved"
+        permission="Moderate Meeting"
+    />
 
-        <transition
-            name="voting_to_published"
-            from_state="voting"
-            to_state="published"
-            permission="Moderate Meeting"
-        />
+    <transition
+        name="approved_to_denied"
+        from_state="approved"
+        to_state="denied"
+        permission="Moderate Meeting"
+    />
+
+   <transition
+        name="retracted_to_published"
+        from_state="retracted"
+        to_state="published"
+        permission="Moderate Meeting"
+    />
+
+    <transition
+        name="voting_to_published"
+        from_state="voting"
+        to_state="published"
+        permission="Moderate Meeting"
+    />
 
 	</workflow>
 

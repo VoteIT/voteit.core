@@ -30,5 +30,5 @@ class AccessPolicy(object):
 
     def handle_config_success(self, view, appstruct):
         self.context.set_field_appstruct(appstruct)
-        view.api.flash_messages.add(view.default_success)
-        return HTTPFound(location = view.api.meeting_url)
+        view.flash_messages.add(view.default_success)
+        return HTTPFound(location = view.request.resource_url(self.context))

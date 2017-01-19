@@ -1,27 +1,25 @@
-from zope.interface import implements
+from __future__ import unicode_literals
+
+from zope.interface import implementer
 from pyramid.security import Allow
 from pyramid.security import DENY_ALL
 
-from betahaus.pyracont.decorators import content_factory
-from betahaus.pyracont.factories import createContent
-
+from voteit.core import _
 from voteit.core import security
-from voteit.core import VoteITMF as _
 from voteit.core.helpers import generate_slug
+from voteit.core.models.arche_compat import createContent
 from voteit.core.models.base_content import BaseContent
 from voteit.core.models.interfaces import IAgendaTemplate
 
 
-@content_factory('AgendaTemplate', title=_(u"Agenda template"))
+@implementer(IAgendaTemplate)
 class AgendaTemplate(BaseContent):
     """ Agenda template content type.
         See :mod:`voteit.core.models.interfaces.IAgendaTemplate`.
         All methods are documented in the interface of this class.
     """
-    implements(IAgendaTemplate)
-    content_type = 'AgendaTemplate'
-    display_name = _(u"Agenda template")
-    allowed_contexts = ('AgendaTemplates')
+    type_name = 'AgendaTemplate'
+    type_title = _("Agenda template")
     add_permission = security.ADD_AGENDA_TEMPLATE
     schemas = {'add': 'AgendaTemplateSchema', 'edit': 'AgendaTemplateSchema'}
 
@@ -35,3 +33,7 @@ class AgendaTemplate(BaseContent):
             obj = createContent('AgendaItem', **item)
             slug = generate_slug(meeting, obj.title)
             meeting[slug] = obj
+
+
+def includeme(config):
+    config.add_content_factory(AgendaTemplate, addable_to = 'AgendaTemplates')

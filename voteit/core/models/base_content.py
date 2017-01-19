@@ -1,34 +1,45 @@
 from datetime import datetime
+import inspect
+from uuid import uuid4
 
-from betahaus.pyracont import BaseFolder
-from zope.component.event import objectEventNotify
-from zope.interface import implements
-from pyramid.threadlocal import get_current_request
+from BTrees.OOBTree import OOBTree
+from arche.api import BaseMixin
+from arche.resources import LocalRolesMixin
+from arche.utils import utcnow
 from pyramid.security import authenticated_userid
+from pyramid.threadlocal import get_current_request
+from repoze.folder import Folder
 from repoze.folder import unicodify
+from zope.component.event import objectEventNotify
+from zope.interface import implementer
 
 from voteit.core.events import ObjectUpdatedEvent
 from voteit.core.models.interfaces import IBaseContent
-from voteit.core.models.security_aware import SecurityAware
 from voteit.core.security import ROLE_OWNER
-from voteit.core.models.catalog import SEARCHABLE_TEXT_INDEXES
 
 #FIXME: This should be changable some way.
 #Things that should never be saved
 RESTRICTED_KEYS = ('csrf_token', )
 
-
-class BaseContent(BaseFolder, SecurityAware):
+@implementer(IBaseContent)
+class BaseContent(Folder, BaseMixin, LocalRolesMixin):
     """ See :mod:`voteit.core.models.interfaces.IBaseContent`.
         All methods are documented in the interface of this class.
+        
+        This also contains compatibility fixes between Arche and old VoteIT code.
     """
-    implements(IBaseContent)
     add_permission = None
-    content_type = None
-    allowed_contexts = ()
-    schemas = {}
+    default_view = u"view"
+    nav_visible = True
+    listing_visible = True
+    search_visible = True
+    custom_mutators = {} #<-- This is deprecated and will be removed
+    custom_accessors = {} #<-- This is deprecated and will be removed
 
     def __init__(self, data=None, **kwargs):
+        if 'creator' in kwargs and 'creators' not in kwargs:
+            #Arche compat hack
+            kwargs['creators'] = kwargs.pop('creator')
         if 'creators' not in kwargs:
             request = get_current_request()
             if request is None:
@@ -47,42 +58,84 @@ class BaseContent(BaseFolder, SecurityAware):
         if 'creators' in kwargs:
             userid = kwargs['creators'][0]
             #Don't send updated event on add
-            self.add_groups(userid, (ROLE_OWNER,), event = False)
-        super(BaseContent, self).__init__(data=data, **kwargs)
+            self.local_roles[userid] = (ROLE_OWNER,)
+        if 'created' not in kwargs:
+            kwargs['created'] = utcnow()
+        if 'modified' not in kwargs:
+            kwargs['modified'] = kwargs['created']
+        if 'uid' not in kwargs:
+            kwargs['uid'] = unicode(uuid4())
+        super(BaseContent, self).__init__(data=data)
+        self.set_field_appstruct(kwargs, notify = False, mark_modified = True)
+
+    @property
+    def field_storage(self):
+        try:
+            return self.__field_storage__
+        except AttributeError:
+            self.__field_storage__ = fs = OOBTree()
+            return fs
 
     def set_field_value(self, key, value):
+        """ Set field value.
+            Will not send events, so use this if you silently want to change a single field.
+            You can override field behaviour by either setting custom mutators
+            or make a field a custom field.
+        """
         if key in RESTRICTED_KEYS:
             return
-        super(BaseContent, self).set_field_value(key, value)
+        if key in self.custom_mutators:
+            if inspect.stack()[2][3] == 'set_field_value':
+                raise Exception("Custom mutator with key '%s' tried to call set_field_value." % key)
+            mutator = self.custom_mutators[key]
+            if isinstance(mutator, basestring):
+                mutator = getattr(self, mutator)
+            mutator(value, key=key)
+            return
+        self.field_storage[key] = value
 
-    def set_field_appstruct(self, values, notify=True, mark_modified=True):
+    def set_field_appstruct(self, values, notify = True, mark_modified = True):
         #Remove restricted keys, in case they're present
         #This might be changed to raise an error instead in time
         for restricted_key in RESTRICTED_KEYS:
             if restricted_key in values:
                 del values[restricted_key]
-        updated = super(BaseContent, self).set_field_appstruct(values, notify=notify, mark_modified=mark_modified)
-        if updated and notify:
-            #FIXME: This hack can be removed when transformations are live
-            #Currently we need to reindex whenever some fields have changed
-            if [x for x in updated if x in SEARCHABLE_TEXT_INDEXES]:
-                updated.add('searchable_text')
+        updated = set()
+        for (k, v) in values.items():
+            cur = self.get_field_value(k)
+            if cur == v:
+                continue
+            self.set_field_value(k, v)
+            updated.add(k)
+        if updated:
+            updated.add('searchable_text') #Just to make sure
+            updated.add('allowed_to_view')
+            if mark_modified and 'modified' not in values:
+                #Don't update if modified is set, since it will override the value we're trying to set.
+                self.mark_modified()
+                updated.add('modified')
             if 'tags' not in updated:
+                #Hack to fix text
                 updated.add('tags')
-            objectEventNotify(ObjectUpdatedEvent(self, indexes=updated, metadata=True))
+            if notify:
+                #FIXME: This hack can be removed when transformations are live
+                #Currently we need to reindex whenever some fields have changed
+                objectEventNotify(ObjectUpdatedEvent(self, changed=updated))
         return updated
 
-    def _get_title(self):
+    @property
+    def title(self):
         return self.get_field_value('title', u"")
-    def _set_title(self, value):
+    @title.setter
+    def title(self, value):
         self.set_field_value('title', value)
-    title = property(_get_title, _set_title)
 
-    def _get_description(self):
-        return self.get_field_value('description', u"")        
-    def _set_description(self, value):
+    @property
+    def description(self):
+        return self.get_field_value('description', u"")
+    @description.setter
+    def description(self, value):
         self.set_field_value('description', value)
-    description = property(_get_description, _set_description)
 
     def _get_creators(self):
         return self.get_field_value('creators', ())
@@ -90,27 +143,30 @@ class BaseContent(BaseFolder, SecurityAware):
         value = tuple(value)
         self.set_field_value('creators', value)
     creators = property(_get_creators, _set_creators)
-        
-    def _get_created(self):
+    creator = property(_get_creators, _set_creators) #Arche compat
+
+    @property
+    def created(self):
         return self.get_field_value('created', None)
-    def _set_created(self, value):
+    @created.setter
+    def created(self, value):
         assert isinstance(value, datetime)
         self.set_field_value('created', value)
-    created = property(_get_created, _set_created)
-    
-    def _get_modified(self):
+
+    @property
+    def modified(self):
         return self.get_field_value('modified', None)
-    def _set_modified(self, value):
+    @modified.setter
+    def modified(self, value):
         assert isinstance(value, datetime)
         self.set_field_value('modified', value)
-    modified = property(_get_modified, _set_modified)
 
-    def _get_uid(self):
-        return self.get_field_value('uid', None)
-    def _set_uid(self, value):
-        value = unicodify(value)
-        self.set_field_value('uid', value)
-    uid = property(_get_uid, _set_uid)
+    @property
+    def uid(self):
+        return self.get_field_value('uid', '')
+    @uid.setter
+    def uid(self, value):
+        self.set_field_value('uid', unicodify(value))
 
     def get_content(self, content_type=None, iface=None, states=None, sort_on=None, sort_reverse=False, limit=None):
         results = []
@@ -153,3 +209,39 @@ class BaseContent(BaseFolder, SecurityAware):
             results = results[-limit:]
 
         return tuple(results)
+
+    @property
+    def content_type(self): #b/c
+        return self.type_name
+
+    @property
+    def display_name(self): #b/c
+        return self.type_title
+
+    def mark_modified(self):
+        """ Mark content as modified. """
+        self.modified = utcnow()
+
+    def get_field_value(self, key, default=None):
+        """ Return field value, or default """
+        if key in self.custom_accessors:
+            if inspect.stack()[2][3] == 'get_field_value':
+                raise CustomFunctionLoopError("Custom accessor with key '%s' tried to call get_field_value." % key)
+            accessor = self.custom_accessors[key]
+            if isinstance(accessor, basestring):
+                accessor = getattr(self, accessor)
+            return accessor(default=default, key=key)
+        return self.field_storage.get(key, default)
+
+    def get_field_appstruct(self, schema):
+        """ Return a dict of all fields and their values.
+            Deform expects input like this when rendering already saved values.
+            DEPRECATED - will be removed
+        """
+        marker = object()
+        appstruct = {}
+        for field in schema:
+            value = self.get_field_value(field.name, marker)
+            if value != marker:
+                appstruct[field.name] = value
+        return appstruct

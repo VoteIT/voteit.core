@@ -4,6 +4,7 @@ from repoze.folder.interfaces import IObjectAddedEvent #API
 from repoze.folder.interfaces import IObjectRemovedEvent #API
 from repoze.folder.interfaces import IObjectWillBeAddedEvent #API
 from repoze.folder.interfaces import IObjectWillBeRemovedEvent #API
+from arche.interfaces import IObjectUpdatedEvent #API
 
 
 #Events
@@ -15,16 +16,3 @@ class IWorkflowStateChange(Interface):
 
     def __init__(object, old_state, new_state):
         """ Create event. """
-
-
-class IObjectUpdatedEvent(Interface):
-    """ An object event for object updated.
-        Note that indexes and metadata can be set to make catalog indexing go faster.
-    """
-    object = Attribute("Object this event is for")
-    indexes = Attribute("List of indexes that should be updated. Note: An empty list means all!")
-    metadata = Attribute("Update metadata? Defaults to True")
-    
-    def __init__(object, indexes=(), metadata=True):
-        """ Create event. """
-        

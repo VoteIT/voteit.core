@@ -1,13 +1,12 @@
+from __future__ import unicode_literals
+
 import colander
 import deform
-from betahaus.pyracont.decorators import schema_factory
 
 from voteit.core import VoteITMF as _
-from voteit.core.models.interfaces import IAgendaItem
-from voteit.core.validators import NotOnlyDefaultTextValidator
-from voteit.core.schemas.common import deferred_default_tags
 from voteit.core.schemas.common import deferred_default_hashtag_text
-from voteit.core.schemas.interfaces import IProposalSchema
+from voteit.core.schemas.common import random_oid
+from voteit.core.validators import NotOnlyDefaultTextValidator
 
 
 @colander.deferred
@@ -18,28 +17,31 @@ def deferred_default_proposal_text(node, kw):
         
         This might be used in the context of an agenda item or a proposal.
     """
-    api = kw['api']
+    request = kw['request']
     hashtag_text = deferred_default_hashtag_text(node, kw)
-    proposal_default_text = api.translate(_(u"proposal_default_text", default = u"proposes"))
+    proposal_default_text = request.localizer.translate(_(u"proposal_default_text", default = u"proposes"))
     return "%s %s" % (proposal_default_text, hashtag_text)
 
 
 @colander.deferred    
 def deferred_proposal_text_validator(node, kw):
     context = kw['context']
-    api = kw['api']
-    return NotOnlyDefaultTextValidator(context, api, deferred_default_proposal_text)
+    request = kw['request']
+    return NotOnlyDefaultTextValidator(context, request, deferred_default_proposal_text)
 
 
-@schema_factory(provides = IProposalSchema)
 class ProposalSchema(colander.MappingSchema):
-    title = colander.SchemaNode(colander.String(),
+    text = colander.SchemaNode(colander.String(),
                                 title = _(u"Proposal"),
+                                description = _("proposal_text_description",
+                                                default = "A proposal is a statement the meeting can approve or deny. "
+                                    "You may use an at sign to reference a user (ex: 'hello @jane') or a hashtag (ex: '#budget') "
+                                    "to reference or create a tag. All proposals automatically get their own tag."),
                                 validator = deferred_proposal_text_validator,
                                 default = deferred_default_proposal_text,
+                                oid = random_oid,
                                 widget = deform.widget.TextAreaWidget(rows=3),)
-    tags = colander.SchemaNode(colander.String(),
-                               title = _(u"Tags"),
-                               default = deferred_default_tags,
-                               widget = deform.widget.HiddenWidget(),
-                               missing = u'')
+
+
+def includeme(config):
+    config.add_content_schema('Proposal', ProposalSchema, ('add', 'edit'))

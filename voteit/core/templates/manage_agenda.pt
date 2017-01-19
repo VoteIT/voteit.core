@@ -1,0 +1,129 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      metal:use-macro="view.macro('arche:templates/master.pt')"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="voteit.core">
+<body>
+<tal:main metal:fill-slot="content">
+
+  <h2 i18n:translate="">
+    Manage agenda
+  </h2>
+
+  <a class="btn btn-default" href="${request.resource_url(context)}" i18n:translate="">Back to meeting</a>
+
+  <form method="post" class="deform" action="">
+    <table class="table table-striped">
+      <tal:states repeat="state states">
+        <thead>
+          <tr>
+            <td colspan="6">
+              <h3 tal:content="translated_state_title(state)">State</h3>
+            </td>
+          </tr>
+          <tr class="thead">
+            <th>
+              <input type="checkbox" data-mselect-for="${state}" />
+            </th>
+            <th i18n:translate="">Agenda item</th>
+            <th i18n:translate="">Edit</th>
+            <th i18n:translate="">Allow proposals</th>
+            <th i18n:translate="">Allow discussions</th>
+            <th i18n:translate="">Delete</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tal:ais repeat="ai ais[state]">
+            <tr>
+              <td><input type="checkbox" name="ais" value="${ai.__name__}" data-mselect-name="${state}" /></td>
+              <td>
+                <a href="${request.resource_url(ai)}">${ai.title}</a>
+              </td>
+              <td>
+                <a href="${request.resource_url(ai, 'edit', query = {'came_from': request.url})}"
+                  class="btn btn-primary btn-sm" i18n:translate="">Edit</a>
+              </td>
+              <td>
+                <a href="${request.resource_url(ai, '_toggle_block', query = {'proposal_block': ai.proposal_block == False and 1 or 0})}"
+                  class="btn btn-sm btn-${ai.proposal_block and 'warning' or 'success'}">
+                  <tal:enabled condition="ai.proposal_block">
+                    <span class="glyphicon glyphicon-ban-circle"></span>
+                    <tal:ts i18n:translate="">No</tal:ts>
+                  </tal:enabled>
+                  <tal:disabled  condition="not ai.proposal_block">
+                    <span class="glyphicon glyphicon-ok"></span>
+                    <tal:ts i18n:translate="">Yes</tal:ts>
+                  </tal:disabled>
+                </a>
+              </td>
+              <td>
+                <a href="${request.resource_url(ai, '_toggle_block', query = {'discussion_block': ai.discussion_block == False and 1 or 0})}"
+                  class="btn btn-sm btn-${ai.discussion_block and 'warning' or 'success'}">
+                  <tal:enabled condition="ai.discussion_block">
+                    <span class="glyphicon glyphicon-ban-circle"></span>
+                    <tal:ts i18n:translate="">No</tal:ts>
+                  </tal:enabled>
+                  <tal:disabled  condition="not ai.discussion_block">
+                    <span class="glyphicon glyphicon-ok"></span>
+                    <tal:ts i18n:translate="">Yes</tal:ts>
+                  </tal:disabled>
+                </a>
+              </td>
+              <td>
+                <a href="${request.resource_url(ai, 'delete', query = {'came_from': request.url})}"
+                  class="btn btn-sm btn-danger">
+                  <span class="glyphicon glyphicon-remove"></span>
+                  <tal:ts i18n:translate="">Delete</tal:ts>
+                </a>
+              </td>
+            </tr>
+          </tal:ais>
+        </tbody>
+      </tal:states>
+    </table>
+
+    <div class="row">
+      <div class="col-sm-6">
+
+        <h2 i18n:translate="">Change several at once</h2>
+        <p i18n:translate="manage_agenda_items_many_info">
+          Mark the agenda items you wish to apply the options bellow to.
+          You can select several at once by using the tic-box in the header.
+        </p>
+
+        <div class="form-group">
+          <label for="state_id" i18n:translate="">Change state on marked items to</label><br />
+          <select id="state_id" name="state_id" class="form-control">
+            <option value="" i18n:translate="">&lt;Leave unchanged&gt;</option>
+            <option tal:repeat="state states" value="${state}">${translated_state_title(state)}</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="block_proposals" i18n:translate="">Adjust proposal block state for all marked</label><br />
+          <select id="block_proposals" name="block_proposals" class="form-control">
+            <option value="" i18n:translate="">&lt;Leave unchanged&gt;</option>
+            <option value="default" i18n:translate="">Default / Allowed</option>
+            <option value="blocked" i18n:translate="">Always blocked</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="block_discussion" i18n:translate="">Adjust discussion block state for all marked</label><br />
+          <select id="block_discussion" name="block_discussion" class="form-control">
+            <option value="" i18n:translate="">&lt;Leave unchanged&gt;</option>
+            <option value="default" i18n:translate="">Default / Allowed</option>
+            <option value="blocked" i18n:translate="">Always blocked</option>
+          </select>
+        </div>
+
+        <div class="well">
+          <button class="btn btn-primary" type="submit" name="change" i18n:translate="">Change</button>
+          <button class="btn btn-default" type="submit" name="cancel" i18n:translate="">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </form>
+
+</tal:main>
+</body>
+</html>

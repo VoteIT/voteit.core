@@ -1,188 +1,216 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 
+from arche.validators import existing_userids
+from arche.schemas import userid_hinder_widget
+from repoze.workflow import get_workflow
 import colander
 import deform
-from betahaus.pyracont.decorators import schema_factory
-from betahaus.pyracont.factories import createContent
-
-from voteit.core.validators import html_string_validator
-from voteit.core.validators import richtext_validator
 
 from voteit.core import VoteITMF as _
 from voteit.core import security 
 from voteit.core.models.interfaces import IAccessPolicy
 from voteit.core.models.interfaces import IPollPlugin
-from voteit.core.models.meeting import Meeting
+from voteit.core.models.interfaces import IProposal
 from voteit.core.schemas.common import NAME_PATTERN
+from voteit.core.validators import html_string_validator
+from voteit.core.validators import richtext_validator
 
 
 @colander.deferred
 def poll_plugins_choices_widget(node, kw):
     request = kw['request']
-    #Add all selectable plugins to schema. This chooses the poll method to use
-    plugin_choices = set()
-    #FIXME: The new object should probably be sent to construct schema
-    #for now, we can fake this
-    fake_poll = createContent('Poll')
-    for (name, plugin) in request.registry.getAdapters([fake_poll], IPollPlugin):
-        plugin_choices.add((name, plugin.title))
-    return deform.widget.CheckboxChoiceWidget(values=plugin_choices)
+    plugin_choices = [(x.name, x.factory.title) for x in request.registry.registeredAdapters() if x.provided == IPollPlugin]
+    return deform.widget.CheckboxChoiceWidget(values = plugin_choices)
 
 @colander.deferred
 def deferred_access_policy_widget(node, kw):
     request = kw['request']
-    choices = []
-    for (name, plugin) in request.registry.getAdapters([_dummy_meeting], IAccessPolicy):
-        choices.append((name, plugin))
-    return deform.widget.RadioChoiceWidget(values = choices, template = "object_radio_choice", readonly_template = "readonly/object_radio_choice")
-
+    choices = [(x.name, x.factory) for x in request.registry.registeredAdapters() if x.provided == IAccessPolicy]
+    return deform.widget.RadioChoiceWidget(values = choices,
+                                           template = "object_radio_choice",
+                                           readonly_template = "readonly/object_radio_choice")
 
 @colander.deferred
 def deferred_copy_perms_widget(node, kw):
     context = kw['context']
     request = kw['request']
-    api = kw['api']
-    choices = [('', _(u"<Don't copy>"))]
-    for meeting in api.root.get_content(content_type = 'Meeting'):
-        if api.context_has_permission(security.MODERATE_MEETING, meeting):
+    view = kw['view']
+    choices = [('', _("<Don't copy>"))]
+    for meeting in view.root.get_content(content_type = 'Meeting'):
+        if request.has_permission(security.MODERATE_MEETING, meeting):
             choices.append((meeting.__name__, "%s (%s)" % (meeting.title, meeting.__name__)))
     return deform.widget.SelectWidget(values=choices)
 
 @colander.deferred
 def deferred_current_user_mail(node, kw):
-    api = kw['api']
-    if api.user_profile:
-        return api.user_profile.get_field_value('email')
-
-def title_node():
-    return colander.SchemaNode(colander.String(),
-                                title = _(u"Title"),
-                                description = _(u"meeting_title_description",
-                                                default=u"Set a title for the meeting that separates it from previous meetings"),
-                                validator=html_string_validator,)
-def description_node():
-    return colander.SchemaNode(
-        colander.String(),
-        title = _(u"Participants description"),
-        description = _(u"meeting_description_description",
-                        default=u"This is only visible to participants, so don't put information on how to register here. "
-                            u"Displayed on the first page of the meeting. You can include things "
-                            u"like information about the meeting, how to contact the moderator and your logo."),
-        missing = u"",
-        widget=deform.widget.RichTextWidget(options = (('theme', 'advanced'),)),
-        validator=richtext_validator,)
-
-def public_description_node():
-    return colander.SchemaNode(
-        colander.String(),
-        title = _(u"Public presentation"),
-        description = _(u"meeting_public_description_description",
-                        default=u"The public description is visible on the request access "
-                            u"page and to not yet logged in visitors."),
-        missing = u"",
-        widget=deform.widget.RichTextWidget(options = (('theme', 'advanced'),)),
-        validator=richtext_validator,)
+    request = kw['request']
+    if request.profile:
+        return request.profile.email
 
 @colander.deferred
 def _deferred_current_fullname(node, kw):
-    api = kw['api']
-    if api.user_profile:
-        return api.user_profile.title
+    request = kw['request']
+    if request.profile:
+        return request.profile.title
 
-def meeting_mail_name_node():
-    return colander.SchemaNode(colander.String(),
-                               title = _(u"Name of the contact person for this meeting"),
-                               default = _deferred_current_fullname,
-                               validator = colander.Regex(regex=NAME_PATTERN,
-                                                          msg=_(u"name_pattern_error",
-                                                                default = u"Must be at least 3 chars + only alphanumeric characters allowed")),)
-
-def meeting_mail_address_node():
-    return colander.SchemaNode(colander.String(),
-                               title = _(u"Contact email for this site"),
-                               default = deferred_current_user_mail,
-                               validator = colander.All(colander.Email(msg = _(u"Invalid email address.")), html_string_validator,),)
-
-def access_policy_node():
-    return colander.SchemaNode(colander.String(),
-                               title = _(u"Meeting access policy"),
-                               widget = deferred_access_policy_widget,
-                               default = "invite_only",)
-
-def mention_notification_setting_node():
-    return colander.SchemaNode(colander.Bool(),
-                               title = _(u"Send mail to mentioned users."),
-                               default = True,
-                               missing = True)
-
-def poll_notification_setting_node():
-    return colander.SchemaNode(colander.Bool(),
-                               title = _(u"Send mail to voters when a poll starts."),
-                               default = True,
-                               missing = True)
+@colander.deferred
+def hide_proposal_states_widget(node, kw):
+    request = kw['request']
+    wf = get_workflow(IProposal, 'Proposal')
+    state_values = []
+    ts = _
+    for info in wf._state_info(IProposal): #Public API goes through permission checker
+        item = [info['name']]
+        item.append(ts(info['title']))
+        state_values.append(item)
+    return deform.widget.CheckboxChoiceWidget(values = state_values)
 
 
-@schema_factory('AddMeetingSchema', title = _(u"Add meeting"))
-class AddMeetingSchema(colander.MappingSchema):
-    title = title_node()
-    meeting_mail_name = meeting_mail_name_node()
-    meeting_mail_address = meeting_mail_address_node()
-    description = description_node()
-    public_description = public_description_node()
-    access_policy = access_policy_node()
-    mention_notification_setting = mention_notification_setting_node()
-    poll_notification_setting = poll_notification_setting_node()
+class EditMeetingSchema(colander.Schema):
+    title = colander.SchemaNode(colander.String(),
+        title = _("Title"),
+        description = _("meeting_title_description",
+                        default="Set a title for the meeting that separates it from previous meetings"),
+        validator = html_string_validator,)
+    meeting_mail_name = colander.SchemaNode(colander.String(),
+        title = _("Name of the contact person for this meeting"),
+        default = _deferred_current_fullname,
+        validator = colander.Regex(regex = NAME_PATTERN,
+                                   msg = _("name_pattern_error",
+                                         default = "Must be at least 3 chars + only alphanumeric characters allowed")),)
+    meeting_mail_address = colander.SchemaNode(colander.String(),
+        title = _("Contact email for this site"),
+        default = deferred_current_user_mail,
+        validator = colander.All(colander.Email(msg = _("Invalid email address.")), html_string_validator,),)
+    description = colander.SchemaNode(colander.String(),
+        title = _("Short description"),
+        description = _("short_description_text",
+                        default = "Shows up in search results and similar. One sentence is enough. "
+                        "You don't need to add it if you don't want to."),
+        missing = "",
+        validator = html_string_validator)
+    body = colander.SchemaNode(colander.String(),
+        title = _("Participants description"),
+        description = _("meeting_description_description",
+                        default="This is only visible to participants, so don't put information on how to register here. "
+                            "Displayed on the first page of the meeting. You can include things "
+                            "like information about the meeting, how to contact the moderator and your logo."),
+        missing = "",
+        widget = deform.widget.RichTextWidget(options = (('theme', 'advanced'),)),
+        validator = richtext_validator,)
+    public_description = colander.SchemaNode(
+        colander.String(),
+        title = _("Public presentation"),
+        description = _("meeting_public_description_description",
+                        default="The public description is visible on the request access "
+                            "page and to not yet logged in visitors."),
+        missing = "",
+        widget = deform.widget.RichTextWidget(options = (('theme', 'advanced'),)),
+        validator = richtext_validator,)
+    mention_notification_setting = colander.SchemaNode(colander.Bool(),
+        title = _("Send mail to mentioned users."),
+        default = True,
+        missing = True,
+        tab = 'advanced',)
+    poll_notification_setting = colander.SchemaNode(colander.Bool(),
+        title = _("Send mail to voters when a poll starts."),
+        default = True,
+        missing = True,
+        tab = 'advanced',)
+    hide_meeting = colander.SchemaNode(colander.Bool(),
+        title = _("Hide meeting from listings"),
+        description = _("hide_meeting_description",
+                        default = "Users won't be able to find it unless they have a link to it."),
+        tab = 'advanced',
+        default = False,
+        missing = False)
+    nav_title = colander.SchemaNode(colander.String(),
+        title = _("Navigation bar title"),
+        description = _("In case you want another title in the navigation bar"),
+        missing = "",
+        tab = 'advanced')
+    hide_proposal_states = colander.SchemaNode(colander.Set(),
+        title = _("Hide proposal states"),
+        description = _("hide_proposal_states_description",
+                        default = "Proposals in these states will be hidden by "
+                        "default but can be shown by pressing "
+                        "the link below the other proposals. They're not "
+                        "by any means invisible to participants."),
+        tab = 'advanced',
+        widget = hide_proposal_states_widget,
+        default = ('retracted', 'denied', 'unhandled'),)
+    system_userids = colander.SchemaNode(colander.Sequence(),
+        colander.SchemaNode(colander.String(),
+                            name='not_used',
+                            title = _("UserID"),
+                            widget = userid_hinder_widget,
+                            validator = existing_userids),
+        title = _("System user accounts"),
+        description = _("system_userids_description",
+                        default = "Must be an existing userid. "
+                        "If they're added here, moderators can use them "
+                        "to add proposals in their name. "
+                        "It's good practice to add things like 'propositions', "
+                        "'board' or similar."),
+        tab = 'advanced',
+        missing = ())
+
+
+class AddMeetingSchema(EditMeetingSchema):
     copy_users_and_perms = colander.SchemaNode(colander.String(),
-                                               title = _(u"Copy users and permissions from a previous meeting."),
-                                               description = _(u"You can only pick meeting where you've been a moderator."),
+                                               title = _("Copy users and permissions from a previous meeting."),
+                                               description = _("You can only pick meeting where you've been a moderator."),
                                                widget = deferred_copy_perms_widget,
-                                               default = u"",
-                                               missing = u"")
+                                               default = "",
+                                               missing = "",
+                                               tab = 'advanced')
 
 
-@schema_factory('EditMeetingSchema', title = _(u"Edit meeting"))
-class EditMeetingSchema(colander.MappingSchema):
-    title = title_node()
-    description = description_node()
-    public_description = public_description_node()
-    meeting_mail_name = meeting_mail_name_node()
-    meeting_mail_address = meeting_mail_address_node()
+class AccessPolicyMeetingSchema(colander.MappingSchema):
+    access_policy = colander.SchemaNode(colander.String(),
+        title = _("Meeting access policy"),
+        widget = deferred_access_policy_widget,
+        default = "invite_only",)
 
 
-@schema_factory('PresentationMeetingSchema',
-                title = _(u"Presentation"),
-                description = _(u"presentation_meeting_schema_main_description",
-                                default = u"Edit the first page of the meeting into an informative and pleasant page for your users. You can for instance place your logo here. The time table can be presented in a table and updated as you go along. It's also advised to add links to the manual and to meeting documents."))
-class PresentationMeetingSchema(colander.MappingSchema):
-    title = title_node()
-    description = description_node()
-    public_description = public_description_node()
-
-
-@schema_factory('MailSettingsMeetingSchema', title = _(u"Mail settings"))
-class MailSettingsMeetingSchema(colander.MappingSchema):
-    meeting_mail_name = meeting_mail_name_node()
-    meeting_mail_address = meeting_mail_address_node()
-    mention_notification_setting = mention_notification_setting_node()
-    poll_notification_setting = poll_notification_setting_node()
-
-
-@schema_factory('AccessPolicyMeetingSchema', title = _(u"Access policy"))
-class AccessPolicyeMeetingSchema(colander.MappingSchema):
-    access_policy = access_policy_node()
-
-
-@schema_factory('MeetingPollSettingsSchema', title = _(u"Poll settings"),
-                description = _(u"meeting_poll_settings_main_description",
-                                default = u"Settings for the whole meeting."))
-class MeetingPollSettingsSchema(colander.MappingSchema):
-    poll_plugins = colander.SchemaNode(deform.Set(allow_empty=True),
-                                       title = _(u"mps_poll_plugins_title",
-                                                 default = u"Available poll methods within this meeting"),
-                                       description = _(u"mps_poll_plugins_description",
-                                                       default=u"Only poll methods selected here will be available withing the meeting. "
-                                                               u"If nothing is selected, only the servers default poll method will be available."),
+class MeetingPollSettingsSchema(colander.Schema):
+    poll_plugins = colander.SchemaNode(colander.Set(),
+                                       title = _("mps_poll_plugins_title",
+                                                 default = "Available poll methods within this meeting"),
+                                       description = _("mps_poll_plugins_description",
+                                                       default="Only poll methods selected here will be available withing the meeting. "
+                                                               "If nothing is selected, only the servers default poll method will be available."),
                                        missing=set(),
                                        widget = poll_plugins_choices_widget,)
 
-_dummy_meeting = Meeting()
+
+class _ContainsOnlyAndNotEmpty(colander.ContainsOnly):
+
+    def __call__(self, node, value):
+        if len(value) == 0:
+            raise colander.Invalid(node, _("Must select at least one"))
+        return super(_ContainsOnlyAndNotEmpty, self).__call__(node, value)
+
+
+class AddExistingUserSchema(colander.Schema):
+    userid = colander.SchemaNode(colander.String(),
+                                 title = _("UserID"),
+                                 widget = userid_hinder_widget,
+                                 validator = existing_userids)
+    roles = colander.SchemaNode(colander.Set(),
+                                title = _("Roles"),
+                                default = set([security.ROLE_VIEWER,
+                                               security.ROLE_DISCUSS,
+                                               security.ROLE_PROPOSE,
+                                               security.ROLE_VOTER]),
+                                validator = _ContainsOnlyAndNotEmpty(dict(security.MEETING_ROLES).keys()),
+                                widget = deform.widget.CheckboxChoiceWidget(values = security.MEETING_ROLES))
+
+
+def includeme(config):
+    config.add_content_schema('Meeting', AddMeetingSchema, 'add')
+    config.add_content_schema('Meeting', EditMeetingSchema, 'edit')
+    config.add_content_schema('Meeting', MeetingPollSettingsSchema, 'meeting_poll_settings')
+    config.add_content_schema('Meeting', AccessPolicyMeetingSchema, 'access_policy')
+    config.add_content_schema('Meeting', AddExistingUserSchema, 'add_existing_user')

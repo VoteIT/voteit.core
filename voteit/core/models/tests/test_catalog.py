@@ -1,435 +1,208 @@
 import unittest
 from datetime import datetime
 from calendar import timegm
-
+ 
 from pyramid import testing
-from zope.component.event import objectEventNotify
-from betahaus.pyracont.factories import createContent
-from pyramid.authorization import ACLAuthorizationPolicy
-from pyramid.authentication import AuthTktAuthenticationPolicy
+# from pyramid.authentication import AuthTktAuthenticationPolicy
+# from pyramid.authorization import ACLAuthorizationPolicy
+from pyramid.traversal import resource_path
+# from zope.component.event import objectEventNotify
+# from zope.interface.verify import verifyClass
+# from zope.interface.verify import verifyObject
+from arche.utils import utcnow
 
-from voteit.core.bootstrap import bootstrap_voteit
-from voteit.core.events import ObjectUpdatedEvent
 from voteit.core import security
-from voteit.core.security import groupfinder
-from voteit.core.models.date_time_util import utcnow
+from voteit.core.bootstrap import bootstrap_voteit
+from voteit.core.models.arche_compat import createContent
+# from voteit.core.models.date_time_util import utcnow
 from voteit.core.models.interfaces import IUnread
+from voteit.core.models.site import SiteRoot
+# from voteit.core.security import groupfinder
+from voteit.core.testing_helpers import bootstrap_and_fixture
 
+ 
+class CatalogIndexTests(unittest.TestCase):
+    """ Make sure indexes work as expected. """
 
-class CatalogTestCase(unittest.TestCase):
-    """ Class for registering test setup and some helper methods.
-        This doesn't actually run any tests.
-    """
     def setUp(self):
-        self.config = testing.setUp()
-        self.config.scan('voteit.core.models.meeting')
-        self.config.scan('voteit.core.models.site')
-        self.config.scan('voteit.core.models.agenda_template')
-        self.config.scan('voteit.core.models.agenda_templates')
-        self.config.scan('voteit.core.models.user')
-        self.config.scan('voteit.core.models.users')
-        self.config.scan('voteit.core.subscribers.catalog')
-        self.config.include('voteit.core.models.user_tags')
-        self.config.include('voteit.core.models.catalog')
-        self.config.scan('betahaus.pyracont.fields.password')
-
+        self.config = testing.setUp(request = testing.DummyRequest())
+        self.config.include('arche.testing')
+        self.config.include('arche.models.catalog')
+        self.config.include('voteit.core.models.meeting')
+        self.config.include('voteit.core.models.site')
+        self.config.include('voteit.core.models.agenda_templates')
+        self.config.include('voteit.core.models.user')
+        self.config.include('voteit.core.models.users')
+        self.config.include('voteit.core.models.catalog') 
         self.root = bootstrap_voteit(echo=False)
         self.query = self.root.catalog.query
         self.search = self.root.catalog.search
-        self.get_metadata = self.root.catalog.document_map.get_metadata
-        self.config.include('pyramid_zcml')
-        self.config.load_zcml('voteit.core:configure.zcml')
-
+        self.get_metadata = self.root.document_map.get_metadata
+        self.config.include('voteit.core.testing_helpers.register_workflows')
+ 
     def tearDown(self):
         testing.tearDown()
-
+ 
     def _add_mock_meeting(self):
-        obj = createContent('Meeting', title = 'Testing catalog',
-                            description = 'To check that everything works as expected.',
-                            uid = 'simple_uid', creators = ['demo_userid'])
+        from voteit.core.models.meeting import Meeting
+        obj = Meeting(title = 'Testing catalog',
+                      description = 'To check that everything works as expected.',
+                      uid = 'simple_uid', creators = ['demo_userid'])
         obj.add_groups('admin', (security.ROLE_ADMIN, security.ROLE_MODERATOR,), event = False)
         self.root['meeting'] = obj
         return obj
-
-    def _register_security_policies(self):
-        authn_policy = AuthTktAuthenticationPolicy(secret='secret',
-                                                   callback=groupfinder)
-        authz_policy = ACLAuthorizationPolicy()
-        self.config.setup_registry(authorization_policy=authz_policy, authentication_policy=authn_policy)
-
-
-class CatalogTests(CatalogTestCase):
-    def test_indexed_on_add(self):
-        title_index = self.root.catalog['title']
-        title_count = title_index.documentCount()
-        meeting = createContent('Meeting')
-        meeting.title = 'hello world'
-        
-        self.root['meeting'] = meeting
-        
-        self.assertEqual(title_index.documentCount(), title_count + 1)
-
-    def test_unindexed_on_remove(self):
-        title_index = self.root.catalog['title']
-        title_count = title_index.documentCount()
-
-        meeting = createContent('Meeting')
-        meeting.title = 'hello world'
-        
-        self.root['meeting'] = meeting
-        
-        self.assertEqual(title_index.documentCount(), title_count + 1)
-        
-        del self.root['meeting']
-        self.assertEqual(title_index.documentCount(), title_count)
-        
-    def test_reindexed_on_update(self):
-        meeting = createContent('Meeting')
-        meeting.title = 'hello world'
-        self.root['meeting'] = meeting
-        
-        query = self.query
-        self.assertEqual(query("title == 'hello world'")[0], 1)
-        
-        self.root['meeting'].title = 'me and my little friends'
-        #We'll have to kick the subscriber manually
-        objectEventNotify(ObjectUpdatedEvent(self.root['meeting']))
-        
-        self.assertEqual(query("title == 'hello world'")[0], 0)
-        self.assertEqual(query("title == 'me and my little friends'")[0], 1)
-
-    def test_update_indexes_when_index_removed(self):
-        meeting = createContent('Meeting')
-        meeting.title = 'hello world'
-        self.root['meeting'] = meeting
-        
-        catalog = self.root.catalog
-        catalog['nonexistent_index'] = catalog['title'] #Nonexistent should be removed
-        del catalog['title'] #Removing title index should recreate it
-        
-        self.failUnless(catalog.get('nonexistent_index'))
-        
-        from voteit.core.models.catalog import update_indexes
-        update_indexes(catalog, reindex=False)
-        
-        self.failIf(catalog.get('nonexistent_index'))
-        self.failUnless(catalog.get('title'))
-    
-    def test_reindex_indexes(self):
-        meeting = createContent('Meeting')
-        meeting.title = 'hello world'
-        self.root['meeting'] = meeting
-        catalog = self.root.catalog
-        
-        #Catalog should return the meeting on a search
-        self.assertEqual(self.query("title == 'hello world'")[0], 1)
-        
-        #If the meeting title changes, no subscriber will be fired here...
-        meeting.title = "Goodbye cruel world"
-        #...but when reindexed it should work
-        from voteit.core.models.catalog import reindex_indexes
-        reindex_indexes(catalog)
-        
-        self.assertEqual(self.query("title == 'Goodbye cruel world'")[0], 1)
-
-    def test_reindex_object_security(self):
-        from voteit.core.models.catalog import reindex_object_security
-        self._register_security_policies()
-        
-        catalog = self.root.catalog
-        obj = self._add_mock_meeting()
-        reindex_object_security(catalog, obj)
-
-        self.assertEqual(self.query("allowed_to_view in any('role:Admin',) and path == '/meeting'")[0], 1)
-        self.assertEqual(self.query("allowed_to_view in any('role:Viewer',) and path == '/meeting'")[0], 1)        
-
-    def test_index_object_preforms_reindex_if_object_already_indexed(self):
-        from voteit.core.models.catalog import index_object
-        catalog = self.root.catalog
-
-        meeting = createContent('Meeting')
-        meeting.title = 'hello world'
-        self.root['meeting'] = meeting
-        meeting.title = 'something new'
-        #This should now preform reindex instead
-        index_object(catalog, meeting)
-        self.assertEqual(catalog.query("title == 'something new'")[0], 1)
-
-    def test_resolve_catalog_docid(self):
-        from voteit.core.models.catalog import resolve_catalog_docid
-        catalog = self.root.catalog
-        meeting = createContent('Meeting')
-        self.root['m'] = meeting
-        docid = catalog.query("content_type == 'Meeting'")[1][0]
-        self.assertEqual(meeting, resolve_catalog_docid(catalog, self.root, docid))
-
-    def test_metadata_for_query(self):
-        from voteit.core.models.catalog import metadata_for_query
-        catalog = self.root.catalog
-        meeting = createContent('Meeting', title = 'Hello world!')
-        self.root['m'] = meeting
-        metadata = metadata_for_query(catalog, content_type = 'Meeting')[0]
-        self.assertEqual(metadata['title'], "Hello world!")
-
-
-class CatalogIndexTests(CatalogTestCase):
-    """ Make sure indexes work as expected. """
-
-    def test_title(self):
-        self._add_mock_meeting()
-        self.assertEqual(self.query("title == 'Testing catalog'")[0], 1)
-    
-    def test_sortable_title(self):
-        self._add_mock_meeting()
-        self.assertEqual(self.query("sortable_title == 'testing catalog'")[0], 1)
-
-    def test_uid(self):
-        self._add_mock_meeting()
-        self.assertEqual(self.query("uid == 'simple_uid'")[0], 1)
-
-    def test_content_type(self):
-        self._add_mock_meeting()
-        self.assertEqual(self.query("content_type == 'Meeting'")[0], 1)
-
+ 
     def test_workflow_state(self):
         self._add_mock_meeting()
         self.assertEqual(self.query("workflow_state == 'upcoming'")[0], 1)
-
-    def test_path(self):
-        self._add_mock_meeting()
-        self.assertEqual(self.query("path == '/meeting'")[0], 1)
-
-    def test_creators(self):
-        self._add_mock_meeting()
-        self.assertEqual(self.query("creators in any('demo_userid',)")[0], 1)
-
-    def test_created(self):
-        """ created actually stores unix-time. Note that it's very
-            likely that all objects are added within the same second.
-        """
-        obj = self._add_mock_meeting()
-        from datetime import datetime
-        meeting_unix = timegm(obj.created.timetuple())
-        
-        self.assertEqual(self.query("created == %s and path == '/meeting'" % meeting_unix)[0], 1)
-        qy = ("%s < created < %s and path == '/meeting'" % (meeting_unix-1, meeting_unix+1))
-        self.assertEqual(self.query(qy)[0], 1)
-
+ 
     def test_allowed_to_view(self):
-        self._register_security_policies()
+        self.config.include('arche.testing.setup_auth')
         obj = self._add_mock_meeting()
-        
         #Owners are not allowed to view meetings. It's exclusive for Admins / Moderators right now
         self.assertEqual(self.query("allowed_to_view in any('404',) and path == '/meeting'")[0], 0)
         self.assertEqual(self.query("allowed_to_view in any('role:Viewer',) and path == '/meeting'")[0], 1)
-        self.assertEqual(self.query("allowed_to_view in any('role:Admin',) and path == '/meeting'")[0], 1)
+        self.assertEqual(self.query("allowed_to_view in any('role:Administrator',) and path == '/meeting'")[0], 1)
         self.assertEqual(self.query("allowed_to_view in any('role:Moderator',) and path == '/meeting'")[0], 1)
-
+ 
     def test_view_meeting_userids(self):
-        self._register_security_policies()
+        self.config.include('arche.testing.setup_auth')
         #Must add a user to users folder too, otherwise the find_authorized_userids won't accept them as valid
         self.root['users']['demo_userid'] = createContent('User')
         obj = self._add_mock_meeting()
         self.assertEqual(self.search(view_meeting_userids = 'demo_userid')[0], 1)
-
-    def test_searchable_text(self):
-        obj = self._add_mock_meeting()
-        
-        self.assertEqual(self.query("'Testing' in searchable_text")[0], 1)
-        self.assertEqual(self.query("'everything works as expected' in searchable_text")[0], 1)
-        self.assertEqual(self.query("'We are 404' in searchable_text")[0], 0)
-
+ 
     def test_start_time(self):
         obj = self._add_mock_meeting()
-
         now = utcnow()
         now_unix = timegm(now.timetuple())
-        
         #Shouldn't return anything
         self.assertEqual(self.query("start_time == %s and path == '/meeting'" % now_unix)[0], 0)
         qy = ("%s < start_time < %s and path == '/meeting'" % (now_unix-1, now_unix+1))
         self.assertEqual(self.query(qy)[0], 0)
-        
         #So let's set it and return stuff
-        obj.set_field_value('start_time', now)
-        from voteit.core.models.catalog import reindex_indexes
-        reindex_indexes(self.root.catalog)
-        
+        obj.update(start_time = now)         
         self.assertEqual(self.query("start_time == %s and path == '/meeting'" % now_unix)[0], 1)
         qy = ("%s < start_time < %s and path == '/meeting'" % (now_unix-1, now_unix+1))
         self.assertEqual(self.query(qy)[0], 1)
-
+ 
     def test_end_time(self):
         obj = self._add_mock_meeting()
-
         now = utcnow()
         now_unix = timegm(now.timetuple())
-        
-        obj.set_field_value('end_time', now)
-        from voteit.core.models.catalog import reindex_indexes
-        reindex_indexes(self.root.catalog)
-        
+        obj.update(end_time = now)
         self.assertEqual(self.query("end_time == %s and path == '/meeting'" % now_unix)[0], 1)
         qy = ("%s < end_time < %s and path == '/meeting'" % (now_unix-1, now_unix+1))
         self.assertEqual(self.query(qy)[0], 1)
 
     def test_unread(self):
         meeting = self._add_mock_meeting()
-        self._register_security_policies()
+        self.config.include('arche.testing.setup_auth')
         self.config.include('voteit.core.models.unread')
         #Discussion posts are unread aware
         from voteit.core.models.discussion_post import DiscussionPost
         obj = DiscussionPost()
-        obj.title = 'Hello'
+        obj.text = 'Hello'
         meeting['post'] = obj
-        
-        from voteit.core.models.catalog import reindex_indexes
-        reindex_indexes(self.root.catalog)
-        
         self.assertEqual(self.search(unread='admin')[0], 1)
-        
         unread = self.config.registry.queryAdapter(obj, IUnread)
         unread.mark_as_read('admin')
-        
         self.assertEqual(self.search(unread='admin')[0], 0)
 
-    def test_like_userids(self):
+    def test_additions_to_searchable_text(self):
         meeting = self._add_mock_meeting()
-        from voteit.core.models.discussion_post import DiscussionPost
-        obj = DiscussionPost()
-        obj.title = 'Hello'
-        meeting['post'] = obj
-        
-        self.assertEqual(self.search(like_userids='admin')[0], 0)
-        
-        #Set like
-        from voteit.core.models.interfaces import IUserTags
-        user_tags = self.config.registry.getAdapter(obj, IUserTags)
-        user_tags.add('like', 'admin')
-        
-        self.assertEqual(self.search(like_userids='admin')[0], 1)
-        
-        user_tags.remove('like', 'admin')
-        self.assertEqual(self.search(like_userids='admin')[0], 0)
-        
-    def test_tags(self):
-        meeting = self._add_mock_meeting()
-        from voteit.core.models.discussion_post import DiscussionPost
-        obj = DiscussionPost(text = '#test')
-        meeting['post'] = obj
-        self.assertEqual(self.search(tags='test')[0], 1)
-        obj.set_field_appstruct({'text': 'test'})
-        self.assertEqual(self.search(tags='test')[0], 0)
+        meeting.update(body = "<p>Jane Doe</p>")
+        self.assertEqual(self.search(searchable_text = 'Jane Doe')[0], 1)
 
 
-class CatalogMetadataTests(CatalogTestCase):
-    """ Test metadata creation. This test also covers catalog subscribers.
-    """
-    
-    def test_title(self):
-        self._add_mock_meeting()
-        result = self.query("title == 'Testing catalog'")
-        doc_id = result[1][0] #Layout is something like: (1, set([123]))
-        metadata = self.get_metadata(doc_id)
-        
-        self.assertTrue('title' in metadata)
-        self.assertEqual(metadata['title'], 'Testing catalog')
-        
-    def test_created(self):
-        """ created actually stores unix-time. Note that it's very
-            likely that all objects are added within the same second.
-            The metadata is regular datetime though.
-        """
-        obj = self._add_mock_meeting()
-        result = self.query("title == 'Testing catalog'")
-        doc_id = result[1][0]
-        metadata = self.get_metadata(doc_id)
-        
-        self.assertEqual(obj.created, metadata['created'])
-        self.assertTrue(isinstance(metadata['created'], datetime))
-
-    def test_path(self):
-        obj = self._add_mock_meeting()
-        result = self.search(title = 'Testing catalog')
-        doc_id = result[1][0]
-        metadata = self.get_metadata(doc_id)
-        
-        self.assertEqual(metadata['path'], '/meeting')
-
-    def test_workflow_state(self):
-        obj = self._add_mock_meeting()
-        result = self.search(title = 'Testing catalog')
-        doc_id = result[1][0]
-        metadata = self.get_metadata(doc_id)
-        self.assertEqual(metadata['workflow_state'], 'upcoming')
-
-    def test_content_type(self):
-        obj = self._add_mock_meeting()
-        result = self.search(title = 'Testing catalog')
-        doc_id = result[1][0]
-        metadata = self.get_metadata(doc_id)
-        
-        self.assertEqual(metadata['content_type'], 'Meeting')
-
-    def test_uid(self):
-        obj = self._add_mock_meeting()
-        result = self.search(title = 'Testing catalog')
-        doc_id = result[1][0]
-        metadata = self.get_metadata(doc_id)
-        
-        self.assertEqual(metadata['uid'], obj.uid)
-
-    def test_like_userids(self):
-        meeting = self._add_mock_meeting()
-        from voteit.core.models.discussion_post import DiscussionPost
-        obj = DiscussionPost()
-        meeting['post'] = obj
-        
-        def _get_metadata():
-            result = self.search(content_type = 'DiscussionPost')
-            doc_id = result[1][0]
-            return self.get_metadata(doc_id)
-        
-        self.assertEqual(_get_metadata()['like_userids'], ())
-
-        #Set like
-        from voteit.core.models.interfaces import IUserTags
-        user_tags = self.config.registry.getAdapter(obj, IUserTags)
-        user_tags.add('like', 'admin')
-
-        self.assertEqual(_get_metadata()['like_userids'], ('admin',))
-        
-        user_tags.remove('like', 'admin')
-        self.assertEqual(_get_metadata()['like_userids'], ())
-
-    def test_docid(self):
-        """ docid should be part of metadata too. """
+class CatalogSubscriberTests(unittest.TestCase):
+ 
+    def setUp(self):
+        self.config = testing.setUp(request = testing.DummyRequest())
+        self.config.include('arche.models.catalog')
+        self.config.include('voteit.core.models.catalog')
+        self.config.include('voteit.core.models.catalog')
+ 
+    def tearDown(self):
+        testing.tearDown()
+ 
+    def _fixture(self):
+        return bootstrap_and_fixture(self.config)
+ 
+    @property
+    def _ai(self):
+        """ Has metadata enabled """
         from voteit.core.models.agenda_item import AgendaItem
-        from voteit.core.models.discussion_post import DiscussionPost
-        
-        meeting = self._add_mock_meeting()
-        self._register_security_policies()
-        
-        meeting['ai'] = AgendaItem()
-        meeting['ai']['disc'] = DiscussionPost()
-        
-        result = self.search(content_type = 'DiscussionPost')
-        doc_id = result[1][0]
-        brain = self.get_metadata(doc_id)
-        self.failUnless('docid' in brain)
-        self.assertEqual(brain['docid'], doc_id)
-        
-    def test_tags(self):
-        meeting = self._add_mock_meeting()
-        from voteit.core.models.discussion_post import DiscussionPost
-        obj = DiscussionPost(text = '#test')
-        meeting['post'] = obj
-        
-        def _get_metadata():
-            result = self.search(content_type = 'DiscussionPost')
-            doc_id = result[1][0]
-            return self.get_metadata(doc_id)
+        return AgendaItem
+ 
+    def _metadata_for_query(self, root, **kw):
+        from voteit.core.models.catalog import metadata_for_query
+        return metadata_for_query(root, **kw)
+     
+    def test_object_added_catalog(self):
+        root = self._fixture()
+        text = 'New object'
+        root['new_obj'] = self._ai(title = text)
+        self.assertEqual(root.catalog.search(title = text)[0], 1)
+     
+    def test_object_added_metadata(self):
+        root = self._fixture()
+        text = 'New object'
+        root['new_obj'] = self._ai(title = text)
+        metadata = self._metadata_for_query(root, title = text)
+        self.assertEqual(metadata[0]['title'], text)
+ 
+    def test_object_updated_wf_changed_catalog(self):
+        root = self._fixture()
+        request = testing.DummyRequest()
+        text = 'New object'
+        root['new_obj'] = self._ai(title = text)
+        root['new_obj'].set_workflow_state(request, 'upcoming')
+        self.assertEqual(root.catalog.search(title = text, workflow_state = 'upcoming')[0], 1)
 
-        self.assertEqual(_get_metadata()['tags'], ('test',))
-        obj.set_field_appstruct({'text': 'test'})
-        self.assertEqual(_get_metadata()['tags'], ())
+    def test_object_updated_from_appstruct_catalog(self):
+        root = self._fixture()
+        ai = self._ai(title = 'New object')
+        root['new_obj'] = ai
+        ai.set_field_appstruct({'title': 'New title'})
+        self.assertEqual(root.catalog.search(title = 'New title')[0], 1)
+ 
+    def test_object_deleted_from_catalog(self):
+        root = self._fixture()
+        ai = self._ai(title = 'New object')
+        root['new_obj'] = ai
+        #Just to make sure
+        self.assertEqual(root.catalog.search(uid = ai.uid)[0], 1)
+        del root['new_obj']
+        self.assertEqual(root.catalog.search(uid = ai.uid)[0], 0)
+ 
+    def test_object_deleted_from_metadata(self):
+        root = self._fixture()
+        ai = self._ai(title = 'New object')
+        root['new_obj'] = ai
+        #Just to make sure
+        self.failUnless(self._metadata_for_query(root, uid = ai.uid))
+        del root['new_obj']
+        self.failIf(self._metadata_for_query(root, uid = ai.uid))
+ 
+    def test_update_contained_in_ai(self):
+        self.config.include('arche.testing.setup_auth')
+        self.config.include('arche.testing')
+        self.config.include('voteit.core.models.meeting')
+        self.config.include('voteit.core.models.discussion_post')
+        from voteit.core.models.discussion_post import DiscussionPost
+        from voteit.core.models.meeting import Meeting
+        from voteit.core.models.user import User
+        root = self._fixture()
+        root['users']['john'] = User()
+        root['m'] = Meeting()
+        root['m'].add_groups('john', [security.ROLE_VIEWER])
+        root['m']['ai'] = ai = self._ai(title = 'New object')
+        ai['dp'] = dp = DiscussionPost()
+        #To make sure dp got catalogued
+        self.assertEqual(root.catalog.search(uid = dp.uid)[0], 1)
+        #The discussion post shouldn't be visible now, since the ai is private
+        self.assertEqual(root.catalog.search(uid = dp.uid, allowed_to_view = [security.ROLE_VIEWER])[0], 0)
+        #When the ai is made upcoming, it should be visible
+        security.unrestricted_wf_transition_to(ai, 'upcoming')
+        self.assertEqual(root.catalog.search(uid = dp.uid, allowed_to_view = [security.ROLE_VIEWER])[0], 1)

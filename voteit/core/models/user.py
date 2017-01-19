@@ -3,60 +3,48 @@ from random import choice
 from datetime import timedelta
 import logging
 
-from zope.interface import implements
-from pyramid.url import resource_url
+from BTrees.OOBTree import OOBTree
+from arche.api import User as ArcheUser
+from arche.utils import utcnow
 from pyramid.security import Allow
 from pyramid.security import DENY_ALL
-from pyramid.traversal import find_interface
 from pyramid.threadlocal import get_current_request
-from pyramid_mailer import get_mailer
-from pyramid_mailer.message import Message
-from pyramid.i18n import get_localizer
-from BTrees.OOBTree import OOBTree
-from betahaus.pyracont.decorators import content_factory
-from betahaus.pyracont.factories import createContent
-from betahaus.viewcomponent import render_view_action
+from zope.interface import implementer
 
-from voteit.core.models.base_content import BaseContent
-from voteit.core.models.interfaces import IUser
-from voteit.core.models.interfaces import ICatalogMetadataEnabled
-from voteit.core.models.interfaces import IMeeting
-from voteit.core.models.interfaces import IAgendaItem
-from voteit.core.models.interfaces import IProfileImage
 from voteit.core import VoteITMF as _
 from voteit.core import security
-from voteit.core.models.date_time_util import utcnow
 from voteit.core.exceptions import TokenValidationError
+from voteit.core.models.base_content import BaseContent
+from voteit.core.models.interfaces import IProfileImage
+from voteit.core.models.interfaces import IUser
 
 
 USERID_REGEXP = r"[a-z]{1}[a-z0-9-_]{2,30}"
 log = logging.getLogger(__name__)
 
 
-@content_factory('User', title=_(u"User"))
-class User(BaseContent):
+@implementer(IUser)
+class User(ArcheUser, BaseContent):
     """ User content type.
         See :mod:`voteit.core.models.interfaces.IUser`.
         All methods are documented in the interface of this class.
     """
-    implements(IUser, ICatalogMetadataEnabled)
-    content_type = 'User'
-    display_name = _(u"User")
-    allowed_contexts = ('Users',)
+    type_name = 'User'
+    type_title = _(u"User")
     add_permission = security.ADD_USER
-    custom_mutators = {'title':'_set_title'}
-    custom_fields = {'password':'PasswordField'}
-    schemas = {'add': 'AddUserSchema', 'edit': 'EditUserSchema'}
 
-    __acl__ = [(Allow, security.ROLE_ADMIN, (security.EDIT, security.VIEW, security.CHANGE_PASSWORD, security.MANAGE_SERVER, security.DELETE)),
-               (Allow, security.ROLE_OWNER, (security.EDIT, security.VIEW, security.CHANGE_PASSWORD,)),
+    __acl__ = [(Allow, security.ROLE_ADMIN, (security.EDIT,
+                                             security.VIEW,
+                                             security.PERM_MANAGE_USERS,
+                                             security.CHANGE_PASSWORD,
+                                             security.MANAGE_SERVER,
+                                             security.DELETE)),
+               (Allow, security.ROLE_OWNER, (security.EDIT,
+                                             security.VIEW,
+                                             security.CHANGE_PASSWORD,)),
                DENY_ALL]
 
-    @property
-    def userid(self):
-        """ Convention - name should always be same as userid """
-        return self.__name__
-
+    #FIXME: Review
     @property
     def auth_domains(self):
         try:
@@ -64,6 +52,14 @@ class User(BaseContent):
         except AttributeError:
             self.__auth_domains__ = OOBTree()
             return self.__auth_domains__
+
+    @property
+    def profile_image_plugin(self):
+        #Arche compat
+        return self.get_field_value('profile_image_plugin', '')
+    @profile_image_plugin.setter
+    def profile_image_plugin(self, value):
+        self.set_field_value('profile_image_plugin', value)
 
     def get_image_plugin(self, request):
         name = self.get_field_value('profile_image_plugin', None)
@@ -83,7 +79,7 @@ class User(BaseContent):
             try:
                 url = plugin.url(size, request)
             except Exception, e:
-                log.error('Image plugin %s caused the exception: %s') % (plugin, e)
+                log.error('Image plugin %s caused the exception: %s', plugin, e)
         if not url:
             url = request.registry.settings.get('voteit.default_profile_picture', '')
         tag = '<img src="%(url)s" height="%(size)s" width="%(size)s"' % {'url': url, 'size': size}
@@ -94,69 +90,43 @@ class User(BaseContent):
         tag += ' />'
         return tag
 
-    def get_password(self):
-        return self.get_field_value('password')
+    @property
+    def first_name(self):
+        #Arche compat
+        return self.get_field_value('first_name', '')
+    @first_name.setter
+    def first_name(self, value):
+        self.set_field_value('first_name', value)
 
-    def set_password(self, value):
-        """ Encrypt a plaintext password. Convenience method for field password for b/c."""
-        self.set_field_value('password', value)
+    @property
+    def last_name(self):
+        #Arche compat
+        return self.get_field_value('last_name', '')
+    @last_name.setter
+    def last_name(self, value):
+        self.set_field_value('last_name', value)
 
-    #Override title for users
-    def _set_title(self, value, key=None):
-        #Not used for user content type
-        pass
-    
-    def _get_title(self):
-        out = "%s %s" % ( self.get_field_value('first_name', ''), self.get_field_value('last_name', '') )
-        return out.strip()
+    @property
+    def email(self):
+        #Arche compat
+        return self.get_field_value('email', '')
+    @email.setter
+    def email(self, value):
+        self.set_field_value('email', value)
 
-    title = property(_get_title, _set_title)
-
-    def new_request_password_token(self, request):
-        """ Set a new request password token and email user. """
-        locale = get_localizer(request)
-        self.__token__ = createContent('RequestPasswordToken')
-        pw_link = "%stoken_pw?token=%s" % (resource_url(self, request), self.__token__())
-        html = render_view_action(self, request, 'email', 'request_password',
-                                  pw_link = pw_link)
-        msg = Message(subject=_(u"Password reset request from VoteIT"),
-                      recipients=[self.get_field_value('email')],
-                      html = html)
-        mailer = get_mailer(request)
-        mailer.send(msg)
-        
-    def remove_password_token(self):
-        self.__token__ = None
-
-    def get_token(self):
-        """ Get password token, or None. """
-        return getattr(self, '__token__', None)
-            
-    def send_mention_notification(self, context, request):
-        """ Sends an email when the user is mentioned in a proposal or a discussion post
-        """
-        # do not send mail if there is no emailadress
-        if self.get_field_value('email'):
-            locale = get_localizer(request)
-            meeting = find_interface(context, IMeeting)
-            agenda_item = find_interface(context, IAgendaItem)
-            #FIXME: Email should use a proper template
-            url = resource_url(context, request)
-            link = "<a href=\"%s\">%s</a>" % (url, url)
-            body = locale.translate(_('mentioned_notification',
-                                      default = "You have been mentioned in ${meeting} on ${agenda_item}. "
-                                        "Click the following link to go there, ${link}.",
-                                        mapping = {'meeting':meeting.title,
-                                                   'agenda_item': agenda_item.title,
-                                                   'link': link,},))
-            msg = Message(subject=_(u"You have been mentioned in VoteIT"),
-                           recipients=[self.get_field_value('email')],
-                           html=body)
-            mailer = get_mailer(request)
-            mailer.send(msg)
+    @property
+    def about_me(self):
+        #Arche compat
+        return self.get_field_value('about_me', '')
+    @about_me.setter
+    def about_me(self, value):
+        self.set_field_value('about_me', value)
 
 
-@content_factory('RequestPasswordToken')
+def includeme(config):
+    config.add_content_factory(User, addable_to = ('Users',))
+
+#Deprecated, clear from db
 class RequestPasswordToken(object):
     """ Object that keeps track of password request tokens. """
     

@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 import unittest
 from datetime import datetime
 
 from pyramid import testing
+from pyramid.request import Request
+from arche.models.datetime_handler import DateTimeHandler
 
 from voteit.core.testing_helpers import bootstrap_and_fixture
 
@@ -11,6 +14,7 @@ class CommonSchemaTests(unittest.TestCase):
 
     def setUp(self):
         self.request = testing.DummyRequest()
+        self.request.dt_handler = DateTimeHandler(self.request, tz_name = 'Europe/Stockholm')
         self.config = testing.setUp(request = self.request)
 
     def tearDown(self):
@@ -18,78 +22,46 @@ class CommonSchemaTests(unittest.TestCase):
 
     def test_deferred_default_start_time(self):
         from voteit.core.schemas.common import deferred_default_start_time as fut
-        settings = self.config.registry.settings
-        settings['default_locale_name'] = 'sv'
-        settings['default_timezone_name'] = 'Europe/Stockholm'
-        self.config.include('voteit.core.models.date_time_util')
         res = fut(None, {'request': self.request})
         self.assertIsInstance(res, datetime)
         self.assertTrue(hasattr(res, 'tzinfo'))
 
     def test_deferred_default_end_time(self):
         from voteit.core.schemas.common import deferred_default_end_time as fut
-        settings = self.config.registry.settings
-        settings['default_locale_name'] = 'sv'
-        settings['default_timezone_name'] = 'Europe/Stockholm'
-        self.config.include('voteit.core.models.date_time_util')
         res = fut(None, {'request': self.request})
         self.assertIsInstance(res, datetime)
         self.assertTrue(hasattr(res, 'tzinfo'))
 
     def test_deferred_default_user_fullname(self):
         from voteit.core.schemas.common import deferred_default_user_fullname as fut
-        from voteit.core.views.api import APIView
         root = bootstrap_and_fixture(self.config)
         admin = root.users['admin']
-        admin.set_field_value('first_name', 'Jane')
-        admin.set_field_value('last_name', 'Doe')
-        self.config.testing_securitypolicy(userid='admin')
-        kw = {'api': APIView(root, self.request)}
+        admin.first_name = 'Jane'
+        admin.last_name = 'Doe'
+        self.request.profile = admin
+        kw = {'request': self.request}
         self.assertEqual(fut(None, kw), 'Jane Doe')
-        self.config.testing_securitypolicy(userid='404')
-        kw = {'api': APIView(root, self.request)}
+        self.request.profile = None
         self.assertEqual(fut(None, kw), '')
 
     def test_deferred_default_user_email(self):
         from voteit.core.schemas.common import deferred_default_user_email as fut
-        from voteit.core.views.api import APIView
         root = bootstrap_and_fixture(self.config)
         admin = root.users['admin']
-        admin.set_field_value('email', 'hello_world@betahaus.net')
-        self.config.testing_securitypolicy(userid='admin')
-        kw = {'api': APIView(root, self.request)}
+        admin.email = 'hello_world@betahaus.net'
+        self.request.profile = admin
+        kw = {'request': self.request}
         self.assertEqual(fut(None, kw), 'hello_world@betahaus.net')
-        self.config.testing_securitypolicy(userid='404')
-        kw = {'api': APIView(root, self.request)}
+        self.request.profile = None
+        kw = {'request': self.request}
         self.assertEqual(fut(None, kw), '')
-
-
-class DeferredDefaultTagsTests(unittest.TestCase):
-
-    def setUp(self):
-        self.config = testing.setUp()
-
-    def tearDown(self):
-        testing.tearDown()
-
-    @property
-    def _fut(self):
-        from voteit.core.schemas.common import deferred_default_tags
-        return deferred_default_tags
-
-    def test_no_tags_context(self):
-        self.assertEqual(self._fut(None, {'context': object()}), u"")
-
-    def test_with_tags(self):
-        from voteit.core.models.discussion_post import DiscussionPost
-        context = DiscussionPost(text = '#HELLO #world')
-        self.assertEqual(self._fut(None, {'context': context}), u"hello world")
 
 
 class DeferredDefaultHashtagTextTests(unittest.TestCase):
 
     def setUp(self):
         self.config = testing.setUp()
+        self.config.include('voteit.core.models.proposal_ids')
 
     def tearDown(self):
         testing.tearDown()
@@ -99,47 +71,61 @@ class DeferredDefaultHashtagTextTests(unittest.TestCase):
         from voteit.core.schemas.common import deferred_default_hashtag_text
         return deferred_default_hashtag_text
 
-    @property
-    def _prop(self):
-        from voteit.core.models.proposal import Proposal
-        return Proposal
-
-    def test_context_is_agenda_item(self):
+    def _fixture(self):
+        root = bootstrap_and_fixture(self.config)
         from voteit.core.models.agenda_item import AgendaItem
-        context = AgendaItem()
-        request = testing.DummyRequest()
-        self.assertEqual(self._fut(None, {'context': context, 'request': request}), u"")
+        from voteit.core.models.discussion_post import DiscussionPost
+        from voteit.core.models.proposal import Proposal
+        from voteit.core.models.meeting import Meeting
+        root['m'] = meeting = Meeting()
+        meeting['ai'] = ai = AgendaItem()
+        ai['p1'] = Proposal(text = "I dream of a #free world", creator = ['admin'])
+        ai['p2'] = Proposal(text = "#free as in #freedom, not #free #beer", creator = ['admin'])
+        ai['d1'] = DiscussionPost(text = "I agree with #admin-2", creator = ['admin'])
+        return root
 
-    def test_context_without_creators(self):
-        #This is not the normal case
-        context = self._prop()
-        request = testing.DummyRequest()
-        self.assertEqual(self._fut(None, {'context': context, 'request': request}), u"")
+    def test_new_blank(self):
+        root = self._fixture()
+        request = Request.blank('/')
+        request.root = root
+        self.assertEqual(self._fut(None, {'request': request}), "")
 
-    def test_context_has_creators(self):
-        context = self._prop(creators = ['jeff'])
-        request = testing.DummyRequest()
-        self.assertEqual(self._fut(None, {'context': context, 'request': request}), u"@jeff: ")
+    def test_tags_in_request(self):
+        root = self._fixture()
+        request = Request.blank('/', )
+        request.GET.add('tag', 'one')
+        request.GET.add('tag', 'two')
+        request.root = root
+        self.assertEqual(self._fut(None, {'request': request}), "#one #two")
 
-    def test_context_has_tags(self):
-        #Tags without creator isn't the normal case
-        context = self._prop(title="#HELLO #world")
-        request = testing.DummyRequest()
-        self.assertEqual(self._fut(None, {'context': context, 'request': request}), u" #hello #world")
+    def test_tags_from_reply(self):
+        self.config.include('arche.testing')
+        self.config.include('arche.models.catalog')
+        root = self._fixture()
+        request = Request.blank('/')
+        uid = root['m']['ai']['p2'].uid
+        request.GET.add('reply-to', uid)
+        request.root = root
+        self.assertEqual(self._fut(None, {'request': request}), "#free #freedom #beer #admin-2")
 
-    def test_context_has_tags_and_creators(self):
-        context = self._prop(creators = ['jeff'], title = "#HELLO #World")
-        request = testing.DummyRequest()
-        self.assertEqual(self._fut(None, {'context': context, 'request': request}), u"@jeff:  #hello #world")
+    def test_reply_to_discussion_includes_creator(self):
+        self.config.include('arche.testing')
+        self.config.include('arche.models.catalog')
+        root = self._fixture()
+        request = Request.blank('/')
+        uid = root['m']['ai']['d1'].uid
+        request.GET.add('reply-to', uid)
+        request.root = root
+        self.assertEqual(self._fut(None, {'request': request}), "@admin: #admin-2")
 
-    def test_context_has_tags_and_creators_and_request_has_tag(self):
-        context = self._prop(creators = ['jeff'], title = "#HELLO #World")
-        request = testing.DummyRequest(params = {'tag': 'me-is_tag-2'})
-        self.assertEqual(self._fut(None, {'context': context, 'request': request}), u"@jeff:  #hello #world #me-is_tag-2")
-
-    def test_with_int_chars(self):
-        context = self._prop(creators = ['jeff'],
-                             title = u"#Quisque #aliquam,#ante in #tincidunt #Äliqöåm. #Risus neque#eleifend #nunc&#34;")
-        request = testing.DummyRequest()
-        self.assertEqual(self._fut(None, {'context': context, 'request': request}),
-                         u"@jeff:  #quisque #aliquam #ante #tincidunt #äliqöåm #risus #nunc")
+    def test_all_together(self):
+        self.config.include('arche.testing')
+        self.config.include('arche.models.catalog')
+        root = self._fixture()
+        request = Request.blank('/')
+        uid = root['m']['ai']['d1'].uid
+        request.GET.add('reply-to', uid)
+        request.GET.add('tag', 'rainbows')
+        request.GET.add('tag', 'unicorns')
+        request.root = root
+        self.assertEqual(self._fut(None, {'request': request}), "@admin: #rainbows #unicorns #admin-2")

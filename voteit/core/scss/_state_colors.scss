@@ -1,0 +1,86 @@
+// For workflow state colouring
+@import "bootstrap/mixins/_buttons";
+@import "bootstrap/mixins/_labels";
+
+.btn-approved {
+  @include button-variant(#fff, $brand-approved, darken($brand-approved, 5%));
+}
+.label-approved {
+  @include label-variant($brand-approved);
+}
+.text-approved {
+  color: $brand-approved;
+}
+
+.btn-ongoing {
+  @include button-variant(#fff, $brand-ongoing, darken($brand-ongoing, 5%));
+}
+.text-ongoing {
+  color: $brand-ongoing;
+}
+
+.btn-denied {
+  @include button-variant(#fff, $brand-denied, darken($brand-denied, 5%));
+}
+.label-denied {
+  @include label-variant($brand-denied);
+}
+.text-denied {
+  color: $brand-denied;
+}
+
+.btn-private {
+  @include button-variant(#fff, $brand-private, darken($brand-private, 5%));
+}
+.text-private {
+  color: $brand-private;
+}
+
+.btn-published {
+  @include button-variant(#fff, $brand-published, darken($brand-published, 5%));
+}
+.text-published {
+  color: $brand-published;
+}
+
+.btn-upcoming {
+  @include button-variant(#fff, $brand-upcoming, darken($brand-upcoming, 5%));
+}
+.text-upcoming {
+  color: $brand-upcoming;
+}
+
+.btn-closed {
+  @include button-variant(#fff, $brand-closed, darken($brand-closed, 5%));
+}
+.text-closed {
+  color: $brand-closed;
+}
+
+.btn-retracted {
+  @include button-variant(#fff, $brand-retracted, darken($brand-retracted, 5%));
+}
+.text-retracted {
+  color: $brand-retracted;
+}
+
+.btn-unhandled {
+  @include button-variant(#fff, $brand-unhandled, darken($brand-unhandled, 5%));
+}
+.text-unhandled {
+  color: $brand-unhandled;
+}
+
+.btn-canceled {
+  @include button-variant(#fff, $brand-canceled, darken($brand-canceled, 5%));
+}
+.text-canceled {
+  color: $brand-canceled;
+}
+
+.btn-voting {
+  @include button-variant(#fff, $brand-voting, darken($brand-voting, 5%));
+}
+.text-voting {
+  color: $brand-voting;
+}

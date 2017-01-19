@@ -1,0 +1,36 @@
+<tal:main xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="voteit.core">
+
+  <tal:no_menu condition="not request.is_moderator or not states">
+    <span class="text-${state_id}">
+      <span class="glyphicon glyphicon-${state_id}"></span>
+      ${state_title}
+    </span>
+  </tal:no_menu>
+
+  <tal:moderator condition="request.is_moderator and states">
+    <div class="btn-group">
+      <button type="button" class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+        <span class="text-${state_id}">
+          <span class="glyphicon glyphicon-${state_id}"></span>
+          ${state_title}
+          <span class="caret"></span>
+        </span>
+      </button>
+      <ul class="dropdown-menu" role="menu">
+        <li tal:repeat="state states">
+          <a href="${request.resource_url(context, '__inline_state_change__', query = {'state': state.name})}"
+             data-replace-target='[data-uid="${context.uid}"]'
+             data-clickable-target>
+            <span class="glyphicon glyphicon-${state.name} text-${state.name}"></span>
+            <span tal:content="tstring(state.title)">Title</span>
+            <span data-actionmarker="glyphicon glyphicon-refresh rotate-me"></span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </tal:moderator>
+</tal:main>

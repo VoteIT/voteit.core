@@ -32,36 +32,15 @@ class DiscussionTests(unittest.TestCase):
 
     def test_verify_obj(self):
         self.assertTrue(verifyObject(IDiscussionPost, self._cut()))
-        
-    def test_title_tags(self):
-        obj = self._cut()
-        obj.title = '#Quisque #aliquam,#ante in #tincidunt #aliquam. #Risus neque#eleifend #nunc'
-        tags = obj.get_tags()
-        self.assertIn('quisque', tags)
-        self.assertIn('aliquam', tags)
-        self.assertIn('ante', tags)
-        self.assertIn('tincidunt', tags)
-        self.assertIn('aliquam', tags)
-        self.assertIn('risus', tags)
-        self.assertIn('nunc', tags)
-        self.assertNotIn('eleifend', tags)
-        
-    def test_mentioned(self):
-        obj = self._cut()
-        obj.mentioned['dummy'] = 'now'
-        self.assertIn('dummy', obj.mentioned)
-        
-    def test_add_mention(self):
-        obj = self._cut()
-        obj.add_mention('dummy')
-        self.assertIn('dummy', obj.mentioned)
 
 
 class DiscussionPostPermissionTests(unittest.TestCase):
     def setUp(self):
         self.config = testing.setUp()
+        self.config.include('arche.testing')
         self.config.include('voteit.core.testing_helpers.register_security_policies')
         self.config.include('voteit.core.testing_helpers.register_workflows')
+        self.config.include('voteit.core.models.discussion_post')
 
     def tearDown(self):
         testing.tearDown()

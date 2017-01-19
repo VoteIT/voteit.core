@@ -1,112 +1,112 @@
 from __future__ import unicode_literals
-
-from betahaus.pyracont.factories import createSchema
+ 
 from pyramid.httpexceptions import HTTPFound
 from pyramid.httpexceptions import HTTPForbidden
 from pyramid.renderers import render
 from pyramid.security import NO_PERMISSION_REQUIRED
 from pyramid.view import view_config
+from arche.utils import send_email
+from arche.views.base import BaseForm
+import deform
 
 from voteit.core import VoteITMF as _
 from voteit.core import security
-from voteit.core.helpers import send_email
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import ISiteRoot
-from voteit.core.models.schemas import button_cancel
-from voteit.core.models.schemas import button_send
 from voteit.core.security import MODERATE_MEETING
 from voteit.core.security import ROLE_MODERATOR
 from voteit.core.security import find_authorized_userids
 from voteit.core.security import find_role_userids
-from voteit.core.views.base_edit import BaseForm
+
+
+
+button_send = deform.Button('send', title = _("Send"), css_class = 'btn btn-primary')
 
 
 @view_config(name = 'contact',
              context = IMeeting,
-             renderer = "voteit.core:views/templates/base_edit.pt",
+             renderer = "arche:templates/form.pt",
              permission = security.VIEW)
 class ContactView(BaseForm):
-    """ Contact and support view. """
-    buttons = (button_send, button_cancel)
-    check_csrf = False
+    """ Contact and support form. """
+    schema_name = "contact"
+    type_name = "Meeting"
 
-    def get_schema(self):
-        return createSchema('ContactSchema')
+    @property
+    def buttons(self):
+        return (button_send, self.button_cancel)
 
     def get_recipients(self):
         recipients = []
         for userid in find_role_userids(self.context, ROLE_MODERATOR):
-            user = self.api.get_user(userid)
-            email = user.get_field_value('email')
-            if email:
-                recipients.append(email)
+            user = self.root.users.get(userid, None)
+            if user and user.email:
+                recipients.append(user.email)
         if not recipients:
             for userid in find_authorized_userids(self.context, (MODERATE_MEETING,)):
-                user = self.api.get_user(userid)
-                email = user.get_field_value('email')
-                if email:
-                    recipients.append(email)
+                user = self.root.users.get(userid, None)
+                if user and user.email:
+                    recipients.append(user.email)
         return recipients
 
     def send_success(self, appstruct):
         if appstruct.get('email', None):
             sender = appstruct['email']
-            if self.api.user_profile:
-                sender += " <%s>" % self.api.user_profile.title
+            if self.request.profile:
+                sender += " <%s>" % self.request.profile.title
         else:
             sender = None
-        response = {'api': self.api,
-                    'meeting': self.api.meeting,
+        response = {'meeting': self.request.meeting,
                     'name': appstruct['name'],
                     'email': appstruct['email'],
                     'subject': appstruct['subject'],
                     'message': appstruct['message'],
                     'meeting_title': appstruct.get('meeting_title', ''),}
-        body_html = render('templates/email/help_contact.pt', response, request = self.request)
+        
+        body_html = render('voteit.core:templates/email/help_contact.pt', response, request = self.request)
         subject = "[%s] %s" % (self.context.title, appstruct['subject'])
         recipients = self.get_recipients()
-        send_email(subject, recipients, body_html, sender = sender, request = self.request)
-        self.api.flash_messages.add(_(u"Message sent to the moderators"))
+        send_email(self.request, subject, recipients, body_html, sender = sender, send_immediately = True)
+        self.flash_messages.add(_("Message sent to the moderators"))
         url = self.request.resource_url(self.context)
         return HTTPFound(location = url)
 
 
 @view_config(name = 'support',
              context = ISiteRoot,
-             renderer = "voteit.core.views:templates/base_edit.pt",
+             renderer = "arche:templates/form.pt",
              permission = NO_PERMISSION_REQUIRED)
 @view_config(name = 'support',
              context = IMeeting,
-             renderer = "voteit.core.views:templates/base_edit.pt",
+             renderer = "arche:templates/form.pt",
              permission = security.VIEW)
 class SupportForm(BaseForm):
-    buttons = (button_send, button_cancel)
-    check_csrf = False
+    schema_name = "support"
+
+    @property
+    def type_name(self):
+        return self.context.type_name
+
+    @property
+    def buttons(self):
+        return (button_send, self.button_cancel)
 
     def __call__(self):
-        support_email = self.api.root.get_field_value('support_email', None)
-        if not support_email:
-            self.api.flash_messages.add(_(u"No support email set for this site. Form won't work!"))
-            url = self.request.resource_url(self.context)
-            raise HTTPForbidden(location = url)
+        if not self.request.root.support_email:
+            raise HTTPForbidden(_(u"No support email set for this site. Form won't work!"))
         return super(SupportForm, self).__call__()
 
-    def get_schema(self):
-        return createSchema('SupportSchema')
-
     def send_success(self, appstruct):
-        sender = appstruct['email'] and appstruct['email'] or "VoteIT <noreply@voteit.se>"
-        response = {'api': self.api,
-                    'meeting': self.api.meeting,
+        sender = appstruct['email'] and appstruct['email'] or None
+        response = {'meeting': self.request.meeting,
                     'name': appstruct['name'],
                     'email': appstruct['email'],
                     'subject': appstruct['subject'],
                     'message': appstruct['message'],
                     'meeting_title': appstruct.get('meeting_title', ''),}
-        body_html = render('templates/email/support.pt', response, request = self.request)
-        title = "%s %s" % (self.api.root.get_field_value('site_title', u"VoteIT"), self.api.translate(_(u"Support")))
+        body_html = render('voteit.core:templates/email/support.pt', response, request = self.request)
+        title = "%s %s" % (self.root.head_title, self.request.localizer.translate(_("Support")))
         subject = "[%s] | %s" % (title, appstruct['subject'])
-        support_email = self.api.root.get_field_value('support_email')
-        send_email(subject, [support_email], body_html, sender = sender, request = self.request)
-        self.api.flash_messages.add(_(u"Message sent"))
+        send_email(self.request, subject, [self.root.support_email], body_html, sender = sender, send_immediately = True)
+        self.flash_messages.add(_("Message sent"))
         return HTTPFound(location = self.request.resource_url(self.context))

@@ -1,4 +1,5 @@
-from betahaus.pyracont.decorators import schema_factory
+from __future__ import unicode_literals
+
 import colander
 import deform
 
@@ -11,19 +12,21 @@ class AgendaItemSequenceSchema(colander.SequenceSchema):
     agenda_item = AgendaItemSchema(title=_(u'Agenda item'))
 
 
-@schema_factory('AgendaTemplateSchema',
-                title = _(u"Agenda template"))
-class AgendaTemplatesSchema(colander.Schema):
+class AgendaTemplateSchema(colander.Schema):
     title = colander.SchemaNode(
         colander.String(),
-        title=_(u"Template name"),
+        title=_("Template name"),
         validator=html_string_validator,)
     description = colander.SchemaNode(
         colander.String(),
-        title = _(u"Description"),
-        description = _(u"agenda_template_description_description",
-                        default=u"Describe the purpose of this agenda"),
+        title = _("Description"),
+        description = _("agenda_template_description_description",
+                        default="Describe the purpose of this agenda"),
         widget=deform.widget.TextAreaWidget(rows=5, cols=40),
     )
-    
-    agenda_items = AgendaItemSequenceSchema(title=_(u'Agenda items'))
+    agenda_items = AgendaItemSequenceSchema(title=_('Agenda items'))
+
+
+def includeme(config):
+    config.add_content_schema('AgendaTemplate', AgendaTemplateSchema, 'edit')
+    config.add_content_schema('AgendaTemplate', AgendaTemplateSchema, 'add')

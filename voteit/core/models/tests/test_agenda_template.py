@@ -16,7 +16,8 @@ class AgendaTemplateTests(unittest.TestCase):
     def setUp(self):
         request = testing.DummyRequest()
         self.config = testing.setUp(request = request)
-        self.config.scan('voteit.core.models.agenda_item')
+        self.config.include('arche.testing')
+        self.config.include('voteit.core.models.agenda_item')
 
     def tearDown(self):
         testing.tearDown()

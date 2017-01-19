@@ -2,8 +2,6 @@ from __future__ import unicode_literals
 
 import colander
 import deform
-from betahaus.pyracont.decorators import schema_factory
-from betahaus.pyracont.factories import createSchema
 from pyramid.httpexceptions import HTTPFound
 
 from voteit.core.models.access_policy import AccessPolicy
@@ -27,23 +25,18 @@ class ImmediateAP(AccessPolicy):
     def handle_success(self, view, appstruct):
         rolesdict = dict(security.STANDARD_ROLES)
         roles = self.context.get_field_value('immediate_access_grant_roles')
-        self.context.add_groups(view.api.userid, roles)
-        view.api.flash_messages.add(_("Access granted - welcome!"))
-        return HTTPFound(location = view.api.meeting_url)
+        self.context.add_groups(view.request.authenticated_userid, roles)
+        view.flash_messages.add(_("Access granted - welcome!"))
+        return HTTPFound(location = view.request.resource_url(self.context))
 
     def config_schema(self):
-        return createSchema('ImmediateAPConfigSchema')
-
-    def handle_config_success(self, view, appstruct):
-        self.context.set_field_appstruct(appstruct)
-        view.api.flash_messages.add(view.default_success)
-        return HTTPFound(location = view.api.meeting_url)
+        return ImmediateAPConfigSchema()
 
 
-@schema_factory('ImmediateAPConfigSchema', title = _("Configure immediate access policy"))
 class ImmediateAPConfigSchema(colander.Schema):
+    title = _("Configure immediate access policy")
     immediate_access_grant_roles = colander.SchemaNode(
-        deform.Set(),
+        colander.Set(),
         title = _("Roles"),
         description = _("immediate_ap_schema_grant_description",
                         default = "Users will be granted these roles IMMEDIATELY upon requesting access."),

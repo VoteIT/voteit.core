@@ -1,6 +1,5 @@
-from betahaus.pyracont.factories import createContent
-
 from voteit.core import VoteITMF as _
+from voteit.core.models.arche_compat import createContent
 from voteit.core.security import ROLE_ADMIN
 
 
@@ -15,12 +14,17 @@ def bootstrap_voteit(echo=True):
     if echo:
         print "Bootstrapping site - creating 'admin' user with password 'admin'"
     #Add root
-    root = createContent('SiteRoot', title = _(u"VoteIT"), creators = ['admin'])
+    root = createContent('Root', title = _(u"VoteIT"), creators = ['admin'])
     root.set_field_value('footer', u'<a href="http://www.voteit.se">www.voteit.se</a> &mdash; '
                                    u'<a href="http://manual.voteit.se">User and developer manual</a> &mdash; '
                                    u'<a href="https://github.com/VoteIT">Source code and bugtracker</a>')
-    #Add users folder
-    root['agenda_templates'] = createContent('AgendaTemplates', title = _(u"Agenda templates"), creators = ['admin'])
+    #Add templates if available
+    try:
+        root['agenda_templates'] = createContent('AgendaTemplates',
+                                                 title = _(u"Agenda templates"),
+                                                 creators = ['admin'])
+    except KeyError:
+        pass #For tests etc
     #Add users folder
     root['users'] = createContent('Users', title = _(u"Registered users"), creators = ['admin'])
     users = root.users
@@ -34,4 +38,3 @@ def bootstrap_voteit(echo=True):
     #Add admin to group managers
     root.add_groups('admin', [ROLE_ADMIN])
     return root
-

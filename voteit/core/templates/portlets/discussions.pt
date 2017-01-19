@@ -1,0 +1,32 @@
+<tal:main xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="voteit.core">
+<div id="ai-discussions" class="col-sm-6">
+  <div class="list-group">
+    <div class="list-group-item">
+      <h4>
+        <span class="glyphicon glyphicon-comment"></span>
+        <span i18n:translate="">Discussion</span>
+        <a href="javascript:"
+           class="pull-right"
+           data-reload-target="[data-discussions-area]"
+           title="Refresh"
+           i18n:attributes="title;">
+          <span class="glyphicon glyphicon-refresh" data-actionmarker="rotate-me"></span>
+        </a>
+      </h4>
+    </div>
+    <div data-discussions-area data-load-target="${load_url}">
+      <div class="list-group-item">
+        <span class="glyphicon glyphicon-refresh rotate-me"></span>
+        Loading...
+      </div>
+    </div>
+    <div class="well">
+      <div tal:replace="structure view.render_template('voteit.core:templates/portlets/inline_add_button_disc.pt')"></div>
+    </div>
+  </div>
+</div>
+</tal:main>

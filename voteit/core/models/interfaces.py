@@ -1,11 +1,14 @@
 from zope.interface import Attribute
 from zope.interface import Interface
 
-from betahaus.pyracont.interfaces import IBaseFolder
+from arche.interfaces import IBase
+from arche.interfaces import IContent
+from arche.interfaces import IIndexedContent
+from arche.interfaces import IUser as IArcheUser
 
 
 #Content type interfaces
-class IBaseContent(IBaseFolder):
+class IBaseContent(IBase, IContent, IIndexedContent):
     """ Base content type that stores values in non-attributes to avoid
         collisions between regular attributes and fields.
         It expects validation to be done on the form level.
@@ -23,9 +26,6 @@ class IBaseContent(IBaseFolder):
     
     content_type = Attribute("""
         Content type, internal name. It's not displayed anywhere.""")
-    
-    allowed_contexts = Attribute("""
-        List of which contexts this content is allowed in. Should correspond to content_type.""")
 
     created = Attribute(
         """A TZ-aware datetime.datetime of when this was created in UTC time.""")
@@ -38,51 +38,6 @@ class IBaseContent(IBaseFolder):
         so when writing functions to export or import content, you might want to
         check that this is really set to something else.""")
 
-    schemas = Attribute(
-        """ Dict that contains a mapping for action -> schema factory name.
-            Example:{'edit':'site_root_edit_schema'}.""")
-
-    custom_accessors = Attribute(
-        """ Dict of custom accessors to use. The key is which field to override,
-            value should be a string which represent a callable on this class, or a callable method.
-            The accessor method must accept default and key as kwarg.
-            Example:
-            
-            .. code-block:: python
-            
-               class Person(BaseContent):
-                   custom_accessors = {'title': 'get_title'}
-                   
-                   def get_title(key=None, default=''):
-                       return "Something else!"
-            
-            When get_field_value('title') is run, "Something else!" will be returned instead.
-                """)
-
-    custom_mutators = Attribute(
-        """ Same as custon accessor, but the callable must accept a value.
-            Method must also accept key as kwarg.
-            
-            Example:
-            
-            .. code-block:: python
-            
-               class Person(BaseContent):
-                   custom_mutator = {'title': 'set_title'}
-                   
-                   def set_title(value, key=None):
-                       assert isinstance(value, basestring)
-                       #<etc...>
-            """)
-
-    custom_fields = Attribute(
-        """ A dict of fields consisting of key (field name) and field factory name.
-            A field type must be registered with that factory name.
-            Example: {'wiki_text':'VersioningField'} if your register a field factory
-            with the name 'VersioningField'.
-            
-            See documentation in betahaus.pyracont for more info.""")
-
     field_storage = Attribute(
         """ An OOBTree storage for field values. The point of exposing this
             is to enable bypass of custom mutators or accessors.""")
@@ -93,12 +48,6 @@ class IBaseContent(IBaseFolder):
             creators is required in kwargs, this class will try to extract it from
             current request if it isn't present.
             Also, owner role will be set for the first entry in the creators-tuple.
-        """
-
-    def suggest_name(parent):
-        """ Suggest a name if this content would be added to parent.
-            By default it looks in the title field, and transforms
-            the first 20 chars to something usable as title.
         """
 
     def mark_modified():
@@ -137,11 +86,6 @@ class IBaseContent(IBaseFolder):
             This equals running set_field_value for each key/value pair in a dict.
         """
 
-    def get_custom_field(key):
-        """ Return custom field. Create it if it doesn't exist.
-            Will only work if key:field_type is specified in custom_fields attribute.
-        """
-
     def get_content(content_type=None, iface=None, states=None, sort_on=None, sort_reverse=False):
         """ Returns contained items within this folder. Keywords are usually conditions.
             They're treated as 'AND'. Note that this is an expensive method to run, if you
@@ -164,14 +108,14 @@ class IBaseContent(IBaseFolder):
         """
 
 
-class ISiteRoot(IBaseFolder):
+class ISiteRoot(IBaseContent):
     """ Singleton that is used as the site root.
         When added, it will also create a caching catalog with the
         attribute catalog."""
     users = Attribute("Access to the users folder. Same as self['users']")
     
 
-class IUsers(IBaseFolder):
+class IUsers(IBaseContent):
     """ Contains all users. """
     
     def get_user_by_email(email):
@@ -180,15 +124,16 @@ class IUsers(IBaseFolder):
         """
 
 
-class IUser(IBaseFolder):
+class IUser(IBaseContent, IArcheUser):
     """ Content type for a user. Usable as a profile page. """
-    
+
+    def __init__(**kw):
+        pass
+
     userid = Attribute("The userid is always the same as __name__, meaning "
                        "that the name of the stored object must be the userid. "
                        "This enables you to do get(<userid>) on a Users folder, "
                        "and it makes it easy to check that each username is only used once.")
-
-    auth_domains = Attribute("Contains domain information on different authentication systems.")
 
     def get_image_plugin(request):
         """ Get the currently selected plugin (adapter) that this user has selected for
@@ -204,36 +149,8 @@ class IUser(IBaseFolder):
             something goes wrong. (Like a broken plugin)
         """
 
-    def get_password():
-        """ Get password hash.
-        """
-    
-    def set_password(value):
-        """ Set password for user.
-            value is the unencrypted password, it will be stored as a SHA1-hash.
-        """
 
-    def new_request_password_token(request):
-        """ Create a new password request token. Used for resetting a users password.
-            It will email the link to reset password to that user.
-        """
-
-    def get_token():
-        """ Return password request token, or None.
-        """
-
-    def remove_password_token():
-        """ Remove password token. """
-
-    def get_token():
-        """ Get password token, or None. """
-
-    def send_mention_notification(context, request):
-        """ Sends an email when the user is mentioned in a proposal or a discussion post
-        """
-
-
-class IAgendaItem(IBaseFolder):
+class IAgendaItem(IBaseContent):
     """ Agenda item content """
     start_time = Attribute("""
         Return start time, if set. The value will be set by a subscriber when
@@ -247,7 +164,7 @@ class IAgendaItem(IBaseFolder):
     """)
 
 
-class IMeeting(IBaseFolder):
+class IMeeting(IBaseContent):
     """ Meeting content type """
     start_time = Attribute("Start time for meeting")
     end_time = Attribute("End time for meeting")
@@ -268,23 +185,13 @@ class IMeeting(IBaseFolder):
         """
 
 
-class IDiscussionPost(IBaseFolder):
+class IDiscussionPost(IBaseContent):
     """ A discussion post.
     """
-
-    mentioned = Attribute("""
-        All users who've been mentioned within this discussion post.
-        This is to make sure several notifications aren't set when anything is updated.
-        It's a key/value storage with userid as key and a datetime as value. """)
-
-    def add_mention(userid):
-        """ Set a userid as mentioned. """
-
-    def get_tags(default = ()):
-        """ Return all used tags within this discussion post. """
+    tags = Attribute(""" Return all used tags within this discussion post. """)
 
 
-class IProposal(IBaseFolder):
+class IProposal(IBaseContent):
     """ Proposal content type
     
         Workflow states for proposals
@@ -316,20 +223,13 @@ class IProposal(IBaseFolder):
         (This is simply to help editing things to avoid mistakes.) After that, the proposals will be locked
         without any option to alter them. In that case, the ACL table 'closed' is used.
     """
-    mentioned = Attribute("""
-        All users who've been mentioned within this discussion post.
-        This is to make sure several notifications aren't set when anything is updated.
-        It's a key/value storage with userid as key and a datetime as value. """)
 
-    def add_mention(userid):
-        """ Set a userid as mentioned. """
-
-    def get_tags(default = ()):
-        """ Return all used tags within this proposal. The automatically set id (hashtag) for this
-            proposal will also be returned. """
+    tags = Attribute("""
+        Return all used tags within this proposal. The automatically set id (hashtag) for this
+        proposal will also be returned. """)
 
 
-class IPoll(IBaseFolder):
+class IPoll(IBaseContent):
     """ Poll content type.
         Note that the actual poll method isn't decided by the poll
         content type. It calls a poll plugin to get that.
@@ -360,10 +260,6 @@ class IPoll(IBaseFolder):
         """ Returns userids of all who've voted in this poll.
         """
 
-    def render_poll_result(request, api, complete):
-        """ Render poll result. Delegates this to plugin.
-        """
-
     def close_poll():
         """ Close the poll, calculate and store the result.
         """
@@ -390,6 +286,8 @@ class IPoll(IBaseFolder):
     def get_proposal_by_uid(uid):
         """ Return a proposal by its uid. Raises KeyError if it isn't found, since
             it shouldn't be used with uids that don't exist.
+            
+            This method will probably be removed in the future and replaced by a catalog search.
         """
 
 
@@ -413,7 +311,7 @@ class IVote(Interface):
 
 
 class ILogEntry(Interface):
-    """ A persistent log entry. """
+    """ DEPRECATED: A persistent log entry. """
 
     created = Attribute("When it was created, in UTC time.")
     context_uid = Attribute("UID of the context that triggered this log entry.")
@@ -436,19 +334,6 @@ class IInviteTicket(Interface):
                       "Used in combinaton with an email address to gain entry to a meeting.")
     sent_dates = Attribute("A list of dates when an email was sent. (Each resend gets saved here)")
     claimed_by = Attribute("The userid of the user who claimed (used) this ticket.")
-    
-    def send(request):
-        """ Send an invite or reminder to the email address that's set in
-            the email attribute. Each time will be logged in sent_dates.
-        """
-
-    def claim(request):
-        """ Handle claim of this ticket. Set permissions for meeting and
-            set the ticket as closed.
-
-            Called by ticket form - see:
-            :func:`voteit.core.views.meeting.MeetingView.claim_ticket`
-        """
 
 
 class IAgendaTemplates(Interface):
@@ -500,9 +385,6 @@ class ISecurityAware(Interface):
             The special group "role:Owner" is never inherited.
         """
 
-    def check_groups(groups):
-        """ Check dependencies and group names. """
-
     def add_groups(principal, groups, event = True):
         """ Add groups for a principal in this context.
             If event is True, an IObjectUpdatedEvent will be sent.
@@ -528,9 +410,6 @@ class ISecurityAware(Interface):
             Warning! This method will also clear any settings for users not present in value!
             This method will send an IObjectUpdatedEvent.
         """
-
-    def list_all_groups():
-        """ Returns a set of all groups in this context. """
 
 
 #Adapters
@@ -567,29 +446,6 @@ class IFlashMessages(Interface):
         """
 
 
-class IUserTags(Interface):
-    """ Adapter for things that can have usertags.
-        The difference to normal tags is that users choose to stand behind them.
-        Typical example would be 'like', but it might also be used for other functionality,
-        like a dynamic rss feed.
-    """
-    tags_storage = Attribute("Storage for user tags")
-
-    def add(tag, userid):
-        """ Add a tag for a userid. Note that the tag shouldn't use non-ascii chars.
-            Think of it as an id rather than a readable name.
-        """
-
-    def userids_for_tag(tag):
-        """ Return a tuple of all userids that have added a specific tag.
-        """
-
-    def remove(tag, userid):
-        """ Remove a tag for a specific userid. It won't raise an exception if
-            the tag doesn't exist.
-        """
-
-
 class IPollPlugin(Interface):
     """ A plugin for a poll.
     """
@@ -599,7 +455,7 @@ class IPollPlugin(Interface):
     description = Attribute("Readable description that will appear when poll is displayed.")
 
 
-    def get_vote_schema(request=None, api=None):
+    def get_vote_schema():
         """ Return the schema of how a vote should be structured.
             This is used to render a voting form.
         """
@@ -617,7 +473,7 @@ class IPollPlugin(Interface):
         """ Handle closing of the poll.
         """
 
-    def render_result(request, api, complete=True):
+    def render_result(view):
         """ Return rendered html with result display. Called by the poll view
             when the poll has finished.
         """
@@ -643,7 +499,7 @@ class IPollPlugin(Interface):
 
 
 class ILogHandler(Interface):
-    """ An adapter that handle logging. """
+    """ DEPRECATED: An adapter that handle logging. """
     log_storage = Attribute("Storage for logs.")
 
     def __init__(context):
@@ -657,23 +513,6 @@ class ILogHandler(Interface):
             userid: if a user triggered the event, which user did so.
             scripted: if a script triggered the event, store script name here
         """
-
-
-class ICatalogMetadata(Interface):
-    """ An adapter to fetch metadata for the catalog.
-        it adapts voteit.core.models.interfaces.ICatalogMetadataEnabled
-        which is just a marker interface.
-    """
-    special_indexes = Attribute("A dict of iface:method name that should be run to extend the metadata for a specific iface.")
-    
-    def __init__(context):
-        """ Object to adapt """
-        
-    def __call__():
-        """ Return metadata for adapted object. """
-    
-    def get_agenda_item_specific(results):
-        """ Update results with agenda item specific metadata. """
 
 
 class IUnread(Interface):
@@ -736,6 +575,9 @@ class IProfileImage(Interface):
         """ Checks if this adapter is usable with this user
         """
 
+
+class IMentioned(Interface):
+    pass
 
 class IAccessPolicy(Interface):
     """ Adapts a meeting to handle an access policy. They're methods for granting
@@ -879,11 +721,3 @@ class IFanstaticResources(Interface):
             should be included in the order set in the order attribute.
             Returns keys of included resources.
         """
-
-
-#Marker interfaces
-class ICatalogMetadataEnabled(Interface):
-    """ Marker interface for IBaseContent that should have metadata.
-        The interface itself doesn't do anything, but the ICatalogMetadata
-        adapter is registered for it.
-    """

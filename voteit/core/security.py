@@ -1,24 +1,55 @@
-from zope.component import getUtility
+from hashlib import sha1
+
+from arche import security as arche_sec
+from arche.interfaces import IRoot
+from arche.security import authz_context
+from arche.security import groupfinder
 from pyramid.interfaces import IAuthorizationPolicy
-from pyramid.traversal import find_root
+from pyramid.security import ALL_PERMISSIONS
+from pyramid.security import Allow
 from pyramid.security import Authenticated
+from pyramid.security import DENY_ALL
 from pyramid.security import Everyone
+from pyramid.threadlocal import get_current_registry
+from pyramid.threadlocal import get_current_request
+from pyramid.traversal import find_root
 from zope.component.event import objectEventNotify
 
+from voteit.core.models.interfaces import IMeeting
 from voteit.core.events import WorkflowStateChange
 from voteit.core import VoteITMF as _
 
 
 #Roles, which are the same as groups really, but we may detach group functionality so it's possible
 #to add regular groups and give them roles.
-ROLE_ADMIN = 'role:Admin'
-ROLE_MEETING_CREATOR = 'role:Meeting creator'
-ROLE_MODERATOR = 'role:Moderator'
-ROLE_VIEWER = 'role:Viewer'
-ROLE_DISCUSS = 'role:Discussion'
-ROLE_PROPOSE = 'role:Propose'
-ROLE_VOTER = 'role:Voter'
-ROLE_OWNER = 'role:Owner'
+#ROLE_ADMIN = 'role:Admin'
+ROLE_ADMIN = arche_sec.ROLE_ADMIN
+ROLE_MEETING_CREATOR = arche_sec.Role('role:Meeting creator',
+                                      title = _("Meeting creator"),
+                                      assignable = True,
+                                      required = IRoot)
+ROLE_MODERATOR = arche_sec.Role('role:Moderator',
+                                title = _("Moderator"),
+                                inheritable = True,
+                                assignable = True,
+                                required = IMeeting)
+ROLE_VIEWER = arche_sec.ROLE_VIEWER
+ROLE_DISCUSS = arche_sec.Role('role:Discussion',
+                              title = _("Discuss"),
+                              inheritable = True,
+                              assignable = True,
+                              required = IMeeting)
+ROLE_PROPOSE = arche_sec.Role('role:Propose',
+                              title = _("Propose"),
+                              inheritable = True,
+                              assignable = True,
+                              required = IMeeting)
+ROLE_VOTER = arche_sec.Role('role:Voter',
+                            title = _("Voter"),
+                            inheritable = True,
+                            assignable = True,
+                            required = IMeeting)
+ROLE_OWNER = arche_sec.ROLE_OWNER
 
 #Some roles are cumulative - admins are always moderators,
 #and discuss, propose and vote requres that you can view. It's always part of respective roles
@@ -33,17 +64,21 @@ ROLE_DEPENDENCIES[ROLE_VOTER] = (ROLE_VIEWER,)
 
 
 #Global Permissions
-VIEW = 'View'
-EDIT = 'Edit'
-DELETE = 'Delete'
+VIEW = arche_sec.PERM_VIEW
+EDIT = arche_sec.PERM_EDIT
+DELETE = arche_sec.PERM_DELETE
 REGISTER = 'Register'
 RETRACT = 'Retract'
 CHANGE_WORKFLOW_STATE = 'Change Workflow State'
 CHANGE_PASSWORD = 'Change Password'
-MANAGE_GROUPS = 'Manage Groups'
-MANAGE_SERVER = 'Manage Server'
+MANAGE_GROUPS = arche_sec.PERM_MANAGE_USERS
+MANAGE_SERVER = arche_sec.PERM_MANAGE_SYSTEM
 MODERATE_MEETING = 'Moderate Meeting'
 REQUEST_MEETING_ACCESS = 'Request Meeting Access'
+REGISTER = arche_sec.PERM_REGISTER
+
+
+PERM_MANAGE_USERS = arche_sec.PERM_MANAGE_USERS
 
 #FIXME: We need to separate Edit and workflow permissions for most content types
 
@@ -57,6 +92,8 @@ ADD_PROPOSAL = 'Add Proposal'
 ADD_USER = 'Add User'
 ADD_VOTE = 'Add Vote'
 ADD_AGENDA_TEMPLATE = 'Add Agenda Template'
+ADD_INVITE_TICKET = 'Add Invite Ticket'
+ADD_SUPPORT = 'Add support'
 
 #All add permissions except vote - used within meetings so some permissions may not apply.
 REGULAR_ADD_PERMISSIONS = (ADD_AGENDA_ITEM,
@@ -71,15 +108,13 @@ ROOT_ROLES = ((ROLE_ADMIN, _(u'Administrator')),
               (ROLE_MEETING_CREATOR, _(u"Meeting creator")),)
 MEETING_ROLES = ((ROLE_MODERATOR, _(u'Moderator')),
                  (ROLE_VIEWER, _(u'View')),
-                 (ROLE_DISCUSS, _(u'Discuss (and view)')),
-                 (ROLE_PROPOSE, _(u'Propose (and view)')),
-                 (ROLE_VOTER, _(u'Voter (and view)')),
-                )
+                 (ROLE_DISCUSS, _(u'Discuss')),
+                 (ROLE_PROPOSE, _(u'Propose')),
+                 (ROLE_VOTER, _(u'Voter')),)
 STANDARD_ROLES = ((ROLE_VIEWER, _(u'View')),
-                  (ROLE_DISCUSS, _(u'Discuss (and view)')),
-                  (ROLE_PROPOSE, _(u'Propose (and view)')),
-                  (ROLE_VOTER, _(u'Voter (and view)')),
-                  )
+                  (ROLE_DISCUSS, _(u'Discuss')),
+                  (ROLE_PROPOSE, _(u'Propose')),
+                  (ROLE_VOTER, _(u'Voter')),)
 
 
 # An empty value tells the catalog to match anything, whereas when
@@ -88,18 +123,17 @@ STANDARD_ROLES = ((ROLE_VIEWER, _(u'View')),
 # as a userid, group or role name.
 NEVER_EVER_PRINCIPAL = 'NO ONE no way NO HOW'
 
-def groupfinder(name, request):
-    """ Get groups for the current user. See models/security_aware.py
-        This is also a callback for the Authorization policy.
-        In some cases, like automated scripts when nobody is logged in,
-        request won't have a context. In that case, no groups should exist.
-    """
-    try:
-        context = request.context
-        return context.get_groups(name)
-    except AttributeError: # pragma : no cover
-        return ()
-
+# def groupfinder(name, request):
+#     """ Get groups for the current user. See models/security_aware.py
+#         This is also a callback for the Authorization policy.
+#         In some cases, like automated scripts when nobody is logged in,
+#         request won't have a context. In that case, no groups should exist.
+#     """
+#     try:
+#         context = request.context
+#         return context.get_groups(name)
+#     except AttributeError: # pragma : no cover
+#         return ()
 
 def find_authorized_userids(context, permissions):
     """ Return a set of all userids that fullfill all of the permissions in permissions.
@@ -112,10 +146,10 @@ def find_authorized_userids(context, permissions):
         
         Warning: This method will of course consume CPU. Use it where appropriate.
     """
-    authz_pol = getUtility(IAuthorizationPolicy)
+    registry = get_current_registry()
+    authz_pol = registry.getUtility(IAuthorizationPolicy)
     root = find_root(context)
     allowed_userids = set()
-    
     for userid in root.users.keys():
         principals = context_effective_principals(context, userid)
         res = [authz_pol.permits(context, principals, perm) for perm in permissions]
@@ -135,11 +169,13 @@ def context_effective_principals(context, userid):
     if userid is None:
         return effective_principals
     
-    groups = context.get_groups(userid)
-    
     effective_principals.append(Authenticated)
     effective_principals.append(userid)
-    effective_principals.extend(groups)
+    request = get_current_request()
+    with authz_context(context, request):
+        effective_principals.extend(groupfinder(userid, request))
+#    groups = context.get_groups(userid)
+    #effective_principals.extend(groups)
     return effective_principals    
 
 def unrestricted_wf_transition_to(obj, state):
@@ -161,3 +197,17 @@ def find_role_userids(context, role):
         if role in context_effective_principals(context, userid):
             results.add(userid)
     return frozenset(results)
+
+def get_sha_password(value, hashed = None):
+    """ Encode a plaintext password to sha1.
+        FIXME: SHA1 is a deprecated method, migration is a good idea!"""
+    if isinstance(value, unicode):
+        value = value.encode('UTF-8')
+    return 'SHA1:' + sha1(value).hexdigest()
+
+def includeme(config):
+    config.register_roles(ROLE_MEETING_CREATOR,
+                          ROLE_MODERATOR,
+                          ROLE_DISCUSS,
+                          ROLE_PROPOSE,
+                          ROLE_VOTER)
