@@ -24,6 +24,10 @@ body {
 .cogwheel {
   margin-left: 5px;
 }
+.body {
+  margin-top: $line-height-computed*2;
+  margin-bottom: $line-height-computed;
+}
 .list-group-item.active {
   >a {
     color: #fff;

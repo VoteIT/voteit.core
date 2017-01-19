@@ -13,7 +13,6 @@ from voteit.core.models.base_content import BaseContent
 from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import IPoll
-from voteit.core.models.interfaces import IProposal
 from voteit.core.models.workflow_aware import WorkflowAware
 
 
@@ -48,6 +47,13 @@ class AgendaItem(BaseContent, WorkflowAware):
             perms.append((Deny, Everyone, security.ADD_DISCUSSION_POST))
         perms.extend(self.__parent__.__acl__)
         return perms
+
+    @property
+    def body(self): #Arche compat
+        return self.get_field_value('body', "")
+    @body.setter
+    def body(self, value):
+        self.set_field_value('body', value)
 
     @property
     def proposal_block(self): #Arche compat

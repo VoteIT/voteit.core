@@ -14,9 +14,6 @@
 
     ${structure: view.render_template('voteit.core:templates/snippets/ai_previous_next.pt')}
 
-    <p class="description lead"
-         tal:define="description context.description|None"
-         tal:content="structure description">Description text</p>
     <div class="body"
          tal:define="body context.body|None"
          tal:condition="body"

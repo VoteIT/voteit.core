@@ -419,6 +419,10 @@ body {
 .cogwheel {
   margin-left: 5px; }
 
+.body {
+  margin-top: 44px;
+  margin-bottom: 22px; }
+
 .list-group-item.active > a {
   color: #fff; }
   .list-group-item.active > a:hover {
