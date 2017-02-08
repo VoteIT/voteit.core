@@ -7,7 +7,7 @@ from pyramid.traversal import resource_path
 import colander
 from pyramid.decorator import reify
 
-from voteit.core.models.interfaces import IAgendaItem
+from voteit.core.models.interfaces import IAgendaItem, IUserUnread
 from voteit.core.models.interfaces import IMeeting
 from voteit.core import _
 from voteit.core.fanstaticlib import data_loader
@@ -52,6 +52,7 @@ class AgendaInlineView(BaseView):
         results = []
         catalog = self.request.root.catalog
         unread_types = ('Proposal', 'DiscussionPost')
+        user_unread = IUserUnread(self.request.profile)
         for docid in catalog.search(path = self.meeting_path,
                                     type_name = 'AgendaItem',
                                     workflow_state = state,
@@ -61,10 +62,7 @@ class AgendaInlineView(BaseView):
             except KeyError:
                 meta = {}
             for utype in unread_types:
-                res = catalog.search(path = "%s/%s" % (self.meeting_path, meta['__name__']),
-                                     type_name = utype,
-                                     unread = self.request.authenticated_userid)[0]
-                meta['unread_%s' % utype.lower()] = res.total
+                meta['unread_%s' % utype.lower()] = user_unread.get_count(meta['uid'], utype)
             results.append(meta)
         return results
 

@@ -13,16 +13,12 @@ from pyramid.traversal import resource_path
 from repoze.catalog.indexes.field import CatalogFieldIndex
 from repoze.catalog.indexes.keyword import CatalogKeywordIndex
 from zope.component import adapter
-from zope.component import getAdapter
-from zope.component import queryAdapter
 from zope.component.interfaces import ComponentLookupError
-from webhelpers.html.render import sanitize
 
 from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IDiscussionPost
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import IProposal
-from voteit.core.models.interfaces import IUnread
 from voteit.core.models.interfaces import IWorkflowAware
 from voteit.core.security import NEVER_EVER_PRINCIPAL
 from voteit.core.security import VIEW
@@ -106,15 +102,6 @@ def get_end_time(obj, default):
             return timegm(value.timetuple())
     return default
 
-def get_unread(obj, default):
-    """ All userids who have this object as unread. """
-    unread = queryAdapter(obj, IUnread)
-    if unread == None:
-        return default
-    userids = unread.get_unread_userids()
-    if userids:
-        return userids
-    return default
 
 def get_order(obj, default):
     """ Return order, if object has that field. """
@@ -192,7 +179,6 @@ def includeme(config):
         'view_meeting_userids': CatalogKeywordIndex(get_view_meeting_userids),
         'start_time' : CatalogFieldIndex(get_start_time),
         'end_time' : CatalogFieldIndex(get_end_time),
-        'unread': CatalogKeywordIndex(get_unread),
         'order': CatalogFieldIndex(get_order),
         'workflow_state': CatalogFieldIndex(get_workflow_state),
     }
@@ -200,6 +186,7 @@ def includeme(config):
     config.scan(__name__)
     config.create_metadata_field('title', 'title')
     config.create_metadata_field('__name__', '__name__')
+    config.create_metadata_field('uid', 'uid')
     config.add_metadata_field(ProposalCountMetadata)
     config.add_metadata_field(DiscussionCountMetadata)
     config.add_metadata_field(PollCountMetadata)

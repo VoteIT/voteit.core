@@ -21,7 +21,7 @@ from voteit.core import _
 from voteit.core import security
 from voteit.core.fanstaticlib import data_loader
 from voteit.core.helpers import get_docids_to_show
-from voteit.core.models.interfaces import IAgendaItem
+from voteit.core.models.interfaces import IAgendaItem, IUserUnread
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IProposal
 from voteit.core.security import ADD_POLL
@@ -109,7 +109,9 @@ class ProposalsInline(BaseView):
                 invert_hidden &= Any('workflow_state', hide)
                 query &= NotAny('workflow_state', hide)
         response['docids'] = tuple(self.catalog_query(query, sort_index = 'created'))
-        response['unread_docids'] = tuple(self.catalog_query(query & Eq('unread', self.request.authenticated_userid),
+        user_unread = IUserUnread(self.request.profile)
+        unread_proposal_uids = user_unread.get_uids(self.context.uid, 'Proposal')
+        response['unread_docids'] = tuple(self.catalog_query(query & Any('uid', unread_proposal_uids),
                                                              sort_index = 'created'))
         response['contents'] = self.resolve_docids(response['docids']) #A generator
         if not load_hidden:
@@ -157,7 +159,7 @@ class DiscussionsInline(BaseView):
             query['end_before'] = int(self.request.GET.get('end_before'))
         if self.request.GET.get('next', False):
             query['start_after'] = int(self.request.GET.get('start_after'))
-        response = get_docids_to_show(self.context, self.request, 'DiscussionPost', **query)
+        response = self.request.get_docids_to_show(self.context, 'DiscussionPost', **query)
         response['contents'] = self.resolve_docids(response['batch']) #Generator
         if response['previous'] and response['batch']:
             end_before = response['batch'][0]

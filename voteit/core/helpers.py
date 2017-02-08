@@ -6,6 +6,8 @@ from arche.utils import generate_slug #API
 from pyramid.renderers import render
 from pyramid.traversal import find_interface
 from pyramid.traversal import resource_path
+from repoze.catalog.query import Any
+from repoze.catalog.query import Eq
 from repoze.workflow import get_workflow
 from webhelpers.html.converters import nl2br
 from webhelpers.html.render import sanitize
@@ -13,6 +15,7 @@ from webhelpers.html.tools import auto_link
 
 from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IMeeting
+from voteit.core.models.interfaces import IUserUnread
 from voteit.core import security
 from voteit.core import _
 
@@ -70,10 +73,6 @@ def strip_and_truncate(text, limit=200, symbol = '<span class="trunc">&hellip;</
     if pool:
         out += symbol
     return  out
-
-#     if len(text) > limit:
-#         text = u"%s<...>" % nl2br(text[:limit])
-#     return nl2br(text)
 
 def move_object(obj, new_parent):
     """ Move an object to a new location. """
@@ -170,7 +169,7 @@ def get_meeting_participants(meeting):
     """
     return security.find_authorized_userids(meeting, [security.VIEW])
 
-def get_docids_to_show(context, request, type_name, tags = (), limit = 5, start_after = None, end_before = None):
+def get_docids_to_show(request, context, type_name, tags = (), limit = 5, start_after = None, end_before = None):
     """ Helper method to fetch docids that would be a resonable batch to show.
         This is mostly to allow agenda views to load fast.
 
@@ -183,13 +182,15 @@ def get_docids_to_show(context, request, type_name, tags = (), limit = 5, start_
         Result example:
         {'batch': [4, 5, 6], 'previous': [1, 2, 3], 'over_limit': [7, 8, 9], 'unread': [4, 5, 6, 7, 8, 9]}
     """
-    query = "path == '%s' and type_name == '%s'" % (resource_path(context), type_name)
+    assert IAgendaItem.providedBy(context)
+    query = Eq('path', resource_path(context))
+    query &= Eq('type_name', type_name)
     if tags:
-        query += " and tags in any(%s)" % list(tags)
-    unread_query = "unread == '%s' and %s" % (request.authenticated_userid, query)
-    catalog_query = request.root.catalog.query
-    unread_docids = list(catalog_query(unread_query, sort_index = 'created')[1])
-    docids_pool = list(catalog_query(query, sort_index = 'created')[1])
+        query &= Any('tags', list(tags))
+    user_unread = IUserUnread(request.profile)
+    unread_query = query & Any('uid', user_unread.get_uids(context.uid, type_name))
+    unread_docids = list(request.root.catalog.query(unread_query, sort_index = 'created')[1])
+    docids_pool = list(request.root.catalog.query(query, sort_index = 'created')[1])
     if start_after and start_after in docids_pool:
         i = docids_pool.index(start_after)
         for docid in docids_pool[:i+1]:
@@ -259,7 +260,7 @@ def clear_tags_url(request, context, *args, **kw):
     return request.resource_url(context, *args, query = clear_tag_query)
 
 def includeme(config):
-    #FIXME: What's a good test for request methods? They aren't included during the regular testing runs.
+    config.add_request_method(get_docids_to_show)
     config.add_request_method(callable = transform_text, name = 'transform_text')
     #Hook creators info
     config.add_request_method(callable = creators_info, name = 'creators_info')
