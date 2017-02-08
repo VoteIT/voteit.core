@@ -1,26 +1,15 @@
 import unittest
-from datetime import datetime
 from calendar import timegm
- 
-from pyramid import testing
-# from pyramid.authentication import AuthTktAuthenticationPolicy
-# from pyramid.authorization import ACLAuthorizationPolicy
-from pyramid.traversal import resource_path
-# from zope.component.event import objectEventNotify
-# from zope.interface.verify import verifyClass
-# from zope.interface.verify import verifyObject
+
 from arche.utils import utcnow
+from pyramid import testing
 
 from voteit.core import security
 from voteit.core.bootstrap import bootstrap_voteit
 from voteit.core.models.arche_compat import createContent
-# from voteit.core.models.date_time_util import utcnow
-from voteit.core.models.interfaces import IUnread
-from voteit.core.models.site import SiteRoot
-# from voteit.core.security import groupfinder
 from voteit.core.testing_helpers import bootstrap_and_fixture
 
- 
+
 class CatalogIndexTests(unittest.TestCase):
     """ Make sure indexes work as expected. """
 
@@ -94,20 +83,6 @@ class CatalogIndexTests(unittest.TestCase):
         self.assertEqual(self.query("end_time == %s and path == '/meeting'" % now_unix)[0], 1)
         qy = ("%s < end_time < %s and path == '/meeting'" % (now_unix-1, now_unix+1))
         self.assertEqual(self.query(qy)[0], 1)
-
-    def test_unread(self):
-        meeting = self._add_mock_meeting()
-        self.config.include('arche.testing.setup_auth')
-        self.config.include('voteit.core.models.unread')
-        #Discussion posts are unread aware
-        from voteit.core.models.discussion_post import DiscussionPost
-        obj = DiscussionPost()
-        obj.text = 'Hello'
-        meeting['post'] = obj
-        self.assertEqual(self.search(unread='admin')[0], 1)
-        unread = self.config.registry.queryAdapter(obj, IUnread)
-        unread.mark_as_read('admin')
-        self.assertEqual(self.search(unread='admin')[0], 0)
 
     def test_additions_to_searchable_text(self):
         meeting = self._add_mock_meeting()

@@ -8,6 +8,7 @@ from pyramid.traversal import resource_path
 from pyramid.traversal import find_resource
 
 from voteit.core.models.interfaces import IMeeting
+from voteit.core.models.interfaces import IUserUnread
 from voteit.core.security import VIEW
 from voteit.core import _
 
@@ -43,11 +44,13 @@ class MeetingListingPortlet(PortletType):
                           request = request)
 
     def item_count_for(self, request, context, type_name, unread = False):
-        query = {'path': resource_path(context),
-                 'type_name': type_name}
         if unread:
-            query['unread'] = request.authenticated_userid
-        return request.root.catalog.search(**query)[0].total
+            user_unread = IUserUnread(request.profile)
+            return user_unread.get_unread_count(context.uid, type_name)
+        else:
+            query = {'path': resource_path(context),
+                     'type_name': type_name}
+            return request.root.catalog.search(**query)[0].total
 
 def _get_meetings(request, state = 'ongoing', sort_index = 'sortable_title'):
     root = request.root

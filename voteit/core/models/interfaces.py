@@ -1,3 +1,4 @@
+from pyramid.interfaces import IDict
 from zope.interface import Attribute
 from zope.interface import Interface
 
@@ -515,24 +516,35 @@ class ILogHandler(Interface):
         """
 
 
-class IUnread(Interface):
-    """ Adapter that provides unread functionality to an object.
-        This means that all users who have access to the adapted object
-        will have it marked as unread when it is added, or any other action that
-        seems appropriate. (This is normally done with subscribers)
-    """
-    unread_storage = Attribute("Acts as a storage. Contains all userids of users who haven't read this context.")
-    
-    def mark_as_read(userid):
-        """ Remove a userid from unread_userids if it exist in there.
-            Just a convenience method in case the storage of userids change.
+class IUserUnread(IDict):
+    container_ifaces = Attribute("List of interfaces that should be considered as containers"
+                                 "for unread items. Currently only AgendaItems within VoteIT.")
+    counter_ifaces = Attribute("List of interfaces that should count a grand total of "
+                               "their contained items. Essentially a cache so we don't "
+                               "have to loop over all containers. Within VoteIT "
+                               "currently only Meetings.")
+
+    def add(context):
+        """ Add context as unread. """
+
+    def remove(context):
+        """ Remove context from unread. """
+
+    def remove_uids(container, uids):
+        """ Remove uids from container - I.e they've been read or the
+            container was deleted.
         """
 
-    def get_unread_userids():
-        """ Returns a frozenset of all userids who haven't read this context. """
-        
-    def reset_unread():
-        """ Sets unread as newly created """
+    def get_count(container_uid, type_name):
+        """ Number of unread within a container. """
+
+    def get_uids(container_uid, type_name):
+        """ Unread uids of a specific type, within a container.
+        """
+
+    def get_unread_count(counter_uid, type_name):
+        """ Get result of counter. (Usually for meetings)
+        """
 
 
 class IProposalIds(Interface):
