@@ -1,23 +1,11 @@
 from arche.views.base import BaseView
-#from betahaus.pyracont.factories import createSchema
-#from pyramid.renderers import render
-#from pyramid.response import Response
-#from pyramid.traversal import find_interface
-from pyramid.traversal import resource_path
-#from pyramid.view import view_config
 from pyramid.httpexceptions import HTTPFound
+from pyramid.traversal import resource_path
 
-from voteit.core import VoteITMF as _
-#from voteit.core.helpers import ajax_options
-#from voteit.core.helpers import generate_slug
-from voteit.core.models.interfaces import IAgendaItem
-#from voteit.core.models.interfaces import IDiscussionPost
-#from voteit.core.models.interfaces import IProposal
-#from voteit.core.models.schemas import button_add
-#from voteit.core.security import MODERATE_MEETING
+from voteit.core import _
 from voteit.core import security
 from voteit.core.fanstaticlib import unread_js
-#from voteit.core.views.base_view import BaseView
+from voteit.core.models.interfaces import IAgendaItem
 
 
 class AgendaItemView(BaseView):
