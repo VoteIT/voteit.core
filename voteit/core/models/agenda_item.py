@@ -27,6 +27,7 @@ class AgendaItem(BaseContent, WorkflowAware):
     add_permission = security.ADD_AGENDA_ITEM
     custom_mutators = {'proposal_block': '_set_proposal_block', 'discussion_block': '_set_discussion_block'}
     css_icon = 'glyphicon glyphicon-list-alt'
+    hashtag = ""
 
     @property
     def __acl__(self):

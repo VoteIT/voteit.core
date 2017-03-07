@@ -30,6 +30,7 @@ class Meeting(BaseContent, SecurityAware, WorkflowAware):
     hide_meeting = False #Unless it's been set, don't show meeting
     nav_title = ""
     custom_mutators = {'copy_perms_and_users': 'copy_perms_and_users'}
+    proposal_id_method = ""
 
     def __init__(self, data=None, **kwargs):
         """ When meetings are added, whoever added them should become moderator and voter.

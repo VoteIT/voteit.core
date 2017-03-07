@@ -6,6 +6,9 @@ from voteit.core.validators import html_string_validator
 from voteit.core.validators import richtext_validator
 
 
+_HASHTAG_PATTERN = r"[a-zA-Z0-9\-\_\.]{2,30}"
+
+
 class AgendaItemSchema(colander.MappingSchema):
     title = colander.SchemaNode(
         colander.String(),
@@ -28,6 +31,17 @@ class AgendaItemSchema(colander.MappingSchema):
         missing = "",
         widget=deform.widget.RichTextWidget(options = (('theme', 'advanced'),)),
         validator=richtext_validator,)
+    hashtag = colander.SchemaNode(
+        colander.String(),
+        title = _("Hashtag for Agenda Item"),
+        description = _("ai_hashtag_schema_description",
+                        default="Only used by systems that implement agenda based hashtags. "
+                        "It's usually a good idea to leave this empty if you "
+                        "don't have a special reason to change it."),
+        missing="",
+        validator=colander.Regex(_HASHTAG_PATTERN,
+                                 msg=_("Must be a-z, 0-9, or any of '.-_'."))
+    )
 
 
 def includeme(config):

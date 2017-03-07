@@ -5,9 +5,11 @@ from pyramid.threadlocal import get_current_registry
 from pyramid.traversal import find_interface
 from repoze.folder.interfaces import IObjectAddedEvent
 
+from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import IProposal
 from voteit.core.models.interfaces import IProposalIds
+from voteit.core import _
 
 
 @adapter(IMeeting)
@@ -17,6 +19,9 @@ class ProposalIds(object):
         See :mod:`voteit.core.models.interfaces.IProposalIds`.
         All methods are documented in the interface of this class.
     """
+    title = ""
+    name = ""
+
     def __init__(self, context):
         self.context = context
 
@@ -36,6 +41,8 @@ class UserIDBasedPropsalIds(ProposalIds):
     """ Add proposal ids based on UserID. IDs are never reused and counts upwards
         with the structure userid-number, Ie john_doe-1 for the first proposal.
     """
+    title = _("UserID-based (default)")
+    name = ""
 
     def add(self, proposal):
         if not proposal.creator:
@@ -49,13 +56,29 @@ class UserIDBasedPropsalIds(ProposalIds):
         self.proposal_ids[creator] = aid_int
 
 
+class AgendaItemBasedProposalIds(ProposalIds):
+    """ Count agenda items instead of userids. """
+    title = _("Agenda hashtag")
+    name = "ai_hashtag"
+
+    def add(self, proposal):
+        ai = find_interface(proposal, IAgendaItem)
+        aid_int = self.proposal_ids.get(ai.__name__, 0) + 1
+        tag_name = ai.hashtag
+        if not tag_name:
+            tag_name = ai.__name__
+        aid = "%s-%s" % (tag_name, aid_int)
+        proposal.update(aid = aid, aid_int = aid_int)
+        self.proposal_ids[ai.__name__] = aid_int
+
+
 def create_proposal_id(obj, event):
     """ Call an IProposalIds adapter if it exists.
         See IProposalIds for implementation.
     """
     reg = get_current_registry()
     meeting = find_interface(obj, IMeeting)
-    proposal_ids = reg.queryAdapter(meeting, IProposalIds)
+    proposal_ids = reg.queryAdapter(meeting, IProposalIds, name=meeting.proposal_id_method)
     if proposal_ids:
         proposal_ids.add(obj)
 
@@ -66,3 +89,4 @@ def includeme(config):
     """
     config.add_subscriber(create_proposal_id, [IProposal, IObjectAddedEvent])
     config.registry.registerAdapter(UserIDBasedPropsalIds)
+    config.registry.registerAdapter(AgendaItemBasedProposalIds, name = AgendaItemBasedProposalIds.name)
