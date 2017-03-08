@@ -205,6 +205,8 @@ class TicketView(BaseView):
                  xhr = True)
     def send_tickets_action(self):
         session = self.request.session
+        if 'send_tickets.emails' not in session:
+            raise HTTPForbidden(_("No tickets to send"))
         emails = session['send_tickets.emails'][:20]
         message = session['send_tickets.message']
         _marker = object()
