@@ -6,7 +6,7 @@ from voteit.core.validators import html_string_validator
 from voteit.core.validators import richtext_validator
 
 
-_HASHTAG_PATTERN = r"[a-zA-Z0-9\-\_\.]{2,30}"
+_HASHTAG_PATTERN = "^[a-zA-Z0-9\-\_\.]{2,30}$"
 
 
 class AgendaItemSchema(colander.MappingSchema):
