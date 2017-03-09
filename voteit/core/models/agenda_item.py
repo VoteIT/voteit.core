@@ -27,7 +27,6 @@ class AgendaItem(BaseContent, WorkflowAware):
     add_permission = security.ADD_AGENDA_ITEM
     custom_mutators = {'proposal_block': '_set_proposal_block', 'discussion_block': '_set_discussion_block'}
     css_icon = 'glyphicon glyphicon-list-alt'
-    hashtag = ""
 
     @property
     def __acl__(self):
@@ -87,6 +86,13 @@ class AgendaItem(BaseContent, WorkflowAware):
     def end_time(self):
         """ Set by a subscriber when this item closes. """
         return self.get_field_value('end_time')
+
+    @property
+    def hashtag(self):
+        return self.get_field_value('hashtag', '')
+    @hashtag.setter
+    def hashtag(self, value):
+        self.set_field_value('hashtag', value)
 
 
 def closing_agenda_item_callback(context, info):
