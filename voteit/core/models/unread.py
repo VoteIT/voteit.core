@@ -171,12 +171,13 @@ class UnreadCleanupCache(object):
 def get_participant_users(context):
     root = find_root(context)
     request = get_current_request()
-    for userid in get_meeting_participants(request.meeting):
-        try:
-            yield root['users'][userid]
-        except KeyError:
-            #Catch any occastions where a userid had a local role it shouldn't have
-            pass
+    if request.meeting:
+        for userid in get_meeting_participants(request.meeting):
+            try:
+                yield root['users'][userid]
+            except KeyError:
+                #Catch any occastions where a userid had a local role it shouldn't have
+                pass
 
 
 def add_as_unread(context, event):
