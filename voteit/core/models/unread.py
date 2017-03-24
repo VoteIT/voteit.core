@@ -7,7 +7,6 @@ from arche.interfaces import IObjectWillBeRemovedEvent
 from repoze.folder.interfaces import IObjectRemovedEvent
 from pyramid.location import lineage
 from pyramid.threadlocal import get_current_request
-from pyramid.traversal import find_interface
 from pyramid.traversal import find_root
 from six import string_types
 from zope.component import adapter
@@ -170,9 +169,9 @@ class UnreadCleanupCache(object):
 
 
 def get_participant_users(context):
-    meeting = find_interface(context, IMeeting)
     root = find_root(context)
-    for userid in get_meeting_participants(meeting):
+    request = get_current_request()
+    for userid in get_meeting_participants(request.meeting):
         try:
             yield root['users'][userid]
         except KeyError:
@@ -191,6 +190,7 @@ def remove_unread(context, event):
     cleanup_cache = UnreadCleanupCache()
     if context.uid in cleanup_cache:
         return
+
     for user in get_participant_users(context):
         unread = IUserUnread(user, None)
         if unread:
