@@ -4,7 +4,9 @@ from BTrees.OOBTree import OOSet
 from arche.compat import IterableUserDict
 from arche.interfaces import IObjectAddedEvent
 from arche.interfaces import IObjectWillBeRemovedEvent
+from repoze.folder.interfaces import IObjectRemovedEvent
 from pyramid.location import lineage
+from pyramid.threadlocal import get_current_request
 from pyramid.traversal import find_interface
 from pyramid.traversal import find_root
 from six import string_types
@@ -18,6 +20,8 @@ from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import IProposal
 from voteit.core.models.interfaces import IUser
 from voteit.core.models.interfaces import IUserUnread
+
+#FIXME: This code isn't finished. It handles unread way to slow on delete.
 
 
 @implementer(IUserUnread)
@@ -35,6 +39,11 @@ class UserUnread(IterableUserDict):
         if not isinstance(self.data, OOBTree):
             self.data = self.context._unread = OOBTree()
         self.data[key] = value
+
+    def __delitem__(self, key):
+        del self.data[key]
+        if key in self.unread_counter:
+            del self.unread_counter[key]
 
     def _find_container(self, obj):
         for obj in lineage(obj):
@@ -74,7 +83,21 @@ class UserUnread(IterableUserDict):
     def remove(self, context):
         container = self._find_container(context)
         assert container
+        if container is context:
+            return self.remove_container(container.uid)
         return self.remove_uids(container, [context.uid])
+
+    def remove_container(self, container):
+        """ Remove container and return all contained uids that were removed. """
+        if isinstance(container, string_types):
+            container_uid = container
+        else:
+            container_uid = container.uid
+        removed = set()
+        for curr in self.get(container_uid, {}).values():
+            removed.update(curr)
+        del self[container_uid]
+        return removed
 
     def remove_uids(self, container, uids):
         removed = {}
@@ -126,6 +149,26 @@ class UserUnread(IterableUserDict):
     __nonzero__ = __bool__
 
 
+class UnreadCleanupCache(object):
+
+    def __init__(self, request=None):
+        if request is None:
+            request = get_current_request()
+        self.request = request
+        if not hasattr(self.request, '_unread_handled_uids'):
+            self.request._unread_handled_uids = set()
+        self.handled = self.request._unread_handled_uids
+
+    def __contains__(self, key):
+        return key in self.handled
+
+    def add(self, key):
+        self.handled.add(key)
+
+    def update(self, keys):
+        self.handled.update(keys)
+
+
 def get_participant_users(context):
     meeting = find_interface(context, IMeeting)
     root = find_root(context)
@@ -145,6 +188,9 @@ def add_as_unread(context, event):
 
 
 def remove_unread(context, event):
+    cleanup_cache = UnreadCleanupCache()
+    if context.uid in cleanup_cache:
+        return
     for user in get_participant_users(context):
         unread = IUserUnread(user, None)
         if unread:
@@ -152,17 +198,31 @@ def remove_unread(context, event):
 
 
 def remove_container(context, event):
-    for user in get_participant_users(context):
-        unread = IUserUnread(user, None)
-        if unread and context.uid in unread:
-            del unread[context.uid]
+    cleanup_cache = UnreadCleanupCache()
+    if IMeeting.providedBy(context):
+        potential = context.values()
+    else:
+        potential = [context]
+    contexts_to_remove = []
+    for pcontext in potential:
+        if pcontext.uid not in cleanup_cache:
+            contexts_to_remove.append(pcontext)
+            cleanup_cache.add(pcontext.uid)
+    if contexts_to_remove:
+        for user in get_participant_users(context):
+            unread = IUserUnread(user, None)
+            for rcontext in contexts_to_remove:
+                if unread and rcontext.uid in unread:
+                    removed = unread.remove_container(rcontext.uid)
+                    cleanup_cache.update(removed)
 
 
 def includeme(config):
     """ Register unread adapter. """
+    config.add_subscriber(remove_container, [IMeeting, IObjectWillBeRemovedEvent])
+    config.add_subscriber(remove_container, [IAgendaItem, IObjectWillBeRemovedEvent])
     config.add_subscriber(add_as_unread, [IProposal, IObjectAddedEvent])
     config.add_subscriber(add_as_unread, [IDiscussionPost, IObjectAddedEvent])
-    config.add_subscriber(remove_unread, [IProposal, IObjectWillBeRemovedEvent])
-    config.add_subscriber(remove_unread, [IDiscussionPost, IObjectWillBeRemovedEvent])
-    config.add_subscriber(remove_container, [IAgendaItem, IObjectWillBeRemovedEvent])
+    config.add_subscriber(remove_unread, [IProposal, IObjectRemovedEvent])
+    config.add_subscriber(remove_unread, [IDiscussionPost, IObjectRemovedEvent])
     config.registry.registerAdapter(UserUnread)
