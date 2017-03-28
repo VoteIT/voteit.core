@@ -94,7 +94,7 @@ def transform_text(request, text, html = True):
         text = at_userid_link(request, text)
     return text
 
-def creators_info(request, creators, portrait = True, lookup = True, at = False, no_tag = False):
+def creators_info(request, creators, portrait = True, lookup = True, at = False, no_tag = False, no_userid = False):
     if lookup == False:
         portrait = False #No portrait without lookup
     users = []
@@ -109,7 +109,8 @@ def creators_info(request, creators, portrait = True, lookup = True, at = False,
                 'portrait': portrait,
                 'lookup': lookup,
                 'at': at,
-                'no_tag': no_tag}
+                'no_tag': no_tag,
+                'no_userid': no_userid}
     return render('voteit.core:templates/snippets/creators_info.pt', response, request = request)
 
 def get_meeting(request):

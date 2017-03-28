@@ -17,7 +17,7 @@
     href="${request.get_userinfo_url(userid)}">
     <img tal:condition="portrait" tal:replace="structure user.get_image_tag(request = request)" />
     <tal:lookup condition="lookup">
-      ${user.title} (${userid})
+      ${user.title} <tal:userid condition="not no_userid">(${userid})</tal:userid>
     </tal:lookup>
     <tal:no_lookup condition="not lookup">${at and '@' or None}${userid}</tal:no_lookup>
   </a>
