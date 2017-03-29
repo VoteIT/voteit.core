@@ -117,22 +117,9 @@ def ongoing_agenda_item_callback(context, info):
                     default = u"You can't set an agenda item to ongoing if the meeting is not ongoing.")
         raise HTTPForbidden(err_msg)
 
-def set_initial_order(obj, event):
-    """ Subscriber to set the initial order of the agenda item """
-    meeting = find_interface(obj, IMeeting)
-    assert meeting
-    order = 0
-    for ai in meeting.values():
-        if IAgendaItem.providedBy(ai):
-            if ai.get_field_value('order') >= order:
-                order = ai.get_field_value('order')+1
-
-    obj.set_field_appstruct({'order': order})
-
 
 def includeme(config):
     config.add_content_factory(AgendaItem, addable_to = 'Meeting')
-    config.add_subscriber(set_initial_order, [IAgendaItem, IObjectAddedEvent])
     _PRIV_MOD_PERMS = (security.VIEW,
                        security.EDIT,
                        security.DELETE,

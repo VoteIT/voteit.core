@@ -55,8 +55,7 @@ class AgendaInlineView(BaseView):
         user_unread = IUserUnread(self.request.profile)
         for docid in catalog.search(path = self.meeting_path,
                                     type_name = 'AgendaItem',
-                                    workflow_state = state,
-                                    sort_index = 'order')[1]:
+                                    workflow_state = state)[1]:
             try:
                 meta = dict(self.request.root.document_map.get_metadata(docid))
             except KeyError:
@@ -64,7 +63,14 @@ class AgendaInlineView(BaseView):
             for utype in unread_types:
                 meta['unread_%s' % utype.lower()] = user_unread.get_count(meta['uid'], utype)
             results.append(meta)
-        return results
+        #Sort meta
+        ai_order = self.context.order
+        def _sorter(meta):
+            try:
+                return ai_order.index(meta['__name__'])
+            except (ValueError, KeyError):
+                return len(ai_order)
+        return sorted(results, key=_sorter)
 
     def in_current_context(self, context_path):
         if self.ai_path:
@@ -73,6 +79,7 @@ class AgendaInlineView(BaseView):
             if len(path) > len(context_path):
                 path = path[0:len(context_path)]
             return path == context_path
+
 
 def includeme(config):
     config.add_view(AgendaInlineView,

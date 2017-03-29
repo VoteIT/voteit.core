@@ -15,8 +15,9 @@ from zope.interface.interfaces import ComponentLookupError
 import deform
 
 from voteit.core import security
-from voteit.core import VoteITMF as _
+from voteit.core import _
 from voteit.core.models.interfaces import IAccessPolicy
+from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.views.base_edit import ArcheFormCompat
 
@@ -50,22 +51,21 @@ class MeetingView(BaseView):
             return obj.email
         return {'users': tuple(sorted(results, key = _sorter)), 'title': _("Participants emails")}
 
-    @view_config(name = "minutes", renderer = "voteit.core:templates/minutes.pt", permission = security.VIEW)
+    @view_config(name = "minutes",
+                 renderer = "voteit.core:templates/minutes.pt",
+                 permission = security.VIEW)
     def minutes(self):
         """ Show an overview of the meeting activities. Should work as a template for minutes. """
-
         if self.request.meeting.get_workflow_state() != 'closed':
             msg = _(u"meeting_not_closed_minutes_incomplete_notice",
                     default = u"This meeting hasn't closed yet so these minutes won't be complete")
             self.flash_messages.add(msg)
         #Add agenda item objects to response
-        query = dict(
-            path = resource_path(self.context),
-            type_name = "AgendaItem",
-            workflow_state = ('upcoming', 'ongoing', 'closed'),
-            sort_index = "order",
-        )
-        return {'agenda_items': self.catalog_search(resolve = True, **query)}
+        results = []
+        for obj in self.context.values():
+            if IAgendaItem.providedBy(obj) and self.request.has_permission(obj, security.VIEW):
+                results.append(obj)
+        return {'agenda_items': results}
 
     @view_config(name = '__userinfo__', permission = security.VIEW, renderer = "arche:templates/content/basic.pt")
     def userinfo(self):

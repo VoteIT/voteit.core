@@ -103,16 +103,11 @@ def get_end_time(obj, default):
     return default
 
 
-def get_order(obj, default):
-    """ Return order, if object has that field. """
-    if IBaseContent.providedBy(obj):
-        return obj.get_field_value('order', default)
-    return default
-
 def get_searchable_prop_or_disc(context, default):
     if IProposal.providedBy(context) or IDiscussionPost.providedBy(context):
         return context.text
     return default
+
 
 @subscriber([IBaseContent, IObjectWillBeRemovedEvent])
 @subscriber([IBaseContent, IObjectAddedEvent])
@@ -123,6 +118,7 @@ def update_if_ai_parent(obj, event):
     parent = getattr(obj, '__parent__', None)
     if IAgendaItem.providedBy(parent):
         ICataloger(parent).index_object()
+
 
 @subscriber([IAgendaItem, IWorkflowStateChange])
 def update_contained_in_ai(obj, event):
@@ -179,7 +175,6 @@ def includeme(config):
         'view_meeting_userids': CatalogKeywordIndex(get_view_meeting_userids),
         'start_time' : CatalogFieldIndex(get_start_time),
         'end_time' : CatalogFieldIndex(get_end_time),
-        'order': CatalogFieldIndex(get_order),
         'workflow_state': CatalogFieldIndex(get_workflow_state),
     }
     config.add_catalog_indexes(__name__, indexes)

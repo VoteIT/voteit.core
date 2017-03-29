@@ -1,13 +1,13 @@
 from arche.views.base import BaseView
 from pyramid.httpexceptions import HTTPFound
 from pyramid.traversal import find_resource
-from pyramid.traversal import resource_path
 from pyramid.view import view_config
 from repoze.workflow.workflow import WorkflowError
 
 from voteit.core import _
 from voteit.core import security
 from voteit.core.models.agenda_item import AgendaItem
+from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IMeeting
 
 
@@ -16,7 +16,10 @@ _BLOCK_VALS = {
     'blocked': True,
 }
 
-@view_config(context = IMeeting, name = "manage_agenda", renderer = "voteit.core:templates/manage_agenda.pt", permission = security.EDIT)
+@view_config(context = IMeeting,
+             name = "manage_agenda",
+             renderer = "voteit.core:templates/manage_agenda.pt",
+             permission = security.EDIT)
 class ManageAgendaItemsView(BaseView):
 
     def __call__(self):
@@ -26,19 +29,10 @@ class ManageAgendaItemsView(BaseView):
             return HTTPFound(location = url)
         if 'change' in post:
             state_id = self.request.POST['state_id']
-
             block_proposals = self.request.POST.get('block_proposals', None)
             block_proposals = _BLOCK_VALS.get(block_proposals, None)
             block_discussion = self.request.POST.get('block_discussion', None)
             block_discussion = _BLOCK_VALS.get(block_discussion, None)
-
-
-#            if discussion_block is not None:
-#                val = bool(int(discussion_block))
-#                self.context.set_field_value('discussion_block', val)
-#            if proposal_block is not None:
-#                val = bool(int(proposal_block))
-#                self.context.set_field_value('proposal_block', val)
 
             controls = self.request.POST.items()
             agenda_items = []
@@ -90,21 +84,15 @@ class ManageAgendaItemsView(BaseView):
                     return tstring(info['title'])
             return state
         response = {}
-        
         response['translated_state_title'] = _translated_state_title
         response['find_resource'] = find_resource
         response['states'] = states = ('ongoing', 'upcoming', 'closed', 'private') 
-        response['ais'] = {}
-        context_path = resource_path(self.context)
+        response['ais'] = ais = {}
         for state in states:
-            query = dict(
-                path = context_path,
-                type_name = 'AgendaItem',
-                sort_index = 'order',
-                workflow_state = state,
-                resolve = True,
-            )
-            response['ais'][state] = self.catalog_search(**query)
+            ais[state] = []
+        for obj in self.context.values():
+            if IAgendaItem.providedBy(obj):
+                ais[obj.get_workflow_state()].append(obj)
         return response
 
 #FIXME: :P

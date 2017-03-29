@@ -68,13 +68,6 @@ class Meeting(BaseContent, SecurityAware, WorkflowAware):
         if pool:
             new_order.extend(pool)
         self._order = tuple([unicodify(x) for x in new_order])
-        #Resort the agenda items too
-        i = 1
-        for obj in self.values():
-            if not IAgendaItem.providedBy(obj):
-                continue
-            obj.set_field_appstruct({'order': i})
-            i+=1
 
     @property
     def body(self): #arche compat

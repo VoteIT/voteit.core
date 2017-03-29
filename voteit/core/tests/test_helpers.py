@@ -229,7 +229,9 @@ class TestGetDocidsToShow(unittest.TestCase):
     def _mk_request(self, root):
         request = testing.DummyRequest()
         request.root = root
+        request.meeting = root['m']
         apply_request_extensions(request)
+        self.config.begin(request)
         return request
 
     def test_only_unread(self):

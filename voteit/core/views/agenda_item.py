@@ -6,27 +6,43 @@ from voteit.core import _
 from voteit.core import security
 from voteit.core.fanstaticlib import unread_js
 from voteit.core.models.interfaces import IAgendaItem
+from voteit.core.security import VIEW
 
 
 class AgendaItemView(BaseView):
 
     def next_ai(self):
-        """ Return next qgenda item if there is one.
+        """ Return next agenda item if there is one.
+            This may hide the next button if there are hidden agenda items
         """
-        query = u"path == '%s' and type_name == 'AgendaItem'" % resource_path(self.context.__parent__)
-        query += u" and order > %s" % self.context.get_field_value('order')
-        query += u" and workflow_state in any(['ongoing', 'upcoming', 'closed'])"
-        for ai in self.catalog_query(query, resolve = True, limit = 1, sort_index='order'):
-            return ai
+        return self._get_sibbling_ai(1)
 
     def previous_ai(self):
         """ Return previous agenda item if there is one.
         """
-        query = u"path == '%s' and type_name == 'AgendaItem'" % resource_path(self.context.__parent__)
-        query += u" and order < %s" % self.context.get_field_value('order')
-        query += u" and workflow_state in any(['ongoing', 'upcoming', 'closed'])"
-        for ai in self.catalog_query(query, resolve = True, limit = 1, sort_index='order', reverse = True):
-            return ai
+        return self._get_sibbling_ai(-1)
+
+    def _get_sibbling_ai(self, pos):
+        meeting = self.request.meeting
+        m_order = tuple(meeting.order)
+        ai_count = len(m_order)
+        try:
+            this_pos = meeting.order.index(self.context.__name__)
+        except ValueError:
+            return
+        #only try a few times - we don't want to iterate through the whole meeting
+        # if there's lots of hidden Agenda items.
+        for obj_pos in range(this_pos+pos, this_pos+(pos*5), pos):
+            if obj_pos < 0 or obj_pos > ai_count:
+                return
+            try:
+                obj = meeting[m_order[obj_pos]]
+            except KeyError:
+                return
+            if not IAgendaItem.providedBy(obj):
+                continue
+            if self.request.has_permission(VIEW, obj):
+                return obj
 
     def __call__(self):
         unread_js.need()
