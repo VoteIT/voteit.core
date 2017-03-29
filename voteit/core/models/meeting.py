@@ -31,6 +31,9 @@ class Meeting(BaseContent, SecurityAware, WorkflowAware):
     nav_title = ""
     custom_mutators = {'copy_perms_and_users': 'copy_perms_and_users'}
     proposal_id_method = ""
+    # To set that this should keep track of ordering. See repoze.folder
+    # If _order is set to None, ordering isn't stored
+    _order = ()
 
     def __init__(self, data=None, **kwargs):
         """ When meetings are added, whoever added them should become moderator and voter.
