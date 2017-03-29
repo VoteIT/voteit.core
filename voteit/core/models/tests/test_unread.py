@@ -7,7 +7,6 @@ from zope.interface.verify import verifyObject
  
 from voteit.core import security
 from voteit.core.testing_helpers import bootstrap_and_fixture
-#from voteit.core.models.interfaces import IUnread
 from voteit.core.models.interfaces import IUserUnread
 
 
@@ -97,20 +96,23 @@ class UserUnreadIntegrationTests(unittest.TestCase):
         from voteit.core.models.user import User
         from voteit.core.models.agenda_item import AgendaItem
         from voteit.core.models.meeting import Meeting
-        from voteit.core.models.proposal import Proposal
         root['m'] = meeting = Meeting()
         for userid in ('fredrik', 'anders', 'hanna', 'robin'):
             root.users[userid] = User()
             meeting.local_roles.add(userid, security.ROLE_VIEWER)
         root['m']['ai'] = ai = AgendaItem(uid='ai_uid')
         security.unrestricted_wf_transition_to(ai, 'upcoming')
-        ai['p'] = Proposal()
         return root
 
     def test_integration(self):
+        from voteit.core.models.proposal import Proposal
         root = self._fixture_and_setup()
+        request = testing.DummyRequest()
+        request.meeting = root['m']
+        self.config.begin(request)
         user = root['users']['fredrik']
         ai = root['m']['ai']
+        ai['p'] = Proposal()
         unread = IUserUnread(user)
         self.assertEqual(unread.get_count('ai_uid', 'Proposal'), 1)
         del ai['p']

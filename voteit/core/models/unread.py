@@ -4,10 +4,9 @@ from BTrees.OOBTree import OOSet
 from arche.compat import IterableUserDict
 from arche.interfaces import IObjectAddedEvent
 from arche.interfaces import IObjectWillBeRemovedEvent
-from repoze.folder.interfaces import IObjectRemovedEvent
 from pyramid.location import lineage
 from pyramid.threadlocal import get_current_request
-from pyramid.traversal import find_root
+from pyramid.traversal import find_root, find_interface
 from six import string_types
 from zope.component import adapter
 from zope.interface import implementer
@@ -21,6 +20,7 @@ from voteit.core.models.interfaces import IUser
 from voteit.core.models.interfaces import IUserUnread
 
 #FIXME: This code isn't finished. It handles unread way to slow on delete.
+#The caching isn't working properly either. We probably need to refactor...
 
 
 @implementer(IUserUnread)
@@ -169,10 +169,11 @@ class UnreadCleanupCache(object):
 
 
 def get_participant_users(context):
-    root = find_root(context)
     request = get_current_request()
-    if request.meeting:
-        for userid in get_meeting_participants(request.meeting):
+    meeting = getattr(request, 'meeting', find_interface(context, IMeeting))
+    root = find_root(meeting)
+    if meeting:
+        for userid in get_meeting_participants(meeting):
             try:
                 yield root['users'][userid]
             except KeyError:
@@ -191,7 +192,6 @@ def remove_unread(context, event):
     cleanup_cache = UnreadCleanupCache()
     if context.uid in cleanup_cache:
         return
-
     for user in get_participant_users(context):
         unread = IUserUnread(user, None)
         if unread:
@@ -224,6 +224,6 @@ def includeme(config):
     config.add_subscriber(remove_container, [IAgendaItem, IObjectWillBeRemovedEvent])
     config.add_subscriber(add_as_unread, [IProposal, IObjectAddedEvent])
     config.add_subscriber(add_as_unread, [IDiscussionPost, IObjectAddedEvent])
-    config.add_subscriber(remove_unread, [IProposal, IObjectRemovedEvent])
-    config.add_subscriber(remove_unread, [IDiscussionPost, IObjectRemovedEvent])
+    config.add_subscriber(remove_unread, [IProposal, IObjectWillBeRemovedEvent])
+    config.add_subscriber(remove_unread, [IDiscussionPost, IObjectWillBeRemovedEvent])
     config.registry.registerAdapter(UserUnread)
