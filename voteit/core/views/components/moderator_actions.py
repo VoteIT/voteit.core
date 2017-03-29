@@ -64,14 +64,3 @@ def block_specific_perm_action(context, request, va, **kw):
         return
     url = request.resource_url(context, '_toggle_block', query = {setting: int(va.kwargs['enable'])})
     return """<li><a href="%s">%s</a></li>""" % (url, request.localizer.translate(va.title))
-
-#@view_action('context_actions', 'manage_agenda_items',
-#             interface = IMeeting, permission = EDIT)
-#def manage_agenda_items(context, request, va, **kw):
-#    """ Provide a link to the manage agenda items screen.
-#        Only for moderators and meeting objects.
-#    """
-#    api = kw['api']
-    #FIXME: Note that order agenda items is a silly name for this view. It should change.
-#    return """<li><a href="%s">%s</a></li>""" % (request.resource_url(context, 'order_agenda_items'),
-#                                                 api.translate(_(u"Manage agenda items")))
