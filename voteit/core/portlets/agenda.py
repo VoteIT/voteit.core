@@ -4,8 +4,6 @@ from arche.portlets import PortletType
 from arche.views.base import BaseView
 from pyramid.renderers import render
 from pyramid.traversal import resource_path
-import colander
-from pyramid.decorator import reify
 
 from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IMeeting
@@ -43,19 +41,13 @@ class AgendaInlineView(BaseView):
         response['state_titles'] = self.request.get_wf_state_titles(IAgendaItem, 'AgendaItem')
         response['meeting_path'] = self.meeting_path = resource_path(self.request.meeting)
         self.ai_name = self.request.GET.get('ai_name', None)
-        #if ai_name:
-        #    self.ai_path = "%s/%s" % (self.meeting_path, ai_name)
-        #else:
-        #    self.ai_path = None
         return response
 
     def get_ais(self, state):
         catalog = self.request.root.catalog
-        #user_unread = IUserUnread(self.request.profile)
         docids = catalog.search(path = self.meeting_path,
                                     type_name = 'AgendaItem',
                                     workflow_state = state)[1]
-        #results = tuple(self.request.resolve_docids(docids, perm=None))
         #Don't check permission here, assume permission check done before
         results = self.request.resolve_docids(docids, perm=None)
         ai_order = self.context.order
@@ -75,16 +67,6 @@ class AgendaInlineView(BaseView):
             results[utype] = {'total': total, 'unread': total-rn.get_read_type(utype, userid)}
         results['Poll'] = {'total': rn.get_type_count('Poll')}
         return results
-
-    #def unread_for(self, ai):
-    #
-    # def in_current_context(self, context_path):
-    #     if self.ai_path:
-    #         path = self.ai_path.split('/')
-    #         context_path = context_path.split('/')
-    #         if len(path) > len(context_path):
-    #             path = path[0:len(context_path)]
-    #         return path == context_path
 
 
 def includeme(config):
