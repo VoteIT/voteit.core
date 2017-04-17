@@ -2,29 +2,14 @@ from BTrees.Length import Length
 from BTrees.OOBTree import OOBTree
 from BTrees.OOBTree import OOSet
 from arche.compat import IterableUserDict
-from arche.interfaces import IObjectAddedEvent
-from arche.interfaces import IObjectWillBeRemovedEvent
 from pyramid.location import lineage
-from pyramid.threadlocal import get_current_request
-from pyramid.traversal import find_root, find_interface
 from six import string_types
-from zope.component import adapter
-from zope.interface import implementer
 
-from voteit.core.helpers import get_meeting_participants
 from voteit.core.models.interfaces import IAgendaItem
-from voteit.core.models.interfaces import IDiscussionPost
 from voteit.core.models.interfaces import IMeeting
-from voteit.core.models.interfaces import IProposal
-from voteit.core.models.interfaces import IUser
-from voteit.core.models.interfaces import IUserUnread
-
-#FIXME: This code isn't finished. It handles unread way to slow on delete.
-#The caching isn't working properly either. We probably need to refactor...
 
 
-@implementer(IUserUnread)
-@adapter(IUser)
+#Keep this during migrations. Remove 2018
 class UserUnread(IterableUserDict):
     container_ifaces = (IAgendaItem,)
     counter_ifaces = (IMeeting,)
@@ -75,8 +60,8 @@ class UserUnread(IterableUserDict):
             type_uids = self[container.uid][context.type_name]
         if context.uid not in type_uids:
             type_uids.add(context.uid)
-            counter_context = self._find_counter(container)
-            self._update_counter(counter_context.uid, context.type_name, 1)
+            #counter_context = self._find_counter(container)
+            #self._update_counter(counter_context.uid, context.type_name, 1)
             return context
 
     def remove(self, context):
@@ -113,10 +98,10 @@ class UserUnread(IterableUserDict):
                     if type_name not in removed:
                         removed[type_name] = set()
                     removed[type_name].add(uid)
-        if removed:
-            counter_context = self._find_counter(container)
-            for (type_name, uids) in removed.items():
-                self._update_counter(counter_context.uid, type_name, -len(uids))
+        #if removed:
+        #    counter_context = self._find_counter(container)
+        #    for (type_name, uids) in removed.items():
+        #        self._update_counter(counter_context.uid, type_name, -len(uids))
         return removed
 
     def get_count(self, container_uid, type_name):
@@ -128,14 +113,14 @@ class UserUnread(IterableUserDict):
         except KeyError:
             return ()
 
-    def _update_counter(self, counter_uid, type_name, val):
-        if not isinstance(self.unread_counter, OOBTree):
-            self.unread_counter = self.context._unread_counter = OOBTree()
-        if counter_uid not in self.unread_counter:
-            self.unread_counter[counter_uid] = OOBTree()
-        if type_name not in self.unread_counter[counter_uid]:
-            self.unread_counter[counter_uid][type_name] = Length()
-        self.unread_counter[counter_uid][type_name].change(val)
+    # def _update_counter(self, counter_uid, type_name, val):
+    #     if not isinstance(self.unread_counter, OOBTree):
+    #         self.unread_counter = self.context._unread_counter = OOBTree()
+    #     if counter_uid not in self.unread_counter:
+    #         self.unread_counter[counter_uid] = OOBTree()
+    #     if type_name not in self.unread_counter[counter_uid]:
+    #         self.unread_counter[counter_uid][type_name] = Length()
+    #     self.unread_counter[counter_uid][type_name].change(val)
 
     def get_unread_count(self, counter_uid, type_name):
         try:
@@ -147,83 +132,83 @@ class UserUnread(IterableUserDict):
         return True
     __nonzero__ = __bool__
 
-
-class UnreadCleanupCache(object):
-
-    def __init__(self, request=None):
-        if request is None:
-            request = get_current_request()
-        self.request = request
-        if not hasattr(self.request, '_unread_handled_uids'):
-            self.request._unread_handled_uids = set()
-        self.handled = self.request._unread_handled_uids
-
-    def __contains__(self, key):
-        return key in self.handled
-
-    def add(self, key):
-        self.handled.add(key)
-
-    def update(self, keys):
-        self.handled.update(keys)
-
-
-def get_participant_users(context):
-    request = get_current_request()
-    meeting = getattr(request, 'meeting', find_interface(context, IMeeting))
-    root = find_root(meeting)
-    if meeting:
-        for userid in get_meeting_participants(meeting):
-            try:
-                yield root['users'][userid]
-            except KeyError:
-                #Catch any occastions where a userid had a local role it shouldn't have
-                pass
+#
+# class UnreadCleanupCache(object):
+#
+#     def __init__(self, request=None):
+#         if request is None:
+#             request = get_current_request()
+#         self.request = request
+#         if not hasattr(self.request, '_unread_handled_uids'):
+#             self.request._unread_handled_uids = set()
+#         self.handled = self.request._unread_handled_uids
+#
+#     def __contains__(self, key):
+#         return key in self.handled
+#
+#     def add(self, key):
+#         self.handled.add(key)
+#
+#     def update(self, keys):
+#         self.handled.update(keys)
 
 
-def add_as_unread(context, event):
-    for user in get_participant_users(context):
-        unread = IUserUnread(user, None)
-        if unread:
-            unread.add(context)
+# def get_participant_users(context):
+#     request = get_current_request()
+#     meeting = getattr(request, 'meeting', find_interface(context, IMeeting))
+#     root = find_root(meeting)
+#     if meeting:
+#         for userid in get_meeting_participants(meeting):
+#             try:
+#                 yield root['users'][userid]
+#             except KeyError:
+#                 #Catch any occastions where a userid had a local role it shouldn't have
+#                 pass
 
 
-def remove_unread(context, event):
-    cleanup_cache = UnreadCleanupCache()
-    if context.uid in cleanup_cache:
-        return
-    for user in get_participant_users(context):
-        unread = IUserUnread(user, None)
-        if unread:
-            unread.remove(context)
+# def add_as_unread(context, event):
+#     for user in get_participant_users(context):
+#         unread = IUserUnread(user, None)
+#         if unread:
+#             unread.add(context)
+#
+#
+# def remove_unread(context, event):
+#     cleanup_cache = UnreadCleanupCache()
+#     if context.uid in cleanup_cache:
+#         return
+#     for user in get_participant_users(context):
+#         unread = IUserUnread(user, None)
+#         if unread:
+#             unread.remove(context)
+#
+#
+# def remove_container(context, event):
+#     cleanup_cache = UnreadCleanupCache()
+#     if IMeeting.providedBy(context):
+#         potential = context.values()
+#     else:
+#         potential = [context]
+#     contexts_to_remove = []
+#     for pcontext in potential:
+#         if pcontext.uid not in cleanup_cache:
+#             contexts_to_remove.append(pcontext)
+#             cleanup_cache.add(pcontext.uid)
+#     if contexts_to_remove:
+#         for user in get_participant_users(context):
+#             unread = IUserUnread(user, None)
+#             for rcontext in contexts_to_remove:
+#                 if unread and rcontext.uid in unread:
+#                     removed = unread.remove_container(rcontext.uid)
+#                     cleanup_cache.update(removed)
 
 
-def remove_container(context, event):
-    cleanup_cache = UnreadCleanupCache()
-    if IMeeting.providedBy(context):
-        potential = context.values()
-    else:
-        potential = [context]
-    contexts_to_remove = []
-    for pcontext in potential:
-        if pcontext.uid not in cleanup_cache:
-            contexts_to_remove.append(pcontext)
-            cleanup_cache.add(pcontext.uid)
-    if contexts_to_remove:
-        for user in get_participant_users(context):
-            unread = IUserUnread(user, None)
-            for rcontext in contexts_to_remove:
-                if unread and rcontext.uid in unread:
-                    removed = unread.remove_container(rcontext.uid)
-                    cleanup_cache.update(removed)
-
-
-def includeme(config):
-    """ Register unread adapter. """
-    config.add_subscriber(remove_container, [IMeeting, IObjectWillBeRemovedEvent])
-    config.add_subscriber(remove_container, [IAgendaItem, IObjectWillBeRemovedEvent])
-    config.add_subscriber(add_as_unread, [IProposal, IObjectAddedEvent])
-    config.add_subscriber(add_as_unread, [IDiscussionPost, IObjectAddedEvent])
-    config.add_subscriber(remove_unread, [IProposal, IObjectWillBeRemovedEvent])
-    config.add_subscriber(remove_unread, [IDiscussionPost, IObjectWillBeRemovedEvent])
-    config.registry.registerAdapter(UserUnread)
+#def includeme(config):
+#    pass
+    # config.add_subscriber(remove_container, [IMeeting, IObjectWillBeRemovedEvent])
+    # config.add_subscriber(remove_container, [IAgendaItem, IObjectWillBeRemovedEvent])
+    # config.add_subscriber(add_as_unread, [IProposal, IObjectAddedEvent])
+    # config.add_subscriber(add_as_unread, [IDiscussionPost, IObjectAddedEvent])
+    # config.add_subscriber(remove_unread, [IProposal, IObjectWillBeRemovedEvent])
+    # config.add_subscriber(remove_unread, [IDiscussionPost, IObjectWillBeRemovedEvent])
+    # config.registry.registerAdapter(UserUnread)

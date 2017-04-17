@@ -8,7 +8,6 @@ from arche.utils import resolve_docids
 from pyramid.request import apply_request_extensions
 
 from voteit.core.bootstrap import bootstrap_voteit
-from voteit.core.models.interfaces import IUserUnread
 from voteit.core.testing_helpers import attach_request_method
 from voteit.core.testing_helpers import bootstrap_and_fixture
 
@@ -180,9 +179,9 @@ class TestGetDocidsToShow(unittest.TestCase):
         self.config = testing.setUp(request = testing.DummyRequest())
         self.config.testing_securitypolicy('admin', permissive = True)
         self.config.include('arche.testing')
-        self.config.include('arche.models.catalog')
+        self.config.include('arche.testing.catalog')
         self.config.include('voteit.core.models.catalog')
-        self.config.include('voteit.core.models.unread')
+        self.config.include('voteit.core.models.read_names')
         self.config.include('voteit.core.models.discussion_post')
         self.config.include('voteit.core.models.site')
         self.config.include('voteit.core.models.users')
@@ -216,10 +215,10 @@ class TestGetDocidsToShow(unittest.TestCase):
             res.append(root.document_map.docid_for_address("/m/ai/d%s" % i))
         return res
 
-    def _mark_read(self, root, items):
-        unread = IUserUnread(root['users']['admin'])
-        for i in items:
-            unread.remove(root['m']['ai']['d%s' % i])
+    #def _mark_read(self, root, items):
+    #    unread = IUserUnread(root['users']['admin'])
+    #    for i in items:
+    #        unread.remove(root['m']['ai']['d%s' % i])
 
     def _set_tag(self, root, items, tag = '#one'):
         for i in items:
@@ -231,7 +230,6 @@ class TestGetDocidsToShow(unittest.TestCase):
         request.root = root
         request.meeting = root['m']
         apply_request_extensions(request)
-        self.config.begin(request)
         return request
 
     def test_only_unread(self):
@@ -247,7 +245,9 @@ class TestGetDocidsToShow(unittest.TestCase):
     def test_too_many_unread(self):
         root = self._fixture(6)
         request = self._mk_request(root)
-        self._mark_read(root, [0, 1])
+        read_names = request.get_read_names(root['m']['ai'])
+        read_names.mark_read(['d0', 'd1'], 'admin')
+        #self._mark_read(root, [0, 1])
         result = self._fut(request, root['m']['ai'], 'DiscussionPost', limit = 2)
         docids = self._docid_structure(root, 6)
         expected_previous = docids[0:2]
@@ -262,7 +262,9 @@ class TestGetDocidsToShow(unittest.TestCase):
     def test_all_read(self):
         root = self._fixture(3)
         request = self._mk_request(root)
-        self._mark_read(root, range(3))
+        read_names = request.get_read_names(root['m']['ai'])
+        read_names.mark_read(['d0', 'd1', 'd2'], 'admin')
+        #self._mark_read(root, range(3))
         result = self._fut(request, root['m']['ai'], 'DiscussionPost', limit = 2)
         docids = self._docid_structure(root)
         expected_previous = docids[0:1]
@@ -274,7 +276,9 @@ class TestGetDocidsToShow(unittest.TestCase):
     def test_2_unread_fill_from_read(self):
         root = self._fixture()
         request = self._mk_request(root)
-        self._mark_read(root, range(8))
+        read_names = request.get_read_names(root['m']['ai'])
+        read_names.mark_read(['d%s' % i for i in range(8)], 'admin')
+        #self._mark_read(root, range(8))
         result = self._fut(request, root['m']['ai'], 'DiscussionPost')
         docids = self._docid_structure(root)
         expected_previous = docids[0:5]
@@ -286,7 +290,9 @@ class TestGetDocidsToShow(unittest.TestCase):
     def test_unread_gaps_dont_matter(self):
         root = self._fixture(6)
         request = self._mk_request(root)
-        self._mark_read(root, [0, 2, 4])
+        read_names = request.get_read_names(root['m']['ai'])
+        read_names.mark_read(['d0', 'd2', 'd4'], 'admin')
+        #self._mark_read(root, [0, 2, 4])
         result = self._fut(request, root['m']['ai'], 'DiscussionPost', limit = 4)
         docids = self._docid_structure(root, 6)
         expected_previous = docids[0:1]
@@ -301,7 +307,9 @@ class TestGetDocidsToShow(unittest.TestCase):
     def test_tags_matter(self):
         root = self._fixture()
         request = self._mk_request(root)
-        self._mark_read(root, range(2))
+        read_names = request.get_read_names(root['m']['ai'])
+        read_names.mark_read(['d0', 'd1'], 'admin')
+        #self._mark_read(root, range(2))
         self._set_tag(root, range(6))
         result = self._fut(request, root['m']['ai'], 'DiscussionPost', tags = ('one',), limit = 3)
         docids = self._docid_structure(root)
@@ -358,7 +366,6 @@ class TestGetPollsStruct(unittest.TestCase):
         self.config.include('arche.testing')
         self.config.include('arche.models.catalog')
         self.config.include('voteit.core.models.catalog')
-        self.config.include('voteit.core.models.unread')
         self.config.include('voteit.core.models.discussion_post')
         self.config.include('voteit.core.models.site')
         self.config.include('voteit.core.models.users')

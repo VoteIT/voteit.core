@@ -1,3 +1,4 @@
+
 def includeme(config):
     """ Include all models. """
     config.include('.agenda_item')
@@ -16,8 +17,8 @@ def includeme(config):
     config.include('.populator')
     config.include('.proposal')
     config.include('.proposal_ids')
+    config.include('.read_names')
     config.include('.site')
-    config.include('.unread')
     config.include('.user')
     config.include('.users')
     config.include('.vote')

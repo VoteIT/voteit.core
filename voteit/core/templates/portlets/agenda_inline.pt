@@ -4,38 +4,40 @@
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
       i18n:domain="voteit.core">
 <tal:iterate repeat="state states">
-  <div class="panel panel-default" tal:define="ai_metas view.get_ais(state)">
+  <div class="panel panel-default" tal:define="ais view.get_ais(state)">
     <div class="panel-heading">
       <h4 class="panel-title">
         <span class="glyphicon glyphicon-${state} text-${state}"></span>
         ${state_titles[state]}
-        <span class="badge pull-right">${len(ai_metas)}</span>
+        <span class="badge pull-right">${len(ais)}</span>
       </h4>
     </div>
     <div class="btn-group-portlet" role="group">
-      <tal:iterate tal:repeat="meta ai_metas">
-      <tal:def define="context_path '%s/%s' % (meeting_path, meta['__name__']);
-                       is_current view.in_current_context(context_path);
-                       context_unread not is_current and (meta['unread_proposal'] or meta['unread_discussionpost']);">
-      <tal:cog condition="request.is_moderator"
-        replace="structure view.render_template('voteit.core:templates/snippets/cogwheel.pt', url =  '%s/__cogwheel_menu__' % context_path)" />
-        <a href="${context_path}"
+      <tal:iterate tal:repeat="ai ais">
+      <tal:def define="is_current view.ai_name == ai.__name__;
+                       tcount view.count_types(ai);
+                       context_unread not is_current and (tcount['Proposal']['unread'] or tcount['DiscussionPost']['unread']);">
+        <tal:cog condition="request.is_moderator">
+          <tal:menu replace="structure view.render_template('voteit.core:templates/snippets/cogwheel.pt',
+                             url=request.resource_url(ai, '__cogwheel_menu__'))"/>
+        </tal:cog>
+        <a href="${request.resource_url(ai)}"
           class="btn btn-default btn-block ${is_current and 'active' or None} ${context_unread and 'item-unread' or None}">
-          <span class="btn-title">${meta['title']}</span>
+          <span class="btn-title">${ai.title}</span>
           <div class="row text-muted">
             <div class="col-xs-4 col-sm-12 col-md-4">
               <span class="glyphicon glyphicon-exclamation-sign"></span>
-              <span>${meta['proposal_count']}</span>
-              <span tal:condition="not is_current and meta['unread_proposal']" class="badge">${meta['unread_proposal']}</span>
+              <span>${tcount['Proposal']['total']}</span>
+              <span tal:condition="not is_current and tcount['Proposal']['unread']" class="badge">${tcount['Proposal']['unread']}</span>
             </div>
             <div class="col-xs-4 col-sm-12 col-md-4">
               <span class="glyphicon glyphicon-comment"></span>
-              <span>${meta['discussion_count']}</span>
-              <span tal:condition="not is_current and meta['unread_discussionpost']" class="badge">${meta['unread_discussionpost']}</span>
+              <span>${tcount['DiscussionPost']['total']}</span>
+              <span tal:condition="not is_current and tcount['DiscussionPost']['unread']" class="badge">${tcount['DiscussionPost']['unread']}</span>
             </div>
             <div class="col-xs-4 col-sm-12 col-md-4">
               <span class="glyphicon glyphicon-star"></span>
-              <span>${meta['poll_count']}</span>
+              <span>${tcount['Poll']['total']}</span>
             </div>
           </div>
         </a>

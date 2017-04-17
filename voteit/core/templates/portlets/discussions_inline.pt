@@ -19,6 +19,7 @@
                    is_unread docid in unread">
   <div class="list-group-item ${is_unread and 'list-group-item-unread' or None}"
     data-uid="${obj.uid}"
+    data-name="${obj.__name__}"
     data-unread="${is_unread and 'true' or 'false'}">
     <div class="text">
       <tal:cog condition="request.is_moderator"

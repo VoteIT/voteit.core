@@ -6,9 +6,9 @@ from arche.portlets import PortletType
 from pyramid.renderers import render
 from pyramid.traversal import resource_path
 from pyramid.traversal import find_resource
+from repoze.catalog.query import Eq
 
 from voteit.core.models.interfaces import IMeeting
-from voteit.core.models.interfaces import IUserUnread
 from voteit.core.security import VIEW
 from voteit.core import _
 
@@ -18,8 +18,14 @@ _meeting_states = ('ongoing', 'upcoming', 'closed')
 class MeetingListingPortlet(PortletType):
     name = "meeting_list"
     title = _("Meeting list")
+    tpl = "voteit.core:templates/portlets/meeting_list.pt"
 
     def render(self, context, request, view, **kwargs):
+
+        def item_count_for(meeting, type_name):
+            query = Eq('path', resource_path(meeting)) & Eq('type_name', type_name)
+            return request.root.catalog.query(query)[0].total
+
         if request.authenticated_userid and (IRoot.providedBy(context) or IUser.providedBy(context)):
             meetings = {}
             collapse = {}
@@ -37,20 +43,13 @@ class MeetingListingPortlet(PortletType):
                         'meetings': meetings,
                         'collapse': collapse,
                         'meeting_states': _meeting_states,
-                        'item_count_for': self.item_count_for,
+                        'item_count_for': item_count_for,
                         'state_titles': request.get_wf_state_titles(IMeeting, 'Meeting'),}
-            return render("voteit.core:templates/portlets/meeting_list.pt",
+            return render(self.tpl,
                           response,
                           request = request)
 
-    def item_count_for(self, request, context, type_name, unread = False):
-        if unread:
-            user_unread = IUserUnread(request.profile)
-            return user_unread.get_unread_count(context.uid, type_name)
-        else:
-            query = {'path': resource_path(context),
-                     'type_name': type_name}
-            return request.root.catalog.search(**query)[0].total
+
 
 def _get_meetings(request, state = 'ongoing', sort_index = 'sortable_title'):
     root = request.root

@@ -11,21 +11,21 @@ function unread_notify(url) {
   }
   if (voteit.unread_notify_url) {
     // Action URL set
-    var unread_uids = [];
-    $("[data-unread]").each( function() {
-      if ($(this).data('unread') === true) unread_uids.push( $(this).data('uid') );
+    var read_names = [];
+    $("[data-name]").each( function() {
+      if ($(this).data('unread') === true) read_names.push( $(this).data('name') );
     });
-    if (unread_uids.length > 0) {
+    if (read_names.length > 0) {
       // There's data to send
-      arche.do_request(voteit.unread_notify_url, {method: 'POST', data:{'read_uids': unread_uids}})
+      arche.do_request(voteit.unread_notify_url, {method: 'POST', data:{'read_names': read_names}})
       .always(function() {
         voteit.unread_notify_timer = setInterval(voteit.unread_notify, voteit.unread_notify_interval);
       })
       .done(function(data) {
-        //Remove uids here
+        //Remove names here
         if ('marked_read' in data) {
           $(data['marked_read']).each(function() {
-            $('[data-uid=' + this + ']').data('unread', false);
+            $('[data-name=' + this + ']').data('unread', false);
           })
         }
       });

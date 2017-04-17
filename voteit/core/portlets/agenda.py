@@ -7,7 +7,7 @@ from pyramid.traversal import resource_path
 import colander
 from pyramid.decorator import reify
 
-from voteit.core.models.interfaces import IAgendaItem, IUserUnread
+from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IMeeting
 from voteit.core import _
 from voteit.core.fanstaticlib import data_loader
@@ -32,6 +32,7 @@ class AgendaPortlet(PortletType):
 
 
 class AgendaInlineView(BaseView):
+    unread_types = ('Proposal', 'DiscussionPost')
 
     def __call__(self):
         response = {}
@@ -41,44 +42,49 @@ class AgendaInlineView(BaseView):
         response['states'] = states
         response['state_titles'] = self.request.get_wf_state_titles(IAgendaItem, 'AgendaItem')
         response['meeting_path'] = self.meeting_path = resource_path(self.request.meeting)
-        ai_name = self.request.GET.get('ai_name', None)
-        if ai_name:
-            self.ai_path = "%s/%s" % (self.meeting_path, ai_name)
-        else:
-            self.ai_path = None
+        self.ai_name = self.request.GET.get('ai_name', None)
+        #if ai_name:
+        #    self.ai_path = "%s/%s" % (self.meeting_path, ai_name)
+        #else:
+        #    self.ai_path = None
         return response
 
     def get_ais(self, state):
-        results = []
         catalog = self.request.root.catalog
-        unread_types = ('Proposal', 'DiscussionPost')
-        user_unread = IUserUnread(self.request.profile)
-        for docid in catalog.search(path = self.meeting_path,
+        #user_unread = IUserUnread(self.request.profile)
+        docids = catalog.search(path = self.meeting_path,
                                     type_name = 'AgendaItem',
-                                    workflow_state = state)[1]:
-            try:
-                meta = dict(self.request.root.document_map.get_metadata(docid))
-            except KeyError:
-                meta = {}
-            for utype in unread_types:
-                meta['unread_%s' % utype.lower()] = user_unread.get_count(meta['uid'], utype)
-            results.append(meta)
-        #Sort meta
+                                    workflow_state = state)[1]
+        #results = tuple(self.request.resolve_docids(docids, perm=None))
+        #Don't check permission here, assume permission check done before
+        results = self.request.resolve_docids(docids, perm=None)
         ai_order = self.context.order
-        def _sorter(meta):
+        def _sorter(ai):
             try:
-                return ai_order.index(meta['__name__'])
+                return ai_order.index(ai.__name__)
             except (ValueError, KeyError):
                 return len(ai_order)
         return sorted(results, key=_sorter)
 
-    def in_current_context(self, context_path):
-        if self.ai_path:
-            path = self.ai_path.split('/')
-            context_path = context_path.split('/')
-            if len(path) > len(context_path):
-                path = path[0:len(context_path)]
-            return path == context_path
+    def count_types(self, ai):
+        results = {}
+        userid = self.request.authenticated_userid
+        rn = self.request.get_read_names(ai)
+        for utype in self.unread_types:
+            total = rn.get_type_count(utype)
+            results[utype] = {'total': total, 'unread': total-rn.get_read_type(utype, userid)}
+        results['Poll'] = {'total': rn.get_type_count('Poll')}
+        return results
+
+    #def unread_for(self, ai):
+    #
+    # def in_current_context(self, context_path):
+    #     if self.ai_path:
+    #         path = self.ai_path.split('/')
+    #         context_path = context_path.split('/')
+    #         if len(path) > len(context_path):
+    #             path = path[0:len(context_path)]
+    #         return path == context_path
 
 
 def includeme(config):

@@ -1,0 +1,47 @@
+<tal:main xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="voteit.core">
+<tal:iterate repeat="state states">
+  <div class="panel panel-default" tal:define="ai_metas view.get_ais(state)">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <span class="glyphicon glyphicon-${state} text-${state}"></span>
+        ${state_titles[state]}
+        <span class="badge pull-right">${len(ai_metas)}</span>
+      </h4>
+    </div>
+    <div class="btn-group-portlet" role="group">
+      <tal:iterate tal:repeat="meta ai_metas">
+      <tal:def define="context_path '%s/%s' % (meeting_path, meta['__name__']);
+                       is_current view.in_current_context(context_path);
+                       context_unread not is_current and (meta['unread_proposal'] or meta['unread_discussionpost']);">
+      <tal:cog condition="request.is_moderator"
+        replace="structure view.render_template('voteit.core:templates/snippets/cogwheel.pt', url =  '%s/__cogwheel_menu__' % context_path)" />
+        <a href="${context_path}"
+          class="btn btn-default btn-block ${is_current and 'active' or None} ${context_unread and 'item-unread' or None}">
+          <span class="btn-title">${meta['title']}</span>
+          <div class="row text-muted">
+            <div class="col-xs-4 col-sm-12 col-md-4">
+              <span class="glyphicon glyphicon-exclamation-sign"></span>
+              <span>${meta['proposal_count']}</span>
+              <span tal:condition="not is_current and meta['unread_proposal']" class="badge">${meta['unread_proposal']}</span>
+            </div>
+            <div class="col-xs-4 col-sm-12 col-md-4">
+              <span class="glyphicon glyphicon-comment"></span>
+              <span>${meta['discussion_count']}</span>
+              <span tal:condition="not is_current and meta['unread_discussionpost']" class="badge">${meta['unread_discussionpost']}</span>
+            </div>
+            <div class="col-xs-4 col-sm-12 col-md-4">
+              <span class="glyphicon glyphicon-star"></span>
+              <span>${meta['poll_count']}</span>
+            </div>
+          </div>
+        </a>
+      </tal:def>
+      </tal:iterate>
+    </div>
+  </div>
+</tal:iterate>
+</tal:main>

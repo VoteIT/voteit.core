@@ -1,4 +1,7 @@
-from voteit.core.models.interfaces import IMeeting, IAgendaItem
+from arche.interfaces import ICataloger
+from arche.utils import find_all_db_objects
+from voteit.core.models.interfaces import IAgendaItem
+from voteit.core.models.interfaces import IMeeting
 
 
 def _reorder_ais(meeting):
@@ -18,6 +21,10 @@ def _reorder_ais(meeting):
         return order_priority[key]
     order = sorted(curr_keys, key=_sorter)
     meeting.order = order
+    for obj in find_all_db_objects(meeting):
+        cataloger = ICataloger(obj, None)
+        if cataloger:
+            cataloger.index_object()
 
 
 def evolve(root):

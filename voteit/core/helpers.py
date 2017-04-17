@@ -6,7 +6,7 @@ from arche.utils import generate_slug #API
 from pyramid.renderers import render
 from pyramid.traversal import find_interface
 from pyramid.traversal import resource_path
-from repoze.catalog.query import Any
+from repoze.catalog.query import Any, NotAny
 from repoze.catalog.query import Eq
 from repoze.workflow import get_workflow
 from webhelpers.html.converters import nl2br
@@ -15,7 +15,6 @@ from webhelpers.html.tools import auto_link
 
 from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IMeeting
-from voteit.core.models.interfaces import IUserUnread
 from voteit.core import security
 from voteit.core import _
 
@@ -188,10 +187,11 @@ def get_docids_to_show(request, context, type_name, tags = (), limit = 5, start_
     query &= Eq('type_name', type_name)
     if tags:
         query &= Any('tags', list(tags))
-    user_unread = IUserUnread(request.profile)
-    unread_query = query & Any('uid', user_unread.get_uids(context.uid, type_name))
+    read_names = request.get_read_names(context)
+    unread_query = query & NotAny('__name__', set(read_names.get(request.authenticated_userid, [])))
     unread_docids = list(request.root.catalog.query(unread_query, sort_index = 'created')[1])
     docids_pool = list(request.root.catalog.query(query, sort_index = 'created')[1])
+
     if start_after and start_after in docids_pool:
         i = docids_pool.index(start_after)
         for docid in docids_pool[:i+1]:

@@ -66,8 +66,6 @@ class MPIntegrationTests(unittest.TestCase):
         self.config.include('voteit.core.testing_helpers.register_workflows')
         #Register poll plugin
         self.config.include('voteit.core.plugins.majority_poll')
-        # Adding catalog
-        self.config.include('voteit.core.models.unread')
         #Add root
         from voteit.core.models.site import SiteRoot
         self.root = root = SiteRoot()

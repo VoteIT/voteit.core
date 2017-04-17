@@ -48,24 +48,26 @@
                 </tal:started>
               </span>
 
-              <div class="row text-muted">
+              <div class="row text-muted"
+                   tal:define="total item_count_for(obj, 'Proposal');
+                               unread total-request.get_read_count(obj, 'Proposal')">
                 <div class="col-xs-4 col-sm-12 col-md-4">
                   <span class="glyphicon glyphicon-exclamation-sign"></span>
-                  <span>${item_count_for(request, obj, 'Proposal')}</span>
-                  <span tal:define="unread_prop item_count_for(request, obj, 'Proposal', unread = True)"
-                    tal:condition="unread_prop"
-                    class="badge">${unread_prop}</span>
+                  <span>${total}</span>
+                  <span tal:condition="unread"
+                    class="badge">${unread}</span>
                 </div>
-                <div class="col-xs-4 col-sm-12 col-md-4">
+                <div class="col-xs-4 col-sm-12 col-md-4"
+                     tal:define="total item_count_for(obj, 'DiscussionPost');
+                               unread total-request.get_read_count(obj, 'DiscussionPost')">
                   <span class="glyphicon glyphicon-comment"></span>
-                  <span>${item_count_for(request, obj, 'DiscussionPost')}</span>
-                  <span tal:define="unread_disc item_count_for(request, obj, 'DiscussionPost', unread = True)"
-                    tal:condition="unread_disc"
-                    class="badge">${unread_disc}</span>
+                  <span>${total}</span>
+                  <span tal:condition="unread"
+                    class="badge">${unread}</span>
                 </div>
                 <div class="col-xs-4 col-sm-12 col-md-4">
                   <span class="glyphicon glyphicon-star"></span>
-                  <span>${item_count_for(request, obj, 'Poll')}</span>
+                  <span>${item_count_for(obj, 'Poll')}</span>
                 </div>
               </div>
 

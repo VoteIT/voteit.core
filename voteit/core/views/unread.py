@@ -1,11 +1,11 @@
-from pyramid.view import view_config
+#from pyramid.view import view_config
 
-from voteit.core.models.interfaces import IAgendaItem
-from voteit.core.models.interfaces import IUserUnread
-from voteit.core.security import VIEW
+#from voteit.core.models.interfaces import IAgendaItem
+#from voteit.core.models.interfaces import IUserUnread
+#from voteit.core.security import VIEW
 
 
-@view_config(context = IAgendaItem, name = "_mark_read", permission = VIEW, renderer='json')
+#@view_config(context = IAgendaItem, name = "_mark_read", permission = VIEW, renderer='json')
 def mark_content_as_read(context, request):
     """ Mark content as read for user. All uids are stored on the users profile object.
         Any updates that will occur at the same time will likely be able to be resolved

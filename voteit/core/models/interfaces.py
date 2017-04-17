@@ -516,35 +516,44 @@ class ILogHandler(Interface):
         """
 
 
-class IUserUnread(IDict):
-    container_ifaces = Attribute("List of interfaces that should be considered as containers"
-                                 "for unread items. Currently only AgendaItems within VoteIT.")
-    counter_ifaces = Attribute("List of interfaces that should count a grand total of "
-                               "their contained items. Essentially a cache so we don't "
-                               "have to loop over all containers. Within VoteIT "
-                               "currently only Meetings.")
+# class IUserUnread(IDict):
+#     container_ifaces = Attribute("List of interfaces that should be considered as containers"
+#                                  "for unread items. Currently only AgendaItems within VoteIT.")
+#     counter_ifaces = Attribute("List of interfaces that should count a grand total of "
+#                                "their contained items. Essentially a cache so we don't "
+#                                "have to loop over all containers. Within VoteIT "
+#                                "currently only Meetings.")
+#
+#     def add(context):
+#         """ Add context as unread. """
+#
+#     def remove(context):
+#         """ Remove context from unread. """
+#
+#     def remove_uids(container, uids):
+#         """ Remove uids from container - I.e they've been read or the
+#             container was deleted.
+#         """
+#
+#     def get_count(container_uid, type_name):
+#         """ Number of unread within a container. """
+#
+#     def get_uids(container_uid, type_name):
+#         """ Unread uids of a specific type, within a container.
+#         """
+#
+#     def get_unread_count(counter_uid, type_name):
+#         """ Get result of counter. (Usually for meetings)
+#         """
 
-    def add(context):
-        """ Add context as unread. """
+class IUnread(IDict):
+    pass
 
-    def remove(context):
-        """ Remove context from unread. """
+class IReadNames(IDict):
+    pass
 
-    def remove_uids(container, uids):
-        """ Remove uids from container - I.e they've been read or the
-            container was deleted.
-        """
-
-    def get_count(container_uid, type_name):
-        """ Number of unread within a container. """
-
-    def get_uids(container_uid, type_name):
-        """ Unread uids of a specific type, within a container.
-        """
-
-    def get_unread_count(counter_uid, type_name):
-        """ Get result of counter. (Usually for meetings)
-        """
+class IReadNamesCounter(IDict):
+    pass
 
 
 class IProposalIds(Interface):
