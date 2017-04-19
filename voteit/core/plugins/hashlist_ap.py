@@ -23,7 +23,7 @@ class HashlistAP(AccessPolicy):
     title = _("Hashlist access")
     description = _(
         "hashlist_access_description",
-        default="Users will be granted the permissions you select without"
+        default="Users will be granted the permissions you select without "
                 "prior moderator approval if their email is registered "
                 "within a hashlist. arche_hashlist must be installed for "
                 "this to work."
@@ -44,7 +44,7 @@ class HashlistAP(AccessPolicy):
         return colander.Schema(
             title=_("Would you like to participate?"),
             description=_(
-                "Clicking request access will grant you access if your email address"
+                "Clicking request access will grant you access if your email address "
                 "is allowed by the access policy."
             )
         )
@@ -58,7 +58,7 @@ class HashlistAP(AccessPolicy):
             raise HTTPForbidden(_("Your email isn't validated. Check your profile menu."))
         if not self.hashlist.check(profile.email):
             msg = _("email_address_not_listed_as_allowed",
-                    default="Your email address isn't listed as allowed to access this meeting."
+                    default="Your email address isn't listed as allowed to access this meeting. "
                             "Contact the moderator to request access."
                     )
             raise HTTPForbidden(msg)
