@@ -23,7 +23,6 @@ class ImmediateAP(AccessPolicy):
                                description = _("Clicking request access will grant you access right away!"))
 
     def handle_success(self, view, appstruct):
-        rolesdict = dict(security.STANDARD_ROLES)
         roles = self.context.get_field_value('immediate_access_grant_roles')
         self.context.add_groups(view.request.authenticated_userid, roles)
         view.flash_messages.add(_("Access granted - welcome!"))
