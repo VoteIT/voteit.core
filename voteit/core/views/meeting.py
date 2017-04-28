@@ -63,7 +63,7 @@ class MeetingView(BaseView):
         #Add agenda item objects to response
         results = []
         for obj in self.context.values():
-            if IAgendaItem.providedBy(obj) and self.request.has_permission(obj, security.VIEW):
+            if IAgendaItem.providedBy(obj) and self.request.has_permission(security.VIEW, obj):
                 results.append(obj)
         return {'agenda_items': results}
 
