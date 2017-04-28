@@ -23,11 +23,13 @@
       </a>
     </div>
     <div class="collapse navbar-collapse" id="navbar-collapsible">
-      <ul class="nav navbar-nav">
-        <li tal:repeat="obj view.get_local_nav_objects(view.root)">
+      <tal:def define="navobjs request.meeting is None and tuple(view.get_local_nav_objects(view.root)) or ()">
+      <ul tal:condition="navobjs" class="nav navbar-nav">
+        <li tal:repeat="obj navobjs">
           <a href="${request.resource_url(obj)}">${obj.get_nav_title()|obj.title}</a>
         </li>
       </ul>
+      </tal:def>
       <ul class="nav navbar-nav navbar-right">
         <tal:actionbar_items replace="structure view.render_view_group('nav_right')" />
       </ul>
