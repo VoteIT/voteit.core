@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      tal:define="show_left_fixed True"
+      metal:define-macro="main"
+      metal:use-macro="view.macro('arche:templates/master.pt')"
+      i18n:domain="Arche">
+<body>
+<div id="fixed-nav" tal:condition="portlets_left_fixed|None" metal:fill-slot="left-fixed">
+    <tal:portlets repeat="portlet portlets_left_fixed">
+        <tal:portlet replace="structure portlet" />
+    </tal:portlets>
+</div>
+  <div class="row" metal:fill-slot="content">
+      <div class="col-sm-3 portlets-left" tal:condition="portlets_left" metal:define-slot="portlets-left">
+          <tal:portlets repeat="portlet portlets_left">
+              <tal:portlet replace="structure portlet" />
+          </tal:portlets>
+      </div>
+      <div class="col-sm-${main_cols}" metal:define-slot="main-column">
+
+          <div class="portlets-top" tal:condition="portlets_top" metal:define-slot="portlets-top">
+              <tal:portlets repeat="portlet portlets_top">
+                  <tal:portlet replace="structure portlet" />
+                  <div class="clearfix"><!-- --></div>
+              </tal:portlets>
+          </div>
+
+          <tal:main-column metal:define-slot="main-content"></tal:main-column>
+
+          <div class="portlets-bottom" tal:condition="portlets_bottom" metal:define-slot="portlets-bottom">
+              <tal:portlets repeat="portlet portlets_bottom">
+                  <tal:portlet replace="structure portlet" />
+                  <div class="clearfix"><!-- --></div>
+              </tal:portlets>
+          </div>
+
+      </div>
+      <div class="col-sm-3 portlets-right" tal:condition="portlets_right" metal:define-slot="portlets-right">
+          <tal:portlets repeat="portlet portlets_right">
+              <tal:portlet replace="structure portlet" />
+          </tal:portlets>
+      </div>
+  </div>
+</body>
+</html>

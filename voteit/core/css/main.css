@@ -473,4 +473,48 @@ body .btn-group-portlet > .item-unread {
 footer {
   margin-top: 30px; }
 
+/* Generic navbar active */
+@media (min-width: 768px) {
+  #fixed-nav {
+    width: 250px;
+    position: fixed;
+    border-radius: 0;
+    top: 50px;
+    bottom: 0;
+    overflow: scroll;
+    padding: 15px;
+    /*
+            .navbar-nav > li {
+                float: none;
+                width: $voteit-fixed-left-nav -1;
+            }
+            */
+    /*
+    .navbar-nav > li > .dropdown-menu {
+      margin-left: 140px;
+    }
+    */ }
+
+  body.left-fixed-active > .container {
+    padding-left: 250px; } }
+@media (max-width: 992px) {
+  body.left-fixed-active > .container {
+    width: auto; } }
+@media (min-width: 992px) {
+  #fixed-nav {
+    width: 300px; }
+
+  body.left-fixed-active > .container {
+    padding-left: 300px; } }
+@media (min-width: 1200px) {
+  #fixed-nav {
+    width: 350px; }
+
+  body.left-fixed-active > .container {
+    padding-left: 350px; } }
+/*
+.navbar-fixed-left + .container,
+.navbar-fixed-left + .navbar-fixed-top,
+*/
+
 /*# sourceMappingURL=main.css.map */

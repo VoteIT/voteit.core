@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      metal:define-macro="main"
+      lang="${request.localizer.locale_name}"
+      i18n:domain="Arche">
+  <head>
+    <tal:head replace="structure view.render_template('arche:templates/head.pt')" />
+    <metal:head define-slot="head"></metal:head>
+  </head>
+
+  <body metal:define-slot="fullpage"
+        tal:define="portlets_left view.render_portlet_slot('left');
+                    portlets_right view.render_portlet_slot('right');
+                    portlets_top view.render_portlet_slot('top');
+                    portlets_bottom view.render_portlet_slot('bottom');
+                    portlets_left_fixed view.render_portlet_slot('left_fixed');
+                    main_cols 12 - int(bool(portlets_left))*3 - int(bool(portlets_right))*3;"
+        class="${(show_left_fixed and portlets_left_fixed) and 'left-fixed-active' or None|None} view-${request.view_name or 'default'|'default'}">
+
+    <div class="fixed-flash-slot" data-flash-slot="main"></div>
+
+    <nav metal:define-slot="navigation" tal:replace="structure view.render_template('arche:templates/navigation.pt')" />
+
+    <tal:fixed-nav metal:define-slot="left-fixed"></tal:fixed-nav>
+
+    <div class="container">
+
+      <div class="row" tal:condition="False">
+        <div class="col-sm-6 col-md-8">
+          <ol class="breadcrumb">
+              <tal:iterate repeat="obj view.breadcrumbs()">
+                <li><a href="${request.resource_url(obj)}"
+                >${obj.get_nav_title()|getattr(obj, 'title', None) and obj.title or obj.__name__}
+                </a></li>
+              </tal:iterate>
+          </ol>
+        </div>
+        <div class="col-sm-6 col-md-4 hidden-print">
+
+          <form action="${request.resource_url(view.root,'search')}" class="search"
+                role="search" method="get">
+            <div class="input-group">
+              <input name="query" type="text" class="form-control" placeholder="Search"
+                  i18n:attributes="placeholder" value="${request.GET.get('query', '')}"/>
+              <span class="input-group-btn">
+                <button type="submit" class="btn btn-default">
+                <span class="glyphicon glyphicon-search"></span>&nbsp;
+                </button>
+              </span>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <tal:actionbar metal:define-slot="actionbar" replace="structure view.render_actionbar()" />
+
+      <div id="content">
+        <metal:content define-slot="content"></metal:content>
+      </div>
+
+    </div><!-- container -->
+    <footer tal:replace="structure view.render_template('arche:templates/footer.pt')" />
+
+  </body>
+</html>

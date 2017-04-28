@@ -5,9 +5,12 @@
       metal:use-macro="view.macro('arche:templates/base_view.pt', 'arche:templates/inline.pt')"
       i18n:domain="voteit.core">
 <body>
-<div metal:fill-slot="main-content">
-    <img tal:replace="structure view.thumb_tag(context, 'col-2', extra_cls = 'pull-right')" />
-  
+<tal:actionbar metal:fill-slot="actionbar" />
+
+<tal:main metal:fill-slot="main-content">
+
+    <tal:actionbar replace="structure view.render_actionbar()" />
+
     <div class="page-header">
       <h1>${context.title}</h1>
     </div>
@@ -26,7 +29,14 @@
         </tal:portlets>
     </div>
 
+    <script>
+    /*
+        window.onload = function() {
+            voteit.initial_ai_loaded();
+        };
+        */
+    </script>
 
-</div>
+</tal:main>
 </body>
 </html>

@@ -4,7 +4,13 @@
   	  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
 	    i18n:domain="voteit.core">
 <body>
+
+<tal:actionbar metal:fill-slot="actionbar" />
+
 <tal:main metal:fill-slot="main-content">
+
+  <tal:actionbar replace="structure view.render_actionbar()" />
+
   <h1>${context.title}</h1>
   <p class="description lead"
        tal:define="description context.description|None"

@@ -40,7 +40,8 @@ def include_voteit_resources(view, event):
     need_lib('deform') #As a minimum this should be included, but it really depends on poll methods.
     if view.request.is_moderator:
         voteit_moderator_js.need()
-
+    if view.request.meeting:
+        unread_js.need()
 
 def includeme(config):
     config.add_subscriber(include_voteit_resources, [IBaseView, IViewInitializedEvent])

@@ -43,7 +43,7 @@ function external_popover_from_event(event) {
 }
 voteit.external_popover_from_event = external_popover_from_event;
 
-function load_and_replace(event) {
+voteit.load_and_replace = function (event) {
   event.preventDefault();
   var elem = $(event.currentTarget);
   arche.actionmarker_feedback(elem, true);
@@ -61,11 +61,11 @@ function load_and_replace(event) {
     arche.actionmarker_feedback(elem, false);
     arche.load_flash_messages();
   });
+  return request;
 }
-voteit.load_and_replace = load_and_replace;
 
 
-function load_polls_menu(event) {
+voteit.load_polls_menu = function (event) {
   // Remember that the menu could be closed via a click too.
   var elem = $(event.currentTarget);
   if (elem.data('menu-loaded') == true) return;
@@ -83,9 +83,9 @@ function load_polls_menu(event) {
     arche.actionmarker_feedback(menu_target, false);
   });
 }
-voteit.load_polls_menu = load_polls_menu;
 
-function reset_polls_menu() {
+
+voteit.reset_polls_menu = function() {
   var out = '<li role="presentation" class="disabled">';
   out += '<a role="menuitem" tabindex="-1" href="#">';
   out += '<span data-actionmarker="glyphicon glyphicon-refresh rotate-me"></span>';
@@ -94,7 +94,89 @@ function reset_polls_menu() {
   $('[data-menu-loaded]').data('menu-loaded', false);
   $('[data-polls-menu-target]').html(out);
 }
-voteit.reset_polls_menu = reset_polls_menu;
+
+
+voteit.insert_ai_response = function(response, elem) {
+    var target = $(elem.data('load-agenda-item'));
+    $('[data-load-agenda-item]').removeClass('active');
+    elem.addClass('active');
+    target.html(response);
+    target.find("[data-load-target]").each(function() {
+        voteit.load_target(this);
+    });
+}
+
+
+voteit.make_ai_request = function(elem) {
+    var url = elem.attr('href');
+    //arche.actionmarker_feedback(elem, true);
+    var target = $(elem.data('load-agenda-item'));
+    var request = arche.do_request(url);
+    request.done(function(response) {
+        voteit.insert_ai_response(response, elem);
+    });
+    request.fail(arche.flash_error);
+    request.always(function() {
+        //arche.actionmarker_feedback(elem, false);
+        arche.load_flash_messages();
+    });
+    return request;
+}
+
+
+voteit.load_agenda_item = function(event) {
+    event.preventDefault();
+    var elem = $(event.currentTarget);
+    //var url = elem.attr('href');
+    var request = voteit.make_ai_request(elem);
+    request.done(function(response) {
+        var title = elem.find('[data-title]').text();
+        document.title = title;
+        /*
+        window.history.pushState(
+            {'url': url, 'title': title, 'html': response, 'type': 'agenda_item'},
+        title, url);
+        */
+    });
+}
+/*
+voteit.initial_ai_loaded function() {
+
+    var curr_url = document.location.href;
+    var curr_title = document.title;
+    var curr_type = $('[data-load-agenda-item][href="' + curr_url + '"]').length > 0 ? 'agenda_item' : '';
+
+    var elem = $();
+    var url = elem.attr('href');
+    var request = voteit.make_ai_request(elem);
+    request.done(function(response) {
+        var title = elem.find('[data-title]').text();
+        document.title = title;
+        window.history.pushState(
+            {'url': url, 'title': title, 'html': response, 'type': 'agenda_item'},
+        title, url);
+    });
+}*/
+
+/*
+voteit.handle_agenda_back = function(event) {
+
+//    console.log('popstate fired!');
+//    console.log(event.state);
+    try {
+        if (event.state['type'] != 'agenda_item') return;
+    } catch(e) {
+        return;
+    }
+
+    var elem = $('[href="' + event.state['url'] + '"]');
+    var target = $(elem.data('load-agenda-item'));
+    voteit.insert_ai_response(event.state['html'], elem);
+}
+*/
+
+//window.addEventListener('popstate', voteit.handle_agenda_back);
+
 
 $(document).ready(function () {
   $("[data-load-target]").each(function() {
@@ -105,4 +187,5 @@ $(document).ready(function () {
   $('body').on('click', '[data-clickable-target]', voteit.load_and_replace);
   $('body').on('click', '[data-polls-menu]', voteit.load_polls_menu);
   $('body').on('click', '[data-external-popover-loaded="false"]', voteit.external_popover_from_event);
+  $('body').on('click', '[data-load-agenda-item]', voteit.load_agenda_item);
 });

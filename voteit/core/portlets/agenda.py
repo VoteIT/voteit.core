@@ -15,6 +15,10 @@ class AgendaPortlet(PortletType):
     name = "agenda"
     schema_factory = None
     title = _("Agenda")
+    tpl = "voteit.core:templates/portlets/agenda.pt"
+
+    def load_url(self, request, ai_name):
+        return request.resource_url(request.meeting, '__agenda_items__', query = {'ai_name': ai_name})
 
     def render(self, context, request, view, **kwargs):
         if request.meeting:
@@ -23,10 +27,19 @@ class AgendaPortlet(PortletType):
             response = {'title': self.title,
                         'portlet': self.portlet,
                         'view': view,
-                        'load_url': request.resource_url(request.meeting, '__agenda_items__', query = {'ai_name': ai_name})}
-            return render("voteit.core:templates/portlets/agenda.pt",
+                        'load_url': self.load_url(request, ai_name)}
+            return render(self.tpl,
                           response,
                           request = request)
+
+
+class AgendaPortletFixed(AgendaPortlet):
+    name = "agenda_fixed"
+    title = _("Fixed agenda")
+    tpl = "voteit.core:templates/portlets/agenda_fixed.pt"
+
+    def load_url(self, request, ai_name):
+        return request.resource_url(request.meeting, '__agenda_fixed_inline__', query = {'ai_name': ai_name})
 
 
 class AgendaInlineView(BaseView):
@@ -70,8 +83,13 @@ class AgendaInlineView(BaseView):
 
 
 def includeme(config):
+    config.add_portlet(AgendaPortlet)
+    config.add_portlet(AgendaPortletFixed)
     config.add_view(AgendaInlineView,
                     name = '__agenda_items__',
                     context = IMeeting,
                     renderer = 'voteit.core:templates/portlets/agenda_inline.pt')
-    config.add_portlet(AgendaPortlet)
+    config.add_view(AgendaInlineView,
+                    name = '__agenda_fixed_inline__',
+                    context = IMeeting,
+                    renderer = 'voteit.core:templates/portlets/agenda_inline_fixed.pt')

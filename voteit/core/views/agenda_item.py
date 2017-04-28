@@ -4,7 +4,6 @@ from pyramid.traversal import resource_path
 
 from voteit.core import _
 from voteit.core import security
-from voteit.core.fanstaticlib import unread_js
 from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.security import VIEW
 
@@ -45,7 +44,6 @@ class AgendaItemView(BaseView):
                 return obj
 
     def __call__(self):
-        unread_js.need()
         return {}
 
 
