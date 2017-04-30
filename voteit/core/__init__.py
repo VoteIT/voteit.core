@@ -54,7 +54,7 @@ def required_components(config):
     config.include('voteit.core.js_translations')
     config.include('voteit.core.plugins.immediate_ap')
     config.include('voteit.core.plugins.invite_only_ap')
-    config.add_portlet_slot('left_fixed', title=_("Fixed left nav"), layout='horizontal')
+    config.add_portlet_slot('left_fixed', title=_("Fixed left nav"), layout='vertical')
     config.include('voteit.core.portlets')
 
     config.add_static_view('voteit_core_static', '%s:static' % PROJECTNAME, cache_max_age = cache_max_age)
