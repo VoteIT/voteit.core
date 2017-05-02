@@ -147,6 +147,13 @@ class Meeting(BaseContent, SecurityAware, WorkflowAware):
         self.set_field_value('system_userids', tuple(value))
 
     @property
+    def polls_menu_only_links(self): #arche compat
+        return self.get_field_value('polls_menu_only_links')
+    @polls_menu_only_links.setter
+    def polls_menu_only_links(self, value):
+        self.set_field_value('polls_menu_only_links', value)
+
+    @property
     def invite_tickets(self):
         try:
             return self.__invite_tickets__

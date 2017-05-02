@@ -249,6 +249,7 @@ class PollsMenuContent(BaseView):
         response['state_titles'] = self.request.get_wf_state_titles(IPoll, 'Poll')
         response['polls_structure'] = get_polls_struct(self.context, self.request, limit = 5)
         response['vote_perm'] = security.ADD_VOTE
+        response['only_link'] = self.context.polls_menu_only_links
         return response
 
 def _get_poll_plugin(context, request):

@@ -169,6 +169,16 @@ class EditMeetingSchema(colander.Schema):
         missing="",
         tab='advanced'
     )
+    polls_menu_only_links = colander.SchemaNode(
+        colander.Bool(),
+        title = _("Disable modal popups for polls menu?"),
+        description = _("schema_polls_menu_only_links_description",
+                        default="If disabled, the polls menu will simply link to"
+                                "the agenda item with the poll item instead."),
+        missing=False,
+        default=False,
+        tab='advanced',
+    )
     hide_proposal_states = colander.SchemaNode(
         colander.Set(),
         title=_("Hide proposal states"),
