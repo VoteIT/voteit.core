@@ -173,7 +173,7 @@ class EditMeetingSchema(colander.Schema):
         colander.Bool(),
         title = _("Disable modal popups for polls menu?"),
         description = _("schema_polls_menu_only_links_description",
-                        default="If disabled, the polls menu will simply link to"
+                        default="If disabled, the polls menu will simply link to "
                                 "the agenda item with the poll item instead."),
         missing=False,
         default=False,

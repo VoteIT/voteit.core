@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2017-04-19 15:44+0200\n"
-"PO-Revision-Date: 2017-04-19 15:49+0200\n"
+"POT-Creation-Date: 2017-05-03 07:55+0200\n"
+"PO-Revision-Date: 2017-05-03 07:57+0200\n"
 "Last-Translator: Robin Harms Oredsson <robin@betahaus.net>\n"
 "Language-Team: sv <LL@li.org>\n"
 "Language: sv\n"
@@ -289,7 +289,7 @@ msgstr "Möte"
 
 #. Default: This meeting still has ongoing or upcoming Agenda items in it. You
 #. can't close it until they're closed.
-#: voteit/core/models/meeting.py:187
+#: voteit/core/models/meeting.py:194
 msgid "error_cant_close_meeting_with_ongoing_ais"
 msgstr ""
 "Detta möte har ännu pågående dagordningspunkter. Du kan inte stänga mötet "
@@ -483,7 +483,7 @@ msgstr ""
 "hashlistor, eller att arche_hashlist inte är installerat."
 
 #: voteit/core/plugins/hashlist_ap.py:99 voteit/core/plugins/immediate_ap.py:39
-#: voteit/core/schemas/invite_ticket.py:26 voteit/core/schemas/meeting.py:270
+#: voteit/core/schemas/invite_ticket.py:26 voteit/core/schemas/meeting.py:280
 msgid "Roles"
 msgstr "Roller"
 
@@ -689,7 +689,7 @@ msgstr ""
 
 #: voteit/core/schemas/agenda_item.py:43
 msgid "Must be a-z, 0-9, or any of '.-_'."
-msgstr ""
+msgstr "Måste vara a-z, 0-0 eller en av ’.-_’."
 
 #: voteit/core/schemas/agenda_template.py:18
 msgid "Template name"
@@ -937,68 +937,79 @@ msgid "In case you want another title in the navigation bar"
 msgstr "Om du vill ha en annan än mötets"
 
 #: voteit/core/schemas/meeting.py:174
+msgid "Disable modal popups for polls menu?"
+msgstr "Ta bort modala popups för omröstningsmenyn?"
+
+#. Default: If disabled, the polls menu will simply link to the agenda item
+#. with the poll item instead.
+#: voteit/core/schemas/meeting.py:175
+msgid "schema_polls_menu_only_links_description"
+msgstr ""
+"Om avstängd så länkar omröstningsmenyn till dagordningspunkten istället."
+
+#: voteit/core/schemas/meeting.py:184
 msgid "Hide proposal states"
 msgstr "Göm förslag i tillstånden"
 
 #. Default: Proposals in these states will be hidden by default but can be
 #. shown by pressing the link below the other proposals. They're not by any
 #. means invisible to participants.
-#: voteit/core/schemas/meeting.py:175
+#: voteit/core/schemas/meeting.py:185
 msgid "hide_proposal_states_description"
 msgstr ""
 "Förslag i markerade tillstånd kommer gömmas som standard men kan visas genom "
 "att klicka på länken under de andra förslagen."
 
-#: voteit/core/schemas/meeting.py:189 voteit/core/schemas/meeting.py:264
+#: voteit/core/schemas/meeting.py:199 voteit/core/schemas/meeting.py:274
 #: voteit/core/templates/participants.pt:23
 msgid "UserID"
 msgstr "Användarnamn"
 
-#: voteit/core/schemas/meeting.py:193
+#: voteit/core/schemas/meeting.py:203
 msgid "System user accounts"
 msgstr "Systemanvändare"
 
 #. Default: Must be an existing userid. If they're added here, moderators can
 #. use them to add proposals in their name. It's good practice to add things
 #. like 'propositions', 'board' or similar.
-#: voteit/core/schemas/meeting.py:194
+#: voteit/core/schemas/meeting.py:204
 msgid "system_userids_description"
 msgstr ""
 "Måste vara ett existerande användarID. Om de läggs till här så kan "
 "moderatorer lägga förslag i deras namn. Normalt är det bäst att använda "
 "opersonliga konton i stil med ’styrelsen’ eller ’handlingar’."
 
-#: voteit/core/schemas/meeting.py:204
+#: voteit/core/schemas/meeting.py:214
 msgid "Proposal naming method"
 msgstr "Förslagens namnmetod"
 
-#: voteit/core/schemas/meeting.py:214
+#: voteit/core/schemas/meeting.py:224
 msgid "Copy users and permissions from a previous meeting."
 msgstr "Kopiera användare och rättigheter från ett föregående möte."
 
-#: voteit/core/schemas/meeting.py:215
+#: voteit/core/schemas/meeting.py:225
 msgid "You can only pick meeting where you've been a moderator."
 msgstr "Du kan bara välja ett möte där du har varit moderator."
 
-#: voteit/core/schemas/meeting.py:226
+#: voteit/core/schemas/meeting.py:236
 msgid "Meeting access policy"
 msgstr "Mötestillgångspolicy"
 
 #. Default: Available poll methods within this meeting
-#: voteit/core/schemas/meeting.py:235
+#: voteit/core/schemas/meeting.py:245
 msgid "mps_poll_plugins_title"
 msgstr "Tillgängliga omröstningsmetoder inom mötet"
 
 #. Default: Only poll methods selected here will be available withing the
 #. meeting. If nothing is selected, only the servers default poll method will
 #. be available.
-#: voteit/core/schemas/meeting.py:237
+#: voteit/core/schemas/meeting.py:247
 msgid "mps_poll_plugins_description"
 msgstr ""
 "Bara omröstningsmetoder valda här kommer att vara tillgängliga i mötet. Om "
 "inget är valt så kommer baraserverns standardmetod finnas tillgänglig."
 
-#: voteit/core/schemas/meeting.py:249
+#: voteit/core/schemas/meeting.py:259
 msgid "Must select at least one"
 msgstr "Måste välja minst en"
 
@@ -1959,7 +1970,7 @@ msgstr "Inget ändrat"
 
 #. Default: This poll uses a plugin that can't be found. Make sure a poll
 #. plugin with the name '${name}' is installed
-#: voteit/core/views/poll.py:259
+#: voteit/core/views/poll.py:260
 msgid "poll_plugin_not_found_error"
 msgstr ""
 "Denna omröstning använder en plugin som inte kan hittas. Kontrollera att en "
