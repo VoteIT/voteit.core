@@ -127,16 +127,14 @@ voteit.make_ai_request = function(elem) {
 voteit.load_agenda_item = function(event) {
     event.preventDefault();
     var elem = $(event.currentTarget);
-    //var url = elem.attr('href');
+    var url = elem.attr('href');
     var request = voteit.make_ai_request(elem);
     request.done(function(response) {
         var title = elem.find('[data-title]').text();
         document.title = title;
-        /*
         window.history.pushState(
             {'url': url, 'title': title, 'html': response, 'type': 'agenda_item'},
         title, url);
-        */
     });
 }
 /*
