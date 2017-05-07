@@ -281,23 +281,6 @@ def _get_poll_plugin(context, request):
         raise HTTPForbidden(msg)
 
 
-@view_config(context=IProposal,
-             name='_pick_poll_menu',
-             permission=security.MODERATE_MEETING,
-             renderer='voteit.core:templates/snippets/pick_poll_menu.pt')
-class PickPollMenu(BaseView):
-    """ Menu for selecting which poll a proposal should be in. """
-
-    def __call__(self):
-        path = resource_path(self.request.agenda_item)
-        query = Eq('path', path) & Eq('type_name', 'Poll') & Any('workflow_state', ('private', 'upcoming'))
-        docids = self.request.root.catalog.query(query)[1]
-        return {
-            'polls': self.request.resolve_docids(docids),
-            'can_add_poll': self.request.has_permission(security.ADD_POLL, self.request.agenda_item),
-        }
-
-
 @view_config(context=IAgendaItem,
              name='_pick_poll_data.json',
              permission=security.MODERATE_MEETING,
