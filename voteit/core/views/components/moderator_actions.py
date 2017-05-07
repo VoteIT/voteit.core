@@ -1,7 +1,7 @@
 from betahaus.viewcomponent import view_action
 from pyramid.renderers import render
 
-from voteit.core import VoteITMF as _
+from voteit.core import _
 from voteit.core.security import DELETE
 from voteit.core.security import EDIT
 from voteit.core.models.interfaces import IAgendaItem
@@ -18,6 +18,7 @@ from voteit.core.views.components.metadata_listing import meta_state
 def wf_menu(context, request, va, **kw):
     return meta_state(context, request, va, **kw)
 
+
 @view_action('moderator_actions_section', 'context_actions',
              title = _(u"Actions here"), contained_section = 'context_actions')
 def moderator_actions_section(context, request, va, **kw):
@@ -30,8 +31,13 @@ def moderator_actions_section(context, request, va, **kw):
     )
     return render('templates/cogwheel/moderator_actions_section.pt', response, request = request)
 
-@view_action('context_actions', 'edit', title = _(u"Edit"), context_perm = EDIT, viewname = 'edit')
-@view_action('context_actions', 'delete', title = _(u"Delete"), context_perm = DELETE, viewname = 'delete')
+
+@view_action('context_actions', 'edit', title = _(u"Edit"),
+             context_perm = EDIT, viewname = 'edit', priority=10)
+@view_action('context_actions', 'edit_proposals', title = _(u"Edit picked proposals"),
+             context_perm = EDIT, viewname = 'edit_proposals',  priority=20)
+@view_action('context_actions', 'delete', title = _(u"Delete"),
+             context_perm = DELETE, viewname = 'delete',  priority=100)
 def moderator_context_action(context, request, va, **kw):
     context_perm = va.kwargs.get('context_perm', None)
     if context_perm and not request.has_permission(context_perm, context):
@@ -39,7 +45,9 @@ def moderator_context_action(context, request, va, **kw):
     url = request.resource_url(context, va.kwargs['viewname'])
     return """<li><a href="%s" class="%s">%s</a></li>""" % (url, va.kwargs['viewname'], request.localizer.translate(va.title))
 
-@view_action('context_actions', 'poll_config', title = _(u"Poll settings"), interface = IPoll)
+
+@view_action('context_actions', 'poll_config', title = _(u"Poll settings"),
+             interface = IPoll,  priority=30)
 def poll_settings_context_action(context, request, va, **kw):
     try:
         schema = context.get_poll_plugin().get_settings_schema()
@@ -48,6 +56,7 @@ def poll_settings_context_action(context, request, va, **kw):
     if request.has_permission(EDIT, context) and schema:
         url = request.resource_url(context, 'poll_config')
         return """<li><a href="%s">%s</a></li>""" % (url, request.localizer.translate(_(u"Poll settings")))
+
 
 @view_action('context_actions', 'enable_proposal_block', title = _(u"Block proposals"),
              interface = IAgendaItem, setting = 'proposal_block', enable = True)

@@ -1,6 +1,5 @@
 from arche.views.base import BaseView
 from pyramid.httpexceptions import HTTPFound
-from pyramid.traversal import resource_path
 
 from voteit.core import _
 from voteit.core import security
@@ -65,7 +64,7 @@ class AIToggleBlockView(BaseView):
         url = self.request.resource_url(self.context)
         if self.request.referer:
             url = self.request.referer
-         #FIXME: This should be done via javascript instead
+        #FIXME: This should be done via javascript instead
         return HTTPFound(location=url)
 
 

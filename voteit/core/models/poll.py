@@ -188,6 +188,7 @@ class Poll(BaseContent, WorkflowAware):
             fm.add(msg, type = 'danger')
 
     def get_proposal_by_uid(self, uid):
+        #FIXME: This should be removed. request.resolve_uid instead
         for prop in self.get_proposal_objects():
             if prop.uid == uid:
                 return prop

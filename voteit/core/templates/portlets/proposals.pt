@@ -12,6 +12,7 @@
         <a href="javascript:"
            class="pull-right"
            data-reload-target="[data-proposals-area]"
+           data-close-pick-poll
            title="Refresh"
            i18n:attributes="title;">
           <span class="glyphicon glyphicon-refresh" data-actionmarker="rotate-me"></span>

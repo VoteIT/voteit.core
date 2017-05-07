@@ -96,6 +96,45 @@ function reset_polls_menu() {
 }
 voteit.reset_polls_menu = reset_polls_menu;
 
+
+voteit.set_poll_proposal = function(event) {
+    var elem = $(event.currentTarget);
+    var form = elem.parents('form');
+    arche.actionmarker_feedback(elem, true);
+    var request = arche.do_request(elem.data('url'), {data: form.serialize(), method: 'POST'});
+    request.done(function(response) {
+        var poll_elem = $('[data-uid="' + elem.data('set-poll') + '"]');
+        poll_elem.replaceWith(response);
+    });
+    request.always(function() {
+        arche.actionmarker_feedback(elem, false);
+    });
+}
+
+
+voteit.pick_poll_open = false;
+
+
+voteit.pick_poll = function(url) {
+    if (voteit.pick_poll_open == true) {
+        voteit.close_pick_poll();
+    } else {
+        var request = arche.do_request(url);
+        request.done(function(response) {
+            voteit.pick_poll_open = true;
+            $.each(response, function(i, val) {
+                $('[data-uid="' + i + '"]').after(val);
+            });
+        });
+    }
+}
+
+voteit.close_pick_poll = function(event) {
+    voteit.pick_poll_open = false;
+    $("[data-pick-poll-context]").remove();
+}
+
+
 $(document).ready(function () {
   $("[data-load-target]").each(function() {
     voteit.load_target(this);
@@ -105,4 +144,6 @@ $(document).ready(function () {
   $('body').on('click', '[data-clickable-target]', voteit.load_and_replace);
   $('body').on('click', '[data-polls-menu]', voteit.load_polls_menu);
   $('body').on('click', '[data-external-popover-loaded="false"]', voteit.external_popover_from_event);
+  $('body').on('click', '[data-set-poll]', voteit.set_poll_proposal);
+  $('body').on('click', '[data-close-pick-poll]', voteit.close_pick_poll);
 });

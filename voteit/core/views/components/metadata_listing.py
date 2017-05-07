@@ -33,6 +33,7 @@ def meta_state(context, request, va, **kw):
     )
     return render(va.kwargs['renderer'], response, request = request)
 
+
 @view_action('metadata_listing', 'retract',
              permission = VIEW,
              interface = IWorkflowAware,
@@ -51,6 +52,7 @@ def meta_retract(context, request, va, **kw):
     url = request.resource_url(context, 'state', query = {'state': 'retracted'})
     return '<a role="button" class="btn btn-default btn-xs" href="%s"><span class="text-warning">%s</span></a> ' % \
         (url, request.localizer.translate(_(u'Retract')))
+
 
 @view_action('metadata_listing', 'reply',
              title = _("Reply"),
@@ -83,6 +85,7 @@ def meta_comment(context, request, va, **kw):
          request.localizer.translate(va.title))
     return out
 
+
 @view_action('metadata_listing', 'delete',
              permission = DELETE,
              interface = IDiscussionPost,
@@ -93,3 +96,12 @@ def meta_delete(context, request, va, **kw):
             (request.resource_url(context, 'delete'),
              '<span class="glyphicon glyphicon-remove"></span>',
              request.localizer.translate(_("Delete")))
+
+
+@view_action('metadata_listing', 'pick_poll',
+             interface=IProposal,
+             priority=25)
+def pick_poll(context, request, va, **kw):
+    if request.is_moderator:
+        values = dict(context=request.agenda_item)
+        return render("voteit.core:templates/snippets/pick_poll.pt", values, request=request)
