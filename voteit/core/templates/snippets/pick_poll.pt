@@ -2,12 +2,14 @@
       xmlns:metal="http://xml.zope.org/namespaces/metal"
       xmlns:tal="http://xml.zope.org/namespaces/tal"
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
-      tal:define="pick_url request.resource_url(context, '_pick_poll_data.json')"
+      tal:define="pick_url request.resource_url(agenda_item, '_pick_poll_data.json', query= {'uid': context.uid})"
       i18n:domain="voteit.core">
   <a class="btn btn-xs btn-default"
-     href="javascript:voteit.pick_poll('${pick_url}')">
+     href="${pick_url}"
+     data-pick-poll="${context.uid}"
+     data-will-remove='[data-pick-poll-context="${context.uid}"]'>
     <span class="text-primary">
-      <span class="glyphicon glyphicon-star"></span>
+      <span class="glyphicon glyphicon-star" data-actionmarker="rotate-me"></span>
       <span class="caret"></span>
     </span>
   </a>

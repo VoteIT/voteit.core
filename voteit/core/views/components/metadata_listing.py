@@ -103,5 +103,5 @@ def meta_delete(context, request, va, **kw):
              priority=25)
 def pick_poll(context, request, va, **kw):
     if request.is_moderator:
-        values = dict(context=request.agenda_item)
+        values = dict(agenda_item=request.agenda_item, context=context)
         return render("voteit.core:templates/snippets/pick_poll.pt", values, request=request)

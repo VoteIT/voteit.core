@@ -295,6 +295,9 @@ class PickPollJSON(BaseView):
         docids = self.request.root.catalog.query(query)[1]
         polls = tuple(self.request.resolve_docids(docids, perm=security.EDIT)) #Must be able to modify poll
         query = Eq('path', path) & Eq('type_name', 'Proposal')
+        only_uid = self.request.GET.get('uid', None)
+        if only_uid:
+            query &= Eq('uid', only_uid)
         docids = self.request.root.catalog.query(query)[1]
         proposals = tuple(self.request.resolve_docids(docids))
         response = {}
