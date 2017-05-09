@@ -10,7 +10,7 @@ from voteit.core.models.interfaces import IPoll
 @view_config(context = IDiscussionPost, permission = NO_PERMISSION_REQUIRED)
 @view_config(context = IPoll, permission = NO_PERMISSION_REQUIRED)
 @view_config(context = IProposal, permission = NO_PERMISSION_REQUIRED)
-def redirect_temp(request):
+def redirect_to_ai(context, request):
     """ Temporary fix until proper redirect with anchors is in place. """
     ai = request.agenda_item
-    return HTTPFound(location = request.resource_url(ai, anchor = ai.uid))
+    return HTTPFound(location = request.resource_url(ai, anchor = context.uid))

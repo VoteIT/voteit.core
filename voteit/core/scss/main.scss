@@ -1,4 +1,6 @@
-@import "_variables";
+@import "variables";
+@import "bootstrap/variables";
+
 
 @import "_mixins";
 @import "_state_colors";
@@ -83,7 +85,8 @@ body .btn-group-portlet > .item-unread {
     margin-bottom: 5px;
   }
   .cogwheel {
-    z-index: 999;
+    //FIXME: Remove from agenda - move to actionbar
+    /*z-index: 999;*/
     margin-right: -1px;
     margin-top: -1px;
   }

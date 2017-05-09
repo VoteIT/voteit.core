@@ -11,6 +11,7 @@
     <a tal:condition="previous_ai"
       class="btn btn-default btn-sm"
       href="${request.resource_url(previous_ai, view_name)}"
+      data-load-agenda-item="#content"
       title="${previous_ai.title}">
       <span class="glyphicon glyphicon-chevron-left"></span>
       <span i18n:translate="">Previous</span>
@@ -20,6 +21,7 @@
     <a tal:condition="next_ai"
       class="btn btn-default btn-sm"
       href="${request.resource_url(next_ai, view_name)}"
+      data-load-agenda-item="#content"
       title="${next_ai.title}">
       <span i18n:translate="">Next</span>
       <span class="glyphicon glyphicon-chevron-right"></span>

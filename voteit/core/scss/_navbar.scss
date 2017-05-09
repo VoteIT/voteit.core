@@ -1,37 +1,127 @@
 
 // Fixed navbar
 
+
+
+@mixin slide-in() {
+    position: fixed;
+    border-radius: 0;
+    top: $navbar-height;
+    bottom: 0;
+    overflow: scroll;
+    background-color: $body-bg;
+    transition: all .5s cubic-bezier(.32, .59, .3, .98);
+    overflow: scroll;
+    z-index: 10000;
+}
+
+
+.slide-in-nav {
+    @include slide-in();
+
+    &.from-left {
+        transform: translateX(-100%);
+        right: 60px;
+        left: 0px;
+
+        &.activated {
+            transform: translateX(0%);
+        }
+    }
+
+    &.profile-menu {
+        transform: translateX(100%);
+        right: 0px;
+        min-width: 200px;
+        //padding: floor($grid-gutter-width/2);
+
+        &.activated {
+            transform: translateX(0%);
+        }
+    }
+
+    &.from-top {
+        top: 0;
+        transform: translateY(-100%);
+        right: 0px;
+        left: 0px;
+        z-index: 1000;
+        &.activated {
+            top: $navbar-height;
+            transform: translateY(0%);
+        }
+    }
+
+    &.from-right {
+        transform: translateX(+100%);
+        right: 0px;
+        left: 60px;
+        &.activated {
+            transform: translateX(0%);
+        }
+    }
+
+}
+
 /* Generic navbar active */
 @media (min-width: $grid-float-breakpoint) {
 
     #fixed-nav {
         width: $voteit-fixed-left-nav-sm;
-        position: fixed;
-        border-radius: 0;
-        top: $navbar-height;
-        bottom: 0;
-        overflow: scroll;
         padding: floor($grid-gutter-width/2);
 
-/*
-        .navbar-nav > li {
-            float: none;
-            width: $voteit-fixed-left-nav -1;
-        }
-        */
-
-        /*
-        .navbar-nav > li > .dropdown-menu {
-          margin-left: 140px;
-        }
-        */
     }
-
     body.left-fixed-active > .container {
         padding-left: $voteit-fixed-left-nav-sm;
     }
 
 }
+
+
+@media (max-width: $grid-float-breakpoint-max) {
+    #fixed-nav {
+        @include slide-in();
+
+        &.from-left {
+            transform: translateX(-100%);
+            right: 60px;
+            left: 0px;
+
+            &.activated {
+                transform: translateX(0%);
+            }
+        }
+
+
+        /*
+            position: fixed;
+            border-radius: 0;
+            top: $navbar-height;
+            bottom: 0;
+            overflow: scroll;
+            background-color: $body-bg;
+            transition: all .5s cubic-bezier(.32, .59, .3, .98);
+            overflow: scroll;
+            z-index: 10000;
+            */
+
+
+    }
+}
+
+
+
+
+#fixed-nav-backdrop {
+    background-color: #000;
+    opacity: 0.5;
+    position: fixed;
+    top: $navbar-height;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+
 
 @media (max-width: $screen-md) {
     body.left-fixed-active {
