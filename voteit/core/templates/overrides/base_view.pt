@@ -8,7 +8,7 @@
       metal:use-macro="view.macro('arche:templates/master.pt')"
       i18n:domain="Arche">
 <body>
-<div id="fixed-nav" class="from-left"
+<div id="fixed-nav" data-slide-menu="fixed-nav"
      tal:condition="portlets_left_fixed|None"
      metal:fill-slot="left-fixed">
     <tal:portlets repeat="portlet portlets_left_fixed">

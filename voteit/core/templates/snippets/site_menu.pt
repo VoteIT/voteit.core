@@ -4,16 +4,14 @@
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
       i18n:domain="voteit.core">
   <div class="text-center well">
-    <img tal:replace="structure request.profile.get_image_tag(size=120, request=request,
-                **{'class': 'img-responsive', 'style': 'display: inline-block;'})" />
+    <h1>
+      <span class="glyphicon glyphicon-cog"></span>
+    </h1>
     <!-- FIXME: Shapes? img-circle? -->
-    <br/><br/>
-    <p><b>${request.profile.title}</b><br/>
-      (${request.profile.userid})</p>
+    <h3>Site settings</h3>
   </div>
-
   <ul class="nav">
-    <tal:actionbar_items replace="structure view.render_view_group('user_menu')" />
+    <tal:actionbar_items replace="structure view.render_view_group('site_menu')" />
   </ul>
 
 </tal:main>

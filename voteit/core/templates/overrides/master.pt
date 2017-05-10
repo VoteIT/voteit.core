@@ -63,8 +63,9 @@
 
     </div><!-- container -->
     <footer tal:replace="structure view.render_template('arche:templates/footer.pt')" />
-    <div id="user-menu" class="slide-in-nav profile-menu"></div>
-    <div id="meeting-menu" class="slide-in-nav from-top">
+    <div data-slide-menu="user-menu" id="user-menu" class="slide-in-nav profile-menu"></div>
+    <div data-slide-menu="site-menu" id="site-menu" class="slide-in-nav from-right"></div>
+    <div data-slide-menu="meeting-menu" id="meeting-menu" class="slide-in-nav from-top">
       <p>
       HEEEEEEEJ lksjdnfksjnfishbfs!
     </p>

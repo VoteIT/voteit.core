@@ -24,8 +24,13 @@
       </a>
 
       <a class="navbar-brand pull-right"
-        href="javascript:voteit.load_profile_menu()">
+         href="javascript:voteit.load_inline_menu('#user-menu', '/_user_menu')">
         <span class="glyphicon glyphicon-user"></span>
+      </a>
+
+      <a class="navbar-brand pull-right"
+          href="javascript:voteit.load_inline_menu('#site-menu', '/_site_menu')">
+        <span class="glyphicon glyphicon-cog"></span>
       </a>
     </div>
 

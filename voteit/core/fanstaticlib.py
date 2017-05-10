@@ -23,6 +23,7 @@ unread_js = Resource(voteit_core_jslib, 'unread.js', depends = (base_js, data_lo
 watcher_js = Resource(voteit_core_jslib, 'watcher.js', depends = (data_loader,))
 like_js = Resource(voteit_core_jslib, 'like.js', depends = (data_loader,))
 support_js = Resource(voteit_core_jslib, 'support.js', depends = (data_loader,))
+navs_js = Resource(voteit_core_jslib, 'navs.js', depends = (data_loader,))
 
 #voteit_bootstrap = Resource(voteit_core_csslib, 'voteit_bootstrap.css')
 #Warning, bundling causes this resource to fail. It may have something to do with the css-map. (Probably not an accessible directory)
@@ -38,6 +39,7 @@ def include_voteit_resources(view, event):
     voteit_main_css.need()
     watcher_js.need()
     need_lib('deform') #As a minimum this should be included, but it really depends on poll methods.
+    navs_js.need()
     if view.request.is_moderator:
         voteit_moderator_js.need()
     if view.request.meeting:
