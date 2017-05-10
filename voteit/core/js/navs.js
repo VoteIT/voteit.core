@@ -17,6 +17,7 @@ voteit.show_nav = function(selector) {
     $(selector).addClass('activated');
     $('#fixed-nav-backdrop').data('active-menu', selector);
     $('#fixed-nav-backdrop').fadeIn();
+    $('body').css({'overflow': 'hidden'});
 }
 
 
@@ -25,6 +26,7 @@ voteit.hide_nav = function(selector) {
     $(selector).removeClass('activated');
     $('#fixed-nav-backdrop').fadeOut();
     $('#fixed-nav-backdrop').data('active-menu', null);
+    $('body').css({'overflow': 'visible'});
 }
 
 

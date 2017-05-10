@@ -6,7 +6,9 @@
 <nav class="navbar navbar-fixed-top navbar-voteit" role="navigation">
   <div class="container-fluid">
     <div class="navbar-header">
+
       <a class="navbar-brand hidden visible-xs"
+         tal:condition="request.meeting"
          href="javascript:voteit.toggle_nav('#fixed-nav')">
         <span class="glyphicon glyphicon-list"></span>
       </a>
@@ -18,7 +20,8 @@
 
       <a tal:condition="request.meeting"
         class="navbar-brand"
-        href="javascript:voteit.toggle_nav('#meeting-menu')">
+         tal:define="meeting_url request.resource_url(request.meeting, '_meeting_menu')"
+         href="javascript:voteit.load_inline_menu('#meeting-menu', '${meeting_url}')">
         <span class="glyphicon glyphicon-chevron-down"></span>
         ${request.meeting.nav_title and request.meeting.nav_title or request.meeting.title}
       </a>
