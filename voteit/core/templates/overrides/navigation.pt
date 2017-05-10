@@ -31,12 +31,14 @@
         <span class="glyphicon glyphicon-user"></span>
       </a>
 
-      <a class="navbar-brand pull-right"
-          href="javascript:voteit.load_inline_menu('#site-menu', '/_site_menu')">
+      <a tal:condition="request.is_moderator"
+          class="navbar-brand pull-right"
+          tal:define="m_context request.meeting and request.meeting or request.root;
+                      site_url request.resource_url(m_context, '_site_menu');"
+          href="javascript:voteit.load_inline_menu('#site-menu', '${site_url}')">
         <span class="glyphicon glyphicon-cog"></span>
       </a>
     </div>
-
 
     <!-- -->
     <div tal:condition="False" class="collapse navbar-collapse" id="navbar-collapsible">
