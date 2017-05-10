@@ -144,8 +144,29 @@
   background-color: $navbar-voteit-bg;
   border-color: $navbar-voteit-border;
   border-bottom: 0;
+  height: $navbar-height;
+
+/*
+  @media (min-width: $grid-float-breakpoint) {
+    float: left;
+  }
+  */
+
+    /* Float all for the standard nav in VoteIT */
+  .navbar-nav, .navbar-brand, .navbar-header, .navbar-nav > li {
+      float: left;
+  }
+
+  .navbar-right {
+      float: right;
+  }
+
+  /* FIXME: Attach right nav as fixed instead.
+  Make sure it has a background and goes on top of the title of the meeting!
+  */
 
   .navbar-brand {
+
     color: $navbar-voteit-brand-color;
     &:hover,
     &:focus {
@@ -159,8 +180,13 @@
   }
 
   .navbar-nav {
+
+    margin: 0 -15px;
+
     > li > a {
       color: $navbar-voteit-link-color;
+      padding-top:    15px;
+      padding-bottom: 15px;
 
       &:hover,
       &:focus {

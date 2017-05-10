@@ -376,7 +376,21 @@ $brand-danger:          #d9534f !default;
 .navbar-voteit {
   background-color: #0a243d;
   border-color: #030a11;
-  border-bottom: 0; }
+  border-bottom: 0;
+  height: 50px;
+  /*
+    @media (min-width: $grid-float-breakpoint) {
+      float: left;
+    }
+    */
+  /* Float all for the standard nav in VoteIT */
+  /* FIXME: Attach right nav as fixed instead.
+  Make sure it has a background and goes on top of the title of the meeting!
+  */ }
+  .navbar-voteit .navbar-nav, .navbar-voteit .navbar-brand, .navbar-voteit .navbar-header, .navbar-voteit .navbar-nav > li {
+    float: left; }
+  .navbar-voteit .navbar-right {
+    float: right; }
   .navbar-voteit .navbar-brand {
     color: #fff; }
     .navbar-voteit .navbar-brand:hover, .navbar-voteit .navbar-brand:focus {
@@ -384,17 +398,21 @@ $brand-danger:          #d9534f !default;
       background-color: transparent; }
   .navbar-voteit .navbar-text {
     color: #fff; }
-  .navbar-voteit .navbar-nav > li > a {
-    color: #fff; }
-    .navbar-voteit .navbar-nav > li > a:hover, .navbar-voteit .navbar-nav > li > a:focus {
+  .navbar-voteit .navbar-nav {
+    margin: 0 -15px; }
+    .navbar-voteit .navbar-nav > li > a {
       color: #fff;
+      padding-top: 15px;
+      padding-bottom: 15px; }
+      .navbar-voteit .navbar-nav > li > a:hover, .navbar-voteit .navbar-nav > li > a:focus {
+        color: #fff;
+        background-color: transparent; }
+    .navbar-voteit .navbar-nav > .active > a, .navbar-voteit .navbar-nav > .active > a:hover, .navbar-voteit .navbar-nav > .active > a:focus {
+      color: #fff;
+      background-color: #0e3153; }
+    .navbar-voteit .navbar-nav > .disabled > a, .navbar-voteit .navbar-nav > .disabled > a:hover, .navbar-voteit .navbar-nav > .disabled > a:focus {
+      color: #444;
       background-color: transparent; }
-  .navbar-voteit .navbar-nav > .active > a, .navbar-voteit .navbar-nav > .active > a:hover, .navbar-voteit .navbar-nav > .active > a:focus {
-    color: #fff;
-    background-color: #0e3153; }
-  .navbar-voteit .navbar-nav > .disabled > a, .navbar-voteit .navbar-nav > .disabled > a:hover, .navbar-voteit .navbar-nav > .disabled > a:focus {
-    color: #444;
-    background-color: transparent; }
   .navbar-voteit .navbar-toggle {
     border-color: #0e3153; }
     .navbar-voteit .navbar-toggle:hover, .navbar-voteit .navbar-toggle:focus {
