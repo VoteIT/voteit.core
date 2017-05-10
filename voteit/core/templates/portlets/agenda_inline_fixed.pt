@@ -17,11 +17,6 @@
       <tal:def define="is_current view.ai_name == ai.__name__;
                        tcount view.count_types(ai);
                        context_unread not is_current and (tcount['Proposal']['unread'] or tcount['DiscussionPost']['unread']);">
-        <!-- FIXME -->
-        <tal:cog condition="False|request.is_moderator">
-          <tal:menu replace="structure view.render_template('voteit.core:templates/snippets/cogwheel.pt',
-                             url=request.resource_url(ai, '__cogwheel_menu__'))"/>
-        </tal:cog>
         <a href="${request.resource_url(ai)}"
            data-load-agenda-item="#content"
           class="btn btn-default btn-block ${is_current and 'active' or None} ${context_unread and 'item-unread' or None}">

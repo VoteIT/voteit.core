@@ -5,22 +5,11 @@
       i18n:domain="voteit.core">
 <div id="agenda-item-portlet" class="portlet hidden-print">
 
-  <h3 class="hidden-xs text-nowrap">
+  <h3 class="text-nowrap">
     <span class="glyphicon glyphicon-list-alt"></span>
     <span i18n:translate="">Agenda</span>
   </h3>
 
-
-
-    <!-- -->
-  <tal:hide tal:condition="True">
-  <p>
-    <a href="#" class="collapsed btn-default btn btn-lg visible-xs" data-toggle="collapse" data-target="#ai-portlet-nav-collapsible">
-      <span class="glyphicon glyphicon-collapse-toggle"></span>
-      <span i18n:translate="">Agenda / Navigation</span>
-      <span class="glyphicon glyphicon-list-alt"></span>
-    </a>
-  </p>
     <div class="row" tal:condition="request.is_moderator">
       <div class="col-sm-6">
         <a class="btn btn-default btn-block btn-sm"
@@ -32,9 +21,6 @@
       </div>
       <p>&nbsp;</p>
     </div>
-    </tal:hide>
-  <!-- -->
-
 
     <div data-load-target="${load_url}">
         <span class="glyphicon glyphicon-refresh rotate-me"></span>
