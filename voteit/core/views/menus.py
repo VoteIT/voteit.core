@@ -3,7 +3,7 @@ from arche.security import PERM_MANAGE_SYSTEM
 from arche.views.base import BaseView
 from betahaus.viewcomponent import IViewGroup
 from betahaus.viewcomponent import render_view_group
-from pyramid.security import NO_PERMISSION_REQUIRED
+from pyramid.security import Authenticated
 from pyramid.view import view_config
 
 from voteit.core.models.interfaces import IMeeting, IAccessPolicy
@@ -11,7 +11,7 @@ from voteit.core.security import VIEW, MODERATE_MEETING
 
 
 @view_config(context=IRoot,
-             permission=NO_PERMISSION_REQUIRED,
+             permission=Authenticated,
              name='_user_menu',
              renderer='voteit.core:templates/snippets/profile_menu.pt')
 class MenuView(BaseView):
@@ -19,7 +19,6 @@ class MenuView(BaseView):
 
     def __call__(self):
         return {}
-
 
 
 @view_config(context=IRoot,

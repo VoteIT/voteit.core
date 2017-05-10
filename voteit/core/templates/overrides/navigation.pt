@@ -18,45 +18,55 @@
               src="${request.static_url('voteit.core:static/images/logo.png')}" />
       </a>
 
-      <a tal:condition="request.meeting"
+      <a tal:condition="request.is_participant"
         class="navbar-brand"
          tal:define="meeting_url request.resource_url(request.meeting, '_meeting_menu')"
          href="javascript:voteit.load_inline_menu('#meeting-menu', '${meeting_url}')">
-        <span class="glyphicon glyphicon-chevron-down"></span>
         ${request.meeting.nav_title and request.meeting.nav_title or request.meeting.title}
+        <span class="caret"></span>
       </a>
 
-      <a class="navbar-brand pull-right"
+      <span tal:condition="request.meeting and not request.is_participant" class="navbar-brand">
+        ${request.meeting.nav_title and request.meeting.nav_title or request.meeting.title|''}
+      </span>
+
+    </div>
+
+    <tal:def define="navobjs request.meeting is None and tuple(view.get_local_nav_objects(view.root)) or ()">
+    <ul tal:condition="navobjs" class="nav navbar-nav">
+      <li tal:repeat="obj navobjs">
+        <a href="${request.resource_url(obj)}">${obj.get_nav_title()|obj.title}</a>
+      </li>
+    </ul>
+    </tal:def>
+
+    <ul class="nav navbar-nav navbar-right">
+      <tal:unauthenticated condition="not request.authenticated_userid">
+        ${structure: view.render_view_group('nav_right')}
+      </tal:unauthenticated>
+      <li>
+      <a tal:condition="request.authenticated_userid"
+         class="navbar-brand pull-right"
          href="javascript:voteit.load_inline_menu('#user-menu', '/_user_menu')">
         <span class="glyphicon glyphicon-user"></span>
+        <span class="caret"></span>
       </a>
+      </li>
 
+      <li>
       <a tal:condition="request.is_moderator"
           class="navbar-brand pull-right"
           tal:define="m_context request.meeting and request.meeting or request.root;
                       site_url request.resource_url(m_context, '_site_menu');"
           href="javascript:voteit.load_inline_menu('#site-menu', '${site_url}')">
         <span class="glyphicon glyphicon-cog"></span>
+        <span class="caret"></span>
       </a>
-    </div>
-
-    <!-- -->
-    <div tal:condition="False" class="collapse navbar-collapse" id="navbar-collapsible">
-      <tal:def define="navobjs request.meeting is None and tuple(view.get_local_nav_objects(view.root)) or ()">
-      <ul tal:condition="navobjs" class="nav navbar-nav">
-        <li tal:repeat="obj navobjs">
-          <a href="${request.resource_url(obj)}">${obj.get_nav_title()|obj.title}</a>
-        </li>
-      </ul>
-      </tal:def>
-      <ul class="nav navbar-nav navbar-right">
-        <tal:actionbar_items replace="structure view.render_view_group('nav_right')" />
-      </ul>
-    </div><!--/.nav-collapse -->
-    <!-- -->
-
-
+      </li>
+    </ul>
   </div><!-- /.container-->
+
+
   <div class="container-fluid msg-bar" data-flash-slot="fixed-msg-bar">
     <div tal:define="tags request.current_tags()" tal:condition="tags" role="alert" class="alert alert-dismissable alert-warning">
       <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
