@@ -3,21 +3,23 @@ from arche.security import PERM_MANAGE_SYSTEM
 from arche.views.base import BaseView
 from betahaus.viewcomponent import IViewGroup
 from betahaus.viewcomponent import render_view_group
-from pyramid.security import Authenticated
 from pyramid.view import view_config
+from pyramid.httpexceptions import HTTPUnauthorized
 
 from voteit.core.models.interfaces import IMeeting, IAccessPolicy
 from voteit.core.security import VIEW, MODERATE_MEETING
 
 
 @view_config(context=IRoot,
-             permission=Authenticated,
+             permission=VIEW,
              name='_user_menu',
              renderer='voteit.core:templates/snippets/profile_menu.pt')
 class MenuView(BaseView):
     """ Generic menu """
 
     def __call__(self):
+        if not self.request.authenticated_userid:
+            raise HTTPUnauthorized("Must login first")
         return {}
 
 
