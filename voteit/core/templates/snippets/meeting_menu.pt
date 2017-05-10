@@ -6,9 +6,13 @@
 
 <div class="container">
 
-  <h3>
-    <a href="${request.resource_url(request.meeting)}" i18n:translate="">Show meeting info</a>
-  </h3>
+  <ol class="breadcrumb">
+    <tal:iterate repeat="obj view.breadcrumbs()">
+      <li><a href="${request.resource_url(obj)}"
+      >${obj.get_nav_title()|getattr(obj, 'title', None) and obj.title or obj.__name__}
+      </a></li>
+    </tal:iterate>
+  </ol>
 
   <div class="row">
     <!-- Participants -->

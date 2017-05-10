@@ -28,7 +28,7 @@
 
     <div class="container">
 
-      <div class="row" tal:condition="False">
+      <div class="row" tal:condition="not request.meeting">
         <div class="col-sm-6 col-md-8">
           <ol class="breadcrumb">
               <tal:iterate repeat="obj view.breadcrumbs()">
