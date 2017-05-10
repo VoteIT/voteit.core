@@ -138,6 +138,14 @@ def is_moderator(request):
     except AttributeError:
         pass
 
+
+def is_participant(request):
+    try:
+        return request.meeting and request.has_permission(security.VIEW, request.meeting)
+    except AttributeError:
+        pass
+
+
 def get_wf_state_titles(request, iface, type_name):
     wf = get_workflow(iface, type_name)
     results = {}
@@ -272,6 +280,8 @@ def includeme(config):
     config.add_request_method(callable = get_userinfo_url, name = 'get_userinfo_url')
     #Is moderator
     config.add_request_method(callable = is_moderator, name = 'is_moderator', reify = True)
+    config.add_request_method(callable = is_participant, name = 'is_participant', reify = True)
+
     #State titles
     config.add_request_method(callable = get_wf_state_titles, name = 'get_wf_state_titles')
     config.add_request_method(callable = current_tags)
