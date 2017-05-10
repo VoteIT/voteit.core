@@ -5,6 +5,11 @@
       i18n:domain="voteit.core">
 
 <div class="container">
+
+  <h3>
+    <a href="${request.resource_url(request.meeting)}" i18n:translate="">Show meeting info</a>
+  </h3>
+
   <div class="row">
     <!-- Participants -->
     <div class="col-sm-6">
