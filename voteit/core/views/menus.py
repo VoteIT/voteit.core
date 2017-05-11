@@ -58,12 +58,13 @@ class MeetingMenuView(BaseView):
 
     def __call__(self):
         response = {}
-        for name in ('meeting_menu', 'participants_menu', 'settings_menu', 'meeting'):
+        for name in ('meeting_menu', 'participants_menu', 'meeting'):
             if self.request.registry.queryUtility(IViewGroup, name):
                 response[name] = render_view_group(self.context, self.request, name, spacer=" ")
             else:
                 response[name] = ''
         return response
+
 
 @view_config(context=IMeeting,
              permission=VIEW,

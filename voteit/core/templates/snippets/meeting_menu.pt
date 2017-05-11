@@ -66,12 +66,10 @@
       </div>
       <!-- Participants -->
 
+      <!-- Other structures registered as 'meeting' -->
+      ${structure: meeting}
 
     </div>
-
-
-    Meeting?
-        ${structure: meeting}
 
   </div>
 </div>
