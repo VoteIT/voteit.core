@@ -306,6 +306,7 @@ $brand-danger:          #d9534f !default;
     transform: translateY(-100%);
     right: 0px;
     left: 0px;
+    bottom: 60px;
     z-index: 1000; }
     .slide-in-nav.from-top.activated {
       top: 50px;
@@ -549,14 +550,19 @@ body .btn-group-portlet > .item-unread {
   border-left-width: 2px;
   border-left-color: #337ab7; }
 
-#polls-menu .votemarker {
-  color: #ccc;
-  font-size: 75%; }
-#polls-menu .votemarker-active {
-  color: #5cb85c; }
-#polls-menu.attention > .dropdown-toggle > .glyphicon-star {
-  color: #f0ad4e; }
+.votemarker {
+  color: #ccc; }
 
+.votemarker-active {
+  color: #5cb85c; }
+
+/*
+&.attention {
+  > .dropdown-toggle > .glyphicon-star {
+    color: $brand-star-shine;
+  }
+}
+*/
 .btn-group-portlet {
   width: 100%; }
   .btn-group-portlet > .btn {

@@ -5,9 +5,14 @@ from betahaus.viewcomponent import IViewGroup
 from betahaus.viewcomponent import render_view_group
 from pyramid.view import view_config
 from pyramid.httpexceptions import HTTPUnauthorized
+from voteit.core.helpers import get_polls_struct
 
-from voteit.core.models.interfaces import IMeeting, IAccessPolicy
-from voteit.core.security import VIEW, MODERATE_MEETING
+from voteit.core.models.interfaces import IAccessPolicy
+from voteit.core.models.interfaces import IMeeting
+from voteit.core.models.interfaces import IPoll
+from voteit.core.security import ADD_VOTE
+from voteit.core.security import MODERATE_MEETING
+from voteit.core.security import VIEW
 
 
 @view_config(context=IRoot,
@@ -52,14 +57,25 @@ class MeetingMenuView(BaseView):
     """ Meeting menu"""
 
     def __call__(self):
-        #ap = self.request.registry.queryAdapter(self.context, IAccessPolicy,
-        #                                   name=self.context.access_policy)
         response = {}
-        #response['ap_configurable'] = bool(ap is not None and ap.config_schema())
         for name in ('meeting_menu', 'participants_menu', 'settings_menu', 'meeting'):
             if self.request.registry.queryUtility(IViewGroup, name):
                 response[name] = render_view_group(self.context, self.request, name, spacer=" ")
             else:
                 response[name] = ''
-        #return render(va.kwargs['renderer'], response, request=request)
+        return response
+
+@view_config(context=IMeeting,
+             permission=VIEW,
+             name='_poll_menu',
+             renderer='voteit.core:templates/snippets/poll_menu.pt')
+class PollMenuView(BaseView):
+    """ Poll menu"""
+
+    def __call__(self):
+        response = {}
+        response['state_titles'] = self.request.get_wf_state_titles(IPoll, 'Poll')
+        response['polls_structure'] = get_polls_struct(self.context, self.request, limit = 5)
+        response['vote_perm'] = ADD_VOTE
+        response['only_link'] = self.context.polls_menu_only_links
         return response

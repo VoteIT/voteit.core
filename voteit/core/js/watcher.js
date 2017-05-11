@@ -5,11 +5,12 @@
  *  
  *  */
 
-// FIXME: Slow down timer on window blur, or even stop it
+// FIXME: Fix structure. Use setTimeout instead and try to simplify
+// Prepare for sockets change
 
 var Watcher = function(action_url, params) {
   params = typeof params !== 'undefined' ? params : {};
-  this.interval = typeof params['interval'] !== 'undefined' ? params['interval'] : 7000;
+  this.interval = typeof params['interval'] !== 'undefined' ? params['interval'] : 6000;
   this.timer = null;
   this.timer_active = false;
   this.cachekey = ''; //FIXME: Allow multiple later on
@@ -30,7 +31,6 @@ Watcher.prototype.dmsg = function(msg) {
 };
 
 Watcher.prototype.start = function() {
-  if (typeof(this.action_url) != 'string') throw "Can't start watcher timer without an URL configured. use setup(<url>)";
   if (this.timer_active === false) {    
     this.dmsg("Start");
     this.timer_active = true
@@ -53,6 +53,15 @@ Watcher.prototype.stop = function() {
 };
 
 Watcher.prototype.fetch_data = function() {
+  if (document.hidden == true) {
+    this.dmsg('Document is hidden, waiting with update');
+    return
+  }
+  if (typeof(this.action_url) != 'string') {
+    this.dmsg('No action url set, waiting with update');
+    return
+  }
+
   this.dmsg('Fetching data from: ' + this.action_url);
   this.stop();
   if (typeof(this.action_url) != 'string') throw "Can't fetch data without an action_url set. Use setup(<url>)";
@@ -89,3 +98,16 @@ Watcher.prototype.apply_callbacks = function(response) {
     callback(response);
   })
 }
+
+voteit.watcher = new Watcher();
+
+
+window.addEventListener('offline', function(event) {
+    voteit.watcher.dmsg('Browser offline, stopping watcher');
+    voteit.watcher.stop();
+});
+
+window.addEventListener('online', function(event) {
+    voteit.watcher.dmsg('Browser online, starting watcher');
+    try { voteit.watcher.start(); } catch(e) { voteit.watcher.dmsg("Watcher couldn't start"); }
+});

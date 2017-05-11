@@ -19,10 +19,10 @@
       </a>
 
       <a tal:condition="request.is_participant"
-        class="navbar-brand"
+         class="navbar-brand"
          tal:define="meeting_url request.resource_url(request.meeting, '_meeting_menu')"
          href="javascript:voteit.load_inline_menu('#meeting-menu', '${meeting_url}')">
-        ${request.meeting.nav_title and request.meeting.nav_title or request.meeting.title}
+          ${request.meeting.nav_title and request.meeting.nav_title or request.meeting.title}
         <span class="caret"></span>
       </a>
 
@@ -44,28 +44,37 @@
       <tal:unauthenticated condition="not request.authenticated_userid">
         ${structure: view.render_view_group('nav_right')}
       </tal:unauthenticated>
-      <li>
-      <a tal:condition="request.authenticated_userid"
-         class="navbar-brand pull-right"
-         href="javascript:voteit.load_inline_menu('#user-menu', '/_user_menu')">
-        <span class="glyphicon glyphicon-user"></span>
-        <span class="caret"></span>
-      </a>
+
+      <li tal:condition="request.meeting|False">
+        <a class="navbar-brand pull-right"
+           tal:define="poll_menu_url request.resource_url(request.meeting, '_poll_menu');"
+           href="javascript:voteit.load_inline_menu('#poll-menu', '${poll_menu_url}')">
+          <span class="glyphicon glyphicon-star"></span>
+          <span class="hidden-xs hidden-sm" i18n:translate="">Polls</span>
+          <span class="label label-success" data-important-polls></span>
+          <span class="caret"></span>
+        </a>
       </li>
 
-      <li>
-      <a tal:condition="request.is_moderator"
-          class="navbar-brand pull-right"
-          tal:define="m_context request.meeting and request.meeting or request.root;
-                      site_url request.resource_url(m_context, '_site_menu');"
-          href="javascript:voteit.load_inline_menu('#site-menu', '${site_url}')">
-        <span class="glyphicon glyphicon-cog"></span>
-        <span class="caret"></span>
-      </a>
+      <li tal:condition="request.authenticated_userid">
+        <a class="navbar-brand pull-right"
+           href="javascript:voteit.load_inline_menu('#user-menu', '/_user_menu')">
+          <span class="glyphicon glyphicon-user"></span>
+          <span class="caret"></span>
+        </a>
+      </li>
+
+      <li tal:condition="request.is_moderator">
+        <a class="navbar-brand pull-right"
+           tal:define="m_context request.meeting and request.meeting or request.root;
+                        site_url request.resource_url(m_context, '_site_menu');"
+            href="javascript:voteit.load_inline_menu('#site-menu', '${site_url}')">
+          <span class="glyphicon glyphicon-cog"></span>
+          <span class="caret"></span>
+        </a>
       </li>
     </ul>
   </div><!-- /.container-->
-
 
   <div class="container-fluid msg-bar" data-flash-slot="fixed-msg-bar">
     <div tal:define="tags request.current_tags()" tal:condition="tags" role="alert" class="alert alert-dismissable alert-warning">

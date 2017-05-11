@@ -1,0 +1,72 @@
+<tal:main xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="voteit.core">
+
+<div class="container">
+
+  <p>&nbsp;</p>
+
+  <div class="row">
+
+    <div class="col-sm-6">
+       <!-- Polls -->
+      <div class="panel panel-success">
+        <div class="panel-heading">
+          <h4 class="panel-title">
+            <span class="glyphicon glyphicon-star"></span>
+            <span i18n:translate="">Ongoing polls</span>
+          </h4>
+        </div>
+
+        <div class="list-group" tal:define="struct polls_structure[0]">
+          <tal:iter repeat="obj struct['polls']">
+            <tal:def define="can_vote request.has_permission(vote_perm, obj);
+                             should_vote request.authenticated_userid not in obj;">
+
+              <a class="list-group-item"
+                 href="${request.resource_url(obj, '__vote__')}" data-open-modal>
+                <span tal:condition="can_vote and should_vote" class="votemarker votemarker-active glyphicon glyphicon-star"></span>
+                <span tal:condition="can_vote and not should_vote" class="votemarker glyphicon glyphicon-ok-circle"></span>
+                ${obj.title}
+              </a>
+            </tal:def>
+          </tal:iter>
+        </div>
+
+      </div>
+      <!-- Ongoing polls end -->
+
+    </div>
+
+    <div class="col-sm-6">
+
+      <tal:state repeat="struct polls_structure[1:]">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4 class="panel-title">
+            ${state_titles[struct['state']]}
+          </h4>
+        </div>
+        <tal:def tal:define="polls tuple(struct['polls'])">
+          <a tal:repeat="obj polls"
+             data-load-agenda-item="#content"
+             onclick="javascript:voteit.hide_nav()"
+             href="${request.resource_url(obj.__parent__, anchor=obj.uid)}"
+             class="list-group-item">
+            ${obj.title}
+          </a>
+          <div tal:condition="not polls"
+              class="list-group-item disabled" i18n:translate="">
+            (None)
+          </div>
+        </tal:def>
+      </div>
+      </tal:state>
+
+    </div>
+
+  </div>
+</div>
+</tal:main>

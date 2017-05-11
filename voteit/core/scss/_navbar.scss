@@ -41,6 +41,7 @@
         transform: translateY(-100%);
         right: 0px;
         left: 0px;
+        bottom: 60px;
         z-index: 1000;
         &.activated {
             top: $navbar-height;

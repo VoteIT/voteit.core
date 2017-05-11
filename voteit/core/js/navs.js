@@ -127,6 +127,23 @@ voteit.handle_agenda_back = function(event) {
 
 //window.addEventListener('popstate', voteit.handle_agenda_back);
 
+
+function unvoted_counter(response) {
+
+    $('[data-important-polls]').html(response['unvoted_polls']);
+
+    if (response['unvoted_polls'] > 0 && $('#poll-notification').length == 0) {
+        //arche.create_flash_message("Halli hallå?",
+        //{id: 'poll-notification', slot: 'fixed-msg-bar', auto_destruct: false, type: 'success'});
+    }
+    if (response['unvoted_polls'] == 0 && $('#poll-notification').length != 0) {
+        $('#poll-notification').remove();
+    }
+
+};
+
+
 $(document).ready(function () {
-  $('body').on('click', '[data-load-agenda-item]', voteit.load_agenda_item);
+    voteit.watcher.add_response_callback(unvoted_counter);
+    $('body').on('click', '[data-load-agenda-item]', voteit.load_agenda_item);
 });

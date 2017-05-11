@@ -6,6 +6,8 @@
 
 <div class="container">
 
+  <p>&nbsp;</p>
+
   <ol class="breadcrumb">
     <tal:iterate repeat="obj view.breadcrumbs()">
       <li><a href="${request.resource_url(obj)}"
@@ -15,8 +17,34 @@
   </ol>
 
   <div class="row">
-    <!-- Participants -->
+
     <div class="col-sm-6">
+
+
+      <!-- Meeting -->
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4 class="panel-title">
+            <span i18n:translate="">Meeting</span>
+          </h4>
+        </div>
+        <div class="panel-body">
+          <ul class="nav nav-pills nav-stacked">
+            <li role="presentation">
+              <a role="menuitem" tabindex="-1"
+                href="${request.resource_url(request.meeting, 'minutes')}"
+                i18n:translate="">Minutes</a>
+            </li>
+            ${structure: meeting_menu}
+          </ul>
+        </div>
+      </div>
+      <!-- Meeting -->
+    </div>
+
+    <div class="col-sm-6">
+
+      <!-- Participants -->
       <div class="panel panel-default">
         <div class="panel-heading">
           <h4 class="panel-title">
@@ -36,30 +64,10 @@
 
         </div>
       </div>
-    </div>
-    <!-- Participants -->
+      <!-- Participants -->
 
-    <!-- Meeting -->
-    <div class="col-sm-6">
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <h4 class="panel-title">
-            <span i18n:translate="">Meeting</span>
-          </h4>
-        </div>
-        <div class="panel-body">
-          <ul class="nav nav-pills nav-stacked">
-            <li role="presentation">
-              <a role="menuitem" tabindex="-1"
-                href="${request.resource_url(request.meeting, 'minutes')}"
-                i18n:translate="">Minutes</a>
-            </li>
-            ${structure: meeting_menu}
-          </ul>
-        </div>
-      </div>
+
     </div>
-    <!-- Meeting -->
 
 
     Meeting?

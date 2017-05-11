@@ -48,20 +48,21 @@ body .btn-group-portlet > .item-unread {
   border-left-width: $voteit-unread-bar-size;
   border-left-color: $voteit-unread;
 }
-#polls-menu {
+
   .votemarker {
     color: $brand-default;
-    font-size: 75%;
   }
   .votemarker-active {
     color: $brand-success;
   }
+  /*
   &.attention {
     > .dropdown-toggle > .glyphicon-star {
       color: $brand-star-shine;
     }
   }
-}
+  */
+
 
 .btn-group-portlet {
   width: 100%;

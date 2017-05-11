@@ -62,11 +62,28 @@
       </div>
 
     </div><!-- container -->
+
     <footer tal:replace="structure view.render_template('arche:templates/footer.pt')" />
     <div data-slide-menu="user-menu" id="user-menu" class="slide-in-nav profile-menu"></div>
     <div data-slide-menu="site-menu" id="site-menu" class="slide-in-nav from-right"></div>
     <div data-slide-menu="meeting-menu" id="meeting-menu" class="slide-in-nav from-top"></div>
-
+    <div data-slide-menu="poll-menu" id="poll-menu" class="slide-in-nav from-top"></div>
     <a id="fixed-nav-backdrop" style="display: none;" data-active-menu="" href="javascript:voteit.hide_nav()"></a>
+
+    <script type="text/javascript" tal:condition="request.meeting|False">
+    $(document).ready(function() {
+      var watcher_url = "${request.resource_url(request.meeting, 'watcher_data.json')}";
+      if (typeof voteit.watcher === 'undefined') {
+        voteit.watcher = new Watcher(watcher_url);
+      } else {
+        if (typeof voteit.watcher.action_url === 'undefined') {
+          voteit.watcher.action_url = watcher_url;
+        }
+      };
+
+      voteit.watcher.start();
+
+    });
+    </script>
   </body>
 </html>

@@ -12,10 +12,8 @@ import deform
 
 from voteit.core import _
 from voteit.core import security
-from voteit.core.helpers import get_polls_struct
 from voteit.core.models.arche_compat import createContent
 from voteit.core.models.interfaces import IAgendaItem
-from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IPollPlugin
 from voteit.core.models.interfaces import IVote
@@ -235,22 +233,6 @@ class EditPollForm(DefaultEditForm):
             self.flash_messages.add(_(u"Nothing changed"))
         return HTTPFound(location = self.request.resource_url(self.context))
 
-
-@view_config(context = IMeeting,
-             name = '__polls_menu_content__',
-             renderer = 'voteit.core:templates/snippets/polls_menu_content.pt',
-             permission = security.VIEW)
-class PollsMenuContent(BaseView):
-    """ Generate the content of the polls menu in the top right corner.
-    """
-
-    def __call__(self):
-        response = {}
-        response['state_titles'] = self.request.get_wf_state_titles(IPoll, 'Poll')
-        response['polls_structure'] = get_polls_struct(self.context, self.request, limit = 5)
-        response['vote_perm'] = security.ADD_VOTE
-        response['only_link'] = self.context.polls_menu_only_links
-        return response
 
 def _get_poll_plugin(context, request):
     assert IPoll.providedBy(context), "Not a poll object"
