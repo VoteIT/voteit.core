@@ -22,6 +22,15 @@
       <p>&nbsp;</p>
     </div>
 
+    <script>
+    $(document).ready(function() {
+      var show_in_fullscreen = ${request.cookies.get('voteit.hide_agenda', '') == '1' and 'false' or 'true'};
+      console.log(show_in_fullscreen);
+      console.log('blabla');
+      voteit.init_agenda(show_in_fullscreen);
+    });
+    </script>
+
     <div data-agenda-url="${load_url}">
         <span class="glyphicon glyphicon-refresh rotate-me"></span>
         Loading...

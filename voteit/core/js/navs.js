@@ -98,13 +98,10 @@ voteit.toggle_agenda = function() {
 }
 
 
-voteit.init_agenda = function(hide_cookie) {
+voteit.init_agenda = function(show_in_fullscreen) {
     //Decide what to do depending on resolution etc
     if ($(window).width() > 768) {
-        // Read cookie etc
-        if (hide_cookie != '1') {
-            voteit.show_agenda();
-        }
+        if (show_in_fullscreen == true) voteit.show_agenda();
     } else {
         // Small screen
         $('#fixed-nav').data('slide-menu', 'fixed-nav').addClass('slide-in-nav');

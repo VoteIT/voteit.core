@@ -92,8 +92,6 @@
         }
       };
       voteit.watcher.start();
-      var hide_cookie = "${request.cookies.get('voteit.hide_agenda', '')}";
-      voteit.init_agenda(hide_cookie);
     });
     </script>
   </body>
