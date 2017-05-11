@@ -192,14 +192,11 @@ voteit.handle_agenda_back = function(event) {
 
 
 function unvoted_counter(response) {
-    $('[data-important-polls]').html(response['unvoted_polls']);
-
-    if (response['unvoted_polls'] > 0 && $('#poll-notification').length == 0) {
-        //arche.create_flash_message("Halli hallå?",
-        //{id: 'poll-notification', slot: 'fixed-msg-bar', auto_destruct: false, type: 'success'});
-    }
-    if (response['unvoted_polls'] == 0 && $('#poll-notification').length != 0) {
-        $('#poll-notification').remove();
+    console.log(response['unvoted_polls']);
+    if (response['unvoted_polls'] == 0) {
+        $('[data-important-polls]').empty();
+    } else {
+        $('[data-important-polls]').html(response['unvoted_polls']);
     }
 };
 

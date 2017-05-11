@@ -23,7 +23,7 @@ unread_js = Resource(voteit_core_jslib, 'unread.js', depends = (base_js, data_lo
 watcher_js = Resource(voteit_core_jslib, 'watcher.js', depends = (data_loader,))
 like_js = Resource(voteit_core_jslib, 'like.js', depends = (data_loader,))
 support_js = Resource(voteit_core_jslib, 'support.js', depends = (data_loader,))
-navs_js = Resource(voteit_core_jslib, 'navs.js', depends = (data_loader,))
+navs_js = Resource(voteit_core_jslib, 'navs.js', depends = (data_loader, watcher_js))
 
 #voteit_bootstrap = Resource(voteit_core_csslib, 'voteit_bootstrap.css')
 #Warning, bundling causes this resource to fail. It may have something to do with the css-map. (Probably not an accessible directory)
