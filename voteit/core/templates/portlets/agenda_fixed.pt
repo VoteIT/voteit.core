@@ -22,11 +22,10 @@
       <p>&nbsp;</p>
     </div>
 
-    <div data-load-target="${load_url}">
+    <div data-agenda-url="${load_url}">
         <span class="glyphicon glyphicon-refresh rotate-me"></span>
         Loading...
     </div>
-
 
 </div>
 </tal:main>

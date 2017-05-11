@@ -1,6 +1,7 @@
 
-// Fixed navbar
-@mixin slide-in() {
+// Fixed & slide-in navs
+
+.slide-in-nav {
     position: fixed;
     border-radius: 0;
     top: $navbar-height;
@@ -8,12 +9,7 @@
     background-color: $body-bg;
     transition: all .5s cubic-bezier(.32, .59, .3, .98);
     overflow: scroll;
-    z-index: 10000;
-}
-
-
-.slide-in-nav {
-    @include slide-in();
+    z-index: 1000;
 
     &.from-left {
         transform: translateX(-100%);
@@ -56,14 +52,11 @@
             transform: translateX(0%);
         }
     }
-
 }
 
 
 @media (max-width: $grid-float-breakpoint-max) {
     #fixed-nav {
-        @include slide-in();
-
         transform: translateX(-100%);
         right: 60px;
         left: 0px;
@@ -86,25 +79,22 @@
         top: $navbar-height;
         bottom: 0;
         overflow: scroll;
+        transform: translateX(-100%);
+        transition: none;
+
+        &.activated {
+            transform: translateX(0%);
+        }
+
     }
+
     body.left-fixed-active > .container {
         padding-left: $voteit-fixed-left-nav-sm;
     }
 
 }
 
-
-#fixed-nav-backdrop {
-    background-color: #000;
-    opacity: 0.5;
-    position: fixed;
-    top: $navbar-height;
-    right: 0;
-    bottom: 0;
-    left: 0;
-}
-
-
+//left-fixed-active !!!
 @media (max-width: $screen-md) {
     body.left-fixed-active {
         > .container,
@@ -124,6 +114,7 @@
     }
 }
 
+
 @media (min-width: $screen-lg) {
     #fixed-nav {
         width: $voteit-fixed-left-nav-lg;
@@ -133,11 +124,17 @@
     }
 }
 
-/*
-.navbar-fixed-left + .container,
-.navbar-fixed-left + .navbar-fixed-top,
-*/
 
+#fixed-nav-backdrop {
+    background-color: #000;
+    opacity: 0.5;
+    position: fixed;
+    top: $navbar-height;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 999;
+}
 
 
 // Built from: Inverse navbar
@@ -147,13 +144,7 @@
   border-bottom: 0;
   height: $navbar-height;
 
-/*
-  @media (min-width: $grid-float-breakpoint) {
-    float: left;
-  }
-  */
-
-    /* Float all for the standard nav in VoteIT */
+  /* Float all for the standard nav in VoteIT */
   .navbar-nav, .navbar-brand, .navbar-header, .navbar-nav > li {
       float: left;
   }

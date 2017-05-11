@@ -44,6 +44,74 @@ voteit.load_inline_menu = function(selector, url) {
 }
 
 
+voteit.show_agenda = function() {
+    //Figure out which agenda to use
+    var elem =  $('[data-agenda-url]');
+    if (elem.length > 0) {
+        var url = elem.data('agenda-url');
+        var request = arche.do_request(url);
+        arche.actionmarker_feedback(elem, true);
+        request.done(function(response) {
+            elem.replaceWith(response);
+        });
+    }
+    if (request) {
+        request.always(function() {
+            arche.actionmarker_feedback(elem, false);
+        });
+    }
+
+//  request.fail(arche.flash_error);
+
+    //FIXME: Can we tie this to bootstraps grid float breakpoint var?
+    if ($(window).width() > 768) {
+        //Desktop version
+        $('body').addClass('left-fixed-active');
+        //voteit.toggle_nav('#fixed-nav');
+        $('#fixed-nav').addClass('activated');
+        document.cookie = "voteit.hide_agenda=;path=/";
+    } else {
+        //Small version
+        voteit.show_nav('#fixed-nav');
+    }
+}
+
+
+voteit.hide_agenda = function() {
+    if ($(window).width() > 768) {
+        $('body').removeClass('left-fixed-active');
+        $('#fixed-nav').removeClass('activated');
+        document.cookie = "voteit.hide_agenda=1;path=/";
+    } else {
+        //Small version
+        voteit.hide_nav('#fixed-nav');
+    }
+}
+
+
+voteit.toggle_agenda = function() {
+    if ($('#fixed-nav').hasClass('activated')) {
+        voteit.hide_agenda();
+    } else {
+        voteit.show_agenda();
+    }
+}
+
+
+voteit.init_agenda = function(hide_cookie) {
+    //Decide what to do depending on resolution etc
+    if ($(window).width() > 768) {
+        // Read cookie etc
+        if (hide_cookie != '1') {
+            voteit.show_agenda();
+        }
+    } else {
+        // Small screen
+        $('#fixed-nav').data('slide-menu', 'fixed-nav').addClass('slide-in-nav');
+    }
+}
+
+
 voteit.insert_ai_response = function(response, elem) {
     var target = $(elem.data('load-agenda-item'));
     $('[data-load-agenda-item]').removeClass('active');
@@ -83,11 +151,9 @@ voteit.load_agenda_item = function(event) {
         window.history.pushState(
             {'url': url, 'title': title, 'html': response, 'type': 'agenda_item'},
         title, url);
-        voteit.hide_nav('#fixed-nav');
+        if ($(window).width() < 768) voteit.hide_nav('#fixed-nav');
     });
 }
-
-
 
 /*
 voteit.initial_ai_loaded function() {
@@ -129,7 +195,6 @@ voteit.handle_agenda_back = function(event) {
 
 
 function unvoted_counter(response) {
-
     $('[data-important-polls]').html(response['unvoted_polls']);
 
     if (response['unvoted_polls'] > 0 && $('#poll-notification').length == 0) {
@@ -139,7 +204,6 @@ function unvoted_counter(response) {
     if (response['unvoted_polls'] == 0 && $('#poll-notification').length != 0) {
         $('#poll-notification').remove();
     }
-
 };
 
 

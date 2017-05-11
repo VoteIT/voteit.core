@@ -18,13 +18,21 @@
                     portlets_bottom view.render_portlet_slot('bottom');
                     portlets_left_fixed view.render_portlet_slot('left_fixed');
                     main_cols 12 - int(bool(portlets_left))*3 - int(bool(portlets_right))*3;"
-        class="${(show_left_fixed and portlets_left_fixed) and 'left-fixed-active' or None|None} view-${request.view_name or 'default'|'default'}">
+        class="view-${request.view_name or 'default'|'default'}">
+
+    <div id="fixed-nav">
+      <!-- this will be set in small screen mode:
+        data-slide-menu="fixed-nav"
+         class="slide-in-nav"
+         -->
+        <tal:portlets repeat="portlet portlets_left_fixed">
+            <tal:portlet replace="structure portlet" />
+        </tal:portlets>
+    </div>
 
     <div class="fixed-flash-slot" data-flash-slot="main"></div>
 
     <nav metal:define-slot="navigation" tal:replace="structure view.render_template('arche:templates/navigation.pt')" />
-
-    <tal:fixed-nav metal:define-slot="left-fixed"></tal:fixed-nav>
 
     <div class="container">
 
@@ -55,9 +63,8 @@
         </div>
       </div>
 
-      <tal:actionbar metal:define-slot="actionbar" replace="structure view.render_actionbar()" />
-
       <div id="content">
+        <tal:actionbar metal:define-slot="actionbar" replace="structure view.render_actionbar()" />
         <metal:content define-slot="content"></metal:content>
       </div>
 
@@ -68,7 +75,11 @@
     <div data-slide-menu="site-menu" id="site-menu" class="slide-in-nav from-right"></div>
     <div data-slide-menu="meeting-menu" id="meeting-menu" class="slide-in-nav from-top"></div>
     <div data-slide-menu="poll-menu" id="poll-menu" class="slide-in-nav from-top"></div>
-    <a id="fixed-nav-backdrop" style="display: none;" data-active-menu="" href="javascript:voteit.hide_nav()"></a>
+
+    <a id="fixed-nav-backdrop"
+       style="display: none;"
+       data-active-menu=""
+       href="javascript:voteit.hide_nav()"></a>
 
     <script type="text/javascript" tal:condition="request.meeting|False">
     $(document).ready(function() {
@@ -80,9 +91,9 @@
           voteit.watcher.action_url = watcher_url;
         }
       };
-
       voteit.watcher.start();
-
+      var hide_cookie = "${request.cookies.get('voteit.hide_agenda', '')}";
+      voteit.init_agenda(hide_cookie);
     });
     </script>
   </body>

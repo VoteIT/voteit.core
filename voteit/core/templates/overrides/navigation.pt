@@ -7,9 +7,17 @@
   <div class="container-fluid">
     <div class="navbar-header">
 
-      <a class="navbar-brand hidden visible-xs"
+      <!-- Nav for meetings on site root?
+      <a class="navbar-brand"
          tal:condition="request.meeting"
          href="javascript:voteit.toggle_nav('#fixed-nav')">
+        <span class="glyphicon glyphicon-list"></span>
+      </a>
+      -->
+
+      <a class="navbar-brand"
+         tal:condition="request.meeting"
+         href="javascript:voteit.toggle_agenda()">
         <span class="glyphicon glyphicon-list"></span>
       </a>
 

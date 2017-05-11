@@ -288,7 +288,7 @@ $brand-danger:          #d9534f !default;
   background-color: #fff;
   transition: all 0.5s cubic-bezier(0.32, 0.59, 0.3, 0.98);
   overflow: scroll;
-  z-index: 10000; }
+  z-index: 1000; }
   .slide-in-nav.from-left {
     transform: translateX(-100%);
     right: 60px;
@@ -319,14 +319,6 @@ $brand-danger:          #d9534f !default;
 
 @media (max-width: 767px) {
   #fixed-nav {
-    position: fixed;
-    border-radius: 0;
-    top: 50px;
-    bottom: 0;
-    background-color: #fff;
-    transition: all 0.5s cubic-bezier(0.32, 0.59, 0.3, 0.98);
-    overflow: scroll;
-    z-index: 10000;
     transform: translateX(-100%);
     right: 60px;
     left: 0px; }
@@ -341,19 +333,14 @@ $brand-danger:          #d9534f !default;
     border-radius: 0;
     top: 50px;
     bottom: 0;
-    overflow: scroll; }
+    overflow: scroll;
+    transform: translateX(-100%);
+    transition: none; }
+    #fixed-nav.activated {
+      transform: translateX(0%); }
 
   body.left-fixed-active > .container {
     padding-left: 250px; } }
-#fixed-nav-backdrop {
-  background-color: #000;
-  opacity: 0.5;
-  position: fixed;
-  top: 50px;
-  right: 0;
-  bottom: 0;
-  left: 0; }
-
 @media (max-width: 992px) {
   body.left-fixed-active > .container,
   body.left-fixed-active > .navbar-fixed-top > .container {
@@ -370,20 +357,21 @@ $brand-danger:          #d9534f !default;
 
   body.left-fixed-active > .container {
     padding-left: 350px; } }
-/*
-.navbar-fixed-left + .container,
-.navbar-fixed-left + .navbar-fixed-top,
-*/
+#fixed-nav-backdrop {
+  background-color: #000;
+  opacity: 0.5;
+  position: fixed;
+  top: 50px;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 999; }
+
 .navbar-voteit {
   background-color: #0a243d;
   border-color: #030a11;
   border-bottom: 0;
   height: 50px;
-  /*
-    @media (min-width: $grid-float-breakpoint) {
-      float: left;
-    }
-    */
   /* Float all for the standard nav in VoteIT */
   /* FIXME: Attach right nav as fixed instead.
   Make sure it has a background and goes on top of the title of the meeting!
