@@ -192,7 +192,6 @@ voteit.handle_agenda_back = function(event) {
 
 
 function unvoted_counter(response) {
-    console.log(response['unvoted_polls']);
     if (response['unvoted_polls'] == 0) {
         $('[data-important-polls]').empty();
     } else {
