@@ -1,6 +1,5 @@
 from arche.views.base import BaseView
 from pyramid.httpexceptions import HTTPFound
-from pyramid.traversal import resource_path
 
 from voteit.core import _
 from voteit.core import security
