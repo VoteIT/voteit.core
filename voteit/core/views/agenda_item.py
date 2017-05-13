@@ -36,7 +36,7 @@ class AgendaItemView(BaseView):
                 return
             try:
                 obj = meeting[m_order[obj_pos]]
-            except KeyError:
+            except (KeyError, IndexError):
                 return
             if not IAgendaItem.providedBy(obj):
                 continue
