@@ -186,7 +186,8 @@ class AgendaItemPermissionTests(unittest.TestCase):
         #Set block
         obj.set_field_value('proposal_block', True)
         #Add proposal
-        self.assertEqual(self.pap(obj, security.ADD_PROPOSAL), set())
+        self.assertEqual(self.pap(obj, security.ADD_PROPOSAL),
+                         set([security.ROLE_ADMIN, security.ROLE_MODERATOR]))
 
     def test_discussion_block(self):
         request = testing.DummyRequest()
@@ -200,4 +201,5 @@ class AgendaItemPermissionTests(unittest.TestCase):
         #Set block
         obj.set_field_value('discussion_block', True)
         #Add discussion post
-        self.assertEqual(self.pap(obj, security.ADD_DISCUSSION_POST), set())
+        self.assertEqual(self.pap(obj, security.ADD_DISCUSSION_POST),
+                         set([security.ROLE_ADMIN, security.ROLE_MODERATOR]))

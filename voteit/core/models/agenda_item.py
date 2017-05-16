@@ -1,13 +1,11 @@
 from arche.security import get_acl_registry
 from pyramid.httpexceptions import HTTPForbidden
 from pyramid.security import Deny
-from pyramid.security import Everyone
 from pyramid.threadlocal import get_current_request
 from pyramid.traversal import find_interface
-from repoze.folder.interfaces import IObjectAddedEvent
 from zope.interface import implementer
 
-from voteit.core import VoteITMF as _
+from voteit.core import _
 from voteit.core import security
 from voteit.core.models.base_content import BaseContent
 from voteit.core.models.interfaces import IAgendaItem
@@ -42,9 +40,9 @@ class AgendaItem(BaseContent, WorkflowAware):
             return acl.get_acl('AgendaItem:private')
         perms = []
         if self.get_field_value('proposal_block', False) == True:
-            perms.append((Deny, Everyone, security.ADD_PROPOSAL))
+            perms.append((Deny, security.ROLE_PROPOSE, security.ADD_PROPOSAL))
         if self.get_field_value('discussion_block', False) == True:
-            perms.append((Deny, Everyone, security.ADD_DISCUSSION_POST))
+            perms.append((Deny, security.ROLE_DISCUSS, security.ADD_DISCUSSION_POST))
         perms.extend(self.__parent__.__acl__)
         return perms
 
