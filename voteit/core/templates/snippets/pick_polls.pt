@@ -1,0 +1,24 @@
+<tal:main xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="voteit.core">
+<div class="list-group-item" data-pick-poll-context="${context.uid}">
+    <div tal:repeat="poll polls"
+         style="margin: 0px;"
+         class="checkbox">
+        <label>
+            <form>
+                <input type="hidden" name="proposal_uid" value="${context.uid}" />
+                <input type="checkbox"
+                       name="selected"
+                       tal:attributes="data-set-poll poll.uid;
+                                       data-url request.resource_url(poll, '__set_proposal__');
+                                       checked context.uid in poll.proposals;" />
+            ${poll.title}
+            (${poll.get_poll_plugin().title|poll.plugin_name})
+            </form>
+        </label>
+    </div>
+</div>
+</tal:main>

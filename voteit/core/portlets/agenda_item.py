@@ -22,6 +22,8 @@ from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IProposal
 from voteit.core.security import ADD_POLL
+from voteit.core.views.base_inline import ProposalInlineMixin
+from voteit.core.views.base_inline import PollInlineMixin
 
 
 # FIXME: Loading required resources for inline forms is still a problem.
@@ -122,24 +124,20 @@ class ProposalsInline(BaseView):
         return response
 
 
-class ProposalsInlineStateChange(BaseView):
+class ProposalsInlineStateChange(BaseView, ProposalInlineMixin):
+
     def __call__(self):
         new_state = self.request.GET.get('state')
-        response = {}
-        response['docids'] = [0]  # Not used
-        response['unread_docids'] = ()
-        response['contents'] = iter([self.context])
-        response['hidden_count'] = False
-        response['context'] = self.context.__parent__  # AI
         # change state
         try:
             self.context.set_workflow_state(self.request, new_state)
         except WorkflowError as exc:
             raise HTTPForbidden(str(exc))
-        return response
+        return self.get_context_response()
 
 
 class DiscussionsInline(BaseView):
+
     def __call__(self):
         """ Loading procedure of discussion posts:
             If nothing specific is set, limit loading to the next 5 unread.
@@ -218,7 +216,7 @@ class PollsInline(BaseView):
         return response
 
 
-class PollsInlineStateChange(PollsInline):
+class PollsInlineStateChange(PollsInline, PollInlineMixin):
     def __call__(self):
         new_state = self.request.GET.get('state')
         # change state
@@ -226,12 +224,7 @@ class PollsInlineStateChange(PollsInline):
             self.context.set_workflow_state(self.request, new_state)
         except WorkflowError as exc:
             raise HTTPForbidden(str(exc))
-        response = {}
-        response['contents'] = iter([self.context])
-        response['vote_perm'] = security.ADD_VOTE
-        response['context'] = self.context.__parent__  # AI
-        response['show_add'] = False
-        return response
+        return self.get_context_response()
 
 
 class StrippedInlineAddForm(DefaultAddForm):

@@ -62,7 +62,7 @@ class AIToggleBlockView(BaseView):
         url = self.request.resource_url(self.context)
         if self.request.referer:
             url = self.request.referer
-         #FIXME: This should be done via javascript instead
+        #FIXME: This should be done via javascript instead
         return HTTPFound(location=url)
 
 

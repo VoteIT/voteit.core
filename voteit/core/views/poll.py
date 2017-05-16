@@ -1,3 +1,4 @@
+import deform
 from arche.utils import generate_slug
 from arche.views.base import BaseView
 from arche.views.base import DefaultAddForm
@@ -6,17 +7,20 @@ from pyramid.httpexceptions import HTTPForbidden
 from pyramid.httpexceptions import HTTPFound
 from pyramid.renderers import render
 from pyramid.response import Response
+from pyramid.traversal import resource_path
 from pyramid.view import view_config
+from repoze.catalog.query import Any
+from repoze.catalog.query import Eq
 from zope.interface.interfaces import ComponentLookupError
-import deform
 
 from voteit.core import _
 from voteit.core import security
-from voteit.core.models.arche_compat import createContent
 from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IPollPlugin
 from voteit.core.models.interfaces import IVote
+from voteit.core.portlets.agenda_item import PollsInline
+from voteit.core.views.base_inline import PollInlineMixin
 
 
 @view_config(context = IPoll,
@@ -184,21 +188,9 @@ class PollVoteForm(DefaultEditForm):
 class AddPollForm(DefaultAddForm):
 
     def save_success(self, appstruct):
-        #Don't save this data
-        add_reject_proposal = appstruct.pop('add_reject_proposal', None)
-        reject_proposal_title = appstruct.pop('reject_proposal_title', None)
-
-        if add_reject_proposal:
-            reject_proposal = createContent('Proposal', text = reject_proposal_title)
-            name = generate_slug(self.context, reject_proposal_title)
-            #name = reject_proposal.suggest_name(self.context)
-            self.context[name] = reject_proposal
-            appstruct['proposals'].add(reject_proposal.uid)
-
-        obj = createContent(self.type_name, **appstruct)
+        obj = self.request.content_factories[self.type_name](**appstruct)
         name = generate_slug(self.context, appstruct['title'])
         self.context[name] = obj
-
         #Polls might have a special redirect action if the poll plugin has a settings schema
         if obj.get_poll_plugin().get_settings_schema() is not None:
             url = self.request.resource_url(obj, 'poll_config')
@@ -216,6 +208,30 @@ class AddPollForm(DefaultAddForm):
              renderer = 'arche:templates/form.pt',
              permission = security.EDIT)
 class EditPollForm(DefaultEditForm):
+
+    def save_success(self, appstruct):
+        updated = self.context.set_field_appstruct(appstruct)
+        plugin_schema = self.context.get_poll_plugin().get_settings_schema()
+        plugin_requires_settings = 'poll_plugin' in updated and plugin_schema
+        url = self.request.resource_url(self.context.__parent__, anchor=self.context.uid)
+        if updated:
+            if plugin_requires_settings:
+                self.flash_messages.add(_("Update plugin settings"))
+                url = self.request.resource_url(self.context, 'poll_config')
+            else:
+                self.flash_messages.add(_(u"Successfully updated"))
+        else:
+            self.flash_messages.add(_(u"Nothing changed"))
+        return HTTPFound(location = url)
+
+
+@view_config(context = IPoll,
+             name = "edit_proposals",
+             renderer = 'arche:templates/form.pt',
+             permission = security.EDIT)
+class EditPollProposalsForm(DefaultEditForm):
+    schema_name = 'edit_proposals'
+    title = _("Pick participating proposals")
 
     def save_success(self, appstruct):
         #Change wf of any removed proposals
@@ -244,3 +260,49 @@ def _get_poll_plugin(context, request):
                           u"plugin with the name '${name}' is installed",
                 mapping = {'name': context.poll_plugin_name})
         raise HTTPForbidden(msg)
+
+
+@view_config(context=IAgendaItem,
+             name='_pick_poll_data.json',
+             permission=security.MODERATE_MEETING,
+             renderer='json')
+class PickPollJSON(BaseView):
+    """ Returns json structure with overlays for planning
+        which proposals should be in which polls."""
+
+    def __call__(self):
+        path = resource_path(self.context)
+        query = Eq('path', path) & Eq('type_name', 'Poll') & Any('workflow_state', ('private', 'upcoming'))
+        docids = self.request.root.catalog.query(query)[1]
+        polls = tuple(self.request.resolve_docids(docids, perm=security.EDIT)) #Must be able to modify poll
+        query = Eq('path', path) & Eq('type_name', 'Proposal')
+        only_uid = self.request.GET.get('uid', None)
+        if only_uid:
+            query &= Eq('uid', only_uid)
+        docids = self.request.root.catalog.query(query)[1]
+        proposals = tuple(self.request.resolve_docids(docids))
+        response = {}
+        if not polls:
+            return response
+        for proposal in proposals:
+            values = {'context': proposal, 'polls': polls}
+            response[proposal.uid] = render('voteit.core:templates/snippets/pick_polls.pt', values, request=self.request)
+        return response
+
+
+@view_config(context=IPoll,
+             name='__set_proposal__',
+             permission=security.EDIT,
+             renderer='voteit.core:templates/portlets/polls_inline.pt')
+class InlineSetProposal(PollsInline, PollInlineMixin):
+
+    def __call__(self):
+        selected = bool(self.request.POST.get('selected', None))
+        proposal_uid = self.request.POST.get('proposal_uid', '')
+        proposals = set(self.context.proposals)
+        if selected and proposal_uid not in proposals:
+            proposals.add(proposal_uid)
+        if not selected and proposal_uid in proposals:
+            proposals.remove(proposal_uid)
+        self.context.proposals = proposals
+        return self.get_context_response()
