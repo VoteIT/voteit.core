@@ -578,4 +578,14 @@ body .btn-group-portlet > .item-unread {
 footer {
   margin-top: 30px; }
 
+/*
+.max-width-text {
+    @include text-overflow();
+    display: inline-block;
+    max-width: 100px;
+}
+*/
+.text-small {
+  font-size: 90%; }
+
 /*# sourceMappingURL=main.css.map */

@@ -10,6 +10,7 @@ from voteit.core.helpers import get_meeting_participants
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.security import MODERATE_MEETING
 
+
 _VIEW_ROLES = (('role_view', security.ROLE_VIEWER),
                ('role_discuss', security.ROLE_DISCUSS),
                ('role_propose', security.ROLE_PROPOSE),
@@ -17,12 +18,23 @@ _VIEW_ROLES = (('role_view', security.ROLE_VIEWER),
                ('role_moderate', security.ROLE_MODERATOR),
                ('role_admin', security.ROLE_ADMIN),)
 
+
 #Only allow VoteIT core roles
 _ALLOWED_TO_TOGGLE = (security.ROLE_VIEWER,
                       security.ROLE_DISCUSS,
                       security.ROLE_PROPOSE,
                       security.ROLE_VOTER,
                       security.ROLE_MODERATOR)
+
+
+#glyphicon glyphicon + ->
+_ROLE_ICONS = {'role_view': 'eye-open',
+               'role_discuss': 'comment',
+               'role_propose': 'exclamation-sign',
+               'role_vote': 'star',
+               'role_moderate': 'king',
+               'role_admin': 'cog'}
+
 
 @view_defaults(context = IMeeting, permission = security.VIEW)
 class ParticipantsView(BaseView):
@@ -34,6 +46,7 @@ class ParticipantsView(BaseView):
         #This might be slow in its current form. Make get_meeting_participants smarter
         response['participants_count'] = len(get_meeting_participants(self.context))
         response['view_roles'] = _VIEW_ROLES
+        response['role_icons'] = _ROLE_ICONS
         response['meeting_closed'] = self.context.get_workflow_state() == 'closed'
         return response
 
