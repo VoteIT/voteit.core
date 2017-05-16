@@ -40,7 +40,7 @@ voteit.pick_poll = function(event) {
     var elem = $(event.currentTarget);
     var url = elem.attr('href');
     var will_remove = $(elem.data('will-remove'));
-    console.log(url)
+//    console.log(url)
     if (will_remove.length > 0) {
         //Remove
         will_remove.remove();
