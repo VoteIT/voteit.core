@@ -18,7 +18,6 @@ from repoze.catalog.query import Eq, NotAny, Any
 from repoze.workflow import WorkflowError
 from voteit.core import _
 from voteit.core import security
-from voteit.core.fanstaticlib import data_loader
 from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IProposal
@@ -51,7 +50,6 @@ class ProposalsPortlet(ListingPortlet):
 
     def render(self, context, request, view, **kwargs):
         if IAgendaItem.providedBy(context):
-            data_loader.need()
             query = {}
             tags = request.GET.getall('tag')
             if tags:

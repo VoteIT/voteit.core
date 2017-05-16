@@ -8,7 +8,6 @@ from pyramid.traversal import resource_path
 from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IMeeting
 from voteit.core import _
-from voteit.core.fanstaticlib import data_loader
 
 
 class AgendaPortlet(PortletType):
@@ -22,7 +21,6 @@ class AgendaPortlet(PortletType):
 
     def render(self, context, request, view, **kwargs):
         if request.meeting:
-            data_loader.need()
             ai_name = IAgendaItem.providedBy(context) and context.__name__ or ''
             response = {'title': self.title,
                         'portlet': self.portlet,
