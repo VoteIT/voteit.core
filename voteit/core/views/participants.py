@@ -1,6 +1,6 @@
 from arche.security import groupfinder
-from arche.views.base import BaseView
-from pyramid.httpexceptions import HTTPForbidden
+from arche.views.base import BaseView, DefaultEditForm
+from pyramid.httpexceptions import HTTPForbidden, HTTPFound
 from pyramid.view import view_config
 from pyramid.view import view_defaults
 
@@ -9,6 +9,7 @@ from voteit.core.fanstaticlib import participants_js
 from voteit.core.helpers import get_meeting_participants
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.security import MODERATE_MEETING
+from voteit.core import _
 
 
 _VIEW_ROLES = (('role_view', security.ROLE_VIEWER),
@@ -100,3 +101,38 @@ class ParticipantsView(BaseView):
         return {'role': view_name_role,
                 'userid': userid,
                 'status': status}
+
+
+@view_config(context = IMeeting,
+               name='bulk_change_roles',
+               permission = security.MODERATE_MEETING,
+               renderer='arche:templates/form.pt')
+class BulkChangeRolesForm(DefaultEditForm):
+    schema_name = 'bulk_change_roles'
+    title = _("Bulk change roles")
+    ROLE_MAP = {
+        'viewer': security.ROLE_VIEWER,
+        'discuss': security.ROLE_DISCUSS,
+        'propose': security.ROLE_PROPOSE,
+        'voter': security.ROLE_VOTER,
+    }
+
+    def save_success(self, appstruct):
+        add_roles = set()
+        remove_roles = set()
+        for (k, v) in appstruct.items():
+            if v == 'add':
+                add_roles.add(self.ROLE_MAP[k])
+            if v == 'remove':
+                remove_roles.add(self.ROLE_MAP[k])
+        #yes, this could be optimised.
+        lr = self.context.local_roles
+        current_local_roles = tuple(lr)
+        for userid in current_local_roles:
+            lr.add(userid, add_roles)
+            lr.remove(userid, remove_roles)
+        self.flash_messages.add(_("Bulk changes applied"))
+        return HTTPFound(location=self.request.resource_url(self.context, 'participants'))
+
+    def cancel_success(self, *args, **kw):
+        return HTTPFound(location=self.request.resource_url(self.context, 'participants'))

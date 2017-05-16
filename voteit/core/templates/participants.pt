@@ -32,8 +32,12 @@
           </tal:iterate>
         </tr>
         <tr>
-          <th colspan="3"></th>
           <th tal:condition="request.is_moderator"></th>
+          <th colspan="3" class="text-right">
+            <a class="btn btn-default btn-xs"
+               href="${request.resource_url(context, 'bulk_change_roles')}">
+              Bulk change...</a>
+          </th>
           <tal:iterate repeat="(name, role) view_roles">
             <th class="text-center">
               <span data-role-count="${name}" class="badge"></span>
