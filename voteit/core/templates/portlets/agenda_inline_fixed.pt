@@ -18,6 +18,7 @@
                        tcount view.count_types(ai);
                        context_unread not is_current and (tcount['Proposal']['unread'] or tcount['DiscussionPost']['unread']);">
         <a href="${request.resource_url(ai)}"
+           data-actionmarker="disabled"
            data-load-agenda-item="#content"
           class="btn btn-default btn-block ${is_current and 'active' or None} ${context_unread and 'item-unread' or None}">
           <span class="btn-title" data-title>${ai.title}</span>

@@ -111,8 +111,6 @@ voteit.init_agenda = function(show_in_fullscreen) {
 
 voteit.insert_ai_response = function(response, elem) {
     var target = $(elem.data('load-agenda-item'));
-    $('[data-load-agenda-item]').removeClass('active');
-    elem.addClass('active');
     target.html(response);
     target.find("[data-load-target]").each(function() {
         voteit.load_target(this);
@@ -122,15 +120,19 @@ voteit.insert_ai_response = function(response, elem) {
 
 voteit.make_ai_request = function(elem) {
     var url = elem.attr('href');
-    //arche.actionmarker_feedback(elem, true);
+    arche.actionmarker_feedback(elem, true);
+
     var target = $(elem.data('load-agenda-item'));
     var request = arche.do_request(url);
     request.done(function(response) {
+        $('[data-load-agenda-item]').removeClass('active');
+        //Fixme: Make sure it's an item in the agenda :)
+        elem.addClass('active');
         voteit.insert_ai_response(response, elem);
     });
     request.fail(arche.flash_error);
     request.always(function() {
-        //arche.actionmarker_feedback(elem, false);
+        arche.actionmarker_feedback(elem, false);
         arche.load_flash_messages();
     });
     return request;
