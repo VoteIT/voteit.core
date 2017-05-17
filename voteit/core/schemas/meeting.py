@@ -10,20 +10,11 @@ import deform
 from voteit.core import VoteITMF as _
 from voteit.core import security
 from voteit.core.models.interfaces import IAccessPolicy
-from voteit.core.models.interfaces import IPollPlugin
 from voteit.core.models.interfaces import IProposal
 from voteit.core.models.interfaces import IProposalIds
 from voteit.core.schemas.common import NAME_PATTERN
 from voteit.core.validators import html_string_validator
 from voteit.core.validators import richtext_validator
-
-
-@colander.deferred
-def poll_plugins_choices_widget(node, kw):
-    request = kw['request']
-    plugin_choices = [(x.name, x.factory.title) for x in request.registry.registeredAdapters() if
-                      x.provided == IPollPlugin]
-    return deform.widget.CheckboxChoiceWidget(values=plugin_choices)
 
 
 @colander.deferred
@@ -239,20 +230,6 @@ class AccessPolicyMeetingSchema(colander.MappingSchema):
     )
 
 
-class MeetingPollSettingsSchema(colander.Schema):
-    poll_plugins = colander.SchemaNode(
-        colander.Set(),
-        title=_("mps_poll_plugins_title",
-                default="Available poll methods within this meeting"),
-        description=_("mps_poll_plugins_description",
-                      default="Only poll methods selected here will be available withing the meeting. "
-                              "If nothing is selected, only the servers default poll "
-                              "method will be available."),
-        missing=set(),
-        widget=poll_plugins_choices_widget,
-    )
-
-
 class _ContainsOnlyAndNotEmpty(colander.ContainsOnly):
     def __call__(self, node, value):
         if len(value) == 0:
@@ -332,7 +309,6 @@ class BulkChangeRolesSchema(colander.Schema):
 def includeme(config):
     config.add_content_schema('Meeting', AddMeetingSchema, 'add')
     config.add_content_schema('Meeting', EditMeetingSchema, 'edit')
-    config.add_content_schema('Meeting', MeetingPollSettingsSchema, 'meeting_poll_settings')
     config.add_content_schema('Meeting', AccessPolicyMeetingSchema, 'access_policy')
     config.add_content_schema('Meeting', AddExistingUserSchema, 'add_existing_user')
     config.add_content_schema('Meeting', BulkChangeRolesSchema, 'bulk_change_roles')

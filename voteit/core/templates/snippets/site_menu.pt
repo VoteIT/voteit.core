@@ -25,11 +25,6 @@
       </li>
       <li role="presentation">
         <a role="menuitem" tabindex="-1"
-          href="${request.resource_url(request.meeting, 'meeting_poll_settings')}"
-          i18n:translate="">Poll settings</a>
-      </li>
-      <li role="presentation">
-        <a role="menuitem" tabindex="-1"
           href="${request.resource_url(request.meeting, 'access_policy')}"
           i18n:translate="">Access policy</a>
       </li>
