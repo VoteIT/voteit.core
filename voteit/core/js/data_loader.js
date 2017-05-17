@@ -2,6 +2,10 @@
 voteit.load_target = function (target) {
     var target = $(target);
     var url = target.data('load-target');
+    if (!url) {
+        console.log("voteit.load_target function got a target that doesn't exist.");
+        return
+    }
     var request = arche.do_request(url);
     request.target = target;
     request.done(function(response) {

@@ -102,7 +102,7 @@ class PollVoteForm(DefaultEditForm):
     ajax_options = """
         {success:
           function () {
-            voteit.load_target("#ai-polls [data-load-target]");
+            if ($("#ai-polls [data-load-target]").length > 0) voteit.load_target("#ai-polls [data-load-target]");
             voteit.watcher.fetch_data();
           },
         error:
