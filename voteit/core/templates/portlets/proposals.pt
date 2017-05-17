@@ -19,7 +19,8 @@
         </a>
       </h4>
 
-      <div tal:define="pick_url request.resource_url(context, '_pick_poll_data.json')">
+      <div tal:condition="request.is_moderator"
+           tal:define="pick_url request.resource_url(context, '_pick_poll_data.json')">
         <a class="btn btn-sm btn-default"
            href="${pick_url}"
            data-pick-poll=""
