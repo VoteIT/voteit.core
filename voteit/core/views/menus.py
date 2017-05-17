@@ -41,8 +41,11 @@ class SiteMenuView(BaseView):
     def __call__(self):
         response = {}
         if IMeeting.providedBy(self.context):
+            ap_name = self.context.access_policy
+            if not ap_name:
+                ap_name = 'invite_only'
             ap = self.request.registry.queryAdapter(self.context, IAccessPolicy,
-                                               name=self.context.access_policy)
+                                               name=ap_name)
             response['ap_configurable'] = bool(ap is not None and ap.config_schema())
             response['settings_menu'] = render_view_group(self.context, self.request, 'settings_menu', spacer=" ")
             response['meeting_closed'] = self.context.get_workflow_state() == 'closed'
