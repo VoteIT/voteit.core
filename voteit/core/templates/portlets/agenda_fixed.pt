@@ -5,34 +5,117 @@
       i18n:domain="voteit.core">
 <div id="agenda-item-portlet" class="portlet hidden-print">
 
-  <h3 class="text-nowrap">
-    <span class="glyphicon glyphicon-list-alt"></span>
-    <span i18n:translate="">Agenda</span>
-  </h3>
-
-    <div class="row" tal:condition="request.is_moderator">
-      <div class="col-sm-6">
-        <a class="btn btn-default btn-block btn-sm"
-          href="${request.resource_url(request.meeting, 'add', query = {'content_type': 'AgendaItem'})}" i18n:translate="">Add</a>
-      </div>
-      <div class="col-sm-6">
-        <a class="btn btn-default btn-block btn-sm"
-          href="${request.resource_url(request.meeting, 'manage_agenda')}" i18n:translate="">Manage</a>
-      </div>
-      <p>&nbsp;</p>
+  <div class="row" tal:condition="request.is_moderator">
+    <div class="col-sm-6">
+      <a class="btn btn-default btn-block btn-sm"
+        href="${request.resource_url(request.meeting, 'add', query = {'content_type': 'AgendaItem'})}" i18n:translate="">Add</a>
     </div>
-
-    <script>
-    $(document).ready(function() {
-      var show_in_fullscreen = ${request.cookies.get('voteit.hide_agenda', '') == '1' and 'false' or 'true'};
-      voteit.init_agenda(show_in_fullscreen);
-    });
-    </script>
-
-    <div data-agenda-url="${load_url}">
-        <span class="glyphicon glyphicon-refresh rotate-me"></span>
-        Loading...
+    <div class="col-sm-6">
+      <a class="btn btn-default btn-block btn-sm"
+        href="${request.resource_url(request.meeting, 'manage_agenda')}" i18n:translate="">Manage</a>
     </div>
+    <p>&nbsp;</p>
+  </div>
+
+<div tal:condition="None" class="btn-group">
+  <div class="btn-group">
+    <button type="button"
+            class="btn btn-sm btn-default dropdown-toggle"
+            data-toggle="dropdown"
+            aria-expanded="false">
+      <span class="text-published">
+        <span class="glyphicon glyphicon-filter"></span>
+        Ämnen: Alla
+        <span class="caret"></span>
+      </span>
+    </button>
+    <ul class="dropdown-menu" role="menu">
+      <li>
+        <a href=""
+           data-replace-target="[data-agenda-filter]" data-clickable-target="">
+          <span>Tillbakadragen</span>
+          <span data-actionmarker="glyphicon glyphicon-refresh rotate-me"></span>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <button type="button" class="btn btn-default btn-sm">
+    &nbsp;
+    <span class="glyphicon glyphicon-remove text-primary"></span>
+    &nbsp;
+  </button>
+</div>
+
+  <!-- FIXME: Initial state always ongoing? -->
+<tal:iterate repeat="state states">
+  <div class="panel panel-primary">
+    <a class="panel-heading collapsed"
+       href="#agenda-state-${state}"
+       data-actionmarker="disabled"
+       data-agenda-control="${state}"
+       style="display: block; text-decoration: none;">
+      <span class="panel-title">
+        ${state_titles[state]}
+        <span class="badge" data-ai-state-count="${state}"></span>
+        <span class="pull-right">
+          <span data-actionmarker="glyphicon glyphicon-refresh rotate-me"></span>
+          &nbsp;
+          <span class="glyphicon collapse-state"></span>
+        </span>
+      </span>
+    </a>
+    <div id="agenda-state-${state}"
+         data-agenda-state="${state}"
+         class="btn-group-portlet"
+         role="group">
+      <!-- purejs will populate this area. See template below -->
+
+    </div>
+  </div>
+</tal:iterate>
+
+
+<script>
+  $(document).ready(function() {
+    var show_in_fullscreen = ${request.cookies.get('voteit.hide_agenda', '') == '1' and 'false' or 'true'};
+    voteit.init_agenda(show_in_fullscreen);
+    voteit.agenda_data_url = "${request.resource_url(request.meeting, 'agenda_data.json')}";
+    voteit.agenda_sort_order = ["${'", "'.join(request.meeting.order)}"];
+
+    //FIXME: options to finetune and make sure it isn't loaded when not needed
+    if ($(window).width() > 768) {
+      voteit.load_agenda_data('ongoing');
+    }
+  });
+</script>
+
+<div class="hidden" data-purejs-template="agenda-item">
+  <a href="${meeting_url}"
+       data-actionmarker="disabled"
+       data-load-agenda-item="#content"
+       data-ai-name=""
+       class="btn btn-default btn-block">
+      <!-- active / item-unread -->
+    <span class="btn-title" data-ai="title"></span>
+    <div class="row text-muted">
+      <div class="col-xs-4 col-sm-12 col-md-4">
+        <span class="glyphicon glyphicon-exclamation-sign"></span>
+        <span data-ai="prop_count"></span>
+        <span class="badge" data-ai="prop_unread"></span>
+      </div>
+      <div class="col-xs-4 col-sm-12 col-md-4">
+        <span class="glyphicon glyphicon-comment"></span>
+        <span data-ai="disc_count"></span>
+        <span class="badge" data-ai="disc_unread"></span>
+      </div>
+      <div class="col-xs-4 col-sm-12 col-md-4">
+        <span class="glyphicon glyphicon-star"></span>
+        <span data-ai="poll_count"></span>
+      </div>
+    </div>
+  </a>
+</div>
 
 </div>
 </tal:main>

@@ -12,6 +12,7 @@
       class="btn btn-default btn-sm"
       href="${request.resource_url(previous_ai, view_name)}"
       data-load-agenda-item="#content"
+      data-ai-name="${previous_ai.__name__}"
       title="${previous_ai.title}">
       <span class="glyphicon glyphicon-chevron-left"></span>
       <span i18n:translate="">Previous</span>
@@ -22,6 +23,7 @@
       class="btn btn-default btn-sm"
       href="${request.resource_url(next_ai, view_name)}"
       data-load-agenda-item="#content"
+      data-ai-name="${next_ai.__name__}"
       title="${next_ai.title}">
       <span i18n:translate="">Next</span>
       <span class="glyphicon glyphicon-chevron-right"></span>

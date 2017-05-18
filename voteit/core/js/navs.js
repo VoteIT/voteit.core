@@ -61,13 +61,10 @@ voteit.show_agenda = function() {
         });
     }
 
-//  request.fail(arche.flash_error);
-
     //FIXME: Can we tie this to bootstraps grid float breakpoint var?
     if ($(window).width() > 768) {
         //Desktop version
         $('body').addClass('left-fixed-active');
-        //voteit.toggle_nav('#fixed-nav');
         $('#fixed-nav').addClass('activated');
         document.cookie = "voteit.hide_agenda=;path=/";
     } else {
@@ -121,13 +118,11 @@ voteit.insert_ai_response = function(response, elem) {
 voteit.make_ai_request = function(elem) {
     var url = elem.attr('href');
     arche.actionmarker_feedback(elem, true);
-
     var target = $(elem.data('load-agenda-item'));
     var request = arche.do_request(url);
     request.done(function(response) {
-        $('[data-load-agenda-item]').removeClass('active');
+        voteit.set_active_ai(elem.data('ai-name'));
         //Fixme: Make sure it's an item in the agenda :)
-        elem.addClass('active');
         voteit.insert_ai_response(response, elem);
     });
     request.fail(arche.flash_error);
@@ -152,6 +147,84 @@ voteit.load_agenda_item = function(event) {
         title, url);
         if ($(window).width() < 768) voteit.hide_nav('#fixed-nav');
     });
+}
+
+
+voteit.load_agenda_data = function(state) {
+    var tpl = $('[data-purejs-template="agenda-item"]').clone();
+    tpl.removeAttr('data-purejs-template');
+
+    var directive = {'a':
+        {'ai<-ais':
+            {
+                '.@href+': 'ai.name',
+                '[data-ai="title"]': 'ai.title',
+                '[data-ai="prop_count"]': 'ai.contents.Proposal.total',
+                '[data-ai="disc_count"]': 'ai.contents.DiscussionPost.total',
+                '[data-ai="poll_count"]': 'ai.contents.Poll.total',
+                '.@data-ai-name': 'ai.name',
+                '.@class+': function(arg) {
+                    if (arg.item.contents.Proposal.unread > 0 || arg.item.contents.DiscussionPost.unread > 0) {
+                        return ' item-unread';
+                    }
+                },
+                '[data-ai="prop_unread"]': function(arg) {
+                    if (arg.item.contents.Proposal.unread > 0) {
+                        return arg.item.contents.Proposal.unread;
+                    }
+                },
+                '[data-ai="disc_unread"]': function(arg) {
+                    if (arg.item.contents.DiscussionPost.unread > 0) {
+                        return arg.item.contents.DiscussionPost.unread;
+                    }
+                }
+            },
+            // same kind of sort as the usual Array sort
+            sort: function(a, b){
+              var cmp = function(x, y){
+                return x > y? 1 : x < y ? -1 : 0;
+              };
+              if (typeof voteit.agenda_sort_order == 'undefined') {
+                return cmp(a.name, b.name);
+              } else {
+                return cmp( voteit.agenda_sort_order.indexOf(a.name), voteit.agenda_sort_order.indexOf(b.name) );
+              }
+            }
+        }
+    };
+
+    var control_elem = $('[data-agenda-control="' + state + '"]');
+    arche.actionmarker_feedback(control_elem, true);
+
+    var request = arche.do_request(voteit.agenda_data_url, {method: 'POST', data: {state: state}});
+    request.done(function(response) {
+        var target = $('[data-agenda-state="' + state + '"]');
+        target.html(tpl.html());
+        target.render(response, directive);
+        control_elem.removeClass('collapsed');
+        //Agendas might have set it without effect
+        if (voteit.active_ai_name) voteit.set_active_ai(voteit.active_ai_name);
+    });
+    request.always(function() {
+        arche.actionmarker_feedback(control_elem, false);
+    });
+    return request;
+}
+
+
+voteit.handle_ai_state_toggles = function(event) {
+    var elem = $(event.currentTarget);
+    var state = elem.data('agenda-control');
+    var target = $('[data-agenda-state="' + state + '"]');
+
+    if (elem.hasClass('collapsed')) {
+        //Load item
+        var request = voteit.load_agenda_data(state);
+    } else {
+        //Collapse and remove
+        elem.addClass('collapsed');
+        target.empty();
+    }
 }
 
 /*
@@ -202,7 +275,27 @@ function unvoted_counter(response) {
 };
 
 
+function agenda_states(response) {
+  $.each(response.agenda_states, function(k, v) {
+    $('[data-ai-state-count="' + k + '"]').text((v > 0 ? v : ''));
+  });
+}
+
+voteit.active_ai_name = '';
+
+voteit.set_active_ai = function(name) {
+    $('[data-ai-name]').removeClass('active');
+    var elem = $('[data-ai-name="' + name + '"]');
+    if (elem.length>0) {
+        elem.addClass('active');
+    }
+    voteit.active_ai_name = name;
+}
+
+
 $(document).ready(function () {
     voteit.watcher.add_response_callback(unvoted_counter);
+    voteit.watcher.add_response_callback(agenda_states);
     $('body').on('click', '[data-load-agenda-item]', voteit.load_agenda_item);
+    $('body').on('click', '[data-agenda-control]', voteit.handle_ai_state_toggles);
 });

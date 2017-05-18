@@ -91,7 +91,7 @@
           voteit.watcher.action_url = watcher_url;
         }
       };
-      voteit.watcher.start();
+      voteit.watcher.fetch_data();
     });
     </script>
   </body>

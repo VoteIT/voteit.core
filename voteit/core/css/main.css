@@ -321,13 +321,20 @@ $brand-danger:          #d9534f !default;
   #fixed-nav {
     transform: translateX(-100%);
     right: 60px;
-    left: 0px; }
+    left: 0px;
+    padding: 15px; }
     #fixed-nav.activated {
       transform: translateX(0%); } }
+.collapse-state:before {
+  content: "\e113"; }
+
+.collapsed .collapse-state:before {
+  content: "\e114"; }
+
 /* Generic navbar active */
 @media (min-width: 768px) {
   #fixed-nav {
-    width: 250px;
+    width: 230px;
     padding: 15px;
     position: fixed;
     border-radius: 0;
@@ -335,12 +342,14 @@ $brand-danger:          #d9534f !default;
     bottom: 0;
     overflow: scroll;
     transform: translateX(-100%);
-    transition: none; }
+    transition: none;
+    background-color: #f5f5f5;
+    border-right: 1px solid #e3e3e3; }
     #fixed-nav.activated {
       transform: translateX(0%); }
 
   body.left-fixed-active > .container {
-    padding-left: 250px; } }
+    padding-left: 245px; } }
 @media (max-width: 992px) {
   body.left-fixed-active > .container,
   body.left-fixed-active > .navbar-fixed-top > .container {

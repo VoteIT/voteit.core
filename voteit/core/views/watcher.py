@@ -5,6 +5,7 @@ from arche.views.base import BaseView
 from betahaus.viewcomponent.decorators import view_action
 from pyramid.traversal import resource_path
 from pyramid.view import view_config
+from repoze.catalog.query import Eq
 
 from voteit.core.models.interfaces import IMeeting
 from voteit.core import security
@@ -39,3 +40,16 @@ def unvoted_polls(context, request, va, **kw):
         if request.has_permission(security.ADD_VOTE, obj) and request.authenticated_userid not in obj:
             counter+=1
     return counter
+
+
+@view_action('watcher_json', 'agenda_states')
+def agenda_states(context, request, va, **kw):
+    states = ['ongoing', 'upcoming', 'closed']
+    if request.is_moderator:
+        states.append('private')
+    results = {}
+    query = Eq('path', resource_path(request.meeting)) & Eq('type_name', 'AgendaItem')
+    for state in states:
+        res = request.root.catalog.query(query & Eq('workflow_state', state))[0]
+        results[state] = res.total
+    return results

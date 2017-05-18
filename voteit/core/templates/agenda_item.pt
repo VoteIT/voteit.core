@@ -39,7 +39,10 @@
     </div>
 
     <script>
-    /*
+        window.onload = function() {
+            voteit.set_active_ai("${context.__name__}");
+        }
+        /*
         window.onload = function() {
             voteit.initial_ai_loaded();
         };
