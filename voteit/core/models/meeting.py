@@ -7,7 +7,7 @@ from pyramid.traversal import find_root
 from repoze.folder import unicodify
 from zope.interface import implementer
 
-from voteit.core import VoteITMF as _
+from voteit.core import _
 from voteit.core import security
 from voteit.core.models.arche_compat import createContent
 from voteit.core.models.base_content import BaseContent
@@ -196,6 +196,7 @@ def closing_meeting_callback(context, info):
                     "Agenda items in it. You can't close it until they're closed.")
         raise HTTPForbidden(err_msg)
 
+
 def add_default_portlets_meeting(meeting):
     manager = get_portlet_manager(meeting)
     if manager is not None:
@@ -206,11 +207,13 @@ def add_default_portlets_meeting(meeting):
             ai_proposals.settings = {'hide_proposal_states': ('retracted', 'denied', 'unhandled')}
         if not manager.get_portlets('agenda_item', 'ai_discussions'):
             manager.add('agenda_item', 'ai_discussions')
-        if not manager.get_portlets('left', 'agenda'):
-            manager.add('left', 'agenda')
+        if not manager.get_portlets('left_fixed', 'agenda_fixed'):
+            manager.add('left_fixed', 'agenda_fixed')
+
 
 def _add_portlets_meeting_subscriber(meeting, event):
     add_default_portlets_meeting(meeting)
+
 
 def includeme(config):
     config.add_content_factory(Meeting, addable_to = 'Root')
