@@ -154,6 +154,13 @@ class Meeting(BaseContent, SecurityAware, WorkflowAware):
         self.set_field_value('polls_menu_only_links', value)
 
     @property
+    def tags(self):
+        return self.get_field_value('tags', frozenset())
+    @tags.setter
+    def tags(self, value):
+        return self.set_field_value('tags', frozenset(value))
+
+    @property
     def invite_tickets(self):
         try:
             return self.__invite_tickets__

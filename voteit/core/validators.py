@@ -2,6 +2,7 @@ import re
 
 from BeautifulSoup import BeautifulSoup
 from pyramid.traversal import find_interface
+from six import string_types
 from translationstring import TranslationString
 from webhelpers.html.tools import strip_tags
 import colander
@@ -171,3 +172,20 @@ class NotOnlyDefaultTextValidator(object):
         if value.strip() == default.strip():
             raise colander.Invalid(node, _(u"only_default_text_validator_error",
                                            default=u"Only the default content is not valid",))
+
+
+class TagValidator(object):
+
+    def __init__(self, msg=_("Use regular chars and no spaces.")):
+        self.msg = msg
+
+    def __call__(self, node, value):
+        #FIXME: Proper regex for matching one word.
+        #Don't use this for sensitive things until that exists.
+        bad = " !?#,."
+        if isinstance(value, string_types):
+            value = [value]
+        for v in value:
+            for x in bad:
+                if x in v:
+                    raise colander.Invalid(node, self.msg)

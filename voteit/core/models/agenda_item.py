@@ -92,6 +92,13 @@ class AgendaItem(BaseContent, WorkflowAware):
     def hashtag(self, value):
         self.set_field_value('hashtag', value)
 
+    @property
+    def tags(self):
+        return self.get_field_value('tags', frozenset())
+    @tags.setter
+    def tags(self, value):
+        self.set_field_value('tags', frozenset(value))
+
 
 def closing_agenda_item_callback(context, info):
     """ Callback for workflow action. When an agenda item is closed,

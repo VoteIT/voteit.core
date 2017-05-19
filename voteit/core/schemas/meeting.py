@@ -7,7 +7,7 @@ from repoze.workflow import get_workflow
 import colander
 import deform
 
-from voteit.core import VoteITMF as _
+from voteit.core import _
 from voteit.core import security
 from voteit.core.models.interfaces import IAccessPolicy
 from voteit.core.models.interfaces import IProposal
@@ -15,6 +15,7 @@ from voteit.core.models.interfaces import IProposalIds
 from voteit.core.schemas.common import NAME_PATTERN
 from voteit.core.validators import html_string_validator
 from voteit.core.validators import richtext_validator
+from voteit.core.validators import TagValidator
 
 
 @colander.deferred
@@ -306,9 +307,23 @@ class BulkChangeRolesSchema(colander.Schema):
     )
 
 
+class MeetingTagsSchema(colander.Schema):
+    tags = colander.SchemaNode(
+        colander.Sequence(),
+        colander.SchemaNode(
+            colander.String(),
+            title = _("tag"),
+            name='notused',
+            validator=TagValidator(),
+        ),
+        title = _("Visible as a sorting option on the agenda, if you add them here"),
+    )
+
+
 def includeme(config):
     config.add_content_schema('Meeting', AddMeetingSchema, 'add')
     config.add_content_schema('Meeting', EditMeetingSchema, 'edit')
     config.add_content_schema('Meeting', AccessPolicyMeetingSchema, 'access_policy')
     config.add_content_schema('Meeting', AddExistingUserSchema, 'add_existing_user')
     config.add_content_schema('Meeting', BulkChangeRolesSchema, 'bulk_change_roles')
+    config.add_content_schema('Meeting', MeetingTagsSchema, 'tags')

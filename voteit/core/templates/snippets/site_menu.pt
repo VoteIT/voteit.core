@@ -33,6 +33,11 @@
           href="${request.resource_url(request.meeting, 'configure_access_policy')}"
           i18n:translate="">Configure selected access policy</a>
       </li>
+      <li role="presentation">
+        <a role="menuitem" tabindex="-1"
+          href="${request.resource_url(request.meeting, 'meeting_tags')}"
+          i18n:translate="">Available tags</a>
+      </li>
       ${structure: settings_menu}
       <li role="separator" class="divider"><!-- --></li>
   </ul>

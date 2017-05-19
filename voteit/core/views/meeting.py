@@ -192,3 +192,12 @@ class ConfigureAccessPolicyForm(ArcheFormCompat, DefaultEditForm):
 
     def save_success(self, appstruct):
         return self.access_policy.handle_config_success(self, appstruct)
+
+
+@view_config(context = IMeeting,
+             name = "meeting_tags",
+             renderer = "arche:templates/form.pt",
+             permission = security.MODERATE_MEETING)
+class MeetingTagsForm(DefaultEditForm): #ArcheFormCompat?
+    schema_name='tags'
+    title = _("Meeting tags")

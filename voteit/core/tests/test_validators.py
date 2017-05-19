@@ -1,11 +1,12 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 from unittest import TestCase
 
 import colander
 from pyramid import testing
 
 from voteit.core.testing_helpers import bootstrap_and_fixture
-from voteit.core.testing_helpers import register_security_policies
-from voteit.core.testing_helpers import register_workflows
 from voteit.core import security
 
 
@@ -259,3 +260,36 @@ class DeferredValidatorsTests(TestCase):
         from voteit.core.models.meeting import Meeting
         res = deferred_token_form_validator(None, {'context': Meeting()})
         self.failUnless(isinstance(res, TokenFormValidator))
+
+
+class TagValidatorTests(TestCase):
+
+    def setUp(self):
+        self.config = testing.setUp()
+
+    def tearDown(self):
+        testing.tearDown()
+
+    @property
+    def _cut(self):
+        from voteit.core.validators import TagValidator
+        return TagValidator
+
+    def test_simple_words(self):
+        validator = self._cut()
+        self.assertIsNone(validator(None, "HelloWhatsUp"))
+        self.assertIsNone(validator(None, "NotMuch"))
+        self.assertIsNone(validator(None, "not-much"))
+        self.assertIsNone(validator(None, "what_up"))
+
+    def test_international(self):
+        validator = self._cut()
+        self.assertIsNone(validator(None, "åäö"))
+        self.assertIsNone(validator(None, "你好"))
+
+    def test_things_that_should_fail(self):
+        validator = self._cut()
+        self.assertRaises(colander.Invalid, validator, None, "Hello world")
+        self.assertRaises(colander.Invalid, validator, None, "你 好")
+        self.assertRaises(colander.Invalid, validator, None, "Hi!")
+        self.assertRaises(colander.Invalid, validator, None, " hello")
