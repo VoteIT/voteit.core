@@ -1,5 +1,4 @@
 from betahaus.viewcomponent import view_action
-from pyramid.renderers import render
 
 from voteit.core import _
 from voteit.core.security import DELETE
@@ -17,19 +16,6 @@ from voteit.core.views.components.metadata_listing import meta_state
              renderer = 'voteit.core:templates/snippets/workflow_menu.pt')
 def wf_menu(context, request, va, **kw):
     return meta_state(context, request, va, **kw)
-
-
-@view_action('moderator_actions_section', 'context_actions',
-             title = _(u"Actions here"), contained_section = 'context_actions')
-def moderator_actions_section(context, request, va, **kw):
-    """ Generic moderator actions section. """
-    api = kw['api']
-    response = dict(
-        section_title = va.title,
-        api = api,
-        section_data = api.render_view_group(context, request, va.kwargs['contained_section'], **kw),
-    )
-    return render('templates/cogwheel/moderator_actions_section.pt', response, request = request)
 
 
 @view_action('context_actions', 'edit', title = _(u"Edit"),
