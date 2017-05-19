@@ -215,16 +215,26 @@ voteit.load_agenda_data = function(state) {
 voteit.handle_ai_state_toggles = function(event) {
     var elem = $(event.currentTarget);
     var state = elem.data('agenda-control');
-    var target = $('[data-agenda-state="' + state + '"]');
-
     if (elem.hasClass('collapsed')) {
         //Load item
         var request = voteit.load_agenda_data(state);
     } else {
         //Collapse and remove
-        elem.addClass('collapsed');
-        target.empty();
+        voteit.agenda_collapse_ai_state(state);
     }
+}
+
+
+voteit.agenda_collapse_ai_state = function(state) {
+    if (state) {
+        var elem = $('[data-agenda-control="' + state + '"]');
+        var target = $('[data-agenda-state="' + state + '"]');
+    } else {
+        var elem = $('[data-agenda-control]');
+        var target = $('[data-agenda-state]');
+    }
+    elem.addClass('collapsed');
+    target.empty();
 }
 
 /*
@@ -277,11 +287,13 @@ function unvoted_counter(response) {
 
 function agenda_states(response) {
   $.each(response.agenda_states, function(k, v) {
-    $('[data-ai-state-count="' + k + '"]').text((v > 0 ? v : ''));
+    $('[data-ai-state-count="' + k + '"]').text(v);
   });
 }
 
+
 voteit.active_ai_name = '';
+
 
 voteit.set_active_ai = function(name) {
     $('[data-ai-name]').removeClass('active');
@@ -290,6 +302,17 @@ voteit.set_active_ai = function(name) {
         elem.addClass('active');
     }
     voteit.active_ai_name = name;
+}
+
+
+voteit.select_ai_tag = function(tag) {
+    var request = arche.do_request(voteit.agenda_select_tag_url, {method: 'POST', data: {tag: tag}});
+    request.done(function(response) {
+        voteit.watcher.fetch_data();
+        $('[data-select-tag]').removeClass('active');
+        $('[data-select-tag="' + tag + '"]').addClass('active');
+        voteit.agenda_collapse_ai_state();
+    });
 }
 
 

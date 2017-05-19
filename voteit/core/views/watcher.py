@@ -1,10 +1,10 @@
 from __future__ import unicode_literals
-from uuid import uuid4
 
 from arche.views.base import BaseView
 from betahaus.viewcomponent.decorators import view_action
 from pyramid.traversal import resource_path
 from pyramid.view import view_config
+from repoze.catalog.query import Any
 from repoze.catalog.query import Eq
 
 from voteit.core.models.interfaces import IMeeting
@@ -47,9 +47,22 @@ def agenda_states(context, request, va, **kw):
     states = ['ongoing', 'upcoming', 'closed']
     if request.is_moderator:
         states.append('private')
+    tag = request.session.get('voteit.ai_selected_tag', '')
+    if tag in context.tags:
+        tag = tag.lower()
+    else:
+        tag = None
     results = {}
     query = Eq('path', resource_path(request.meeting)) & Eq('type_name', 'AgendaItem')
     for state in states:
-        res = request.root.catalog.query(query & Eq('workflow_state', state))[0]
-        results[state] = res.total
+        squery = query & Eq('workflow_state', state)
+        res = request.root.catalog.query(squery)[0]
+        if res.total:
+            if tag:
+                tagres = request.root.catalog.query(squery & Any('tags', [tag]))[0]
+                results[state] = "%s / %s" % (tagres.total, res.total)
+            else:
+                results[state] = str(res.total)
+        else:
+            results[state] = ""
     return results

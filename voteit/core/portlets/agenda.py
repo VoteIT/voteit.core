@@ -2,9 +2,12 @@ from __future__ import unicode_literals
 
 from arche.portlets import PortletType
 from arche.views.base import BaseView
+from pyramid.httpexceptions import HTTPBadRequest
 from pyramid.httpexceptions import HTTPForbidden
 from pyramid.renderers import render
+from pyramid.response import Response
 from pyramid.traversal import resource_path
+from repoze.catalog.query import Any
 from repoze.catalog.query import Eq
 
 from voteit.core.models.interfaces import IAgendaItem
@@ -48,10 +51,14 @@ class AgendaPortletFixed(AgendaPortlet):
             states = ['ongoing', 'upcoming', 'closed']
             if request.is_moderator:
                 states.append('private')
+            tags = sorted(request.meeting.tags, key=lambda x: x.lower())
+            selected_tag = request.session.get('voteit.ai_selected_tag', None)
             response = {'title': self.title,
                         'portlet': self.portlet,
                         'view': view,
                         'states': states,
+                        'tags': tags,
+                        'selected_tag': selected_tag in tags and selected_tag or None,
                         'state_titles': request.get_wf_state_titles(IAgendaItem, 'AgendaItem'),
                         'meeting_url': request.resource_url(request.meeting)
             }
@@ -109,6 +116,9 @@ def agenda_data_json(context, request):
     #FIXME: Toggle state in sessions here
     if state not in _OPEN_STATES and not request.is_moderator:
         raise HTTPForbidden('State query not allowed')
+    tag = request.session.get('voteit.ai_selected_tag', '')
+    if tag and tag in request.meeting.tags:
+        query &= Any('tags', [tag.lower()])
     docids = request.root.catalog.query(query & Eq('workflow_state', state))[1]
     results = []
     for ai in request.resolve_docids(docids, perm=None):
@@ -131,6 +141,20 @@ def count_types(request, ai):
     return results
 
 
+def select_tag(request):
+    tag = request.POST.get('tag', '')
+    if tag and tag in request.meeting.tags:
+        request.session['voteit.ai_selected_tag'] = tag
+        request.session.changed()
+        return Response()
+    if not tag:
+        request.session.pop('voteit.ai_selected_tag', None)
+        request.session.changed()
+        return Response()
+    return HTTPBadRequest("No such tag")
+    #selected_tag = request.session.get('voteit.ai_selected_tag', None)
+
+
 def includeme(config):
     config.add_portlet(AgendaPortlet)
     config.add_portlet(AgendaPortletFixed)
@@ -143,3 +167,7 @@ def includeme(config):
                     context = IMeeting,
                     permission = security.VIEW,
                     renderer = 'json')
+    config.add_view(select_tag,
+                    name='_agenda_select_tag',
+                    context = IMeeting,
+                    permission=security.VIEW)
