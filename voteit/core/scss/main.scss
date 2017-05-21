@@ -103,6 +103,9 @@ footer {
     display: inline-block;
     max-width: 100px;
 }
+.fade-effect {
+    @include fade-effect(0.5s);
+}
 */
 .text-small {
     font-size: 90%;

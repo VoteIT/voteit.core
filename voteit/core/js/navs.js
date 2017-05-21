@@ -29,17 +29,31 @@ voteit.hide_nav = function(selector) {
     $('body').css({'overflow': 'visible'});
 }
 
+/*
+selector
+    Where to load the menu
 
+url
+    From where to load
+
+Tag data-initiator="<selector>" should indicate the tag that initiated the call,
+mostly for visual feedback during the load process.
+*/
 voteit.load_inline_menu = function(selector, url) {
+    var initiator = $('[data-initiator="' + selector + '"]');
+    if (initiator.hasClass('disabled')) return;
     if ($(selector).hasClass('activated')) {
         $(selector).empty();
         voteit.hide_nav(selector);
     } else {
+        arche.actionmarker_feedback(initiator, true);
         var request = arche.do_request(url);
         request.done(function(response) {
             voteit.show_nav(selector);
             $(selector).html(response);
+            arche.actionmarker_feedback(initiator, false);
         });
+        return request;
     }
 }
 

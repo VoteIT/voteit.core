@@ -5,3 +5,20 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+@mixin fade-effect($duration) {
+    animation-name: fade-effect;
+    animation-duration: $duration;
+    animation-timing-function: linear;
+    animation-direction: alternate;
+    animation-iteration-count: infinite;
+}
+
+@keyframes fade-effect {
+    100% {
+        opacity: 1;
+    }
+    0% {
+        opacity: 0.5;
+    }
+}

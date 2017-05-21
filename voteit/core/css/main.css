@@ -5,6 +5,11 @@ $brand-info:            #5bc0de !default;
 $brand-warning:         #f0ad4e !default;
 $brand-danger:          #d9534f !default;
 */
+@keyframes fade-effect {
+  100% {
+    opacity: 1; }
+  0% {
+    opacity: 0.5; } }
 .btn-approved {
   color: #fff;
   background-color: #5cb85c;
@@ -592,6 +597,9 @@ footer {
     @include text-overflow();
     display: inline-block;
     max-width: 100px;
+}
+.fade-effect {
+    @include fade-effect(0.5s);
 }
 */
 .text-small {

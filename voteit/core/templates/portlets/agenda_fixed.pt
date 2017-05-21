@@ -102,20 +102,23 @@
        data-load-agenda-item="#content"
        data-ai-name=""
        class="btn btn-default btn-block">
-      <!-- active / item-unread -->
     <span class="btn-title" data-ai="title"></span>
     <div class="row text-muted">
       <div class="col-xs-4 col-sm-12 col-md-4">
-        <span class="glyphicon glyphicon-exclamation-sign"></span>
-        <span data-ai="prop_count"></span>
-        <span class="badge" data-ai="prop_unread"></span>
+        <span data-actionmarker="glyphicon glyphicon-refresh rotate-me"></span>
+        <span data-actionmarker="hidden">
+          <span class="glyphicon glyphicon-exclamation-sign"></span>
+          <span data-ai="prop_count"></span>
+          <span class="badge" data-ai="prop_unread"></span>
+        </span>
+        &nbsp;
       </div>
-      <div class="col-xs-4 col-sm-12 col-md-4">
+      <div data-actionmarker="hidden" class="col-xs-4 col-sm-12 col-md-4">
         <span class="glyphicon glyphicon-comment"></span>
         <span data-ai="disc_count"></span>
         <span class="badge" data-ai="disc_unread"></span>
       </div>
-      <div class="col-xs-4 col-sm-12 col-md-4">
+      <div data-actionmarker="hidden" class="col-xs-4 col-sm-12 col-md-4">
         <span class="glyphicon glyphicon-star"></span>
         <span data-ai="poll_count"></span>
       </div>
