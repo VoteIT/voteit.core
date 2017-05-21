@@ -307,16 +307,21 @@ class BulkChangeRolesSchema(colander.Schema):
     )
 
 
-class MeetingTagsSchema(colander.Schema):
+class AgendaLabelsSchema(colander.Schema):
+    #Note on name: tags is an existing property in the catalog.
+    #It does however only index lowercase version of things
+    #keep that in mind while searching!
     tags = colander.SchemaNode(
         colander.Sequence(),
         colander.SchemaNode(
             colander.String(),
-            title = _("tag"),
+            title = _("label"),
             name='notused',
             validator=TagValidator(),
         ),
-        title = _("Visible as a sorting option on the agenda, if you add them here"),
+        title = _("agenda_labels_schema_title",
+            default="Adding labels here will make them selectable on agenda items. "
+                  "They'll also appear as a sorting option in the agenda."),
     )
 
 
@@ -326,4 +331,4 @@ def includeme(config):
     config.add_content_schema('Meeting', AccessPolicyMeetingSchema, 'access_policy')
     config.add_content_schema('Meeting', AddExistingUserSchema, 'add_existing_user')
     config.add_content_schema('Meeting', BulkChangeRolesSchema, 'bulk_change_roles')
-    config.add_content_schema('Meeting', MeetingTagsSchema, 'tags')
+    config.add_content_schema('Meeting', AgendaLabelsSchema, 'agenda_labels')

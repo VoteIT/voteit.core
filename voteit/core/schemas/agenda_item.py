@@ -52,10 +52,9 @@ class AgendaItemSchema(colander.MappingSchema):
     )
     tags = colander.SchemaNode(
         colander.Set(),
-        title=_("Tags"),
+        title=_("Agenda sorting labels"),
         description=_("ai_schema_tags_description",
-                      default="For sorting in the agenda. "
-                              "You may add them in the settings menu."),
+                      default="You may add more in the settings menu."),
         widget=ai_tags_widget,
         validator=TagValidator(),
         missing=(),

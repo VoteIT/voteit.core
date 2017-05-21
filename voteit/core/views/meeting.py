@@ -195,9 +195,9 @@ class ConfigureAccessPolicyForm(ArcheFormCompat, DefaultEditForm):
 
 
 @view_config(context = IMeeting,
-             name = "meeting_tags",
+             name = "agenda_labels",
              renderer = "arche:templates/form.pt",
              permission = security.MODERATE_MEETING)
 class MeetingTagsForm(DefaultEditForm): #ArcheFormCompat?
-    schema_name='tags'
-    title = _("Meeting tags")
+    schema_name='agenda_labels'
+    title = _("Agenda sorting labels")

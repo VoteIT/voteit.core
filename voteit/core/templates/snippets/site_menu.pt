@@ -35,8 +35,8 @@
       </li>
       <li role="presentation">
         <a role="menuitem" tabindex="-1"
-          href="${request.resource_url(request.meeting, 'meeting_tags')}"
-          i18n:translate="">Available tags</a>
+          href="${request.resource_url(request.meeting, 'agenda_labels')}"
+          i18n:translate="">Agenda labels</a>
       </li>
       ${structure: settings_menu}
       <li role="separator" class="divider"><!-- --></li>
