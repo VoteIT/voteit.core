@@ -58,7 +58,7 @@ class AgendaPortletFixed(AgendaPortlet):
                         'view': view,
                         'states': states,
                         'tags': tags,
-                        'selected_tag': selected_tag in tags and selected_tag or None,
+                        'selected_tag': selected_tag in tags and selected_tag or '',
                         'state_titles': request.get_wf_state_titles(IAgendaItem, 'AgendaItem'),
                         'meeting_url': request.resource_url(request.meeting)
             }

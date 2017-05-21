@@ -305,13 +305,23 @@ voteit.set_active_ai = function(name) {
 }
 
 
-voteit.select_ai_tag = function(tag) {
+voteit.select_ai_tag = function(tag, load_ongoing) {
     var request = arche.do_request(voteit.agenda_select_tag_url, {method: 'POST', data: {tag: tag}});
     request.done(function(response) {
         voteit.watcher.fetch_data();
         $('[data-select-tag]').removeClass('active');
         $('[data-select-tag="' + tag + '"]').addClass('active');
         voteit.agenda_collapse_ai_state();
+        $('[data-agenda-filter]').hide();
+        if (tag) {
+            $('[data-agenda-filter="true"]').show();
+            $('[data-active-agenda-tag]').text(tag);
+        } else {
+            $('[data-agenda-filter="false"]').show();
+        }
+        if (load_ongoing == true) {
+            voteit.load_agenda_data('ongoing');
+        }
     });
 }
 

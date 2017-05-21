@@ -17,34 +17,36 @@
     <p>&nbsp;</p>
   </div>
 
-<div tal:condition="tags" class="btn-group">
-  <div class="btn-group">
-    <button type="button"
-            class="btn btn-sm btn-default dropdown-toggle"
-            data-toggle="dropdown"
-            aria-expanded="false">
-      <span class="text-published">
-        <span class="glyphicon glyphicon-filter"></span>
-        <span tal:condition="selected_tag">${selected_tag}</span>
-        <span tal:condition="not selected_tag" i18n:translate="">Showing all</span>
-        <span class="caret"></span>
+<div tal:condition="tags" class="btn-group" style="max-width: 100%;">
+  <button type="button"
+          class="btn btn-sm btn-default dropdown-toggle"
+          data-toggle="dropdown"
+          aria-expanded="false"
+  style="max-width: 100%; overflow: hidden;">
+    <span class="text-published">
+      <span class="glyphicon glyphicon-filter"></span>
+      <span data-agenda-filter="false" i18n:translate="">Showing all</span>
+      <span data-agenda-filter="true">
+        <span i18n:translate="">Only: </span>
+        <span data-active-agenda-tag></span>
       </span>
-    </button>
-    <ul class="dropdown-menu" role="menu">
-      <li class="${not selected_tag and 'active' or None}" data-select-tag="">
-        <a href="javascript:voteit.select_ai_tag('')">
-          <span i18n:translate="">Show all</span>
-        </a>
-      </li>
-      <li role="separator" class="divider"></li>
-      <li tal:repeat="tag tags" data-select-tag="${tag}" class="${tag == selected_tag and 'active' or None}">
-        <a href="javascript:voteit.select_ai_tag('${tag}')">
-          ${tag}
-          <span data-actionmarker="glyphicon glyphicon-refresh rotate-me"></span>
-        </a>
-      </li>
-    </ul>
-  </div>
+      <span class="caret"></span>
+    </span>
+  </button>
+  <ul class="dropdown-menu" role="menu">
+    <li class="${not selected_tag and 'active' or None}" data-select-tag="">
+      <a href="javascript:voteit.select_ai_tag('', true)">
+        <span i18n:translate="">Show all</span>
+      </a>
+    </li>
+    <li role="separator" class="divider"></li>
+    <li tal:repeat="tag tags" data-select-tag="${tag}" class="${tag == selected_tag and 'active' or None}">
+      <a href="javascript:voteit.select_ai_tag('${tag}', true)">
+        ${tag}
+        <span data-actionmarker="glyphicon glyphicon-refresh rotate-me"></span>
+      </a>
+    </li>
+  </ul>
 </div>
 
   <!-- FIXME: Initial state always ongoing? -->
@@ -86,7 +88,7 @@
 
     //FIXME: options to finetune and make sure it isn't loaded when not needed
     if ($(window).width() > 768) {
-      voteit.load_agenda_data('ongoing');
+      voteit.select_ai_tag("${selected_tag}", show_in_fullscreen);
     }
   });
 </script>
