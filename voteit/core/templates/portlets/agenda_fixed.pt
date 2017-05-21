@@ -17,12 +17,13 @@
     <p>&nbsp;</p>
   </div>
 
-<div tal:condition="tags" class="btn-group" style="max-width: 100%;">
+<tal:filter tal:condition="tags">
+<div class="btn-group" style="width: 100%;">
   <button type="button"
           class="btn btn-sm btn-default dropdown-toggle"
           data-toggle="dropdown"
           aria-expanded="false"
-  style="max-width: 100%; overflow: hidden;">
+  style="width: 100%; overflow: hidden;">
     <span class="text-published">
       <span class="glyphicon glyphicon-filter"></span>
       <span data-agenda-filter="false" i18n:translate="">Showing all</span>
@@ -48,6 +49,8 @@
     </li>
   </ul>
 </div>
+<p>&nbsp;</p>
+</tal:filter>
 
   <!-- FIXME: Initial state always ongoing? -->
 <tal:iterate repeat="state states">
