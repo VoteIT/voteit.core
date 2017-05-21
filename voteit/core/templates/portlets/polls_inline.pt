@@ -96,7 +96,8 @@
         <tal:meta replace="structure view.render_view_group('metadata_listing', obj)"></tal:meta>
       </div>
       <div class="col-sm-6">
-        <a class="btn btn-default btn-xs" tal:condition="obj.proposals"
+        <a class="btn btn-default btn-xs"
+           tal:condition="obj.proposals"
            href="${view.get_poll_filter_url(obj)}">
           <span class="glyphicon glyphicon-filter"></span>
           <span i18n:translate="">Filter on poll (<tal:ts i18n:name="num">${len(obj.proposals)}</tal:ts>) </span>

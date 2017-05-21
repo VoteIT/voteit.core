@@ -15,7 +15,7 @@ from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IPollPlugin
 from voteit.core.models.poll_plugin import PollPlugin
 from voteit.core import security
-from voteit.core.testing_helpers import active_poll_fixture
+from voteit.core.testing_helpers import active_poll_fixture, bootstrap_and_fixture
 from voteit.core.testing_helpers import register_workflows
 
 
@@ -33,7 +33,6 @@ class PollTests(unittest.TestCase):
     def setUp(self):
         request = testing.DummyRequest()
         self.config = testing.setUp(request = request)
-        self.config.include('voteit.core.models.flash_messages')
 
     def tearDown(self):
         testing.tearDown()
@@ -62,7 +61,8 @@ class PollTests(unittest.TestCase):
         """ Create an agenda item with a poll and two proposals. """
         from voteit.core.models.agenda_item import AgendaItem
         from voteit.core.models.proposal import Proposal
-        agenda_item = AgendaItem()
+        root = bootstrap_and_fixture(self.config)
+        root['ai'] = agenda_item = AgendaItem()
         agenda_item['prop1'] = Proposal()
         agenda_item['prop2'] = Proposal()
         return agenda_item
@@ -122,36 +122,22 @@ class PollTests(unittest.TestCase):
     
     def test_get_proposal_objects(self):
         """ Test that all proposals that belong to this poll gets returned. """
+        self.config.include('arche.testing.catalog')
         agenda_item = self._agenda_item_with_proposals_fixture()
         prop1 = agenda_item['prop1']
         prop2 = agenda_item['prop2']
-        agenda_item['poll'] = poll = self._make_obj()
-        poll.proposal_uids = (prop1.uid, prop2.uid,)
-        
+        agenda_item['poll'] = poll = self._cut(proposals=[prop1.uid, prop2.uid])
         self.assertEqual(set(poll.get_proposal_objects()), set([prop1, prop2,]))
 
     def test_get_proposal_objects_wrong_context(self):
         obj = self._cut()
         self.assertRaises(ValueError, obj.get_proposal_objects)
 
-    def test_get_all_votes(self):
-        """ Get all votes for the current poll. """
-        obj = self._cut()
-        obj['me'] = self._make_vote()
-        self.assertEqual(tuple(obj.get_all_votes()), (obj['me'],))
-
-    def test_get_voted_userids(self):
-        obj = self._make_obj()
-        vote1 = self._make_vote()
-        vote2 = self._make_vote()
-        obj['vote1'] = vote1
-        obj['vote2'] = vote2
-        self.assertEqual(obj.get_voted_userids(), frozenset(['vote1', 'vote2']))
-
     def test_close_poll(self):
         register_workflows(self.config)
         request = testing.DummyRequest()
         self.config = testing.setUp(registry = self.config.registry, request = request)
+        self.config.include('arche.testing.catalog')
         agenda_item = self._agenda_item_with_proposals_fixture()
         prop1 = agenda_item['prop1']
         prop2 = agenda_item['prop2']
@@ -177,6 +163,7 @@ class PollTests(unittest.TestCase):
         self.assertRaises(ValueError, poll.adjust_proposal_states, {'bad_uid': 'state'})
 
     def test_adjust_proposal_states(self):
+        self.config.include('arche.testing.catalog')
         register_workflows(self.config)
         request = testing.DummyRequest()
         self.config = testing.setUp(registry = self.config.registry, request = request)
@@ -195,6 +182,7 @@ class PollTests(unittest.TestCase):
 
     def test_adjust_proposal_states_already_correct_state(self):
         register_workflows(self.config)
+        self.config.include('arche.testing.catalog')
         request = testing.DummyRequest()
         self.config = testing.setUp(registry = self.config.registry, request = request)
         agenda_item = self._agenda_item_with_proposals_fixture()
@@ -214,6 +202,7 @@ class PollTests(unittest.TestCase):
 
     def test_adjust_proposal_states_bad_state(self):
         register_workflows(self.config)
+        self.config.include('arche.testing.catalog')
         request = testing.DummyRequest()
         self.config = testing.setUp(registry = self.config.registry, request = request)
         agenda_item = self._agenda_item_with_proposals_fixture()
@@ -259,8 +248,9 @@ class PollTests(unittest.TestCase):
             agenda item is not ongoing an exception should be raised.
         """
         register_workflows(self.config)
+        self.config.include('arche.testing.catalog')
         request = testing.DummyRequest()
-        obj = self._make_obj()
+        obj = self._agenda_item_with_proposals_fixture()
         obj.set_workflow_state(request, 'upcoming')
         self.assertRaises(Exception, obj.set_workflow_state, 'ongoing')
         ai = find_interface(obj, IAgendaItem)
@@ -270,17 +260,20 @@ class PollTests(unittest.TestCase):
 
     def test_ongoing_wo_proposal(self):
         register_workflows(self.config)
-        poll = self._make_obj()
-        ai = find_interface(poll, IAgendaItem)
+        self.config.include('arche.testing.catalog')
+        ai = self._agenda_item_with_proposals_fixture()
+        ai['poll'] = poll = self._cut()
+        #ai = find_interface(poll, IAgendaItem)
         security.unrestricted_wf_transition_to(ai, 'upcoming')
         security.unrestricted_wf_transition_to(ai, 'ongoing')
         # remove all proposals on poll
-        poll.set_field_value('proposals', set())
+        #poll.set_field_value('proposals', set())
         security.unrestricted_wf_transition_to(poll, 'upcoming')
         request = testing.DummyRequest()
         self.assertRaises(HTTPForbidden, poll.set_workflow_state, request, 'ongoing')
 
     def test_get_proposal_by_uid(self):
+        self.config.include('arche.testing.catalog')
         agenda_item = self._agenda_item_with_proposals_fixture()
         uid = agenda_item['prop1'].uid
         agenda_item['poll'] = poll = self._cut()
@@ -289,6 +282,7 @@ class PollTests(unittest.TestCase):
         self.assertEqual(prop, agenda_item['prop1'])
         
     def test_get_proposal_by_uid_non_existing_uid(self):
+        self.config.include('arche.testing.catalog')
         agenda_item = self._agenda_item_with_proposals_fixture()
         uid = agenda_item['prop1'].uid
         agenda_item['poll'] = poll = self._cut()
@@ -298,8 +292,8 @@ class PollTests(unittest.TestCase):
 class PollMethodsTests(unittest.TestCase):
     def setUp(self):
         self.config = testing.setUp()
-        self.config.include('voteit.core.models.flash_messages')
         self.config.include('pyramid_chameleon')
+        self.config.include('arche.testing.catalog')
 
     def tearDown(self):
         testing.tearDown()
@@ -327,30 +321,29 @@ class PollPermissionTests(unittest.TestCase):
     def setUp(self):
         request = testing.DummyRequest()
         self.config = testing.setUp(request = request)
-        self.config.include('arche.testing')
-        policy = ACLAuthorizationPolicy()
-        self.pap = policy.principals_allowed_by_permission
-        register_workflows(self.config)
-        self.config.include('voteit.core.models.flash_messages')
-        self.config.include('voteit.core.models.poll')
+        self.config.include('arche.testing.catalog')
 
     def tearDown(self):
         testing.tearDown()
 
+    @property
+    def pap(self):
+        policy = ACLAuthorizationPolicy()
+        return policy.principals_allowed_by_permission
+
     def _make_obj(self):
         """ Poll object need to be in the context of an Agenda Item to work properly
         """
+        root = bootstrap_and_fixture(self.config)
+        self.config.include('voteit.core.models.poll')
         from voteit.core.models.poll import Poll
-        poll = Poll()
-        
         from voteit.core.models.proposal import Proposal
-        proposal = Proposal()
-        poll.set_field_value('proposals', set(proposal.uid))
-        
         from voteit.core.models.agenda_item import AgendaItem
-        ai = AgendaItem()
+        root['ai'] = ai = AgendaItem()
+        poll = Poll()
+        ai['prop'] = proposal = Proposal()
+        poll.set_field_value('proposals', set(proposal.uid))
         ai['poll'] = poll
-
         return poll
 
     def _register_majority_poll(self, poll):

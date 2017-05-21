@@ -9,7 +9,10 @@ from pyramid.renderers import render
 from pyramid.threadlocal import get_current_registry
 from pyramid.threadlocal import get_current_request
 from pyramid.traversal import find_interface
+from pyramid.traversal import find_resource
 from pyramid.traversal import find_root
+from repoze.catalog.query import Any
+from repoze.catalog.query import Eq
 from repoze.workflow.workflow import WorkflowError
 from zope.interface import implementer
 
@@ -21,7 +24,6 @@ from voteit.core.models.interfaces import IFlashMessages
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IPollPlugin
-from voteit.core.models.interfaces import IProposal
 from voteit.core.models.interfaces import IVote
 from voteit.core.models.workflow_aware import WorkflowAware
 
@@ -55,6 +57,11 @@ class Poll(BaseContent, WorkflowAware):
         if acl_name in acl:
             return acl.get_acl(acl_name)
         return acl.get_acl('Poll:private')
+
+    #Make sure only Vote objects can be added here
+    def add(self, name, other, send_events=True):
+        assert IVote.providedBy(other)
+        super(Poll, self).add(name, other, send_events=send_events)
 
     @property
     def start_time(self):
@@ -123,27 +130,26 @@ class Poll(BaseContent, WorkflowAware):
         return reg.getAdapter(self, name = self.poll_plugin_name, interface = IPollPlugin)
 
     def get_proposal_objects(self):
-        #FIXME: Search through catalog instead
-        agenda_item = find_interface(self, IAgendaItem)
+        #FIXME: This method should accept request as an argument and use
+        # the cached properties and helper methods there instead
+        agenda_item = self.__parent__
         if agenda_item is None:
             raise ValueError("Can't find any agenda item in the polls lineage")
-        proposals = set()
-        for item in agenda_item.values():
-            if item.uid in self.proposal_uids:
-                proposals.add(item)
-        return proposals
-
-    def get_all_votes(self):
-        """ Returns all votes in this context. """
-        return frozenset([x for x in self.values() if IVote.providedBy(x)])
-
-    def get_voted_userids(self):
-        """ Returns userids of all users who've voted. """
-        return frozenset([x.__name__ for x in self.get_all_votes()])
+        query = Any('uid', tuple(self.proposal_uids)) & Eq('type_name', 'Proposal')
+        root = find_root(agenda_item)
+        results = []
+        for docid in root.catalog.query(query, sort_index='created')[1]:
+            path = root.document_map.address_for_docid(docid)
+            obj = find_resource(root, path)
+            #Permission check shouldn't be needed at this point
+            if obj:
+                results.append(obj)
+        return results
 
     def calculate_ballots(self):
         ballot_counter = Ballots()
-        for vote in self.get_all_votes():
+        for vote in self.values():
+            assert IVote.providedBy(vote)
             ballot_counter.add(vote.get_vote_data())
         return ballot_counter.result()
 
@@ -221,6 +227,7 @@ def closing_poll_callback(poll, info):
     """ Workflow callback when a poll is closed."""
     poll.close_poll()
 
+
 def lock_proposals(poll, request):
     """ Set proposals to voting. """
     count = 0
@@ -242,6 +249,7 @@ def lock_proposals(poll, request):
                              'prop_form': prop_form})
             fm.add(msg)
 
+
 def upcoming_poll_callback(poll, info):
     """ Workflow callback when a poll is set in the upcoming state.
         This method sets all proposals in the locked for vote-state.
@@ -253,6 +261,7 @@ def upcoming_poll_callback(poll, info):
         msg = _('poll_upcoming_state_notice',
                 default=u"Setting poll in upcoming state. It's now visible for meeting participants.")
         fm.add(msg)
+
 
 def ongoing_poll_callback(poll, info):
     """ Workflow callback when a poll is set in the ongoing state.
@@ -271,6 +280,7 @@ def ongoing_poll_callback(poll, info):
                     mapping = {'tag': edit_tag})
         raise HTTPForbidden(err_msg)
     lock_proposals(poll, request)
+
 
 def email_voters_about_ongoing_poll(poll, request=None):
     """ Email voters about that a poll they have voting permission in is open.

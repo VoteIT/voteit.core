@@ -2,6 +2,7 @@ import unittest
 
 from pyramid import testing
 from pyramid.authorization import ACLAuthorizationPolicy
+from voteit.core.testing_helpers import bootstrap_and_fixture
 from zope.interface.verify import verifyObject
 
 from voteit.core import security
@@ -32,14 +33,18 @@ class VotePermissionTests(unittest.TestCase):
 
     def setUp(self):
         self.config = testing.setUp()
-        self.config.include('arche.testing')
-        policy = ACLAuthorizationPolicy()
-        self.pap = policy.principals_allowed_by_permission
+        self.config.include('arche.testing.catalog')
+        self.root = bootstrap_and_fixture(self.config)
         self.config.include('voteit.core.testing_helpers.register_workflows')
         self.config.include('voteit.core.models.vote')
 
     def tearDown(self):
         testing.tearDown()
+
+    @property
+    def pap(self):
+        policy = ACLAuthorizationPolicy()
+        return policy.principals_allowed_by_permission
 
     def _make_obj(self):
         from voteit.core.models.vote import Vote
@@ -61,7 +66,8 @@ class VotePermissionTests(unittest.TestCase):
 
     def test_ongoing_poll_context(self):
         request = testing.DummyRequest()
-        ai = self._make_ai()
+
+        self.root['ai'] = ai = self._make_ai()
         ai.set_workflow_state(request, 'upcoming')
         ai.set_workflow_state(request, 'ongoing')
         poll = self._make_poll()
@@ -79,8 +85,8 @@ class VotePermissionTests(unittest.TestCase):
 
     def test_closed_poll_context(self):
         request = testing.DummyRequest()
-        self.config = testing.setUp(registry=self.config.registry, request=request)
-        ai = self._make_ai()
+        self.config.begin(request)
+        self.root['ai'] = ai = self._make_ai()
         ai.set_workflow_state(request, 'upcoming')
         ai.set_workflow_state(request, 'ongoing')
         poll = self._make_poll()

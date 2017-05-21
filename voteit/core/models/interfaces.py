@@ -253,14 +253,6 @@ class IPoll(IBaseContent):
         """ Return all proposal objects resigered in this poll.
         """
 
-    def get_all_votes():
-        """ Return a frozenset of all votes in this poll.
-        """
-
-    def get_voted_userids():
-        """ Returns userids of all who've voted in this poll.
-        """
-
     def close_poll():
         """ Close the poll, calculate and store the result.
         """

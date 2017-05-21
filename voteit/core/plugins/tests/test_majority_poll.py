@@ -8,7 +8,7 @@ import colander
 from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import IPollPlugin
-from voteit.core.testing_helpers import attach_request_method
+from voteit.core.testing_helpers import attach_request_method, bootstrap_and_fixture
 from voteit.core.helpers import creators_info
 from voteit.core.helpers import get_userinfo_url
 
@@ -25,10 +25,10 @@ class MPUnitTests(unittest.TestCase):
         from voteit.core.plugins.majority_poll import MajorityPollPlugin
         from voteit.core.models.poll import Poll
         from voteit.core.models.agenda_item import AgendaItem
-
-        ai = AgendaItem()
+        self.config.include('arche.testing.catalog')
+        self.root = bootstrap_and_fixture(self.config)
+        self.root['ai'] = ai = AgendaItem()
         ai['poll'] = self.poll = Poll()
-        
         return MajorityPollPlugin( ai['poll'] )
 
     def test_verify_implementation(self):
