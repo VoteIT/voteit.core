@@ -217,7 +217,6 @@ voteit.load_agenda_data = function(state) {
     var request = arche.do_request(voteit.agenda_data_url, {method: 'POST', data: {state: state}});
     request.done(function(response) {
         if (!response['hide_type_count']) {
-            console.log('will extend directive')
             $.extend(directive['a']['ai<-ais'], types_directive);
         }
 
