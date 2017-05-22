@@ -94,8 +94,8 @@ class ProposalsInline(BaseView):
         if tags:
             tags = [x.lower() for x in tags]
             query &= Any('tags', tags)
-        hide = self.request.GET.getall('hide')
-        load_hidden = self.request.GET.get('load_hidden', False)
+        hide = self.request.params.getall('hide')
+        load_hidden = self.request.params.get('load_hidden', False)
         if load_hidden:
             # Only load data previously hidden
             if hide:

@@ -20,7 +20,10 @@
     <div class="clearfix"></div>
     <div class="metadata row">
       <div class="col-xs-6">
-        <a class="primary-tag" href="${request.resource_url(context, query = {'tag': obj.aid})}">
+        <a class="primary-tag"
+           data-load-agenda-item="#content"
+           data-ai-name="${context.__name__}"
+           href="${request.resource_url(context, query = {'tag': obj.aid})}">
           #${obj.aid}
         </a>
       </div>

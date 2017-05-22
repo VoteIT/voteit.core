@@ -43,7 +43,24 @@ class AgendaItemView(BaseView):
                 return obj
 
     def __call__(self):
-        return {}
+        tags = self.request.params.getall('tag')
+        response = {'tags': tags}
+        if tags:
+            trans = self.request.localizer.translate
+            filter_msg = """%s
+            <a href="%s"
+               data-load-agenda-item="#content"
+               class="btn btn-default btn-xs"
+               data-ai-name="%s"> %s </a>
+           """ % (
+                trans(_("Filter active, showing ${num} tag(s)", mapping={'num': len(tags)})),
+                self.request.clear_tags_url(self.context),
+                self.context.__name__,
+                trans(_("Show all")),
+            )
+            filter_msg = filter_msg.replace('\n','')
+            response['filter_msg'] = filter_msg
+        return response
 
 
 class AIToggleBlockView(BaseView):

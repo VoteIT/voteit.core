@@ -53,7 +53,10 @@ def tags2links(text):
         tag = matched_dict['tag']
         pre = matched_dict['pre']
         url = u"?%s" % urlencode({'tag': tag.encode('utf-8')})
-        return u"""%(pre)s<a href="%(url)s" data-set-tag-filter="%(tag)s" class="tag">#%(tag)s</a>""" % {'pre': pre, 'url': url, 'tag': tag}
+        #FIXME: data-ai-name="${context.__name__}
+        #This should be refactored and handled through javascript
+        return u"""%(pre)s<a href="%(url)s" data-load-agenda-item="#content" class="tag">#%(tag)s</a>""" % \
+               {'pre': pre, 'url': url, 'tag': tag}
     return re.sub(TAG_PATTERN, handle_match, text)
 
 def strip_and_truncate(text, limit=200, symbol = '<span class="trunc">&hellip;</span>'):
@@ -258,9 +261,6 @@ def get_polls_struct(meeting, request, limit = 5):
         results.append(result)
     return results
 
-def current_tags(request, prepend = '#', separator = ', '):
-    return separator.join(["%s%s" % (prepend, x) for x in request.GET.getall('tag')])
-
 def clear_tags_url(request, context, *args, **kw):
     clear_tag_query = request.GET.copy()
     if 'tag' in clear_tag_query:
@@ -284,5 +284,4 @@ def includeme(config):
 
     #State titles
     config.add_request_method(callable = get_wf_state_titles, name = 'get_wf_state_titles')
-    config.add_request_method(callable = current_tags)
     config.add_request_method(callable = clear_tags_url)

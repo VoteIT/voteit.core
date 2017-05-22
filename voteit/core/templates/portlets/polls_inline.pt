@@ -98,10 +98,13 @@
       <div class="col-sm-6">
         <a class="btn btn-default btn-xs"
            tal:condition="obj.proposals"
+           data-load-agenda-item="#content"
+           data-ai-name="${context.__name__}"
            href="${view.get_poll_filter_url(obj)}">
           <span class="glyphicon glyphicon-filter"></span>
           <span i18n:translate="">Filter on poll (<tal:ts i18n:name="num">${len(obj.proposals)}</tal:ts>) </span>
         </a>
+
         <tal:poll_plugin condition="poll_plugin" tal:define="poll_method_info 'poll_method_info_%s' % obj.uid">
             <a class="btn btn-default btn-xs" data-toggle="collapse"
                href="#${poll_method_info}" aria-expanded="false"

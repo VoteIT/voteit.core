@@ -42,12 +42,31 @@
         window.onload = function() {
             voteit.set_active_ai("${context.__name__}");
         }
-        /*
-        window.onload = function() {
-            voteit.initial_ai_loaded();
-        };
-        */
+
+        function notify_filter_active() {
+            var message = '${structure: filter_msg|''}';
+            arche.create_flash_message(message,
+                {id: 'filter-active-notice',
+                 icon_class: 'glyphicon glyphicon-filter',
+                 auto_destruct: false,
+                 slot: 'fixed-msg-bar',
+                 type: 'warning'}
+            );
+        }
     </script>
+    <script tal:condition="tags and not request.is_xhr">
+        window.onload = function() {
+            notify_filter_active();
+        }
+    </script>
+    <tal:xhr condition="request.is_xhr">
+        <script>
+            $('#filter-active-notice').remove();
+        </script>
+        <script tal:condition="tags">
+            notify_filter_active();
+        </script>
+    </tal:xhr>
 
 </tal:main>
 </body>
