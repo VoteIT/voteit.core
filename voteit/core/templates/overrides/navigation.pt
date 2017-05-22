@@ -17,7 +17,8 @@
 
       <a class="navbar-brand"
          tal:condition="request.meeting"
-         href="javascript:voteit.toggle_agenda()">
+         href="#"
+         onclick="javascript:voteit.toggle_agenda()">
         <span class="glyphicon glyphicon-list"></span>
       </a>
 
@@ -31,7 +32,8 @@
          data-actionmarker="disabled"
          data-initiator="#meeting-menu"
          tal:define="meeting_url request.resource_url(request.meeting, '_meeting_menu')"
-         href="javascript:voteit.load_inline_menu('#meeting-menu', '${meeting_url}')">
+         href="#"
+         onclick="javascript:voteit.load_inline_menu('#meeting-menu', '${meeting_url}')">
         <span data-actionmarker="glyphicon glyphicon-refresh rotate-me"></span>
           ${request.meeting.nav_title and request.meeting.nav_title or request.meeting.title}
         <span class="caret"></span>
@@ -60,8 +62,9 @@
         <a class="navbar-brand pull-right"
            data-initiator="#poll-menu"
            data-actionmarker="disabled"
+           href="#"
            tal:define="poll_menu_url request.resource_url(request.meeting, '_poll_menu');"
-           href="javascript:voteit.load_inline_menu('#poll-menu', '${poll_menu_url}')">
+           onclick="javascript:voteit.load_inline_menu('#poll-menu', '${poll_menu_url}')">
           <span data-actionmarker="rotate-me glyphicon-refresh" class="glyphicon glyphicon-star"></span>
           <span class="hidden-xs hidden-sm" i18n:translate="">Polls</span>
           <span class="label label-success" data-important-polls></span>
@@ -73,7 +76,8 @@
         <a class="navbar-brand pull-right"
            data-initiator="#user-menu"
            data-actionmarker="disabled"
-           href="javascript:voteit.load_inline_menu('#user-menu', '/_user_menu')">
+           href="#"
+           onclick="javascript:voteit.load_inline_menu('#user-menu', '/_user_menu')">
           <span data-actionmarker="rotate-me glyphicon-refresh" class="glyphicon glyphicon-user"></span>
           <span class="caret"></span>
         </a>
@@ -85,7 +89,8 @@
            data-actionmarker="disabled"
            tal:define="m_context request.meeting and request.meeting or request.root;
                         site_url request.resource_url(m_context, '_site_menu');"
-            href="javascript:voteit.load_inline_menu('#site-menu', '${site_url}')">
+            href="#"
+            onclick="javascript:voteit.load_inline_menu('#site-menu', '${site_url}')">
           <span data-actionmarker="rotate-me glyphicon-refresh" class="glyphicon glyphicon-cog"></span>
           <span class="caret"></span>
         </a>
