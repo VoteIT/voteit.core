@@ -173,25 +173,7 @@ voteit.load_agenda_data = function(state) {
             {
                 '.@href+': 'ai.name',
                 '[data-ai="title"]': 'ai.title',
-                '[data-ai="prop_count"]': 'ai.contents.Proposal.total',
-                '[data-ai="disc_count"]': 'ai.contents.DiscussionPost.total',
-                '[data-ai="poll_count"]': 'ai.contents.Poll.total',
-                '.@data-ai-name': 'ai.name',
-                '.@class+': function(arg) {
-                    if (arg.item.contents.Proposal.unread > 0 || arg.item.contents.DiscussionPost.unread > 0) {
-                        return ' item-unread';
-                    }
-                },
-                '[data-ai="prop_unread"]': function(arg) {
-                    if (arg.item.contents.Proposal.unread > 0) {
-                        return arg.item.contents.Proposal.unread;
-                    }
-                },
-                '[data-ai="disc_unread"]': function(arg) {
-                    if (arg.item.contents.DiscussionPost.unread > 0) {
-                        return arg.item.contents.DiscussionPost.unread;
-                    }
-                }
+                '.@data-ai-name': 'ai.name'
             },
             // same kind of sort as the usual Array sort
             sort: function(a, b){
@@ -207,15 +189,43 @@ voteit.load_agenda_data = function(state) {
         }
     };
 
+    //Update directive depending on contents of ai
+    var types_directive = {
+        '[data-ai="prop_count"]': 'ai.contents.Proposal.total',
+        '[data-ai="disc_count"]': 'ai.contents.DiscussionPost.total',
+        '[data-ai="poll_count"]': 'ai.contents.Poll.total',
+        '.@class+': function(arg) {
+            if (arg.item.contents.Proposal.unread > 0 || arg.item.contents.DiscussionPost.unread > 0) {
+                return ' item-unread';
+            }
+        },
+        '[data-ai="prop_unread"]': function(arg) {
+            if (arg.item.contents.Proposal.unread > 0) {
+                return arg.item.contents.Proposal.unread;
+            }
+        },
+        '[data-ai="disc_unread"]': function(arg) {
+            if (arg.item.contents.DiscussionPost.unread > 0) {
+                return arg.item.contents.DiscussionPost.unread;
+            }
+        }
+    }
+
     var control_elem = $('[data-agenda-control="' + state + '"]');
     arche.actionmarker_feedback(control_elem, true);
 
     var request = arche.do_request(voteit.agenda_data_url, {method: 'POST', data: {state: state}});
     request.done(function(response) {
+        if (!response['hide_type_count']) {
+            console.log('will extend directive')
+            $.extend(directive['a']['ai<-ais'], types_directive);
+        }
+
         var target = $('[data-agenda-state="' + state + '"]');
         target.html(tpl.html());
         target.render(response, directive);
         control_elem.removeClass('collapsed');
+        if (response['hide_type_count']) $('[data-agenda-count-cols]').hide();
         //Agendas might have set it without effect
         if (voteit.active_ai_name) voteit.set_active_ai(voteit.active_ai_name);
     });

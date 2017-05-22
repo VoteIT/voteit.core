@@ -14,7 +14,7 @@ from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IMeeting
 from voteit.core import security
 from voteit.core import _
-
+from voteit.core.schemas.agenda import AgendaPortletSchema
 
 _UNREAD_TYPES = ('Proposal', 'DiscussionPost')
 _OPEN_STATES = ('ongoing', 'upcoming', 'closed')
@@ -44,6 +44,7 @@ class AgendaPortlet(PortletType):
 class AgendaPortletFixed(AgendaPortlet):
     name = "agenda_fixed"
     title = _("Fixed agenda")
+    schema_factory = AgendaPortletSchema
     tpl = "voteit.core:templates/portlets/agenda_fixed.pt"
 
     def render(self, context, request, view, **kwargs):
@@ -53,6 +54,10 @@ class AgendaPortletFixed(AgendaPortlet):
                 states.append('private')
             tags = sorted(request.meeting.tags, key=lambda x: x.lower())
             selected_tag = request.session.get('voteit.ai_selected_tag', None)
+            hide_type_count = self.portlet.settings.get('hide_type_count', False)
+            if request.session.get('voteit.agenda.hide_type_count', object()) != hide_type_count:
+                request.session['voteit.agenda.hide_type_count'] = hide_type_count
+                request.session.changed()
             response = {'title': self.title,
                         'portlet': self.portlet,
                         'view': view,
@@ -113,7 +118,6 @@ def agenda_data_json(context, request):
     query = Eq('path', resource_path(context)) & Eq('type_name', 'AgendaItem')
     #Sanitize to avoid exceptions?
     state = request.POST.get('state', '')
-    #FIXME: Toggle state in sessions here
     if state not in _OPEN_STATES and not request.is_moderator:
         raise HTTPForbidden('State query not allowed')
     tag = request.session.get('voteit.ai_selected_tag', '')
@@ -121,13 +125,16 @@ def agenda_data_json(context, request):
         query &= Any('tags', [tag.lower()])
     docids = request.root.catalog.query(query & Eq('workflow_state', state))[1]
     results = []
+    hide_type_count = request.session.get('voteit.agenda.hide_type_count', False)
     for ai in request.resolve_docids(docids, perm=None):
-        results.append({
+        ai_res = {
             'title': ai.title,
-            'name': ai.__name__,
-            'contents': count_types(request, ai)
-        })
-    return {'ais': results}
+            'name': ai.__name__
+        }
+        if not hide_type_count:
+            ai_res['contents'] = count_types(request, ai)
+        results.append(ai_res)
+    return {'ais': results, 'hide_type_count': hide_type_count}
 
 
 def count_types(request, ai):
@@ -152,7 +159,6 @@ def select_tag(request):
         request.session.changed()
         return Response()
     return HTTPBadRequest("No such tag")
-    #selected_tag = request.session.get('voteit.ai_selected_tag', None)
 
 
 def includeme(config):
