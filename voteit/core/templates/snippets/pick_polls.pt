@@ -20,5 +20,8 @@
             </form>
         </label>
     </div>
+    <tal:no_polls condition="not polls">
+        <span class="text-muted" i18n:translate="">No private or upcoming polls</span>
+    </tal:no_polls>
 </div>
 </tal:main>

@@ -282,8 +282,6 @@ class PickPollJSON(BaseView):
         docids = self.request.root.catalog.query(query)[1]
         proposals = tuple(self.request.resolve_docids(docids))
         response = {}
-        if not polls:
-            return response
         for proposal in proposals:
             values = {'context': proposal, 'polls': polls}
             response[proposal.uid] = render('voteit.core:templates/snippets/pick_polls.pt', values, request=self.request)

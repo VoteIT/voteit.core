@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2017-05-22 21:38+0200\n"
-"PO-Revision-Date: 2017-05-22 21:39+0200\n"
+"POT-Creation-Date: 2017-05-22 21:45+0200\n"
+"PO-Revision-Date: 2017-05-22 21:45+0200\n"
 "Last-Translator: Robin Harms Oredsson <robin@betahaus.net>\n"
 "Language-Team: sv <LL@li.org>\n"
 "Language: sv\n"
@@ -1770,6 +1770,10 @@ msgstr "Lägg till existerande"
 #: voteit/core/templates/snippets/participants_tabs.pt:23
 msgid "Emails"
 msgstr "Epost"
+
+#: voteit/core/templates/snippets/pick_polls.pt:24
+msgid "No private or upcoming polls"
+msgstr "Inga privata eller kommande omröstningar"
 
 #: voteit/core/templates/snippets/poll_menu.pt:19
 msgid "Ongoing polls"
