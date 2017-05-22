@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE 1.0\n"
-"POT-Creation-Date: 2017-05-22 10:39+0200\n"
+"POT-Creation-Date: 2017-05-22 21:38+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -589,7 +589,7 @@ msgid "Discussion"
 msgstr ""
 
 #: ././voteit/core/portlets/agenda_item.py:74
-#: ././voteit/core/templates/overrides/navigation.pt:66
+#: ././voteit/core/templates/overrides/navigation.pt:69
 #: ././voteit/core/templates/portlets/polls.pt:11
 #: ././voteit/core/views/components/polls.py:10
 msgid "Polls"
@@ -606,6 +606,14 @@ msgstr ""
 #: ././voteit/core/portlets/meeting.py:39
 #: ././voteit/core/templates/portlets/meeting_list.pt:8
 msgid "Meetings"
+msgstr ""
+
+#: ././voteit/core/schemas/agenda.py:9
+msgid "Hide type and unread count"
+msgstr ""
+
+#: ././voteit/core/schemas/agenda.py:10
+msgid "Will speed up loading for physical meetings with lots of participants"
 msgstr ""
 
 #: ././voteit/core/schemas/agenda_item.py:23
@@ -1479,15 +1487,6 @@ msgstr ""
 msgid "To access this meeting use the link below:"
 msgstr ""
 
-#: ././voteit/core/templates/overrides/navigation.pt:100
-msgid "Only showing ${tags}"
-msgstr ""
-
-#: ././voteit/core/templates/overrides/navigation.pt:101
-#: ././voteit/core/templates/portlets/agenda_fixed.pt:40
-msgid "Show all"
-msgstr ""
-
 #: ././voteit/core/templates/portlets/agenda.pt:16
 msgid "Agenda / Navigation"
 msgstr ""
@@ -1509,6 +1508,11 @@ msgstr ""
 
 #: ././voteit/core/templates/portlets/agenda_fixed.pt:31
 msgid "Only:"
+msgstr ""
+
+#: ././voteit/core/templates/portlets/agenda_fixed.pt:40
+#: ././voteit/core/views/agenda_item.py:59
+msgid "Show all"
 msgstr ""
 
 #: ././voteit/core/templates/portlets/discussions.pt:15
@@ -1591,19 +1595,19 @@ msgstr ""
 msgid "Closes"
 msgstr ""
 
-#: ././voteit/core/templates/portlets/polls_inline.pt:103
+#: ././voteit/core/templates/portlets/polls_inline.pt:105
 msgid "Filter on poll (${num})"
 msgstr ""
 
-#: ././voteit/core/templates/portlets/polls_inline.pt:115
+#: ././voteit/core/templates/portlets/polls_inline.pt:118
 msgid "Ballot data"
 msgstr ""
 
-#: ././voteit/core/templates/portlets/polls_inline.pt:129
+#: ././voteit/core/templates/portlets/polls_inline.pt:132
 msgid "No polls yet"
 msgstr ""
 
-#: ././voteit/core/templates/portlets/polls_inline.pt:135
+#: ././voteit/core/templates/portlets/polls_inline.pt:138
 msgid "Add Poll"
 msgstr ""
 
@@ -1611,7 +1615,7 @@ msgstr ""
 msgid "Poll / Descision planning"
 msgstr ""
 
-#: ././voteit/core/templates/portlets/proposals_inline.pt:44
+#: ././voteit/core/templates/portlets/proposals_inline.pt:47
 msgid "Show ${num} hidden"
 msgstr ""
 
@@ -1700,7 +1704,12 @@ msgstr ""
 msgid "Last added"
 msgstr ""
 
-#: ././voteit/core/views/agenda_item.py:61
+#: ././voteit/core/views/agenda_item.py:56
+#, python-format
+msgid "Filter active, showing ${num} tag(s)"
+msgstr ""
+
+#: ././voteit/core/views/agenda_item.py:78
 msgid "Status changed - note that workflow state also matters."
 msgstr ""
 

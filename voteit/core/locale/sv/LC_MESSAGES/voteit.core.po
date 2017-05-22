@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2017-05-22 10:39+0200\n"
-"PO-Revision-Date: 2017-05-22 10:43+0200\n"
+"POT-Creation-Date: 2017-05-22 21:38+0200\n"
+"PO-Revision-Date: 2017-05-22 21:39+0200\n"
 "Last-Translator: Robin Harms Oredsson <robin@betahaus.net>\n"
 "Language-Team: sv <LL@li.org>\n"
 "Language: sv\n"
@@ -634,7 +634,7 @@ msgid "Discussion"
 msgstr "Diskussion"
 
 #: voteit/core/portlets/agenda_item.py:74
-#: voteit/core/templates/overrides/navigation.pt:66
+#: voteit/core/templates/overrides/navigation.pt:69
 #: voteit/core/templates/portlets/polls.pt:11
 #: voteit/core/views/components/polls.py:10
 msgid "Polls"
@@ -652,6 +652,14 @@ msgstr "Möten"
 #: voteit/core/templates/portlets/meeting_list.pt:8
 msgid "Meetings"
 msgstr "Möten"
+
+#: voteit/core/schemas/agenda.py:9
+msgid "Hide type and unread count"
+msgstr ""
+
+#: voteit/core/schemas/agenda.py:10
+msgid "Will speed up loading for physical meetings with lots of participants"
+msgstr ""
 
 #: voteit/core/schemas/agenda_item.py:23 voteit/core/schemas/meeting.py:81
 #: voteit/core/schemas/poll.py:54
@@ -1594,15 +1602,6 @@ msgstr "Länken nedan ger dig följande rättigheter i mötet:"
 msgid "To access this meeting use the link below:"
 msgstr "För att få tillgång till mötet använd länken nedan:"
 
-#: voteit/core/templates/overrides/navigation.pt:100
-msgid "Only showing ${tags}"
-msgstr "Visar bara ${tags}"
-
-#: voteit/core/templates/overrides/navigation.pt:101
-#: voteit/core/templates/portlets/agenda_fixed.pt:40
-msgid "Show all"
-msgstr "Visa alla"
-
 #: voteit/core/templates/portlets/agenda.pt:16
 msgid "Agenda / Navigation"
 msgstr "Dagordning / Navigation"
@@ -1625,6 +1624,11 @@ msgstr "Visar alla"
 #: voteit/core/templates/portlets/agenda_fixed.pt:31
 msgid "Only:"
 msgstr "Bara:"
+
+#: voteit/core/templates/portlets/agenda_fixed.pt:40
+#: voteit/core/views/agenda_item.py:59
+msgid "Show all"
+msgstr "Visa alla"
 
 #: voteit/core/templates/portlets/discussions.pt:15
 #: voteit/core/templates/portlets/polls.pt:15
@@ -1708,19 +1712,19 @@ msgstr "Startad"
 msgid "Closes"
 msgstr "Stänger"
 
-#: voteit/core/templates/portlets/polls_inline.pt:103
+#: voteit/core/templates/portlets/polls_inline.pt:105
 msgid "Filter on poll (${num})"
 msgstr "Filtrera på omröstning (${num})"
 
-#: voteit/core/templates/portlets/polls_inline.pt:115
+#: voteit/core/templates/portlets/polls_inline.pt:118
 msgid "Ballot data"
 msgstr "Valurnans data"
 
-#: voteit/core/templates/portlets/polls_inline.pt:129
+#: voteit/core/templates/portlets/polls_inline.pt:132
 msgid "No polls yet"
 msgstr "Inga omröstningar än"
 
-#: voteit/core/templates/portlets/polls_inline.pt:135
+#: voteit/core/templates/portlets/polls_inline.pt:138
 msgid "Add Poll"
 msgstr "Lägg till omröstning"
 
@@ -1728,7 +1732,7 @@ msgstr "Lägg till omröstning"
 msgid "Poll / Descision planning"
 msgstr "Omröstning / Beslutsplanering"
 
-#: voteit/core/templates/portlets/proposals_inline.pt:44
+#: voteit/core/templates/portlets/proposals_inline.pt:47
 msgid "Show ${num} hidden"
 msgstr "Visa ${num} gömd(a)"
 
@@ -1817,7 +1821,12 @@ msgstr "Du har inte skrivit något än!"
 msgid "Last added"
 msgstr "Senast tillagda"
 
-#: voteit/core/views/agenda_item.py:61
+#: voteit/core/views/agenda_item.py:56
+#, python-format
+msgid "Filter active, showing ${num} tag(s)"
+msgstr "Filter aktivt, visar ${num} tagg(ar)"
+
+#: voteit/core/views/agenda_item.py:78
 msgid "Status changed - note that workflow state also matters."
 msgstr "Status ändrad - notera att arbetsflödestillstånd också har betydelse"
 
@@ -2260,6 +2269,9 @@ msgstr "personer"
 #: voteit/core/views/templates/snippets/user_tag.pt:20
 msgid "more_in_likes"
 msgstr "till"
+
+#~ msgid "Only showing ${tags}"
+#~ msgstr "Visar bara ${tags}"
 
 #~ msgid "mps_poll_plugins_title"
 #~ msgstr "Tillgängliga omröstningsmetoder inom mötet"
