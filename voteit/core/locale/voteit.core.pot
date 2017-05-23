@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE 1.0\n"
-"POT-Creation-Date: 2017-05-23 11:21+0200\n"
+"POT-Creation-Date: 2017-05-23 18:12+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1134,7 +1134,7 @@ msgstr ""
 #: ././voteit/core/templates/manage_agenda.pt:32
 #: ././voteit/core/templates/manage_agenda.pt:76
 #: ././voteit/core/views/components/metadata_listing.py:98
-#: ././voteit/core/views/components/moderator_actions.py:25
+#: ././voteit/core/views/components/moderator_actions.py:29
 #: ././voteit/core/views/templates/agenda_template.pt:21
 #: ././voteit/core/views/templates/agenda_templates.pt:60
 msgid "Delete"
@@ -1525,7 +1525,7 @@ msgstr ""
 msgid "Show ${num} previous"
 msgstr ""
 
-#: ././voteit/core/templates/portlets/discussions_inline.pt:50
+#: ././voteit/core/templates/portlets/discussions_inline.pt:52
 msgid "Show more"
 msgstr ""
 
@@ -1615,7 +1615,7 @@ msgstr ""
 msgid "Poll / Descision planning"
 msgstr ""
 
-#: ././voteit/core/templates/portlets/proposals_inline.pt:47
+#: ././voteit/core/templates/portlets/proposals_inline.pt:49
 msgid "Show ${num} hidden"
 msgstr ""
 
@@ -1664,6 +1664,10 @@ msgstr ""
 
 #: ././voteit/core/templates/snippets/poll_menu.pt:61
 msgid "(None)"
+msgstr ""
+
+#: ././voteit/core/templates/snippets/profile_menu.pt:20
+msgid "Your roles"
 msgstr ""
 
 #: ././voteit/core/templates/snippets/site_menu.pt:10
@@ -1801,11 +1805,11 @@ msgstr ""
 msgid "Email addresses of moderators with upcoming or ongoing meetings"
 msgstr ""
 
-#: ././voteit/core/views/participants.py:112
+#: ././voteit/core/views/participants.py:113
 msgid "Bulk change roles"
 msgstr ""
 
-#: ././voteit/core/views/participants.py:134
+#: ././voteit/core/views/participants.py:135
 msgid "Bulk changes applied"
 msgstr ""
 
@@ -1985,28 +1989,28 @@ msgstr ""
 msgid "Workflow"
 msgstr ""
 
-#: ././voteit/core/views/components/moderator_actions.py:23
+#: ././voteit/core/views/components/moderator_actions.py:24
 msgid "Edit picked proposals"
 msgstr ""
 
-#: ././voteit/core/views/components/moderator_actions.py:35
-#: ././voteit/core/views/components/moderator_actions.py:44
+#: ././voteit/core/views/components/moderator_actions.py:39
+#: ././voteit/core/views/components/moderator_actions.py:48
 msgid "Poll settings"
 msgstr ""
 
-#: ././voteit/core/views/components/moderator_actions.py:47
+#: ././voteit/core/views/components/moderator_actions.py:51
 msgid "Block proposals"
 msgstr ""
 
-#: ././voteit/core/views/components/moderator_actions.py:49
+#: ././voteit/core/views/components/moderator_actions.py:53
 msgid "Enable proposals"
 msgstr ""
 
-#: ././voteit/core/views/components/moderator_actions.py:51
+#: ././voteit/core/views/components/moderator_actions.py:55
 msgid "Block discussion"
 msgstr ""
 
-#: ././voteit/core/views/components/moderator_actions.py:53
+#: ././voteit/core/views/components/moderator_actions.py:57
 msgid "Enable discussion"
 msgstr ""
 

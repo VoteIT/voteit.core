@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2017-05-23 11:21+0200\n"
-"PO-Revision-Date: 2017-05-23 11:22+0200\n"
+"POT-Creation-Date: 2017-05-23 18:12+0200\n"
+"PO-Revision-Date: 2017-05-23 18:12+0200\n"
 "Last-Translator: Robin Harms Oredsson <robin@betahaus.net>\n"
 "Language-Team: sv <LL@li.org>\n"
 "Language: sv\n"
@@ -1230,7 +1230,7 @@ msgstr "Tillåt diskussion"
 #: voteit/core/templates/manage_agenda.pt:32
 #: voteit/core/templates/manage_agenda.pt:76
 #: voteit/core/views/components/metadata_listing.py:98
-#: voteit/core/views/components/moderator_actions.py:25
+#: voteit/core/views/components/moderator_actions.py:29
 #: voteit/core/views/templates/agenda_template.pt:21
 #: voteit/core/views/templates/agenda_templates.pt:60
 msgid "Delete"
@@ -1640,7 +1640,7 @@ msgstr "Uppdatera"
 msgid "Show ${num} previous"
 msgstr "Visa ${num} föregående"
 
-#: voteit/core/templates/portlets/discussions_inline.pt:50
+#: voteit/core/templates/portlets/discussions_inline.pt:52
 msgid "Show more"
 msgstr "Visa mer"
 
@@ -1732,7 +1732,7 @@ msgstr "Lägg till omröstning"
 msgid "Poll / Descision planning"
 msgstr "Omröstning / Beslutsplanering"
 
-#: voteit/core/templates/portlets/proposals_inline.pt:47
+#: voteit/core/templates/portlets/proposals_inline.pt:49
 msgid "Show ${num} hidden"
 msgstr "Visa ${num} gömd(a)"
 
@@ -1782,6 +1782,10 @@ msgstr "Pågående omröstningar"
 #: voteit/core/templates/snippets/poll_menu.pt:61
 msgid "(None)"
 msgstr "(Ingen)"
+
+#: voteit/core/templates/snippets/profile_menu.pt:20
+msgid "Your roles"
+msgstr "Dina roller"
 
 #: voteit/core/templates/snippets/site_menu.pt:10
 msgid "Settings"
@@ -1925,11 +1929,11 @@ msgstr ""
 msgid "Email addresses of moderators with upcoming or ongoing meetings"
 msgstr "Epostadresser för moderatorer med pågående eller kommande möten"
 
-#: voteit/core/views/participants.py:112
+#: voteit/core/views/participants.py:113
 msgid "Bulk change roles"
 msgstr "Bulkändra roller"
 
-#: voteit/core/views/participants.py:134
+#: voteit/core/views/participants.py:135
 msgid "Bulk changes applied"
 msgstr "Bulkändring utförd"
 
@@ -2135,28 +2139,28 @@ msgstr "Dra tillbaka"
 msgid "Workflow"
 msgstr "Arbetsflöde"
 
-#: voteit/core/views/components/moderator_actions.py:23
+#: voteit/core/views/components/moderator_actions.py:24
 msgid "Edit picked proposals"
 msgstr "Redigera valda förslag"
 
-#: voteit/core/views/components/moderator_actions.py:35
-#: voteit/core/views/components/moderator_actions.py:44
+#: voteit/core/views/components/moderator_actions.py:39
+#: voteit/core/views/components/moderator_actions.py:48
 msgid "Poll settings"
 msgstr "Inställningar för omröstning"
 
-#: voteit/core/views/components/moderator_actions.py:47
+#: voteit/core/views/components/moderator_actions.py:51
 msgid "Block proposals"
 msgstr "Blockera förslag"
 
-#: voteit/core/views/components/moderator_actions.py:49
+#: voteit/core/views/components/moderator_actions.py:53
 msgid "Enable proposals"
 msgstr "Aktivera förslag"
 
-#: voteit/core/views/components/moderator_actions.py:51
+#: voteit/core/views/components/moderator_actions.py:55
 msgid "Block discussion"
 msgstr "Blockera diskussion"
 
-#: voteit/core/views/components/moderator_actions.py:53
+#: voteit/core/views/components/moderator_actions.py:57
 msgid "Enable discussion"
 msgstr "Aktivera diskussion"
 
@@ -2526,9 +2530,6 @@ msgstr "till"
 
 #~ msgid "Password reset request from VoteIT"
 #~ msgstr "Begäran om nytt lösenord från VoteIT"
-
-#~ msgid "Your vote"
-#~ msgstr "Din röst"
 
 #~ msgid "invite_only_ap_msg"
 #~ msgstr ""
