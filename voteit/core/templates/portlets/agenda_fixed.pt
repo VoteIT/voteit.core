@@ -37,7 +37,7 @@
   <ul class="dropdown-menu" role="menu">
     <li class="${not selected_tag and 'active' or None}" data-select-tag="">
       <a href="javascript:voteit.select_ai_tag('', true)">
-        <span i18n:translate="">Show all</span>
+        <span i18n:translate="">Filter: Show all</span>
       </a>
     </li>
     <li role="separator" class="divider"></li>

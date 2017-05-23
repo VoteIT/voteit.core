@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE 1.0\n"
-"POT-Creation-Date: 2017-05-22 21:45+0200\n"
+"POT-Creation-Date: 2017-05-23 09:56+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1511,8 +1511,7 @@ msgid "Only:"
 msgstr ""
 
 #: ././voteit/core/templates/portlets/agenda_fixed.pt:40
-#: ././voteit/core/views/agenda_item.py:59
-msgid "Show all"
+msgid "Filter: Show all"
 msgstr ""
 
 #: ././voteit/core/templates/portlets/discussions.pt:15
@@ -1711,6 +1710,10 @@ msgstr ""
 #: ././voteit/core/views/agenda_item.py:56
 #, python-format
 msgid "Filter active, showing ${num} tag(s)"
+msgstr ""
+
+#: ././voteit/core/views/agenda_item.py:59
+msgid "Show all"
 msgstr ""
 
 #: ././voteit/core/views/agenda_item.py:78

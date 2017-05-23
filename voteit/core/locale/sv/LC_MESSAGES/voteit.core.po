@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2017-05-22 21:45+0200\n"
-"PO-Revision-Date: 2017-05-22 21:45+0200\n"
+"POT-Creation-Date: 2017-05-23 09:56+0200\n"
+"PO-Revision-Date: 2017-05-23 09:56+0200\n"
 "Last-Translator: Robin Harms Oredsson <robin@betahaus.net>\n"
 "Language-Team: sv <LL@li.org>\n"
 "Language: sv\n"
@@ -1626,9 +1626,8 @@ msgid "Only:"
 msgstr "Bara:"
 
 #: voteit/core/templates/portlets/agenda_fixed.pt:40
-#: voteit/core/views/agenda_item.py:59
-msgid "Show all"
-msgstr "Visa alla"
+msgid "Filter: Show all"
+msgstr "Filter: Visa alla"
 
 #: voteit/core/templates/portlets/discussions.pt:15
 #: voteit/core/templates/portlets/polls.pt:15
@@ -1829,6 +1828,10 @@ msgstr "Senast tillagda"
 #, python-format
 msgid "Filter active, showing ${num} tag(s)"
 msgstr "Filter aktivt, visar ${num} tagg(ar)"
+
+#: voteit/core/views/agenda_item.py:59
+msgid "Show all"
+msgstr "Visa alla"
 
 #: voteit/core/views/agenda_item.py:78
 msgid "Status changed - note that workflow state also matters."
