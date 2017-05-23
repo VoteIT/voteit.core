@@ -26,7 +26,7 @@
   style="width: 100%; overflow: hidden;">
     <span class="text-published">
       <span class="glyphicon glyphicon-filter"></span>
-      <span data-agenda-filter="false" i18n:translate="">Showing all</span>
+      <span data-agenda-filter="false" i18n:translate="">Filter: Showing all</span>
       <span data-agenda-filter="true">
         <span i18n:translate="">Only: </span>
         <span data-active-agenda-tag></span>
@@ -37,7 +37,7 @@
   <ul class="dropdown-menu" role="menu">
     <li class="${not selected_tag and 'active' or None}" data-select-tag="">
       <a href="javascript:voteit.select_ai_tag('', true)">
-        <span i18n:translate="">Filter: Show all</span>
+        <span i18n:translate="">Show all</span>
       </a>
     </li>
     <li role="separator" class="divider"></li>
