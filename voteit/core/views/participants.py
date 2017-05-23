@@ -29,6 +29,7 @@ _ALLOWED_TO_TOGGLE = (security.ROLE_VIEWER,
 
 
 #glyphicon glyphicon + ->
+#FIXME: Exists in helpers.py
 _ROLE_ICONS = {'role_view': 'eye-open',
                'role_discuss': 'comment',
                'role_propose': 'exclamation-sign',

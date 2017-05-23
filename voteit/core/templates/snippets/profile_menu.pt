@@ -16,4 +16,13 @@
     <tal:actionbar_items replace="structure view.render_view_group('user_menu')" />
   </ul>
 
+  <div class="panel-body" tal:condition="show_roles">
+    <h4 i18n:translate="">Your roles</h4>
+
+    <div tal:repeat="role local_roles">
+      <span class="${role_icons.get(role, '')}"></span>
+      ${role.title}
+    </div>
+  </div>
+
 </tal:main>

@@ -70,12 +70,15 @@
         </a>
       </li>
 
-      <li tal:condition="request.authenticated_userid">
+      <li tal:condition="request.authenticated_userid"
+          tal:define="umcontxt request.meeting and request.meeting or request.root">
+
         <a class="navbar-brand pull-right"
+           tal:define="usr_menu_url request.resource_url(umcontxt, '_user_menu')"
            data-initiator="#user-menu"
            data-actionmarker="disabled"
            href="#"
-           onclick="javascript:voteit.load_inline_menu('#user-menu', '/_user_menu')">
+           onclick="javascript:voteit.load_inline_menu('#user-menu', '${usr_menu_url}')">
           <span data-actionmarker="rotate-me glyphicon-refresh" class="glyphicon glyphicon-user"></span>
           <span class="caret"></span>
         </a>

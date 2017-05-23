@@ -5,8 +5,9 @@ from betahaus.viewcomponent import IViewGroup
 from betahaus.viewcomponent import render_view_group
 from pyramid.view import view_config
 from pyramid.httpexceptions import HTTPUnauthorized
-from voteit.core.helpers import get_polls_struct
 
+from voteit.core.helpers import get_polls_struct
+from voteit.core.helpers import ROLE_ICONS
 from voteit.core.models.interfaces import IAccessPolicy
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import IPoll
@@ -19,13 +20,24 @@ from voteit.core.security import VIEW
              permission=VIEW,
              name='_user_menu',
              renderer='voteit.core:templates/snippets/profile_menu.pt')
+@view_config(context=IMeeting,
+             permission=VIEW,
+             name='_user_menu',
+             renderer='voteit.core:templates/snippets/profile_menu.pt')
 class MenuView(BaseView):
     """ Generic menu """
 
     def __call__(self):
         if not self.request.authenticated_userid:
             raise HTTPUnauthorized("Must login first")
-        return {}
+        show_roles = IMeeting.providedBy(self.context)
+        local_roles = []
+        if show_roles:
+            for role in self.context.local_roles.get(self.request.authenticated_userid, ()):
+                local_roles.append(self.request.registry.roles[role])
+        return {'show_roles': show_roles,
+                'local_roles': local_roles,
+                'role_icons': ROLE_ICONS}
 
 
 @view_config(context=IRoot,
