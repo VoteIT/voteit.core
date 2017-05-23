@@ -20,8 +20,12 @@ def wf_menu(context, request, va, **kw):
 
 @view_action('context_actions', 'edit', title = _(u"Edit"),
              context_perm = EDIT, viewname = 'edit', priority=10)
-@view_action('context_actions', 'edit_proposals', title = _(u"Edit picked proposals"),
-             context_perm = EDIT, viewname = 'edit_proposals',  priority=20)
+@view_action('context_actions', 'edit_proposals',
+             title = _(u"Edit picked proposals"),
+             interface = IPoll,
+             context_perm = EDIT,
+             viewname = 'edit_proposals',
+             priority=20)
 @view_action('context_actions', 'delete', title = _(u"Delete"),
              context_perm = DELETE, viewname = 'delete',  priority=100)
 def moderator_context_action(context, request, va, **kw):
