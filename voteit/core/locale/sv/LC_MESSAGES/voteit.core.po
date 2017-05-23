@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2017-05-23 09:56+0200\n"
-"PO-Revision-Date: 2017-05-23 09:56+0200\n"
+"POT-Creation-Date: 2017-05-23 11:21+0200\n"
+"PO-Revision-Date: 2017-05-23 11:22+0200\n"
 "Last-Translator: Robin Harms Oredsson <robin@betahaus.net>\n"
 "Language-Team: sv <LL@li.org>\n"
 "Language: sv\n"
@@ -634,7 +634,7 @@ msgid "Discussion"
 msgstr "Diskussion"
 
 #: voteit/core/portlets/agenda_item.py:74
-#: voteit/core/templates/overrides/navigation.pt:69
+#: voteit/core/templates/overrides/navigation.pt:67
 #: voteit/core/templates/portlets/polls.pt:11
 #: voteit/core/views/components/polls.py:10
 msgid "Polls"
@@ -1618,16 +1618,17 @@ msgid "Manage"
 msgstr "Hantera"
 
 #: voteit/core/templates/portlets/agenda_fixed.pt:29
-msgid "Showing all"
-msgstr "Visar alla"
+msgid "Filter: Showing all"
+msgstr "Filter: Visar alla"
 
 #: voteit/core/templates/portlets/agenda_fixed.pt:31
 msgid "Only:"
 msgstr "Bara:"
 
 #: voteit/core/templates/portlets/agenda_fixed.pt:40
-msgid "Filter: Show all"
-msgstr "Filter: Visa alla"
+#: voteit/core/views/agenda_item.py:59
+msgid "Show all"
+msgstr "Visa alla"
 
 #: voteit/core/templates/portlets/discussions.pt:15
 #: voteit/core/templates/portlets/polls.pt:15
@@ -1828,10 +1829,6 @@ msgstr "Senast tillagda"
 #, python-format
 msgid "Filter active, showing ${num} tag(s)"
 msgstr "Filter aktivt, visar ${num} tagg(ar)"
-
-#: voteit/core/views/agenda_item.py:59
-msgid "Show all"
-msgstr "Visa alla"
 
 #: voteit/core/views/agenda_item.py:78
 msgid "Status changed - note that workflow state also matters."
@@ -2276,6 +2273,9 @@ msgstr "personer"
 #: voteit/core/views/templates/snippets/user_tag.pt:20
 msgid "more_in_likes"
 msgstr "till"
+
+#~ msgid "Showing all"
+#~ msgstr "Visar alla"
 
 #~ msgid "Only showing ${tags}"
 #~ msgstr "Visar bara ${tags}"

@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE 1.0\n"
-"POT-Creation-Date: 2017-05-23 09:56+0200\n"
+"POT-Creation-Date: 2017-05-23 11:21+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -589,7 +589,7 @@ msgid "Discussion"
 msgstr ""
 
 #: ././voteit/core/portlets/agenda_item.py:74
-#: ././voteit/core/templates/overrides/navigation.pt:69
+#: ././voteit/core/templates/overrides/navigation.pt:67
 #: ././voteit/core/templates/portlets/polls.pt:11
 #: ././voteit/core/views/components/polls.py:10
 msgid "Polls"
@@ -1503,7 +1503,7 @@ msgid "Manage"
 msgstr ""
 
 #: ././voteit/core/templates/portlets/agenda_fixed.pt:29
-msgid "Showing all"
+msgid "Filter: Showing all"
 msgstr ""
 
 #: ././voteit/core/templates/portlets/agenda_fixed.pt:31
@@ -1511,7 +1511,8 @@ msgid "Only:"
 msgstr ""
 
 #: ././voteit/core/templates/portlets/agenda_fixed.pt:40
-msgid "Filter: Show all"
+#: ././voteit/core/views/agenda_item.py:59
+msgid "Show all"
 msgstr ""
 
 #: ././voteit/core/templates/portlets/discussions.pt:15
@@ -1710,10 +1711,6 @@ msgstr ""
 #: ././voteit/core/views/agenda_item.py:56
 #, python-format
 msgid "Filter active, showing ${num} tag(s)"
-msgstr ""
-
-#: ././voteit/core/views/agenda_item.py:59
-msgid "Show all"
 msgstr ""
 
 #: ././voteit/core/views/agenda_item.py:78

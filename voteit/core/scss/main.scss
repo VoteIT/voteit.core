@@ -97,6 +97,10 @@ footer {
     margin-top: $grid-gutter-width;
 }
 
+.greedy {
+    @include text-overflow();
+    display: inline-block;
+}
 /*
 .max-width-text {
     @include text-overflow();

@@ -305,6 +305,7 @@ function unvoted_counter(response) {
     } else {
         $('[data-important-polls]').html(response['unvoted_polls']);
     }
+    voteit.adjust_greedy_element();
 };
 
 
@@ -349,9 +350,36 @@ voteit.select_ai_tag = function(tag, load_ongoing) {
 }
 
 
+/* Adjust greedy elements so they won't take up too much space
+Structure should be:
+    <some-container data-check greedy>
+        <other elem> ...
+        <greedy_elem class="greedy">
+    </some-container>
+*/
+voteit.adjust_greedy_element = function(extra_margin) {
+    //16 due to rounding elements. Sometimes widths will be like 102.32px
+    var extra_margin = (typeof extra_margin == 'undefined') ? 16 : extra_margin;
+    $('[data-check-greedy]').each(function(i, elem) {
+        var elem = $(elem);
+        var total_width = elem.width();
+        var locked_width = 0;
+        $.each(elem.children('*:visible:not(.greedy)'), function(k, v) {
+            locked_width += $(v).outerWidth( true );
+        });
+        elem.find('.greedy').css({'width': total_width-locked_width-extra_margin});
+    });
+}
+
+
 $(document).ready(function () {
     voteit.watcher.add_response_callback(unvoted_counter);
     voteit.watcher.add_response_callback(agenda_states);
     $('body').on('click', '[data-load-agenda-item]', voteit.load_agenda_item);
     $('body').on('click', '[data-agenda-control]', voteit.handle_ai_state_toggles);
+    voteit.adjust_greedy_element();
+    window.addEventListener('resize', function () {
+        voteit.adjust_greedy_element();
+    });
+
 });

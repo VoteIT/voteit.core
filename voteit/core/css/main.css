@@ -592,6 +592,12 @@ body .btn-group-portlet > .item-unread {
 footer {
   margin-top: 30px; }
 
+.greedy {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: inline-block; }
+
 /*
 .max-width-text {
     @include text-overflow();

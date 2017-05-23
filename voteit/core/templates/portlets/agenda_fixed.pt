@@ -90,9 +90,8 @@
     voteit.agenda_select_tag_url = "${request.resource_url(request.meeting, '_agenda_select_tag')}";
 
     //FIXME: options to finetune and make sure it isn't loaded when not needed
-    if ($(window).width() > 768) {
-      voteit.select_ai_tag("${selected_tag}", show_in_fullscreen);
-    }
+    var load_ongoing = (show_in_fullscreen && $(window).width() > 768 );
+    voteit.select_ai_tag("${selected_tag}", load_ongoing);
   });
 </script>
 
