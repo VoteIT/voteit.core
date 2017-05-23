@@ -11,6 +11,7 @@ voteit.load_target = function (target) {
     request.done(function(response) {
         request.target.html(response);
         //maybe scroll?
+        voteit.create_collapsible();
         var uid = window.location.hash.slice(1);
         var elem = $('[data-uid="' + uid + '"]');
         if (elem.length == 1) {
@@ -74,11 +75,51 @@ voteit.load_and_replace = function (event) {
 }
 
 
+voteit.collapsible_clicked = function(event) {
+    event.preventDefault();
+    var elemctrl = $(event.currentTarget);
+    var name = elemctrl.data('collapsible-ctrl');
+    var elem = $('[data-collapsible="' + name + '"]');
+    var textelem = elem.children('[data-collapsible-text]');
+    if (elem.hasClass('active')) {
+        textelem.css({'height': 'auto'});
+    } else {
+        textelem.css({'height': parseInt(textelem.data('collapsible-text'))});
+        textelem.goTo();
+    }
+    elem.toggleClass('active');
+}
+
+
+voteit.create_collapsible = function() {
+    $('[data-collapsible]').each(function(i, v) {
+        var elem = $(v);
+        var textelem = elem.children('[data-collapsible-text]');
+        if (!textelem.hasClass('collapsible-text')) {
+            var name = elem.data('collapsible');
+            var maxheight = parseInt(textelem.data('collapsible-text'));
+            if (textelem.height() > maxheight) {
+                textelem.css({'height': maxheight});
+                elem.addClass('collapsible active');
+                textelem.addClass('collapsible-text');
+                var ctrl = $('<a>', {"data-collapsible-ctrl": name,
+                                    class: "collapsible-ctrl btn btn-default btn-sm",
+                                    href: "#",
+                                    html: '<span class="glyphicon collapse-state text-primary"></span>'})
+                elem.append(ctrl);
+            }
+        }
+    });
+}
+
+
 $(document).ready(function () {
-  $("[data-load-target]").each(function() {
-    voteit.load_target(this);
-  });
-  $('body').on('click', '[data-reload-target]', voteit.reload_target);
-  $('body').on('click', '[data-clickable-target]', voteit.load_and_replace);
-  $('body').on('click', '[data-external-popover-loaded="false"]', voteit.external_popover_from_event);
+    $("[data-load-target]").each(function() {
+        voteit.load_target(this);
+    });
+    $('body').on('click', '[data-reload-target]', voteit.reload_target);
+    $('body').on('click', '[data-clickable-target]', voteit.load_and_replace);
+    $('body').on('click', '[data-external-popover-loaded="false"]', voteit.external_popover_from_event);
+    $('body').on('click', '[data-collapsible-ctrl]', voteit.collapsible_clicked);
+    voteit.create_collapsible();
 });

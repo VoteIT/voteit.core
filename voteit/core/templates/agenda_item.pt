@@ -27,9 +27,14 @@
     ${structure: view.render_template('voteit.core:templates/snippets/ai_previous_next.pt')}
 
     <div class="body"
+         data-collapsible="body"
          tal:define="body context.body|None"
-         tal:condition="body"
-         tal:content="structure body">Body text</div>
+         tal:condition="body">
+        <div data-collapsible-text="200">
+            ${structure: body}
+        </div>
+    </div>
+
     <div class="clearfix"><!-- --></div>
 
     <div class="portlets-ai row">

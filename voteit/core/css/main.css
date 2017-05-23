@@ -611,4 +611,30 @@ footer {
 .text-small {
   font-size: 90%; }
 
+.collapsible {
+  position: relative; }
+  .collapsible.active .collapsible-text {
+    overflow: hidden; }
+    .collapsible.active .collapsible-text:before {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 23px;
+      height: 35px;
+      background: linear-gradient(transparent, #fff); }
+  .collapsible.active .collapsible-ctrl .collapse-state:before {
+    content: "\e114"; }
+  .collapsible .collapsible-ctrl {
+    position: absolute;
+    bottom: 0px;
+    left: 0;
+    right: 0;
+    display: block;
+    text-align: center; }
+    .collapsible .collapsible-ctrl:hover {
+      text-decoration: none; }
+    .collapsible .collapsible-ctrl .collapse-state:before {
+      content: "\e113"; }
+
 /*# sourceMappingURL=main.css.map */

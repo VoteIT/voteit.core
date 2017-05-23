@@ -114,3 +114,46 @@ footer {
 .text-small {
     font-size: 90%;
 }
+
+
+.collapsible {
+    position: relative;
+
+    &.active {
+
+        .collapsible-text {
+            overflow: hidden;
+
+            &:before {
+                content: '';
+                position: absolute;
+                left: 0;
+                right: 0;
+                bottom: 23px;
+                height: 35px;
+                background: linear-gradient(transparent, $body-bg);
+            }
+        }
+
+        .collapsible-ctrl .collapse-state {
+            &:before { content: "\e114"; }
+        }
+    }
+
+    .collapsible-ctrl {
+        position: absolute;
+        bottom: 0px;
+        left: 0;
+        right: 0;
+        display: block;
+        text-align: center;
+
+        &:hover {
+            text-decoration: none;
+        }
+
+        .collapse-state {
+            &:before { content: "\e113"; }
+        }
+    }
+}
