@@ -613,6 +613,8 @@ footer {
 
 .collapsible {
   position: relative; }
+  .collapsible .collapsible-text {
+    padding-bottom: 25px; }
   .collapsible.active .collapsible-text {
     overflow: hidden; }
     .collapsible.active .collapsible-text:before {
@@ -620,8 +622,8 @@ footer {
       position: absolute;
       left: 0;
       right: 0;
-      bottom: 23px;
-      height: 35px;
+      bottom: 20px;
+      height: 40px;
       background: linear-gradient(transparent, #fff); }
   .collapsible.active .collapsible-ctrl .collapse-state:before {
     content: "\e114"; }

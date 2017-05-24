@@ -119,6 +119,10 @@ footer {
 .collapsible {
     position: relative;
 
+    .collapsible-text {
+        padding-bottom: 25px;
+    }
+
     &.active {
 
         .collapsible-text {
@@ -129,8 +133,8 @@ footer {
                 position: absolute;
                 left: 0;
                 right: 0;
-                bottom: 23px;
-                height: 35px;
+                bottom: 20px;
+                height: 40px;
                 background: linear-gradient(transparent, $body-bg);
             }
         }
