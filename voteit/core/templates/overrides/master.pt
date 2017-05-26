@@ -21,10 +21,6 @@
         class="view-${request.view_name or 'default'|'default'}">
 
     <div id="fixed-nav">
-      <!-- this will be set in small screen mode:
-        data-slide-menu="fixed-nav"
-         class="slide-in-nav"
-         -->
         <tal:portlets repeat="portlet portlets_left_fixed">
             <tal:portlet replace="structure portlet" />
         </tal:portlets>
