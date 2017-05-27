@@ -103,6 +103,7 @@ class PollVoteForm(DefaultEditForm):
         {success:
           function () {
             if ($("#ai-polls [data-load-target]").length > 0) voteit.load_target("#ai-polls [data-load-target]");
+            voteit.hide_nav();
             voteit.watcher.fetch_data();
           },
         error:
