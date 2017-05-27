@@ -39,13 +39,16 @@ def user_schema_adjustments(schema, event):
         widget = deform.widget.TextAreaWidget(rows=10, cols=60),
         missing=u"",
         validator=html_string_validator,))
-    schema.add(colander.SchemaNode(colander.String(),
+    schema.add(colander.SchemaNode(
+        colander.String(),
         name = 'profile_image_plugin',
         title = _(u"Profile image provider"),
         description = _(u"profile_image_plugin_description",
                         default=u""),
         widget = profile_image_plugin_choices_widget,
-        default = 'gravatar_profile_image',) )
+        default = 'gravatar_profile_image',
+        missing='gravatar_profile_image'),
+    )
 
 
 def includeme(config):
