@@ -68,7 +68,7 @@
         padding: floor($grid-gutter-width/2);
 
         &.activated {
-            @include translate(0%, 0%);
+            @include translate(0%, 0);
 
         }
     }
@@ -93,14 +93,14 @@
         top: $navbar-height;
         bottom: 0;
         overflow: scroll;
-        @include translate(-100%, 0%);
+        @include translate(-100%, 0);
 
         transition: none;
         background-color: $well-bg;
         border-right: 1px solid $well-border;
 
         &.activated {
-            @include translate(0%, 0%);
+            @include translate(0%, 0);
         }
     }
 
