@@ -7,7 +7,7 @@ python:
 install:
   - wget https://bootstrap.pypa.io/bootstrap-buildout.py
   - python bootstrap-buildout.py
-  - bin/buildout
+  - travis_retry bin/buildout
 
-script: bin/py setup.py test -q
-
+script:
+  - travis_retry bin/py setup.py test -q
