@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2017-05-23 18:12+0200\n"
-"PO-Revision-Date: 2017-05-23 18:12+0200\n"
+"POT-Creation-Date: 2017-05-30 19:07+0200\n"
+"PO-Revision-Date: 2017-05-30 19:08+0200\n"
 "Last-Translator: Robin Harms Oredsson <robin@betahaus.net>\n"
 "Language-Team: sv <LL@li.org>\n"
 "Language: sv\n"
@@ -39,7 +39,7 @@ msgstr "Standarddagordningar"
 msgid "Registered users"
 msgstr "Registrerade användare"
 
-#: voteit/core/bootstrap.py:36 voteit/core/security.py:107
+#: voteit/core/bootstrap.py:36 voteit/core/security.py:119
 #: voteit/core/views/templates/_participants.pt:56
 msgid "Administrator"
 msgstr "Administratör"
@@ -178,30 +178,30 @@ msgstr "Uppdateringen av rättigheter lyckades."
 msgid "permssions_updated_error"
 msgstr "Uppdateringen av rättigheter lyckades inte."
 
-#: voteit/core/security.py:28 voteit/core/security.py:108
+#: voteit/core/security.py:40 voteit/core/security.py:120
 msgid "Meeting creator"
 msgstr "Mötesskapare"
 
-#: voteit/core/security.py:32 voteit/core/security.py:109
+#: voteit/core/security.py:44 voteit/core/security.py:121
 msgid "Moderator"
 msgstr "Moderator"
 
-#: voteit/core/security.py:38 voteit/core/security.py:111
-#: voteit/core/security.py:115 voteit/core/views/templates/_participants.pt:40
+#: voteit/core/security.py:50 voteit/core/security.py:123
+#: voteit/core/security.py:127 voteit/core/views/templates/_participants.pt:40
 msgid "Discuss"
 msgstr "Diskutera"
 
-#: voteit/core/security.py:43 voteit/core/security.py:112
-#: voteit/core/security.py:116 voteit/core/views/templates/_participants.pt:44
+#: voteit/core/security.py:55 voteit/core/security.py:124
+#: voteit/core/security.py:128 voteit/core/views/templates/_participants.pt:44
 msgid "Propose"
 msgstr "Föreslå"
 
-#: voteit/core/security.py:48 voteit/core/security.py:113
-#: voteit/core/security.py:117 voteit/core/views/templates/_participants.pt:48
+#: voteit/core/security.py:60 voteit/core/security.py:125
+#: voteit/core/security.py:129 voteit/core/views/templates/_participants.pt:48
 msgid "Voter"
 msgstr "Rösträtt"
 
-#: voteit/core/security.py:110 voteit/core/security.py:114
+#: voteit/core/security.py:122 voteit/core/security.py:126
 #: voteit/core/views/templates/_participants.pt:36
 #: voteit/core/views/templates/agenda_template.pt:12
 msgid "View"
@@ -214,7 +214,7 @@ msgstr "HTML är inte tillåtet."
 #: voteit/core/validators.py:50
 #, python-format
 msgid "The following adresses is invalid: ${emails}"
-msgstr "Förljande adress(er) är ogiltiga: ${emails}"
+msgstr "Följande adress(er) är ogiltiga: ${emails}"
 
 #. Default: The following userids is invalid: ${userids}. Remember that userids
 #. are case sensitive.
@@ -328,7 +328,7 @@ msgstr ""
 #: voteit/core/models/poll.py:190
 msgid "poll_closed_proposal_wf_change_error"
 msgstr ""
-"Kunde inte justera tillstånd för förljande förslag: '${props}'. Du bör kolla "
+"Kunde inte justera tillstånd för följande förslag: '${props}'. Du bör kolla "
 "att det blev rätt manuellt."
 
 #: voteit/core/models/poll.py:241
@@ -1139,11 +1139,11 @@ msgstr ""
 "Vänligen notera att det du skriver här blir synligt för alla användare som "
 "är deltagare i samma möte som du."
 
-#: voteit/core/schemas/user.py:44
+#: voteit/core/schemas/user.py:45
 msgid "Profile image provider"
 msgstr "Profilbilden kommer ifrån"
 
-#: voteit/core/schemas/user.py:45
+#: voteit/core/schemas/user.py:46
 msgid "profile_image_plugin_description"
 msgstr "Läs mer i hjälpen om olika metoder och dess för- och nackdelar."
 
@@ -1684,7 +1684,7 @@ msgstr ""
 
 #. Default: Vote
 #: voteit/core/templates/portlets/polls_inline.pt:36
-#: voteit/core/views/poll.py:119
+#: voteit/core/views/poll.py:120
 msgid "add_vote_button"
 msgstr "Rösta"
 
@@ -1779,7 +1779,7 @@ msgstr "Inga privata eller kommande omröstningar"
 msgid "Ongoing polls"
 msgstr "Pågående omröstningar"
 
-#: voteit/core/templates/snippets/poll_menu.pt:61
+#: voteit/core/templates/snippets/poll_menu.pt:60
 msgid "(None)"
 msgstr "(Ingen)"
 
@@ -1929,11 +1929,11 @@ msgstr ""
 msgid "Email addresses of moderators with upcoming or ongoing meetings"
 msgstr "Epostadresser för moderatorer med pågående eller kommande möten"
 
-#: voteit/core/views/participants.py:113
+#: voteit/core/views/participants.py:116
 msgid "Bulk change roles"
 msgstr "Bulkändra roller"
 
-#: voteit/core/views/participants.py:135
+#: voteit/core/views/participants.py:138
 msgid "Bulk changes applied"
 msgstr "Bulkändring utförd"
 
@@ -1965,17 +1965,17 @@ msgstr "Omröstningen är fortfarande öppen"
 msgid "No settings for this poll"
 msgstr "Inga inställningar för denna omröstning"
 
-#: voteit/core/views/poll.py:149
+#: voteit/core/views/poll.py:150
 msgid "You're not allowed to vote"
 msgstr "Du har inte rätt att rösta"
 
-#: voteit/core/views/poll.py:159
+#: voteit/core/views/poll.py:160
 msgid "Your vote was changed."
 msgstr "Din röst ändrades."
 
 #. Default: Your vote has been added. If you wish to change it, you may do so
 #. as long as the poll is open.
-#: voteit/core/views/poll.py:166
+#: voteit/core/views/poll.py:167
 msgid "vote_success_msg"
 msgstr ""
 "Din röst har lagts till. Om du vill ändra den så kan du göra det så länge "
@@ -1983,31 +1983,31 @@ msgstr ""
 
 #. Default: The poll is created in private state, to show it the participants
 #. you have to change the state to upcoming.
-#: voteit/core/views/poll.py:199
+#: voteit/core/views/poll.py:200
 msgid "private_poll_info"
 msgstr ""
 "Denna omröstning är skapad i status privat, för att visa den för dina "
 "deltagare måste du ändra dess status till kommande."
 
-#: voteit/core/views/poll.py:219
+#: voteit/core/views/poll.py:220
 msgid "Update plugin settings"
 msgstr "Uppdatera plugin-inställningar"
 
-#: voteit/core/views/poll.py:222 voteit/core/views/poll.py:247
+#: voteit/core/views/poll.py:223 voteit/core/views/poll.py:248
 msgid "Successfully updated"
 msgstr "Uppdaterad"
 
-#: voteit/core/views/poll.py:224 voteit/core/views/poll.py:249
+#: voteit/core/views/poll.py:225 voteit/core/views/poll.py:250
 msgid "Nothing changed"
 msgstr "Inget ändrat"
 
-#: voteit/core/views/poll.py:234
+#: voteit/core/views/poll.py:235
 msgid "Pick participating proposals"
 msgstr "Välj förslag som deltar"
 
 #. Default: This poll uses a plugin that can't be found. Make sure a poll
 #. plugin with the name '${name}' is installed
-#: voteit/core/views/poll.py:258
+#: voteit/core/views/poll.py:259
 msgid "poll_plugin_not_found_error"
 msgstr ""
 "Denna omröstning använder en plugin som inte kan hittas. Kontrollera att en "
