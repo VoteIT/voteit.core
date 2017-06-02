@@ -20,7 +20,7 @@
                     main_cols 12 - int(bool(portlets_left))*3 - int(bool(portlets_right))*3;"
         class="view-${request.view_name or 'default'|'default'}">
 
-    <div id="fixed-nav">
+    <div id="fixed-nav" tal:condition="portlets_left_fixed">
         <tal:portlets repeat="portlet portlets_left_fixed">
             <tal:portlet replace="structure portlet" />
         </tal:portlets>

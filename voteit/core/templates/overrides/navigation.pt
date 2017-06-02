@@ -15,7 +15,7 @@
     -->
 
     <a class="navbar-brand"
-       tal:condition="request.meeting"
+       tal:condition="request.is_participant"
        href="#"
        onclick="javascript:voteit.toggle_agenda()">
       <span class="glyphicon glyphicon-list"></span>

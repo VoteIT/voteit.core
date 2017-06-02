@@ -48,7 +48,7 @@ class AgendaPortletFixed(AgendaPortlet):
     tpl = "voteit.core:templates/portlets/agenda_fixed.pt"
 
     def render(self, context, request, view, **kwargs):
-        if request.meeting:
+        if request.is_participant:
             states = ['ongoing', 'upcoming', 'closed']
             if request.is_moderator:
                 states.append('private')
