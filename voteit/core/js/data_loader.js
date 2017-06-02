@@ -16,6 +16,7 @@ voteit.load_target = function (target) {
         var elem = $('[data-uid="' + uid + '"]');
         if (elem.length == 1) {
             elem.goTo();
+            window.location.hash='';
         }
     });
     request.fail(arche.flash_error);
