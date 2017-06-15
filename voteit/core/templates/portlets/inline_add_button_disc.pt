@@ -6,7 +6,7 @@
     href="${request.resource_url(context, 'add', query = {'content_type': 'DiscussionPost', 'tag': request.GET.getall('tag')})}"
     class="btn btn-primary">
     <span data-actionmarker="glyphicon glyphicon-refresh rotate-me"></span>
-    <span tal:condition="context.proposal_block" class="glyphicon glyphicon-lock"></span>
+    <span tal:condition="context.discussion_block" class="glyphicon glyphicon-lock"></span>
     <span i18n:translate="">New entry</span>
   </a>
   <tal:cant_add condition="not can_add">
