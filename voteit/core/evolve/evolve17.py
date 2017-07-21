@@ -54,7 +54,6 @@ def evolve(root):
     if '__name__' not in root.catalog:
         raise KeyError("__name__ index must be in catalog before this migration."
                        "Run catalog update first.")
-    print "WARNING! You must reindex the catalog before running this migration!"
     print "Walking through users..."
     found = {}
     for user in root['users'].values():
