@@ -220,11 +220,11 @@ class MeetingSchema(colander.Schema):
     )
 
 
-class EditMeetingSchema(colander.Schema):
+class EditMeetingSchema(MeetingSchema):
     pass
 
 
-class AddMeetingSchema(colander.Schema):
+class AddMeetingSchema(MeetingSchema):
     pass
 
 
