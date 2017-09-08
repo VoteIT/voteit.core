@@ -178,13 +178,6 @@ class IMeeting(IBaseContent):
             If the ticket was added, it will be returned.
         """
 
-    def copy_users_and_perms(name, event = True):
-        """ Copy users and their perms from a previous meeting.
-            This is a low level function that shouldn't be exposed directly.
-            It's a good idea to only let users copy permissions from meetings they're already
-            moderators in.
-        """
-
 
 class IDiscussionPost(IBaseContent):
     """ A discussion post.

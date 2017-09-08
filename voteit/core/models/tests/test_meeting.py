@@ -86,15 +86,6 @@ class MeetingTests(unittest.TestCase):
         obj['ai'].set_workflow_state(request, 'ongoing')
         self.assertRaises(HTTPForbidden, obj.set_workflow_state, request, 'closed')
 
-    def test_copy_users_and_perms(self):
-        root = bootstrap_and_fixture(self.config)
-        root['m1'] = m1 = self._cut()
-        m1.add_groups('first', ['role:A', 'role:B'])
-        m1.add_groups('second', ['role:A', 'role:C'])
-        root['m2'] = m2 = self._cut()
-        m2.copy_users_and_perms('m1')
-        self.assertEqual(frozenset(m2.get_groups('second')), frozenset(['role:A', 'role:C']))
-
     def test_get_ticket_names(self):
         self.config.include('arche')
         self.config.include('voteit.core.models.invite_ticket')

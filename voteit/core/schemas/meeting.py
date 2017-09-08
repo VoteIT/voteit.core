@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 from arche.validators import existing_userids
 from arche.schemas import userid_hinder_widget
+from repoze.catalog.query import Eq, NotEq
 from repoze.workflow import get_workflow
 import colander
 import deform
@@ -28,15 +29,25 @@ def deferred_access_policy_widget(node, kw):
                                            readonly_template="readonly/object_radio_choice")
 
 
+def _get_meetings_that_could_be_copied(request, context):
+    """ Returns any meetings that could be copied (in one or another way) in this context.
+        - If meeting is context, make sure that isn't included
+        - Make sure the logged in user has the moderate meeting perm.
+    """
+    docids = request.root.catalog.query(
+        Eq('type_name', 'Meeting') & NotEq('uid', context.uid),
+        sort_index='sortable_title',
+    )[1]
+    return request.resolve_docids(docids, perm=security.MODERATE_MEETING)
+
+
 @colander.deferred
-def deferred_copy_perms_widget(node, kw):
-    context = kw['context']
+def deferred_copy_from_meeting_widget(node, kw):
     request = kw['request']
-    view = kw['view']
-    choices = [('', _("<Don't copy>"))]
-    for meeting in view.root.get_content(content_type='Meeting'):
-        if request.has_permission(security.MODERATE_MEETING, meeting):
-            choices.append((meeting.__name__, "%s (%s)" % (meeting.title, meeting.__name__)))
+    context = kw['context']
+    choices = [('', _("<Select>"))]
+    for meeting in _get_meetings_that_could_be_copied(request, context):
+        choices.append((meeting.__name__, "%s (%s)" % (meeting.title, meeting.__name__)))
     return deform.widget.SelectWidget(values=choices)
 
 
@@ -56,7 +67,6 @@ def _deferred_current_fullname(node, kw):
 
 @colander.deferred
 def hide_proposal_states_widget(node, kw):
-    request = kw['request']
     wf = get_workflow(IProposal, 'Proposal')
     state_values = []
     ts = _
@@ -75,7 +85,7 @@ def proposal_naming_widget(node, kw):
     return deform.widget.SelectWidget(values=values)
 
 
-class EditMeetingSchema(colander.Schema):
+class MeetingSchema(colander.Schema):
     title = colander.SchemaNode(
         colander.String(),
         title=_("Title"),
@@ -210,15 +220,44 @@ class EditMeetingSchema(colander.Schema):
     )
 
 
-class AddMeetingSchema(EditMeetingSchema):
-    copy_users_and_perms = colander.SchemaNode(
+class EditMeetingSchema(colander.Schema):
+    pass
+
+
+class AddMeetingSchema(colander.Schema):
+    pass
+
+
+class CopyUserPermsSchema(colander.Schema):
+    meeting_name = colander.SchemaNode(
         colander.String(),
         title=_("Copy users and permissions from a previous meeting."),
-        description=_("You can only pick meeting where you've been a moderator."),
-        widget=deferred_copy_perms_widget,
-        default="",
-        missing="",
-        tab='advanced'
+        description=_("copy_users_and_perms_description",
+                      default="You can only pick meeting where you've been a moderator. "
+                              "Note that permissions are addative, so nothing will be removed."),
+
+        widget=deferred_copy_from_meeting_widget,
+    )
+
+
+_TYPES_CHOICES = (
+    ('DiscussionPost', _("Discussion Post")),
+    ('Proposal', _("Proposal")),
+)
+
+
+class CopyAgendaSchema(colander.Schema):
+    meeting_name = colander.SchemaNode(
+        colander.String(),
+        title=_("Copy Agenda from a previous meeting."),
+        description=_("You can only pick meeting where you've been a moderator. "),
+        widget=deferred_copy_from_meeting_widget,
+    )
+    copy_types = colander.SchemaNode(
+        colander.Set(),
+        title=_("Copy these types too"),
+        missing=(),
+        widget=deform.widget.CheckboxChoiceWidget(values=_TYPES_CHOICES)
     )
 
 
@@ -326,9 +365,11 @@ class AgendaLabelsSchema(colander.Schema):
 
 
 def includeme(config):
-    config.add_content_schema('Meeting', AddMeetingSchema, 'add')
-    config.add_content_schema('Meeting', EditMeetingSchema, 'edit')
-    config.add_content_schema('Meeting', AccessPolicyMeetingSchema, 'access_policy')
-    config.add_content_schema('Meeting', AddExistingUserSchema, 'add_existing_user')
-    config.add_content_schema('Meeting', BulkChangeRolesSchema, 'bulk_change_roles')
-    config.add_content_schema('Meeting', AgendaLabelsSchema, 'agenda_labels')
+    config.add_schema('Meeting', AddMeetingSchema, 'add')
+    config.add_schema('Meeting', EditMeetingSchema, 'edit')
+    config.add_schema('Meeting', CopyUserPermsSchema, 'copy_users_perms')
+    config.add_schema('Meeting', CopyAgendaSchema, 'copy_agenda')
+    config.add_schema('Meeting', AccessPolicyMeetingSchema, 'access_policy')
+    config.add_schema('Meeting', AddExistingUserSchema, 'add_existing_user')
+    config.add_schema('Meeting', BulkChangeRolesSchema, 'bulk_change_roles')
+    config.add_schema('Meeting', AgendaLabelsSchema, 'agenda_labels')

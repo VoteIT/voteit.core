@@ -1,4 +1,9 @@
+from copy import deepcopy
+
+import colander
+from arche.events import ObjectUpdatedEvent
 from arche.events import SchemaCreatedEvent
+from arche.utils import generate_slug
 from arche.views.base import BaseView
 from arche.views.base import DefaultEditForm
 from betahaus.viewcomponent import render_view_group
@@ -6,10 +11,8 @@ from pyramid.decorator import reify
 from pyramid.httpexceptions import HTTPForbidden
 from pyramid.httpexceptions import HTTPFound
 from pyramid.security import NO_PERMISSION_REQUIRED
-from pyramid.traversal import resource_path
 from pyramid.view import view_config
 from pyramid.view import view_defaults
-from repoze.catalog.query import Eq
 from zope.component.event import objectEventNotify
 from zope.interface.interfaces import ComponentLookupError
 import deform
@@ -201,3 +204,69 @@ class ConfigureAccessPolicyForm(ArcheFormCompat, DefaultEditForm):
 class MeetingTagsForm(DefaultEditForm): #ArcheFormCompat?
     schema_name='agenda_labels'
     title = _("Agenda sorting labels")
+
+
+@view_config(context=IMeeting,
+             name="copy_users_perms",
+             renderer="arche:templates/form.pt",
+             permission=security.MODERATE_MEETING)
+class CopyUsersPermsForm(DefaultEditForm):
+    schema_name = 'copy_users_perms'
+    title = _("Copy users permissions")
+
+    def save_success(self, appstruct):
+        from_meeting = self.request.root[appstruct['meeting_name']]
+        assert IMeeting.providedBy(from_meeting)
+        for (userid, roles) in from_meeting.local_roles.items():
+            self.context.local_roles.add(userid, roles, event=False)
+        event_obj = ObjectUpdatedEvent(self.context, changed=['local_roles'])
+        objectEventNotify(event_obj)
+        return HTTPFound(location=self.request.resource_url(self.context))
+
+
+@view_config(context=IMeeting,
+             name="copy_agenda",
+             renderer="arche:templates/form.pt",
+             permission=security.MODERATE_MEETING)
+class CopyAgendaForm(DefaultEditForm):
+    schema_name = 'copy_agenda'
+    title = _("Copy agenda")
+
+    def save_success(self, appstruct):
+        from_meeting = self.request.root[appstruct['meeting_name']]
+        assert IMeeting.providedBy(from_meeting)
+        counter = 0
+        for ai in from_meeting.values():
+            if not IAgendaItem.providedBy(ai):
+                continue
+            new_ai = self.copy_context(ai, self.context)
+            counter += 1
+            for obj in ai.values():
+                if getattr(obj, 'type_name', '') not in appstruct['copy_types']:
+                    continue
+                self.copy_context(obj, new_ai)
+                counter += 1
+        self.flash_messages.add(_("Copied ${num} objects", mapping={'num': counter}))
+        return HTTPFound(location=self.request.resource_url(self.context))
+
+    def copy_context(self, context, parent):
+        appstruct = self.get_context_appstruct(context)
+        new_obj = self.request.content_factories[context.type_name](creator=context.creator, **appstruct)
+        #Also copy mentions to avoid duplicate notifications
+        #FIXME: Smarter way to handle this? There may be other exceptions to the rule
+        if hasattr(context, '__mentioned__'):
+            new_obj.__mentioned__ = deepcopy(context.__mentioned__)
+        name = generate_slug(parent, new_obj.title)
+        parent[name] = new_obj
+        return new_obj
+
+    def get_context_appstruct(self, context):
+        schema = self.request.get_schema(context, context.type_name, 'edit', bind=None, event=True)
+        appstruct = {}
+        for field in schema.children:
+            if hasattr(context, field.name):
+                val = getattr(context, field.name)
+                if val is None:
+                    val = colander.null
+                appstruct[field.name] = val
+        return appstruct

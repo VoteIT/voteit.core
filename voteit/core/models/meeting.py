@@ -186,11 +186,6 @@ class Meeting(BaseContent, SecurityAware, WorkflowAware):
         self.invite_tickets[email] = obj
         return obj
 
-    def copy_users_and_perms(self, name, event = True):
-        root = find_root(self)
-        origin = root[name]
-        self.local_roles.set_from_appstruct(origin.local_roles)
-
 
 def closing_meeting_callback(context, info):
     """ Callback for workflow action. When a meeting is closed,
