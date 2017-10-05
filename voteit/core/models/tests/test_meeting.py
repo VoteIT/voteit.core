@@ -87,7 +87,7 @@ class MeetingTests(unittest.TestCase):
         self.assertRaises(HTTPForbidden, obj.set_workflow_state, request, 'closed')
 
     def test_get_ticket_names(self):
-        self.config.include('arche')
+        self.config.include('arche.testing')
         self.config.include('voteit.core.models.invite_ticket')
         obj = self._cut()
         obj.add_invite_ticket('john@doe.com', [security.ROLE_DISCUSS])
