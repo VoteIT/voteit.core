@@ -1,8 +1,12 @@
 language: python
 sudo: false
+bundler_args: --retry 8
 
 python:
   - 2.7
+
+before_install:
+  - pip install --upgrade pip
 
 install:
   - wget https://bootstrap.pypa.io/bootstrap-buildout.py
