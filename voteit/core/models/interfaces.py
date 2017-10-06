@@ -243,7 +243,7 @@ class IPoll(IBaseContent):
         """
 
     def get_proposal_objects():
-        """ Return all proposal objects resigered in this poll.
+        """ Return all proposal objects registered in this poll.
         """
 
     def close_poll():
