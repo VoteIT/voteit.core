@@ -323,10 +323,10 @@ $brand-danger:          #d9534f !default;
       transform: translate(0%, 0%); }
   .slide-in-nav.from-top {
     top: 0;
-    -webkit-transform: translate(0, -100%);
-    -ms-transform: translate(0, -100%);
-    -o-transform: translate(0, -100%);
-    transform: translate(0, -100%);
+    -webkit-transform: translate(0%, -100%);
+    -ms-transform: translate(0%, -100%);
+    -o-transform: translate(0%, -100%);
+    transform: translate(0%, -100%);
     right: 0px;
     left: 0px;
     bottom: 60px;
@@ -338,23 +338,23 @@ $brand-danger:          #d9534f !default;
       -o-transform: translate(0%, 0%);
       transform: translate(0%, 0%); }
   .slide-in-nav.from-right {
-    -webkit-transform: translate(100%, 0);
-    -ms-transform: translate(100%, 0);
-    -o-transform: translate(100%, 0);
-    transform: translate(100%, 0);
+    -webkit-transform: translate(100%, 0%);
+    -ms-transform: translate(100%, 0%);
+    -o-transform: translate(100%, 0%);
+    transform: translate(100%, 0%);
     right: 0px; }
     .slide-in-nav.from-right.activated {
-      -webkit-transform: translate(0%, 0);
-      -ms-transform: translate(0%, 0);
-      -o-transform: translate(0%, 0);
-      transform: translate(0%, 0); }
+      -webkit-transform: translate(0%, 0%);
+      -ms-transform: translate(0%, 0%);
+      -o-transform: translate(0%, 0%);
+      transform: translate(0%, 0%); }
 
 @media (max-width: 767px) {
   #fixed-nav {
-    -webkit-transform: translate(-100%, 0);
-    -ms-transform: translate(-100%, 0);
-    -o-transform: translate(-100%, 0);
-    transform: translate(-100%, 0);
+    -webkit-transform: translate(-100%, 0%);
+    -ms-transform: translate(-100%, 0%);
+    -o-transform: translate(-100%, 0%);
+    transform: translate(-100%, 0%);
     right: 60px;
     left: 0px;
     padding: 15px; }
