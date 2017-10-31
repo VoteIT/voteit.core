@@ -9,23 +9,6 @@
 
 <tal:main metal:fill-slot="main-content">
 
-    <tal:actionbar replace="structure view.render_actionbar()" />
-
-    <div class="page-header">
-      <h1>
-
-        <tal:cog condition="request.is_moderator">
-          <!-- FIXME: Move to actionbar -->
-          <tal:menu replace="structure view.render_template('voteit.core:templates/snippets/cogwheel.pt',
-                             url=request.resource_url(context, '__cogwheel_menu__'))"/>
-        </tal:cog>
-        ${context.title}
-
-      </h1>
-    </div>
-
-    ${structure: view.render_template('voteit.core:templates/snippets/ai_previous_next.pt')}
-
     <div class="body"
          data-collapsible="body"
          tal:define="body context.body|None"

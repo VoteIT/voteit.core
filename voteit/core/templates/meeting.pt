@@ -9,8 +9,6 @@
 
 <tal:main metal:fill-slot="main-content">
 
-  <tal:actionbar replace="structure view.render_actionbar()" />
-
   <h1>${context.title}</h1>
   <p class="description lead"
        tal:define="description context.description|None"
