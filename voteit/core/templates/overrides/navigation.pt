@@ -3,114 +3,142 @@
       xmlns:tal="http://xml.zope.org/namespaces/tal"
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
       i18n:domain="voteit.core">
-<nav class="navbar navbar-fixed-top navbar-voteit" role="navigation">
-  <div class="container-fluid" data-check-greedy>
+<nav id="fixed-top-nav" class="navbar-fixed-top">
+    <div class="container-fluid">
 
-    <!-- Nav for meetings on site root?
-    <a class="navbar-brand"
-       tal:condition="request.meeting"
-       href="javascript:voteit.toggle_nav('#fixed-nav')">
-      <span class="glyphicon glyphicon-list"></span>
-    </a>
-    -->
+      <a class="voteit-logo-nav pull-left" href="${request.application_url}"></a>
 
-    <a class="navbar-brand"
-       tal:condition="request.is_participant"
-       href="#"
-       onclick="javascript:voteit.toggle_agenda()">
-      <span class="glyphicon glyphicon-list"></span>
-    </a>
+      <tal:def tal:condition="None" define="navobjs request.meeting is None and tuple(view.get_local_nav_objects(view.root)) or ()">
+        XXXXXXX
+        <ul tal:condition="navobjs" class="nav navbar-nav">
+          <li tal:repeat="obj navobjs">
+            <a href="${request.resource_url(obj)}">${obj.get_nav_title()|obj.title}</a>
+          </li>
+        </ul>
+      </tal:def>
 
-    <a class="navbar-brand hidden-xs" href="${request.application_url}">
-        <img height="31" width="85" class="voteitlogo"
-            src="${request.static_url('voteit.core:static/images/logo.png')}" />
-    </a>
+      <ul class="nav voteit-nav pull-right"
+          tal:define="umcontxt request.meeting and request.meeting or request.root">
+        <tal:unauthenticated condition="not request.authenticated_userid">
+          ${structure: view.render_view_group('nav_right')}
+        </tal:unauthenticated>
 
-    <a tal:condition="request.is_participant"
-       class="navbar-brand greedy"
-       data-actionmarker="disabled"
-       data-initiator="#meeting-menu"
-       tal:define="meeting_url request.resource_url(request.meeting, '_meeting_menu')"
-       href="#"
-       onclick="javascript:voteit.load_inline_menu('#meeting-menu', '${meeting_url}')">
-      <span data-actionmarker="glyphicon glyphicon-refresh rotate-me"></span>
-        ${request.meeting.nav_title and request.meeting.nav_title or request.meeting.title}
-      <span class="caret"></span>
-    </a>
+        <li>
+          <a data-initiator="#help-menu"
+             data-actionmarker="disabled"
+             href="#"
+             tal:define="help_menu_url request.resource_url(umcontxt, '_help_menu');"
+             onclick="javascript:voteit.load_inline_menu('#help-menu', '${help_menu_url}')">
+            <span data-actionmarker="rotate-me glyphicon-refresh"
+                  class="glyphicon glyphicon-question-sign"></span>
+            <span class="caret"></span>
+          </a>
+        </li>
 
-    <span tal:condition="request.meeting and not request.is_participant"
-          class="navbar-brand">
-      ${request.meeting.nav_title and request.meeting.nav_title or request.meeting.title|''}
-    </span>
+        <li tal:condition="request.authenticated_userid">
+          <a tal:define="usr_menu_url request.resource_url(umcontxt, '_user_menu')"
+             data-initiator="#user-menu"
+             data-actionmarker="disabled"
+             href="#"
+             onclick="javascript:voteit.load_inline_menu('#user-menu', '${usr_menu_url}')">
+            <span data-actionmarker="rotate-me glyphicon-refresh" class="glyphicon glyphicon-user"></span>
+            <span class="caret"></span>
+          </a>
+        </li>
 
-    <tal:def define="navobjs request.meeting is None and tuple(view.get_local_nav_objects(view.root)) or ()">
-    <ul tal:condition="navobjs" class="nav navbar-nav">
-      <li tal:repeat="obj navobjs">
-        <a href="${request.resource_url(obj)}">${obj.get_nav_title()|obj.title}</a>
-      </li>
-    </ul>
-    </tal:def>
+        <li tal:condition="request.is_moderator">
+          <a data-initiator="#site-menu"
+             data-actionmarker="disabled"
+             tal:define="site_url request.resource_url(request.root, '_site_menu');"
+              href="#"
+              onclick="javascript:voteit.load_inline_menu('#site-menu', '${site_url}')">
+            <span data-actionmarker="rotate-me glyphicon-refresh" class="glyphicon glyphicon-cog"></span>
+            <span class="caret"></span>
+          </a>
+        </li>
+      </ul>
+    </div><!-- /.container-->
 
-    <ul class="nav navbar-nav navbar-right"
-        tal:define="umcontxt request.meeting and request.meeting or request.root">
-      <tal:unauthenticated condition="not request.authenticated_userid">
-        ${structure: view.render_view_group('nav_right')}
-      </tal:unauthenticated>
+  <tal:meeting_nav tal:condition="request.is_participant">
 
-      <li tal:condition="request.meeting|False">
-        <a class="navbar-brand pull-right"
-           data-initiator="#poll-menu"
-           data-actionmarker="disabled"
-           href="#"
-           tal:define="poll_menu_url request.resource_url(request.meeting, '_poll_menu');"
-           onclick="javascript:voteit.load_inline_menu('#poll-menu', '${poll_menu_url}')">
-          <span data-actionmarker="rotate-me glyphicon-refresh" class="glyphicon glyphicon-star"></span>
-          <span class="hidden-xs hidden-sm" i18n:translate="">Polls</span>
-          <span class="label label-success" data-important-polls></span>
-          <span class="caret"></span>
-        </a>
-      </li>
+    <div>
+      <div class="pull-left">
+        <ul class="nav voteit-nav agenda-responsive-width" data-check-greedy>
+          <li>
+            <a href="#"
+               onclick="javascript:voteit.toggle_agenda()">
+              &nbsp;
+              <span class="glyphicon glyphicon-list"></span>
+              &nbsp;
+            </a>
+          </li>
+          <li class="greedy" style="width: 200px;">
+            <a class="text-overflow voteit-nav-header" href="${request.resource_url(request.meeting)}">
+                ${request.meeting.nav_title and request.meeting.nav_title or request.meeting.title}
+            </a>
+          </li>
+        </ul>
+      </div>
+      <div class="pull-left">
+        <ul class="nav voteit-nav">
 
-      <li>
-        <a class="navbar-brand pull-right"
-           data-initiator="#help-menu"
-           data-actionmarker="disabled"
-           href="#"
-           tal:define="help_menu_url request.resource_url(umcontxt, '_help_menu');"
-           onclick="javascript:voteit.load_inline_menu('#help-menu', '${help_menu_url}')">
-          <span data-actionmarker="rotate-me glyphicon-refresh"
-                class="glyphicon glyphicon-question-sign"></span>
-          <span class="caret"></span>
-        </a>
-      </li>
+          <li>
+            <a data-initiator="#poll-menu"
+               data-actionmarker="disabled"
+               href="#"
+               tal:define="poll_menu_url request.resource_url(request.meeting, '_poll_menu');"
+               onclick="javascript:voteit.load_inline_menu('#poll-menu', '${poll_menu_url}')">
+              <span data-actionmarker="rotate-me glyphicon-refresh" class="glyphicon glyphicon-star"></span>
+              <span class="hidden-xs hidden-sm" i18n:translate="">Polls</span>
+              <span class="label label-success" data-important-polls></span>
+              <span class="caret"></span>
+            </a>
+          </li>
 
-      <li tal:condition="request.authenticated_userid">
+          <li>
+            <a href="${request.resource_url(request.meeting, 'participants')}">
+              <span class="glyphicon glyphicon-user"></span>
+              <span class="hidden-xs hidden-sm" i18n:translate="">Participants</span>
+            </a>
+          </li>
 
-        <a class="navbar-brand pull-right"
-           tal:define="usr_menu_url request.resource_url(umcontxt, '_user_menu')"
-           data-initiator="#user-menu"
-           data-actionmarker="disabled"
-           href="#"
-           onclick="javascript:voteit.load_inline_menu('#user-menu', '${usr_menu_url}')">
-          <span data-actionmarker="rotate-me glyphicon-refresh" class="glyphicon glyphicon-user"></span>
-          <span class="caret"></span>
-        </a>
-      </li>
+          <li>
+            <a href="${request.resource_url(request.meeting, 'minutes')}">
+              <span class="glyphicon glyphicon-file"></span>
+              <span class="hidden-xs hidden-sm" i18n:translate="">Minutes</span>
+            </a>
+          </li>
 
-      <li tal:condition="request.is_moderator">
-        <a class="navbar-brand pull-right"
-           data-initiator="#site-menu"
-           data-actionmarker="disabled"
-           tal:define="m_context request.meeting and request.meeting or request.root;
-                        site_url request.resource_url(m_context, '_site_menu');"
-            href="#"
-            onclick="javascript:voteit.load_inline_menu('#site-menu', '${site_url}')">
-          <span data-actionmarker="rotate-me glyphicon-refresh" class="glyphicon glyphicon-cog"></span>
-          <span class="caret"></span>
-        </a>
-      </li>
-    </ul>
-  </div><!-- /.container-->
+          <li>
+            <a data-initiator="#control-panel"
+               data-actionmarker="disabled"
+               href="#"
+               tal:define="url request.resource_url(request.meeting, '_control_panel');"
+               onclick="javascript:voteit.load_inline_menu('#control-panel', '${url}')">
+              <span data-actionmarker="rotate-me glyphicon-refresh" class="glyphicon glyphicon-cog"></span>
+              <span class="hidden-xs hidden-sm" i18n:translate="">Control panel</span>
+              <span class="caret"></span>
+            </a>
+          </li>
+
+          <!-- XXX -->
+          <li tal:condition="False |request.is_moderator">
+            <a data-initiator="#site-menu"
+               data-actionmarker="disabled"
+               tal:define="m_context request.meeting and request.meeting or request.root;
+                            site_url request.resource_url(m_context, '_site_menu');"
+                href="#"
+                onclick="javascript:voteit.load_inline_menu('#site-menu', '${site_url}')">
+              <span data-actionmarker="rotate-me">
+                    &#8942;
+              </span>
+            </a>
+          </li>
+
+        </ul>
+      </div>
+    </div><!-- /.container-->
+  </tal:meeting_nav>
 
   <div class="container-fluid msg-bar" data-flash-slot="fixed-msg-bar">
   </div>

@@ -17,10 +17,12 @@
                     portlets_top view.render_portlet_slot('top');
                     portlets_bottom view.render_portlet_slot('bottom');
                     portlets_left_fixed view.render_portlet_slot('left_fixed');
-                    main_cols 12 - int(bool(portlets_left))*3 - int(bool(portlets_right))*3;"
-        class="view-${request.view_name or 'default'|'default'}">
+                    main_cols 12 - int(bool(portlets_left))*3 - int(bool(portlets_right))*3;
+                    bpadding sum([2, bool(request.is_moderator), bool(request.meeting)])*50;"
+        class="view-${request.view_name or 'default'|'default'}"
+        style="padding-top: ${bpadding}px;">
 
-    <div id="fixed-nav" tal:condition="portlets_left_fixed">
+    <div id="fixed-nav" class="agenda-responsive-width" tal:condition="portlets_left_fixed">
         <tal:portlets repeat="portlet portlets_left_fixed">
             <tal:portlet replace="structure portlet" />
         </tal:portlets>
@@ -29,6 +31,10 @@
     <div class="fixed-flash-slot" data-flash-slot="main"></div>
 
     <nav metal:define-slot="navigation" tal:replace="structure view.render_template('arche:templates/navigation.pt')" />
+
+    <tal:agenda_actionbar metal:define-slot="agenda_actionbar"
+                          tal:condition="request.meeting"
+                          tal:replace="structure view.render_template('voteit.core:templates/menus/agenda_actions.pt')"></tal:agenda_actionbar>
 
     <div class="container">
 
@@ -60,7 +66,9 @@
       </div>
 
       <div id="content">
-        <tal:actionbar metal:define-slot="actionbar" replace="structure view.render_actionbar()" />
+        <tal:actionbar tal:condition="not request.meeting"
+                       metal:define-slot="actionbar"
+                       replace="structure view.render_actionbar()" />
         <metal:content define-slot="content"></metal:content>
       </div>
 
@@ -70,8 +78,8 @@
     <div data-slide-menu="help-menu" id="help-menu" class="slide-in-nav from-right"></div>
     <div data-slide-menu="user-menu" id="user-menu" class="slide-in-nav profile-menu"></div>
     <div data-slide-menu="site-menu" id="site-menu" class="slide-in-nav from-right"></div>
-    <div data-slide-menu="meeting-menu" id="meeting-menu" class="slide-in-nav from-top"></div>
     <div data-slide-menu="poll-menu" id="poll-menu" class="slide-in-nav from-top"></div>
+    <div data-slide-menu="control-panel" id="control-panel" class="slide-in-nav from-top"></div>
 
     <a id="fixed-nav-backdrop"
        style="display: none;"

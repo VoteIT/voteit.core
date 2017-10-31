@@ -1,0 +1,37 @@
+<tal:main xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      tal:define="previous_ai view.previous_ai()|None;
+                  next_ai view.next_ai()|None;
+                  view_name view_name|'';"
+      i18n:domain="voteit.core">
+<div class="row">
+    <div class="col-xs-1">
+        <a tal:condition="previous_ai"
+          class="voteit-nav-text pull-left"
+          href="${request.resource_url(previous_ai, view_name)}"
+          data-load-agenda-item="#content"
+          data-ai-name="${previous_ai.__name__}"
+          title="${previous_ai.title}">
+          <span class="glyphicon glyphicon-chevron-left"></span>
+            &nbsp;
+        </a>
+    </div>
+    <div class="col-xs-10 text-center voteit-nav-header">
+        <div class="text-overflow"
+            title="${context.title}">${context.title}</div>
+    </div>
+    <div class="col-xs-1">
+        <a tal:condition="next_ai"
+          class="voteit-nav-text pull-right"
+          href="${request.resource_url(next_ai, view_name)}"
+          data-load-agenda-item="#content"
+          data-ai-name="${next_ai.__name__}"
+          title="${next_ai.title}">
+            &nbsp;
+          <span class="glyphicon glyphicon-chevron-right"></span>
+        </a>
+    </div>
+</div>
+</tal:main>
