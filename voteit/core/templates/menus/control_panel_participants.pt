@@ -1,0 +1,25 @@
+<tal:main xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="voteit.core">
+<div class="column-item">
+  <h3>${title}</h3>
+
+  <ul class="list-unstyled">
+    <li>
+      <a href="${request.resource_url(request.meeting, 'participants')}"
+        i18n:translate="">Participant list</a>
+    </li>
+    <li tal:condition="not meeting_closed">
+      <a href="${request.resource_url(request.meeting, 'add_tickets')}"
+        i18n:translate="">Invite participants</a>
+    </li>
+    <li>
+      <a href="${request.resource_url(request.meeting, 'manage_tickets')}"
+        i18n:translate="">Manage invites</a>
+    </li>
+    ${structure: panel_group}
+  </ul>
+</div>
+</tal:main>

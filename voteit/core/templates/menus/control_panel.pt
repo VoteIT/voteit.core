@@ -1,0 +1,33 @@
+<tal:main xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="voteit.core">
+
+<div class="container">
+
+  <div class="columns">
+    <tal:iter repeat="panel control_panels_active">
+      <tal:panel replace="structure panel"></tal:panel>
+    </tal:iter>
+  </div>
+
+  <tal:inactive condition="control_panels_inactive">
+    <hr/>
+    <h4 class="text-center">
+      <a href="#hidden-control-panels" class="collapsed" data-toggle="collapse">
+        <span i18n:translate="">Inactive options for this meeting</span> (${len(control_panels_inactive)})
+        <span class="glyphicon collapse-state"></span>
+      </a>
+    </h4>
+    <div id="hidden-control-panels" class="collapse">
+      <div class="columns">
+        <tal:iter repeat="panel control_panels_inactive">
+          <tal:panel replace="structure panel"></tal:panel>
+        </tal:iter>
+      </div>
+    </div>
+  </tal:inactive>
+
+</div>
+</tal:main>
