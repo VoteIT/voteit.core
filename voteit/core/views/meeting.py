@@ -98,8 +98,8 @@ class MeetingView(BaseView):
              renderer = "arche:templates/form.pt",
              permission = security.MODERATE_MEETING)
 class AccessPolicyForm(ArcheFormCompat, DefaultEditForm):
-
     schema_name = 'access_policy'
+    title = _("Select access policy")
 
     def save_success(self, appstruct):
         response = super(AccessPolicyForm, self).save_success(appstruct)
@@ -176,6 +176,7 @@ class RequestAccessForm(ArcheFormCompat, DefaultEditForm):
              renderer = "arche:templates/form.pt",
              permission = security.MODERATE_MEETING)
 class ConfigureAccessPolicyForm(ArcheFormCompat, DefaultEditForm):
+    title = _("Configure access policy")
 
     @reify
     def access_policy(self):
