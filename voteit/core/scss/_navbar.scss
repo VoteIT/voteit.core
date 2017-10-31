@@ -5,12 +5,12 @@
 .slide-in-nav {
     position: fixed;
     border-radius: 0;
-    top: $navbar-height;
+    top: $voteit-fixed-top-nav;
     bottom: 0;
     background-color: $body-bg;
     @include transition-transform(all .5s cubic-bezier(.32, .59, .3, .98));
     overflow: scroll;
-    z-index: 1000;
+    z-index: $zindex-navbar-fixed + 50;
 
     &.from-left {
         @include translate(-100%, 0%);
@@ -36,21 +36,20 @@
     }
 
     &.from-top {
-        top: 0;
+        top: $voteit-fixed-top-nav;
         @include translate(0%, -100%);
         right: 0px;
         left: 0px;
         bottom: 60px;
         z-index: 1000;
         &.activated {
-            top: $navbar-height;
             @include translate(0%, 0%);
+            z-index: $zindex-navbar-fixed + 50;
         }
     }
 
     &.from-right {
         @include translate(100%, 0%);
-
         right: 0px;
         &.activated {
             @include translate(0%, 0%);
@@ -62,14 +61,11 @@
 @media (max-width: $grid-float-breakpoint-max) {
     #fixed-nav {
         @include translate(-100%, 0%);
-
         right: 60px;
         left: 0px;
         padding: floor($grid-gutter-width/2);
-
         &.activated {
             @include translate(0%, 0);
-
         }
     }
 }
@@ -82,15 +78,28 @@
 }
 
 
+#context-actions {
+    position: fixed;
+    top: $voteit-fixed-top-nav;
+    left: 0;
+    right: 0;
+    background-color: #ccc;
+    z-index: $zindex-navbar-fixed;
+    line-height: $voteit-nav-line-height;
+}
+
+
 /* Generic navbar active */
 @media (min-width: $grid-float-breakpoint) {
 
-    #fixed-nav {
+    .agenda-responsive-width {
         width: $voteit-fixed-left-nav-sm;
+    }
+
+    #fixed-nav {
         padding: floor($grid-gutter-width/2);
         position: fixed;
-        border-radius: 0;
-        top: $navbar-height;
+        top: $voteit-fixed-top-nav;
         bottom: 0;
         overflow: scroll;
         @include translate(-100%, 0);
@@ -104,6 +113,9 @@
         }
     }
 
+    body.left-fixed-active #context-actions {
+        left: $voteit-fixed-left-nav-sm;
+    }
     body.left-fixed-active > .container {
         padding-left: $voteit-fixed-left-nav-sm + floor($grid-gutter-width/2);
     }
@@ -122,8 +134,11 @@
 
 
 @media (min-width: $screen-md) {
-    #fixed-nav {
+    .agenda-responsive-width {
         width: $voteit-fixed-left-nav-md;
+    }
+    body.left-fixed-active #context-actions {
+        left: $voteit-fixed-left-nav-md;
     }
     body.left-fixed-active > .container {
         padding-left: $voteit-fixed-left-nav-md;
@@ -132,8 +147,11 @@
 
 
 @media (min-width: $screen-lg) {
-    #fixed-nav {
+    .agenda-responsive-width {
         width: $voteit-fixed-left-nav-lg;
+    }
+    body.left-fixed-active #context-actions {
+        left: $voteit-fixed-left-nav-lg;
     }
     body.left-fixed-active > .container {
         padding-left: $voteit-fixed-left-nav-lg;
@@ -145,15 +163,74 @@
     background-color: #000;
     opacity: 0.5;
     position: fixed;
-    top: $navbar-height;
+    top: $voteit-fixed-top-nav;
     right: 0;
     bottom: 0;
     left: 0;
-    z-index: 999;
+    z-index: $zindex-navbar-fixed + 1;
+}
+
+#fixed-top-nav {
+    background-color: $navbar-voteit-bg;
+    color: $navbar-voteit-color;
+    line-height: $voteit-nav-line-height;
+    height: $voteit-fixed-top-nav;
+    a, &:focus, &:active {
+        background-color: $navbar-voteit-bg;
+        color: $navbar-voteit-color;
+    }
+}
+
+.voteit-nav {
+  > li {
+    float: left;
+
+    // Active state
+    &.active > a {
+      &,
+      &:hover,
+      &:focus {
+        color: $navbar-voteit-color;
+        background-color: $navbar-voteit-bg;
+      }
+    }
+  }
 }
 
 
+.voteit-logo-nav {
+    min-width: 70px;
+    margin: 10px 15px;
+    padding: 0px;
+    height: $voteit-nav-line-height;
+    display: block;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-image: url(/voteit_core_static/images/voteit-logo.svg);
+    background-position-y: center;
+}
+
+.voteit-nav-text,
+.voteit-nav-header {
+    line-height: $voteit-nav-line-height;
+    padding: 15px 10px;
+    margin-top: 0;
+    margin-bottom: 0;
+    &:hover {
+        text-decoration: none;
+    }
+}
+
+.voteit-nav-header {
+    font-weight: 500;
+    font-size: 17px;
+}
+
+
+
+
 // Built from: Inverse navbar
+/* This whole section is kept for compatibility reasons. It's deprecated */
 .navbar-voteit {
   background-color: $navbar-voteit-bg;
   border-color: $navbar-voteit-border;
@@ -307,3 +384,4 @@
     }
   }
 }
+/* END Deprecated nav */

@@ -288,7 +288,7 @@ $brand-danger:          #d9534f !default;
 .slide-in-nav {
   position: fixed;
   border-radius: 0;
-  top: 50px;
+  top: 100px;
   bottom: 0;
   background-color: #fff;
   -webkit-transition: -webkit-transform all 0.5s cubic-bezier(0.32, 0.59, 0.3, 0.98);
@@ -296,7 +296,7 @@ $brand-danger:          #d9534f !default;
   -o-transition: -o-transform all 0.5s cubic-bezier(0.32, 0.59, 0.3, 0.98);
   transition: transform all 0.5s cubic-bezier(0.32, 0.59, 0.3, 0.98);
   overflow: scroll;
-  z-index: 1000; }
+  z-index: 1080; }
   .slide-in-nav.from-left {
     -webkit-transform: translate(-100%, 0%);
     -ms-transform: translate(-100%, 0%);
@@ -322,7 +322,7 @@ $brand-danger:          #d9534f !default;
       -o-transform: translate(0%, 0%);
       transform: translate(0%, 0%); }
   .slide-in-nav.from-top {
-    top: 0;
+    top: 100px;
     -webkit-transform: translate(0%, -100%);
     -ms-transform: translate(0%, -100%);
     -o-transform: translate(0%, -100%);
@@ -332,11 +332,11 @@ $brand-danger:          #d9534f !default;
     bottom: 60px;
     z-index: 1000; }
     .slide-in-nav.from-top.activated {
-      top: 50px;
       -webkit-transform: translate(0%, 0%);
       -ms-transform: translate(0%, 0%);
       -o-transform: translate(0%, 0%);
-      transform: translate(0%, 0%); }
+      transform: translate(0%, 0%);
+      z-index: 1080; }
   .slide-in-nav.from-right {
     -webkit-transform: translate(100%, 0%);
     -ms-transform: translate(100%, 0%);
@@ -369,14 +369,24 @@ $brand-danger:          #d9534f !default;
 .collapsed .collapse-state:before {
   content: "\e114"; }
 
+#context-actions {
+  position: fixed;
+  top: 100px;
+  left: 0;
+  right: 0;
+  background-color: #ccc;
+  z-index: 1030;
+  line-height: 30px; }
+
 /* Generic navbar active */
 @media (min-width: 768px) {
+  .agenda-responsive-width {
+    width: 230px; }
+
   #fixed-nav {
-    width: 230px;
     padding: 15px;
     position: fixed;
-    border-radius: 0;
-    top: 50px;
+    top: 100px;
     bottom: 0;
     overflow: scroll;
     -webkit-transform: translate(-100%, 0);
@@ -392,6 +402,9 @@ $brand-danger:          #d9534f !default;
       -o-transform: translate(0%, 0);
       transform: translate(0%, 0); }
 
+  body.left-fixed-active #context-actions {
+    left: 230px; }
+
   body.left-fixed-active > .container {
     padding-left: 245px; } }
 @media (max-width: 992px) {
@@ -399,14 +412,20 @@ $brand-danger:          #d9534f !default;
   body.left-fixed-active > .navbar-fixed-top > .container {
     width: auto; } }
 @media (min-width: 992px) {
-  #fixed-nav {
+  .agenda-responsive-width {
     width: 300px; }
+
+  body.left-fixed-active #context-actions {
+    left: 300px; }
 
   body.left-fixed-active > .container {
     padding-left: 300px; } }
 @media (min-width: 1200px) {
-  #fixed-nav {
+  .agenda-responsive-width {
     width: 350px; }
+
+  body.left-fixed-active #context-actions {
+    left: 350px; }
 
   body.left-fixed-active > .container {
     padding-left: 350px; } }
@@ -414,12 +433,53 @@ $brand-danger:          #d9534f !default;
   background-color: #000;
   opacity: 0.5;
   position: fixed;
-  top: 50px;
+  top: 100px;
   right: 0;
   bottom: 0;
   left: 0;
-  z-index: 999; }
+  z-index: 1031; }
 
+#fixed-top-nav {
+  background-color: #0a243d;
+  color: #fff;
+  line-height: 30px;
+  height: 100px; }
+  #fixed-top-nav a, #fixed-top-nav:focus, #fixed-top-nav:active {
+    background-color: #0a243d;
+    color: #fff; }
+
+.voteit-nav > li {
+  float: left; }
+  .voteit-nav > li.active > a, .voteit-nav > li.active > a:hover, .voteit-nav > li.active > a:focus {
+    color: #fff;
+    background-color: #0a243d; }
+
+.voteit-logo-nav {
+  min-width: 70px;
+  margin: 10px 15px;
+  padding: 0px;
+  height: 30px;
+  display: block;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-image: url(/voteit_core_static/images/voteit-logo.svg);
+  background-position-y: center; }
+
+.voteit-nav-text,
+.voteit-nav-header {
+  line-height: 30px;
+  padding: 15px 10px;
+  margin-top: 0;
+  margin-bottom: 0; }
+  .voteit-nav-text:hover,
+  .voteit-nav-header:hover {
+    text-decoration: none; }
+
+.voteit-nav-header {
+  font-weight: 500;
+  font-size: 17px; }
+
+/* This whole section is kept for compatibility reasons. It's deprecated */
 .navbar-voteit {
   background-color: #0a243d;
   border-color: #030a11;
@@ -494,6 +554,7 @@ $brand-danger:          #d9534f !default;
     .navbar-voteit .btn-link[disabled]:hover, .navbar-voteit .btn-link[disabled]:focus, fieldset[disabled] .navbar-voteit .btn-link:hover, fieldset[disabled] .navbar-voteit .btn-link:focus {
       color: #444; }
 
+/* END Deprecated nav */
 /*
 $brand-primary:         darken(#428bca, 6.5%) !default; // #337ab7
 $brand-success:         #5cb85c !default;
@@ -556,9 +617,6 @@ $brand-danger:          #d9534f !default;
       margin-bottom: 5px;
       margin-top: 5px; }
 
-body {
-  padding-top: 90px; }
-
 .profile-pic {
   float: left;
   margin-right: 10px; }
@@ -597,13 +655,6 @@ body .btn-group-portlet > .item-unread {
 .votemarker-active {
   color: #5cb85c; }
 
-/*
-&.attention {
-  > .dropdown-toggle > .glyphicon-star {
-    color: $brand-star-shine;
-  }
-}
-*/
 .btn-group-portlet {
   width: 100%; }
   .btn-group-portlet > .btn {
@@ -623,30 +674,16 @@ body .btn-group-portlet > .item-unread {
     font-size: 110%;
     white-space: normal;
     margin-bottom: 5px; }
-  .btn-group-portlet .cogwheel {
-    /*z-index: 999;*/
-    margin-right: -1px;
-    margin-top: -1px; }
 
 footer {
   margin-top: 30px; }
 
-.greedy {
+.text-overflow {
+  display: inline-block;
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
-  display: inline-block; }
+  white-space: nowrap; }
 
-/*
-.max-width-text {
-    @include text-overflow();
-    display: inline-block;
-    max-width: 100px;
-}
-.fade-effect {
-    @include fade-effect(0.5s);
-}
-*/
 .text-small {
   font-size: 90%; }
 
@@ -677,5 +714,26 @@ footer {
       text-decoration: none; }
     .collapsible .collapsible-ctrl .collapse-state:before {
       content: "\e113"; }
+
+.columns {
+  -webkit-column-gap: 30px;
+  -moz-column-gap: 30px;
+  column-gap: 30px;
+  columns: 4; }
+
+.column-item, .control-panel {
+  -webkit-column-break-inside: avoid;
+  page-break-inside: avoid;
+  break-inside: avoid; }
+
+@media (max-width: 1200px) {
+  .columns {
+    columns: 3; } }
+@media (max-width: 992px) {
+  .columns {
+    columns: 2; } }
+@media (max-width: 768px) {
+  .columns {
+    columns: 1; } }
 
 /*# sourceMappingURL=main.css.map */
