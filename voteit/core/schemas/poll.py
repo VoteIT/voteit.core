@@ -87,7 +87,21 @@ class PollEditProposalsSchema(colander.Schema):
     )
 
 
+class PollSettingsSchema(colander.Schema):
+    polls_menu_only_links = colander.SchemaNode(
+        colander.Bool(),
+        title = _("Disable modal popups for polls menu?"),
+        description = _("schema_polls_menu_only_links_description",
+                        default="If disabled, the polls menu will simply link to "
+                                "the agenda item with the poll item instead."),
+        missing=False,
+        default=False,
+        tab='advanced',
+    )
+
+
 def includeme(config):
     # config.add_content_schema('Poll', AddPollSchema, 'add')
     config.add_content_schema('Poll', PollSchema, ['add', 'edit'])
     config.add_content_schema('Poll', PollEditProposalsSchema, 'edit_proposals')
+    config.add_content_schema('Poll', PollSettingsSchema, 'settings')

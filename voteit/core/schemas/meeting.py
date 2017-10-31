@@ -4,15 +4,12 @@ from __future__ import unicode_literals
 from arche.validators import existing_userids
 from arche.schemas import userid_hinder_widget
 from repoze.catalog.query import Eq, NotEq
-from repoze.workflow import get_workflow
 import colander
 import deform
 
 from voteit.core import _
 from voteit.core import security
 from voteit.core.models.interfaces import IAccessPolicy
-from voteit.core.models.interfaces import IProposal
-from voteit.core.models.interfaces import IProposalIds
 from voteit.core.schemas.common import NAME_PATTERN
 from voteit.core.validators import html_string_validator
 from voteit.core.validators import richtext_validator
@@ -63,26 +60,6 @@ def _deferred_current_fullname(node, kw):
     request = kw['request']
     if request.profile:
         return request.profile.title
-
-
-@colander.deferred
-def hide_proposal_states_widget(node, kw):
-    wf = get_workflow(IProposal, 'Proposal')
-    state_values = []
-    ts = _
-    for info in wf._state_info(IProposal):  # Public API goes through permission checker
-        item = [info['name']]
-        item.append(ts(info['title']))
-        state_values.append(item)
-    return deform.widget.CheckboxChoiceWidget(values=state_values)
-
-
-@colander.deferred
-def proposal_naming_widget(node, kw):
-    request = kw['request']
-    values = [(x.name, x.factory.title) for x in request.registry.registeredAdapters()
-              if x.provided == IProposalIds]
-    return deform.widget.SelectWidget(values=values)
 
 
 class MeetingSchema(colander.Schema):
@@ -139,21 +116,6 @@ class MeetingSchema(colander.Schema):
         missing="",
         widget=deform.widget.RichTextWidget(options=(('theme', 'advanced'),)),
         validator=richtext_validator, )
-    mention_notification_setting = colander.SchemaNode(
-        colander.Bool(),
-        title=_("Send mail to mentioned users."),
-        default=True,
-        missing=True,
-        tab='advanced',
-    )
-    poll_notification_setting = colander.SchemaNode(
-        colander.Bool(),
-        title=_(
-            "Send mail to voters when a poll starts."),
-        default=True,
-        missing=True,
-        tab='advanced',
-    )
     hide_meeting = colander.SchemaNode(
         colander.Bool(),
         title=_("Hide meeting from listings"),
@@ -170,53 +132,6 @@ class MeetingSchema(colander.Schema):
             "In case you want another title in the navigation bar"),
         missing="",
         tab='advanced'
-    )
-    polls_menu_only_links = colander.SchemaNode(
-        colander.Bool(),
-        title = _("Disable modal popups for polls menu?"),
-        description = _("schema_polls_menu_only_links_description",
-                        default="If disabled, the polls menu will simply link to "
-                                "the agenda item with the poll item instead."),
-        missing=False,
-        default=False,
-        tab='advanced',
-    )
-    hide_proposal_states = colander.SchemaNode(
-        colander.Set(),
-        title=_("Hide proposal states"),
-        description=_("hide_proposal_states_description",
-                      default="Proposals in these states will be hidden by "
-                              "default but can be shown by pressing "
-                              "the link below the other proposals. They're not "
-                              "by any means invisible to participants."),
-        tab='advanced',
-        widget=hide_proposal_states_widget,
-        default=('retracted', 'denied', 'unhandled'),
-    )
-    system_userids = colander.SchemaNode(
-        colander.Sequence(),
-        colander.SchemaNode(
-            colander.String(),
-            name='not_used',
-            title=_("UserID"),
-            widget=userid_hinder_widget,
-            validator=existing_userids
-        ),
-        title=_("System user accounts"),
-        description=_("system_userids_description",
-                      default="Must be an existing userid. "
-                              "If they're added here, moderators can use them "
-                              "to add proposals in their name. "
-                              "It's good practice to add things like 'propositions', "
-                              "'board' or similar."),
-        tab='advanced',
-        missing=())
-    proposal_id_method = colander.SchemaNode(
-        colander.String(),
-        title=_("Proposal naming method"),
-        tab='advanced',
-        widget=proposal_naming_widget,
-        missing="",
     )
 
 
@@ -364,6 +279,22 @@ class AgendaLabelsSchema(colander.Schema):
     )
 
 
+class NotificationSettingsSchema(colander.Schema):
+    mention_notification_setting = colander.SchemaNode(
+        colander.Bool(),
+        title=_("Send mail to mentioned users."),
+        default=True,
+        missing=True,
+    )
+    poll_notification_setting = colander.SchemaNode(
+        colander.Bool(),
+        title=_(
+            "Send mail to voters when a poll starts."),
+        default=False,
+        missing=False,
+    )
+
+
 def includeme(config):
     config.add_schema('Meeting', AddMeetingSchema, 'add')
     config.add_schema('Meeting', EditMeetingSchema, 'edit')
@@ -373,3 +304,4 @@ def includeme(config):
     config.add_schema('Meeting', AddExistingUserSchema, 'add_existing_user')
     config.add_schema('Meeting', BulkChangeRolesSchema, 'bulk_change_roles')
     config.add_schema('Meeting', AgendaLabelsSchema, 'agenda_labels')
+    config.add_schema('Meeting', NotificationSettingsSchema, 'notification_settings')
