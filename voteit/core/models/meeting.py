@@ -113,7 +113,7 @@ class Meeting(BaseContent, SecurityAware, WorkflowAware):
 
     @property
     def poll_notification_setting(self): #arche compat
-        return self.get_field_value('poll_notification_setting', True)
+        return self.get_field_value('poll_notification_setting', False)
     @poll_notification_setting.setter
     def poll_notification_setting(self, value):
         self.set_field_value('poll_notification_setting', value)
