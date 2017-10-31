@@ -7,44 +7,10 @@
     <h1>
       <span class="glyphicon glyphicon-cog"></span>
     </h1>
-    <h3 i18n:translate="">Settings</h3>
+    <h3 i18n:translate="">Site</h3>
   </div>
 
-  <tal:meeting condition="request.meeting and request.is_moderator or False">
-  <h4 style="padding: 15px 0px 0px 15px;" i18n:translate="">Meeting</h4>
-  <ul class="nav">
-      <li role="presentation" tal:condition="not meeting_closed">
-        <a role="menuitem" tabindex="-1"
-          href="${request.resource_url(request.meeting, 'add_tickets')}"
-          i18n:translate="">Invite participants</a>
-      </li>
-      <li role="presentation">
-        <a role="menuitem" tabindex="-1"
-          href="${request.resource_url(request.meeting, 'manage_tickets')}"
-          i18n:translate="">Manage invites</a>
-      </li>
-      <li role="presentation">
-        <a role="menuitem" tabindex="-1"
-          href="${request.resource_url(request.meeting, 'access_policy')}"
-          i18n:translate="">Access policy</a>
-      </li>
-      <li role="presentation" tal:condition="ap_configurable">
-        <a role="menuitem" tabindex="-1"
-          href="${request.resource_url(request.meeting, 'configure_access_policy')}"
-          i18n:translate="">Configure selected access policy</a>
-      </li>
-      <li role="presentation">
-        <a role="menuitem" tabindex="-1"
-          href="${request.resource_url(request.meeting, 'agenda_labels')}"
-          i18n:translate="">Agenda labels</a>
-      </li>
-      ${structure: settings_menu}
-      <li role="separator" class="divider"><!-- --></li>
-  </ul>
-  </tal:meeting>
-
   <tal:admin condition="request.has_permission('perm:Manage server', request.root)">
-    <h4 style="padding: 15px 0px 0px 15px;" i18n:translate="">Server</h4>
     <ul class="nav">
       <tal:actionbar_items replace="structure view.render_view_group('site_menu')" />
     </ul>
