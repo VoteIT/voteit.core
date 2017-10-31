@@ -359,7 +359,7 @@ Structure should be:
 */
 voteit.adjust_greedy_element = function(extra_margin) {
     //16 due to rounding elements. Sometimes widths will be like 102.32px
-    var extra_margin = (typeof extra_margin == 'undefined') ? 16 : extra_margin;
+    var extra_margin = (typeof extra_margin == 'undefined') ? 0 : extra_margin;
     $('[data-check-greedy]').each(function(i, elem) {
         var elem = $(elem);
         var total_width = elem.width();
