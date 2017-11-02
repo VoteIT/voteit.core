@@ -20,7 +20,9 @@
                 <a class="dropdown-toggle"
                 aria-expanded="false"
                 data-toggle="dropdown">
-                &#8942;
+                <span class="h4">
+                &nbsp;&#8942;&nbsp;
+                </span>
               </a>
               <ul class="dropdown-menu dropdown-menu-right" role="menu">
                 ${structure: view.render_view_group('context_actions')}
