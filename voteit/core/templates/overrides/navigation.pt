@@ -4,14 +4,17 @@
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
       i18n:domain="voteit.core">
 <nav id="fixed-top-nav" class="navbar-fixed-top">
-    <div class="container-fluid">
+    <div class="container-fluid" data-check-greedy>
 
       <a class="voteit-logo-nav pull-left" href="${request.application_url}"></a>
 
-      <tal:def tal:condition="None"
-               define="navobjs request.meeting is None and tuple(view.get_local_nav_objects(view.root)) or ()">
-        XXXXXXX
-        <ul tal:condition="navobjs" class="nav navbar-nav">
+      <a class="text-overflow voteit-nav-header greedy" tal:condition="request.meeting"
+         href="${request.resource_url(request.meeting)}">
+          ${request.meeting.nav_title and request.meeting.nav_title or request.meeting.title}
+      </a>
+
+      <tal:def define="navobjs request.meeting is None and tuple(view.get_local_nav_objects(view.root)) or ()">
+        <ul tal:condition="navobjs" class="nav voteit-nav pull-left">
           <li tal:repeat="obj navobjs">
             <a href="${request.resource_url(obj)}">${obj.get_nav_title()|obj.title}</a>
           </li>
@@ -67,18 +70,13 @@
 
     <div>
       <div class="pull-left">
-        <ul class="nav voteit-nav agenda-responsive-width" data-check-greedy>
+        <ul class="nav voteit-nav agenda-responsive-width">
           <li>
             <a href="#"
                onclick="javascript:voteit.toggle_agenda()">
               &nbsp;
               <span class="glyphicon glyphicon-list"></span>
               &nbsp;
-            </a>
-          </li>
-          <li class="greedy hidden-xs" style="width: 200px;">
-            <a class="text-overflow voteit-nav-header" href="${request.resource_url(request.meeting)}">
-                ${request.meeting.nav_title and request.meeting.nav_title or request.meeting.title}
             </a>
           </li>
         </ul>

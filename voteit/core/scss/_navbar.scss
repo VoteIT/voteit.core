@@ -242,7 +242,7 @@
     margin-bottom: floor($voteit-nav-padding / 2);
     padding: 0px;
     height: $voteit-nav-line-height + $voteit-nav-padding;
-    display: block;
+    display: inline-block;
     background-size: contain;
     background-repeat: no-repeat;
     background-image: url(/voteit_core_static/images/voteit-logo.svg);

@@ -482,7 +482,7 @@ $brand-danger:          #d9534f !default;
   margin-bottom: 5px;
   padding: 0px;
   height: 35px;
-  display: block;
+  display: inline-block;
   background-size: contain;
   background-repeat: no-repeat;
   background-image: url(/voteit_core_static/images/voteit-logo.svg);
