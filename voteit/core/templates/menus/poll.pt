@@ -29,6 +29,8 @@
             <tal:def define="can_vote request.has_permission(vote_perm, obj);
                              should_vote request.authenticated_userid not in obj;">
               <a class="list-group-item btn-lg"
+                 data-load-agenda-item=""
+                 onclick="javascript:voteit.hide_nav()"
                  href="${request.resource_url(obj, '__vote__')}" data-open-modal>
                 <span tal:condition="can_vote and should_vote" class="votemarker votemarker-active glyphicon glyphicon-star"></span>
                 <span tal:condition="can_vote and not should_vote" class="votemarker glyphicon glyphicon-ok-circle"></span>
