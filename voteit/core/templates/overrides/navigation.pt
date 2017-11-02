@@ -44,7 +44,7 @@
              href="#"
              onclick="javascript:voteit.load_inline_menu('#user-menu', '${usr_menu_url}')">
             <span data-actionmarker="rotate-me glyphicon-refresh" class="glyphicon glyphicon-user"></span>
-            <span class="hidden-xs hidden-sm" i18n:translate="">You</span>
+            <span class="hidden-xs hidden-sm">${request.authenticated_userid}</span>
             <span class="caret"></span>
           </a>
         </li>
