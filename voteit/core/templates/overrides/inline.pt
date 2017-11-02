@@ -5,9 +5,7 @@
       metal:define-macro="main"
       i18n:domain="Arche">
   <tal:comment condition="None"> Don't treat this as API-stable!</tal:comment>
-  <tal:agenda_actionbar metal:define-slot="agenda_actionbar"
-                      tal:condition="request.meeting"
-                      tal:replace="structure view.render_template('voteit.core:templates/menus/context_actions.pt')"></tal:agenda_actionbar>
+  <tal:agenda_actionbar metal:define-slot="agenda_actionbar"></tal:agenda_actionbar>
   <tal:content metal:define-slot="content">
     <tal:main-column metal:define-slot="main-content"></tal:main-column>
   </tal:content>

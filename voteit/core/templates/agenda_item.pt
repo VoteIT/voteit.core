@@ -7,6 +7,9 @@
 <body>
 <tal:actionbar metal:fill-slot="actionbar" />
 
+<tal:agenda_actionbar metal:fill-slot="agenda_actionbar"
+    tal:replace="structure view.render_template('voteit.core:templates/menus/context_actions.pt')" />
+
 <tal:main metal:fill-slot="main-content">
 
     <div class="body"
