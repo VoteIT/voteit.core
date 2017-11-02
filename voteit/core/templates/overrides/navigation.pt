@@ -125,8 +125,12 @@
             </a>
           </li>
 
+          ${structure: view.render_view_group('nav_meeting')|''}
+
           <!-- XXX -->
           <li tal:condition="False |request.is_moderator">
+            FIXME: This will be the catch-all menu for things that doesn't fit in nav_meeting
+
             <a data-initiator="#site-menu"
                data-actionmarker="disabled"
                tal:define="m_context request.meeting and request.meeting or request.root;
