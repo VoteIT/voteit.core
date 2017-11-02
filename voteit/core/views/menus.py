@@ -16,11 +16,11 @@ from voteit.core.security import VIEW
 @view_config(context=IRoot,
              permission=VIEW,
              name='_user_menu',
-             renderer='voteit.core:templates/snippets/profile_menu.pt')
+             renderer='voteit.core:templates/menus/profile.pt')
 @view_config(context=IMeeting,
              permission=VIEW,
              name='_user_menu',
-             renderer='voteit.core:templates/snippets/profile_menu.pt')
+             renderer='voteit.core:templates/menus/profile.pt')
 class MenuView(BaseView):
     """ Generic menu """
 
@@ -40,7 +40,7 @@ class MenuView(BaseView):
 @view_config(context=IRoot,
              permission=PERM_MANAGE_SYSTEM,
              name='_site_menu',
-             renderer='voteit.core:templates/snippets/site_menu.pt')
+             renderer='voteit.core:templates/menus/site.pt')
 class SiteMenuView(BaseView):
 
     def __call__(self):

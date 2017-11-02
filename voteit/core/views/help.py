@@ -12,11 +12,11 @@ from voteit.core.security import VIEW
 @view_config(context=IRoot,
              name='_help_menu',
              permission=NO_PERMISSION_REQUIRED,
-             renderer='voteit.core:templates/snippets/help_menu.pt')
+             renderer='voteit.core:templates/menus/help.pt')
 @view_config(context=IMeeting,
              name='_help_menu',
              permission=VIEW,
-             renderer='voteit.core:templates/snippets/help_menu.pt')
+             renderer='voteit.core:templates/menus/help.pt')
 class HelpView(BaseView):
 
     def __call__(self):
