@@ -16,7 +16,8 @@
 }
 
 .container-float-below {
-  position: relative;
+    clear: both;
+    position: relative;
 
   > .float-below {
     position: absolute;

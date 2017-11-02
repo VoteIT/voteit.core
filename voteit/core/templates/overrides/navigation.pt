@@ -8,7 +8,8 @@
 
       <a class="voteit-logo-nav pull-left" href="${request.application_url}"></a>
 
-      <tal:def tal:condition="None" define="navobjs request.meeting is None and tuple(view.get_local_nav_objects(view.root)) or ()">
+      <tal:def tal:condition="None"
+               define="navobjs request.meeting is None and tuple(view.get_local_nav_objects(view.root)) or ()">
         XXXXXXX
         <ul tal:condition="navobjs" class="nav navbar-nav">
           <li tal:repeat="obj navobjs">
@@ -31,6 +32,7 @@
              onclick="javascript:voteit.load_inline_menu('#help-menu', '${help_menu_url}')">
             <span data-actionmarker="rotate-me glyphicon-refresh"
                   class="glyphicon glyphicon-question-sign"></span>
+            <span class="hidden-xs hidden-sm" i18n:translate="">Help</span>
             <span class="caret"></span>
           </a>
         </li>
@@ -42,6 +44,7 @@
              href="#"
              onclick="javascript:voteit.load_inline_menu('#user-menu', '${usr_menu_url}')">
             <span data-actionmarker="rotate-me glyphicon-refresh" class="glyphicon glyphicon-user"></span>
+            <span class="hidden-xs hidden-sm" i18n:translate="">You</span>
             <span class="caret"></span>
           </a>
         </li>
@@ -53,6 +56,7 @@
               href="#"
               onclick="javascript:voteit.load_inline_menu('#site-menu', '${site_url}')">
             <span data-actionmarker="rotate-me glyphicon-refresh" class="glyphicon glyphicon-cog"></span>
+            <span class="hidden-xs hidden-sm" i18n:translate="">Site</span>
             <span class="caret"></span>
           </a>
         </li>
@@ -72,7 +76,7 @@
               &nbsp;
             </a>
           </li>
-          <li class="greedy" style="width: 200px;">
+          <li class="greedy hidden-xs" style="width: 200px;">
             <a class="text-overflow voteit-nav-header" href="${request.resource_url(request.meeting)}">
                 ${request.meeting.nav_title and request.meeting.nav_title or request.meeting.title}
             </a>
@@ -109,7 +113,7 @@
             </a>
           </li>
 
-          <li>
+          <li tal:condition="request.is_moderator">
             <a data-initiator="#control-panel"
                data-actionmarker="disabled"
                href="#"
@@ -140,8 +144,6 @@
     </div><!-- /.container-->
   </tal:meeting_nav>
 
-  <div class="container-fluid msg-bar" data-flash-slot="fixed-msg-bar">
-  </div>
   <div class="container container-float-below">
     <div class="float-below" data-flash-slot="voteit-main"></div>
   </div>

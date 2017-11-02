@@ -10,7 +10,9 @@
     Manage agenda
   </h2>
 
-  <a class="btn btn-default" href="${request.resource_url(context)}" i18n:translate="">Back to meeting</a>
+  <p>
+    <a class="btn btn-default" href="${request.resource_url(context, 'contents')}" i18n:translate="">Sort agenda items</a>
+  </p>
 
   <form method="post" class="deform" action="">
     <table class="table table-striped">

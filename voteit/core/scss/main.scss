@@ -8,23 +8,39 @@
 @import "_portlets";
 @import "_msg_bar";
 
+body {
+    padding-top: 50px;
+}
+
+body.in_meeting {
+    padding-top: 150px;
+}
+body.is_moderator {
+    padding-top: 200px;
+}
+
 .profile-pic {
   float: left;
   margin-right: 10px;
 }
+
 .metadata {
   padding: 5px 0;
 }
+
 .text {
   padding: 5px 0;
 }
+
 .cogwheel {
   margin-left: 5px;
 }
+
 .body {
   margin-top: $line-height-computed*2;
   margin-bottom: $line-height-computed;
 }
+
 .list-group-item.active {
   >a {
     color: #fff;
@@ -33,9 +49,11 @@
     }
   }
 }
+
 .navbar-brand img.voteitlogo {
   margin-top: -5px;
 }
+
 .panel .list-group .list-group-item-unread,
 .list-group .list-group-item-unread,
 body .btn-group-portlet > .item-unread {
@@ -77,8 +95,6 @@ body .btn-group-portlet > .item-unread {
 footer {
     margin-top: $grid-gutter-width;
 }
-
-.greedy {}
 
 .text-overflow {
     display: inline-block;
@@ -136,12 +152,15 @@ footer {
 }
 
 .columns {
+    columns: 4;
     -webkit-column-gap: $grid-gutter-width;
     -moz-column-gap: $grid-gutter-width;
     column-gap: $grid-gutter-width;
-    columns: 4;
 }
 .column-item {
+    display: inline-block;
+    width: 100%;
+
     -webkit-column-break-inside: avoid;
       page-break-inside: avoid;
            break-inside: avoid;

@@ -8,12 +8,6 @@
 <tal:actionbar metal:fill-slot="actionbar" />
 
 <tal:main metal:fill-slot="main-content">
-
-  <h1>${context.title}</h1>
-  <p class="description lead"
-       tal:define="description context.description|None"
-       tal:condition="description"
-       tal:content="structure description">Description text</p>
   <div class="body" tal:content="structure context.body">Body</div>
 </tal:main>
 </body>

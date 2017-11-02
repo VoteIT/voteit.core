@@ -33,9 +33,11 @@ $voteit-fixed-left-nav-sm: 230px;
 $voteit-fixed-left-nav-md: 300px;
 $voteit-fixed-left-nav-lg: 350px;
 
-$voteit-fixed-top-nav: 100px;
 
-$voteit-nav-line-height: 30px;
+$voteit-nav-line-height: 25px;
+$voteit-nav-padding: 10px;
+
+$voteit-fixed-top-nav: ($voteit-nav-line-height + ($voteit-nav-padding *2));
 
 
 // Colours

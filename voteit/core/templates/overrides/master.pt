@@ -18,9 +18,9 @@
                     portlets_bottom view.render_portlet_slot('bottom');
                     portlets_left_fixed view.render_portlet_slot('left_fixed');
                     main_cols 12 - int(bool(portlets_left))*3 - int(bool(portlets_right))*3;
-                    bpadding sum([2, bool(request.is_moderator), bool(request.meeting)])*50;"
-        class="view-${request.view_name or 'default'|'default'}"
-        style="padding-top: ${bpadding}px;">
+                    meeting_cls request.meeting and 'in_meeting' or None;
+                    moderator_cls (request.meeting and request.is_moderator) and 'is_moderator' or None;"
+        class="view-${request.view_name or 'default'|'default'} ${meeting_cls} ${moderator_cls}">
 
     <div id="fixed-nav" class="agenda-responsive-width" tal:condition="portlets_left_fixed">
         <tal:portlets repeat="portlet portlets_left_fixed">
@@ -31,10 +31,6 @@
     <div class="fixed-flash-slot" data-flash-slot="main"></div>
 
     <nav metal:define-slot="navigation" tal:replace="structure view.render_template('arche:templates/navigation.pt')" />
-
-    <tal:agenda_actionbar metal:define-slot="agenda_actionbar"
-                          tal:condition="request.meeting"
-                          tal:replace="structure view.render_template('voteit.core:templates/menus/agenda_actions.pt')"></tal:agenda_actionbar>
 
     <div class="container">
 
@@ -66,6 +62,9 @@
       </div>
 
       <div id="content">
+        <tal:agenda_actionbar metal:define-slot="agenda_actionbar"
+                              tal:condition="request.meeting"
+                              tal:replace="structure view.render_template('voteit.core:templates/menus/context_actions.pt')"></tal:agenda_actionbar>
         <tal:actionbar tal:condition="not request.meeting"
                        metal:define-slot="actionbar"
                        replace="structure view.render_actionbar()" />

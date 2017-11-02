@@ -5,19 +5,24 @@
 .slide-in-nav {
     position: fixed;
     border-radius: 0;
-    top: $voteit-fixed-top-nav;
-    bottom: 0;
     background-color: $body-bg;
+    /*
     @include transition-transform(all .5s cubic-bezier(.32, .59, .3, .98));
+    */
     overflow: scroll;
     z-index: $zindex-navbar-fixed + 50;
+    display: none;
+    top: $voteit-fixed-top-nav;
+
+    &.activated {
+        display: block;
+    }
 
     &.from-left {
         @include translate(-100%, 0%);
-
         right: 60px;
         left: 0px;
-
+        bottom: 0;
         &.activated {
             @include translate(0%, 0%);
         }
@@ -25,8 +30,8 @@
 
     &.profile-menu {
         @include translate(100%, 0%);
-
         right: 0px;
+        bottom: 0;
         min-width: 200px;
 
         &.activated {
@@ -37,13 +42,16 @@
 
     &.from-top {
         top: $voteit-fixed-top-nav;
+        /*
         @include translate(0%, -100%);
+        */
         right: 0px;
         left: 0px;
-        bottom: 60px;
         z-index: 1000;
         &.activated {
+        /*
             @include translate(0%, 0%);
+            */
             z-index: $zindex-navbar-fixed + 50;
         }
     }
@@ -51,19 +59,36 @@
     &.from-right {
         @include translate(100%, 0%);
         right: 0px;
+        bottom: 0;
         &.activated {
             @include translate(0%, 0%);
         }
     }
 }
 
+/* Increase padding for meetings */
+.in_meeting .slide-in-nav {
+    top: $voteit-fixed-top-nav * 2;
+}
+
+
+#fixed-nav {
+    top: $voteit-fixed-top-nav;
+    bottom: 0;
+    padding: floor($grid-gutter-width/2);
+    position: fixed;
+    overflow: scroll;
+}
+.in_meeting  #fixed-nav {
+    top: $voteit-fixed-top-nav * 2;
+}
+
 
 @media (max-width: $grid-float-breakpoint-max) {
     #fixed-nav {
-        @include translate(-100%, 0%);
         right: 60px;
         left: 0px;
-        padding: floor($grid-gutter-width/2);
+        @include translate(-100%, 0%);
         &.activated {
             @include translate(0%, 0);
         }
@@ -80,12 +105,17 @@
 
 #context-actions {
     position: fixed;
-    top: $voteit-fixed-top-nav;
+    top: $voteit-fixed-top-nav * 2;
     left: 0;
     right: 0;
-    background-color: #ccc;
+    background-color: $body-bg;
     z-index: $zindex-navbar-fixed;
     line-height: $voteit-nav-line-height;
+    border-bottom: $navbar-default-border solid 1px;
+    .voteit-nav-text *,
+    .voteit-nav * {
+        line-height: $voteit-nav-line-height;
+    }
 }
 
 
@@ -97,17 +127,11 @@
     }
 
     #fixed-nav {
-        padding: floor($grid-gutter-width/2);
-        position: fixed;
-        top: $voteit-fixed-top-nav;
-        bottom: 0;
-        overflow: scroll;
-        @include translate(-100%, 0);
-
         transition: none;
         background-color: $well-bg;
         border-right: 1px solid $well-border;
 
+        @include translate(-100%, 0);
         &.activated {
             @include translate(0%, 0);
         }
@@ -122,7 +146,7 @@
 
 }
 
-//left-fixed-active !!!
+
 @media (max-width: $screen-md) {
     body.left-fixed-active {
         > .container,
@@ -169,12 +193,17 @@
     left: 0;
     z-index: $zindex-navbar-fixed + 1;
 }
+.in_meeting #fixed-nav-backdrop {
+    top: $voteit-fixed-top-nav * 2;
+}
 
 #fixed-top-nav {
     background-color: $navbar-voteit-bg;
     color: $navbar-voteit-color;
     line-height: $voteit-nav-line-height;
+    /*
     height: $voteit-fixed-top-nav;
+    */
     a, &:focus, &:active {
         background-color: $navbar-voteit-bg;
         color: $navbar-voteit-color;
@@ -182,16 +211,25 @@
 }
 
 .voteit-nav {
+
+  * {
+      line-height: $voteit-nav-line-height;
+  }
+
   > li {
     float: left;
+
+    a {
+        padding: $voteit-nav-padding 10px;
+        height: $voteit-nav-line-height + $voteit-nav-padding * 2;
+    }
 
     // Active state
     &.active > a {
       &,
       &:hover,
       &:focus {
-        color: $navbar-voteit-color;
-        background-color: $navbar-voteit-bg;
+        background-color: $gray-lighter;
       }
     }
   }
@@ -200,9 +238,10 @@
 
 .voteit-logo-nav {
     min-width: 70px;
-    margin: 10px 15px;
+    margin-top: floor($voteit-nav-padding / 2);
+    margin-bottom: floor($voteit-nav-padding / 2);
     padding: 0px;
-    height: $voteit-nav-line-height;
+    height: $voteit-nav-line-height + $voteit-nav-padding;
     display: block;
     background-size: contain;
     background-repeat: no-repeat;
@@ -212,8 +251,9 @@
 
 .voteit-nav-text,
 .voteit-nav-header {
+    height: $voteit-nav-line-height + $voteit-nav-padding * 2;
     line-height: $voteit-nav-line-height;
-    padding: 15px 10px;
+    padding: $voteit-nav-padding 10px;
     margin-top: 0;
     margin-bottom: 0;
     &:hover {
@@ -225,9 +265,6 @@
     font-weight: 500;
     font-size: 17px;
 }
-
-
-
 
 // Built from: Inverse navbar
 /* This whole section is kept for compatibility reasons. It's deprecated */

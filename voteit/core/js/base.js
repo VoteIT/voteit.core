@@ -3,7 +3,7 @@
     //Scroll extension
     $.fn.goTo = function() {
         $('html, body').animate({
-            scrollTop: $(this).offset().top - 100 + 'px'
+            scrollTop: $(this).offset().top - 200 + 'px'
         }, 'fast');
         return this; // for chaining...
     }
@@ -28,4 +28,4 @@ if(typeof(voteit) == "undefined"){
 }
 
 /* Prioritize displaying flash messages in voteits area that floats under the menu */
-arche.flash_slot_order = ['modal', 'voteit-main', 'main'];
+arche.flash_slot_order = ['modal', 'voteit-context-actions', 'voteit-main', 'main'];

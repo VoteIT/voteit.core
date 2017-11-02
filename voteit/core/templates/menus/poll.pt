@@ -6,8 +6,12 @@
 
 <div class="container">
 
-  <p>&nbsp;</p>
-
+  <h4 class="text-center">
+    <a href="javascript:voteit.hide_nav()" data-active-menu="">
+      <span class="glyphicon glyphicon-chevron-up"></span>
+      <span i18n:translate="">Close</span>
+    </a>
+  </h4>
   <div class="row">
 
     <div class="col-sm-6">

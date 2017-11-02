@@ -1,0 +1,37 @@
+<tal:main xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="voteit.core">
+<div id="context-actions" class="container-fluid">
+  ${structure: view.render_template('voteit.core:templates/snippets/ai_title.pt')}
+    <tal:moderator condition="request.is_moderator">
+      <div class="pull-left">
+        <ul class="nav voteit-nav">
+            ${structure: view.render_view_action('actionbar_main', 'voteit_wf')}
+            ${structure: view.render_view_action('actionbar_main', 'edit')}
+            ${structure: view.render_view_action('actionbar_main', 'view')}
+            ${structure: view.render_view_group('agenda_actions')|''}
+        </ul>
+      </div>
+      <div class="pull-right">
+        <ul class="nav voteit-nav">
+            <li>
+                <a class="dropdown-toggle"
+                aria-expanded="false"
+                data-toggle="dropdown">
+                &#8942;
+              </a>
+              <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                ${structure: view.render_view_group('context_actions')}
+                ${structure: view.render_view_group('actions_menu')}
+              </ul>
+            </li>
+        </ul>
+      </div>
+    </tal:moderator>
+  <div class="container-float-below">
+    <div class="float-below" data-flash-slot="voteit-context-actions"></div>
+  </div>
+</div>
+</tal:main>
