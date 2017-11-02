@@ -30,7 +30,8 @@ from voteit.core import security
              interface = IProposal,
              priority = 50)
 def like_action(context, request, va, **kw):
-    if context.type_name in request.meeting.like_context_types:
+    like_context_types = request.meeting.like_context_types
+    if like_context_types and context.type_name in request.meeting.like_context_types:
         like = request.registry.getAdapter(context, IUserTags, name = 'like')
         response = {'context': context,
                     'like': like,
