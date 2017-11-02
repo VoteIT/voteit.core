@@ -5,16 +5,19 @@
       i18n:domain="voteit.core">
 <div id="agenda-item-portlet" class="portlet hidden-print">
 
-  <div class="row" tal:condition="request.is_moderator">
-    <div class="col-sm-6">
-      <a class="btn btn-default btn-block btn-sm"
-        href="${request.resource_url(request.meeting, 'add', query = {'content_type': 'AgendaItem'})}" i18n:translate="">Add</a>
-    </div>
-    <div class="col-sm-6">
-      <a class="btn btn-default btn-block btn-sm"
-        href="${request.resource_url(request.meeting, 'manage_agenda')}" i18n:translate="">Manage</a>
-    </div>
-    <p>&nbsp;</p>
+  <div tal:condition="request.is_moderator" class="text-right">
+      <a class="btn btn-default btn-sm"
+        title="Manage agenda"
+        i18n:attributes="title;"
+        href="${request.resource_url(request.meeting, 'add', query = {'content_type': 'AgendaItem'})}">
+        &nbsp;<span class="glyphicon glyphicon-plus"></span>&nbsp;
+      </a>
+      <a class="btn btn-default btn-sm"
+         title="Manage agenda"
+         i18n:attributes="title;"
+        href="${request.resource_url(request.meeting, 'manage_agenda')}">
+        &nbsp;<span class="glyphicon glyphicon-edit"></span>&nbsp;
+      </a>
   </div>
 
 <tal:filter tal:condition="tags">
