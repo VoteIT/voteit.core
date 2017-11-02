@@ -7,7 +7,7 @@
 
   <div tal:condition="request.is_moderator" class="text-right">
       <a class="btn btn-default btn-sm"
-        title="Manage agenda"
+        title="Add"
         i18n:attributes="title;"
         href="${request.resource_url(request.meeting, 'add', query = {'content_type': 'AgendaItem'})}">
         &nbsp;<span class="glyphicon glyphicon-plus"></span>&nbsp;

@@ -201,13 +201,15 @@
     background-color: $navbar-voteit-bg;
     color: $navbar-voteit-color;
     line-height: $voteit-nav-line-height;
-    /*
     height: $voteit-fixed-top-nav;
-    */
     a, &:focus, &:active {
         background-color: $navbar-voteit-bg;
         color: $navbar-voteit-color;
     }
+}
+.in_meeting #fixed-top-nav {
+    height: $voteit-fixed-top-nav * 2;
+
 }
 
 .voteit-nav {

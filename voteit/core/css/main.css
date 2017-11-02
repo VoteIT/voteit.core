@@ -459,12 +459,13 @@ $brand-danger:          #d9534f !default;
   background-color: #0a243d;
   color: #fff;
   line-height: 25px;
-  /*
-  height: $voteit-fixed-top-nav;
-  */ }
+  height: 45px; }
   #fixed-top-nav a, #fixed-top-nav:focus, #fixed-top-nav:active {
     background-color: #0a243d;
     color: #fff; }
+
+.in_meeting #fixed-top-nav {
+  height: 90px; }
 
 .voteit-nav * {
   line-height: 25px; }
