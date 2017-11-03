@@ -398,7 +398,7 @@ $brand-danger:          #d9534f !default;
 
 /* Generic navbar active */
 @media (min-width: 768px) {
-  .agenda-responsive-width {
+  body.left-fixed-active .agenda-responsive-width {
     width: 230px; }
 
   #fixed-nav {
@@ -425,7 +425,7 @@ $brand-danger:          #d9534f !default;
   body.left-fixed-active > .navbar-fixed-top > .container {
     width: auto; } }
 @media (min-width: 992px) {
-  .agenda-responsive-width {
+  body.left-fixed-active .agenda-responsive-width {
     width: 300px; }
 
   body.left-fixed-active #context-actions {
@@ -434,7 +434,7 @@ $brand-danger:          #d9534f !default;
   body.left-fixed-active > .container {
     padding-left: 300px; } }
 @media (min-width: 1200px) {
-  .agenda-responsive-width {
+  body.left-fixed-active .agenda-responsive-width {
     width: 350px; }
 
   body.left-fixed-active #context-actions {

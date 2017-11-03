@@ -122,7 +122,7 @@
 /* Generic navbar active */
 @media (min-width: $grid-float-breakpoint) {
 
-    .agenda-responsive-width {
+    body.left-fixed-active .agenda-responsive-width {
         width: $voteit-fixed-left-nav-sm;
     }
 
@@ -158,7 +158,7 @@
 
 
 @media (min-width: $screen-md) {
-    .agenda-responsive-width {
+    body.left-fixed-active .agenda-responsive-width {
         width: $voteit-fixed-left-nav-md;
     }
     body.left-fixed-active #context-actions {
@@ -171,7 +171,7 @@
 
 
 @media (min-width: $screen-lg) {
-    .agenda-responsive-width {
+    body.left-fixed-active .agenda-responsive-width {
         width: $voteit-fixed-left-nav-lg;
     }
     body.left-fixed-active #context-actions {
