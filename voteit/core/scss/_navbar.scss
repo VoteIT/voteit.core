@@ -22,7 +22,7 @@
         @include translate(-100%, 0%);
         right: 60px;
         left: 0px;
-        bottom: 0;
+        bottom: 0px;
         &.activated {
             @include translate(0%, 0%);
         }
@@ -31,7 +31,7 @@
     &.profile-menu {
         @include translate(100%, 0%);
         right: 0px;
-        bottom: 0;
+        bottom: 0px;
         min-width: 200px;
 
         &.activated {
@@ -48,6 +48,7 @@
         right: 0px;
         left: 0px;
         z-index: 1000;
+        bottom: 100px;
         &.activated {
         /*
             @include translate(0%, 0%);
@@ -59,7 +60,7 @@
     &.from-right {
         @include translate(100%, 0%);
         right: 0px;
-        bottom: 0;
+        bottom: 0px;
         &.activated {
             @include translate(0%, 0%);
         }

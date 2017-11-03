@@ -305,7 +305,7 @@ $brand-danger:          #d9534f !default;
     transform: translate(-100%, 0%);
     right: 60px;
     left: 0px;
-    bottom: 0; }
+    bottom: 0px; }
     .slide-in-nav.from-left.activated {
       -webkit-transform: translate(0%, 0%);
       -ms-transform: translate(0%, 0%);
@@ -317,7 +317,7 @@ $brand-danger:          #d9534f !default;
     -o-transform: translate(100%, 0%);
     transform: translate(100%, 0%);
     right: 0px;
-    bottom: 0;
+    bottom: 0px;
     min-width: 200px; }
     .slide-in-nav.profile-menu.activated {
       -webkit-transform: translate(0%, 0%);
@@ -331,7 +331,8 @@ $brand-danger:          #d9534f !default;
     */
     right: 0px;
     left: 0px;
-    z-index: 1000; }
+    z-index: 1000;
+    bottom: 100px; }
     .slide-in-nav.from-top.activated {
       /*
           @include translate(0%, 0%);
@@ -343,7 +344,7 @@ $brand-danger:          #d9534f !default;
     -o-transform: translate(100%, 0%);
     transform: translate(100%, 0%);
     right: 0px;
-    bottom: 0; }
+    bottom: 0px; }
     .slide-in-nav.from-right.activated {
       -webkit-transform: translate(0%, 0%);
       -ms-transform: translate(0%, 0%);
