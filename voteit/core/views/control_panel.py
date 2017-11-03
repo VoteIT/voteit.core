@@ -8,7 +8,6 @@ from zope.interface.interfaces import ComponentLookupError
 from voteit.core import security
 from voteit.core.models.interfaces import IAccessPolicy
 from voteit.core.models.interfaces import IMeeting
-from voteit.core.views.base_edit import ArcheFormCompat
 from voteit.core import _
 
 
@@ -120,7 +119,7 @@ def control_panel_link(context, request, va, **kw):
              name = "proposal_settings",
              renderer = "arche:templates/form.pt",
              permission = security.MODERATE_MEETING)
-class ProposalSettingsForm(ArcheFormCompat, DefaultEditForm):
+class ProposalSettingsForm(DefaultEditForm):
     type_name = 'Proposal'
     schema_name = 'settings'
     title = _("Proposal settings")
@@ -130,7 +129,7 @@ class ProposalSettingsForm(ArcheFormCompat, DefaultEditForm):
              name = "poll_settings",
              renderer = "arche:templates/form.pt",
              permission = security.MODERATE_MEETING)
-class PollSettingsForm(ArcheFormCompat, DefaultEditForm):
+class PollSettingsForm(DefaultEditForm):
     type_name = 'Poll'
     schema_name = 'settings'
     title = _("Poll settings")
@@ -140,7 +139,7 @@ class PollSettingsForm(ArcheFormCompat, DefaultEditForm):
              name = "notification_settings",
              renderer = "arche:templates/form.pt",
              permission = security.MODERATE_MEETING)
-class NotificationSettingsForm(ArcheFormCompat, DefaultEditForm):
+class NotificationSettingsForm(DefaultEditForm):
     type_name = 'Meeting'
     schema_name = 'notification_settings'
     title = _("Notifications")
