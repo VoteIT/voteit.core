@@ -54,7 +54,7 @@
 
   <!-- FIXME: Initial state always ongoing? -->
 <tal:iterate repeat="state states">
-  <div class="panel panel-primary">
+  <div class="panel panel-default">
     <a class="panel-heading collapsed"
        href="#agenda-state-${state}"
        data-actionmarker="disabled"

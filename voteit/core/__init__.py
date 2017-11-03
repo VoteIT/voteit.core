@@ -37,6 +37,7 @@ def required_components(config):
     config.include('pyramid_chameleon')
     config.include('pyramid_deform')
     config.include('deform_autoneed')
+    config.include('betahaus.viewcomponent')
     #Arche
     cache_max_age = int(config.registry.settings.get('arche.cache_max_age', 60*60*24))
     config.add_static_view('static', 'arche:static', cache_max_age = cache_max_age)
