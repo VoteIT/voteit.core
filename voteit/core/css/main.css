@@ -292,7 +292,7 @@ $brand-danger:          #d9534f !default;
   /*
   @include transition-transform(all .5s cubic-bezier(.32, .59, .3, .98));
   */
-  overflow: scroll;
+  overflow: auto;
   z-index: 1080;
   display: none;
   top: 45px; }
@@ -359,7 +359,7 @@ $brand-danger:          #d9534f !default;
   bottom: 0;
   padding: 15px;
   position: fixed;
-  overflow: scroll; }
+  overflow: auto; }
 
 .in_meeting #fixed-nav {
   top: 90px; }
