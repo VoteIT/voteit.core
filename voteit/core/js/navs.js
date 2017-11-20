@@ -371,6 +371,23 @@ voteit.adjust_greedy_element = function(extra_margin) {
     });
 }
 
+voteit.greedyMutationListener = function () {
+    var innerWidth = document.body.clientWidth;
+    var MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
+    var observer = new MutationObserver(function(mutations, observer) {
+        // fired when a mutation occurs
+        var newWidth = document.body.clientWidth;
+        if (innerWidth != newWidth) {
+            voteit.adjust_greedy_element();
+            innerWidth = newWidth;
+        }
+    });
+    observer.observe(document, {
+        subtree: true,
+        attributes: true,
+    });
+}
+
 
 $(document).ready(function () {
     voteit.watcher.add_response_callback(unvoted_counter);
@@ -378,8 +395,8 @@ $(document).ready(function () {
     $('body').on('click', '[data-load-agenda-item]', voteit.load_agenda_item);
     $('body').on('click', '[data-agenda-control]', voteit.handle_ai_state_toggles);
     voteit.adjust_greedy_element();
-    window.addEventListener('resize', function () {
+    window.addEventListener('resize', function() {
         voteit.adjust_greedy_element();
     });
-
+    voteit.greedyMutationListener();
 });
