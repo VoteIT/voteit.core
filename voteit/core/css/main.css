@@ -296,8 +296,6 @@ $brand-danger:          #d9534f !default;
   z-index: 1080;
   display: none;
   top: 45px; }
-  .slide-in-nav.activated {
-    display: block; }
   .slide-in-nav.from-left {
     -webkit-transform: translate(-100%, 0%);
     -ms-transform: translate(-100%, 0%);
@@ -389,7 +387,7 @@ $brand-danger:          #d9534f !default;
   top: 90px;
   left: 0;
   right: 0;
-  background-color: #fff;
+  background-color: #f5f5f5;
   z-index: 1030;
   line-height: 25px;
   border-bottom: #e7e7e7 solid 1px; }
@@ -475,8 +473,27 @@ $brand-danger:          #d9534f !default;
   .voteit-nav > li a {
     padding: 10px 10px;
     height: 45px; }
-  .voteit-nav > li.active > a, .voteit-nav > li.active > a:hover, .voteit-nav > li.active > a:focus {
-    background-color: #eeeeee; }
+
+#agenda-toggler a,
+.menu-toggler {
+  border-radius: 8px 8px 0 0;
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  transition: background-color .25s;
+  margin-left: 8px; }
+
+#agenda-toggler a {
+  padding: 10px 6px; }
+
+body.left-fixed-active #agenda-toggler a {
+  background-color: #fff;
+  color: #000; }
+  @media (min-width: 768px) {
+    body.left-fixed-active #agenda-toggler a {
+      background-color: #f5f5f5 !important; } }
+
+.menu-toggler.open {
+  background-color: white !important;
+  color: #000 !important; }
 
 .voteit-logo-nav {
   min-width: 70px;
@@ -489,6 +506,9 @@ $brand-danger:          #d9534f !default;
   background-repeat: no-repeat;
   background-image: url(/voteit_core_static/images/voteit-logo.svg);
   background-position-y: center; }
+  @media (min-width: 992px) {
+    .voteit-logo-nav {
+      margin-right: 10px; } }
 
 .voteit-nav-text,
 .voteit-nav-header {
@@ -502,7 +522,7 @@ $brand-danger:          #d9534f !default;
     text-decoration: none; }
 
 .voteit-nav-header {
-  font-weight: 500;
+  font-weight: bold;
   font-size: 17px; }
 
 /* This whole section is kept for compatibility reasons. It's deprecated */
@@ -773,5 +793,3 @@ footer {
 @media (max-width: 768px) {
   .columns {
     columns: 1; } }
-
-/*# sourceMappingURL=main.css.map */

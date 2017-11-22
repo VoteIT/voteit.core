@@ -8,7 +8,7 @@
 
       <a class="voteit-logo-nav pull-left" href="${request.application_url}"></a>
 
-      <a class="text-overflow voteit-nav-header pull-left greedy text-center" tal:condition="request.meeting"
+      <a class="text-overflow voteit-nav-header pull-left greedy" tal:condition="request.meeting"
          href="${request.resource_url(request.meeting)}">
           ${request.meeting.nav_title and request.meeting.nav_title or request.meeting.title}
       </a>
@@ -70,7 +70,7 @@
 
     <div>
       <div class="pull-left">
-        <ul class="nav voteit-nav agenda-responsive-width">
+        <ul id="agenda-toggler" class="nav voteit-nav">
           <li>
             <a href="#"
                onclick="javascript:voteit.toggle_agenda()">
@@ -89,10 +89,24 @@
                data-actionmarker="disabled"
                href="#"
                tal:define="poll_menu_url request.resource_url(request.meeting, '_poll_menu');"
-               onclick="javascript:voteit.load_inline_menu('#poll-menu', '${poll_menu_url}')">
+               onclick="javascript:voteit.load_inline_menu('#poll-menu', '${poll_menu_url}')"
+               class="menu-toggler">
               <span data-actionmarker="rotate-me glyphicon-refresh" class="glyphicon glyphicon-star"></span>
               <span class="hidden-xs hidden-sm" i18n:translate="">Polls</span>
               <span class="label label-success" data-important-polls></span>
+              <span class="caret"></span>
+            </a>
+          </li>
+
+          <li tal:condition="request.is_moderator">
+            <a data-initiator="#control-panel"
+               data-actionmarker="disabled"
+               href="#"
+               tal:define="url request.resource_url(request.meeting, '_control_panel');"
+               onclick="javascript:voteit.load_inline_menu('#control-panel', '${url}')"
+               class="menu-toggler">
+              <span data-actionmarker="rotate-me glyphicon-refresh" class="glyphicon glyphicon-cog"></span>
+              <span class="hidden-xs hidden-sm" i18n:translate="">Control panel</span>
               <span class="caret"></span>
             </a>
           </li>
@@ -108,18 +122,6 @@
             <a href="${request.resource_url(request.meeting, 'minutes')}">
               <span class="glyphicon glyphicon-file"></span>
               <span class="hidden-xs hidden-sm" i18n:translate="">Minutes</span>
-            </a>
-          </li>
-
-          <li tal:condition="request.is_moderator">
-            <a data-initiator="#control-panel"
-               data-actionmarker="disabled"
-               href="#"
-               tal:define="url request.resource_url(request.meeting, '_control_panel');"
-               onclick="javascript:voteit.load_inline_menu('#control-panel', '${url}')">
-              <span data-actionmarker="rotate-me glyphicon-refresh" class="glyphicon glyphicon-cog"></span>
-              <span class="hidden-xs hidden-sm" i18n:translate="">Control panel</span>
-              <span class="caret"></span>
             </a>
           </li>
 

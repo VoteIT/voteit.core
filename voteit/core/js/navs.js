@@ -13,8 +13,8 @@ voteit.toggle_nav = function(selector) {
 
 
 voteit.show_nav = function(selector) {
-    $('[data-slide-menu].activated').removeClass('activated');
-    $(selector).addClass('activated');
+    $('[data-slide-menu].activated').removeClass('activated').hide();
+    $(selector).addClass('activated').fadeIn();
     $('#fixed-nav-backdrop').data('active-menu', selector);
     $('#fixed-nav-backdrop').fadeIn();
     $('body').css({'overflow': 'hidden'});
@@ -23,10 +23,10 @@ voteit.show_nav = function(selector) {
 
 voteit.hide_nav = function(selector) {
     var selector = (typeof selector == 'string') ? selector : $('#fixed-nav-backdrop').data('active-menu');
-    $(selector).removeClass('activated');
+    $(selector).removeClass('activated').fadeOut();
     $('#fixed-nav-backdrop').fadeOut();
     $('#fixed-nav-backdrop').data('active-menu', null);
-    $('body').css({'overflow': 'visible'});
+    $('body').css({'overflow': ''});
 }
 
 /*
@@ -42,6 +42,7 @@ mostly for visual feedback during the load process.
 voteit.load_inline_menu = function(selector, url) {
     var initiator = $('[data-initiator="' + selector + '"]');
     if (initiator.hasClass('disabled')) return;
+    $('.menu-toggler').removeClass('open');
     if ($(selector).hasClass('activated')) {
         $(selector).empty();
         voteit.hide_nav(selector);
@@ -50,8 +51,10 @@ voteit.load_inline_menu = function(selector, url) {
         var request = arche.do_request(url);
         request.done(function(response) {
             voteit.show_nav(selector);
+            console.log(selector);
             $(selector).html(response);
             arche.actionmarker_feedback(initiator, false);
+            initiator.addClass('open');
         });
         return request;
     }
@@ -76,10 +79,10 @@ voteit.show_agenda = function() {
     }
 
     //FIXME: Can we tie this to bootstraps grid float breakpoint var?
+    $('body').addClass('left-fixed-active');
     if ($(window).width() > 768) {
         //Desktop version
-        $('body').addClass('left-fixed-active');
-        $('#fixed-nav').addClass('activated');
+        $('#fixed-nav').addClass('activated').show();
         document.cookie = "voteit.hide_agenda=;path=/";
     } else {
         //Small version
@@ -89,8 +92,8 @@ voteit.show_agenda = function() {
 
 
 voteit.hide_agenda = function() {
+    $('body').removeClass('left-fixed-active');
     if ($(window).width() > 768) {
-        $('body').removeClass('left-fixed-active');
         $('#fixed-nav').removeClass('activated');
         document.cookie = "voteit.hide_agenda=1;path=/";
     } else {
@@ -112,10 +115,11 @@ voteit.toggle_agenda = function() {
 voteit.init_agenda = function(show_in_fullscreen) {
     //Decide what to do depending on resolution etc
     if ($(window).width() > 768) {
-        if (show_in_fullscreen == true) voteit.show_agenda();
+        if (show_in_fullscreen) voteit.show_agenda();
     } else {
         // Small screen
         $('#fixed-nav').data('slide-menu', 'fixed-nav').addClass('slide-in-nav');
+        voteit.hide_agenda();
     }
 }
 

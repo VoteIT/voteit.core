@@ -85,9 +85,12 @@
 
 
 <script>
-  $(document).ready(function() {
+  $(function() {
     var show_in_fullscreen = ${request.cookies.get('voteit.hide_agenda', '') == '1' and 'false' or 'true'};
     voteit.init_agenda(show_in_fullscreen);
+    $(window).resize(function () {
+      voteit.init_agenda(show_in_fullscreen);
+    });
     voteit.agenda_data_url = "${request.resource_url(request.meeting, 'agenda_data.json')}";
     voteit.agenda_sort_order = ["${'", "'.join(request.meeting.order)}"];
     voteit.agenda_select_tag_url = "${request.resource_url(request.meeting, '_agenda_select_tag')}";

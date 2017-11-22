@@ -14,10 +14,6 @@
     display: none;
     top: $voteit-fixed-top-nav;
 
-    &.activated {
-        display: block;
-    }
-
     &.from-left {
         @include translate(-100%, 0%);
         right: 60px;
@@ -109,7 +105,7 @@
     top: $voteit-fixed-top-nav * 2;
     left: 0;
     right: 0;
-    background-color: $body-bg;
+    background-color: $well-bg;
     z-index: $zindex-navbar-fixed;
     line-height: $voteit-nav-line-height;
     border-bottom: $navbar-default-border solid 1px;
@@ -227,17 +223,33 @@
         height: $voteit-nav-line-height + $voteit-nav-padding * 2;
     }
 
-    // Active state
-    &.active > a {
-      &,
-      &:hover,
-      &:focus {
-        background-color: $gray-lighter;
-      }
-    }
   }
 }
 
+#agenda-toggler a,
+.menu-toggler {
+    border-radius: 8px 8px 0 0;
+    background-color: rgba(255,255,255,.1)!important;
+    transition: background-color .25s;
+    margin-left: 8px;
+}
+#agenda-toggler a {
+    padding: 10px 6px;
+}
+body.left-fixed-active #agenda-toggler a {
+    background-color: #fff;
+    color: #000;
+    @media (min-width: $screen-sm) {
+        background-color: $well-bg!important;
+    }
+}
+
+.menu-toggler {
+    &.open {
+        background-color: rgba(255,255,255,1)!important;
+        color: #000!important;
+    }
+}
 
 .voteit-logo-nav {
     min-width: 70px;
@@ -250,6 +262,9 @@
     background-repeat: no-repeat;
     background-image: url(/voteit_core_static/images/voteit-logo.svg);
     background-position-y: center;
+    @media (min-width: $screen-md) {
+        margin-right: 10px;
+    }
 }
 
 .voteit-nav-text,
@@ -265,7 +280,7 @@
 }
 
 .voteit-nav-header {
-    font-weight: 500;
+    font-weight: bold;
     font-size: 17px;
 }
 

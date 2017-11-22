@@ -16,7 +16,7 @@
     Access policies will still work though.
   </p>
 
-  <div class="table-responsive">
+  <div id="participant-table" class="table-responsive">
     <table class="table table-striped table-condensed" id="participants">
       <thead>
         <tr>
@@ -27,7 +27,6 @@
             <th class="text-center">
               <span class="glyphicon glyphicon-${role_icons.get(name, '')}"
                     data-toggle="tooltip"
-                    data-placement="left"
                     title="${role.title}"></span>
             </th>
           </tal:iterate>
@@ -86,9 +85,14 @@
     <span i18n:translate="">Loading data...</span>
   </div>
 <script>
+/*
 $(function () {
-  $('[data-toggle="tooltip"]').tooltip();
+  $('#participant-table').tooltip({
+    selector: '[data-toggle="tooltip"]',
+    container: '#participant-table',
+  });
 });
+*/
 </script>
 </tal:main>
 </body>
