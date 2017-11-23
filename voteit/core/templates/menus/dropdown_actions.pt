@@ -4,12 +4,10 @@
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
       i18n:domain="voteit.core">
   <div class="btn-group">
-    <a class="btn btn-default btn-xs dropdown-toggle"
+    <a class="btn btn-default btn-sm dropdown-toggle"
       aria-expanded="false"
       data-toggle="dropdown">
-        <span class="h4">
-        &nbsp;&#8942;&nbsp;
-        </span>
+        <span class="glyphicon glyphicon-cog"></span>
     </a>
     <ul class="dropdown-menu" role="menu">
         <tal:iter repeat="x menu_items">
