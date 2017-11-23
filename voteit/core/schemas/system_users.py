@@ -6,6 +6,7 @@ from arche.schemas import current_userid_as_tuple
 import colander
 import deform
 
+from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.schemas.proposal import ProposalSchema
 from voteit.core.schemas.discussion_post import DiscussionPostSchema
 from voteit.core.security import MODERATE_MEETING
@@ -26,7 +27,8 @@ def add_as_system_user_widget(node, kw):
                 values.append((userid, "%s (%s)" % (user.title, userid)))
         return deform.widget.SelectWidget(values = values, multiple = True)
     raise Exception("Widget shouldn't be loaded if there are no system_userids")
-    
+
+
 @colander.deferred
 def current_user_or_system_users(node, kw):
     request = kw['request']
@@ -34,16 +36,19 @@ def current_user_or_system_users(node, kw):
     values.extend(request.meeting.system_userids)
     return colander.All(colander.ContainsOnly(values), colander.Length(min = 1, max = 1))
 
+
 def to_tuple(value):
     #Since sets can't be indexed
     return tuple(value)
+
 
 def system_users_in_add_schema(schema, event):
     """ Inject a choice so add a proposal as another user if:
         - The current user is a moderator
         - System users are set on the meeting
     """
-    if event.request.view_name == 'add' and event.request.has_permission(MODERATE_MEETING):
+    #The context check here is essentially a guess if this is an add-view.
+    if IAgendaItem.providedBy(event.context) and event.request.has_permission(MODERATE_MEETING):
         system_userids = event.request.meeting.system_userids
         if system_userids:
             schema.add(colander.SchemaNode(colander.Set(),
@@ -54,6 +59,7 @@ def system_users_in_add_schema(schema, event):
                                            preparer = to_tuple,
                                            default = current_userid_as_tuple,
                                            missing = current_userid_as_tuple))
+
 
 def includeme(config):
     config.add_subscriber(system_users_in_add_schema, [DiscussionPostSchema, ISchemaCreatedEvent])
