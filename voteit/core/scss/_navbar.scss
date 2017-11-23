@@ -115,6 +115,18 @@
     }
 }
 
+#meeting-menu {
+    white-space: nowrap;
+    overflow: hidden;
+    height: $voteit-fixed-top-nav;
+    width: 100%;
+
+    .voteit-nav {
+        display: inline-block;
+    }
+
+}
+
 
 /* Generic navbar active */
 @media (min-width: $grid-float-breakpoint) {
@@ -211,10 +223,6 @@
 
 .voteit-nav {
 
-  * {
-      line-height: $voteit-nav-line-height;
-  }
-
   > li {
     float: left;
 
@@ -226,17 +234,14 @@
   }
 }
 
-#agenda-toggler a,
 .menu-toggler {
     border-radius: 8px 8px 0 0;
     background-color: rgba(255,255,255,.1)!important;
     transition: background-color .25s;
     margin-left: 8px;
 }
-#agenda-toggler a {
-    padding: 10px 6px;
-}
-body.left-fixed-active #agenda-toggler a {
+
+body.left-fixed-active #agenda-toggler {
     background-color: #fff !important;
     color: #000;
     @media (min-width: $screen-sm) {
