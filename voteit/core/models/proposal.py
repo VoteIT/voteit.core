@@ -1,5 +1,6 @@
 from arche.security import get_acl_registry
 from pyramid.traversal import find_interface
+from six import string_types
 from zope.interface import implementer
 
 from voteit.core import VoteITMF as _
@@ -77,6 +78,23 @@ class Proposal(BaseContent, WorkflowAware):
     @aid_int.setter
     def aid_int(self, value):
         self.set_field_value('aid_int', value)
+
+    @property
+    def diff_text(self):
+        return self.get_field_value('diff_text', '')
+    @diff_text.setter
+    def diff_text(self, value):
+        assert isinstance(value, string_types)
+        self.set_field_value('diff_text', value)
+
+    @property
+    def diff_text_para(self):
+        """ Which paragraph this is a diff against. """
+        return self.get_field_value('diff_text_para', None)
+    @diff_text_para.setter
+    def diff_text_para(self, value):
+        assert isinstance(value, int)
+        self.set_field_value('diff_text_para', value)
 
 
 def includeme(config):

@@ -54,6 +54,18 @@ def meta_retract(context, request, va, **kw):
         (url, request.localizer.translate(_(u'Retract')))
 
 
+@view_action('metadata_listing', 'diff_view',
+             permission = VIEW,
+             interface = IProposal,
+             priority = 22)
+def meta_retract(context, request, va, **kw):
+    if request.meeting.diff_text_enabled and  context.diff_text_para != None:
+        url = request.resource_url(context, 'diff_view')
+        return """<a data-placement="top" data-external-popover-loaded="false" role="button"
+            class="btn btn-default btn-xs" href="%s">%s</a>
+        """ % (url, request.localizer.translate(_(u'Diff')))
+
+
 @view_action('metadata_listing', 'reply',
              title = _("Reply"),
              interface = IDiscussionPost,

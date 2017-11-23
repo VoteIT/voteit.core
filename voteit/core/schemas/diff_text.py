@@ -2,8 +2,12 @@ from __future__ import unicode_literals
 
 import colander
 import deform
+from arche.schemas import maybe_modal_form
+from pyramid.httpexceptions import HTTPBadRequest
 
 from voteit.core import _
+from voteit.core.models.interfaces import IDiffText
+from voteit.core.schemas.proposal import ProposalSchema
 
 
 class DiffTextSettingsSchema(colander.Schema):
@@ -44,6 +48,128 @@ class DiffTextContentSchema(colander.Schema):
     )
 
 
+def _get_request_para(request):
+    para = request.GET.get('para', None)
+    if not para:
+        return
+    try:
+        para = int(para)
+    except TypeError:
+        return
+    return para
+
+
+@colander.deferred
+def default_diff_prop_text(node, kw):
+    request = kw['request']
+    diff_text = IDiffText(request.agenda_item)
+    para = _get_request_para(request)
+    if para == None:
+        return ''
+    paragraphs = diff_text.get_paragraphs()
+    try:
+        return paragraphs[para-1]
+    except IndexError:
+        return ''
+
+
+@colander.deferred
+def default_leadin(node, kw):
+    request = kw['request']
+    para = _get_request_para(request)
+    if para == None:
+        raise HTTPBadRequest("Restart form")
+    diff_text = IDiffText(request.agenda_item)
+    hashtag = "%s-%s" % (diff_text.hashtag, para)
+    return request.localizer.translate(
+        _("default_lead_in",
+          default="proposes to change #${hashtag} to:\n",
+          mapping={'hashtag': hashtag})
+    )
+
+
+@colander.deferred
+class LeadInValidator(object):
+
+    def __init__(self, node, kw):
+        self.request = kw['request']
+
+    def __call__(self, node, value):
+        para = _get_request_para(self.request)
+        if para == None:
+            raise HTTPBadRequest("Restart form")
+        diff_text = IDiffText(self.request.agenda_item)
+        hashtag = "#%s-%s" % (diff_text.hashtag, para)
+        if hashtag not in value:
+            msg = _("Please keep the hashtag ${hashtag} in your lead-in.",
+                    mapping={'hashtag': hashtag})
+            raise colander.Invalid(node, msg)
+        pass
+
+
+@colander.deferred
+class DiffProposalValidator(object):
+
+    def __init__(self, node, kw):
+        self.request = kw['request']
+
+    def __call__(self, node, value):
+        #FIXME: Add other validators from proposals
+        default_text = default_diff_prop_text(node, {'request': self.request})
+        if default_text == value:
+            raise colander.Invalid(node, _("You haven't changed anything"))
+
+
+class AddDiffProposalSchema(colander.Schema):
+    widget = maybe_modal_form
+    leadin = colander.SchemaNode(
+        colander.String(),
+        title=_("Lead-in"),
+        default=default_leadin,
+        validator=LeadInValidator,
+    )
+    text = colander.SchemaNode(
+        colander.String(),
+        default=default_diff_prop_text,
+        validator=DiffProposalValidator,
+        widget=deform.widget.TextAreaWidget(rows=4),
+
+    )
+
+
+@colander.deferred
+def staged_text_change(node, kw):
+    request = kw['request']
+    text_uid = request.GET.get('text_uid', '')
+    data = request.session.get(text_uid, None)
+    if not data:
+        raise HTTPBadRequest("No data found, restart procedure")
+    return data['text']
+
+
+class AddDiffPreviewSchema(ProposalSchema):
+    widget = maybe_modal_form
+    diff_text = colander.SchemaNode(
+        colander.String(),
+        title=_("Text difference"),
+        description = _("text_diff_readonly_description",
+                                     default="The text above shows the difference between "
+                                             "your text and the original text. "
+                                             "New lines are green, removed lines are red and strikethrough."),
+        widget = deform.widget.TextAreaWidget(readonly=True, readonly_template='readonly/diff_html'),
+        missing='',
+    )
+
+    def after_bind(self, schema, node):
+        self['text'].widget.readonly = True
+        self['text'].widget.readonly_template = 'readonly/diff_html'
+        self['text'].title = _("Your proposal")
+        self['text'].description = ""
+        self['text'].missing = ""
+
+
 def includeme(config):
     config.add_schema('Meeting', DiffTextSettingsSchema, 'diff_text_settings')
     config.add_schema('AgendaItem', DiffTextContentSchema, 'edit_diff_text')
+    config.add_schema('Proposal', AddDiffProposalSchema, 'add_diff')
+    config.add_schema('Proposal', AddDiffPreviewSchema, 'add_diff_preview')

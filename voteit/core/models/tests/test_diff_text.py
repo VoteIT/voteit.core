@@ -48,6 +48,26 @@ who respects sex, who has made mistakes and learned from them."""
         expected = ["Det gör mycket mer ont när våren inte kommer alls.", "Det är ok om den tvekar."]
         self.assertEqual(result, expected)
 
+    def test_no_diff_zoe(self):
+        context = testing.DummyModel()
+        obj = self._cut(context)
+        obj.text = _ZOE
+        paragraphs = obj.get_paragraphs()
+        expected_6 = """I want someone who has been in love and been hurt,
+who respects sex, who has made mistakes and learned from them."""
+        results = obj(paragraphs[5], expected_6)
+        self.assertEqual(expected_6, results)
+
+    def test_diff_with_lines_zoe(self):
+        context = testing.DummyModel()
+        obj = self._cut(context)
+        obj.text = _ZOE
+        paragraphs = obj.get_paragraphs()
+        changed = """Who respects sex,\nwho has made mistakes and learned from them!"""
+        results = obj(paragraphs[5], changed)
+        expected = '<strong class="text-success">Who</strong> <strong><s class="text-danger">I want someone who has been in love and been hurt, who</s></strong> respects sex,\nwho has made mistakes and learned from <strong><s class="text-danger">them.</s></strong> <strong class="text-success">them!</strong>'
+        self.assertEqual(expected, results)
+
 
 #Note that the sometimes odd spaces in the texts inserted for the tests :)
 _ZOE = """

@@ -3,7 +3,7 @@
       xmlns:tal="http://xml.zope.org/namespaces/tal"
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
       i18n:domain="voteit.core">
-<div id="ai-proposals" class="col-sm-12">
+<div id="ai-diff-proposals" class="col-sm-12">
   <div class="list-group">
     <div class="list-group-item">
       <h4>
@@ -22,6 +22,15 @@
            href="${request.resource_url(context, query={'tag': hashtag})}">
           #${hashtag}
           <span tal:condition="tags_count.get(hashtag, 0)">(${tags_count.get(hashtag, 0)})</span>
+
+          <a tal:condition="can_add"
+             class="btn btn-default btn-xs"
+             data-open-modal
+             data-modal-dialog-class="modal-lg"
+             href="${request.resource_url(context, 'add_diff_proposal', query={'para': repeat['row'].number})}"
+             i18n:translate="">
+            Add proposal
+          </a>
         </a><br/>
         ${structure: row}
       </div>
