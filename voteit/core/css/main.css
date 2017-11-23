@@ -485,7 +485,7 @@ $brand-danger:          #d9534f !default;
   padding: 10px 6px; }
 
 body.left-fixed-active #agenda-toggler a {
-  background-color: #fff;
+  background-color: #fff !important;
   color: #000; }
   @media (min-width: 768px) {
     body.left-fixed-active #agenda-toggler a {
@@ -793,3 +793,5 @@ footer {
 @media (max-width: 768px) {
   .columns {
     columns: 1; } }
+
+/*# sourceMappingURL=main.css.map */

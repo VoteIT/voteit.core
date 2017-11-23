@@ -237,7 +237,7 @@
     padding: 10px 6px;
 }
 body.left-fixed-active #agenda-toggler a {
-    background-color: #fff;
+    background-color: #fff !important;
     color: #000;
     @media (min-width: $screen-sm) {
         background-color: $well-bg!important;
