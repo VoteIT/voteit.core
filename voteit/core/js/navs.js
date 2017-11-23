@@ -84,7 +84,7 @@ voteit.show_agenda = function() {
 
     //FIXME: Can we tie this to bootstraps grid float breakpoint var?
     $('body').addClass('left-fixed-active');
-    if ($(window).width() > 768) {
+    if ($(window).width() >= 768) {
         //Desktop version
         $('#fixed-nav').addClass('activated').show();
         document.cookie = "voteit.hide_agenda=;path=/";
@@ -98,7 +98,7 @@ voteit.show_agenda = function() {
 
 voteit.hide_agenda = function() {
     $('body').removeClass('left-fixed-active');
-    if ($(window).width() > 768) {
+    if ($(window).width() >= 768) {
         $('#fixed-nav').removeClass('activated');
         document.cookie = "voteit.hide_agenda=1;path=/";
     } else {
@@ -121,7 +121,7 @@ voteit.toggle_agenda = function() {
 voteit.init_agenda = function(show_in_fullscreen) {
     //Decide what to do depending on resolution etc
     $('#fixed-nav').data('slide-menu', 'fixed-nav').addClass('slide-in-nav');
-    if ($(window).width() > 768) {
+    if ($(window).width() >= 768) {
         if (show_in_fullscreen) voteit.show_agenda();
     } else {
         // Small screen
