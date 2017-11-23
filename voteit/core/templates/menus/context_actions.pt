@@ -20,9 +20,7 @@
                 <a class="dropdown-toggle"
                 aria-expanded="false"
                 data-toggle="dropdown">
-                <span class="h4">
-                &nbsp;&#8942;&nbsp;
-                </span>
+                <span class="glyphicon glyphicon-option-vertical"></span>
               </a>
               <ul class="dropdown-menu dropdown-menu-right" role="menu">
                 ${structure: view.render_view_group('context_actions')}

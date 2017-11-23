@@ -13,7 +13,8 @@ voteit.toggle_nav = function(selector) {
 
 
 voteit.show_nav = function(selector) {
-    $('[data-slide-menu].activated').removeClass('activated').hide();
+    voteit.hide_nav(undefined, true);
+//    $('[data-slide-menu].activated').removeClass('activated').hide();
     $(selector).addClass('activated').fadeIn();
     $('#fixed-nav-backdrop').data('active-menu', selector);
     $('#fixed-nav-backdrop').fadeIn();
@@ -21,13 +22,17 @@ voteit.show_nav = function(selector) {
 }
 
 
-voteit.hide_nav = function(selector) {
+voteit.hide_nav = function(selector, hold_bg) {
     var selector = (typeof selector == 'string') ? selector : $('#fixed-nav-backdrop').data('active-menu');
     $(selector).removeClass('activated').fadeOut();
-    $('#fixed-nav-backdrop').fadeOut();
+    $('.menu-toggler').removeClass('open');
+    if (typeof(hold_bg) === 'undefined') {
+        $('#fixed-nav-backdrop').fadeOut();
+    }
     $('#fixed-nav-backdrop').data('active-menu', null);
     $('body').css({'overflow': ''});
 }
+
 
 /*
 selector
@@ -51,7 +56,6 @@ voteit.load_inline_menu = function(selector, url) {
         var request = arche.do_request(url);
         request.done(function(response) {
             voteit.show_nav(selector);
-            console.log(selector);
             $(selector).html(response);
             arche.actionmarker_feedback(initiator, false);
             initiator.addClass('open');
@@ -80,7 +84,7 @@ voteit.show_agenda = function() {
 
     //FIXME: Can we tie this to bootstraps grid float breakpoint var?
     $('body').addClass('left-fixed-active');
-    if ($(window).width() > 768) {
+    if ($(window).width() >= 768) {
         //Desktop version
         $('#fixed-nav').addClass('activated').show();
         document.cookie = "voteit.hide_agenda=;path=/";
@@ -88,18 +92,20 @@ voteit.show_agenda = function() {
         //Small version
         voteit.show_nav('#fixed-nav');
     }
+    $('#agenda-toggler').addClass('open')
 }
 
 
 voteit.hide_agenda = function() {
     $('body').removeClass('left-fixed-active');
-    if ($(window).width() > 768) {
+    if ($(window).width() >= 768) {
         $('#fixed-nav').removeClass('activated');
         document.cookie = "voteit.hide_agenda=1;path=/";
     } else {
         //Small version
         voteit.hide_nav('#fixed-nav');
     }
+    $('#agenda-toggler').removeClass('open')
 }
 
 
@@ -114,8 +120,9 @@ voteit.toggle_agenda = function() {
 
 voteit.init_agenda = function(show_in_fullscreen) {
     //Decide what to do depending on resolution etc
-    if ($(window).width() > 768) {
+    if ($(window).width() >= 768) {
         if (show_in_fullscreen) voteit.show_agenda();
+        $('#fixed-nav').removeClass('slide-in-nav');
     } else {
         // Small screen
         $('#fixed-nav').data('slide-menu', 'fixed-nav').addClass('slide-in-nav');
@@ -392,6 +399,10 @@ voteit.greedyMutationListener = function () {
     });
 }
 
+voteit.meetingExtrasToggler = function(e) {
+    voteit.hide_nav();
+}
+
 
 $(document).ready(function () {
     voteit.watcher.add_response_callback(unvoted_counter);
@@ -403,4 +414,5 @@ $(document).ready(function () {
         voteit.adjust_greedy_element();
     });
     voteit.greedyMutationListener();
+    $('#meeting-extras').click(voteit.meetingExtrasToggler);
 });

@@ -388,7 +388,7 @@ $brand-danger:          #d9534f !default;
   left: 0;
   right: 0;
   background-color: #f5f5f5;
-  z-index: 1030;
+  z-index: 1020;
   line-height: 25px;
   border-bottom: #e7e7e7 solid 1px; }
   #context-actions .voteit-nav-text *,
@@ -397,10 +397,21 @@ $brand-danger:          #d9534f !default;
 
 #meeting-menu {
   white-space: nowrap;
-  overflow: hidden;
-  height: 45px; }
+  height: 45px;
+  width: 100%;
+  position: relative; }
+  #meeting-menu #meeting-extras {
+    position: absolute;
+    right: 8px;
+    bottom: 0;
+    padding: 10px; }
+  #meeting-menu .open #meeting-extras {
+    background-color: #fff !important;
+    color: #000 !important; }
   #meeting-menu .voteit-nav {
     display: inline-block; }
+  #meeting-menu .dropdown-menu {
+    z-index: 1040; }
 
 /* Generic navbar active */
 @media (min-width: 768px) {
@@ -469,13 +480,19 @@ $brand-danger:          #d9534f !default;
   #fixed-top-nav a, #fixed-top-nav:focus, #fixed-top-nav:active {
     background-color: #0a243d;
     color: #fff; }
+  #fixed-top-nav .dropdown-menu a {
+    background-color: #fff;
+    color: #000; }
+    #fixed-top-nav .dropdown-menu a:hover {
+      color: #262626;
+      background-color: #f5f5f5; }
 
 .in_meeting #fixed-top-nav {
   height: 90px; }
 
 .voteit-nav > li {
   float: left; }
-  .voteit-nav > li a {
+  .voteit-nav > li > a {
     padding: 10px 10px;
     height: 45px; }
 
@@ -485,12 +502,10 @@ $brand-danger:          #d9534f !default;
   transition: background-color .25s;
   margin-left: 8px; }
 
-body.left-fixed-active #agenda-toggler {
-  background-color: #fff !important;
-  color: #000; }
-  @media (min-width: 768px) {
-    body.left-fixed-active #agenda-toggler {
-      background-color: #f5f5f5 !important; } }
+@media (min-width: 768px) {
+  body.left-fixed-active #agenda-toggler {
+    background-color: #f5f5f5 !important;
+    color: #000 !important; } }
 
 .menu-toggler.open {
   background-color: white !important;
