@@ -106,7 +106,7 @@
     left: 0;
     right: 0;
     background-color: $well-bg;
-    z-index: $zindex-navbar-fixed;
+    z-index: $zindex-navbar-fixed - 10;
     line-height: $voteit-nav-line-height;
     border-bottom: $navbar-default-border solid 1px;
     .voteit-nav-text *,
@@ -117,12 +117,26 @@
 
 #meeting-menu {
     white-space: nowrap;
-    overflow: hidden;
     height: $voteit-fixed-top-nav;
     width: 100%;
+    position: relative;
+
+    #meeting-extras {
+        position: absolute;
+        right: 8px;
+        bottom: 0;
+        padding: 10px;
+    }
+    .open #meeting-extras {
+        background-color: #fff!important;
+        color: #000!important;
+    }
 
     .voteit-nav {
         display: inline-block;
+    }
+    .dropdown-menu {
+        z-index: 1040;
     }
 
 }
@@ -215,6 +229,14 @@
         background-color: $navbar-voteit-bg;
         color: $navbar-voteit-color;
     }
+    .dropdown-menu a {
+        background-color: #fff;
+        color: #000;
+        &:hover {
+            color: $dropdown-link-hover-color;
+            background-color: $dropdown-link-hover-bg;
+        }
+    }
 }
 .in_meeting #fixed-top-nav {
     height: $voteit-fixed-top-nav * 2;
@@ -226,7 +248,7 @@
   > li {
     float: left;
 
-    a {
+    > a {
         padding: $voteit-nav-padding 10px;
         height: $voteit-nav-line-height + $voteit-nav-padding * 2;
     }
@@ -242,10 +264,9 @@
 }
 
 body.left-fixed-active #agenda-toggler {
-    background-color: #fff !important;
-    color: #000;
     @media (min-width: $screen-sm) {
         background-color: $well-bg!important;
+        color: #000!important;
     }
 }
 

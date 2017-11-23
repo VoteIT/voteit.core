@@ -89,7 +89,7 @@
                onclick="javascript:voteit.load_inline_menu('#poll-menu', '${poll_menu_url}')"
                class="menu-toggler">
               <span data-actionmarker="rotate-me glyphicon-refresh" class="glyphicon glyphicon-star"></span>
-              <span i18n:translate="">Polls</span>
+              <span i18n:translate="" class="hidden-xs">Polls</span>
               <span class="label label-success" data-important-polls></span>
             </a>
           </li>
@@ -107,7 +107,7 @@
           </li>
         </ul>
 
-        <ul class="nav voteit-nav">
+        <ul class="nav voteit-nav hidden-xs">
           <li>
             <a href="${request.resource_url(request.meeting, 'participants')}"
                i18n:translate="">
@@ -125,6 +125,34 @@
           ${structure: view.render_view_group('nav_meeting')|''}
 
         </ul>
+
+      <div class="visible-xs">
+        <a data-toggle="dropdown"
+           aria-expanded="false"
+           id="meeting-extras"
+           class="menu-toggler">
+          <span class="glyphicon glyphicon-option-vertical"></span>
+        </a>
+
+        <ul class="dropdown-menu dropdown-menu-right" role="menu">
+          <li>
+            <a href="${request.resource_url(request.meeting, 'participants')}"
+               i18n:translate="">
+              Participants
+            </a>
+          </li>
+
+          <li>
+            <a href="${request.resource_url(request.meeting, 'minutes')}"
+               i18n:translate="">
+              Minutes
+            </a>
+          </li>
+
+          ${structure: view.render_view_group('nav_meeting')|''}
+
+        </ul>
+      </div>
     </div><!-- /.container-->
   </tal:meeting_nav>
 
