@@ -3,7 +3,6 @@ from arche.interfaces import IObjectAddedEvent
 from arche.portlets import get_portlet_manager
 from arche.security import get_acl_registry
 from pyramid.httpexceptions import HTTPForbidden
-from pyramid.traversal import find_root
 from repoze.folder import unicodify
 from zope.interface import implementer
 
@@ -185,6 +184,13 @@ class Meeting(BaseContent, SecurityAware, WorkflowAware):
         obj.__parent__ = self
         self.invite_tickets[email] = obj
         return obj
+
+    @property
+    def diff_text_enabled(self):
+        return self.get_field_value('diff_text_enabled', None)
+    @diff_text_enabled.setter
+    def diff_text_enabled(self, value):
+        self.set_field_value('diff_text_enabled', bool(value))
 
 
 def closing_meeting_callback(context, info):

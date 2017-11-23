@@ -10,4 +10,5 @@ def includeme(config):
     config.include('.proposal')
     config.include('.site')
     config.include('.system_users')
+    config.include('.diff_text')
     config.include('.user')

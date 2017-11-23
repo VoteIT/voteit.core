@@ -18,6 +18,10 @@ def agenda_labels_active(context, request, va):
     return bool(context.tags)
 
 
+def diff_text_active(context, request, va):
+    return bool(context.diff_text_enabled)
+
+
 @view_action('control_panel', 'proposal',
              panel_group = 'control_panel_proposal',
              title=_("Proposals"),
@@ -35,6 +39,10 @@ def agenda_labels_active(context, request, va):
              panel_group = 'control_panel_agenda_labels',
              title=_("Agenda labels"),
              check_active=agenda_labels_active)
+@view_action('control_panel', 'diff_text',
+             panel_group='control_panel_diff_text',
+             title=_("Diff text"),
+             check_active=diff_text_active)
 def control_panel_category(context, request, va, active=True, **kw):
     """
     check_active
@@ -108,6 +116,8 @@ def control_panel_participants(context, request, va, active=True, **kw):
              title=_("Settings"), view_name='notification_settings')
 @view_action('control_panel_agenda_labels', 'agenda_labels',
              title=_("Settings"), view_name='agenda_labels')
+@view_action('control_panel_diff_text', 'settings',
+             title=_("Settings"), view_name='diff_text_settings')
 def control_panel_link(context, request, va, **kw):
     return """<li><a href="%s">%s</a></li>""" % (
         request.resource_url(request.meeting, va.kwargs['view_name']),
@@ -143,3 +153,13 @@ class NotificationSettingsForm(DefaultEditForm):
     type_name = 'Meeting'
     schema_name = 'notification_settings'
     title = _("Notifications")
+
+
+@view_config(context = IMeeting,
+             name = "diff_text_settings",
+             renderer = "arche:templates/form.pt",
+             permission = security.MODERATE_MEETING)
+class DiffTextSettingsForm(DefaultEditForm):
+    type_name = 'Meeting'
+    schema_name = 'diff_text_settings'
+    title = _("Diff text settings")

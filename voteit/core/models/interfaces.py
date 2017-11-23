@@ -552,6 +552,13 @@ class IProfileImage(Interface):
 class IMentioned(Interface):
     pass
 
+
+class IDiffText(Interface):
+    """ Adapter to store and handle text that should be a base for diffs.
+        Essentially new proposals that track their original text.
+    """
+
+
 class IAccessPolicy(Interface):
     """ Adapts a meeting to handle an access policy. They're methods for granting
         access to users that request it.

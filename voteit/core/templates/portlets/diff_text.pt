@@ -1,0 +1,35 @@
+<tal:main xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="voteit.core">
+<div id="ai-proposals" class="col-sm-12">
+  <div class="list-group">
+    <div class="list-group-item">
+      <h4>
+        <span class="glyphicon glyphicon-text-background"></span>
+        <span tal:condition="not diff_text.title" i18n:translate="">Diff text</span>
+        <span tal:condition="diff_text.title">${diff_text.title}</span>
+        <a href="${request.resource_url(context, 'edit_diff_text')}">Edit</a>
+      </h4>
+    </div>
+
+    <tal:iter repeat="row paragraphs">
+      <div class="list-group-item"
+           tal:define="hashtag '%s-%s' % (diff_text.hashtag, repeat['row'].number)">
+        <a class="primary-tag" data-load-agenda-item="#content"
+           data-ai-name="${context.__name__}"
+           href="${request.resource_url(context, query={'tag': hashtag})}">
+          #${hashtag}
+          <span tal:condition="tags_count.get(hashtag, 0)">(${tags_count.get(hashtag, 0)})</span>
+        </a><br/>
+        ${structure: row}
+      </div>
+
+    </tal:iter>
+    <div class="well">
+      Hello world
+    </div>
+  </div>
+</div>
+</tal:main>
