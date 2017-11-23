@@ -120,11 +120,12 @@ voteit.toggle_agenda = function() {
 
 voteit.init_agenda = function(show_in_fullscreen) {
     //Decide what to do depending on resolution etc
-    $('#fixed-nav').data('slide-menu', 'fixed-nav').addClass('slide-in-nav');
     if ($(window).width() >= 768) {
         if (show_in_fullscreen) voteit.show_agenda();
+        $('#fixed-nav').removeClass('slide-in-nav');
     } else {
         // Small screen
+        $('#fixed-nav').data('slide-menu', 'fixed-nav').addClass('slide-in-nav');
         voteit.hide_agenda();
     }
 }
