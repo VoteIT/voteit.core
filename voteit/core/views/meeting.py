@@ -137,7 +137,7 @@ class RequestAccessForm(ArcheFormCompat, DefaultEditForm):
             raise HTTPForbidden(_("forbidden_on_closed_meetings",
                                   default = "You need to contact the moderator "
                                   "to get access to this meeting."))
-        objectEventNotify(SchemaCreatedEvent(schema))
+        objectEventNotify(SchemaCreatedEvent(schema, request=self.request, context=self.context, view=self))
         return schema
 
     @reify
