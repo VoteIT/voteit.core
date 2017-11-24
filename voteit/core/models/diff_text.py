@@ -52,9 +52,9 @@ class DiffText(object):
     def hashtag(self, value):
         self.data['hashtag'] = value
 
-    def __call__(self, base_text, new_text):
+    def __call__(self, base_text, new_text, brief=False):
         ch = Changes(base_text, new_text)
-        return ch.get_html()
+        return ch.get_html(brief)
 
     def set_appstruct(self, appstruct):
         for (k, v) in appstruct.items():
@@ -107,8 +107,13 @@ def insert_diff_text_portlet(context, event):
 
 
 class ChangeGroup(object):
+    WORD_CAP = 3
+    CAP_FILL = ['[...]']
+    first = False
+    last = False
+
     def __init__(self, state):
-        self.state = state
+        self.state = state != ' ' and state or None
         self.words = list()
 
     def __len__(self):
@@ -117,13 +122,24 @@ class ChangeGroup(object):
     def append(self, word):
         self.words.append(word)
 
-    def get_html(self):
-        words = ' '.join(self.words)
+    @property
+    def brief_words(self):
+        if len(self.words) > self.WORD_CAP:
+            if self.first:
+                return self.CAP_FILL + self.words[-self.WORD_CAP:]
+            elif self.last:
+                return self.words[:self.WORD_CAP] + self.CAP_FILL
+            elif len(self.words) > self.WORD_CAP * 2:
+                return self.words[:self.WORD_CAP] + self.CAP_FILL + self.words[-self.WORD_CAP:]
+        return self.words
+
+    def get_html(self, joiner, brief=False):
+        txt = joiner.join(brief and self.brief_words or self.words)
         if self.state == '+':
-            return '<strong class="text-success">{0}</strong>'.format(words)
+            return '<strong class="text-success">{0}</strong>'.format(txt)
         if self.state == '-':
-            return '<strong><s class="text-danger">{0}</s></strong>'.format(words)
-        return words
+            return '<strong><s class="text-danger">{0}</s></strong>'.format(txt)
+        return txt
 
 
 class Changes(object):
@@ -134,10 +150,20 @@ class Changes(object):
         self.orig = orig
         self.changed = changed
         self.change_groups = list()
+        self.has_lines = '\n' in self.orig
         self.do_compare()
 
+    @property
+    def joiner(self):
+        return self.has_lines and '\n' or ' '
+
     def split(self, txt):
-        return self.whitespaces.split(txt)
+        return self.has_lines and txt.splitlines() or self.whitespaces.split(txt)
+
+    def join(self, groups, brief):
+        if self.has_lines and brief:
+            return self.joiner.join([cg.get_html(self.joiner) for cg in filter(lambda g: g.state, groups)])
+        return self.joiner.join([cg.get_html(self.joiner, brief=brief) for cg in groups])
 
     def do_compare(self):
         current_state = None
@@ -148,13 +174,16 @@ class Changes(object):
                 if state == '?':
                     continue
                 if state != current_state:
-                    current_state = state
                     change_group = ChangeGroup(state)
+                    if current_state is None:
+                        change_group.first = True
+                    current_state = state
                     self.change_groups.append(change_group)
                 change_group.append(word)
+        change_group.last = True
 
-    def get_html(self):
-        return ' '.join([cg.get_html() for cg in self.change_groups])
+    def get_html(self, brief=False):
+        return self.join(self.change_groups, brief)
 
 
 def includeme(config):

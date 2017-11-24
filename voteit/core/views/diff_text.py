@@ -55,7 +55,6 @@ class AddDiffProposalForm(BaseForm):
     use_ajax = True
 
     def next_success(self, appstruct):
-        print appstruct
         uid = str(uuid4())
         self.request.session[uid] = dict(
             text = appstruct['text'],
@@ -110,8 +109,8 @@ class AddDiffPreviewProposalForm(BaseForm):
         return data
 
     def appstruct(self):
-        text = "%s<br/><br/>%s" % (self.staged_data['leadin'], self.staged_data['text'])
-        return {'diff_text': self.get_staged_diff(), 'text': text}
+        text = "%s<br/><br/>%s" % (self.staged_data['leadin'], nl2br(self.staged_data['text']).unescape())
+        return {'diff_text': nl2br(self.get_staged_diff()).unescape(), 'text': text}
 
     def get_staged_diff(self):
         paragraphs = self.diff_text.get_paragraphs()

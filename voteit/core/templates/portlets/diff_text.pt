@@ -10,7 +10,7 @@
         <span class="glyphicon glyphicon-text-background"></span>
         <span tal:condition="not diff_text.title" i18n:translate="">Diff text</span>
         <span tal:condition="diff_text.title">${diff_text.title}</span>
-        <a href="${request.resource_url(context, 'edit_diff_text')}">Edit</a>
+        <a href="${request.resource_url(context, 'edit_diff_text')}" class="btn btn-primary"><span class="glyphicon glyphicon-pencil"></span> <i18n:translate>Edit</i18n:translate></a>
       </h4>
     </div>
 
@@ -32,12 +32,13 @@
             Add proposal
           </a>
         </a><br/>
-        ${structure: row}
+        <tal:newlines repeat="line row.splitlines()">${structure: line}<br/></tal:newlines>
       </div>
 
     </tal:iter>
-    <div class="well">
-      Hello world
+    <div class="well" i18n:translate="">
+      Propose changes to paragraphs using the <em>Add proposal</em> method above.
+      Moving, adding or removing paragraphs is done using ordinary proposals below.
     </div>
   </div>
 </div>
