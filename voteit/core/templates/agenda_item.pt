@@ -36,7 +36,6 @@
         }
 
         function notify_filter_active() {
-        console.log('hello');
             var message = '${structure: filter_msg|''}';
             arche.create_flash_message(message,
                 {id: 'filter-active-notice',
