@@ -1,3 +1,27 @@
+function setCookie(cname, cvalue, exdays) {
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays*24*60*60*1000));
+    var expires = "expires="+ d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+
+function getCookie(cname) {
+    var name = cname + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var ca = decodedCookie.split(';');
+    for(var i = 0; i <ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
+
+
 if(typeof(voteit) == "undefined"){
     voteit = {};
 }
@@ -87,7 +111,7 @@ voteit.show_agenda = function() {
     if ($(window).width() >= 768) {
         //Desktop version
         $('#fixed-nav').addClass('activated').show();
-        document.cookie = "voteit.hide_agenda=;path=/";
+        setCookie("voteit.hide_agenda");
     } else {
         //Small version
         voteit.show_nav('#fixed-nav');
@@ -100,7 +124,7 @@ voteit.hide_agenda = function() {
     $('body').removeClass('left-fixed-active');
     if ($(window).width() >= 768) {
         $('#fixed-nav').removeClass('activated');
-        document.cookie = "voteit.hide_agenda=1;path=/";
+        setCookie("voteit.hide_agenda", "1");
     } else {
         //Small version
         voteit.hide_nav('#fixed-nav');
