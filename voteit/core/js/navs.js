@@ -77,7 +77,7 @@ voteit.load_inline_menu = function(selector, url) {
         voteit.hide_nav(selector);
     } else {
         arche.actionmarker_feedback(initiator, true);
-        var request = arche.do_request(url);
+        var request = arche.do_request(url, {timeout: 5000});
         request.done(function(response) {
             voteit.show_nav(selector);
             $(selector).html(response);
