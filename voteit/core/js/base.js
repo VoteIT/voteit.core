@@ -3,7 +3,7 @@
     //Scroll extension
     $.fn.goTo = function() {
         $('html, body').animate({
-            scrollTop: $(this).offset().top - 200 + 'px'
+            scrollTop: $(this).offset().top - 300 + 'px'
         }, 'fast');
         return this; // for chaining...
     }
