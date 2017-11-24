@@ -81,9 +81,12 @@ voteit.load_inline_menu = function(selector, url) {
         request.done(function(response) {
             voteit.show_nav(selector);
             $(selector).html(response);
-            arche.actionmarker_feedback(initiator, false);
             initiator.addClass('open');
         });
+        request.always(function() {
+            arche.actionmarker_feedback(initiator, false);
+        })
+        request.fail(arche.flash_error);
         return request;
     }
 }
