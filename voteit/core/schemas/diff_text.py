@@ -51,7 +51,7 @@ class DiffTextContentSchema(colander.Schema):
 
 
 def _get_request_para(request):
-    para = request.GET.get('para', None)
+    para = request.params.get('para', None)
     if not para:
         return
     try:
@@ -151,23 +151,27 @@ def staged_text_change(node, kw):
 
 class AddDiffPreviewSchema(ProposalSchema):
     widget = maybe_modal_form
+    leadin = colander.SchemaNode(
+        colander.String(),
+        title=_("Lead-in"),
+        default=default_leadin,
+        widget=deform.widget.TextInputWidget(readonly=True),
+        missing="",
+        rows=4,
+    )
+    text = colander.SchemaNode(
+        colander.String(),
+        widget = deform.widget.HiddenWidget(),
+        missing="",
+    )
     diff_text = colander.SchemaNode(
         colander.String(),
-        title=_("Text difference"),
-        description = _("text_diff_readonly_description",
-                                     default="The text above shows the difference between "
-                                             "your text and the original text. "
-                                             "New lines are green, removed lines are red and strikethrough."),
-        widget = deform.widget.TextAreaWidget(readonly=True, readonly_template='readonly/diff_html'),
-        missing='',
+        missing="",
+        widget=deform.widget.TextInputWidget(
+            readonly = True,
+            readonly_template = 'readonly/diff_html',
+        ),
     )
-
-    def after_bind(self, schema, node):
-        self['text'].widget.readonly = True
-        self['text'].widget.readonly_template = 'readonly/diff_html'
-        self['text'].title = _("Your proposal")
-        self['text'].description = ""
-        self['text'].missing = ""
 
 
 def includeme(config):

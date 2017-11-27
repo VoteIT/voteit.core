@@ -56,13 +56,13 @@ class AddDiffProposalForm(BaseForm):
 
     def next_success(self, appstruct):
         uid = str(uuid4())
+        para = int(self.request.GET['para']) - 1
         self.request.session[uid] = dict(
             text = appstruct['text'],
-            para = int(self.request.GET['para'])-1,
             leadin = appstruct['leadin'],
         )
         url = self.request.resource_url(self.context, 'add_diff_preview',
-                                        query={'modal': 1, 'text_uid': uid})
+                                        query={'modal': 1, 'text_uid': uid, 'para': para})
         return HTTPFound(location=url)
 
 
@@ -108,24 +108,36 @@ class AddDiffPreviewProposalForm(BaseForm):
             raise HTTPBadRequest("Data not found, try again.")
         return data
 
+    @reify
+    def para(self):
+        try:
+            para = int(self.request.params['para'])
+        except (TypeError, KeyError):
+            para = None
+        if para is None:
+            raise HTTPBadRequest("No such parahraph")
+        return para
+
     def appstruct(self):
-        text = "%s<br/><br/>%s" % (self.staged_data['leadin'], nl2br(self.staged_data['text']).unescape())
-        return {'diff_text': nl2br(self.get_staged_diff()).unescape(), 'text': text}
+        return {'text': nl2br(self.staged_data['text']).unescape(),
+                'leadin': self.staged_data['leadin'],
+                'diff_text': nl2br(self.get_staged_diff()).unescape()}
 
     def get_staged_diff(self):
         paragraphs = self.diff_text.get_paragraphs()
-        para = self.staged_data['para']
-        original = paragraphs[para]
+        try:
+            original = paragraphs[self.para]
+        except KeyError:
+            raise HTTPBadRequest("No such diff")
         text = self.staged_data['text']
         return self.diff_text(original, text)
 
     def save_success(self, appstruct):
         self.flash_messages.add(self.default_success, type="success")
         factory = self.request.content_factories[self.type_name]
-        text = "%s\n\n%s" % (self.staged_data['leadin'], self.staged_data['text'])
-        appstruct['text'] = text
-        appstruct['diff_text'] = self.staged_data['text']
-        appstruct['diff_text_para'] = self.staged_data['para']
+        appstruct['text'] = self.staged_data['text']
+        appstruct['diff_text_leadin'] = self.staged_data['leadin']
+        appstruct['diff_text_para'] = self.para
         obj = factory(**appstruct)
         naming_attr = getattr(obj, 'naming_attr', 'title')
         name = generate_slug(self.context, getattr(obj, naming_attr, ''))
@@ -149,7 +161,5 @@ class ProposalDiffView(BaseView):
             original = paragraphs[self.context.diff_text_para]
         except (TypeError, IndexError):
             raise HTTPNotFound("No diff for this context")
-        text = self.diff_text(original, self.context.diff_text)
-        return {
-            'text': nl2br(text).unescape()
-        }
+        text = self.diff_text(original, self.context.text)
+        return {'text': nl2br(text).unescape()}

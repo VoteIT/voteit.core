@@ -3,7 +3,7 @@ from pyramid.traversal import find_interface
 from six import string_types
 from zope.interface import implementer
 
-from voteit.core import VoteITMF as _
+from voteit.core import _
 from voteit.core import security
 from voteit.core.helpers import strip_and_truncate
 from voteit.core.helpers import tags_from_text
@@ -80,12 +80,12 @@ class Proposal(BaseContent, WorkflowAware):
         self.set_field_value('aid_int', value)
 
     @property
-    def diff_text(self):
-        return self.get_field_value('diff_text', '')
-    @diff_text.setter
-    def diff_text(self, value):
+    def diff_text_leadin(self):
+        return self.get_field_value('diff_text_leadin', None)
+    @diff_text_leadin.setter
+    def diff_text_leadin(self, value):
         assert isinstance(value, string_types)
-        self.set_field_value('diff_text', value)
+        self.set_field_value('diff_text_leadin', value)
 
     @property
     def diff_text_para(self):

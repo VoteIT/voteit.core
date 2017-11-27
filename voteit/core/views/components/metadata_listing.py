@@ -61,7 +61,7 @@ def meta_retract(context, request, va, **kw):
 def meta_retract(context, request, va, **kw):
     if request.meeting.diff_text_enabled and  context.diff_text_para != None:
         url = request.resource_url(context, 'diff_view')
-        return """<a data-placement="top" data-external-popover-loaded="false" role="button"
+        return """<a data-open-modal data-modal-class="modal-lg" role="button"
             class="btn btn-default btn-xs" href="%s">%s</a>
         """ % (url, request.localizer.translate(_(u'Diff')))
 
