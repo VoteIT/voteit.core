@@ -13,12 +13,19 @@ from voteit.core.security import MODERATE_MEETING
 from voteit.core import _
 
 
+def _get_other_system_userids(request):
+    userids = list(request.meeting.system_userids)
+    if request.authenticated_userid in userids:
+        userids.remove(request.authenticated_userid)
+    return sorted(userids)
+
+
 @colander.deferred
 def add_as_system_user_widget(node, kw):
     #FIXME: This widget is less suitable than a regular select widget.
     #Figure out a smarter way to change data type returned, since we don't want a string
     request = kw['request']
-    userids = list(request.meeting.system_userids)
+    userids = _get_other_system_userids(request)
     if userids:
         values = [(request.authenticated_userid, _("As yourself"))]
         for userid in userids:
@@ -49,7 +56,7 @@ def system_users_in_add_schema(schema, event):
     """
     #The context check here is essentially a guess if this is an add-view.
     if IAgendaItem.providedBy(event.context) and event.request.has_permission(MODERATE_MEETING):
-        system_userids = event.request.meeting.system_userids
+        system_userids = _get_other_system_userids(event.request)
         if system_userids:
             schema.add(colander.SchemaNode(colander.Set(),
                                            name = 'creator',
