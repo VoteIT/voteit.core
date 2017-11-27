@@ -52,9 +52,9 @@ class DiffText(object):
     def hashtag(self, value):
         self.data['hashtag'] = value
 
-    def __call__(self, base_text, new_text, brief=False):
+    def __call__(self, base_text, new_text, brief=False, no_deleted=False):
         ch = Changes(base_text, new_text)
-        return ch.get_html(brief)
+        return ch.get_html(brief, no_deleted)
 
     def set_appstruct(self, appstruct):
         for (k, v) in appstruct.items():
@@ -147,10 +147,11 @@ class Changes(object):
     differ = Differ()
 
     def __init__(self, orig, changed):
+        # type: (str, str) -> None
+        self.has_lines = '\n' in orig
         self.orig = orig
-        self.changed = changed
+        self.changed = self.has_lines and changed or changed.replace('\n', ' ⏎<br/> ')
         self.change_groups = list()
-        self.has_lines = '\n' in self.orig
         self.do_compare()
 
     @property
@@ -160,30 +161,34 @@ class Changes(object):
     def split(self, txt):
         return self.has_lines and txt.splitlines() or self.whitespaces.split(txt)
 
-    def join(self, groups, brief):
+    def join(self, groups, brief, no_deleted):
         if self.has_lines and brief:
-            return self.joiner.join([cg.get_html(self.joiner) for cg in filter(lambda g: g.state, groups)])
+            groups = filter(lambda g: g.state, groups)
+            brief = False
+        if no_deleted:
+            groups = filter(lambda g: g.state != '-', groups)
         return self.joiner.join([cg.get_html(self.joiner, brief=brief) for cg in groups])
 
     def do_compare(self):
         current_state = None
         for d in self.differ.compare(
             self.split(self.orig),
-            self.split(self.changed)):
-                state, word = d[0], d[2:]
-                if state == '?':
-                    continue
-                if state != current_state:
-                    change_group = ChangeGroup(state)
-                    if current_state is None:
-                        change_group.first = True
-                    current_state = state
-                    self.change_groups.append(change_group)
-                change_group.append(word)
+            self.split(self.changed)
+        ):
+            state, word = d[0], d[2:]
+            if state == '?':
+                continue
+            if state != current_state:
+                change_group = ChangeGroup(state)
+                if current_state is None:
+                    change_group.first = True
+                current_state = state
+                self.change_groups.append(change_group)
+            change_group.append(word)
         change_group.last = True
 
-    def get_html(self, brief=False):
-        return self.join(self.change_groups, brief)
+    def get_html(self, brief=False, no_deleted=False):
+        return self.join(self.change_groups, brief, no_deleted)
 
 
 def includeme(config):
