@@ -108,6 +108,7 @@ def insert_diff_text_portlet(context, event):
 
 class ChangeGroup(object):
     WORD_CAP = 3
+    LINE_CAP = 1
     CAP_FILL = ['[...]']
     first = False
     last = False
@@ -122,19 +123,19 @@ class ChangeGroup(object):
     def append(self, word):
         self.words.append(word)
 
-    @property
-    def brief_words(self):
-        if len(self.words) > self.WORD_CAP:
+    def brief_parts(self, joiner):
+        cap = joiner == ' ' and self.WORD_CAP or self.LINE_CAP
+        if self.state is None and len(self.words) > cap+1:
             if self.first:
-                return self.CAP_FILL + self.words[-self.WORD_CAP:]
+                return self.CAP_FILL + self.words[-cap:]
             elif self.last:
-                return self.words[:self.WORD_CAP] + self.CAP_FILL
-            elif len(self.words) > self.WORD_CAP * 2:
-                return self.words[:self.WORD_CAP] + self.CAP_FILL + self.words[-self.WORD_CAP:]
+                return self.words[:cap] + self.CAP_FILL
+            elif len(self.words) > cap * 2:
+                return self.words[:cap] + self.CAP_FILL + self.words[-cap:]
         return self.words
 
     def get_html(self, joiner, brief=False):
-        txt = joiner.join(brief and self.brief_words or self.words)
+        txt = joiner.join(brief and self.brief_parts(joiner) or self.words)
         if self.state == '+':
             return '<strong class="text-success">{0}</strong>'.format(txt)
         if self.state == '-':
@@ -162,9 +163,6 @@ class Changes(object):
         return self.has_lines and txt.splitlines() or self.whitespaces.split(txt)
 
     def join(self, groups, brief, no_deleted):
-        if self.has_lines and brief:
-            groups = filter(lambda g: g.state, groups)
-            brief = False
         if no_deleted:
             groups = filter(lambda g: g.state != '-', groups)
         return self.joiner.join([cg.get_html(self.joiner, brief=brief) for cg in groups])
