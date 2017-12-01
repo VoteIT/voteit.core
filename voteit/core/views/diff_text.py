@@ -32,17 +32,18 @@ class DiffTextEditForm(DefaultEditForm):
     title = _("Proposed text body")
 
     def __call__(self):
-        res = self.request.root.catalog.query(
-            Eq('type_name', 'Proposal') & Eq('path', resource_path(self.context))
-        )[0]
-        if res.total:
-            msg = _("chaning_text_body_diff_warning",
-              default="Warning! Changing the text body when there are proposals "
-                      "already will change the original text they differ from. "
-                      "Don't to this unless you know what you're doing. "
-                      "Adding new lines will cause the functionality to "
-                      "break completely!")
-            self.flash_messages.add(msg, type='danger', auto_destruct=False)
+        if self.request.method == 'GET':
+            res = self.request.root.catalog.query(
+                Eq('type_name', 'Proposal') & Eq('path', resource_path(self.context))
+            )[0]
+            if res.total:
+                msg = _("chaning_text_body_diff_warning",
+                  default="Warning! Changing the text body when there are proposals "
+                          "already will change the original text they differ from. "
+                          "Don't to this unless you know what you're doing. "
+                          "Adding new lines will cause the functionality to "
+                          "break completely!")
+                self.flash_messages.add(msg, type='danger', auto_destruct=False)
         return super(DiffTextEditForm, self).__call__()
 
     @reify
