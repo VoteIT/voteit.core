@@ -8,13 +8,17 @@
 <div class="modal-header">
   <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
   <h4 class="modal-title">
-    Diff
+    <tal:creator replace="structure request.creators_info(context.creators, portrait=False, no_tag=True, no_userid=True)"></tal:creator>
+    <span tal:content="context.diff_text_leadin" />
   </h4>
 </div>
 <div class="modal-body">
 ${structure: text}
 </div>
 <div class="modal-footer">
-  <p i18n:translate="">Showing diff (help text)</p>
+  <p>
+    <strong><s i18n:translate="" class="text-danger">Red strikeout: Text removed in the proposal.</s></strong><br/>
+    <strong i18n:translate="" class="text-success">Bold green: Text added in the proposal.</strong>
+  </p>
 </div>
 </tal:main>

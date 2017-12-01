@@ -58,12 +58,12 @@ def meta_retract(context, request, va, **kw):
              permission = VIEW,
              interface = IProposal,
              priority = 22)
-def meta_retract(context, request, va, **kw):
+def diff_view(context, request, va, **kw):
     if request.meeting.diff_text_enabled and  context.diff_text_para != None:
         url = request.resource_url(context, 'diff_view')
         return """<a data-open-modal data-modal-class="modal-lg" role="button"
-            class="btn btn-default btn-xs" href="%s">%s</a>
-        """ % (url, request.localizer.translate(_(u'Diff')))
+            class="btn btn-default btn-xs" href="%s"><span class="text-primary">%s</span></a>
+        """ % (url, request.localizer.translate(_(u'Full paragraph')))
 
 
 @view_action('metadata_listing', 'reply',
