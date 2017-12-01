@@ -65,7 +65,11 @@ who respects sex, who has made mistakes and learned from them."""
         paragraphs = obj.get_paragraphs()
         changed = """Who respects sex,\nwho has made mistakes and learned from them!"""
         results = obj(paragraphs[5], changed)
-        expected = '<strong class="text-success">Who</strong> <strong><s class="text-danger">I want someone who has been in love and been hurt, who</s></strong> respects sex,\nwho has made mistakes and learned from <strong><s class="text-danger">them.</s></strong> <strong class="text-success">them!</strong>'
+        expected = u'<strong><s class="text-danger">I want someone who has been in love and been hurt,' \
+                   u'</s></strong>\n<strong class="text-success">Who respects sex,' \
+                   u'</strong>\n<strong><s class="text-danger">who respects sex, ' \
+                   u'who has made mistakes and learned from them.</s></strong>\n' \
+                   u'<strong class="text-success">who has made mistakes and learned from them!</strong>'
         self.assertEqual(expected, results)
 
 

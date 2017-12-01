@@ -56,12 +56,14 @@ class Proposal(BaseContent, WorkflowAware):
 
     @property
     def tags(self): #arche compat
-        tags = set(tags_from_text(self.text))
+        tags = tags_from_text(self.text)
         if self.diff_text_leadin:
-            tags.update(tags_from_text(self.diff_text_leadin))
+            for tag in tags_from_text(self.diff_text_leadin):
+                if tag not in tags:
+                    tags.append(tag)
         aid = self.get_field_value('aid', None)
         if aid is not None and aid not in tags:
-            tags.add(aid)
+            tags.append(aid)
         return list(tags)
     @tags.setter
     def tags(self, value):
