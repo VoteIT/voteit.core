@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2017-12-01 15:40+0100\n"
-"PO-Revision-Date: 2017-12-01 16:05+0100\n"
+"POT-Creation-Date: 2017-12-01 16:34+0100\n"
+"PO-Revision-Date: 2017-12-01 16:30+0100\n"
 "Last-Translator: Robin Harms Oredsson <robin@betahaus.net>\n"
 "Language-Team: sv <LL@li.org>\n"
 "Language: sv\n"
@@ -287,9 +287,9 @@ msgid "forbidden_on_closed_meetings"
 msgstr "Du behöver kontakta moderator för att få tillgång till detta möte."
 
 #. Default: Can't find an access policy with the id '${policy}'.
-#. This might mean that the registered
+#.                                     This might mean that the registered
 #. access type for this meeting doesn't exist.
-#. Please contact the moderator about this.
+#.                                     Please contact the moderator about this.
 #: voteit/core/views/meeting.py:149
 msgid "access_policy_not_found"
 msgstr ""
@@ -306,9 +306,9 @@ msgid "Configure access policy"
 msgstr "Inställningar för vald accesspolicy"
 
 #. Default: Can't find an access policy with the id '${policy}'.
-#. This might mean that the registered
+#.                                     This might mean that the registered
 #. access policy type for this meeting doesn't exist.
-#. Please change access policy.
+#.                                     Please change access policy.
 #: voteit/core/views/meeting.py:187
 msgid "access_policy_not_found_moderator"
 msgstr ""
@@ -449,7 +449,7 @@ msgstr ""
 "La till ${added} inbjudningar med hanterade inte ${rejected} eftersom de "
 "redan existerar eller redan har använts."
 
-#: voteit/core/views/control_panel.py:27 voteit/core/schemas/poll.py:82
+#: voteit/core/views/control_panel.py:30 voteit/core/schemas/poll.py:82
 #: voteit/core/templates/portlets/proposals.pt:12
 #: voteit/core/portlets/agenda_item.py:49
 msgid "Proposals"
@@ -457,33 +457,34 @@ msgstr "Förslag"
 
 #. Default: Change behaviour of proposals and set users that moderators may add
 #. proposals as.
-#: voteit/core/views/control_panel.py:28
+#: voteit/core/views/control_panel.py:31
 msgid "control_panel_proposal_description"
 msgstr ""
 "Ändra beteende på förslag och ställ in användare som moderatorer kan lägga "
 "förslag som."
 
-#: voteit/core/views/control_panel.py:34
+#: voteit/core/views/control_panel.py:37
 msgid "Polls and votes"
 msgstr "Omröstningar och röster"
 
-#: voteit/core/views/control_panel.py:37 voteit/core/views/control_panel.py:155
+#: voteit/core/views/control_panel.py:40 voteit/core/views/control_panel.py:158
 msgid "Notifications"
 msgstr "Notifieringar"
 
-#: voteit/core/views/control_panel.py:40
+#: voteit/core/views/control_panel.py:43
 msgid "Agenda labels"
 msgstr "Dagordningsetiketter"
 
-#: voteit/core/views/control_panel.py:44
-msgid "Diff text"
-msgstr "Textskillnad"
+#: voteit/core/views/control_panel.py:47
+#, fuzzy
+msgid "Text difference proposals"
+msgstr "Redigera valda förslag"
 
-#: voteit/core/views/control_panel.py:72
+#: voteit/core/views/control_panel.py:75
 msgid "Access policy"
 msgstr "Accesspolicy"
 
-#: voteit/core/views/control_panel.py:95
+#: voteit/core/views/control_panel.py:98
 #: voteit/core/views/templates/_participants.pt:19
 #: voteit/core/templates/minutes.pt:15
 #: voteit/core/templates/snippets/participants_tabs.pt:10
@@ -492,29 +493,28 @@ msgstr "Accesspolicy"
 msgid "Participants"
 msgstr "Deltagare"
 
-#: voteit/core/views/control_panel.py:112
-#: voteit/core/views/control_panel.py:114
-#: voteit/core/views/control_panel.py:116
-#: voteit/core/views/control_panel.py:118
-#: voteit/core/views/control_panel.py:120
+#: voteit/core/views/control_panel.py:115
+#: voteit/core/views/control_panel.py:117
+#: voteit/core/views/control_panel.py:119
+#: voteit/core/views/control_panel.py:121
+#: voteit/core/views/control_panel.py:123
 #: voteit/core/plugins/like_button.py:106
 msgid "Settings"
 msgstr "Inställningar"
 
-#: voteit/core/views/control_panel.py:135
+#: voteit/core/views/control_panel.py:138
 msgid "Proposal settings"
 msgstr "Förslagsinställningar"
 
-#: voteit/core/views/control_panel.py:145
+#: voteit/core/views/control_panel.py:148
 #: voteit/core/views/components/moderator_actions.py:42
 #: voteit/core/views/components/moderator_actions.py:51
 msgid "Poll settings"
 msgstr "Inställningar för omröstning"
 
-#: voteit/core/views/control_panel.py:165
-#, fuzzy
+#: voteit/core/views/control_panel.py:168
 msgid "Diff text settings"
-msgstr "ReCaptcha-inställningar"
+msgstr "Inställningar för ändringsförslag"
 
 #: voteit/core/views/poll.py:37 voteit/core/views/poll.py:53
 #, python-format
@@ -621,8 +621,9 @@ msgid "Saved"
 msgstr "Sparad"
 
 #: voteit/core/views/diff_text.py:68
-msgid "Add new proposal"
-msgstr "Lägg till ett förslag"
+#: voteit/core/templates/portlets/diff_text.pt:35
+msgid "Add proposal"
+msgstr "Lägg till förslag"
 
 #: voteit/core/views/diff_text.py:69
 #: voteit/core/views/templates/_agenda_item.pt:15
@@ -1150,19 +1151,19 @@ msgid "paragraph"
 msgstr "stycke"
 
 #: voteit/core/schemas/diff_text.py:34
-#, fuzzy
 msgid "Text body"
-msgstr "Text"
+msgstr "Brödtext"
 
 #. Default: Each paragraph will have its own hashtag. Separate paragraphs with
 #. 2 new lines.
 #: voteit/core/schemas/diff_text.py:35
-#, fuzzy
 msgid "diff_text_schema_text_description"
-msgstr "Du kan lägga till fler i inställnings-menyn."
+msgstr ""
+"Varje stycke kommer ha sin egen tagg. Dela i stycken med dubbla "
+"radbrytningar."
 
 #: voteit/core/schemas/diff_text.py:45
-msgid "Base hashtags for paragraphs"
+msgid "Base hashtag for paragraphs"
 msgstr ""
 
 #: voteit/core/schemas/diff_text.py:46
@@ -1189,9 +1190,8 @@ msgid "Please keep the hashtag ${hashtag} in your lead-in."
 msgstr "Vänligen behåll taggen ${hashtag} i inledningen"
 
 #: voteit/core/schemas/diff_text.py:122
-#, fuzzy
 msgid "You haven't changed anything"
-msgstr "Du har inte skrivit något än!"
+msgstr "Du har inte skrivit något än"
 
 #: voteit/core/schemas/diff_text.py:130 voteit/core/schemas/diff_text.py:156
 msgid "Lead-in"
@@ -1210,7 +1210,7 @@ msgstr "Standarddagordningens namn"
 #. Default: Describe the purpose of this agenda
 #: voteit/core/schemas/agenda_template.py:23
 msgid "agenda_template_description_description"
-msgstr "Beskriv denna standarddagordning."
+msgstr "Beskriv denna standarddagordning"
 
 #: voteit/core/schemas/agenda_template.py:27
 #: voteit/core/templates/minutes.pt:18
@@ -1358,9 +1358,9 @@ msgstr "Inbjudningskoden som du fick i dett ebrev"
 
 #. Default: One user can have more than one role. Note that to be able to
 #. propose,
-#. discuss and vote you need respective role. This is
+#.                         discuss and vote you need respective role. This is
 #. selected by default. If you want
-#. to add a user that can only view, select View and
+#.                         to add a user that can only view, select View and
 #. uncheck everything else.
 #: voteit/core/schemas/invite_ticket.py:28
 msgid "add_tickets_roles_description"
@@ -1986,7 +1986,7 @@ msgstr "Hantera"
 
 #: voteit/core/templates/portlets/inline_add_button_prop.pt:10
 msgid "Add Proposal"
-msgstr "Lägg till ett förslag"
+msgstr "Lägg till förslag"
 
 #. Default: You lack the required permission to add.
 #: voteit/core/templates/portlets/inline_add_button_prop.pt:14
@@ -2098,20 +2098,14 @@ msgstr "Filter: Visar alla"
 msgid "Only:"
 msgstr "Bara:"
 
-#: voteit/core/templates/portlets/diff_text.pt:35
-#, fuzzy
-msgid "Add proposal"
-msgstr "Lägg till ett förslag"
-
 #. Default: Propose changes to paragraphs by clicking 'Add proposal' above. If
 #. your proposal doesn't have to do with the text above, add it in the regular
 #. proposal part below.
 #: voteit/core/templates/portlets/diff_text.pt:45
 msgid "diff_text_portlet_footer_help"
 msgstr ""
-"Föreslå ändringar i stycken genom att klicka på 'Lägg till ett förslag' "
-"ovan. Om ditt förslag inte berör texten ovan, lägg det som ett vanligt "
-"förslag nedan."
+"Föreslå ändringar i stycken genom att klicka på 'Lägg till förslag' ovan. Om "
+"ditt förslag inte berör texten ovan, lägg det som ett vanligt förslag nedan."
 
 #. Default: Access will only be granted through invites (Default)
 #: voteit/core/plugins/invite_only_ap.py:10
@@ -2119,9 +2113,9 @@ msgid "meeting_access_invite_only_label"
 msgstr "Tillgång ges bara genom inbjudningar (Standard)"
 
 #. Default: This meeting is invite only.
-#. That means that a mail will be sent with an access
+#.                     That means that a mail will be sent with an access
 #. ticket.
-#. Contact meeting moderators for more information.
+#.                     Contact meeting moderators for more information.
 #: voteit/core/plugins/invite_only_ap.py:12
 msgid "invite_only_meeting_access_request_description"
 msgstr ""
@@ -2474,6 +2468,12 @@ msgstr ""
 #: voteit/core/models/user.py:33
 msgid "User"
 msgstr "Användare"
+
+#~ msgid "Diff text"
+#~ msgstr "Textskillnad"
+
+#~ msgid "Add new proposal"
+#~ msgstr "Lägg till förslag"
 
 #~ msgid "<Don't copy>"
 #~ msgstr "<Kopiera inte>"

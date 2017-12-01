@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 from arche.views.base import DefaultEditForm
 from betahaus.viewcomponent import render_view_group
 from betahaus.viewcomponent import view_action

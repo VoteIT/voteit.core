@@ -65,7 +65,7 @@ class DiffTextEditForm(DefaultEditForm):
 class AddDiffProposalForm(BaseForm):
     schema_name='add_diff'
     type_name='Proposal'
-    title = _("Add new proposal")
+    title = _("Add proposal")
     buttons = (deform.Button('next', title=_("Next")),)
     formid = 'add_diff_proposal_form'
     use_ajax = True

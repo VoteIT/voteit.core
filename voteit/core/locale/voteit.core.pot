@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE 1.0\n"
-"POT-Creation-Date: 2017-12-01 15:55+0100\n"
+"POT-Creation-Date: 2017-12-01 16:34+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -416,7 +416,7 @@ msgstr ""
 msgid "added_tickets_text_some_rejected"
 msgstr ""
 
-#: ././voteit/core/views/control_panel.py:27 ././voteit/core/schemas/poll.py:82
+#: ././voteit/core/views/control_panel.py:30 ././voteit/core/schemas/poll.py:82
 #: ././voteit/core/templates/portlets/proposals.pt:12
 #: ././voteit/core/portlets/agenda_item.py:49
 msgid "Proposals"
@@ -424,32 +424,32 @@ msgstr ""
 
 #. Default: Change behaviour of proposals and set users that moderators may add
 #. proposals as.
-#: ././voteit/core/views/control_panel.py:28
+#: ././voteit/core/views/control_panel.py:31
 msgid "control_panel_proposal_description"
 msgstr ""
 
-#: ././voteit/core/views/control_panel.py:34
+#: ././voteit/core/views/control_panel.py:37
 msgid "Polls and votes"
 msgstr ""
 
-#: ././voteit/core/views/control_panel.py:37
-#: ././voteit/core/views/control_panel.py:155
+#: ././voteit/core/views/control_panel.py:40
+#: ././voteit/core/views/control_panel.py:158
 msgid "Notifications"
 msgstr ""
 
-#: ././voteit/core/views/control_panel.py:40
+#: ././voteit/core/views/control_panel.py:43
 msgid "Agenda labels"
 msgstr ""
 
-#: ././voteit/core/views/control_panel.py:44
+#: ././voteit/core/views/control_panel.py:47
 msgid "Text difference proposals"
 msgstr ""
 
-#: ././voteit/core/views/control_panel.py:72
+#: ././voteit/core/views/control_panel.py:75
 msgid "Access policy"
 msgstr ""
 
-#: ././voteit/core/views/control_panel.py:95
+#: ././voteit/core/views/control_panel.py:98
 #: ././voteit/core/views/templates/_participants.pt:19
 #: ././voteit/core/templates/minutes.pt:15
 #: ././voteit/core/templates/snippets/participants_tabs.pt:10
@@ -458,26 +458,26 @@ msgstr ""
 msgid "Participants"
 msgstr ""
 
-#: ././voteit/core/views/control_panel.py:112
-#: ././voteit/core/views/control_panel.py:114
-#: ././voteit/core/views/control_panel.py:116
-#: ././voteit/core/views/control_panel.py:118
-#: ././voteit/core/views/control_panel.py:120
+#: ././voteit/core/views/control_panel.py:115
+#: ././voteit/core/views/control_panel.py:117
+#: ././voteit/core/views/control_panel.py:119
+#: ././voteit/core/views/control_panel.py:121
+#: ././voteit/core/views/control_panel.py:123
 #: ././voteit/core/plugins/like_button.py:106
 msgid "Settings"
 msgstr ""
 
-#: ././voteit/core/views/control_panel.py:135
+#: ././voteit/core/views/control_panel.py:138
 msgid "Proposal settings"
 msgstr ""
 
-#: ././voteit/core/views/control_panel.py:145
+#: ././voteit/core/views/control_panel.py:148
 #: ././voteit/core/views/components/moderator_actions.py:42
 #: ././voteit/core/views/components/moderator_actions.py:51
 msgid "Poll settings"
 msgstr ""
 
-#: ././voteit/core/views/control_panel.py:165
+#: ././voteit/core/views/control_panel.py:168
 msgid "Diff text settings"
 msgstr ""
 
@@ -574,7 +574,8 @@ msgid "Saved"
 msgstr ""
 
 #: ././voteit/core/views/diff_text.py:68
-msgid "Add new proposal"
+#: ././voteit/core/templates/portlets/diff_text.pt:35
+msgid "Add proposal"
 msgstr ""
 
 #: ././voteit/core/views/diff_text.py:69
@@ -1968,10 +1969,6 @@ msgstr ""
 
 #: ././voteit/core/templates/portlets/agenda_fixed.pt:34
 msgid "Only:"
-msgstr ""
-
-#: ././voteit/core/templates/portlets/diff_text.pt:35
-msgid "Add proposal"
 msgstr ""
 
 #. Default: Propose changes to paragraphs by clicking 'Add proposal' above. If
