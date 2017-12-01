@@ -42,7 +42,7 @@ class DiffTextContentSchema(colander.Schema):
     )
     hashtag = colander.SchemaNode(
         colander.String(),
-        title=_("Base hashtags for paragraphs"),
+        title=_("Base hashtag for paragraphs"),
         description=_("Use lowercase a-z. All paragraphs will be marked with this tag and then a number. "
                       "All new proposals will use it as a mandatory hashtag."),
         default=default_hashtag_name,

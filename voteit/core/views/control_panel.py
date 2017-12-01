@@ -41,7 +41,7 @@ def diff_text_active(context, request, va):
              check_active=agenda_labels_active)
 @view_action('control_panel', 'diff_text',
              panel_group='control_panel_diff_text',
-             title=_("Diff text"),
+             title=_("Text difference proposals"),
              check_active=diff_text_active)
 def control_panel_category(context, request, va, active=True, **kw):
     """
