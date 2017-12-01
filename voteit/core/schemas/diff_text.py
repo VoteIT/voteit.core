@@ -14,6 +14,10 @@ from voteit.core.validators import html_string_validator
 class DiffTextSettingsSchema(colander.Schema):
     diff_text_enabled = colander.SchemaNode(
         colander.Bool(),
+        title = _("Enable diff text proposals"),
+        description = _("diff_text_enabled_description",
+                        default="Makes it possible to add a text chunk "
+                        "and then write proposals on changes in that text.")
     )
 
 
