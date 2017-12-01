@@ -85,7 +85,7 @@ def default_leadin(node, kw):
     hashtag = "%s-%s" % (diff_text.hashtag, para)
     return request.localizer.translate(
         _("default_lead_in",
-          default="proposes to change #${hashtag} to:\n",
+          default="proposes changes to #${hashtag}:",
           mapping={'hashtag': hashtag})
     )
 
