@@ -11,7 +11,9 @@ from pyramid.httpexceptions import HTTPFound
 from pyramid.httpexceptions import HTTPNotFound
 from pyramid.renderers import render
 from pyramid.response import Response
+from pyramid.traversal import resource_path
 from pyramid.view import view_config
+from repoze.catalog.query import Eq
 from webhelpers.html.converters import nl2br
 
 from voteit.core import security
@@ -27,7 +29,21 @@ from voteit.core import _
              renderer='arche:templates/form.pt')
 class DiffTextEditForm(DefaultEditForm):
     schema_name='edit_diff_text'
-    title = _("Diff text content")
+    title = _("Proposed text body")
+
+    def __call__(self):
+        res = self.request.root.catalog.query(
+            Eq('type_name', 'Proposal') & Eq('path', resource_path(self.context))
+        )[0]
+        if res.total:
+            msg = _("chaning_text_body_diff_warning",
+              default="Warning! Changing the text body when there are proposals "
+                      "already will change the original text they differ from. "
+                      "Don't to this unless you know what you're doing. "
+                      "Adding new lines will cause the functionality to "
+                      "break completely!")
+            self.flash_messages.add(msg, type='danger', auto_destruct=False)
+        return super(DiffTextEditForm, self).__call__()
 
     @reify
     def diff_text(self):

@@ -7,32 +7,31 @@ from repoze.catalog.query import Any
 from repoze.catalog.query import Eq
 
 from voteit.core.models.interfaces import IDiffText
-from voteit.core import security
 from voteit.core import _
 from voteit.core.security import ADD_PROPOSAL
 
 
 class DiffTextPortlet(PortletType):
     name = "diff_text"
-    title = _("Agenda")
+    title = _("Proposed text body")
     tpl = "voteit.core:templates/portlets/diff_text.pt"
 
     def render(self, context, request, view, **kwargs):
         if request.meeting:
             diff_text = IDiffText(context)
             paragraphs = diff_text.get_paragraphs()
-            tags_count = self.count_tags(context, request, diff_text.hashtag, len(paragraphs))
-
-            response = {'title': self.title,
-                        'portlet': self.portlet,
-                        'diff_text': diff_text,
-                        'paragraphs': paragraphs,
-                        'tags_count': tags_count,
-                        'can_add': request.has_permission(ADD_PROPOSAL, context),
-                        'view': view}
-            return render(self.tpl,
-                          response,
-                          request = request)
+            if paragraphs or request.is_moderator:
+                tags_count = self.count_tags(context, request, diff_text.hashtag, len(paragraphs))
+                response = {'title': self.title,
+                            'portlet': self.portlet,
+                            'diff_text': diff_text,
+                            'paragraphs': paragraphs,
+                            'tags_count': tags_count,
+                            'can_add': request.has_permission(ADD_PROPOSAL, context),
+                            'view': view}
+                return render(self.tpl,
+                              response,
+                              request = request)
 
     def count_tags(self, context, request, base_tag, num):
         results = {}
