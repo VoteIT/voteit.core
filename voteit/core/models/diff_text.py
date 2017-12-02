@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-from difflib import Differ
+from difflib import SequenceMatcher
 import re
 
 import colander
@@ -113,45 +113,42 @@ class ChangeGroup(object):
     first = False
     last = False
 
-    def __init__(self, state):
-        self.state = state != ' ' and state or None
-        self.words = list()
+    def __init__(self, state, parts):
+        self.state = state
+        self.parts = parts
 
     def __len__(self):
-        return len(self.words)
-
-    def append(self, word):
-        self.words.append(word)
+        return len(self.parts)
 
     def brief_parts(self, joiner):
         cap = joiner == ' ' and self.WORD_CAP or self.LINE_CAP
-        if self.state is None and len(self.words) > cap+1:
+        if self.state == 'equal' and len(self) > cap+1:
             if self.first:
-                return self.CAP_FILL + self.words[-cap:]
+                return self.CAP_FILL + self.parts[-cap:]
             elif self.last:
-                return self.words[:cap] + self.CAP_FILL
-            elif len(self.words) > cap * 2:
-                return self.words[:cap] + self.CAP_FILL + self.words[-cap:]
-        return self.words
+                return self.parts[:cap] + self.CAP_FILL
+            elif len(self) > (cap * 2) + 1:
+                return self.parts[:cap] + self.CAP_FILL + self.parts[-cap:]
+        return self.parts
 
     def get_html(self, joiner, brief=False):
-        txt = joiner.join(brief and self.brief_parts(joiner) or self.words)
-        if self.state == '+':
+        txt = joiner.join(brief and self.brief_parts(joiner) or self.parts)
+        if self.state == 'insert':
             return '<strong class="text-success">{0}</strong>'.format(txt)
-        if self.state == '-':
+        if self.state == 'delete':
             return '<strong><s class="text-danger">{0}</s></strong>'.format(txt)
         return txt
 
 
 class Changes(object):
     whitespaces = re.compile('\s+')
-    differ = Differ()
+    differ = SequenceMatcher()
 
     def __init__(self, orig, changed):
         # type: (str, str) -> None
         self.has_lines = '\n' in orig
-        self.orig = orig
-        self.changed = self.has_lines and changed or changed.replace('\n', ' ⏎<br/> ')
+        self.orig = self.split(orig)
+        self.changed = self.split(self.has_lines and changed or changed.replace('\n', ' ⏎<br/> '))
         self.change_groups = list()
         self.do_compare()
 
@@ -164,26 +161,28 @@ class Changes(object):
 
     def join(self, groups, brief, no_deleted):
         if no_deleted:
-            groups = filter(lambda g: g.state != '-', groups)
+            groups = filter(lambda g: g.state != 'delete', groups)
         return self.joiner.join([cg.get_html(self.joiner, brief=brief) for cg in groups])
 
+    def add_change_group(self, state, astart, aend, bstart, bend):
+        if state == 'insert':
+            parts = self.changed[bstart:bend]
+        else:  # 'delete' och 'equal'
+            parts = self.orig[astart:aend]
+        self.change_groups.append(ChangeGroup(state, parts))
+
     def do_compare(self):
-        current_state = None
-        for d in self.differ.compare(
-            self.split(self.orig),
-            self.split(self.changed)
-        ):
-            state, word = d[0], d[2:]
-            if state == '?':
-                continue
-            if state != current_state:
-                change_group = ChangeGroup(state)
-                if current_state is None:
-                    change_group.first = True
-                current_state = state
-                self.change_groups.append(change_group)
-            change_group.append(word)
-        change_group.last = True
+        self.differ.set_seqs(self.orig, self.changed)
+        for opcode in self.differ.get_opcodes():
+            state, positions = opcode[0], opcode[1:]
+            if state == 'replace':
+                self.add_change_group('delete', *positions)
+                self.add_change_group('insert', *positions)
+            else:
+                self.add_change_group(*opcode)
+        if self.change_groups:
+            self.change_groups[0].first = True
+            self.change_groups[-1].last = True
 
     def get_html(self, brief=False, no_deleted=False):
         return self.join(self.change_groups, brief, no_deleted)
