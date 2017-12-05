@@ -106,17 +106,19 @@ voteit.show_agenda = function() {
         });
     }
 
-    //FIXME: Can we tie this to bootstraps grid float breakpoint var?
+
     $('body').addClass('left-fixed-active');
+    //FIXME: Can we tie this to bootstraps grid float breakpoint var?
     if ($(window).width() >= 768) {
         //Desktop version
         $('#fixed-nav').addClass('activated').show();
         setCookie("voteit.hide_agenda");
+        voteit.hide_nav();
     } else {
         //Small version
         voteit.show_nav('#fixed-nav');
     }
-    $('#agenda-toggler').addClass('open')
+    $('#agenda-toggler').addClass('open');
 }
 
 
@@ -135,7 +137,13 @@ voteit.hide_agenda = function() {
 
 voteit.toggle_agenda = function() {
     if ($('#fixed-nav').hasClass('activated')) {
-        voteit.hide_agenda();
+        // If another menu is open, assume we want to switch to this area instead
+        if ($('.menu-toggler.open').length > 0) {
+            voteit.hide_nav();
+        } else {
+            // No other menus, hide the agenda
+            voteit.hide_agenda();
+        }
     } else {
         voteit.show_agenda();
     }
