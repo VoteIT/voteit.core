@@ -47,7 +47,7 @@ def meta_retract(context, request, va, **kw):
         return
     #Now for the 'expensive' stuff
     ai = find_interface(context, IAgendaItem)
-    if not request.has_permission(ADD_PROPOSAL, ai) and request.has_permission(RETRACT, context):
+    if not (request.has_permission(ADD_PROPOSAL, ai) and request.has_permission(RETRACT, context)):
         return
     url = request.resource_url(context, 'state', query = {'state': 'retracted'})
     return '<a role="button" class="btn btn-default btn-xs" href="%s"><span class="text-warning">%s</span></a> ' % \
