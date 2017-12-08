@@ -294,7 +294,7 @@ def email_voters_about_ongoing_poll(poll, request=None):
     """
     meeting = find_interface(poll, IMeeting)
     assert meeting
-    if not meeting.get_field_value('poll_notification_setting', True):
+    if not meeting.get_field_value('poll_notification_setting', False):
         return
     if request is None:
         request = get_current_request()
@@ -313,8 +313,7 @@ def email_voters_about_ongoing_poll(poll, request=None):
     response['meeting_url'] = request.resource_url(meeting)
     response['poll_url'] = request.resource_url(poll)
     sender = "%s <%s>" % (meeting.get_field_value('meeting_mail_name'), meeting.get_field_value('meeting_mail_address'))
-    #FIXME: This should be detatched into a view component
-    body_html = render('../views/templates/email/ongoing_poll_notification.pt', response, request=request)
+    body_html = render('voteit.core:templates/email/ongoing_poll_notification.pt', response, request=request)
     #Since subject won't be part of a renderer, we need to translate it manually
     #Keep the _ -syntax otherwise Babel/lingua won't pick up the string
     subject = _(u"VoteIT: Open poll")
