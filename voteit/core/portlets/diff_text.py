@@ -9,6 +9,7 @@ from repoze.catalog.query import Eq
 from voteit.core.models.interfaces import IDiffText
 from voteit.core import _
 from voteit.core.security import ADD_PROPOSAL
+from voteit.core.security import EDIT
 
 
 class DiffTextPortlet(PortletType):
@@ -28,6 +29,7 @@ class DiffTextPortlet(PortletType):
                             'paragraphs': paragraphs,
                             'tags_count': tags_count,
                             'can_add': request.has_permission(ADD_PROPOSAL, context),
+                            'can_edit': request.has_permission(EDIT, context),
                             'view': view}
                 return render(self.tpl,
                               response,

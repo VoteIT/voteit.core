@@ -11,6 +11,7 @@
         <span tal:condition="not diff_text.title">${title}</span>
         <span tal:condition="diff_text.title">${diff_text.title}</span>
         <a href="${request.resource_url(context, 'edit_diff_text')}"
+           tal:condition="can_edit"
            class="btn btn-default"
            title="Edit" i18n:attributes="title;">
           <span class="glyphicon glyphicon-pencil"></span>
@@ -31,21 +32,32 @@
              class="btn btn-default btn-xs"
              data-open-modal
              data-modal-dialog-class="modal-lg"
-             href="${request.resource_url(context, 'add_diff_proposal', query={'para': repeat['row'].number})}"
-             i18n:translate="">
-            Add proposal
+             href="${request.resource_url(context, 'add_diff_proposal', query={'para': repeat['row'].number})}">
+            <span tal:condition="context.proposal_block" class="glyphicon glyphicon-lock"></span>
+
+            <tal:ts i18n:translate="">Add proposal</tal:ts>
           </a>
         </a><br/>
         <tal:newlines repeat="line row.splitlines()">${structure: line}<br/></tal:newlines>
       </div>
 
     </tal:iter>
+
     <div tal:condition="paragraphs"
-         class="well"
-         i18n:translate="diff_text_portlet_footer_help">
-      Propose changes to paragraphs by clicking 'Add proposal' above.
-      If your proposal doesn't have to do with the text above, add it in the regular proposal part below.
+         class="well">
+      <tal:can_add tal:condition="can_add" i18n:translate="diff_text_portlet_footer_help">
+        Propose changes to paragraphs by clicking 'Add proposal' above.
+        If your proposal doesn't have to do with the text above, add it in the regular proposal part below.
+      </tal:can_add>
+
+      <tal:cant_add condition="not can_add">
+        <span tal:condition="not context.proposal_block"
+          i18n:translate="lack_add_perm">You lack the required permission to add.</span>
+        <span tal:condition="context.proposal_block"
+          i18n:translate="">The moderator has locked the ability to add more proposals.</span>
+      </tal:cant_add>
     </div>
+
   </div>
 </div>
 </tal:main>
