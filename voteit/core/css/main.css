@@ -762,7 +762,7 @@ footer {
 .collapsible {
   position: relative; }
   .collapsible .collapsible-text {
-    padding-bottom: 25px; }
+    padding-bottom: 45px; }
   .collapsible.active .collapsible-text {
     overflow: hidden; }
     .collapsible.active .collapsible-text:before {
