@@ -57,12 +57,14 @@ class ParticipantsView(BaseView):
         users = self.root['users']
         results = []
         userids = get_meeting_participants(self.context)
-        query = "userid in any(%s)" % list(userids)
         role_count = {}
         for key in dict(_VIEW_ROLES).keys():
             role_count[key] = 0
-        for user in self.catalog_query(query, resolve = True, perm = None, sort_index = 'sortable_title'):
-            uroles = groupfinder(user.userid, self.request)
+        for userid in userids:
+            #This should never generate key error since there are guards for that
+            #But still...
+            user = users[userid]
+            uroles = groupfinder(userid, self.request)
             userdata = {'first_name': user.first_name,
                         'last_name': user.last_name,
                         'userid': user.userid,}
