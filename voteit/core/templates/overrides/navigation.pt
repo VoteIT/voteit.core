@@ -28,10 +28,6 @@
         </tal:unauthenticated>
 
         <li>
-          ${structure: view.render_view_action('nav_right', 'set_language')|''}
-        </li>
-
-        <li>
           <a data-initiator="#help-menu"
              data-actionmarker="disabled"
              href="#"
