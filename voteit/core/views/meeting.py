@@ -143,6 +143,8 @@ class RequestAccessForm(ArcheFormCompat, DefaultEditForm):
     @reify
     def access_policy(self):
         access_policy_name = self.context.get_field_value('access_policy', '')
+        if not access_policy_name:
+            access_policy_name = 'invite_only'
         try:
             return self.request.registry.getAdapter(self.context, IAccessPolicy, name = access_policy_name)
         except ComponentLookupError:
