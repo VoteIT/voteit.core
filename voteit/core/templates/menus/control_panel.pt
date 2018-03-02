@@ -4,12 +4,12 @@
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
       i18n:domain="voteit.core">
 <div class="container">
-    <h4 class="text-center">
-      <a href="javascript:voteit.hide_nav()" data-active-menu="">
-        <span class="glyphicon glyphicon-chevron-up"></span>
-        <span i18n:translate="">Close</span>
-      </a>
-    </h4>
+  <h4 class="text-center">
+    <a href="javascript:voteit.hide_nav()" data-active-menu="">
+      <span class="glyphicon glyphicon-chevron-up"></span>
+      <span i18n:translate="">Close</span>
+    </a>
+  </h4>
   <div class="columns">
     <tal:iter repeat="panel control_panels_active">
       <tal:panel replace="structure panel"></tal:panel>
@@ -19,17 +19,12 @@
   <tal:inactive condition="control_panels_inactive">
     <hr/>
     <h4 class="text-center">
-      <a href="#hidden-control-panels" class="collapsed" data-toggle="collapse">
-        <span i18n:translate="">Inactive options for this meeting</span> (${len(control_panels_inactive)})
-        <span class="glyphicon collapse-state"></span>
-      </a>
+      <span i18n:translate="">Inactive options for this meeting</span> (${len(control_panels_inactive)})
     </h4>
-    <div id="hidden-control-panels" class="collapse">
-      <div class="columns">
-        <tal:iter repeat="panel control_panels_inactive">
-          <tal:panel replace="structure panel"></tal:panel>
-        </tal:iter>
-      </div>
+    <div class="columns">
+      <tal:iter repeat="panel control_panels_inactive">
+        <tal:panel replace="structure panel"></tal:panel>
+      </tal:iter>
     </div>
   </tal:inactive>
 
