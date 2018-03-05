@@ -2,9 +2,10 @@
       xmlns:metal="http://xml.zope.org/namespaces/metal"
       xmlns:tal="http://xml.zope.org/namespaces/tal"
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      tal:define="view_name view_name|request.view_name|'';"
       i18n:domain="voteit.core">
 <div id="context-actions" class="container-fluid">
-  ${structure: view.render_template('voteit.core:templates/snippets/ai_title.pt')}
+  ${structure: view.render_template('voteit.core:templates/snippets/ai_title.pt', view_name=view_name)}
     <tal:moderator condition="request.is_moderator">
       <div class="pull-left">
         <ul class="nav voteit-nav">
