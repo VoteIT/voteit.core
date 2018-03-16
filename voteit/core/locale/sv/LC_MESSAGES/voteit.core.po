@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2017-12-01 16:45+0100\n"
-"PO-Revision-Date: 2018-02-21 14:03+0000\n"
+"PO-Revision-Date: 2018-03-16 15:51+0000\n"
 "Last-Translator: Weblate Admin <admin@example.com>\n"
 "Language-Team: Swedish <http://example.com/projects/voteit/voteit-core/sv/>\n"
 "Language: sv\n"
@@ -1293,7 +1293,7 @@ msgstr "Bifallen"
 
 #: voteit/core/templates/_translations.pt:16
 msgid "Denied"
-msgstr "Avslagen"
+msgstr "Avslaget"
 
 #: voteit/core/templates/_translations.pt:17
 msgid "Unhandled"
