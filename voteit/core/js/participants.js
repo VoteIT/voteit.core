@@ -15,7 +15,13 @@ function update_table_from_response(response) {
         '.last_name': 'obj.last_name',
         '.userid': 'obj.userid',
         '.userid@href+': 'obj.userid',
-      }
+      },
+      sort: function(a, b){ // same kind of sort as the usual Array sort
+        var cmp = function(x, y){
+          return x > y? 1 : x < y ? -1 : 0;
+        };
+        return cmp( a.first_name.toLowerCase(), b.first_name.toLowerCase() );
+        }
     }
   };
 

@@ -1,0 +1,18 @@
+<tal:main xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="voteit.core">
+  <div class="text-center well">
+    <h1>
+      <span class="glyphicon glyphicon-cog"></span>
+    </h1>
+    <h3 i18n:translate="">Site</h3>
+  </div>
+
+  <tal:admin condition="request.has_permission('perm:Manage server', request.root)">
+    <ul class="nav">
+      <tal:actionbar_items replace="structure view.render_view_group('site_menu')" />
+    </ul>
+  </tal:admin>
+</tal:main>

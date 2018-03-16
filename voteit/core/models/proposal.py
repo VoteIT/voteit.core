@@ -1,8 +1,9 @@
 from arche.security import get_acl_registry
 from pyramid.traversal import find_interface
+from six import string_types
 from zope.interface import implementer
 
-from voteit.core import VoteITMF as _
+from voteit.core import _
 from voteit.core import security
 from voteit.core.helpers import strip_and_truncate
 from voteit.core.helpers import tags_from_text
@@ -56,10 +57,14 @@ class Proposal(BaseContent, WorkflowAware):
     @property
     def tags(self): #arche compat
         tags = tags_from_text(self.text)
+        if self.diff_text_leadin:
+            for tag in tags_from_text(self.diff_text_leadin):
+                if tag not in tags:
+                    tags.append(tag)
         aid = self.get_field_value('aid', None)
         if aid is not None and aid not in tags:
             tags.append(aid)
-        return tags
+        return list(tags)
     @tags.setter
     def tags(self, value):
         print "Tags shouldn't be set like this"
@@ -77,6 +82,23 @@ class Proposal(BaseContent, WorkflowAware):
     @aid_int.setter
     def aid_int(self, value):
         self.set_field_value('aid_int', value)
+
+    @property
+    def diff_text_leadin(self):
+        return self.get_field_value('diff_text_leadin', None)
+    @diff_text_leadin.setter
+    def diff_text_leadin(self, value):
+        assert isinstance(value, string_types)
+        self.set_field_value('diff_text_leadin', value)
+
+    @property
+    def diff_text_para(self):
+        """ Which paragraph this is a diff against. """
+        return self.get_field_value('diff_text_para', None)
+    @diff_text_para.setter
+    def diff_text_para(self, value):
+        assert isinstance(value, int)
+        self.set_field_value('diff_text_para', value)
 
 
 def includeme(config):

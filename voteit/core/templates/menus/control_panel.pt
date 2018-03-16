@@ -1,0 +1,32 @@
+<tal:main xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="voteit.core">
+<div class="container">
+  <h4 class="text-center">
+    <a href="javascript:voteit.hide_nav()" data-active-menu="">
+      <span class="glyphicon glyphicon-chevron-up"></span>
+      <span i18n:translate="">Close</span>
+    </a>
+  </h4>
+  <div class="columns">
+    <tal:iter repeat="panel control_panels_active">
+      <tal:panel replace="structure panel"></tal:panel>
+    </tal:iter>
+  </div>
+
+  <tal:inactive condition="control_panels_inactive">
+    <hr/>
+    <h4 class="text-center">
+      <span i18n:translate="">Inactive options for this meeting</span> (${len(control_panels_inactive)})
+    </h4>
+    <div class="columns">
+      <tal:iter repeat="panel control_panels_inactive">
+        <tal:panel replace="structure panel"></tal:panel>
+      </tal:iter>
+    </div>
+  </tal:inactive>
+
+</div>
+</tal:main>

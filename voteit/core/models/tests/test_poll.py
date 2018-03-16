@@ -302,6 +302,7 @@ class PollMethodsTests(unittest.TestCase):
         root = active_poll_fixture(self.config)
         self.config.testing_securitypolicy('userid', permissive = True)
         poll = root['meeting']['ai']['poll']
+        root['meeting'].poll_notification_setting = True
         request = testing.DummyRequest()
         mailer = get_mailer(request)
         self.assertEqual(len(mailer.outbox), 0)

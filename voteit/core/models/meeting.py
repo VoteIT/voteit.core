@@ -3,7 +3,6 @@ from arche.interfaces import IObjectAddedEvent
 from arche.portlets import get_portlet_manager
 from arche.security import get_acl_registry
 from pyramid.httpexceptions import HTTPForbidden
-from pyramid.traversal import find_root
 from repoze.folder import unicodify
 from zope.interface import implementer
 
@@ -39,6 +38,8 @@ class Meeting(BaseContent, SecurityAware, WorkflowAware):
         """ When meetings are added, whoever added them should become moderator and voter.
             BaseContent will have added userid to creators attribute.
         """
+        if 'access_policy' not in kwargs:
+            kwargs['access_policy'] = 'invite_only'
         super(Meeting, self).__init__(data=data, **kwargs)
         if len(self.creators) and self.creators[0]:
             userid = self.creators[0]
@@ -113,7 +114,7 @@ class Meeting(BaseContent, SecurityAware, WorkflowAware):
 
     @property
     def poll_notification_setting(self): #arche compat
-        return self.get_field_value('poll_notification_setting', True)
+        return self.get_field_value('poll_notification_setting', False)
     @poll_notification_setting.setter
     def poll_notification_setting(self, value):
         self.set_field_value('poll_notification_setting', value)
@@ -185,6 +186,13 @@ class Meeting(BaseContent, SecurityAware, WorkflowAware):
         obj.__parent__ = self
         self.invite_tickets[email] = obj
         return obj
+
+    @property
+    def diff_text_enabled(self):
+        return self.get_field_value('diff_text_enabled', None)
+    @diff_text_enabled.setter
+    def diff_text_enabled(self, value):
+        self.set_field_value('diff_text_enabled', bool(value))
 
 
 def closing_meeting_callback(context, info):

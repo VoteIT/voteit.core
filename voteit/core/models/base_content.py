@@ -38,15 +38,15 @@ class BaseContent(Folder, BaseMixin, LocalRolesMixin):
 
     def __init__(self, data=None, **kwargs):
         if 'creator' in kwargs and 'creators' not in kwargs:
-            #Arche compat hack
+            # Arche compat hack
             kwargs['creators'] = kwargs.pop('creator')
-        if 'creators' not in kwargs:
+        if not kwargs.get('creators', None):
             request = get_current_request()
             if request is None:
-                #request will be None in some tests
+                # request will be None in some tests
                 userid = None
             else:
-                userid = authenticated_userid(request)
+                userid = request.authenticated_userid
             if userid:
                 kwargs['creators'] = (userid,)
             else:

@@ -1,7 +1,6 @@
 @import "variables";
 @import "bootstrap/variables";
 
-
 @import "_mixins";
 @import "_state_colors";
 @import "_icons";
@@ -9,27 +8,39 @@
 @import "_portlets";
 @import "_msg_bar";
 
-
 body {
-  padding-top:  90px;
+    padding-top: 50px;
 }
+
+body.in_meeting {
+    padding-top: 150px;
+}
+body.is_moderator {
+    padding-top: 200px;
+}
+
 .profile-pic {
   float: left;
   margin-right: 10px;
 }
+
 .metadata {
   padding: 5px 0;
 }
+
 .text {
   padding: 5px 0;
 }
+
 .cogwheel {
   margin-left: 5px;
 }
+
 .body {
   margin-top: $line-height-computed*2;
   margin-bottom: $line-height-computed;
 }
+
 .list-group-item.active {
   >a {
     color: #fff;
@@ -38,9 +49,11 @@ body {
     }
   }
 }
+
 .navbar-brand img.voteitlogo {
   margin-top: -5px;
 }
+
 .panel .list-group .list-group-item-unread,
 .list-group .list-group-item-unread,
 body .btn-group-portlet > .item-unread {
@@ -49,20 +62,12 @@ body .btn-group-portlet > .item-unread {
   border-left-color: $voteit-unread;
 }
 
-  .votemarker {
+.votemarker {
     color: $brand-default;
-  }
-  .votemarker-active {
+}
+.votemarker-active {
     color: $brand-success;
-  }
-  /*
-  &.attention {
-    > .dropdown-toggle > .glyphicon-star {
-      color: $brand-star-shine;
-    }
-  }
-  */
-
+}
 
 .btn-group-portlet {
   width: 100%;
@@ -85,42 +90,26 @@ body .btn-group-portlet > .item-unread {
     white-space: normal;
     margin-bottom: 5px;
   }
-  .cogwheel {
-    //FIXME: Remove from agenda - move to actionbar
-    /*z-index: 999;*/
-    margin-right: -1px;
-    margin-top: -1px;
-  }
 }
 
 footer {
     margin-top: $grid-gutter-width;
 }
 
-.greedy {
-    @include text-overflow();
+.text-overflow {
     display: inline-block;
-}
-/*
-.max-width-text {
     @include text-overflow();
-    display: inline-block;
-    max-width: 100px;
 }
-.fade-effect {
-    @include fade-effect(0.5s);
-}
-*/
+
 .text-small {
     font-size: 90%;
 }
-
 
 .collapsible {
     position: relative;
 
     .collapsible-text {
-        padding-bottom: 25px;
+        padding-bottom: 45px;
     }
 
     &.active {
@@ -160,4 +149,33 @@ footer {
             &:before { content: "\e113"; }
         }
     }
+}
+
+.columns {
+    columns: 4;
+    -webkit-column-gap: $grid-gutter-width;
+    -moz-column-gap: $grid-gutter-width;
+    column-gap: $grid-gutter-width;
+}
+.column-item {
+    display: inline-block;
+    width: 100%;
+
+    -webkit-column-break-inside: avoid;
+      page-break-inside: avoid;
+           break-inside: avoid;
+}
+
+.control-panel {
+    @extend .column-item;
+}
+
+@media(max-width: $screen-lg) {
+    .columns { columns: 3; }
+}
+@media(max-width: $screen-md) {
+    .columns { columns: 2; }
+}
+@media(max-width: $screen-sm) {
+    .columns { columns: 1; }
 }

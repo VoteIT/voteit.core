@@ -16,6 +16,8 @@ from webhelpers.html.tools import auto_link
 from voteit.core import _
 from voteit.core import security
 from voteit.core.models.interfaces import IAgendaItem
+from voteit.core.models.interfaces import IDiffText
+from voteit.core.models.interfaces import IProposal
 from voteit.core.models.interfaces import IMeeting
 
 
@@ -104,12 +106,12 @@ def move_object(obj, new_parent):
     return new_obj
 
 
-def transform_text(request, text, html=True):
+def transform_text(request, text, html=True, tag_func=tags2links):
     text = sanitize(text)
     if html:
         text = auto_link(text)
         text = nl2br(text)
-        text = tags2links(unicode(text))
+        text = tag_func(unicode(text))
         text = at_userid_link(request, text)
     return text
 
@@ -299,6 +301,28 @@ def clear_tags_url(request, context, *args, **kw):
     return request.resource_url(context, *args, query=clear_tag_query)
 
 
+def render_proposal_text(request, proposal, tag_func=tags2links):
+    """ Render a proposal as a diff or as the original text. """
+    if not IProposal.providedBy(proposal):
+        raise TypeError("%s is not a proposal" % proposal)
+    if proposal.diff_text_para is None:
+        #This is a regular proposal without the diff functions active
+        return request.transform_text(proposal.text, tag_func=tag_func)
+    else:
+        diff_text = IDiffText(request.agenda_item)
+        paragraphs = diff_text.get_paragraphs()
+        try:
+            original = paragraphs[proposal.diff_text_para]
+        except (TypeError, IndexError):
+            #Simply abort
+            return request.transform_text(proposal.text, tag_func=tag_func)
+        text = ""
+        if proposal.diff_text_leadin:
+            text += tag_func(proposal.diff_text_leadin) + "\n\n"
+        text += diff_text(original, proposal.text, brief=True)
+        return nl2br(text).unescape()
+
+
 def includeme(config):
     config.add_request_method(get_docids_to_show)
     config.add_request_method(callable=transform_text, name='transform_text')
@@ -312,7 +336,8 @@ def includeme(config):
     # Is moderator
     config.add_request_method(callable=is_moderator, name='is_moderator', reify=True)
     config.add_request_method(callable=is_participant, name='is_participant', reify=True)
-
     # State titles
     config.add_request_method(callable=get_wf_state_titles, name='get_wf_state_titles')
     config.add_request_method(callable=clear_tags_url)
+    # Special rendering for proposal
+    config.add_request_method(render_proposal_text)

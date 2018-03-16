@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:metal="http://xml.zope.org/namespaces/metal"
+<html xmlns:metal="http://xml.zope.org/namespaces/metal"
       xmlns:tal="http://xml.zope.org/namespaces/tal"
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
       metal:define-macro="main"
@@ -17,10 +16,12 @@
                     portlets_top view.render_portlet_slot('top');
                     portlets_bottom view.render_portlet_slot('bottom');
                     portlets_left_fixed view.render_portlet_slot('left_fixed');
-                    main_cols 12 - int(bool(portlets_left))*3 - int(bool(portlets_right))*3;"
-        class="view-${request.view_name or 'default'|'default'}">
+                    main_cols 12 - int(bool(portlets_left))*3 - int(bool(portlets_right))*3;
+                    meeting_cls request.meeting and 'in_meeting' or None;
+                    moderator_cls (request.meeting and request.is_moderator) and 'is_moderator' or None;"
+        class="view-${request.view_name or 'default'|'default'} ${meeting_cls} ${moderator_cls}">
 
-    <div id="fixed-nav" tal:condition="portlets_left_fixed">
+    <div id="fixed-nav" class="agenda-responsive-width" tal:condition="portlets_left_fixed">
         <tal:portlets repeat="portlet portlets_left_fixed">
             <tal:portlet replace="structure portlet" />
         </tal:portlets>
@@ -32,7 +33,7 @@
 
     <div class="container">
 
-      <div class="row" tal:condition="not request.meeting">
+      <div class="row" tal:condition="not request.meeting and request.is_moderator">
         <div class="col-sm-6 col-md-8">
           <ol class="breadcrumb">
               <tal:iterate repeat="obj view.breadcrumbs()">
@@ -60,7 +61,12 @@
       </div>
 
       <div id="content">
-        <tal:actionbar metal:define-slot="actionbar" replace="structure view.render_actionbar()" />
+        <tal:agenda_actionbar metal:define-slot="agenda_actionbar"
+                              tal:condition="request.meeting"
+                              tal:replace="structure view.render_template('voteit.core:templates/menus/context_actions.pt')"></tal:agenda_actionbar>
+        <tal:actionbar tal:condition="not request.meeting"
+                       metal:define-slot="actionbar"
+                       replace="structure view.render_actionbar()" />
         <metal:content define-slot="content"></metal:content>
       </div>
 
@@ -70,8 +76,8 @@
     <div data-slide-menu="help-menu" id="help-menu" class="slide-in-nav from-right"></div>
     <div data-slide-menu="user-menu" id="user-menu" class="slide-in-nav profile-menu"></div>
     <div data-slide-menu="site-menu" id="site-menu" class="slide-in-nav from-right"></div>
-    <div data-slide-menu="meeting-menu" id="meeting-menu" class="slide-in-nav from-top"></div>
     <div data-slide-menu="poll-menu" id="poll-menu" class="slide-in-nav from-top"></div>
+    <div data-slide-menu="control-panel" id="control-panel" class="slide-in-nav from-top"></div>
 
     <a id="fixed-nav-backdrop"
        style="display: none;"

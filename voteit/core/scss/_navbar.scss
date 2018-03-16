@@ -5,19 +5,20 @@
 .slide-in-nav {
     position: fixed;
     border-radius: 0;
-    top: $navbar-height;
-    bottom: 0;
     background-color: $body-bg;
+    /*
     @include transition-transform(all .5s cubic-bezier(.32, .59, .3, .98));
-    overflow: scroll;
-    z-index: 1000;
+    */
+    overflow: auto;
+    z-index: $zindex-navbar-fixed + 50;
+    display: none;
+    top: $voteit-fixed-top-nav;
 
     &.from-left {
         @include translate(-100%, 0%);
-
         right: 60px;
         left: 0px;
-
+        bottom: 0px;
         &.activated {
             @include translate(0%, 0%);
         }
@@ -25,8 +26,8 @@
 
     &.profile-menu {
         @include translate(100%, 0%);
-
         right: 0px;
+        bottom: 0px;
         min-width: 200px;
 
         &.activated {
@@ -36,40 +37,57 @@
     }
 
     &.from-top {
-        top: 0;
+        top: $voteit-fixed-top-nav;
+        /*
         @include translate(0%, -100%);
+        */
         right: 0px;
         left: 0px;
-        bottom: 60px;
         z-index: 1000;
+        bottom: 100px;
         &.activated {
-            top: $navbar-height;
+        /*
             @include translate(0%, 0%);
+            */
+            z-index: $zindex-navbar-fixed + 50;
         }
     }
 
     &.from-right {
         @include translate(100%, 0%);
-
         right: 0px;
+        bottom: 0px;
         &.activated {
             @include translate(0%, 0%);
         }
     }
 }
 
+/* Increase padding for meetings */
+.in_meeting .slide-in-nav {
+    top: $voteit-fixed-top-nav * 2;
+}
+
+
+#fixed-nav {
+    top: $voteit-fixed-top-nav;
+    bottom: 0;
+    padding: floor($grid-gutter-width/2);
+    position: fixed;
+    overflow: auto;
+}
+.in_meeting  #fixed-nav {
+    top: $voteit-fixed-top-nav * 2;
+}
+
 
 @media (max-width: $grid-float-breakpoint-max) {
     #fixed-nav {
-        @include translate(-100%, 0%);
-
         right: 60px;
         left: 0px;
-        padding: floor($grid-gutter-width/2);
-
+        @include translate(-100%, 0%);
         &.activated {
             @include translate(0%, 0);
-
         }
     }
 }
@@ -82,35 +100,76 @@
 }
 
 
+#context-actions {
+    position: fixed;
+    top: $voteit-fixed-top-nav * 2;
+    left: 0;
+    right: 0;
+    background-color: $well-bg;
+    z-index: $zindex-navbar-fixed - 10;
+    line-height: $voteit-nav-line-height;
+    border-bottom: $navbar-default-border solid 1px;
+    .voteit-nav-text *,
+    .voteit-nav * {
+        line-height: $voteit-nav-line-height;
+    }
+}
+
+#meeting-menu {
+    white-space: nowrap;
+    height: $voteit-fixed-top-nav;
+    width: 100%;
+    position: relative;
+
+    #meeting-extras {
+        position: absolute;
+        right: 8px;
+        bottom: 0;
+        padding: 10px;
+    }
+    .open #meeting-extras {
+        background-color: #fff!important;
+        color: #000!important;
+    }
+
+    .voteit-nav {
+        display: inline-block;
+    }
+    .dropdown-menu {
+        z-index: 1040;
+    }
+
+}
+
+
 /* Generic navbar active */
 @media (min-width: $grid-float-breakpoint) {
 
-    #fixed-nav {
+    body.left-fixed-active .agenda-responsive-width {
         width: $voteit-fixed-left-nav-sm;
-        padding: floor($grid-gutter-width/2);
-        position: fixed;
-        border-radius: 0;
-        top: $navbar-height;
-        bottom: 0;
-        overflow: scroll;
-        @include translate(-100%, 0);
+    }
 
+    #fixed-nav {
         transition: none;
         background-color: $well-bg;
         border-right: 1px solid $well-border;
 
+        @include translate(-100%, 0);
         &.activated {
             @include translate(0%, 0);
         }
     }
 
+    body.left-fixed-active #context-actions {
+        left: $voteit-fixed-left-nav-sm;
+    }
     body.left-fixed-active > .container {
         padding-left: $voteit-fixed-left-nav-sm + floor($grid-gutter-width/2);
     }
 
 }
 
-//left-fixed-active !!!
+
 @media (max-width: $screen-md) {
     body.left-fixed-active {
         > .container,
@@ -122,8 +181,11 @@
 
 
 @media (min-width: $screen-md) {
-    #fixed-nav {
+    body.left-fixed-active .agenda-responsive-width {
         width: $voteit-fixed-left-nav-md;
+    }
+    body.left-fixed-active #context-actions {
+        left: $voteit-fixed-left-nav-md;
     }
     body.left-fixed-active > .container {
         padding-left: $voteit-fixed-left-nav-md;
@@ -132,8 +194,11 @@
 
 
 @media (min-width: $screen-lg) {
-    #fixed-nav {
+    body.left-fixed-active .agenda-responsive-width {
         width: $voteit-fixed-left-nav-lg;
+    }
+    body.left-fixed-active #context-actions {
+        left: $voteit-fixed-left-nav-lg;
     }
     body.left-fixed-active > .container {
         padding-left: $voteit-fixed-left-nav-lg;
@@ -145,15 +210,108 @@
     background-color: #000;
     opacity: 0.5;
     position: fixed;
-    top: $navbar-height;
+    top: $voteit-fixed-top-nav;
     right: 0;
     bottom: 0;
     left: 0;
-    z-index: 999;
+    z-index: $zindex-navbar-fixed + 1;
+}
+.in_meeting #fixed-nav-backdrop {
+    top: $voteit-fixed-top-nav * 2;
 }
 
+#fixed-top-nav {
+    background-color: $navbar-voteit-bg;
+    color: $navbar-voteit-color;
+    line-height: $voteit-nav-line-height;
+    height: $voteit-fixed-top-nav;
+    a, &:focus, &:active {
+        background-color: $navbar-voteit-bg;
+        color: $navbar-voteit-color;
+    }
+    .dropdown-menu a {
+        background-color: #fff;
+        color: #000;
+        &:hover {
+            color: $dropdown-link-hover-color;
+            background-color: $dropdown-link-hover-bg;
+        }
+    }
+}
+.in_meeting #fixed-top-nav {
+    height: $voteit-fixed-top-nav * 2;
+
+}
+
+.voteit-nav {
+
+  > li {
+    float: left;
+
+    > a {
+        padding: $voteit-nav-padding 10px;
+        height: $voteit-nav-line-height + $voteit-nav-padding * 2;
+    }
+
+  }
+}
+
+.menu-toggler {
+    border-radius: 8px 8px 0 0;
+    background-color: rgba(255,255,255,.1)!important;
+    transition: background-color .25s;
+    margin-left: 8px;
+}
+
+body.left-fixed-active #agenda-toggler {
+    @media (min-width: $screen-sm) {
+        background-color: $well-bg!important;
+        color: #000!important;
+    }
+}
+
+.menu-toggler {
+    &.open {
+        background-color: rgba(255,255,255,1)!important;
+        color: #000!important;
+    }
+}
+
+.voteit-logo-nav {
+    min-width: 70px;
+    margin-top: floor($voteit-nav-padding / 2);
+    margin-bottom: floor($voteit-nav-padding / 2);
+    padding: 0px;
+    height: $voteit-nav-line-height + $voteit-nav-padding;
+    display: inline-block;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-image: url(/voteit_core_static/images/voteit-logo.svg);
+    background-position-y: center;
+    @media (min-width: $screen-md) {
+        margin-right: 10px;
+    }
+}
+
+.voteit-nav-text,
+.voteit-nav-header {
+    height: $voteit-nav-line-height + $voteit-nav-padding * 2;
+    line-height: $voteit-nav-line-height;
+    padding: $voteit-nav-padding 10px;
+    margin-top: 0;
+    margin-bottom: 0;
+    &:hover {
+        text-decoration: none;
+    }
+}
+
+.voteit-nav-header {
+    font-weight: bold;
+    font-size: 17px;
+}
 
 // Built from: Inverse navbar
+/* This whole section is kept for compatibility reasons. It's deprecated */
 .navbar-voteit {
   background-color: $navbar-voteit-bg;
   border-color: $navbar-voteit-border;
@@ -307,3 +465,4 @@
     }
   }
 }
+/* END Deprecated nav */

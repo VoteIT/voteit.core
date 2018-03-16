@@ -5,16 +5,19 @@
       i18n:domain="voteit.core">
 <div id="agenda-item-portlet" class="portlet hidden-print">
 
-  <div class="row" tal:condition="request.is_moderator">
-    <div class="col-sm-6">
-      <a class="btn btn-default btn-block btn-sm"
-        href="${request.resource_url(request.meeting, 'add', query = {'content_type': 'AgendaItem'})}" i18n:translate="">Add</a>
-    </div>
-    <div class="col-sm-6">
-      <a class="btn btn-default btn-block btn-sm"
-        href="${request.resource_url(request.meeting, 'manage_agenda')}" i18n:translate="">Manage</a>
-    </div>
-    <p>&nbsp;</p>
+  <div tal:condition="request.is_moderator" class="text-right">
+      <a class="btn btn-default btn-sm"
+        title="Add"
+        i18n:attributes="title;"
+        href="${request.resource_url(request.meeting, 'add', query = {'content_type': 'AgendaItem'})}">
+        &nbsp;<span class="glyphicon glyphicon-plus"></span>&nbsp;
+      </a>
+      <a class="btn btn-default btn-sm"
+         title="Manage agenda"
+         i18n:attributes="title;"
+        href="${request.resource_url(request.meeting, 'manage_agenda')}">
+        &nbsp;<span class="glyphicon glyphicon-edit"></span>&nbsp;
+      </a>
   </div>
 
 <tal:filter tal:condition="tags">
@@ -82,9 +85,13 @@
 
 
 <script>
-  $(document).ready(function() {
-    var show_in_fullscreen = ${request.cookies.get('voteit.hide_agenda', '') == '1' and 'false' or 'true'};
+  $(function() {
+    var show_in_fullscreen = (getCookie('voteit.hide_agenda') != '1');
     voteit.init_agenda(show_in_fullscreen);
+    $(window).resize(function () {
+      show_in_fullscreen = (getCookie('voteit.hide_agenda') != '1');
+      voteit.init_agenda(show_in_fullscreen);
+    });
     voteit.agenda_data_url = "${request.resource_url(request.meeting, 'agenda_data.json')}";
     voteit.agenda_sort_order = ["${'", "'.join(request.meeting.order)}"];
     voteit.agenda_select_tag_url = "${request.resource_url(request.meeting, '_agenda_select_tag')}";

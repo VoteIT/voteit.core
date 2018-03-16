@@ -1,0 +1,25 @@
+<tal:main xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="voteit.core">
+<div class="control-panel">
+  <h3>${title}</h3>
+
+  <p>
+    <span i18n:translate="">Active</span>:
+    ${access_policy.title|''}</p>
+  <ul class="list-unstyled">
+    <li>
+      <a href="${request.resource_url(request.meeting, 'access_policy')}"
+        i18n:translate="">Change</a>
+    </li>
+    <li tal:condition="ap_configurable">
+      <a href="${request.resource_url(request.meeting, 'configure_access_policy')}"
+        i18n:translate="">Configure</a>
+    </li>
+    ${structure: panel_group}
+
+  </ul>
+</div>
+</tal:main>

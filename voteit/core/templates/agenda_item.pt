@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:metal="http://xml.zope.org/namespaces/metal"
       xmlns:tal="http://xml.zope.org/namespaces/tal"
@@ -7,24 +8,10 @@
 <body>
 <tal:actionbar metal:fill-slot="actionbar" />
 
+<tal:agenda_actionbar metal:fill-slot="agenda_actionbar"
+    tal:replace="structure view.render_template('voteit.core:templates/menus/context_actions.pt')" />
+
 <tal:main metal:fill-slot="main-content">
-
-    <tal:actionbar replace="structure view.render_actionbar()" />
-
-    <div class="page-header">
-      <h1>
-
-        <tal:cog condition="request.is_moderator">
-          <!-- FIXME: Move to actionbar -->
-          <tal:menu replace="structure view.render_template('voteit.core:templates/snippets/cogwheel.pt',
-                             url=request.resource_url(context, '__cogwheel_menu__'))"/>
-        </tal:cog>
-        ${context.title}
-
-      </h1>
-    </div>
-
-    ${structure: view.render_template('voteit.core:templates/snippets/ai_previous_next.pt')}
 
     <div class="body"
          data-collapsible="body"
@@ -49,12 +36,12 @@
         }
 
         function notify_filter_active() {
+        console.log('hello');
             var message = '${structure: filter_msg|''}';
             arche.create_flash_message(message,
                 {id: 'filter-active-notice',
                  icon_class: 'glyphicon glyphicon-filter',
                  auto_destruct: false,
-                 slot: 'fixed-msg-bar',
                  type: 'warning'}
             );
         }
