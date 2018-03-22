@@ -106,12 +106,12 @@ def move_object(obj, new_parent):
     return new_obj
 
 
-def transform_text(request, text, html=True):
+def transform_text(request, text, html=True, tag_func=tags2links):
     text = sanitize(text)
     if html:
         text = auto_link(text)
         text = nl2br(text)
-        text = tags2links(unicode(text))
+        text = tag_func(unicode(text))
         text = at_userid_link(request, text)
     return text
 
@@ -301,13 +301,13 @@ def clear_tags_url(request, context, *args, **kw):
     return request.resource_url(context, *args, query=clear_tag_query)
 
 
-def render_proposal_text(request, proposal):
+def render_proposal_text(request, proposal, tag_func=tags2links):
     """ Render a proposal as a diff or as the original text. """
     if not IProposal.providedBy(proposal):
         raise TypeError("%s is not a proposal" % proposal)
     if proposal.diff_text_para is None:
         #This is a regular proposal without the diff functions active
-        return request.transform_text(proposal.text)
+        return request.transform_text(proposal.text, tag_func=tag_func)
     else:
         diff_text = IDiffText(request.agenda_item)
         paragraphs = diff_text.get_paragraphs()
@@ -315,10 +315,10 @@ def render_proposal_text(request, proposal):
             original = paragraphs[proposal.diff_text_para]
         except (TypeError, IndexError):
             #Simply abort
-            return request.transform_text(proposal.text)
+            return request.transform_text(proposal.text, tag_func=tag_func)
         text = ""
         if proposal.diff_text_leadin:
-            text += tags2links(proposal.diff_text_leadin) + "\n\n"
+            text += tag_func(proposal.diff_text_leadin) + "\n\n"
         text += diff_text(original, proposal.text, brief=True)
         return nl2br(text).unescape()
 

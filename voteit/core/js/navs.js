@@ -81,8 +81,11 @@ voteit.load_inline_menu = function(selector, url) {
         request.done(function(response) {
             voteit.show_nav(selector);
             $(selector).html(response);
-            arche.actionmarker_feedback(initiator, false);
             initiator.addClass('open');
+        });
+        request.fail(arche.flash_error);
+        request.always(function() {
+            arche.actionmarker_feedback(initiator, false);
         });
         return request;
     }
@@ -271,6 +274,7 @@ voteit.load_agenda_data = function(state) {
         //Agendas might have set it without effect
         if (voteit.active_ai_name) voteit.set_active_ai(voteit.active_ai_name);
     });
+    request.fail(arche.flash_error);
     request.always(function() {
         arche.actionmarker_feedback(control_elem, false);
     });

@@ -42,7 +42,7 @@ def deferred_default_poll_method(node, kw):
 @colander.deferred
 def poll_default_title(node, kw):
     request = kw['request']
-    query = Eq('path', resource_path(request.agenda_item)) & Eq('type_name', 'Poll')
+    query = Eq('path', resource_path(request.meeting)) & Eq('type_name', 'Poll')
     res = request.root.catalog.query(query)[0]
     title = _("Descision ${num}", mapping={'num': res.total + 1})
     return request.localizer.translate(title)

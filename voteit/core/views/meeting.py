@@ -1,9 +1,12 @@
 from copy import deepcopy
+from datetime import timedelta
 
 import colander
+import deform
 from arche.events import ObjectUpdatedEvent
 from arche.events import SchemaCreatedEvent
 from arche.utils import generate_slug
+from arche.utils import utcnow
 from arche.views.base import BaseView
 from arche.views.base import DefaultEditForm
 from betahaus.viewcomponent import render_view_group
@@ -15,10 +18,9 @@ from pyramid.view import view_config
 from pyramid.view import view_defaults
 from zope.component.event import objectEventNotify
 from zope.interface.interfaces import ComponentLookupError
-import deform
 
-from voteit.core import security
 from voteit.core import _
+from voteit.core import security
 from voteit.core.models.interfaces import IAccessPolicy
 from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IMeeting
@@ -143,6 +145,8 @@ class RequestAccessForm(ArcheFormCompat, DefaultEditForm):
     @reify
     def access_policy(self):
         access_policy_name = self.context.get_field_value('access_policy', '')
+        if not access_policy_name:
+            access_policy_name = 'invite_only'
         try:
             return self.request.registry.getAdapter(self.context, IAccessPolicy, name = access_policy_name)
         except ComponentLookupError:
@@ -237,6 +241,8 @@ class CopyAgendaForm(DefaultEditForm):
         from_meeting = self.request.root[appstruct['meeting_name']]
         assert IMeeting.providedBy(from_meeting)
         counter = 0
+        now = utcnow()
+        offset = 0
         for ai in from_meeting.values():
             if not IAgendaItem.providedBy(ai):
                 continue
@@ -245,13 +251,16 @@ class CopyAgendaForm(DefaultEditForm):
             for obj in ai.values():
                 if getattr(obj, 'type_name', '') not in appstruct['copy_types']:
                     continue
-                self.copy_context(obj, new_ai)
+                created = now + timedelta(seconds=offset)
+                self.copy_context(obj, new_ai, created=created)
+                offset += 2
                 counter += 1
         self.flash_messages.add(_("Copied ${num} objects", mapping={'num': counter}))
         return HTTPFound(location=self.request.resource_url(self.context))
 
-    def copy_context(self, context, parent):
+    def copy_context(self, context, parent, **kw):
         appstruct = self.get_context_appstruct(context)
+        appstruct.update(kw)
         new_obj = self.request.content_factories[context.type_name](creator=context.creator, **appstruct)
         #Also copy mentions to avoid duplicate notifications
         #FIXME: Smarter way to handle this? There may be other exceptions to the rule

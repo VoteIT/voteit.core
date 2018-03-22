@@ -38,6 +38,8 @@ class Meeting(BaseContent, SecurityAware, WorkflowAware):
         """ When meetings are added, whoever added them should become moderator and voter.
             BaseContent will have added userid to creators attribute.
         """
+        if 'access_policy' not in kwargs:
+            kwargs['access_policy'] = 'invite_only'
         super(Meeting, self).__init__(data=data, **kwargs)
         if len(self.creators) and self.creators[0]:
             userid = self.creators[0]

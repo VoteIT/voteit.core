@@ -17,7 +17,18 @@ class PollPlugin(object):
     name = 'BasePollPlugin'
     title = 'BasePollPlugin'
     description = 'Subclass this to make a usable PollPlugin'
-    
+
+    # Use this to determine if poll is applicable
+    multiple_winners = False
+    # Position in listing, lower number is better
+    priority = 3
+
+    # Default: Check if multiple winners are needed.
+    @classmethod
+    def check_applicable(cls, proposals, winners=1, random_timebreaks=True):
+        # type: (int, int, bool) -> bool
+        return (winners > 1) == cls.multiple_winners
+
     def __init__(self, context):
         self.context = context
 
