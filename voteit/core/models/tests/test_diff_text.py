@@ -11,6 +11,7 @@ from voteit.core.models.interfaces import IDiffText
 
 
 class DiffTextTests(unittest.TestCase):
+    maxDiff = None
 
     def setUp(self):
         self.config = testing.setUp()
@@ -53,22 +54,65 @@ who respects sex, who has made mistakes and learned from them."""
         obj = self._cut(context)
         obj.text = _ZOE
         paragraphs = obj.get_paragraphs()
-        expected_6 = """I want someone who has been in love and been hurt,
-who respects sex, who has made mistakes and learned from them."""
-        results = obj(paragraphs[5], expected_6)
-        self.assertEqual(expected_6, results)
+        changed = 'I want someone who has been in love and been hurt,\n who respects sex, who has made mistakes ' \
+                   'and learned from them.'
+        expected = 'I want someone who has been in love and been hurt, <br/> who respects sex, who has made mistakes ' \
+                   'and learned from them.'
+        results = obj(paragraphs[5], expected)
+        self.assertEqual(expected, results)
 
     def test_diff_with_lines_zoe(self):
         context = testing.DummyModel()
         obj = self._cut(context)
         obj.text = _ZOE
         paragraphs = obj.get_paragraphs()
-        changed = """Who respects sex,\nwho has made mistakes and learned from them!"""
+        changed = """Who respects sex, who has made mistakes and learned from them!"""
         results = obj(paragraphs[5], changed)
-        expected = u'<strong><s class="text-danger">I want someone who has been in love and been hurt,\n' \
-                   u'who respects sex, who has made mistakes and learned from them.</s></strong>\n' \
-                   u'<strong class="text-success">Who respects sex,\n' \
-                   u'who has made mistakes and learned from them!</strong>'
+        expected = '<strong><s class="text-danger">I want someone who has been in love and been hurt, <br/> ' \
+                   'who</s></strong> <strong class="text-success">Who</strong> respects sex, ' \
+                   'who has made mistakes and learned from <strong><s class="text-danger">them.</s></strong> ' \
+                   '<strong class="text-success">them!</strong>'
+        self.assertEqual(expected, results)
+
+    def test_diff_with_bullets(self):
+        context = testing.DummyModel()
+        obj = self._cut(context)
+        obj.text = _JOHNNY
+        paragraphs = obj.get_paragraphs()
+        changed = """Det här är en punktlista
+• En grej
+• En mellangrej"""
+        results = obj(paragraphs[0], changed)
+        expected = """Det här är en punktlista
+• En grej
+<strong><s class="text-danger">• Ytterligare en grej</s></strong>
+<strong class="text-success">• En mellangrej</strong>"""
+        self.assertEqual(expected, results)
+
+    def test_diff_with_other_bullets(self):
+        context = testing.DummyModel()
+        obj = self._cut(context)
+        obj.text = _JOHNNY
+        paragraphs = obj.get_paragraphs()
+        changed = """Det här är också en punktlista
+- En grej
+- En mellangrej"""
+        results = obj(paragraphs[1], changed)
+        expected = """Det här är också en punktlista
+- En grej
+<strong><s class="text-danger">- Ytterligare en grej</s></strong>
+<strong class="text-success">- En mellangrej</strong>"""
+        self.assertEqual(expected, results)
+
+    def test_diff_with_no_bullets(self):
+        context = testing.DummyModel()
+        obj = self._cut(context)
+        obj.text = _JOHNNY
+        paragraphs = obj.get_paragraphs()
+        changed = """Det här är inte en punktlista
+Det är bara ett ovanligt stycke"""
+        results = obj(paragraphs[2], changed)
+        expected = """Det här är inte en punktlista <br/> Det är bara ett <strong><s class="text-danger">vanligt</s></strong> <strong class="text-success">ovanligt</strong> stycke"""
         self.assertEqual(expected, results)
 
 
@@ -117,3 +161,14 @@ Always a boss and never a worker. Always a liar, always a thief, and never caugh
 
 
 _BOYE = "Det gör mycket mer ont när våren inte kommer alls.\n   \n  Det är ok om den tvekar."
+
+_JOHNNY = """Det här är en punktlista
+• En grej
+• Ytterligare en grej
+
+Det här är också en punktlista
+- En grej
+- Ytterligare en grej
+
+Det här är inte en punktlista
+Det är bara ett vanligt stycke"""
