@@ -239,6 +239,8 @@ class CopyAgendaForm(DefaultEditForm):
 
     def save_success(self, appstruct):
         from_meeting = self.request.root[appstruct['meeting_name']]
+        reset_wf =  appstruct['all_props_published']
+        only_copy_prop_states =  appstruct['only_copy_prop_states']
         assert IMeeting.providedBy(from_meeting)
         counter = 0
         now = utcnow()
@@ -249,16 +251,19 @@ class CopyAgendaForm(DefaultEditForm):
             new_ai = self.copy_context(ai, self.context)
             counter += 1
             for obj in ai.values():
-                if getattr(obj, 'type_name', '') not in appstruct['copy_types']:
+                type_name = getattr(obj, 'type_name', '')
+                if type_name not in appstruct['copy_types']:
+                    continue
+                if type_name == 'Proposal' and obj.state not in only_copy_prop_states:
                     continue
                 created = now + timedelta(seconds=offset)
-                self.copy_context(obj, new_ai, created=created)
+                self.copy_context(obj, new_ai, reset_wf=reset_wf, created=created)
                 offset += 2
                 counter += 1
         self.flash_messages.add(_("Copied ${num} objects", mapping={'num': counter}))
         return HTTPFound(location=self.request.resource_url(self.context))
 
-    def copy_context(self, context, parent, **kw):
+    def copy_context(self, context, parent, reset_wf = True, **kw):
         appstruct = self.get_context_appstruct(context)
         appstruct.update(kw)
         new_obj = self.request.content_factories[context.type_name](creator=context.creator, **appstruct)
@@ -266,6 +271,9 @@ class CopyAgendaForm(DefaultEditForm):
         #FIXME: Smarter way to handle this? There may be other exceptions to the rule
         if hasattr(context, '__mentioned__'):
             new_obj.__mentioned__ = deepcopy(context.__mentioned__)
+        if reset_wf and new_obj.type_name == 'Proposal':
+            #Note: this system will change
+            new_obj.state = unicode('published')
         name = generate_slug(parent, new_obj.title)
         parent[name] = new_obj
         return new_obj
