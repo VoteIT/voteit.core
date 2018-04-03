@@ -146,18 +146,27 @@ class Changes(object):
 
     def __init__(self, orig, changed):
         # type: (str, str) -> None
-        self.has_lines = '\n' in orig
+        self.has_lines = self.check_bullet_list(orig)
         self.orig = self.split(orig)
-        self.changed = self.split(self.has_lines and changed or changed.replace('\n', ' ⏎<br/> '))
+        # self.changed = self.split(self.has_lines and changed or changed.replace('\n', ' ⏎<br/> '))
+        self.changed = self.split(changed)
         self.change_groups = list()
         self.do_compare()
+
+    @staticmethod
+    def check_bullet_list(text):
+        # type: (unicode) -> bool
+        bullets = '•*→-‐‑‒–—―‣'
+        lines = text.splitlines()
+        if len(lines) > 1:
+            return any(line.strip()[0] in bullets for line in lines)
 
     @property
     def joiner(self):
         return self.has_lines and '\n' or ' '
 
     def split(self, txt):
-        return self.has_lines and txt.splitlines() or self.whitespaces.split(txt)
+        return self.has_lines and txt.splitlines() or self.whitespaces.split(txt.replace('\n', ' <br/> '))
 
     def join(self, groups, brief, no_deleted):
         if no_deleted:
