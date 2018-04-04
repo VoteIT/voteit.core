@@ -36,7 +36,7 @@ $(function() {
     if (is_ie) {
         arche.create_flash_message(
             'Internet Explorer is not supported on this site. Please consider switching browser.',
-            {icon_class: 'glyphicon glyphicon-warning-sign', type: 'danger', auto_destruct: false},
-        )
+            {icon_class: 'glyphicon glyphicon-warning-sign', type: 'danger', auto_destruct: false}
+        );
     }
 });
