@@ -133,6 +133,8 @@ Hello @admin what's cooking?
 Check out http://www.voteit.se
 And discuss under #voteit
 """
+_TRANSFORMABLE_TEXT2 = "Test & conquer (sponsored by B&J)"
+_TRANSFORMABLE_TEXT2_AMP = "Test &amp; conquer (sponsored by B&amp;J)"
 
 class TestTransformText(unittest.TestCase):
 
@@ -168,9 +170,19 @@ class TestTransformText(unittest.TestCase):
 
     def test_transform_without_html(self):
         request = self._fixture()
-        out = self._fut(request, _TRANSFORMABLE_TEXT, html = False)
+        out = self._fut(request, _TRANSFORMABLE_TEXT, html=False)
         self.assertNotIn('href="http://example.com/m/__userinfo__/admin', out)
         self.assertNotIn('tag=voteit', out)
+
+    def test_transform_ampersand(self):
+        request = self._fixture()
+        out = self._fut(request, _TRANSFORMABLE_TEXT2)
+        self.assertEqual(out, _TRANSFORMABLE_TEXT2_AMP)
+
+    def test_transform_ampersand_wo_html(self):
+        request = self._fixture()
+        out = self._fut(request, _TRANSFORMABLE_TEXT2, html=False)
+        self.assertEqual(out, _TRANSFORMABLE_TEXT2)
 
 
 class TestGetDocidsToShow(unittest.TestCase):

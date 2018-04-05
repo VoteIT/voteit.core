@@ -9,7 +9,7 @@ from repoze.catalog.query import Any, NotAny
 from repoze.catalog.query import Eq
 from repoze.workflow import get_workflow
 from webhelpers.html.converters import nl2br
-from webhelpers.html.render import sanitize
+from webhelpers.html.tools import strip_tags
 from webhelpers.html.tools import auto_link
 
 from voteit.core import _
@@ -77,7 +77,7 @@ def tags2links(text):
 
 def strip_and_truncate(text, limit=200, symbol='<span class="trunc">&hellip;</span>'):
     try:
-        text = sanitize(text)
+        text = strip_tags(text)
     except Exception, e:
         # FIXME: Logg unrecoverable error
         # This is a bad exception that should never happen
@@ -94,7 +94,7 @@ def strip_and_truncate(text, limit=200, symbol='<span class="trunc">&hellip;</sp
 
 
 def transform_text(request, text, html=True, tag_func=tags2links):
-    text = sanitize(text)
+    text = strip_tags(text)
     if html:
         text = auto_link(text)
         text = nl2br(text)
