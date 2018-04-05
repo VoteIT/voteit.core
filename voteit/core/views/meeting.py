@@ -1,12 +1,10 @@
-from copy import deepcopy
-from datetime import timedelta
+from uuid import uuid4
 
-import colander
 import deform
 from arche.events import ObjectUpdatedEvent
 from arche.events import SchemaCreatedEvent
+from arche.utils import copy_recursive
 from arche.utils import generate_slug
-from arche.utils import utcnow
 from arche.views.base import BaseView
 from arche.views.base import DefaultEditForm
 from betahaus.viewcomponent import render_view_group
@@ -16,6 +14,7 @@ from pyramid.httpexceptions import HTTPFound
 from pyramid.security import NO_PERMISSION_REQUIRED
 from pyramid.view import view_config
 from pyramid.view import view_defaults
+from six import text_type
 from zope.component.event import objectEventNotify
 from zope.interface.interfaces import ComponentLookupError
 
@@ -240,51 +239,52 @@ class CopyAgendaForm(DefaultEditForm):
     def save_success(self, appstruct):
         from_meeting = self.request.root[appstruct['meeting_name']]
         reset_wf =  appstruct['all_props_published']
-        only_copy_prop_states =  appstruct['only_copy_prop_states']
+        only_copy_prop_states = appstruct['only_copy_prop_states']
+        copy_types = appstruct['copy_types']
         assert IMeeting.providedBy(from_meeting)
         counter = 0
-        now = utcnow()
-        offset = 0
         for ai in from_meeting.values():
             if not IAgendaItem.providedBy(ai):
                 continue
-            new_ai = self.copy_context(ai, self.context)
-            counter += 1
-            for obj in ai.values():
-                type_name = getattr(obj, 'type_name', '')
-                if type_name not in appstruct['copy_types']:
-                    continue
-                if type_name == 'Proposal' and obj.state not in only_copy_prop_states:
-                    continue
-                created = now + timedelta(seconds=offset)
-                self.copy_context(obj, new_ai, reset_wf=reset_wf, created=created)
-                offset += 2
-                counter += 1
+            counter += copy_ai(self.context, ai, reset_wf=reset_wf, only_copy_prop_states=only_copy_prop_states, copy_types=copy_types)
         self.flash_messages.add(_("Copied ${num} objects", mapping={'num': counter}))
         return HTTPFound(location=self.request.resource_url(self.context))
 
-    def copy_context(self, context, parent, reset_wf = True, **kw):
-        appstruct = self.get_context_appstruct(context)
-        appstruct.update(kw)
-        new_obj = self.request.content_factories[context.type_name](creator=context.creator, **appstruct)
-        #Also copy mentions to avoid duplicate notifications
-        #FIXME: Smarter way to handle this? There may be other exceptions to the rule
-        if hasattr(context, '__mentioned__'):
-            new_obj.__mentioned__ = deepcopy(context.__mentioned__)
-        if reset_wf and new_obj.type_name == 'Proposal':
-            #Note: this system will change
-            new_obj.state = unicode('published')
-        name = generate_slug(parent, new_obj.title)
-        parent[name] = new_obj
-        return new_obj
 
-    def get_context_appstruct(self, context):
-        schema = self.request.get_schema(context, context.type_name, 'edit', bind=None, event=True)
-        appstruct = {}
-        for field in schema.children:
-            if hasattr(context, field.name):
-                val = getattr(context, field.name)
-                if val is None:
-                    val = colander.null
-                appstruct[field.name] = val
-        return appstruct
+def copy_ai(new_parent, ai, reset_wf=False, only_copy_prop_states=(), copy_types=()):
+    """
+    :param new_parent: The new meeting object
+    :param ai: object to be copied
+    :param reset_wf: turn all proposals published? (bool)
+    :param only_copy_prop_states: (list of states)
+    :param copy_types: Copy these types, remove everything else.
+    :return:
+    """
+    # Note about copy: use zope.copy functions, check arche method 'copy_recursive' for that.
+    new_ai = copy_recursive(ai)
+    new_ai.__parent__ = None
+    new_ai.state = unicode('private')
+    counter = 1 #The current ai
+    for obj in new_ai.values():
+        type_name = getattr(obj, 'type_name', '')
+        if type_name not in copy_types:
+            new_ai.remove(obj.__name__, send_events=False)
+            continue
+        if type_name == 'Proposal' and obj.get_workflow_state() not in only_copy_prop_states:
+            new_ai.remove(obj.__name__, send_events=False)
+            continue
+        if reset_wf and obj.type_name == 'Proposal':
+            # Note: this system will change
+            try:
+                obj.state = unicode('published')
+            except AttributeError:
+                # No wf ever set
+                pass
+        # Kill anything else contained
+        for k in obj.keys():
+            obj.remove(k, send_events=False)
+        counter += 1
+        obj.uid = text_type(uuid4())
+    name = generate_slug(new_parent, new_ai.title)
+    new_parent[name] = new_ai
+    return counter
