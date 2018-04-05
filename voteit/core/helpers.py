@@ -1,5 +1,4 @@
 import re
-from copy import deepcopy
 from urllib import urlencode
 
 from arche.utils import generate_slug #API
@@ -92,18 +91,6 @@ def strip_and_truncate(text, limit=200, symbol='<span class="trunc">&hellip;</sp
     if pool:
         out += symbol
     return out
-
-
-def move_object(obj, new_parent):
-    """ Move an object to a new location. """
-    name = obj.__name__
-    if name in new_parent:
-        raise ValueError("Already exist")
-    old_parent = obj.__parent__
-    new_obj = deepcopy(obj)
-    del old_parent[name]
-    new_parent[name] = new_obj
-    return new_obj
 
 
 def transform_text(request, text, html=True, tag_func=tags2links):
