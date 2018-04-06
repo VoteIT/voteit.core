@@ -141,7 +141,7 @@ voteit.hide_agenda = function() {
 voteit.toggle_agenda = function() {
     if ($('#fixed-nav').hasClass('activated')) {
         // If another menu is open, assume we want to switch to this area instead
-        if ($('.menu-toggler.open').length > 0) {
+        if ($(':not(#agenda-toggler).menu-toggler.open').length > 0) {
             voteit.hide_nav();
         } else {
             // No other menus, hide the agenda
