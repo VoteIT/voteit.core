@@ -24,6 +24,7 @@ from voteit.core.models.interfaces import IAccessPolicy
 from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.views.base_edit import ArcheFormCompat
+from voteit.core.security import unrestricted_wf_transition_to
 
 
 @view_defaults(context = IMeeting, permission = security.VIEW)
@@ -262,29 +263,24 @@ def copy_ai(new_parent, ai, reset_wf=False, only_copy_prop_states=(), copy_types
     """
     # Note about copy: use zope.copy functions, check arche method 'copy_recursive' for that.
     new_ai = copy_recursive(ai)
-    new_ai.__parent__ = None
     new_ai.state = unicode('private')
     counter = 1 #The current ai
-    for obj in new_ai.values():
-        type_name = getattr(obj, 'type_name', '')
-        if type_name not in copy_types:
-            new_ai.remove(obj.__name__, send_events=False)
-            continue
-        if type_name == 'Proposal' and obj.get_workflow_state() not in only_copy_prop_states:
-            new_ai.remove(obj.__name__, send_events=False)
-            continue
-        if reset_wf and obj.type_name == 'Proposal':
-            # Note: this system will change
-            try:
-                obj.state = unicode('published')
-            except AttributeError:
-                # No wf ever set
-                pass
-        # Kill anything else contained
-        for k in obj.keys():
-            obj.remove(k, send_events=False)
-        counter += 1
-        obj.uid = text_type(uuid4())
     name = generate_slug(new_parent, new_ai.title)
     new_parent[name] = new_ai
+    #Create new keys tuple to avoid changing lazy objects during iteration
+    for key in tuple(new_ai.keys()):
+        obj = new_ai[key]
+        type_name = getattr(obj, 'type_name', '')
+        if type_name not in copy_types:
+            del new_ai[obj.__name__]
+            continue
+        if type_name == 'Proposal' and obj.get_workflow_state() not in only_copy_prop_states:
+            del new_ai[obj.__name__]
+            continue
+        if reset_wf and obj.type_name == 'Proposal' and obj.get_workflow_state() != 'published':
+            unrestricted_wf_transition_to(obj, 'published')
+        # Kill anything else contained
+        for k in obj.keys():
+            del obj[k]
+        counter += 1
     return counter

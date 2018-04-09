@@ -181,8 +181,9 @@ class CopyAgendaSchema(colander.Schema):
     )
     copy_types = colander.SchemaNode(
         colander.Set(),
-        title=_("Copy these types too"),
+        title=_("Copy these types"),
         missing=(),
+        default=[x[0] for x in _TYPES_CHOICES],
         widget=deform.widget.CheckboxChoiceWidget(values=_TYPES_CHOICES)
     )
     only_copy_prop_states = colander.SchemaNode(
