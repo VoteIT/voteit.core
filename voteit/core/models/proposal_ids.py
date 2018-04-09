@@ -50,10 +50,17 @@ class UserIDBasedPropsalIds(ProposalIds):
         #By convention, first name in list is main creator.
         #No support for many creators yet but it might be implemented.
         creator = proposal.creator[0]
-        aid_int = self.proposal_ids.get(creator, 0) + 1
-        aid = "%s-%s" % (creator, aid_int)
-        proposal.set_field_appstruct({'aid': aid, 'aid_int': aid_int})
-        self.proposal_ids[creator] = aid_int
+        if proposal.aid:
+            try:
+                if proposal.aid_int > int(self.proposal_ids.get(creator, 0)):
+                    self.proposal_ids[creator] = proposal.aid_int
+            except (KeyError, TypeError, ValueError): #pragma: no cover
+                pass
+        else:
+            aid_int = self.proposal_ids.get(creator, 0) + 1
+            aid = "%s-%s" % (creator, aid_int)
+            proposal.set_field_appstruct({'aid': aid, 'aid_int': aid_int})
+            self.proposal_ids[creator] = aid_int
 
 
 class AgendaItemBasedProposalIds(ProposalIds):
@@ -63,13 +70,25 @@ class AgendaItemBasedProposalIds(ProposalIds):
 
     def add(self, proposal):
         ai = find_interface(proposal, IAgendaItem)
-        aid_int = self.proposal_ids.get(ai.__name__, 0) + 1
         tag_name = ai.hashtag
         if not tag_name:
             tag_name = ai.__name__
-        aid = "%s-%s" % (tag_name, aid_int)
-        proposal.update(aid = aid, aid_int = aid_int)
-        self.proposal_ids[ai.__name__] = aid_int
+        if proposal.aid:
+            try:
+                # Find the name part and increase the number for it
+                # In case this crashes, some props might get the same id
+                # This will still be the case since we don't know what's copied,
+                # so we'll leave that for the moderators to fix if they want to.
+                curr_name = "-".join(proposal.aid.split('-')[:-1])
+                if proposal.aid_int > int(self.proposal_ids.get(curr_name, 0)):
+                    self.proposal_ids[curr_name] = proposal.aid_int
+            except (KeyError, TypeError, ValueError): #pragma: no cover
+                pass
+        else:
+            aid_int = self.proposal_ids.get(ai.__name__, 0) + 1
+            aid = "%s-%s" % (tag_name, aid_int)
+            proposal.update(aid = aid, aid_int = aid_int)
+            self.proposal_ids[ai.__name__] = aid_int
 
 
 def create_proposal_id(obj, event):
