@@ -21,6 +21,7 @@ class ProposalIds(object):
     """
     title = ""
     name = ""
+    ai_need_hashtag = False
 
     def __init__(self, context):
         self.context = context
@@ -67,6 +68,7 @@ class AgendaItemBasedProposalIds(ProposalIds):
     """ Count agenda items instead of userids. """
     title = _("Agenda hashtag")
     name = "ai_hashtag"
+    ai_need_hashtag = True
 
     def add(self, proposal):
         ai = find_interface(proposal, IAgendaItem)
