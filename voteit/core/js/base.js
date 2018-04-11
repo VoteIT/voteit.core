@@ -29,3 +29,14 @@ if(typeof(voteit) == "undefined"){
 
 /* Prioritize displaying flash messages in voteits area that floats under the menu */
 arche.flash_slot_order = ['modal', 'voteit-context-actions', 'voteit-main', 'main'];
+
+$(function() {
+    /* Internet Explorer not supported */
+    var is_ie = window.navigator.userAgent.indexOf("MSIE ") > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./);
+    if (is_ie) {
+        arche.create_flash_message(
+            'Internet Explorer is not supported on this site. Please consider switching browser.',
+            {icon_class: 'glyphicon glyphicon-warning-sign', type: 'danger', auto_destruct: false}
+        );
+    }
+});

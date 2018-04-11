@@ -10,6 +10,7 @@ import deform
 from voteit.core import _
 from voteit.core import security
 from voteit.core.models.interfaces import IAccessPolicy
+from voteit.core.models.interfaces import IProposal
 from voteit.core.schemas.common import NAME_PATTERN
 from voteit.core.validators import html_string_validator
 from voteit.core.validators import richtext_validator
@@ -161,6 +162,16 @@ _TYPES_CHOICES = (
 )
 
 
+@colander.deferred
+def prop_states_choice(node, kw):
+    request = kw['request']
+    results = request.get_wf_state_titles(IProposal, 'Proposal')
+    values = []
+    for (k, v) in results.items():
+        values.append((k, v))
+    return deform.widget.CheckboxChoiceWidget(values=values)
+
+
 class CopyAgendaSchema(colander.Schema):
     meeting_name = colander.SchemaNode(
         colander.String(),
@@ -170,9 +181,22 @@ class CopyAgendaSchema(colander.Schema):
     )
     copy_types = colander.SchemaNode(
         colander.Set(),
-        title=_("Copy these types too"),
+        title=_("Copy these types"),
         missing=(),
+        default=[x[0] for x in _TYPES_CHOICES],
         widget=deform.widget.CheckboxChoiceWidget(values=_TYPES_CHOICES)
+    )
+    only_copy_prop_states = colander.SchemaNode(
+        colander.Set(),
+        title=_("Only copy proposals in these states"),
+        missing=(),
+        default=('published', 'approved', 'denied'),
+        widget=prop_states_choice,
+    )
+    all_props_published = colander.SchemaNode(
+        colander.Bool(),
+        title = _("Make all proposals published?"),
+        description = _("Uncheck this to retain workflow state")
     )
 
 

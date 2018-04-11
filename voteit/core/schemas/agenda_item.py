@@ -5,6 +5,8 @@ from voteit.core import VoteITMF as _
 from voteit.core.validators import html_string_validator
 from voteit.core.validators import TagValidator
 from voteit.core.validators import richtext_validator
+from voteit.core.models.interfaces import IProposalIds
+
 
 _HASHTAG_PATTERN = "^[a-zA-Z0-9\-\_\.]{2,30}$"
 
@@ -41,11 +43,13 @@ class AgendaItemSchema(colander.MappingSchema):
         validator=richtext_validator, )
     hashtag = colander.SchemaNode(
         colander.String(),
-        title=_("Hashtag for Agenda Item"),
+        title=_("Base hashtag for Agenda Item"),
         description=_("ai_hashtag_schema_description",
                       default="Only used by systems that implement agenda based hashtags. "
                               "It's usually a good idea to leave this empty if you "
-                              "don't have a special reason to change it."),
+                              "don't have a special reason to change it. "
+                              "(It will use the agenda items name in that case) "
+                              "Proposals will be named according to this base tag + a number."),
         missing="",
         validator=colander.Regex(_HASHTAG_PATTERN,
                                  msg=_("Must be a-z, 0-9, or any of '.-_'."))
@@ -59,6 +63,17 @@ class AgendaItemSchema(colander.MappingSchema):
         validator=TagValidator(),
         missing=(),
     )
+
+    def after_bind(self, schema, kw):
+        request = kw['request']
+        proposal_ids = request.registry.queryAdapter(
+            request.meeting, IProposalIds, name=request.meeting.proposal_id_method)
+        if proposal_ids is not None and proposal_ids.ai_need_hashtag:
+            pass
+        else:
+            del schema['hashtag']
+        if not request.meeting.tags:
+            del schema['tags']
 
 
 def includeme(config):

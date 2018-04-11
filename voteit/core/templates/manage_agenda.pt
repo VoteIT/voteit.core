@@ -12,7 +12,12 @@
   </h2>
 
   <p>
-    <a class="btn btn-default" href="${request.resource_url(context, 'contents')}" i18n:translate="">Sort agenda items</a>
+    <a class="btn btn-default"
+       href="${request.resource_url(context, 'contents')}"
+       i18n:translate="">Sort agenda items</a>
+    <a class="btn btn-default"
+       href="${request.resource_url(context, 'copy_agenda')}"
+       i18n:translate="">Copy items</a>
   </p>
 
   <form method="post" class="deform" action="">

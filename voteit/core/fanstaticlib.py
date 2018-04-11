@@ -11,6 +11,10 @@ from js.bootstrap import bootstrap_css
 from js.jquery import jquery
 from js.jquery_tablesorter import tablesorter
 from pkg_resources import resource_filename
+try:
+    from arche_autobahn.fanstatic_lib import init_client_js
+except ImportError:
+    init_client_js = None
 
 # #Libs
 deformlib = Library('deform', resource_filename('deform', 'static'))
@@ -43,6 +47,8 @@ def include_voteit_resources(view, event):
     if view.request.is_moderator:
         voteit_moderator_js.need()
     if view.request.meeting:
+        if init_client_js is not None:
+            init_client_js.need()
         unread_js.need()
 
 def includeme(config):
