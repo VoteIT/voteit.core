@@ -27,9 +27,12 @@
           #${obj.aid}
         </a>
       </div>
-      <div class="col-xs-6 text-right text-muted">
+      <div class="col-xs-6 text-right text-muted"
+           tal:define="dt_relative request.dt_handler.format_relative(obj.created);
+                       dt_absolute request.dt_handler.format_dt(obj.created);"
+           tal:attributes="title dt_absolute != dt_relative and dt_absolute or None">
         <span class="glyphicon glyphicon-time"></span>
-        ${request.dt_handler.format_relative(obj.created)}
+        ${dt_relative}
       </div>
     </div>
     <div class="metadata">
