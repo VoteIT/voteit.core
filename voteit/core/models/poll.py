@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from BTrees.OIBTree import OIBTree
 from BTrees.OOBTree import OOBTree
 from arche.security import get_acl_registry
@@ -25,6 +27,7 @@ from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IPollPlugin
 from voteit.core.models.interfaces import IVote
+from voteit.core.models.proposal import PROPOSAL_ORDER_KEY_METHODS
 from voteit.core.models.workflow_aware import WorkflowAware
 
 
@@ -130,7 +133,7 @@ class Poll(BaseContent, WorkflowAware):
         return reg.getAdapter(self, name = self.poll_plugin_name, interface = IPollPlugin)
 
     def get_proposal_objects(self):
-        #FIXME: This method should accept request as an argument and use
+        # FIXME: This method should accept request as an argument and use
         # the cached properties and helper methods there instead
         agenda_item = self.__parent__
         if agenda_item is None:
@@ -141,10 +144,14 @@ class Poll(BaseContent, WorkflowAware):
         for docid in root.catalog.query(query, sort_index='created')[1]:
             path = root.document_map.address_for_docid(docid)
             obj = find_resource(root, path)
-            #Permission check shouldn't be needed at this point
+            # Permission check shouldn't be needed at this point
             if obj:
                 results.append(obj)
-        return results
+        # return results
+        # TODO Sort results according to meeting setting
+        meeting = find_interface(self, IMeeting)
+        order_method = PROPOSAL_ORDER_KEY_METHODS[meeting.poll_proposals_default_order]
+        return sorted(results, key=order_method, reverse=meeting.poll_proposals_default_direction_reversed)
 
     def calculate_ballots(self):
         ballot_counter = Ballots()

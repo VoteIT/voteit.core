@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 import colander
 import deform
 from pyramid.traversal import resource_path, find_interface
@@ -7,6 +9,7 @@ from voteit.core import _
 from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IPollPlugin
 from voteit.core.models.interfaces import IProposal
+from voteit.core.models.proposal import PROPOSAL_ORDER_CHOICES
 from voteit.core.validators import html_string_validator
 
 
@@ -90,13 +93,26 @@ class PollEditProposalsSchema(colander.Schema):
 class PollSettingsSchema(colander.Schema):
     polls_menu_only_links = colander.SchemaNode(
         colander.Bool(),
-        title = _("Disable modal popups for polls menu?"),
-        description = _("schema_polls_menu_only_links_description",
-                        default="If disabled, the polls menu will simply link to "
-                                "the agenda item with the poll item instead."),
+        title=_("Disable modal popups for polls menu?"),
+        description=_("schema_polls_menu_only_links_description",
+                      default="If disabled, the polls menu will simply link to "
+                              "the agenda item with the poll item instead."),
         missing=False,
         default=False,
-        tab='advanced',
+        # tab='advanced',
+    )
+    poll_proposals_default_order = colander.SchemaNode(
+        colander.String(),
+        title=_('Default proposal order'),
+        # tab='advanced',
+        widget=deform.widget.RadioChoiceWidget(values=PROPOSAL_ORDER_CHOICES),
+        missing='',
+    )
+    poll_proposals_default_direction_reversed = colander.SchemaNode(
+        colander.Bool(),
+        title=_('Reverse proposal ordering'),
+        # tab='advanced',
+        missing=False,
     )
 
 
