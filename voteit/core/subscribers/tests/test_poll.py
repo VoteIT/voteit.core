@@ -46,7 +46,7 @@ class PollTests(unittest.TestCase):
         ai['prop'] = Proposal()
         ai['poll'] = Poll()
         ai['poll'].proposal_uids = (ai['prop'].uid, )
-        self.config.scan('voteit.core.subscribers.poll')
+        self.config.include('voteit.core.subscribers.poll')
         #Set state to something that doesn't have a transition to 'voting'
         ai['prop'].set_workflow_state(request, 'approved')
         self.assertRaises(HTTPForbidden, ai['poll'].set_workflow_state, request, 'upcoming')
@@ -78,7 +78,7 @@ class PollActiveTests(unittest.TestCase):
         self.config.include('voteit.core.models.meeting')
         root = _voters_fixture(self.config)
         self.config.include('arche.testing.setup_auth')
-        self.config.scan('voteit.core.subscribers.poll')
+        self.config.include('voteit.core.subscribers.poll')
         self.config.include('voteit.core.security')
         poll = root['meeting']['ai']['poll']
         security.unrestricted_wf_transition_to(poll, 'ongoing')
@@ -95,7 +95,7 @@ class PollActiveTests(unittest.TestCase):
         # making sure that proposals are in voting state after poll is set to ongoing
         self.assertEqual(ai['prop1'].get_workflow_state(), 'voting')
         self.assertEqual(ai['prop2'].get_workflow_state(), 'voting')
-        self.config.scan('voteit.core.subscribers.poll')
+        self.config.include('voteit.core.subscribers.poll')
         del ai['poll']
         self.assertEqual(ai['prop1'].get_workflow_state(), 'published')
         self.assertEqual(ai['prop2'].get_workflow_state(), 'published')

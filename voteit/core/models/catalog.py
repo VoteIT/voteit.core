@@ -1,7 +1,6 @@
 from calendar import timegm
 
 from arche.interfaces import ICataloger
-from pyramid.events import subscriber
 from pyramid.security import principals_allowed_by_permission
 from pyramid.traversal import find_resource
 from repoze.catalog.indexes.field import CatalogFieldIndex
@@ -92,7 +91,6 @@ def get_searchable_prop_or_disc(context, default):
     return default
 
 
-@subscriber([IAgendaItem, IWorkflowStateChange])
 def update_contained_in_ai(obj, event):
     """ Special subscriber that touches any contained objects within
         agenda items when it changes wf stade to or from private.
@@ -119,4 +117,4 @@ def includeme(config):
         '__name__': CatalogFieldIndex('__name__'),
     }
     config.add_catalog_indexes(__name__, indexes)
-    config.scan(__name__)
+    config.add_subscriber(update_contained_in_ai, [IAgendaItem, IWorkflowStateChange])

@@ -68,7 +68,7 @@ class MeetingTests(unittest.TestCase):
 
     def test_timestamp_added_on_close(self):
         register_workflows(self.config)
-        self.config.scan('voteit.core.subscribers.timestamps') #To add subscriber
+        self.config.include('voteit.core.subscribers.timestamps') #To add subscriber
         request = testing.DummyRequest()
         obj = self._cut()
         obj.set_workflow_state(request, 'ongoing')

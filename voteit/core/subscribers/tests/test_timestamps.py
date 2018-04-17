@@ -8,7 +8,7 @@ class TimestampsTests(TestCase):
 
     def setUp(self):
         self.config = testing.setUp()
-        self.config.scan('voteit.core.subscribers.timestamps')
+        self.config.include('voteit.core.subscribers.timestamps')
         self.config.include('pyramid_zcml')
         self.config.load_zcml('voteit.core:configure.zcml')
 

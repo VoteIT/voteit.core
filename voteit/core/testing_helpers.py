@@ -56,15 +56,13 @@ def active_poll_fixture(config):
     """
     from voteit.core.models.poll import Poll
     from voteit.core.models.meeting import Meeting
-    from voteit.core.security import unrestricted_wf_transition_to
     from voteit.core.models.agenda_item import AgendaItem
     from voteit.core.models.proposal import Proposal
     root = bootstrap_and_fixture(config)
     request = testing.DummyRequest()
     config = testing.setUp(request = request, registry = config.registry)
     config.include('pyramid_mailer.testing')
-    config.scan('voteit.core.subscribers.poll')
-    config.scan('voteit.core.models.meeting')
+    config.include('voteit.core.subscribers.poll')
     root['users']['admin'].set_field_value('email', 'this@that.com')
     meeting = root['meeting'] = Meeting()
     meeting.add_groups('admin', [ROLE_VOTER])

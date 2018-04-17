@@ -68,7 +68,7 @@ class AgendaItemTests(unittest.TestCase):
         self.assertRaises(Exception, obj.set_workflow_state, 'closed')
 
     def test_timestamp_added_on_close(self):
-        self.config.scan('voteit.core.subscribers.timestamps') #To add subscriber
+        self.config.include('voteit.core.subscribers.timestamps') #To add subscriber
         request = testing.DummyRequest()
         self.root['ai'] = ai = self._cut()
         ai.set_workflow_state(request, 'upcoming')

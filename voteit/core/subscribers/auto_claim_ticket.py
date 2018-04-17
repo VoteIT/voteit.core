@@ -22,5 +22,6 @@ def auto_claim_ticket(event):
             if ticket.get_workflow_state() == 'open':
                 claim_ticket(ticket, request, event.user.userid)
 
+
 def includeme(config):
     config.add_subscriber(auto_claim_ticket, IEmailValidatedEvent)

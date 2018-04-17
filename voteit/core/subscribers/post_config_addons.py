@@ -1,6 +1,5 @@
 from pyramid.config import Configurator
-from pyramid.events import ApplicationCreated
-from pyramid.events import subscriber
+from pyramid.interfaces import IApplicationCreated
 
 
 def include_zcml(config):
@@ -10,7 +9,6 @@ def include_zcml(config):
     config.commit()
 
 
-@subscriber(ApplicationCreated)
 def post_application_config(event):
     """ The zope.component registry must be global if we want to hook components from
         non-Pyramid packages. This stage ensures that zopes getSiteManager method
@@ -18,3 +16,7 @@ def post_application_config(event):
     """
     config = Configurator(registry=event.app.registry)
     include_zcml(config)
+
+
+def includeme(config):
+    config.add_subscriber(post_application_config, IApplicationCreated)

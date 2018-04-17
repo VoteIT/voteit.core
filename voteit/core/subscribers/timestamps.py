@@ -1,6 +1,3 @@
-from datetime import datetime
-
-from pyramid.events import subscriber
 from arche.utils import utcnow
 
 from voteit.core.models.interfaces import IAgendaItem
@@ -9,9 +6,6 @@ from voteit.core.models.interfaces import IPoll
 from voteit.core.interfaces import IWorkflowStateChange
 
 
-@subscriber([IAgendaItem, IWorkflowStateChange])
-@subscriber([IMeeting, IWorkflowStateChange])
-@subscriber([IPoll, IWorkflowStateChange])
 def add_close_timestamp(obj, event):
     """ Add timestamps when a meeting, ai or poll is closed. """
     #Note: Use set_field_appstruct since we want the IObjectUpdatedEvent to be sent so the catalog gets reindexed.
@@ -22,9 +16,6 @@ def add_close_timestamp(obj, event):
         obj.set_field_appstruct({'end_time': None})
 
 
-@subscriber([IAgendaItem, IWorkflowStateChange])
-@subscriber([IMeeting, IWorkflowStateChange])
-@subscriber([IPoll, IWorkflowStateChange])
 def add_start_timestamp(obj, event):
     """ Add timestamps when a meeting, ai or poll is started. """
     #Note: Use set_field_appstruct since we want the IObjectUpdatedEvent to be sent so the catalog gets reindexed.
@@ -33,3 +24,12 @@ def add_start_timestamp(obj, event):
     #Clear start_time if it is moved to upcoming again
     if event.old_state == 'ongoing' and event.new_state == 'upcoming':
         obj.set_field_appstruct({'start_time': None})
+
+
+def includeme(config):
+    config.add_subscriber(add_close_timestamp, [IAgendaItem, IWorkflowStateChange])
+    config.add_subscriber(add_close_timestamp, [IMeeting, IWorkflowStateChange])
+    config.add_subscriber(add_close_timestamp, [IPoll, IWorkflowStateChange])
+    config.add_subscriber(add_start_timestamp, [IAgendaItem, IWorkflowStateChange])
+    config.add_subscriber(add_start_timestamp, [IMeeting, IWorkflowStateChange])
+    config.add_subscriber(add_start_timestamp, [IPoll, IWorkflowStateChange])
