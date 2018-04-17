@@ -149,9 +149,11 @@ class Poll(BaseContent, WorkflowAware):
             if obj:
                 results.append(obj)
         meeting = find_interface(self, IMeeting)
-        order_method = PROPOSAL_ORDER_KEY_METHODS.get(meeting.poll_proposals_default_order) or \
+        default_order = getattr(meeting, 'poll_proposals_default_order', '')
+        reverse = getattr(meeting, 'poll_proposals_default_direction_reversed', False)
+        key_method = PROPOSAL_ORDER_KEY_METHODS.get(default_order) or \
             PROPOSAL_ORDER_KEY_METHODS[PROPOSAL_ORDER_DEFAULT]
-        return sorted(results, key=order_method, reverse=meeting.poll_proposals_default_direction_reversed)
+        return sorted(results, key=key_method, reverse=reverse)
 
     def calculate_ballots(self):
         ballot_counter = Ballots()
