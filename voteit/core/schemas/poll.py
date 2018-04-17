@@ -9,7 +9,7 @@ from voteit.core import _
 from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IPollPlugin
 from voteit.core.models.interfaces import IProposal
-from voteit.core.models.proposal import PROPOSAL_ORDER_CHOICES
+from voteit.core.models.poll import PROPOSAL_ORDER_CHOICES
 from voteit.core.validators import html_string_validator
 
 
@@ -99,20 +99,12 @@ class PollSettingsSchema(colander.Schema):
                               "the agenda item with the poll item instead."),
         missing=False,
         default=False,
-        # tab='advanced',
     )
     poll_proposals_default_order = colander.SchemaNode(
         colander.String(),
         title=_('Default proposal order'),
-        # tab='advanced',
         widget=deform.widget.RadioChoiceWidget(values=PROPOSAL_ORDER_CHOICES),
         missing='',
-    )
-    poll_proposals_default_direction_reversed = colander.SchemaNode(
-        colander.Bool(),
-        title=_('Reverse proposal ordering'),
-        # tab='advanced',
-        missing=False,
     )
 
 

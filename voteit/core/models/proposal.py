@@ -1,7 +1,5 @@
 from __future__ import unicode_literals
 
-from random import random
-
 from arche.security import get_acl_registry
 from pyramid.traversal import find_interface
 from six import string_types
@@ -16,23 +14,6 @@ from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IProposal
 from voteit.core.models.workflow_aware import WorkflowAware
 
-
-PROPOSAL_ORDER_ALPHABETICAL = 'alphabatical'
-PROPOSAL_ORDER_RANDOM = 'random'
-PROPOSAL_ORDER_CHRONOLOGICAL = 'chronological'
-PROPOSAL_ORDER_DEFAULT = PROPOSAL_ORDER_CHRONOLOGICAL
-PROPOSAL_ORDER_REVERSED_DEFAULT = False
-
-PROPOSAL_ORDER_CHOICES = (
-    (PROPOSAL_ORDER_CHRONOLOGICAL, _('Chronological')),
-    (PROPOSAL_ORDER_ALPHABETICAL, _('Alphabetical')),
-    (PROPOSAL_ORDER_RANDOM, _('Random')),
-)
-PROPOSAL_ORDER_KEY_METHODS = {
-    PROPOSAL_ORDER_ALPHABETICAL: lambda p: p.text.lower(),
-    PROPOSAL_ORDER_RANDOM: lambda p: random(),
-    PROPOSAL_ORDER_CHRONOLOGICAL: lambda p: p.created,
-}
 
 @implementer(IProposal)
 class Proposal(BaseContent, WorkflowAware):

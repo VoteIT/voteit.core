@@ -1,5 +1,7 @@
 from __future__ import unicode_literals
 
+from random import random
+
 from BTrees.OIBTree import OIBTree
 from BTrees.OOBTree import OOBTree
 from arche.security import get_acl_registry
@@ -27,9 +29,24 @@ from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IPollPlugin
 from voteit.core.models.interfaces import IVote
-from voteit.core.models.proposal import PROPOSAL_ORDER_DEFAULT
-from voteit.core.models.proposal import PROPOSAL_ORDER_KEY_METHODS
 from voteit.core.models.workflow_aware import WorkflowAware
+
+
+PROPOSAL_ORDER_ALPHABETICAL = 'alphabatical'
+PROPOSAL_ORDER_RANDOM = 'random'
+PROPOSAL_ORDER_CHRONOLOGICAL = 'chronological'
+PROPOSAL_ORDER_DEFAULT = PROPOSAL_ORDER_CHRONOLOGICAL
+
+PROPOSAL_ORDER_CHOICES = (
+    (PROPOSAL_ORDER_CHRONOLOGICAL, _('Chronological')),
+    (PROPOSAL_ORDER_ALPHABETICAL, _('Alphabetical')),
+    (PROPOSAL_ORDER_RANDOM, _('Random')),
+)
+PROPOSAL_ORDER_KEY_METHODS = {
+    PROPOSAL_ORDER_ALPHABETICAL: lambda p: p.text.lower(),
+    PROPOSAL_ORDER_RANDOM: lambda p: random(),
+    PROPOSAL_ORDER_CHRONOLOGICAL: lambda p: p.created,
+}
 
 
 @implementer(IPoll)
@@ -150,10 +167,10 @@ class Poll(BaseContent, WorkflowAware):
                 results.append(obj)
         meeting = find_interface(self, IMeeting)
         default_order = getattr(meeting, 'poll_proposals_default_order', '')
-        reverse = getattr(meeting, 'poll_proposals_default_direction_reversed', False)
-        key_method = PROPOSAL_ORDER_KEY_METHODS.get(default_order) or \
-            PROPOSAL_ORDER_KEY_METHODS[PROPOSAL_ORDER_DEFAULT]
-        return sorted(results, key=key_method, reverse=reverse)
+        key_method = PROPOSAL_ORDER_KEY_METHODS.get(
+            default_order, PROPOSAL_ORDER_KEY_METHODS[PROPOSAL_ORDER_DEFAULT]
+        )
+        return sorted(results, key=key_method)
 
     def calculate_ballots(self):
         ballot_counter = Ballots()

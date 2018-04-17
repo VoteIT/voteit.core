@@ -1,6 +1,7 @@
 import unittest
-from datetime import datetime
+from datetime import datetime, timedelta
 
+from arche.utils import utcnow
 from pyramid import testing
 from zope.interface.verify import verifyClass
 from zope.interface.verify import verifyObject
@@ -128,6 +129,46 @@ class PollTests(unittest.TestCase):
         prop2 = agenda_item['prop2']
         agenda_item['poll'] = poll = self._cut(proposals=[prop1.uid, prop2.uid])
         self.assertEqual(set(poll.get_proposal_objects()), set([prop1, prop2,]))
+
+    def _ordering_fixture(self):
+        self.config.include('arche.testing.catalog')
+        from voteit.core.models.agenda_item import AgendaItem
+        from voteit.core.models.meeting import Meeting
+        from voteit.core.models.proposal import Proposal
+        root = bootstrap_and_fixture(self.config)
+        root['m'] = m = Meeting()
+        m['ai'] = ai = AgendaItem()
+        now = utcnow()
+        ai['p1'] = Proposal(created=now, text='Abc', uid='a')
+        ai['p2'] = Proposal(created=now+timedelta(seconds=2), text='aa', uid='b')
+        ai['p3'] = Proposal(created=now+timedelta(seconds=4), text='cc', uid='c')
+        ai['p4'] = Proposal(created=now+timedelta(seconds=6), text='zz', uid='d')
+        ai['p5'] = Proposal(created=now+timedelta(seconds=8), text='C', uid='e')
+        ai['poll'] = self._cut(proposals=['a', 'b', 'c', 'd', 'e'])
+        return root
+
+    def test_get_proposal_objects_ordering_chronological(self):
+        root = self._ordering_fixture()
+        poll = root['m']['ai']['poll']
+        #Chronological order is default
+        self.assertEqual([x.uid for x in poll.get_proposal_objects()], ['a', 'b', 'c', 'd', 'e'])
+
+    def test_get_proposal_objects_ordering_random(self):
+        from voteit.core.models.poll import PROPOSAL_ORDER_RANDOM
+        root = self._ordering_fixture()
+        root['m'].poll_proposals_default_order = PROPOSAL_ORDER_RANDOM
+        poll = root['m']['ai']['poll']
+        r = {}
+        for i in range(5):
+            r[i] = [x.uid for x in poll.get_proposal_objects()]
+        self.failIf(r[0] == r[1] == r[2] == r[3] == r[4])
+
+    def test_get_proposal_objects_ordering_alphabetical(self):
+        from voteit.core.models.poll import PROPOSAL_ORDER_ALPHABETICAL
+        root = self._ordering_fixture()
+        root['m'].poll_proposals_default_order = PROPOSAL_ORDER_ALPHABETICAL
+        poll = root['m']['ai']['poll']
+        self.assertEqual([x.uid for x in poll.get_proposal_objects()], ['b', 'a', 'e', 'c', 'd'])
 
     def test_get_proposal_objects_wrong_context(self):
         obj = self._cut()

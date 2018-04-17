@@ -12,9 +12,8 @@ from voteit.core.models.arche_compat import createContent
 from voteit.core.models.base_content import BaseContent
 from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IMeeting
-from voteit.core.models.proposal import PROPOSAL_ORDER_CHOICES
-from voteit.core.models.proposal import PROPOSAL_ORDER_DEFAULT
-from voteit.core.models.proposal import PROPOSAL_ORDER_REVERSED_DEFAULT
+from voteit.core.models.poll import PROPOSAL_ORDER_CHOICES
+from voteit.core.models.poll import PROPOSAL_ORDER_DEFAULT
 from voteit.core.models.workflow_aware import WorkflowAware
 from voteit.core.models.security_aware import SecurityAware
 
@@ -165,14 +164,6 @@ class Meeting(BaseContent, SecurityAware, WorkflowAware):
         order_dict = dict(PROPOSAL_ORDER_CHOICES)
         assert value in order_dict, 'Default order must be one of: {}'.format(', '.join(order_dict.keys()))
         self.set_field_value('poll_proposals_default_order', value)
-
-    @property
-    def poll_proposals_default_direction_reversed(self):
-        return self.get_field_value('poll_proposals_default_direction_reversed', PROPOSAL_ORDER_REVERSED_DEFAULT)
-    @poll_proposals_default_direction_reversed.setter
-    def poll_proposals_default_direction_reversed(self, value):
-        assert isinstance(value, bool), 'Direction reversed can only be True och False'
-        self.set_field_value('poll_proposals_default_direction_reversed', value)
 
     @property
     def tags(self):
