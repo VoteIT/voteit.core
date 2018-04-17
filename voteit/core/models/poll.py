@@ -27,6 +27,7 @@ from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IPollPlugin
 from voteit.core.models.interfaces import IVote
+from voteit.core.models.proposal import PROPOSAL_ORDER_DEFAULT
 from voteit.core.models.proposal import PROPOSAL_ORDER_KEY_METHODS
 from voteit.core.models.workflow_aware import WorkflowAware
 
@@ -141,16 +142,15 @@ class Poll(BaseContent, WorkflowAware):
         query = Any('uid', tuple(self.proposal_uids)) & Eq('type_name', 'Proposal')
         root = find_root(agenda_item)
         results = []
-        for docid in root.catalog.query(query, sort_index='created')[1]:
+        for docid in root.catalog.query(query)[1]:
             path = root.document_map.address_for_docid(docid)
             obj = find_resource(root, path)
             # Permission check shouldn't be needed at this point
             if obj:
                 results.append(obj)
-        # return results
-        # TODO Sort results according to meeting setting
         meeting = find_interface(self, IMeeting)
-        order_method = PROPOSAL_ORDER_KEY_METHODS[meeting.poll_proposals_default_order]
+        order_method = PROPOSAL_ORDER_KEY_METHODS.get(meeting.poll_proposals_default_order) or \
+            PROPOSAL_ORDER_KEY_METHODS[PROPOSAL_ORDER_DEFAULT]
         return sorted(results, key=order_method, reverse=meeting.poll_proposals_default_direction_reversed)
 
     def calculate_ballots(self):

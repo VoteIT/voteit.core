@@ -29,7 +29,7 @@ PROPOSAL_ORDER_CHOICES = (
     (PROPOSAL_ORDER_RANDOM, _('Random')),
 )
 PROPOSAL_ORDER_KEY_METHODS = {
-    PROPOSAL_ORDER_ALPHABETICAL: lambda p: p.text,
+    PROPOSAL_ORDER_ALPHABETICAL: lambda p: p.text.lower(),
     PROPOSAL_ORDER_RANDOM: lambda p: random(),
     PROPOSAL_ORDER_CHRONOLOGICAL: lambda p: p.created,
 }
