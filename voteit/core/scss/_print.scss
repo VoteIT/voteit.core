@@ -1,0 +1,31 @@
+@media print {
+    .btn {
+        display: none;
+    }
+
+    a[data-toggle],
+    a.tag,
+    a.primary-tag,
+    a[href^="mailto:"],
+    a[href^="tel:"] {
+        &::after {
+            content: '';
+        }
+    }
+
+    .btn[data-permission-toggle] {
+        @extend a[data-toggle];
+        display: inline;
+    }
+
+    nav,
+    .nav,
+    #context-actions,
+    #pDebug {
+        display: none;
+    }
+
+    body {
+        padding: 0!important;
+    }
+}

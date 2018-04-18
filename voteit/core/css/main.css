@@ -680,6 +680,28 @@ $brand-danger:          #d9534f !default;
       margin-bottom: 5px;
       margin-top: 5px; }
 
+@media print {
+  .btn {
+    display: none; }
+
+  a[data-toggle]::after, .btn[data-permission-toggle]::after,
+  a.tag::after,
+  a.primary-tag::after,
+  a[href^="mailto:"]::after,
+  a[href^="tel:"]::after {
+    content: ''; }
+
+  .btn[data-permission-toggle] {
+    display: inline; }
+
+  nav,
+  .nav,
+  #context-actions,
+  #pDebug {
+    display: none; }
+
+  body {
+    padding: 0 !important; } }
 body {
   padding-top: 50px; }
 
