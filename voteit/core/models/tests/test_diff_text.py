@@ -54,8 +54,6 @@ who respects sex, who has made mistakes and learned from them."""
         obj = self._cut(context)
         obj.text = _ZOE
         paragraphs = obj.get_paragraphs()
-        changed = 'I want someone who has been in love and been hurt,\n who respects sex, who has made mistakes ' \
-                   'and learned from them.'
         expected = 'I want someone who has been in love and been hurt, <br/> who respects sex, who has made mistakes ' \
                    'and learned from them.'
         results = obj(paragraphs[5], expected)
@@ -68,10 +66,10 @@ who respects sex, who has made mistakes and learned from them."""
         paragraphs = obj.get_paragraphs()
         changed = """Who respects sex, who has made mistakes and learned from them!"""
         results = obj(paragraphs[5], changed)
-        expected = '<strong><s class="text-danger">I want someone who has been in love and been hurt, <br/> ' \
-                   'who</s></strong> <strong class="text-success">Who</strong> respects sex, ' \
-                   'who has made mistakes and learned from <strong><s class="text-danger">them.</s></strong> ' \
-                   '<strong class="text-success">them!</strong>'
+        expected = '<span class="text-diff-removed">I want someone who has been in love and been hurt, <br/> ' \
+                   'who</span> <span class="text-diff-added">Who</span> respects sex, ' \
+                   'who has made mistakes and learned from <span class="text-diff-removed">them.</span> ' \
+                   '<span class="text-diff-added">them!</span>'
         self.assertEqual(expected, results)
 
     def test_diff_with_bullets(self):
@@ -85,8 +83,8 @@ who respects sex, who has made mistakes and learned from them."""
         results = obj(paragraphs[0], changed)
         expected = """Det här är en punktlista
 • En grej
-<strong><s class="text-danger">• Ytterligare en grej</s></strong>
-<strong class="text-success">• En mellangrej</strong>"""
+<span class="text-diff-removed">• Ytterligare en grej</span>
+<span class="text-diff-added">• En mellangrej</span>"""
         self.assertEqual(expected, results)
 
     def test_diff_with_other_bullets(self):
@@ -100,8 +98,8 @@ who respects sex, who has made mistakes and learned from them."""
         results = obj(paragraphs[1], changed)
         expected = """Det här är också en punktlista
 - En grej
-<strong><s class="text-danger">- Ytterligare en grej</s></strong>
-<strong class="text-success">- En mellangrej</strong>"""
+<span class="text-diff-removed">- Ytterligare en grej</span>
+<span class="text-diff-added">- En mellangrej</span>"""
         self.assertEqual(expected, results)
 
     def test_diff_with_no_bullets(self):
@@ -112,7 +110,7 @@ who respects sex, who has made mistakes and learned from them."""
         changed = """Det här är inte en punktlista
 Det är bara ett ovanligt stycke"""
         results = obj(paragraphs[2], changed)
-        expected = """Det här är inte en punktlista <br/> Det är bara ett <strong><s class="text-danger">vanligt</s></strong> <strong class="text-success">ovanligt</strong> stycke"""
+        expected = """Det här är inte en punktlista <br/> Det är bara ett <span class="text-diff-removed">vanligt</span> <span class="text-diff-added">ovanligt</span> stycke"""
         self.assertEqual(expected, results)
 
 

@@ -227,11 +227,6 @@ class TestGetDocidsToShow(unittest.TestCase):
             res.append(root.document_map.docid_for_address("/m/ai/d%s" % i))
         return res
 
-    #def _mark_read(self, root, items):
-    #    unread = IUserUnread(root['users']['admin'])
-    #    for i in items:
-    #        unread.remove(root['m']['ai']['d%s' % i])
-
     def _set_tag(self, root, items, tag = '#one'):
         for i in items:
             #To enable subscribers
