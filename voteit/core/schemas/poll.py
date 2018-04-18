@@ -13,6 +13,10 @@ from voteit.core.models.poll import PROPOSAL_ORDER_CHOICES
 from voteit.core.validators import html_string_validator
 
 
+_PROPOSAL_ORDER_CHOICES_W_DEFAULT = [('', _('(Use meeting default)'))]
+_PROPOSAL_ORDER_CHOICES_W_DEFAULT.extend(PROPOSAL_ORDER_CHOICES)
+
+
 @colander.deferred
 def poll_plugin_choices_widget(node, kw):
     request = kw['request']
@@ -51,6 +55,16 @@ def poll_default_title(node, kw):
     return request.localizer.translate(title)
 
 
+@colander.deferred
+def meeting_default_description(node, kw):
+    request = kw['request']
+    choices = dict(PROPOSAL_ORDER_CHOICES)
+    title = choices.get(request.meeting.poll_proposals_default_order, _('Unknown'))
+    title = request.localizer.translate(title)
+    return _("Meeting default is currently: ${title}",
+             mapping={'title': title})
+
+
 class PollSchema(colander.MappingSchema):
     title = colander.SchemaNode(
         colander.String(),
@@ -67,6 +81,13 @@ class PollSchema(colander.MappingSchema):
                               u"polls in the agenda item."),
         widget=deform.widget.TextAreaWidget(rows=5, cols=40),
         validator=html_string_validator,
+    )
+    proposal_order = colander.SchemaNode(
+        colander.String(),
+        title = _("Proposal ordering"),
+        description = meeting_default_description,
+        widget=deform.widget.SelectWidget(values=_PROPOSAL_ORDER_CHOICES_W_DEFAULT),
+        missing='',
     )
     poll_plugin = colander.SchemaNode(
         colander.String(),

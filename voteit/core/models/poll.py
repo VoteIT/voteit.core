@@ -150,6 +150,13 @@ class Poll(BaseContent, WorkflowAware):
         reg = get_current_registry()
         return reg.getAdapter(self, name = self.poll_plugin_name, interface = IPollPlugin)
 
+    @property
+    def proposal_order(self):
+        return self.get_field_value('proposal_order', '')
+    @proposal_order.setter
+    def proposal_order(self, value):
+        self.set_field_value('proposal_order', value)
+
     def get_proposal_objects(self):
         # FIXME: This method should accept request as an argument and use
         # the cached properties and helper methods there instead
@@ -165,10 +172,14 @@ class Poll(BaseContent, WorkflowAware):
             # Permission check shouldn't be needed at this point
             if obj:
                 results.append(obj)
-        meeting = find_interface(self, IMeeting)
-        default_order = getattr(meeting, 'poll_proposals_default_order', '')
+        if self.proposal_order:
+            proposal_order = self.proposal_order
+        else:
+            meeting = find_interface(self, IMeeting)
+            # During tests, we might not have a real meeting here :)
+            proposal_order = getattr(meeting, 'poll_proposals_default_order', '')
         key_method = PROPOSAL_ORDER_KEY_METHODS.get(
-            default_order, PROPOSAL_ORDER_KEY_METHODS[PROPOSAL_ORDER_DEFAULT]
+            proposal_order, PROPOSAL_ORDER_KEY_METHODS[PROPOSAL_ORDER_DEFAULT]
         )
         return sorted(results, key=key_method)
 

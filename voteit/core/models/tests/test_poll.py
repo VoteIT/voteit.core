@@ -170,6 +170,16 @@ class PollTests(unittest.TestCase):
         poll = root['m']['ai']['poll']
         self.assertEqual([x.uid for x in poll.get_proposal_objects()], ['b', 'a', 'e', 'c', 'd'])
 
+    def test_get_proposal_objects_local_setting(self):
+        from voteit.core.models.poll import PROPOSAL_ORDER_ALPHABETICAL
+        from voteit.core.models.poll import PROPOSAL_ORDER_CHRONOLOGICAL
+        root = self._ordering_fixture()
+        root['m'].poll_proposals_default_order = PROPOSAL_ORDER_CHRONOLOGICAL
+        poll = root['m']['ai']['poll']
+        poll.proposal_order = PROPOSAL_ORDER_ALPHABETICAL
+        # Alphabetical order overrides
+        self.assertEqual([x.uid for x in poll.get_proposal_objects()], ['b', 'a', 'e', 'c', 'd'])
+
     def test_get_proposal_objects_wrong_context(self):
         obj = self._cut()
         self.assertRaises(ValueError, obj.get_proposal_objects)

@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE 1.0\n"
-"POT-Creation-Date: 2018-04-18 14:07+0200\n"
+"POT-Creation-Date: 2018-04-18 14:28+0200\n"
 "PO-Revision-Date: 2018-02-20 14:41+0100\n"
 "Last-Translator: Tatsuhei Morozumi <poc1220@gmail.com>\n"
 "Language-Team: Japanese\n"
@@ -269,7 +269,7 @@ msgstr "会議リスト"
 msgid "Meetings"
 msgstr "会議"
 
-#: voteit/core/portlets/agenda_item.py:49 voteit/core/schemas/poll.py:85
+#: voteit/core/portlets/agenda_item.py:49 voteit/core/schemas/poll.py:106
 #: voteit/core/templates/portlets/proposals.pt:12
 #: voteit/core/views/control_panel.py:30
 msgid "Proposals"
@@ -601,30 +601,30 @@ msgstr ""
 
 #. Default: Poll has now closed. ${num} proposal(s) are now set in another
 #. state due to the outcome of the poll.
-#: voteit/core/models/poll.py:211
+#: voteit/core/models/poll.py:222
 msgid "poll_closed_info"
 msgstr "投票は終了しました。 投票結果により${num}議題が追加されました"
 
 #. Default: Couldn't adjust the state of the following proposal(s): '${props}'.
 #. You may wish to review them manually.
-#: voteit/core/models/poll.py:216
+#: voteit/core/models/poll.py:227
 msgid "poll_closed_proposal_wf_change_error"
 msgstr ""
 "以下の議題のステータスを変更することができませんでした。手動で変更してくださ"
 "い。’${props}’"
 
-#: voteit/core/models/poll.py:267
+#: voteit/core/models/poll.py:278
 msgid "proposal"
 msgstr "提案"
 
-#: voteit/core/models/poll.py:268
+#: voteit/core/models/poll.py:279
 msgid "proposals"
 msgstr "提案"
 
 #. Default: Setting ${count} ${prop_form} as 'locked for vote'. They can no
 #. longer be edited or retracted by normal users. All proposals participating
 #. in an ongoing poll should be locked.
-#: voteit/core/models/poll.py:270
+#: voteit/core/models/poll.py:281
 msgid "poll_proposals_locked_notice"
 msgstr ""
 "${count} ${prop_form}を投票のためにロックする設定。通常のユーザーがこれらを編"
@@ -632,25 +632,25 @@ msgstr ""
 
 #. Default: Setting poll in upcoming state. It's now visible for meeting
 #. participants.
-#: voteit/core/models/poll.py:287
+#: voteit/core/models/poll.py:298
 msgid "poll_upcoming_state_notice"
 msgstr "投票を「近日中」に設定。会議参加者に表示されるようになりました."
 
 #. Default: You can't set a poll to ongoing if the agenda item is not ongoing.
-#: voteit/core/models/poll.py:298
+#: voteit/core/models/poll.py:309
 #, fuzzy
 msgid "error_poll_cant_be_ongoing_unless_ai_is"
 msgstr "議題が進行中ではない場合、投票を行なうことはできません"
 
 #. Default: A poll with no proposal can not be set to ongoing. Click link to
 #. edit: ${tag}
-#: voteit/core/models/poll.py:304
+#: voteit/core/models/poll.py:315
 msgid "error_no_proposals_in_poll"
 msgstr ""
 "提案のない投票は進行中にはできません。編集するには以下をクリックしてください "
 "${tag}"
 
-#: voteit/core/models/poll.py:345
+#: voteit/core/models/poll.py:356
 #, fuzzy
 msgid "VoteIT: Open poll"
 msgstr "VoteIT: 開票"
@@ -832,7 +832,7 @@ msgid "paragraph"
 msgstr ""
 
 #: voteit/core/schemas/diff_text.py:33 voteit/core/schemas/meeting.py:69
-#: voteit/core/schemas/agenda_item.py:25 voteit/core/schemas/poll.py:57
+#: voteit/core/schemas/agenda_item.py:25 voteit/core/schemas/poll.py:71
 msgid "Title"
 msgstr "タイトル"
 
@@ -1127,50 +1127,69 @@ msgstr "議題を分類するラベル"
 msgid "ai_schema_tags_description"
 msgstr "設定メニューからさらに追加することができます"
 
-#: voteit/core/schemas/poll.py:50
+#: voteit/core/schemas/poll.py:16
+#, fuzzy
+msgid "(Use meeting default)"
+msgstr "ユーザーID（既定）"
+
+#: voteit/core/schemas/poll.py:54
 #, python-format
 msgid "Descision ${num}"
 msgstr "決議${num}"
 
-#: voteit/core/schemas/poll.py:63 voteit/core/schemas/agenda_template.py:22
+#: voteit/core/schemas/poll.py:62
+msgid "Unknown"
+msgstr ""
+
+#: voteit/core/schemas/poll.py:64
+#, python-format
+msgid "Meeting default is currently: ${title}"
+msgstr ""
+
+#: voteit/core/schemas/poll.py:77 voteit/core/schemas/agenda_template.py:22
 msgid "Description"
 msgstr "詳細"
 
 #. Default: Explain your choice of poll method and your plan for the different
 #. polls in the agenda item.
-#: voteit/core/schemas/poll.py:65
+#: voteit/core/schemas/poll.py:79
 msgid "poll_description_description"
 msgstr "投票の選択肢と、議題でどの投票方法を採用するかを説明してください"
 
-#: voteit/core/schemas/poll.py:73
+#: voteit/core/schemas/poll.py:87
+#, fuzzy
+msgid "Proposal ordering"
+msgstr "投票の設定"
+
+#: voteit/core/schemas/poll.py:94
 msgid "Poll method to use"
 msgstr "投票方法"
 
 #. Default: Each poll method should have its own documentation. The standard
 #. ones from VoteIT will be in the manual - check the help menu!
-#: voteit/core/schemas/poll.py:74
+#: voteit/core/schemas/poll.py:95
 msgid "poll_poll_plugin_description"
 msgstr ""
 "それぞれの投票方法の説明が必要です。標準的な説明はVoteITの説明書に掲載されて"
 "います。"
 
 #. Default: Only proposals in the state 'published' can be selected
-#: voteit/core/schemas/poll.py:86
+#: voteit/core/schemas/poll.py:107
 msgid "poll_proposals_description"
 msgstr "公開された提案のみ選択可能です"
 
-#: voteit/core/schemas/poll.py:96
+#: voteit/core/schemas/poll.py:117
 msgid "Disable modal popups for polls menu?"
 msgstr "投票メニューのポップアップを作動しないようにしますか？"
 
 #. Default: If disabled, the polls menu will simply link to the agenda item
 #. with the poll item instead.
-#: voteit/core/schemas/poll.py:97
+#: voteit/core/schemas/poll.py:118
 msgid "schema_polls_menu_only_links_description"
 msgstr ""
 "作動しないようにした場合、代わりに投票メニューは議題と投票に関連づけられます"
 
-#: voteit/core/schemas/poll.py:105
+#: voteit/core/schemas/poll.py:126
 msgid "Default proposal order"
 msgstr ""
 

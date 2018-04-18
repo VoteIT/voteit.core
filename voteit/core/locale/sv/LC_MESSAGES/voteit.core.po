@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2018-04-18 14:07+0200\n"
-"PO-Revision-Date: 2018-04-18 14:07+0200\n"
+"POT-Creation-Date: 2018-04-18 14:28+0200\n"
+"PO-Revision-Date: 2018-04-18 14:29+0200\n"
 "Last-Translator: Robin Harms Oredsson <robin@betahaus.net>\n"
 "Language-Team: sv <LL@li.org>\n"
 "Language: sv\n"
@@ -276,7 +276,7 @@ msgstr "Möten"
 msgid "Meetings"
 msgstr "Möten"
 
-#: voteit/core/portlets/agenda_item.py:49 voteit/core/schemas/poll.py:85
+#: voteit/core/portlets/agenda_item.py:49 voteit/core/schemas/poll.py:106
 #: voteit/core/templates/portlets/proposals.pt:12
 #: voteit/core/views/control_panel.py:30
 msgid "Proposals"
@@ -610,7 +610,7 @@ msgstr "Slumpade"
 
 #. Default: Poll has now closed. ${num} proposal(s) are now set in another
 #. state due to the outcome of the poll.
-#: voteit/core/models/poll.py:211
+#: voteit/core/models/poll.py:222
 msgid "poll_closed_info"
 msgstr ""
 "Omröstningen har nu stängt. ${num} förslag har nu satts i ett annat "
@@ -618,24 +618,24 @@ msgstr ""
 
 #. Default: Couldn't adjust the state of the following proposal(s): '${props}'.
 #. You may wish to review them manually.
-#: voteit/core/models/poll.py:216
+#: voteit/core/models/poll.py:227
 msgid "poll_closed_proposal_wf_change_error"
 msgstr ""
 "Kunde inte justera tillstånd för följande förslag: '${props}'. Du bör kolla "
 "att det blev rätt manuellt."
 
-#: voteit/core/models/poll.py:267
+#: voteit/core/models/poll.py:278
 msgid "proposal"
 msgstr "förslag"
 
-#: voteit/core/models/poll.py:268
+#: voteit/core/models/poll.py:279
 msgid "proposals"
 msgstr "förslag"
 
 #. Default: Setting ${count} ${prop_form} as 'locked for vote'. They can no
 #. longer be edited or retracted by normal users. All proposals participating
 #. in an ongoing poll should be locked.
-#: voteit/core/models/poll.py:270
+#: voteit/core/models/poll.py:281
 msgid "poll_proposals_locked_notice"
 msgstr ""
 "Sätter ${count} ${prop_form} som 'låst för omröstning'. De kan inte längre "
@@ -644,14 +644,14 @@ msgstr ""
 
 #. Default: Setting poll in upcoming state. It's now visible for meeting
 #. participants.
-#: voteit/core/models/poll.py:287
+#: voteit/core/models/poll.py:298
 msgid "poll_upcoming_state_notice"
 msgstr ""
 "Omröstning är nu i tillståndet 'kommande'. Den är nu synlig för "
 "mötesdeltagare."
 
 #. Default: You can't set a poll to ongoing if the agenda item is not ongoing.
-#: voteit/core/models/poll.py:298
+#: voteit/core/models/poll.py:309
 msgid "error_poll_cant_be_ongoing_unless_ai_is"
 msgstr ""
 "Du kan inte göra en omröstning till pågående om dagordningspunkten inte är "
@@ -659,13 +659,13 @@ msgstr ""
 
 #. Default: A poll with no proposal can not be set to ongoing. Click link to
 #. edit: ${tag}
-#: voteit/core/models/poll.py:304
+#: voteit/core/models/poll.py:315
 msgid "error_no_proposals_in_poll"
 msgstr ""
 "En omröstning utan förslagn kan inte göras till pågående. Klicka på länken "
 "för att ändra: ${tag}"
 
-#: voteit/core/models/poll.py:345
+#: voteit/core/models/poll.py:356
 msgid "VoteIT: Open poll"
 msgstr "VoteIT: Pågående omröstning"
 
@@ -845,7 +845,7 @@ msgid "paragraph"
 msgstr "stycke"
 
 #: voteit/core/schemas/diff_text.py:33 voteit/core/schemas/meeting.py:69
-#: voteit/core/schemas/agenda_item.py:25 voteit/core/schemas/poll.py:57
+#: voteit/core/schemas/agenda_item.py:25 voteit/core/schemas/poll.py:71
 msgid "Title"
 msgstr "Titel"
 
@@ -1140,50 +1140,67 @@ msgstr "Dagordningens sorteringsetiketter"
 msgid "ai_schema_tags_description"
 msgstr "Du kan lägga till fler i inställnings-menyn."
 
-#: voteit/core/schemas/poll.py:50
+#: voteit/core/schemas/poll.py:16
+msgid "(Use meeting default)"
+msgstr "(Använd mötets standard)"
+
+#: voteit/core/schemas/poll.py:54
 #, python-format
 msgid "Descision ${num}"
 msgstr "Beslut ${num}"
 
-#: voteit/core/schemas/poll.py:63 voteit/core/schemas/agenda_template.py:22
+#: voteit/core/schemas/poll.py:62
+msgid "Unknown"
+msgstr "Okänd"
+
+#: voteit/core/schemas/poll.py:64
+#, python-format
+msgid "Meeting default is currently: ${title}"
+msgstr "Mötets standard är: ${title}"
+
+#: voteit/core/schemas/poll.py:77 voteit/core/schemas/agenda_template.py:22
 msgid "Description"
 msgstr "Beskrivning"
 
 #. Default: Explain your choice of poll method and your plan for the different
 #. polls in the agenda item.
-#: voteit/core/schemas/poll.py:65
+#: voteit/core/schemas/poll.py:79
 msgid "poll_description_description"
 msgstr ""
 "Förklara ditt val av omröstningsmetod och hur du planerat de olika "
 "omröstningarna i dagordninspunkten."
 
-#: voteit/core/schemas/poll.py:73
+#: voteit/core/schemas/poll.py:87
+msgid "Proposal ordering"
+msgstr "Förslagsordning"
+
+#: voteit/core/schemas/poll.py:94
 msgid "Poll method to use"
 msgstr "Omröstningsmetod"
 
 #. Default: Each poll method should have its own documentation. The standard
 #. ones from VoteIT will be in the manual - check the help menu!
-#: voteit/core/schemas/poll.py:74
+#: voteit/core/schemas/poll.py:95
 msgid "poll_poll_plugin_description"
 msgstr "Läs mer i hjälpen om olika metoder och dess för- och nackdelar."
 
 #. Default: Only proposals in the state 'published' can be selected
-#: voteit/core/schemas/poll.py:86
+#: voteit/core/schemas/poll.py:107
 msgid "poll_proposals_description"
 msgstr "Endast förslag i tillståndet 'publicerad' kan väljas."
 
-#: voteit/core/schemas/poll.py:96
+#: voteit/core/schemas/poll.py:117
 msgid "Disable modal popups for polls menu?"
 msgstr "Ta bort modala popups för omröstningsmenyn?"
 
 #. Default: If disabled, the polls menu will simply link to the agenda item
 #. with the poll item instead.
-#: voteit/core/schemas/poll.py:97
+#: voteit/core/schemas/poll.py:118
 msgid "schema_polls_menu_only_links_description"
 msgstr ""
 "Om avstängd så länkar omröstningsmenyn till dagordningspunkten istället."
 
-#: voteit/core/schemas/poll.py:105
+#: voteit/core/schemas/poll.py:126
 msgid "Default proposal order"
 msgstr "Standardordning för förslag"
 
