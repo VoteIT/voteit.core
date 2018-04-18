@@ -134,9 +134,9 @@ class ChangeGroup(object):
     def get_html(self, joiner, brief=False):
         txt = joiner.join(brief and self.brief_parts(joiner) or self.parts)
         if self.state == 'insert':
-            return '<strong class="text-success">{0}</strong>'.format(txt)
+            return '<span class="text-diff-added">{0}</span>'.format(txt)
         if self.state == 'delete':
-            return '<strong><s class="text-danger">{0}</s></strong>'.format(txt)
+            return '<span class="text-diff-removed">{0}</span>'.format(txt)
         return txt
 
 

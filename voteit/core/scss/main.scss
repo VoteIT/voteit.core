@@ -28,6 +28,18 @@ body.is_moderator {
   padding: 5px 0;
 }
 
+.text-diff-added {
+    color: $state-success-text;
+    text-decoration: underline;
+    font-weight: bold;
+}
+
+.text-diff-removed {
+    color: $state-danger-text;
+    text-decoration: line-through;
+    font-weight: bold;
+}
+
 .text {
   padding: 5px 0;
 }

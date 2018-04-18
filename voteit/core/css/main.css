@@ -696,6 +696,16 @@ body.is_moderator {
 .metadata {
   padding: 5px 0; }
 
+.text-diff-added {
+  color: #3c763d;
+  text-decoration: underline;
+  font-weight: bold; }
+
+.text-diff-removed {
+  color: #a94442;
+  text-decoration: line-through;
+  font-weight: bold; }
+
 .text {
   padding: 5px 0; }
 
