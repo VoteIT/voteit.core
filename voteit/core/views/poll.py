@@ -179,7 +179,11 @@ class PollVoteForm(DefaultEditForm):
         appstruct = self.appstruct()
         if appstruct is None:
             appstruct = {}
-        return {'form': form.render(appstruct = appstruct, readonly = self.readonly)}
+        return {'form': form.render(
+            appstruct=appstruct,
+            readonly=self.readonly,
+            description=None if self.can_vote else _('You have no voting permission in this poll.')
+        )}
 
 
 @view_config(context = IAgendaItem,

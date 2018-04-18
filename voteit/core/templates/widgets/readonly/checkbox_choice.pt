@@ -1,0 +1,10 @@
+<div tal:define="oid oid|field.oid;">
+  <ul class="list-group">
+    <tal:loop tal:repeat="choice values">
+      <li class="list-group-item"
+          tal:define="(value, description) choice">
+        <span id="${oid}-${repeat.choice.index}">${description}</span>
+      </li>
+  </tal:loop>
+  </ul>
+</div>
