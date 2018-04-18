@@ -296,7 +296,10 @@ def render_proposal_text(request, proposal, tag_func=tags2links):
         #This is a regular proposal without the diff functions active
         return request.transform_text(proposal.text, tag_func=tag_func)
     else:
-        diff_text = IDiffText(request.agenda_item)
+        ai = request.agenda_item
+        if ai is None:
+            ai = proposal.__parent__
+        diff_text = IDiffText(ai)
         paragraphs = diff_text.get_paragraphs()
         try:
             original = paragraphs[proposal.diff_text_para]

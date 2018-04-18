@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE 1.0\n"
-"POT-Creation-Date: 2018-04-18 07:10+0200\n"
+"POT-Creation-Date: 2018-04-18 14:07+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,6 +15,26 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Lingua 4.13\n"
+
+#: ./voteit/core/bootstrap.py:17 ./voteit/core/bootstrap.py:35
+#: ./voteit/core/models/populator.py:10
+msgid "VoteIT"
+msgstr ""
+
+#: ./voteit/core/bootstrap.py:24 ./voteit/core/models/agenda_templates.py:18
+#: ./voteit/core/models/populator.py:19
+#: ./voteit/core/views/templates/agenda_templates.pt:14
+msgid "Agenda templates"
+msgstr ""
+
+#: ./voteit/core/bootstrap.py:29
+msgid "Registered users"
+msgstr ""
+
+#: ./voteit/core/bootstrap.py:36 ./voteit/core/security.py:107
+#: ./voteit/core/views/templates/_participants.pt:56
+msgid "Administrator"
+msgstr ""
 
 #: ./voteit/core/validators.py:34
 msgid "HTML is not allowed."
@@ -56,30 +76,6 @@ msgstr ""
 msgid "Use regular chars and no spaces."
 msgstr ""
 
-#: ./voteit/core/bootstrap.py:17 ./voteit/core/bootstrap.py:35
-#: ./voteit/core/models/populator.py:10
-msgid "VoteIT"
-msgstr ""
-
-#: ./voteit/core/bootstrap.py:24 ./voteit/core/models/agenda_templates.py:18
-#: ./voteit/core/models/populator.py:19
-#: ./voteit/core/views/templates/agenda_templates.pt:14
-msgid "Agenda templates"
-msgstr ""
-
-#: ./voteit/core/bootstrap.py:29
-msgid "Registered users"
-msgstr ""
-
-#: ./voteit/core/bootstrap.py:36 ./voteit/core/security.py:107
-#: ./voteit/core/views/templates/_participants.pt:56
-msgid "Administrator"
-msgstr ""
-
-#: ./voteit/core/__init__.py:58
-msgid "Fixed left nav"
-msgstr ""
-
 #: ./voteit/core/security.py:28 ./voteit/core/security.py:108
 msgid "Meeting creator"
 msgstr ""
@@ -110,6 +106,10 @@ msgstr ""
 #: ./voteit/core/views/templates/agenda_template.pt:12
 #: ./voteit/core/views/templates/_participants.pt:36
 msgid "View"
+msgstr ""
+
+#: ./voteit/core/__init__.py:58
+msgid "Fixed left nav"
 msgstr ""
 
 #: ./voteit/core/js_translations.py:12
@@ -241,6 +241,329 @@ msgstr ""
 msgid "permssions_updated_error"
 msgstr ""
 
+#: ./voteit/core/portlets/agenda.py:26
+#: ./voteit/core/templates/portlets/agenda.pt:10
+#: ./voteit/core/templates/overrides/navigation.pt:81
+#: ./voteit/core/views/templates/agenda_template.pt:29
+msgid "Agenda"
+msgstr ""
+
+#: ./voteit/core/portlets/agenda.py:46
+msgid "Fixed agenda"
+msgstr ""
+
+#: ./voteit/core/portlets/diff_text.py:17 ./voteit/core/views/diff_text.py:32
+msgid "Proposed text body"
+msgstr ""
+
+#: ./voteit/core/portlets/meeting.py:20
+msgid "Meeting list"
+msgstr ""
+
+#: ./voteit/core/portlets/meeting.py:39
+#: ./voteit/core/templates/portlets/meeting_list.pt:8
+msgid "Meetings"
+msgstr ""
+
+#: ./voteit/core/portlets/agenda_item.py:49 ./voteit/core/schemas/poll.py:85
+#: ./voteit/core/templates/portlets/proposals.pt:12
+#: ./voteit/core/views/control_panel.py:30
+msgid "Proposals"
+msgstr ""
+
+#: ./voteit/core/portlets/agenda_item.py:67
+#: ./voteit/core/templates/portlets/discussions.pt:11
+msgid "Discussion"
+msgstr ""
+
+#: ./voteit/core/portlets/agenda_item.py:74
+#: ./voteit/core/templates/portlets/polls.pt:11
+#: ./voteit/core/templates/overrides/navigation.pt:92
+#: ./voteit/core/views/components/polls.py:10
+msgid "Polls"
+msgstr ""
+
+#: ./voteit/core/portlets/agenda_item.py:306
+msgid "Agenda Item portlets"
+msgstr ""
+
+#: ./voteit/core/plugins/gravatar_profile_image.py:15
+msgid "Gravatar"
+msgstr ""
+
+#. Default: The profile image comes from the <a href="http://www.gravatar.com"
+#. target="_blank">Gravatar network</a>.It's taken from your current email
+#. address. If you want to change the picture, simply go tothe Gravatar site
+#. and change your picture for the email you use in VoteIT.
+#: ./voteit/core/plugins/gravatar_profile_image.py:16
+msgid "profile_gravatar_explanation"
+msgstr ""
+
+#: ./voteit/core/plugins/like_button.py:71
+#: ./voteit/core/plugins/like_button.py:102
+msgid "Like button"
+msgstr ""
+
+#: ./voteit/core/plugins/like_button.py:78 ./voteit/core/models/proposal.py:25
+#: ./voteit/core/schemas/proposal.py:41 ./voteit/core/schemas/meeting.py:161
+msgid "Proposal"
+msgstr ""
+
+#: ./voteit/core/plugins/like_button.py:79
+msgid "DiscussionPost"
+msgstr ""
+
+#: ./voteit/core/plugins/like_button.py:106
+#: ./voteit/core/views/control_panel.py:115
+#: ./voteit/core/views/control_panel.py:117
+#: ./voteit/core/views/control_panel.py:119
+#: ./voteit/core/views/control_panel.py:121
+#: ./voteit/core/views/control_panel.py:123
+msgid "Settings"
+msgstr ""
+
+#: ./voteit/core/plugins/hashlist_ap.py:23
+msgid "Hashlist access"
+msgstr ""
+
+#. Default: Users will be granted the permissions you select without prior
+#. moderator approval if their email is registered within a hashlist.
+#. arche_hashlist must be installed for this to work.
+#: ./voteit/core/plugins/hashlist_ap.py:24
+msgid "hashlist_access_description"
+msgstr ""
+
+#: ./voteit/core/plugins/hashlist_ap.py:38
+msgid "Access policy isn't configured correctly"
+msgstr ""
+
+#: ./voteit/core/plugins/hashlist_ap.py:45
+#: ./voteit/core/plugins/immediate_ap.py:22
+msgid "Would you like to participate?"
+msgstr ""
+
+#: ./voteit/core/plugins/hashlist_ap.py:46
+msgid ""
+"Clicking request access will grant you access if your email address is "
+"allowed by the access policy."
+msgstr ""
+
+#: ./voteit/core/plugins/hashlist_ap.py:58
+msgid "Your email isn't validated. Check your profile menu."
+msgstr ""
+
+#. Default: Your email address isn't listed as allowed to access this meeting.
+#. Contact the moderator to request access.
+#: ./voteit/core/plugins/hashlist_ap.py:60
+msgid "email_address_not_listed_as_allowed"
+msgstr ""
+
+#: ./voteit/core/plugins/hashlist_ap.py:67
+#: ./voteit/core/plugins/immediate_ap.py:28
+msgid "Access granted - welcome!"
+msgstr ""
+
+#: ./voteit/core/plugins/hashlist_ap.py:79 ./voteit/core/schemas/meeting.py:46
+msgid "<Select>"
+msgstr ""
+
+#: ./voteit/core/plugins/hashlist_ap.py:86 ./voteit/core/views/meeting.py:183
+msgid "Configure access policy"
+msgstr ""
+
+#: ./voteit/core/plugins/hashlist_ap.py:87
+msgid "Access will be granted if users are present in the hashlist."
+msgstr ""
+
+#: ./voteit/core/plugins/hashlist_ap.py:90
+msgid "Hashlist"
+msgstr ""
+
+#. Default: If nothing is present here, it might mean that you don't have
+#. permission to see any hashlists, or that arche_hashlist isn't installed.
+#: ./voteit/core/plugins/hashlist_ap.py:91
+msgid "ap_hashlist_uid_description"
+msgstr ""
+
+#: ./voteit/core/plugins/hashlist_ap.py:99
+#: ./voteit/core/plugins/immediate_ap.py:39
+#: ./voteit/core/schemas/invite_ticket.py:26
+#: ./voteit/core/schemas/meeting.py:236
+msgid "Roles"
+msgstr ""
+
+#. Default: Users will be granted these roles upon requesting access and
+#. passing check.
+#. Default: Users will be granted these roles IMMEDIATELY upon requesting
+#. access.
+#: ./voteit/core/plugins/hashlist_ap.py:100
+#: ./voteit/core/plugins/immediate_ap.py:40
+msgid "immediate_ap_schema_grant_description"
+msgstr ""
+
+#: ./voteit/core/plugins/majority_poll.py:18
+msgid "Majority Poll"
+msgstr ""
+
+#: ./voteit/core/plugins/majority_poll.py:20
+msgid "Majority poll - don't use this for more than 2 choices!"
+msgstr ""
+
+#: ./voteit/core/plugins/majority_poll.py:39
+msgid "Vote for one"
+msgstr ""
+
+#: ./voteit/core/plugins/majority_poll.py:41
+msgid "You can't change your vote now."
+msgstr ""
+
+#. Default: Vote
+#: ./voteit/core/plugins/majority_poll.py:77
+msgid "vote_singular"
+msgstr ""
+
+#. Default: Votes
+#: ./voteit/core/plugins/majority_poll.py:78
+msgid "vote_plural"
+msgstr ""
+
+#. Default: Access will only be granted through invites (Default)
+#: ./voteit/core/plugins/invite_only_ap.py:10
+msgid "meeting_access_invite_only_label"
+msgstr ""
+
+#. Default: This meeting is invite only.
+#.                     That means that a mail will be sent with an access
+#. ticket.
+#.                     Contact meeting moderators for more information.
+#: ./voteit/core/plugins/invite_only_ap.py:12
+msgid "invite_only_meeting_access_request_description"
+msgstr ""
+
+#: ./voteit/core/plugins/immediate_ap.py:17
+msgid "Public access"
+msgstr ""
+
+#. Default: Users will be granted the permissions you select without prior
+#. moderator approval. This is for public meetings.
+#: ./voteit/core/plugins/immediate_ap.py:18
+msgid "public_access_description"
+msgstr ""
+
+#: ./voteit/core/plugins/immediate_ap.py:23
+msgid "Clicking request access will grant you access right away!"
+msgstr ""
+
+#: ./voteit/core/plugins/immediate_ap.py:36
+msgid "Configure immediate access policy"
+msgstr ""
+
+#: ./voteit/core/plugins/templates/majority_poll.pt:5
+msgid "Results of ${title}"
+msgstr ""
+
+#: ./voteit/core/plugins/templates/majority_poll.pt:41
+msgid "Note!"
+msgstr ""
+
+#. Default: Majority polls aren't ment to handle more than 2 proposals. If the
+#. winner didn't receive at least 51% of the votes, you should consider using
+#. another poll method (like Schulze). Consult the manual for more information.
+#: ./voteit/core/plugins/templates/majority_poll.pt:42
+msgid "majority_poll_too_many_proposals_warning"
+msgstr ""
+
+#. Default: The percentage shows number of votes that favoured that
+#. alternative, not out of the total number of voters.
+#: ./voteit/core/plugins/templates/majority_poll.pt:48
+msgid "majority_results_description"
+msgstr ""
+
+#: ./voteit/core/plugins/templates/like_btn.pt:8
+msgid "Like"
+msgstr ""
+
+#: ./voteit/core/plugins/templates/like_users_popover.pt:6
+msgid "Users who like this ${count}"
+msgstr ""
+
+#. Default: Note that liking something isn't the same thing as voting for it!
+#: ./voteit/core/plugins/templates/like_users_popover.pt:13
+msgid "like_not_vote_notice"
+msgstr ""
+
+#: ./voteit/core/plugins/templates/support_users_popover.pt:6
+msgid "Users who supports this ${count}"
+msgstr ""
+
+#. Default: Support
+#: ./voteit/core/plugins/templates/support_btn.pt:9
+msgid "support_proposal"
+msgstr ""
+
+#: ./voteit/core/models/proposal_ids.py:45
+msgid "UserID-based (default)"
+msgstr ""
+
+#: ./voteit/core/models/proposal_ids.py:69
+msgid "Agenda hashtag"
+msgstr ""
+
+#: ./voteit/core/models/user.py:33
+msgid "User"
+msgstr ""
+
+#: ./voteit/core/models/invite_ticket.py:89
+#, python-format
+msgid "Invitation to ${meeting_title}"
+msgstr ""
+
+#: ./voteit/core/models/invite_ticket.py:124
+#, python-format
+msgid "${meeting_title} is now accessible"
+msgstr ""
+
+#: ./voteit/core/models/users.py:18
+msgid "Users"
+msgstr ""
+
+#: ./voteit/core/models/vote.py:24
+msgid "Vote"
+msgstr ""
+
+#: ./voteit/core/models/meeting.py:28 ./voteit/core/schemas/contact.py:63
+msgid "Meeting"
+msgstr ""
+
+#. Default: This meeting still has ongoing or upcoming Agenda items in it. You
+#. can't close it until they're closed.
+#: ./voteit/core/models/meeting.py:215
+msgid "error_cant_close_meeting_with_ongoing_ais"
+msgstr ""
+
+#: ./voteit/core/models/discussion_post.py:24
+#: ./voteit/core/schemas/meeting.py:160
+msgid "Discussion Post"
+msgstr ""
+
+#: ./voteit/core/models/agenda_item.py:24
+#: ./voteit/core/schemas/agenda_template.py:12
+#: ./voteit/core/templates/manage_agenda.pt:36
+msgid "Agenda item"
+msgstr ""
+
+#. Default: You can't close an agenda item that has ongoing polls in it. Close
+#. the polls first!
+#: ./voteit/core/models/agenda_item.py:112
+msgid "error_polls_not_closed_cant_close_ai"
+msgstr ""
+
+#. Default: You can't set an agenda item to ongoing if the meeting is not
+#. ongoing.
+#: ./voteit/core/models/agenda_item.py:121
+msgid "error_ai_cannot_be_ongoing_in_not_ongoing_meeting"
+msgstr ""
+
 #: ./voteit/core/models/poll.py:41
 msgid "Chronological"
 msgstr ""
@@ -301,43 +624,6 @@ msgstr ""
 msgid "VoteIT: Open poll"
 msgstr ""
 
-#: ./voteit/core/models/user.py:33
-msgid "User"
-msgstr ""
-
-#: ./voteit/core/models/invite_ticket.py:89
-#, python-format
-msgid "Invitation to ${meeting_title}"
-msgstr ""
-
-#: ./voteit/core/models/invite_ticket.py:124
-#, python-format
-msgid "${meeting_title} is now accessible"
-msgstr ""
-
-#: ./voteit/core/models/agenda_item.py:24
-#: ./voteit/core/schemas/agenda_template.py:12
-#: ./voteit/core/templates/manage_agenda.pt:36
-msgid "Agenda item"
-msgstr ""
-
-#. Default: You can't close an agenda item that has ongoing polls in it. Close
-#. the polls first!
-#: ./voteit/core/models/agenda_item.py:112
-msgid "error_polls_not_closed_cant_close_ai"
-msgstr ""
-
-#. Default: You can't set an agenda item to ongoing if the meeting is not
-#. ongoing.
-#: ./voteit/core/models/agenda_item.py:121
-msgid "error_ai_cannot_be_ongoing_in_not_ongoing_meeting"
-msgstr ""
-
-#: ./voteit/core/models/discussion_post.py:24
-#: ./voteit/core/schemas/meeting.py:160
-msgid "Discussion Post"
-msgstr ""
-
 #. Default: You have been mentioned in ${meeting} on ${agenda_item}. Click the
 #. following link to go there, ${link}.
 #: ./voteit/core/models/mention.py:80
@@ -349,124 +635,12 @@ msgstr ""
 msgid "Mentioned in ${meeting_title}"
 msgstr ""
 
-#: ./voteit/core/models/users.py:18
-msgid "Users"
-msgstr ""
-
-#: ./voteit/core/models/proposal.py:25 ./voteit/core/schemas/proposal.py:41
-#: ./voteit/core/schemas/meeting.py:161 ./voteit/core/plugins/like_button.py:78
-msgid "Proposal"
-msgstr ""
-
-#: ./voteit/core/models/proposal_ids.py:45
-msgid "UserID-based (default)"
-msgstr ""
-
-#: ./voteit/core/models/proposal_ids.py:69
-msgid "Agenda hashtag"
-msgstr ""
-
-#: ./voteit/core/models/populator.py:11
-msgid "Create a VoteIT instance"
-msgstr ""
-
-#: ./voteit/core/models/vote.py:24
-msgid "Vote"
-msgstr ""
-
-#: ./voteit/core/models/meeting.py:28 ./voteit/core/schemas/contact.py:63
-msgid "Meeting"
-msgstr ""
-
-#. Default: This meeting still has ongoing or upcoming Agenda items in it. You
-#. can't close it until they're closed.
-#: ./voteit/core/models/meeting.py:215
-msgid "error_cant_close_meeting_with_ongoing_ais"
-msgstr ""
-
 #: ./voteit/core/models/agenda_template.py:22
 msgid "Agenda template"
 msgstr ""
 
-#. Default: Can't set Proposal '${title}' as 'Locked for voting'. It's probably
-#. not in the state published, or has already been handled in another way. All
-#. changes aborted, please check the proposals and try again.
-#: ./voteit/core/subscribers/poll.py:23
-msgid "workflow_error_when_setting_proposal_as_voting"
-msgstr ""
-
-#: ./voteit/core/schemas/poll.py:50
-#, python-format
-msgid "Descision ${num}"
-msgstr ""
-
-#: ./voteit/core/schemas/poll.py:57 ./voteit/core/schemas/agenda_item.py:25
-#: ./voteit/core/schemas/diff_text.py:33 ./voteit/core/schemas/meeting.py:69
-msgid "Title"
-msgstr ""
-
-#: ./voteit/core/schemas/poll.py:63 ./voteit/core/schemas/agenda_template.py:22
-msgid "Description"
-msgstr ""
-
-#. Default: Explain your choice of poll method and your plan for the different
-#. polls in the agenda item.
-#: ./voteit/core/schemas/poll.py:65
-msgid "poll_description_description"
-msgstr ""
-
-#: ./voteit/core/schemas/poll.py:73
-msgid "Poll method to use"
-msgstr ""
-
-#. Default: Each poll method should have its own documentation. The standard
-#. ones from VoteIT will be in the manual - check the help menu!
-#: ./voteit/core/schemas/poll.py:74
-msgid "poll_poll_plugin_description"
-msgstr ""
-
-#: ./voteit/core/schemas/poll.py:85 ./voteit/core/portlets/agenda_item.py:49
-#: ./voteit/core/templates/portlets/proposals.pt:12
-#: ./voteit/core/views/control_panel.py:30
-msgid "Proposals"
-msgstr ""
-
-#. Default: Only proposals in the state 'published' can be selected
-#: ./voteit/core/schemas/poll.py:86
-msgid "poll_proposals_description"
-msgstr ""
-
-#: ./voteit/core/schemas/poll.py:96
-msgid "Disable modal popups for polls menu?"
-msgstr ""
-
-#. Default: If disabled, the polls menu will simply link to the agenda item
-#. with the poll item instead.
-#: ./voteit/core/schemas/poll.py:97
-msgid "schema_polls_menu_only_links_description"
-msgstr ""
-
-#: ./voteit/core/schemas/poll.py:105
-msgid "Default proposal order"
-msgstr ""
-
-#: ./voteit/core/schemas/site.py:15
-msgid "Support email for this site"
-msgstr ""
-
-#. Default: This email will receive mail sent through the support request form
-#. visible in the help menu.
-#: ./voteit/core/schemas/site.py:16
-msgid "support_email_schema_desription"
-msgstr ""
-
-#: ./voteit/core/schemas/site.py:24
-msgid "Main body text"
-msgstr ""
-
-#. Default: This is the first page of VoteIT. Describe your instance here.
-#: ./voteit/core/schemas/site.py:25
-msgid "main_body_desc"
+#: ./voteit/core/models/populator.py:11
+msgid "Create a VoteIT instance"
 msgstr ""
 
 #: ./voteit/core/schemas/user.py:36
@@ -487,6 +661,14 @@ msgstr ""
 msgid "profile_image_plugin_description"
 msgstr ""
 
+#: ./voteit/core/schemas/agenda.py:9
+msgid "Hide type and unread count"
+msgstr ""
+
+#: ./voteit/core/schemas/agenda.py:10
+msgid "Will speed up loading for physical meetings with lots of participants"
+msgstr ""
+
 #: ./voteit/core/schemas/invite_ticket.py:15
 msgid "Email address your invitation was sent to."
 msgstr ""
@@ -499,13 +681,6 @@ msgstr ""
 #. Default: The access token your received in your email.
 #: ./voteit/core/schemas/invite_ticket.py:19
 msgid "claim_ticket_token_title"
-msgstr ""
-
-#: ./voteit/core/schemas/invite_ticket.py:26
-#: ./voteit/core/schemas/meeting.py:236
-#: ./voteit/core/plugins/immediate_ap.py:39
-#: ./voteit/core/plugins/hashlist_ap.py:99
-msgid "Roles"
 msgstr ""
 
 #. Default: One user can have more than one role. Note that to be able to
@@ -538,120 +713,12 @@ msgstr ""
 msgid "ticket_message_description"
 msgstr ""
 
-#: ./voteit/core/schemas/agenda_item.py:26
-msgid "Try keeping it under 20 characters."
+#: ./voteit/core/schemas/system_users.py:30
+msgid "As yourself"
 msgstr ""
 
-#: ./voteit/core/schemas/agenda_item.py:30
-msgid "Description (In search results and similar)"
-msgstr ""
-
-#: ./voteit/core/schemas/agenda_item.py:31
-msgid "Not visible on the agenda page."
-msgstr ""
-
-#: ./voteit/core/schemas/agenda_item.py:35
-msgid "Body"
-msgstr ""
-
-#. Default: Place the the agenda item background information here. You can link
-#. to external documents and memos. It's also a good idea to add an image, it
-#. will make it easier for participants to quickly see which page they're on.
-#: ./voteit/core/schemas/agenda_item.py:36
-msgid "agenda_item_schema_body"
-msgstr ""
-
-#: ./voteit/core/schemas/agenda_item.py:46
-msgid "Base hashtag for Agenda Item"
-msgstr ""
-
-#. Default: Only used by systems that implement agenda based hashtags. It's
-#. usually a good idea to leave this empty if you don't have a special reason
-#. to change it. (It will use the agenda items name in that case) Proposals
-#. will be named according to this base tag + a number.
-#: ./voteit/core/schemas/agenda_item.py:47
-msgid "ai_hashtag_schema_description"
-msgstr ""
-
-#: ./voteit/core/schemas/agenda_item.py:55
-msgid "Must be a-z, 0-9, or any of '.-_'."
-msgstr ""
-
-#: ./voteit/core/schemas/agenda_item.py:59 ./voteit/core/views/meeting.py:211
-msgid "Agenda sorting labels"
-msgstr ""
-
-#. Default: You may add more in the settings menu.
-#: ./voteit/core/schemas/agenda_item.py:60
-msgid "ai_schema_tags_description"
-msgstr ""
-
-#: ./voteit/core/schemas/discussion_post.py:19
-msgid "Text"
-msgstr ""
-
-#. Default: You may use an at sign to reference a user (ex: 'hello @jane') or a
-#. hashtag (ex: '#budget') to reference or create a tag. If you're commenting
-#. on proposals, it's a good idea to use their tags.
-#: ./voteit/core/schemas/discussion_post.py:20
-msgid "discussion_post_text_description"
-msgstr ""
-
-#: ./voteit/core/schemas/diff_text.py:17
-msgid "Enable diff text proposals"
-msgstr ""
-
-#. Default: Makes it possible to add a text chunk and then write proposals on
-#. changes in that text.
-#: ./voteit/core/schemas/diff_text.py:18
-msgid "diff_text_enabled_description"
-msgstr ""
-
-#: ./voteit/core/schemas/diff_text.py:27
-msgid "paragraph"
-msgstr ""
-
-#: ./voteit/core/schemas/diff_text.py:38
-msgid "Text body"
-msgstr ""
-
-#. Default: Each paragraph will have its own hashtag. Separate paragraphs with
-#. 2 new lines.
-#: ./voteit/core/schemas/diff_text.py:39
-msgid "diff_text_schema_text_description"
-msgstr ""
-
-#: ./voteit/core/schemas/diff_text.py:49
-msgid "Base hashtag for paragraphs"
-msgstr ""
-
-#: ./voteit/core/schemas/diff_text.py:50
-msgid ""
-"Use lowercase a-z. All paragraphs will be marked with this tag and then a "
-"number. All new proposals will use it as a mandatory hashtag."
-msgstr ""
-
-#: ./voteit/core/schemas/diff_text.py:53
-msgid "Only lowercase a-z please"
-msgstr ""
-
-#. Default: proposes changes to #${hashtag}:
-#: ./voteit/core/schemas/diff_text.py:91
-msgid "default_lead_in"
-msgstr ""
-
-#: ./voteit/core/schemas/diff_text.py:110
-#, python-format
-msgid "Please keep the hashtag ${hashtag} in your lead-in."
-msgstr ""
-
-#: ./voteit/core/schemas/diff_text.py:126
-msgid "You haven't changed anything"
-msgstr ""
-
-#: ./voteit/core/schemas/diff_text.py:134
-#: ./voteit/core/schemas/diff_text.py:160
-msgid "Lead-in"
+#: ./voteit/core/schemas/system_users.py:63
+msgid "Add as"
 msgstr ""
 
 #. Default: proposes
@@ -698,16 +765,85 @@ msgstr ""
 msgid "Proposal naming method"
 msgstr ""
 
-#: ./voteit/core/schemas/system_users.py:30
-msgid "As yourself"
+#: ./voteit/core/schemas/diff_text.py:17
+msgid "Enable diff text proposals"
 msgstr ""
 
-#: ./voteit/core/schemas/system_users.py:63
-msgid "Add as"
+#. Default: Makes it possible to add a text chunk and then write proposals on
+#. changes in that text.
+#: ./voteit/core/schemas/diff_text.py:18
+msgid "diff_text_enabled_description"
 msgstr ""
 
-#: ./voteit/core/schemas/meeting.py:46 ./voteit/core/plugins/hashlist_ap.py:79
-msgid "<Select>"
+#: ./voteit/core/schemas/diff_text.py:27
+msgid "paragraph"
+msgstr ""
+
+#: ./voteit/core/schemas/diff_text.py:33 ./voteit/core/schemas/meeting.py:69
+#: ./voteit/core/schemas/agenda_item.py:25 ./voteit/core/schemas/poll.py:57
+msgid "Title"
+msgstr ""
+
+#: ./voteit/core/schemas/diff_text.py:38
+msgid "Text body"
+msgstr ""
+
+#. Default: Each paragraph will have its own hashtag. Separate paragraphs with
+#. 2 new lines.
+#: ./voteit/core/schemas/diff_text.py:39
+msgid "diff_text_schema_text_description"
+msgstr ""
+
+#: ./voteit/core/schemas/diff_text.py:49
+msgid "Base hashtag for paragraphs"
+msgstr ""
+
+#: ./voteit/core/schemas/diff_text.py:50
+msgid ""
+"Use lowercase a-z. All paragraphs will be marked with this tag and then a "
+"number. All new proposals will use it as a mandatory hashtag."
+msgstr ""
+
+#: ./voteit/core/schemas/diff_text.py:53
+msgid "Only lowercase a-z please"
+msgstr ""
+
+#. Default: proposes changes to #${hashtag}:
+#: ./voteit/core/schemas/diff_text.py:91
+msgid "default_lead_in"
+msgstr ""
+
+#: ./voteit/core/schemas/diff_text.py:110
+#, python-format
+msgid "Please keep the hashtag ${hashtag} in your lead-in."
+msgstr ""
+
+#: ./voteit/core/schemas/diff_text.py:126
+msgid "You haven't changed anything"
+msgstr ""
+
+#: ./voteit/core/schemas/diff_text.py:134
+#: ./voteit/core/schemas/diff_text.py:160
+msgid "Lead-in"
+msgstr ""
+
+#: ./voteit/core/schemas/site.py:15
+msgid "Support email for this site"
+msgstr ""
+
+#. Default: This email will receive mail sent through the support request form
+#. visible in the help menu.
+#: ./voteit/core/schemas/site.py:16
+msgid "support_email_schema_desription"
+msgstr ""
+
+#: ./voteit/core/schemas/site.py:24
+msgid "Main body text"
+msgstr ""
+
+#. Default: This is the first page of VoteIT. Describe your instance here.
+#: ./voteit/core/schemas/site.py:25
+msgid "main_body_desc"
 msgstr ""
 
 #. Default: Set a title for the meeting that separates it from previous
@@ -850,6 +986,109 @@ msgstr ""
 msgid "Send mail to voters when a poll starts."
 msgstr ""
 
+#: ./voteit/core/schemas/discussion_post.py:19
+msgid "Text"
+msgstr ""
+
+#. Default: You may use an at sign to reference a user (ex: 'hello @jane') or a
+#. hashtag (ex: '#budget') to reference or create a tag. If you're commenting
+#. on proposals, it's a good idea to use their tags.
+#: ./voteit/core/schemas/discussion_post.py:20
+msgid "discussion_post_text_description"
+msgstr ""
+
+#: ./voteit/core/schemas/agenda_item.py:26
+msgid "Try keeping it under 20 characters."
+msgstr ""
+
+#: ./voteit/core/schemas/agenda_item.py:30
+msgid "Description (In search results and similar)"
+msgstr ""
+
+#: ./voteit/core/schemas/agenda_item.py:31
+msgid "Not visible on the agenda page."
+msgstr ""
+
+#: ./voteit/core/schemas/agenda_item.py:35
+msgid "Body"
+msgstr ""
+
+#. Default: Place the the agenda item background information here. You can link
+#. to external documents and memos. It's also a good idea to add an image, it
+#. will make it easier for participants to quickly see which page they're on.
+#: ./voteit/core/schemas/agenda_item.py:36
+msgid "agenda_item_schema_body"
+msgstr ""
+
+#: ./voteit/core/schemas/agenda_item.py:46
+msgid "Base hashtag for Agenda Item"
+msgstr ""
+
+#. Default: Only used by systems that implement agenda based hashtags. It's
+#. usually a good idea to leave this empty if you don't have a special reason
+#. to change it. (It will use the agenda items name in that case) Proposals
+#. will be named according to this base tag + a number.
+#: ./voteit/core/schemas/agenda_item.py:47
+msgid "ai_hashtag_schema_description"
+msgstr ""
+
+#: ./voteit/core/schemas/agenda_item.py:55
+msgid "Must be a-z, 0-9, or any of '.-_'."
+msgstr ""
+
+#: ./voteit/core/schemas/agenda_item.py:59 ./voteit/core/views/meeting.py:211
+msgid "Agenda sorting labels"
+msgstr ""
+
+#. Default: You may add more in the settings menu.
+#: ./voteit/core/schemas/agenda_item.py:60
+msgid "ai_schema_tags_description"
+msgstr ""
+
+#: ./voteit/core/schemas/poll.py:50
+#, python-format
+msgid "Descision ${num}"
+msgstr ""
+
+#: ./voteit/core/schemas/poll.py:63 ./voteit/core/schemas/agenda_template.py:22
+msgid "Description"
+msgstr ""
+
+#. Default: Explain your choice of poll method and your plan for the different
+#. polls in the agenda item.
+#: ./voteit/core/schemas/poll.py:65
+msgid "poll_description_description"
+msgstr ""
+
+#: ./voteit/core/schemas/poll.py:73
+msgid "Poll method to use"
+msgstr ""
+
+#. Default: Each poll method should have its own documentation. The standard
+#. ones from VoteIT will be in the manual - check the help menu!
+#: ./voteit/core/schemas/poll.py:74
+msgid "poll_poll_plugin_description"
+msgstr ""
+
+#. Default: Only proposals in the state 'published' can be selected
+#: ./voteit/core/schemas/poll.py:86
+msgid "poll_proposals_description"
+msgstr ""
+
+#: ./voteit/core/schemas/poll.py:96
+msgid "Disable modal popups for polls menu?"
+msgstr ""
+
+#. Default: If disabled, the polls menu will simply link to the agenda item
+#. with the poll item instead.
+#: ./voteit/core/schemas/poll.py:97
+msgid "schema_polls_menu_only_links_description"
+msgstr ""
+
+#: ./voteit/core/schemas/poll.py:105
+msgid "Default proposal order"
+msgstr ""
+
 #: ./voteit/core/schemas/agenda_template.py:18
 msgid "Template name"
 msgstr ""
@@ -862,14 +1101,6 @@ msgstr ""
 #: ./voteit/core/schemas/agenda_template.py:27
 #: ./voteit/core/templates/minutes.pt:18
 msgid "Agenda items"
-msgstr ""
-
-#: ./voteit/core/schemas/agenda.py:9
-msgid "Hide type and unread count"
-msgstr ""
-
-#: ./voteit/core/schemas/agenda.py:10
-msgid "Will speed up loading for physical meetings with lots of participants"
 msgstr ""
 
 #: ./voteit/core/schemas/contact.py:19 ./voteit/core/views/help.py:32
@@ -893,8 +1124,8 @@ msgid "contact_schema_name_description"
 msgstr ""
 
 #: ./voteit/core/schemas/contact.py:30 ./voteit/core/schemas/contact.py:53
-#: ./voteit/core/templates/manage_tickets.pt:48
 #: ./voteit/core/templates/participants.pt:25
+#: ./voteit/core/templates/manage_tickets.pt:48
 #: ./voteit/core/templates/snippets/user_basic_info.pt:9
 #: ./voteit/core/views/templates/_participants.pt:34
 msgid "Email"
@@ -939,374 +1170,50 @@ msgstr ""
 msgid "support_schema_message_description"
 msgstr ""
 
-#: ./voteit/core/plugins/gravatar_profile_image.py:15
-msgid "Gravatar"
-msgstr ""
-
-#. Default: The profile image comes from the <a href="http://www.gravatar.com"
-#. target="_blank">Gravatar network</a>.It's taken from your current email
-#. address. If you want to change the picture, simply go tothe Gravatar site
-#. and change your picture for the email you use in VoteIT.
-#: ./voteit/core/plugins/gravatar_profile_image.py:16
-msgid "profile_gravatar_explanation"
-msgstr ""
-
-#: ./voteit/core/plugins/immediate_ap.py:17
-msgid "Public access"
-msgstr ""
-
-#. Default: Users will be granted the permissions you select without prior
-#. moderator approval. This is for public meetings.
-#: ./voteit/core/plugins/immediate_ap.py:18
-msgid "public_access_description"
-msgstr ""
-
-#: ./voteit/core/plugins/immediate_ap.py:22
-#: ./voteit/core/plugins/hashlist_ap.py:45
-msgid "Would you like to participate?"
-msgstr ""
-
-#: ./voteit/core/plugins/immediate_ap.py:23
-msgid "Clicking request access will grant you access right away!"
-msgstr ""
-
-#: ./voteit/core/plugins/immediate_ap.py:28
-#: ./voteit/core/plugins/hashlist_ap.py:67
-msgid "Access granted - welcome!"
-msgstr ""
-
-#: ./voteit/core/plugins/immediate_ap.py:36
-msgid "Configure immediate access policy"
-msgstr ""
-
-#. Default: Users will be granted these roles IMMEDIATELY upon requesting
-#. access.
-#. Default: Users will be granted these roles upon requesting access and
-#. passing check.
-#: ./voteit/core/plugins/immediate_ap.py:40
-#: ./voteit/core/plugins/hashlist_ap.py:100
-msgid "immediate_ap_schema_grant_description"
-msgstr ""
-
-#: ./voteit/core/plugins/majority_poll.py:18
-msgid "Majority Poll"
-msgstr ""
-
-#: ./voteit/core/plugins/majority_poll.py:20
-msgid "Majority poll - don't use this for more than 2 choices!"
-msgstr ""
-
-#: ./voteit/core/plugins/majority_poll.py:39
-msgid "Vote for one"
-msgstr ""
-
-#: ./voteit/core/plugins/majority_poll.py:41
-msgid "You can't change your vote now."
-msgstr ""
-
-#. Default: Vote
-#: ./voteit/core/plugins/majority_poll.py:77
-msgid "vote_singular"
-msgstr ""
-
-#. Default: Votes
-#: ./voteit/core/plugins/majority_poll.py:78
-msgid "vote_plural"
-msgstr ""
-
-#. Default: Access will only be granted through invites (Default)
-#: ./voteit/core/plugins/invite_only_ap.py:10
-msgid "meeting_access_invite_only_label"
-msgstr ""
-
-#. Default: This meeting is invite only.
-#.                     That means that a mail will be sent with an access
-#. ticket.
-#.                     Contact meeting moderators for more information.
-#: ./voteit/core/plugins/invite_only_ap.py:12
-msgid "invite_only_meeting_access_request_description"
-msgstr ""
-
-#: ./voteit/core/plugins/hashlist_ap.py:23
-msgid "Hashlist access"
-msgstr ""
-
-#. Default: Users will be granted the permissions you select without prior
-#. moderator approval if their email is registered within a hashlist.
-#. arche_hashlist must be installed for this to work.
-#: ./voteit/core/plugins/hashlist_ap.py:24
-msgid "hashlist_access_description"
-msgstr ""
-
-#: ./voteit/core/plugins/hashlist_ap.py:38
-msgid "Access policy isn't configured correctly"
-msgstr ""
-
-#: ./voteit/core/plugins/hashlist_ap.py:46
-msgid ""
-"Clicking request access will grant you access if your email address is "
-"allowed by the access policy."
-msgstr ""
-
-#: ./voteit/core/plugins/hashlist_ap.py:58
-msgid "Your email isn't validated. Check your profile menu."
-msgstr ""
-
-#. Default: Your email address isn't listed as allowed to access this meeting.
-#. Contact the moderator to request access.
-#: ./voteit/core/plugins/hashlist_ap.py:60
-msgid "email_address_not_listed_as_allowed"
-msgstr ""
-
-#: ./voteit/core/plugins/hashlist_ap.py:86 ./voteit/core/views/meeting.py:183
-msgid "Configure access policy"
-msgstr ""
-
-#: ./voteit/core/plugins/hashlist_ap.py:87
-msgid "Access will be granted if users are present in the hashlist."
-msgstr ""
-
-#: ./voteit/core/plugins/hashlist_ap.py:90
-msgid "Hashlist"
-msgstr ""
-
-#. Default: If nothing is present here, it might mean that you don't have
-#. permission to see any hashlists, or that arche_hashlist isn't installed.
-#: ./voteit/core/plugins/hashlist_ap.py:91
-msgid "ap_hashlist_uid_description"
-msgstr ""
-
-#: ./voteit/core/plugins/like_button.py:71
-#: ./voteit/core/plugins/like_button.py:102
-msgid "Like button"
-msgstr ""
-
-#: ./voteit/core/plugins/like_button.py:79
-msgid "DiscussionPost"
-msgstr ""
-
-#: ./voteit/core/plugins/like_button.py:106
-#: ./voteit/core/views/control_panel.py:115
-#: ./voteit/core/views/control_panel.py:117
-#: ./voteit/core/views/control_panel.py:119
-#: ./voteit/core/views/control_panel.py:121
-#: ./voteit/core/views/control_panel.py:123
-msgid "Settings"
-msgstr ""
-
-#: ./voteit/core/plugins/templates/like_btn.pt:8
-msgid "Like"
-msgstr ""
-
-#. Default: Support
-#: ./voteit/core/plugins/templates/support_btn.pt:9
-msgid "support_proposal"
-msgstr ""
-
-#: ./voteit/core/plugins/templates/support_users_popover.pt:6
-msgid "Users who supports this ${count}"
-msgstr ""
-
-#: ./voteit/core/plugins/templates/majority_poll.pt:5
-msgid "Results of ${title}"
-msgstr ""
-
-#: ./voteit/core/plugins/templates/majority_poll.pt:41
-msgid "Note!"
-msgstr ""
-
-#. Default: Majority polls aren't ment to handle more than 2 proposals. If the
-#. winner didn't receive at least 51% of the votes, you should consider using
-#. another poll method (like Schulze). Consult the manual for more information.
-#: ./voteit/core/plugins/templates/majority_poll.pt:42
-msgid "majority_poll_too_many_proposals_warning"
-msgstr ""
-
-#. Default: The percentage shows number of votes that favoured that
-#. alternative, not out of the total number of voters.
-#: ./voteit/core/plugins/templates/majority_poll.pt:48
-msgid "majority_results_description"
-msgstr ""
-
-#: ./voteit/core/plugins/templates/like_users_popover.pt:6
-msgid "Users who like this ${count}"
-msgstr ""
-
-#. Default: Note that liking something isn't the same thing as voting for it!
-#: ./voteit/core/plugins/templates/like_users_popover.pt:13
-msgid "like_not_vote_notice"
-msgstr ""
-
-#: ./voteit/core/portlets/agenda_item.py:67
-#: ./voteit/core/templates/portlets/discussions.pt:11
-msgid "Discussion"
-msgstr ""
-
-#: ./voteit/core/portlets/agenda_item.py:74
-#: ./voteit/core/templates/overrides/navigation.pt:92
-#: ./voteit/core/templates/portlets/polls.pt:11
-#: ./voteit/core/views/components/polls.py:10
-msgid "Polls"
-msgstr ""
-
-#: ./voteit/core/portlets/agenda_item.py:306
-msgid "Agenda Item portlets"
-msgstr ""
-
-#: ./voteit/core/portlets/diff_text.py:17 ./voteit/core/views/diff_text.py:32
-msgid "Proposed text body"
-msgstr ""
-
-#: ./voteit/core/portlets/meeting.py:20
-msgid "Meeting list"
-msgstr ""
-
-#: ./voteit/core/portlets/meeting.py:39
-#: ./voteit/core/templates/portlets/meeting_list.pt:8
-msgid "Meetings"
-msgstr ""
-
-#: ./voteit/core/portlets/agenda.py:26
-#: ./voteit/core/templates/overrides/navigation.pt:81
-#: ./voteit/core/templates/portlets/agenda.pt:10
-#: ./voteit/core/views/templates/agenda_template.pt:29
-msgid "Agenda"
-msgstr ""
-
-#: ./voteit/core/portlets/agenda.py:46
-msgid "Fixed agenda"
-msgstr ""
-
-#: ./voteit/core/templates/minutes.pt:11
-msgid "Meeting opened"
-msgstr ""
-
-#: ./voteit/core/templates/minutes.pt:13
-msgid "Meeting closed"
-msgstr ""
-
-#: ./voteit/core/templates/minutes.pt:15
-#: ./voteit/core/templates/overrides/navigation.pt:113
-#: ./voteit/core/templates/overrides/navigation.pt:140
-#: ./voteit/core/templates/snippets/participants_tabs.pt:10
-#: ./voteit/core/views/control_panel.py:98
-#: ./voteit/core/views/templates/_participants.pt:19
-msgid "Participants"
-msgstr ""
-
-#: ./voteit/core/templates/minutes.pt:16
-msgid "View participants list"
-msgstr ""
-
-#: ./voteit/core/templates/minutes.pt:21
-msgid "Agenda item was opened at"
-msgstr ""
-
-#: ./voteit/core/templates/minutes.pt:23
-msgid "Agenda item was closed at"
-msgstr ""
-
-#: ./voteit/core/templates/minutes.pt:29
-msgid "Approved proposals:"
-msgstr ""
-
-#: ./voteit/core/templates/minutes.pt:45
-msgid "Denied proposals:"
-msgstr ""
-
-#: ./voteit/core/templates/minutes.pt:63
-#: ./voteit/core/templates/send_tickets.pt:14
 #: ./voteit/core/templates/users_emails.pt:22
+#: ./voteit/core/templates/minutes.pt:64
+#: ./voteit/core/templates/send_tickets.pt:14
 #: ./voteit/core/views/templates/agenda_template.pt:41
 #: ./voteit/core/views/templates/_participants.pt:21
 #: ./voteit/core/views/templates/_participants.pt:123
 msgid "Back"
 msgstr ""
 
-#: ./voteit/core/templates/manage_agenda.pt:10
-#: ./voteit/core/templates/portlets/agenda_fixed.pt:16
-msgid "Manage agenda"
+#: ./voteit/core/templates/ticket_claim.pt:12
+msgid "You're logged in as"
 msgstr ""
 
-#: ./voteit/core/templates/manage_agenda.pt:17
-msgid "Sort agenda items"
+#. Default: Would you like to use this invitation to gain access to this
+#. meeting? It will only work for one user. If not, log out and click the
+#. invitation link again.
+#: ./voteit/core/templates/ticket_claim.pt:15
+msgid "use_ticket_to_gain_access_description"
 msgstr ""
 
-#: ./voteit/core/templates/manage_agenda.pt:20
-msgid "Copy items"
+#: ./voteit/core/templates/ticket_claim.pt:22
+msgid "Use ticket"
 msgstr ""
 
-#: ./voteit/core/templates/manage_agenda.pt:37
-#: ./voteit/core/templates/manage_agenda.pt:52
-#: ./voteit/core/templates/portlets/diff_text.pt:16
-#: ./voteit/core/views/components/moderator_actions.py:24
-#: ./voteit/core/views/templates/agenda_template.pt:15
-#: ./voteit/core/views/templates/agenda_templates.pt:52
-msgid "Edit"
+#: ./voteit/core/templates/ticket_claim.pt:24
+msgid "Logout"
 msgstr ""
 
-#: ./voteit/core/templates/manage_agenda.pt:38
-msgid "Allow proposals"
+#: ./voteit/core/templates/participants.pt:10
+msgid "${num} participants"
 msgstr ""
 
-#: ./voteit/core/templates/manage_agenda.pt:39
-msgid "Allow discussions"
+#. Default: Meeting is closed, so unused tickets won't grant access to the
+#. meeting. Access policies will still work though.
+#: ./voteit/core/templates/participants.pt:14
+msgid "meeting_closed"
 msgstr ""
 
-#: ./voteit/core/templates/manage_agenda.pt:40
-#: ./voteit/core/templates/manage_agenda.pt:84
-#: ./voteit/core/views/components/metadata_listing.py:113
-#: ./voteit/core/views/components/moderator_actions.py:32
-#: ./voteit/core/views/templates/agenda_template.pt:21
-#: ./voteit/core/views/templates/agenda_templates.pt:60
-msgid "Delete"
+#: ./voteit/core/templates/participants.pt:39
+msgid "Bulk change..."
 msgstr ""
 
-#: ./voteit/core/templates/manage_agenda.pt:96
-msgid "Change several at once"
-msgstr ""
-
-#. Default: Mark the agenda items you wish to apply the options bellow to. You
-#. can select several at once by using the tic-box in the header.
-#: ./voteit/core/templates/manage_agenda.pt:97
-msgid "manage_agenda_items_many_info"
-msgstr ""
-
-#: ./voteit/core/templates/manage_agenda.pt:103
-msgid "Change state on marked items to"
-msgstr ""
-
-#: ./voteit/core/templates/manage_agenda.pt:105
-#: ./voteit/core/templates/manage_agenda.pt:113
-#: ./voteit/core/templates/manage_agenda.pt:121
-msgid "&lt;Leave unchanged&gt;"
-msgstr ""
-
-#: ./voteit/core/templates/manage_agenda.pt:111
-msgid "Adjust proposal block state for all marked"
-msgstr ""
-
-#: ./voteit/core/templates/manage_agenda.pt:114
-#: ./voteit/core/templates/manage_agenda.pt:122
-msgid "Default / Allowed"
-msgstr ""
-
-#: ./voteit/core/templates/manage_agenda.pt:115
-#: ./voteit/core/templates/manage_agenda.pt:123
-msgid "Always blocked"
-msgstr ""
-
-#: ./voteit/core/templates/manage_agenda.pt:119
-msgid "Adjust discussion block state for all marked"
-msgstr ""
-
-#: ./voteit/core/templates/manage_agenda.pt:128
-#: ./voteit/core/templates/menus/control_panel_ap.pt:15
-msgid "Change"
-msgstr ""
-
-#: ./voteit/core/templates/manage_agenda.pt:129
-msgid "Cancel"
+#: ./voteit/core/templates/participants.pt:86
+msgid "Loading data..."
 msgstr ""
 
 #: ./voteit/core/templates/_translations.pt:8
@@ -1352,6 +1259,51 @@ msgstr ""
 
 #: ./voteit/core/templates/_translations.pt:18
 msgid "Canceled"
+msgstr ""
+
+#: ./voteit/core/templates/minutes.pt:11
+msgid "Meeting opened"
+msgstr ""
+
+#: ./voteit/core/templates/minutes.pt:13
+msgid "Meeting closed"
+msgstr ""
+
+#: ./voteit/core/templates/minutes.pt:15
+#: ./voteit/core/templates/overrides/navigation.pt:113
+#: ./voteit/core/templates/overrides/navigation.pt:140
+#: ./voteit/core/templates/snippets/participants_tabs.pt:10
+#: ./voteit/core/views/control_panel.py:98
+#: ./voteit/core/views/templates/_participants.pt:19
+msgid "Participants"
+msgstr ""
+
+#: ./voteit/core/templates/minutes.pt:16
+msgid "View participants list"
+msgstr ""
+
+#: ./voteit/core/templates/minutes.pt:21
+msgid "Agenda item was opened at"
+msgstr ""
+
+#: ./voteit/core/templates/minutes.pt:23
+msgid "Agenda item was closed at"
+msgstr ""
+
+#: ./voteit/core/templates/minutes.pt:29
+msgid "Approved proposals:"
+msgstr ""
+
+#: ./voteit/core/templates/minutes.pt:46
+msgid "Denied proposals:"
+msgstr ""
+
+#: ./voteit/core/templates/user.pt:19
+msgid "Change profile"
+msgstr ""
+
+#: ./voteit/core/templates/user.pt:23
+msgid "Change password"
 msgstr ""
 
 #: ./voteit/core/templates/send_tickets.pt:10
@@ -1471,165 +1423,101 @@ msgstr ""
 msgid "Add existing user"
 msgstr ""
 
-#: ./voteit/core/templates/ticket_claim.pt:12
-msgid "You're logged in as"
-msgstr ""
-
-#. Default: Would you like to use this invitation to gain access to this
-#. meeting? It will only work for one user. If not, log out and click the
-#. invitation link again.
-#: ./voteit/core/templates/ticket_claim.pt:15
-msgid "use_ticket_to_gain_access_description"
-msgstr ""
-
-#: ./voteit/core/templates/ticket_claim.pt:22
-msgid "Use ticket"
-msgstr ""
-
-#: ./voteit/core/templates/ticket_claim.pt:24
-msgid "Logout"
-msgstr ""
-
 #: ./voteit/core/templates/request_meeting_access.pt:10
 #: ./voteit/core/views/meeting.py:131
 msgid "Request access"
 msgstr ""
 
-#: ./voteit/core/templates/participants.pt:10
-msgid "${num} participants"
+#: ./voteit/core/templates/manage_agenda.pt:10
+#: ./voteit/core/templates/portlets/agenda_fixed.pt:16
+msgid "Manage agenda"
 msgstr ""
 
-#. Default: Meeting is closed, so unused tickets won't grant access to the
-#. meeting. Access policies will still work though.
-#: ./voteit/core/templates/participants.pt:14
-msgid "meeting_closed"
+#: ./voteit/core/templates/manage_agenda.pt:17
+msgid "Sort agenda items"
 msgstr ""
 
-#: ./voteit/core/templates/participants.pt:85
-msgid "Loading data..."
+#: ./voteit/core/templates/manage_agenda.pt:20
+msgid "Copy items"
 msgstr ""
 
-#: ./voteit/core/templates/user.pt:19
-msgid "Change profile"
+#: ./voteit/core/templates/manage_agenda.pt:37
+#: ./voteit/core/templates/manage_agenda.pt:52
+#: ./voteit/core/templates/portlets/diff_text.pt:16
+#: ./voteit/core/views/components/moderator_actions.py:24
+#: ./voteit/core/views/templates/agenda_templates.pt:52
+#: ./voteit/core/views/templates/agenda_template.pt:15
+msgid "Edit"
 msgstr ""
 
-#: ./voteit/core/templates/user.pt:23
-msgid "Change password"
+#: ./voteit/core/templates/manage_agenda.pt:38
+msgid "Allow proposals"
 msgstr ""
 
-#: ./voteit/core/templates/overrides/navigation.pt:38
-#: ./voteit/core/templates/menus/help.pt:10
-msgid "Help"
+#: ./voteit/core/templates/manage_agenda.pt:39
+msgid "Allow discussions"
 msgstr ""
 
-#: ./voteit/core/templates/overrides/navigation.pt:62
-#: ./voteit/core/templates/menus/site.pt:10
-msgid "Site"
+#: ./voteit/core/templates/manage_agenda.pt:40
+#: ./voteit/core/templates/manage_agenda.pt:84
+#: ./voteit/core/views/components/moderator_actions.py:32
+#: ./voteit/core/views/components/metadata_listing.py:113
+#: ./voteit/core/views/templates/agenda_templates.pt:60
+#: ./voteit/core/views/templates/agenda_template.pt:21
+msgid "Delete"
 msgstr ""
 
-#: ./voteit/core/templates/overrides/navigation.pt:105
-msgid "Control panel"
+#: ./voteit/core/templates/manage_agenda.pt:96
+msgid "Change several at once"
 msgstr ""
 
-#: ./voteit/core/templates/overrides/navigation.pt:120
-#: ./voteit/core/templates/overrides/navigation.pt:147
-msgid "Minutes"
+#. Default: Mark the agenda items you wish to apply the options bellow to. You
+#. can select several at once by using the tic-box in the header.
+#: ./voteit/core/templates/manage_agenda.pt:97
+msgid "manage_agenda_items_many_info"
 msgstr ""
 
-#: ./voteit/core/templates/overrides/master.pt:51
-msgid "Search"
+#: ./voteit/core/templates/manage_agenda.pt:103
+msgid "Change state on marked items to"
 msgstr ""
 
-#: ./voteit/core/templates/widgets/voteit_form_inline.pt:39
-msgid "There was a problem with your submission"
+#: ./voteit/core/templates/manage_agenda.pt:105
+#: ./voteit/core/templates/manage_agenda.pt:113
+#: ./voteit/core/templates/manage_agenda.pt:121
+msgid "&lt;Leave unchanged&gt;"
 msgstr ""
 
-#: ./voteit/core/templates/menus/profile.pt:20
-msgid "Your roles"
+#: ./voteit/core/templates/manage_agenda.pt:111
+msgid "Adjust proposal block state for all marked"
 msgstr ""
 
-#: ./voteit/core/templates/menus/control_panel_participants.pt:12
-msgid "Participant list"
+#: ./voteit/core/templates/manage_agenda.pt:114
+#: ./voteit/core/templates/manage_agenda.pt:122
+msgid "Default / Allowed"
 msgstr ""
 
-#: ./voteit/core/templates/menus/control_panel_participants.pt:16
-#: ./voteit/core/views/ticket.py:238
-#: ./voteit/core/views/templates/_participants.pt:128
-msgid "Invite participants"
+#: ./voteit/core/templates/manage_agenda.pt:115
+#: ./voteit/core/templates/manage_agenda.pt:123
+msgid "Always blocked"
 msgstr ""
 
-#: ./voteit/core/templates/menus/control_panel_participants.pt:20
-msgid "Manage invites"
+#: ./voteit/core/templates/manage_agenda.pt:119
+msgid "Adjust discussion block state for all marked"
 msgstr ""
 
-#: ./voteit/core/templates/menus/poll.pt:23
-msgid "Ongoing polls"
+#: ./voteit/core/templates/manage_agenda.pt:128
+#: ./voteit/core/templates/menus/control_panel_ap.pt:15
+msgid "Change"
 msgstr ""
 
-#: ./voteit/core/templates/menus/poll.pt:66
-msgid "(None)"
+#: ./voteit/core/templates/manage_agenda.pt:129
+msgid "Cancel"
 msgstr ""
 
-#: ./voteit/core/templates/menus/control_panel_ap.pt:10
-msgid "Active"
-msgstr ""
-
-#: ./voteit/core/templates/menus/control_panel_ap.pt:19
-msgid "Configure"
-msgstr ""
-
-#: ./voteit/core/templates/menus/control_panel.pt:22
-msgid "Inactive options for this meeting"
-msgstr ""
-
-#: ./voteit/core/templates/portlets/discussions_inline.pt:12
-msgid "Show ${num} previous"
-msgstr ""
-
-#: ./voteit/core/templates/portlets/discussions_inline.pt:52
-msgid "Show more"
-msgstr ""
-
-#: ./voteit/core/templates/portlets/polls.pt:15
-#: ./voteit/core/templates/portlets/proposals.pt:20
-#: ./voteit/core/templates/portlets/discussions.pt:18
-msgid "Refresh"
-msgstr ""
-
-#: ./voteit/core/templates/portlets/inline_add_button_prop.pt:10
 #: ./voteit/core/templates/portlets/diff_text.pt:38
+#: ./voteit/core/templates/portlets/inline_add_button_prop.pt:10
 #: ./voteit/core/views/diff_text.py:69
 msgid "Add proposal"
-msgstr ""
-
-#. Default: You lack the required permission to add.
-#: ./voteit/core/templates/portlets/inline_add_button_prop.pt:14
-#: ./voteit/core/templates/portlets/diff_text.pt:55
-#: ./voteit/core/templates/portlets/inline_add_button_disc.pt:14
-msgid "lack_add_perm"
-msgstr ""
-
-#: ./voteit/core/templates/portlets/inline_add_button_prop.pt:16
-#: ./voteit/core/templates/portlets/diff_text.pt:57
-msgid "The moderator has locked the ability to add more proposals."
-msgstr ""
-
-#: ./voteit/core/templates/portlets/proposals_inline.pt:50
-msgid "Show ${num} hidden"
-msgstr ""
-
-#: ./voteit/core/templates/portlets/agenda.pt:16
-msgid "Agenda / Navigation"
-msgstr ""
-
-#: ./voteit/core/templates/portlets/agenda.pt:25
-#: ./voteit/core/templates/portlets/meeting_list.pt:12
-#: ./voteit/core/templates/portlets/agenda_fixed.pt:10
-msgid "Add"
-msgstr ""
-
-#: ./voteit/core/templates/portlets/agenda.pt:29
-msgid "Manage"
 msgstr ""
 
 #. Default: Propose changes to paragraphs by clicking 'Add proposal' above. If
@@ -1639,12 +1527,57 @@ msgstr ""
 msgid "diff_text_portlet_footer_help"
 msgstr ""
 
-#: ./voteit/core/templates/portlets/meeting_list.pt:41
-msgid "Started: ${date}"
+#. Default: You lack the required permission to add.
+#: ./voteit/core/templates/portlets/diff_text.pt:55
+#: ./voteit/core/templates/portlets/inline_add_button_disc.pt:14
+#: ./voteit/core/templates/portlets/inline_add_button_prop.pt:14
+msgid "lack_add_perm"
 msgstr ""
 
-#: ./voteit/core/templates/portlets/meeting_list.pt:45
-msgid "Closed: ${date}"
+#: ./voteit/core/templates/portlets/diff_text.pt:57
+#: ./voteit/core/templates/portlets/inline_add_button_prop.pt:16
+msgid "The moderator has locked the ability to add more proposals."
+msgstr ""
+
+#: ./voteit/core/templates/portlets/proposals_inline.pt:50
+msgid "Show ${num} hidden"
+msgstr ""
+
+#: ./voteit/core/templates/portlets/inline_add_button_disc.pt:10
+msgid "New entry"
+msgstr ""
+
+#: ./voteit/core/templates/portlets/inline_add_button_disc.pt:16
+msgid "The moderator has locked the ability to add more discussion posts."
+msgstr ""
+
+#: ./voteit/core/templates/portlets/polls.pt:15
+#: ./voteit/core/templates/portlets/proposals.pt:20
+#: ./voteit/core/templates/portlets/discussions.pt:18
+msgid "Refresh"
+msgstr ""
+
+#: ./voteit/core/templates/portlets/proposals.pt:34
+msgid "Poll / Descision planning"
+msgstr ""
+
+#: ./voteit/core/templates/portlets/agenda_fixed.pt:10
+#: ./voteit/core/templates/portlets/agenda.pt:25
+#: ./voteit/core/templates/portlets/meeting_list.pt:12
+msgid "Add"
+msgstr ""
+
+#: ./voteit/core/templates/portlets/agenda_fixed.pt:32
+msgid "Filter: Showing all"
+msgstr ""
+
+#: ./voteit/core/templates/portlets/agenda_fixed.pt:34
+msgid "Only:"
+msgstr ""
+
+#: ./voteit/core/templates/portlets/agenda_fixed.pt:43
+#: ./voteit/core/views/agenda_item.py:59
+msgid "Show all"
 msgstr ""
 
 #. Default: The method '${poll_method}' that this poll uses i missing from this
@@ -1699,53 +1632,55 @@ msgstr ""
 msgid "Add Poll"
 msgstr ""
 
-#: ./voteit/core/templates/portlets/proposals.pt:34
-msgid "Poll / Descision planning"
+#: ./voteit/core/templates/portlets/agenda.pt:16
+msgid "Agenda / Navigation"
 msgstr ""
 
-#: ./voteit/core/templates/portlets/agenda_fixed.pt:32
-msgid "Filter: Showing all"
+#: ./voteit/core/templates/portlets/agenda.pt:29
+msgid "Manage"
 msgstr ""
 
-#: ./voteit/core/templates/portlets/agenda_fixed.pt:34
-msgid "Only:"
+#: ./voteit/core/templates/portlets/discussions_inline.pt:12
+msgid "Show ${num} previous"
 msgstr ""
 
-#: ./voteit/core/templates/portlets/agenda_fixed.pt:43
-#: ./voteit/core/views/agenda_item.py:59
-msgid "Show all"
+#: ./voteit/core/templates/portlets/discussions_inline.pt:52
+msgid "Show more"
 msgstr ""
 
-#: ./voteit/core/templates/portlets/inline_add_button_disc.pt:10
-msgid "New entry"
+#: ./voteit/core/templates/portlets/meeting_list.pt:41
+msgid "Started: ${date}"
 msgstr ""
 
-#: ./voteit/core/templates/portlets/inline_add_button_disc.pt:16
-msgid "The moderator has locked the ability to add more discussion posts."
+#: ./voteit/core/templates/portlets/meeting_list.pt:45
+msgid "Closed: ${date}"
 msgstr ""
 
-#: ./voteit/core/templates/snippets/user_latest_meeting_entries.pt:3
-msgid "Last added"
+#: ./voteit/core/templates/overrides/master.pt:51
+msgid "Search"
+msgstr ""
+
+#: ./voteit/core/templates/overrides/navigation.pt:38
+#: ./voteit/core/templates/menus/help.pt:10
+msgid "Help"
+msgstr ""
+
+#: ./voteit/core/templates/overrides/navigation.pt:62
+#: ./voteit/core/templates/menus/site.pt:10
+msgid "Site"
+msgstr ""
+
+#: ./voteit/core/templates/overrides/navigation.pt:105
+msgid "Control panel"
+msgstr ""
+
+#: ./voteit/core/templates/overrides/navigation.pt:120
+#: ./voteit/core/templates/overrides/navigation.pt:147
+msgid "Minutes"
 msgstr ""
 
 #: ./voteit/core/templates/snippets/pick_polls.pt:24
 msgid "No private or upcoming polls"
-msgstr ""
-
-#: ./voteit/core/templates/snippets/user_basic_info.pt:13
-msgid "About"
-msgstr ""
-
-#: ./voteit/core/templates/snippets/user_basic_info.pt:18
-msgid "You haven't entered anything yet!"
-msgstr ""
-
-#: ./voteit/core/templates/snippets/diff_view.pt:20
-msgid "Red strikeout: Text removed in the proposal."
-msgstr ""
-
-#: ./voteit/core/templates/snippets/diff_view.pt:21
-msgid "Bold green: Text added in the proposal."
 msgstr ""
 
 #: ./voteit/core/templates/snippets/participants_tabs.pt:14
@@ -1760,14 +1695,62 @@ msgstr ""
 msgid "Emails"
 msgstr ""
 
-#: ./voteit/core/templates/email/ongoing_poll_notification.pt:11
-msgid "You can now vote"
+#: ./voteit/core/templates/snippets/diff_view.pt:20
+msgid "Red strikeout: Text removed in the proposal."
 msgstr ""
 
-#. Default: A poll has just opened in the meeting ${meeting_title}. To get
-#. there, follow this link:
-#: ./voteit/core/templates/email/ongoing_poll_notification.pt:13
-msgid "ongoing_poll_email_text"
+#: ./voteit/core/templates/snippets/diff_view.pt:21
+msgid "Bold green: Text added in the proposal."
+msgstr ""
+
+#: ./voteit/core/templates/snippets/user_latest_meeting_entries.pt:3
+msgid "Last added"
+msgstr ""
+
+#: ./voteit/core/templates/snippets/user_basic_info.pt:13
+msgid "About"
+msgstr ""
+
+#: ./voteit/core/templates/snippets/user_basic_info.pt:18
+msgid "You haven't entered anything yet!"
+msgstr ""
+
+#: ./voteit/core/templates/menus/poll.pt:23
+msgid "Ongoing polls"
+msgstr ""
+
+#: ./voteit/core/templates/menus/poll.pt:66
+msgid "(None)"
+msgstr ""
+
+#: ./voteit/core/templates/menus/control_panel_participants.pt:12
+msgid "Participant list"
+msgstr ""
+
+#: ./voteit/core/templates/menus/control_panel_participants.pt:16
+#: ./voteit/core/views/ticket.py:238
+#: ./voteit/core/views/templates/_participants.pt:128
+msgid "Invite participants"
+msgstr ""
+
+#: ./voteit/core/templates/menus/control_panel_participants.pt:20
+msgid "Manage invites"
+msgstr ""
+
+#: ./voteit/core/templates/menus/control_panel_ap.pt:10
+msgid "Active"
+msgstr ""
+
+#: ./voteit/core/templates/menus/control_panel_ap.pt:19
+msgid "Configure"
+msgstr ""
+
+#: ./voteit/core/templates/menus/control_panel.pt:22
+msgid "Inactive options for this meeting"
+msgstr ""
+
+#: ./voteit/core/templates/menus/profile.pt:20
+msgid "Your roles"
 msgstr ""
 
 #: ./voteit/core/templates/email/claimed_ticket_email.pt:7
@@ -1839,6 +1822,16 @@ msgstr ""
 msgid "invitation_no_maillist_notice"
 msgstr ""
 
+#: ./voteit/core/templates/email/ongoing_poll_notification.pt:11
+msgid "You can now vote"
+msgstr ""
+
+#. Default: A poll has just opened in the meeting ${meeting_title}. To get
+#. there, follow this link:
+#: ./voteit/core/templates/email/ongoing_poll_notification.pt:13
+msgid "ongoing_poll_email_text"
+msgstr ""
+
 #: ./voteit/core/templates/email/help_contact.pt:12
 #: ./voteit/core/templates/email/support.pt:11
 msgid "From"
@@ -1847,6 +1840,10 @@ msgstr ""
 #: ./voteit/core/templates/email/help_contact.pt:21
 #: ./voteit/core/templates/email/support.pt:21
 msgid "Click the link to get to the VoteIT meeting:"
+msgstr ""
+
+#: ./voteit/core/templates/email/support.pt:18
+msgid "Regarding meeting"
 msgstr ""
 
 #: ./voteit/core/templates/email/invite_ticket_email.pt:8
@@ -1865,67 +1862,15 @@ msgstr ""
 msgid "To access this meeting use the link below:"
 msgstr ""
 
-#: ./voteit/core/templates/email/support.pt:18
-msgid "Regarding meeting"
+#: ./voteit/core/templates/widgets/voteit_form_inline.pt:39
+msgid "There was a problem with your submission"
 msgstr ""
 
-#: ./voteit/core/views/poll.py:37 ./voteit/core/views/poll.py:53
-#, python-format
-msgid "Poll plugin ${plugin} not found"
-msgstr ""
-
-#: ./voteit/core/views/poll.py:40 ./voteit/core/views/poll.py:56
-msgid "This poll is still open"
-msgstr ""
-
-#: ./voteit/core/views/poll.py:74
-msgid "No settings for this poll"
-msgstr ""
-
-#: ./voteit/core/views/poll.py:150
-msgid "You're not allowed to vote"
-msgstr ""
-
-#: ./voteit/core/views/poll.py:160
-msgid "Your vote was changed."
-msgstr ""
-
-#. Default: Your vote has been added. If you wish to change it, you may do so
-#. as long as the poll is open.
-#: ./voteit/core/views/poll.py:167
-msgid "vote_success_msg"
-msgstr ""
-
-#: ./voteit/core/views/poll.py:185
-msgid "You have no voting permission in this poll."
-msgstr ""
-
-#. Default: The poll is created in private state, to show it the participants
-#. you have to change the state to upcoming.
-#: ./voteit/core/views/poll.py:204
-msgid "private_poll_info"
-msgstr ""
-
-#: ./voteit/core/views/poll.py:224
-msgid "Update plugin settings"
-msgstr ""
-
-#: ./voteit/core/views/poll.py:227 ./voteit/core/views/poll.py:252
-msgid "Successfully updated"
-msgstr ""
-
-#: ./voteit/core/views/poll.py:229 ./voteit/core/views/poll.py:254
-msgid "Nothing changed"
-msgstr ""
-
-#: ./voteit/core/views/poll.py:239
-msgid "Pick participating proposals"
-msgstr ""
-
-#. Default: This poll uses a plugin that can't be found. Make sure a poll
-#. plugin with the name '${name}' is installed
-#: ./voteit/core/views/poll.py:263
-msgid "poll_plugin_not_found_error"
+#. Default: Can't set Proposal '${title}' as 'Locked for voting'. It's probably
+#. not in the state published, or has already been handled in another way. All
+#. changes aborted, please check the proposals and try again.
+#: ./voteit/core/subscribers/poll.py:23
+msgid "workflow_error_when_setting_proposal_as_voting"
 msgstr ""
 
 #: ./voteit/core/views/manage_agenda_items.py:52
@@ -2042,37 +1987,6 @@ msgstr ""
 msgid "added_tickets_text_some_rejected"
 msgstr ""
 
-#: ./voteit/core/views/permissions.py:35
-msgid "Add existing user to meeting"
-msgstr ""
-
-#. Default: User was already a part of this meeting, but these new roles were
-#. added: ${roles}
-#: ./voteit/core/views/permissions.py:53
-msgid "new_roles_appended_notice"
-msgstr ""
-
-#: ./voteit/core/views/permissions.py:59
-msgid "No new roles added - user already had all of them."
-msgstr ""
-
-#: ./voteit/core/views/participants.py:115
-msgid "Bulk change roles"
-msgstr ""
-
-#: ./voteit/core/views/participants.py:137
-msgid "Bulk changes applied"
-msgstr ""
-
-#: ./voteit/core/views/agenda_item.py:56
-#, python-format
-msgid "Filter active, showing ${num} tag(s)"
-msgstr ""
-
-#: ./voteit/core/views/agenda_item.py:78
-msgid "Status changed - note that workflow state also matters."
-msgstr ""
-
 #. Default: Change behaviour of proposals and set users that moderators may add
 #. proposals as.
 #: ./voteit/core/views/control_panel.py:31
@@ -2114,14 +2028,6 @@ msgstr ""
 msgid "Diff text settings"
 msgstr ""
 
-#: ./voteit/core/views/help.py:39
-msgid "Lost your password?"
-msgstr ""
-
-#: ./voteit/core/views/help.py:46 ./voteit/core/views/contact.py:108
-msgid "Support"
-msgstr ""
-
 #. Default: Warning! Changing the text body when there are proposals already
 #. will change the original text they differ from. Don't to this unless you
 #. know what you're doing. Adding new lines will cause the functionality to
@@ -2146,6 +2052,28 @@ msgstr ""
 #: ./voteit/core/views/diff_text.py:94
 #: ./voteit/core/views/templates/_participants.pt:116
 msgid "Save"
+msgstr ""
+
+#: ./voteit/core/views/permissions.py:35
+msgid "Add existing user to meeting"
+msgstr ""
+
+#. Default: User was already a part of this meeting, but these new roles were
+#. added: ${roles}
+#: ./voteit/core/views/permissions.py:53
+msgid "new_roles_appended_notice"
+msgstr ""
+
+#: ./voteit/core/views/permissions.py:59
+msgid "No new roles added - user already had all of them."
+msgstr ""
+
+#: ./voteit/core/views/participants.py:115
+msgid "Bulk change roles"
+msgstr ""
+
+#: ./voteit/core/views/participants.py:137
+msgid "Bulk changes applied"
 msgstr ""
 
 #: ./voteit/core/views/meeting.py:57
@@ -2209,6 +2137,82 @@ msgstr ""
 msgid "Copied ${num} objects"
 msgstr ""
 
+#: ./voteit/core/views/agenda_item.py:56
+#, python-format
+msgid "Filter active, showing ${num} tag(s)"
+msgstr ""
+
+#: ./voteit/core/views/agenda_item.py:78
+msgid "Status changed - note that workflow state also matters."
+msgstr ""
+
+#: ./voteit/core/views/poll.py:37 ./voteit/core/views/poll.py:53
+#, python-format
+msgid "Poll plugin ${plugin} not found"
+msgstr ""
+
+#: ./voteit/core/views/poll.py:40 ./voteit/core/views/poll.py:56
+msgid "This poll is still open"
+msgstr ""
+
+#: ./voteit/core/views/poll.py:74
+msgid "No settings for this poll"
+msgstr ""
+
+#: ./voteit/core/views/poll.py:150
+msgid "You're not allowed to vote"
+msgstr ""
+
+#: ./voteit/core/views/poll.py:160
+msgid "Your vote was changed."
+msgstr ""
+
+#. Default: Your vote has been added. If you wish to change it, you may do so
+#. as long as the poll is open.
+#: ./voteit/core/views/poll.py:167
+msgid "vote_success_msg"
+msgstr ""
+
+#: ./voteit/core/views/poll.py:185
+msgid "You don't have the right to vote within this meeting"
+msgstr ""
+
+#. Default: The poll is created in private state, to show it the participants
+#. you have to change the state to upcoming.
+#: ./voteit/core/views/poll.py:204
+msgid "private_poll_info"
+msgstr ""
+
+#: ./voteit/core/views/poll.py:224
+msgid "Update plugin settings"
+msgstr ""
+
+#: ./voteit/core/views/poll.py:227 ./voteit/core/views/poll.py:252
+msgid "Successfully updated"
+msgstr ""
+
+#: ./voteit/core/views/poll.py:229 ./voteit/core/views/poll.py:254
+msgid "Nothing changed"
+msgstr ""
+
+#: ./voteit/core/views/poll.py:239
+msgid "Pick participating proposals"
+msgstr ""
+
+#. Default: This poll uses a plugin that can't be found. Make sure a poll
+#. plugin with the name '${name}' is installed
+#: ./voteit/core/views/poll.py:263
+msgid "poll_plugin_not_found_error"
+msgstr ""
+
+#: ./voteit/core/views/help.py:39
+msgid "Lost your password?"
+msgstr ""
+
+#: ./voteit/core/views/help.py:46 ./voteit/core/views/contact.py:108
+msgid "Support"
+msgstr ""
+
 #: ./voteit/core/views/contact.py:70
 msgid "Message sent to the moderators"
 msgstr ""
@@ -2219,14 +2223,6 @@ msgstr ""
 
 #: ./voteit/core/views/contact.py:111
 msgid "Message sent"
-msgstr ""
-
-#: ./voteit/core/views/components/metadata_listing.py:54
-msgid "Retract"
-msgstr ""
-
-#: ./voteit/core/views/components/metadata_listing.py:60
-msgid "Full paragraph"
 msgstr ""
 
 #: ./voteit/core/views/components/moderator_actions.py:16
@@ -2253,44 +2249,12 @@ msgstr ""
 msgid "Enable discussion"
 msgstr ""
 
-#: ./voteit/core/views/templates/agenda_template.pt:18
-#: ./voteit/core/views/templates/agenda_templates.pt:56
-msgid "Sort"
+#: ./voteit/core/views/components/metadata_listing.py:54
+msgid "Retract"
 msgstr ""
 
-#. Default: Click the icons to change permission. Any permission that's changed
-#. will be listed in bold. When you're done, click save at the bottom. If all
-#. permissions are removed from a user, that user is removed from the meeting.
-#: ./voteit/core/views/templates/_participants.pt:23
-msgid "participants_form_instructions"
-msgstr ""
-
-#: ./voteit/core/views/templates/_participants.pt:52
-msgid "Moderate"
-msgstr ""
-
-#: ./voteit/core/views/templates/_participants.pt:64
-#: ./voteit/core/views/templates/_participants.pt:69
-#: ./voteit/core/views/templates/_participants.pt:74
-#: ./voteit/core/views/templates/_participants.pt:79
-#: ./voteit/core/views/templates/_participants.pt:84
-msgid "all"
-msgstr ""
-
-#: ./voteit/core/views/templates/_participants.pt:65
-#: ./voteit/core/views/templates/_participants.pt:70
-#: ./voteit/core/views/templates/_participants.pt:75
-#: ./voteit/core/views/templates/_participants.pt:80
-#: ./voteit/core/views/templates/_participants.pt:85
-msgid "none"
-msgstr ""
-
-#: ./voteit/core/views/templates/_participants.pt:132
-msgid "Add participant"
-msgstr ""
-
-#: ./voteit/core/views/templates/_agenda_item.pt:13
-msgid "Previous"
+#: ./voteit/core/views/components/metadata_listing.py:60
+msgid "Full paragraph"
 msgstr ""
 
 #: ./voteit/core/views/templates/agenda_templates.pt:19
@@ -2323,8 +2287,48 @@ msgstr ""
 msgid "Apply to meeting"
 msgstr ""
 
+#: ./voteit/core/views/templates/agenda_templates.pt:56
+#: ./voteit/core/views/templates/agenda_template.pt:18
+msgid "Sort"
+msgstr ""
+
 #: ./voteit/core/views/templates/agenda_templates.pt:63
 msgid "There are no agenda templates available"
+msgstr ""
+
+#: ./voteit/core/views/templates/_agenda_item.pt:13
+msgid "Previous"
+msgstr ""
+
+#. Default: Click the icons to change permission. Any permission that's changed
+#. will be listed in bold. When you're done, click save at the bottom. If all
+#. permissions are removed from a user, that user is removed from the meeting.
+#: ./voteit/core/views/templates/_participants.pt:23
+msgid "participants_form_instructions"
+msgstr ""
+
+#: ./voteit/core/views/templates/_participants.pt:52
+msgid "Moderate"
+msgstr ""
+
+#: ./voteit/core/views/templates/_participants.pt:64
+#: ./voteit/core/views/templates/_participants.pt:69
+#: ./voteit/core/views/templates/_participants.pt:74
+#: ./voteit/core/views/templates/_participants.pt:79
+#: ./voteit/core/views/templates/_participants.pt:84
+msgid "all"
+msgstr ""
+
+#: ./voteit/core/views/templates/_participants.pt:65
+#: ./voteit/core/views/templates/_participants.pt:70
+#: ./voteit/core/views/templates/_participants.pt:75
+#: ./voteit/core/views/templates/_participants.pt:80
+#: ./voteit/core/views/templates/_participants.pt:85
+msgid "none"
+msgstr ""
+
+#: ./voteit/core/views/templates/_participants.pt:132
+msgid "Add participant"
 msgstr ""
 
 #: ./voteit/core/views/templates/snippets/user_tag.pt:7

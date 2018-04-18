@@ -182,7 +182,7 @@ class PollVoteForm(DefaultEditForm):
         return {'form': form.render(
             appstruct=appstruct,
             readonly=self.readonly,
-            description=None if self.can_vote else _('You have no voting permission in this poll.')
+            description=None if self.can_vote else _("You don't have the right to vote within this meeting")
         )}
 
 

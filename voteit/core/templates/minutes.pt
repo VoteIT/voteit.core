@@ -32,7 +32,8 @@
         <tal:iterate repeat="prop approved">
           <li class="list-group-item">
             <span tal:replace="structure request.creators_info(prop.creators, portrait = False)">userinfo</span>
-            ${prop.text}
+            <span tal:content="structure request.render_proposal_text(prop)">Text here</span>
+            <p class="text-muted">#${prop.aid}</p>
           </li>
         </tal:iterate>
         </ul>
@@ -48,8 +49,8 @@
           <tal:iterate repeat="prop ai.get_content(content_type = 'Proposal', states = 'denied', sort_on = 'created')">
             <li class="list-group-item">
               <span tal:replace="structure request.creators_info(prop.creators, portrait = False)">userinfo</span>
-              ${structure: request.transform_text(prop.text)}
-              <p>#${prop.aid}</p>
+              <span tal:content="structure request.render_proposal_text(prop)">Text here</span>
+              <p class="text-muted">#${prop.aid}</p>
             </li>
           </tal:iterate>
         </ul>
