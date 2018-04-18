@@ -2040,7 +2040,7 @@ msgstr ""
 #: voteit/core/views/poll.py:185
 #, fuzzy
 msgid "You have no voting permission in this poll."
-msgstr "betyder att du inte röstat i omröstningen"
+msgstr "Du har inte behörighet att rösta i den här omröstningen."
 
 #. Default: The poll is created in private state, to show it the participants
 #. you have to change the state to upcoming.
