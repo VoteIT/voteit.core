@@ -9,9 +9,9 @@ msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2018-03-26 13:34+0200\n"
-"PO-Revision-Date: 2017-12-01 16:46+0100\n"
-"Last-Translator: Robin Harms Oredsson <robin@betahaus.net>\n"
-"Language-Team: sv <LL@li.org>\n"
+"PO-Revision-Date: 2018-04-18 08:22+0000\n"
+"Last-Translator: Weblate Admin <admin@example.com>\n"
+"Language-Team: Swedish <http://example.com/projects/voteit/voteit-core/sv/>\n"
 "Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,7 +22,7 @@ msgstr ""
 
 #: voteit/core/__init__.py:58
 msgid "Fixed left nav"
-msgstr ""
+msgstr "Fast navigation vänster"
 
 #: voteit/core/bootstrap.py:17 voteit/core/bootstrap.py:35
 #: voteit/core/models/populator.py:10
@@ -640,7 +640,7 @@ msgstr "Dagordning"
 
 #: voteit/core/portlets/agenda.py:46
 msgid "Fixed agenda"
-msgstr ""
+msgstr "Fast dagordning"
 
 #: voteit/core/portlets/agenda_item.py:49 voteit/core/schemas/poll.py:82
 #: voteit/core/templates/portlets/proposals.pt:12
@@ -681,11 +681,11 @@ msgstr "Möten"
 
 #: voteit/core/schemas/agenda.py:9
 msgid "Hide type and unread count"
-msgstr ""
+msgstr "Göm antal olästa förslag och kommentarer"
 
 #: voteit/core/schemas/agenda.py:10
 msgid "Will speed up loading for physical meetings with lots of participants"
-msgstr ""
+msgstr "Snabbar upp sidladdning, särskilt vid fysiska möten med många deltagare"
 
 #: voteit/core/schemas/agenda_item.py:23 voteit/core/schemas/diff_text.py:33
 #: voteit/core/schemas/meeting.py:68 voteit/core/schemas/poll.py:54
@@ -1970,7 +1970,7 @@ msgstr "Senast tillagda"
 
 #: voteit/core/templates/widgets/voteit_form_inline.pt:39
 msgid "There was a problem with your submission"
-msgstr ""
+msgstr "Det uppstod ett problem med formuläret"
 
 #: voteit/core/views/agenda_item.py:56
 #, python-format
