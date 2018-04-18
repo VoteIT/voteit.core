@@ -31,7 +31,8 @@ from voteit.core.models.interfaces import IPollPlugin
 from voteit.core.models.interfaces import IVote
 from voteit.core.models.workflow_aware import WorkflowAware
 
-
+# FIXME: This should turn into utilities later on, so other packages can
+# register methods without patching.
 PROPOSAL_ORDER_ALPHABETICAL = 'alphabatical'
 PROPOSAL_ORDER_RANDOM = 'random'
 PROPOSAL_ORDER_CHRONOLOGICAL = 'chronological'
