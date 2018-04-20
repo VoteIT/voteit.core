@@ -281,8 +281,7 @@ def lock_proposals(poll, request):
             prop_form = request.localizer.pluralize(singular, plural, count)
             msg = _(u'poll_proposals_locked_notice',
                     default=u"Setting ${count} ${prop_form} as 'locked for vote'. "
-                            u"They can no longer be edited or retracted by normal users. "
-                            u"All proposals participating in an ongoing poll should be locked.",
+                            u"They can no longer be edited or retracted by normal users. ",
                     mapping={'count':count,
                              'prop_form': prop_form})
             fm.add(msg)
@@ -294,11 +293,6 @@ def upcoming_poll_callback(poll, info):
     """
     request = get_current_request()
     lock_proposals(poll, request)
-    fm = IFlashMessages(request, None)
-    if fm:
-        msg = _('poll_upcoming_state_notice',
-                default=u"Setting poll in upcoming state. It's now visible for meeting participants.")
-        fm.add(msg)
 
 
 def ongoing_poll_callback(poll, info):
