@@ -32,7 +32,6 @@ def bootstrap_and_fixture(config):
     config.include('voteit.core.models.agenda_templates')
     config.include('voteit.core.models.user')
     config.include('voteit.core.models.users')
-    config.include('voteit.core.models.fanstatic_resources')
     return bootstrap_voteit(echo=False)
 
 def register_security_policies(config):

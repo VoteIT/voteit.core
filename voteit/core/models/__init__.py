@@ -8,7 +8,6 @@ def includeme(config):
     config.include('.diff_text')
     config.include('.discussion_post')
     config.include('.evolver')
-    config.include('.fanstatic_resources')
     config.include('.flash_messages')
     config.include('.invite_ticket')
     config.include('.meeting')
