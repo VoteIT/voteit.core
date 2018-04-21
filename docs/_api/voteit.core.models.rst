@@ -61,11 +61,6 @@ voteit.core.models package
     :undoc-members:
     :show-inheritance:
 
-.. automodule:: voteit.core.models.js_util
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 .. automodule:: voteit.core.models.logs
     :members:
     :undoc-members:

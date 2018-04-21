@@ -647,25 +647,6 @@ class IDateTimeUtil(Interface):
         """ Get a readable relative format like "5 minutes ago". """
 
 
-class IJSUtil(Interface):
-    """ """
-
-    def add_translations(**tstrings):
-        """ Add translationstrings to be included as:
-            javascript_key = TranslationString
-            Example: yes = _(u"Yes")
-            The javascript key will be in the namespace translations in voteit.
-            The above example can be found at:
-            voteit.translations['yes']
-        """
-
-    def get_translations():
-        """ Get a dict of all translations. This method may change to include
-            conditions later. The dict is a copy of the original, so it's okay
-            to modify it.
-        """
-
-
 class IFanstaticResources(Interface):
     """ Util for keeping track of when to render fanstatic resources.
         All resources doesn't have to be registered here, just use it

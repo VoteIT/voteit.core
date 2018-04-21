@@ -1,9 +1,0 @@
-<tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core">
-if(typeof(voteit) == "undefined"){
-    voteit = {};
-}
-voteit.translation = {};
-<tal:iterate repeat="item translations.items()">
-voteit.translation["${item[0]}"] = "<tal:ts tal:content="structure item[1]">ts</tal:ts>";
-</tal:iterate>
-</tal:main>

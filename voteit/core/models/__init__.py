@@ -11,7 +11,6 @@ def includeme(config):
     config.include('.fanstatic_resources')
     config.include('.flash_messages')
     config.include('.invite_ticket')
-    config.include('.js_util')
     config.include('.meeting')
     config.include('.mention')
     config.include('.poll')
