@@ -92,7 +92,7 @@
       show_in_fullscreen = (getCookie('voteit.hide_agenda') != '1');
       voteit.init_agenda(show_in_fullscreen);
     });
-    voteit.agenda_data_url = "${request.resource_url(request.meeting, 'agenda_data.json')}";
+//    voteit.agenda_data_url = "${request.resource_url(request.meeting, 'agenda_data.json')}";
     voteit.agenda_sort_order = ["${'", "'.join(request.meeting.order)}"];
     voteit.agenda_select_tag_url = "${request.resource_url(request.meeting, '_agenda_select_tag')}";
 
