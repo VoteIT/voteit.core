@@ -366,18 +366,13 @@ voteit.handle_agenda_back = function(event) {
 //window.addEventListener('popstate', voteit.handle_agenda_back);
 
 voteit.agenda_states = function(response) {
+    currentValues = voteit.$agendaToggler.data('values');
     $.each(response.agenda_states, function(k, v) {
         $('[data-ai-state-count="' + k + '"]').text(v);
+        if (currentValues && currentValues[k] !== v) {
+            voteit.load_agenda_data(k);
+        }
     });
-    currentValues = voteit.$agendaToggler.data('values');
-    if (currentValues) {
-        $.each(response.agenda_states, function(k, v) {
-            if (currentValues[k] !== v) {
-                console.log(k, 'changed');
-                voteit.load_agenda_data(k);
-            }
-        });
-    }
     voteit.$agendaToggler.data('values', response.agenda_states);
 };
 
