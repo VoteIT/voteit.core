@@ -270,9 +270,12 @@ def lock_proposals(poll, request):
     """ Set proposals to voting. """
     count = 0
     for proposal in poll.get_proposal_objects():
-        if 'voting' in [x['name'] for x in proposal.get_available_workflow_states(request)]:
+        try:
             proposal.set_workflow_state(request, 'voting')
             count += 1
+        except WorkflowError:
+            # Skip those
+            pass
     if count:
         fm = IFlashMessages(request, None)
         if fm:
