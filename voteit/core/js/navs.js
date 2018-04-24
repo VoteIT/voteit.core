@@ -365,6 +365,8 @@ voteit.handle_agenda_back = function(event) {
 
 //window.addEventListener('popstate', voteit.handle_agenda_back);
 
+// FIXME: This was a quick fix to get the agenda to reload when the number of items differs
+// Should be checked via dockids instead, so we can actually detect changes properly.
 voteit.agenda_states = function(response) {
     currentValues = voteit.$agendaToggler.data('values');
     $.each(response.agenda_states, function(k, v) {
@@ -388,13 +390,6 @@ voteit.unvoted_counter = function(response) {
     voteit.reloadMenuOnChanged('#poll-menu', value);
 }
 
-/*
-function agenda_states(response) {
-    $.each(response.agenda_states, function(k, v) {
-        $('[data-ai-state-count="' + k + '"]').text(v);
-    });
-}
-*/
 
 voteit.active_ai_name = '';
 
