@@ -21,10 +21,14 @@ function getCookie(cname) {
     return "";
 }
 
+var voteit = voteit || {};
 
-if(typeof(voteit) == "undefined"){
-    voteit = {};
-}
+
+voteit.init = function() {
+    voteit.$agendaToggler = $('#agenda-toggler');
+    voteit.$agendaToggler.click(voteit.toggle_agenda);
+
+};
 
 
 voteit.toggle_nav = function(selector) {
@@ -33,7 +37,7 @@ voteit.toggle_nav = function(selector) {
     } else {
         voteit.show_nav(selector);
     }
-}
+};
 
 
 voteit.show_nav = function(selector) {
@@ -43,7 +47,7 @@ voteit.show_nav = function(selector) {
     $('#fixed-nav-backdrop').data('active-menu', selector);
     $('#fixed-nav-backdrop').fadeIn();
     $('body').css({'overflow': 'hidden'});
-}
+};
 
 
 voteit.hide_nav = function(selector, hold_bg) {
@@ -55,7 +59,21 @@ voteit.hide_nav = function(selector, hold_bg) {
     }
     $('#fixed-nav-backdrop').data('active-menu', null);
     $('body').css({'overflow': ''});
-}
+};
+
+
+voteit.reloadMenuOnChanged = function(target, value) {
+    var $menu = $('[data-target="' + target + '"]');
+    if ($menu.data('value') != value) {
+        $menu.data('value', value);
+
+        if ($menu.hasClass('open')) {
+            $.get($menu.attr('href'), function (response) {
+                $(target).html(response);
+            });
+        }
+    }
+};
 
 
 /*
@@ -89,7 +107,7 @@ voteit.load_inline_menu = function(selector, url) {
         });
         return request;
     }
-}
+};
 
 
 voteit.show_agenda = function() {
@@ -122,7 +140,7 @@ voteit.show_agenda = function() {
         voteit.show_nav('#fixed-nav');
     }
     $('#agenda-toggler').addClass('open');
-}
+};
 
 
 voteit.hide_agenda = function() {
@@ -135,10 +153,11 @@ voteit.hide_agenda = function() {
         voteit.hide_nav('#fixed-nav');
     }
     $('#agenda-toggler').removeClass('open')
-}
+};
 
 
-voteit.toggle_agenda = function() {
+voteit.toggle_agenda = function(e) {
+    e.preventDefault();
     if ($('#fixed-nav').hasClass('activated')) {
         // If another menu is open, assume we want to switch to this area instead
         if ($(':not(#agenda-toggler).menu-toggler.open').length > 0) {
@@ -150,7 +169,7 @@ voteit.toggle_agenda = function() {
     } else {
         voteit.show_agenda();
     }
-}
+};
 
 
 voteit.init_agenda = function(show_in_fullscreen) {
@@ -163,7 +182,7 @@ voteit.init_agenda = function(show_in_fullscreen) {
         $('#fixed-nav').data('slide-menu', 'fixed-nav').addClass('slide-in-nav');
         voteit.hide_agenda();
     }
-}
+};
 
 
 voteit.insert_ai_response = function(response, elem) {
@@ -172,7 +191,7 @@ voteit.insert_ai_response = function(response, elem) {
     target.find("[data-load-target]").each(function() {
         voteit.load_target(this);
     });
-}
+};
 
 
 voteit.make_ai_request = function(elem) {
@@ -191,7 +210,7 @@ voteit.make_ai_request = function(elem) {
         arche.load_flash_messages();
     });
     return request;
-}
+};
 
 
 voteit.load_agenda_item = function(event) {
@@ -207,7 +226,7 @@ voteit.load_agenda_item = function(event) {
         title, url);
         if ($(window).width() < 768) voteit.hide_nav('#fixed-nav');
     });
-}
+};
 
 
 voteit.load_agenda_data = function(state) {
@@ -260,7 +279,8 @@ voteit.load_agenda_data = function(state) {
     var control_elem = $('[data-agenda-control="' + state + '"]');
     arche.actionmarker_feedback(control_elem, true);
 
-    var request = arche.do_request(voteit.agenda_data_url, {method: 'POST', data: {state: state}});
+    var agenda_data_url = voteit.$agendaToggler.attr('href');
+    var request = arche.do_request(agenda_data_url, {method: 'POST', data: {state: state}});
     request.done(function(response) {
         if (!response['hide_type_count']) {
             $.extend(directive['a']['ai<-ais'], types_directive);
@@ -271,7 +291,7 @@ voteit.load_agenda_data = function(state) {
         target.render(response, directive);
         control_elem.removeClass('collapsed');
         if (response['hide_type_count']) $('[data-agenda-count-cols]').hide();
-        //Agendas might have set it without effect
+        // Agendas might have set it without effect
         if (voteit.active_ai_name) voteit.set_active_ai(voteit.active_ai_name);
     });
     request.fail(arche.flash_error);
@@ -279,7 +299,7 @@ voteit.load_agenda_data = function(state) {
         arche.actionmarker_feedback(control_elem, false);
     });
     return request;
-}
+};
 
 
 voteit.handle_ai_state_toggles = function(event) {
@@ -292,7 +312,7 @@ voteit.handle_ai_state_toggles = function(event) {
         //Collapse and remove
         voteit.agenda_collapse_ai_state(state);
     }
-}
+};
 
 
 voteit.agenda_collapse_ai_state = function(state) {
@@ -305,7 +325,7 @@ voteit.agenda_collapse_ai_state = function(state) {
     }
     elem.addClass('collapsed');
     target.empty();
-}
+};
 
 /*
 voteit.initial_ai_loaded function() {
@@ -345,21 +365,29 @@ voteit.handle_agenda_back = function(event) {
 
 //window.addEventListener('popstate', voteit.handle_agenda_back);
 
-
-function unvoted_counter(response) {
-    if (response['unvoted_polls'] == 0) {
-        $('[data-important-polls]').empty();
-    } else {
-        $('[data-important-polls]').html(response['unvoted_polls']);
-    }
-    voteit.adjust_greedy_element();
+// FIXME: This was a quick fix to get the agenda to reload when the number of items differs
+// Should be checked via dockids instead, so we can actually detect changes properly.
+voteit.agenda_states = function(response) {
+    currentValues = voteit.$agendaToggler.data('values');
+    $.each(response.agenda_states, function(k, v) {
+        $('[data-ai-state-count="' + k + '"]').text(v);
+        if (currentValues && currentValues[k] !== v && $('[data-agenda-state="' + k + '"] > *').length > 0) {
+            voteit.load_agenda_data(k);
+        }
+    });
+    voteit.$agendaToggler.data('values', response.agenda_states);
 };
 
 
-function agenda_states(response) {
-  $.each(response.agenda_states, function(k, v) {
-    $('[data-ai-state-count="' + k + '"]').text(v);
-  });
+voteit.unvoted_counter = function(response) {
+    var value = response['unvoted_polls'];
+    if (value == 0) {
+        $('[data-important-polls]').empty();
+    } else {
+        $('[data-important-polls]').html(value);
+    }
+    voteit.adjust_greedy_element();
+    voteit.reloadMenuOnChanged('#poll-menu', value);
 }
 
 
@@ -435,14 +463,45 @@ voteit.greedyMutationListener = function () {
     });
 }
 
+
 voteit.meetingExtrasToggler = function(e) {
     voteit.hide_nav();
 }
 
 
-$(document).ready(function () {
-    voteit.watcher.add_response_callback(unvoted_counter);
-    voteit.watcher.add_response_callback(agenda_states);
+voteit.toggleInlineMenu = function(e) {
+    e.preventDefault();
+    var $menu = $(e.currentTarget),
+        $target = $($menu.data('target')),
+        is_open = $menu.hasClass('open');
+
+    if ($menu.hasClass('disabled')) { return; }
+
+    $('[data-inline-menu]').removeClass('open');
+
+    if (is_open) {
+        voteit.hide_nav($target);
+        $target.empty();
+    } else {
+        arche.actionmarker_feedback($menu, true);
+        $.get($menu.attr('href'))
+        .done(function(response) {
+            $target.html(response);
+            voteit.show_nav($target);
+            $menu.addClass('open');
+        })
+        .fail(arche.flash_error)
+        .always(function() {
+            arche.actionmarker_feedback($menu, false);
+        });
+    }
+}
+
+
+$(function () {
+    voteit.init();
+    voteit.watcher.add_response_callback(voteit.unvoted_counter);
+    voteit.watcher.add_response_callback(voteit.agenda_states);
     $('body').on('click', '[data-load-agenda-item]', voteit.load_agenda_item);
     $('body').on('click', '[data-agenda-control]', voteit.handle_ai_state_toggles);
     voteit.adjust_greedy_element();
@@ -451,4 +510,5 @@ $(document).ready(function () {
     });
     voteit.greedyMutationListener();
     $('#meeting-extras').click(voteit.meetingExtrasToggler);
+    $('[data-inline-menu]').click(voteit.toggleInlineMenu);
 });

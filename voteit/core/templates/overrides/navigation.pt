@@ -28,11 +28,10 @@
         </tal:unauthenticated>
 
         <li>
-          <a data-initiator="#help-menu"
+          <a data-inline-menu
+             data-target="#help-menu"
              data-actionmarker="disabled"
-             href="#"
-             tal:define="help_menu_url request.resource_url(umcontxt, '_help_menu');"
-             onclick="javascript:voteit.load_inline_menu('#help-menu', '${help_menu_url}')">
+             href="${request.resource_url(umcontxt, '_help_menu')}">
             <span data-actionmarker="rotate-me glyphicon-refresh"
                   class="glyphicon glyphicon-question-sign"></span>
             <span class="hidden-xs hidden-sm" i18n:translate="">Help</span>
@@ -41,11 +40,10 @@
         </li>
 
         <li tal:condition="request.authenticated_userid">
-          <a tal:define="usr_menu_url request.resource_url(umcontxt, '_user_menu')"
-             data-initiator="#user-menu"
+          <a data-inline-menu
+             data-target="#user-menu"
              data-actionmarker="disabled"
-             href="#"
-             onclick="javascript:voteit.load_inline_menu('#user-menu', '${usr_menu_url}')">
+             href="${request.resource_url(umcontxt, '_user_menu')}">
             <span data-actionmarker="rotate-me glyphicon-refresh" class="glyphicon glyphicon-user"></span>
             <span class="hidden-xs hidden-sm">${request.authenticated_userid}</span>
             <span class="caret"></span>
@@ -53,11 +51,10 @@
         </li>
 
         <li tal:condition="request.is_moderator">
-          <a data-initiator="#site-menu"
+          <a data-inline-menu
+             data-target="#site-menu"
              data-actionmarker="disabled"
-             tal:define="site_url request.resource_url(request.root, '_site_menu');"
-              href="#"
-              onclick="javascript:voteit.load_inline_menu('#site-menu', '${site_url}')">
+             href="${request.resource_url(request.root, '_site_menu')}">
             <span data-actionmarker="rotate-me glyphicon-refresh" class="glyphicon glyphicon-cog"></span>
             <span class="hidden-xs hidden-sm" i18n:translate="">Site</span>
             <span class="caret"></span>
@@ -73,20 +70,19 @@
         <ul class="nav voteit-nav">
 
           <li>
-            <a href="#"
+            <a href="${request.resource_url(request.meeting, 'agenda_data.json')}"
                id="agenda-toggler"
-               class="menu-toggler"
-               onclick="javascript:voteit.toggle_agenda()">
+               data-target="#fixed-nav"
+               class="menu-toggler">
               <span class="glyphicon glyphicon-list"></span>
               <span i18n:translate="">Agenda</span>
             </a>
           </li>
           <li>
-            <a data-initiator="#poll-menu"
+            <a data-inline-menu
+               data-target="#poll-menu"
                data-actionmarker="disabled"
-               href="#"
-               tal:define="poll_menu_url request.resource_url(request.meeting, '_poll_menu');"
-               onclick="javascript:voteit.load_inline_menu('#poll-menu', '${poll_menu_url}')"
+               href="${request.resource_url(request.meeting, '_poll_menu')}"
                class="menu-toggler">
               <span data-actionmarker="rotate-me glyphicon-refresh" class="glyphicon glyphicon-star"></span>
               <span i18n:translate="" class="hidden-xs">Polls</span>
@@ -95,11 +91,10 @@
           </li>
 
           <li tal:condition="request.is_moderator">
-            <a data-initiator="#control-panel"
+            <a data-inline-menu
+               data-target="#control-panel"
                data-actionmarker="disabled"
-               href="#"
-               tal:define="url request.resource_url(request.meeting, '_control_panel');"
-               onclick="javascript:voteit.load_inline_menu('#control-panel', '${url}')"
+               href="${request.resource_url(request.meeting, '_control_panel')}"
                class="menu-toggler">
               <span data-actionmarker="rotate-me glyphicon-refresh" class="glyphicon glyphicon-cog"></span>
               <span class="hidden-xs" i18n:translate="">Control panel</span>

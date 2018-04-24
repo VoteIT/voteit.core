@@ -116,16 +116,20 @@ def agenda_data_json(context, request):
     if not request.is_participant:
         return {}
     query = Eq('path', resource_path(context)) & Eq('type_name', 'AgendaItem')
-    #Sanitize to avoid exceptions?
-    state = request.POST.get('state', '')
+    # Sanitize to avoid exceptions?
+    state = request.POST.get('state')
     if state not in _OPEN_STATES and not request.is_moderator:
         raise HTTPForbidden('State query not allowed')
     tag = request.session.get('voteit.ai_selected_tag', '')
     if tag and tag in request.meeting.tags:
         query &= Any('tags', [tag.lower()])
-    docids = request.root.catalog.query(query & Eq('workflow_state', state))[1]
     results = []
     hide_type_count = request.session.get('voteit.agenda.hide_type_count', False)
+
+    if state:
+        query &= Eq('workflow_state', state)
+
+    count, docids = request.root.catalog.query(query)
     for ai in request.resolve_docids(docids, perm=None):
         ai_res = {
             'title': ai.title,
@@ -133,7 +137,10 @@ def agenda_data_json(context, request):
         }
         if not hide_type_count:
             ai_res['contents'] = count_types(request, ai)
+        if state is None:
+            ai_res['state'] = ai.get_workflow_state()
         results.append(ai_res)
+
     return {'ais': results, 'hide_type_count': hide_type_count}
 
 
