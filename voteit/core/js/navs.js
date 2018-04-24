@@ -371,7 +371,7 @@ voteit.agenda_states = function(response) {
     currentValues = voteit.$agendaToggler.data('values');
     $.each(response.agenda_states, function(k, v) {
         $('[data-ai-state-count="' + k + '"]').text(v);
-        if (currentValues && currentValues[k] !== v) {
+        if (currentValues && currentValues[k] !== v && $('[data-agenda-state="' + k + '"] > *').length > 0) {
             voteit.load_agenda_data(k);
         }
     });
