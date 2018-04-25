@@ -24,8 +24,12 @@ class WatcherView(BaseView):
         #FIXME: Caching
         #print 'cachekey:', self.request.GET.get('cachekey', '')
         if self.request.authenticated_userid:
-            return self.render_view_group('watcher_json', as_type = 'dict', empty_val = '', meeting_path = resource_path(self.context))
+            return self.render_view_group('watcher_json', as_type = 'dict', empty_val = '',
+                                          meeting_path = resource_path(self.context))
         return {}
+
+
+_unvoted_query = Eq('type_name', 'Poll') & Eq('workflow_state', 'ongoing')
 
 
 @view_action('watcher_json', 'unvoted_polls')
@@ -34,10 +38,10 @@ def unvoted_polls(context, request, va, **kw):
     if security.ROLE_VOTER not in context.local_roles.get(request.authenticated_userid, ()):
         return
     view = kw['view']
-    query = "type_name == 'Poll' and workflow_state == 'ongoing' and path == '%s'" % kw['meeting_path']
+    query = _unvoted_query & Eq('path', kw['meeting_path'])
     counter = 0
     for obj in view.catalog_query(query, resolve = True):
-        if request.has_permission(security.ADD_VOTE, obj) and request.authenticated_userid not in obj:
+        if request.authenticated_userid not in obj and request.has_permission(security.ADD_VOTE, obj):
             counter+=1
     return counter
 
@@ -53,7 +57,7 @@ def agenda_states(context, request, va, **kw):
     else:
         tag = None
     results = {}
-    query = Eq('path', resource_path(request.meeting)) & Eq('type_name', 'AgendaItem')
+    query = Eq('path', kw['meeting_path']) & Eq('type_name', 'AgendaItem')
     for state in states:
         squery = query & Eq('workflow_state', state)
         res = request.root.catalog.query(squery)[0]
