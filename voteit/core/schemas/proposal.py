@@ -51,7 +51,7 @@ class ProposalSchema(colander.Schema):
 
 
 @colander.deferred
-def hide_proposal_states_widget(node, kw):
+def proposal_states_widget(node, kw):
     wf = get_workflow(IProposal, 'Proposal')
     state_values = []
     ts = _
@@ -80,7 +80,7 @@ class ProposalSettingsSchema(colander.Schema):
                               "the link below the other proposals. They're not "
                               "by any means invisible to participants."),
         tab='advanced',
-        widget=hide_proposal_states_widget,
+        widget=proposal_states_widget,
         default=('retracted', 'denied', 'unhandled'),
     )
     system_userids = colander.SchemaNode(

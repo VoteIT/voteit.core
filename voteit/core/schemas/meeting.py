@@ -216,12 +216,12 @@ class _ContainsOnlyAndNotEmpty(colander.ContainsOnly):
         return super(_ContainsOnlyAndNotEmpty, self).__call__(node, value)
 
 
-_DEFAULT_ROLES = set([
+_DEFAULT_ROLES = {
     security.ROLE_VIEWER,
     security.ROLE_DISCUSS,
     security.ROLE_PROPOSE,
     security.ROLE_VOTER,
-])
+}
 
 
 class AddExistingUserSchema(colander.Schema):

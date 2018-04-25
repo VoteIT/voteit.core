@@ -14,6 +14,7 @@ from voteit.core.models.interfaces import IDiscussionPost
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import IProposal
 from voteit.core.fanstaticlib import like_js
+from voteit.core.schemas.proposal import proposal_states_widget
 from voteit.core.views.base_edit import ArcheFormCompat
 from voteit.core.views.control_panel import control_panel_category
 from voteit.core.views.control_panel import control_panel_link
@@ -31,12 +32,22 @@ from voteit.core import security
              priority = 50)
 def like_action(context, request, va, **kw):
     like_context_types = request.meeting.like_context_types
-    if like_context_types and context.type_name in request.meeting.like_context_types:
-        like = request.registry.getAdapter(context, IUserTags, name = 'like')
-        response = {'context': context,
-                    'like': like,
-                    'user_likes': request.authenticated_userid in like}
-        return render('voteit.core.plugins:templates/like_btn.pt', response, request = request)
+    like_workflow_states = request.meeting.like_workflow_states
+    like_user_roles = request.meeting.like_user_roles
+    if not like_context_types or context.type_name not in like_context_types:
+        return
+    if IProposal.providedBy(context):
+        if like_workflow_states and context.get_workflow_state() not in like_workflow_states:
+            return
+        user_meeting_roles = request.meeting.local_roles.get(request.authenticated_userid)
+        if like_user_roles and not like_user_roles.intersection(user_meeting_roles):
+            return
+
+    like = request.registry.getAdapter(context, IUserTags, name = 'like')
+    response = {'context': context,
+                'like': like,
+                'user_likes': request.authenticated_userid in like}
+    return render('voteit.core.plugins:templates/like_btn.pt', response, request = request)
 
 
 def get_like_userids_indexer(context, default):
@@ -77,7 +88,22 @@ class LikeSettingsSchema(colander.Schema):
         widget=deform.widget.CheckboxChoiceWidget(values=(
             ('Proposal', _("Proposal")),
             ('DiscussionPost', _("DiscussionPost")),
-        ))
+        )),
+        title=_('Like content types'),
+    )
+    like_workflow_states = colander.SchemaNode(
+        colander.Set(),
+        title=_('Proposal workflow states'),
+        description=_('If selected, proposals in these workflow states can be liked.'),
+        widget=proposal_states_widget,
+        missing=(),
+    )
+    like_user_roles = colander.SchemaNode(
+        colander.Set(),
+        title=_('User roles'),
+        description=_('If selected, users will need one of these to be able to like a proposal.'),
+        widget=deform.widget.CheckboxChoiceWidget(values=security.MEETING_ROLES),
+        missing=(),
     )
 
 
@@ -88,12 +114,22 @@ def _check_active_for_meeting(context, request, va):
 def includeme(config):
     from voteit.core.models.meeting import Meeting
 
-    #Set property on meeting
+    #Set properties on meeting
     def get_like_context_types(self):
         return self.get_field_value('like_context_types')
     def set_like_context_types(self, value):
         return self.set_field_value('like_context_types', frozenset(value))
+    def get_like_workflow_states(self):
+        return self.get_field_value('like_workflow_states')
+    def set_like_workflow_states(self, value):
+        return self.set_field_value('like_workflow_states', frozenset(value))
+    def get_like_user_roles(self):
+        return self.get_field_value('like_user_roles')
+    def set_like_user_roles(self, value):
+        return self.set_field_value('like_user_roles', frozenset(value))
     Meeting.like_context_types = property(get_like_context_types, set_like_context_types)
+    Meeting.like_workflow_states = property(get_like_workflow_states, set_like_workflow_states)
+    Meeting.like_user_roles = property(get_like_user_roles, set_like_user_roles)
 
     config.add_schema('Meeting', LikeSettingsSchema, 'like_settings')
     config.add_view_action(control_panel_category,
