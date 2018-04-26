@@ -269,10 +269,16 @@ voteit.load_agenda_data = function(state) {
                 return arg.item.contents.Proposal.unread;
             }
         },
+        '[data-ai="prop_unread_text"]@aria-hidden': function(arg) {
+            return arg.item.contents.Proposal.unread == 0;
+        },
         '[data-ai="disc_unread"]': function(arg) {
             if (arg.item.contents.DiscussionPost.unread > 0) {
                 return arg.item.contents.DiscussionPost.unread;
             }
+        },
+        '[data-ai="disc_unread_text"]@aria-hidden': function(arg) {
+            return arg.item.contents.DiscussionPost.unread == 0;
         }
     }
 

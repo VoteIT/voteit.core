@@ -113,17 +113,18 @@
         <span data-actionmarker="glyphicon glyphicon-refresh rotate-me"></span>
         <span data-agenda-count-cols data-actionmarker="hidden">
           <span class="glyphicon glyphicon-exclamation-sign"></span>
-          <span data-ai="prop_count"></span>
-          <span class="badge" data-ai="prop_unread"></span>
+          <span data-ai="prop_unread_text" class="sr-only" i18n:translate="">Has unread proposals</span>
+          <span data-ai="prop_count" aria-hidden></span>
+          <span data-ai="prop_unread" class="badge" aria-hidden></span>
         </span>
-        &nbsp;
       </div>
       <div data-agenda-count-cols data-actionmarker="hidden" class="col-xs-4 col-sm-12 col-md-4">
         <span class="glyphicon glyphicon-comment"></span>
-        <span data-ai="disc_count"></span>
-        <span class="badge" data-ai="disc_unread"></span>
+        <span data-ai="disc_unread_text" class="sr-only" i18n:translate="">Has unread discussions</span>
+        <span data-ai="disc_count" aria-hidden></span>
+        <span data-ai="disc_unread" class="badge" aria-hidden></span>
       </div>
-      <div data-agenda-count-cols data-actionmarker="hidden" class="col-xs-4 col-sm-12 col-md-4">
+      <div data-agenda-count-cols aria-hidden data-actionmarker="hidden" class="col-xs-4 col-sm-12 col-md-4">
         <span class="glyphicon glyphicon-star"></span>
         <span data-ai="poll_count"></span>
       </div>
