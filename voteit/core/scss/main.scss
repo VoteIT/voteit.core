@@ -54,13 +54,22 @@ body.is_moderator {
   margin-bottom: $line-height-computed;
 }
 
-.list-group-item.active {
-  >a {
-    color: #fff;
-    &:hover {
-      color: #fff;
+.list-group {
+    h2 {
+        font-size: 18px;
+        margin-top: 10px;
     }
-  }
+    h3 {
+        font-size: 18px;
+    }
+    .list-group-item.active {
+        >a {
+            color: #fff;
+            &:hover {
+                color: #fff;
+            }
+        }
+    }
 }
 
 .navbar-brand img.voteitlogo {

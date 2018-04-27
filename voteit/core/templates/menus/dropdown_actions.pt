@@ -5,8 +5,9 @@
       i18n:domain="voteit.core">
   <div class="btn-group">
     <a class="btn btn-default btn-sm dropdown-toggle"
-      aria-expanded="false"
-      data-toggle="dropdown">
+       role="button"
+       aria-expanded="false"
+       data-toggle="dropdown">
         <span class="glyphicon glyphicon-cog"></span>
     </a>
     <ul class="dropdown-menu" role="menu">

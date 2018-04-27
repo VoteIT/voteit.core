@@ -303,11 +303,12 @@ body.left-fixed-active #agenda-toggler {
     &:hover {
         text-decoration: none;
     }
-}
-
-.voteit-nav-header {
-    font-weight: bold;
-    font-size: 17px;
+    h1 {
+        line-height: $voteit-nav-line-height;
+        font-weight: bold;
+        font-size: 17px;
+        margin: 0;
+    }
 }
 
 // Built from: Inverse navbar

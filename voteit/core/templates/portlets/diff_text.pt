@@ -6,7 +6,7 @@
 <div id="ai-diff-proposals" class="col-sm-12">
   <div class="list-group">
     <div class="list-group-item">
-      <h4>
+      <h2>
         <span class="glyphicon glyphicon-transfer"></span>
         <span tal:condition="not diff_text.title">${title}</span>
         <span tal:condition="diff_text.title">${diff_text.title}</span>
@@ -16,7 +16,7 @@
            title="Edit" i18n:attributes="title;">
           <span class="glyphicon glyphicon-pencil"></span>
         </a>
-      </h4>
+      </h2>
     </div>
 
     <tal:iter repeat="row paragraphs">

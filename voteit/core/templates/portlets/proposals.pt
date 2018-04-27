@@ -6,7 +6,7 @@
 <div id="ai-proposals" class="col-sm-6">
   <div class="list-group">
     <div class="list-group-item">
-      <h4>
+      <h2>
         <span class="glyphicon glyphicon-exclamation-sign"></span>
 
         <span i18n:translate="">Proposals</span>
@@ -21,7 +21,7 @@
            i18n:attributes="title;">
           <span class="glyphicon glyphicon-refresh" data-actionmarker="rotate-me"></span>
         </a>
-      </h4>
+      </h2>
 
       <div tal:condition="request.is_moderator"
            tal:define="pick_url request.resource_url(context, '_pick_poll_data.json')">

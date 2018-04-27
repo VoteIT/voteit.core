@@ -28,36 +28,65 @@ voteit.init = function() {
     voteit.$agendaToggler = $('#agenda-toggler');
     voteit.$agendaToggler.click(voteit.toggle_agenda);
 
+    document.addEventListener("focus", voteit.dialogFocusListener, true);
+    document.addEventListener("keydown", voteit.dialogEscapeListener, true);
 };
 
+voteit.getActiveDialog = function() {
+    return $('[data-slide-menu].activated');
+};
+
+voteit.dialogFocusListener = function(event) {
+    var dialog = voteit.getActiveDialog();
+    if (dialog.length && !$.contains(dialog[0], event.target)) {
+        event.stopPropagation();
+        var all = $('*');
+        if (all.index($(event.target)) < all.index(dialog)) {
+            dialog.find('a').last().focus();
+        } else {
+            dialog.find('a').first().focus();
+        }
+    }
+};
+
+voteit.dialogEscapeListener = function(event) {
+    var dialog = voteit.getActiveDialog();
+    if (dialog.length && event.keyCode == 27) {
+        voteit.hide_nav();
+    }
+};
 
 voteit.toggle_nav = function(selector) {
     if ($(selector).hasClass('activated')) {
-        voteit.hide_nav(selector);
+        voteit.hide_nav($(selector));
     } else {
-        voteit.show_nav(selector);
+        voteit.show_nav($(selector));
     }
 };
 
 
-voteit.show_nav = function(selector) {
+voteit.show_nav = function($target) {
     voteit.hide_nav(undefined, true);
-//    $('[data-slide-menu].activated').removeClass('activated').hide();
-    $(selector).addClass('activated').fadeIn();
-    $('#fixed-nav-backdrop').data('active-menu', selector);
+    voteit.$activeMenu = $('[data-target="#' + $target.attr('id') + '"]');
+    $target.addClass('activated').fadeIn().attr('aria-hidden', false).focus();
     $('#fixed-nav-backdrop').fadeIn();
     $('body').css({'overflow': 'hidden'});
 };
 
 
-voteit.hide_nav = function(selector, hold_bg) {
-    var selector = (typeof selector == 'string') ? selector : $('#fixed-nav-backdrop').data('active-menu');
-    $(selector).removeClass('activated').fadeOut();
+voteit.hide_nav = function($target, hold_bg) {
+    if (!$target && voteit.$activeMenu) {
+        $target = $(voteit.$activeMenu.data('target'));
+    }
+    if ($target) {
+        $target.removeClass('activated').fadeOut().attr('aria-hidden', true);
+    }
     $('.menu-toggler').removeClass('open');
     if (typeof(hold_bg) === 'undefined') {
         $('#fixed-nav-backdrop').fadeOut();
+        voteit.$activeMenu.focus();
+        delete voteit.$activeMenu;
     }
-    $('#fixed-nav-backdrop').data('active-menu', null);
     $('body').css({'overflow': ''});
 };
 
@@ -83,27 +112,28 @@ selector
 url
     From where to load
 
-Tag data-initiator="<selector>" should indicate the tag that initiated the call,
+Tag data-target="<selector>" should indicate the tag that initiated the call,
 mostly for visual feedback during the load process.
 */
 voteit.load_inline_menu = function(selector, url) {
-    var initiator = $('[data-initiator="' + selector + '"]');
-    if (initiator.hasClass('disabled')) return;
+    var $menu = $('[data-target="' + selector + '"]');
+    var $target = $(selector);
+    if ($menu.hasClass('disabled')) { return; }
     $('.menu-toggler').removeClass('open');
-    if ($(selector).hasClass('activated')) {
-        $(selector).empty();
-        voteit.hide_nav(selector);
+    if ($target.hasClass('activated')) {
+        $target.empty();
+        voteit.hide_nav($target);
     } else {
-        arche.actionmarker_feedback(initiator, true);
+        arche.actionmarker_feedback($menu, true);
         var request = arche.do_request(url);
         request.done(function(response) {
-            voteit.show_nav(selector);
-            $(selector).html(response);
-            initiator.addClass('open');
+            voteit.show_nav($target);
+            $target.html(response);
+            $menu.addClass('open');
         });
         request.fail(arche.flash_error);
         request.always(function() {
-            arche.actionmarker_feedback(initiator, false);
+            arche.actionmarker_feedback($menu, false);
         });
         return request;
     }
@@ -134,10 +164,10 @@ voteit.show_agenda = function() {
         //Desktop version
         $('#fixed-nav').addClass('activated').show();
         setCookie("voteit.hide_agenda");
-        voteit.hide_nav();
+        // voteit.hide_nav();
     } else {
         //Small version
-        voteit.show_nav('#fixed-nav');
+        voteit.show_nav($('#fixed-nav'));
     }
     $('#agenda-toggler').addClass('open');
 };
@@ -415,7 +445,7 @@ voteit.set_active_ai = function(name) {
         elem.addClass('active');
     }
     voteit.active_ai_name = name;
-}
+};
 
 
 voteit.select_ai_tag = function(tag, load_ongoing) {
@@ -436,7 +466,7 @@ voteit.select_ai_tag = function(tag, load_ongoing) {
             voteit.load_agenda_data('ongoing');
         }
     });
-}
+};
 
 
 /* Adjust greedy elements so they won't take up too much space
@@ -458,7 +488,7 @@ voteit.adjust_greedy_element = function(extra_margin) {
         });
         elem.find('.greedy').css({'width': total_width-locked_width-extra_margin});
     });
-}
+};
 
 voteit.greedyMutationListener = function () {
     var innerWidth = document.body.clientWidth;
@@ -475,12 +505,12 @@ voteit.greedyMutationListener = function () {
         subtree: true,
         attributes: true,
     });
-}
+};
 
 
 voteit.meetingExtrasToggler = function(e) {
     voteit.hide_nav();
-}
+};
 
 
 voteit.toggleInlineMenu = function(e) {
@@ -509,7 +539,7 @@ voteit.toggleInlineMenu = function(e) {
             arche.actionmarker_feedback($menu, false);
         });
     }
-}
+};
 
 
 $(function () {

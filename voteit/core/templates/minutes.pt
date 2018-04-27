@@ -12,7 +12,7 @@
 
     <div><span i18n:translate="">Meeting closed</span>: ${request.dt_handler.format_relative(context.end_time)|string:-}</div>
 
-    <h3 i18n:translate="">Participants</h3>
+    <h2 i18n:translate="">Participants</h2>
     <div><a href="${request.resource_url(context, 'participants')}" i18n:translate="">View participants list</a></div>
 
     <h2 i18n:translate="">Agenda items</h2>

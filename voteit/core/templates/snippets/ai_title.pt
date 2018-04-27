@@ -24,7 +24,7 @@
       <span class="glyphicon glyphicon-chevron-right"></span>
     </a>
     <div class="text-center voteit-nav-header">
-        <div class="text-overflow" title="${context.title}">${context.title}</div>
+        <h1 class="text-overflow" title="${context.title}">${context.title}</h1>
     </div>
 </div>
 </tal:main>

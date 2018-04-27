@@ -7,7 +7,7 @@
 <body>
 <tal:main metal:fill-slot="content">
 
-  <h1 i18n:translate=""><tal:ts i18n:name="num" content="participants_count" /> participants</h1>
+  <h2 i18n:translate=""><tal:ts i18n:name="num" content="participants_count" /> participants</h2>
 
   ${structure: view.render_template('voteit.core:templates/snippets/participants_tabs.pt')}
   

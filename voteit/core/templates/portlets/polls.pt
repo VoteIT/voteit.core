@@ -6,7 +6,7 @@
 <div id="ai-polls" class="col-sm-12">
   <div class="list-group">
     <div class="list-group-item">
-      <h4>
+      <h2>
         <span class="glyphicon glyphicon-star"></span>
         <span i18n:translate="">Polls</span>
         <a href="javascript:"
@@ -16,7 +16,7 @@
            i18n:attributes="title;">
           <span class="glyphicon glyphicon-refresh" data-actionmarker="rotate-me"></span>
         </a>
-      </h4>
+      </h2>
     </div>
     <div data-polls-area data-load-target="${load_url}">
       <div class="list-group-item">

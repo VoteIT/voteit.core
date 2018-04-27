@@ -16,11 +16,12 @@
         </ul>
       </div>
       <div class="pull-right">
-        <ul class="nav voteit-nav">
+        <ul class="nav voteit-nav" role="navigation">
             <li>
                 <a class="dropdown-toggle"
-                aria-expanded="false"
-                data-toggle="dropdown">
+                   role="button"
+                   aria-expanded="false"
+                   data-toggle="dropdown">
                 <span class="glyphicon glyphicon-option-vertical"></span>
               </a>
               <ul class="dropdown-menu dropdown-menu-right" role="menu">

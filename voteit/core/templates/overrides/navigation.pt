@@ -22,7 +22,8 @@
       </tal:def>
 
       <ul class="nav voteit-nav pull-right"
-          tal:define="umcontxt request.meeting and request.meeting or request.root">
+          tal:define="umcontxt request.meeting and request.meeting or request.root"
+          role="menu">
         <tal:unauthenticated condition="not request.authenticated_userid">
           ${structure: view.render_view_group('nav_right')}
         </tal:unauthenticated>
@@ -31,6 +32,7 @@
           <a data-inline-menu
              data-target="#help-menu"
              data-actionmarker="disabled"
+             role="button"
              href="${request.resource_url(umcontxt, '_help_menu')}">
             <span data-actionmarker="rotate-me glyphicon-refresh"
                   class="glyphicon glyphicon-question-sign"></span>
@@ -43,6 +45,7 @@
           <a data-inline-menu
              data-target="#user-menu"
              data-actionmarker="disabled"
+             role="button"
              href="${request.resource_url(umcontxt, '_user_menu')}">
             <span data-actionmarker="rotate-me glyphicon-refresh" class="glyphicon glyphicon-user"></span>
             <span class="hidden-xs hidden-sm">${request.authenticated_userid}</span>
@@ -54,6 +57,7 @@
           <a data-inline-menu
              data-target="#site-menu"
              data-actionmarker="disabled"
+             role="button"
              href="${request.resource_url(request.root, '_site_menu')}">
             <span data-actionmarker="rotate-me glyphicon-refresh" class="glyphicon glyphicon-cog"></span>
             <span class="hidden-xs hidden-sm" i18n:translate="">Site</span>
@@ -67,10 +71,11 @@
 
     <div id="meeting-menu">
 
-        <ul class="nav voteit-nav">
+        <ul class="nav voteit-nav" role="navigation">
 
           <li>
             <a href="${request.resource_url(request.meeting, 'agenda_data.json')}"
+               role="button"
                id="agenda-toggler"
                data-target="#fixed-nav"
                class="menu-toggler">
@@ -80,6 +85,7 @@
           </li>
           <li>
             <a data-inline-menu
+               role="button"
                data-target="#poll-menu"
                data-actionmarker="disabled"
                href="${request.resource_url(request.meeting, '_poll_menu')}"
@@ -92,6 +98,7 @@
 
           <li tal:condition="request.is_moderator">
             <a data-inline-menu
+               role="button"
                data-target="#control-panel"
                data-actionmarker="disabled"
                href="${request.resource_url(request.meeting, '_control_panel')}"
@@ -102,7 +109,7 @@
           </li>
         </ul>
 
-        <ul class="nav voteit-nav hidden-xs">
+        <ul class="nav voteit-nav hidden-xs" role="navigation">
           <li>
             <a href="${request.resource_url(request.meeting, 'participants')}"
                i18n:translate="">
@@ -121,8 +128,9 @@
 
         </ul>
 
-      <div class="visible-xs">
+      <div class="visible-xs" role="navigation">
         <a data-toggle="dropdown"
+           role="button"
            aria-expanded="false"
            id="meeting-extras"
            class="menu-toggler">
@@ -132,6 +140,7 @@
         <ul class="dropdown-menu dropdown-menu-right" role="menu">
           <li>
             <a href="${request.resource_url(request.meeting, 'participants')}"
+               role="menuitem"
                i18n:translate="">
               Participants
             </a>
@@ -139,6 +148,7 @@
 
           <li>
             <a href="${request.resource_url(request.meeting, 'minutes')}"
+               role="menuitem"
                i18n:translate="">
               Minutes
             </a>

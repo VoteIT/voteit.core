@@ -11,7 +11,7 @@
   </div>
 
   <tal:admin condition="request.has_permission('perm:Manage server', request.root)">
-    <ul class="nav">
+    <ul class="nav" role="navigation">
       <tal:actionbar_items replace="structure view.render_view_group('site_menu')" />
     </ul>
   </tal:admin>

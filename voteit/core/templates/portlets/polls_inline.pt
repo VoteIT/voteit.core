@@ -21,7 +21,7 @@
             that this poll uses i missing from this system.
             This poll won't work unless it's restored or changed.</div>
         </tal:broken_plugin>
-        <h4 class="media-heading">${obj.title}</h4>
+        <h3 class="media-heading">${obj.title}</h3>
         <div tal:content="structure obj.description">Description</div>
 
     <tal:working_plugin condition="poll_plugin">

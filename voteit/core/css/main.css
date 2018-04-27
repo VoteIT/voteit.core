@@ -536,10 +536,12 @@ $brand-danger:          #d9534f !default;
   .voteit-nav-text:hover,
   .voteit-nav-header:hover {
     text-decoration: none; }
-
-.voteit-nav-header {
-  font-weight: bold;
-  font-size: 17px; }
+  .voteit-nav-text h1,
+  .voteit-nav-header h1 {
+    line-height: 25px;
+    font-weight: bold;
+    font-size: 17px;
+    margin: 0; }
 
 /* This whole section is kept for compatibility reasons. It's deprecated */
 .navbar-voteit {
@@ -738,9 +740,14 @@ body.is_moderator {
   margin-top: 44px;
   margin-bottom: 22px; }
 
-.list-group-item.active > a {
+.list-group h2 {
+  font-size: 18px;
+  margin-top: 10px; }
+.list-group h3 {
+  font-size: 18px; }
+.list-group .list-group-item.active > a {
   color: #fff; }
-  .list-group-item.active > a:hover {
+  .list-group .list-group-item.active > a:hover {
     color: #fff; }
 
 .navbar-brand img.voteitlogo {
