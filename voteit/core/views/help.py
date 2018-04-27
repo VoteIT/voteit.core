@@ -23,19 +23,6 @@ class HelpView(BaseView):
         return {}
 
 
-# @view_action('help_action', 'manual', title = _("VoteIT Manual"))
-# def action_manual(context, request, va, **kw):
-#     title = request.localizer.translate(va.title)
-#     return """<li><a href="http://manual.voteit.se" target="_blank">%s</a></li>""" % title
-
-
-@view_action('help_action', 'contact', title = _("Contact moderator"))
-def action_contact(context, request, va, **kw):
-    if request.meeting:
-        return """<li><a href="%s">%s</a></li>""" % (request.resource_url(request.meeting, 'contact'),
-                                                     request.localizer.translate(va.title),)
-
-
 @view_action('help_action', 'lost_password', title = _("Lost your password?"))
 def action_lost_password(context, request, va, **kw):
     if not request.authenticated_userid:
