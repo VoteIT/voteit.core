@@ -82,10 +82,12 @@ voteit.hide_nav = function($target, hold_bg) {
         $target.removeClass('activated').fadeOut().attr('aria-hidden', true);
     }
     $('.menu-toggler').removeClass('open');
-    if (typeof(hold_bg) === 'undefined') {
+    if (typeof hold_bg === 'undefined') {
         $('#fixed-nav-backdrop').fadeOut();
-        voteit.$activeMenu.focus();
-        delete voteit.$activeMenu;
+        if (typeof voteit.$activeMenu !== 'undefined') {
+            voteit.$activeMenu.focus();
+            delete voteit.$activeMenu;
+        }
     }
     $('body').css({'overflow': ''});
 };
@@ -180,7 +182,7 @@ voteit.hide_agenda = function() {
         setCookie("voteit.hide_agenda", "1");
     } else {
         //Small version
-        voteit.hide_nav('#fixed-nav');
+        voteit.hide_nav($('#fixed-nav'));
     }
     $('#agenda-toggler').removeClass('open')
 };
