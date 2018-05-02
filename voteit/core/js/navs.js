@@ -49,18 +49,12 @@ voteit.dialogFocusListener = function(event) {
     }
 };
 
+
 voteit.dialogEscapeListener = function(event) {
     var dialog = voteit.getActiveDialog();
     if (dialog.length && event.keyCode == 27) {
+        voteit.$activeMenu.removeClass('open');
         voteit.hide_nav();
-    }
-};
-
-voteit.toggle_nav = function(selector) {
-    if ($(selector).hasClass('activated')) {
-        voteit.hide_nav($(selector));
-    } else {
-        voteit.show_nav($(selector));
     }
 };
 
@@ -81,7 +75,6 @@ voteit.hide_nav = function($target, hold_bg) {
     if ($target) {
         $target.removeClass('activated').fadeOut().attr('aria-hidden', true);
     }
-    $('.menu-toggler').removeClass('open');
     if (typeof hold_bg === 'undefined') {
         $('#fixed-nav-backdrop').fadeOut();
         if (typeof voteit.$activeMenu !== 'undefined') {
@@ -103,41 +96,6 @@ voteit.reloadMenuOnChanged = function(target, value) {
                 $(target).html(response);
             });
         }
-    }
-};
-
-
-/*
-selector
-    Where to load the menu
-
-url
-    From where to load
-
-Tag data-target="<selector>" should indicate the tag that initiated the call,
-mostly for visual feedback during the load process.
-*/
-voteit.load_inline_menu = function(selector, url) {
-    var $menu = $('[data-target="' + selector + '"]');
-    var $target = $(selector);
-    if ($menu.hasClass('disabled')) { return; }
-    $('.menu-toggler').removeClass('open');
-    if ($target.hasClass('activated')) {
-        $target.empty();
-        voteit.hide_nav($target);
-    } else {
-        arche.actionmarker_feedback($menu, true);
-        var request = arche.do_request(url);
-        request.done(function(response) {
-            voteit.show_nav($target);
-            $target.html(response);
-            $menu.addClass('open');
-        });
-        request.fail(arche.flash_error);
-        request.always(function() {
-            arche.actionmarker_feedback($menu, false);
-        });
-        return request;
     }
 };
 
@@ -168,7 +126,7 @@ voteit.show_agenda = function() {
         setCookie("voteit.hide_agenda");
         // voteit.hide_nav();
     } else {
-        //Small version
+        // Small version
         voteit.show_nav($('#fixed-nav'));
     }
     $('#agenda-toggler').addClass('open');
@@ -192,8 +150,10 @@ voteit.toggle_agenda = function(e) {
     e.preventDefault();
     if ($('#fixed-nav').hasClass('activated')) {
         // If another menu is open, assume we want to switch to this area instead
-        if ($(':not(#agenda-toggler).menu-toggler.open').length > 0) {
+        if (typeof voteit.$activeMenu !== 'undefined') {
+            voteit.$activeMenu.removeClass('open');
             voteit.hide_nav();
+            $('#fixed-nav').find('[href]')[0].focus();
         } else {
             // No other menus, hide the agenda
             voteit.hide_agenda();
@@ -522,7 +482,6 @@ voteit.toggleInlineMenu = function(e) {
         is_open = $menu.hasClass('open');
 
     if ($menu.hasClass('disabled')) { return; }
-
     $('[data-inline-menu]').removeClass('open');
 
     if (is_open) {
@@ -530,11 +489,11 @@ voteit.toggleInlineMenu = function(e) {
         $target.empty();
     } else {
         arche.actionmarker_feedback($menu, true);
-        $.get($menu.attr('href'))
+        $menu.addClass('open');
+        do_request($menu.attr('href'))
         .done(function(response) {
             $target.html(response);
             voteit.show_nav($target);
-            $menu.addClass('open');
         })
         .fail(arche.flash_error)
         .always(function() {
