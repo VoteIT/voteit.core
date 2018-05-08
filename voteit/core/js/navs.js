@@ -110,13 +110,10 @@ voteit.show_agenda = function() {
         request.done(function(response) {
             elem.replaceWith(response);
         });
-    }
-    if (request) {
         request.always(function() {
             arche.actionmarker_feedback(elem, false);
         });
     }
-
 
     $('body').addClass('left-fixed-active');
     //FIXME: Can we tie this to bootstraps grid float breakpoint var?
@@ -148,16 +145,20 @@ voteit.hide_agenda = function() {
 
 voteit.toggle_agenda = function(e) {
     e.preventDefault();
+    // Check this: $(':not(#agenda-toggler).menu-toggler.open').length > 0)
+
+    if (typeof voteit.$activeMenu !== 'undefined')  {
+        voteit.$activeMenu.removeClass('open');
+        voteit.hide_nav();
+        if (!$('#fixed-nav').hasClass('activated')) {
+            voteit.show_agenda();
+        }
+        $('#fixed-nav').find('[href]')[0].focus();
+        return
+    }
     if ($('#fixed-nav').hasClass('activated')) {
         // If another menu is open, assume we want to switch to this area instead
-        if (typeof voteit.$activeMenu !== 'undefined') {
-            voteit.$activeMenu.removeClass('open');
-            voteit.hide_nav();
-            $('#fixed-nav').find('[href]')[0].focus();
-        } else {
-            // No other menus, hide the agenda
-            voteit.hide_agenda();
-        }
+        voteit.hide_agenda();
     } else {
         voteit.show_agenda();
     }
