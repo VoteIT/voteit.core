@@ -17,42 +17,6 @@ def _fixture(config):
     return root
 
 
-class ContactViewTests(unittest.TestCase):
-    def setUp(self):
-        self.config = testing.setUp(request = testing.DummyRequest())
-        self.config.testing_securitypolicy(userid='admin', permissive=True)
-        self.config.include('pyramid_chameleon')
-
-    def tearDown(self):
-        testing.tearDown()
-
-    @property
-    def _cut(self):
-        from voteit.core.views.contact import ContactView
-        return ContactView
-
-    def test_render(self):
-        context = _fixture(self.config)
-        request = testing.DummyRequest(root = context, profile = None)
-        obj = self._cut(context, request)
-        self.assertIn('form', obj())
-
-    def test_post(self):
-        postdata = {'send': 'send',
-                    'name': 'Dummy Dumbson',
-                    'subject': 'Test',
-                    'email': 'dummy@test.com',
-                    'message': 'Lorem ipsum',}
-        context = _fixture(self.config)
-        request = testing.DummyRequest(method = 'POST', post = postdata, profile = None, meeting = None, root = context)
-        obj = self._cut(context, request)
-        obj.check_csrf = False
-        response = obj()
-        self.assertEqual(response.location, 'http://example.com/')
-        mailer = get_mailer(request)
-        self.assertTrue(mailer.outbox)
- 
- 
 class SupportFormTests(unittest.TestCase):
 
     def setUp(self):

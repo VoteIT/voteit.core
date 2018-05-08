@@ -41,6 +41,7 @@ class DiffTextContentSchema(colander.Schema):
             default="Each paragraph will have its own hashtag. "
                     "Separate paragraphs with 2 new lines."
         ),
+        missing="",
         widget=deform.widget.TextAreaWidget(rows=12),
         validator=html_string_validator,
     )
