@@ -69,6 +69,7 @@ voteit.show_nav = function($target) {
 
 
 voteit.hide_nav = function($target, hold_bg) {
+    $('[data-inline-menu]').removeClass('open');
     if (!$target && voteit.$activeMenu) {
         $target = $(voteit.$activeMenu.data('target'));
     }
@@ -483,18 +484,17 @@ voteit.toggleInlineMenu = function(e) {
         is_open = $menu.hasClass('open');
 
     if ($menu.hasClass('disabled')) { return; }
-    $('[data-inline-menu]').removeClass('open');
 
     if (is_open) {
         voteit.hide_nav($target);
         $target.empty();
     } else {
         arche.actionmarker_feedback($menu, true);
-        $menu.addClass('open');
         do_request($menu.attr('href'))
         .done(function(response) {
             $target.html(response);
             voteit.show_nav($target);
+            $menu.addClass('open');
         })
         .fail(arche.flash_error)
         .always(function() {
