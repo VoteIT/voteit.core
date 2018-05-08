@@ -14,7 +14,8 @@
       <div data-collapsible-text="400">
         <tal:cog condition="request.is_moderator" replace="structure view.render_template('voteit.core:templates/snippets/cogwheel.pt', context = obj)" />
         <tal:creator replace="structure request.creators_info(obj.creators)"></tal:creator>
-        <span tal:content="structure request.render_proposal_text(obj)">Text here</span>
+        <span class="proposal-text"
+              tal:content="structure request.render_proposal_text(obj)">Text here</span>
       </div>
     </div>
     <div class="clearfix"></div>
