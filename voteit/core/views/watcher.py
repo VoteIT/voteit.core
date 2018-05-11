@@ -60,13 +60,12 @@ def agenda_states(context, request, va, **kw):
     query = Eq('path', kw['meeting_path']) & Eq('type_name', 'AgendaItem')
     for state in states:
         squery = query & Eq('workflow_state', state)
-        res = request.root.catalog.query(squery)[0]
-        if res.total:
-            if tag:
-                tagres = request.root.catalog.query(squery & Any('tags', [tag]))[0]
-                results[state] = "%s / %s" % (tagres.total, res.total)
-            else:
-                results[state] = str(res.total)
-        else:
-            results[state] = ""
+        res, docids = request.root.catalog.query(squery)
+        results[state] = {
+            'hash': hash(tuple(docids)),
+            'count': res.total and str(res.total) or '',
+        }
+        if tag and res.total:
+            tagres = request.root.catalog.query(squery & Any('tags', [tag]))[0]
+            results[state]['count'] = "%s / %s" % (tagres.total, res.total)
     return results

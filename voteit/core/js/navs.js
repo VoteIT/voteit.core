@@ -365,17 +365,26 @@ voteit.handle_agenda_back = function(event) {
 
 //window.addEventListener('popstate', voteit.handle_agenda_back);
 
-// FIXME: This was a quick fix to get the agenda to reload when the number of items differs
-// Should be checked via dockids instead, so we can actually detect changes properly.
+
 voteit.agenda_states = function(response) {
-    currentValues = voteit.$agendaToggler.data('values');
+    var currentValues = voteit.$agendaToggler.data('values') || {};
+    var changed = false;
     $.each(response.agenda_states, function(k, v) {
-        $('[data-ai-state-count="' + k + '"]').text(v);
-        if (currentValues && currentValues[k] !== v && $('[data-agenda-state="' + k + '"] > *').length > 0) {
-            voteit.load_agenda_data(k);
+        $('[data-ai-state-count="' + k + '"]').text(v.count);
+        if (currentValues[k] !== v.hash) {
+            changed = true;
+            if (!$('[data-agenda-control="' + k + '"]').hasClass('collapsed')) {
+                voteit.load_agenda_data(k);
+            }
         }
     });
-    voteit.$agendaToggler.data('values', response.agenda_states);
+    if (changed) {
+        var newValues = {}
+        $.each(response.agenda_states, function (k, v) {
+            newValues[k] = v.hash;
+        });
+        voteit.$agendaToggler.data('values', newValues);
+    }
 };
 
 
