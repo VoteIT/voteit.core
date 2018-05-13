@@ -5,6 +5,7 @@ from pyramid.renderers import render
 from pyramid.traversal import resource_path
 from repoze.catalog.query import Any
 from repoze.catalog.query import Eq
+from repoze.catalog.query import NotAny
 
 from voteit.core.models.interfaces import IDiffText
 from voteit.core import _
@@ -38,6 +39,7 @@ class DiffTextPortlet(PortletType):
     def count_tags(self, context, request, base_tag, num):
         results = {}
         query = Eq('path', resource_path(context)) & Eq('type_name', 'Proposal')
+        query &= NotAny('workflow_state', ['retracted', 'unhandled'])
         cquery = request.root.catalog.query
         for i in range(1, num+1):
             tag = "%s-%s" % (base_tag, i)
