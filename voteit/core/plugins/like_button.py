@@ -89,7 +89,7 @@ class LikeSettingsSchema(colander.Schema):
             ('Proposal', _("Proposal")),
             ('DiscussionPost', _("DiscussionPost")),
         )),
-        title=_('Like content types'),
+        title=_("Allow like on these types"),
     )
     like_workflow_states = colander.SchemaNode(
         colander.Set(),
@@ -101,7 +101,9 @@ class LikeSettingsSchema(colander.Schema):
     like_user_roles = colander.SchemaNode(
         colander.Set(),
         title=_('User roles'),
-        description=_('If selected, users will need one of these to be able to like a proposal.'),
+        description=_("like_user_roles_description",
+                      default='If selected, users will need one of these within '
+                      'the meeting to be able to like something.'),
         widget=deform.widget.CheckboxChoiceWidget(values=security.MEETING_ROLES),
         missing=(),
     )
