@@ -365,6 +365,7 @@ voteit.handle_agenda_back = function(event) {
 
 //window.addEventListener('popstate', voteit.handle_agenda_back);
 
+
 voteit.agenda_states = function(response) {
     var currentValues = voteit.$agendaToggler.data('values') || {};
     var changed = false;
