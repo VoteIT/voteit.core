@@ -8,6 +8,7 @@ from arche_usertags.interfaces import IUserTags
 from betahaus.viewcomponent import view_action
 from pyramid.renderers import render
 from pyramid.threadlocal import get_current_registry
+from pyramid.traversal import find_interface
 from repoze.catalog.indexes.keyword import CatalogKeywordIndex
 
 from voteit.core.models.interfaces import IDiscussionPost
@@ -22,6 +23,32 @@ from voteit.core import _
 from voteit.core import security
 
 
+def _check_add_perm(adapter, request):
+    if request.meeting is None:
+        meeting = find_interface(adapter.context, IMeeting)
+    else:
+        meeting = request.meeting
+    like_context_types = meeting.like_context_types
+    like_workflow_states = meeting.like_workflow_states
+    like_user_roles = meeting.like_user_roles
+    user_meeting_roles = meeting.local_roles.get(request.authenticated_userid)
+
+    # Check if context can be liked
+    if not like_context_types or adapter.context.type_name not in like_context_types:
+        return False
+
+    # If proposal, check if workflow state can be liked
+    if IProposal.providedBy(adapter.context):
+        if like_workflow_states and adapter.context.get_workflow_state() not in like_workflow_states:
+            return False
+
+    # Lastly, check if user has a role that can like
+    if like_user_roles and not like_user_roles.intersection(user_meeting_roles):
+        return False
+
+    return True
+
+
 @view_action('metadata_listing', 'like_post',
              permission = PERM_VIEW,
              interface = IDiscussionPost,
@@ -33,19 +60,17 @@ from voteit.core import security
 def like_action(context, request, va, **kw):
     like_context_types = request.meeting.like_context_types
     like_workflow_states = request.meeting.like_workflow_states
-    like_user_roles = request.meeting.like_user_roles
+
     if not like_context_types or context.type_name not in like_context_types:
         return
     if IProposal.providedBy(context):
         if like_workflow_states and context.get_workflow_state() not in like_workflow_states:
             return
-        user_meeting_roles = request.meeting.local_roles.get(request.authenticated_userid)
-        if like_user_roles and not like_user_roles.intersection(user_meeting_roles):
-            return
 
     like = request.registry.getAdapter(context, IUserTags, name = 'like')
     response = {'context': context,
                 'like': like,
+                'has_like_perm': _check_add_perm(like, request),
                 'user_likes': request.authenticated_userid in like}
     return render('voteit.core.plugins:templates/like_btn.pt', response, request = request)
 
@@ -159,7 +184,8 @@ def includeme(config):
         config.add_usertag('like', iface,
                            catalog_index = 'like_userids',
                            add_perm = PERM_VIEW,
-                           view_perm = PERM_VIEW)
+                           view_perm = PERM_VIEW,
+                           add_perm_callback = _check_add_perm)
         config.add_view(LikeUsersView,
                         context = iface,
                         name = '_like_users_popover',

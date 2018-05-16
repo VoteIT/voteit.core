@@ -1,5 +1,5 @@
 <span data-like xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core">
-  <a data-like-btn
+  <a tal:condition="has_like_perm" data-like-btn
     href="${user_likes and like.remove_url(request) or like.add_url(request)}"
     role="button"
     class="btn btn-xs btn-default ${user_likes and 'active' or ''}"> 
