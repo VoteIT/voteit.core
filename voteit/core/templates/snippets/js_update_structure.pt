@@ -4,6 +4,9 @@
   <tal:popover condition="hide_popover|False">
   $('${hide_popover}').popover('hide');
   </tal:popover>
+  <tal:destroy condition="destroy_popover|False">
+    $('${destroy_popover}').popover('destroy').data('external-popover-loaded', false);
+  </tal:destroy>
   <tal:load_target condition="load_target|False">
   var response = voteit.load_target('${load_target}');
     <tal:scroll_to condition="scroll_to|False">
