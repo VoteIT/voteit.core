@@ -11,6 +11,7 @@ from pyramid.decorator import reify
 from zope.component import adapter
 from zope.interface import implementer
 
+from voteit.core.helpers import tags2links
 from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IDiffText
 from voteit.core.models.interfaces import IMeeting
@@ -141,17 +142,32 @@ class ChangeGroup(object):
 
 
 class Changes(object):
-    whitespaces = re.compile('\s+')
+    whitespaces = re.compile('\s+', re.UNICODE)
+    first_tag = re.compile(r'^(#\w+)', re.UNICODE)
     differ = SequenceMatcher()
 
     def __init__(self, orig, changed):
         # type: (str, str) -> None
+        self.stripped_tag = ''
         self.has_lines = self.check_bullet_list(orig)
         self.orig = self.split(orig)
         # self.changed = self.split(self.has_lines and changed or changed.replace('\n', ' ⏎<br/> '))
-        self.changed = self.split(changed)
+        self.changed = self.split(self.strip_tag(changed, orig))
         self.change_groups = list()
         self.do_compare()
+
+    def strip_tag(self, changed, orig):
+        # type: (unicode, unicode) -> unicode
+        orig_match = self.first_tag.search(orig)
+
+        def sub_tag(match):
+            tag = match.group(1)
+            if not orig_match or tag != orig_match.group(0):
+                self.stripped_tag = tag + ' '
+                return ''
+            return tag
+
+        return self.first_tag.sub(sub_tag, changed).strip()
 
     @staticmethod
     def check_bullet_list(text):
@@ -194,7 +210,7 @@ class Changes(object):
             self.change_groups[-1].last = True
 
     def get_html(self, brief=False, no_deleted=False):
-        return self.join(self.change_groups, brief, no_deleted)
+        return tags2links(self.stripped_tag) + self.join(self.change_groups, brief, no_deleted)
 
 
 def includeme(config):
