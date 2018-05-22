@@ -35,8 +35,11 @@ $(function() {
     var is_ie = window.navigator.userAgent.indexOf("MSIE ") > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./);
     if (is_ie) {
         arche.create_flash_message(
-            'Internet Explorer is not supported on this site. Please consider switching browser.',
+            "You seem to be using Internet Explorer. Please switch browser, " +
+            "since IE is no longer being maintained by its authors. This site (and many others) " +
+            "won't function correctly with IE.",
             {icon_class: 'glyphicon glyphicon-warning-sign', type: 'danger', auto_destruct: false}
         );
     }
 });
+
