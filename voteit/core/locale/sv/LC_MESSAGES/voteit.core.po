@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2018-05-14 16:50+0200\n"
-"PO-Revision-Date: 2018-05-14 16:52+0200\n"
+"POT-Creation-Date: 2018-05-22 17:13+0200\n"
+"PO-Revision-Date: 2018-05-22 17:13+0200\n"
 "Last-Translator: Robin Harms Oredsson <robin@betahaus.net>\n"
 "Language-Team: sv <LL@li.org>\n"
 "Language: sv\n"
@@ -173,42 +173,43 @@ msgstr ""
 "\">Gravatar</a>. Den är hämtad från din epostadress. Om du vill ändra bild, "
 "gå till Gravatar och ändra bild för den epostadress du använder i VoteIT."
 
-#: voteit/core/plugins/like_button.py:82 voteit/core/plugins/like_button.py:140
+#: voteit/core/plugins/like_button.py:107
+#: voteit/core/plugins/like_button.py:165
 msgid "Like button"
 msgstr "Gillaknapp"
 
-#: voteit/core/plugins/like_button.py:89 voteit/core/models/proposal.py:27
+#: voteit/core/plugins/like_button.py:114 voteit/core/models/proposal.py:27
 #: voteit/core/schemas/proposal.py:41 voteit/core/schemas/meeting.py:161
 msgid "Proposal"
 msgstr "Förslag"
 
-#: voteit/core/plugins/like_button.py:90
+#: voteit/core/plugins/like_button.py:115
 msgid "DiscussionPost"
 msgstr "Diskussionsinlägg"
 
-#: voteit/core/plugins/like_button.py:92
+#: voteit/core/plugins/like_button.py:117
 msgid "Allow like on these types"
 msgstr "Tillåt gilla på typerna"
 
-#: voteit/core/plugins/like_button.py:96
+#: voteit/core/plugins/like_button.py:121
 msgid "Proposal workflow states"
 msgstr "Förslagens status"
 
-#: voteit/core/plugins/like_button.py:97
+#: voteit/core/plugins/like_button.py:122
 msgid "If selected, proposals in these workflow states can be liked."
 msgstr "Om någon är vald, kräv att förslag är i valda tillstånd för att gilla."
 
-#: voteit/core/plugins/like_button.py:103
+#: voteit/core/plugins/like_button.py:128
 msgid "User roles"
 msgstr "Användarroller"
 
 #. Default: If selected, users will need one of these within the meeting to be
 #. able to like something.
-#: voteit/core/plugins/like_button.py:104
+#: voteit/core/plugins/like_button.py:129
 msgid "like_user_roles_description"
 msgstr "Om vald så behöver användare ha en av rollerna i mötet för att gilla."
 
-#: voteit/core/plugins/like_button.py:144
+#: voteit/core/plugins/like_button.py:169
 #: voteit/core/views/control_panel.py:115
 #: voteit/core/views/control_panel.py:117
 #: voteit/core/views/control_panel.py:119
@@ -500,7 +501,7 @@ msgstr "Omröstning"
 
 #. Default: Poll has now closed. ${num} proposal(s) are now set in another
 #. state due to the outcome of the poll.
-#: voteit/core/models/poll.py:223
+#: voteit/core/models/poll.py:224
 msgid "poll_closed_info"
 msgstr ""
 "Omröstningen har nu stängt. ${num} förslag har nu satts i ett annat "
@@ -508,23 +509,23 @@ msgstr ""
 
 #. Default: Couldn't adjust the state of the following proposal(s): '${props}'.
 #. You may wish to review them manually.
-#: voteit/core/models/poll.py:228
+#: voteit/core/models/poll.py:229
 msgid "poll_closed_proposal_wf_change_error"
 msgstr ""
 "Kunde inte justera tillstånd för följande förslag: '${props}'. Du bör kolla "
 "att det blev rätt manuellt."
 
-#: voteit/core/models/poll.py:282
+#: voteit/core/models/poll.py:283
 msgid "proposal"
 msgstr "förslag"
 
-#: voteit/core/models/poll.py:283
+#: voteit/core/models/poll.py:284
 msgid "proposals"
 msgstr "förslag"
 
 #. Default: Setting ${count} ${prop_form} as 'locked for vote'. They can no
 #. longer be edited or retracted by normal users.
-#: voteit/core/models/poll.py:285
+#: voteit/core/models/poll.py:286
 msgid "poll_proposals_locked_notice"
 msgstr ""
 "Sätter ${count} ${prop_form} som 'låst för omröstning'. De kan inte längre "
@@ -532,7 +533,7 @@ msgstr ""
 "omröstning bör vara låsta."
 
 #. Default: You can't set a poll to ongoing if the agenda item is not ongoing.
-#: voteit/core/models/poll.py:307
+#: voteit/core/models/poll.py:308
 msgid "error_poll_cant_be_ongoing_unless_ai_is"
 msgstr ""
 "Du kan inte göra en omröstning till pågående om dagordningspunkten inte är "
@@ -540,13 +541,13 @@ msgstr ""
 
 #. Default: A poll with no proposal can not be set to ongoing. Click link to
 #. edit: ${tag}
-#: voteit/core/models/poll.py:313
+#: voteit/core/models/poll.py:314
 msgid "error_no_proposals_in_poll"
 msgstr ""
 "En omröstning utan förslagn kan inte göras till pågående. Klicka på länken "
 "för att ändra: ${tag}"
 
-#: voteit/core/models/poll.py:354
+#: voteit/core/models/poll.py:355
 msgid "VoteIT: Open poll"
 msgstr "VoteIT: Pågående omröstning"
 
@@ -1551,12 +1552,20 @@ msgid "The moderator has locked the ability to add more discussion posts."
 msgstr "Moderatorn har låst möjligheten att lägga till fler diskussionsposter."
 
 #: voteit/core/templates/portlets/polls.pt:15
-#: voteit/core/templates/portlets/proposals.pt:20
+#: voteit/core/templates/portlets/proposals.pt:35
 #: voteit/core/templates/portlets/discussions.pt:18
 msgid "Refresh"
 msgstr "Uppdatera"
 
-#: voteit/core/templates/portlets/proposals.pt:34
+#: voteit/core/templates/portlets/proposals.pt:19
+msgid "Use full page width"
+msgstr "Använd full sidbredd"
+
+#: voteit/core/templates/portlets/proposals.pt:26
+msgid "Columns"
+msgstr "Kolumner"
+
+#: voteit/core/templates/portlets/proposals.pt:49
 msgid "Poll / Descision planning"
 msgstr "Omröstning / Beslutsplanering"
 
