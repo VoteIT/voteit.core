@@ -3,7 +3,7 @@
       xmlns:tal="http://xml.zope.org/namespaces/tal"
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
       i18n:domain="voteit.core">
-<div id="ai-proposals" class="col-sm-6">
+<div id="ai-proposals" class="col-sm-6" data-main-col-resize>
   <div class="list-group">
     <div class="list-group-item">
       <h4>
@@ -12,6 +12,21 @@
         <span i18n:translate="">Proposals</span>
 
         <tal:moderator replace="structure view.render_view_action('context_menus', 'proposal_extras')" />
+
+        <a href="#"
+           class="btn btn-sm btn-default hidden-xs"
+           data-resize-btn
+           title="Use full page width"
+           i18n:attributes="title;">
+          <span class="glyphicon glyphicon-resize-full"></span>
+        </a>
+        <a href="#"
+           class="btn btn-sm btn-default  hidden-xs hidden"
+           data-resize-btn
+           title="Columns"
+           i18n:attributes="title;">
+          <span class="glyphicon glyphicon-resize-small"></span>
+        </a>
 
         <a href="javascript:"
            class="pull-right"

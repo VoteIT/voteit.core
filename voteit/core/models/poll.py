@@ -159,8 +159,9 @@ class Poll(BaseContent, WorkflowAware):
         self.set_field_value('proposal_order', value)
 
     def get_proposal_objects(self):
-        # FIXME: This method should accept request as an argument and use
-        # the cached properties and helper methods there instead
+        """ Return proposal objects relevant to this poll.
+            Will sort them in specified order.
+        """
         agenda_item = self.__parent__
         if agenda_item is None:
             raise ValueError("Can't find any agenda item in the polls lineage")
