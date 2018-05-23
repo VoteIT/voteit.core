@@ -541,7 +541,8 @@ $brand-danger:          #d9534f !default;
     line-height: 25px;
     font-weight: bold;
     font-size: 17px;
-    margin: 0; }
+    margin: 0;
+    padding-right: 40px; }
 
 /* This whole section is kept for compatibility reasons. It's deprecated */
 .navbar-voteit {

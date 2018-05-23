@@ -23,8 +23,8 @@
       title="${next_ai.title}">
       <span class="glyphicon glyphicon-chevron-right"></span>
     </a>
-    <div class="text-center voteit-nav-header">
-        <h1 class="text-overflow" title="${context.title}">${context.title}</h1>
+    <div class="text-center voteit-nav-header" data-check-greedy="">
+        <h1 class="greedy text-overflow">${context.title}</h1>
     </div>
 </div>
 </tal:main>

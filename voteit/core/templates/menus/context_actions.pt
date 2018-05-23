@@ -8,7 +8,7 @@
   ${structure: view.render_template('voteit.core:templates/snippets/ai_title.pt', view_name=view_name)}
     <tal:moderator condition="request.is_moderator">
       <div class="pull-left">
-        <ul class="nav voteit-nav">
+        <ul class="nav voteit-nav" role="navigation">
             ${structure: view.render_view_action('actionbar_main', 'voteit_wf')}
             ${structure: view.render_view_action('actionbar_main', 'edit')}
             ${structure: view.render_view_action('actionbar_main', 'view')}
@@ -16,7 +16,7 @@
         </ul>
       </div>
       <div class="pull-right">
-        <ul class="nav voteit-nav" role="navigation">
+        <ul class="nav voteit-nav">
             <li>
                 <a class="dropdown-toggle"
                    role="button"

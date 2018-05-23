@@ -68,6 +68,7 @@ class ProposalPermissionTests(unittest.TestCase):
         self.pap = policy.principals_allowed_by_permission
         self.config.include('voteit.core.testing_helpers.register_workflows')
         self.config.include('arche.testing')
+        self.config.include('arche.models.reference_guard')
         self.config.include('voteit.core.models.proposal')
 
     def tearDown(self):

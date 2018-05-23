@@ -1,3 +1,5 @@
+const WINDOW_SM = 768;
+
 function setCookie(cname, cvalue, exdays) {
     var d = new Date();
     d.setTime(d.getTime() + (exdays*24*60*60*1000));
@@ -38,6 +40,9 @@ voteit.getActiveDialog = function() {
 
 voteit.dialogFocusListener = function(event) {
     var dialog = voteit.getActiveDialog();
+    if ($(event.target).hasClass('menu-toggler')) {
+        return;  // Do not control focus on menu clicks
+    }
     if (dialog.length && !$.contains(dialog[0], event.target)) {
         event.stopPropagation();
         var all = $('*');
@@ -70,6 +75,9 @@ voteit.show_nav = function($target) {
 
 voteit.hide_nav = function($target, hold_bg) {
     $('[data-inline-menu]').removeClass('open');
+    if ($(window).width() < WINDOW_SM) {
+        $('#agenda-toggler').removeClass('open');
+    }
     if (!$target && voteit.$activeMenu) {
         $target = $(voteit.$activeMenu.data('target'));
     }
@@ -118,7 +126,7 @@ voteit.show_agenda = function() {
 
     $('body').addClass('left-fixed-active');
     //FIXME: Can we tie this to bootstraps grid float breakpoint var?
-    if ($(window).width() >= 768) {
+    if ($(window).width() >= WINDOW_SM) {
         //Desktop version
         $('#fixed-nav').addClass('activated').show();
         setCookie("voteit.hide_agenda");
@@ -133,7 +141,8 @@ voteit.show_agenda = function() {
 
 voteit.hide_agenda = function() {
     $('body').removeClass('left-fixed-active');
-    if ($(window).width() >= 768) {
+    if ($(window).width() >= WINDOW_SM) {
+        //Desktop version
         $('#fixed-nav').removeClass('activated');
         setCookie("voteit.hide_agenda", "1");
     } else {
@@ -148,7 +157,7 @@ voteit.toggle_agenda = function(e) {
     e.preventDefault();
     // Check this: $(':not(#agenda-toggler).menu-toggler.open').length > 0)
 
-    if (typeof voteit.$activeMenu !== 'undefined')  {
+    if (voteit.$activeMenu && voteit.$activeMenu.prop('id') !== 'agenda-toggler')  {
         voteit.$activeMenu.removeClass('open');
         voteit.hide_nav();
         if (!$('#fixed-nav').hasClass('activated')) {
@@ -168,7 +177,7 @@ voteit.toggle_agenda = function(e) {
 
 voteit.init_agenda = function(show_in_fullscreen) {
     //Decide what to do depending on resolution etc
-    if ($(window).width() >= 768) {
+    if ($(window).width() >= WINDOW_SM) {
         if (show_in_fullscreen) voteit.show_agenda();
         $('#fixed-nav').removeClass('slide-in-nav');
     } else {
@@ -218,7 +227,7 @@ voteit.load_agenda_item = function(event) {
         window.history.pushState(
             {'url': url, 'title': title, 'html': response, 'type': 'agenda_item'},
         title, url);
-        if ($(window).width() < 768) voteit.hide_nav('#fixed-nav');
+        if ($(window).width() < WINDOW_SM) voteit.hide_nav($('#fixed-nav'));
     });
 };
 
@@ -364,6 +373,7 @@ voteit.handle_agenda_back = function(event) {
 */
 
 //window.addEventListener('popstate', voteit.handle_agenda_back);
+
 
 voteit.agenda_states = function(response) {
     var currentValues = voteit.$agendaToggler.data('values') || {};

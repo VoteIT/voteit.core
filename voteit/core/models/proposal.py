@@ -2,6 +2,8 @@ from __future__ import unicode_literals
 
 from arche.security import get_acl_registry
 from pyramid.traversal import find_interface
+from pyramid.traversal import resource_path
+from repoze.catalog.query import Eq
 from six import string_types
 from zope.interface import implementer
 
@@ -103,6 +105,16 @@ class Proposal(BaseContent, WorkflowAware):
         self.set_field_value('diff_text_para', value)
 
 
+def guard_proposals_that_are_part_of_a_poll(request, context):
+    query = Eq('path', resource_path(request.agenda_item)) & Eq('type_name', 'Poll')
+    docids = request.root.catalog.query(query)[1]
+    found = []
+    for poll in request.resolve_docids(docids, perm=None):
+        if context.uid in poll.proposals:
+            found.append(poll)
+    return found
+
+
 def includeme(config):
     config.add_content_factory(Proposal, addable_to = 'AgendaItem')
     _PUBLISHED_MODERATOR_PERMS = (security.VIEW,
@@ -132,3 +144,10 @@ def includeme(config):
     private = aclreg.new_acl('Proposal:private', description ="When Agenda Item is private")
     private.add(security.ROLE_ADMIN, _PUBLISHED_MODERATOR_PERMS)
     private.add(security.ROLE_MODERATOR, _PUBLISHED_MODERATOR_PERMS)
+    # Ref guard for proposals
+    config.add_ref_guard(
+        guard_proposals_that_are_part_of_a_poll,
+        requires=(IProposal,),
+        catalog_result=False,
+        title=_("Proposal is a part of poll(s)"),
+    )

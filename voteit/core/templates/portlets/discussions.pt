@@ -3,7 +3,7 @@
       xmlns:tal="http://xml.zope.org/namespaces/tal"
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
       i18n:domain="voteit.core">
-<div id="ai-discussions" class="col-sm-6">
+<div id="ai-discussions" class="col-sm-6" data-main-col-resize>
   <div class="list-group">
     <div class="list-group-item">
       <h2>
