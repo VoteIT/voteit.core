@@ -66,11 +66,14 @@ def like_action(context, request, va, **kw):
     if IProposal.providedBy(context):
         if like_workflow_states and context.get_workflow_state() not in like_workflow_states:
             return
-
     like = request.registry.getAdapter(context, IUserTags, name = 'like')
+    try:
+        has_like_perm = request._has_like_perm
+    except AttributeError:
+        request._has_like_perm = has_like_perm = _check_add_perm(like, request)
     response = {'context': context,
                 'like': like,
-                'has_like_perm': _check_add_perm(like, request),
+                'has_like_perm': has_like_perm,
                 'user_likes': request.authenticated_userid in like}
     return render('voteit.core.plugins:templates/like_btn.pt', response, request = request)
 
