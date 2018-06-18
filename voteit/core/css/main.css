@@ -1,10 +1,3 @@
-/*
-$brand-primary:         darken(#428bca, 6.5%) !default; // #337ab7
-$brand-success:         #5cb85c !default;
-$brand-info:            #5bc0de !default;
-$brand-warning:         #f0ad4e !default;
-$brand-danger:          #d9534f !default;
-*/
 @keyframes fade-effect {
   100% {
     opacity: 1; }
@@ -617,13 +610,6 @@ $brand-danger:          #d9534f !default;
       color: #444; }
 
 /* END Deprecated nav */
-/*
-$brand-primary:         darken(#428bca, 6.5%) !default; // #337ab7
-$brand-success:         #5cb85c !default;
-$brand-info:            #5bc0de !default;
-$brand-warning:         #f0ad4e !default;
-$brand-danger:          #d9534f !default;
-*/
 .portlet-collapse {
   overflow-x: visible;
   -webkit-overflow-scrolling: touch; }
@@ -648,13 +634,6 @@ $brand-danger:          #d9534f !default;
       .portlet-collapse.in {
         overflow-y: visible; } }
 
-/*
-$brand-primary:         darken(#428bca, 6.5%) !default; // #337ab7
-$brand-success:         #5cb85c !default;
-$brand-info:            #5bc0de !default;
-$brand-warning:         #f0ad4e !default;
-$brand-danger:          #d9534f !default;
-*/
 .msg-bar {
   padding-right: 0px;
   padding-left: 0px; }
