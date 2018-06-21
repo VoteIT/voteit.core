@@ -42,9 +42,7 @@ def user_schema_adjustments(schema, event):
     schema.add(colander.SchemaNode(
         colander.String(),
         name = 'profile_image_plugin',
-        title = _(u"Profile image provider"),
-        description = _(u"profile_image_plugin_description",
-                        default=u""),
+        title = _("Use profile image from"),
         widget = profile_image_plugin_choices_widget,
         default = 'gravatar_profile_image',
         missing='gravatar_profile_image'),
