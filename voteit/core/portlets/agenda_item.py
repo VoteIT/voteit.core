@@ -10,6 +10,7 @@ from arche.portlets import PortletType
 from arche.utils import generate_slug
 from arche.views.base import BaseView
 from arche.views.base import DefaultAddForm
+from pyramid.decorator import reify
 from pyramid.httpexceptions import HTTPForbidden
 from pyramid.renderers import render
 from pyramid.response import Response
@@ -274,7 +275,7 @@ class DiscussionAddForm(StrippedInlineAddForm):
     def reply_to(self):
         return self.request.GET.get('reply-to')
 
-    @property
+    @reify
     def form_options(self):
         options = dict(super(DiscussionAddForm, self).form_options)
         if self.reply_to:
