@@ -124,36 +124,6 @@ def richtext_validator(node, value):
         raise colander.Invalid(node, _(u"Contains forbidden HTML tags."))
 
 
-# @colander.deferred
-# def deferred_context_roles_validator(node, kw):
-#     context = kw['context']
-#     request = kw['request']
-#     return ContextRolesValidator(context, request)
-#
-#
-# class ContextRolesValidator(object):
-#     """ Check that the roles a user tries to assign is allowed in this context.
-#     """
-#
-#     def __init__(self, context, request):
-#         self.context = context
-#         self.request = request
-#
-#     def __call__(self, node, value):
-#         if not has_permission(MANAGE_GROUPS, self.context, self.request):
-#             raise colander.Invalid(node, _(u"You can't change groups in this context"))
-#         roles = []
-#         if ISiteRoot.providedBy(self.context):
-#             roles.extend([x[0] for x in ROOT_ROLES])
-#         elif IMeeting.providedBy(self.context):
-#             roles.extend([x[0] for x in MEETING_ROLES])
-#         for v in value:
-#             if v not in roles:
-#                 raise colander.Invalid(node, _(u"wrong_context_for_roles_error",
-#                                                default = u"Group ${group} can't be assigned in this context",
-#                                                mapping = {'group': v}))
-
-
 class NotOnlyDefaultTextValidator(object):
     """ Validator which fails if only default text or only tag is pressent
     """
