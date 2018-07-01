@@ -1,7 +1,7 @@
 import colander
 import deform
 
-from voteit.core.validators import html_string_validator
+from voteit.core.validators import no_html_validator
 from voteit.core.schemas.common import deferred_default_user_fullname
 from voteit.core.schemas.common import deferred_default_user_email
 from voteit.core import _
@@ -31,7 +31,7 @@ class SupportSchema(colander.Schema):
                                missing=u"") 
     subject = colander.SchemaNode(colander.String(),
                                   title = _(u"Subject"),
-                                  validator = html_string_validator,)
+                                  validator = no_html_validator,)
     meeting_title = colander.SchemaNode(colander.String(),
                                         title = _(u"Meeting"),
                                         description = _(u"support_schema_meeting_description",
@@ -39,7 +39,7 @@ class SupportSchema(colander.Schema):
                                                             u"In that case, what's the title of the meeting? "
                                                             u"(It doesn't have to be exact, it's just so we know what to look for!)"),
                                         default = deferred_meeting_title,
-                                        validator = html_string_validator,
+                                        validator = no_html_validator,
                                         missing = u"",)
     message = colander.SchemaNode(colander.String(),
                                   title = _(u'What do you need help with?'),
@@ -48,7 +48,7 @@ class SupportSchema(colander.Schema):
                                                             u"If you're submitting an error report, please explain what you were doing and how we can reproduce the error. "
                                                             u"The more information you send us, the better. We're really bad at reading minds..."),
                                   widget = deform.widget.TextAreaWidget(rows=10, cols=40),
-                                  validator = html_string_validator,)
+                                  validator = no_html_validator,)
 
 
 def includeme(config):

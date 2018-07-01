@@ -184,6 +184,12 @@ class TestTransformText(unittest.TestCase):
         out = self._fut(request, _TRANSFORMABLE_TEXT2, html=False)
         self.assertEqual(out, _TRANSFORMABLE_TEXT2)
 
+    def test_transform_text_full(self):
+        request = self._fixture()
+        out = self._fut(request, _TRANSFORMABLE_TEXT, html=True)
+        # Make sure newlines are kept
+        self.assertIn('<br />', out)
+
 
 class TestGetDocidsToShow(unittest.TestCase):
 

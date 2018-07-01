@@ -2,7 +2,7 @@ import colander
 import deform
 
 from voteit.core import VoteITMF as _
-from voteit.core.validators import html_string_validator
+from voteit.core.validators import no_html_validator
 from voteit.core.validators import TagValidator
 from voteit.core.validators import richtext_validator
 from voteit.core.models.interfaces import IProposalIds
@@ -24,7 +24,7 @@ class AgendaItemSchema(colander.MappingSchema):
         colander.String(),
         title=_("Title"),
         description=_("Try keeping it under 20 characters."),
-        validator=html_string_validator, )
+        validator=no_html_validator, )
     description = colander.SchemaNode(
         colander.String(),
         title=_("Description (In search results and similar)"),

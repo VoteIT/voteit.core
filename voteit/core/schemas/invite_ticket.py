@@ -1,11 +1,11 @@
 import colander
 import deform
 
-from voteit.core.validators import html_string_validator
+from voteit.core.validators import no_html_validator
 from voteit.core.validators import multiple_email_validator
 from voteit.core.schemas.common import strip_and_lowercase
 from voteit.core import security
-from voteit.core import VoteITMF as _
+from voteit.core import _
 from voteit.core.validators import deferred_token_form_validator
 
 
@@ -38,7 +38,7 @@ class AddTicketsSchema(colander.Schema):
                                                  default=u'Separate email addresses with a single line break.'),
                                  widget = deform.widget.TextAreaWidget(rows=7, cols=40),
                                  preparer = strip_and_lowercase,
-                                 validator = colander.All(html_string_validator, multiple_email_validator),
+                                 validator = colander.All(no_html_validator, multiple_email_validator),
     )
     message = colander.SchemaNode(colander.String(),
                                   title = _(u"Welcome text of the email that will be sent"),
@@ -47,7 +47,7 @@ class AddTicketsSchema(colander.Schema):
                                                         u"so focus on anything that might be specific for your participants."),
                                   widget = deform.widget.TextAreaWidget(rows=5, cols=40),
                                   missing = u"",
-                                  validator = html_string_validator,
+                                  validator = no_html_validator,
     )
 
 

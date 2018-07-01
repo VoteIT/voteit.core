@@ -4,10 +4,9 @@ from BeautifulSoup import BeautifulSoup
 from pyramid.traversal import find_interface
 from six import string_types
 from translationstring import TranslationString
-from webhelpers.html.tools import strip_tags
 import colander
 
-from voteit.core import VoteITMF as _
+from voteit.core import _
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.user import USERID_REGEXP
 from voteit.core.security import VIEW
@@ -18,20 +17,21 @@ AT_USERID_PATTERN = re.compile(r'(\A|\s)@('+USERID_REGEXP+r')')
 NEW_USERID_PATTERN = re.compile(r'^'+USERID_REGEXP+r'$')
 
 
-def html_string_validator(node, value):
+def no_html_validator(node, value):
     """ Checks that input doesn't contain html tags
     """
-    # removes tags and new lines and replaces <br> with newlines
-    svalue = strip_tags(value)
-    # removes newlines
-    svalue = re.sub(r"\r?\n", " ", svalue)
-    value = re.sub(r"\r?\n", " ", value)
-    # removes duplicated whitespaces
-    svalue = ' '.join(svalue.split())
-    value = ' '.join(value.split())
-    # if the original value and the stripped value is not the same raise exception
-    if not svalue == value:
+    tag_re = re.compile(r'<.*?>', re.S)
+    comment_re = re.compile(r'<!--|-->')
+
+    if comment_re.match(value):
+        raise colander.Invalid(node, _("HTML comments not allowed."))
+
+    if tag_re.match(value):
         raise colander.Invalid(node, _(u"HTML is not allowed."))
+
+
+# backwards compatible, keep this!
+html_string_validator = no_html_validator
 
 
 def multiple_email_validator(node, value):
@@ -129,16 +129,16 @@ def richtext_validator(node, value):
 #     context = kw['context']
 #     request = kw['request']
 #     return ContextRolesValidator(context, request)
-# 
-# 
+#
+#
 # class ContextRolesValidator(object):
 #     """ Check that the roles a user tries to assign is allowed in this context.
 #     """
-#     
+#
 #     def __init__(self, context, request):
 #         self.context = context
 #         self.request = request
-#     
+#
 #     def __call__(self, node, value):
 #         if not has_permission(MANAGE_GROUPS, self.context, self.request):
 #             raise colander.Invalid(node, _(u"You can't change groups in this context"))

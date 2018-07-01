@@ -12,7 +12,7 @@ from voteit.core import security
 from voteit.core.models.interfaces import IAccessPolicy
 from voteit.core.models.interfaces import IProposal
 from voteit.core.schemas.common import NAME_PATTERN
-from voteit.core.validators import html_string_validator
+from voteit.core.validators import no_html_validator
 from voteit.core.validators import richtext_validator
 from voteit.core.validators import TagValidator
 
@@ -69,7 +69,7 @@ class MeetingSchema(colander.Schema):
         title=_("Title"),
         description=_("meeting_title_description",
                       default="Set a title for the meeting that separates it from previous meetings"),
-        validator=html_string_validator,
+        validator=no_html_validator,
     )
     meeting_mail_name = colander.SchemaNode(
         colander.String(),
@@ -85,7 +85,7 @@ class MeetingSchema(colander.Schema):
         default=deferred_current_user_mail,
         validator=colander.All(
             colander.Email(msg=_("Invalid email address.")),
-            html_string_validator, ),
+            no_html_validator, ),
     )
     description = colander.SchemaNode(
         colander.String(),
@@ -94,7 +94,7 @@ class MeetingSchema(colander.Schema):
                       default="Shows up in search results and similar. One sentence is enough. "
                               "You don't need to add it if you don't want to."),
         missing="",
-        validator=html_string_validator
+        validator=no_html_validator
     )
     body = colander.SchemaNode(
         colander.String(),

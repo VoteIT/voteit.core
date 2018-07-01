@@ -5,7 +5,7 @@ from arche.schemas import UserSchema
 
 from voteit.core import VoteITMF as _
 from voteit.core.models.interfaces import IProfileImage
-from voteit.core.validators import html_string_validator
+from voteit.core.validators import no_html_validator
 
 
 @colander.deferred
@@ -38,7 +38,7 @@ def user_schema_adjustments(schema, event):
                         default=u"Please note that anything you type here will be visible to all users in the same meeting as you."),
         widget = deform.widget.TextAreaWidget(rows=10, cols=60),
         missing=u"",
-        validator=html_string_validator,))
+        validator=no_html_validator,))
     schema.add(colander.SchemaNode(
         colander.String(),
         name = 'profile_image_plugin',
