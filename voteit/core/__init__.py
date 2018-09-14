@@ -12,7 +12,7 @@ PROJECTNAME = 'voteit.core'
 _ = VoteITMF = TranslationStringFactory(PROJECTNAME)
 DEFAULT_SETTINGS = {
     'voteit.gravatar_default': 'mm',
-    'voteit.default_profile_picture': '/static/images/default_user.png',
+    'voteit.default_profile_picture': '/voteit_core_static/images/default_user.png',
     'pyramid_deform.template_search_path': 'voteit.core:templates/widgets arche:templates/deform',
     'arche.hash_method': 'voteit.core.security.get_sha_password',
     'arche.favicon': 'voteit.core:static/favicon.ico',

@@ -31,7 +31,7 @@ def _check_add_perm(adapter, request):
     like_context_types = meeting.like_context_types
     like_workflow_states = meeting.like_workflow_states
     like_user_roles = meeting.like_user_roles
-    user_meeting_roles = meeting.local_roles.get(request.authenticated_userid)
+    user_meeting_roles = meeting.local_roles.get(request.authenticated_userid, ())
 
     # Check if context can be liked
     if not like_context_types or adapter.context.type_name not in like_context_types:
@@ -66,11 +66,14 @@ def like_action(context, request, va, **kw):
     if IProposal.providedBy(context):
         if like_workflow_states and context.get_workflow_state() not in like_workflow_states:
             return
-
     like = request.registry.getAdapter(context, IUserTags, name = 'like')
+    try:
+        has_like_perm = request._has_like_perm
+    except AttributeError:
+        request._has_like_perm = has_like_perm = _check_add_perm(like, request)
     response = {'context': context,
                 'like': like,
-                'has_like_perm': _check_add_perm(like, request),
+                'has_like_perm': has_like_perm,
                 'user_likes': request.authenticated_userid in like}
     return render('voteit.core.plugins:templates/like_btn.pt', response, request = request)
 
@@ -143,15 +146,15 @@ def includeme(config):
 
     #Set properties on meeting
     def get_like_context_types(self):
-        return self.get_field_value('like_context_types')
+        return self.get_field_value('like_context_types', frozenset())
     def set_like_context_types(self, value):
         return self.set_field_value('like_context_types', frozenset(value))
     def get_like_workflow_states(self):
-        return self.get_field_value('like_workflow_states')
+        return self.get_field_value('like_workflow_states', frozenset())
     def set_like_workflow_states(self, value):
         return self.set_field_value('like_workflow_states', frozenset(value))
     def get_like_user_roles(self):
-        return self.get_field_value('like_user_roles')
+        return self.get_field_value('like_user_roles', frozenset())
     def set_like_user_roles(self, value):
         return self.set_field_value('like_user_roles', frozenset(value))
     Meeting.like_context_types = property(get_like_context_types, set_like_context_types)

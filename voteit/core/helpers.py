@@ -94,7 +94,6 @@ def strip_and_truncate(text, limit=200, symbol='<span class="trunc">&hellip;</sp
 
 
 def transform_text(request, text, html=True, tag_func=tags2links):
-    text = strip_tags(text)
     if html:
         text = auto_link(text)
         text = nl2br(text)

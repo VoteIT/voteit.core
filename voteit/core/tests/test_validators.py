@@ -136,7 +136,6 @@ class TokenFormValidatorTests(TestCase):
         self.assertEqual(obj(node, {'email': 'this@email.com', 'token': token_value}), None)
 
 
-
 class MultipleEmailValidatorTests(TestCase):
 
     def setUp(self):
@@ -163,8 +162,7 @@ class MultipleEmailValidatorTests(TestCase):
         self.assertRaises(colander.Invalid, self._fut, None, "one@two.com\nthree@four.net\nfive@six.com\none@two.com hello! \n")
 
 
-
-class HTMLStringValidatorTests(TestCase):
+class NoHTMLValidatorTests(TestCase):
 
     def setUp(self):
         self.config = testing.setUp()
@@ -174,8 +172,8 @@ class HTMLStringValidatorTests(TestCase):
     
     @property
     def _fut(self):
-        from voteit.core.validators import html_string_validator
-        return html_string_validator
+        from voteit.core.validators import no_html_validator
+        return no_html_validator
 
     def test_normal_text(self):
         node = None
@@ -209,8 +207,8 @@ class RichTextValidatorTests(TestCase):
 
 
 def _dummy_default_deferred(*kw):
-    from voteit.core import VoteITMF
-    return VoteITMF(u'Proposal')
+    from voteit.core import _ as MF
+    return MF('Proposal')
 
 
 class NotOnlyDefaultTextValidatorTests(TestCase):

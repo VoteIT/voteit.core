@@ -144,10 +144,11 @@ class ChangeGroup(object):
 class Changes(object):
     whitespaces = re.compile('\s+', re.UNICODE)
     first_tag = re.compile(r'^(#\w+)', re.UNICODE)
-    differ = SequenceMatcher()
 
     def __init__(self, orig, changed):
         # type: (str, str) -> None
+        # moved, must be thread safe
+        self.differ = SequenceMatcher()
         self.stripped_tag = ''
         self.has_lines = self.check_bullet_list(orig)
         self.orig = self.split(orig)

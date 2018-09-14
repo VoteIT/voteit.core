@@ -10,7 +10,7 @@ from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IPollPlugin
 from voteit.core.models.interfaces import IProposal
 from voteit.core.models.poll import PROPOSAL_ORDER_CHOICES
-from voteit.core.validators import html_string_validator
+from voteit.core.validators import no_html_validator
 
 
 _PROPOSAL_ORDER_CHOICES_W_DEFAULT = [('', _('(Use meeting default)'))]
@@ -70,7 +70,7 @@ class PollSchema(colander.MappingSchema):
         colander.String(),
         title=_(u"Title"),
         default=poll_default_title,
-        validator=html_string_validator,
+        validator=no_html_validator,
     )
     description = colander.SchemaNode(
         colander.String(),
@@ -80,7 +80,7 @@ class PollSchema(colander.MappingSchema):
                       default=u"Explain your choice of poll method and your plan for the different "
                               u"polls in the agenda item."),
         widget=deform.widget.TextAreaWidget(rows=5, cols=40),
-        validator=html_string_validator,
+        validator=no_html_validator,
     )
     proposal_order = colander.SchemaNode(
         colander.String(),

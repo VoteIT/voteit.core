@@ -8,7 +8,7 @@ from pyramid.httpexceptions import HTTPBadRequest
 from voteit.core import _
 from voteit.core.models.interfaces import IDiffText
 from voteit.core.schemas.proposal import ProposalSchema
-from voteit.core.validators import html_string_validator
+from voteit.core.validators import no_html_validator
 
 
 class DiffTextSettingsSchema(colander.Schema):
@@ -43,7 +43,7 @@ class DiffTextContentSchema(colander.Schema):
         ),
         missing="",
         widget=deform.widget.TextAreaWidget(rows=12),
-        validator=html_string_validator,
+        validator=no_html_validator,
     )
     hashtag = colander.SchemaNode(
         colander.String(),
@@ -125,7 +125,7 @@ class DiffProposalValidator(object):
         default_text = default_diff_prop_text(node, {'request': self.request})
         if default_text.replace('\r\n', '\n') == value.replace('\r\n', '\n'):
             raise colander.Invalid(node, _("You haven't changed anything"))
-        html_string_validator(node, value)
+        no_html_validator(node, value)
 
 
 class AddDiffProposalSchema(colander.Schema):
