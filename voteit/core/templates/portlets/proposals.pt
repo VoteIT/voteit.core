@@ -6,7 +6,7 @@
 <div id="ai-proposals" class="col-sm-6" data-main-col-resize>
   <div class="list-group">
     <div class="list-group-item">
-      <h2>
+      <h2 class="h4">
         <span class="glyphicon glyphicon-exclamation-sign"></span>
 
         <span i18n:translate="">Proposals</span>

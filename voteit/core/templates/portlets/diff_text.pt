@@ -6,7 +6,7 @@
 <div id="ai-diff-proposals" class="col-sm-12">
   <div class="list-group">
     <div class="list-group-item">
-      <h2>
+      <h2 class="h4">
         <span class="glyphicon glyphicon-transfer"></span>
         <span tal:condition="not diff_text.title">${title}</span>
         <span tal:condition="diff_text.title">${diff_text.title}</span>

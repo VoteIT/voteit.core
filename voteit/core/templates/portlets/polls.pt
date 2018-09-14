@@ -6,7 +6,7 @@
 <div id="ai-polls" class="col-sm-12">
   <div class="list-group">
     <div class="list-group-item">
-      <h2>
+      <h2 class="h4">
         <span class="glyphicon glyphicon-star"></span>
         <span i18n:translate="">Polls</span>
         <a href="javascript:"
