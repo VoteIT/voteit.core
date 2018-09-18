@@ -1,5 +1,3 @@
-from uuid import uuid4
-
 import deform
 from arche.events import ObjectUpdatedEvent
 from arche.events import SchemaCreatedEvent
@@ -11,10 +9,10 @@ from betahaus.viewcomponent import render_view_group
 from pyramid.decorator import reify
 from pyramid.httpexceptions import HTTPForbidden
 from pyramid.httpexceptions import HTTPFound
+from pyramid.httpexceptions import HTTPUnauthorized
 from pyramid.security import NO_PERMISSION_REQUIRED
 from pyramid.view import view_config
 from pyramid.view import view_defaults
-from six import text_type
 from zope.component.event import objectEventNotify
 from zope.interface.interfaces import ComponentLookupError
 
@@ -23,8 +21,8 @@ from voteit.core import security
 from voteit.core.models.interfaces import IAccessPolicy
 from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IMeeting
-from voteit.core.views.base_edit import ArcheFormCompat
 from voteit.core.security import unrestricted_wf_transition_to
+from voteit.core.views.base_edit import ArcheFormCompat
 
 
 @view_defaults(context = IMeeting, permission = security.VIEW)
@@ -35,6 +33,8 @@ class MeetingView(BaseView):
         """ Meeting view behaves a bit differently than regular views since
             it should allow users to request access if unauthorized is raised.
         """
+        if not self.request.authenticated_userid:
+            raise HTTPUnauthorized()
         if not self.request.has_permission(security.VIEW, self.context):
             #We delegate permission checks to the request_meeting_access part.
             url = self.request.resource_url(self.context, 'request_access')
@@ -161,11 +161,7 @@ class RequestAccessForm(ArcheFormCompat, DefaultEditForm):
         if self.request.has_permission(security.VIEW):
             return HTTPFound(location = self.request.resource_url(self.context))
         if not self.request.authenticated_userid:
-            msg = _("You need to login or register.")
-            self.flash_messages.add(msg, type='danger', auto_destruct = False)
-            came_from = self.request.resource_url(self.context, 'request_access')
-            url = self.request.resource_url(self.root, query={'came_from': came_from})
-            return HTTPFound(location = url)
+            raise HTTPUnauthorized()
         if self.access_policy.view is not None:
             #Redirect to access policy custom view
             return HTTPFound(location = self.request.resource_url(self.context, self.access_policy.view))
