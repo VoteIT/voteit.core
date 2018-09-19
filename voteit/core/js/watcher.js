@@ -75,15 +75,19 @@ Watcher.prototype.fetch_data = function() {
     that.start()
   });
   request.fail(function(jqxhr) {
-    that.current_fails++;
-    that.dmsg('Response fail, fails are now at: ' + that.current_fails);
-    if (that.current_fails >= that.max_fails) {
-      that.dmsg('Stopping due to too many fails');
+    if (jqxhr.status == 401) {
+        arche.handle_401(jqxhr);
     } else {
-      that.dmsg('Failed and retrying.');
-      that.start();
+        that.current_fails++;
+        that.dmsg('Response fail, fails are now at: ' + that.current_fails);
+        if (that.current_fails >= that.max_fails) {
+          that.dmsg('Stopping due to too many fails');
+        } else {
+          that.dmsg('Failed and retrying.');
+          that.start();
+        }
     }
-  })
+  });
 }
 
 Watcher.prototype.add_response_callback = function(callback) {
