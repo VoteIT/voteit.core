@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2018-05-22 17:13+0200\n"
-"PO-Revision-Date: 2018-05-22 17:13+0200\n"
+"POT-Creation-Date: 2018-10-01 12:58+0200\n"
+"PO-Revision-Date: 2018-10-01 12:59+0200\n"
 "Last-Translator: Robin Harms Oredsson <robin@betahaus.net>\n"
 "Language-Team: sv <LL@li.org>\n"
 "Language: sv\n"
@@ -38,7 +38,11 @@ msgstr "Registrerade användare"
 msgid "Administrator"
 msgstr "Administratör"
 
-#: voteit/core/validators.py:34
+#: voteit/core/validators.py:27
+msgid "HTML comments not allowed."
+msgstr "HTML är inte tillåtet."
+
+#: voteit/core/validators.py:30
 msgid "HTML is not allowed."
 msgstr "HTML är inte tillåtet."
 
@@ -72,11 +76,11 @@ msgid "Contains forbidden HTML tags."
 msgstr "Innehåller otillåtna HTML-taggar."
 
 #. Default: Only the default content is not valid
-#: voteit/core/validators.py:173
+#: voteit/core/validators.py:143
 msgid "only_default_text_validator_error"
 msgstr "Att enbart posta den förifyllda texten är inte tillräckligt"
 
-#: voteit/core/validators.py:179
+#: voteit/core/validators.py:149
 msgid "Use regular chars and no spaces."
 msgstr "Använd vanliga tecken utan mellanslag."
 
@@ -113,7 +117,7 @@ msgstr "Fast navigation vänster"
 
 #: voteit/core/portlets/agenda.py:26
 #: voteit/core/templates/portlets/agenda.pt:10
-#: voteit/core/templates/overrides/navigation.pt:78
+#: voteit/core/templates/overrides/navigation.pt:83
 msgid "Agenda"
 msgstr "Dagordning"
 
@@ -136,25 +140,25 @@ msgstr "Möten"
 msgid "Meetings"
 msgstr "Möten"
 
-#: voteit/core/portlets/agenda_item.py:49 voteit/core/schemas/poll.py:106
+#: voteit/core/portlets/agenda_item.py:50 voteit/core/schemas/poll.py:106
 #: voteit/core/templates/portlets/proposals.pt:12
 #: voteit/core/views/control_panel.py:30
 msgid "Proposals"
 msgstr "Förslag"
 
-#: voteit/core/portlets/agenda_item.py:67
+#: voteit/core/portlets/agenda_item.py:68
 #: voteit/core/templates/portlets/discussions.pt:11
 msgid "Discussion"
 msgstr "Diskussion"
 
-#: voteit/core/portlets/agenda_item.py:74
+#: voteit/core/portlets/agenda_item.py:75
 #: voteit/core/templates/portlets/polls.pt:11
-#: voteit/core/templates/overrides/navigation.pt:88
+#: voteit/core/templates/overrides/navigation.pt:94
 #: voteit/core/views/components/polls.py:10
 msgid "Polls"
 msgstr "Omröstningar"
 
-#: voteit/core/portlets/agenda_item.py:306
+#: voteit/core/portlets/agenda_item.py:307
 msgid "Agenda Item portlets"
 msgstr "Dagordningsportlets"
 
@@ -162,7 +166,7 @@ msgstr "Dagordningsportlets"
 msgid "Gravatar"
 msgstr "Gravatar"
 
-#. Default: The profile image comes from the <a href="http://www.gravatar.com"
+#. Default: Profile image from <a href="http://www.gravatar.com"
 #. target="_blank">Gravatar network</a>.It's taken from your current email
 #. address. If you want to change the picture, simply go tothe Gravatar site
 #. and change your picture for the email you use in VoteIT.
@@ -173,43 +177,43 @@ msgstr ""
 "\">Gravatar</a>. Den är hämtad från din epostadress. Om du vill ändra bild, "
 "gå till Gravatar och ändra bild för den epostadress du använder i VoteIT."
 
-#: voteit/core/plugins/like_button.py:107
-#: voteit/core/plugins/like_button.py:165
+#: voteit/core/plugins/like_button.py:110
+#: voteit/core/plugins/like_button.py:168
 msgid "Like button"
 msgstr "Gillaknapp"
 
-#: voteit/core/plugins/like_button.py:114 voteit/core/models/proposal.py:27
+#: voteit/core/plugins/like_button.py:117 voteit/core/models/proposal.py:27
 #: voteit/core/schemas/proposal.py:41 voteit/core/schemas/meeting.py:161
 msgid "Proposal"
 msgstr "Förslag"
 
-#: voteit/core/plugins/like_button.py:115
+#: voteit/core/plugins/like_button.py:118
 msgid "DiscussionPost"
 msgstr "Diskussionsinlägg"
 
-#: voteit/core/plugins/like_button.py:117
+#: voteit/core/plugins/like_button.py:120
 msgid "Allow like on these types"
 msgstr "Tillåt gilla på typerna"
 
-#: voteit/core/plugins/like_button.py:121
+#: voteit/core/plugins/like_button.py:124
 msgid "Proposal workflow states"
 msgstr "Förslagens status"
 
-#: voteit/core/plugins/like_button.py:122
+#: voteit/core/plugins/like_button.py:125
 msgid "If selected, proposals in these workflow states can be liked."
 msgstr "Om någon är vald, kräv att förslag är i valda tillstånd för att gilla."
 
-#: voteit/core/plugins/like_button.py:128
+#: voteit/core/plugins/like_button.py:131
 msgid "User roles"
 msgstr "Användarroller"
 
 #. Default: If selected, users will need one of these within the meeting to be
 #. able to like something.
-#: voteit/core/plugins/like_button.py:129
+#: voteit/core/plugins/like_button.py:132
 msgid "like_user_roles_description"
 msgstr "Om vald så behöver användare ha en av rollerna i mötet för att gilla."
 
-#: voteit/core/plugins/like_button.py:169
+#: voteit/core/plugins/like_button.py:172
 #: voteit/core/views/control_panel.py:115
 #: voteit/core/views/control_panel.py:117
 #: voteit/core/views/control_panel.py:119
@@ -268,7 +272,7 @@ msgstr "Du har fått tillgång till mötet - välkommen!"
 msgid "<Select>"
 msgstr "<Välj>"
 
-#: voteit/core/plugins/hashlist_ap.py:86 voteit/core/views/meeting.py:183
+#: voteit/core/plugins/hashlist_ap.py:86 voteit/core/views/meeting.py:179
 msgid "Configure access policy"
 msgstr "Inställningar för vald accesspolicy"
 
@@ -470,7 +474,7 @@ msgstr "Dagordningspunkt"
 
 #. Default: You can't close an agenda item that has ongoing polls in it. Close
 #. the polls first!
-#: voteit/core/models/agenda_item.py:112
+#: voteit/core/models/agenda_item.py:113
 msgid "error_polls_not_closed_cant_close_ai"
 msgstr ""
 "Du kan inte stänga en dagordningspunkt med pågående omröstningar. Stäng "
@@ -478,7 +482,7 @@ msgstr ""
 
 #. Default: You can't set an agenda item to ongoing if the meeting is not
 #. ongoing.
-#: voteit/core/models/agenda_item.py:121
+#: voteit/core/models/agenda_item.py:122
 msgid "error_ai_cannot_be_ongoing_in_not_ongoing_meeting"
 msgstr ""
 "Du kan inte sätta en dagordningspunkt i pågående om mötet inte är pågående."
@@ -585,12 +589,8 @@ msgstr ""
 "är deltagare i samma möte som du."
 
 #: voteit/core/schemas/user.py:45
-msgid "Profile image provider"
-msgstr "Profilbilden kommer ifrån"
-
-#: voteit/core/schemas/user.py:46
-msgid "profile_image_plugin_description"
-msgstr "Läs mer i hjälpen om olika metoder och dess för- och nackdelar."
+msgid "Use profile image from"
+msgstr "Använd profilbild från"
 
 #: voteit/core/schemas/agenda.py:9
 msgid "Hide type and unread count"
@@ -995,6 +995,18 @@ msgstr ""
 "gör det lättare för deltagarna att identifiera sig med punkten."
 
 #: voteit/core/schemas/agenda_item.py:46
+msgid "Collapse body texts that are higher than..."
+msgstr "Dra ihop brödtext som är högre än…"
+
+#: voteit/core/schemas/agenda_item.py:49
+msgid "Off"
+msgstr "Av"
+
+#: voteit/core/schemas/agenda_item.py:50
+msgid "Default (200px)"
+msgstr "Standard (200px)"
+
+#: voteit/core/schemas/agenda_item.py:59
 msgid "Base hashtag for Agenda Item"
 msgstr "Hashtag för dagordningspunkt"
 
@@ -1002,23 +1014,23 @@ msgstr "Hashtag för dagordningspunkt"
 #. usually a good idea to leave this empty if you don't have a special reason
 #. to change it. (It will use the agenda items name in that case) Proposals
 #. will be named according to this base tag + a number.
-#: voteit/core/schemas/agenda_item.py:47
+#: voteit/core/schemas/agenda_item.py:60
 msgid "ai_hashtag_schema_description"
 msgstr ""
 "Används bara av system som implementerar agendabaserade hashtaggar. Det är "
 "vanligtvis en bra idé att låta det här vara tomt om du inte har någon "
 "speciell anledning att ändra det."
 
-#: voteit/core/schemas/agenda_item.py:55
+#: voteit/core/schemas/agenda_item.py:68
 msgid "Must be a-z, 0-9, or any of '.-_'."
 msgstr "Måste vara a-z, 0-0 eller en av ’.-_’."
 
-#: voteit/core/schemas/agenda_item.py:59 voteit/core/views/meeting.py:211
+#: voteit/core/schemas/agenda_item.py:72 voteit/core/views/meeting.py:207
 msgid "Agenda sorting labels"
 msgstr "Dagordningens sorteringsetiketter"
 
 #. Default: You may add more in the settings menu.
-#: voteit/core/schemas/agenda_item.py:60
+#: voteit/core/schemas/agenda_item.py:73
 msgid "ai_schema_tags_description"
 msgstr "Du kan lägga till fler i inställnings-menyn."
 
@@ -1252,8 +1264,8 @@ msgid "Meeting closed"
 msgstr "Mötet stängt"
 
 #: voteit/core/templates/minutes.pt:15
-#: voteit/core/templates/overrides/navigation.pt:108
-#: voteit/core/templates/overrides/navigation.pt:135
+#: voteit/core/templates/overrides/navigation.pt:115
+#: voteit/core/templates/overrides/navigation.pt:144
 #: voteit/core/templates/snippets/participants_tabs.pt:10
 #: voteit/core/views/control_panel.py:98
 msgid "Participants"
@@ -1588,6 +1600,14 @@ msgstr "Bara:"
 msgid "Show all"
 msgstr "Visa alla"
 
+#: voteit/core/templates/portlets/agenda_fixed.pt:116
+msgid "Has unread proposals"
+msgstr "Har olästa förslag"
+
+#: voteit/core/templates/portlets/agenda_fixed.pt:123
+msgid "Has unread discussions"
+msgstr "Har olästa diskussionsinlägg"
+
 #. Default: The method '${poll_method}' that this poll uses i missing from this
 #. system. This poll won't work unless it's restored or changed.
 #: voteit/core/templates/portlets/polls_inline.pt:19
@@ -1666,26 +1686,42 @@ msgstr "Startad: ${date}"
 msgid "Closed: ${date}"
 msgstr "Stängd: ${date}"
 
-#: voteit/core/templates/overrides/master.pt:51
+#: voteit/core/templates/overrides/master.pt:25
+msgid "Skip to main content"
+msgstr "Hoppa till huvudinnehåll"
+
+#: voteit/core/templates/overrides/master.pt:26
+msgid "Skip to meetings"
+msgstr "Hoppa till möten"
+
+#: voteit/core/templates/overrides/master.pt:27
+msgid "Skip to agenda"
+msgstr "Hoppa till agenda"
+
+#: voteit/core/templates/overrides/master.pt:28
+msgid "Skip to navigation"
+msgstr "Hoppa till navigation"
+
+#: voteit/core/templates/overrides/master.pt:58
 msgid "Search"
 msgstr "Sök"
 
-#: voteit/core/templates/overrides/navigation.pt:37
+#: voteit/core/templates/overrides/navigation.pt:39
 #: voteit/core/templates/menus/help.pt:10
 msgid "Help"
 msgstr "Hjälp"
 
-#: voteit/core/templates/overrides/navigation.pt:59
+#: voteit/core/templates/overrides/navigation.pt:63
 #: voteit/core/templates/menus/site.pt:10
 msgid "Site"
 msgstr "Site"
 
-#: voteit/core/templates/overrides/navigation.pt:100
+#: voteit/core/templates/overrides/navigation.pt:107
 msgid "Control panel"
 msgstr "Kontrollpanel"
 
-#: voteit/core/templates/overrides/navigation.pt:115
-#: voteit/core/templates/overrides/navigation.pt:142
+#: voteit/core/templates/overrides/navigation.pt:122
+#: voteit/core/templates/overrides/navigation.pt:152
 msgid "Minutes"
 msgstr "Protokoll"
 
@@ -2171,30 +2207,26 @@ msgstr ""
 "registrerade policyn inte existerar längre. Vänligen kontakta moderator om "
 "detta."
 
-#: voteit/core/views/meeting.py:164
-msgid "You need to login or register."
-msgstr "Du behöver logga in eller registrera dig."
-
 #. Default: Can't find an access policy with the id '${policy}'.
 #. This might mean that the registered
 #. access policy type for this meeting doesn't exist.
 #. Please change access policy.
-#: voteit/core/views/meeting.py:191
+#: voteit/core/views/meeting.py:187
 msgid "access_policy_not_found_moderator"
 msgstr ""
 "Kan inte hitta en accesspolicy med id '${policy}'. Det kan betyda att den "
 "registrerade accesspolicyn för mötet inte existerar längre. Vänligen "
 "kontakta moderatorn om detta."
 
-#: voteit/core/views/meeting.py:220
+#: voteit/core/views/meeting.py:216
 msgid "Copy users permissions"
 msgstr "Kopiera användarnas rättigheter"
 
-#: voteit/core/views/meeting.py:238
+#: voteit/core/views/meeting.py:234
 msgid "Copy agenda"
 msgstr "Kopiera agenda"
 
-#: voteit/core/views/meeting.py:251
+#: voteit/core/views/meeting.py:247
 #, python-format
 msgid "Copied ${num} objects"
 msgstr "Kopierade ${num} objekt"
@@ -2204,7 +2236,7 @@ msgstr "Kopierade ${num} objekt"
 msgid "Filter active, showing ${num} tag(s)"
 msgstr "Filter aktivt, visar ${num} tagg(ar)"
 
-#: voteit/core/views/agenda_item.py:78
+#: voteit/core/views/agenda_item.py:85
 msgid "Status changed - note that workflow state also matters."
 msgstr "Status ändrad - notera att arbetsflödestillstånd också har betydelse"
 
@@ -2328,6 +2360,12 @@ msgstr "Svara"
 #: voteit/core/views/components/metadata_listing.py:78
 msgid "Comment"
 msgstr "Kommentera"
+
+#~ msgid "profile_image_plugin_description"
+#~ msgstr "Läs mer i hjälpen om olika metoder och dess för- och nackdelar."
+
+#~ msgid "You need to login or register."
+#~ msgstr "Du behöver logga in eller registrera dig."
 
 #~ msgid "Ok"
 #~ msgstr "Ok"
@@ -2492,9 +2530,6 @@ msgstr "Kommentera"
 #~ msgid "<Don't copy>"
 #~ msgstr "<Kopiera inte>"
 
-#~ msgid "Back to meeting"
-#~ msgstr "Tillbaka till möte"
-
 #~ msgid "Configure selected access policy"
 #~ msgstr "Inställningar för vald accesspolicy"
 
@@ -2552,9 +2587,6 @@ msgstr "Kommentera"
 
 #~ msgid "Last name"
 #~ msgstr "Efternamn"
-
-#~ msgid "Navigation"
-#~ msgstr "Navigation"
 
 #~ msgid "Meeting functions"
 #~ msgstr "Mötesfunktioner"
@@ -2812,10 +2844,6 @@ msgstr "Kommentera"
 #~ msgstr ""
 #~ "Du kan fortfarande komma åt tillbakadragna förslag genom att använda "
 #~ "länken under de vanliga förslagen."
-
-#~| msgid "Hide retracted or unhandled proposals"
-#~ msgid "Hide unhandled proposals"
-#~ msgstr "Göm ohanterade förslag"
 
 #~| msgid "meeting_hide_retracted_description"
 #~ msgid "meeting_hide_unhandled_description"
@@ -3199,9 +3227,6 @@ msgstr "Kommentera"
 
 #~ msgid "Read more"
 #~ msgstr "Läs mer"
-
-#~ msgid "Load new discussion posts"
-#~ msgstr "Ladda nya inlägg"
 
 #~ msgid "Showing ${count} users"
 #~ msgstr "Visar ${count} användare"

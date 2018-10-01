@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE 1.0\n"
-"POT-Creation-Date: 2018-05-22 17:13+0200\n"
+"POT-Creation-Date: 2018-10-01 12:58+0200\n"
 "PO-Revision-Date: 2018-02-20 14:41+0100\n"
 "Last-Translator: Tatsuhei Morozumi <poc1220@gmail.com>\n"
 "Language-Team: Japanese\n"
@@ -35,7 +35,12 @@ msgstr "登録したユーザー"
 msgid "Administrator"
 msgstr "管理人"
 
-#: voteit/core/validators.py:34
+#: voteit/core/validators.py:27
+#, fuzzy
+msgid "HTML comments not allowed."
+msgstr "HTMLは許可されていません."
+
+#: voteit/core/validators.py:30
 msgid "HTML is not allowed."
 msgstr "HTMLは許可されていません."
 
@@ -69,11 +74,11 @@ msgid "Contains forbidden HTML tags."
 msgstr "禁止されたHTMLタグが含まれます."
 
 #. Default: Only the default content is not valid
-#: voteit/core/validators.py:173
+#: voteit/core/validators.py:143
 msgid "only_default_text_validator_error"
 msgstr "デフォルトの内容が有効ではありません"
 
-#: voteit/core/validators.py:179
+#: voteit/core/validators.py:149
 msgid "Use regular chars and no spaces."
 msgstr "通常の文字及び空白なしを使用する."
 
@@ -110,7 +115,7 @@ msgstr "左側に固定"
 
 #: voteit/core/portlets/agenda.py:26
 #: voteit/core/templates/portlets/agenda.pt:10
-#: voteit/core/templates/overrides/navigation.pt:78
+#: voteit/core/templates/overrides/navigation.pt:83
 msgid "Agenda"
 msgstr "議題"
 
@@ -131,25 +136,25 @@ msgstr "会議リスト"
 msgid "Meetings"
 msgstr "会議"
 
-#: voteit/core/portlets/agenda_item.py:49 voteit/core/schemas/poll.py:106
+#: voteit/core/portlets/agenda_item.py:50 voteit/core/schemas/poll.py:106
 #: voteit/core/templates/portlets/proposals.pt:12
 #: voteit/core/views/control_panel.py:30
 msgid "Proposals"
 msgstr "提案"
 
-#: voteit/core/portlets/agenda_item.py:67
+#: voteit/core/portlets/agenda_item.py:68
 #: voteit/core/templates/portlets/discussions.pt:11
 msgid "Discussion"
 msgstr "議論"
 
-#: voteit/core/portlets/agenda_item.py:74
+#: voteit/core/portlets/agenda_item.py:75
 #: voteit/core/templates/portlets/polls.pt:11
-#: voteit/core/templates/overrides/navigation.pt:88
+#: voteit/core/templates/overrides/navigation.pt:94
 #: voteit/core/views/components/polls.py:10
 msgid "Polls"
 msgstr "投票"
 
-#: voteit/core/portlets/agenda_item.py:306
+#: voteit/core/portlets/agenda_item.py:307
 #, fuzzy
 msgid "Agenda Item portlets"
 msgstr "議題アイテムポートレット"
@@ -158,7 +163,7 @@ msgstr "議題アイテムポートレット"
 msgid "Gravatar"
 msgstr "グラベーター"
 
-#. Default: The profile image comes from the <a href="http://www.gravatar.com"
+#. Default: Profile image from <a href="http://www.gravatar.com"
 #. target="_blank">Gravatar network</a>.It's taken from your current email
 #. address. If you want to change the picture, simply go tothe Gravatar site
 #. and change your picture for the email you use in VoteIT.
@@ -170,42 +175,42 @@ msgstr ""
 "ています。プロフィール画像を変更するにはGravatarのページから画像を変更してく"
 "ださい。"
 
-#: voteit/core/plugins/like_button.py:107
-#: voteit/core/plugins/like_button.py:165
+#: voteit/core/plugins/like_button.py:110
+#: voteit/core/plugins/like_button.py:168
 msgid "Like button"
 msgstr ""
 
-#: voteit/core/plugins/like_button.py:114 voteit/core/models/proposal.py:27
+#: voteit/core/plugins/like_button.py:117 voteit/core/models/proposal.py:27
 #: voteit/core/schemas/proposal.py:41 voteit/core/schemas/meeting.py:161
 msgid "Proposal"
 msgstr "提案"
 
-#: voteit/core/plugins/like_button.py:115
+#: voteit/core/plugins/like_button.py:118
 #, fuzzy
 msgid "DiscussionPost"
 msgstr "議論の投稿"
 
-#: voteit/core/plugins/like_button.py:117
+#: voteit/core/plugins/like_button.py:120
 msgid "Allow like on these types"
 msgstr ""
 
-#: voteit/core/plugins/like_button.py:121
+#: voteit/core/plugins/like_button.py:124
 #, fuzzy
 msgid "Proposal workflow states"
 msgstr "提案の状態を隠す"
 
-#: voteit/core/plugins/like_button.py:122
+#: voteit/core/plugins/like_button.py:125
 msgid "If selected, proposals in these workflow states can be liked."
 msgstr ""
 
-#: voteit/core/plugins/like_button.py:128
+#: voteit/core/plugins/like_button.py:131
 #, fuzzy
 msgid "User roles"
 msgstr "あなたの役割"
 
 #. Default: If selected, users will need one of these within the meeting to be
 #. able to like something.
-#: voteit/core/plugins/like_button.py:129
+#: voteit/core/plugins/like_button.py:132
 #, fuzzy
 msgid "like_user_roles_description"
 msgstr ""
@@ -214,7 +219,7 @@ msgstr ""
 "す。もし閲覧のみできるユーザーを追加するには、閲覧を選択しその他の選択肢から"
 "チェックを外してください。"
 
-#: voteit/core/plugins/like_button.py:169
+#: voteit/core/plugins/like_button.py:172
 #: voteit/core/views/control_panel.py:115
 #: voteit/core/views/control_panel.py:117
 #: voteit/core/views/control_panel.py:119
@@ -271,7 +276,7 @@ msgstr "参加が許可されました。ようこそ！"
 msgid "<Select>"
 msgstr "選択"
 
-#: voteit/core/plugins/hashlist_ap.py:86 voteit/core/views/meeting.py:183
+#: voteit/core/plugins/hashlist_ap.py:86 voteit/core/views/meeting.py:179
 msgid "Configure access policy"
 msgstr "アクセスポリシーを設定する"
 
@@ -472,14 +477,14 @@ msgstr "議題アイテム"
 
 #. Default: You can't close an agenda item that has ongoing polls in it. Close
 #. the polls first!
-#: voteit/core/models/agenda_item.py:112
+#: voteit/core/models/agenda_item.py:113
 msgid "error_polls_not_closed_cant_close_ai"
 msgstr ""
 "投票期間中の議題を終了することはできません。まずは投票を終了してください"
 
 #. Default: You can't set an agenda item to ongoing if the meeting is not
 #. ongoing.
-#: voteit/core/models/agenda_item.py:121
+#: voteit/core/models/agenda_item.py:122
 msgid "error_ai_cannot_be_ongoing_in_not_ongoing_meeting"
 msgstr "会議が開催中ではない場合、議題を進行中にはできません"
 
@@ -581,12 +586,9 @@ msgid "user_about_me_description"
 msgstr "ここに記入したことは、すべての会議に参加しているユーザーに表示されます"
 
 #: voteit/core/schemas/user.py:45
-msgid "Profile image provider"
+#, fuzzy
+msgid "Use profile image from"
 msgstr "プロフィール画像の提供者"
-
-#: voteit/core/schemas/user.py:46
-msgid "profile_image_plugin_description"
-msgstr ""
 
 #: voteit/core/schemas/agenda.py:9
 msgid "Hide type and unread count"
@@ -993,6 +995,18 @@ msgstr ""
 "能です。画像を追加することで参加者にとってページわかりやすくなります。"
 
 #: voteit/core/schemas/agenda_item.py:46
+msgid "Collapse body texts that are higher than..."
+msgstr ""
+
+#: voteit/core/schemas/agenda_item.py:49
+msgid "Off"
+msgstr ""
+
+#: voteit/core/schemas/agenda_item.py:50
+msgid "Default (200px)"
+msgstr ""
+
+#: voteit/core/schemas/agenda_item.py:59
 #, fuzzy
 msgid "Base hashtag for Agenda Item"
 msgstr "議題のハッシュタグ"
@@ -1001,22 +1015,22 @@ msgstr "議題のハッシュタグ"
 #. usually a good idea to leave this empty if you don't have a special reason
 #. to change it. (It will use the agenda items name in that case) Proposals
 #. will be named according to this base tag + a number.
-#: voteit/core/schemas/agenda_item.py:47
+#: voteit/core/schemas/agenda_item.py:60
 msgid "ai_hashtag_schema_description"
 msgstr ""
 "議題ごとのハッシュタグを設けるときに使われますが、特別の理由がない限り空欄に"
 "しておくのがいいでしょう"
 
-#: voteit/core/schemas/agenda_item.py:55
+#: voteit/core/schemas/agenda_item.py:68
 msgid "Must be a-z, 0-9, or any of '.-_'."
 msgstr "小文字のアルファベット、半角数字、または’.-_’.を使用してください"
 
-#: voteit/core/schemas/agenda_item.py:59 voteit/core/views/meeting.py:211
+#: voteit/core/schemas/agenda_item.py:72 voteit/core/views/meeting.py:207
 msgid "Agenda sorting labels"
 msgstr "議題を分類するラベル"
 
 #. Default: You may add more in the settings menu.
-#: voteit/core/schemas/agenda_item.py:60
+#: voteit/core/schemas/agenda_item.py:73
 msgid "ai_schema_tags_description"
 msgstr "設定メニューからさらに追加することができます"
 
@@ -1251,8 +1265,8 @@ msgid "Meeting closed"
 msgstr "閉会された会議"
 
 #: voteit/core/templates/minutes.pt:15
-#: voteit/core/templates/overrides/navigation.pt:108
-#: voteit/core/templates/overrides/navigation.pt:135
+#: voteit/core/templates/overrides/navigation.pt:115
+#: voteit/core/templates/overrides/navigation.pt:144
 #: voteit/core/templates/snippets/participants_tabs.pt:10
 #: voteit/core/views/control_panel.py:98
 msgid "Participants"
@@ -1589,6 +1603,16 @@ msgstr "限定:"
 msgid "Show all"
 msgstr "全てを表示"
 
+#: voteit/core/templates/portlets/agenda_fixed.pt:116
+#, fuzzy
+msgid "Has unread proposals"
+msgstr "否決された提案"
+
+#: voteit/core/templates/portlets/agenda_fixed.pt:123
+#, fuzzy
+msgid "Has unread discussions"
+msgstr "議論を有効にする"
+
 #. Default: The method '${poll_method}' that this poll uses i missing from this
 #. system. This poll won't work unless it's restored or changed.
 #: voteit/core/templates/portlets/polls_inline.pt:19
@@ -1667,26 +1691,44 @@ msgstr "開始日:${date}"
 msgid "Closed: ${date}"
 msgstr "閉会日:${date}"
 
-#: voteit/core/templates/overrides/master.pt:51
+#: voteit/core/templates/overrides/master.pt:25
+msgid "Skip to main content"
+msgstr ""
+
+#: voteit/core/templates/overrides/master.pt:26
+#, fuzzy
+msgid "Skip to meetings"
+msgstr "会議に戻る"
+
+#: voteit/core/templates/overrides/master.pt:27
+#, fuzzy
+msgid "Skip to agenda"
+msgstr "固定された議題"
+
+#: voteit/core/templates/overrides/master.pt:28
+msgid "Skip to navigation"
+msgstr ""
+
+#: voteit/core/templates/overrides/master.pt:58
 msgid "Search"
 msgstr ""
 
-#: voteit/core/templates/overrides/navigation.pt:37
+#: voteit/core/templates/overrides/navigation.pt:39
 #: voteit/core/templates/menus/help.pt:10
 msgid "Help"
 msgstr "ヘルプ"
 
-#: voteit/core/templates/overrides/navigation.pt:59
+#: voteit/core/templates/overrides/navigation.pt:63
 #: voteit/core/templates/menus/site.pt:10
 msgid "Site"
 msgstr ""
 
-#: voteit/core/templates/overrides/navigation.pt:100
+#: voteit/core/templates/overrides/navigation.pt:107
 msgid "Control panel"
 msgstr ""
 
-#: voteit/core/templates/overrides/navigation.pt:115
-#: voteit/core/templates/overrides/navigation.pt:142
+#: voteit/core/templates/overrides/navigation.pt:122
+#: voteit/core/templates/overrides/navigation.pt:152
 msgid "Minutes"
 msgstr "議事録"
 
@@ -2172,31 +2214,27 @@ msgstr ""
 "の参加タイプが存在しない可能性があります。モデレーターに問い合わせてみてくだ"
 "さい"
 
-#: voteit/core/views/meeting.py:164
-msgid "You need to login or register."
-msgstr "ログインするか登録してください"
-
 #. Default: Can't find an access policy with the id '${policy}'.
 #.                                     This might mean that the registered
 #. access policy type for this meeting doesn't exist.
 #.                                     Please change access policy.
-#: voteit/core/views/meeting.py:191
+#: voteit/core/views/meeting.py:187
 msgid "access_policy_not_found_moderator"
 msgstr ""
 "アクセスポリシー:${policy}がみつかりませんでした。おそらく登録されたこの会議"
 "の参加タイプが存在しない可能性があります。アクセスポリシーを変更してください"
 
-#: voteit/core/views/meeting.py:220
+#: voteit/core/views/meeting.py:216
 #, fuzzy
 msgid "Copy users permissions"
 msgstr "許可"
 
-#: voteit/core/views/meeting.py:238
+#: voteit/core/views/meeting.py:234
 #, fuzzy
 msgid "Copy agenda"
 msgstr "固定された議題"
 
-#: voteit/core/views/meeting.py:251
+#: voteit/core/views/meeting.py:247
 #, python-format
 msgid "Copied ${num} objects"
 msgstr ""
@@ -2206,7 +2244,7 @@ msgstr ""
 msgid "Filter active, showing ${num} tag(s)"
 msgstr "絞り込みを有効化:${num}のタグを表示"
 
-#: voteit/core/views/agenda_item.py:78
+#: voteit/core/views/agenda_item.py:85
 #, fuzzy
 msgid "Status changed - note that workflow state also matters."
 msgstr ""
@@ -2332,6 +2370,13 @@ msgstr "返信"
 #: voteit/core/views/components/metadata_listing.py:78
 msgid "Comment"
 msgstr "コメント"
+
+#, fuzzy
+#~ msgid "Collapse long body texts"
+#~ msgstr "本文"
+
+#~ msgid "You need to login or register."
+#~ msgstr "ログインするか登録してください"
 
 #~ msgid "Ok"
 #~ msgstr "OK"
@@ -2479,9 +2524,6 @@ msgstr "コメント"
 #, fuzzy
 #~ msgid "<Don't copy>"
 #~ msgstr "コピーしないでください"
-
-#~ msgid "Back to meeting"
-#~ msgstr "会議に戻る"
 
 #~ msgid "Configure selected access policy"
 #~ msgstr "選択したアクセスポリシーを設定する"
