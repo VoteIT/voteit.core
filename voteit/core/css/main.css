@@ -719,6 +719,10 @@ body.is_moderator {
 .body {
   margin-top: 44px;
   margin-bottom: 22px; }
+  .body img {
+    display: inline-block;
+    max-width: 100%;
+    height: auto; }
 
 .list-group-item.active > a {
   color: #fff; }

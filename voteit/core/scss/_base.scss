@@ -42,6 +42,10 @@ body.is_moderator {
 .body {
   margin-top: $line-height-computed*2;
   margin-bottom: $line-height-computed;
+
+  img {
+    @include img-responsive(inline-block);
+  }
 }
 
 .list-group-item.active {
