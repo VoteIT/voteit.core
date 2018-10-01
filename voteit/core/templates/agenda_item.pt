@@ -17,7 +17,7 @@
          data-collapsible="body"
          tal:define="body context.body|None"
          tal:condition="body">
-        <div data-collapsible-text="200">
+        <div tal:attributes="data-collapsible-text collapsible_limit">
             ${structure: body}
         </div>
     </div>

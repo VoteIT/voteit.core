@@ -60,6 +60,13 @@ class AgendaItemView(BaseView):
             )
             filter_msg = filter_msg.replace('\n','')
             response['filter_msg'] = filter_msg
+        # 200 is a default, but None removes the setting, hence this
+        collapsible_limit = self.context.collapsible_limit
+        if collapsible_limit is None:
+            collapsible_limit = 200
+        if collapsible_limit == 0:
+            collapsible_limit = None
+        response['collapsible_limit'] = collapsible_limit
         return response
 
 

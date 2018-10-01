@@ -41,6 +41,20 @@ class AgendaItemSchema(colander.MappingSchema):
         missing="",
         widget=deform.widget.RichTextWidget(options=(('theme', 'advanced'),)),
         validator=richtext_validator, )
+    collapsible_limit = colander.SchemaNode(
+        colander.Int(),
+        title=_("Collapse long body texts"),
+        description=_(""),
+        widget=deform.widget.SelectWidget(values=(
+            # The odd values here are so we can have a sane default
+            ('0', _("Off")),
+            ('', _("Default (200px)")),
+            ('400', _("400px")),
+            ('600', _("600px")),
+            ('800', _("800px")),
+        )),
+        missing=None,
+    )
     hashtag = colander.SchemaNode(
         colander.String(),
         title=_("Base hashtag for Agenda Item"),
