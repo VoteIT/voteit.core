@@ -6,7 +6,7 @@ from BTrees.OOBTree import OOBTree
 from arche.api import BaseMixin
 from arche.resources import LocalRolesMixin
 from arche.utils import utcnow
-from pyramid.security import authenticated_userid
+from betahaus.pyracont import CustomFunctionLoopError
 from pyramid.threadlocal import get_current_request
 from repoze.folder import Folder
 from repoze.folder import unicodify
@@ -93,6 +93,14 @@ class BaseContent(Folder, BaseMixin, LocalRolesMixin):
             mutator(value, key=key)
             return
         self.field_storage[key] = value
+
+    @classmethod
+    def add_field(cls, name, default=''):
+        if not hasattr(cls, name):
+            setattr(cls, name, property(
+                lambda o: o.get_field_value(name, default),
+                lambda o, value: o.set_field_value(name, value),
+            ))
 
     def set_field_appstruct(self, values, notify = True, mark_modified = True):
         #Remove restricted keys, in case they're present
