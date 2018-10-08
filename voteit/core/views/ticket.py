@@ -6,6 +6,7 @@ from arche.views.base import button_add
 from arche.views.base import button_cancel
 from pyramid.httpexceptions import HTTPForbidden
 from pyramid.httpexceptions import HTTPFound
+from pyramid.httpexceptions import HTTPUnauthorized
 from pyramid.security import NO_PERMISSION_REQUIRED
 from pyramid.view import view_config
 from pyramid.view import view_defaults
@@ -114,7 +115,7 @@ class TicketView(BaseView):
                         mapping = {'register_link': register_link,
                                    'meeting_title': "<b>%s</b>" % self.context.title,
                                    'email': "<b>%s</b>" % email})
-                url = self.request.resource_url(self.root, 'login', query = {'came_from': claim_url})
+                raise HTTPUnauthorized(msg)
             else:
                 #Create a registration token to allow bypass regular registration procedure
                 msg = _("ticket_user_probably_dont_exist_text",
