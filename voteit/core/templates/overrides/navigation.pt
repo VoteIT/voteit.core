@@ -160,9 +160,5 @@
       </div>
     </div><!-- /.container-->
   </tal:meeting_nav>
-
-  <div class="container container-float-below">
-    <div class="float-below" data-flash-slot="voteit-main"></div>
-  </div>
 </nav>
 </tal:main>

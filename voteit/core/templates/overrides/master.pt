@@ -34,8 +34,6 @@
         </tal:portlets>
     </div>
 
-    <div class="fixed-flash-slot" data-flash-slot="main" role="alert"></div>
-
     <nav metal:define-slot="navigation" tal:replace="structure view.render_template('arche:templates/navigation.pt')" />
 
     <div class="container">
@@ -74,9 +72,13 @@
         <tal:actionbar tal:condition="not request.meeting"
                        metal:define-slot="actionbar"
                        replace="structure view.render_actionbar()" />
+        <div metal:define-slot="mainflash" style="position: relative;">
+          <div data-spy="affix" data-offset-top="150" class="mainflash">
+            <div data-flash-slot="main" data-flash-slot="voteit-main"></div>
+          </div>
+        </div>
         <metal:content define-slot="content"></metal:content>
       </div>
-
     </div><!-- container -->
 
     <footer tal:replace="structure view.render_template('arche:templates/footer.pt')" />
