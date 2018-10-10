@@ -501,10 +501,10 @@ class ILogHandler(Interface):
         """
 
 
-class IReadNames(IDict):
+class IReadNames(Interface):
     pass
 
-class IReadNamesCounter(IDict):
+class IReadNamesCounter(Interface):
     pass
 
 

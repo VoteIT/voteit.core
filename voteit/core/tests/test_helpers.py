@@ -204,6 +204,7 @@ class TestGetDocidsToShow(unittest.TestCase):
         self.config.include('voteit.core.models.site')
         self.config.include('voteit.core.models.users')
         self.config.include('voteit.core.models.user')
+        self.config.include('voteit.core.helpers')
         self.config.include('voteit.core.testing_helpers.register_workflows')
 
     def tearDown(self):
@@ -322,7 +323,6 @@ class TestGetDocidsToShow(unittest.TestCase):
         request = self._mk_request(root)
         read_names = request.get_read_names(root['m']['ai'])
         read_names.mark_read(['d0', 'd1'], 'admin')
-        #self._mark_read(root, range(2))
         self._set_tag(root, range(6))
         result = self._fut(request, root['m']['ai'], 'DiscussionPost', tags = ('one',), limit = 3)
         docids = self._docid_structure(root)

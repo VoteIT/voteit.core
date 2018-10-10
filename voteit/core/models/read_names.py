@@ -1,7 +1,3 @@
-from BTrees.Length import Length
-from BTrees.OOBTree import OOBTree
-from BTrees.OOBTree import Set
-from arche.compat import IterableUserDict
 from arche.interfaces import IObjectWillBeRemovedEvent
 from pyramid.decorator import reify
 from pyramid.interfaces import IRequest
@@ -20,27 +16,17 @@ from voteit.core.models.interfaces import IDiscussionPost
 from voteit.core.models.interfaces import IProposal
 from voteit.core.models.interfaces import IReadNames
 from voteit.core.models.interfaces import IReadNamesCounter
-from zope.interface.interfaces import ComponentLookupError
 
 
 @implementer(IReadNames)
 @adapter(IAgendaItem, IRequest)
-class ReadNames(IterableUserDict):
-    """ Keep track of read items. The base ZODB-version isn't great for
-        large live meetings.
-
-        It's a good idea to replace it with a redis-based version
-        with non-expiring keys for those occasions.
-        """
+class ReadNames(object):
+    """ Keep track of read items."""
     track_types = ('Proposal', 'DiscussionPost')
 
     def __init__(self, context, request):
         self.context = context
         self.request = request
-        try:
-            self.data = context._read_names
-        except AttributeError:
-            self.data = context._read_names = OOBTree()
 
     @reify
     def path_query(self):
@@ -53,43 +39,67 @@ class ReadNames(IterableUserDict):
             meeting = find_interface(self.context, IMeeting)
         return meeting
 
-    def __setitem__(self, key, value):
-        self.data[key] = Set(value)
+    @reify
+    def rnc(self):
+        return self.request.registry.getMultiAdapter([self.meeting, self.request], IReadNamesCounter)
+
+    def __getitem__(self, userid):
+        return self.request.redis_conn.smembers(self.get_key(userid))
+
+    def get(self, userid, default=None):
+        try:
+            return self[userid]
+        except KeyError:
+            return default
+
+    def get_users_index_key(self):
+        return "%s:ur:uindex" % self.context.uid
+
+    def get_key(self, userid):
+        return "%s:ur:%s" % (self.context.uid, userid)
+
+    def get_len_key(self, type_name, userid):
+        assert type_name in self.track_types
+        return "%s:%s:urc:%s" % (self.context.uid, type_name, userid)
 
     def mark_read(self, names, userid):
         if isinstance(names, string_types):
             names = [names]
         #The ones that aren't stored already
-        names = self.get_unread(names, userid)
-        if names:
-            if userid in self:
-                self[userid].update(names)
-            else:
-                self[userid] = names
-            self.update_chached_len(names, userid)
-            return names
-        return set() #pragma: no coverage
+        # FIXME: optimize this if needed!
+        key = self.get_key(userid)
+        new_names = set()
+        with self.request.redis_conn.pipeline() as pipe:
+            if pipe.exists(names) != len(names):
+                for name in names:
+                    if pipe.sadd(key, name):
+                        new_names.add(name)
+            if new_names:
+                pipe.sadd(self.get_users_index_key(), userid)
+            pipe.execute()
+        if new_names:
+            self.update_cached_len(userid)
+        return new_names
 
-    def update_chached_len(self, names, userid):
-        try:
-            rnc = self.request.registry.getMultiAdapter([self.meeting, self.request], IReadNamesCounter)
-        except ComponentLookupError: #For simpler tests
-            rnc = ReadNamesCounter(self.meeting, self.request)
-        base_query = self.path_query & Any('__name__', names)
+    def update_cached_len(self, userid):
+        read_names = self.request.redis_conn.smembers(self.get_key(userid))
+        base_query = self.path_query & Any('__name__', read_names)
         for type_name in self.track_types:
             res = self.request.root.catalog.query(base_query & Eq('type_name', type_name))[0]
-            rnc.change(type_name, res.total, userid)
+            old_len = self.get_read_type(type_name, userid)
+            self.request.redis_conn.set(self.get_len_key(type_name, userid), res.total)
+            changed = res.total - old_len
+            self.rnc.change(type_name, changed, userid)
 
     def get_unread(self, names, userid):
-        return set(names) - set(self.get(userid, ()))
+        read_names = self.request.redis_conn.smembers(self.get_key(userid))
+        return set(names) - set(read_names)
 
     def get_read_type(self, type_name, userid):
-        read_names = self.get(userid, ())
-        if read_names:
-            query = self.path_query & Eq('type_name', type_name) & Any('__name__', read_names)
-            res = self.request.root.catalog.query(query)[0]
-            return res.total
-        return 0
+        try:
+            return int(self.request.redis_conn.get(self.get_len_key(type_name, userid)))
+        except (ValueError, TypeError):
+            return 0
 
     def get_type_count(self, type_name):
         query = self.path_query & Eq('type_name', type_name)
@@ -97,13 +107,15 @@ class ReadNames(IterableUserDict):
         return res.total
 
     def tracked_removed(self, context):
+        # This may be quite slow and should perhaps be offloaded to a worker.
+        # However, it will only impact delete operations, which only moderators can do.
         assert context.type_name in self.track_types
-        rnc = self.request.registry.getMultiAdapter([self.meeting, self.request], IReadNamesCounter)
         name = context.__name__
-        for (userid, curr) in self.items():
-            if name in curr:
-                curr.remove(name)
-                rnc.change(context.type_name, -1, userid)
+        userids = self.request.redis_conn.smembers(self.get_users_index_key())
+        for userid in userids:
+            self.request.redis_conn.srem(self.get_key(userid), name)
+            # FIXME: This should be optimized
+            self.update_cached_len(userid)
 
     def __bool__(self):
         return True
@@ -112,34 +124,26 @@ class ReadNames(IterableUserDict):
 
 @implementer(IReadNamesCounter)
 @adapter(IMeeting, IRequest)
-class ReadNamesCounter(IterableUserDict):
-    """ Keep track of current count of read items """
+class ReadNamesCounter(object):
+    """ Keep track of current count of read items for the meeting. """
 
     def __init__(self, context, request):
         self.context = context
         self.request = request
-        try:
-            self.data = context._read_names_counter
-        except AttributeError:
-            self.data = context._read_names_counter = OOBTree()
+
+    def get_key(self, type_name, userid):
+        return "%s:%s:rnc:%s" % (self.context.uid, type_name, userid)
 
     def change(self, type_name, num, userid):
-        if userid not in self:
-            self.data[userid] = OOBTree()
-        storage = self.data[userid]
-        if type_name not in storage:
-            storage[type_name] = Length()
-        storage[type_name].change(num)
+        if num != 0:
+            curr = self.get_read_count(type_name, userid)
+            self.request.redis_conn.set(self.get_key(type_name, userid), curr + num)
 
     def get_read_count(self, type_name, userid):
-        if userid in self:
-            storage = self[userid]
-            if type_name in storage:
-                return storage[type_name]()
-        return 0
-
-    def __setitem__(self, key, value):
-        raise Exception("Shouldn't be accessed directly, use change() method")
+        try:
+            return int(self.request.redis_conn.get(self.get_key(type_name, userid)))
+        except (ValueError, TypeError):
+            return 0
 
     def __bool__(self):
         return True
