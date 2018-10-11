@@ -118,3 +118,6 @@ def includeme(config):
     }
     config.add_catalog_indexes(__name__, indexes)
     config.add_subscriber(update_contained_in_ai, [IAgendaItem, IWorkflowStateChange])
+    config.update_index_info('aid_int', linked='aid_int', type_names = 'Proposal')
+    config.update_index_info('aid', type_names = 'Proposal')
+    config.update_index_info('view_meeting_userids', type_names = 'Meeting')
