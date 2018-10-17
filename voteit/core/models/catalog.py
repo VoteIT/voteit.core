@@ -6,16 +6,12 @@ from pyramid.security import principals_allowed_by_permission
 from pyramid.traversal import find_resource
 from repoze.catalog.indexes.field import CatalogFieldIndex
 from repoze.catalog.indexes.keyword import CatalogKeywordIndex
-from zope.component.interfaces import ComponentLookupError
 
 from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IDiscussionPost
-from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import IProposal
-from voteit.core.models.interfaces import IWorkflowAware
 from voteit.core.security import NEVER_EVER_PRINCIPAL
 from voteit.core.security import VIEW
-from voteit.core.security import find_authorized_userids
 from voteit.core.models.interfaces import IBaseContent
 
 

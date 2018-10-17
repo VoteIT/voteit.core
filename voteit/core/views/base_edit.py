@@ -1,5 +1,7 @@
 from __future__ import unicode_literals
 
+import warnings
+
 from arche.exceptions import WorkflowException
 from pyramid.httpexceptions import HTTPForbidden
 from pyramid.httpexceptions import HTTPFound
@@ -29,6 +31,8 @@ def state_change(context, request):
         In case something goes wrong (for instance wrong permission) a
         WorkflowError will be raised.
     """
+    warnings.warn("state_change is deprecated, use regular workflow view from Arche",
+                  DeprecationWarning)
     state = request.params.get('state')
     try:
         context.workflow.do_transition(state, request)

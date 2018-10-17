@@ -8,17 +8,6 @@ from voteit.core.security import DELETE
 from voteit.core.security import EDIT
 from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IPoll
-from voteit.core.models.interfaces import IWorkflowAware
-from voteit.core.views.components.metadata_listing import meta_state
-
-
-# @view_action('actionbar_main', 'voteit_wf',
-#              title = _("Workflow"),
-#              priority = 5,
-#              interface = IWorkflowAware,
-#              renderer = 'voteit.core:templates/snippets/workflow_menu.pt')
-# def wf_menu(context, request, va, **kw):
-#     return meta_state(context, request, va, **kw)
 
 
 @view_action('context_actions', 'edit', title = _(u"Edit"),

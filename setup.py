@@ -19,8 +19,7 @@ install_requires = (
     'html2text',
     'js.jquery_tablesorter', #FIXME?
     'pyramid',
-    'pyramid_zcml',
-    'repoze.workflow',
+    'repoze.workflow',  #FIXME: Will be removed
     'webhelpers',)
 
 docs_extras = [

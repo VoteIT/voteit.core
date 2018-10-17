@@ -39,7 +39,7 @@ def meta_state(context, request, va, **kw):
 def meta_retract(context, request, va, **kw):
     if request.is_moderator:
         return
-    if context.get_workflow_state() != 'published':
+    if context.wf_state != 'published':
         return
     if not request.authenticated_userid in context.creators:
         return
