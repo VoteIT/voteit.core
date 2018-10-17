@@ -1,7 +1,9 @@
 import unittest
 
 from pyramid import testing
+from pyramid.request import apply_request_extensions
 from pyramid.security import principals_allowed_by_permission
+from voteit.core.testing_helpers import bootstrap_and_fixture
 from zope.interface.verify import verifyClass
 from zope.interface.verify import verifyObject
 
@@ -35,12 +37,9 @@ class DiscussionTests(unittest.TestCase):
 
 
 class DiscussionPostPermissionTests(unittest.TestCase):
+
     def setUp(self):
         self.config = testing.setUp()
-        self.config.include('arche.testing')
-        self.config.include('voteit.core.testing_helpers.register_security_policies')
-        self.config.include('voteit.core.testing_helpers.register_workflows')
-        self.config.include('voteit.core.models.discussion_post')
 
     def tearDown(self):
         testing.tearDown()
@@ -52,9 +51,15 @@ class DiscussionPostPermissionTests(unittest.TestCase):
         from voteit.core.models.meeting import Meeting
         from voteit.core.models.agenda_item import AgendaItem
         from voteit.core.models.discussion_post import DiscussionPost
-        m = Meeting()
+        root = bootstrap_and_fixture(self.config)
+        request = testing.DummyRequest()
+        apply_request_extensions(request)
+        self.config.begin(request)
+        root['m'] = m = Meeting()
         m['ai'] = AgendaItem()
         m['ai']['d'] = DiscussionPost()
+        self.config.include('voteit.core.testing_helpers.register_security_policies')
+        self.config.include('voteit.core.models.discussion_post')
         return m
 
     def test_upcoming_meeting_private_ai(self):
@@ -100,8 +105,6 @@ class DiscussionPostPermissionTests(unittest.TestCase):
     def test_closed_meeting_closed_ai(self):
         m = self._fixture()
         security.unrestricted_wf_transition_to(m, 'ongoing')
-        security.unrestricted_wf_transition_to(m['ai'], 'upcoming')
-        security.unrestricted_wf_transition_to(m['ai'], 'ongoing')
         security.unrestricted_wf_transition_to(m['ai'], 'closed')
         security.unrestricted_wf_transition_to(m, 'closed')
         self.assertEqual(principals_allowed_by_permission(m['ai']['d'], security.VIEW), admin | viewer | moderator)

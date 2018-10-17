@@ -16,7 +16,7 @@ class ModeratorsEmails(BaseView):
         """ List all moderators emails. """
         #FIXME: This method is way to expensive to use on a site with lots of users.
         userids = set()
-        for meeting in self.catalog_search(resolve = True, type_name = 'Meeting', workflow_state = ('ongoing', 'upcoming')):
+        for meeting in self.catalog_search(resolve = True, type_name = 'Meeting', wf_state = ('ongoing', 'upcoming')):
             userids.update(security.find_authorized_userids(meeting, (security.MODERATE_MEETING,)))
         users = []
         for userid in userids:

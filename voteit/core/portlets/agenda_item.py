@@ -6,6 +6,7 @@ from __future__ import unicode_literals
 from copy import copy
 from decimal import Decimal
 
+from arche.exceptions import WorkflowException
 from arche.portlets import PortletType
 from arche.utils import generate_slug
 from arche.views.base import BaseView
@@ -16,7 +17,6 @@ from pyramid.renderers import render
 from pyramid.response import Response
 from pyramid.traversal import resource_path
 from repoze.catalog.query import Eq, NotAny, Any
-from repoze.workflow import WorkflowError
 from voteit.core import _
 from voteit.core import security
 from voteit.core.models.interfaces import IAgendaItem
@@ -79,7 +79,7 @@ class PollsPortlet(ListingPortlet):
     def render(self, context, request, view, **kwargs):
         if IAgendaItem.providedBy(context):
             query = "type_name == 'Poll' and path == '%s'" % resource_path(context)
-            query += " and workflow_state in any(['ongoing', 'upcoming', 'closed'])"
+            query += " and wf_state in any(['ongoing', 'upcoming', 'closed'])"
             if request.is_moderator or view.catalog_query(query):
                 url = request.resource_url(context, self.view_name)
                 response = {'portlet': self.portlet, 'view': view, 'load_url': url}
@@ -100,13 +100,13 @@ class ProposalsInline(BaseView):
         if load_hidden:
             # Only load data previously hidden
             if hide:
-                query &= Any('workflow_state', hide)
+                query &= Any('wf_state', hide)
         else:
             invert_hidden = copy(query)
             # Normal operation, keep count of hidden
             if hide:
-                invert_hidden &= Any('workflow_state', hide)
-                query &= NotAny('workflow_state', hide)
+                invert_hidden &= Any('wf_state', hide)
+                query &= NotAny('wf_state', hide)
         response['docids'] = tuple(self.catalog_query(query, sort_index='created'))
         read_names = self.request.get_read_names(self.context)
         unread_query = query & NotAny('__name__',
@@ -131,8 +131,8 @@ class ProposalsInlineStateChange(BaseView, ProposalInlineMixin):
         new_state = self.request.GET.get('state')
         # change state
         try:
-            self.context.set_workflow_state(self.request, new_state)
-        except WorkflowError as exc:
+            self.context.workflow.do_transition(new_state, request=self.request)
+        except WorkflowException as exc:
             raise HTTPForbidden(str(exc))
         return self.get_context_response()
 
@@ -218,12 +218,13 @@ class PollsInline(BaseView):
 
 
 class PollsInlineStateChange(PollsInline, PollInlineMixin):
+
     def __call__(self):
         new_state = self.request.GET.get('state')
         # change state
         try:
-            self.context.set_workflow_state(self.request, new_state)
-        except WorkflowError as exc:
+            self.context.workflow.do_transition(new_state, request=self.request)
+        except WorkflowException as exc:
             raise HTTPForbidden(str(exc))
         return self.get_context_response()
 

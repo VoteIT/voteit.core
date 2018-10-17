@@ -1,5 +1,6 @@
 import unittest
 
+from arche.resources import Root
 from pyramid import testing
 from pyramid.authorization import ACLAuthorizationPolicy
 from pyramid.security import Authenticated
@@ -11,6 +12,7 @@ from voteit.core.models.interfaces import IProposal
 
 
 class ProposalTests(unittest.TestCase):
+
     def setUp(self):
         self.config = testing.setUp()
 
@@ -66,9 +68,10 @@ class ProposalPermissionTests(unittest.TestCase):
         self.config = testing.setUp()
         policy = ACLAuthorizationPolicy()
         self.pap = policy.principals_allowed_by_permission
-        self.config.include('voteit.core.testing_helpers.register_workflows')
         self.config.include('arche.testing')
+        self.config.include('voteit.core.testing_helpers.register_workflows')
         self.config.include('arche.models.reference_guard')
+        self.config.include('voteit.core.models.agenda_item')
         self.config.include('voteit.core.models.proposal')
 
     def tearDown(self):
@@ -124,14 +127,13 @@ class ProposalPermissionTests(unittest.TestCase):
         self.assertEqual(self.pap(obj, security.RETRACT), set())
 
     def test_retracted_in_closed_ai(self):
+        self.config.include('voteit.core.testing_helpers.register_catalog')
         request = testing.DummyRequest()
-        obj = self._make_obj()
-        obj.set_workflow_state(request, 'retracted')
-        ai = self._make_ai()
-        ai.set_workflow_state(request, 'upcoming')
-        ai.set_workflow_state(request, 'ongoing')
-        ai.set_workflow_state(request, 'closed')
-        ai['prop'] = obj
+        root = Root()
+        root['ai'] = ai = self._make_ai()
+        ai.workflow.do_transition('closed', request)
+        ai['prop'] = obj = self._make_obj()
+        obj.workflow.do_transition('retracted', request)
 
         #View
         self.assertEqual(self.pap(obj, security.VIEW), admin | moderator | viewer )
@@ -146,14 +148,13 @@ class ProposalPermissionTests(unittest.TestCase):
         self.assertEqual(self.pap(obj, security.RETRACT), set())
 
     def test_unhandled_in_closed_ai(self):
+        self.config.include('voteit.core.testing_helpers.register_catalog')
         request = testing.DummyRequest()
-        obj = self._make_obj()
-        obj.set_workflow_state(request, 'unhandled')
-        ai = self._make_ai()
-        ai.set_workflow_state(request, 'upcoming')
-        ai.set_workflow_state(request, 'ongoing')
-        ai.set_workflow_state(request, 'closed')
-        ai['prop'] = obj
+        root = Root()
+        root['ai'] = ai = self._make_ai()
+        ai.workflow.do_transition('closed', request)
+        ai['prop'] = obj = self._make_obj()
+        obj.workflow.do_transition('unhandled', request)
         self.assertEqual(self.pap(obj, security.VIEW), admin | moderator | viewer )
         self.assertEqual(self.pap(obj, security.EDIT), set())
         self.assertEqual(self.pap(obj, security.DELETE), set())
@@ -182,15 +183,13 @@ class ProposalPermissionTests(unittest.TestCase):
         self.assertEqual(self.pap(obj, security.RETRACT), set())
 
     def test_approved_in_closed_ai(self):
+        self.config.include('voteit.core.testing_helpers.register_catalog')
         request = testing.DummyRequest()
-        obj = self._make_obj()
-        obj.set_workflow_state(request, 'voting')
-        obj.set_workflow_state(request, 'approved')
-        ai = self._make_ai()
-        ai.set_workflow_state(request, 'upcoming')
-        ai.set_workflow_state(request, 'ongoing')
-        ai.set_workflow_state(request, 'closed')
-        ai['prop'] = obj
+        root = Root()
+        root['ai'] = ai = self._make_ai()
+        ai.workflow.do_transition('closed', request)
+        ai['prop'] = obj = self._make_obj()
+        obj.workflow.do_transition('approved', request)
 
         #View
         self.assertEqual(self.pap(obj, security.VIEW), admin | moderator | viewer )
@@ -203,13 +202,11 @@ class ProposalPermissionTests(unittest.TestCase):
 
     def test_denied_in_ongoing_ai(self):
         request = testing.DummyRequest()
-        obj = self._make_obj()
-        obj.set_workflow_state(request, 'voting')
-        obj.set_workflow_state(request, 'denied')
-        ai = self._make_ai()
-        ai.set_workflow_state(request, 'upcoming')
-        ai.set_workflow_state(request, 'ongoing')
-        ai['prop'] = obj
+        root = Root()
+        root['ai'] = ai = self._make_ai()
+        ai.workflow.do_transition('ongoing', request)
+        ai['prop'] = obj = self._make_obj()
+        obj.workflow.do_transition('denied', request)
 
         #View
         self.assertEqual(self.pap(obj, security.VIEW), admin | moderator | viewer )

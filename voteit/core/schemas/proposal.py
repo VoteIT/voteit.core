@@ -2,15 +2,14 @@ from __future__ import unicode_literals
 
 import colander
 import deform
+from arche.models.workflow import get_workflows
 from arche.schemas import userid_hinder_widget
 from arche.validators import existing_userids
-from repoze.workflow import get_workflow
 
 from voteit.core import _
 from voteit.core.schemas.common import deferred_default_hashtag_text
 from voteit.core.schemas.common import random_oid
 from voteit.core.validators import NotOnlyDefaultTextValidator
-from voteit.core.models.interfaces import IProposal
 from voteit.core.models.interfaces import IProposalIds
 
 
@@ -52,13 +51,12 @@ class ProposalSchema(colander.Schema):
 
 @colander.deferred
 def proposal_states_widget(node, kw):
-    wf = get_workflow(IProposal, 'Proposal')
+    request = kw['request']
+    wfs = get_workflows(request.registry)
+    wf = wfs['proposal_wf']
     state_values = []
-    ts = _
-    for info in wf._state_info(IProposal):  # Public API goes through permission checker
-        item = [info['name']]
-        item.append(ts(info['title']))
-        state_values.append(item)
+    for (k, v) in wf.states.items():
+        state_values.append((k, request.localizer.translate(v)))
     return deform.widget.CheckboxChoiceWidget(values=state_values)
 
 

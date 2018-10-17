@@ -2,6 +2,7 @@ import unittest
 from datetime import datetime
 
 from pyramid import testing
+from voteit.core.testing_helpers import bootstrap_and_fixture
 from zope.interface.verify import verifyClass
 from zope.interface.verify import verifyObject
 
@@ -141,13 +142,10 @@ class BaseContentTests(unittest.TestCase):
         self.assertRaises(AttributeError, parent.get_content, sort_on = 'non_existent')
         
     def test_get_content_states(self):
-        """ To test content states we need to setup workflow and use real content types."""
         from voteit.core.models.meeting import Meeting
         from voteit.core.models.agenda_item import AgendaItem
-        self.config.include('pyramid_zcml')
-        self.config.load_zcml('voteit.core:configure.zcml')
-
-        meeting = Meeting()
+        root = bootstrap_and_fixture(self.config)
+        root['m'] = meeting = Meeting()
         meeting.title = 'Hello Meeting'
         ai1 = AgendaItem()
         ai1.title = 'Stuff to do'

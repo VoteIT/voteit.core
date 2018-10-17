@@ -29,7 +29,7 @@ class WatcherView(BaseView):
         return {}
 
 
-_unvoted_query = Eq('type_name', 'Poll') & Eq('workflow_state', 'ongoing')
+_unvoted_query = Eq('type_name', 'Poll') & Eq('wf_state', 'ongoing')
 
 
 @view_action('watcher_json', 'unvoted_polls')
@@ -59,7 +59,7 @@ def agenda_states(context, request, va, **kw):
     results = {}
     query = Eq('path', kw['meeting_path']) & Eq('type_name', 'AgendaItem')
     for state in states:
-        squery = query & Eq('workflow_state', state)
+        squery = query & Eq('wf_state', state)
         res, docids = request.root.catalog.query(squery)
         results[state] = {
             'hash': hash(tuple(docids)),

@@ -1,13 +1,14 @@
 import re
+import warnings
 from urllib import urlencode
 
+from arche.models.workflow import get_workflows
 from arche.utils import generate_slug #API
 from pyramid.renderers import render
 from pyramid.traversal import find_interface
 from pyramid.traversal import resource_path
 from repoze.catalog.query import Any, NotAny
 from repoze.catalog.query import Eq
-from repoze.workflow import get_workflow
 from webhelpers.html.converters import nl2br
 from webhelpers.html.tools import strip_tags
 from webhelpers.html.tools import auto_link
@@ -160,12 +161,23 @@ def is_participant(request):
         pass
 
 
+_wf_compat_names = {
+    'AgendaItem': 'agenda_item_wf',
+    'Poll': 'poll_wf',
+    'Proposal': 'proposal_wf',
+    'InviteTicket': 'invite_ticket_wf',
+    'Meeting': 'meeting_wf',
+}
+
 def get_wf_state_titles(request, iface, type_name):
-    wf = get_workflow(iface, type_name)
+    warnings.warn("get_wf_state_titles is deprecated, use context.workflow to "
+                  "interact with states instead", DeprecationWarning)
+    # Guess which workflow this is from type name
+    wfs = get_workflows(request.registry)
+    wf = wfs[_wf_compat_names[type_name]]
     results = {}
-    tstring = _
-    for sinfo in wf.state_info(None, request):
-        results[sinfo['name']] = request.localizer.translate(tstring(sinfo['title']))
+    for trans in wf.transitions.values():
+        results[trans.to_state] = request.localizer.translate(wf.states[trans.to_state])
     return results
 
 
@@ -264,10 +276,10 @@ def get_polls_struct(meeting, request, limit=5):
                    'private': {'sort_index': 'created', 'limit': limit}}
     if request.is_moderator:
         states.append('private')
-    query = "type_name == 'Poll' and path == '%s'" % resource_path(meeting)
+    query = Eq('type_name', 'Poll') & Eq('path', resource_path(meeting))
     results = []
     for state in states:
-        squery = "%s and workflow_state == '%s'" % (query, state)
+        squery = query & Eq('wf_state', state)
         # Note: Sorted items
         res, docids = request.root.catalog.query(squery, **state_query[state])
         result = {}

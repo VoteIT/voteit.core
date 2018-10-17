@@ -3,7 +3,6 @@ import unittest
 from pyramid import testing
 from pyramid.authorization import ACLAuthorizationPolicy
 from pyramid.authentication import AuthTktAuthenticationPolicy
-from repoze.workflow.workflow import WorkflowError
 
 from voteit.core.bootstrap import bootstrap_voteit
 from voteit.core import security
@@ -75,17 +74,6 @@ class SecurityTests(unittest.TestCase):
         res = security.context_effective_principals(root, 'robin')
         self.assertEqual(res, ['system.Everyone', 'system.Authenticated',
                                'robin', 'role:Administrator'])
-    
-    def test_unrestricted_wf_transition_to(self):
-        from voteit.core.models.meeting import Meeting
-        root = self._fixture()
-        request = testing.DummyRequest()
-        obj = Meeting()
-        #Regular wf method doesn't work
-        self.assertRaises(WorkflowError, obj.set_workflow_state, request, 'ongoing')
-        #But unrestricted does
-        security.unrestricted_wf_transition_to(obj, 'ongoing')
-        self.assertEqual(obj.get_workflow_state(), 'ongoing')
 
     def test_find_role_userids(self):
         root = self._fixture()

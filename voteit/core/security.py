@@ -1,3 +1,4 @@
+import warnings
 from hashlib import sha1
 
 from arche import security as arche_sec
@@ -174,16 +175,18 @@ def context_effective_principals(context, userid):
     request = get_current_request()
     with authz_context(context, request):
         effective_principals.extend(groupfinder(userid, request))
-#    groups = context.get_groups(userid)
-    #effective_principals.extend(groups)
     return effective_principals    
 
 def unrestricted_wf_transition_to(obj, state):
     """ Transition to a state WITHOUT checking permission.
     """
-    old_state = obj.get_workflow_state()
-    obj.workflow._transition_to_state(obj, state, guards=())
-    objectEventNotify(WorkflowStateChange(obj, old_state, state))
+    warnings.warn("unrestricted_wf_transition_to is deprecated, "
+                  "use the method do_transition with force=True instead. "
+                  "See below.", DeprecationWarning)
+    obj.workflow.do_transition(state, force=True)
+    #old_state = obj.get_workflow_state()
+    #obj.workflow._transition_to_state(obj, state, guards=())
+    #objectEventNotify(WorkflowStateChange(obj, old_state, state))
 
 def find_role_userids(context, role):
     """ Return a frozenset of userids that have the specific role. No security check will be performed.

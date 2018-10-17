@@ -21,3 +21,4 @@ def includeme(config):
     config.include('.user')
     config.include('.users')
     config.include('.vote')
+    config.include('.workflow_aware')

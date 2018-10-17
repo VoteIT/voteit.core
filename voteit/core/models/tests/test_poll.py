@@ -1,8 +1,12 @@
 import unittest
 from datetime import datetime, timedelta
 
+from BTrees.OOBTree import OOBTree
+from arche.resources import User
+from arche.testing import barebone_fixture
 from arche.utils import utcnow
 from pyramid import testing
+from voteit.core.security import ROLE_VOTER
 from zope.interface.verify import verifyClass
 from zope.interface.verify import verifyObject
 from pyramid.authorization import ACLAuthorizationPolicy
@@ -17,7 +21,6 @@ from voteit.core.models.interfaces import IPollPlugin
 from voteit.core.models.poll_plugin import PollPlugin
 from voteit.core import security
 from voteit.core.testing_helpers import active_poll_fixture, bootstrap_and_fixture
-from voteit.core.testing_helpers import register_workflows
 
 
 admin = set([security.ROLE_ADMIN])
@@ -30,10 +33,52 @@ voter = set([security.ROLE_VOTER])
 owner = set([security.ROLE_OWNER])
 
 
+def poll_fixture():
+    from voteit.core.models.poll import Poll
+    from voteit.core.models.meeting import Meeting
+    from voteit.core.models.agenda_item import AgendaItem
+    from voteit.core.models.proposal import Proposal
+
+    root = barebone_fixture()
+    root['users']['admin'] = User(email='this@that.com')
+    meeting = root['m'] = Meeting()
+    meeting.local_roles.add('admin', [ROLE_VOTER])
+    ai = meeting['ai'] = AgendaItem()
+    ai['prop1'] = Proposal(text = "Proposal 1", uid="p1")
+    ai['prop2'] = Proposal(text = "Proposal 2", uid="p2")
+    ai['poll'] = poll = Poll(title = 'A poll')
+    poll.update(proposals = ["p2", "p1"])
+    return root
+    #poll = ai['poll']
+    #poll.set_field_value('proposals', set([ai['prop1'].uid, ai['prop2'].uid]))
+    #poll.set_workflow_state(request, 'upcoming')
+
+    #root = bootstrap_and_fixture(config)
+    #request = testing.DummyRequest()
+    #root['users']['admin'].set_field_value('email', 'this@that.com')
+    #meeting.set_workflow_state(request, 'ongoing')
+    #ai = meeting['ai'] = AgendaItem()
+
+    #ai.set_workflow_state(request, 'upcoming')
+    #ai.set_workflow_state(request, 'ongoing')
+    #ai['poll'] = Poll(title = 'A poll')
+    #poll = ai['poll']
+    #poll.set_field_value('proposals', set([ai['prop1'].uid, ai['prop2'].uid]))
+    #poll.set_workflow_state(request, 'upcoming')
+    #return root
+
+
+    ###
+    # config = testing.setUp(request = request, registry = config.registry)
+    #config.include('pyramid_mailer.testing')
+    #config.include('voteit.core.subscribers.poll')
+
+
 class PollTests(unittest.TestCase):
+
     def setUp(self):
-        request = testing.DummyRequest()
-        self.config = testing.setUp(request = request)
+        self.config = testing.setUp()
+        self.config.include('arche.testing')
 
     def tearDown(self):
         testing.tearDown()
@@ -56,17 +101,17 @@ class PollTests(unittest.TestCase):
 
     def _register_majority_poll(self, poll):
         self.config.include('voteit.core.plugins.majority_poll')
-        poll.set_field_value('poll_plugin', u'majority_poll')
+        poll.set_field_value('poll_plugin', 'majority_poll')
 
-    def _agenda_item_with_proposals_fixture(self):
-        """ Create an agenda item with a poll and two proposals. """
-        from voteit.core.models.agenda_item import AgendaItem
-        from voteit.core.models.proposal import Proposal
-        root = bootstrap_and_fixture(self.config)
-        root['ai'] = agenda_item = AgendaItem()
-        agenda_item['prop1'] = Proposal()
-        agenda_item['prop2'] = Proposal()
-        return agenda_item
+    #def _agenda_item_with_proposals_fixture(self):
+    #    """ Create an agenda item with a poll and two proposals. """
+    #    from voteit.core.models.agenda_item import AgendaItem
+    #    from voteit.core.models.proposal import Proposal
+    #    root = bootstrap_and_fixture(self.config)
+    #    root['ai'] = agenda_item = AgendaItem()
+    #    agenda_item['prop1'] = Proposal()
+    #    agenda_item['prop2'] = Proposal()
+    #    return agenda_item
 
     def _make_vote(self, vote_data='hello_world'):
         from voteit.core.models.vote import Vote
@@ -86,25 +131,16 @@ class PollTests(unittest.TestCase):
         """
         obj = self._make_obj()
         obj.proposal_uids = ['hello']
-        self.assertEqual(obj.get_field_value('proposals'), ('hello',))
-        obj.set_field_value('proposals', ('new', 'uids',))
+        self.assertEqual(obj.proposals, ('hello',))
+        obj.proposals = {'new', 'uids'}
         self.assertEqual(obj.proposal_uids, ('new', 'uids',))
-
-    def test_start_time_property(self):
-        now = datetime.now()
-        obj = self._cut(start_time = now)
-        self.assertEqual(obj.start_time, now)
-
-    def test_end_time_property(self):
-        now = datetime.now()
-        obj = self._cut(end_time = now)
-        self.assertEqual(obj.end_time, now)
 
     def test_poll_settings_property(self):
         settings = {'this': 1, 'other': 2}
         obj = self._cut()
         obj.poll_settings = settings
         self.assertEqual(dict(obj.poll_settings), settings)
+        self.assertIsInstance(obj.poll_settings, OOBTree)
 
     def test_poll_settings_property_bad_type(self):
         settings = "Hello!"
@@ -115,27 +151,23 @@ class PollTests(unittest.TestCase):
         except TypeError:
             pass
 
-    def test_poll_plugin_name(self):
-        """ poll_plugin_name should get the registered plugins name. """
-        obj = self._cut()
-        obj.set_field_value('poll_plugin', 'my_plugin')
-        self.assertEqual(obj.poll_plugin_name, 'my_plugin')
-    
     def test_get_proposal_objects(self):
         """ Test that all proposals that belong to this poll gets returned. """
-        self.config.include('arche.testing.catalog')
-        agenda_item = self._agenda_item_with_proposals_fixture()
+        self.config.include('voteit.core.testing_helpers.register_catalog')
+        root = poll_fixture()
+        agenda_item = root['m']['ai']
         prop1 = agenda_item['prop1']
         prop2 = agenda_item['prop2']
-        agenda_item['poll'] = poll = self._cut(proposals=[prop1.uid, prop2.uid])
+        poll = agenda_item['poll']
+        #agenda_item['poll'] = poll = self._cut(proposals=[prop1.uid, prop2.uid])
         self.assertEqual(set(poll.get_proposal_objects()), set([prop1, prop2,]))
 
     def _ordering_fixture(self):
-        self.config.include('arche.testing.catalog')
+        self.config.include('voteit.core.testing_helpers.register_catalog')
         from voteit.core.models.agenda_item import AgendaItem
         from voteit.core.models.meeting import Meeting
         from voteit.core.models.proposal import Proposal
-        root = bootstrap_and_fixture(self.config)
+        root = barebone_fixture()
         root['m'] = m = Meeting()
         m['ai'] = ai = AgendaItem()
         now = utcnow()
@@ -185,15 +217,15 @@ class PollTests(unittest.TestCase):
         self.assertRaises(ValueError, obj.get_proposal_objects)
 
     def test_close_poll(self):
-        register_workflows(self.config)
+        self.config.include('voteit.core.testing_helpers.register_catalog')
+        self.config.include('voteit.core.testing_helpers.register_workflows')
         request = testing.DummyRequest()
-        self.config = testing.setUp(registry = self.config.registry, request = request)
-        self.config.include('arche.testing.catalog')
-        agenda_item = self._agenda_item_with_proposals_fixture()
+        self.config.begin(request)
+        root = poll_fixture()
+        agenda_item = root['m']['ai']
         prop1 = agenda_item['prop1']
         prop2 = agenda_item['prop2']
-        agenda_item['poll'] = poll = self._cut()
-        poll.proposal_uids = (prop1.uid, prop2.uid,)
+        poll = agenda_item['poll']
 
         class _MockPollPlugin(PollPlugin):
             def handle_close(self):
@@ -202,64 +234,64 @@ class PollTests(unittest.TestCase):
                 return {prop1.uid: 'voting', prop2.uid:'voting'}
 
         self.config.registry.registerAdapter(_MockPollPlugin, (IPoll,), IPollPlugin, 'mock_poll_plugin')
-        poll.set_field_value('poll_plugin', 'mock_poll_plugin')
+        poll.poll_plugin = 'mock_poll_plugin'
         poll.close_poll()
         #Should have been adjusted if everything went according to plan
-        self.assertEqual(prop2.get_workflow_state(), 'voting')
+        self.assertEqual(prop2.wf_state, 'voting')
 
     def test_adjust_proposal_states_bad_uids(self):
         request = testing.DummyRequest()
-        self.config = testing.setUp(registry = self.config.registry, request = request)
+        self.config.begin(request)
         poll = self._cut()
         self.assertRaises(ValueError, poll.adjust_proposal_states, {'bad_uid': 'state'})
 
     def test_adjust_proposal_states(self):
-        self.config.include('arche.testing.catalog')
-        register_workflows(self.config)
+        self.config.include('voteit.core.testing_helpers.register_catalog')
+        self.config.include('voteit.core.testing_helpers.register_workflows')
+        root = poll_fixture()
+        agenda_item = root['m']['ai']
         request = testing.DummyRequest()
-        self.config = testing.setUp(registry = self.config.registry, request = request)
-        agenda_item = self._agenda_item_with_proposals_fixture()
+        self.config.begin(request)
         prop1 = agenda_item['prop1']
         prop2 = agenda_item['prop2']
-        prop1.set_workflow_state(request, 'voting')
-        prop2.set_workflow_state(request, 'voting')
-        agenda_item['poll'] = poll = self._cut()
-        poll.proposal_uids = (prop1.uid, prop2.uid,)
+        prop1.workflow.do_transition('voting', request, force=True)
+        prop2.workflow.do_transition('voting', request, force=True)
         adjust_states = {prop1.uid: 'denied',
                          prop2.uid: 'approved',}
+        poll = agenda_item['poll']
         poll.adjust_proposal_states(adjust_states)
         self.assertEqual(prop1.get_workflow_state(), 'denied')
         self.assertEqual(prop2.get_workflow_state(), 'approved')
 
     def test_adjust_proposal_states_already_correct_state(self):
-        register_workflows(self.config)
-        self.config.include('arche.testing.catalog')
+        self.config.include('voteit.core.testing_helpers.register_workflows')
+        self.config.include('voteit.core.testing_helpers.register_catalog')
         request = testing.DummyRequest()
-        self.config = testing.setUp(registry = self.config.registry, request = request)
-        agenda_item = self._agenda_item_with_proposals_fixture()
+        self.config.begin(request)
+        root = poll_fixture()
+        agenda_item = root['m']['ai']
         prop1 = agenda_item['prop1']
         prop2 = agenda_item['prop2']
-        prop1.set_workflow_state(request, 'voting')
-        prop2.set_workflow_state(request, 'voting')
-        prop2.set_workflow_state(request, 'approved')
-        agenda_item['poll'] = poll = self._cut()
-        poll.proposal_uids = (prop1.uid, prop2.uid,)
+        prop1.workflow.do_transition('voting', request, force=True)
+        prop2.workflow.do_transition('approved', request, force=True)
+        poll = agenda_item['poll']
         adjust_states = {prop1.uid: 'denied',
                          prop2.uid: 'approved',}
         poll.adjust_proposal_states(adjust_states)
-        self.assertEqual(prop1.get_workflow_state(), 'denied')
+        self.assertEqual(prop1.wf_state, 'denied')
         #No change here, but no exception raised either
-        self.assertEqual(prop2.get_workflow_state(), 'approved')
+        self.assertEqual(prop2.wf_state, 'approved')
 
     def test_adjust_proposal_states_bad_state(self):
-        register_workflows(self.config)
-        self.config.include('arche.testing.catalog')
+        self.config.include('voteit.core.testing_helpers.register_workflows')
+        self.config.include('voteit.core.testing_helpers.register_catalog')
         request = testing.DummyRequest()
-        self.config = testing.setUp(registry = self.config.registry, request = request)
-        agenda_item = self._agenda_item_with_proposals_fixture()
+        self.config.begin(request)
+        root = poll_fixture()
+        agenda_item = root['m']['ai']
         prop1 = agenda_item['prop1']
         prop2 = agenda_item['prop2']
-        agenda_item['poll'] = poll = self._cut()
+        poll = agenda_item['poll']
         poll.proposal_uids = (prop1.uid, prop2.uid,)
         adjust_states = {prop1.uid: 'john',
                          prop2.uid: 'doe',}
@@ -295,56 +327,66 @@ class PollTests(unittest.TestCase):
         self.assertEqual(ballots, (({'apple': 1}, 2), ({'apple': 1, 'potato': 2}, 3)))
 
     def test_workflow_state_to_ongoing(self):
-        """ When you try to set state to ongoing on poll and 
-            agenda item is not ongoing an exception should be raised.
-        """
-        register_workflows(self.config)
-        self.config.include('arche.testing.catalog')
+        # When you try to set state to ongoing on poll and
+        # agenda item is not ongoing an exception should be raised.
+        self.config.include('voteit.core.testing_helpers.register_workflows')
+        self.config.include('voteit.core.testing_helpers.register_catalog')
+        #self.config.include('voteit.core.models.meeting')
+        #self.config.include('voteit.core.models.agenda_item')
         request = testing.DummyRequest()
-        obj = self._agenda_item_with_proposals_fixture()
-        obj.set_workflow_state(request, 'upcoming')
+        self.config.begin(request)
+        root = poll_fixture()
+        root['m'].wf_state = 'ongoing'
+        obj = root['m']['ai']
+        obj.wf_state = 'upcoming'
         self.assertRaises(Exception, obj.set_workflow_state, 'ongoing')
         ai = find_interface(obj, IAgendaItem)
-        ai.set_workflow_state(request, 'upcoming')
-        ai.set_workflow_state(request, 'ongoing')
-        obj.set_workflow_state(request, 'ongoing')
+        ai.wf_state = 'ongoing'
+        obj.wf_state = 'ongoing'
 
     def test_ongoing_wo_proposal(self):
-        register_workflows(self.config)
-        self.config.include('arche.testing.catalog')
-        ai = self._agenda_item_with_proposals_fixture()
-        ai['poll'] = poll = self._cut()
-        #ai = find_interface(poll, IAgendaItem)
-        security.unrestricted_wf_transition_to(ai, 'upcoming')
-        security.unrestricted_wf_transition_to(ai, 'ongoing')
-        # remove all proposals on poll
-        #poll.set_field_value('proposals', set())
-        security.unrestricted_wf_transition_to(poll, 'upcoming')
+        self.config.include('voteit.core.testing_helpers.register_workflows')
+        self.config.include('voteit.core.testing_helpers.register_catalog')
+        self.config.include('voteit.core.models.poll')
         request = testing.DummyRequest()
-        self.assertRaises(HTTPForbidden, poll.set_workflow_state, request, 'ongoing')
+        self.config.begin(request)
+        root = poll_fixture()
+        root['m'].wf_state = 'ongoing'
+        ai = root['m']['ai']
+        poll = ai['poll']
+        ai.wf_state = 'ongoing'
+        poll.wf_state = 'upcoming'
+        # remove all proposals on poll
+        poll.proposals = ()
+        self.assertRaises(HTTPForbidden, poll.workflow.do_transition, 'ongoing')
 
     def test_get_proposal_by_uid(self):
-        self.config.include('arche.testing.catalog')
-        agenda_item = self._agenda_item_with_proposals_fixture()
+        self.config.include('voteit.core.testing_helpers.register_catalog')
+        root = poll_fixture()
+        agenda_item = root['m']['ai']
         uid = agenda_item['prop1'].uid
-        agenda_item['poll'] = poll = self._cut()
+        poll = agenda_item['poll']
         poll.proposal_uids = (uid,)
         prop = poll.get_proposal_by_uid(uid)
         self.assertEqual(prop, agenda_item['prop1'])
         
     def test_get_proposal_by_uid_non_existing_uid(self):
-        self.config.include('arche.testing.catalog')
-        agenda_item = self._agenda_item_with_proposals_fixture()
+        self.config.include('voteit.core.testing_helpers.register_catalog')
+        root = poll_fixture()
+        agenda_item = root['m']['ai']
+        poll = agenda_item['poll']
+        # This will break the reference
+        poll.proposals = ()
         uid = agenda_item['prop1'].uid
-        agenda_item['poll'] = poll = self._cut()
         self.assertRaises(KeyError, poll.get_proposal_by_uid, uid)
 
 
 class PollMethodsTests(unittest.TestCase):
+
     def setUp(self):
         self.config = testing.setUp()
         self.config.include('pyramid_chameleon')
-        self.config.include('arche.testing.catalog')
+        self.config.include('voteit.core.testing_helpers.register_catalog')
 
     def tearDown(self):
         testing.tearDown()
@@ -362,18 +404,23 @@ class PollMethodsTests(unittest.TestCase):
         self.failUnless('this@that.com' in mailer.outbox[0].recipients)
 
     def test_ongoing_poll_callback_agenda_item_not_ongoing_error(self):
+        request = testing.DummyRequest()
+        self.config.begin(request)
         root = active_poll_fixture(self.config)
         ai = root['meeting']['ai']
-        security.unrestricted_wf_transition_to(ai, 'upcoming')
+        ai.wf_state = 'upcoming'
         self.assertRaises(HTTPForbidden, security.unrestricted_wf_transition_to, ai['poll'], 'ongoing')
 
 
 class PollPermissionTests(unittest.TestCase):
 
     def setUp(self):
+        self.config = testing.setUp()
+        self.config.include('arche.testing')
+        self.config.include('voteit.core.testing_helpers.register_catalog')
+        self.config.include('voteit.core.testing_helpers.register_workflows')
         request = testing.DummyRequest()
-        self.config = testing.setUp(request = request)
-        self.config.include('arche.testing.catalog')
+        self.config.begin(request)
 
     def tearDown(self):
         testing.tearDown()
@@ -387,7 +434,6 @@ class PollPermissionTests(unittest.TestCase):
         """ Poll object need to be in the context of an Agenda Item to work properly
         """
         root = bootstrap_and_fixture(self.config)
-        self.config.include('voteit.core.models.poll')
         from voteit.core.models.poll import Poll
         from voteit.core.models.proposal import Proposal
         from voteit.core.models.agenda_item import AgendaItem
@@ -404,7 +450,6 @@ class PollPermissionTests(unittest.TestCase):
 
     def test_private(self):
         poll = self._make_obj()
-        
         self.assertEqual(self.pap(poll, security.VIEW), admin | moderator)
         self.assertEqual(self.pap(poll, security.EDIT), admin | moderator)
         self.assertEqual(self.pap(poll, security.DELETE), admin | moderator)
@@ -413,9 +458,8 @@ class PollPermissionTests(unittest.TestCase):
 
     def test_upcoming_w_ongoing_ai(self):
         poll = self._make_obj()
-        request = testing.DummyRequest()
-        poll.__parent__.set_workflow_state(request, 'upcoming')
-        poll.set_workflow_state(request, 'upcoming')
+        poll.__parent__.wf_state = 'upcoming'
+        poll.wf_state = 'upcoming'
         self.assertEqual(self.pap(poll, security.VIEW), admin | moderator | viewer )
         self.assertEqual(self.pap(poll, security.EDIT), admin | moderator)
         self.assertEqual(self.pap(poll, security.DELETE), admin | moderator)
@@ -424,8 +468,7 @@ class PollPermissionTests(unittest.TestCase):
 
     def test_upcoming_w_private_ai(self):
         poll = self._make_obj()
-        request = testing.DummyRequest()
-        security.unrestricted_wf_transition_to(poll, 'upcoming')
+        poll.wf_state = 'upcoming'
         self.assertEqual(self.pap(poll, security.VIEW), admin | moderator )
         self.assertEqual(self.pap(poll, security.EDIT), admin | moderator)
         self.assertEqual(self.pap(poll, security.DELETE), admin | moderator)
@@ -433,13 +476,11 @@ class PollPermissionTests(unittest.TestCase):
         self.assertEqual(self.pap(poll, security.CHANGE_WORKFLOW_STATE), admin | moderator)
 
     def test_ongoing(self):
-        request = testing.DummyRequest()
         poll = self._make_obj()
         ai = find_interface(poll, IAgendaItem)
-        ai.set_workflow_state(request, 'upcoming')
-        ai.set_workflow_state(request, 'ongoing')
-        poll.set_workflow_state(request, 'upcoming')
-        poll.set_workflow_state(request, 'ongoing')
+        ai.wf_state = 'ongoing'
+        poll.wf_state = 'upcoming'
+        poll.wf_state = 'ongoing'
         self.assertEqual(self.pap(poll, security.VIEW), admin | moderator | viewer )
         self.assertEqual(self.pap(poll, security.EDIT), set())
         self.assertEqual(self.pap(poll, security.DELETE), admin | moderator)
@@ -447,16 +488,13 @@ class PollPermissionTests(unittest.TestCase):
         self.assertEqual(self.pap(poll, security.CHANGE_WORKFLOW_STATE), admin | moderator)
         
     def test_closed(self):
-        request = testing.DummyRequest()
-        self.config = testing.setUp(registry = self.config.registry, request = request)
         poll = self._make_obj()
-        ai = find_interface(poll, IAgendaItem)
-        ai.set_workflow_state(request, 'upcoming')
-        ai.set_workflow_state(request, 'ongoing')
         self._register_majority_poll(poll)
-        poll.set_workflow_state(request, 'upcoming')
-        poll.set_workflow_state(request, 'ongoing')
-        poll.set_workflow_state(request, 'closed')
+        ai = find_interface(poll, IAgendaItem)
+        ai.wf_state = 'ongoing'
+        poll.wf_state = 'upcoming'
+        poll.wf_state = 'ongoing'
+        poll.wf_state = 'closed'
         self.assertEqual(self.pap(poll, security.VIEW), admin | moderator | viewer )
         self.assertEqual(self.pap(poll, security.EDIT), set())
         self.assertEqual(self.pap(poll, security.DELETE), admin | moderator)
@@ -464,16 +502,13 @@ class PollPermissionTests(unittest.TestCase):
         self.assertEqual(self.pap(poll, security.CHANGE_WORKFLOW_STATE), set())
 
     def test_canceled(self):
-        request = testing.DummyRequest()
-        self.config = testing.setUp(registry = self.config.registry, request = request)
         poll = self._make_obj()
         ai = find_interface(poll, IAgendaItem)
-        ai.set_workflow_state(request, 'upcoming')
-        ai.set_workflow_state(request, 'ongoing')
+        ai.wf_state = 'ongoing'
+        poll.wf_state = 'upcoming'
+        poll.wf_state = 'ongoing'
+        poll.wf_state = 'canceled'
         self._register_majority_poll(poll)
-        poll.set_workflow_state(request, 'upcoming')
-        poll.set_workflow_state(request, 'ongoing')
-        poll.set_workflow_state(request, 'canceled')
         self.assertEqual(self.pap(poll, security.VIEW), admin | moderator | viewer )
         self.assertEqual(self.pap(poll, security.EDIT), set())
         self.assertEqual(self.pap(poll, security.DELETE), admin | moderator)

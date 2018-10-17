@@ -2,8 +2,10 @@ from arche.interfaces import IEmailValidatedEvent
 from pyramid.threadlocal import get_current_request
 from pyramid.traversal import find_resource
 from pyramid.traversal import find_root
+from repoze.catalog.query import Eq, Any
 
 from voteit.core.models.invite_ticket import claim_ticket
+
 
 def auto_claim_ticket(event):
     """ When an email address is validated check for existing
@@ -11,8 +13,8 @@ def auto_claim_ticket(event):
     """
     root = find_root(event.user)
     address_for_docid = root.document_map.address_for_docid
-    query = "type_name == 'Meeting' and "
-    query += "workflow_state in any(['ongoing', 'upcoming'])"
+    query = Eq('type_name', 'Meeting') & Any('wf_state', ('ongoing', 'upcoming'))
+
     request = get_current_request()
     for docid in root.catalog.query(query)[1]:
         path = address_for_docid(docid)

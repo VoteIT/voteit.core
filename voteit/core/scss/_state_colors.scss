@@ -8,14 +8,16 @@
 .label-approved {
   @include label-variant($brand-approved);
 }
-.text-approved {
+.text-approved,
+.wf-state.wf-state-approved {
   color: $brand-approved;
 }
 
 .btn-ongoing {
   @include button-variant(#fff, $brand-ongoing, darken($brand-ongoing, 5%));
 }
-.text-ongoing {
+.text-ongoing,
+.wf-state.wf-state-ongoing {
   color: $brand-ongoing;
 }
 
@@ -25,62 +27,71 @@
 .label-denied {
   @include label-variant($brand-denied);
 }
-.text-denied {
+.text-denied,
+.wf-state.wf-state-denied {
   color: $brand-denied;
 }
 
 .btn-private {
   @include button-variant(#fff, $brand-private, darken($brand-private, 5%));
 }
-.text-private {
+.text-private,
+.wf-state.wf-state-private {
   color: $brand-private;
 }
 
 .btn-published {
   @include button-variant(#fff, $brand-published, darken($brand-published, 5%));
 }
-.text-published {
+.text-published,
+.wf-state.wf-state-published {
   color: $brand-published;
 }
 
 .btn-upcoming {
   @include button-variant(#fff, $brand-upcoming, darken($brand-upcoming, 5%));
 }
-.text-upcoming {
+.text-upcoming,
+.wf-state.wf-state-upcoming {
   color: $brand-upcoming;
 }
 
 .btn-closed {
   @include button-variant(#fff, $brand-closed, darken($brand-closed, 5%));
 }
-.text-closed {
+.text-closed,
+.wf-state.wf-state-closed {
   color: $brand-closed;
 }
 
 .btn-retracted {
   @include button-variant(#fff, $brand-retracted, darken($brand-retracted, 5%));
 }
-.text-retracted {
+.text-retracted,
+.wf-state.wf-state-retracted {
   color: $brand-retracted;
 }
 
 .btn-unhandled {
   @include button-variant(#fff, $brand-unhandled, darken($brand-unhandled, 5%));
 }
-.text-unhandled {
+.text-unhandled,
+.wf-state.wf-state-unhandled {
   color: $brand-unhandled;
 }
 
 .btn-canceled {
   @include button-variant(#fff, $brand-canceled, darken($brand-canceled, 5%));
 }
-.text-canceled {
+.text-canceled,
+.wf-state.wf-state-canceled {
   color: $brand-canceled;
 }
 
 .btn-voting {
   @include button-variant(#fff, $brand-voting, darken($brand-voting, 5%));
 }
-.text-voting {
+.text-voting,
+.wf-state.wf-state-voting {
   color: $brand-voting;
 }

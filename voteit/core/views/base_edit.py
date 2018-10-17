@@ -1,9 +1,9 @@
 from __future__ import unicode_literals
 
+from arche.exceptions import WorkflowException
 from pyramid.httpexceptions import HTTPForbidden
 from pyramid.httpexceptions import HTTPFound
 from pyramid.view import view_config
-from repoze.workflow.workflow import WorkflowError
 
 from voteit.core import _
 from voteit.core.models.interfaces import IFlashMessages
@@ -31,12 +31,12 @@ def state_change(context, request):
     """
     state = request.params.get('state')
     try:
-        context.set_workflow_state(request, state)
-    except WorkflowError as exc:
+        context.workflow.do_transition(state, request)
+    except WorkflowException as exc:
         raise HTTPForbidden(str(exc))
     fm = IFlashMessages(request)
-    fm.add(_(context.current_state_title(request)))
-    if context.content_type == 'Poll': #Redirect to polls anchor
+    fm.add(_(context.workflow.state_title))
+    if context.type_name == 'Poll': #Redirect to polls anchor
         url = request.resource_url(context.__parent__, anchor = context.uid)
     else:
         url = request.resource_url(context)

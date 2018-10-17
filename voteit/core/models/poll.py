@@ -1,12 +1,16 @@
 from __future__ import unicode_literals
 
+import warnings
 from random import random
 
 from BTrees.OIBTree import OIBTree
 from BTrees.OOBTree import OOBTree
+from arche.exceptions import WorkflowException
+from arche.interfaces import IWorkflowBeforeTransition
+from arche.interfaces import IWorkflowAfterTransition
+from arche.resources import ContextACLMixin
 from arche.security import get_acl_registry
 from arche.utils import get_flash_messages
-from arche.utils import send_email
 from arche.utils import utcnow
 from pyramid.httpexceptions import HTTPForbidden
 from pyramid.renderers import render
@@ -17,7 +21,6 @@ from pyramid.traversal import find_resource
 from pyramid.traversal import find_root
 from repoze.catalog.query import Any
 from repoze.catalog.query import Eq
-from repoze.workflow.workflow import WorkflowError
 from zope.interface import implementer
 
 from voteit.core import _
@@ -29,7 +32,8 @@ from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IPollPlugin
 from voteit.core.models.interfaces import IVote
-from voteit.core.models.workflow_aware import WorkflowAware
+from voteit.core.models.workflow_aware import WorkflowCompatMixin
+
 
 # FIXME: This should turn into utilities later on, so other packages can
 # register methods without patching.
@@ -51,7 +55,7 @@ PROPOSAL_ORDER_KEY_METHODS = {
 
 
 @implementer(IPoll)
-class Poll(BaseContent, WorkflowAware):
+class Poll(BaseContent, ContextACLMixin, WorkflowCompatMixin):
     """ Poll content type.
         See :mod:`voteit.core.models.interfaces.IPoll`.
         All methods are documented in the interface of this class.
@@ -59,7 +63,7 @@ class Poll(BaseContent, WorkflowAware):
         content type. It calls a poll plugin to get that.
     """
     type_name = 'Poll'
-    type_title = _(u"Poll")
+    type_title = _("Poll")
     add_permission = security.ADD_POLL
     _poll_result = None
     _ballots = None
@@ -67,18 +71,13 @@ class Poll(BaseContent, WorkflowAware):
 
     @property
     def __acl__(self):
-        acl = get_acl_registry()
         #If ai is private, use private
         ai = find_interface(self, IAgendaItem)
         ai_state = ai.get_workflow_state()
         if ai_state == 'private':
-            return acl.get_acl('Poll:private')
-        state = self.get_workflow_state()
-        #As default - don't traverse to parent
-        acl_name = 'Poll:%s' % state
-        if acl_name in acl:
-            return acl.get_acl(acl_name)
-        return acl.get_acl('Poll:private')
+            acl = get_acl_registry()
+            return acl.get_acl('poll_wf:private')
+        return super(Poll, self).__acl__
 
     #Make sure only Vote objects can be added here
     def add(self, name, other, send_events=True):
@@ -88,18 +87,30 @@ class Poll(BaseContent, WorkflowAware):
     @property
     def start_time(self):
         return self.get_field_value('start_time')
+    @start_time.setter
+    def start_time(self, value):
+        return self.set_field_value('start_time', value)
 
     @property
     def end_time(self):
         return self.get_field_value('end_time')
+    @end_time.setter
+    def end_time(self, value):
+        return self.set_field_value('end_time', value)
 
     @property
     def voters_mark_ongoing(self):
         return self.get_field_value('voters_mark_ongoing', frozenset())
+    @voters_mark_ongoing.setter
+    def voters_mark_ongoing(self, value):
+        self.set_field_value('voters_mark_ongoing', frozenset(value))
 
     @property
     def voters_mark_closed(self):
         return self.get_field_value('voters_mark_closed', frozenset())
+    @voters_mark_closed.setter
+    def voters_mark_closed(self, value):
+        self.set_field_value('voters_mark_closed', frozenset(value))
 
     @property
     def proposals(self):
@@ -165,7 +176,7 @@ class Poll(BaseContent, WorkflowAware):
         agenda_item = self.__parent__
         if agenda_item is None:
             raise ValueError("Can't find any agenda item in the polls lineage")
-        query = Any('uid', tuple(self.proposal_uids)) & Eq('type_name', 'Proposal')
+        query = Any('uid', tuple(self.proposal_uids))
         root = find_root(agenda_item)
         results = []
         for docid in root.catalog.query(query)[1]:
@@ -218,7 +229,7 @@ class Poll(BaseContent, WorkflowAware):
                 try:
                     proposal.set_workflow_state(request, state)
                     changed.append(proposal)
-                except WorkflowError:
+                except WorkflowException:
                     change_error.append(proposal)
         fm = get_flash_messages(request)
         msg = _('poll_closed_info',
@@ -233,7 +244,7 @@ class Poll(BaseContent, WorkflowAware):
             fm.add(msg, type = 'danger')
 
     def get_proposal_by_uid(self, uid):
-        #FIXME: This should be removed. request.resolve_uid instead
+        warnings.warn("get_proposal_by_uid is deprecated, use request.resolve_uid", DeprecationWarning)
         for prop in self.get_proposal_objects():
             if prop.uid == uid:
                 return prop
@@ -262,60 +273,64 @@ class Ballots(object):
             self.ballots[value] = 1
 
 
-def closing_poll_callback(poll, info):
-    """ Workflow callback when a poll is closed."""
-    poll.close_poll()
+def closing_poll_callback(poll, event):
+    """ Workflow subscriber for when a poll is closed."""
+    if poll.wf_state == 'closed':
+        poll.close_poll()
 
 
-def lock_proposals(poll, request):
+def lock_proposals(poll, event):
     """ Set proposals to voting. """
-    count = 0
-    for proposal in poll.get_proposal_objects():
-        try:
-            proposal.set_workflow_state(request, 'voting')
-            count += 1
-        except WorkflowError:
-            # Skip those
-            pass
-    if count:
-        fm = IFlashMessages(request, None)
-        if fm:
-            singular = request.localizer.translate(_(u"proposal"))
-            plural = request.localizer.translate(_(u"proposals"))
-            prop_form = request.localizer.pluralize(singular, plural, count)
-            msg = _(u'poll_proposals_locked_notice',
-                    default=u"Setting ${count} ${prop_form} as 'locked for vote'. "
-                            u"They can no longer be edited or retracted by normal users. ",
-                    mapping={'count':count,
-                             'prop_form': prop_form})
-            fm.add(msg)
+    request = event.request
+    if event.to_state in ('upcoming', 'ongoing'):
+        count = 0
+        for proposal in poll.get_proposal_objects():
+            try:
+                proposal.workflow.do_transition('voting', request)
+                count += 1
+            except WorkflowException:
+                # Skip those
+                pass
+        if count:
+            fm = IFlashMessages(request, None)
+            if fm:
+                singular = request.localizer.translate(_(u"proposal"))
+                plural = request.localizer.translate(_(u"proposals"))
+                prop_form = request.localizer.pluralize(singular, plural, count)
+                msg = _(u'poll_proposals_locked_notice',
+                        default=u"Setting ${count} ${prop_form} as 'locked for vote'. "
+                                u"They can no longer be edited or retracted by normal users. ",
+                        mapping={'count':count,
+                                 'prop_form': prop_form})
+                fm.add(msg)
 
 
-def upcoming_poll_callback(poll, info):
-    """ Workflow callback when a poll is set in the upcoming state.
-        This method sets all proposals in the locked for vote-state.
-    """
-    request = get_current_request()
-    lock_proposals(poll, request)
+# def upcoming_poll_callback(poll, info):
+#     """ Workflow callback when a poll is set in the upcoming state.
+#         This method sets all proposals in the locked for vote-state.
+#     """
+#     request = get_current_request()
+#     lock_proposals(poll, request)
 
 
-def ongoing_poll_callback(poll, info):
+def ongoing_poll_callback(poll, event):
     """ Workflow callback when a poll is set in the ongoing state.
         This method will raise an exeption if the parent agenda item is not ongoing or if there is no proposals in the poll.
     """
+    if event.to_state != 'ongoing':
+        return
     ai = find_interface(poll, IAgendaItem)
-    if ai.get_workflow_state() != 'ongoing':
+    if ai.wf_state != 'ongoing':
         err_msg = _(u"error_poll_cant_be_ongoing_unless_ai_is",
                     default = u"You can't set a poll to ongoing if the agenda item is not ongoing.")
         raise HTTPForbidden(err_msg)
-    request = get_current_request()
     if not poll.proposal_uids:
-        edit_tag = '<a href="%s"><b>%s</b></a>' % (request.resource_url(poll, 'edit'), poll.title)
-        err_msg = _(u"error_no_proposals_in_poll",
-                    default = u"A poll with no proposal can not be set to ongoing. Click link to edit: ${tag}",
+        edit_tag = '<a href="%s"><b>%s</b></a>' % (event.request.resource_url(poll, 'edit'),
+                                                   poll.title)
+        err_msg = _("error_no_proposals_in_poll",
+                    default = "A poll with no proposal can not be set to ongoing. Click link to edit: ${tag}",
                     mapping = {'tag': edit_tag})
         raise HTTPForbidden(err_msg)
-    lock_proposals(poll, request)
 
 
 def email_voters_about_ongoing_poll(poll, request=None):
@@ -328,6 +343,7 @@ def email_voters_about_ongoing_poll(poll, request=None):
         Note that there's a setting on the meeting called poll_notification_setting
         that controls wether this should be executed or not.
     """
+    # FIXME: Remove this
     meeting = find_interface(poll, IMeeting)
     assert meeting
     if not meeting.get_field_value('poll_notification_setting', False):
@@ -348,46 +364,18 @@ def email_voters_about_ongoing_poll(poll, request=None):
     response['meeting'] = meeting
     response['meeting_url'] = request.resource_url(meeting)
     response['poll_url'] = request.resource_url(poll)
-    sender = "%s <%s>" % (meeting.get_field_value('meeting_mail_name'), meeting.get_field_value('meeting_mail_address'))
     body_html = render('voteit.core:templates/email/ongoing_poll_notification.pt', response, request=request)
     #Since subject won't be part of a renderer, we need to translate it manually
     #Keep the _ -syntax otherwise Babel/lingua won't pick up the string
     subject = _(u"VoteIT: Open poll")
     for email in email_addresses:
-        send_email(request, subject, [email], body_html)
+        request.send_email(subject, [email], body_html)
 
 
 def includeme(config):
     config.add_content_factory(Poll, addable_to = 'AgendaItem')
-    aclreg = config.registry.acl
-
-    _UPCOMING_PERMS = (security.VIEW,
-                       security.EDIT,
-                       security.DELETE,
-                       security.CHANGE_WORKFLOW_STATE,
-                       security.MODERATE_MEETING, )
-    _ONGOING_PERMS = (security.VIEW,
-                      security.DELETE,
-                      security.CHANGE_WORKFLOW_STATE,
-                      security.MODERATE_MEETING, )
-
-    private = aclreg.new_acl('Poll:private')
-    private.add(security.ROLE_ADMIN, _UPCOMING_PERMS)
-    private.add(security.ROLE_MODERATOR, _UPCOMING_PERMS)
-    upcoming = aclreg.new_acl('Poll:upcoming')
-    upcoming.add(security.ROLE_ADMIN, _UPCOMING_PERMS)
-    upcoming.add(security.ROLE_MODERATOR, _UPCOMING_PERMS)
-    upcoming.add(security.ROLE_VIEWER, security.VIEW)
-    ongoing = aclreg.new_acl('Poll:ongoing')
-    ongoing.add(security.ROLE_ADMIN, _ONGOING_PERMS)
-    ongoing.add(security.ROLE_MODERATOR, _ONGOING_PERMS)
-    ongoing.add(security.ROLE_VOTER, security.ADD_VOTE)
-    ongoing.add(security.ROLE_VIEWER, security.VIEW)
-    closed = aclreg.new_acl('Poll:closed')
-    closed.add(security.ROLE_ADMIN, [security.VIEW, security.DELETE, security.MODERATE_MEETING])
-    closed.add(security.ROLE_MODERATOR, [security.VIEW, security.DELETE, security.MODERATE_MEETING])
-    closed.add(security.ROLE_VIEWER, security.VIEW)
-    canceled = aclreg.new_acl('Poll:canceled')
-    canceled.add(security.ROLE_ADMIN, _ONGOING_PERMS)
-    canceled.add(security.ROLE_MODERATOR, _ONGOING_PERMS)
-    canceled.add(security.ROLE_VIEWER, security.VIEW)
+    config.add_subscriber(closing_poll_callback, [IPoll, IWorkflowAfterTransition])
+    config.add_subscriber(lock_proposals, [IPoll, IWorkflowAfterTransition])
+    config.add_subscriber(ongoing_poll_callback, [IPoll, IWorkflowBeforeTransition])
+    #config.add_subscriber(_add_portlets_meeting_subscriber, [IMeeting, IObjectAddedEvent])
+    #config.add_subscriber(check_no_open_ais, [IMeeting, IWorkflowAfterTransition])

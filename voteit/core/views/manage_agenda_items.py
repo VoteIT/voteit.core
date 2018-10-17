@@ -1,12 +1,12 @@
+from arche.exceptions import WorkflowException
+from arche.models.workflow import get_workflows
 from arche.views.base import BaseView
 from pyramid.httpexceptions import HTTPFound
 from pyramid.traversal import find_resource
 from pyramid.view import view_config
-from repoze.workflow.workflow import WorkflowError
 
 from voteit.core import _
 from voteit.core import security
-from voteit.core.models.agenda_item import AgendaItem
 from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IMeeting
 
@@ -48,7 +48,7 @@ class ManageAgendaItemsView(BaseView):
                     try:
                         ai.set_workflow_state(self.request, state_id)
                         states_changed += 1
-                    except WorkflowError, e:
+                    except WorkflowException, e:
                         self.flash_messages.add(_('Unable to change state on ${title}: ${error}',
                                                       mapping={'title': ai.title, 'error': e}),
                                                     type='danger')
@@ -76,13 +76,10 @@ class ManageAgendaItemsView(BaseView):
                 self.flash_messages.add(_('Nothing updated'), type='warning')
             return HTTPFound(location=self.request.resource_url(self.context, 'manage_agenda'))
 
-        state_info = _dummy_agenda_item.workflow.state_info(None, self.request)
-        tstring = _
+        wfs = get_workflows(self.request.registry)
+        wf = wfs['agenda_item_wf']
         def _translated_state_title(state):
-            for info in state_info:
-                if info['name'] == state:
-                    return tstring(info['title'])
-            return state
+            return wf.states[state]
         response = {}
         response['translated_state_title'] = _translated_state_title
         response['find_resource'] = find_resource
@@ -94,6 +91,3 @@ class ManageAgendaItemsView(BaseView):
             if IAgendaItem.providedBy(obj):
                 ais[obj.get_workflow_state()].append(obj)
         return response
-
-#FIXME: :P
-_dummy_agenda_item = AgendaItem()

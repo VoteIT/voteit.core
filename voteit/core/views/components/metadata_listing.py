@@ -22,14 +22,12 @@ from voteit.core.security import VIEW
 def meta_state(context, request, va, **kw):
     """ Note: moderator actions also uses this one.
     """
-    tstring = _
     response = dict(
         section_title = va.title,
-        state_id  = context.get_workflow_state(),
-        state_title = tstring(context.current_state_title(request)), #Picked up by translation mechanism in zcml
-        states = context.get_available_workflow_states(request),
+        state_id  = context.wf_state,
+        state_title = context.workflow.state_title,
+        transitions = tuple(context.workflow.get_transitions(request)),
         context = context,
-        tstring = tstring,
     )
     return render(va.kwargs['renderer'], response, request = request)
 

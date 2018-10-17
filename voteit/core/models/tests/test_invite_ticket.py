@@ -42,6 +42,7 @@ class InviteTicketTests(unittest.TestCase):
         self.config.include('pyramid_chameleon')
         self.config.include('pyramid_mailer.testing')
         self.config.include('arche.testing')
+        self.config.include('voteit.core.testing_helpers.register_workflows')
         self.config.include('voteit.core.models.invite_ticket')
         from voteit.core.models.invite_ticket import send_invite_ticket
         meeting = _fixture(self.config)['m']
@@ -58,6 +59,7 @@ class InviteTicketTests(unittest.TestCase):
         from voteit.core.models.invite_ticket import claim_ticket
         from voteit.core.models.user import User
         self.config.include('arche.testing')
+        self.config.include('voteit.core.testing_helpers.register_workflows')
         self.config.include('voteit.core.models.invite_ticket')
         root = _fixture(self.config)
         meeting = root['m']
@@ -74,6 +76,7 @@ class InviteTicketTests(unittest.TestCase):
         from voteit.core.models.invite_ticket import claim_ticket
         from voteit.core.models.user import User
         self.config.include('arche.testing')
+        self.config.include('voteit.core.testing_helpers.register_workflows')
         self.config.include('voteit.core.models.invite_ticket')
         root = _fixture(self.config)
         meeting = root['m']
@@ -86,6 +89,7 @@ class InviteTicketTests(unittest.TestCase):
     def test_claim_closed(self):
         from voteit.core.models.invite_ticket import claim_ticket
         self.config.include('arche.testing')
+        self.config.include('voteit.core.testing_helpers.register_workflows')
         self.config.include('voteit.core.models.invite_ticket')
         meeting = _fixture(self.config)['m']
         self.config.testing_securitypolicy(userid='some_user',

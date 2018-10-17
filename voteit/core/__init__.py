@@ -50,6 +50,7 @@ def required_components(config):
     config.include('voteit.core.subscribers')
     config.include('voteit.core.views')
     config.include('voteit.core.schemas')
+    config.include('voteit.core.workflows')
     #Plugins and minor dependent components
     config.include('voteit.core.helpers')
     config.include('voteit.core.plugins.immediate_ap')

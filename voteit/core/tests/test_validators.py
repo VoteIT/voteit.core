@@ -27,10 +27,9 @@ def _fixture(config):
                      first_name = u'Moderator',
                      email = "moderator@voteit.se",)
     root.users['moderator'] = moderator
-    meeting = Meeting()
+    root['meeting'] = meeting = Meeting()
     meeting.add_groups('tester', [security.ROLE_DISCUSS, security.ROLE_PROPOSE, security.ROLE_VOTER, security.ROLE_VIEWER])
     meeting.add_groups('moderator', [security.ROLE_MODERATOR])
-    root['meeting'] = meeting
     return root
 
 

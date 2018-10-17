@@ -39,7 +39,7 @@ class DiffTextPortlet(PortletType):
     def count_tags(self, context, request, base_tag, num):
         results = {}
         query = Eq('path', resource_path(context)) & Eq('type_name', 'Proposal')
-        query &= NotAny('workflow_state', ['retracted', 'unhandled'])
+        query &= NotAny('wf_state', ['retracted', 'unhandled'])
         cquery = request.root.catalog.query
         for i in range(1, num+1):
             tag = "%s-%s" % (base_tag, i)

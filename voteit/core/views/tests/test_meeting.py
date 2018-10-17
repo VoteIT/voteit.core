@@ -33,12 +33,12 @@ class CopyAITests(unittest.TestCase):
         ai['p'] = Proposal(text='Some animlas are more equal than others')
         ai['p']['d'] = Document()
         ai['p2'] = Proposal(text='Me wont be there')
-        unrestricted_wf_transition_to(ai['p2'], 'retracted')
         root['m2'] = Meeting()
         request = testing.DummyRequest()
         request.root = root
         apply_request_extensions(request)
         self.config.begin(request)
+        ai['p2'].wf_state = 'retracted'
         return root, request
 
     def test_contained_not_copied(self):

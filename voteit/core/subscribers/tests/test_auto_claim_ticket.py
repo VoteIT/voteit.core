@@ -16,8 +16,7 @@ class AutoClaimTicketTests(TestCase):
 
     def _fixture(self):
         from voteit.core.models.meeting import Meeting
-        self.config.include('arche.models.catalog')
-        self.config.include('voteit.core.models.catalog')
+        self.config.include('voteit.core.testing_helpers.register_catalog')
         root = bootstrap_and_fixture(self.config)
         self.config.include('voteit.core.models.invite_ticket')
         root['m'] = Meeting()
@@ -27,7 +26,9 @@ class AutoClaimTicketTests(TestCase):
     def test_auto_claim_on_add_user(self):
         root = self._fixture()
         self.config.include('voteit.core.subscribers.auto_claim_ticket')
-        self.config.include('arche.subscribers') #<- Delegating subscriber here
+        self.config.include('arche.subscribers')  #<- Delegating subscriber here
+        request = testing.DummyRequest()
+        self.config.begin(request)
         root['m'].add_invite_ticket('other@voteit.se', roles = [security.ROLE_VIEWER])
         from voteit.core.models.user import User
         user = User(email = 'other@voteit.se', email_validated = True)
@@ -37,6 +38,8 @@ class AutoClaimTicketTests(TestCase):
     def test_auto_claim_on_validated(self):        
         root = self._fixture()
         self.config.include('voteit.core.subscribers.auto_claim_ticket')
+        request = testing.DummyRequest()
+        self.config.begin(request)
         root['m'].add_invite_ticket('tester@voteit.se', roles = [security.ROLE_VIEWER])
         root['users']['admin'].email_validated = True
         self.assertIn(security.ROLE_VIEWER, root['m'].local_roles['admin'])        

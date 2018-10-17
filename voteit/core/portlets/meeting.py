@@ -55,7 +55,7 @@ def _get_meetings(request, state = 'ongoing', sort_index = 'sortable_title'):
     root = request.root
     results = []
     for docid in root.catalog.search(type_name = 'Meeting',
-                                     workflow_state = state,
+                                     wf_state = state,
                                      sort_index = sort_index)[1]:
         path = root.document_map.address_for_docid(docid)
         obj = find_resource(root, path)

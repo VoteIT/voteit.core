@@ -25,7 +25,8 @@
   .label-approved[href]:hover, .label-approved[href]:focus {
     background-color: #449d44; }
 
-.text-approved {
+.text-approved,
+.wf-state.wf-state-approved {
   color: #5cb85c; }
 
 .btn-ongoing {
@@ -45,7 +46,8 @@
     color: #5cb85c;
     background-color: #fff; }
 
-.text-ongoing {
+.text-ongoing,
+.wf-state.wf-state-ongoing {
   color: #5cb85c; }
 
 .btn-denied {
@@ -70,7 +72,8 @@
   .label-denied[href]:hover, .label-denied[href]:focus {
     background-color: #c9302c; }
 
-.text-denied {
+.text-denied,
+.wf-state.wf-state-denied {
   color: #d9534f; }
 
 .btn-private {
@@ -90,7 +93,8 @@
     color: #d9534f;
     background-color: #fff; }
 
-.text-private {
+.text-private,
+.wf-state.wf-state-private {
   color: #d9534f; }
 
 .btn-published {
@@ -110,7 +114,8 @@
     color: #337ab7;
     background-color: #fff; }
 
-.text-published {
+.text-published,
+.wf-state.wf-state-published {
   color: #337ab7; }
 
 .btn-upcoming {
@@ -130,7 +135,8 @@
     color: #f0ad4e;
     background-color: #fff; }
 
-.text-upcoming {
+.text-upcoming,
+.wf-state.wf-state-upcoming {
   color: #f0ad4e; }
 
 .btn-closed {
@@ -150,7 +156,8 @@
     color: #000;
     background-color: #fff; }
 
-.text-closed {
+.text-closed,
+.wf-state.wf-state-closed {
   color: #000; }
 
 .btn-retracted {
@@ -170,7 +177,8 @@
     color: #ccc;
     background-color: #fff; }
 
-.text-retracted {
+.text-retracted,
+.wf-state.wf-state-retracted {
   color: #ccc; }
 
 .btn-unhandled {
@@ -190,7 +198,8 @@
     color: #ccc;
     background-color: #fff; }
 
-.text-unhandled {
+.text-unhandled,
+.wf-state.wf-state-unhandled {
   color: #ccc; }
 
 .btn-canceled {
@@ -210,7 +219,8 @@
     color: #ccc;
     background-color: #fff; }
 
-.text-canceled {
+.text-canceled,
+.wf-state.wf-state-canceled {
   color: #ccc; }
 
 .btn-voting {
@@ -230,7 +240,8 @@
     color: #f0ad4e;
     background-color: #fff; }
 
-.text-voting {
+.text-voting,
+.wf-state.wf-state-voting {
   color: #f0ad4e; }
 
 /*Icons - match to wf states*/

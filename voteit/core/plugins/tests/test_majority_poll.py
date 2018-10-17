@@ -1,6 +1,7 @@
 import unittest
 
 from pyramid import testing
+from pyramid.request import apply_request_extensions
 from pyramid.traversal import find_interface, find_root
 from zope.interface.verify import verifyObject
 import colander
@@ -36,7 +37,6 @@ class MPUnitTests(unittest.TestCase):
         self.assertTrue(verifyObject(IPollPlugin, obj))
 
     def test_get_vote_schema(self):
-        self.config.include('voteit.core.testing_helpers.register_workflows')
         obj = self._make_obj()
         self.assertIsInstance(obj.get_vote_schema(), colander.Schema)
     
@@ -61,9 +61,10 @@ class MPIntegrationTests(unittest.TestCase):
         self.config = testing.setUp(request=self.request)
         self.config.testing_securitypolicy(userid='admin')
         self.config.include('arche.testing')
-        self.config.include('arche.models.catalog')
-        #Enable workflows
+        self.config.include('voteit.core.testing_helpers.register_catalog')
         self.config.include('voteit.core.testing_helpers.register_workflows')
+        self.config.include('voteit.core.models.poll')
+        self.config.include('voteit.core.helpers')
         #Register poll plugin
         self.config.include('voteit.core.plugins.majority_poll')
         #Add root
@@ -87,17 +88,13 @@ class MPIntegrationTests(unittest.TestCase):
         self.poll = ai['poll']
         #Select plugin to use
         from voteit.core.plugins.majority_poll import MajorityPollPlugin
-        self.poll.set_field_value('poll_plugin', MajorityPollPlugin.name)
+        self.poll.poll_plugin = MajorityPollPlugin.name
         #Add proposals
         from voteit.core.models.proposal import Proposal
-        p1 = Proposal(text = 'p1', creators = ['admin'], aid = 'one')
-        p1.uid = 'p1uid' #To make it simpler to test against
-        ai['p1'] = p1
-        p2 = Proposal(text = 'p2', creators = ['admin'], aid = 'two')
-        p2.uid = 'p2uid' #To make it simpler to test against
-        ai['p2'] = p2
+        ai['p1'] = p1 = Proposal(text = 'p1', creators = ['admin'], aid = 'one', uid='p1uid')
+        ai['p2'] = p2 = Proposal(text = 'p2', creators = ['admin'], aid = 'two', uid='p2uid')
         #Select proposals for this poll
-        self.poll.proposal_uids = (p1.uid, p2.uid, )
+        self.poll.proposals = (p1.uid, p2.uid, )
         self.ai = ai
         
     def tearDown(self):
@@ -106,49 +103,41 @@ class MPIntegrationTests(unittest.TestCase):
     def _add_votes(self):
         plugin = self.poll.get_poll_plugin()
         vote_cls = plugin.get_vote_class()
-                
         v1 = vote_cls()
         self.poll['v1'] = v1
         v1.set_vote_data({'proposal':self.ai['p1'].uid})
-        
         v2 = vote_cls()
         self.poll['v2'] = v2
         v2.set_vote_data({'proposal':self.ai['p1'].uid})
-        
         v3 = vote_cls()
         self.poll['v3'] = v3
         v3.set_vote_data({'proposal':self.ai['p2'].uid})
     
     def _close_poll(self):
         request = self.request
-        
         m = find_interface(self.poll, IMeeting)
-        m.set_workflow_state(request, 'ongoing')
-        
+        m.wf_state = 'ongoing'
         ai = find_interface(self.poll, IAgendaItem)
-        ai.set_workflow_state(request, 'upcoming')
-        ai.set_workflow_state(request, 'ongoing')
-        
-        self.poll.set_workflow_state(request, 'upcoming')
-        self.poll.set_workflow_state(request, 'ongoing')
-        self.poll.set_workflow_state(request, 'closed')
+        ai.wf_state = 'ongoing'
+        self.poll.wf_state = 'upcoming'
+        self.poll.wf_state = 'ongoing'
+        self.poll.wf_state = 'closed'
 
     def test_poll_result_created(self):
         self._add_votes()
         self._close_poll()
-
         self.assertEqual(2, len(self.poll.poll_result))
 
     def test_render_raw_data(self):
         self._add_votes()
         self._close_poll()
         plugin = self.poll.get_poll_plugin()
-        self.assertEqual(plugin.render_raw_data().body, "(({'proposal': u'p1uid'}, 2), ({'proposal': u'p2uid'}, 1))")
+        self.assertEqual(plugin.render_raw_data().body,
+                         "(({'proposal': 'p1uid'}, 2), ({'proposal': 'p2uid'}, 1))")
 
     def test_render_result(self):
         self.config.include('pyramid_chameleon')
-        attach_request_method(self.request, creators_info, 'creators_info')
-        attach_request_method(self.request, get_userinfo_url, 'get_userinfo_url')
+        apply_request_extensions(self.request)
         self.request.root = self.root
         self.request.meeting = self.meeting
         from voteit.core.views.poll import PollResultsView

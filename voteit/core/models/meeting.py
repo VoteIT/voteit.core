@@ -1,8 +1,11 @@
 from BTrees.OOBTree import OOBTree
 from arche.interfaces import IObjectAddedEvent
+from arche.interfaces import IWorkflowBeforeTransition
 from arche.portlets import get_portlet_manager
-from arche.security import get_acl_registry
+from arche.resources import ContextACLMixin
 from pyramid.httpexceptions import HTTPForbidden
+from pyramid.traversal import find_root
+from repoze.catalog.query import Eq
 from repoze.folder import unicodify
 from zope.interface import implementer
 
@@ -10,16 +13,15 @@ from voteit.core import _
 from voteit.core import security
 from voteit.core.models.arche_compat import createContent
 from voteit.core.models.base_content import BaseContent
-from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.poll import PROPOSAL_ORDER_CHOICES
 from voteit.core.models.poll import PROPOSAL_ORDER_DEFAULT
-from voteit.core.models.workflow_aware import WorkflowAware
+from voteit.core.models.workflow_aware import WorkflowCompatMixin
 from voteit.core.models.security_aware import SecurityAware
 
 
 @implementer(IMeeting)
-class Meeting(BaseContent, SecurityAware, WorkflowAware):
+class Meeting(BaseContent, SecurityAware, ContextACLMixin, WorkflowCompatMixin):
     """ Meeting content type.
         See :mod:`voteit.core.models.interfaces.IMeeting`.
         All methods are documented in the interface of this class.
@@ -48,13 +50,6 @@ class Meeting(BaseContent, SecurityAware, WorkflowAware):
             #We can't send the event here since the object isn't attached to the resource tree yet
             #When it is attached, an event will be sent.
             self.add_groups(userid, (security.ROLE_MODERATOR, ), event = False)
-
-    @property
-    def __acl__(self):
-        acl = get_acl_registry()
-        if self.get_workflow_state() == 'closed':
-            return acl.get_acl('Meeting:closed')
-        return acl.get_acl('Meeting:default')
 
     @property
     def order(self):
@@ -206,18 +201,6 @@ class Meeting(BaseContent, SecurityAware, WorkflowAware):
         self.set_field_value('diff_text_enabled', bool(value))
 
 
-def closing_meeting_callback(context, info):
-    """ Callback for workflow action. When a meeting is closed,
-        raise an exception if any agenda item is ongoing.
-    """
-    #get_content returns a generator. It's "True" even if it's empty
-    if tuple(context.get_content(iface=IAgendaItem, states=('ongoing', 'upcoming'))):
-        err_msg = _(u"error_cant_close_meeting_with_ongoing_ais",
-                    default = u"This meeting still has ongoing or upcoming "
-                    "Agenda items in it. You can't close it until they're closed.")
-        raise HTTPForbidden(err_msg)
-
-
 def add_default_portlets_meeting(meeting):
     manager = get_portlet_manager(meeting)
     if manager is not None:
@@ -236,33 +219,20 @@ def _add_portlets_meeting_subscriber(meeting, event):
     add_default_portlets_meeting(meeting)
 
 
+def check_no_open_ais(meeting, event):
+    """ Make sure no agenda items are ongoing if we close the meeting. """
+    if event.to_state == 'closed':
+        root = find_root(meeting)
+        query = Eq('type_name', 'AgendaItem') & Eq('wf_state', 'ongoing')
+        res = root.catalog.query(query)[0]
+        if res.total:
+            err_msg = _(u"error_cant_close_meeting_with_ongoing_ais",
+                        default = u"This meeting still has ongoing or upcoming "
+                        "Agenda items in it. You can't close it until they're closed.")
+            raise HTTPForbidden(err_msg)
+
+
 def includeme(config):
     config.add_content_factory(Meeting, addable_to = 'Root')
-    _MODERATOR_DEFAULTS = (security.VIEW,
-                           security.EDIT,
-                           security.MANAGE_GROUPS,
-                           security.MODERATE_MEETING,
-                           security.DELETE,
-                           security.CHANGE_WORKFLOW_STATE,
-                           security.ADD_INVITE_TICKET)
-    aclreg = config.registry.acl
-    default_acl = aclreg.new_acl('Meeting:default')
-    default_acl.add(security.ROLE_ADMIN, security.REGULAR_ADD_PERMISSIONS)
-    default_acl.add(security.ROLE_ADMIN, security.MANAGE_SERVER)
-    default_acl.add(security.ROLE_ADMIN, _MODERATOR_DEFAULTS)
-    default_acl.add(security.ROLE_MODERATOR, security.REGULAR_ADD_PERMISSIONS)
-    default_acl.add(security.ROLE_MODERATOR, _MODERATOR_DEFAULTS)
-    default_acl.add(security.ROLE_DISCUSS, security.ADD_DISCUSSION_POST)
-    default_acl.add(security.ROLE_PROPOSE, security.ADD_PROPOSAL)
-    default_acl.add(security.ROLE_VIEWER, security.VIEW)
-    closed_acl = aclreg.new_acl('Meeting:closed')
-    closed_acl.add(security.ROLE_ADMIN, (security.VIEW,
-                                         security.MODERATE_MEETING,
-                                         security.MANAGE_GROUPS,
-                                         security.DELETE,
-                                         security.CHANGE_WORKFLOW_STATE))
-    closed_acl.add(security.ROLE_MODERATOR, (security.VIEW,
-                                             security.MODERATE_MEETING,
-                                             security.MANAGE_GROUPS,))
-    closed_acl.add(security.ROLE_VIEWER, security.VIEW)
     config.add_subscriber(_add_portlets_meeting_subscriber, [IMeeting, IObjectAddedEvent])
+    config.add_subscriber(check_no_open_ais, [IMeeting, IWorkflowBeforeTransition])

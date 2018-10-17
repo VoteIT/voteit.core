@@ -4,14 +4,14 @@
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
       i18n:domain="voteit.core">
 
-  <tal:no_menu condition="not request.is_moderator or not states">
+  <tal:no_menu condition="not request.is_moderator or not transitions">
     <span class="text-${state_id}">
       <span class="glyphicon glyphicon-${state_id}"></span>
       ${state_title}
     </span>
   </tal:no_menu>
 
-  <tal:moderator condition="request.is_moderator and states">
+  <tal:moderator condition="request.is_moderator and transitions">
     <div class="btn-group">
       <button type="button" class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
         <span class="text-${state_id}">
@@ -21,12 +21,12 @@
         </span>
       </button>
       <ul class="dropdown-menu" role="menu">
-        <li tal:repeat="state states">
-          <a href="${request.resource_url(context, '__inline_state_change__', query = {'state': state.name})}"
+        <li tal:repeat="transition transitions">
+          <a href="${request.resource_url(context, '__inline_state_change__', query = {'state': transition.to_state})}"
              data-replace-target='[data-uid="${context.uid}"]'
              data-clickable-target>
-            <span class="glyphicon glyphicon-${state.name} text-${state.name}"></span>
-            <span tal:content="tstring(state.title)">Title</span>
+            <span class="glyphicon glyphicon-${transition.to_state} text-${transition.to_state}"></span>
+            <span tal:content="transition.title">Title</span>
             <span data-actionmarker="glyphicon glyphicon-refresh rotate-me"></span>
           </a>
         </li>

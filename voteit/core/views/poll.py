@@ -277,7 +277,7 @@ class PickPollJSON(BaseView):
 
     def __call__(self):
         path = resource_path(self.context)
-        query = Eq('path', path) & Eq('type_name', 'Poll') & Any('workflow_state', ('private', 'upcoming'))
+        query = Eq('path', path) & Eq('type_name', 'Poll') & Any('wf_state', ('private', 'upcoming'))
         docids = self.request.root.catalog.query(query)[1]
         polls = tuple(self.request.resolve_docids(docids, perm=security.EDIT)) #Must be able to modify poll
         query = Eq('path', path) & Eq('type_name', 'Proposal')

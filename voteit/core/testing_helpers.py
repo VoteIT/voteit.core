@@ -1,4 +1,7 @@
+import warnings
+
 from pyramid import testing
+from pyramid.request import apply_request_extensions
 from transaction import commit
 
 from voteit.core.bootstrap import bootstrap_voteit
@@ -7,6 +10,7 @@ from voteit.core.security import ROLE_VOTER
 
 def printing_mailer(config):
     config.include('arche.testing.printing_mailer')
+
 
 def dummy_zodb_root(config):
     """ Returns a bootstrapped root object that has been attached to
@@ -24,22 +28,33 @@ def dummy_zodb_root(config):
     commit()
     return zodb_root['app_root']
 
+
 def bootstrap_and_fixture(config):
-    config.include('pyramid_zcml')
     config.include('arche.testing')
-    config.load_zcml('voteit.core:configure.zcml')
+    config.include('arche.models.reference_guard')
+    config.include('arche.testing.workflow')
+    #config.load_zcml('voteit.core:configure.zcml')
+    register_catalog(config)
+    register_workflows(config)
     config.include('voteit.core.models.site')
-    config.include('voteit.core.models.agenda_templates')
+    #config.include('voteit.core.models.agenda_templates')
     config.include('voteit.core.models.user')
     config.include('voteit.core.models.users')
+    config.include('voteit.core.models.meeting')
+    config.include('voteit.core.models.agenda_item')
+    config.include('voteit.core.models.proposal')
+    config.include('voteit.core.models.poll')
     return bootstrap_voteit(echo=False)
+
 
 def register_security_policies(config):
     config.include('arche.testing.setup_auth')
 
+
 def register_workflows(config):
-    config.include('pyramid_zcml')
-    config.load_zcml('voteit.core:configure.zcml')
+    config.include('arche.testing.workflow')
+    config.include('voteit.core.workflows')
+
 
 def register_catalog(config):
     """ Register minimal components needed to enable the catalog in testing.
@@ -47,6 +62,7 @@ def register_catalog(config):
     """
     config.include('arche.testing.catalog')
     config.include('voteit.core.models.catalog')
+
 
 def active_poll_fixture(config):
     """ This method sets up a site the way it will be when a poll is ready to start
@@ -57,28 +73,33 @@ def active_poll_fixture(config):
     from voteit.core.models.meeting import Meeting
     from voteit.core.models.agenda_item import AgendaItem
     from voteit.core.models.proposal import Proposal
+    from pyramid.threadlocal import get_current_request
     root = bootstrap_and_fixture(config)
-    request = testing.DummyRequest()
-    config = testing.setUp(request = request, registry = config.registry)
     config.include('pyramid_mailer.testing')
+    config.include('voteit.core.models.poll')
     config.include('voteit.core.subscribers.poll')
     root['users']['admin'].set_field_value('email', 'this@that.com')
     meeting = root['meeting'] = Meeting()
     meeting.add_groups('admin', [ROLE_VOTER])
-    meeting.set_workflow_state(request, 'ongoing')
+    if not get_current_request():
+        request = testing.DummyRequest()
+        apply_request_extensions(request)
+        config.begin(request)
+    meeting.wf_state = 'ongoing'
     ai = meeting['ai'] = AgendaItem()
-    ai['prop1'] = Proposal(text = u"Proposal 1")
-    ai['prop2'] = Proposal(text = u"Proposal 2")
-    ai.set_workflow_state(request, 'upcoming')
-    ai.set_workflow_state(request, 'ongoing')
+    ai['prop1'] = Proposal(text = "Proposal 1")
+    ai['prop2'] = Proposal(text = "Proposal 2")
+    ai.wf_state = 'ongoing'
     ai['poll'] = Poll(title = 'A poll')
     poll = ai['poll']
-    poll.set_field_value('proposals', set([ai['prop1'].uid, ai['prop2'].uid]))
-    poll.set_workflow_state(request, 'upcoming')
+    poll.proposals = {ai['prop1'].uid, ai['prop2'].uid}
+    poll.wf_state = 'upcoming'
     return root
 
+
 def attach_request_method(request, helper, name):
-    """ Register as a request method, they won't be active otherwise. Only for testing!"""
+    warnings.warn("attach_request_method is deprecated use"
+                  "pyramid.request.apply_request_extensions", DeprecationWarning)
     def _wrap_request_method(*args, **kwargs):
         return helper(request, *args, **kwargs)
     setattr(request, name, _wrap_request_method)

@@ -1,7 +1,11 @@
+import warnings
+
+from arche.exceptions import WorkflowException
+from arche.interfaces import IWorkflowAfterTransition
 from repoze.workflow import get_workflow
 from repoze.workflow.workflow import WorkflowError
 from zope.component.event import objectEventNotify
-from zope.interface import implements
+from zope.interface import implements, implementer
 
 from voteit.core.models.interfaces import IWorkflowAware
 from voteit.core.events import WorkflowStateChange
@@ -53,3 +57,42 @@ class WorkflowAware(object):
             if info['current']:
                 return info['title']
         raise WorkflowError("No workflow title found on object: %s" % self)
+
+
+@implementer(IWorkflowAware)
+class WorkflowCompatMixin(object):
+    """ Mixin class to make content implement parts of VoteiTs old workflow system.
+        See :mod:`voteit.core.models.interfaces.IWorkflowAware`.
+    """
+    # workflow prop is the same
+
+    def get_workflow_state(self):
+        warnings.warn("get_workflow_state is deprecated, use wf_state instead", DeprecationWarning)
+        return self.wf_state
+
+    def set_workflow_state(self, request, state):
+        warnings.warn("set_workflow_state is deprecated, use workflow.do_transition() instead", DeprecationWarning)
+        if self.workflow:
+            return self.workflow.do_transition(state, request=request)
+        raise WorkflowException("Workflow not configured for '%s'" % self)
+
+    def make_workflow_transition(self, request, transition):
+        raise Exception('Not used?')
+
+    def get_available_workflow_states(self, request):
+        warnings.warn("get_available_workflow_states is deprecated, use workflow.get_transitions() instead", DeprecationWarning)
+        return list(self.workflow.get_transitions(request))
+
+    def current_state_title(self, request):
+        warnings.warn("get_available_workflow_states is deprecated, use workflow.state_title instead", DeprecationWarning)
+        return self.workflow.state_title
+
+
+def compat_event(context, event):
+    deprecated_event = WorkflowStateChange(context, old_state=event.from_state, new_state=event.to_state)
+    objectEventNotify(deprecated_event)
+
+
+def includeme(config):
+    # Compat - tie WorkflowStateChange
+    config.add_subscriber(compat_event, [IWorkflowAware, IWorkflowAfterTransition])

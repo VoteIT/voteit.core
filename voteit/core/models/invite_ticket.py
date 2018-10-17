@@ -2,6 +2,7 @@ from random import choice
 from uuid import uuid4
 import string
 
+from arche.resources import ContextACLMixin
 from arche.utils import send_email
 from arche.utils import utcnow
 from persistent.list import PersistentList
@@ -10,15 +11,13 @@ from pyramid.exceptions import HTTPForbidden
 from pyramid.renderers import render
 from pyramid.traversal import find_interface
 from pyramid.traversal import find_root
-from six import string_types
 from zope.interface import implementer
 
 from voteit.core import _
 from voteit.core import security
 from voteit.core.models.interfaces import IInviteTicket
 from voteit.core.models.interfaces import IMeeting
-from voteit.core.models.workflow_aware import WorkflowAware
-
+from voteit.core.models.workflow_aware import WorkflowCompatMixin
 
 SELECTABLE_ROLES = (security.ROLE_MODERATOR,
                     security.ROLE_DISCUSS,
@@ -28,7 +27,7 @@ SELECTABLE_ROLES = (security.ROLE_MODERATOR,
 
 
 @implementer(IInviteTicket)
-class InviteTicket(Persistent, WorkflowAware):
+class InviteTicket(Persistent, ContextACLMixin, WorkflowCompatMixin):
     """ Invite ticket. Send these to give access to new users.
         See :mod:`voteit.core.models.interfaces.IInviteTicket`.
         All methods are documented in the interface of this class.
@@ -140,6 +139,7 @@ def render_claimed_ticket_notification(ticket, request, message = "", user = Non
     response['roles'] = [roles.get(x) for x in ticket.roles]
     response['user'] = user
     return render('voteit.core:templates/email/claimed_ticket_email.pt', response, request = request)
+
 
 def includeme(config):
     config.add_content_factory(InviteTicket)

@@ -7,11 +7,10 @@ from pyramid.security import Authenticated
 from pyramid.httpexceptions import HTTPForbidden
 from zope.interface.verify import verifyClass
 from zope.interface.verify import verifyObject
+from arche.resources import Root
 
 from voteit.core import security
 from voteit.core.models.interfaces import IMeeting
-from voteit.core.testing_helpers import register_workflows
-from voteit.core.testing_helpers import bootstrap_and_fixture
 
 
 admin = set([security.ROLE_ADMIN])
@@ -25,8 +24,10 @@ owner = set([security.ROLE_OWNER])
 
 
 class MeetingTests(unittest.TestCase):
+
     def setUp(self):
         self.config = testing.setUp()
+        self.config.include('arche.testing')
 
     def tearDown(self):
         testing.tearDown()
@@ -55,31 +56,38 @@ class MeetingTests(unittest.TestCase):
 
     def test_closing_meeting_with_ongoing_ais(self):
         """ Closing a meeting with ongoing agenda items should raise an exception. """
-        register_workflows(self.config)
+        self.config.include('arche.testing.catalog')
+        self.config.include('voteit.core.testing_helpers.register_workflows')
+        self.config.include('voteit.core.models.meeting')
+        #self.config.include('voteit.core.subscribers.timestamps')  # To add subscriber
         request = testing.DummyRequest()
-        ai = self._ai()
-        ai.set_workflow_state(request, 'upcoming')
-        ai.set_workflow_state(request, 'ongoing')
-        obj = self._cut()
-        obj['ai'] = ai
-        
-        obj.set_workflow_state(request, 'ongoing')
-        self.assertRaises(Exception, obj.set_workflow_state, 'closed')
+        self.config.begin(request)
+        root = Root()
+        root['m'] = obj = self._cut()
+        obj.workflow.do_transition('ongoing')
+        obj['ai'] = ai = self._ai()
+        ai.workflow.do_transition('ongoing')
+        self.assertRaises(HTTPForbidden, obj.workflow.do_transition, 'closed')
 
     def test_timestamp_added_on_close(self):
-        register_workflows(self.config)
-        self.config.include('voteit.core.subscribers.timestamps') #To add subscriber
+        self.config.include('arche.testing.catalog')
+        self.config.include('voteit.core.testing_helpers.register_workflows')
+        self.config.include('voteit.core.subscribers.timestamps')  # To add subscriber
         request = testing.DummyRequest()
-        obj = self._cut()
+        root = Root()
+        root['m'] = obj = self._cut()
         obj.set_workflow_state(request, 'ongoing')
         self.assertFalse(isinstance(obj.end_time, datetime))
         obj.set_workflow_state(request, 'closed')
         self.assertTrue(isinstance(obj.end_time, datetime))
 
     def test_closing_meeting_callback(self):
-        register_workflows(self.config)
+        self.config.include('arche.testing.catalog')
+        self.config.include('voteit.core.testing_helpers.register_workflows')
+        self.config.include('voteit.core.models.meeting')
         request = testing.DummyRequest()
-        obj = self._cut()
+        root = Root()
+        root['m'] = obj = self._cut()
         obj['ai'] = self._ai()
         obj.set_workflow_state(request, 'ongoing')
         obj['ai'].set_workflow_state(request, 'upcoming')
@@ -96,7 +104,7 @@ class MeetingTests(unittest.TestCase):
         self.assertEqual(set(results), set(['john@doe.com', 'jane@doe.com']))
 
     def test_add_invite_ticket_doesnt_touch_existing(self):
-        self.config.include('arche')
+        self.config.include('arche.testing')
         self.config.include('voteit.core.models.invite_ticket')
         obj = self._cut()
         self.failUnless(obj.add_invite_ticket('john@doe.com', [security.ROLE_DISCUSS]))
@@ -136,12 +144,8 @@ class MeetingPermissionTests(unittest.TestCase):
         self.config = testing.setUp()
         policy = ACLAuthorizationPolicy()
         self.pap = policy.principals_allowed_by_permission
-        # load workflow
-        self.config.include('pyramid_zcml')
-        self.config.load_zcml('voteit.core:configure.zcml')
-        self.config.include('arche.security')
-        self.config.include('arche.utils')
-        self.config.include('voteit.core.models.meeting')
+        self.config.include('arche.testing')
+        self.config.include('voteit.core.testing_helpers.register_workflows')
 
     def tearDown(self):
         testing.tearDown()
@@ -184,7 +188,8 @@ class MeetingPermissionTests(unittest.TestCase):
 
     def test_ongoing(self):
         request = testing.DummyRequest()
-        obj = self._cut()
+        root = Root()
+        root['m'] = obj = self._cut()
         obj.set_workflow_state(request, 'ongoing')
         
         #View
@@ -216,8 +221,8 @@ class MeetingPermissionTests(unittest.TestCase):
 
     def test_closed(self):
         request = testing.DummyRequest()
-        obj = self._cut()
-        obj.set_workflow_state(request, 'ongoing')
+        root = Root()
+        root['m'] = obj = self._cut()
         obj.set_workflow_state(request, 'closed')
         
         #View

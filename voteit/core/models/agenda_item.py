@@ -1,8 +1,11 @@
+from arche.interfaces import IWorkflowBeforeTransition
+from arche.resources import ContextACLMixin
 from arche.security import get_acl_registry
 from pyramid.httpexceptions import HTTPForbidden
 from pyramid.security import Deny
-from pyramid.threadlocal import get_current_request
 from pyramid.traversal import find_interface
+from pyramid.traversal import find_root
+from repoze.catalog.query import Eq
 from zope.interface import implementer
 
 from voteit.core import _
@@ -10,12 +13,11 @@ from voteit.core import security
 from voteit.core.models.base_content import BaseContent
 from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IMeeting
-from voteit.core.models.interfaces import IPoll
-from voteit.core.models.workflow_aware import WorkflowAware
+from voteit.core.models.workflow_aware import WorkflowCompatMixin
 
 
 @implementer(IAgendaItem)
-class AgendaItem(BaseContent, WorkflowAware):
+class AgendaItem(BaseContent, ContextACLMixin, WorkflowCompatMixin):
     """ Agenda Item content type.
         See :mod:`voteit.core.models.interfaces.IAgendaItem`.
         All methods are documented in the interface of this class.
@@ -23,6 +25,7 @@ class AgendaItem(BaseContent, WorkflowAware):
     type_name = 'AgendaItem'
     type_title = _("Agenda item")
     add_permission = security.ADD_AGENDA_ITEM
+    # FIXME: Remove and migrate this
     custom_mutators = {'proposal_block': '_set_proposal_block', 'discussion_block': '_set_discussion_block'}
     css_icon = 'glyphicon glyphicon-list-alt'
     collapsible_limit = None
@@ -80,11 +83,17 @@ class AgendaItem(BaseContent, WorkflowAware):
     def start_time(self):
         """ Set by a subscriber when this item is opened. """
         return self.get_field_value('start_time')
+    @start_time.setter
+    def start_time(self, value):
+        self.set_field_value('start_time', value)
 
     @property
     def end_time(self):
         """ Set by a subscriber when this item closes. """
         return self.get_field_value('end_time')
+    @end_time.setter
+    def end_time(self, value):
+        self.set_field_value('end_time', value)
 
     @property
     def hashtag(self):
@@ -101,52 +110,29 @@ class AgendaItem(BaseContent, WorkflowAware):
         self.set_field_value('tags', frozenset(value))
 
 
-def closing_agenda_item_callback(context, info):
-    """ Callback for workflow action. When an agenda item is closed,
-        all contained proposals that haven't been handled should be set to
-        "unhandled".
-        If there are any open polls, this should raise an exception or an error message of some sort.
-    """
-    request = get_current_request() #Should be okay to use here since this method is called very seldom.
-    #get_content returns a generator. It's "True" even if it's empty!
-    if tuple(context.get_content(iface=IPoll, states='ongoing')):
-        err_msg = _(u"error_polls_not_closed_cant_close_ai",
-                    default = u"You can't close an agenda item that has ongoing polls in it. Close the polls first!")
-        raise HTTPForbidden(err_msg)
+def check_no_open_polls(ai, event):
+    """ Make sure no polls are ongoing if we close agenda item. """
+    if event.to_state == 'closed':
+        root = find_root(ai)
+        query = Eq('type_name', 'Poll') & Eq('wf_state', 'ongoing')
+        res = root.catalog.query(query)[0]
+        if res.total:
+            err_msg = _(u"error_polls_not_closed_cant_close_ai",
+                        default=u"You can't close an agenda item that has ongoing polls in it. Close the polls first!")
+            raise HTTPForbidden(err_msg)
 
-def ongoing_agenda_item_callback(context, info):
-    """ Callback for workflow action. An agenda item can't be set as ongoing when meeting is not ongoing
-    """
-    meeting = find_interface(context, IMeeting)
-    if meeting and meeting.get_workflow_state() != 'ongoing':
-        err_msg = _(u"error_ai_cannot_be_ongoing_in_not_ongoing_meeting",
-                    default = u"You can't set an agenda item to ongoing if the meeting is not ongoing.")
-        raise HTTPForbidden(err_msg)
+
+def check_meeting_ongoing(ai, event):
+    meeting = find_interface(ai, IMeeting)
+    if meeting:
+        if event.to_state == 'ongoing' and meeting.wf_state != 'ongoing':
+            err_msg = _(u"error_ai_cannot_be_ongoing_in_not_ongoing_meeting",
+                        default = u"You can't set an agenda item to ongoing if the meeting is not ongoing.")
+            raise HTTPForbidden(err_msg)
+
 
 
 def includeme(config):
     config.add_content_factory(AgendaItem, addable_to = 'Meeting')
-    _PRIV_MOD_PERMS = (security.VIEW,
-                       security.EDIT,
-                       security.DELETE,
-                       security.MODERATE_MEETING,
-                       security.CHANGE_WORKFLOW_STATE, )
-    _CLOSED_AI_MOD_PERMS = (security.VIEW,
-                            security.CHANGE_WORKFLOW_STATE,
-                            security.ADD_DISCUSSION_POST,
-                            security.MODERATE_MEETING, )
-    aclreg = config.registry.acl
-    private = aclreg.new_acl('AgendaItem:private')
-    private.add(security.ROLE_ADMIN, security.REGULAR_ADD_PERMISSIONS)
-    private.add(security.ROLE_ADMIN, _PRIV_MOD_PERMS)
-    private.add(security.ROLE_MODERATOR, security.REGULAR_ADD_PERMISSIONS)
-    private.add(security.ROLE_MODERATOR, _PRIV_MOD_PERMS)
-    closed_ai = aclreg.new_acl('AgendaItem:closed_ai')
-    closed_ai.add(security.ROLE_ADMIN, _CLOSED_AI_MOD_PERMS)
-    closed_ai.add(security.ROLE_MODERATOR, _CLOSED_AI_MOD_PERMS)
-    closed_ai.add(security.ROLE_DISCUSS, security.ADD_DISCUSSION_POST)
-    closed_ai.add(security.ROLE_VIEWER, security.VIEW)
-    closed_meeting = aclreg.new_acl('AgendaItem:closed_meeting')
-    closed_meeting.add(security.ROLE_ADMIN, security.VIEW)
-    closed_meeting.add(security.ROLE_MODERATOR, security.VIEW)
-    closed_meeting.add(security.ROLE_VIEWER, security.VIEW)
+    config.add_subscriber(check_no_open_polls, [IAgendaItem, IWorkflowBeforeTransition])
+    config.add_subscriber(check_meeting_ongoing, [IAgendaItem, IWorkflowBeforeTransition])

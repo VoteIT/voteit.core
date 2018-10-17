@@ -88,9 +88,10 @@ class AgendaInlineView(BaseView):
 
     def get_ais(self, state):
         catalog = self.request.root.catalog
-        docids = catalog.search(path = self.meeting_path,
-                                    type_name = 'AgendaItem',
-                                    workflow_state = state)[1]
+        docids = catalog.search(
+            path = self.meeting_path,
+            type_name = 'AgendaItem',
+            wf_state = state)[1]
         #Don't check permission here, assume permission check done before
         results = self.request.resolve_docids(docids, perm=None)
         ai_order = self.context.order
@@ -125,10 +126,8 @@ def agenda_data_json(context, request):
         query &= Any('tags', [tag.lower()])
     results = []
     hide_type_count = request.session.get('voteit.agenda.hide_type_count', False)
-
     if state:
-        query &= Eq('workflow_state', state)
-
+        query &= Eq('wf_state', state)
     count, docids = request.root.catalog.query(query)
     for ai in request.resolve_docids(docids, perm=None):
         ai_res = {
@@ -140,7 +139,6 @@ def agenda_data_json(context, request):
         if state is None:
             ai_res['state'] = ai.get_workflow_state()
         results.append(ai_res)
-
     return {'ais': results, 'hide_type_count': hide_type_count}
 
 
