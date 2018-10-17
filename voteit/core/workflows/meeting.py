@@ -8,7 +8,7 @@ from voteit.core import security
 class MeetingWorkflow(Workflow):
     """ The basic transitions for a meeting. """
     name = 'meeting_wf'
-    title = _("Meeting workflow")
+    title = "Meeting workflow"
     states = {'upcoming': _("Upcoming"),
               'ongoing': _("Ongoing"),
               'closed': _("Closed")}
@@ -59,14 +59,13 @@ MeetingWorkflow.add_transitions(
     to_states='closed',
     title = _("Close meeting"),
     permission=security.CHANGE_WORKFLOW_STATE
-
 )
 
 
 MeetingWorkflow.add_transitions(
     from_states='*',
     to_states='upcoming',
-    title = _("Set as upcoming"),
+    title = _("Back to upcoming"),
     permission=security.CHANGE_WORKFLOW_STATE
 )
 

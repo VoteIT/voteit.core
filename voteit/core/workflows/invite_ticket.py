@@ -8,7 +8,7 @@ from voteit.core import _
 class InviteTicketWorkflow(Workflow):
     """ Invite tickets can only be open or closed. Open tickets aren't used. """
     name = 'invite_ticket_wf'
-    title = _("Invite ticket workflow")
+    title = "Invite ticket workflow"
     states = {'open': _("Open"),
               'closed': _("Closed")}
     transitions = {}
@@ -22,14 +22,12 @@ class InviteTicketWorkflow(Workflow):
 InviteTicketWorkflow.add_transitions(
     from_states='open',
     to_states='closed',
-    title = _("Closed"),
 )
 
 
 InviteTicketWorkflow.add_transitions(
     from_states='closed',
     to_states='open',
-    title = _("Open"),
 )
 
 

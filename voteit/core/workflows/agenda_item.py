@@ -8,7 +8,7 @@ from voteit.core import _
 class AgendaItemWorkflow(Workflow):
     """ The basic transitions for an Agenda item. """
     name = 'agenda_item_wf'
-    title = _("Agenda item workflow")
+    title = "Agenda item workflow"
     states = {'private': _("Private"),
               'upcoming': _("Upcoming"),
               'ongoing': _("Ongoing"),
@@ -47,7 +47,7 @@ class AgendaItemWorkflow(Workflow):
 AgendaItemWorkflow.add_transitions(
     from_states='*',
     to_states='ongoing',
-    title = _("Make ongoing"),
+    title=_("Set ongoing"),
     permission=security.CHANGE_WORKFLOW_STATE
 )
 
@@ -55,16 +55,15 @@ AgendaItemWorkflow.add_transitions(
 AgendaItemWorkflow.add_transitions(
     from_states='*',
     to_states='closed',
-    title = _("Close"),
+    title=_("Close"),
     permission=security.CHANGE_WORKFLOW_STATE
-
 )
 
 
 AgendaItemWorkflow.add_transitions(
     from_states='*',
     to_states='upcoming',
-    title = _("Set as upcoming"),
+    title=_("Set upcoming"),
     permission=security.CHANGE_WORKFLOW_STATE
 )
 
@@ -72,7 +71,7 @@ AgendaItemWorkflow.add_transitions(
 AgendaItemWorkflow.add_transitions(
     from_states='*',
     to_states='private',
-    title = _("Make private"),
+    title=_("Set private"),
     permission=security.CHANGE_WORKFLOW_STATE
 )
 

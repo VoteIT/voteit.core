@@ -8,10 +8,10 @@ from voteit.core import security
 class ProposalWorkflow(Workflow):
     """ Handles states and permissions for proposals. """
     name = 'proposal_wf'
-    title = _("Proposal workflow")
+    title = "Proposal workflow"
     states = {'published': _("Published"),
               'retracted': _("Retracted"),
-              'voting': _("Voting"),
+              'voting': _("Locked for voting"),
               'approved': _("Approved"),
               'denied': _("Denied"),
               'unhandled': _("Unhandled")}
@@ -96,7 +96,7 @@ ProposalWorkflow.add_transitions(
 ProposalWorkflow.add_transitions(
     from_states='*',
     to_states='published',
-    title = _("Publish"),
+    title = _("Back to published"),
     permission=security.MODERATE_MEETING
 )
 

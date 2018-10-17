@@ -8,7 +8,7 @@ from voteit.core import security
 class PollWorkflow(Workflow):
     """ Poll workflow. """
     name = 'poll_wf'
-    title = _("Poll workflow")
+    title = "Poll workflow"
     states = {'private': _("Private"),
               'upcoming': _("Upcoming"),
               'ongoing': _("Ongoing"),
@@ -56,7 +56,7 @@ class PollWorkflow(Workflow):
 PollWorkflow.add_transitions(
     from_states='private',
     to_states='upcoming',
-    title=_("Set as upcoming"),
+    title=_("Set upcoming"),
     permission=security.CHANGE_WORKFLOW_STATE
 )
 
@@ -64,7 +64,7 @@ PollWorkflow.add_transitions(
 PollWorkflow.add_transitions(
     from_states='upcoming',
     to_states='private',
-    title=_("Make private"),
+    title=_("Make private again"),
     permission=security.CHANGE_WORKFLOW_STATE
 
 )
@@ -73,7 +73,7 @@ PollWorkflow.add_transitions(
 PollWorkflow.add_transitions(
     from_states='upcoming',
     to_states='ongoing',
-    title=_("Start"),
+    title=_("Start poll"),
     permission=security.CHANGE_WORKFLOW_STATE
 )
 
@@ -95,7 +95,5 @@ PollWorkflow.add_transitions(
 
 
 def includeme(config):
-    #config.add_subscriber(_add_portlets_meeting_subscriber, [IMeeting, IObjectAddedEvent])
-    #config.add_subscriber(check_no_open_ais, [IMeeting, IWorkflowAfterTransition])
     config.add_workflow(PollWorkflow)
     config.set_content_workflow('Poll', 'poll_wf')

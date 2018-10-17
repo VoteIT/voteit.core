@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2018-10-01 12:58+0200\n"
-"PO-Revision-Date: 2018-10-01 12:59+0200\n"
+"POT-Creation-Date: 2018-10-17 15:36+0200\n"
+"PO-Revision-Date: 2018-10-17 15:36+0200\n"
 "Last-Translator: Robin Harms Oredsson <robin@betahaus.net>\n"
 "Language-Team: sv <LL@li.org>\n"
 "Language: sv\n"
@@ -34,7 +34,7 @@ msgstr "Standarddagordningar"
 msgid "Registered users"
 msgstr "Registrerade användare"
 
-#: voteit/core/bootstrap.py:36 voteit/core/security.py:107
+#: voteit/core/bootstrap.py:36 voteit/core/security.py:108
 msgid "Administrator"
 msgstr "Administratör"
 
@@ -84,34 +84,34 @@ msgstr "Att enbart posta den förifyllda texten är inte tillräckligt"
 msgid "Use regular chars and no spaces."
 msgstr "Använd vanliga tecken utan mellanslag."
 
-#: voteit/core/security.py:28 voteit/core/security.py:108
+#: voteit/core/security.py:29 voteit/core/security.py:109
 msgid "Meeting creator"
 msgstr "Mötesskapare"
 
-#: voteit/core/security.py:32 voteit/core/security.py:109
+#: voteit/core/security.py:33 voteit/core/security.py:110
 msgid "Moderator"
 msgstr "Moderator"
 
-#: voteit/core/security.py:38 voteit/core/security.py:111
-#: voteit/core/security.py:115
+#: voteit/core/security.py:39 voteit/core/security.py:112
+#: voteit/core/security.py:116
 msgid "Discuss"
 msgstr "Diskutera"
 
-#: voteit/core/security.py:43 voteit/core/security.py:112
-#: voteit/core/security.py:116
+#: voteit/core/security.py:44 voteit/core/security.py:113
+#: voteit/core/security.py:117
 msgid "Propose"
 msgstr "Föreslå"
 
-#: voteit/core/security.py:48 voteit/core/security.py:113
-#: voteit/core/security.py:117
+#: voteit/core/security.py:49 voteit/core/security.py:114
+#: voteit/core/security.py:118
 msgid "Voter"
 msgstr "Rösträtt"
 
-#: voteit/core/security.py:110 voteit/core/security.py:114
+#: voteit/core/security.py:111 voteit/core/security.py:115
 msgid "View"
 msgstr "Läsa"
 
-#: voteit/core/__init__.py:57
+#: voteit/core/__init__.py:58
 msgid "Fixed left nav"
 msgstr "Fast navigation vänster"
 
@@ -158,7 +158,7 @@ msgstr "Diskussion"
 msgid "Polls"
 msgstr "Omröstningar"
 
-#: voteit/core/portlets/agenda_item.py:307
+#: voteit/core/portlets/agenda_item.py:308
 msgid "Agenda Item portlets"
 msgstr "Dagordningsportlets"
 
@@ -182,8 +182,8 @@ msgstr ""
 msgid "Like button"
 msgstr "Gillaknapp"
 
-#: voteit/core/plugins/like_button.py:117 voteit/core/models/proposal.py:27
-#: voteit/core/schemas/proposal.py:41 voteit/core/schemas/meeting.py:161
+#: voteit/core/plugins/like_button.py:117 voteit/core/models/proposal.py:28
+#: voteit/core/schemas/proposal.py:40 voteit/core/schemas/meeting.py:161
 msgid "Proposal"
 msgstr "Förslag"
 
@@ -416,6 +416,118 @@ msgstr "Användare som stödjer detta ${count}"
 msgid "support_proposal"
 msgstr "Stöd"
 
+#: voteit/core/workflows/invite_ticket.py:12
+msgid "Open"
+msgstr "Öppen"
+
+#: voteit/core/workflows/invite_ticket.py:13
+#: voteit/core/workflows/meeting.py:14 voteit/core/workflows/agenda_item.py:15
+#: voteit/core/workflows/poll.py:15
+#: voteit/core/templates/portlets/polls_inline.pt:87
+msgid "Closed"
+msgstr "Avslutad"
+
+#: voteit/core/workflows/proposal.py:12
+msgid "Published"
+msgstr "Publicerad"
+
+#: voteit/core/workflows/proposal.py:13
+msgid "Retracted"
+msgstr "Tillbakadragen"
+
+#: voteit/core/workflows/proposal.py:14
+msgid "Locked for voting"
+msgstr "Låst för omröstning"
+
+#: voteit/core/workflows/proposal.py:15 voteit/core/workflows/proposal.py:75
+msgid "Approved"
+msgstr "Bifallen"
+
+#: voteit/core/workflows/proposal.py:16 voteit/core/workflows/proposal.py:83
+msgid "Denied"
+msgstr "Avslaget"
+
+#: voteit/core/workflows/proposal.py:17 voteit/core/workflows/proposal.py:91
+msgid "Unhandled"
+msgstr "Ohanterad"
+
+#: voteit/core/workflows/proposal.py:59
+#: voteit/core/views/components/metadata_listing.py:52
+msgid "Retract"
+msgstr "Dra tillbaka"
+
+#: voteit/core/workflows/proposal.py:67
+msgid "Lock for voting"
+msgstr "Lås för omröstning"
+
+#: voteit/core/workflows/proposal.py:99
+msgid "Back to published"
+msgstr "Tillbaka till publicerad"
+
+#: voteit/core/workflows/meeting.py:12 voteit/core/workflows/agenda_item.py:13
+#: voteit/core/workflows/poll.py:13
+msgid "Upcoming"
+msgstr "Kommande"
+
+#: voteit/core/workflows/meeting.py:13 voteit/core/workflows/agenda_item.py:14
+#: voteit/core/workflows/poll.py:14
+msgid "Ongoing"
+msgstr "Pågående"
+
+#: voteit/core/workflows/meeting.py:52
+msgid "Start meeting"
+msgstr "Starta mötet"
+
+#: voteit/core/workflows/meeting.py:60
+msgid "Close meeting"
+msgstr "Stäng mötet"
+
+#: voteit/core/workflows/meeting.py:68
+msgid "Back to upcoming"
+msgstr "Tillbaka till kommande"
+
+#: voteit/core/workflows/agenda_item.py:12 voteit/core/workflows/poll.py:12
+msgid "Private"
+msgstr "Privat"
+
+#: voteit/core/workflows/agenda_item.py:50
+msgid "Set ongoing"
+msgstr "Gör pågående"
+
+#: voteit/core/workflows/agenda_item.py:58
+#: voteit/core/templates/menus/poll.pt:12
+#: voteit/core/templates/menus/control_panel.pt:10
+msgid "Close"
+msgstr "Stäng"
+
+#: voteit/core/workflows/agenda_item.py:66 voteit/core/workflows/poll.py:59
+msgid "Set upcoming"
+msgstr "Gör kommande"
+
+#: voteit/core/workflows/agenda_item.py:74
+msgid "Set private"
+msgstr "Gör privat"
+
+#: voteit/core/workflows/poll.py:16
+msgid "Canceled"
+msgstr "Avbruten"
+
+#: voteit/core/workflows/poll.py:67
+msgid "Make private again"
+msgstr "Gör privat igen"
+
+#: voteit/core/workflows/poll.py:76
+msgid "Start poll"
+msgstr "Starta omröstningen"
+
+#: voteit/core/workflows/poll.py:84
+msgid "Cancel poll"
+msgstr "Avbryt omröstningen"
+
+#: voteit/core/workflows/poll.py:92
+msgid "Close poll"
+msgstr "Stäng omröstningen"
+
 #: voteit/core/models/proposal_ids.py:45
 msgid "UserID-based (default)"
 msgstr "AnvändarID-baserad (standard)"
@@ -428,12 +540,12 @@ msgstr "Dagordningspunktens hashtagg"
 msgid "User"
 msgstr "Användare"
 
-#: voteit/core/models/invite_ticket.py:89
+#: voteit/core/models/invite_ticket.py:88
 #, python-format
 msgid "Invitation to ${meeting_title}"
 msgstr "Inbjudan till ${meeting_title}"
 
-#: voteit/core/models/invite_ticket.py:124
+#: voteit/core/models/invite_ticket.py:123
 #, python-format
 msgid "${meeting_title} is now accessible"
 msgstr "${meeting_title} är nu tillgängligt"
@@ -442,7 +554,7 @@ msgstr "${meeting_title} är nu tillgängligt"
 msgid "Users"
 msgstr "Användare"
 
-#: voteit/core/models/proposal.py:152
+#: voteit/core/models/proposal.py:123
 msgid "Proposal is a part of poll(s)"
 msgstr "Förslaget är en del av en omröstning"
 
@@ -450,13 +562,13 @@ msgstr "Förslaget är en del av en omröstning"
 msgid "Vote"
 msgstr "Röst"
 
-#: voteit/core/models/meeting.py:28 voteit/core/schemas/contact.py:36
+#: voteit/core/models/meeting.py:30 voteit/core/schemas/contact.py:36
 msgid "Meeting"
 msgstr "Möte"
 
 #. Default: This meeting still has ongoing or upcoming Agenda items in it. You
 #. can't close it until they're closed.
-#: voteit/core/models/meeting.py:215
+#: voteit/core/models/meeting.py:229
 msgid "error_cant_close_meeting_with_ongoing_ais"
 msgstr ""
 "Detta möte har ännu pågående dagordningspunkter. Du kan inte stänga mötet "
@@ -466,7 +578,7 @@ msgstr ""
 msgid "Discussion Post"
 msgstr "Diskussionsinlägg"
 
-#: voteit/core/models/agenda_item.py:24
+#: voteit/core/models/agenda_item.py:26
 #: voteit/core/schemas/agenda_template.py:12
 #: voteit/core/templates/manage_agenda.pt:36
 msgid "Agenda item"
@@ -474,7 +586,7 @@ msgstr "Dagordningspunkt"
 
 #. Default: You can't close an agenda item that has ongoing polls in it. Close
 #. the polls first!
-#: voteit/core/models/agenda_item.py:113
+#: voteit/core/models/agenda_item.py:120
 msgid "error_polls_not_closed_cant_close_ai"
 msgstr ""
 "Du kan inte stänga en dagordningspunkt med pågående omröstningar. Stäng "
@@ -482,30 +594,30 @@ msgstr ""
 
 #. Default: You can't set an agenda item to ongoing if the meeting is not
 #. ongoing.
-#: voteit/core/models/agenda_item.py:122
+#: voteit/core/models/agenda_item.py:129
 msgid "error_ai_cannot_be_ongoing_in_not_ongoing_meeting"
 msgstr ""
 "Du kan inte sätta en dagordningspunkt i pågående om mötet inte är pågående."
 
-#: voteit/core/models/poll.py:42
+#: voteit/core/models/poll.py:46
 msgid "Chronological"
 msgstr "Kronologisk"
 
-#: voteit/core/models/poll.py:43
+#: voteit/core/models/poll.py:47
 msgid "Alphabetical"
 msgstr "Alfabetisk"
 
-#: voteit/core/models/poll.py:44
+#: voteit/core/models/poll.py:48
 msgid "Random"
 msgstr "Slumpade"
 
-#: voteit/core/models/poll.py:62
+#: voteit/core/models/poll.py:66
 msgid "Poll"
 msgstr "Omröstning"
 
 #. Default: Poll has now closed. ${num} proposal(s) are now set in another
 #. state due to the outcome of the poll.
-#: voteit/core/models/poll.py:224
+#: voteit/core/models/poll.py:235
 msgid "poll_closed_info"
 msgstr ""
 "Omröstningen har nu stängt. ${num} förslag har nu satts i ett annat "
@@ -513,23 +625,23 @@ msgstr ""
 
 #. Default: Couldn't adjust the state of the following proposal(s): '${props}'.
 #. You may wish to review them manually.
-#: voteit/core/models/poll.py:229
+#: voteit/core/models/poll.py:240
 msgid "poll_closed_proposal_wf_change_error"
 msgstr ""
 "Kunde inte justera tillstånd för följande förslag: '${props}'. Du bör kolla "
 "att det blev rätt manuellt."
 
-#: voteit/core/models/poll.py:283
+#: voteit/core/models/poll.py:297
 msgid "proposal"
 msgstr "förslag"
 
-#: voteit/core/models/poll.py:284
+#: voteit/core/models/poll.py:298
 msgid "proposals"
 msgstr "förslag"
 
 #. Default: Setting ${count} ${prop_form} as 'locked for vote'. They can no
 #. longer be edited or retracted by normal users.
-#: voteit/core/models/poll.py:286
+#: voteit/core/models/poll.py:300
 msgid "poll_proposals_locked_notice"
 msgstr ""
 "Sätter ${count} ${prop_form} som 'låst för omröstning'. De kan inte längre "
@@ -537,7 +649,7 @@ msgstr ""
 "omröstning bör vara låsta."
 
 #. Default: You can't set a poll to ongoing if the agenda item is not ongoing.
-#: voteit/core/models/poll.py:308
+#: voteit/core/models/poll.py:324
 msgid "error_poll_cant_be_ongoing_unless_ai_is"
 msgstr ""
 "Du kan inte göra en omröstning till pågående om dagordningspunkten inte är "
@@ -545,13 +657,13 @@ msgstr ""
 
 #. Default: A poll with no proposal can not be set to ongoing. Click link to
 #. edit: ${tag}
-#: voteit/core/models/poll.py:314
+#: voteit/core/models/poll.py:330
 msgid "error_no_proposals_in_poll"
 msgstr ""
 "En omröstning utan förslagn kan inte göras till pågående. Klicka på länken "
 "för att ändra: ${tag}"
 
-#: voteit/core/models/poll.py:355
+#: voteit/core/models/poll.py:370
 msgid "VoteIT: Open poll"
 msgstr "VoteIT: Pågående omröstning"
 
@@ -658,7 +770,7 @@ msgid "Add as"
 msgstr "Lägg till som"
 
 #. Default: proposes
-#: voteit/core/schemas/proposal.py:27
+#: voteit/core/schemas/proposal.py:26
 msgid "proposal_default_text"
 msgstr "föreslår"
 
@@ -666,7 +778,7 @@ msgstr "föreslår"
 #. use an at sign to reference a user (ex: 'hello @jane') or a hashtag (ex:
 #. '#budget') to reference or create a tag. All proposals automatically get
 #. their own tag.
-#: voteit/core/schemas/proposal.py:42
+#: voteit/core/schemas/proposal.py:41
 msgid "proposal_text_description"
 msgstr ""
 "Ett förslag är ett uttalande mötet kan bifalla eller avslå. Du kan använda @-"
@@ -674,39 +786,39 @@ msgstr ""
 "(ex: '#budget') för att referera eller skapa en tagg. Alla förslag får "
 "automatiskt sin egen tagg."
 
-#: voteit/core/schemas/proposal.py:76
+#: voteit/core/schemas/proposal.py:74
 msgid "Hide proposal states"
 msgstr "Göm förslag i tillstånden"
 
 #. Default: Proposals in these states will be hidden by default but can be
 #. shown by pressing the link below the other proposals. They're not by any
 #. means invisible to participants.
-#: voteit/core/schemas/proposal.py:77
+#: voteit/core/schemas/proposal.py:75
 msgid "hide_proposal_states_description"
 msgstr ""
 "Förslag i markerade tillstånd kommer gömmas som standard men kan visas genom "
 "att klicka på länken under de andra förslagen."
 
-#: voteit/core/schemas/proposal.py:91 voteit/core/schemas/meeting.py:230
+#: voteit/core/schemas/proposal.py:89 voteit/core/schemas/meeting.py:230
 #: voteit/core/templates/participants.pt:24
 msgid "UserID"
 msgstr "AnvändarID"
 
-#: voteit/core/schemas/proposal.py:95
+#: voteit/core/schemas/proposal.py:93
 msgid "System user accounts"
 msgstr "Systemanvändare"
 
 #. Default: Must be an existing userid. If they're added here, moderators can
 #. use them to add proposals in their name. It's good practice to add things
 #. like 'propositions', 'board' or similar.
-#: voteit/core/schemas/proposal.py:96
+#: voteit/core/schemas/proposal.py:94
 msgid "system_userids_description"
 msgstr ""
 "Måste vara ett existerande användarID. Om de läggs till här så kan "
 "moderatorer lägga förslag i deras namn. Normalt är det bäst att använda "
 "opersonliga konton i stil med ’styrelsen’ eller ’handlingar’."
 
-#: voteit/core/schemas/proposal.py:106
+#: voteit/core/schemas/proposal.py:104
 msgid "Proposal naming method"
 msgstr "Förslagens namnmetod"
 
@@ -1210,51 +1322,6 @@ msgstr "Ändra många…"
 msgid "Loading data..."
 msgstr "Laddar data…"
 
-#: voteit/core/templates/_translations.pt:8
-msgid "Private"
-msgstr "Privat"
-
-#: voteit/core/templates/_translations.pt:9
-msgid "Upcoming"
-msgstr "Kommande"
-
-#: voteit/core/templates/_translations.pt:10
-msgid "Ongoing"
-msgstr "Pågående"
-
-#: voteit/core/templates/_translations.pt:11
-#: voteit/core/templates/portlets/polls_inline.pt:87
-msgid "Closed"
-msgstr "Avslutad"
-
-#: voteit/core/templates/_translations.pt:12
-msgid "Published"
-msgstr "Publicerad"
-
-#: voteit/core/templates/_translations.pt:13
-msgid "Retracted"
-msgstr "Tillbakadragen"
-
-#: voteit/core/templates/_translations.pt:14
-msgid "Locked for voting"
-msgstr "Låst för omröstning"
-
-#: voteit/core/templates/_translations.pt:15
-msgid "Approved"
-msgstr "Bifallen"
-
-#: voteit/core/templates/_translations.pt:16
-msgid "Denied"
-msgstr "Avslaget"
-
-#: voteit/core/templates/_translations.pt:17
-msgid "Unhandled"
-msgstr "Ohanterad"
-
-#: voteit/core/templates/_translations.pt:18
-msgid "Canceled"
-msgstr "Avbruten"
-
 #: voteit/core/templates/minutes.pt:11
 msgid "Meeting opened"
 msgstr "Mötet öppnat"
@@ -1461,7 +1528,7 @@ msgstr "Tillåt diskussion"
 #: voteit/core/templates/manage_agenda.pt:40
 #: voteit/core/templates/manage_agenda.pt:84
 #: voteit/core/views/components/moderator_actions.py:32
-#: voteit/core/views/components/metadata_listing.py:113
+#: voteit/core/views/components/metadata_listing.py:111
 msgid "Delete"
 msgstr "Radera"
 
@@ -1702,7 +1769,7 @@ msgstr "Hoppa till agenda"
 msgid "Skip to navigation"
 msgstr "Hoppa till navigation"
 
-#: voteit/core/templates/overrides/master.pt:58
+#: voteit/core/templates/overrides/master.pt:56
 msgid "Search"
 msgstr "Sök"
 
@@ -1765,11 +1832,6 @@ msgstr "Om"
 msgid "You haven't entered anything yet!"
 msgstr "Du har inte skrivit något än!"
 
-#: voteit/core/templates/menus/poll.pt:12
-#: voteit/core/templates/menus/control_panel.pt:10
-msgid "Close"
-msgstr "Stäng"
-
 #: voteit/core/templates/menus/poll.pt:23
 msgid "Ongoing polls"
 msgstr "Pågående omröstningar"
@@ -1783,7 +1845,7 @@ msgid "Participant list"
 msgstr "Deltagarlista"
 
 #: voteit/core/templates/menus/control_panel_participants.pt:16
-#: voteit/core/views/ticket.py:238
+#: voteit/core/views/ticket.py:239
 msgid "Invite participants"
 msgstr "Bjud in deltagare"
 
@@ -1930,17 +1992,6 @@ msgstr "För att få tillgång till mötet använd länken nedan:"
 msgid "There was a problem with your submission"
 msgstr "Det uppstod ett problem med formuläret"
 
-#. Default: Can't set Proposal '${title}' as 'Locked for voting'. It's probably
-#. not in the state published, or has already been handled in another way. All
-#. changes aborted, please check the proposals and try again.
-#: voteit/core/subscribers/poll.py:23
-msgid "workflow_error_when_setting_proposal_as_voting"
-msgstr ""
-"Kan inte sätta förslaget '${title}' som 'Låst för omröstning'. Troligtvis är "
-"det inte i tillståndet publicerat, eller så har det redan hanterats på något "
-"annat sätt. Alla ändringar har avbrutits, vänligen kontrollera förslagen och "
-"försök igen."
-
 #: voteit/core/views/manage_agenda_items.py:52
 #, python-format
 msgid "Unable to change state on ${title}: ${error}"
@@ -1964,41 +2015,41 @@ msgstr "Inget uppdaterat"
 msgid "Email addresses of moderators with upcoming or ongoing meetings"
 msgstr "Epostadresser för moderatorer med pågående eller kommande möten"
 
-#: voteit/core/views/ticket.py:41
+#: voteit/core/views/ticket.py:42
 msgid "This ticket has already been used."
 msgstr "Biljetten har redan använts."
 
 #. Default: Ticket validation failed. Either the ticket doesn't exist, was
 #. already used or the url used improperly. If you need help, please contact
 #. the moderator that invited you to this meeting.
-#: voteit/core/views/ticket.py:52
+#: voteit/core/views/ticket.py:53
 msgid "ticket_validation_fail"
 msgstr ""
 "Kontroll av inbjudan misslyckades. Detta kan bero på att inbjudningskoden "
 "inte finns, redan använts eller att du använde webbadressen fel. Om du "
 "behöver hjälp kan du kontakta den som skickade inbjudan."
 
-#: voteit/core/views/ticket.py:62
+#: voteit/core/views/ticket.py:63
 msgid "You've been granted access to the meeting. Welcome!"
 msgstr "Du har fått rätt att delta i mötet. Välkommen!"
 
-#: voteit/core/views/ticket.py:83
+#: voteit/core/views/ticket.py:84
 msgid "This meeting is closed so no invitations can be used now."
 msgstr "Mötet är stängt så inbjudningar kan inte användas längre."
 
 #. Default: The ticket link did not contain a token and an email address.
 #. Perhaps you came to this page by mistake?
-#: voteit/core/views/ticket.py:97
+#: voteit/core/views/ticket.py:98
 msgid "ticket_link_wrong_parameters_error"
 msgstr ""
 "Inbjudanslänken innehöll inte inbjudningskod och epostadress som de ska. "
 "Hamnade du kanske på denna sida av misstag?"
 
-#: voteit/core/views/ticket.py:105
+#: voteit/core/views/ticket.py:106
 msgid "login"
 msgstr "logga in"
 
-#: voteit/core/views/ticket.py:107
+#: voteit/core/views/ticket.py:108
 msgid "register"
 msgstr "registrera"
 
@@ -2006,7 +2057,7 @@ msgstr "registrera"
 #. logged in. Since ${email} was already registered with us, it seems like you
 #. have an account. If not, please ${register_link} first and then click the
 #. link in the invitation again.
-#: voteit/core/views/ticket.py:110
+#: voteit/core/views/ticket.py:111
 msgid "ticket_user_might_exist_text"
 msgstr ""
 "För att delta i mötet ${meeting_title} så behöver du vara inloggad. Eftersom "
@@ -2018,7 +2069,7 @@ msgstr ""
 #. logged in. We can't find any user with the email address ${email}. Perhaps
 #. you need to register first? If you know that you already have an account,
 #. simply ${login_link}.
-#: voteit/core/views/ticket.py:120
+#: voteit/core/views/ticket.py:121
 msgid "ticket_user_probably_dont_exist_text"
 msgstr ""
 "För att delta i mötet ${meeting_title} så behöver du vara inloggad. Vi kan "
@@ -2026,21 +2077,21 @@ msgstr ""
 "registrera dig först? Om du vet att du har ett konto, så kan du bara "
 "${login_link}."
 
-#: voteit/core/views/ticket.py:145
+#: voteit/core/views/ticket.py:146
 msgid "Nothing selected - nothing to do!"
 msgstr "Inga valda - kan inte göra något!"
 
-#: voteit/core/views/ticket.py:150
+#: voteit/core/views/ticket.py:151
 #, python-format
 msgid "Removed ${count} tickets"
 msgstr "Tog bort ${count} inbjudningar"
 
-#: voteit/core/views/ticket.py:171
+#: voteit/core/views/ticket.py:172
 #, python-format
 msgid "Resent ${count} successfully"
 msgstr "Skickade om ${count}"
 
-#: voteit/core/views/ticket.py:174
+#: voteit/core/views/ticket.py:175
 #, python-format
 msgid ""
 "Resent ${count} of ${total}. ${aborted} were not sent since they're already "
@@ -2049,18 +2100,18 @@ msgstr ""
 "Skickade om ${count} av ${total}. ${aborted} skickades inte eftersom de "
 "redan använts"
 
-#: voteit/core/views/ticket.py:209
+#: voteit/core/views/ticket.py:210
 msgid "No tickets to send"
 msgstr "Inga biljetter att skicka"
 
 #. Default: Successfully added ${added} invites
-#: voteit/core/views/ticket.py:256
+#: voteit/core/views/ticket.py:257
 msgid "added_tickets_text"
 msgstr "La till ${added} inbjudningar"
 
 #. Default: No tickets added - all you specified probably exist already.
 #. (Proccessed ${rejected})
-#: voteit/core/views/ticket.py:259
+#: voteit/core/views/ticket.py:260
 msgid "no_tickets_added"
 msgstr ""
 "Inga inbjudningar las till - alla du specificerade finns förmodligen redan. "
@@ -2068,7 +2119,7 @@ msgstr ""
 
 #. Default: Successfully added ${added} invites but discarded ${rejected} since
 #. they already existed or were already used.
-#: voteit/core/views/ticket.py:267
+#: voteit/core/views/ticket.py:268
 msgid "added_tickets_text_some_rejected"
 msgstr ""
 "La till ${added} inbjudningar med hanterade inte ${rejected} eftersom de "
@@ -2321,10 +2372,6 @@ msgstr "Ingen support-epost satt för denna site. Formuläret fungerar inte!"
 msgid "Message sent"
 msgstr "Meddelande skickat"
 
-#: voteit/core/views/components/moderator_actions.py:16
-msgid "Workflow"
-msgstr "Arbetsflöde"
-
 #: voteit/core/views/components/moderator_actions.py:27
 msgid "Edit picked proposals"
 msgstr "Redigera valda förslag"
@@ -2345,21 +2392,52 @@ msgstr "Blockera diskussion"
 msgid "Enable discussion"
 msgstr "Aktivera diskussion"
 
-#: voteit/core/views/components/metadata_listing.py:54
-msgid "Retract"
-msgstr "Dra tillbaka"
-
-#: voteit/core/views/components/metadata_listing.py:60
+#: voteit/core/views/components/metadata_listing.py:58
 msgid "Full paragraph"
 msgstr "Hela stycket"
 
-#: voteit/core/views/components/metadata_listing.py:73
+#: voteit/core/views/components/metadata_listing.py:71
 msgid "Reply"
 msgstr "Svara"
 
-#: voteit/core/views/components/metadata_listing.py:78
+#: voteit/core/views/components/metadata_listing.py:76
 msgid "Comment"
 msgstr "Kommentera"
+
+#, fuzzy
+#~ msgid "Set approved"
+#~ msgstr "Bifallen"
+
+#, fuzzy
+#~ msgid "Set denied"
+#~ msgstr "Avslaget"
+
+#, fuzzy
+#~ msgid "Set unhandled"
+#~ msgstr "Ohanterad"
+
+#, fuzzy
+#~ msgid "Proposal workflow"
+#~ msgstr "Förslagens status"
+
+#, fuzzy
+#~ msgid "Meeting workflow"
+#~ msgstr "Mötet stängt"
+
+#, fuzzy
+#~ msgid "Agenda item workflow"
+#~ msgstr "Dagordningspunkt"
+
+#, fuzzy
+#~ msgid "Poll workflow"
+#~ msgstr "Arbetsflöde"
+
+#~ msgid "workflow_error_when_setting_proposal_as_voting"
+#~ msgstr ""
+#~ "Kan inte sätta förslaget '${title}' som 'Låst för omröstning'. Troligtvis "
+#~ "är det inte i tillståndet publicerat, eller så har det redan hanterats på "
+#~ "något annat sätt. Alla ändringar har avbrutits, vänligen kontrollera "
+#~ "förslagen och försök igen."
 
 #~ msgid "profile_image_plugin_description"
 #~ msgstr "Läs mer i hjälpen om olika metoder och dess för- och nackdelar."
@@ -2416,9 +2494,6 @@ msgstr "Kommentera"
 
 #~ msgid "js_error_saving"
 #~ msgstr "Det gick inte att spara"
-
-#~ msgid "Close message"
-#~ msgstr "Stäng meddelande"
 
 #~ msgid "Can not delete poll"
 #~ msgstr "Omröstning kan inte raderas"
@@ -2858,9 +2933,6 @@ msgstr "Kommentera"
 #~ msgid "Add meeting"
 #~ msgstr "Lägg till möte"
 
-#~ msgid "Edit meeting"
-#~ msgstr "Redigera möte"
-
 #~ msgid "Presentation"
 #~ msgstr "Mötespresentation"
 
@@ -2894,9 +2966,6 @@ msgstr "Kommentera"
 
 #~ msgid "Use this form to add a poll"
 #~ msgstr "Använd detta formulär för att skapa en omröstning"
-
-#~ msgid "Edit poll"
-#~ msgstr "Redigera omröstning"
 
 #~ msgid "Use this form to edit a poll"
 #~ msgstr "Använd detta formulär för att redigera en omröstning"
@@ -3338,9 +3407,6 @@ msgstr "Kommentera"
 #~ msgid_plural "Plural"
 #~ msgstr[0] "Röst"
 #~ msgstr[1] "Röster"
-
-#~ msgid "Open"
-#~ msgstr "Öppen"
 
 #~ msgid "apply_to_all_title"
 #~ msgstr "Använd för allt nedan, oavsett valda"

@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE 1.0\n"
-"POT-Creation-Date: 2018-10-01 12:58+0200\n"
+"POT-Creation-Date: 2018-10-17 15:36+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -30,7 +30,7 @@ msgstr ""
 msgid "Registered users"
 msgstr ""
 
-#: ./voteit/core/bootstrap.py:36 ./voteit/core/security.py:107
+#: ./voteit/core/bootstrap.py:36 ./voteit/core/security.py:108
 msgid "Administrator"
 msgstr ""
 
@@ -78,34 +78,34 @@ msgstr ""
 msgid "Use regular chars and no spaces."
 msgstr ""
 
-#: ./voteit/core/security.py:28 ./voteit/core/security.py:108
+#: ./voteit/core/security.py:29 ./voteit/core/security.py:109
 msgid "Meeting creator"
 msgstr ""
 
-#: ./voteit/core/security.py:32 ./voteit/core/security.py:109
+#: ./voteit/core/security.py:33 ./voteit/core/security.py:110
 msgid "Moderator"
 msgstr ""
 
-#: ./voteit/core/security.py:38 ./voteit/core/security.py:111
-#: ./voteit/core/security.py:115
+#: ./voteit/core/security.py:39 ./voteit/core/security.py:112
+#: ./voteit/core/security.py:116
 msgid "Discuss"
 msgstr ""
 
-#: ./voteit/core/security.py:43 ./voteit/core/security.py:112
-#: ./voteit/core/security.py:116
+#: ./voteit/core/security.py:44 ./voteit/core/security.py:113
+#: ./voteit/core/security.py:117
 msgid "Propose"
 msgstr ""
 
-#: ./voteit/core/security.py:48 ./voteit/core/security.py:113
-#: ./voteit/core/security.py:117
+#: ./voteit/core/security.py:49 ./voteit/core/security.py:114
+#: ./voteit/core/security.py:118
 msgid "Voter"
 msgstr ""
 
-#: ./voteit/core/security.py:110 ./voteit/core/security.py:114
+#: ./voteit/core/security.py:111 ./voteit/core/security.py:115
 msgid "View"
 msgstr ""
 
-#: ./voteit/core/__init__.py:57
+#: ./voteit/core/__init__.py:58
 msgid "Fixed left nav"
 msgstr ""
 
@@ -150,7 +150,7 @@ msgstr ""
 msgid "Polls"
 msgstr ""
 
-#: ./voteit/core/portlets/agenda_item.py:307
+#: ./voteit/core/portlets/agenda_item.py:308
 msgid "Agenda Item portlets"
 msgstr ""
 
@@ -171,8 +171,8 @@ msgstr ""
 msgid "Like button"
 msgstr ""
 
-#: ./voteit/core/plugins/like_button.py:117 ./voteit/core/models/proposal.py:27
-#: ./voteit/core/schemas/proposal.py:41 ./voteit/core/schemas/meeting.py:161
+#: ./voteit/core/plugins/like_button.py:117 ./voteit/core/models/proposal.py:28
+#: ./voteit/core/schemas/proposal.py:40 ./voteit/core/schemas/meeting.py:161
 msgid "Proposal"
 msgstr ""
 
@@ -390,6 +390,121 @@ msgstr ""
 msgid "support_proposal"
 msgstr ""
 
+#: ./voteit/core/workflows/invite_ticket.py:12
+msgid "Open"
+msgstr ""
+
+#: ./voteit/core/workflows/invite_ticket.py:13
+#: ./voteit/core/workflows/meeting.py:14
+#: ./voteit/core/workflows/agenda_item.py:15 ./voteit/core/workflows/poll.py:15
+#: ./voteit/core/templates/portlets/polls_inline.pt:87
+msgid "Closed"
+msgstr ""
+
+#: ./voteit/core/workflows/proposal.py:12
+msgid "Published"
+msgstr ""
+
+#: ./voteit/core/workflows/proposal.py:13
+msgid "Retracted"
+msgstr ""
+
+#: ./voteit/core/workflows/proposal.py:14
+msgid "Locked for voting"
+msgstr ""
+
+#: ./voteit/core/workflows/proposal.py:15
+#: ./voteit/core/workflows/proposal.py:75
+msgid "Approved"
+msgstr ""
+
+#: ./voteit/core/workflows/proposal.py:16
+#: ./voteit/core/workflows/proposal.py:83
+msgid "Denied"
+msgstr ""
+
+#: ./voteit/core/workflows/proposal.py:17
+#: ./voteit/core/workflows/proposal.py:91
+msgid "Unhandled"
+msgstr ""
+
+#: ./voteit/core/workflows/proposal.py:59
+#: ./voteit/core/views/components/metadata_listing.py:52
+msgid "Retract"
+msgstr ""
+
+#: ./voteit/core/workflows/proposal.py:67
+msgid "Lock for voting"
+msgstr ""
+
+#: ./voteit/core/workflows/proposal.py:99
+msgid "Back to published"
+msgstr ""
+
+#: ./voteit/core/workflows/meeting.py:12
+#: ./voteit/core/workflows/agenda_item.py:13 ./voteit/core/workflows/poll.py:13
+msgid "Upcoming"
+msgstr ""
+
+#: ./voteit/core/workflows/meeting.py:13
+#: ./voteit/core/workflows/agenda_item.py:14 ./voteit/core/workflows/poll.py:14
+msgid "Ongoing"
+msgstr ""
+
+#: ./voteit/core/workflows/meeting.py:52
+msgid "Start meeting"
+msgstr ""
+
+#: ./voteit/core/workflows/meeting.py:60
+msgid "Close meeting"
+msgstr ""
+
+#: ./voteit/core/workflows/meeting.py:68
+msgid "Back to upcoming"
+msgstr ""
+
+#: ./voteit/core/workflows/agenda_item.py:12 ./voteit/core/workflows/poll.py:12
+msgid "Private"
+msgstr ""
+
+#: ./voteit/core/workflows/agenda_item.py:50
+msgid "Set ongoing"
+msgstr ""
+
+#: ./voteit/core/workflows/agenda_item.py:58
+#: ./voteit/core/templates/menus/poll.pt:12
+#: ./voteit/core/templates/menus/control_panel.pt:10
+msgid "Close"
+msgstr ""
+
+#: ./voteit/core/workflows/agenda_item.py:66 ./voteit/core/workflows/poll.py:59
+msgid "Set upcoming"
+msgstr ""
+
+#: ./voteit/core/workflows/agenda_item.py:74
+msgid "Set private"
+msgstr ""
+
+#: ./voteit/core/workflows/poll.py:16
+msgid "Canceled"
+msgstr ""
+
+#: ./voteit/core/workflows/poll.py:67
+msgid "Make private again"
+msgstr ""
+
+#: ./voteit/core/workflows/poll.py:76
+msgid "Start poll"
+msgstr ""
+
+#: ./voteit/core/workflows/poll.py:84
+msgid "Cancel poll"
+msgstr ""
+
+#: ./voteit/core/workflows/poll.py:92
+msgid "Close poll"
+msgstr ""
+
 #: ./voteit/core/models/proposal_ids.py:45
 msgid "UserID-based (default)"
 msgstr ""
@@ -402,12 +517,12 @@ msgstr ""
 msgid "User"
 msgstr ""
 
-#: ./voteit/core/models/invite_ticket.py:89
+#: ./voteit/core/models/invite_ticket.py:88
 #, python-format
 msgid "Invitation to ${meeting_title}"
 msgstr ""
 
-#: ./voteit/core/models/invite_ticket.py:124
+#: ./voteit/core/models/invite_ticket.py:123
 #, python-format
 msgid "${meeting_title} is now accessible"
 msgstr ""
@@ -416,7 +531,7 @@ msgstr ""
 msgid "Users"
 msgstr ""
 
-#: ./voteit/core/models/proposal.py:152
+#: ./voteit/core/models/proposal.py:123
 msgid "Proposal is a part of poll(s)"
 msgstr ""
 
@@ -424,13 +539,13 @@ msgstr ""
 msgid "Vote"
 msgstr ""
 
-#: ./voteit/core/models/meeting.py:28 ./voteit/core/schemas/contact.py:36
+#: ./voteit/core/models/meeting.py:30 ./voteit/core/schemas/contact.py:36
 msgid "Meeting"
 msgstr ""
 
 #. Default: This meeting still has ongoing or upcoming Agenda items in it. You
 #. can't close it until they're closed.
-#: ./voteit/core/models/meeting.py:215
+#: ./voteit/core/models/meeting.py:229
 msgid "error_cant_close_meeting_with_ongoing_ais"
 msgstr ""
 
@@ -439,7 +554,7 @@ msgstr ""
 msgid "Discussion Post"
 msgstr ""
 
-#: ./voteit/core/models/agenda_item.py:24
+#: ./voteit/core/models/agenda_item.py:26
 #: ./voteit/core/schemas/agenda_template.py:12
 #: ./voteit/core/templates/manage_agenda.pt:36
 msgid "Agenda item"
@@ -447,70 +562,70 @@ msgstr ""
 
 #. Default: You can't close an agenda item that has ongoing polls in it. Close
 #. the polls first!
-#: ./voteit/core/models/agenda_item.py:113
+#: ./voteit/core/models/agenda_item.py:120
 msgid "error_polls_not_closed_cant_close_ai"
 msgstr ""
 
 #. Default: You can't set an agenda item to ongoing if the meeting is not
 #. ongoing.
-#: ./voteit/core/models/agenda_item.py:122
+#: ./voteit/core/models/agenda_item.py:129
 msgid "error_ai_cannot_be_ongoing_in_not_ongoing_meeting"
 msgstr ""
 
-#: ./voteit/core/models/poll.py:42
+#: ./voteit/core/models/poll.py:46
 msgid "Chronological"
 msgstr ""
 
-#: ./voteit/core/models/poll.py:43
+#: ./voteit/core/models/poll.py:47
 msgid "Alphabetical"
 msgstr ""
 
-#: ./voteit/core/models/poll.py:44
+#: ./voteit/core/models/poll.py:48
 msgid "Random"
 msgstr ""
 
-#: ./voteit/core/models/poll.py:62
+#: ./voteit/core/models/poll.py:66
 msgid "Poll"
 msgstr ""
 
 #. Default: Poll has now closed. ${num} proposal(s) are now set in another
 #. state due to the outcome of the poll.
-#: ./voteit/core/models/poll.py:224
+#: ./voteit/core/models/poll.py:235
 msgid "poll_closed_info"
 msgstr ""
 
 #. Default: Couldn't adjust the state of the following proposal(s): '${props}'.
 #. You may wish to review them manually.
-#: ./voteit/core/models/poll.py:229
+#: ./voteit/core/models/poll.py:240
 msgid "poll_closed_proposal_wf_change_error"
 msgstr ""
 
-#: ./voteit/core/models/poll.py:283
+#: ./voteit/core/models/poll.py:297
 msgid "proposal"
 msgstr ""
 
-#: ./voteit/core/models/poll.py:284
+#: ./voteit/core/models/poll.py:298
 msgid "proposals"
 msgstr ""
 
 #. Default: Setting ${count} ${prop_form} as 'locked for vote'. They can no
 #. longer be edited or retracted by normal users.
-#: ./voteit/core/models/poll.py:286
+#: ./voteit/core/models/poll.py:300
 msgid "poll_proposals_locked_notice"
 msgstr ""
 
 #. Default: You can't set a poll to ongoing if the agenda item is not ongoing.
-#: ./voteit/core/models/poll.py:308
+#: ./voteit/core/models/poll.py:324
 msgid "error_poll_cant_be_ongoing_unless_ai_is"
 msgstr ""
 
 #. Default: A poll with no proposal can not be set to ongoing. Click link to
 #. edit: ${tag}
-#: ./voteit/core/models/poll.py:314
+#: ./voteit/core/models/poll.py:330
 msgid "error_no_proposals_in_poll"
 msgstr ""
 
-#: ./voteit/core/models/poll.py:355
+#: ./voteit/core/models/poll.py:370
 msgid "VoteIT: Open poll"
 msgstr ""
 
@@ -608,7 +723,7 @@ msgid "Add as"
 msgstr ""
 
 #. Default: proposes
-#: ./voteit/core/schemas/proposal.py:27
+#: ./voteit/core/schemas/proposal.py:26
 msgid "proposal_default_text"
 msgstr ""
 
@@ -616,38 +731,38 @@ msgstr ""
 #. use an at sign to reference a user (ex: 'hello @jane') or a hashtag (ex:
 #. '#budget') to reference or create a tag. All proposals automatically get
 #. their own tag.
-#: ./voteit/core/schemas/proposal.py:42
+#: ./voteit/core/schemas/proposal.py:41
 msgid "proposal_text_description"
 msgstr ""
 
-#: ./voteit/core/schemas/proposal.py:76
+#: ./voteit/core/schemas/proposal.py:74
 msgid "Hide proposal states"
 msgstr ""
 
 #. Default: Proposals in these states will be hidden by default but can be
 #. shown by pressing the link below the other proposals. They're not by any
 #. means invisible to participants.
-#: ./voteit/core/schemas/proposal.py:77
+#: ./voteit/core/schemas/proposal.py:75
 msgid "hide_proposal_states_description"
 msgstr ""
 
-#: ./voteit/core/schemas/proposal.py:91 ./voteit/core/schemas/meeting.py:230
+#: ./voteit/core/schemas/proposal.py:89 ./voteit/core/schemas/meeting.py:230
 #: ./voteit/core/templates/participants.pt:24
 msgid "UserID"
 msgstr ""
 
-#: ./voteit/core/schemas/proposal.py:95
+#: ./voteit/core/schemas/proposal.py:93
 msgid "System user accounts"
 msgstr ""
 
 #. Default: Must be an existing userid. If they're added here, moderators can
 #. use them to add proposals in their name. It's good practice to add things
 #. like 'propositions', 'board' or similar.
-#: ./voteit/core/schemas/proposal.py:96
+#: ./voteit/core/schemas/proposal.py:94
 msgid "system_userids_description"
 msgstr ""
 
-#: ./voteit/core/schemas/proposal.py:106
+#: ./voteit/core/schemas/proposal.py:104
 msgid "Proposal naming method"
 msgstr ""
 
@@ -1106,51 +1221,6 @@ msgstr ""
 msgid "Loading data..."
 msgstr ""
 
-#: ./voteit/core/templates/_translations.pt:8
-msgid "Private"
-msgstr ""
-
-#: ./voteit/core/templates/_translations.pt:9
-msgid "Upcoming"
-msgstr ""
-
-#: ./voteit/core/templates/_translations.pt:10
-msgid "Ongoing"
-msgstr ""
-
-#: ./voteit/core/templates/_translations.pt:11
-#: ./voteit/core/templates/portlets/polls_inline.pt:87
-msgid "Closed"
-msgstr ""
-
-#: ./voteit/core/templates/_translations.pt:12
-msgid "Published"
-msgstr ""
-
-#: ./voteit/core/templates/_translations.pt:13
-msgid "Retracted"
-msgstr ""
-
-#: ./voteit/core/templates/_translations.pt:14
-msgid "Locked for voting"
-msgstr ""
-
-#: ./voteit/core/templates/_translations.pt:15
-msgid "Approved"
-msgstr ""
-
-#: ./voteit/core/templates/_translations.pt:16
-msgid "Denied"
-msgstr ""
-
-#: ./voteit/core/templates/_translations.pt:17
-msgid "Unhandled"
-msgstr ""
-
-#: ./voteit/core/templates/_translations.pt:18
-msgid "Canceled"
-msgstr ""
-
 #: ./voteit/core/templates/minutes.pt:11
 msgid "Meeting opened"
 msgstr ""
@@ -1348,7 +1418,7 @@ msgstr ""
 #: ./voteit/core/templates/manage_agenda.pt:40
 #: ./voteit/core/templates/manage_agenda.pt:84
 #: ./voteit/core/views/components/moderator_actions.py:32
-#: ./voteit/core/views/components/metadata_listing.py:113
+#: ./voteit/core/views/components/metadata_listing.py:111
 msgid "Delete"
 msgstr ""
 
@@ -1583,7 +1653,7 @@ msgstr ""
 msgid "Skip to navigation"
 msgstr ""
 
-#: ./voteit/core/templates/overrides/master.pt:58
+#: ./voteit/core/templates/overrides/master.pt:56
 msgid "Search"
 msgstr ""
 
@@ -1646,11 +1716,6 @@ msgstr ""
 msgid "You haven't entered anything yet!"
 msgstr ""
 
-#: ./voteit/core/templates/menus/poll.pt:12
-#: ./voteit/core/templates/menus/control_panel.pt:10
-msgid "Close"
-msgstr ""
-
 #: ./voteit/core/templates/menus/poll.pt:23
 msgid "Ongoing polls"
 msgstr ""
@@ -1664,7 +1729,7 @@ msgid "Participant list"
 msgstr ""
 
 #: ./voteit/core/templates/menus/control_panel_participants.pt:16
-#: ./voteit/core/views/ticket.py:238
+#: ./voteit/core/views/ticket.py:239
 msgid "Invite participants"
 msgstr ""
 
@@ -1804,13 +1869,6 @@ msgstr ""
 msgid "There was a problem with your submission"
 msgstr ""
 
-#. Default: Can't set Proposal '${title}' as 'Locked for voting'. It's probably
-#. not in the state published, or has already been handled in another way. All
-#. changes aborted, please check the proposals and try again.
-#: ./voteit/core/subscribers/poll.py:23
-msgid "workflow_error_when_setting_proposal_as_voting"
-msgstr ""
-
 #: ./voteit/core/views/manage_agenda_items.py:52
 #, python-format
 msgid "Unable to change state on ${title}: ${error}"
@@ -1834,36 +1892,36 @@ msgstr ""
 msgid "Email addresses of moderators with upcoming or ongoing meetings"
 msgstr ""
 
-#: ./voteit/core/views/ticket.py:41
+#: ./voteit/core/views/ticket.py:42
 msgid "This ticket has already been used."
 msgstr ""
 
 #. Default: Ticket validation failed. Either the ticket doesn't exist, was
 #. already used or the url used improperly. If you need help, please contact
 #. the moderator that invited you to this meeting.
-#: ./voteit/core/views/ticket.py:52
+#: ./voteit/core/views/ticket.py:53
 msgid "ticket_validation_fail"
 msgstr ""
 
-#: ./voteit/core/views/ticket.py:62
+#: ./voteit/core/views/ticket.py:63
 msgid "You've been granted access to the meeting. Welcome!"
 msgstr ""
 
-#: ./voteit/core/views/ticket.py:83
+#: ./voteit/core/views/ticket.py:84
 msgid "This meeting is closed so no invitations can be used now."
 msgstr ""
 
 #. Default: The ticket link did not contain a token and an email address.
 #. Perhaps you came to this page by mistake?
-#: ./voteit/core/views/ticket.py:97
+#: ./voteit/core/views/ticket.py:98
 msgid "ticket_link_wrong_parameters_error"
 msgstr ""
 
-#: ./voteit/core/views/ticket.py:105
+#: ./voteit/core/views/ticket.py:106
 msgid "login"
 msgstr ""
 
-#: ./voteit/core/views/ticket.py:107
+#: ./voteit/core/views/ticket.py:108
 msgid "register"
 msgstr ""
 
@@ -1871,7 +1929,7 @@ msgstr ""
 #. logged in. Since ${email} was already registered with us, it seems like you
 #. have an account. If not, please ${register_link} first and then click the
 #. link in the invitation again.
-#: ./voteit/core/views/ticket.py:110
+#: ./voteit/core/views/ticket.py:111
 msgid "ticket_user_might_exist_text"
 msgstr ""
 
@@ -1879,49 +1937,49 @@ msgstr ""
 #. logged in. We can't find any user with the email address ${email}. Perhaps
 #. you need to register first? If you know that you already have an account,
 #. simply ${login_link}.
-#: ./voteit/core/views/ticket.py:120
+#: ./voteit/core/views/ticket.py:121
 msgid "ticket_user_probably_dont_exist_text"
 msgstr ""
 
-#: ./voteit/core/views/ticket.py:145
+#: ./voteit/core/views/ticket.py:146
 msgid "Nothing selected - nothing to do!"
 msgstr ""
 
-#: ./voteit/core/views/ticket.py:150
+#: ./voteit/core/views/ticket.py:151
 #, python-format
 msgid "Removed ${count} tickets"
 msgstr ""
 
-#: ./voteit/core/views/ticket.py:171
+#: ./voteit/core/views/ticket.py:172
 #, python-format
 msgid "Resent ${count} successfully"
 msgstr ""
 
-#: ./voteit/core/views/ticket.py:174
+#: ./voteit/core/views/ticket.py:175
 #, python-format
 msgid ""
 "Resent ${count} of ${total}. ${aborted} were not sent since they're already "
 "claimed"
 msgstr ""
 
-#: ./voteit/core/views/ticket.py:209
+#: ./voteit/core/views/ticket.py:210
 msgid "No tickets to send"
 msgstr ""
 
 #. Default: Successfully added ${added} invites
-#: ./voteit/core/views/ticket.py:256
+#: ./voteit/core/views/ticket.py:257
 msgid "added_tickets_text"
 msgstr ""
 
 #. Default: No tickets added - all you specified probably exist already.
 #. (Proccessed ${rejected})
-#: ./voteit/core/views/ticket.py:259
+#: ./voteit/core/views/ticket.py:260
 msgid "no_tickets_added"
 msgstr ""
 
 #. Default: Successfully added ${added} invites but discarded ${rejected} since
 #. they already existed or were already used.
-#: ./voteit/core/views/ticket.py:267
+#: ./voteit/core/views/ticket.py:268
 msgid "added_tickets_text_some_rejected"
 msgstr ""
 
@@ -2153,10 +2211,6 @@ msgstr ""
 msgid "Message sent"
 msgstr ""
 
-#: ./voteit/core/views/components/moderator_actions.py:16
-msgid "Workflow"
-msgstr ""
-
 #: ./voteit/core/views/components/moderator_actions.py:27
 msgid "Edit picked proposals"
 msgstr ""
@@ -2177,18 +2231,14 @@ msgstr ""
 msgid "Enable discussion"
 msgstr ""
 
-#: ./voteit/core/views/components/metadata_listing.py:54
-msgid "Retract"
-msgstr ""
-
-#: ./voteit/core/views/components/metadata_listing.py:60
+#: ./voteit/core/views/components/metadata_listing.py:58
 msgid "Full paragraph"
 msgstr ""
 
-#: ./voteit/core/views/components/metadata_listing.py:73
+#: ./voteit/core/views/components/metadata_listing.py:71
 msgid "Reply"
 msgstr ""
 
-#: ./voteit/core/views/components/metadata_listing.py:78
+#: ./voteit/core/views/components/metadata_listing.py:76
 msgid "Comment"
 msgstr ""
