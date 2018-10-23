@@ -5,8 +5,11 @@ import deform
 from pyramid.httpexceptions import HTTPFound
 
 from voteit.core.models.access_policy import AccessPolicy
-from voteit.core import VoteITMF as _
+from voteit.core import _
 from voteit.core import security
+
+
+_DEFAULT_ROLES = (security.ROLE_VIEWER,)
 
 
 class ImmediateAP(AccessPolicy):
@@ -24,6 +27,8 @@ class ImmediateAP(AccessPolicy):
 
     def handle_success(self, view, appstruct):
         roles = self.context.get_field_value('immediate_access_grant_roles')
+        if not roles:
+            roles = _DEFAULT_ROLES
         self.context.add_groups(view.request.authenticated_userid, roles)
         view.flash_messages.add(_("Access granted - welcome!"))
         return HTTPFound(location = view.request.resource_url(self.context))
@@ -39,7 +44,7 @@ class ImmediateAPConfigSchema(colander.Schema):
         title = _("Roles"),
         description = _("immediate_ap_schema_grant_description",
                         default = "Users will be granted these roles IMMEDIATELY upon requesting access."),
-        default = (security.ROLE_VIEWER,),
+        default = _DEFAULT_ROLES,
         widget = deform.widget.CheckboxChoiceWidget(values=security.STANDARD_ROLES,),
     )
 
