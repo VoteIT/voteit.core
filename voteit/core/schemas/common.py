@@ -1,15 +1,12 @@
+import warnings
 from datetime import timedelta
 from uuid import uuid4
 import re
 
 from arche.widgets import deferred_autocompleting_userid_widget #b/c
 from pyramid.traversal import find_resource
-from pyramid.traversal import find_root
 from six import string_types
 import colander
-import deform
-
-from voteit.core import _
 
 
 NAME_PATTERN = re.compile(r'^[\w\s]{3,100}$', flags=re.UNICODE)
@@ -80,8 +77,21 @@ def strip_whitespace(value):
         return value
     return "\n".join([x.strip() for x in value.splitlines()])
 
-def strip_and_lowercase(value):
+
+def prepare_emails_from_text(value):
     """ Used as preparer - strips whitespace from the end of rows and lowercases all content. """
     if not isinstance(value, basestring):
         return value
-    return "\n".join([x.strip().lower() for x in value.splitlines()])
+    value = re.sub("[,;]", "", value)
+    value = value.lower()
+    res = []
+    for x in value.splitlines():
+        x = x.strip()
+        if x:
+            res.append(x)
+    return "\n".join(res)
+
+
+def strip_and_lowercase(value):
+    warnings.warn('strip_and_lowercase renamed prepare_emails_from_text', DeprecationWarning)
+    return prepare_emails_from_text(value)
