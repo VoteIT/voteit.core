@@ -4,8 +4,7 @@ Vue.component('user-table', {
             isModerator: this.$root.isModerator,
             users: this.$root.users,
             itemsPerPage: 25,
-            currentPage: 0,
-            order: undefined
+            currentPage: 0
         };
     },
     props: ['src', 'roleApi', 'bulkWarning', 'currentUser'],
@@ -17,6 +16,7 @@ Vue.component('user-table', {
                     response.results[i].selected = false;
                 }
                 this.users = response.results;
+                this.sortUsers();
             }.bind(this))
         }
     },
@@ -84,8 +84,16 @@ Vue.component('user-table', {
         getPage: function(id) {
             this.currentPage = id;
         },
-        setOrder: function(order) {
-            this.order = order;
+        sortUsers: function(order) {
+            this.users.sort(function(user_a, user_b) {
+                if (!order) {
+                    return user_a.userid !== this.currentUser;
+                } else if (typeof user_a[order] === 'boolean') {
+                    return user_a[order] < user_b[order];
+                } else {
+                    return user_a[order] > user_b[order];
+                }
+            }.bind(this));
         }
     },
     computed: {
@@ -109,15 +117,6 @@ Vue.component('user-table', {
         displayUsers: function() {
             var start = this.currentPage * this.itemsPerPage;
             var end = start + this.itemsPerPage;
-            this.users.sort(function(user_a, user_b) {
-                if (typeof this.order === 'undefined') {
-                    return user_a.userid !== this.currentUser;
-                } else if (typeof user_a[this.order] === 'boolean') {
-                    return user_a[this.order] < user_b[this.order];
-                } else {
-                    return user_a[this.order] > user_b[this.order];
-                }
-            }.bind(this));
             return this.users.slice(start, end);
         },
         pages: function() {
