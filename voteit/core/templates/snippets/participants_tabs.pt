@@ -3,24 +3,21 @@
       xmlns:tal="http://xml.zope.org/namespaces/tal"
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
       i18n:domain="voteit.core">
-<p tal:condition="request.is_moderator" tal:define="meeting_closed context.get_workflow_state() == 'closed'">
-<div class="btn-group" role="group">
-  <a href="${request.resource_url(context, 'participants')}"
-    class="btn btn-default ${request.view_name == 'participants' and 'active' or None}"
-    i18n:translate="">Participants</a>
-  <a href="${request.resource_url(context, 'add_tickets')}"
-  tal:attributes="disabled meeting_closed and 'disabled' or None"
-  class="btn btn-default ${request.view_name == 'add_tickets' and 'active' or None}"
-  i18n:translate="">Invite</a>
-  <a href="${request.resource_url(context, 'add_userid')}"
-  class="btn btn-default ${request.view_name == 'add_userid' and 'active' or None}"
-  i18n:translate="">Add existing</a>
-  <a href="${request.resource_url(context, 'manage_tickets')}"
-  class="btn btn-default ${request.view_name == 'manage_tickets' and 'active' or None}"
-  i18n:translate="">Manage invitations</a>
-  <a href="${request.resource_url(context, 'participants_emails')}"
-    class="btn btn-default ${request.view_name == 'participants_emails' and 'active' or None}"
-    i18n:translate="">Emails</a>
-</div>
-</p>
+  <ul tal:condition="request.is_moderator" class="nav nav-tabs">
+    <li role="presentation" class="${request.view_name == 'participants' and 'active' or None}">
+      <a href="${request.resource_url(context, 'participants')}" i18n:translate="">Participants</a>
+    </li>
+    <li role="presentation" tal:attributes="class request.view_name == 'add_tickets' and 'active' or None; disabled context.get_workflow_state() == 'closed';">
+      <a href="${request.resource_url(context, 'add_tickets')}" i18n:translate="">Invite</a>
+    </li>
+    <li role="presentation" class="${request.view_name == 'add_userid' and 'active' or None}">
+      <a href="${request.resource_url(context, 'add_userid')}" i18n:translate="">Add existing</a>
+    </li>
+    <li role="presentation" class="${request.view_name == 'manage_tickets' and 'active' or None}">
+      <a href="${request.resource_url(context, 'manage_tickets')}" i18n:translate="">Manage invitations</a>
+    </li>
+    <li role="presentation" class="${request.view_name == 'participants_emails' and 'active' or None}">
+      <a href="${request.resource_url(context, 'participants_emails')}" i18n:translate="">Emails</a>
+    </li>
+  </ul>
 </tal:main>

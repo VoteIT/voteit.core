@@ -7,13 +7,13 @@
 <body>
 <tal:main metal:fill-slot="content" tal:define="meeting_closed context.get_workflow_state() == 'closed'">
 
-  <h1 i18n:translate="">Manage invitations</h1>
+  ${structure: view.render_template('voteit.core:templates/snippets/participants_tabs.pt')}
+
+  <h2 i18n:translate="">Manage invitations</h2>
   <h4 i18n:translate="total_tickets_header">
       <span i18n:name="open" tal:replace="len(invite_tickets) - closed_count">3</span>
       open ticket(s) and <span i18n:name="closed" tal:replace="closed_count">3</span> closed.
   </h4>
-
-  ${structure: view.render_template('voteit.core:templates/snippets/participants_tabs.pt')}
 
   <div tal:condition="never_invited">
     <p i18n:translate="never_invited_warning">Warning! There are

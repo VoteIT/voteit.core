@@ -2,6 +2,7 @@
 from arche.fanstatic_lib import common_js
 from arche.fanstatic_lib import main_css
 from arche.fanstatic_lib import pure_js
+from arche.fanstatic_lib import vue_js
 from arche.interfaces import IBaseView
 from arche.interfaces import IViewInitializedEvent
 from deform_autoneed import need_lib
@@ -30,6 +31,7 @@ navs_js = Resource(voteit_core_jslib, 'navs.js', depends = (data_loader, watcher
 participants_js = Resource(voteit_core_jslib, 'participants.js', depends = (base_js, pure_js))
 voteit_moderator_js = Resource(voteit_core_jslib, 'voteit_moderator.js', bottom = True, depends = (data_loader,))
 voteit_manage_tickets_js = Resource(voteit_core_jslib, 'voteit_manage_tickets.js', bottom = True, depends=(tablesorter,))
+voteit_vue_components_js = Resource(voteit_core_jslib, 'vue/voteit_components.js', depends=(vue_js,))
 
 
 def include_voteit_resources(view, event):

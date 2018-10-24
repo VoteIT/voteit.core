@@ -1,100 +1,85 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
       xmlns:tal="http://xml.zope.org/namespaces/tal"
-      metal:use-macro="view.macro('arche:templates/master.pt')"
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      xmlns:v-bind="http://www.w3.org/1999/xhtml"
+      xmlns:v-on="http://www.w3.org/1999/xhtml"
+      metal:use-macro="view.macro('arche:templates/master.pt')"
       i18n:domain="voteit.core">
 <body>
 <tal:main metal:fill-slot="content">
 
+  ${structure: view.render_template('voteit.core:templates/snippets/participants_tabs.pt')}
+
   <h2 i18n:translate=""><tal:ts i18n:name="num" content="participants_count" /> participants</h2>
 
-  ${structure: view.render_template('voteit.core:templates/snippets/participants_tabs.pt')}
-  
   <p tal:condition="meeting_closed" i18n:translate="meeting_closed">
     Meeting is closed, so unused tickets won't grant access to the meeting.
     Access policies will still work though.
   </p>
 
-  <div id="participant-table" class="table-responsive">
-    <table class="table table-striped table-condensed" id="participants">
-      <thead>
-        <tr>
-          <th colspan="2" i18n:translate="">Name</th>
-          <th i18n:translate="">UserID</th>
-          <th tal:condition="request.is_moderator" i18n:translate="">Email</th>
-          <tal:iterate repeat="(name, role) view_roles">
-            <th class="text-center">
-              <span class="glyphicon glyphicon-${role_icons.get(name, '')}"
-                    data-toggle="tooltip"
-                    title="${role.title}"></span>
-            </th>
-          </tal:iterate>
-        </tr>
-        <tr>
-          <th tal:condition="request.is_moderator"></th>
-          <th colspan="3" class="text-right">
-            <a class="btn btn-default btn-xs"
-               href="${request.resource_url(context, 'bulk_change_roles')}"
-               i18n:translate="">
-              Bulk change...</a>
-          </th>
-          <tal:iterate repeat="(name, role) view_roles">
-            <th class="text-center">
-              <span data-role-count="${name}" class="badge"></span>
-            </th>
-          </tal:iterate>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td class="first_name text-small"></td>
-          <td class="last_name text-small"></td>
-          <td>
-            <a tabindex="0"
-              class="inlineinfo userid text-small"
-              role="button"
-              data-toggle="popover"
-              data-trigger="click focus"
-              data-external-popover-loaded="false"
-              data-placement="bottom"
-              href="${request.resource_url(request.meeting, '__userinfo__')}/"></a>
-          </td>
-          <td tal:condition="request.is_moderator">
-            <a href="mailto:" class="email text-small"></a>
-          </td>
-          <tal:iterate repeat="(name, role) view_roles">
-            <td class="${name}">
-              <a tal:omit-tag="not request.is_moderator or role == 'role:Administrator'"
-                data-permission-toggle
-                data-role="${name}"
-                data-enabled=""
-                data-userid=""
-                href="${request.resource_url(context, '_toggle_participant_role')}"
-                class="btn btn-default btn-sm">
-                <span data-perm-marker></span>
-              </a>
-            </td>
-          </tal:iterate>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+  <user-table
+          src="${request.resource_path(context, 'participants.json')}"
+          role-api="${request.resource_path(context, '_set_participant_role')}"
+          bulk-warning="You are about to change a role for all users in this meeting. Are you sure this is what you want to do?"
+          current-user="${request.authenticated_userid}"
+          inline-template
+          i18n:attributes="bulk-warning">
+    <div class="table-responsive">
+    <ul class="nav nav-pills" v-if="pages">
+      <li role="presentation" v-for="page in pages" v-bind:class="{active: page.active}">
+        <a v-on:click.prevent="getPage(page.id)" v-bind:href="'#page-' + page.id">{{ page.text }}</a>
+      </li>
+    </ul>
 
-  <div data-loading-placeholder>
-    <span class="glyphicon glyphicon-refresh rotate-me"></span>
-    <span i18n:translate="">Loading data...</span>
-  </div>
-<script>
-/*
-$(function () {
-  $('#participant-table').tooltip({
-    selector: '[data-toggle="tooltip"]',
-    container: '#participant-table',
-  });
-});
-*/
-</script>
+      <table class="table table-striped table-condensed">
+        <thead>
+          <tr>
+            <th i18n:translate="" v-on:click="setOrder('userid')">UserID</th>
+            <th i18n:translate="" v-on:click="setOrder('first_name')">Name</th>
+            <th v-if="isModerator" i18n:translate="" v-on:click="setOrder('email')">Email</th>
+            <th tal:repeat="(name, role) view_roles" class="text-center" v-on:click="setOrder('${name}')"><span class="glyphicon glyphicon-${role_icons.get(name, '')}" title="${role.title}"></span></th>
+          </tr>
+          <tr>
+            <th v-bind:colspan="isModerator ? 3 : 2">
+              <button v-if="isModerator" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <tal:ts i18n:translate="">Bulk change</tal:ts>
+                <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu" style="top: unset; left: unset;">
+                <li role="presentation" class="dropdown-header" i18n:translate="">Give role to all</li>
+                <li tal:repeat="(name, role) view_roles[:-2]"><a href="#" v-on:click.prevent="setAllRole('${name}', true)">${role.split(':')[-1]}</a></li>
+                <li role="separator" class="divider"></li>
+                <li role="presentation" class="dropdown-header" i18n:translate="">Remove role from all</li>
+                <li tal:repeat="(name, role) view_roles[:-2]"><a href="#" v-on:click.prevent="setAllRole('${name}', false)">${role.split(':')[-1]}</a></li>
+              </ul>
+            </th>
+            <th tal:repeat="(name, role) view_roles" class="text-center"><span class="badge">{{ roleCount('${name}') }}</span></th>
+          </tr>
+        </thead>
+        <tbody class="text-small">
+          <tr v-for="user in displayUsers" v-bind:key="user.userid" v-bind:class="{success: user.userid === currentUser}">
+            <td><a href="#">{{ user.userid }}</a></td>
+            <td>{{ user.first_name }} {{ user.last_name }}</td>
+            <td v-if="isModerator"><a v-if="user.email" v-bind:href="'mailto:' + user.email">{{ user.email }}</a></td>
+            <td tal:repeat="(name, role) view_roles" class="text-center">
+              <template v-if="isModerator && ${str(name != 'role_admin').lower()}">
+                <button class="btn btn-default btn-sm" v-on:click="toggleRole(user, '${name}')">
+                  <span v-if="user['${name}']" class="glyphicon glyphicon-ok text-success"></span>
+                  <span v-else class="glyphicon glyphicon-minus text-warning"></span>
+                </button>
+              </template>
+              <template v-else>
+                <span v-if="user['${name}']" class="glyphicon glyphicon-ok text-success"></span>
+                <span v-else class="glyphicon glyphicon-minus text-warning"></span>
+              </template>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </user-table>
+
 </tal:main>
 </body>
 </html>

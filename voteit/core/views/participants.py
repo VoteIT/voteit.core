@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from arche.security import groupfinder
 from arche.views.base import BaseView, DefaultEditForm
 from pyramid.httpexceptions import HTTPForbidden, HTTPFound
@@ -6,6 +8,7 @@ from pyramid.view import view_defaults
 
 from voteit.core import security
 from voteit.core.fanstaticlib import participants_js
+from voteit.core.fanstaticlib import voteit_vue_components_js
 from voteit.core.helpers import get_meeting_participants
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.security import MODERATE_MEETING
@@ -43,7 +46,8 @@ class ParticipantsView(BaseView):
 
     @view_config(name = 'participants', renderer = 'voteit.core:templates/participants.pt')
     def main(self):
-        participants_js.need()
+        # participants_js.need()
+        voteit_vue_components_js.need()
         response = {}
         #This might be slow in its current form. Make get_meeting_participants smarter
         response['participants_count'] = len(get_meeting_participants(self.context))
@@ -104,6 +108,28 @@ class ParticipantsView(BaseView):
         return {'role': view_name_role,
                 'userid': userid,
                 'status': status}
+
+    @view_config(name = '_set_participant_role',
+                 renderer = 'json',
+                 permission = MODERATE_MEETING,
+                 xhr = True)
+    def set_participant_role(self):
+        userid = self.request.POST.get('userid')
+        view_roles = dict(_VIEW_ROLES)
+        view_name_role = self.request.POST.get('role', '')
+        role = view_roles.get(view_name_role, None)
+        if role not in _ALLOWED_TO_TOGGLE:
+            raise HTTPForbidden("Not allowed to tinker with role: '%s'" % view_name_role)
+        state = self.request.POST.get('state', 'true') == 'true'
+        role_change = getattr(self.context.local_roles, state and 'add' or 'remove')
+        if userid:
+            role_change(userid, role)
+        else:
+            for userid in get_meeting_participants(self.context):
+                role_change(userid, role)
+        return {'role': view_name_role,
+                'userid': userid or '__all__',
+                'state': state}
 
 
 @view_config(context = IMeeting,

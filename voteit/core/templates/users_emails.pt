@@ -7,15 +7,17 @@
 <body>
 <tal:main metal:fill-slot="content">
 
-  <h1>${title}</h1>
-
   ${structure: view.render_template('voteit.core:templates/snippets/participants_tabs.pt')}
 
-  <table class="table trable-striped">
+  <h2>${title}</h2>
+
+  <table class="table table-striped">
     <tbody>
-      <tr tal:repeat="user users">
-        <td tal:content="user.get_field_value('email')">Email</td>
-      </tr>
+      <tal:iter repeat="user users">
+        <tr tal:condition="user.get_field_value('email')">
+          <td tal:content="user.get_field_value('email')">Email</td>
+        </tr>
+      </tal:iter>
     </tbody>
   </table>
   
