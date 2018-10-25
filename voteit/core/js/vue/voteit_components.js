@@ -90,12 +90,20 @@ Vue.component('user-table', {
         sortUsers: function(order) {
             this.users.sort(function(user_a, user_b) {
                 if (!order) {
-                    return user_a.userid !== this.currentUser;
-                } else if (typeof user_a[order] === 'boolean') {
-                    return user_a[order] < user_b[order];
-                } else {
-                    return user_a[order] > user_b[order];
+                    if (user_b.userid === this.currentUser) return 1;
+                    if (user_a.userid === this.currentUser) return -1;
+                    return 0;
                 }
+                var a = user_a[order],
+                    b = user_b[order];
+                if (typeof a === 'boolean') {
+                    if (a === b) return 0;
+                    if (a) return -1;
+                    return 1;
+                }
+                if (a < b) return -1;
+                if (a > b) return 1;
+                return 0;
             }.bind(this));
         }
     },
