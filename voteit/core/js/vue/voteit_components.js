@@ -4,10 +4,11 @@ Vue.component('user-table', {
             isModerator: this.$root.isModerator,
             users: this.$root.users,
             itemsPerPage: 25,
-            currentPage: 0
+            currentPage: 0,
+            textFilter: ''
         };
     },
-    props: ['src', 'roleApi', 'bulkWarning', 'currentUser'],
+    props: ['src', 'roleApi', 'bulkWarning', 'currentUser', 'textFilterFields'],
     mounted: function() {
         if (!this.users.length) {
             do_request(this.src)
@@ -117,12 +118,13 @@ Vue.component('user-table', {
         displayUsers: function() {
             var start = this.currentPage * this.itemsPerPage;
             var end = start + this.itemsPerPage;
-            return this.users.slice(start, end);
+            return this.filteredUsers.slice(start, end);
         },
         pages: function() {
-          if (this.users.length <= this.itemsPerPage) return;
+          var users = this.filteredUsers;
+          if (users.length <= this.itemsPerPage) return;
           var pages = [];
-          var endPage = Math.ceil(this.users.length / this.itemsPerPage) - 1;
+          var endPage = Math.ceil(users.length / this.itemsPerPage) - 1;
           var sliceStart = this.currentPage - 3;
           var sliceEnd = this.currentPage + 3;
           if (sliceStart < 0 !== sliceEnd > endPage) {  // Only one is off
@@ -135,7 +137,7 @@ Vue.component('user-table', {
           // Make sure nothing is off after this.
           sliceStart = Math.max(sliceStart, 0);
           sliceEnd = Math.min(sliceEnd, endPage);
-          if (typeof this.users.length !== 'undefined') {
+          if (typeof users.length !== 'undefined') {
             if (sliceStart > 0) {
               pages.push({
                 text: '«',
@@ -144,7 +146,7 @@ Vue.component('user-table', {
             }
             for (page=sliceStart; page<=sliceEnd; page++) {
               var start = (page * this.itemsPerPage) + 1;
-              var end = Math.min((page * this.itemsPerPage) + this.itemsPerPage, this.users.length);
+              var end = Math.min((page * this.itemsPerPage) + this.itemsPerPage, users.length);
               pages.push({
                 text: (start === end) ? start : start + ' - ' + end,
                 active: page === this.currentPage,
@@ -159,6 +161,33 @@ Vue.component('user-table', {
             }
           }
           return pages;
+        },
+        filteredUsers: function() {
+            if (this.textFilter) {
+                return this.users.filter(function(user) {
+                    var fields = this.textFilterFields.split(/\s+/);
+                    var searches = this.textFilter.split(/\s+/);
+                    for (s=0; s<searches.length; s++) {
+                        var search = searches[s].toLowerCase();
+                        var match = false;
+                        for (f=0; f<fields.length; f++) {
+                            var value = user[fields[f]];
+                            if (value && value.toLowerCase().indexOf(search) !== -1) {
+                                match = true;
+                                break;
+                            }
+                        }
+                        if (!match) return false;
+                    }
+                    return true;
+                }.bind(this));
+            }
+            return this.users;
+        }
+    },
+    watch: {
+        textFilter: function(val) {
+            this.currentPage = 0;
         }
     }
 });

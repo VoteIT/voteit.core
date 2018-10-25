@@ -23,14 +23,19 @@
           role-api="${request.resource_path(context, '_set_participant_role')}"
           bulk-warning="You are about to change a role for all users in this meeting. Are you sure this is what you want to do?"
           current-user="${request.authenticated_userid}"
+          text-filter-fields="userid first_name last_name email"
           inline-template
           i18n:attributes="bulk-warning">
     <div class="table-responsive">
-    <ul class="nav nav-pills" v-if="pages">
-      <li role="presentation" v-for="page in pages" v-bind:class="{active: page.active}">
-        <a v-on:click.prevent="getPage(page.id)" v-bind:href="'#page-' + page.id">{{ page.text }}</a>
-      </li>
-    </ul>
+      <div class="input-group" v-if="users.length > 5" style="padding: 10px 0;">
+        <span class="input-group-addon" i18n:translate="">Search</span>
+        <input type="text" v-model="textFilter" class="form-control">
+      </div>
+      <ul class="nav nav-pills" v-if="pages">
+        <li role="presentation" v-for="page in pages" v-bind:class="{active: page.active}">
+          <a v-on:click.prevent="getPage(page.id)" v-bind:href="'#page-' + page.id">{{ page.text }}</a>
+        </li>
+      </ul>
 
       <table class="table table-striped table-condensed">
         <thead>
