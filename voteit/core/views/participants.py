@@ -23,12 +23,18 @@ _VIEW_ROLES = (('role_view', security.ROLE_VIEWER),
                ('role_admin', security.ROLE_ADMIN),)
 
 
-#Only allow VoteIT core roles
+# Only allow VoteIT core roles
 _ALLOWED_TO_TOGGLE = (security.ROLE_VIEWER,
                       security.ROLE_DISCUSS,
                       security.ROLE_PROPOSE,
                       security.ROLE_VOTER,
                       security.ROLE_MODERATOR)
+
+# Only allow VoteIT core roles
+_ALLOWED_TO_BULK_CHANGE = (security.ROLE_VIEWER,
+                           security.ROLE_DISCUSS,
+                           security.ROLE_PROPOSE,
+                           security.ROLE_VOTER)
 
 
 #glyphicon glyphicon + ->
@@ -44,17 +50,18 @@ _ROLE_ICONS = {'role_view': 'eye-open',
 @view_defaults(context = IMeeting, permission = security.VIEW)
 class ParticipantsView(BaseView):
 
-    @view_config(name = 'participants', renderer = 'voteit.core:templates/participants.pt')
+    @view_config(name='participants', renderer='voteit.core:templates/participants.pt')
     def main(self):
-        # participants_js.need()
         voteit_vue_components_js.need()
-        response = {}
-        #This might be slow in its current form. Make get_meeting_participants smarter
-        response['participants_count'] = len(get_meeting_participants(self.context))
-        response['view_roles'] = _VIEW_ROLES
-        response['role_icons'] = _ROLE_ICONS
-        response['meeting_closed'] = self.context.get_workflow_state() == 'closed'
-        return response
+        return {
+            # This might be slow in its current form. Make get_meeting_participants smarter
+            'participants_count': len(get_meeting_participants(self.context)),
+            'view_roles': _VIEW_ROLES,
+            'toggle_roles': _ALLOWED_TO_TOGGLE,
+            'bulk_change_roles': [role for role in _VIEW_ROLES if role[1] in _ALLOWED_TO_BULK_CHANGE],
+            'role_icons': _ROLE_ICONS,
+            'meeting_closed': self.context.get_workflow_state() == 'closed',
+        }
 
     @view_config(name = 'participants.json', renderer = 'json')
     def json_data(self):

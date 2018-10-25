@@ -53,10 +53,16 @@
               </button>
               <ul class="dropdown-menu" style="top: unset; left: unset;">
                 <li role="presentation" class="dropdown-header" i18n:translate="">Give role to all</li>
-                <li tal:repeat="(name, role) view_roles[:-2]"><a href="#" v-on:click.prevent="setAllRole('${name}', true)">${role.split(':')[-1]}</a></li>
+                <li tal:repeat="(name, role) bulk_change_roles"><a href="#" v-on:click.prevent="setAllRole('${name}', true)">
+                  <span class="glyphicon glyphicon-${role_icons.get(name, '')}"></span>
+                  ${role.title}
+                </a></li>
                 <li role="separator" class="divider"></li>
                 <li role="presentation" class="dropdown-header" i18n:translate="">Remove role from all</li>
-                <li tal:repeat="(name, role) view_roles[:-2]"><a href="#" v-on:click.prevent="setAllRole('${name}', false)">${role.split(':')[-1]}</a></li>
+                <li tal:repeat="(name, role) bulk_change_roles"><a href="#" v-on:click.prevent="setAllRole('${name}', false)">
+                  <span class="glyphicon glyphicon-${role_icons.get(name, '')}"></span>
+                  ${role.title}
+                </a></li>
               </ul>
             </th>
             <th tal:repeat="(name, role) view_roles" class="text-center"><span class="badge">{{ roleCount('${name}') }}</span></th>
@@ -74,7 +80,7 @@
             <td>{{ user.first_name }} {{ user.last_name }}</td>
             <td v-if="isModerator"><a v-if="user.email" v-bind:href="'mailto:' + user.email">{{ user.email }}</a></td>
             <td tal:repeat="(name, role) view_roles" class="text-center">
-              <template v-if="isModerator && ${str(name != 'role_admin').lower()}">
+              <template v-if="isModerator && ${str(role in toggle_roles).lower()}">
                 <button class="btn btn-default btn-sm" v-on:click="toggleRole(user, '${name}')">
                   <span v-if="user['${name}']" class="glyphicon glyphicon-ok text-success"></span>
                   <span v-else class="glyphicon glyphicon-minus text-warning"></span>
