@@ -63,6 +63,12 @@
           </tr>
         </thead>
         <tbody class="text-small">
+          <tr v-show="!filteredUsers.length">
+            <td v-bind:colspan="isModerator ? 9 : 8">
+              <span class="glyphicon glyphicon-ban-circle"></span>
+              <tal:ts i18n:translate="">No user matches your search.</tal:ts>
+            </td>
+          </tr>
           <tr v-for="user in displayUsers" v-bind:key="user.userid" v-bind:class="{success: user.userid === currentUser}">
             <td><a href="#">{{ user.userid }}</a></td>
             <td>{{ user.first_name }} {{ user.last_name }}</td>
