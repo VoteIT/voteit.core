@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2018-10-25 14:49+0200\n"
+"POT-Creation-Date: 2018-10-25 15:07+0200\n"
 "PO-Revision-Date: 2018-10-25 14:52+0200\n"
 "Last-Translator: Robin Harms Oredsson <robin@betahaus.net>\n"
 "Language-Team: sv <LL@li.org>\n"
@@ -150,9 +150,9 @@ msgid "forbidden_on_closed_meetings"
 msgstr "Du behöver kontakta moderator för att få tillgång till detta möte."
 
 #. Default: Can't find an access policy with the id '${policy}'.
-#. This might mean that the registered
+#.                                     This might mean that the registered
 #. access type for this meeting doesn't exist.
-#. Please contact the moderator about this.
+#.                                     Please contact the moderator about this.
 #: voteit/core/views/meeting.py:153
 msgid "access_policy_not_found"
 msgstr ""
@@ -165,9 +165,9 @@ msgid "Configure access policy"
 msgstr "Inställningar för vald accesspolicy"
 
 #. Default: Can't find an access policy with the id '${policy}'.
-#. This might mean that the registered
+#.                                     This might mean that the registered
 #. access policy type for this meeting doesn't exist.
-#. Please change access policy.
+#.                                     Please change access policy.
 #: voteit/core/views/meeting.py:187
 msgid "access_policy_not_found_moderator"
 msgstr ""
@@ -1109,9 +1109,9 @@ msgstr "Inbjudningskoden som du fick i dett ebrev"
 
 #. Default: One user can have more than one role. Note that to be able to
 #. propose,
-#. discuss and vote you need respective role. This is
+#.                         discuss and vote you need respective role. This is
 #. selected by default. If you want
-#. to add a user that can only view, select View and
+#.                         to add a user that can only view, select View and
 #. uncheck everything else.
 #: voteit/core/schemas/invite_ticket.py:28
 msgid "add_tickets_roles_description"
@@ -1582,6 +1582,11 @@ msgid "Remove role from all"
 msgstr "Ta bort från alla"
 
 #: voteit/core/templates/participants.pt:75
+#: voteit/core/templates/snippets/cogwheel.pt:12
+msgid "Loading..."
+msgstr "Laddar…"
+
+#: voteit/core/templates/participants.pt:81
 msgid "No user matches your search."
 msgstr "Ingen användare matchar din sökning"
 
@@ -1715,10 +1720,6 @@ msgstr "Lägg till existerande"
 #: voteit/core/templates/snippets/participants_tabs.pt:20
 msgid "Emails"
 msgstr "Epost"
-
-#: voteit/core/templates/snippets/cogwheel.pt:12
-msgid "Loading..."
-msgstr "Laddar…"
 
 #: voteit/core/templates/snippets/user_latest_meeting_entries.pt:3
 msgid "Last added"
@@ -1987,9 +1988,9 @@ msgid "meeting_access_invite_only_label"
 msgstr "Tillgång ges bara genom inbjudningar (Standard)"
 
 #. Default: This meeting is invite only.
-#. That means that a mail will be sent with an access
+#.                     That means that a mail will be sent with an access
 #. ticket.
-#. Contact meeting moderators for more information.
+#.                     Contact meeting moderators for more information.
 #: voteit/core/plugins/invite_only_ap.py:12
 msgid "invite_only_meeting_access_request_description"
 msgstr ""

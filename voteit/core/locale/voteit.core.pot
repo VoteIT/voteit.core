@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE 1.0\n"
-"POT-Creation-Date: 2018-10-25 14:49+0200\n"
+"POT-Creation-Date: 2018-10-25 15:07+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1467,6 +1467,11 @@ msgid "Remove role from all"
 msgstr ""
 
 #: ./voteit/core/templates/participants.pt:75
+#: ./voteit/core/templates/snippets/cogwheel.pt:12
+msgid "Loading..."
+msgstr ""
+
+#: ./voteit/core/templates/participants.pt:81
 msgid "No user matches your search."
 msgstr ""
 
@@ -1592,10 +1597,6 @@ msgstr ""
 
 #: ./voteit/core/templates/snippets/participants_tabs.pt:20
 msgid "Emails"
-msgstr ""
-
-#: ./voteit/core/templates/snippets/cogwheel.pt:12
-msgid "Loading..."
 msgstr ""
 
 #: ./voteit/core/templates/snippets/user_latest_meeting_entries.pt:3
