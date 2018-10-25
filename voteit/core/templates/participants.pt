@@ -69,6 +69,12 @@
           </tr>
         </thead>
         <tbody class="text-small">
+          <tr v-show="loading">
+            <td v-bind:colspan="isModerator ? 9 : 8">
+            <span class="rotate-me glyphicon glyphicon-refresh"></span>
+            <tal:ts i18n:translate="">Loading...</tal:ts>
+            </td>
+          </tr>
           <tr v-show="!filteredUsers.length">
             <td v-bind:colspan="isModerator ? 9 : 8">
               <span class="glyphicon glyphicon-ban-circle"></span>

@@ -5,7 +5,8 @@ Vue.component('user-table', {
             users: this.$root.users,
             itemsPerPage: 25,
             currentPage: 0,
-            textFilter: ''
+            textFilter: '',
+            loading: true
         };
     },
     props: ['src', 'roleApi', 'bulkWarning', 'currentUser', 'textFilterFields'],
@@ -18,6 +19,7 @@ Vue.component('user-table', {
                 }
                 this.users = response.results;
                 this.sortUsers();
+                this.loading = false;
             }.bind(this))
         }
     },
