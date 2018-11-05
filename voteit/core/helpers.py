@@ -315,7 +315,11 @@ def render_proposal_text(request, proposal, tag_func=tags2links):
 
 
 def redis_conn(request):
-    return StrictRedis.from_url(request.registry.settings['voteit.redis_url'])
+    redis = getattr(request.registry, '_voteit_unread_redis_conn', None)
+    # if we found an active connection, return it
+    if redis is None:
+        redis = request.registry._voteit_unread_redis_conn = StrictRedis.from_url(request.registry.settings['voteit.redis_url'])
+    return redis
 
 
 def _configure_fake_redis(config):
