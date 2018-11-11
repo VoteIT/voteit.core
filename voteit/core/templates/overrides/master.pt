@@ -8,6 +8,7 @@
   <head>
     <tal:head replace="structure view.render_template('arche:templates/head.pt')" />
     <metal:head define-slot="head"></metal:head>
+    <link rel="manifest" href="/manifest.json">
   </head>
 
   <body metal:define-slot="fullpage"
