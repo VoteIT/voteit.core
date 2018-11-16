@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 import colander
 import deform
 from arche.interfaces import IBaseView
@@ -21,6 +23,16 @@ from voteit.core.views.control_panel import control_panel_category
 from voteit.core.views.control_panel import control_panel_link
 from voteit.core import _
 from voteit.core import security
+
+
+LIKE_SETTING_ACTIVE = 0
+LIKE_SETTING_INACTIVE = 1
+LIKE_SETTING_HIDDEN = 2
+LIKE_SETTING_VALUES = (
+    (0, _('Active')),
+    (1, _('Inactive')),
+    (2, _('Hidden')),
+)
 
 
 def _check_add_perm(adapter, request):
@@ -58,13 +70,17 @@ def _check_add_perm(adapter, request):
              interface = IProposal,
              priority = 50)
 def like_action(context, request, va, **kw):
-    like_context_types = request.meeting.like_context_types
-    like_workflow_states = request.meeting.like_workflow_states
+    context_types = request.meeting.like_context_types
+    workflow_states = request.meeting.like_workflow_states
+    state = request.meeting.like_button_state
+    success_threshold = request.meeting.like_success_threshold
 
-    if not like_context_types or context.type_name not in like_context_types:
+    if state == LIKE_SETTING_HIDDEN:
+        return
+    if not context_types or context.type_name not in context_types:
         return
     if IProposal.providedBy(context):
-        if like_workflow_states and context.get_workflow_state() not in like_workflow_states:
+        if workflow_states and context.get_workflow_state() not in workflow_states:
             return
     like = request.registry.getAdapter(context, IUserTags, name = 'like')
     try:
@@ -74,8 +90,13 @@ def like_action(context, request, va, **kw):
     response = {'context': context,
                 'like': like,
                 'has_like_perm': has_like_perm,
-                'user_likes': request.authenticated_userid in like}
-    return render('voteit.core.plugins:templates/like_btn.pt', response, request = request)
+                'user_likes': request.authenticated_userid in like,
+                'success': (success_threshold > 0) and (len(like) >= success_threshold)}
+    if state == LIKE_SETTING_ACTIVE:
+        template_name = 'voteit.core.plugins:templates/like_btn.pt'
+    else:
+        template_name = 'voteit.core.plugins:templates/like_btn_readonly.pt'
+    return render(template_name, response, request=request)
 
 
 def get_like_userids_indexer(context, default):
@@ -111,12 +132,24 @@ class LikeSettingsForm(ArcheFormCompat, DefaultEditForm):
 
 
 class LikeSettingsSchema(colander.Schema):
+    like_button_state = colander.SchemaNode(
+        colander.Int(),
+        widget=deform.widget.RadioChoiceWidget(values=LIKE_SETTING_VALUES, inline=True),
+        title=_('Like button state'),
+        default=LIKE_SETTING_ACTIVE,
+    )
+    like_success_threshold = colander.SchemaNode(
+        colander.Int(),
+        title=_('Success threshold'),
+        description=_('Show like button in success color from this amount of likes. Set to "0" to disable.'),
+        default=0,
+    )
     like_context_types = colander.SchemaNode(
         colander.Set(),
         widget=deform.widget.CheckboxChoiceWidget(values=(
             ('Proposal', _("Proposal")),
             ('DiscussionPost', _("DiscussionPost")),
-        )),
+        ), inline=True),
         title=_("Allow like on these types"),
     )
     like_workflow_states = colander.SchemaNode(
@@ -145,21 +178,11 @@ def includeme(config):
     from voteit.core.models.meeting import Meeting
 
     #Set properties on meeting
-    def get_like_context_types(self):
-        return self.get_field_value('like_context_types', frozenset())
-    def set_like_context_types(self, value):
-        return self.set_field_value('like_context_types', frozenset(value))
-    def get_like_workflow_states(self):
-        return self.get_field_value('like_workflow_states', frozenset())
-    def set_like_workflow_states(self, value):
-        return self.set_field_value('like_workflow_states', frozenset(value))
-    def get_like_user_roles(self):
-        return self.get_field_value('like_user_roles', frozenset())
-    def set_like_user_roles(self, value):
-        return self.set_field_value('like_user_roles', frozenset(value))
-    Meeting.like_context_types = property(get_like_context_types, set_like_context_types)
-    Meeting.like_workflow_states = property(get_like_workflow_states, set_like_workflow_states)
-    Meeting.like_user_roles = property(get_like_user_roles, set_like_user_roles)
+    Meeting.add_field('like_context_types', wrapper=frozenset)
+    Meeting.add_field('like_workflow_states', wrapper=frozenset)
+    Meeting.add_field('like_user_roles', wrapper=frozenset)
+    Meeting.add_field('like_button_state', default=LIKE_SETTING_ACTIVE)
+    Meeting.add_field('like_success_threshold', default=0)
 
     config.add_schema('Meeting', LikeSettingsSchema, 'like_settings')
     config.add_view_action(control_panel_category,
