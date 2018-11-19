@@ -1,10 +1,12 @@
 import re
+from logging import getLogger
 from urllib import urlencode
 
 from arche.utils import generate_slug #API
 from pyramid.renderers import render
 from pyramid.traversal import find_interface
 from pyramid.traversal import resource_path
+from redis import StrictRedis
 from repoze.catalog.query import Any, NotAny
 from repoze.catalog.query import Eq
 from repoze.workflow import get_workflow
@@ -312,7 +314,26 @@ def render_proposal_text(request, proposal, tag_func=tags2links):
         return nl2br(text).unescape()
 
 
+def redis_conn(request):
+    redis = getattr(request.registry, '_voteit_unread_redis_conn', None)
+    # if we found an active connection, return it
+    if redis is None:
+        redis = request.registry._voteit_unread_redis_conn = StrictRedis.from_url(request.registry.settings['voteit.redis_url'])
+    return redis
+
+
+def _configure_fake_redis(config):
+    try:
+        from fakeredis import FakeStrictRedis
+    except ImportError:
+        raise ImportError("fakeredis not found, install with voteit.core[testing]")
+    def _testing_redis_conn(reqest):
+        return FakeStrictRedis()
+    config.add_request_method(_testing_redis_conn, name='redis_conn', reify=True)
+
+
 def includeme(config):
+    logger = getLogger(__name__)
     config.add_request_method(get_docids_to_show)
     config.add_request_method(callable=transform_text, name='transform_text')
     # Hook creators info
@@ -330,3 +351,16 @@ def includeme(config):
     config.add_request_method(callable=clear_tags_url)
     # Special rendering for proposal
     config.add_request_method(render_proposal_text)
+    # Redis connection
+    settings = config.registry.settings
+    # Allow fake redis if the testrunner is running this, or if this is a debug-enabled instance
+    # without configuration
+    if config.registry.package_name == 'testing':
+        _configure_fake_redis(config)
+    elif (not settings.get('voteit.redis_url', False) and settings.get('arche.debug', False)):
+        logger.warn("'voteit.redis_url' is missing in config. "
+                    "Will run with FakeRedis, so nothing will be stored!")
+        _configure_fake_redis(config)
+    else:
+        assert 'voteit.redis_url' in settings, "'voteit.redis_url' is required in settings"
+        config.add_request_method(redis_conn, reify=True)
