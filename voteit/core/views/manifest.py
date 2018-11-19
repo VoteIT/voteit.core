@@ -21,10 +21,25 @@ class ManifestJson(BaseView):
         'lang': 'en',
         'icons': (
             {
-                'src': '/voteit_core_static/images/voteit-logo-manifest.svg',
-                'type': 'image/svg+xml',
+                'src': '/voteit_core_static/images/voteit-logo-manifest-48.png',
+                'type': 'image/png',
                 'sizes': '48x48',
-            }
+            },
+            {
+                'src': '/voteit_core_static/images/voteit-logo-manifest-128.png',
+                'type': 'image/png',
+                'sizes': '128x128',
+            },
+            {
+                'src': '/voteit_core_static/images/voteit-logo-manifest-192.png',
+                'type': 'image/png',
+                'sizes': '192x192',
+            },
+            {
+                'src': '/voteit_core_static/images/voteit-logo-manifest-256.png',
+                'type': 'image/png',
+                'sizes': '256x256',
+            },
         )
     }
 

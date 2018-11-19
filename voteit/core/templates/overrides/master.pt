@@ -9,6 +9,7 @@
     <tal:head replace="structure view.render_template('arche:templates/head.pt')" />
     <metal:head define-slot="head"></metal:head>
     <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#0a243d">
   </head>
 
   <body metal:define-slot="fullpage"
