@@ -1,13 +1,13 @@
 from __future__ import unicode_literals
 
 import colander
-import deform
 from arche.interfaces import IBaseView
 from arche.interfaces import IViewInitializedEvent
 from arche.security import PERM_VIEW
 from arche.views.base import BaseView, DefaultEditForm
 from arche_usertags.interfaces import IUserTags
 from betahaus.viewcomponent import view_action
+from deform import widget
 from pyramid.renderers import render
 from pyramid.threadlocal import get_current_registry
 from pyramid.traversal import find_interface
@@ -134,7 +134,7 @@ class LikeSettingsForm(ArcheFormCompat, DefaultEditForm):
 class LikeSettingsSchema(colander.Schema):
     like_button_state = colander.SchemaNode(
         colander.Int(),
-        widget=deform.widget.RadioChoiceWidget(values=LIKE_SETTING_VALUES, inline=True),
+        widget=widget.RadioChoiceWidget(values=LIKE_SETTING_VALUES, inline=True),
         title=_('Like button state'),
         default=LIKE_SETTING_ACTIVE,
     )
@@ -146,7 +146,7 @@ class LikeSettingsSchema(colander.Schema):
     )
     like_context_types = colander.SchemaNode(
         colander.Set(),
-        widget=deform.widget.CheckboxChoiceWidget(values=(
+        widget=widget.CheckboxChoiceWidget(values=(
             ('Proposal', _("Proposal")),
             ('DiscussionPost', _("DiscussionPost")),
         ), inline=True),
@@ -165,7 +165,7 @@ class LikeSettingsSchema(colander.Schema):
         description=_("like_user_roles_description",
                       default='If selected, users will need one of these within '
                       'the meeting to be able to like something.'),
-        widget=deform.widget.CheckboxChoiceWidget(values=security.MEETING_ROLES),
+        widget=widget.CheckboxChoiceWidget(values=security.MEETING_ROLES),
         missing=(),
     )
 
@@ -177,7 +177,7 @@ def _check_active_for_meeting(context, request, va):
 def includeme(config):
     from voteit.core.models.meeting import Meeting
 
-    #Set properties on meeting
+    # Set properties on meeting
     Meeting.add_field('like_context_types', wrapper=frozenset)
     Meeting.add_field('like_workflow_states', wrapper=frozenset)
     Meeting.add_field('like_user_roles', wrapper=frozenset)
@@ -195,7 +195,7 @@ def includeme(config):
                            title=_("Settings"), view_name='like_settings')
     config.scan(__name__)
     config.add_subscriber(like_resources, [IBaseView, IViewInitializedEvent])
-    #Add catalog index
+    # Add catalog index
     indexes = {'like_userids': CatalogKeywordIndex(get_like_userids_indexer),}
     config.add_catalog_indexes(__name__, indexes)
     config.add_view(
@@ -205,7 +205,7 @@ def includeme(config):
         permission=security.MODERATE_MEETING,
         renderer="arche:templates/form.pt",
     )
-    #Setup storage
+    # Setup storage
     for iface in (IProposal, IDiscussionPost):
         config.add_usertag('like', iface,
                            catalog_index = 'like_userids',
