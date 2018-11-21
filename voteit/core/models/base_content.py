@@ -95,11 +95,11 @@ class BaseContent(Folder, BaseMixin, LocalRolesMixin):
         self.field_storage[key] = value
 
     @classmethod
-    def add_field(cls, name, default=''):
+    def add_field(cls, name, default='', wrapper=lambda v: v):
         if not hasattr(cls, name):
             setattr(cls, name, property(
-                lambda o: o.get_field_value(name, default),
-                lambda o, value: o.set_field_value(name, value),
+                lambda o: o.get_field_value(name, wrapper(default)),
+                lambda o, value: o.set_field_value(name, wrapper(value)),
             ))
 
     def set_field_appstruct(self, values, notify = True, mark_modified = True):

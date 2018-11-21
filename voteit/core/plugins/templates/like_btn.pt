@@ -9,7 +9,7 @@
     </span>
   </a>
   <a data-open-modal
-    class="btn btn-xs btn-default"
+    class="btn btn-xs ${success and 'btn-success' or 'btn-default'}"
     href="${request.resource_url(context, '_like_users_popover')}">
     <span data-like-count>${len(like)}</span>
     <span class="glyphicon glyphicon-user"></span>

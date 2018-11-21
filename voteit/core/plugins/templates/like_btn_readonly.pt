@@ -1,0 +1,10 @@
+<span data-like xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="voteit.core">
+  <a data-open-modal
+    class="btn btn-xs ${success and 'btn-success' or 'btn-default'} ${user_likes and 'active' or ''}"
+    href="${request.resource_url(context, '_like_users_popover')}"
+    title="Like is currently disabled"
+    i18n:attributes="title">
+    <span class="glyphicon glyphicon-thumbs-up"></span>
+    ${len(like)}
+  </a>
+</span>
