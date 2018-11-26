@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE 1.0\n"
-"POT-Creation-Date: 2018-10-25 15:07+0200\n"
+"POT-Creation-Date: 2018-11-16 15:35+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -310,7 +310,7 @@ msgstr ""
 
 #: ./voteit/core/views/control_panel.py:98
 #: ./voteit/core/templates/minutes.pt:15
-#: ./voteit/core/templates/snippets/participants_tabs.pt:8
+#: ./voteit/core/templates/snippets/participants_tabs.pt:10
 #: ./voteit/core/templates/overrides/navigation.pt:115
 #: ./voteit/core/templates/overrides/navigation.pt:144
 msgid "Participants"
@@ -321,7 +321,7 @@ msgstr ""
 #: ./voteit/core/views/control_panel.py:119
 #: ./voteit/core/views/control_panel.py:121
 #: ./voteit/core/views/control_panel.py:123
-#: ./voteit/core/plugins/like_button.py:172
+#: ./voteit/core/plugins/like_button.py:195
 msgid "Settings"
 msgstr ""
 
@@ -452,11 +452,11 @@ msgstr ""
 msgid "Save"
 msgstr ""
 
-#: ./voteit/core/views/participants.py:148
+#: ./voteit/core/views/participants.py:115
 msgid "Bulk change roles"
 msgstr ""
 
-#: ./voteit/core/views/participants.py:170
+#: ./voteit/core/views/participants.py:136
 msgid "Bulk changes applied"
 msgstr ""
 
@@ -677,7 +677,7 @@ msgid "Discussion Post"
 msgstr ""
 
 #: ./voteit/core/schemas/meeting.py:161 ./voteit/core/schemas/proposal.py:41
-#: ./voteit/core/plugins/like_button.py:117 ./voteit/core/models/proposal.py:27
+#: ./voteit/core/plugins/like_button.py:150 ./voteit/core/models/proposal.py:27
 msgid "Proposal"
 msgstr ""
 
@@ -714,7 +714,7 @@ msgid "Must select at least one"
 msgstr ""
 
 #: ./voteit/core/schemas/meeting.py:230 ./voteit/core/schemas/proposal.py:91
-#: ./voteit/core/templates/participants.pt:43
+#: ./voteit/core/templates/participants.pt:24
 msgid "UserID"
 msgstr ""
 
@@ -972,13 +972,13 @@ msgid "Support request"
 msgstr ""
 
 #: ./voteit/core/schemas/contact.py:22
-#: ./voteit/core/templates/participants.pt:44
+#: ./voteit/core/templates/participants.pt:23
 msgid "Name"
 msgstr ""
 
 #: ./voteit/core/schemas/contact.py:26
 #: ./voteit/core/templates/manage_tickets.pt:48
-#: ./voteit/core/templates/participants.pt:45
+#: ./voteit/core/templates/participants.pt:25
 #: ./voteit/core/templates/snippets/user_basic_info.pt:9
 msgid "Email"
 msgstr ""
@@ -1136,7 +1136,7 @@ msgstr ""
 msgid "discussion_post_text_description"
 msgstr ""
 
-#: ./voteit/core/templates/users_emails.pt:24
+#: ./voteit/core/templates/users_emails.pt:22
 #: ./voteit/core/templates/minutes.pt:64
 #: ./voteit/core/templates/send_tickets.pt:14
 msgid "Back"
@@ -1433,46 +1433,22 @@ msgstr ""
 msgid "Logout"
 msgstr ""
 
-#: ./voteit/core/templates/participants.pt:14
+#: ./voteit/core/templates/participants.pt:10
 msgid "${num} participants"
 msgstr ""
 
 #. Default: Meeting is closed, so unused tickets won't grant access to the
 #. meeting. Access policies will still work though.
-#: ./voteit/core/templates/participants.pt:16
+#: ./voteit/core/templates/participants.pt:14
 msgid "meeting_closed"
 msgstr ""
 
-#: ./voteit/core/templates/participants.pt:24
-msgid ""
-"You are about to change a role for all users in this meeting. Are you sure "
-"this is what you want to do?"
+#: ./voteit/core/templates/participants.pt:39
+msgid "Bulk change..."
 msgstr ""
 
-#: ./voteit/core/templates/participants.pt:31
-#: ./voteit/core/templates/overrides/master.pt:56
-msgid "Search"
-msgstr ""
-
-#: ./voteit/core/templates/participants.pt:51
-msgid "Bulk change"
-msgstr ""
-
-#: ./voteit/core/templates/participants.pt:55
-msgid "Give role to all"
-msgstr ""
-
-#: ./voteit/core/templates/participants.pt:61
-msgid "Remove role from all"
-msgstr ""
-
-#: ./voteit/core/templates/participants.pt:75
-#: ./voteit/core/templates/snippets/cogwheel.pt:12
-msgid "Loading..."
-msgstr ""
-
-#: ./voteit/core/templates/participants.pt:81
-msgid "No user matches your search."
+#: ./voteit/core/templates/participants.pt:86
+msgid "Loading data..."
 msgstr ""
 
 #: ./voteit/core/templates/email/claimed_ticket_email.pt:7
@@ -1587,16 +1563,20 @@ msgstr ""
 msgid "To access this meeting use the link below:"
 msgstr ""
 
-#: ./voteit/core/templates/snippets/participants_tabs.pt:11
+#: ./voteit/core/templates/snippets/participants_tabs.pt:14
 msgid "Invite"
 msgstr ""
 
-#: ./voteit/core/templates/snippets/participants_tabs.pt:14
+#: ./voteit/core/templates/snippets/participants_tabs.pt:17
 msgid "Add existing"
 msgstr ""
 
-#: ./voteit/core/templates/snippets/participants_tabs.pt:20
+#: ./voteit/core/templates/snippets/participants_tabs.pt:23
 msgid "Emails"
+msgstr ""
+
+#: ./voteit/core/templates/snippets/cogwheel.pt:12
+msgid "Loading..."
 msgstr ""
 
 #: ./voteit/core/templates/snippets/user_latest_meeting_entries.pt:3
@@ -1627,20 +1607,24 @@ msgstr ""
 msgid "There was a problem with your submission"
 msgstr ""
 
-#: ./voteit/core/templates/overrides/master.pt:25
+#: ./voteit/core/templates/overrides/master.pt:26
 msgid "Skip to main content"
 msgstr ""
 
-#: ./voteit/core/templates/overrides/master.pt:26
+#: ./voteit/core/templates/overrides/master.pt:27
 msgid "Skip to meetings"
 msgstr ""
 
-#: ./voteit/core/templates/overrides/master.pt:27
+#: ./voteit/core/templates/overrides/master.pt:28
 msgid "Skip to agenda"
 msgstr ""
 
-#: ./voteit/core/templates/overrides/master.pt:28
+#: ./voteit/core/templates/overrides/master.pt:29
 msgid "Skip to navigation"
+msgstr ""
+
+#: ./voteit/core/templates/overrides/master.pt:57
+msgid "Search"
 msgstr ""
 
 #: ./voteit/core/templates/overrides/navigation.pt:39
@@ -1669,6 +1653,7 @@ msgid "Minutes"
 msgstr ""
 
 #: ./voteit/core/templates/menus/control_panel_ap.pt:10
+#: ./voteit/core/plugins/like_button.py:32
 msgid "Active"
 msgstr ""
 
@@ -1918,34 +1903,56 @@ msgstr ""
 msgid "profile_gravatar_explanation"
 msgstr ""
 
-#: ./voteit/core/plugins/like_button.py:110
-#: ./voteit/core/plugins/like_button.py:168
-msgid "Like button"
+#: ./voteit/core/plugins/like_button.py:33
+msgid "Inactive"
 msgstr ""
 
-#: ./voteit/core/plugins/like_button.py:118
-msgid "DiscussionPost"
-msgstr ""
-
-#: ./voteit/core/plugins/like_button.py:120
-msgid "Allow like on these types"
-msgstr ""
-
-#: ./voteit/core/plugins/like_button.py:124
-msgid "Proposal workflow states"
-msgstr ""
-
-#: ./voteit/core/plugins/like_button.py:125
-msgid "If selected, proposals in these workflow states can be liked."
+#: ./voteit/core/plugins/like_button.py:34
+msgid "Hidden"
 msgstr ""
 
 #: ./voteit/core/plugins/like_button.py:131
+#: ./voteit/core/plugins/like_button.py:191
+msgid "Like button"
+msgstr ""
+
+#: ./voteit/core/plugins/like_button.py:138
+msgid "Like button state"
+msgstr ""
+
+#: ./voteit/core/plugins/like_button.py:143
+msgid "Success threshold"
+msgstr ""
+
+#: ./voteit/core/plugins/like_button.py:144
+msgid ""
+"Show like button in success color from this amount of likes. Set to \"0\" to "
+"disable."
+msgstr ""
+
+#: ./voteit/core/plugins/like_button.py:151
+msgid "DiscussionPost"
+msgstr ""
+
+#: ./voteit/core/plugins/like_button.py:153
+msgid "Allow like on these types"
+msgstr ""
+
+#: ./voteit/core/plugins/like_button.py:157
+msgid "Proposal workflow states"
+msgstr ""
+
+#: ./voteit/core/plugins/like_button.py:158
+msgid "If selected, proposals in these workflow states can be liked."
+msgstr ""
+
+#: ./voteit/core/plugins/like_button.py:164
 msgid "User roles"
 msgstr ""
 
 #. Default: If selected, users will need one of these within the meeting to be
 #. able to like something.
-#: ./voteit/core/plugins/like_button.py:132
+#: ./voteit/core/plugins/like_button.py:165
 msgid "like_user_roles_description"
 msgstr ""
 
@@ -2027,6 +2034,10 @@ msgstr ""
 
 #: ./voteit/core/plugins/templates/support_users_popover.pt:6
 msgid "Users who supports this ${count}"
+msgstr ""
+
+#: ./voteit/core/plugins/templates/like_btn_readonly.pt:5
+msgid "Like is currently disabled"
 msgstr ""
 
 #: ./voteit/core/plugins/templates/like_btn.pt:8

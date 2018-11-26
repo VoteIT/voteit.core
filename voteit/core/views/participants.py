@@ -161,12 +161,11 @@ class BulkChangeRolesForm(DefaultEditForm):
                 add_roles.add(self.ROLE_MAP[k])
             if v == 'remove':
                 remove_roles.add(self.ROLE_MAP[k])
-        #yes, this could be optimised.
         lr = self.context.local_roles
-        current_local_roles = tuple(lr)
-        for userid in current_local_roles:
-            lr.add(userid, add_roles)
-            lr.remove(userid, remove_roles)
+        for userid in security.find_authorized_userids(self.context, [security.VIEW]):
+            lr.add(userid, add_roles, event=False)
+            lr.remove(userid, remove_roles, event=False)
+        lr.send_event()
         self.flash_messages.add(_("Bulk changes applied"))
         return HTTPFound(location=self.request.resource_url(self.context, 'participants'))
 

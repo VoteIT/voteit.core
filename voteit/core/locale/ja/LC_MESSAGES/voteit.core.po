@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE 1.0\n"
-"POT-Creation-Date: 2018-10-25 15:07+0200\n"
+"POT-Creation-Date: 2018-11-16 15:35+0100\n"
 "PO-Revision-Date: 2018-02-20 14:41+0100\n"
 "Last-Translator: Tatsuhei Morozumi <poc1220@gmail.com>\n"
 "Language-Team: Japanese\n"
@@ -343,7 +343,7 @@ msgid "Access policy"
 msgstr "アクセスポリシー"
 
 #: voteit/core/views/control_panel.py:98 voteit/core/templates/minutes.pt:15
-#: voteit/core/templates/snippets/participants_tabs.pt:8
+#: voteit/core/templates/snippets/participants_tabs.pt:10
 #: voteit/core/templates/overrides/navigation.pt:115
 #: voteit/core/templates/overrides/navigation.pt:144
 msgid "Participants"
@@ -354,7 +354,7 @@ msgstr "参加者"
 #: voteit/core/views/control_panel.py:119
 #: voteit/core/views/control_panel.py:121
 #: voteit/core/views/control_panel.py:123
-#: voteit/core/plugins/like_button.py:172
+#: voteit/core/plugins/like_button.py:195
 msgid "Settings"
 msgstr "設定"
 
@@ -494,11 +494,11 @@ msgstr ""
 msgid "Save"
 msgstr "保存"
 
-#: voteit/core/views/participants.py:148
+#: voteit/core/views/participants.py:115
 msgid "Bulk change roles"
 msgstr "役割の一括変更"
 
-#: voteit/core/views/participants.py:170
+#: voteit/core/views/participants.py:136
 msgid "Bulk changes applied"
 msgstr "一括変更が適用されました"
 
@@ -728,7 +728,7 @@ msgid "Discussion Post"
 msgstr "議論の投稿"
 
 #: voteit/core/schemas/meeting.py:161 voteit/core/schemas/proposal.py:41
-#: voteit/core/plugins/like_button.py:117 voteit/core/models/proposal.py:27
+#: voteit/core/plugins/like_button.py:150 voteit/core/models/proposal.py:27
 msgid "Proposal"
 msgstr "提案"
 
@@ -767,7 +767,7 @@ msgid "Must select at least one"
 msgstr "少なくとも1つ選択してください"
 
 #: voteit/core/schemas/meeting.py:230 voteit/core/schemas/proposal.py:91
-#: voteit/core/templates/participants.pt:43
+#: voteit/core/templates/participants.pt:24
 msgid "UserID"
 msgstr "ユーザーID"
 
@@ -809,13 +809,16 @@ msgstr "メンションを飛ばしたユーザーにメッセージを送る"
 msgid "Send mail to voters when a poll starts."
 msgstr "投票が開始されたら投票者にメールを送る"
 
-#: voteit/core/schemas/agenda.py:9
-msgid "Hide type and unread count"
-msgstr "種類と未読数を隠す"
+#: voteit/core/views/components/moderator_actions.py:16
+msgid "Workflow"
+msgstr "作業工程"
 
-#: voteit/core/schemas/agenda.py:10
-msgid "Will speed up loading for physical meetings with lots of participants"
-msgstr "参加者が多い実際の会議を短時間にします"
+#: voteit/core/views/components/moderator_actions.py:24
+#: voteit/core/templates/manage_agenda.pt:37
+#: voteit/core/templates/manage_agenda.pt:52
+#: voteit/core/templates/portlets/diff_text.pt:16
+msgid "Edit"
+msgstr "編集する"
 
 #: voteit/core/schemas/poll.py:16
 #, fuzzy
@@ -891,21 +894,20 @@ msgstr "あなた自身について"
 msgid "Add as"
 msgstr "として追加"
 
-#: voteit/core/schemas/diff_text.py:17
-#, fuzzy
-msgid "Enable diff text proposals"
-msgstr "提案を有効にする"
+#: voteit/core/views/components/metadata_listing.py:78
+msgid "Comment"
+msgstr "コメント"
 
-#. Default: Makes it possible to add a text chunk and then write proposals on
-#. changes in that text.
-#: voteit/core/schemas/diff_text.py:18
-#, fuzzy
-msgid "diff_text_enabled_description"
-msgstr "メールアドレス〜で区切ってください"
+#: voteit/core/views/components/polls.py:10
+#: voteit/core/templates/overrides/navigation.pt:94
+#: voteit/core/templates/portlets/polls.pt:11
+#: voteit/core/portlets/agenda_item.py:75
+msgid "Polls"
+msgstr "投票"
 
-#: voteit/core/schemas/diff_text.py:27
-msgid "paragraph"
-msgstr ""
+#: voteit/core/schemas/meeting.py:46 voteit/core/plugins/hashlist_ap.py:79
+msgid "<Select>"
+msgstr "選択"
 
 #: voteit/core/schemas/diff_text.py:38
 #, fuzzy
@@ -1050,12 +1052,12 @@ msgstr ""
 msgid "Support request"
 msgstr "サポートリクエスト"
 
-#: voteit/core/schemas/contact.py:22 voteit/core/templates/participants.pt:44
+#: voteit/core/schemas/contact.py:22 voteit/core/templates/participants.pt:23
 msgid "Name"
 msgstr "名前"
 
 #: voteit/core/schemas/contact.py:26 voteit/core/templates/manage_tickets.pt:48
-#: voteit/core/templates/participants.pt:45
+#: voteit/core/templates/participants.pt:25
 #: voteit/core/templates/snippets/user_basic_info.pt:9
 msgid "Email"
 msgstr "メールアドレス"
@@ -1239,7 +1241,7 @@ msgstr ""
 "ンを飛ばすことができます。またハッシュタグ（#予算）を作ることもできます。提案"
 "にコメントをするならこれらのタグを使うといいでしょう"
 
-#: voteit/core/templates/users_emails.pt:24 voteit/core/templates/minutes.pt:64
+#: voteit/core/templates/users_emails.pt:22 voteit/core/templates/minutes.pt:64
 #: voteit/core/templates/send_tickets.pt:14
 msgid "Back"
 msgstr "戻る"
@@ -1355,50 +1357,171 @@ msgstr "承認された提案"
 msgid "Denied proposals:"
 msgstr "否決された提案"
 
-#: voteit/core/templates/_translations.pt:8
-msgid "Private"
-msgstr "プライベート"
+#: voteit/core/schemas/agenda_item.py:35
+msgid "Body"
+msgstr "本文"
 
-#: voteit/core/templates/_translations.pt:9
-msgid "Upcoming"
-msgstr "近日中"
+#. Default: Place the the agenda item background information here. You can link
+#. to external documents and memos. It's also a good idea to add an image, it
+#. will make it easier for participants to quickly see which page they're on.
+#: voteit/core/schemas/agenda_item.py:36
+msgid "agenda_item_schema_body"
+msgstr ""
+"議題の背景情報をここに入力してください。外部の文書やメモに関連づけることも可"
+"能です。画像を追加することで参加者にとってページわかりやすくなります。"
 
-#: voteit/core/templates/_translations.pt:10
-msgid "Ongoing"
-msgstr "進行中"
+#: voteit/core/schemas/agenda_item.py:46
+msgid "Collapse body texts that are higher than..."
+msgstr ""
 
-#: voteit/core/templates/_translations.pt:11
-#: voteit/core/templates/portlets/polls_inline.pt:87
-msgid "Closed"
-msgstr "終了"
+#: voteit/core/schemas/agenda_item.py:49
+msgid "Off"
+msgstr ""
 
-#: voteit/core/templates/_translations.pt:12
-msgid "Published"
-msgstr "公開済み"
+#: voteit/core/schemas/agenda_item.py:50
+msgid "Default (200px)"
+msgstr ""
 
-#: voteit/core/templates/_translations.pt:13
-msgid "Retracted"
-msgstr "撤回されました"
+#: voteit/core/schemas/agenda_item.py:59
+#, fuzzy
+msgid "Base hashtag for Agenda Item"
+msgstr "議題のハッシュタグ"
 
-#: voteit/core/templates/_translations.pt:14
-msgid "Locked for voting"
-msgstr "投票のために鍵がかかっています"
+#. Default: Only used by systems that implement agenda based hashtags. It's
+#. usually a good idea to leave this empty if you don't have a special reason
+#. to change it. (It will use the agenda items name in that case) Proposals
+#. will be named according to this base tag + a number.
+#: voteit/core/schemas/agenda_item.py:60
+msgid "ai_hashtag_schema_description"
+msgstr ""
+"議題ごとのハッシュタグを設けるときに使われますが、特別の理由がない限り空欄に"
+"しておくのがいいでしょう"
 
-#: voteit/core/templates/_translations.pt:15
-msgid "Approved"
-msgstr "承認済み"
+#: voteit/core/schemas/agenda_item.py:68
+msgid "Must be a-z, 0-9, or any of '.-_'."
+msgstr "小文字のアルファベット、半角数字、または’.-_’.を使用してください"
 
-#: voteit/core/templates/_translations.pt:16
-msgid "Denied"
-msgstr "拒否済み"
+#. Default: You may add more in the settings menu.
+#: voteit/core/schemas/agenda_item.py:73
+msgid "ai_schema_tags_description"
+msgstr "設定メニューからさらに追加することができます"
 
-#: voteit/core/templates/_translations.pt:17
-msgid "Unhandled"
-msgstr "未処理"
+#: voteit/core/schemas/user.py:36
+#, fuzzy
+msgid "About me"
+msgstr "自分自身について"
 
-#: voteit/core/templates/_translations.pt:18
-msgid "Canceled"
-msgstr "キャンセル済み"
+#. Default: Please note that anything you type here will be visible to all
+#. users in the same meeting as you.
+#: voteit/core/schemas/user.py:37
+msgid "user_about_me_description"
+msgstr "ここに記入したことは、すべての会議に参加しているユーザーに表示されます"
+
+#: voteit/core/schemas/user.py:45
+#, fuzzy
+msgid "Use profile image from"
+msgstr "プロフィール画像の提供者"
+
+#: voteit/core/schemas/discussion_post.py:19
+msgid "Text"
+msgstr "文章"
+
+#. Default: You may use an at sign to reference a user (ex: 'hello @jane') or a
+#. hashtag (ex: '#budget') to reference or create a tag. If you're commenting
+#. on proposals, it's a good idea to use their tags.
+#: voteit/core/schemas/discussion_post.py:20
+msgid "discussion_post_text_description"
+msgstr ""
+"「こんにちは @suzuki さん」というように@マークを使用すればユーザーにメンショ"
+"ンを飛ばすことができます。またハッシュタグ（#予算）を作ることもできます。提案"
+"にコメントをするならこれらのタグを使うといいでしょう"
+
+#: voteit/core/templates/users_emails.pt:24 voteit/core/templates/minutes.pt:64
+#: voteit/core/templates/send_tickets.pt:14
+msgid "Back"
+msgstr "戻る"
+
+#: voteit/core/templates/manage_agenda.pt:10
+#: voteit/core/templates/portlets/agenda_fixed.pt:16
+msgid "Manage agenda"
+msgstr "議題を"
+
+#: voteit/core/templates/manage_agenda.pt:17
+#, fuzzy
+msgid "Sort agenda items"
+msgstr "議題アイテム"
+
+#: voteit/core/templates/manage_agenda.pt:20
+msgid "Copy items"
+msgstr ""
+
+#: voteit/core/templates/manage_agenda.pt:38
+msgid "Allow proposals"
+msgstr "提案を許可する"
+
+#: voteit/core/templates/manage_agenda.pt:39
+msgid "Allow discussions"
+msgstr "議論を許可する"
+
+#: voteit/core/templates/manage_agenda.pt:59
+#: voteit/core/templates/manage_agenda.pt:72
+msgid "No"
+msgstr "いいえ"
+
+#: voteit/core/templates/manage_agenda.pt:63
+#: voteit/core/templates/manage_agenda.pt:76
+msgid "Yes"
+msgstr "はい"
+
+#: voteit/core/templates/manage_agenda.pt:96
+msgid "Change several at once"
+msgstr "複数の選択肢を同時に変更する"
+
+#. Default: Mark the agenda items you wish to apply the options bellow to. You
+#. can select several at once by using the tic-box in the header.
+#: voteit/core/templates/manage_agenda.pt:97
+msgid "manage_agenda_items_many_info"
+msgstr ""
+"オプションを適用したい議題を選択してください。複数の議題を同時に選択すること"
+"も可能です"
+
+#: voteit/core/templates/manage_agenda.pt:103
+msgid "Change state on marked items to"
+msgstr "印をつけた項目の状態を変える："
+
+#: voteit/core/templates/manage_agenda.pt:105
+#: voteit/core/templates/manage_agenda.pt:113
+#: voteit/core/templates/manage_agenda.pt:121
+#, fuzzy
+msgid "&lt;Leave unchanged&gt;"
+msgstr "変更なしのままにする"
+
+#: voteit/core/templates/manage_agenda.pt:111
+msgid "Adjust proposal block state for all marked"
+msgstr "印をつけたすべてのブロックされた提案を変更する"
+
+#: voteit/core/templates/manage_agenda.pt:114
+#: voteit/core/templates/manage_agenda.pt:122
+msgid "Default / Allowed"
+msgstr "デフォルト/許可"
+
+#: voteit/core/templates/manage_agenda.pt:115
+#: voteit/core/templates/manage_agenda.pt:123
+msgid "Always blocked"
+msgstr "常にブロック"
+
+#: voteit/core/templates/manage_agenda.pt:119
+msgid "Adjust discussion block state for all marked"
+msgstr "印をつけたすべてのブロックされた議論を変更する"
+
+#: voteit/core/templates/manage_agenda.pt:128
+#: voteit/core/templates/menus/control_panel_ap.pt:15
+msgid "Change"
+msgstr "変更"
+
+#: voteit/core/templates/manage_agenda.pt:129
+msgid "Cancel"
+msgstr "キャンセル"
 
 #: voteit/core/templates/user.pt:19
 msgid "Change profile"
@@ -1550,52 +1673,26 @@ msgstr "チケットを使う"
 msgid "Logout"
 msgstr "ログアウト"
 
-#: voteit/core/templates/participants.pt:14
+#: voteit/core/templates/participants.pt:10
 msgid "${num} participants"
 msgstr "参加者数${num} "
 
 #. Default: Meeting is closed, so unused tickets won't grant access to the
 #. meeting. Access policies will still work though.
-#: voteit/core/templates/participants.pt:16
+#: voteit/core/templates/participants.pt:14
 msgid "meeting_closed"
 msgstr ""
 "会議は閉会しました。使用されていないチケットは、会議への参加権を与えません。"
 "アクセスポリシーはまだ動作します。"
 
-#: voteit/core/templates/participants.pt:24
-msgid ""
-"You are about to change a role for all users in this meeting. Are you sure "
-"this is what you want to do?"
-msgstr ""
-
-#: voteit/core/templates/participants.pt:31
-#: voteit/core/templates/overrides/master.pt:56
-msgid "Search"
-msgstr ""
-
-#: voteit/core/templates/participants.pt:51
+#: voteit/core/templates/participants.pt:39
 #, fuzzy
-msgid "Bulk change"
+msgid "Bulk change..."
 msgstr "役割の一括変更"
 
-#: voteit/core/templates/participants.pt:55
-#, fuzzy
-msgid "Give role to all"
-msgstr "全員に与える"
-
-#: voteit/core/templates/participants.pt:61
-#, fuzzy
-msgid "Remove role from all"
-msgstr "全員から取り除く"
-
-#: voteit/core/templates/participants.pt:75
-#: voteit/core/templates/snippets/cogwheel.pt:12
-msgid "Loading..."
-msgstr "ロード中."
-
-#: voteit/core/templates/participants.pt:81
-msgid "No user matches your search."
-msgstr ""
+#: voteit/core/templates/participants.pt:86
+msgid "Loading data..."
+msgstr "データをロード中"
 
 #: voteit/core/templates/email/claimed_ticket_email.pt:7
 msgid "Hello ${fullname}"
@@ -1715,17 +1812,21 @@ msgstr "以下のリンクは会議での次の許可をあたえます"
 msgid "To access this meeting use the link below:"
 msgstr "会議に参加するには以下のリンクをクリックしてください"
 
-#: voteit/core/templates/snippets/participants_tabs.pt:11
+#: voteit/core/templates/snippets/participants_tabs.pt:14
 msgid "Invite"
 msgstr "招待"
 
-#: voteit/core/templates/snippets/participants_tabs.pt:14
+#: voteit/core/templates/snippets/participants_tabs.pt:17
 msgid "Add existing"
 msgstr "既存を追加"
 
-#: voteit/core/templates/snippets/participants_tabs.pt:20
+#: voteit/core/templates/snippets/participants_tabs.pt:23
 msgid "Emails"
 msgstr "メール"
+
+#: voteit/core/templates/snippets/cogwheel.pt:12
+msgid "Loading..."
+msgstr "ロード中."
 
 #: voteit/core/templates/snippets/user_latest_meeting_entries.pt:3
 msgid "Last added"
@@ -1755,22 +1856,26 @@ msgstr "まだ何も入力していません"
 msgid "There was a problem with your submission"
 msgstr ""
 
-#: voteit/core/templates/overrides/master.pt:25
+#: voteit/core/templates/overrides/master.pt:26
 msgid "Skip to main content"
 msgstr ""
 
-#: voteit/core/templates/overrides/master.pt:26
+#: voteit/core/templates/overrides/master.pt:27
 #, fuzzy
 msgid "Skip to meetings"
 msgstr "会議に戻る"
 
-#: voteit/core/templates/overrides/master.pt:27
+#: voteit/core/templates/overrides/master.pt:28
 #, fuzzy
 msgid "Skip to agenda"
 msgstr "固定された議題"
 
-#: voteit/core/templates/overrides/master.pt:28
+#: voteit/core/templates/overrides/master.pt:29
 msgid "Skip to navigation"
+msgstr ""
+
+#: voteit/core/templates/overrides/master.pt:57
+msgid "Search"
 msgstr ""
 
 #: voteit/core/templates/overrides/navigation.pt:39
@@ -1799,6 +1904,7 @@ msgid "Minutes"
 msgstr "議事録"
 
 #: voteit/core/templates/menus/control_panel_ap.pt:10
+#: voteit/core/plugins/like_button.py:32
 msgid "Active"
 msgstr ""
 
@@ -2060,37 +2166,59 @@ msgstr ""
 "ています。プロフィール画像を変更するにはGravatarのページから画像を変更してく"
 "ださい。"
 
-#: voteit/core/plugins/like_button.py:110
-#: voteit/core/plugins/like_button.py:168
+#: voteit/core/plugins/like_button.py:33
+msgid "Inactive"
+msgstr ""
+
+#: voteit/core/plugins/like_button.py:34
+msgid "Hidden"
+msgstr ""
+
+#: voteit/core/plugins/like_button.py:131
+#: voteit/core/plugins/like_button.py:191
 msgid "Like button"
 msgstr ""
 
-#: voteit/core/plugins/like_button.py:118
+#: voteit/core/plugins/like_button.py:138
+msgid "Like button state"
+msgstr ""
+
+#: voteit/core/plugins/like_button.py:143
+msgid "Success threshold"
+msgstr ""
+
+#: voteit/core/plugins/like_button.py:144
+msgid ""
+"Show like button in success color from this amount of likes. Set to \"0\" to "
+"disable."
+msgstr ""
+
+#: voteit/core/plugins/like_button.py:151
 #, fuzzy
 msgid "DiscussionPost"
 msgstr "議論の投稿"
 
-#: voteit/core/plugins/like_button.py:120
+#: voteit/core/plugins/like_button.py:153
 msgid "Allow like on these types"
 msgstr ""
 
-#: voteit/core/plugins/like_button.py:124
+#: voteit/core/plugins/like_button.py:157
 #, fuzzy
 msgid "Proposal workflow states"
 msgstr "提案の状態を隠す"
 
-#: voteit/core/plugins/like_button.py:125
+#: voteit/core/plugins/like_button.py:158
 msgid "If selected, proposals in these workflow states can be liked."
 msgstr ""
 
-#: voteit/core/plugins/like_button.py:131
+#: voteit/core/plugins/like_button.py:164
 #, fuzzy
 msgid "User roles"
 msgstr "あなたの役割"
 
 #. Default: If selected, users will need one of these within the meeting to be
 #. able to like something.
-#: voteit/core/plugins/like_button.py:132
+#: voteit/core/plugins/like_button.py:165
 #, fuzzy
 msgid "like_user_roles_description"
 msgstr ""
@@ -2185,6 +2313,10 @@ msgstr "支持"
 #: voteit/core/plugins/templates/support_users_popover.pt:6
 msgid "Users who supports this ${count}"
 msgstr "支持しているユーザー"
+
+#: voteit/core/plugins/templates/like_btn_readonly.pt:5
+msgid "Like is currently disabled"
+msgstr ""
 
 #: voteit/core/plugins/templates/like_btn.pt:8
 msgid "Like"
@@ -2387,9 +2519,6 @@ msgstr "会議が開催中ではない場合、議題を進行中にはできま
 #: voteit/core/models/user.py:33
 msgid "User"
 msgstr "ユーザー"
-
-#~ msgid "Loading data..."
-#~ msgstr "データをロード中"
 
 #, fuzzy
 #~ msgid "Collapse long body texts"

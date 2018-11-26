@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2018-10-25 15:07+0200\n"
-"PO-Revision-Date: 2018-10-25 14:52+0200\n"
+"POT-Creation-Date: 2018-11-16 15:35+0100\n"
+"PO-Revision-Date: 2018-11-19 15:36+0100\n"
 "Last-Translator: Robin Harms Oredsson <robin@betahaus.net>\n"
 "Language-Team: sv <LL@li.org>\n"
 "Language: sv\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 2.1.1\n"
 "Generated-By: Babel 1.3\n"
 
 #: voteit/core/bootstrap.py:17 voteit/core/bootstrap.py:35
@@ -150,9 +150,9 @@ msgid "forbidden_on_closed_meetings"
 msgstr "Du behöver kontakta moderator för att få tillgång till detta möte."
 
 #. Default: Can't find an access policy with the id '${policy}'.
-#.                                     This might mean that the registered
+#. This might mean that the registered
 #. access type for this meeting doesn't exist.
-#.                                     Please contact the moderator about this.
+#. Please contact the moderator about this.
 #: voteit/core/views/meeting.py:153
 msgid "access_policy_not_found"
 msgstr ""
@@ -165,9 +165,9 @@ msgid "Configure access policy"
 msgstr "Inställningar för vald accesspolicy"
 
 #. Default: Can't find an access policy with the id '${policy}'.
-#.                                     This might mean that the registered
+#. This might mean that the registered
 #. access policy type for this meeting doesn't exist.
-#.                                     Please change access policy.
+#. Please change access policy.
 #: voteit/core/views/meeting.py:187
 msgid "access_policy_not_found_moderator"
 msgstr ""
@@ -342,7 +342,7 @@ msgid "Access policy"
 msgstr "Accesspolicy"
 
 #: voteit/core/views/control_panel.py:98 voteit/core/templates/minutes.pt:15
-#: voteit/core/templates/snippets/participants_tabs.pt:8
+#: voteit/core/templates/snippets/participants_tabs.pt:10
 #: voteit/core/templates/overrides/navigation.pt:115
 #: voteit/core/templates/overrides/navigation.pt:144
 msgid "Participants"
@@ -353,7 +353,7 @@ msgstr "Deltagare"
 #: voteit/core/views/control_panel.py:119
 #: voteit/core/views/control_panel.py:121
 #: voteit/core/views/control_panel.py:123
-#: voteit/core/plugins/like_button.py:172
+#: voteit/core/plugins/like_button.py:195
 msgid "Settings"
 msgstr "Inställningar"
 
@@ -497,11 +497,11 @@ msgstr "Förhandsvisa och spara"
 msgid "Save"
 msgstr "Spara"
 
-#: voteit/core/views/participants.py:148
+#: voteit/core/views/participants.py:115
 msgid "Bulk change roles"
 msgstr "Bulkändra roller"
 
-#: voteit/core/views/participants.py:170
+#: voteit/core/views/participants.py:136
 msgid "Bulk changes applied"
 msgstr "Bulkändring utförd"
 
@@ -731,7 +731,7 @@ msgid "Discussion Post"
 msgstr "Diskussionsinlägg"
 
 #: voteit/core/schemas/meeting.py:161 voteit/core/schemas/proposal.py:41
-#: voteit/core/plugins/like_button.py:117 voteit/core/models/proposal.py:27
+#: voteit/core/plugins/like_button.py:150 voteit/core/models/proposal.py:27
 msgid "Proposal"
 msgstr "Förslag"
 
@@ -768,7 +768,7 @@ msgid "Must select at least one"
 msgstr "Måste välja minst en"
 
 #: voteit/core/schemas/meeting.py:230 voteit/core/schemas/proposal.py:91
-#: voteit/core/templates/participants.pt:43
+#: voteit/core/templates/participants.pt:24
 msgid "UserID"
 msgstr "AnvändarID"
 
@@ -1047,12 +1047,12 @@ msgstr "Det är är VoteITs förstasida. Beskriv din instans här."
 msgid "Support request"
 msgstr "Supportförfrågan"
 
-#: voteit/core/schemas/contact.py:22 voteit/core/templates/participants.pt:44
+#: voteit/core/schemas/contact.py:22 voteit/core/templates/participants.pt:23
 msgid "Name"
 msgstr "Namn"
 
 #: voteit/core/schemas/contact.py:26 voteit/core/templates/manage_tickets.pt:48
-#: voteit/core/templates/participants.pt:45
+#: voteit/core/templates/participants.pt:25
 #: voteit/core/templates/snippets/user_basic_info.pt:9
 msgid "Email"
 msgstr "Epost"
@@ -1109,9 +1109,9 @@ msgstr "Inbjudningskoden som du fick i dett ebrev"
 
 #. Default: One user can have more than one role. Note that to be able to
 #. propose,
-#.                         discuss and vote you need respective role. This is
+#. discuss and vote you need respective role. This is
 #. selected by default. If you want
-#.                         to add a user that can only view, select View and
+#. to add a user that can only view, select View and
 #. uncheck everything else.
 #: voteit/core/schemas/invite_ticket.py:28
 msgid "add_tickets_roles_description"
@@ -1234,7 +1234,7 @@ msgstr ""
 "eller en hashtagg (ex: '#budget') för att referera eller skapa en tagg. Om "
 "du kommenterar ett förslag är det bra att inkludera dess tagg."
 
-#: voteit/core/templates/users_emails.pt:24 voteit/core/templates/minutes.pt:64
+#: voteit/core/templates/users_emails.pt:22 voteit/core/templates/minutes.pt:64
 #: voteit/core/templates/send_tickets.pt:14
 msgid "Back"
 msgstr "Tillbaka"
@@ -1544,51 +1544,25 @@ msgstr "Använd inbjudningskod"
 msgid "Logout"
 msgstr "Logga ut"
 
-#: voteit/core/templates/participants.pt:14
+#: voteit/core/templates/participants.pt:10
 msgid "${num} participants"
 msgstr "${num} deltagare"
 
 #. Default: Meeting is closed, so unused tickets won't grant access to the
 #. meeting. Access policies will still work though.
-#: voteit/core/templates/participants.pt:16
+#: voteit/core/templates/participants.pt:14
 msgid "meeting_closed"
 msgstr ""
 "Mötet är stängt, så oanvända biljetter kommer inte ge tillgång till mötet. "
 "Accesspolicies kommer fortfarande fungera."
 
-#: voteit/core/templates/participants.pt:24
-msgid ""
-"You are about to change a role for all users in this meeting. Are you sure "
-"this is what you want to do?"
-msgstr ""
-"Du håller på att ändra en roll för samtliga deltagare i det här mötet. Är du "
-"säker på att du vill göra detta?"
+#: voteit/core/templates/participants.pt:39
+msgid "Bulk change..."
+msgstr "Ändra många…"
 
-#: voteit/core/templates/participants.pt:31
-#: voteit/core/templates/overrides/master.pt:56
-msgid "Search"
-msgstr "Sök"
-
-#: voteit/core/templates/participants.pt:51
-msgid "Bulk change"
-msgstr "Ändra flera"
-
-#: voteit/core/templates/participants.pt:55
-msgid "Give role to all"
-msgstr "Ge till alla"
-
-#: voteit/core/templates/participants.pt:61
-msgid "Remove role from all"
-msgstr "Ta bort från alla"
-
-#: voteit/core/templates/participants.pt:75
-#: voteit/core/templates/snippets/cogwheel.pt:12
-msgid "Loading..."
-msgstr "Laddar…"
-
-#: voteit/core/templates/participants.pt:81
-msgid "No user matches your search."
-msgstr "Ingen användare matchar din sökning"
+#: voteit/core/templates/participants.pt:86
+msgid "Loading data..."
+msgstr "Laddar data…"
 
 #: voteit/core/templates/email/claimed_ticket_email.pt:7
 msgid "Hello ${fullname}"
@@ -1709,17 +1683,21 @@ msgstr "Länken nedan ger dig följande rättigheter i mötet:"
 msgid "To access this meeting use the link below:"
 msgstr "För att få tillgång till mötet använd länken nedan:"
 
-#: voteit/core/templates/snippets/participants_tabs.pt:11
+#: voteit/core/templates/snippets/participants_tabs.pt:14
 msgid "Invite"
 msgstr "Bjud in"
 
-#: voteit/core/templates/snippets/participants_tabs.pt:14
+#: voteit/core/templates/snippets/participants_tabs.pt:17
 msgid "Add existing"
 msgstr "Lägg till existerande"
 
-#: voteit/core/templates/snippets/participants_tabs.pt:20
+#: voteit/core/templates/snippets/participants_tabs.pt:23
 msgid "Emails"
 msgstr "Epost"
+
+#: voteit/core/templates/snippets/cogwheel.pt:12
+msgid "Loading..."
+msgstr "Laddar…"
 
 #: voteit/core/templates/snippets/user_latest_meeting_entries.pt:3
 msgid "Last added"
@@ -1749,21 +1727,25 @@ msgstr "Du har inte skrivit något än!"
 msgid "There was a problem with your submission"
 msgstr "Det uppstod ett problem med formuläret"
 
-#: voteit/core/templates/overrides/master.pt:25
+#: voteit/core/templates/overrides/master.pt:26
 msgid "Skip to main content"
 msgstr "Hoppa till huvudinnehåll"
 
-#: voteit/core/templates/overrides/master.pt:26
+#: voteit/core/templates/overrides/master.pt:27
 msgid "Skip to meetings"
 msgstr "Hoppa till möten"
 
-#: voteit/core/templates/overrides/master.pt:27
+#: voteit/core/templates/overrides/master.pt:28
 msgid "Skip to agenda"
 msgstr "Hoppa till agenda"
 
-#: voteit/core/templates/overrides/master.pt:28
+#: voteit/core/templates/overrides/master.pt:29
 msgid "Skip to navigation"
 msgstr "Hoppa till navigation"
+
+#: voteit/core/templates/overrides/master.pt:57
+msgid "Search"
+msgstr "Sök"
 
 #: voteit/core/templates/overrides/navigation.pt:39
 #: voteit/core/templates/menus/help.pt:10
@@ -1791,6 +1773,7 @@ msgid "Minutes"
 msgstr "Protokoll"
 
 #: voteit/core/templates/menus/control_panel_ap.pt:10
+#: voteit/core/plugins/like_button.py:32
 msgid "Active"
 msgstr "Aktiv"
 
@@ -1988,9 +1971,9 @@ msgid "meeting_access_invite_only_label"
 msgstr "Tillgång ges bara genom inbjudningar (Standard)"
 
 #. Default: This meeting is invite only.
-#.                     That means that a mail will be sent with an access
+#. That means that a mail will be sent with an access
 #. ticket.
-#.                     Contact meeting moderators for more information.
+#. Contact meeting moderators for more information.
 #: voteit/core/plugins/invite_only_ap.py:12
 msgid "invite_only_meeting_access_request_description"
 msgstr ""
@@ -2050,34 +2033,58 @@ msgstr ""
 "\">Gravatar</a>. Den är hämtad från din epostadress. Om du vill ändra bild, "
 "gå till Gravatar och ändra bild för den epostadress du använder i VoteIT."
 
-#: voteit/core/plugins/like_button.py:110
-#: voteit/core/plugins/like_button.py:168
+#: voteit/core/plugins/like_button.py:33
+msgid "Inactive"
+msgstr "Inaktiv"
+
+#: voteit/core/plugins/like_button.py:34
+msgid "Hidden"
+msgstr "Gömd"
+
+#: voteit/core/plugins/like_button.py:131
+#: voteit/core/plugins/like_button.py:191
 msgid "Like button"
 msgstr "Gillaknapp"
 
-#: voteit/core/plugins/like_button.py:118
+#: voteit/core/plugins/like_button.py:138
+msgid "Like button state"
+msgstr "Status för gillaknapp"
+
+#: voteit/core/plugins/like_button.py:143
+msgid "Success threshold"
+msgstr "Tröskelvärde för godkännande"
+
+#: voteit/core/plugins/like_button.py:144
+msgid ""
+"Show like button in success color from this amount of likes. Set to \"0\" to "
+"disable."
+msgstr ""
+"Knappen för att gilla blir grön från detta antal gilla. Sätt till \"0\" för "
+"att inaktivera."
+
+#: voteit/core/plugins/like_button.py:151
 msgid "DiscussionPost"
 msgstr "Diskussionsinlägg"
 
-#: voteit/core/plugins/like_button.py:120
+#: voteit/core/plugins/like_button.py:153
 msgid "Allow like on these types"
 msgstr "Tillåt gilla på typerna"
 
-#: voteit/core/plugins/like_button.py:124
+#: voteit/core/plugins/like_button.py:157
 msgid "Proposal workflow states"
 msgstr "Förslagens status"
 
-#: voteit/core/plugins/like_button.py:125
+#: voteit/core/plugins/like_button.py:158
 msgid "If selected, proposals in these workflow states can be liked."
 msgstr "Om någon är vald, kräv att förslag är i valda tillstånd för att gilla."
 
-#: voteit/core/plugins/like_button.py:131
+#: voteit/core/plugins/like_button.py:164
 msgid "User roles"
 msgstr "Användarroller"
 
 #. Default: If selected, users will need one of these within the meeting to be
 #. able to like something.
-#: voteit/core/plugins/like_button.py:132
+#: voteit/core/plugins/like_button.py:165
 msgid "like_user_roles_description"
 msgstr "Om vald så behöver användare ha en av rollerna i mötet för att gilla."
 
@@ -2169,6 +2176,10 @@ msgstr "Stöd"
 #: voteit/core/plugins/templates/support_users_popover.pt:6
 msgid "Users who supports this ${count}"
 msgstr "Användare som stödjer detta ${count}"
+
+#: voteit/core/plugins/templates/like_btn_readonly.pt:5
+msgid "Like is currently disabled"
+msgstr "Gilla är avstängt"
 
 #: voteit/core/plugins/templates/like_btn.pt:8
 msgid "Like"
@@ -2377,9 +2388,6 @@ msgstr ""
 #: voteit/core/models/user.py:33
 msgid "User"
 msgstr "Användare"
-
-#~ msgid "Loading data..."
-#~ msgstr "Laddar data…"
 
 #~ msgid "profile_image_plugin_description"
 #~ msgstr "Läs mer i hjälpen om olika metoder och dess för- och nackdelar."
