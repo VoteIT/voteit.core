@@ -230,12 +230,11 @@ class TicketView(BaseView):
 
 @view_config(name = "add_tickets",
              context = IMeeting,
-             renderer = "arche:templates/form.pt",
+             renderer = "voteit.core:templates/participants_form.pt",
              permission = security.ADD_INVITE_TICKET)
 class AddTicketsForm(BaseForm):
     schema_name = 'add_tickets'
     type_name = 'Meeting'
-
     title = _("Invite participants")
 
     @property

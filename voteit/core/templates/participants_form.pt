@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:metal="http://xml.zope.org/namespaces/metal"
+  xmlns:tal="http://xml.zope.org/namespaces/tal"
+  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+  metal:use-macro="view.macro('arche:templates/master.pt', 'arche:templates/inline.pt')"
+  i18n:domain="voteit.core">
+<tal:form metal:fill-slot="content">
+    ${structure: view.render_template('voteit.core:templates/snippets/participants_tabs.pt')}
+    <form tal:replace="structure form" />
+</tal:form>
+</html>

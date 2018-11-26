@@ -7,7 +7,6 @@ from pyramid.view import view_config
 from pyramid.view import view_defaults
 
 from voteit.core import security
-from voteit.core.fanstaticlib import participants_js
 from voteit.core.fanstaticlib import voteit_vue_components_js
 from voteit.core.helpers import get_meeting_participants
 from voteit.core.models.interfaces import IMeeting

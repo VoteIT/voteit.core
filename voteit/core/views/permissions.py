@@ -4,6 +4,7 @@ from arche.security import PERM_MANAGE_USERS
 from arche.views.actions import actionbar_main_generic
 from arche.views.base import BaseForm
 from betahaus.viewcomponent.decorators import view_action
+from deform import Button
 from pyramid.httpexceptions import HTTPFound
 from pyramid.view import view_config
 
@@ -30,13 +31,17 @@ def permissions_action(context, request, va, **kw):
 @view_config(context = IMeeting,
              permission = security.MODERATE_MEETING,
              name = "add_userid",
-             renderer = "arche:templates/form.pt")
+             renderer = "voteit.core:templates/participants_form.pt")
 class AddExistingUserForm(BaseForm):
     title = _("Add existing user to meeting")
     schema_name = 'add_existing_user'
     type_name = 'Meeting'
 
-    def save_success(self, appstruct):
+    @property
+    def buttons(self):
+        return (self.button_add, self.button_cancel)
+
+    def add_success(self, appstruct):
         userid = appstruct['userid']
         roles = appstruct['roles']
         if roles and security.ROLE_VIEWER not in roles:
@@ -61,4 +66,4 @@ class AddExistingUserForm(BaseForm):
             #Userid wasn't registered in this meeting
             self.flash_messages.add(self.default_success, type = "success")
         self.context.local_roles.add(appstruct['userid'], roles)
-        return HTTPFound(location = self.request.resource_url(self.context, 'participants'))
+        return HTTPFound(location = self.request.resource_url(self.context, 'add_userid'))
