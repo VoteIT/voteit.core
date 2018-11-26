@@ -136,37 +136,3 @@ class ParticipantsView(BaseView):
         return {'role': view_name_role,
                 'userid': userid or '__all__',
                 'state': state}
-
-
-@view_config(context = IMeeting,
-               name='bulk_change_roles',
-               permission = security.MODERATE_MEETING,
-               renderer='arche:templates/form.pt')
-class BulkChangeRolesForm(DefaultEditForm):
-    schema_name = 'bulk_change_roles'
-    title = _("Bulk change roles")
-    ROLE_MAP = {
-        'viewer': security.ROLE_VIEWER,
-        'discuss': security.ROLE_DISCUSS,
-        'propose': security.ROLE_PROPOSE,
-        'voter': security.ROLE_VOTER,
-    }
-
-    def save_success(self, appstruct):
-        add_roles = set()
-        remove_roles = set()
-        for (k, v) in appstruct.items():
-            if v == 'add':
-                add_roles.add(self.ROLE_MAP[k])
-            if v == 'remove':
-                remove_roles.add(self.ROLE_MAP[k])
-        lr = self.context.local_roles
-        for userid in security.find_authorized_userids(self.context, [security.VIEW]):
-            lr.add(userid, add_roles, event=False)
-            lr.remove(userid, remove_roles, event=False)
-        lr.send_event()
-        self.flash_messages.add(_("Bulk changes applied"))
-        return HTTPFound(location=self.request.resource_url(self.context, 'participants'))
-
-    def cancel_success(self, *args, **kw):
-        return HTTPFound(location=self.request.resource_url(self.context, 'participants'))

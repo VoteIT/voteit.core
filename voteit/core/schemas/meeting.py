@@ -240,51 +240,6 @@ class AddExistingUserSchema(colander.Schema):
     )
 
 
-_BULK_CHOICES = (
-    ('', _("Don't change")),
-    ('add', _("Give to all")),
-    ('remove', _("Remove from all")),
-)
-
-
-def bulk_change_roles_widget():
-    return deform.widget.SelectWidget(values=_BULK_CHOICES)
-
-
-_BULK_VALIDATOR = colander.OneOf(('', 'add', 'remove'))
-
-
-class BulkChangeRolesSchema(colander.Schema):
-    viewer = colander.SchemaNode(
-        colander.String(),
-        title = security.ROLE_VIEWER.title,
-        widget = bulk_change_roles_widget(),
-        validator=_BULK_VALIDATOR,
-        missing="",
-    )
-    discuss = colander.SchemaNode(
-        colander.String(),
-        title = security.ROLE_DISCUSS.title,
-        widget = bulk_change_roles_widget(),
-        validator=_BULK_VALIDATOR,
-        missing="",
-    )
-    propose = colander.SchemaNode(
-        colander.String(),
-        title = security.ROLE_PROPOSE.title,
-        widget = bulk_change_roles_widget(),
-        validator=_BULK_VALIDATOR,
-        missing="",
-    )
-    voter = colander.SchemaNode(
-        colander.String(),
-        title = security.ROLE_VOTER.title,
-        widget = bulk_change_roles_widget(),
-        validator=_BULK_VALIDATOR,
-        missing="",
-    )
-
-
 class AgendaLabelsSchema(colander.Schema):
     #Note on name: tags is an existing property in the catalog.
     #It does however only index lowercase version of things
@@ -326,6 +281,5 @@ def includeme(config):
     config.add_schema('Meeting', CopyAgendaSchema, 'copy_agenda')
     config.add_schema('Meeting', AccessPolicyMeetingSchema, 'access_policy')
     config.add_schema('Meeting', AddExistingUserSchema, 'add_existing_user')
-    config.add_schema('Meeting', BulkChangeRolesSchema, 'bulk_change_roles')
     config.add_schema('Meeting', AgendaLabelsSchema, 'agenda_labels')
     config.add_schema('Meeting', NotificationSettingsSchema, 'notification_settings')
