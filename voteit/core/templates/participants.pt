@@ -68,7 +68,7 @@
             <th tal:repeat="(name, role) view_roles" class="text-center"><span class="badge">{{ roleCount('${name}') }}</span></th>
           </tr>
         </thead>
-        <tbody class="text-small">
+        <tbody class="text-small" tal:define="infourl request.resource_path(request.meeting, '__userinfo__')">
           <tr v-if="loading">
             <td v-bind:colspan="isModerator ? 9 : 8">
             <span class="rotate-me glyphicon glyphicon-refresh"></span>
@@ -82,7 +82,17 @@
             </td>
           </tr>
           <tr v-for="user in displayUsers" v-bind:key="user.userid" v-bind:class="{success: user.userid === currentUser}">
-            <td><a href="#">{{ user.userid }}</a></td>
+            <td>
+              <a v-bind:href="'${infourl}/'+ user.userid"
+                    class="inlineinfo"
+                    role="button"
+                    data-toggle="popover"
+                    data-trigger="click focus"
+                    data-external-popover-loaded="false"
+                    data-placement="bottom">
+                {{ user.userid }}
+              </a>
+            </td>
             <td>{{ user.first_name }} {{ user.last_name }}</td>
             <td v-if="isModerator"><a v-if="user.email" v-bind:href="'mailto:' + user.email">{{ user.email }}</a></td>
             <td tal:repeat="(name, role) view_roles" class="text-center">
