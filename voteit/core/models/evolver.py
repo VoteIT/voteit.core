@@ -6,7 +6,7 @@ from voteit.core.evolve import VERSION
 class VoteITCoreEvolver(BaseEvolver):
     name = 'voteit.core'
     sw_version = VERSION
-    initial_db_version = 8
+    initial_db_version = VERSION
 
 
 def includeme(config):
