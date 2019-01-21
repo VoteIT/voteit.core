@@ -1,8 +1,8 @@
 from arche.api import Root
 from arche.security import get_acl_registry
+from arche.interfaces import IObjectAddedEvent
 from zope.interface.declarations import implementer
 
-from voteit.core import VoteITMF as _
 from voteit.core import security
 from voteit.core.models.interfaces import ISiteRoot
 from voteit.core.models.base_content import BaseContent
@@ -70,8 +70,15 @@ class SiteRoot(BaseContent, SecurityAware, Root):
         return self.set_field_value('site_title', value)
 
 
+def _add_meeting_list_portlet(root, event):
+    from arche.portlets import get_portlet_manager
+    manager = get_portlet_manager(root)
+    if not manager.get_portlets('right', 'meeting_list'):
+        manager.add('right', 'meeting_list')
+
 def includeme(config):
     config.add_content_factory(SiteRoot, addable_in = ('Meeting',))
+    config.add_subscriber(_add_meeting_list_portlet, [ISiteRoot, IObjectAddedEvent])
     #Setup root acl
     aclreg = config.registry.acl
     root_acl = aclreg.new_acl('Root:default')
