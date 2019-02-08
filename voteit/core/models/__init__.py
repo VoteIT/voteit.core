@@ -13,7 +13,6 @@ def includeme(config):
     config.include('.meeting')
     config.include('.mention')
     config.include('.poll')
-    config.include('.populator')
     config.include('.proposal')
     config.include('.proposal_ids')
     config.include('.read_names')
