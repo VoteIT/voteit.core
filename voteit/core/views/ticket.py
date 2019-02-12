@@ -87,18 +87,17 @@ class TicketView(BaseView):
         email = self.request.GET.get('email', '')
         token = self.request.GET.get('token', '')
         translate = self.request.localizer.translate
-        claim_url = self.request.resource_url(self.context, 'ticket_claim',
-                                              query = {'email': email, 'token': token})
-        #Authenticated users
+        if not (email and token):
+            url = self.request.resource_url(self.root)
+            bad_params_msg = _(u"ticket_link_wrong_parameters_error",
+                            default = "The ticket link did not contain a token and an email address. "
+                            "Perhaps you came to this page by mistake?")
+            self.flash_messages.add(bad_params_msg, type='danger')
+            raise HTTPFound(location=url)
+        #Authenticated users - with email and token set
         if self.request.authenticated_userid:
-            if email and token:
-                url = claim_url
-            else:
-                url = self.request.resource_url(self.context)
-                msg = _(u"ticket_link_wrong_parameters_error",
-                        default = "The ticket link did not contain a token and an email address. "
-                        "Perhaps you came to this page by mistake?")
-                self.flash_messages.add(msg, type = 'danger')
+            url = self.request.resource_url(self.context, 'ticket_claim',
+                                            query = {'email': email, 'token': token})
             return HTTPFound(location = url)
         #Unauthenticated users
         else:
