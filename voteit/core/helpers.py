@@ -80,10 +80,9 @@ def tags2links(text):
 def strip_and_truncate(text, limit=200, symbol='<span class="trunc">&hellip;</span>'):
     try:
         text = strip_tags(text)
-    except Exception, e:
-        # FIXME: Logg unrecoverable error
-        # This is a bad exception that should never happen
-        return u"Unrecoverable error: could not truncate text"
+    except Exception:
+        logger.exception('strip_tags caused exception:')
+        return u"Error: could not truncate text"
     out = ""
     pool = text
     while pool and len(out) < limit:
