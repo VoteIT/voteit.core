@@ -70,10 +70,9 @@ class ReadNames(object):
         key = self.get_key(userid)
         new_names = set()
         with self.request.redis_conn.pipeline() as pipe:
-            if pipe.exists(names) != len(names):
-                for name in names:
-                    if pipe.sadd(key, name):
-                        new_names.add(name)
+            for name in names:
+                if pipe.sadd(key, name):
+                    new_names.add(name)
             if new_names:
                 pipe.sadd(self.get_users_index_key(), userid)
             pipe.execute()
