@@ -4,8 +4,9 @@ from repoze.folder.interfaces import IObjectWillBeRemovedEvent
 from repoze.workflow.workflow import WorkflowError
 
 from voteit.core import _
-from voteit.core.security import ROLE_VOTER
 from voteit.core.security import find_role_userids
+from voteit.core.security import ROLE_VOTER
+from voteit.core.security import unrestricted_wf_transition_to
 from voteit.core.interfaces import IWorkflowStateChange
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.poll import email_voters_about_ongoing_poll
@@ -46,7 +47,7 @@ def poll_is_deleted(obj, event):
     request = get_current_request()
     for proposal in obj.get_proposal_objects():
         if proposal.get_workflow_state() == 'voting':
-            proposal.set_workflow_state(request, 'published')
+            unrestricted_wf_transition_to(proposal, 'published')
 
 
 def includeme(config):
