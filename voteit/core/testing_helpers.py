@@ -27,6 +27,7 @@ def dummy_zodb_root(config):
 def bootstrap_and_fixture(config):
     config.include('pyramid_zcml')
     config.include('arche.testing')
+    config.include('voteit.core.security')
     config.load_zcml('voteit.core:configure.zcml')
     config.include('voteit.core.models.site')
     config.include('voteit.core.models.agenda_templates')
