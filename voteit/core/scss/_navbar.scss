@@ -74,7 +74,11 @@
     bottom: 0;
     padding: floor($grid-gutter-width/2);
     position: fixed;
-    overflow: auto;
+    overflow-y: auto;
+    &.slide-in-nav {
+        overflow-y: scroll;
+        -webkit-overflow-scrolling: touch;
+    }
 }
 .in_meeting  #fixed-nav {
     top: $voteit-fixed-top-nav * 2;

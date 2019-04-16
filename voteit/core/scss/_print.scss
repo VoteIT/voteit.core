@@ -7,14 +7,14 @@
     a.tag,
     a.primary-tag,
     a[href^="mailto:"],
-    a[href^="tel:"] {
+    a[href^="tel:"],
+    .btn[data-permission-toggle] {
         &::after {
             content: '';
         }
     }
 
     .btn[data-permission-toggle] {
-        @extend a[data-toggle];
         display: inline;
     }
 
