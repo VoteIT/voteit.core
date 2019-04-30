@@ -18,7 +18,9 @@ class MajorityPollPlugin(PollPlugin):
     title = _('Majority Poll')
     #FIXME: Description of majority poll
     description = _("Majority poll - don't use this for more than 2 choices!")
-    
+    proposals_min = 2
+    proposals_max = 2
+
     def get_settings_schema(self):
         """ Get an instance of the schema used to render a form for editing settings.
             This form doesn't have any settings, so the schema is empty.

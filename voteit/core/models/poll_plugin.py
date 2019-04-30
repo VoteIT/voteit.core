@@ -22,12 +22,21 @@ class PollPlugin(object):
     multiple_winners = False
     # Position in listing, lower number is better
     priority = 3
+    proposals_min = 1
+    proposals_max = None
 
-    # Default: Check if multiple winners are needed.
+    # Default: Check min/max proposals and if multiple winners is needed.
     @classmethod
-    def check_applicable(cls, proposals, winners=1, random_timebreaks=True):
+    def check_applicable(cls, proposals=None, winners=1, random_timebreaks=True):
         # type: (int, int, bool) -> bool
-        return (winners > 1) == cls.multiple_winners
+        if proposals is not None:
+            if cls.proposals_min and cls.proposals_min > proposals:
+                return False
+            if cls.proposals_max and proposals > cls.proposals_max:
+                return False
+        if winners > 1 and not cls.multiple_winners:
+            return False
+        return True
 
     def __init__(self, context):
         self.context = context
