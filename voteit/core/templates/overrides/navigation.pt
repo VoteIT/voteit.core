@@ -14,7 +14,7 @@
       </a>
 
       <tal:def define="navobjs request.meeting is None and tuple(view.get_local_nav_objects(view.root)) or ()">
-        <ul tal:condition="navobjs" class="nav voteit-nav pull-left">
+        <ul class="nav voteit-nav pull-left">
           <li tal:repeat="obj navobjs">
             <a href="${request.resource_url(obj)}">${obj.get_nav_title()|obj.title}</a>
           </li>
