@@ -617,20 +617,21 @@ body.left-fixed-active > .navbar-fixed-top > .container {
 #fixed-top-nav .container-fluid {
   display: flex;
 }
-#fixed-top-nav .container-fluid a, #fixed-top-nav .container-fluid ul {
+#fixed-top-nav .container-fluid > a, #fixed-top-nav .container-fluid > ul {
   flex: 0 0 auto;
 }
-#fixed-top-nav .container-fluid .voteit-nav-header {
+#fixed-top-nav .container-fluid > .voteit-nav-header,
+#fixed-top-nav .container-fluid > ul.voteit-nav.pull-left:first-of-type {
   flex: 1 1 auto;
 }
 
 #ai-nav-header {
   display: flex;
 }
-#ai-nav-header a {
+#ai-nav-header > a {
   flex: 0 0 auto;
 }
-#ai-nav-header .voteit-nav-header {
+#ai-nav-header > .voteit-nav-header {
   flex: 1 1 auto;
   white-space: nowrap;
   overflow: hidden;

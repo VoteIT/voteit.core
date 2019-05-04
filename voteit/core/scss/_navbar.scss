@@ -243,10 +243,11 @@
     }
     .container-fluid {
         display: flex;
-        a, ul {
+        > a, > ul {
             flex: 0 0 auto;
         }
-        .voteit-nav-header {
+        > .voteit-nav-header,
+        > ul.voteit-nav.pull-left:first-of-type {
             flex: 1 1 auto;
         }
     }
@@ -254,10 +255,10 @@
 
 #ai-nav-header {
     display: flex;
-    a {
+    > a {
         flex: 0 0 auto;
     }
-    .voteit-nav-header {
+    > .voteit-nav-header {
         flex: 1 1 auto;
         white-space: nowrap;
         overflow: hidden;
