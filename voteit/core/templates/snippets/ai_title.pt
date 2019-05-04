@@ -6,7 +6,7 @@
                   next_ai view.next_ai()|None;
                   view_name view_name|request.view_name|'';"
       i18n:domain="voteit.core">
-<div class="text-nowrap">
+<div id="ai-nav-header">
     <a tal:condition="previous_ai"
       class="voteit-nav-text pull-left"
       href="${request.resource_url(previous_ai, view_name)}"
@@ -15,6 +15,9 @@
       title="${previous_ai.title}">
       <span class="glyphicon glyphicon-chevron-left"></span>
     </a>
+    <div class="text-center voteit-nav-header">
+        <h1 class="text-overflow">${context.title}</h1>
+    </div>
     <a tal:condition="next_ai"
       class="voteit-nav-text pull-right"
       href="${request.resource_url(next_ai, view_name)}"
@@ -23,8 +26,5 @@
       title="${next_ai.title}">
       <span class="glyphicon glyphicon-chevron-right"></span>
     </a>
-    <div class="text-center voteit-nav-header" data-check-greedy="">
-        <h1 class="greedy text-overflow">${context.title}</h1>
-    </div>
 </div>
 </tal:main>

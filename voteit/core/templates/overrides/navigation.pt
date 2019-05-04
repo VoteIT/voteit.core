@@ -4,11 +4,11 @@
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
       i18n:domain="voteit.core">
 <nav id="fixed-top-nav" class="navbar-fixed-top">
-    <div class="container-fluid" data-check-greedy>
+    <div class="container-fluid">
 
       <a class="voteit-logo-nav pull-left" href="${request.application_url}"></a>
 
-      <a class="text-overflow voteit-nav-header pull-left greedy" tal:condition="request.meeting"
+      <a class="text-overflow voteit-nav-header pull-left" tal:condition="request.meeting"
          href="${request.resource_url(request.meeting)}">
           ${request.meeting.nav_title and request.meeting.nav_title or request.meeting.title}
       </a>

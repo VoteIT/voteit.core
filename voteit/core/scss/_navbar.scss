@@ -241,7 +241,30 @@
             background-color: $dropdown-link-hover-bg;
         }
     }
+    .container-fluid {
+        display: flex;
+        a, ul {
+            flex: 0 0 auto;
+        }
+        .voteit-nav-header {
+            flex: 1 1 auto;
+        }
+    }
 }
+
+#ai-nav-header {
+    display: flex;
+    a {
+        flex: 0 0 auto;
+    }
+    .voteit-nav-header {
+        flex: 1 1 auto;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}
+
 .in_meeting #fixed-top-nav {
     height: $voteit-fixed-top-nav * 2;
 
