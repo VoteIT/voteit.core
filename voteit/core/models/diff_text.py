@@ -53,6 +53,23 @@ class DiffText(object):
     def hashtag(self, value):
         self.data['hashtag'] = value
 
+    @property
+    def collapsible_limit(self):
+        return self.data.get('collapsible_limit', None)
+
+    @collapsible_limit.setter
+    def collapsible_limit(self, value):
+        self.data['collapsible_limit'] = value
+
+    def get_collapsible_limit(self):
+        # 200 is a default, but None removes the setting, hence this
+        climit = self.collapsible_limit
+        if climit is None:
+            climit = 200
+        if climit == 0:
+            climit = None
+        return climit
+
     def __call__(self, base_text, new_text, brief=False, no_deleted=False):
         ch = Changes(base_text, new_text)
         return ch.get_html(brief, no_deleted)

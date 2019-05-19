@@ -3,10 +3,13 @@ from datetime import timedelta
 from uuid import uuid4
 import re
 
+import deform
 from arche.widgets import deferred_autocompleting_userid_widget #b/c
 from pyramid.traversal import find_resource
 from six import string_types
 import colander
+
+from voteit.core import _
 
 
 NAME_PATTERN = re.compile(r'^[\w\s]{3,100}$', flags=re.UNICODE)
@@ -90,6 +93,22 @@ def prepare_emails_from_text(value):
         if x:
             res.append(x)
     return "\n".join(res)
+
+
+def collapsible_limit_node():
+    return colander.SchemaNode(
+        colander.Int(),
+        title=_("Collapse body texts that are higher than..."),
+        widget=deform.widget.SelectWidget(values=(
+            # The odd values here are so we can have a sane default
+            ('0', _("Off")),
+            ('', _("Default (200px)")),
+            ('400', "400px"),
+            ('600', "600px"),
+            ('800', "800px"),
+        )),
+        missing=None,
+    )
 
 
 def strip_and_lowercase(value):

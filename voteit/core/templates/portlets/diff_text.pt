@@ -18,45 +18,48 @@
         </a>
       </h2>
     </div>
+    <div data-collapsible="textdiff">
+      <div tal:attributes="data-collapsible-text collapsible_limit">
+      <tal:iter repeat="row paragraphs">
+        <div class="list-group-item"
+             tal:define="hashtag '%s-%s' % (diff_text.hashtag, repeat['row'].number)">
+          <a class="primary-tag" data-load-agenda-item="#content"
+             data-ai-name="${context.__name__}"
+             href="${request.resource_url(context, query={'tag': hashtag})}">
+            #${hashtag}
+            <span tal:condition="tags_count.get(hashtag, 0)">(${tags_count.get(hashtag, 0)})</span>
 
-    <tal:iter repeat="row paragraphs">
-      <div class="list-group-item"
-           tal:define="hashtag '%s-%s' % (diff_text.hashtag, repeat['row'].number)">
-        <a class="primary-tag" data-load-agenda-item="#content"
-           data-ai-name="${context.__name__}"
-           href="${request.resource_url(context, query={'tag': hashtag})}">
-          #${hashtag}
-          <span tal:condition="tags_count.get(hashtag, 0)">(${tags_count.get(hashtag, 0)})</span>
+            <a tal:condition="can_add"
+               class="btn btn-default btn-xs"
+               data-open-modal
+               data-modal-dialog-class="modal-lg"
+               href="${request.resource_url(context, 'add_diff_proposal', query={'para': repeat['row'].number})}">
+              <span tal:condition="context.proposal_block" class="glyphicon glyphicon-lock"></span>
 
-          <a tal:condition="can_add"
-             class="btn btn-default btn-xs"
-             data-open-modal
-             data-modal-dialog-class="modal-lg"
-             href="${request.resource_url(context, 'add_diff_proposal', query={'para': repeat['row'].number})}">
-            <span tal:condition="context.proposal_block" class="glyphicon glyphicon-lock"></span>
+              <tal:ts i18n:translate="">Add proposal</tal:ts>
+            </a>
+          </a><br/>
+          <tal:newlines repeat="line row.splitlines()">${structure: line}<br/></tal:newlines>
+        </div>
 
-            <tal:ts i18n:translate="">Add proposal</tal:ts>
-          </a>
-        </a><br/>
-        <tal:newlines repeat="line row.splitlines()">${structure: line}<br/></tal:newlines>
+      </tal:iter>
+      <div tal:condition="paragraphs"
+           class="well">
+        <tal:can_add tal:condition="can_add" i18n:translate="diff_text_portlet_footer_help">
+          Propose changes to paragraphs by clicking 'Add proposal' above.
+          If your proposal doesn't have to do with the text above, add it in the regular proposal part below.
+        </tal:can_add>
+
+        <tal:cant_add condition="not can_add">
+          <span tal:condition="not context.proposal_block"
+            i18n:translate="lack_add_perm">You lack the required permission to add.</span>
+          <span tal:condition="context.proposal_block"
+            i18n:translate="">The moderator has locked the ability to add more proposals.</span>
+        </tal:cant_add>
       </div>
-
-    </tal:iter>
-
-    <div tal:condition="paragraphs"
-         class="well">
-      <tal:can_add tal:condition="can_add" i18n:translate="diff_text_portlet_footer_help">
-        Propose changes to paragraphs by clicking 'Add proposal' above.
-        If your proposal doesn't have to do with the text above, add it in the regular proposal part below.
-      </tal:can_add>
-
-      <tal:cant_add condition="not can_add">
-        <span tal:condition="not context.proposal_block"
-          i18n:translate="lack_add_perm">You lack the required permission to add.</span>
-        <span tal:condition="context.proposal_block"
-          i18n:translate="">The moderator has locked the ability to add more proposals.</span>
-      </tal:cant_add>
+      </div>
     </div>
+
 
   </div>
 </div>

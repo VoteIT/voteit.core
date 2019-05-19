@@ -1023,7 +1023,7 @@ footer {
   position: relative;
 }
 .collapsible .collapsible-text {
-  padding-bottom: 45px;
+  padding-bottom: 31px;
 }
 .collapsible.active .collapsible-text {
   overflow: hidden;

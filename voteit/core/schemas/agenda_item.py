@@ -2,6 +2,7 @@ import colander
 import deform
 
 from voteit.core import VoteITMF as _
+from voteit.core.schemas.common import collapsible_limit_node
 from voteit.core.validators import no_html_validator
 from voteit.core.validators import TagValidator
 from voteit.core.validators import richtext_validator
@@ -41,19 +42,7 @@ class AgendaItemSchema(colander.MappingSchema):
         missing="",
         widget=deform.widget.RichTextWidget(options=(('theme', 'advanced'),)),
         validator=richtext_validator, )
-    collapsible_limit = colander.SchemaNode(
-        colander.Int(),
-        title=_("Collapse body texts that are higher than..."),
-        widget=deform.widget.SelectWidget(values=(
-            # The odd values here are so we can have a sane default
-            ('0', _("Off")),
-            ('', _("Default (200px)")),
-            ('400', "400px"),
-            ('600', "600px"),
-            ('800', "800px"),
-        )),
-        missing=None,
-    )
+    collapsible_limit = collapsible_limit_node()
     hashtag = colander.SchemaNode(
         colander.String(),
         title=_("Base hashtag for Agenda Item"),

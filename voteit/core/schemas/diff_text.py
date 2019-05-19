@@ -7,6 +7,7 @@ from pyramid.httpexceptions import HTTPBadRequest
 
 from voteit.core import _
 from voteit.core.models.interfaces import IDiffText
+from voteit.core.schemas.common import collapsible_limit_node
 from voteit.core.schemas.proposal import ProposalSchema
 from voteit.core.validators import no_html_validator
 
@@ -53,6 +54,7 @@ class DiffTextContentSchema(colander.Schema):
         default=default_hashtag_name,
         valdator=colander.Regex("^[a-z]{2,15}$", msg=_("Only lowercase a-z please")),
     )
+    collapsible_limit = collapsible_limit_node()
 
 
 def _get_request_para(request):

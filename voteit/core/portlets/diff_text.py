@@ -29,6 +29,7 @@ class DiffTextPortlet(PortletType):
                             'diff_text': diff_text,
                             'paragraphs': paragraphs,
                             'tags_count': tags_count,
+                            'collapsible_limit': diff_text.get_collapsible_limit(),
                             'can_add': request.has_permission(ADD_PROPOSAL, context),
                             'can_edit': request.has_permission(EDIT, context),
                             'view': view}
