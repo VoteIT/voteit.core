@@ -21,9 +21,13 @@ def change_states_proposals(obj, event):
                 try:
                     proposal.set_workflow_state(request, 'voting')
                 except WorkflowError:
-                    raise HTTPForbidden(_(u"workflow_error_when_setting_proposal_as_voting",
-                                          default = u"Can't set Proposal '${title}' as 'Locked for voting'. It's probably not in the state published, or has already been handled in another way. All changes aborted, please check the proposals and try again.",
-                                          mapping = {'title': obj.title}))
+                    raise HTTPForbidden(
+                        _("workflow_error_when_setting_proposal_as_voting",
+                          default = "Can't set Proposal '${title}' as 'Locked for voting'. "
+                                    "It's probably not in the state published, or has already been "
+                                    "handled in another way. All changes aborted, please check the "
+                                    "proposals and try again.",
+                                    mapping = {'title': proposal.title}))
 
 
 def email_voters_about_ongoing_poll_subscriber(obj, event):
