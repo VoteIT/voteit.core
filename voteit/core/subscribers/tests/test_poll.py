@@ -48,7 +48,7 @@ class PollTests(unittest.TestCase):
         ai['poll'].proposal_uids = (ai['prop'].uid, )
         self.config.include('voteit.core.subscribers.poll')
         #Set state to something that doesn't have a transition to 'voting'
-        ai['prop'].set_workflow_state(request, 'approved')
+        ai['prop'].set_workflow_state(request, 'denied')
         self.assertRaises(HTTPForbidden, ai['poll'].set_workflow_state, request, 'upcoming')
 
 

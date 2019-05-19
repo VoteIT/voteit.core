@@ -115,6 +115,13 @@
     />
 
     <transition
+        name="approved_to_voting"
+        from_state="approved"
+        to_state="voting"
+        permission="Moderate Meeting"
+    />
+
+    <transition
         name="denied_to_approved"
         from_state="denied"
         to_state="approved"
