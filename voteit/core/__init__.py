@@ -76,7 +76,9 @@ def register_plugins(config):
     """
     plugins = config.registry.settings.get('plugins')
     if plugins is not None:
-        for plugin in plugins.strip().splitlines():
+        if not isinstance(plugins, list):
+            plugins = plugins.strip().splitlines()
+        for plugin in plugins:
             config.include(plugin)
 
 def check_required_settings(settings):
