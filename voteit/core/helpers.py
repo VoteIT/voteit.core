@@ -288,12 +288,12 @@ def clear_tags_url(request, context, *args, **kw):
     return request.resource_url(context, *args, query=clear_tag_query)
 
 
-def render_proposal_text(request, proposal, tag_func=tags2links):
+def render_proposal_text(request, proposal, tag_func=tags2links, diff_brief=True):
     """ Render a proposal as a diff or as the original text. """
     if not IProposal.providedBy(proposal):
         raise TypeError("%s is not a proposal" % proposal)
     if proposal.diff_text_para is None:
-        #This is a regular proposal without the diff functions active
+        # This is a regular proposal without the diff functions active
         return request.transform_text(proposal.text, tag_func=tag_func)
     else:
         ai = request.agenda_item
@@ -304,12 +304,12 @@ def render_proposal_text(request, proposal, tag_func=tags2links):
         try:
             original = paragraphs[proposal.diff_text_para]
         except (TypeError, IndexError):
-            #Simply abort
+            # Simply abort
             return request.transform_text(proposal.text, tag_func=tag_func)
         text = ""
         if proposal.diff_text_leadin:
             text += tag_func(proposal.diff_text_leadin) + "\n\n"
-        text += diff_text(original, proposal.text, brief=True)
+        text += diff_text(original, proposal.text, brief=diff_brief)
         return nl2br(text).unescape()
 
 
