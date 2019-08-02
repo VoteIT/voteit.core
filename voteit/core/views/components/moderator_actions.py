@@ -7,6 +7,7 @@ from voteit.core import _
 from voteit.core.security import DELETE
 from voteit.core.security import EDIT
 from voteit.core.models.interfaces import IAgendaItem
+from voteit.core.models.interfaces import IMeeting
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IWorkflowAware
 from voteit.core.views.components.metadata_listing import meta_state
@@ -29,14 +30,22 @@ def wf_menu(context, request, va, **kw):
              context_perm = EDIT,
              viewname = 'edit_proposals',
              priority=20)
-@view_action('context_actions', 'delete', title = _(u"Delete"),
-             context_perm = DELETE, viewname = 'delete',  priority=100)
 def moderator_context_action(context, request, va, **kw):
     context_perm = va.kwargs.get('context_perm', None)
     if context_perm and not request.has_permission(context_perm, context):
         return
     url = request.resource_url(context, va.kwargs['viewname'])
     return """<li><a href="%s" class="%s">%s</a></li>""" % (url, va.kwargs['viewname'], request.localizer.translate(va.title))
+
+
+@view_action('context_actions', 'delete', title = _(u"Delete"),
+             context_perm = DELETE, viewname = 'delete',  priority=100)
+def moderator_context_delete(context, request, va, **kw):
+    """ This is already a part of the Arches context menu, so it shouldn't be shown in meetings or agenda items.
+    """
+    if IAgendaItem.providedBy(context) or IMeeting.providedBy(context):
+        return
+    return moderator_context_action(context, request, va, **kw)
 
 
 @view_action('context_actions', 'poll_config', title = _(u"Poll settings"),
