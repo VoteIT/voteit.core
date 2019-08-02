@@ -4,12 +4,10 @@ from pyramid.traversal import resource_path
 from webhelpers.html.converters import nl2br
 from pyramid.security import effective_principals
 
-from voteit.core import VoteITMF as _
 from voteit.core.models.interfaces import IUser
-from voteit.core.helpers import strip_and_truncate
 
 
-@view_action('user_info', 'basic_profile', interface = IUser)
+@view_action('user_info', 'basic_profile', interface = IUser, priority = 10)
 def user_basic_profile(context, request, va, **kw):
     response = dict(
         about_me = nl2br(context.about_me),
@@ -17,14 +15,15 @@ def user_basic_profile(context, request, va, **kw):
     )
     return render('voteit.core:templates/snippets/user_basic_info.pt', response, request = request)
 
-@view_action('user_info', 'latest_meeting_entries', interface = IUser)
+
+@view_action('user_info', 'latest_meeting_entries', interface = IUser, priority = 50)
 def user_latest_meeting_entries(context, request, va, **kw):
     view = kw['view']
     query = {}
-    #context is the user profile, but if within a meeting it's importat to preform a check
-    #wether you're allowed to view entries
-    #If the view that calls this is invoked outside a meeting, only admins and owners
-    #will be able to view it.
+    # context is the user profile, but if within a meeting it's importat to preform a check
+    # wether you're allowed to view entries
+    # If the view that calls this is invoked outside a meeting, only admins and owners
+    # will be able to view it.
     if request.meeting:
         query['path'] = resource_path(request.meeting)
         query['allowed_to_view'] = {'operator':'or', 'query': effective_principals(request)}
