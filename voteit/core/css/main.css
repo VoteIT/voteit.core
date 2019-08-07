@@ -739,8 +739,10 @@ body.left-fixed-active > .navbar-fixed-top > .container {
 }
 .navbar-voteit .navbar-nav > li > a {
   color: #fff;
-  padding-top: 15px;
+  /*
+  padding-top:    15px;
   padding-bottom: 15px;
+  */
 }
 .navbar-voteit .navbar-nav > li > a:hover, .navbar-voteit .navbar-nav > li > a:focus {
   color: #fff;

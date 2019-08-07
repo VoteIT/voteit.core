@@ -380,8 +380,10 @@ body.left-fixed-active #agenda-toggler {
 
     > li > a {
       color: $navbar-voteit-link-color;
+      /*
       padding-top:    15px;
       padding-bottom: 15px;
+      */
 
       &:hover,
       &:focus {
