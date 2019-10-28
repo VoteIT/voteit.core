@@ -46,6 +46,7 @@ class InviteTicket(Persistent, WorkflowAware):
         for role in roles:
             if role not in SELECTABLE_ROLES:
                 raise ValueError("InviteTicket got '%s' as a role, and that isn't selectable." % role)
+        assert len(roles), "Can't create an invite ticket without roles"
         self.roles = roles
         self.created = utcnow()
         self.closed = None
