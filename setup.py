@@ -22,7 +22,7 @@ install_requires = (
     'pyramid_zcml',
     'repoze.workflow',
     'webhelpers',
-    'redis',)
+    'redis<3.5',)
 
 docs_extras = [
     'Sphinx',
@@ -33,7 +33,7 @@ docs_extras = [
 testing_extras = [
     'nose',
     'coverage',
-    'fakeredis',
+    'fakeredis<1.2',
     ]
 
 setup(name='voteit.core',
