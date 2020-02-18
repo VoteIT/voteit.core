@@ -1,0 +1,3 @@
+-e git+https://github.com/ArcheProject/Arche.git#egg=arche
+-e git+https://github.com/ArcheProject/arche_usertags.git#egg=arche_usertags
+-e .[testing]
