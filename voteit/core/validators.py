@@ -1,6 +1,6 @@
 import re
 
-from BeautifulSoup import BeautifulSoup
+from bs4 import BeautifulSoup
 from pyramid.traversal import find_interface
 from six import string_types
 from translationstring import TranslationString

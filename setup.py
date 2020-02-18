@@ -8,7 +8,7 @@ CHANGES = open(os.path.join(here, 'CHANGES.rst')).read()
 
 install_requires = (
     'Arche',
-    'BeautifulSoup', #FIXME?
+    'beautifulsoup4', #FIXME?
     'ZODB3',
     'arche_usertags',
     'betahaus.pyracont >= 0.3b', #Needed for migrations
