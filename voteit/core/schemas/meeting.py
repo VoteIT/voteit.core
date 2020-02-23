@@ -2,7 +2,6 @@
 from __future__ import unicode_literals
 
 from arche.validators import existing_userids
-from arche.schemas import userid_hinder_widget
 from repoze.catalog.query import Eq, NotEq
 import colander
 import deform
@@ -12,6 +11,7 @@ from voteit.core import security
 from voteit.core.models.interfaces import IAccessPolicy
 from voteit.core.models.interfaces import IProposal
 from voteit.core.schemas.common import NAME_PATTERN
+from voteit.core.schemas.common import MeetingUserReferenceWidget
 from voteit.core.validators import no_html_validator
 from voteit.core.validators import richtext_validator
 from voteit.core.validators import TagValidator
@@ -228,7 +228,7 @@ class AddExistingUserSchema(colander.Schema):
     userid = colander.SchemaNode(
         colander.String(),
         title=_("UserID"),
-        widget=userid_hinder_widget,
+        widget=MeetingUserReferenceWidget(multiple=False),
         validator=existing_userids
     )
     roles = colander.SchemaNode(

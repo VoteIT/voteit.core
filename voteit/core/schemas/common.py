@@ -4,13 +4,13 @@ from uuid import uuid4
 import re
 
 import deform
-from arche.widgets import deferred_autocompleting_userid_widget #b/c
-from pyramid.traversal import find_resource
+from arche.widgets import deferred_autocompleting_userid_widget, UserReferenceWidget  # b/c
+from pyramid.traversal import find_resource, find_interface
 from six import string_types
 import colander
 
 from voteit.core import _
-
+from voteit.core.models.interfaces import IMeeting
 
 NAME_PATTERN = re.compile(r'^[\w\s]{3,100}$', flags=re.UNICODE)
 #For when it's part of a http GET - no # in front of it
@@ -114,3 +114,11 @@ def collapsible_limit_node():
 def strip_and_lowercase(value):
     warnings.warn('strip_and_lowercase renamed prepare_emails_from_text', DeprecationWarning)
     return prepare_emails_from_text(value)
+
+
+class MeetingUserReferenceWidget(UserReferenceWidget):
+    view_name = "users_search_select2.json"  # The view to query
+    context_from = 'get_meeting'
+
+    def get_meeting(self, bindings):
+        return find_interface(bindings["context"], IMeeting)

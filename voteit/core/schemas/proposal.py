@@ -2,12 +2,11 @@ from __future__ import unicode_literals
 
 import colander
 import deform
-from arche.schemas import userid_hinder_widget
 from arche.validators import existing_userids
 from repoze.workflow import get_workflow
 
 from voteit.core import _
-from voteit.core.schemas.common import deferred_default_hashtag_text
+from voteit.core.schemas.common import deferred_default_hashtag_text, MeetingUserReferenceWidget
 from voteit.core.schemas.common import random_oid
 from voteit.core.validators import NotOnlyDefaultTextValidator
 from voteit.core.models.interfaces import IProposal
@@ -79,19 +78,13 @@ class ProposalSettingsSchema(colander.Schema):
                               "default but can be shown by pressing "
                               "the link below the other proposals. They're not "
                               "by any means invisible to participants."),
-        tab='advanced',
         widget=proposal_states_widget,
         default=('retracted', 'denied', 'unhandled'),
     )
     system_userids = colander.SchemaNode(
-        colander.Sequence(),
-        colander.SchemaNode(
-            colander.String(),
-            name='not_used',
-            title=_("UserID"),
-            widget=userid_hinder_widget,
-            validator=existing_userids
-        ),
+        colander.List(),
+        widget=MeetingUserReferenceWidget(multiple=True),
+        validator=existing_userids,
         title=_("System user accounts"),
         description=_("system_userids_description",
                       default="Must be an existing userid. "
@@ -99,12 +92,11 @@ class ProposalSettingsSchema(colander.Schema):
                               "to add proposals in their name. "
                               "It's good practice to add things like 'propositions', "
                               "'board' or similar."),
-        tab='advanced',
-        missing=())
+        missing=(),
+    )
     proposal_id_method = colander.SchemaNode(
         colander.String(),
         title=_("Proposal naming method"),
-        tab='advanced',
         widget=proposal_naming_widget,
         missing="",
     )
