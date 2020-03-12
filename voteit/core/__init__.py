@@ -2,7 +2,7 @@ import logging
 
 from arche import base_config
 from pyramid.i18n import TranslationStringFactory
-
+from pyramid_auto_env import autoenv_settings
 
 log = logging.getLogger(__name__)
 
@@ -13,12 +13,16 @@ _ = VoteITMF = TranslationStringFactory(PROJECTNAME)
 DEFAULT_SETTINGS = {
     'voteit.gravatar_default': 'mm',
     'voteit.default_profile_picture': '/voteit_core_static/images/default_user.png',
+    'voteit.redis_url': None,
     'pyramid_deform.template_search_path': 'voteit.core:templates/widgets arche:templates/deform',
     'arche.hash_method': 'voteit.core.security.get_sha_password',
     'arche.favicon': 'voteit.core:static/favicon.ico',
     'arche.actionbar': 'voteit.core.views.render_actionbar',
+    'default_poll_method': 'schulze',
 }
 
+
+@autoenv_settings(prefix="VOTEIT")
 def main(global_config, **settings):
     """ This function returns a Pyramid WSGI application.
         If you don't want to start the VoteIT app from this method,
@@ -30,10 +34,13 @@ def main(global_config, **settings):
     config.hook_zca()
     return config.make_wsgi_app()
 
+
 def required_components(config):
     #Other includes
     config.include('pyramid_zodbconn')
     config.include('pyramid_tm')
+    config.include('pyramid_retry')
+    config.include('pyramid_exclog')
     config.include('pyramid_chameleon')
     config.include('pyramid_deform')
     config.include('deform_autoneed')

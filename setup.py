@@ -22,7 +22,11 @@ install_requires = (
     'pyramid_zcml',
     'repoze.workflow',
     'webhelpers',
-    'redis<3.5',)
+    'redis<3.5',
+    'pyramid-auto-env',
+    'pyramid_retry',
+    'pyramid_exclog',
+)
 
 docs_extras = [
     'Sphinx',
