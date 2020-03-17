@@ -102,6 +102,7 @@ def check_required_components(config):
     """ After the process of including components is run, check that something has been included in the required sections.
         For instance poll methods.
     """
+    from pyramid_mailer import IMailer
     from voteit.core.models.interfaces import IPollPlugin
     from voteit.core.models.interfaces import IProfileImage
     from voteit.core.models.interfaces import IAccessPolicy
@@ -112,6 +113,10 @@ def check_required_components(config):
     for adapter_registration in config.registry.registeredAdapters():
         if adapter_registration.provided in need_at_least_one:
             del need_at_least_one[adapter_registration.provided]
+    # Make sure a mailer exist
+    mailer = config.registry.queryUtility(IMailer)
+    if mailer is None:
+        config.include('pyramid_mailer')
     for (k, vals) in need_at_least_one.items():
         log.warn("Nothing providing '%s.%s' included in configuration." % (k.__module__, k.__name__))
         for v in vals:
