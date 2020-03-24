@@ -9,6 +9,7 @@
     <tal:moderator condition="request.is_moderator">
       <div class="pull-left">
         <ul class="nav voteit-nav" role="navigation">
+            ${structure: view.render_view_action('actionbar_main', 'wf')}
             ${structure: view.render_view_action('actionbar_main', 'voteit_wf')}
             ${structure: view.render_view_action('actionbar_main', 'edit')}
             ${structure: view.render_view_action('actionbar_main', 'view')}
