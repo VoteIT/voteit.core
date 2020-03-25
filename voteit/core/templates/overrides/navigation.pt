@@ -53,7 +53,7 @@
           </a>
         </li>
 
-        <li tal:condition="request.is_moderator">
+        <li tal:condition="request.is_moderator and request.has_permission('perm:Manage system', request.root)">
           <a data-inline-menu
              data-target="#site-menu"
              data-actionmarker="disabled"
