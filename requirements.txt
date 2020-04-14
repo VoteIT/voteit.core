@@ -2,3 +2,12 @@
 -e git+https://github.com/ArcheProject/arche_usertags.git#egg=arche_usertags
 -e .[testing]
 six>=1.12
+js.jquery < 2.0
+pyramid < 2
+pyramid_exclog < 1.1
+pyramid_retry < 2.2
+pyramid_redis_sessions < 1.1
+pyramid-auto-env < 0.2
+zope.schema < 6
+zope.interface < 5
+zope.component < 5
