@@ -15,10 +15,16 @@ from voteit.core import _
 
 _meeting_states = ('ongoing', 'upcoming', 'closed')
 
+
 class MeetingListingPortlet(PortletType):
     name = "meeting_list"
     title = _("Meeting list")
     tpl = "voteit.core:templates/portlets/meeting_list.pt"
+
+    def visible(self, context, request, view, **kwargs):
+        if request.authenticated_userid and (IRoot.providedBy(context) or IUser.providedBy(context)):
+            return True
+        return False
 
     def render(self, context, request, view, **kwargs):
 
@@ -48,7 +54,6 @@ class MeetingListingPortlet(PortletType):
             return render(self.tpl,
                           response,
                           request = request)
-
 
 
 def _get_meetings(request, state = 'ongoing', sort_index = 'sortable_title'):

@@ -7,7 +7,7 @@ from repoze.catalog.query import Any
 from repoze.catalog.query import Eq
 from repoze.catalog.query import NotAny
 
-from voteit.core.models.interfaces import IDiffText
+from voteit.core.models.interfaces import IDiffText, IAgendaItem
 from voteit.core import _
 from voteit.core.security import ADD_PROPOSAL
 from voteit.core.security import EDIT
@@ -18,8 +18,18 @@ class DiffTextPortlet(PortletType):
     title = _("Proposed text body")
     tpl = "voteit.core:templates/portlets/diff_text.pt"
 
+    def visible(self, context, request, view, **kwargs):
+        if IAgendaItem.providedBy(context):
+            if request.is_moderator:
+                return True
+            diff_text = IDiffText(context)
+            paragraphs = diff_text.get_paragraphs()
+            if paragraphs:
+                return True
+        return False
+
     def render(self, context, request, view, **kwargs):
-        if request.meeting:
+        if self.visible(context, request, view, **kwargs):
             diff_text = IDiffText(context)
             paragraphs = diff_text.get_paragraphs()
             if paragraphs or request.is_moderator:

@@ -13,12 +13,12 @@
   </head>
 
   <body metal:define-slot="fullpage"
-        tal:define="portlets_left view.render_portlet_slot('left');
-                    portlets_right view.render_portlet_slot('right');
-                    portlets_top view.render_portlet_slot('top');
-                    portlets_bottom view.render_portlet_slot('bottom');
-                    portlets_left_fixed view.render_portlet_slot('left_fixed');
-                    main_cols 12 - int(bool(portlets_left))*3 - int(bool(portlets_right))*3;
+        tal:define="portlets_left_visible view.portlet_slot_visible('left');
+                    portlets_right_visible view.portlet_slot_visible('right');
+                    portlets_top_visible view.portlet_slot_visible('top');
+                    portlets_bottom_visible view.portlet_slot_visible('bottom');
+                    portlets_left_fixed_visible view.portlet_slot_visible('left_fixed');
+                    main_cols 12 - int(portlets_left_visible)*3 - int(portlets_right_visible)*3;
                     meeting_cls request.meeting and 'in_meeting' or None;
                     moderator_cls (request.meeting and request.is_moderator) and 'is_moderator' or None;"
         class="view-${request.view_name or 'default'|'default'} ${meeting_cls} ${moderator_cls}">
@@ -30,8 +30,8 @@
       <a href="#fixed-top-nav" i18n:translate="">Skip to navigation</a>
     </div>
 
-    <div id="fixed-nav" class="agenda-responsive-width" tal:condition="portlets_left_fixed">
-        <tal:portlets repeat="portlet portlets_left_fixed">
+    <div id="fixed-nav" class="agenda-responsive-width" tal:condition="portlets_left_fixed_visible">
+        <tal:portlets repeat="portlet view.render_portlet_slot('left_fixed')">
             <tal:portlet replace="structure portlet" />
         </tal:portlets>
     </div>

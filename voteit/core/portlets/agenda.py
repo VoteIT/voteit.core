@@ -47,6 +47,9 @@ class AgendaPortletFixed(AgendaPortlet):
     schema_factory = AgendaPortletSchema
     tpl = "voteit.core:templates/portlets/agenda_fixed.pt"
 
+    def visible(self, context, request, view, **kwargs):
+        return request.is_participant
+
     def render(self, context, request, view, **kwargs):
         if request.is_participant:
             states = ['ongoing', 'upcoming', 'closed']

@@ -34,15 +34,18 @@ from voteit.core.views.base_inline import PollInlineMixin
 class ListingPortlet(PortletType):
     schema_factory = None
 
+    def visible(self, context, request, view, **kwargs):
+        # These will all be visible regardless
+        return IAgendaItem.providedBy(context)
+
     def render(self, context, request, view, **kwargs):
-        if IAgendaItem.providedBy(context):
-            query = {}
-            tags = request.GET.getall('tag')
-            if tags:
-                query['tag'] = [x.lower() for x in tags]
-            url = request.resource_url(context, self.view_name, query=query)
-            response = {'portlet': self.portlet, 'view': view, 'load_url': url}
-            return render(self.template, response, request=request)
+        query = {}
+        tags = request.GET.getall('tag')
+        if tags:
+            query['tag'] = [x.lower() for x in tags]
+        url = request.resource_url(context, self.view_name, query=query)
+        response = {'portlet': self.portlet, 'view': view, 'load_url': url}
+        return render(self.template, response, request=request)
 
 
 class ProposalsPortlet(ListingPortlet):
