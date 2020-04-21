@@ -398,9 +398,9 @@ class PollPermissionTests(unittest.TestCase):
         ai['poll'] = poll
         return poll
 
-    def _register_majority_poll(self, poll):
-        self.config.include('voteit.core.plugins.majority_poll')
-        poll.set_field_value('poll_plugin', u'majority_poll')
+    def _register_testing_poll(self, poll):
+        self.config.include('voteit.core.testing_helpers.register_testing_poll')
+        poll.set_field_value('poll_plugin', u'testing')
 
     def test_private(self):
         poll = self._make_obj()
@@ -438,6 +438,7 @@ class PollPermissionTests(unittest.TestCase):
         ai = find_interface(poll, IAgendaItem)
         ai.set_workflow_state(request, 'upcoming')
         ai.set_workflow_state(request, 'ongoing')
+        self._register_testing_poll(poll)
         poll.set_workflow_state(request, 'upcoming')
         poll.set_workflow_state(request, 'ongoing')
         self.assertEqual(self.pap(poll, security.VIEW), admin | moderator | viewer )
@@ -450,10 +451,11 @@ class PollPermissionTests(unittest.TestCase):
         request = testing.DummyRequest()
         self.config = testing.setUp(registry = self.config.registry, request = request)
         poll = self._make_obj()
+        self._register_testing_poll(poll)
         ai = find_interface(poll, IAgendaItem)
         ai.set_workflow_state(request, 'upcoming')
         ai.set_workflow_state(request, 'ongoing')
-        self._register_majority_poll(poll)
+        self._register_testing_poll(poll)
         poll.set_workflow_state(request, 'upcoming')
         poll.set_workflow_state(request, 'ongoing')
         poll.set_workflow_state(request, 'closed')
@@ -470,7 +472,7 @@ class PollPermissionTests(unittest.TestCase):
         ai = find_interface(poll, IAgendaItem)
         ai.set_workflow_state(request, 'upcoming')
         ai.set_workflow_state(request, 'ongoing')
-        self._register_majority_poll(poll)
+        self._register_testing_poll(poll)
         poll.set_workflow_state(request, 'upcoming')
         poll.set_workflow_state(request, 'ongoing')
         poll.set_workflow_state(request, 'canceled')

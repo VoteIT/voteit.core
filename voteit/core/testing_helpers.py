@@ -2,6 +2,7 @@ from pyramid import testing
 from transaction import commit
 
 from voteit.core.bootstrap import bootstrap_voteit
+from voteit.core.models.poll_plugin import PollPlugin
 from voteit.core.security import ROLE_VOTER
 
 
@@ -63,19 +64,21 @@ def active_poll_fixture(config):
     config = testing.setUp(request = request, registry = config.registry)
     config.include('pyramid_mailer.testing')
     config.include('voteit.core.subscribers.poll')
+    config.include(register_testing_poll)
     root['users']['admin'].set_field_value('email', 'this@that.com')
     meeting = root['meeting'] = Meeting()
     meeting.add_groups('admin', [ROLE_VOTER])
     meeting.set_workflow_state(request, 'ongoing')
     ai = meeting['ai'] = AgendaItem()
-    ai['prop1'] = Proposal(text = u"Proposal 1")
-    ai['prop2'] = Proposal(text = u"Proposal 2")
+    ai['prop1'] = p1 = Proposal(text = u"Proposal 1")
+    ai['prop2'] = p2 = Proposal(text = u"Proposal 2")
     ai.set_workflow_state(request, 'upcoming')
     ai.set_workflow_state(request, 'ongoing')
     ai['poll'] = Poll(title = 'A poll')
     poll = ai['poll']
-    poll.set_field_value('proposals', set([ai['prop1'].uid, ai['prop2'].uid]))
+    poll.proposals = (p1.uid, p2.uid)
     poll.set_workflow_state(request, 'upcoming')
+    poll.poll_plugin_name = TestingPollPlugin.name  # Change for more detailed unit tests
     return root
 
 def attach_request_method(request, helper, name):
@@ -83,3 +86,17 @@ def attach_request_method(request, helper, name):
     def _wrap_request_method(*args, **kwargs):
         return helper(request, *args, **kwargs)
     setattr(request, name, _wrap_request_method)
+
+
+class TestingPollPlugin(PollPlugin):
+    name = "testing"
+    title = "Testing"
+    description = "I never complain..."
+    selectable = False
+
+    def handle_close(self):
+        pass
+
+
+def register_testing_poll(config):
+    config.registry.registerAdapter(TestingPollPlugin, name=TestingPollPlugin.name)

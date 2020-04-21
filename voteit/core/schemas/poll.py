@@ -22,7 +22,7 @@ def poll_plugin_choices_widget(node, kw):
     request = kw['request']
     values = []
     values.extend([(x.name, x.factory) for x in request.registry.registeredAdapters() if
-                   x.provided == IPollPlugin])
+                   x.provided == IPollPlugin and x.factory.selectable])
     return deform.widget.RadioChoiceWidget(values=values, template="object_radio_choice")
 
 

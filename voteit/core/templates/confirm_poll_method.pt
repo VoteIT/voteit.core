@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      metal:use-macro="view.macro('arche:templates/master.pt')"
+  	  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+	    i18n:domain="voteit.core">
+<body>
+
+<tal:main metal:fill-slot="content">
+
+	<h3>
+		<span class="glyphicon glyphicon-warning-sign"></span>
+		<tal:ts i18n:translate="">Unsuitable poll method</tal:ts>
+	</h3>
+
+	<p i18n:translate="bad_poll_method_description" >
+		The poll method you've picked may have unexpected side-effects.
+		It may allow a small group of voters to change the outcome through tactical voting,
+		or simply produce a result that isn't usable. Please choose another method.
+	</p>
+
+	<tal:err condition="bad_method_text">
+		<h4 i18n:translate="">Description of the problem</h4>
+		<p class="lead">${bad_method_text}</p>
+	</tal:err>
+
+	<p>&nbsp;</p>
+
+	<form tal:replace="structure form"></form>
+
+</tal:main>
+</body>
+</html>

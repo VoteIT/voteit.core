@@ -53,9 +53,9 @@ class VotePermissionTests(unittest.TestCase):
     def _make_poll(self):
         from voteit.core.models.poll import Poll
         from voteit.core.models.proposal import Proposal
-        self.config.include('voteit.core.plugins.majority_poll')
+        self.config.include('voteit.core.testing_helpers.register_testing_poll')
         poll = Poll()
-        poll.set_field_value('poll_plugin', u'majority_poll')
+        poll.set_field_value('poll_plugin', "testing")
         proposal = Proposal()
         poll.set_field_value('proposals', set(proposal.uid))
         return poll

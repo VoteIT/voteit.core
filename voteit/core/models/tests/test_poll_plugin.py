@@ -24,4 +24,8 @@ class PollPluginTests(unittest.TestCase):
 
     def test_verify_obj(self):
         context = testing.DummyModel()
-        self.failUnless(verifyObject(IPollPlugin, self._cut(context)))
+
+        class _DummyPlugin(self._cut):
+            name = "dummy"
+            title = "Dummy"
+        self.failUnless(verifyObject(IPollPlugin, _DummyPlugin(context)))

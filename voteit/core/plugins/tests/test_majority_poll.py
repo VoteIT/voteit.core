@@ -2,6 +2,7 @@ import unittest
 
 from pyramid import testing
 from pyramid.traversal import find_interface, find_root
+from voteit.core.exceptions import BadPollMethodError
 from zope.interface.verify import verifyObject
 import colander
 
@@ -97,7 +98,7 @@ class MPIntegrationTests(unittest.TestCase):
         p2.uid = 'p2uid' #To make it simpler to test against
         ai['p2'] = p2
         #Select proposals for this poll
-        self.poll.proposal_uids = (p1.uid, p2.uid, )
+        self.poll.proposals = (p1.uid, p2.uid, )
         self.ai = ai
         
     def tearDown(self):
@@ -161,3 +162,11 @@ class MPIntegrationTests(unittest.TestCase):
         response = view()
         self.assertEqual(response.status, '200 OK')
         self.assertIn('#one', response.body)
+
+    def test_exc_with_bad_amount_of_proposals(self):
+        from voteit.core.models.proposal import Proposal
+        self.ai["p3"] = p3 = Proposal(text="p3")
+        self.poll.proposals = self.poll.proposals + (p3.uid,)
+        poll_plugin = self.poll.get_poll_plugin()
+        request = testing.DummyRequest()
+        self.assertRaises(BadPollMethodError, poll_plugin.handle_start, request)

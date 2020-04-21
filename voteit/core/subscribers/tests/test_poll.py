@@ -85,13 +85,16 @@ class PollActiveTests(unittest.TestCase):
         self.assertEqual(poll.get_field_value('voters_mark_ongoing'), frozenset(['alice', 'ben', 'celine', 'admin']))
 
     def test_poll_is_deleted(self):
+        self.config.include('voteit.core.plugins.majority_poll')
         request = testing.DummyRequest()
         self.config.begin(request)
         root = active_poll_fixture(self.config)
         self.config.testing_securitypolicy(userid='mr_tester')
         meeting = root['meeting']
         ai = meeting['ai']
-        ai['poll'].set_workflow_state(request, 'ongoing')
+        poll = ai['poll']
+        poll.poll_plugin_name = "majority_poll"
+        poll.set_workflow_state(request, 'ongoing')
         # making sure that proposals are in voting state after poll is set to ongoing
         self.assertEqual(ai['prop1'].get_workflow_state(), 'voting')
         self.assertEqual(ai['prop2'].get_workflow_state(), 'voting')

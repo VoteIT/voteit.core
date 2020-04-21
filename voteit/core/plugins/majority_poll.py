@@ -4,9 +4,11 @@ from operator import itemgetter
 
 import colander
 import deform
+from pyramid.httpexceptions import HTTPForbidden
 from pyramid.renderers import render
 from pyramid.response import Response
 
+from voteit.core.exceptions import BadPollMethodError
 from voteit.core.models.poll_plugin import PollPlugin
 from voteit.core import _
 
@@ -52,6 +54,17 @@ class MajorityPollPlugin(PollPlugin):
                             title=proposal_title,
                             description='',)
         return Schema()
+
+    def handle_start(self, request):
+        prop_count = len(self.context.proposals)
+        if prop_count == 1:
+            raise HTTPForbidden(_("Only one proposal selected"))
+        if prop_count > 2:
+            msg = _("Majority polls with more than 2 proposals may not yield a complete result or will force tactical voting. "
+                    "Use Schulze method instead.")
+            exc = BadPollMethodError(_(msg), self.context, request)
+            if not exc.override_confirmed:
+                raise exc
 
     def handle_close(self):
         """ Get the calculated result of this ballot.

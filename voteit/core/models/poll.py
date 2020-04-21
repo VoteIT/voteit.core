@@ -80,7 +80,6 @@ class Poll(BaseContent, WorkflowAware):
             return acl.get_acl(acl_name)
         return acl.get_acl('Poll:private')
 
-    #Make sure only Vote objects can be added here
     def add(self, name, other, send_events=True):
         assert IVote.providedBy(other)
         super(Poll, self).add(name, other, send_events=send_events)
@@ -301,7 +300,7 @@ def upcoming_poll_callback(poll, info):
 
 def ongoing_poll_callback(poll, info):
     """ Workflow callback when a poll is set in the ongoing state.
-        This method will raise an exeption if the parent agenda item is not ongoing or if there is no proposals in the poll.
+        This method will raise an exception if the parent agenda item is not ongoing or if there is no proposals in the poll.
     """
     ai = find_interface(poll, IAgendaItem)
     if ai.get_workflow_state() != 'ongoing':
@@ -315,6 +314,8 @@ def ongoing_poll_callback(poll, info):
                     default = u"A poll with no proposal can not be set to ongoing. Click link to edit: ${tag}",
                     mapping = {'tag': edit_tag})
         raise HTTPForbidden(err_msg)
+    poll_plugin = poll.get_poll_plugin()
+    poll_plugin.handle_start(request)
     lock_proposals(poll, request)
 
 

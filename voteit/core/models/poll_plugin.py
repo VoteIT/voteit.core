@@ -1,42 +1,30 @@
-from zope.interface import implements
-from zope.component import adapts
 from pyramid.response import Response
+from zope.component import adapter
+from zope.interface.declarations import implementer
 
 from voteit.core.models.interfaces import IPoll
 from voteit.core.models.interfaces import IPollPlugin
 from voteit.core.models.vote import Vote
 
 
+@implementer(IPollPlugin)
+@adapter(IPoll)
 class PollPlugin(object):
     """ Base class for poll plugins. Subclass this to make your own.
         It's not usable by itself, since it doesn't implement the required interfaces.
         See :mod:`voteit.core.models.interfaces.IPollPlugin` for documentation.
     """
-    implements(IPollPlugin)
-    adapts(IPoll)
-    name = 'BasePollPlugin'
-    title = 'BasePollPlugin'
-    description = 'Subclass this to make a usable PollPlugin'
 
-    # Use this to determine if poll is applicable
-    multiple_winners = False
-    # Position in listing, lower number is better
-    priority = 3
-    proposals_min = 1
-    proposals_max = None
+    @property
+    def name(self):
+        raise NotImplementedError("Must be provided by subclass") # pragma : no cover
 
-    # Default: Check min/max proposals and if multiple winners is needed.
-    @classmethod
-    def check_applicable(cls, proposals=None, winners=1, random_timebreaks=True):
-        # type: (int, int, bool) -> bool
-        if proposals is not None:
-            if cls.proposals_min and cls.proposals_min > proposals:
-                return False
-            if cls.proposals_max and proposals > cls.proposals_max:
-                return False
-        if winners > 1 and not cls.multiple_winners:
-            return False
-        return True
+    @property
+    def title(self):
+        raise NotImplementedError("Must be provided by subclass") # pragma : no cover
+
+    description = ""
+    selectable = True
 
     def __init__(self, context):
         self.context = context
@@ -58,6 +46,13 @@ class PollPlugin(object):
             If this is None, this poll method doesn't have any settings.
         """
         return None # pragma : no cover
+
+    def handle_start(self, request):
+        """ Optional method to adjust things when poll starts, or check sanity of poll settings.
+            Raises HTTPForbidden on errors, and BadPollMethodError for things that could be bypassed
+            if you want to have a poll that doesn't make any sense.
+        """
+        pass
 
     def handle_close(self):
         """ Handle closing of the poll.

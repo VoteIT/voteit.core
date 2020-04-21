@@ -1,8 +1,11 @@
+import colander
 import deform
 from arche.utils import generate_slug
 from arche.views.base import BaseView
+from arche.views.base import BaseForm
 from arche.views.base import DefaultAddForm
 from arche.views.base import DefaultEditForm
+from deform import Button
 from deform.decorator import reify
 from pyramid.httpexceptions import HTTPForbidden
 from pyramid.httpexceptions import HTTPFound
@@ -12,6 +15,8 @@ from pyramid.traversal import resource_path
 from pyramid.view import view_config
 from repoze.catalog.query import Any
 from repoze.catalog.query import Eq
+from repoze.workflow.workflow import WorkflowError
+from voteit.core.exceptions import BadPollMethodError
 from zope.interface.interfaces import ComponentLookupError
 
 from voteit.core import _
@@ -313,3 +318,54 @@ class InlineSetProposal(PollsInline, PollInlineMixin):
             proposals.remove(proposal_uid)
         self.context.proposals = proposals
         return self.get_context_response()
+
+
+@view_config(context=BadPollMethodError)
+class RelocateFromException(BaseView):
+
+    def __call__(self):
+        self.request.session['_bad_method_text'] = self.context.msg
+        return self.relocate_response(self.request.resource_url(self.context.poll, '_confirm_poll_method'))
+
+
+@view_config(context=IPoll,
+             name="_confirm_poll_method",
+             renderer="voteit.core:templates/confirm_poll_method.pt")
+class ConfirmBadPollMethodView(BaseForm):
+
+    buttons = (
+        Button("edit", title=_("Change method"),),
+        Button("override", title=_("Override - I'm aware of the consequences"), css_class='btn-danger'),
+        BaseForm.button_cancel,
+    )
+
+    def get_schema(self):
+        return colander.Schema()
+
+    def __call__(self):
+        values = super(ConfirmBadPollMethodView, self).__call__()
+        if isinstance(values, dict):
+            values["bad_method_text"] = self.request.session.get('_bad_method_text', '')
+        return values
+
+    def _cleanup(self):
+        self.request.session.pop('_bad_method_text', None)
+
+    def edit_success(self, appstruct):
+        self._cleanup()
+        url = self.request.resource_url(self.context, "edit")
+        return HTTPFound(location=url)
+
+    def override_success(self, appstruct):
+        try:
+            self.context.set_workflow_state(self.request, "ongoing")
+        except WorkflowError as exc:
+            raise HTTPForbidden(str(exc))
+        self._cleanup()
+        url = self.request.resource_url(self.context.__parent__, anchor=self.context.uid)
+        return HTTPFound(location=url)
+
+    def cancel_success(self, *args):
+        self._cleanup()
+        url = self.request.resource_url(self.context.__parent__, anchor=self.context.uid)
+        return HTTPFound(location=url)

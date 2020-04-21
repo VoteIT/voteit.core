@@ -40,10 +40,12 @@ class AgendaItemTests(unittest.TestCase):
         from voteit.core.models.meeting import Meeting
         from voteit.core.models.proposal import Proposal
         from voteit.core.models.poll import Poll
+        self.config.include("voteit.core.testing_helpers.register_testing_poll")
         self.root['m'] = m = Meeting()
         m['ai'] = ai = self._cut()
         ai['prop'] = prop = Proposal()
         ai['poll'] = Poll(proposals=[prop.uid])
+        ai['poll'].poll_plugin_name = "testing"
         return ai
 
     def test_verify_implementation(self):

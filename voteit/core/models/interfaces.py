@@ -439,6 +439,7 @@ class IPollPlugin(Interface):
     title = Attribute("Readable title that will appear when you select which"
                       "poll plugin to use for a poll.")
     description = Attribute("Readable description that will appear when poll is displayed.")
+    selectable = Attribute("Wether this should show up as an option when creating a poll.")
 
 
     def get_vote_schema():
@@ -453,6 +454,12 @@ class IPollPlugin(Interface):
         
     def get_settings_schema():
         """ Get an instance of the schema used to render a form for editing settings.
+        """
+
+    def handle_start(request):
+        """ Optional method to adjust things when poll starts, or check sanity of poll settings.
+            Raises HTTPForbidden on errors, and BadPollMethodError for things that could be bypassed
+            if you want to have a poll that doesn't make any sense.
         """
 
     def handle_close():
