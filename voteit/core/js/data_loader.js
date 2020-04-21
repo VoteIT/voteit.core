@@ -64,8 +64,13 @@ voteit.load_and_replace = function (event) {
   if (target.length != 1) {
     target = elem;
   }
-  request.done(function(response) {
-    target.replaceWith(response);
+  request.done(function(response, status, xhr) {
+    var loc = xhr.getResponseHeader('X-Relocate');
+    if (loc) {
+      document.location = loc;
+    } else {
+      target.replaceWith(response);
+    }
   });
   request.fail(arche.flash_error);
   request.always(function() {
