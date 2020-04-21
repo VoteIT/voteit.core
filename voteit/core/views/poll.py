@@ -3,6 +3,7 @@ from arche.utils import generate_slug
 from arche.views.base import BaseView
 from arche.views.base import DefaultAddForm
 from arche.views.base import DefaultEditForm
+from deform.decorator import reify
 from pyramid.httpexceptions import HTTPForbidden
 from pyramid.httpexceptions import HTTPFound
 from pyramid.renderers import render
@@ -124,7 +125,7 @@ class PollVoteForm(DefaultEditForm):
     def title(self):
         return self.context.title
 
-    @property
+    @reify
     def can_vote(self):
         return self.request.has_permission(security.ADD_VOTE, self.context)
 
@@ -179,10 +180,13 @@ class PollVoteForm(DefaultEditForm):
         appstruct = self.appstruct()
         if appstruct is None:
             appstruct = {}
+        description = None
+        if self.context.get_workflow_state() == 'ongoing' and self.can_vote:
+            description = _("You don't have the right to vote within this meeting")
         return {'form': form.render(
             appstruct=appstruct,
             readonly=self.readonly,
-            description=None if self.can_vote else _("You don't have the right to vote within this meeting")
+            description=description
         )}
 
 
