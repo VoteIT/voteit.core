@@ -53,11 +53,6 @@
   <tal:ts i18n:translate="">VoteIT is a meeting system created by a group of Swedish Non-profit NGOs.</tal:ts>
   <a href="http://www.voteit.se">http://www.VoteIT.se</a>
 </p>
-<h3 i18n:translate="">Need the manual?</h3>
-<p>
-  <tal:ts i18n:translate="">All manuals can be found at:</tal:ts>
-  <a href="http://manual.voteit.se">http://manual.VoteIT.se</a>
-</p>
 <p i18n:translate="invitation_no_maillist_notice">
 Note that this message doesn't mean that you're subscribed to a mailing list or similar.
 You're probably receiving it since you're a member of an organisaiton.
