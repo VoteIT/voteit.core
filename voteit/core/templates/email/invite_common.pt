@@ -1,0 +1,28 @@
+<tal:main xmlns="http://www.w3.org/1999/xhtml"
+          xmlns:tal="http://xml.zope.org/namespaces/tal"
+          xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+          i18n:domain="voteit.core">
+    <h3 i18n:translate="">Contact</h3>
+    <p>
+        <tal:ts i18n:translate="invite_contact">The contact person for this meeting is
+            <b i18n:name="contact_person_name" tal:content="meeting.meeting_mail_name">contact person name</b>
+        </tal:ts>
+        <tal:mail condition="contact_mail" i18n:translate="">
+            and can be reached on
+            <a href="mailto:${contact_mail}" i18n:name="contact_mail" tal:content="contact_mail">
+                jane.doe@voteit.se
+            </a>
+        </tal:mail>
+    </p>
+    <h3 i18n:translate="">About VoteIT</h3>
+    <p>
+        <tal:ts i18n:translate="email_read_more_voteit">
+            VoteIT is a meeting system created by a group of Swedish Non-profit NGOs.
+            Read more at <a href="http://www.voteit.se" i18n:name="url">http://www.VoteIT.se</a>
+        </tal:ts>
+    </p>
+    <p i18n:translate="invitation_no_maillist_notice">
+        Note that this message doesn't mean that you're subscribed to a mailing list or similar.
+        You're probably receiving it since you're a member of an organisaiton.
+    </p>
+</tal:main>
