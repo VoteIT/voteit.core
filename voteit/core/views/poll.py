@@ -325,6 +325,7 @@ class RelocateFromException(BaseView):
 
     def __call__(self):
         self.request.session['_bad_method_text'] = self.context.msg
+        self.request.session['_bad_method_recommendation'] = self.context.recommendation
         return self.relocate_response(self.request.resource_url(self.context.poll, '_confirm_poll_method'))
 
 
@@ -346,10 +347,12 @@ class ConfirmBadPollMethodView(BaseForm):
         values = super(ConfirmBadPollMethodView, self).__call__()
         if isinstance(values, dict):
             values["bad_method_text"] = self.request.session.get('_bad_method_text', '')
+            values["bad_method_recommendation"] = self.request.session.get('_bad_method_recommendation', '')
         return values
 
     def _cleanup(self):
         self.request.session.pop('_bad_method_text', None)
+        self.request.session.pop('_bad_method_recommendation', None)
 
     def edit_success(self, appstruct):
         self._cleanup()

@@ -21,7 +21,12 @@
 
 	<tal:err condition="bad_method_text">
 		<h4 i18n:translate="">Description of the problem</h4>
-		<p class="lead">${bad_method_text}</p>
+		<p>${bad_method_text}</p>
+	</tal:err>
+
+	<tal:err condition="bad_method_recommendation">
+		<h4 i18n:translate="">Recommendation</h4>
+		<p>${bad_method_recommendation}</p>
 	</tal:err>
 
 	<p>&nbsp;</p>
