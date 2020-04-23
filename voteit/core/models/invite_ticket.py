@@ -10,7 +10,6 @@ from pyramid.exceptions import HTTPForbidden
 from pyramid.renderers import render
 from pyramid.traversal import find_interface
 from pyramid.traversal import find_root
-from six import string_types
 from zope.interface import implementer
 
 from voteit.core import _
@@ -101,15 +100,12 @@ def render_invite_ticket(ticket, request, message = "", **kw):
     meeting = find_interface(ticket, IMeeting)
     root = find_root(meeting)
     assert IMeeting.providedBy(meeting)
-    response = {}
-    response['access_link'] = request.resource_url(meeting, 'ticket',
-                                                   query = {'email': ticket.email, 'token': ticket.token})
-    response['message'] = message
-    response['meeting'] = meeting
-    response['context'] = ticket
-    response['contact_mail'] = meeting.get_field_value('meeting_mail_address')
-    response['sender_profile'] = root.users.get(ticket.sent_by)
-    response['roles'] = [roles.get(x) for x in ticket.roles]
+    response = {'access_link': request.resource_url(meeting, 'ticket',
+                                                    query={'email': ticket.email, 'token': ticket.token}),
+                'message': message, 'meeting': meeting, 'context': ticket,
+                'contact_mail': meeting.get_field_value('meeting_mail_address'),
+                'sender_profile': root.users.get(ticket.sent_by), 'roles': [roles.get(x) for x in ticket.roles]}
+    response['invite_common'] = render_invite_common(response, request)
     return render('voteit.core:templates/email/invite_ticket_email.pt', response, request = request)
 
 def claim_and_send_notification(ticket, request, message = ""):
@@ -132,15 +128,17 @@ def render_claimed_ticket_notification(ticket, request, message = "", user = Non
     meeting = find_interface(ticket, IMeeting)
     root = find_root(meeting)
     assert IMeeting.providedBy(meeting)
-    response = {}
-    response['message'] = message
-    response['meeting'] = meeting
-    response['context'] = ticket
-    response['contact_mail'] = meeting.get_field_value('meeting_mail_address')
-    response['sender_profile'] = root.users.get(ticket.sent_by)
-    response['roles'] = [roles.get(x) for x in ticket.roles]
-    response['user'] = user
+    response = {'message': message, 'meeting': meeting, 'context': ticket,
+                'contact_mail': meeting.get_field_value('meeting_mail_address'),
+                'sender_profile': root.users.get(ticket.sent_by), 'roles': [roles.get(x) for x in ticket.roles],
+                'user': user}
+    response['invite_common'] = render_invite_common(response, request)
     return render('voteit.core:templates/email/claimed_ticket_email.pt', response, request = request)
+
+
+def render_invite_common(values, request):
+    return render('voteit.core:templates/email/invite_common.pt', values, request = request)
+
 
 def includeme(config):
     config.add_content_factory(InviteTicket)
