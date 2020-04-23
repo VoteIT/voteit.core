@@ -1,0 +1,112 @@
+${field.start_rename()}
+<div tal:define="oid oid|field.oid;
+                title title|field.title;
+                css_class css_class|field.widget.css_class;"
+     class="deformSet list-group">
+    <tal:loop tal:repeat="choice values">
+        <tal:def tal:define="(value, factory) choice;
+                           idx repeat.choice.start and oid or '%s-%s' % (oid, repeat.choice.index);">
+            <div class="deformSet-item list-group-item">
+                <label for="${idx}">
+                    <h4>
+                        <input tal:attributes="checked value == cstruct;
+                                     class css_class"
+                               type="radio"
+                               name="${oid}"
+                               value="${value}"
+                               id="${idx}"/>
+                        <span tal:replace="structure factory.title|value"/>
+                    </h4>
+                </label>
+
+                <dl class="dl-horizontal">
+                    <tal:multiple_winners condition="factory.multiple_winners is not None|None">
+                        <dt i18n:translate="">Multiple winners</dt>
+                        <dd>
+                            <span class="${factory.CRITERIA_ICONS[factory.multiple_winners]|''}"></span>
+                        </dd>
+                    </tal:multiple_winners>
+                    <tal:min_props condition="factory.proposals_min|None">
+                        <dt i18n:translate="">Minimum proposals</dt>
+                        <dd>${factory.proposals_min}</dd>
+                    </tal:min_props>
+                    <tal:max_props condition="factory.proposals_max|None">
+                        <dt i18n:translate="">Maximum proposals</dt>
+                        <dd>${factory.proposals_max}</dd>
+                    </tal:max_props>
+                    <tal:recommended_for condition="factory.recommended_for|None">
+                        <dt i18n:translate="">Recommended for</dt>
+                        <dd>${factory.recommended_for}</dd>
+                    </tal:recommended_for>
+                </dl>
+
+                <tal:defs define="long_desc factory.long_description(field.request);">
+                    <tal:long condition="long_desc" tal:replace="structure long_desc">
+                    </tal:long>
+                    <tal:short condition="not long_desc">
+                        <p tal:content="structure factory.description|''">
+                        </p>
+                    </tal:short>
+
+                </tal:defs>
+
+                <tal:criteria condition="factory.criteria">
+
+                    <p class="text-center">
+
+                        <a data-toggle="collapse"
+                           href="#${idx}-collapse"
+                           aria-expanded="false"
+                           class="collapsed"
+                           aria-controls="${idx}-collapse">
+                            <span class="glyphicon glyphicon-collapse-toggle"></span>
+                            <tal:ts i18n:translate="">Election criteria</tal:ts>
+                        </a>
+                    </p>
+
+                    <div class="collapse" aria-expanded="false"
+                         id="${idx}-collapse">
+                        <div class="well">
+                            <h4 i18n:translate="">Election criteria</h4>
+
+                            <dl class="dl-horizontal">
+
+                                <tal:iter repeat="criteria factory.criteria">
+                                    <dt>
+                                        <a tal:omit-tag="not criteria.help"
+                                           tabindex="0"
+                                           data-placement="top"
+                                           role="button" data-toggle="popover" data-trigger="focus"
+                                           title="Help" data-content="${criteria.help}">${criteria.title}</a>
+                                    </dt>
+                                    <dd>
+                                        <span class="${criteria.icon}"></span>
+                                        ${criteria.comment}
+                                    </dd>
+                                </tal:iter>
+                            </dl>
+
+                            <p class="text-muted">
+                                <span class="glyphicon glyphicon-info-sign"></span>
+                                Wikipedia also has several extensive explanations of the election criteria.</p>
+
+                            <a data-toggle="collapse"
+                               href="#${idx}-collapse" aria-expanded="false" class="btn btn-default"
+                               aria-controls="${idx}-collapse">
+                                <tal:ts i18n:translate="">Close</tal:ts>
+                            </a>
+
+                        </div>
+                    </div>
+                </tal:criteria>
+
+            </div>
+        </tal:def>
+    </tal:loop>
+<script>
+$(function () {
+  $('#item-${oid} [data-toggle="popover"]').popover()
+})
+</script>
+</div>
+${field.end_rename()}

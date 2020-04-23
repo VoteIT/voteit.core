@@ -1,4 +1,5 @@
 from __future__ import unicode_literals
+
 from decimal import Decimal
 from operator import itemgetter
 
@@ -15,13 +16,17 @@ from voteit.core import _
 
 class MajorityPollPlugin(PollPlugin):
     """ Majority poll plugin. An example of how plugins work. """
-    
     name = 'majority_poll'
     title = _('Majority Poll')
-    #FIXME: Description of majority poll
-    description = _("Majority poll - don't use this for more than 2 choices!")
+    description = _("majority_poll_desc",
+                    default="A standard majority poll with radio buttons. "
+                            "Simple graphs will display the result. ")
+    multiple_winners = False
     proposals_min = 2
     proposals_max = 2
+    recommended_for = _("Simple choices between 2 proposals")
+    # Position in listing, lower number is better
+    priority = 5
 
     def get_settings_schema(self):
         """ Get an instance of the schema used to render a form for editing settings.

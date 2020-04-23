@@ -23,7 +23,8 @@ def poll_plugin_choices_widget(node, kw):
     values = []
     values.extend([(x.name, x.factory) for x in request.registry.registeredAdapters() if
                    x.provided == IPollPlugin and x.factory.selectable])
-    return deform.widget.RadioChoiceWidget(values=values, template="object_radio_choice")
+    values = sorted(values, key=lambda x: x[1].priority)
+    return deform.widget.RadioChoiceWidget(values=values, template="poll_radio_choice")
 
 
 @colander.deferred

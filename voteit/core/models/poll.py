@@ -148,7 +148,7 @@ class Poll(BaseContent, WorkflowAware):
 
     def get_poll_plugin(self):
         reg = get_current_registry()
-        return reg.getAdapter(self, name = self.poll_plugin_name, interface = IPollPlugin)
+        return reg.getAdapter(self, name = self.poll_plugin, interface = IPollPlugin)
 
     @property
     def proposal_order(self):
@@ -309,7 +309,7 @@ def ongoing_poll_callback(poll, info):
         raise HTTPForbidden(err_msg)
     request = get_current_request()
     if not poll.proposal_uids:
-        edit_tag = '<a href="%s"><b>%s</b></a>' % (request.resource_url(poll, 'edit'), poll.title)
+        edit_tag = '<a href="%s"><b>%s</b></a>' % (request.resource_url(poll, 'edit_proposals'), poll.title)
         err_msg = _(u"error_no_proposals_in_poll",
                     default = u"A poll with no proposal can not be set to ongoing. Click link to edit: ${tag}",
                     mapping = {'tag': edit_tag})
