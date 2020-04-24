@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-04-23 13:51+0200\n"
-"PO-Revision-Date: 2020-04-23 13:56+0200\n"
+"POT-Creation-Date: 2020-04-24 11:52+0200\n"
+"PO-Revision-Date: 2020-04-24 11:54+0200\n"
 "Last-Translator: Robin Harms Oredsson <robin@betahaus.net>\n"
 "Language-Team: sv <LL@li.org>\n"
 "Language: sv\n"
@@ -141,7 +141,7 @@ msgstr "Möten"
 msgid "Meetings"
 msgstr "Möten"
 
-#: voteit/core/portlets/agenda_item.py:53 voteit/core/schemas/poll.py:106
+#: voteit/core/portlets/agenda_item.py:53 voteit/core/schemas/poll.py:107
 #: voteit/core/templates/portlets/proposals.pt:12
 #: voteit/core/views/control_panel.py:30
 msgid "Proposals"
@@ -336,30 +336,51 @@ msgstr "Roller"
 msgid "immediate_ap_schema_grant_description"
 msgstr "Användare ges rollerna DIREKT när de begär tillträde."
 
-#: voteit/core/plugins/majority_poll.py:18
+#: voteit/core/plugins/majority_poll.py:21
 msgid "Majority Poll"
 msgstr "Majoritetsomröstning"
 
-#. FIXME: Description of majority poll
-#: voteit/core/plugins/majority_poll.py:20
-msgid "Majority poll - don't use this for more than 2 choices!"
-msgstr "Majoritetsomröstning - använd inte detta för fler än 2 val!"
+#. Default: A standard majority poll with radio buttons. Simple graphs will
+#. display the result.
+#: voteit/core/plugins/majority_poll.py:22
+msgid "majority_poll_desc"
+msgstr "En majoritetsomröstning med radioknappar. Resultatet som diagram."
 
-#: voteit/core/plugins/majority_poll.py:41
+#: voteit/core/plugins/majority_poll.py:30
+msgid "Simple choices between 2 proposals"
+msgstr "Enkla val mellan 2 förslag"
+
+#: voteit/core/plugins/majority_poll.py:51
 msgid "Vote for one"
 msgstr "Rösta på en"
 
-#: voteit/core/plugins/majority_poll.py:43
+#: voteit/core/plugins/majority_poll.py:53
 msgid "You can't change your vote now."
 msgstr "Du kan inte ändra din röst nu."
 
+#: voteit/core/plugins/majority_poll.py:72
+msgid "Only one proposal selected"
+msgstr "Bara ett förslag valt"
+
+#. Default: Majority polls with more than 2 proposals may not yield a complete
+#. result or will force tactical voting.
+#: voteit/core/plugins/majority_poll.py:74
+msgid "majority_poll_too_many_props"
+msgstr ""
+"Majoritetsomröstningar med fler än 2 förslag kan ge ett inkomplett resultat "
+"eller tvinga fram taktiskt röstande."
+
+#: voteit/core/plugins/majority_poll.py:83
+msgid "Use Schulze method instead"
+msgstr "Använd Schulze-metoden istället"
+
 #. Default: Vote
-#: voteit/core/plugins/majority_poll.py:79
+#: voteit/core/plugins/majority_poll.py:111
 msgid "vote_singular"
 msgstr "Röst"
 
 #. Default: Votes
-#: voteit/core/plugins/majority_poll.py:80
+#: voteit/core/plugins/majority_poll.py:112
 msgid "vote_plural"
 msgstr "Röster"
 
@@ -463,15 +484,107 @@ msgstr "Dagordningspunktens hashtagg"
 msgid "User"
 msgstr "Användare"
 
-#: voteit/core/models/invite_ticket.py:90
+#: voteit/core/models/invite_ticket.py:89
 #, python-format
 msgid "Invitation to ${meeting_title}"
 msgstr "Inbjudan till ${meeting_title}"
 
-#: voteit/core/models/invite_ticket.py:125
+#: voteit/core/models/invite_ticket.py:121
 #, python-format
 msgid "${meeting_title} is now accessible"
 msgstr "${meeting_title} är nu tillgängligt"
+
+#: voteit/core/models/poll_plugin.py:44
+msgid "Majority winner"
+msgstr "Majoritetsvinst"
+
+#. Default: A majority (more than 50%) must prefer this, otherwise it shouldn't
+#. be able to win.
+#: voteit/core/models/poll_plugin.py:45
+msgid "criteria_mw_help"
+msgstr ""
+"En majoritet (fler än 50%) måste föredra detta, annars ska förslaget inte "
+"kunna vinna."
+
+#: voteit/core/models/poll_plugin.py:52
+msgid "Majority looser"
+msgstr "Majoritetsförlust"
+
+#. Default: If a majority of voters do not want this, it shouldn't be able to
+#. win.
+#: voteit/core/models/poll_plugin.py:53
+msgid "criteria_ml_help"
+msgstr ""
+"Om en majoritet av de röstande inte vill ha ett förslag så ska det inte "
+"kunna vinna."
+
+#: voteit/core/models/poll_plugin.py:60
+msgid "Mutual majority"
+msgstr "Gemensam majoritet"
+
+#. Default: If there's a subset of candidates where every voter prefer other
+#. candidates within the subset and the subset itself has a majority, then the
+#. winner must come from the subset. Example: Alice (apple with 30% vote share)
+#. and Granny Smith (apple with 30% vote share) goes against Navelina (orange
+#. with 40%). All Alice/GS fans prefer the other apple over the orange, so one
+#. of the apples should win.
+#: voteit/core/models/poll_plugin.py:61
+msgid "criteria_mm_help"
+msgstr ""
+"(Engelska: Mutual Majority) Om det finns en grupp kandidater där varje "
+"röstande föredrar kandidater inom den gruppen och gruppen har majoritet "
+"totalt sett, så måste vinnaren komma från den gruppen. Exempel: Alice (äpple "
+"med 30% av rösterna) och Granny Smith (äpple med 30%) ställs mot Navelina "
+"(apelsin med 40%). Alla Alice/GS-fans föredrar det andra äpplet framför "
+"apelsin, så en av äpplena bör vinna."
+
+#: voteit/core/models/poll_plugin.py:73
+msgid "Condorcet winner"
+msgstr "Condorcet-vinnare"
+
+#. Default: The winner must beat every other candidate in a pairwise
+#. comparison.
+#: voteit/core/models/poll_plugin.py:74
+msgid "criteria_cw_help"
+msgstr "Vinnaren måste slå varje annan kandidat vid parvis jämförelse."
+
+#: voteit/core/models/poll_plugin.py:81
+msgid "Condorcet looser"
+msgstr "Condorcet-förlorare"
+
+#. Default: The looser must loose against every other candidate in a pairwise
+#. comparison.
+#: voteit/core/models/poll_plugin.py:82
+msgid "criteria_cl_help"
+msgstr ""
+"Förloraren måste förlora mot varje annan kandidat vid parvis jämförelse."
+
+#: voteit/core/models/poll_plugin.py:89
+msgid "Clone proof"
+msgstr "Klonsäker"
+
+#. Default: The winner must not change due to strategic nomination, for
+#. instance that a similar candidate runs.
+#: voteit/core/models/poll_plugin.py:90
+msgid "criteria_cp_help"
+msgstr ""
+"Vinnaren får inte ändras genom strategisk nominering, t.ex. genom att två "
+"kandidater som liknar varandra ställer upp."
+
+#: voteit/core/models/poll_plugin.py:97
+msgid "Proportional result"
+msgstr "Proportionellt resultat"
+
+#. Default: The result should reflect the user base as a whole, for instance:
+#. If n% of the electorate support a particular political party as their
+#. favorite, then roughly n% of seats will be won by that party. Applies to
+#. multiple winner methods.
+#: voteit/core/models/poll_plugin.py:98
+msgid "criteria_p_help"
+msgstr ""
+"Resultatet bör avspegla väljarbasen som helhet, exempel: Om n% av "
+"väljarbasen stödjer ett specifikt parti som sin favorit, då bör ungefär n% "
+"av platserna vinnas av det partiet. Gäller valmetoder med många vinnare."
 
 #: voteit/core/models/users.py:18
 msgid "Users"
@@ -522,19 +635,19 @@ msgid "error_ai_cannot_be_ongoing_in_not_ongoing_meeting"
 msgstr ""
 "Du kan inte sätta en dagordningspunkt i pågående om mötet inte är pågående."
 
-#: voteit/core/models/poll.py:42
+#: voteit/core/models/poll.py:43
 msgid "Chronological"
 msgstr "Kronologisk"
 
-#: voteit/core/models/poll.py:43
+#: voteit/core/models/poll.py:44
 msgid "Alphabetical"
 msgstr "Alfabetisk"
 
-#: voteit/core/models/poll.py:44
+#: voteit/core/models/poll.py:45
 msgid "Random"
 msgstr "Slumpade"
 
-#: voteit/core/models/poll.py:62
+#: voteit/core/models/poll.py:63
 msgid "Poll"
 msgstr "Omröstning"
 
@@ -588,7 +701,7 @@ msgstr ""
 
 #. Since subject won't be part of a renderer, we need to translate it manually
 #. Keep the _ -syntax otherwise Babel/lingua won't pick up the string
-#: voteit/core/models/poll.py:355
+#: voteit/core/models/poll.py:362
 msgid "VoteIT: Open poll"
 msgstr "VoteIT: Pågående omröstning"
 
@@ -755,7 +868,7 @@ msgid "paragraph"
 msgstr "stycke"
 
 #: voteit/core/schemas/diff_text.py:34 voteit/core/schemas/meeting.py:69
-#: voteit/core/schemas/agenda_item.py:26 voteit/core/schemas/poll.py:71
+#: voteit/core/schemas/agenda_item.py:26 voteit/core/schemas/poll.py:72
 msgid "Title"
 msgstr "Titel"
 
@@ -1059,63 +1172,63 @@ msgstr "Du kan lägga till fler i inställnings-menyn."
 msgid "(Use meeting default)"
 msgstr "(Använd mötets standard)"
 
-#: voteit/core/schemas/poll.py:54
+#: voteit/core/schemas/poll.py:55
 #, python-format
 msgid "Descision ${num}"
 msgstr "Beslut ${num}"
 
-#: voteit/core/schemas/poll.py:62
+#: voteit/core/schemas/poll.py:63
 msgid "Unknown"
 msgstr "Okänd"
 
-#: voteit/core/schemas/poll.py:64
+#: voteit/core/schemas/poll.py:65
 #, python-format
 msgid "Meeting default is currently: ${title}"
 msgstr "Mötets standard är: ${title}"
 
-#: voteit/core/schemas/poll.py:77 voteit/core/schemas/agenda_template.py:22
+#: voteit/core/schemas/poll.py:78 voteit/core/schemas/agenda_template.py:22
 msgid "Description"
 msgstr "Beskrivning"
 
 #. Default: Explain your choice of poll method and your plan for the different
 #. polls in the agenda item.
-#: voteit/core/schemas/poll.py:79
+#: voteit/core/schemas/poll.py:80
 msgid "poll_description_description"
 msgstr ""
 "Förklara ditt val av omröstningsmetod och hur du planerat de olika "
 "omröstningarna i dagordninspunkten."
 
-#: voteit/core/schemas/poll.py:87
+#: voteit/core/schemas/poll.py:88
 msgid "Proposal ordering"
 msgstr "Förslagsordning"
 
-#: voteit/core/schemas/poll.py:94
+#: voteit/core/schemas/poll.py:95
 msgid "Poll method to use"
 msgstr "Omröstningsmetod"
 
 #. Default: Each poll method should have its own documentation. The standard
 #. ones from VoteIT will be in the manual - check the help menu!
-#: voteit/core/schemas/poll.py:95
+#: voteit/core/schemas/poll.py:96
 msgid "poll_poll_plugin_description"
 msgstr "Läs mer i hjälpen om olika metoder och dess för- och nackdelar."
 
 #. Default: Only proposals in the state 'published' can be selected
-#: voteit/core/schemas/poll.py:107
+#: voteit/core/schemas/poll.py:108
 msgid "poll_proposals_description"
 msgstr "Endast förslag i tillståndet 'publicerad' kan väljas."
 
-#: voteit/core/schemas/poll.py:117
+#: voteit/core/schemas/poll.py:118
 msgid "Disable modal popups for polls menu?"
 msgstr "Ta bort modala popups för omröstningsmenyn?"
 
 #. Default: If disabled, the polls menu will simply link to the agenda item
 #. with the poll item instead.
-#: voteit/core/schemas/poll.py:118
+#: voteit/core/schemas/poll.py:119
 msgid "schema_polls_menu_only_links_description"
 msgstr ""
 "Om avstängd så länkar omröstningsmenyn till dagordningspunkten istället."
 
-#: voteit/core/schemas/poll.py:126
+#: voteit/core/schemas/poll.py:127
 msgid "Default proposal order"
 msgstr "Standardordning för förslag"
 
@@ -1270,7 +1383,7 @@ msgid "Ongoing"
 msgstr "Pågående"
 
 #: voteit/core/templates/_translations.pt:11
-#: voteit/core/templates/portlets/polls_inline.pt:87
+#: voteit/core/templates/portlets/polls_inline.pt:91
 msgid "Closed"
 msgstr "Avslutad"
 
@@ -1472,6 +1585,30 @@ msgstr ""
 msgid "Add existing user"
 msgstr "Lägg till existerande användare"
 
+#: voteit/core/templates/confirm_poll_method.pt:13
+msgid "Unsuitable poll method"
+msgstr "Olämplig omröstningsmetod"
+
+#. Default: The poll method you've picked may have unexpected side-effects. It
+#. may allow a small group of voters to change the outcome through tactical
+#. voting, or simply produce a result that isn't usable. Please choose another
+#. method.
+#: voteit/core/templates/confirm_poll_method.pt:16
+msgid "bad_poll_method_description"
+msgstr ""
+"Omröstningsmetoden du vald kan ha oväntade bieffekter. Den kan tillåta en "
+"liten grupp röstande att påverka resultatet genom taktiskt röstande, eller "
+"helt enkelt ge ett resultat som inte är användbart. Vänligen välj en annan "
+"valmetod."
+
+#: voteit/core/templates/confirm_poll_method.pt:23
+msgid "Description of the problem"
+msgstr "Beskrivning av problemet"
+
+#: voteit/core/templates/confirm_poll_method.pt:28
+msgid "Recommendation"
+msgstr "Rekommendation"
+
 #: voteit/core/templates/request_meeting_access.pt:10
 #: voteit/core/views/meeting.py:131
 msgid "Request access"
@@ -1665,7 +1802,7 @@ msgstr ""
 
 #. Default: Vote
 #: voteit/core/templates/portlets/polls_inline.pt:36
-#: voteit/core/views/poll.py:121
+#: voteit/core/views/poll.py:126
 msgid "add_vote_button"
 msgstr "Rösta"
 
@@ -1677,35 +1814,39 @@ msgstr "Ändra röst"
 msgid "View vote"
 msgstr "Visa röst"
 
-#: voteit/core/templates/portlets/polls_inline.pt:54
+#: voteit/core/templates/portlets/polls_inline.pt:50
+msgid "The poll is open, but you're not a voter."
+msgstr "Omröstningen är öppen, men du har inte rösträtt"
+
+#: voteit/core/templates/portlets/polls_inline.pt:58
 msgid "Show results"
 msgstr "Visa resultat"
 
-#: voteit/core/templates/portlets/polls_inline.pt:81
+#: voteit/core/templates/portlets/polls_inline.pt:85
 msgid "Starts"
 msgstr "Öppnar"
 
-#: voteit/core/templates/portlets/polls_inline.pt:82
+#: voteit/core/templates/portlets/polls_inline.pt:86
 msgid "Started"
 msgstr "Startad"
 
-#: voteit/core/templates/portlets/polls_inline.pt:86
+#: voteit/core/templates/portlets/polls_inline.pt:90
 msgid "Closes"
 msgstr "Stänger"
 
-#: voteit/core/templates/portlets/polls_inline.pt:105
+#: voteit/core/templates/portlets/polls_inline.pt:109
 msgid "Filter on poll (${num})"
 msgstr "Filtrera på omröstning (${num})"
 
-#: voteit/core/templates/portlets/polls_inline.pt:118
+#: voteit/core/templates/portlets/polls_inline.pt:122
 msgid "Ballot data"
 msgstr "Valurnans data"
 
-#: voteit/core/templates/portlets/polls_inline.pt:132
+#: voteit/core/templates/portlets/polls_inline.pt:136
 msgid "No polls yet"
 msgstr "Inga omröstningar än"
 
-#: voteit/core/templates/portlets/polls_inline.pt:138
+#: voteit/core/templates/portlets/polls_inline.pt:142
 msgid "Add Poll"
 msgstr "Lägg till omröstning"
 
@@ -1806,6 +1947,7 @@ msgstr "Du har inte skrivit något än!"
 
 #: voteit/core/templates/menus/poll.pt:12
 #: voteit/core/templates/menus/control_panel.pt:10
+#: voteit/core/templates/widgets/poll_radio_choice.pt:100
 msgid "Close"
 msgstr "Stäng"
 
@@ -1949,6 +2091,27 @@ msgstr "Länken nedan ger dig följande rättigheter i mötet:"
 msgid "To access this meeting use the link below to register:"
 msgstr ""
 "För att få tillgång till mötet använd länken nedan för att registrera dig:"
+
+#: voteit/core/templates/widgets/poll_radio_choice.pt:28
+msgid "Multiple winners"
+msgstr "Flera vinnare"
+
+#: voteit/core/templates/widgets/poll_radio_choice.pt:34
+msgid "Minimum proposals"
+msgstr "Min. förslag"
+
+#: voteit/core/templates/widgets/poll_radio_choice.pt:38
+msgid "Maximum proposals"
+msgstr "Max. förslag"
+
+#: voteit/core/templates/widgets/poll_radio_choice.pt:42
+msgid "Recommended for"
+msgstr "Rekommenderas för"
+
+#: voteit/core/templates/widgets/poll_radio_choice.pt:67
+#: voteit/core/templates/widgets/poll_radio_choice.pt:74
+msgid "Election criteria"
+msgstr "Valkriterier"
 
 #: voteit/core/templates/widgets/voteit_form_inline.pt:39
 msgid "There was a problem with your submission"
@@ -2257,70 +2420,78 @@ msgstr "Filter aktivt, visar ${num} tagg(ar)"
 msgid "Status changed - note that workflow state also matters."
 msgstr "Status ändrad - notera att arbetsflödestillstånd också har betydelse"
 
-#: voteit/core/views/poll.py:38 voteit/core/views/poll.py:54
+#: voteit/core/views/poll.py:43 voteit/core/views/poll.py:59
 #, python-format
 msgid "Poll plugin ${plugin} not found"
 msgstr "Röstningsplugin ${plugin} hittades inte"
 
-#: voteit/core/views/poll.py:41 voteit/core/views/poll.py:57
+#: voteit/core/views/poll.py:46 voteit/core/views/poll.py:62
 msgid "This poll is still open"
 msgstr "Omröstningen är fortfarande öppen"
 
-#: voteit/core/views/poll.py:75
+#: voteit/core/views/poll.py:80
 msgid "No settings for this poll"
 msgstr "Inga inställningar för denna omröstning"
 
-#: voteit/core/views/poll.py:151
+#: voteit/core/views/poll.py:156
 msgid "You're not allowed to vote"
 msgstr "Du har inte rätt att rösta"
 
-#: voteit/core/views/poll.py:161
+#: voteit/core/views/poll.py:166
 msgid "Your vote was changed."
 msgstr "Din röst ändrades."
 
 #. Default: Your vote has been added. If you wish to change it, you may do so
 #. as long as the poll is open.
-#: voteit/core/views/poll.py:168
+#: voteit/core/views/poll.py:173
 msgid "vote_success_msg"
 msgstr ""
 "Din röst har lagts till. Om du vill ändra den så kan du göra det så länge "
 "som omröstningen är öppen."
 
-#: voteit/core/views/poll.py:185
-msgid "You don't have the right to vote within this meeting"
-msgstr "Du har inte rätt att rösta i mötet"
+#: voteit/core/views/poll.py:190
+msgid "The poll is closed so you may not change your vote"
+msgstr "Omröstningen är stängd så du kan inte ändra din röst"
 
 #. Default: The poll is created in private state, to show it the participants
 #. you have to change the state to upcoming.
-#: voteit/core/views/poll.py:208
+#: voteit/core/views/poll.py:213
 msgid "private_poll_info"
 msgstr ""
 "Denna omröstning är skapad i status privat, för att visa den för dina "
 "deltagare måste du ändra dess status till kommande."
 
-#: voteit/core/views/poll.py:228
+#: voteit/core/views/poll.py:233
 msgid "Update plugin settings"
 msgstr "Uppdatera plugin-inställningar"
 
-#: voteit/core/views/poll.py:231 voteit/core/views/poll.py:256
+#: voteit/core/views/poll.py:236 voteit/core/views/poll.py:261
 msgid "Successfully updated"
 msgstr "Uppdaterad"
 
-#: voteit/core/views/poll.py:233 voteit/core/views/poll.py:258
+#: voteit/core/views/poll.py:238 voteit/core/views/poll.py:263
 msgid "Nothing changed"
 msgstr "Inget ändrat"
 
-#: voteit/core/views/poll.py:243
+#: voteit/core/views/poll.py:248
 msgid "Pick participating proposals"
 msgstr "Välj förslag som deltar"
 
 #. Default: This poll uses a plugin that can't be found. Make sure a poll
 #. plugin with the name '${name}' is installed
-#: voteit/core/views/poll.py:267
+#: voteit/core/views/poll.py:272
 msgid "poll_plugin_not_found_error"
 msgstr ""
 "Denna omröstning använder en plugin som inte kan hittas. Kontrollera att en "
 "omröstningsplugin med namnet '${name}' är installerad"
+
+#: voteit/core/views/poll.py:338
+msgid "Change method"
+msgstr "Ändra metod"
+
+#: voteit/core/views/poll.py:339
+msgid "Override - I'm aware of the consequences"
+msgstr "Tvinga start - Jag förstår konsekvenserna"
 
 #: voteit/core/views/help.py:26
 msgid "Lost your password?"
@@ -2377,6 +2548,12 @@ msgstr "Svara"
 #: voteit/core/views/components/metadata_listing.py:78
 msgid "Comment"
 msgstr "Kommentera"
+
+#~ msgid "Majority poll - don't use this for more than 2 choices!"
+#~ msgstr "Majoritetsomröstning - använd inte detta för fler än 2 val!"
+
+#~ msgid "You don't have the right to vote within this meeting"
+#~ msgstr "Du har inte rätt att rösta i mötet"
 
 #~ msgid "Create a VoteIT instance"
 #~ msgstr "Skapa en VoteIT-instans"
@@ -2621,10 +2798,6 @@ msgstr "Kommentera"
 #~ msgid "End time of this poll."
 #~ msgstr "Sluttid för omröstningen."
 
-#~ msgid "poll_end_time_description"
-#~ msgstr ""
-#~ "Du måste stänga den själv. Ett bra standardvärde är en dag efter start."
-
 #~ msgid "Reject proposal"
 #~ msgstr "Avslå förslag"
 
@@ -2835,11 +3008,6 @@ msgstr "Kommentera"
 
 #~ msgid "Password reset request from VoteIT"
 #~ msgstr "Begäran om nytt lösenord från VoteIT"
-
-#~ msgid "Description of majority poll"
-#~ msgstr ""
-#~ "Rösta på ett av flera alternativ. När omröstningen avslutas utses det "
-#~ "förslag som fått egen majoritet av de avgivna rösterna som vinnande"
 
 #~ msgid "Add agenda item"
 #~ msgstr "Lägg till dagordningspunkt"
