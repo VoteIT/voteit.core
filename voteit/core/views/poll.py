@@ -186,7 +186,7 @@ class PollVoteForm(DefaultEditForm):
         if appstruct is None:
             appstruct = {}
         description = None
-        if self.context.get_workflow_state() == 'ongoing' and self.can_vote:
+        if self.context.get_workflow_state() == 'ongoing' and not self.can_vote:
             description = _("You don't have the right to vote within this meeting")
         return {'form': form.render(
             appstruct=appstruct,
