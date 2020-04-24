@@ -186,8 +186,8 @@ class PollVoteForm(DefaultEditForm):
         if appstruct is None:
             appstruct = {}
         description = None
-        if self.context.get_workflow_state() == 'ongoing' and not self.can_vote:
-            description = _("You don't have the right to vote within this meeting")
+        if self.context.get_workflow_state() == 'closed':
+            description = _("The poll is closed so you may not change your vote")
         return {'form': form.render(
             appstruct=appstruct,
             readonly=self.readonly,

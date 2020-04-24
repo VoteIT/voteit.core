@@ -46,6 +46,10 @@
         <span i18n:translate="">View vote</span>
       </a>
 
+      <p tal:condition="wf_state == 'ongoing' and not can_vote">
+        <em i18n:translate="">The poll is open, but you're not a voter.</em>
+      </p>
+
       <a tal:condition="wf_state == 'closed'"
         data-open-modal
         class="btn btn-primary"
