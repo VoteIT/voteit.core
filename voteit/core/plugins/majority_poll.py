@@ -76,14 +76,12 @@ class MajorityPollPlugin(PollPlugin):
                 default="Majority polls with more than 2 proposals may not yield a complete "
                 "result or will force tactical voting.",
             )
-            exc = BadPollMethodError(
+            raise BadPollMethodError(
                 _(msg),
                 self.context,
                 request,
                 recommendation=_("Use Schulze method instead"),
             )
-            if not exc.override_confirmed:
-                raise exc
 
     def handle_close(self):
         """ Get the calculated result of this ballot.

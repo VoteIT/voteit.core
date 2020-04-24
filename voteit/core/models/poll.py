@@ -18,6 +18,7 @@ from pyramid.traversal import find_root
 from repoze.catalog.query import Any
 from repoze.catalog.query import Eq
 from repoze.workflow.workflow import WorkflowError
+from voteit.core.exceptions import BadPollMethodError
 from zope.interface import implementer
 
 from voteit.core import _
@@ -315,7 +316,12 @@ def ongoing_poll_callback(poll, info):
                     mapping = {'tag': edit_tag})
         raise HTTPForbidden(err_msg)
     poll_plugin = poll.get_poll_plugin()
-    poll_plugin.handle_start(request)
+    try:
+        poll_plugin.handle_start(request)
+    except BadPollMethodError as exc:
+        # Moderators may manually override
+        if not exc.override_confirmed:
+            raise exc
     lock_proposals(poll, request)
 
 
