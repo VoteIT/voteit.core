@@ -92,7 +92,8 @@ ${field.start_rename()}
 
                             <p class="text-muted">
                                 <span class="glyphicon glyphicon-info-sign"></span>
-                                Wikipedia also has several extensive explanations of the election criteria.</p>
+                                <tal:ts i18n:translate="">English Wikipedia has several extensive pages on election systems.</tal:ts>
+                            </p>
 
                             <a data-toggle="collapse"
                                href="#${idx}-collapse" aria-expanded="false" class="btn btn-default"

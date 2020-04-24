@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE 1.0\n"
-"POT-Creation-Date: 2020-04-24 11:52+0200\n"
+"POT-Creation-Date: 2020-04-24 13:52+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1803,7 +1803,7 @@ msgstr ""
 
 #: ./voteit/core/templates/menus/poll.pt:12
 #: ./voteit/core/templates/menus/control_panel.pt:10
-#: ./voteit/core/templates/widgets/poll_radio_choice.pt:100
+#: ./voteit/core/templates/widgets/poll_radio_choice.pt:101
 msgid "Close"
 msgstr ""
 
@@ -1957,6 +1957,10 @@ msgstr ""
 #: ./voteit/core/templates/widgets/poll_radio_choice.pt:67
 #: ./voteit/core/templates/widgets/poll_radio_choice.pt:74
 msgid "Election criteria"
+msgstr ""
+
+#: ./voteit/core/templates/widgets/poll_radio_choice.pt:95
+msgid "English Wikipedia has several extensive pages on election systems."
 msgstr ""
 
 #: ./voteit/core/templates/widgets/voteit_form_inline.pt:39
