@@ -56,8 +56,8 @@ class MajorityLooser(Criteria):
     )
 
 
-class MutialMajority(Criteria):
-    title = _("Mutial majority")
+class MutualMajority(Criteria):
+    title = _("Mutual majority")
     help = _(
         "criteria_mm_help",
         default="If there's a subset of candidates where every voter prefer "
