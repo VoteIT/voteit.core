@@ -88,9 +88,10 @@ def send_mention_notification(context, request, user):
         request.send_email(subject, email, body)
         return user.userid
 
+
 def includeme(config):
-    config.registry.registerAdapter(Mentioned, required = [IProposal])
-    config.registry.registerAdapter(Mentioned, required = [IDiscussionPost])
+    config.registry.registerAdapter(Mentioned, required=[IProposal], provided=IMentioned)
+    config.registry.registerAdapter(Mentioned, required=[IDiscussionPost], provided=IMentioned)
     config.add_subscriber(email_users_about_mention, [IProposal, IObjectAddedEvent])
     config.add_subscriber(email_users_about_mention, [IProposal, IObjectUpdatedEvent])
     config.add_subscriber(email_users_about_mention, [IDiscussionPost, IObjectAddedEvent])
