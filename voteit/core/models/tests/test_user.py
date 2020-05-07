@@ -1,5 +1,6 @@
 import unittest
 
+from arche.testing import barebone_fixture
 from zope.interface.verify import verifyObject
 from pyramid import testing
 from pyramid.security import principals_allowed_by_permission
@@ -47,10 +48,15 @@ class UserTests(unittest.TestCase):
 
     def test_get_image_tag(self):
         self.config.include('voteit.core.plugins.gravatar_profile_image')
-        obj = self._make_obj()
+        root = barebone_fixture()
+        request = testing.DummyRequest()
+        request.root = root
+        root['users']['jane'] = obj = self._make_obj()
         obj.set_field_value('email', 'hello@world.com')
-        self.assertEqual(obj.get_image_tag(size=45),
-                         '<img src="https://secure.gravatar.com/avatar/4b3cdf9adfc6258a102ab90eb64565ea?s=45&d=mm" height="45" width="45" class="profile-pic" />')
+        self.assertEqual(
+            '<img src="https://secure.gravatar.com/avatar/4b3cdf9adfc6258a102ab90eb64565ea?s=45&d=robohash" height="45" width="45" class="profile-pic" />',
+             obj.get_image_tag(size=45, request=request)
+         )
 
     def test_get_image_tag_no_plugin(self):
         self.config.registry.settings['voteit.default_profile_picture'] = 'some_pic.png'
