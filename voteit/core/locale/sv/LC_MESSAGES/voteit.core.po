@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: voteit.core 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-04-24 13:52+0200\n"
-"PO-Revision-Date: 2020-04-24 13:53+0200\n"
+"POT-Creation-Date: 2020-05-07 14:45+0200\n"
+"PO-Revision-Date: 2020-05-07 14:49+0200\n"
 "Last-Translator: Robin Harms Oredsson <robin@betahaus.net>\n"
 "Language-Team: sv <LL@li.org>\n"
 "Language: sv\n"
@@ -159,24 +159,62 @@ msgstr "Diskussion"
 msgid "Polls"
 msgstr "Omröstningar"
 
-#: voteit/core/portlets/agenda_item.py:310
+#: voteit/core/portlets/agenda_item.py:312
 msgid "Agenda Item portlets"
 msgstr "Dagordningsportlets"
 
-#: voteit/core/plugins/gravatar_profile_image.py:15
+#: voteit/core/plugins/gravatar_profile_image.py:19
 msgid "Gravatar"
 msgstr "Gravatar"
 
 #. Default: Profile image from <a href="http://www.gravatar.com"
-#. target="_blank">Gravatar network</a>.It's taken from your current email
-#. address. If you want to change the picture, simply go tothe Gravatar site
+#. target="_blank">Gravatar network</a>. It's taken from your current email
+#. address. If you want to change the picture, simply go to the Gravatar site
 #. and change your picture for the email you use in VoteIT.
-#: voteit/core/plugins/gravatar_profile_image.py:16
+#: voteit/core/plugins/gravatar_profile_image.py:20
 msgid "profile_gravatar_explanation"
 msgstr ""
 "Profilbilden kommer från <a href=\"http://www.gravatar.com\" target=\"_blank"
 "\">Gravatar</a>. Den är hämtad från din epostadress. Om du vill ändra bild, "
 "gå till Gravatar och ändra bild för den epostadress du använder i VoteIT."
+
+#: voteit/core/plugins/gravatar_profile_image.py:51
+msgid ""
+"a simple, cartoon-style silhouetted outline of a person (does not vary by "
+"email hash)"
+msgstr "En enkel tecknad kontur av en person. (Samma för alla användare)"
+
+#: voteit/core/plugins/gravatar_profile_image.py:55
+msgid "A geometric pattern based on an email hash"
+msgstr "Ett geometriskt mönster baserat på eposthash"
+
+#: voteit/core/plugins/gravatar_profile_image.py:56
+msgid "A generated 'monster' with different colors, faces, etc"
+msgstr "Ett genererat ”monster” med olika färger, ansikten, etc"
+
+#: voteit/core/plugins/gravatar_profile_image.py:57
+msgid "A generated faces with differing features and backgrounds"
+msgstr "Genererade ansikten med olika utseende och bakgrund"
+
+#: voteit/core/plugins/gravatar_profile_image.py:58
+msgid "Awesome generated, 8-bit arcade-style pixelated faces"
+msgstr "8-bit pixlade ansikten i arkadstil"
+
+#: voteit/core/plugins/gravatar_profile_image.py:59
+msgid "A generated robot with different colors, faces, etc"
+msgstr "En genererad robot med olika färger, ansikten etc"
+
+#: voteit/core/plugins/gravatar_profile_image.py:75
+msgid "Gravatar default type"
+msgstr "Gravatars standardtyp"
+
+#. Default: What to use in case users don't have a gravatar image registered.
+#. See: ${url} for more information and examples.
+#: voteit/core/plugins/gravatar_profile_image.py:76
+msgid "gravatar_default_description"
+msgstr ""
+"Används om användare saknar en bild hos gravatar. Se ${url} för mer "
+"information och exempel."
 
 #: voteit/core/plugins/like_button.py:32
 #: voteit/core/templates/menus/control_panel_ap.pt:10
@@ -1735,7 +1773,7 @@ msgstr "Du saknar rättigheten att lägga till."
 msgid "The moderator has locked the ability to add more proposals."
 msgstr "Moderatorn har låst möjligheten att lägga till fler förslag."
 
-#: voteit/core/templates/portlets/proposals_inline.pt:51
+#: voteit/core/templates/portlets/proposals_inline.pt:52
 msgid "Show ${num} hidden"
 msgstr "Visa ${num} gömd(a)"
 

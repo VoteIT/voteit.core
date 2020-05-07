@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE 1.0\n"
-"POT-Creation-Date: 2020-04-24 13:52+0200\n"
+"POT-Creation-Date: 2020-05-07 14:45+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -151,20 +151,56 @@ msgstr ""
 msgid "Polls"
 msgstr ""
 
-#: ./voteit/core/portlets/agenda_item.py:310
+#: ./voteit/core/portlets/agenda_item.py:312
 msgid "Agenda Item portlets"
 msgstr ""
 
-#: ./voteit/core/plugins/gravatar_profile_image.py:15
+#: ./voteit/core/plugins/gravatar_profile_image.py:19
 msgid "Gravatar"
 msgstr ""
 
 #. Default: Profile image from <a href="http://www.gravatar.com"
-#. target="_blank">Gravatar network</a>.It's taken from your current email
-#. address. If you want to change the picture, simply go tothe Gravatar site
+#. target="_blank">Gravatar network</a>. It's taken from your current email
+#. address. If you want to change the picture, simply go to the Gravatar site
 #. and change your picture for the email you use in VoteIT.
-#: ./voteit/core/plugins/gravatar_profile_image.py:16
+#: ./voteit/core/plugins/gravatar_profile_image.py:20
 msgid "profile_gravatar_explanation"
+msgstr ""
+
+#: ./voteit/core/plugins/gravatar_profile_image.py:51
+msgid ""
+"a simple, cartoon-style silhouetted outline of a person (does not vary by "
+"email hash)"
+msgstr ""
+
+#: ./voteit/core/plugins/gravatar_profile_image.py:55
+msgid "A geometric pattern based on an email hash"
+msgstr ""
+
+#: ./voteit/core/plugins/gravatar_profile_image.py:56
+msgid "A generated 'monster' with different colors, faces, etc"
+msgstr ""
+
+#: ./voteit/core/plugins/gravatar_profile_image.py:57
+msgid "A generated faces with differing features and backgrounds"
+msgstr ""
+
+#: ./voteit/core/plugins/gravatar_profile_image.py:58
+msgid "Awesome generated, 8-bit arcade-style pixelated faces"
+msgstr ""
+
+#: ./voteit/core/plugins/gravatar_profile_image.py:59
+msgid "A generated robot with different colors, faces, etc"
+msgstr ""
+
+#: ./voteit/core/plugins/gravatar_profile_image.py:75
+msgid "Gravatar default type"
+msgstr ""
+
+#. Default: What to use in case users don't have a gravatar image registered.
+#. See: ${url} for more information and examples.
+#: ./voteit/core/plugins/gravatar_profile_image.py:76
+msgid "gravatar_default_description"
 msgstr ""
 
 #: ./voteit/core/plugins/like_button.py:32
@@ -1593,7 +1629,7 @@ msgstr ""
 msgid "The moderator has locked the ability to add more proposals."
 msgstr ""
 
-#: ./voteit/core/templates/portlets/proposals_inline.pt:51
+#: ./voteit/core/templates/portlets/proposals_inline.pt:52
 msgid "Show ${num} hidden"
 msgstr ""
 
