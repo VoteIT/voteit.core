@@ -12,7 +12,8 @@
     data-unread="${is_unread and 'true' or 'false'}">
     <div class="text" data-collapsible="${obj.uid}">
       <div data-collapsible-text="400">
-        <tal:cog condition="request.is_moderator" replace="structure view.render_template('voteit.core:templates/snippets/cogwheel.pt', context = obj)" />
+        <tal:cog condition="request.is_moderator and ck_mod(obj)"
+                 replace="structure view.render_template('voteit.core:templates/snippets/cogwheel.pt', context = obj)" />
         <tal:creator replace="structure request.creators_info(obj.creators)"></tal:creator>
         <span class="proposal-text"
               tal:content="structure request.render_proposal_text(obj)">Text here</span>

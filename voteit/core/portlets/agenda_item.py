@@ -125,6 +125,8 @@ class ProposalsInline(BaseView):
                                                                     query=get_query)
         else:
             response['hidden_count'] = False
+        # A more expensive but accurate permission check for a specific object.
+        response['ck_mod'] = lambda obj: self.request.has_permission(security.MODERATE_MEETING, obj)
         return response
 
 
