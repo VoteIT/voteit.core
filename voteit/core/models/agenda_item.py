@@ -31,19 +31,22 @@ class AgendaItem(BaseContent, WorkflowAware):
     def __acl__(self):
         acl = get_acl_registry()
         state = self.get_workflow_state()
+        perms = []
+        if self.proposal_block:
+            perms.append((Deny, security.ROLE_PROPOSE, security.ADD_PROPOSAL))
+        if self.discussion_block:
+            perms.append((Deny, security.ROLE_DISCUSS, security.ADD_DISCUSSION_POST))
         if state == 'closed':
             #Check if the meeting is closed, if not discussion should be allowed +
             #it should be allowed to change the workflow back
             if self.__parent__.get_workflow_state() == 'closed':
-                return acl.get_acl('AgendaItem:closed_meeting')
-            return acl.get_acl('AgendaItem:closed_ai')
-        if state == 'private':
-            return acl.get_acl('AgendaItem:private')
-        perms = []
-        if self.get_field_value('proposal_block', False) == True:
-            perms.append((Deny, security.ROLE_PROPOSE, security.ADD_PROPOSAL))
-        if self.get_field_value('discussion_block', False) == True:
-            perms.append((Deny, security.ROLE_DISCUSS, security.ADD_DISCUSSION_POST))
+                perms.extend(acl.get_acl('AgendaItem:closed_meeting'))
+            else:
+                perms.extend(acl.get_acl('AgendaItem:closed_ai'))
+            return perms
+        elif state == 'private':
+            perms.extend(acl.get_acl('AgendaItem:private'))
+            return perms
         perms.extend(self.__parent__.__acl__)
         return perms
 
