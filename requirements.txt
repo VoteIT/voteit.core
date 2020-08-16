@@ -11,3 +11,4 @@ pyramid-auto-env < 0.2
 zope.schema < 6
 zope.interface < 5
 zope.component < 5
+repoze.workflow == 0.6.1
