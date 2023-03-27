@@ -22,7 +22,7 @@ install_requires = (
     'pyramid_zcml',
     'repoze.workflow',
     'webhelpers',
-    'redis<3.5',
+    'redis<4.6',
     'pyramid-auto-env',
     'pyramid_retry',
     'pyramid_exclog',
