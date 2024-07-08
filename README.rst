@@ -1,6 +1,10 @@
 Introduction
 ============
 
+NOTE: This is the previous major version of VoteIT! It's not maintained anylonger.
+
+
+
 .. image:: https://travis-ci.org/VoteIT/voteit.core.png?branch=master
    :target: https://travis-ci.org/VoteIT/voteit.core
 
