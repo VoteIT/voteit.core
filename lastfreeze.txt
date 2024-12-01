@@ -45,7 +45,7 @@ pyramid-tm==2.4
 pyramid-zcml==1.2.0
 pyramid-zodbconn==0.8.1
 pytz==2019.3
-redis==3.4.1
+redis==4.4.4
 regex==2020.1.8
 repoze.catalog==0.9.0
 repoze.evolution==0.6
